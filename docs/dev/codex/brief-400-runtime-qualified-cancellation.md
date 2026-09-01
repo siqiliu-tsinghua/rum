@@ -224,3 +224,233 @@ whether the machine was otherwise idle.
    confirm the `taskset` pinning and machine idleness.
 6. What is deliberately left for step 2, stop-loss, and open questions —
    including whether your shape stays safe if resume later gains a prologue.
+
+---
+
+## Report — 2026-09-02 — STOPPED on scope conflict
+
+This brief did **not** reach completion. I stopped under the hard rule “Do not
+modify files outside Scope. If you believe you must, STOP and report.” The
+partial implementation remains in the worktree together with a deterministic
+red test that demonstrates the ownership conflict described in section 6.
+
+### 1. Partial state machine and API changes
+
+- `runtime/model/request_cancellation.rs` (new) contains the reusable
+  `AtomicU64` control block (`0` idle, otherwise
+  `(generation << 1) | cancelled`), linear non-`Clone` `AcceptedRequest`,
+  cloneable exact-generation `RequestCancelHandle`, idempotent exact-generation
+  cancel CAS, and close-and-observe completion CAS. Its encoding comment states
+  why a bare boolean and unconditional clear are unsound. Dropping a ticket
+  closes only its generation. Generation exhaustion uses `0` as the private
+  counter sentinel so the next idle acceptance rotates the `Arc` control block.
+- `runtime/model/mod.rs` exports the ticket, handle, and acceptance error and
+  keeps the control implementation runtime-private.
+- `runtime/model/session.rs` and `session/session_state.rs` add one
+  session-owned control block, the generation counter, the active accepted
+  ticket, and a compatibility-only legacy arming cell. The legacy
+  `Arc<AtomicBool>` remains.
+- `session/session_api.rs::accept_cancellable_request` reserves only idle exact
+  generations and rotates on exhaustion. `interrupt_handle` still returns the
+  legacy raw handle; it now records legacy arming without `Arc::strong_count`.
+  Timeout remains separate.
+- `session/session_helpers.rs` installs and validates a ticket by `Arc`
+  identity before the prologue, checks the active generation, and atomically
+  closes it. `begin_top_level_interrupt_budget` clears only the legacy boolean
+  and does not touch scoped cancellation. Arming derives from timeout, the
+  active accepted scope, or the explicit legacy compatibility lane; no strong
+  count remains.
+- `eval_core/mod.rs::poll_host_interrupt_if_due` keeps the existing branch and
+  1024-call stride. An accepted request performs one qualified atomic load;
+  legacy and timeout-only behavior stay separate. No extra evaluator poll was
+  added.
+- `session/session_requests.rs` adds accepted source, expression, script, and
+  file entrypoints; validates/consumes tickets; linearizes completion against
+  cancel; retains the active ticket across ordinary input suspension and nested
+  resuspension; and checks cancellation before converting supplied resume
+  input. Script/file entrypoints keep one active identity.
+- `session/session_eval.rs` observes a scoped cancellation after each form
+  prologue and stops accepted script/file processing before a later form.
+- `runtime/tests/session_requests/api.rs` contains direct-order tests for
+  pre-entry cancel, idempotence, stale/completed handles, current-vs-stale CAS,
+  ticket drop, wrong-session validation, exhaustion rotation, normal/timeout
+  usability, script/file form stopping, and suspension/resuspension.
+- I did not touch either optional private interrupt test file. No `unsafe`, new
+  dependency, `Do` change, host/CLI/REPL/Jupyter/stdlib change, or out-of-scope
+  source change was made. The five pre-existing modified files and untracked
+  `scripts/peak-rss.py` were preserved.
+
+Organization assessment: the new 5.7k model module keeps the state machine out
+of already-large files. `session_api.rs`, `session_helpers.rs`,
+`session_requests.rs`, and `session_state.rs` remain in the split-plan range;
+this scoped migration cuts across their existing coherent API/helper/request/
+state responsibilities, so an unrelated split would obscure the cancellation
+lifetime review. `tests/session_requests/api.rs` is 31k, below the 45k test-debt
+threshold but in its warning range; a future split boundary is accepted-request
+lifecycle versus the older transport/error mapping tests.
+
+### 2. Red-first proof and post-change pass
+
+The first test was written before the state machine. It used the only
+pre-change capability (the raw handle) to force cancel before the request
+prologue. Verbatim failure:
+
+```text
+running 1 test
+
+thread 'runtime::tests::session_requests::api::accepted_cancel_before_request_entry_is_observed' panicked at crates/rum-runtime/src/runtime/tests/session_requests/api.rs:445:5:
+assertion `left == right` failed
+  left: None
+ right: Some(Cancelled)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test runtime::tests::session_requests::api::accepted_cancel_before_request_entry_is_observed ... FAILED
+
+failures:
+    runtime::tests::session_requests::api::accepted_cancel_before_request_entry_is_observed
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 905 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p rum-runtime --lib`
+```
+
+After changing the same named regression to the typed accepted lane, its exact
+run passed:
+
+```text
+running 1 test
+test runtime::tests::session_requests::api::accepted_cancel_before_request_entry_is_observed ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 905 filtered out; finished in 0.00s
+```
+
+### 3. Deterministic ordering evidence reached before the stop
+
+The accepted-test filter used no sleeps and passed direct ordering, suspension,
+nested resuspension, session validation, script/file channel handshakes, normal
+completion, and timeout:
+
+```text
+running 6 tests
+test runtime::tests::session_requests::api::accepted_cancel_before_request_entry_is_observed ... ok
+test runtime::tests::session_requests::api::accepted_cancel_survives_input_suspension_without_consuming_input ... ok
+test runtime::tests::session_requests::api::accepted_nested_resuspension_keeps_request_identity ... ok
+test runtime::tests::session_requests::api::accepted_ticket_is_validated_against_its_session ... ok
+test runtime::tests::session_requests::api::accepted_script_and_file_stop_before_later_forms_after_cancellation ... ok
+test runtime::tests::session_requests::api::accepted_request_normal_completion_and_timeout_leave_session_usable ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 909 filtered out; finished in 0.01s
+```
+
+Cancel-before-entry followed by the completion CAS proves the cancel-wins side;
+completion followed by stale cancellation proves the completion-wins side. A
+current cancel followed by a stale cancel proves the stale generation cannot
+overwrite the current cancelled state. A zero-capacity start/ack channel forces
+script/file cancellation in the first form before the second form can run.
+The resume input uses a conversion probe; the cancellation branch returns
+before `Into<String>` is invoked. Nested resuspension reuses the original
+handle.
+
+### 4. Test output and the blocking red test
+
+Before strengthening the suspension test, the crate suite was green:
+
+```text
+test result: ok. 913 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 3.17s
+
+Doc-tests rum_runtime
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+
+That output is superseded by the current deterministic test, which checks that
+abandoning a cancelled suspended `Block` restores its dynamic scope. Verbatim:
+
+```text
+running 1 test
+
+thread 'runtime::tests::session_requests::api::accepted_cancel_survives_input_suspension_without_consuming_input' panicked at crates/rum-runtime/src/runtime/tests/session_requests/api.rs:600:5:
+assertion `left == right` failed
+  left: "List[8, inside]"
+ right: "List[8, outside]"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test runtime::tests::session_requests::api::accepted_cancel_survives_input_suspension_without_consuming_input ... FAILED
+
+failures:
+    runtime::tests::session_requests::api::accepted_cancel_survives_input_suspension_without_consuming_input
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 915 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p rum-runtime --lib`
+```
+
+Therefore the mandatory focused set, current crate gate, workspace gate, and
+final `cargo fmt --check` did not reach green and were not claimed. The
+workspace gate was not run after discovering the scope blocker.
+
+### 5. Base noise floor; candidate comparison not run
+
+Profiling environment variables were absent. The release base build completed:
+
+```text
+Finished `release` profile [optimized] target(s) in 23.34s
+```
+
+All three controls used the same saved binary and every invocation ran through
+`taskset -c 0,2,4,6` under `scripts/run-bounded.py`. The machine was otherwise
+idle; the pre-run process sample showed only `codex`, `bash`, `ps`, and `head`,
+all at `0.0` CPU. Verbatim benchmark completion lines were:
+
+```text
+core microbench output: /tmp/brief-400-base-1
+core microbench output: /tmp/brief-400-base-2
+core microbench output: /tmp/brief-400-base-3
+```
+
+Named rows and their same-binary spread:
+
+| label | base-1 | base-2 | base-3 | spread |
+| --- | ---: | ---: | ---: | ---: |
+| literal-integer | 0.000075342 | 0.000080311 | 0.000072944 | 10.10% |
+| literal-string | 0.000078971 | 0.000083687 | 0.000078646 | 6.41% |
+| symbol-ownvalue-read | 0.000218013 | 0.000202424 | 0.000200309 | 8.84% |
+| list-literal-small | 0.000080809 | 0.000081216 | 0.000077611 | 4.64% |
+
+Across all labels, measured min-to-max spreads ranged from 0.05% to 18.75%.
+The rows at or above 10% were `table-iterator-symbol` 12.69%,
+`literal-integer` 10.10%, `stringtrim-literal-list-32000` 12.10%,
+`stringtrim-single-literal-32000` 11.23%, `stringtrim-whitespace-32000` 13.59%,
+`appendto-list-incremental-small` 10.15%, `set-part-fixed100-len800` 18.75%,
+`set-part-fill-large` 15.84%, `sort-default-wide` 18.62%,
+`sort-symbol-default-width16000` 11.65%, and `reversesort-default-wide` 15.98%.
+The complete raw per-label controls remain in the three `/tmp` directories.
+
+No candidate build or candidate timing run was made after the blocker, so
+there are no base/new rows and no all-row candidate verdict to claim.
+
+### 6. Stop reason, step 2 boundary, and resume-prologue answer
+
+The simple cancellation branch correctly avoids converting the supplied host
+input, but clearing `pending_suspension` drops saved frames without driving
+their error cleanup. The deterministic `Block` test proves that this leaves
+dynamic runtime state installed. Correct cancellation must resume the saved
+frame driver with `Err(EvalError::Cancelled)`, so every continuation frame
+unwinds its scope while no host input is converted or delivered.
+
+That driver and the private frame queue are in
+`crates/rum-runtime/src/runtime/suspension/core.rs`, which is outside this
+brief's MAY-modify list. There is no safe API in the allowed files that can
+inject an error outcome at the front of the saved continuation. Reimplementing
+the private queue, discarding frames, feeding dummy input, or using layout
+access would respectively violate ownership, leak state, run continuation
+effects, or require forbidden `unsafe`. The needed scope amendment is narrowly
+to allow `suspension/core.rs` to expose a runtime-private cancellation resume
+entrypoint that drives the existing frames with `Err(Cancelled)`.
+
+Step 2 remains deliberately untouched: no host contract or consumer was
+migrated, and the raw boolean lane remains. The partial qualified shape itself
+would remain safe if resume later gained a prologue: the ticket stays installed
+across suspension, arming derives from that active scope, and the prologue
+clears only the legacy flag, never the qualified control word. The unresolved
+issue is continuation cleanup, not prologue erasure.
