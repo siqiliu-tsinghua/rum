@@ -698,13 +698,12 @@ The findings and their repairs follow.
   sightings. Sweep the class, then decide per assertion whether it wants the
   lane-disjoint construction or should stop asserting cache residency at all.
 
-- **Cross-thread cancellation tests synchronize with sleeps.** Top-level
-  evaluation clears a pending interrupt (`session_helpers.rs:30`), and these
-  tests start a sleeping canceller before calling evaluation
-  (`rum-host/tests/lifecycle_contract.rs:118`, `eval_contract.rs:210`,
-  `stress.rs:52`, `session_requests/api.rs:502`). If the main thread is delayed
-  past the worker's sleep, the cancellation lands first and is then erased. Not
-  yet observed failing; same shape as the flakes already closed.
+- **Request-scoped cancellation — CLOSED 2026-09-02** (brief-404). Cancellation
+  is generation-qualified, survives its request prologue, and stale handles are
+  inert after completion or reset. The lifecycle, crate-local host, and runtime
+  tests use channel handshakes. Only the ignored stability loop at
+  `crates/rum-host/tests/stress.rs:124-144` still uses a 25 ms sleep; replacing
+  that test synchronization remains separate cleanup.
 
 - **Four native IOPub tests depend on a fixed 50 ms PUB/SUB propagation
   delay** (`native/signed.rs:24`, `frontend/execute.rs:24`,

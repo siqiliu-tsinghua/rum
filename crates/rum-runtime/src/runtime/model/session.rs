@@ -1,8 +1,12 @@
 use super::*;
 use crate::runtime::scoping::packages::SourceUnit;
 
+use std::cell::{Cell, RefCell};
 use std::hash::BuildHasherDefault;
-use std::sync::{Arc, atomic::AtomicBool};
+use std::sync::Arc;
+
+#[cfg(test)]
+use std::sync::atomic::AtomicBool;
 
 use std::time::{Duration, Instant};
 
@@ -111,6 +115,11 @@ pub struct Session {
     pub(in crate::runtime) resuming_suspension: Option<SuspendedEvaluation>,
     pub(in crate::runtime) abandonment_active: bool,
     pub(in crate::runtime) abandonment_worklist: Vec<SuspendedEvaluation>,
+    pub(in crate::runtime) request_interrupt_control: RefCell<Arc<RequestInterruptState>>,
+    pub(in crate::runtime) next_request_generation: Cell<u64>,
+    pub(in crate::runtime) pending_accepted_request: RefCell<Option<AcceptedRequest>>,
+    pub(in crate::runtime) active_accepted_request: Option<AcceptedRequest>,
+    #[cfg(test)]
     pub(in crate::runtime) interrupt_flag: Arc<AtomicBool>,
     pub(in crate::runtime) eval_timeout: Option<Duration>,
     pub(in crate::runtime) eval_deadline: Option<Instant>,

@@ -1,6 +1,5 @@
 use super::super::*;
 use rum_syntax::SourceText;
-use std::sync::atomic::Ordering;
 use std::time::Instant;
 
 pub(in crate::runtime) struct EvaluationRollbackSnapshot {
@@ -29,13 +28,87 @@ pub(in crate::runtime) struct EvaluationRollbackSnapshot {
 
 impl Session {
     pub(in crate::runtime) fn begin_top_level_interrupt_budget(&mut self) {
-        self.interrupt_flag.store(false, Ordering::Relaxed);
+        let legacy_interrupt_armed = {
+            let control = self.request_interrupt_control.borrow();
+            if self.active_accepted_request.is_none() && control.has_cancelled_request() {
+                control.suppress_legacy_interrupt();
+            } else {
+                control.synchronize_legacy_interrupt();
+            }
+            control.legacy_handle_is_shared()
+        };
         self.interrupt_poll_counter = 0;
         self.eval_deadline = self.eval_timeout.map(|timeout| Instant::now() + timeout);
         self.current_memory_limit = self.resource_limits.eval_memory_limit;
         self.memory_limit_check_counter.set(0);
-        self.interrupt_armed =
-            self.eval_deadline.is_some() || std::sync::Arc::strong_count(&self.interrupt_flag) > 1;
+        self.interrupt_armed = self.eval_deadline.is_some()
+            || self.active_accepted_request.is_some()
+            || legacy_interrupt_armed;
+    }
+
+    pub(in crate::runtime) fn install_accepted_request(
+        &mut self,
+        accepted: AcceptedRequest,
+    ) -> Result<(), SessionRequestFailure> {
+        let belongs_to_session = {
+            let control = self.request_interrupt_control.borrow();
+            accepted.belongs_to(&control)
+        };
+        let valid =
+            self.active_accepted_request.is_none() && belongs_to_session && accepted.is_reserved();
+        if !valid {
+            return Err(SessionRequestFailure {
+                error: SessionRequestError::Other {
+                    message: "accepted request ticket does not belong to this idle session"
+                        .to_string(),
+                },
+                messages: Vec::new(),
+                prints: Vec::new(),
+                trace: Vec::new(),
+            });
+        }
+
+        self.active_accepted_request = Some(accepted);
+        Ok(())
+    }
+
+    pub(in crate::runtime) fn activate_pending_accepted_request(
+        &mut self,
+    ) -> Result<(), SessionRequestFailure> {
+        if self.active_accepted_request.is_some() {
+            return Ok(());
+        }
+        let accepted = self.pending_accepted_request.borrow_mut().take();
+        if let Some(accepted) = accepted {
+            self.install_accepted_request(accepted)?;
+        }
+        Ok(())
+    }
+
+    pub(in crate::runtime) fn active_accepted_request_is_cancelled(&self) -> bool {
+        self.active_accepted_request
+            .as_ref()
+            .is_some_and(AcceptedRequest::is_cancelled)
+    }
+
+    pub(in crate::runtime) fn take_active_accepted_request(&mut self) -> Option<AcceptedRequest> {
+        let accepted = self.active_accepted_request.take();
+        if accepted.is_some() {
+            self.request_interrupt_control
+                .borrow()
+                .suppress_legacy_interrupt();
+        }
+        self.interrupt_armed = self.eval_deadline.is_some()
+            || self
+                .request_interrupt_control
+                .borrow()
+                .legacy_handle_is_shared();
+        accepted
+    }
+
+    pub(in crate::runtime) fn finish_active_accepted_request(&mut self) -> bool {
+        self.take_active_accepted_request()
+            .is_some_and(AcceptedRequest::finish)
     }
 
     pub(in crate::runtime) fn capture_loader_snapshot(&self) -> LoaderSnapshot {

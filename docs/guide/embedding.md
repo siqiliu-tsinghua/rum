@@ -296,7 +296,10 @@ continuation. The original single-source continuation remains resumable through
 `resume_with_input`. `queue_input_response` remains available for future input,
 and reset, snapshot inspection, symbol/editor inspection, and other read-only
 operations remain available; queuing a value is not an implicit resume or
-supersede operation.
+supersede operation. The one exception is an accepted cancellation for that
+same suspended request: the next resume or guest-code evaluation entrypoint
+reports the structured cancellation, abandons the continuation without
+converting or delivering host input, and leaves the session reusable.
 
 The host crate has a public contract test for this flow:
 
@@ -347,8 +350,13 @@ script-shaped request is not resumable through `resume_with_input`: that call
 returns `Failure` with `HostFailureCode::Other`, and forms after the suspended
 form are not evaluated. New evaluation requests are also rejected while that
 script suspension remains installed. Because the script has no resumable host
-checkpoint, use `reset()`, `restore_from_bytes()` (which resets first), or
-replace the whole `HostSession` before evaluating again. Read-only inspection
+checkpoint, the ordinary escape routes are `reset()`, `restore_from_bytes()`
+(which resets first), or replacing the whole `HostSession`. Request-scoped
+cancellation is a second escape: cancel the handle accepted for the script,
+then re-enter through `resume_with_input` or a guest-code evaluation entrypoint.
+That re-entry reports cancellation for the old script without converting its
+argument or evaluating new source, structurally abandons the script
+continuation, and makes the following request usable. Read-only inspection
 remains safe and available. Queuing a response after suspension does not turn
 the script into a resumable request. Single-source `eval` retains the resumable
 flow described above.
@@ -424,7 +432,17 @@ calls, and omits the file and host-entropy providers.
 
 ## Cancel And Timeout
 
-Use `cancel_handle()` to cancel from another thread.
+Call `cancel_handle()` before starting cancellable work, then move or clone the
+handle to the controlling thread. The handle is qualified to that one request:
+cancellation is effective immediately, survives the request prologue, and
+remains attached through input suspension and resume. Completion is the
+boundary; later calls on the same handle cannot affect another request. A
+handle held across `reset()` is likewise inert.
+
+If a single-source request is waiting for input, call the handle and then
+`resume_with_input`. Cancellation wins before the supplied value is converted
+or delivered, the continuation is structurally abandoned, and the returned
+success carries `HostTerminationReason::Cancelled`.
 
 Use `eval_with_timeout(source, duration)` for a per-evaluation elapsed-time
 deadline backed by Rust's monotonic `Instant`.

@@ -105,15 +105,66 @@ fn eval_with_timeout_terminates_long_eval_and_session_remains_usable() {
 }
 
 #[test]
-fn cancel_handle_before_or_after_eval_is_a_noop_for_later_evals() {
+fn cancel_handle_targets_one_request_and_is_inert_after_completion() {
     let mut session = HostSession::new();
     let cancel = session.cancel_handle();
 
     cancel.cancel();
-    assert_success_text(session.eval("1 + 2"), "3");
+    assert_terminated_value(
+        session.eval("1 + 2"),
+        "TerminatedEvaluation[\"Cancelled\"]",
+        "cancel",
+    );
 
     cancel.cancel();
     assert_success_text(session.eval("3 + 4"), "7");
+}
+
+#[test]
+fn stale_cancel_cannot_erase_a_current_request_cancel() {
+    let mut session = HostSession::new();
+    let stale = session.cancel_handle();
+    assert_success_text(session.eval("1"), "1");
+
+    let current = session.cancel_handle();
+    current.cancel();
+    stale.cancel();
+    assert_terminated_value(
+        session.eval("2"),
+        "TerminatedEvaluation[\"Cancelled\"]",
+        "cancel",
+    );
+    assert_success_text(session.eval("3"), "3");
+}
+
+#[test]
+fn cancel_accepted_before_eval_request_survives_request_prologue() {
+    let session = HostSession::new();
+    let cancel = session.cancel_handle();
+    let (ready_tx, ready_rx) = mpsc::sync_channel(0);
+    let (cancelled_tx, cancelled_rx) = mpsc::sync_channel(0);
+
+    let worker = thread::spawn(move || {
+        let mut session = session;
+        ready_tx
+            .send(())
+            .expect("canceller should observe the pre-evaluation boundary");
+        cancelled_rx
+            .recv()
+            .expect("worker should wait until cancellation is accepted");
+        session.eval("1 + 1")
+    });
+
+    ready_rx
+        .recv()
+        .expect("worker should reach the pre-evaluation boundary");
+    cancel.cancel();
+    cancelled_tx
+        .send(())
+        .expect("worker should be released after cancellation");
+
+    let outcome = worker.join().expect("evaluation worker should not panic");
+    assert_terminated_value(outcome, "TerminatedEvaluation[\"Cancelled\"]", "cancel");
 }
 
 #[test]
@@ -169,9 +220,11 @@ fn reset_is_idempotent_and_old_cancel_handles_do_not_affect_rebuilt_session() {
     let old_cancel = session.cancel_handle();
 
     assert_success_text(session.eval("y = 9; y"), "9");
+    let pending_across_reset = session.cancel_handle();
     session.reset();
     session.reset();
     old_cancel.cancel();
+    pending_across_reset.cancel();
 
     let symbol = assert_success_text(session.eval("y"), "y");
     assert_eq!(symbol.value.typed, HostTyped::Symbol("y".to_string()));

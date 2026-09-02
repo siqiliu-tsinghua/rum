@@ -1,4 +1,4 @@
-use rum_host::{HostEvalOutcome, HostEvalSuccess, HostSession, HostTyped};
+use rum_host::{HostEvalOutcome, HostEvalSuccess, HostSession, HostTerminationReason, HostTyped};
 use std::sync::{
     Arc,
     atomic::{AtomicUsize, Ordering},
@@ -70,6 +70,131 @@ fn integer_value(session: &mut HostSession, source: &str) -> i64 {
         HostTyped::Integer(value) => value,
         other => panic!("expected integer for {source:?}, got {other:?}"),
     }
+}
+
+struct InputConversionProbe {
+    conversions: Arc<AtomicUsize>,
+}
+
+impl From<InputConversionProbe> for String {
+    fn from(probe: InputConversionProbe) -> Self {
+        probe.conversions.fetch_add(1, Ordering::Relaxed);
+        "input-that-must-not-be-converted".to_string()
+    }
+}
+
+fn cancel_suspended(session: &mut HostSession, source: &str) -> HostEvalSuccess {
+    let cancel = session.cancel_handle();
+    let suspended = session.eval(source);
+    assert!(
+        matches!(suspended, HostEvalOutcome::InputRequired(_)),
+        "expected input suspension for {source:?}, got {suspended:?}"
+    );
+
+    cancel.cancel();
+    let conversions = Arc::new(AtomicUsize::new(0));
+    let outcome = session.resume_with_input(InputConversionProbe {
+        conversions: Arc::clone(&conversions),
+    });
+    assert_eq!(
+        conversions.load(Ordering::Relaxed),
+        0,
+        "accepted cancellation must win before host input conversion"
+    );
+    assert!(
+        session.pending_input_request().is_none(),
+        "cancelled abandonment must remove the pending input request"
+    );
+
+    match outcome {
+        HostEvalOutcome::Success(success) => {
+            assert_eq!(success.termination, Some(HostTerminationReason::Cancelled));
+            assert_eq!(success.value.text, "TerminatedEvaluation[\"Cancelled\"]");
+            success
+        }
+        other => panic!("expected structured cancellation for {source:?}, got {other:?}"),
+    }
+}
+
+#[test]
+fn public_cancelled_block_suspension_restores_scope_without_running_continuation() {
+    let mut session = HostSession::new();
+    success(
+        &mut session,
+        "cancelBlock404 = \"outside\"; cancelSentinel404 = 0",
+    );
+
+    cancel_suspended(
+        &mut session,
+        "Block[{cancelBlock404 = \"inside\"}, InputString[\"block\"]; cancelSentinel404 = 1]",
+    );
+
+    assert_text(&mut session, "cancelBlock404", "\"outside\"");
+    assert_text(&mut session, "cancelSentinel404", "0");
+}
+
+#[test]
+fn public_cancelled_module_suspension_reclaims_local_without_running_continuation() {
+    let mut session = HostSession::new();
+    success(&mut session, "cancelSentinel404 = 0");
+
+    cancel_suspended(
+        &mut session,
+        "Module[{cancelModuleLocal404 = \"local\"}, InputString[\"module\"]; cancelSentinel404 = 1]",
+    );
+
+    assert_text(
+        &mut session,
+        "Names[\"Global`cancelModuleLocal404$*\"]",
+        "List[]",
+    );
+    assert_text(&mut session, "cancelSentinel404", "0");
+}
+
+#[test]
+fn public_cancelled_with_suspension_restores_scope_without_running_continuation() {
+    let mut session = HostSession::new();
+    success(
+        &mut session,
+        "cancelWith404 = \"outside\"; cancelSentinel404 = 0",
+    );
+
+    cancel_suspended(
+        &mut session,
+        "With[{cancelWith404 = \"inside\"}, InputString[\"with\"]; cancelSentinel404 = 1; cancelWith404]",
+    );
+
+    assert_text(&mut session, "cancelWith404", "\"outside\"");
+    assert_text(&mut session, "cancelSentinel404", "0");
+}
+
+#[test]
+fn public_cancel_handle_acquired_while_suspended_abandons_before_input_conversion() {
+    let mut session = HostSession::new();
+    success(&mut session, "cancelLateSentinel404 = 0");
+    let suspended = session.eval("InputString[\"late cancel\"]; cancelLateSentinel404 = 1");
+    assert!(matches!(suspended, HostEvalOutcome::InputRequired(_)));
+
+    session.queue_input_response("queued-value-survives-cancel");
+    let cancel = session.cancel_handle();
+    cancel.cancel();
+    let conversions = Arc::new(AtomicUsize::new(0));
+    let cancelled = session.resume_with_input(InputConversionProbe {
+        conversions: Arc::clone(&conversions),
+    });
+
+    assert_eq!(conversions.load(Ordering::Relaxed), 0);
+    assert!(matches!(
+        cancelled,
+        HostEvalOutcome::Success(ref success)
+            if success.termination == Some(HostTerminationReason::Cancelled)
+    ));
+    assert_text(&mut session, "cancelLateSentinel404", "0");
+    assert_text(
+        &mut session,
+        "InputString[]",
+        "\"queued-value-survives-cancel\"",
+    );
 }
 
 #[test]
@@ -293,4 +418,194 @@ fn public_monitor_matrix_restores_capture_package_and_cleanup_owners() {
         monitor_contract,
         HostEvalOutcome::Success(ref value) if value.value.text == "Null"
     ));
+}
+
+#[test]
+fn public_cancelled_suspension_restores_attribute_iterator_and_option_state() {
+    let mut session = HostSession::new();
+    success(
+        &mut session,
+        "cancelSentinel404 = 0; Options[cancelOptionProbe404] = {cancelChoice404 -> \"default\"}; \
+         cancelOptionProbe404[OptionsPattern[]] := (InputString[\"option\"]; \
+         cancelSentinel404 = 1; OptionValue[cancelChoice404])",
+    );
+
+    cancel_suspended(
+        &mut session,
+        "Block[{cancelAttribute404}, SetAttributes[cancelAttribute404, Protected]; \
+         InputString[\"attributes\"]; cancelSentinel404 = 1]",
+    );
+    assert_text(&mut session, "Attributes[cancelAttribute404]", "List[]");
+    assert_text(&mut session, "cancelSentinel404", "0");
+
+    cancel_suspended(
+        &mut session,
+        "Table[InputString[\"iterator\"]; cancelSentinel404 = 1, \
+         {cancelIterator404, {7}}]",
+    );
+    assert_text(&mut session, "cancelIterator404", "cancelIterator404");
+    assert_text(&mut session, "cancelSentinel404", "0");
+
+    cancel_suspended(
+        &mut session,
+        "cancelOptionProbe404[cancelChoice404 -> \"explicit\"]",
+    );
+    let option_after = session.eval("OptionValue[cancelChoice404]");
+    record("cancel.matrix.option.after", &option_after);
+    assert!(matches!(
+        option_after,
+        HostEvalOutcome::Success(ref value)
+            if value.value.text == "OptionValue[cancelChoice404]"
+    ));
+    assert_text(&mut session, "cancelSentinel404", "0");
+}
+
+#[test]
+fn public_cancelled_suspension_restores_reap_monitor_trace_and_constraint_state() {
+    let mut session = HostSession::new();
+    success(&mut session, "cancelSentinel404 = 0");
+
+    let memory_before = integer_value(&mut session, "MemoryInUse[]");
+    cancel_suspended(
+        &mut session,
+        "Reap[Sow[Range[2000]]; InputString[\"reap\"]; cancelSentinel404 = 1]",
+    );
+    let memory_after = integer_value(&mut session, "MemoryInUse[]");
+    let memory_growth = memory_after.saturating_sub(memory_before);
+    println!(
+        "cancel.matrix.reap.memory=before:{memory_before},after:{memory_after},growth:{memory_growth}"
+    );
+    assert!(
+        memory_growth < 16_000,
+        "cancelled Reap buckets retained {memory_growth} proxy bytes"
+    );
+    assert_text(&mut session, "cancelSentinel404", "0");
+
+    let (mut monitor_session, monitor_refreshes) =
+        session_with_counting_print("monitor-refresh-404");
+    success(&mut monitor_session, "cancelSentinel404 = 0");
+    cancel_suspended(
+        &mut monitor_session,
+        "Monitor[InputString[\"monitor\"]; cancelSentinel404 = 1, \
+         Print[\"monitor-refresh-404\"]]",
+    );
+    let abandoned_refreshes = monitor_refreshes.load(Ordering::Relaxed);
+    let (mut completed_monitor, completed_refreshes) =
+        session_with_counting_print("monitor-refresh-404");
+    success(
+        &mut completed_monitor,
+        "Monitor[Null, Print[\"monitor-refresh-404\"]]",
+    );
+    assert!(
+        abandoned_refreshes < completed_refreshes.load(Ordering::Relaxed),
+        "cancelled Monitor abandonment must omit its normal final refresh"
+    );
+    assert_text(&mut monitor_session, "cancelSentinel404", "0");
+
+    cancel_suspended(
+        &mut session,
+        "Trace[InputString[\"trace\"]; cancelSentinel404 = 1]",
+    );
+    let trace_after = session.eval("1 + 1");
+    record("cancel.matrix.trace.after", &trace_after);
+    assert!(matches!(
+        trace_after,
+        HostEvalOutcome::Success(ref value) if value.trace.is_empty()
+    ));
+    assert_text(&mut session, "cancelSentinel404", "0");
+
+    cancel_suspended(
+        &mut session,
+        "TimeConstrained[InputString[\"time\"]; cancelSentinel404 = 1, 1/20]",
+    );
+    std::thread::sleep(Duration::from_millis(75));
+    assert_text(&mut session, "Do[Null, {1000}]; \"done\"", "\"done\"");
+    assert_text(&mut session, "cancelSentinel404", "0");
+
+    cancel_suspended(
+        &mut session,
+        "MemoryConstrained[InputString[\"memory\"]; cancelSentinel404 = 1, 200000]",
+    );
+    assert_text(&mut session, "Length[Range[20000]]", "20000");
+    assert_text(&mut session, "cancelSentinel404", "0");
+}
+
+#[test]
+fn public_cancelled_suspension_restores_prng_and_abort_protect_state() {
+    let mut control = HostSession::new();
+    success(&mut control, "SeedRandom[404]");
+    let expected_random = success(&mut control, "RandomInteger[1000000]").value.text;
+
+    let mut session = HostSession::new();
+    success(
+        &mut session,
+        "SeedRandom[404]; cancelSentinel404 = 0; cancelAbortAfter404 = 0",
+    );
+    cancel_suspended(
+        &mut session,
+        "BlockRandom[RandomInteger[1000000]; InputString[\"random\"]; \
+         cancelSentinel404 = 1]",
+    );
+    assert_text(&mut session, "RandomInteger[1000000]", &expected_random);
+    assert_text(&mut session, "cancelSentinel404", "0");
+
+    cancel_suspended(
+        &mut session,
+        "AbortProtect[InputString[\"abort\"]; cancelSentinel404 = 1]",
+    );
+    let abort = session.eval("Abort[]; cancelAbortAfter404 = 1");
+    record("cancel.matrix.abort", &abort);
+    assert_text(&mut session, "cancelAbortAfter404", "0");
+    assert_text(&mut session, "cancelSentinel404", "0");
+}
+
+#[test]
+fn public_cancelled_nested_with_cleanup_runs_cleanup_and_abandons_nested_input() {
+    let mut session = HostSession::new();
+    success(
+        &mut session,
+        "cancelCleanupInner404 = 0; cancelCleanupOuter404 = 0; \
+         cancelCleanupAfterInput404 = 0; cancelBodyAfterInput404 = 0",
+    );
+
+    cancel_suspended(
+        &mut session,
+        "WithCleanup[WithCleanup[(InputString[\"body\"]; cancelBodyAfterInput404 = 1), \
+         (cancelCleanupInner404 += 1; InputString[\"nested cleanup\"]; \
+         cancelCleanupAfterInput404 = 1)], cancelCleanupOuter404 += 1]",
+    );
+
+    assert_text(
+        &mut session,
+        "List[cancelCleanupInner404, cancelCleanupOuter404, \
+         cancelCleanupAfterInput404, cancelBodyAfterInput404]",
+        "List[1, 1, 0, 0]",
+    );
+    assert!(session.pending_input_request().is_none());
+}
+
+#[test]
+fn public_cancelled_script_suspension_is_a_reset_free_escape_route() {
+    let mut session = HostSession::new();
+    success(
+        &mut session,
+        "cancelScriptTail404 = 0; cancelEscapeAttempt404 = 0",
+    );
+    let cancel = session.cancel_handle();
+    let suspended = session.eval_script("InputString[\"script\"]\ncancelScriptTail404 = 1");
+    assert!(matches!(suspended, HostEvalOutcome::InputRequired(_)));
+
+    cancel.cancel();
+    let cancelled = session.eval("cancelEscapeAttempt404 = 1");
+    assert!(matches!(
+        cancelled,
+        HostEvalOutcome::Success(ref success)
+            if success.termination == Some(HostTerminationReason::Cancelled)
+    ));
+    assert_text(
+        &mut session,
+        "List[cancelScriptTail404, cancelEscapeAttempt404]",
+        "List[0, 0]",
+    );
+    assert_text(&mut session, "6 * 7", "42");
 }

@@ -1,5 +1,9 @@
 use super::*;
-use std::sync::{atomic::Ordering, mpsc};
+use std::sync::{
+    Arc,
+    atomic::{AtomicBool, Ordering},
+    mpsc,
+};
 use std::thread;
 use std::time::Duration;
 
@@ -11,6 +15,44 @@ fn mark_file_request_evaluation_started(
     assert!(args.is_empty(), "evaluation-start probe takes no arguments");
     session.push_print("evaluation-started");
     Ok(system_expr(heads::structure::NULL))
+}
+
+struct InputConversionProbe {
+    converted: Arc<AtomicBool>,
+}
+
+impl From<InputConversionProbe> for String {
+    fn from(probe: InputConversionProbe) -> Self {
+        probe.converted.store(true, Ordering::Relaxed);
+        "input-that-must-not-run".to_string()
+    }
+}
+
+fn cancel_after_evaluation_start(
+    session: &mut Session,
+    cancel: RequestCancelHandle,
+) -> thread::JoinHandle<()> {
+    let (evaluation_started_tx, evaluation_started_rx) = mpsc::sync_channel(0);
+    let (cancelled_tx, cancelled_rx) = mpsc::sync_channel(0);
+    session.set_print_sink(Box::new(move |line| {
+        assert_eq!(line, "evaluation-started");
+        evaluation_started_tx
+            .send(())
+            .expect("canceller should receive evaluation-start signal");
+        cancelled_rx
+            .recv()
+            .expect("canceller should acknowledge the qualified cancel");
+    }));
+
+    thread::spawn(move || {
+        evaluation_started_rx
+            .recv()
+            .expect("evaluation should report that it started");
+        cancel.cancel();
+        cancelled_tx
+            .send(())
+            .expect("evaluation should wait for cancellation acknowledgement");
+    })
 }
 
 fn file_request_error(source: &str, configure: impl FnOnce(&mut Session)) -> SessionRequestError {
@@ -430,6 +472,211 @@ fn file_request_maps_completed_syntax_io_and_missing_provider_errors() {
         }
         other => panic!("expected no-provider request error, got {other:?}"),
     }
+}
+
+#[test]
+fn accepted_cancel_before_request_entry_is_observed() {
+    let mut session = session_with_test_control_builtins();
+    let accepted = session
+        .accept_cancellable_request()
+        .expect("the idle session should accept a cancellable request");
+    let cancel = accepted.cancel_handle();
+    cancel.cancel();
+    cancel.cancel();
+
+    let response = session
+        .eval_accepted_request(accepted, "1 + 1")
+        .expect("cancellation should surface as a terminated evaluation");
+
+    assert_eq!(response.termination, Some(EvalTerminationReason::Cancelled));
+}
+
+#[test]
+fn completed_request_handle_is_inert_for_later_requests() {
+    let mut session = session_with_test_control_builtins();
+    let first = session
+        .accept_cancellable_request()
+        .expect("the first request should be accepted");
+    let stale = first.cancel_handle();
+    let first_response = session
+        .eval_accepted_request(first, "1 + 1")
+        .expect("the first request should complete");
+    assert_eq!(first_response.value.to_string(), "2");
+
+    stale.cancel();
+    let ordinary = session
+        .eval_request("2 + 2")
+        .expect("a stale handle must not affect an ordinary request");
+    assert_eq!(ordinary.value.to_string(), "4");
+
+    let second = session
+        .accept_cancellable_request()
+        .expect("the second request should be accepted");
+    stale.cancel();
+    let second_response = session
+        .eval_accepted_request(second, "3 + 3")
+        .expect("a stale handle must not affect a later accepted request");
+    assert_eq!(second_response.value.to_string(), "6");
+}
+
+#[test]
+fn stale_cancel_cannot_overwrite_current_request_cancel() {
+    let mut session = session_with_test_control_builtins();
+    let completed = session
+        .accept_cancellable_request()
+        .expect("the first request should be accepted");
+    let stale = completed.cancel_handle();
+    session
+        .eval_accepted_request(completed, "1")
+        .expect("the first request should complete");
+
+    let current = session
+        .accept_cancellable_request()
+        .expect("the current request should be accepted");
+    let current_cancel = current.cancel_handle();
+    current_cancel.cancel();
+    stale.cancel();
+
+    let response = session
+        .eval_accepted_request(current, "2")
+        .expect("current cancellation should surface as a value");
+    assert_eq!(response.termination, Some(EvalTerminationReason::Cancelled));
+}
+
+#[test]
+fn accepted_cancel_abandons_input_before_conversion_or_continuation() {
+    let mut session = session_with_test_control_builtins();
+    session
+        .eval_request("x = outside; cancelSentinel404 = 0")
+        .expect("the outer state should be installed");
+    let accepted = session
+        .accept_cancellable_request()
+        .expect("the request should be accepted");
+    let cancel = accepted.cancel_handle();
+
+    let suspended = session
+        .eval_accepted_request(
+            accepted,
+            "Block[{x = inside}, InputString[\"name: \"]; cancelSentinel404 = 1]",
+        )
+        .expect_err("the request should suspend for host input");
+    assert!(matches!(
+        suspended.error,
+        SessionRequestError::InputRequired { .. }
+    ));
+
+    cancel.cancel();
+    let converted = Arc::new(AtomicBool::new(false));
+    let response = session
+        .resume_eval_request_with_input(InputConversionProbe {
+            converted: Arc::clone(&converted),
+        })
+        .expect("latched cancellation should terminate the suspended request");
+
+    assert!(!converted.load(Ordering::Relaxed));
+    assert_eq!(response.termination, Some(EvalTerminationReason::Cancelled));
+    let follow_up = session
+        .eval_request("List[4 + 4, x, cancelSentinel404]")
+        .expect("the session should remain usable after suspended cancellation");
+    assert_eq!(follow_up.value.to_string(), "List[8, outside, 0]");
+}
+
+#[test]
+fn dropped_accepted_ticket_and_generation_rotation_retire_handles() {
+    let mut session = session_with_test_control_builtins();
+    let abandoned = session
+        .accept_cancellable_request()
+        .expect("the request should be accepted");
+    let stale = abandoned.cancel_handle();
+    drop(abandoned);
+    stale.cancel();
+
+    session.next_request_generation.set(MAX_REQUEST_GENERATION);
+    let final_generation = session
+        .accept_cancellable_request()
+        .expect("the final generation should be accepted");
+    let retired_control = final_generation.cancel_handle();
+    drop(final_generation);
+
+    let rotated = session
+        .accept_cancellable_request()
+        .expect("generation exhaustion should rotate the control block");
+    let current = rotated.cancel_handle();
+    current.cancel();
+    stale.cancel();
+    retired_control.cancel();
+    let response = session
+        .eval_accepted_request(rotated, "8 + 8")
+        .expect("retired handles must not erase the current cancellation");
+    assert_eq!(response.termination, Some(EvalTerminationReason::Cancelled));
+}
+
+#[test]
+fn accepted_script_and_file_stop_before_later_forms_after_cancellation() {
+    let mut script_session = session_with_test_control_builtins();
+    script_session.register_builtin(BuiltinSpec::ordinary(
+        "TestEvaluationStarted",
+        "Marks the accepted script's first form as started.",
+        mark_file_request_evaluation_started,
+    ));
+    let script = script_session
+        .accept_cancellable_request()
+        .expect("the script request should be accepted");
+    let script_canceller =
+        cancel_after_evaluation_start(&mut script_session, script.cancel_handle());
+    let script_response = script_session
+        .eval_accepted_script_request(script, "TestEvaluationStarted[]\nlaterScriptForm404 = 1")
+        .expect("script cancellation should surface as a terminated value");
+    script_canceller
+        .join()
+        .expect("script canceller should not panic");
+    script_session.clear_print_sink();
+    assert_eq!(
+        script_response.termination,
+        Some(EvalTerminationReason::Cancelled)
+    );
+    assert_eq!(
+        script_session
+            .eval_request("laterScriptForm404")
+            .expect("the script session should remain usable")
+            .value
+            .to_string(),
+        "laterScriptForm404"
+    );
+
+    let dir = TempDirGuard::new("accepted-request-cancel");
+    let file = dir.write(
+        "accepted-cancel.rum",
+        "TestEvaluationStarted[]\nlaterFileForm404 = 1",
+    );
+    let mut file_session = session_with_test_control_builtins();
+    file_session.register_builtin(BuiltinSpec::ordinary(
+        "TestEvaluationStarted",
+        "Marks the accepted file's first form as started.",
+        mark_file_request_evaluation_started,
+    ));
+    install_test_file_io(&mut file_session);
+    let file_request = file_session
+        .accept_cancellable_request()
+        .expect("the file request should be accepted");
+    let file_canceller =
+        cancel_after_evaluation_start(&mut file_session, file_request.cancel_handle());
+    let file_failure = file_session
+        .eval_accepted_file_request(file_request, &file)
+        .expect_err("loader-shaped cancellation should remain a request failure");
+    file_canceller
+        .join()
+        .expect("file canceller should not panic");
+    file_session.clear_print_sink();
+    assert!(matches!(file_failure.error, SessionRequestError::Cancelled));
+    assert_eq!(
+        file_session
+            .eval_request("laterFileForm404")
+            .expect("the file session should remain usable")
+            .value
+            .to_string(),
+        "laterFileForm404"
+    );
 }
 
 #[test]

@@ -1,5 +1,6 @@
 use super::*;
 
+#[cfg(test)]
 use std::sync::atomic::Ordering;
 
 use std::time::Instant;
@@ -86,6 +87,17 @@ impl Session {
         if self.interrupt_poll_counter & INTERRUPT_POLL_MASK != 0 {
             return Ok(());
         }
+        if self.active_accepted_request_is_cancelled() {
+            return Err(EvalError::Cancelled);
+        }
+        if self
+            .request_interrupt_control
+            .borrow()
+            .legacy_interrupt_requested()
+        {
+            return Err(EvalError::Cancelled);
+        }
+        #[cfg(test)]
         if self.interrupt_flag.load(Ordering::Relaxed) {
             return Err(EvalError::Cancelled);
         }

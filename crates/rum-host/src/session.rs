@@ -1,12 +1,8 @@
 use rum_core::{Atom, Expr};
-use rum_runtime::{CapabilityPolicy, Session};
+use rum_runtime::{CapabilityPolicy, RequestCancelHandle, Session};
 use std::any::Any;
 use std::panic::{AssertUnwindSafe, catch_unwind};
 use std::path::Path;
-use std::sync::{
-    Arc,
-    atomic::{AtomicBool, Ordering},
-};
 use std::time::Duration;
 
 use crate::config::HostConfig;
@@ -112,17 +108,18 @@ pub struct HostSession {
 
 /// Cloneable cancellation handle for a [`HostSession`].
 ///
-/// A handle interrupts the session instance that produced it. Handles returned
-/// before [`HostSession::reset`] are invalidated by that reset.
+/// A handle affects only the request generation that produced it. It is active
+/// from request acceptance through input suspension and resume, and becomes
+/// inert when that request completes or the session is reset.
 #[derive(Clone, Debug)]
 pub struct HostCancelHandle {
-    flag: Arc<AtomicBool>,
+    handle: RequestCancelHandle,
 }
 
 impl HostCancelHandle {
-    /// Requests cancellation of the associated session's current evaluation.
+    /// Requests cancellation of this handle's accepted request.
     pub fn cancel(&self) {
-        self.flag.store(true, Ordering::Relaxed);
+        self.handle.cancel();
     }
 }
 
@@ -168,9 +165,9 @@ impl HostSession {
     /// attributes, contexts, loaded packages, messages, gensyms, queued input
     /// responses, and any installed print sink. Reinstall the print sink after
     /// reset. Reset also invalidates any previously returned
-    /// [`HostCancelHandle`], because the rebuilt session has a fresh interrupt
-    /// flag; obtain a new handle after reset. If the session was poisoned by a
-    /// caught panic, reset clears the poisoned flag.
+    /// [`HostCancelHandle`], because the rebuilt session retires the old request
+    /// generations; obtain a new handle after reset. If the session was
+    /// poisoned by a caught panic, reset clears the poisoned flag.
     pub fn reset(&mut self) {
         self.session = Self::build_inner_session(&self.config);
         self.poisoned = false;
@@ -412,6 +409,13 @@ impl HostSession {
     }
 
     fn call_unprotected(&mut self, head: &str, args: &[HostTyped]) -> HostEvalOutcome {
+        match self.session.finish_cancelled_pending_evaluation_request() {
+            Ok(Some(response)) => {
+                return HostEvalOutcome::Success(eval_success_from_runtime(response));
+            }
+            Ok(None) => {}
+            Err(failure) => return eval_failure_from_runtime(failure),
+        }
         if let Err(failure) = self.session.reject_overlapping_evaluation_request() {
             return eval_failure_from_runtime(failure);
         }
@@ -452,11 +456,13 @@ impl HostSession {
 
     /// Returns a cancellation handle for this session.
     ///
-    /// The handle may be cloned and used from another thread to request
-    /// interruption of the current evaluation.
+    /// The handle may be cloned and used from another thread. It targets the
+    /// active request, including an input-suspended request, or reserves the
+    /// next evaluation request when the session is idle. It cannot affect a
+    /// later request after its generation completes.
     pub fn cancel_handle(&self) -> HostCancelHandle {
         HostCancelHandle {
-            flag: self.session.interrupt_handle(),
+            handle: self.session.request_cancel_handle(),
         }
     }
 

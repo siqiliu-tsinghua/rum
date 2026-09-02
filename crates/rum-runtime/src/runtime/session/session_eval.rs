@@ -222,17 +222,21 @@ impl Session {
         let previous_message_list_dirty =
             std::mem::replace(&mut self.current_message_list_dirty, false);
         let result = (|| {
-            let syntax = match input {
-                TopLevelEvalInput::Text(text) => parse_expr(text)?,
-                TopLevelEvalInput::ScriptForm {
-                    text,
-                    source,
-                    source_offset,
-                } => parse_script_form_with_source(text, source, source_offset)?,
-                TopLevelEvalInput::Parsed(syntax) => syntax,
+            let result = if self.active_accepted_request_is_cancelled() {
+                Err(EvalError::Cancelled)
+            } else {
+                let syntax = match input {
+                    TopLevelEvalInput::Text(text) => parse_expr(text)?,
+                    TopLevelEvalInput::ScriptForm {
+                        text,
+                        source,
+                        source_offset,
+                    } => parse_script_form_with_source(text, source, source_offset)?,
+                    TopLevelEvalInput::Parsed(syntax) => syntax,
+                };
+                let expr = self.lower_syntax_expr(&syntax)?;
+                self.evaluate(expr)
             };
-            let expr = self.lower_syntax_expr(&syntax)?;
-            let result = self.evaluate(expr);
             match terminated_handling {
                 TerminatedEvaluationHandling::ConvertToValue => {
                     self.finalize_top_level_eval_value(result, handled_error_checkpoint)
@@ -326,6 +330,12 @@ impl Session {
                     termination = outcome.termination;
                     messages.extend(outcome.messages);
                     prints.extend(outcome.prints);
+                    if self.active_accepted_request.is_some()
+                        && (termination == Some(EvalTerminationReason::Cancelled)
+                            || self.active_accepted_request_is_cancelled())
+                    {
+                        break;
+                    }
                 }
                 Err(err) => {
                     if !messages.is_empty() {

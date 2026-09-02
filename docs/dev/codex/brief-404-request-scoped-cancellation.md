@@ -251,3 +251,224 @@ eval, dispatch, or matcher code, the cost premise is exceeded — stop and repor
 5. Verification output, including the repository invariant rows.
 6. Cost statement.
 7. Stop-loss, risks, open questions.
+
+---
+
+# Report — 2026-09-02
+
+## 1. Per-file changes
+
+- [request_cancellation.rs](crates/rum-runtime/src/runtime/model/request_cancellation.rs:1), lines 1–237 — added the `AtomicU64` generation state machine, non-`Clone` `AcceptedRequest`, cloneable exact-generation `RequestCancelHandle`, completion linearization, generation exhaustion handling, and the legacy iterator-interrupt mirror.
+- [model/mod.rs](crates/rum-runtime/src/runtime/model/mod.rs:7), lines 7 and 34–35 — registered and exported the request-cancellation types.
+- [model/session.rs](crates/rum-runtime/src/runtime/model/session.rs:4), lines 4–9 and 118–123 — stored current/pending request tickets, generation state, and the test-only raw interrupt probe.
+- [session_state.rs](crates/rum-runtime/src/runtime/session/session_state.rs:662), lines 662–668 — initialized request cancellation state for new/reset sessions.
+- [session_api.rs](crates/rum-runtime/src/runtime/session/session_api.rs:137), lines 137–195 — added request acceptance and qualified-handle reservation while preserving the low-level `interrupt_handle() -> Arc<AtomicBool>` API used by `rum-stdlib`.
+- [session_helpers.rs](crates/rum-runtime/src/runtime/session/session_helpers.rs:30), lines 30–111 — made the prologue preserve the accepted generation, managed ticket activation/completion, and suppressed the qualified interrupt mirror during structural cleanup.
+- [eval_core/mod.rs](crates/rum-runtime/src/runtime/eval_core/mod.rs:85), lines 85–103 — checked the active generation at the existing interrupt-poll cadence; the cadence and default `interrupt_armed` gate are unchanged.
+- [session_eval.rs](crates/rum-runtime/src/runtime/session/session_eval.rs:225), lines 225–239 and 333–338 — checked cancellation before parsing/lowering and stopped script forms after cancellation.
+- [session_requests.rs](crates/rum-runtime/src/runtime/session/session_requests.rs:46), lines 46–70, 154–213, 269–321, 366–435, and 493–639 — integrated accepted requests across source/expression/script/file entrypoints; cancellation now abandons suspension before resume conversion and preserves existing source/file outcome shapes.
+- [rum-host session.rs](crates/rum-host/src/session.rs:109), lines 2–5, 109–123, 168–170, 412–420, and 457–466 — re-expressed `HostSession::cancel_handle` over the qualified handle and made typed calls check suspended cancellation before argument conversion.
+- [runtime request tests](crates/rum-runtime/src/runtime/tests/session_requests/api.rs:20), lines 2–5, 20–57, and 475–679 — added deterministic channel-handshake, stale-generation, suspended-input, reset/rotation, and script/file cancellation coverage.
+- [lifecycle_contract.rs](crates/rum-host/tests/lifecycle_contract.rs:108), lines 108–170, 223, and 227 — added the red/green prologue regression and public stale/reset generation tests.
+- [suspension_abandonment_contract.rs](crates/rum-host/tests/suspension_abandonment_contract.rs:75), lines 75–199 and 421–610 — added observable conversion, continuation-sentinel, scope matrix, nested cleanup, queued-input, and reset-free script escape tests.
+- [TODO.md](TODO.md:701), lines 701–706 — closed the defect and retained only the ignored stress-loop sleep as separate cleanup.
+- [embedding.md](docs/guide/embedding.md:299), lines 299–302, 353–359, and 435–445 — documented request qualification, suspension behavior, stale/reset handles, and cancellation as the second script-suspension escape.
+
+The stash supplied the phase encoding, linear-ticket design, stale-generation cases, and runtime test skeletons. I ported those pieces, but rewrote the wiring against the brief-402 abandonment protocol and brief-403 overlap rejection. The public scope tests reuse brief-403’s matrix shapes. No change was needed in `suspension/core.rs`; its existing `abandon_pending_suspension` entrypoint is called from the accepted-cancellation branches.
+
+## 2. Request-boundary ordering decision
+
+Accepted cancellation is checked before brief-403’s overlap rejection:
+
+1. A pending ticket is activated.
+2. If it belongs to the currently suspended request and is cancelled, the ticket is detached, `abandon_pending_suspension(AbandonReason::CancelledRequest)` runs, and the old request reports structured cancellation.
+3. Otherwise brief-403’s overlap rejection runs unchanged.
+4. For a fresh accepted request, the prologue runs without clearing its generation, followed by a pre-parse cancellation check.
+
+This ordering is required because cancellation is now an explicitly documented second escape from script-shaped suspension. An uncancelled overlap still rejects without abandoning or consuming anything. Resume cancellation is checked before taking the checkpoint, before `input.into()`, and before queued input is consumed. Host typed calls perform the same preflight before building argument expressions.
+
+## 3. Red test, then green
+
+Command used both times:
+
+```text
+scripts/run-bounded.py --timeout 300 -- cargo test --offline -p rum-host --test lifecycle_contract cancel_accepted_before_eval_request_survives_request_prologue -- --exact --nocapture
+```
+
+Before repair:
+
+```text
+   Compiling rum-host v0.2.0 (crates/rum-host)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.53s
+     Running tests/lifecycle_contract.rs (target/debug/deps/lifecycle_contract-d359d0673170e5fa)
+
+running 1 test
+
+thread 'cancel_accepted_before_eval_request_survives_request_prologue' panicked at crates/rum-host/tests/lifecycle_contract.rs:44:5:
+assertion `left == right` failed
+  left: "2"
+ right: "TerminatedEvaluation[\"Cancelled\"]"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test cancel_accepted_before_eval_request_survives_request_prologue ... FAILED
+
+failures:
+
+failures:
+    cancel_accepted_before_eval_request_survives_request_prologue
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 13 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p rum-host --test lifecycle_contract`
+```
+
+After repair:
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running tests/lifecycle_contract.rs (target/debug/deps/lifecycle_contract-d359d0673170e5fa)
+
+running 1 test
+test cancel_accepted_before_eval_request_survives_request_prologue ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 13 filtered out; finished in 0.00s
+```
+
+## 4. Cancel-while-suspended evidence
+
+The custom `Into<String>` probe increments an `AtomicUsize`; every cancellation helper asserts the count remains exactly `0`. The separate late-acquired-handle test also asserts zero conversions. Cancellation returns `HostTerminationReason::Cancelled`, and no ordinary resume driver receives synthetic cancellation.
+
+Selected public-contract output:
+
+```text
+cancelLateSentinel404=Success(value=0, termination=None, messages=0, prints=[], trace=0)
+InputString[]=Success(value="queued-value-survives-cancel", termination=None, messages=0, prints=[], trace=0)
+cancelWith404=Success(value="outside", termination=None, messages=0, prints=[], trace=0)
+cancelBlock404=Success(value="outside", termination=None, messages=0, prints=[], trace=0)
+Names["Global`cancelModuleLocal404$*"]=Success(value=List[], termination=None, messages=0, prints=[], trace=0)
+Attributes[cancelAttribute404]=Success(value=List[], termination=None, messages=0, prints=[], trace=0)
+List[cancelCleanupInner404, cancelCleanupOuter404, cancelCleanupAfterInput404, cancelBodyAfterInput404]=Success(value=List[1, 1, 0, 0], termination=None, messages=0, prints=[], trace=0)
+List[cancelScriptTail404, cancelEscapeAttempt404]=Success(value=List[0, 0], termination=None, messages=0, prints=[], trace=0)
+6 * 7=Success(value=42, termination=None, messages=0, prints=[], trace=0)
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+```
+
+The matrix separately covers `Block`, `Module`, `With`, attributes, iterator state, option scope, `Reap`, `Monitor`, trace, time and memory constraints, PRNG/`BlockRandom`, and `AbortProtect`. Every post-`InputString` sentinel remained `0`. Nested `WithCleanup` ran both cleanups exactly once and abandoned nested input without issuing a second host request. A queued value survived cancellation and was consumed by the following independent `InputString`.
+
+## 5. Verification output
+
+Formatting emitted no output and exited 0:
+
+```text
+scripts/run-bounded.py --timeout 300 -- cargo --offline fmt --check
+```
+
+Runtime:
+
+```text
+test result: ok. 928 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 3.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+
+Host:
+
+```text
+test result: ok. 87 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.29s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.11s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.79s
+```
+
+The mandatory workspace command, including `--no-fail-fast`, exited 0. Its non-empty suite summaries were:
+
+```text
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 87 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.28s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.11s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+test result: ok. 103 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+test result: ok. 45 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+test result: ok. 928 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 3.02s
+test result: ok. 828 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 2.52s
+test result: ok. 189 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.77s
+```
+
+The whole `rum-jupyter` suite passed on this run, including the kernel-level finding-B test.
+
+Repository invariant rows:
+
+```text
+named_suspension_frames=545
+named_pure_finalizers=60
+pure_frame_abandon_derives=516
+handwritten_stateful_frame_abandons=29
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/evaluation_data.rs:EvalEvaluationDataSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/monitor.rs:EvalMonitorSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/reap.rs:EvalReapSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/resources/constraints.rs:ResumeMemoryConstrainedWithLimitSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/resources/constraints.rs:ResumeTimeConstrainedWithLimitSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/test_report/evaluation.rs:EvalExprWithStreamCaptureSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/trace/resume_frames.rs:EvalStructuredTraceCaptureExprSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:EvalAbortProtectSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:ResumeCheckAbortAfterPrimarySuspensionFrame1
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:ResumeCheckAbortAfterPrimarySuspensionFrame2
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:ResumeCheckAbortWithPropagationSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/driver/resume_frames.rs:EvaluateLoopIteratorBodySuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/driver/resume_frames.rs:EvaluateLoopIteratorBodyWithDynamicValueSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/mod.rs:WithIterationProductScopeSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:EvalCheckSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:EvalQuietSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs:DriveWithCleanupPrimarySuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs:EvalWithCleanupSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/options/patterns.rs:EvaluateWithOptionValueScopeSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/block/resume_frames.rs:EvalSingleSymbolBlockSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/block/resume_frames.rs:ResumeBlockBodySuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/block/resume_frames.rs:ResumeBlockInitializersSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/block/resume_frames.rs:ResumeSingleSymbolBlockBodySuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/module.rs:ResumeModuleInitializersSuspensionFrame1
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/module.rs:ResumeModuleInitializersSuspensionFrame2
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/module.rs:ResumeSuspendedModuleInitializersSuspensionFrame1
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/module.rs:ResumeSuspendedModuleInitializersSuspensionFrame2
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/packages/resume_frames.rs:ResumePackageInstallSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/session/session_api/resume_frames.rs:EvaluateWithRandomStateRestoredSuspensionFrame
+evaluate_cleanup_allowlist=WithCleanup owner frames (2)
+raw_live_owner_clears=0
+raw_live_owner_replacements=0
+legacy_api_hits=0 direct_queue_mutation_hits=0 ownership_hits=0
+test runtime::tests::frame_root_trace::suspension_protocol_repository_invariants_hold ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 929 filtered out; finished in 0.44s
+```
+
+A scoped `unsafe` search produced no matches.
+
+## 6. Cost statement
+
+No timing A/B was run, per the brief. All new allocation and synchronization occurs at session creation, request acceptance/completion, reset, or generation exhaustion. There are no mutexes and no new ordinary evaluator-step allocations or locks.
+
+The existing `interrupt_armed` fast gate and 1024-step polling cadence are unchanged. Only an already-armed poll checks the accepted generation before the retained low-level interrupt mirror. When no timeout, accepted request, or shared low-level handle exists, the existing default path remains unarmed.
+
+## 7. Stop-loss, risks, open questions
+
+No stop-loss condition fired. I made no out-of-scope edits, did not touch `rum-jupyter`, `rum-stdlib`, `Cargo.lock`, dependency edges, abandonment classifications, or ordinary dispatch/matcher logic, and added no `unsafe`.
+
+The first wiring attempt exposed an out-of-scope compatibility dependency: `rum-stdlib/src/lazy.rs` requires `Session::interrupt_handle() -> Arc<AtomicBool>`. I therefore retained that low-level API and added the distinct qualified `request_cancel_handle()` used by the host. The phase word remains authoritative; the boolean is a synchronized compatibility mirror for kernel-resident iterators.
+
+The main review risk is that [session_requests.rs](crates/rum-runtime/src/runtime/session/session_requests.rs:1) is now about 29.7k characters, within the documented split-plan range. Splitting it would have expanded this tightly scoped change, so I left module organization unchanged.
+
+No open correctness questions remain. The ignored host stress-loop sleep and intermittent Jupyter timing risks remain explicitly out of scope.

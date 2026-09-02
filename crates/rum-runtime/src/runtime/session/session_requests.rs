@@ -43,6 +43,31 @@ impl From<PendingEvalRequest> for RequestCheckpoint {
 
 impl Session {
     #[doc(hidden)]
+    pub fn finish_cancelled_pending_evaluation_request(
+        &mut self,
+    ) -> Result<Option<SessionEvalResponse>, SessionRequestFailure> {
+        self.activate_pending_accepted_request()?;
+        if !self.active_accepted_request_is_cancelled()
+            || self.pending_suspension_generation().is_none()
+        {
+            return Ok(None);
+        }
+
+        let checkpoint = self
+            .pending_eval_request
+            .map(RequestCheckpoint::from)
+            .unwrap_or_else(|| RequestCheckpoint::new(self));
+        let accepted = self
+            .take_active_accepted_request()
+            .expect("a qualified cancellation retains its accepted ticket");
+        self.abandon_pending_suspension(AbandonReason::CancelledRequest);
+        let cancellation_won = accepted.finish();
+        debug_assert!(cancellation_won);
+
+        Ok(Some(self.finish_cancelled_eval_response(checkpoint)))
+    }
+
+    #[doc(hidden)]
     pub fn reject_overlapping_evaluation_request(&self) -> Result<(), SessionRequestFailure> {
         if self.pending_suspension_generation().is_none() {
             return Ok(());
@@ -126,15 +151,24 @@ impl Session {
         &mut self,
         input: &str,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        if let Some(cancelled) = self.finish_cancelled_pending_evaluation_request()? {
+            return Ok(cancelled);
+        }
         self.reject_overlapping_evaluation_request()?;
         self.begin_top_level_interrupt_budget();
         let checkpoint = RequestCheckpoint::new(self);
-        let parsed = parse_with_diagnostics(input).map_err(request_syntax_failure)?;
-        let expr = self
-            .lower_syntax_expr(parsed.syntax())
-            .map_err(|err| self.finish_request_failure(checkpoint, err))?;
+        if self.active_accepted_request_is_cancelled() {
+            return Ok(self.finish_cancelled_active_request(checkpoint));
+        }
+        let result = (|| {
+            let parsed = parse_with_diagnostics(input).map_err(request_syntax_failure)?;
+            let expr = self
+                .lower_syntax_expr(parsed.syntax())
+                .map_err(|err| self.finish_request_failure(checkpoint, err))?;
 
-        self.eval_expr_request_from_checkpoint(expr, checkpoint)
+            self.eval_expr_request_from_checkpoint(expr, checkpoint)
+        })();
+        self.finish_accepted_value_request(result)
     }
 
     /// Evaluates an already-built expression through the top-level request protocol.
@@ -145,11 +179,38 @@ impl Session {
         &mut self,
         expr: Expr,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        if let Some(cancelled) = self.finish_cancelled_pending_evaluation_request()? {
+            return Ok(cancelled);
+        }
         self.reject_overlapping_evaluation_request()?;
         self.begin_top_level_interrupt_budget();
         let checkpoint = RequestCheckpoint::new(self);
+        if self.active_accepted_request_is_cancelled() {
+            return Ok(self.finish_cancelled_active_request(checkpoint));
+        }
 
-        self.eval_expr_request_from_checkpoint(expr, checkpoint)
+        let result = self.eval_expr_request_from_checkpoint(expr, checkpoint);
+        self.finish_accepted_value_request(result)
+    }
+
+    /// Evaluates source text under a previously accepted request identity.
+    pub fn eval_accepted_request(
+        &mut self,
+        accepted: AcceptedRequest,
+        input: &str,
+    ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        self.install_accepted_request(accepted)?;
+        self.eval_request(input)
+    }
+
+    /// Evaluates an expression under a previously accepted request identity.
+    pub fn eval_accepted_expr_request(
+        &mut self,
+        accepted: AcceptedRequest,
+        expr: Expr,
+    ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        self.install_accepted_request(accepted)?;
+        self.eval_expr_request(expr)
     }
 
     fn eval_expr_request_from_checkpoint(
@@ -205,7 +266,11 @@ impl Session {
         &mut self,
         input: impl Into<String>,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
-        let input = input.into();
+        if self.pending_suspension_generation().is_some() {
+            if let Some(cancelled) = self.finish_cancelled_pending_evaluation_request()? {
+                return Ok(cancelled);
+            }
+        }
         let checkpoint = self
             .pending_eval_request
             .take()
@@ -218,6 +283,7 @@ impl Session {
                 prints: Vec::new(),
                 trace: Vec::new(),
             })?;
+        let input = input.into();
 
         let previous_message_list_checkpoint = self
             .current_message_list_checkpoint
@@ -227,6 +293,32 @@ impl Session {
             self.messages.len() > checkpoint.message_checkpoint,
         );
         let outcome = self.resume_suspended_evaluation(input.clone());
+        let outcome = match outcome {
+            Err(error @ EvalError::InputRequired { .. }) => {
+                if self.active_accepted_request_is_cancelled() {
+                    self.pending_eval_request = Some(checkpoint.into());
+                    return self
+                        .finish_cancelled_pending_evaluation_request()?
+                        .ok_or_else(|| SessionRequestFailure {
+                            error: SessionRequestError::Other {
+                                message: "cancelled suspension was not available for abandonment"
+                                    .to_string(),
+                            },
+                            messages: Vec::new(),
+                            prints: Vec::new(),
+                            trace: Vec::new(),
+                        });
+                }
+                Err(error)
+            }
+            outcome => {
+                if self.finish_active_accepted_request() {
+                    Err(EvalError::Cancelled)
+                } else {
+                    outcome
+                }
+            }
+        };
         let finalized =
             self.finalize_top_level_eval_value(outcome, checkpoint.handled_error_checkpoint);
         self.current_message_list_checkpoint = previous_message_list_checkpoint;
@@ -271,10 +363,13 @@ impl Session {
         &mut self,
         source: &str,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        if let Some(cancelled) = self.finish_cancelled_pending_evaluation_request()? {
+            return Ok(cancelled);
+        }
         self.reject_overlapping_evaluation_request()?;
         let checkpoint = RequestCheckpoint::new(self);
 
-        match self.eval_script(source) {
+        let result = match self.eval_script(source) {
             Ok(outcome) => Ok(SessionEvalResponse {
                 value: outcome.value,
                 termination: outcome.termination,
@@ -283,18 +378,32 @@ impl Session {
                 trace: self.trace_events[checkpoint.trace_checkpoint..].to_vec(),
             }),
             Err(err) => Err(self.finish_completed_request_failure(checkpoint, Some(source), err)),
-        }
+        };
+        self.finish_accepted_value_request(result)
+    }
+
+    /// Evaluates a script under one previously accepted request identity.
+    pub fn eval_accepted_script_request(
+        &mut self,
+        accepted: AcceptedRequest,
+        source: &str,
+    ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        self.install_accepted_request(accepted)?;
+        self.eval_script_request(source)
     }
 
     pub fn eval_file_request(
         &mut self,
         path: impl AsRef<Path>,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        if let Some(cancelled) = self.finish_cancelled_pending_evaluation_request()? {
+            return Ok(cancelled);
+        }
         self.reject_overlapping_evaluation_request()?;
         let checkpoint = RequestCheckpoint::new(self);
         let path = path.as_ref();
 
-        match self.eval_file(path) {
+        let result = match self.eval_file(path) {
             Ok(outcome) => Ok(SessionEvalResponse {
                 value: outcome.value,
                 termination: outcome.termination,
@@ -312,7 +421,18 @@ impl Session {
 
                 Err(self.finish_completed_request_failure(checkpoint, source.as_deref(), err))
             }
-        }
+        };
+        self.finish_accepted_file_request(result)
+    }
+
+    /// Evaluates a file under one previously accepted request identity.
+    pub fn eval_accepted_file_request(
+        &mut self,
+        accepted: AcceptedRequest,
+        path: impl AsRef<Path>,
+    ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        self.install_accepted_request(accepted)?;
+        self.eval_file_request(path)
     }
 
     pub fn inspect_request(&self, name: &str) -> Option<SessionInspectResponse> {
@@ -370,6 +490,153 @@ impl Session {
             trace,
         }
     }
+
+    fn finish_accepted_value_request(
+        &mut self,
+        result: Result<SessionEvalResponse, SessionRequestFailure>,
+    ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        if matches!(
+            &result,
+            Err(SessionRequestFailure {
+                error: SessionRequestError::InputRequired { .. },
+                ..
+            })
+        ) {
+            if !self.active_accepted_request_is_cancelled() {
+                return result;
+            }
+
+            let checkpoint = self
+                .pending_eval_request
+                .map(RequestCheckpoint::from)
+                .unwrap_or_else(|| RequestCheckpoint::new(self));
+            let accepted = self
+                .take_active_accepted_request()
+                .expect("cancelled input suspension should retain its accepted ticket");
+            self.abandon_pending_suspension(AbandonReason::CancelledRequest);
+            let cancellation_won = accepted.finish();
+            debug_assert!(cancellation_won);
+            return Ok(self.finish_cancelled_eval_response(checkpoint));
+        }
+
+        if self.finish_active_accepted_request() {
+            self.force_cancelled_eval_result(result)
+        } else {
+            result
+        }
+    }
+
+    fn finish_accepted_file_request(
+        &mut self,
+        result: Result<SessionEvalResponse, SessionRequestFailure>,
+    ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        if matches!(
+            &result,
+            Err(SessionRequestFailure {
+                error: SessionRequestError::InputRequired { .. },
+                ..
+            })
+        ) {
+            return self.finish_accepted_value_request(result);
+        }
+        if self.finish_active_accepted_request() {
+            self.force_cancelled_file_result(result)
+        } else {
+            result
+        }
+    }
+
+    fn finish_cancelled_active_request(
+        &mut self,
+        checkpoint: RequestCheckpoint,
+    ) -> SessionEvalResponse {
+        let cancellation_won = self.finish_active_accepted_request();
+        debug_assert!(cancellation_won);
+        self.finish_cancelled_eval_response(checkpoint)
+    }
+
+    fn force_cancelled_eval_result(
+        &mut self,
+        result: Result<SessionEvalResponse, SessionRequestFailure>,
+    ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        let (mut messages, prints, trace) = match result {
+            Ok(response) => (response.messages, response.prints, response.trace),
+            Err(failure) => (failure.messages, failure.prints, failure.trace),
+        };
+        append_cancel_message(&mut messages);
+        self.last_message_list = messages.clone();
+
+        Ok(SessionEvalResponse {
+            value: Expr::call(
+                system_expr("TerminatedEvaluation"),
+                vec![Expr::string(EvalTerminationReason::Cancelled.tag())],
+            ),
+            termination: Some(EvalTerminationReason::Cancelled),
+            messages,
+            prints,
+            trace,
+        })
+    }
+
+    fn force_cancelled_file_result(
+        &mut self,
+        result: Result<SessionEvalResponse, SessionRequestFailure>,
+    ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        let (mut messages, prints, trace) = match result {
+            Ok(response) => (response.messages, response.prints, response.trace),
+            Err(failure) => (failure.messages, failure.prints, failure.trace),
+        };
+        append_cancel_message(&mut messages);
+        self.last_message_list = messages.clone();
+
+        Err(SessionRequestFailure {
+            error: SessionRequestError::Cancelled,
+            messages,
+            prints,
+            trace,
+        })
+    }
+
+    fn finish_cancelled_eval_response(
+        &mut self,
+        checkpoint: RequestCheckpoint,
+    ) -> SessionEvalResponse {
+        let (value, termination) = self
+            .finalize_top_level_eval_value(
+                Err(EvalError::Cancelled),
+                checkpoint.handled_error_checkpoint,
+            )
+            .expect("host cancellation is a terminated-evaluation value");
+        let messages = self.messages.split_off(checkpoint.message_checkpoint);
+        let prints = self.prints.split_off(checkpoint.print_checkpoint);
+        let trace = self.trace_events[checkpoint.trace_checkpoint..].to_vec();
+        self.last_message_list = messages.clone();
+        self.handled_non_loader_eval_errors
+            .truncate(checkpoint.handled_error_checkpoint);
+        self.pending_eval_request = None;
+
+        SessionEvalResponse {
+            value,
+            termination,
+            messages,
+            prints,
+            trace,
+        }
+    }
+}
+
+fn append_cancel_message(messages: &mut Vec<RuntimeMessage>) {
+    if messages
+        .iter()
+        .any(|message| message.symbol == "General" && message.tag == "cancel")
+    {
+        return;
+    }
+
+    messages.push(
+        Session::runtime_message_for_non_loader_eval_error(&EvalError::Cancelled)
+            .expect("host cancellation has a runtime message"),
+    );
 }
 
 fn request_syntax_failure(diagnostic: rum_syntax::SourceDiagnostic) -> SessionRequestFailure {

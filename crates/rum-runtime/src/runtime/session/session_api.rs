@@ -2,6 +2,7 @@ mod resume_frames;
 use resume_frames::*;
 
 use super::super::*;
+use std::num::NonZeroU64;
 use std::sync::{Arc, atomic::AtomicBool};
 use std::time::Duration;
 
@@ -133,15 +134,65 @@ impl Session {
         self.resource_limits.iteration_work_limit = limit;
     }
 
+    /// Reserves a unique identity for one cancellable request.
+    pub fn accept_cancellable_request(&self) -> Result<AcceptedRequest, AcceptRequestError> {
+        let mut control = self.request_interrupt_control.borrow_mut();
+        if !control.is_idle() {
+            return Err(AcceptRequestError::RequestAlreadyAccepted);
+        }
+
+        if self.next_request_generation.get() == 0 {
+            *control = Arc::new(RequestInterruptState::new());
+            self.next_request_generation.set(1);
+        }
+
+        let generation = NonZeroU64::new(self.next_request_generation.get())
+            .expect("request generation zero is the exhaustion sentinel");
+        if !control.try_reserve(generation) {
+            return Err(AcceptRequestError::RequestAlreadyAccepted);
+        }
+
+        self.next_request_generation
+            .set(if generation.get() == MAX_REQUEST_GENERATION {
+                0
+            } else {
+                generation.get() + 1
+            });
+
+        Ok(AcceptedRequest::new(Arc::clone(&control), generation))
+    }
+
+    /// Returns the low-level interrupt flag used by kernel-resident iterators.
     pub fn interrupt_handle(&self) -> Arc<AtomicBool> {
-        Arc::clone(&self.interrupt_flag)
+        self.request_interrupt_control.borrow().legacy_handle()
+    }
+
+    /// Returns a qualified handle for the active request, or reserves the next request.
+    pub fn request_cancel_handle(&self) -> RequestCancelHandle {
+        if let Some(active) = self.active_accepted_request.as_ref() {
+            return active.cancel_handle();
+        }
+        if let Some(pending) = self.pending_accepted_request.borrow().as_ref() {
+            return pending.cancel_handle();
+        }
+
+        let accepted = self
+            .accept_cancellable_request()
+            .expect("an idle session should reserve its next cancellable request");
+        let handle = accepted.cancel_handle();
+        *self.pending_accepted_request.borrow_mut() = Some(accepted);
+        handle
     }
 
     pub fn set_eval_timeout(&mut self, timeout: Option<Duration>) {
         self.eval_timeout = timeout;
         self.eval_deadline = None;
-        self.interrupt_armed =
-            self.eval_timeout.is_some() || Arc::strong_count(&self.interrupt_flag) > 1;
+        self.interrupt_armed = self.eval_timeout.is_some()
+            || self.active_accepted_request.is_some()
+            || self
+                .request_interrupt_control
+                .borrow()
+                .legacy_handle_is_shared();
     }
 
     pub fn set_resource_limits(&mut self, limits: ResourceLimits) {
