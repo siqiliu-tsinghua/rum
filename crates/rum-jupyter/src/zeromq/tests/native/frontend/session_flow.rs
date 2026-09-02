@@ -16,56 +16,51 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
     let stdin_endpoint = backend.transport_layout().stdin.uri();
     let control_endpoint = backend.transport_layout().control.uri();
     let iopub_endpoint = backend.transport_layout().iopub.uri();
-    let heartbeat_endpoint = backend.transport_layout().heartbeat.uri();
     let mut driver = backend.socket_driver(Session::new());
 
-    let mut shell = runtime.block_on(async {
-        let mut options = SocketOptions::default();
-        options.peer_identity(frontend_identity.clone());
-        let mut shell = DealerSocket::with_options(options);
-        shell
-            .connect(&shell_endpoint)
-            .await
-            .expect("shell dealer should connect");
-        shell
-    });
-    let mut stdin = runtime.block_on(async {
-        let mut options = SocketOptions::default();
-        options.peer_identity(frontend_identity);
-        let mut stdin = DealerSocket::with_options(options);
-        stdin
-            .connect(&stdin_endpoint)
-            .await
-            .expect("stdin dealer should connect");
-        stdin
-    });
-    let mut control = runtime.block_on(async {
-        let mut control = DealerSocket::new();
-        control
-            .connect(&control_endpoint)
-            .await
-            .expect("control dealer should connect");
-        control
-    });
-    let mut iopub = runtime.block_on(async {
-        let mut iopub = SubSocket::new();
-        iopub
-            .connect(&iopub_endpoint)
-            .await
-            .expect("iopub sub should connect");
-        iopub
-            .subscribe("")
-            .await
-            .expect("iopub sub should subscribe");
-        iopub
-    });
+    let mut shell_options = SocketOptions::default();
+    shell_options.peer_identity(frontend_identity.clone());
+    let mut shell = DealerSocket::with_options(shell_options);
+    harness.block_on_result(
+        &runtime,
+        "session-flow Shell Dealer/Router connection setup",
+        shell.connect(&shell_endpoint),
+    );
+    let mut stdin_options = SocketOptions::default();
+    stdin_options.peer_identity(frontend_identity);
+    let mut stdin = DealerSocket::with_options(stdin_options);
+    harness.block_on_result(
+        &runtime,
+        "session-flow Stdin Dealer/Router connection setup",
+        stdin.connect(&stdin_endpoint),
+    );
+    let mut control = harness.connect_dealer(
+        &runtime,
+        &control_endpoint,
+        "session-flow Control Dealer/Router connection setup",
+    );
+    let mut iopub = SubSocket::new();
+    harness.block_on_result(
+        &runtime,
+        "session-flow IOPub SUB connection setup",
+        iopub.connect(&iopub_endpoint),
+    );
+    harness.block_on_result(
+        &runtime,
+        "session-flow IOPub SUB subscription request",
+        iopub.subscribe(""),
+    );
 
     acknowledge_iopub_subscription(
         &harness,
         &runtime,
-        &heartbeat_endpoint,
+        &mut shell,
+        &mut iopub,
+        &codec,
+        &bootstrap.wire_config().delimiter,
         &mut driver,
         backend.transport_mut(),
+        "iopub-barrier-zmq-session-flow",
     );
 
     let first_execute_header = KernelMessageHeader::new(
@@ -83,14 +78,13 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
             request: KernelRequest::Execute(crate::KernelExecuteRequest::new("1")),
         })
         .expect("first execute request should encode");
-    runtime.block_on(async {
-        shell
-            .send(frames_to_zmq_message(
-                wire_message_to_frames(first_execute).frames,
-            ))
-            .await
-            .expect("shell dealer should send first execute");
-    });
+    harness.block_on_result(
+        &runtime,
+        "session-flow first execute request send",
+        shell.send(frames_to_zmq_message(
+            wire_message_to_frames(first_execute).frames,
+        )),
+    );
 
     wait_for_socket_event(
         &harness,
@@ -107,12 +101,11 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
         "session-flow first execute worker completion",
     );
 
-    let first_reply_wire = runtime.block_on(async {
-        tokio::time::timeout(Duration::from_secs(2), shell.recv())
-            .await
-            .expect("first shell reply should arrive before timeout")
-            .expect("first shell reply should decode")
-    });
+    let first_reply_wire = harness.block_on_result(
+        &runtime,
+        "session-flow first execute Shell reply",
+        shell.recv(),
+    );
     let first_reply = decode_response_message(
         &frames_to_wire_message(
             KernelChannel::Shell,
@@ -130,26 +123,22 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
         other => panic!("expected first execute reply, got {other:?}"),
     }
 
-    let mut first_iopub = Vec::new();
-    while first_iopub.len() < 4 {
-        let message = runtime.block_on(async {
-            tokio::time::timeout(Duration::from_secs(2), iopub.recv())
-                .await
-                .expect("first iopub message should arrive before timeout")
-                .expect("first iopub message should decode")
-        });
-        first_iopub.push(
-            crate::decode_iopub_message(
-                &frames_to_wire_message(
-                    KernelChannel::IoPub,
-                    &bootstrap.wire_config().delimiter,
-                    zmq_message_to_frames(message),
-                )
-                .expect("first iopub frames should convert"),
-            )
-            .expect("first iopub message should parse"),
-        );
-    }
+    let first_observed_iopub = harness.collect_iopub_for_parent(
+        &runtime,
+        &mut iopub,
+        &codec,
+        &bootstrap.wire_config().delimiter,
+        &first_execute_header,
+        "session-flow first execute IOPub collection",
+    );
+    harness.assert_exact_execute_iopub_sequence(
+        &first_observed_iopub,
+        "session-flow first execute IOPub sequence",
+    );
+    let first_iopub = first_observed_iopub
+        .into_iter()
+        .map(|(_, envelope)| envelope)
+        .collect::<Vec<_>>();
     assert!(first_iopub.iter().any(|message| matches!(
         &message.payload,
         crate::KernelIoPubPayload::ExecuteInput(input)
@@ -178,14 +167,13 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
             )),
         })
         .expect("second execute request should encode");
-    runtime.block_on(async {
-        shell
-            .send(frames_to_zmq_message(
-                wire_message_to_frames(second_execute).frames,
-            ))
-            .await
-            .expect("shell dealer should send second execute");
-    });
+    harness.block_on_result(
+        &runtime,
+        "session-flow second execute request send",
+        shell.send(frames_to_zmq_message(
+            wire_message_to_frames(second_execute).frames,
+        )),
+    );
 
     wait_for_socket_event(
         &harness,
@@ -202,12 +190,11 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
         "session-flow suspension worker completion",
     );
 
-    let stdin_request_wire = runtime.block_on(async {
-        tokio::time::timeout(Duration::from_secs(2), stdin.recv())
-            .await
-            .expect("stdin request should arrive before timeout")
-            .expect("stdin request should decode")
-    });
+    let stdin_request_wire = harness.block_on_result(
+        &runtime,
+        "session-flow second execute input request",
+        stdin.recv(),
+    );
     let stdin_request_wire = frames_to_wire_message(
         KernelChannel::Stdin,
         &bootstrap.wire_config().delimiter,
@@ -232,14 +219,13 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
             reply: crate::KernelInputReply::new("Ada"),
         })
         .expect("stdin reply should encode");
-    runtime.block_on(async {
-        stdin
-            .send(frames_to_zmq_message(
-                wire_message_to_frames(input_reply).frames,
-            ))
-            .await
-            .expect("stdin dealer should send input reply");
-    });
+    harness.block_on_result(
+        &runtime,
+        "session-flow second execute input reply send",
+        stdin.send(frames_to_zmq_message(
+            wire_message_to_frames(input_reply).frames,
+        )),
+    );
 
     wait_for_socket_event(
         &harness,
@@ -256,12 +242,11 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
         "session-flow resume worker completion",
     );
 
-    let second_reply_wire = runtime.block_on(async {
-        tokio::time::timeout(Duration::from_secs(2), shell.recv())
-            .await
-            .expect("second shell reply should arrive before timeout")
-            .expect("second shell reply should decode")
-    });
+    let second_reply_wire = harness.block_on_result(
+        &runtime,
+        "session-flow second execute Shell reply",
+        shell.recv(),
+    );
     let second_reply = decode_response_message(
         &frames_to_wire_message(
             KernelChannel::Shell,
@@ -279,26 +264,22 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
         other => panic!("expected second execute reply, got {other:?}"),
     }
 
-    let mut second_iopub = Vec::new();
-    while second_iopub.len() < 4 {
-        let message = runtime.block_on(async {
-            tokio::time::timeout(Duration::from_secs(2), iopub.recv())
-                .await
-                .expect("second iopub message should arrive before timeout")
-                .expect("second iopub message should decode")
-        });
-        second_iopub.push(
-            crate::decode_iopub_message(
-                &frames_to_wire_message(
-                    KernelChannel::IoPub,
-                    &bootstrap.wire_config().delimiter,
-                    zmq_message_to_frames(message),
-                )
-                .expect("second iopub frames should convert"),
-            )
-            .expect("second iopub message should parse"),
-        );
-    }
+    let second_observed_iopub = harness.collect_iopub_for_parent(
+        &runtime,
+        &mut iopub,
+        &codec,
+        &bootstrap.wire_config().delimiter,
+        &second_execute_header,
+        "session-flow second execute IOPub collection",
+    );
+    harness.assert_exact_execute_iopub_sequence(
+        &second_observed_iopub,
+        "session-flow second execute IOPub sequence",
+    );
+    let second_iopub = second_observed_iopub
+        .into_iter()
+        .map(|(_, envelope)| envelope)
+        .collect::<Vec<_>>();
     assert!(second_iopub.iter().any(|message| matches!(
         &message.payload,
         crate::KernelIoPubPayload::ExecuteInput(input)
@@ -325,14 +306,13 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
             request: KernelRequest::Execute(crate::KernelExecuteRequest::new("2")),
         })
         .expect("third execute request should encode");
-    runtime.block_on(async {
-        shell
-            .send(frames_to_zmq_message(
-                wire_message_to_frames(third_execute).frames,
-            ))
-            .await
-            .expect("shell dealer should send third execute");
-    });
+    harness.block_on_result(
+        &runtime,
+        "session-flow third execute request send",
+        shell.send(frames_to_zmq_message(
+            wire_message_to_frames(third_execute).frames,
+        )),
+    );
 
     wait_for_socket_event(
         &harness,
@@ -349,12 +329,11 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
         "session-flow third execute worker completion",
     );
 
-    let third_reply_wire = runtime.block_on(async {
-        tokio::time::timeout(Duration::from_secs(2), shell.recv())
-            .await
-            .expect("third shell reply should arrive before timeout")
-            .expect("third shell reply should decode")
-    });
+    let third_reply_wire = harness.block_on_result(
+        &runtime,
+        "session-flow third execute Shell reply",
+        shell.recv(),
+    );
     let third_reply = decode_response_message(
         &frames_to_wire_message(
             KernelChannel::Shell,
@@ -372,26 +351,22 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
         other => panic!("expected third execute reply, got {other:?}"),
     }
 
-    let mut third_iopub = Vec::new();
-    while third_iopub.len() < 4 {
-        let message = runtime.block_on(async {
-            tokio::time::timeout(Duration::from_secs(2), iopub.recv())
-                .await
-                .expect("third iopub message should arrive before timeout")
-                .expect("third iopub message should decode")
-        });
-        third_iopub.push(
-            crate::decode_iopub_message(
-                &frames_to_wire_message(
-                    KernelChannel::IoPub,
-                    &bootstrap.wire_config().delimiter,
-                    zmq_message_to_frames(message),
-                )
-                .expect("third iopub frames should convert"),
-            )
-            .expect("third iopub message should parse"),
-        );
-    }
+    let third_observed_iopub = harness.collect_iopub_for_parent(
+        &runtime,
+        &mut iopub,
+        &codec,
+        &bootstrap.wire_config().delimiter,
+        &third_execute_header,
+        "session-flow third execute IOPub collection",
+    );
+    harness.assert_exact_execute_iopub_sequence(
+        &third_observed_iopub,
+        "session-flow third execute IOPub sequence",
+    );
+    let third_iopub = third_observed_iopub
+        .into_iter()
+        .map(|(_, envelope)| envelope)
+        .collect::<Vec<_>>();
     assert!(third_iopub.iter().any(|message| matches!(
         &message.payload,
         crate::KernelIoPubPayload::ExecuteInput(input)
@@ -418,14 +393,13 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
             request: KernelRequest::Shutdown(crate::KernelShutdownRequest { restart: false }),
         })
         .expect("shutdown request should encode");
-    runtime.block_on(async {
-        control
-            .send(frames_to_zmq_message(
-                wire_message_to_frames(shutdown_request).frames,
-            ))
-            .await
-            .expect("control dealer should send shutdown request");
-    });
+    harness.block_on_result(
+        &runtime,
+        "session-flow shutdown request send",
+        control.send(frames_to_zmq_message(
+            wire_message_to_frames(shutdown_request).frames,
+        )),
+    );
 
     wait_for_socket_event(
         &harness,
@@ -435,12 +409,11 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
         "session-flow shutdown request delivery",
     );
 
-    let shutdown_reply_wire = runtime.block_on(async {
-        tokio::time::timeout(Duration::from_secs(2), control.recv())
-            .await
-            .expect("shutdown reply should arrive before timeout")
-            .expect("shutdown reply should decode")
-    });
+    let shutdown_reply_wire = harness.block_on_result(
+        &runtime,
+        "session-flow shutdown Control reply",
+        control.recv(),
+    );
     let shutdown_reply = decode_response_message(
         &frames_to_wire_message(
             KernelChannel::Control,

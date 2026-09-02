@@ -3,14 +3,62 @@ use std::{
     future::Future,
     io::ErrorKind,
     net::TcpListener,
-    time::Duration,
 };
 
+use futures::FutureExt;
+
 use super::*;
+use crate::{
+    KernelExecutionState, KernelIoPubPayload, KernelLifecycleState, KernelStatusOutput,
+};
 
 const ALLOW_NATIVE_ZEROMQ_SKIP: &str = "RUM_ALLOW_NATIVE_ZEROMQ_SKIP";
 const NATIVE_TEST_HARNESS_STOP_LOSS: Duration = Duration::from_secs(30);
 const NATIVE_TEST_POLL_INTERVAL: Duration = Duration::from_millis(10);
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum ParentScopedIoPub {
+    Excluded,
+    Included,
+    TerminalIdle,
+}
+
+fn classify_parent_scoped_iopub(
+    envelope: &crate::KernelIoPubEnvelope,
+    parent: &KernelMessageHeader,
+) -> ParentScopedIoPub {
+    if envelope.parent_header.as_ref() != Some(parent) {
+        return ParentScopedIoPub::Excluded;
+    }
+
+    if matches!(
+        envelope.payload,
+        KernelIoPubPayload::Status(ref status)
+            if status.execution_state == KernelExecutionState::Idle
+    ) {
+        ParentScopedIoPub::TerminalIdle
+    } else {
+        ParentScopedIoPub::Included
+    }
+}
+
+fn decode_observed_iopub(
+    codec: &crate::KernelWireCodec,
+    delimiter: &str,
+    message: ZmqMessage,
+    stage: &str,
+) -> (crate::KernelWireMessage, crate::KernelIoPubEnvelope) {
+    let wire = frames_to_wire_message(
+        KernelChannel::IoPub,
+        delimiter,
+        zmq_message_to_frames(message),
+    )
+    .unwrap_or_else(|error| panic!("native ZeroMQ stage `{stage}` failed: {error:?}"));
+    let envelope = codec
+        .decode_iopub_message(&wire)
+        .unwrap_or_else(|error| panic!("native ZeroMQ stage `{stage}` failed: {error:?}"));
+    (wire, envelope)
+}
 
 pub(super) struct NativeTestHarness {
     deadline: Instant,
@@ -76,8 +124,34 @@ impl NativeTestHarness {
         probe_message_id: &str,
         stage: &str,
     ) {
-        let probe_header = KernelMessageHeader::new(
+        self.kernel_info_round_trip(
+            runtime,
+            dealer,
+            codec,
+            delimiter,
+            driver,
+            transport,
+            channel,
             probe_message_id,
+            stage,
+        );
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn kernel_info_round_trip(
+        &self,
+        runtime: &tokio::runtime::Runtime,
+        dealer: &mut DealerSocket,
+        codec: &crate::KernelWireCodec,
+        delimiter: &str,
+        driver: &mut KernelSocketDriver,
+        transport: &mut ZeroMqSocketSession<NativeZeroMqSocket>,
+        channel: KernelChannel,
+        message_id: &str,
+        stage: &str,
+    ) -> KernelMessageHeader {
+        let probe_header = KernelMessageHeader::new(
+            message_id,
             "frontend-session",
             "frontend",
             "kernel_info_request",
@@ -91,7 +165,7 @@ impl NativeTestHarness {
                 request: KernelRequest::KernelInfo(crate::KernelInfoRequest),
             })
             .unwrap_or_else(|error| panic!("native ZeroMQ stage `{stage}` failed: {error:?}"));
-        let send_stage = format!("{stage}: connection probe send");
+        let send_stage = format!("{stage}: request send");
         self.block_on_result(
             runtime,
             &send_stage,
@@ -100,7 +174,7 @@ impl NativeTestHarness {
             )),
         );
 
-        let delivery_stage = format!("{stage}: connection probe request delivery");
+        let delivery_stage = format!("{stage}: request delivery");
         wait_for_socket_event(
             self,
             driver,
@@ -109,7 +183,7 @@ impl NativeTestHarness {
             &delivery_stage,
         );
 
-        let reply_stage = format!("{stage}: connection probe reply");
+        let reply_stage = format!("{stage}: reply");
         let reply = self.block_on_result(runtime, &reply_stage, dealer.recv());
         let reply_wire = frames_to_wire_message(channel, delimiter, zmq_message_to_frames(reply))
             .unwrap_or_else(|error| {
@@ -122,7 +196,7 @@ impl NativeTestHarness {
             });
         assert_eq!(
             reply.parent_header,
-            Some(probe_header),
+            Some(probe_header.clone()),
             "native ZeroMQ stage `{reply_stage}` returned the wrong parent header"
         );
         match reply.response {
@@ -135,6 +209,7 @@ impl NativeTestHarness {
                 "native ZeroMQ stage `{reply_stage}` returned the wrong response: {other:?}"
             ),
         }
+        probe_header
     }
 
     pub(super) fn heartbeat_round_trip(
@@ -184,6 +259,58 @@ impl NativeTestHarness {
                 }
             }
         }
+    }
+
+    pub(super) fn collect_iopub_for_parent(
+        &self,
+        runtime: &tokio::runtime::Runtime,
+        iopub: &mut SubSocket,
+        codec: &crate::KernelWireCodec,
+        delimiter: &str,
+        parent: &KernelMessageHeader,
+        stage: &str,
+    ) -> Vec<(crate::KernelWireMessage, crate::KernelIoPubEnvelope)> {
+        let receive_stage = format!("{stage}: SUB receive");
+        let decode_stage = format!("{stage}: frame decode");
+        let mut collected = Vec::new();
+
+        loop {
+            let message = self.block_on_result(runtime, &receive_stage, iopub.recv());
+            let observed = decode_observed_iopub(codec, delimiter, message, &decode_stage);
+            match classify_parent_scoped_iopub(&observed.1, parent) {
+                ParentScopedIoPub::Excluded => {}
+                ParentScopedIoPub::Included => collected.push(observed),
+                ParentScopedIoPub::TerminalIdle => {
+                    collected.push(observed);
+                    return collected;
+                }
+            }
+        }
+    }
+
+    pub(super) fn assert_exact_execute_iopub_sequence(
+        &self,
+        messages: &[(crate::KernelWireMessage, crate::KernelIoPubEnvelope)],
+        stage: &str,
+    ) {
+        let sequence = messages
+            .iter()
+            .map(|(_, message)| match &message.payload {
+                KernelIoPubPayload::Status(status)
+                    if status.lifecycle_state == KernelLifecycleState::Running =>
+                {
+                    status.execution_state.as_str()
+                }
+                KernelIoPubPayload::ExecuteInput(_) => "input",
+                KernelIoPubPayload::ExecuteResult(_) => "result",
+                _ => "other",
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(
+            sequence,
+            ["busy", "input", "result", "idle"],
+            "native ZeroMQ stage `{stage}` returned the wrong target-parent IOPub count or sequence"
+        );
     }
 
     fn remaining(&self, stage: &str) -> Duration {
@@ -271,24 +398,71 @@ pub(super) fn test_runtime() -> tokio::runtime::Runtime {
 pub(super) fn acknowledge_iopub_subscription(
     harness: &NativeTestHarness,
     runtime: &tokio::runtime::Runtime,
-    heartbeat_endpoint: &str,
+    shell: &mut DealerSocket,
+    iopub: &mut SubSocket,
+    codec: &crate::KernelWireCodec,
+    delimiter: &str,
     driver: &mut KernelSocketDriver,
     transport: &mut ZeroMqSocketSession<NativeZeroMqSocket>,
+    sentinel_id: &str,
 ) {
-    let mut heartbeat = harness.connect_req(
-        runtime,
-        heartbeat_endpoint,
-        "IOPub subscription heartbeat connection",
-    );
-    let barrier = b"iopub-subscription-ready".to_vec();
-    harness.heartbeat_round_trip(
-        runtime,
-        &mut heartbeat,
-        driver,
-        transport,
-        barrier,
-        "IOPub subscription heartbeat round trip",
-    );
+    let adapter_state_before = {
+        let adapter = driver.event_pump().adapter();
+        (
+            adapter.execution_count(),
+            adapter.execution_state(),
+            adapter.lifecycle_state(),
+        )
+    };
+    let mut sentinels = Vec::new();
+    let mut attempt = 0_u64;
+
+    loop {
+        attempt += 1;
+        let stage = format!("IOPub subscription barrier attempt {attempt}: Shell sentinel");
+        let parent = harness.kernel_info_round_trip(
+            runtime,
+            shell,
+            codec,
+            delimiter,
+            driver,
+            transport,
+            KernelChannel::Shell,
+            &format!("{sentinel_id}-{attempt}"),
+            &stage,
+        );
+        sentinels.push(parent.clone());
+
+        let observed = runtime.block_on(async { iopub.recv().now_or_never() });
+        let message = match observed {
+            Some(Ok(message)) => message,
+            Some(Err(zeromq::ZmqError::NoMessage)) | None => continue,
+            Some(Err(error)) => panic!(
+                "native ZeroMQ IOPub subscription barrier SUB observation failed: {error:?}"
+            ),
+        };
+        let observation_stage =
+            format!("IOPub subscription barrier attempt {attempt}: SUB observation");
+        let (_, envelope) = decode_observed_iopub(codec, delimiter, message, &observation_stage);
+        if !sentinels
+            .iter()
+            .any(|sentinel| envelope.parent_header.as_ref() == Some(sentinel))
+        {
+            continue;
+        }
+
+        let adapter = driver.event_pump().adapter();
+        assert_eq!(
+            (
+                adapter.execution_count(),
+                adapter.execution_state(),
+                adapter.lifecycle_state(),
+            ),
+            adapter_state_before,
+            "IOPub subscription barrier kernel-info sentinels must preserve adapter state"
+        );
+        return;
+    }
 }
 
 pub(super) fn wait_for_socket_event(
@@ -402,6 +576,56 @@ mod harness_tests {
             panic_message(timeout),
             "native ZeroMQ harness timeout while waiting for stage `timeout outcome`; this is a \
              harness timeout, not a latency contract"
+        );
+    }
+
+    fn status_iopub(
+        parent: &KernelMessageHeader,
+        execution_state: KernelExecutionState,
+    ) -> crate::KernelIoPubEnvelope {
+        crate::KernelIoPubEnvelope {
+            channel: KernelChannel::IoPub,
+            header: KernelMessageHeader::new("status", "kernel-session", "rum-kernel", "status"),
+            parent_header: Some(parent.clone()),
+            metadata: KernelMetadata::new(),
+            payload: KernelIoPubPayload::Status(KernelStatusOutput {
+                execution_state,
+                lifecycle_state: KernelLifecycleState::Running,
+            }),
+        }
+    }
+
+    #[test]
+    fn parent_scope_excludes_sentinels_including_late_duplicates_and_stops_at_target_idle() {
+        let sentinel = KernelMessageHeader::new(
+            "iopub-barrier-sentinel-1",
+            "frontend-session",
+            "frontend",
+            "kernel_info_request",
+        );
+        let target = KernelMessageHeader::new(
+            "execute-target-1",
+            "frontend-session",
+            "frontend",
+            "execute_request",
+        );
+        let classify = |parent, state| {
+            classify_parent_scoped_iopub(&status_iopub(parent, state), &target)
+        };
+
+        assert_eq!(
+            [
+                classify(&sentinel, KernelExecutionState::Busy),
+                classify(&target, KernelExecutionState::Busy),
+                classify(&sentinel, KernelExecutionState::Idle),
+                classify(&target, KernelExecutionState::Idle),
+            ],
+            [
+                ParentScopedIoPub::Excluded,
+                ParentScopedIoPub::Included,
+                ParentScopedIoPub::Excluded,
+                ParentScopedIoPub::TerminalIdle,
+            ]
         );
     }
 }

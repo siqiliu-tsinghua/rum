@@ -12,36 +12,35 @@ fn native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_meta
         .expect("native zeromq backend should build");
     let shell_endpoint = backend.transport_layout().shell.uri();
     let iopub_endpoint = backend.transport_layout().iopub.uri();
-    let heartbeat_endpoint = backend.transport_layout().heartbeat.uri();
     let mut driver = backend.socket_driver(Session::new());
 
-    let mut shell = runtime.block_on(async {
-        let mut shell = DealerSocket::new();
-        shell
-            .connect(&shell_endpoint)
-            .await
-            .expect("shell dealer should connect");
-        shell
-    });
-    let mut iopub = runtime.block_on(async {
-        let mut iopub = SubSocket::new();
-        iopub
-            .connect(&iopub_endpoint)
-            .await
-            .expect("iopub sub should connect");
-        iopub
-            .subscribe("")
-            .await
-            .expect("iopub sub should subscribe");
-        iopub
-    });
+    let mut shell = harness.connect_dealer(
+        &runtime,
+        &shell_endpoint,
+        "frontend execute Shell Dealer/Router connection setup",
+    );
+    let mut iopub = SubSocket::new();
+    harness.block_on_result(
+        &runtime,
+        "frontend execute IOPub SUB connection setup",
+        iopub.connect(&iopub_endpoint),
+    );
+    harness.block_on_result(
+        &runtime,
+        "frontend execute IOPub SUB subscription request",
+        iopub.subscribe(""),
+    );
 
     acknowledge_iopub_subscription(
         &harness,
         &runtime,
-        &heartbeat_endpoint,
+        &mut shell,
+        &mut iopub,
+        &codec,
+        &bootstrap.wire_config().delimiter,
         &mut driver,
         backend.transport_mut(),
+        "iopub-barrier-zmq-metadata",
     );
 
     let execute_header = KernelMessageHeader::new(
@@ -59,14 +58,13 @@ fn native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_meta
             request: KernelRequest::Execute(crate::KernelExecuteRequest::new("1")),
         })
         .expect("execute request should encode");
-    runtime.block_on(async {
-        shell
-            .send(frames_to_zmq_message(
-                wire_message_to_frames(execute_request).frames,
-            ))
-            .await
-            .expect("shell dealer should send execute request");
-    });
+    harness.block_on_result(
+        &runtime,
+        "frontend execute request send",
+        shell.send(frames_to_zmq_message(
+            wire_message_to_frames(execute_request).frames,
+        )),
+    );
 
     wait_for_socket_event(
         &harness,
@@ -83,12 +81,8 @@ fn native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_meta
         "frontend execute worker completion",
     );
 
-    let shell_reply_wire = runtime.block_on(async {
-        tokio::time::timeout(Duration::from_secs(2), shell.recv())
-            .await
-            .expect("shell reply should arrive before timeout")
-            .expect("shell reply should decode")
-    });
+    let shell_reply_wire =
+        harness.block_on_result(&runtime, "frontend execute Shell reply", shell.recv());
     let shell_reply = decode_response_message(
         &frames_to_wire_message(
             KernelChannel::Shell,
@@ -119,25 +113,19 @@ fn native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_meta
         other => panic!("expected execute reply, got {other:?}"),
     }
 
-    let mut iopub_messages = Vec::new();
-    while iopub_messages.len() < 4 {
-        let message = runtime.block_on(async {
-            tokio::time::timeout(Duration::from_secs(2), iopub.recv())
-                .await
-                .expect("iopub message should arrive before timeout")
-                .expect("iopub message should decode")
-        });
-        let envelope = crate::decode_iopub_message(
-            &frames_to_wire_message(
-                KernelChannel::IoPub,
-                &bootstrap.wire_config().delimiter,
-                zmq_message_to_frames(message),
-            )
-            .expect("iopub frames should convert"),
-        )
-        .expect("iopub message should parse");
-        iopub_messages.push(envelope);
-    }
+    let observed_iopub = harness.collect_iopub_for_parent(
+        &runtime,
+        &mut iopub,
+        &codec,
+        &bootstrap.wire_config().delimiter,
+        &execute_header,
+        "frontend execute IOPub collection",
+    );
+    harness.assert_exact_execute_iopub_sequence(&observed_iopub, "frontend execute IOPub sequence");
+    let iopub_messages = observed_iopub
+        .into_iter()
+        .map(|(_, envelope)| envelope)
+        .collect::<Vec<_>>();
 
     for message in &iopub_messages {
         assert_eq!(message.header.username, "rum-kernel");

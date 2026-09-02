@@ -15,48 +15,46 @@ fn native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_r
     let shell_endpoint = backend.transport_layout().shell.uri();
     let stdin_endpoint = backend.transport_layout().stdin.uri();
     let iopub_endpoint = backend.transport_layout().iopub.uri();
-    let heartbeat_endpoint = backend.transport_layout().heartbeat.uri();
     let mut driver = backend.socket_driver(Session::new());
 
-    let mut shell = runtime.block_on(async {
-        let mut options = SocketOptions::default();
-        options.peer_identity(frontend_identity.clone());
-        let mut shell = DealerSocket::with_options(options);
-        shell
-            .connect(&shell_endpoint)
-            .await
-            .expect("shell dealer should connect");
-        shell
-    });
-    let mut stdin = runtime.block_on(async {
-        let mut options = SocketOptions::default();
-        options.peer_identity(frontend_identity);
-        let mut stdin = DealerSocket::with_options(options);
-        stdin
-            .connect(&stdin_endpoint)
-            .await
-            .expect("stdin dealer should connect");
-        stdin
-    });
-    let mut iopub = runtime.block_on(async {
-        let mut iopub = SubSocket::new();
-        iopub
-            .connect(&iopub_endpoint)
-            .await
-            .expect("iopub sub should connect");
-        iopub
-            .subscribe("")
-            .await
-            .expect("iopub sub should subscribe");
-        iopub
-    });
+    let mut shell_options = SocketOptions::default();
+    shell_options.peer_identity(frontend_identity.clone());
+    let mut shell = DealerSocket::with_options(shell_options);
+    harness.block_on_result(
+        &runtime,
+        "stdin flow Shell Dealer/Router connection setup",
+        shell.connect(&shell_endpoint),
+    );
+    let mut stdin_options = SocketOptions::default();
+    stdin_options.peer_identity(frontend_identity);
+    let mut stdin = DealerSocket::with_options(stdin_options);
+    harness.block_on_result(
+        &runtime,
+        "stdin flow Stdin Dealer/Router connection setup",
+        stdin.connect(&stdin_endpoint),
+    );
+    let mut iopub = SubSocket::new();
+    harness.block_on_result(
+        &runtime,
+        "stdin flow IOPub SUB connection setup",
+        iopub.connect(&iopub_endpoint),
+    );
+    harness.block_on_result(
+        &runtime,
+        "stdin flow IOPub SUB subscription request",
+        iopub.subscribe(""),
+    );
 
     acknowledge_iopub_subscription(
         &harness,
         &runtime,
-        &heartbeat_endpoint,
+        &mut shell,
+        &mut iopub,
+        &codec,
+        &bootstrap.wire_config().delimiter,
         &mut driver,
         backend.transport_mut(),
+        "iopub-barrier-zmq-stdin",
     );
 
     let execute_header = KernelMessageHeader::new(
@@ -76,14 +74,13 @@ fn native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_r
             )),
         })
         .expect("execute request should encode");
-    runtime.block_on(async {
-        shell
-            .send(frames_to_zmq_message(
-                wire_message_to_frames(execute_request).frames,
-            ))
-            .await
-            .expect("shell dealer should send execute request");
-    });
+    harness.block_on_result(
+        &runtime,
+        "stdin flow execute request send",
+        shell.send(frames_to_zmq_message(
+            wire_message_to_frames(execute_request).frames,
+        )),
+    );
 
     wait_for_socket_event(
         &harness,
@@ -100,12 +97,8 @@ fn native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_r
         "stdin flow suspension worker completion",
     );
 
-    let stdin_request_wire = runtime.block_on(async {
-        tokio::time::timeout(Duration::from_secs(2), stdin.recv())
-            .await
-            .expect("stdin request should arrive before timeout")
-            .expect("stdin request should decode")
-    });
+    let stdin_request_wire =
+        harness.block_on_result(&runtime, "stdin flow input request", stdin.recv());
     let stdin_request_wire = frames_to_wire_message(
         KernelChannel::Stdin,
         &bootstrap.wire_config().delimiter,
@@ -130,14 +123,13 @@ fn native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_r
             reply: crate::KernelInputReply::new("Ada"),
         })
         .expect("input reply should encode");
-    runtime.block_on(async {
-        stdin
-            .send(frames_to_zmq_message(
-                wire_message_to_frames(input_reply).frames,
-            ))
-            .await
-            .expect("stdin dealer should send input reply");
-    });
+    harness.block_on_result(
+        &runtime,
+        "stdin flow input reply send",
+        stdin.send(frames_to_zmq_message(
+            wire_message_to_frames(input_reply).frames,
+        )),
+    );
 
     wait_for_socket_event(
         &harness,
@@ -154,12 +146,8 @@ fn native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_r
         "stdin flow resume worker completion",
     );
 
-    let shell_reply_wire = runtime.block_on(async {
-        tokio::time::timeout(Duration::from_secs(2), shell.recv())
-            .await
-            .expect("shell reply should arrive before timeout")
-            .expect("shell reply should decode")
-    });
+    let shell_reply_wire =
+        harness.block_on_result(&runtime, "stdin flow execute Shell reply", shell.recv());
     let shell_reply = decode_response_message(
         &frames_to_wire_message(
             KernelChannel::Shell,
@@ -177,25 +165,20 @@ fn native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_r
         other => panic!("expected execute reply, got {other:?}"),
     }
 
-    let mut iopub_payloads = Vec::new();
-    while iopub_payloads.len() < 4 {
-        let message = runtime.block_on(async {
-            tokio::time::timeout(Duration::from_secs(2), iopub.recv())
-                .await
-                .expect("iopub message should arrive before timeout")
-                .expect("iopub message should decode")
-        });
-        let envelope = crate::decode_iopub_message(
-            &frames_to_wire_message(
-                KernelChannel::IoPub,
-                &bootstrap.wire_config().delimiter,
-                zmq_message_to_frames(message),
-            )
-            .expect("iopub frames should convert"),
-        )
-        .expect("iopub message should parse");
-        iopub_payloads.push(envelope.payload);
-    }
+    let observed_iopub = harness.collect_iopub_for_parent(
+        &runtime,
+        &mut iopub,
+        &codec,
+        &bootstrap.wire_config().delimiter,
+        &execute_header,
+        "stdin flow execute IOPub collection",
+    );
+    harness
+        .assert_exact_execute_iopub_sequence(&observed_iopub, "stdin flow execute IOPub sequence");
+    let iopub_payloads = observed_iopub
+        .into_iter()
+        .map(|(_, envelope)| envelope.payload)
+        .collect::<Vec<_>>();
 
     assert!(iopub_payloads.iter().any(|payload| matches!(
         payload,

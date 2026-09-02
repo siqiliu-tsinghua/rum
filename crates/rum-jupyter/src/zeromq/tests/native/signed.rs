@@ -12,7 +12,6 @@ fn native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages() 
         .expect("signed native zeromq backend should build");
     let shell_endpoint = backend.transport_layout().shell.uri();
     let iopub_endpoint = backend.transport_layout().iopub.uri();
-    let heartbeat_endpoint = backend.transport_layout().heartbeat.uri();
     let mut driver = backend.socket_driver(Session::new());
 
     let mut shell = harness.connect_dealer(
@@ -31,36 +30,40 @@ fn native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages() 
         "connect-zmq-signed-1",
         "signed Shell Dealer/Router connection readiness",
     );
-    let mut iopub = runtime.block_on(async {
-        let mut iopub = SubSocket::new();
-        iopub
-            .connect(&iopub_endpoint)
-            .await
-            .expect("iopub sub should connect");
-        iopub
-            .subscribe("")
-            .await
-            .expect("iopub sub should subscribe");
-        iopub
-    });
+    let mut iopub = SubSocket::new();
+    harness.block_on_result(
+        &runtime,
+        "signed IOPub SUB connection setup",
+        iopub.connect(&iopub_endpoint),
+    );
+    harness.block_on_result(
+        &runtime,
+        "signed IOPub SUB subscription request",
+        iopub.subscribe(""),
+    );
 
     acknowledge_iopub_subscription(
         &harness,
         &runtime,
-        &heartbeat_endpoint,
+        &mut shell,
+        &mut iopub,
+        &codec,
+        &bootstrap.wire_config().delimiter,
         &mut driver,
         backend.transport_mut(),
+        "iopub-barrier-zmq-signed",
     );
 
+    let execute_header = KernelMessageHeader::new(
+        "execute-zmq-signed-1",
+        "frontend-session",
+        "frontend",
+        "execute_request",
+    );
     let request = codec
         .encode_request_envelope(&KernelRequestEnvelope {
             channel: KernelChannel::Shell,
-            header: KernelMessageHeader::new(
-                "execute-zmq-signed-1",
-                "frontend-session",
-                "frontend",
-                "execute_request",
-            ),
+            header: execute_header.clone(),
             parent_header: None,
             metadata: KernelMetadata::new(),
             request: KernelRequest::Execute(crate::KernelExecuteRequest::new("1")),
@@ -95,7 +98,7 @@ fn native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages() 
         KernelChannel::Shell,
         &bootstrap.wire_config().delimiter,
         harness
-            .block_on_result(&runtime, "signed execute reply", shell.recv())
+            .block_on_result(&runtime, "signed execute Shell reply", shell.recv())
             .into_vec()
             .into_iter()
             .map(|frame| frame.to_vec())
@@ -106,6 +109,7 @@ fn native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages() 
     let reply = codec
         .decode_response_message(&reply_wire)
         .expect("signed shell reply should validate and decode");
+    assert_eq!(reply.parent_header, Some(execute_header.clone()));
     match reply.response {
         KernelResponse::Execute(response) => {
             assert_eq!(response.status, KernelReplyStatus::Ok);
@@ -114,23 +118,19 @@ fn native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages() 
         other => panic!("expected signed execute reply, got {other:?}"),
     }
 
+    let iopub_messages = harness.collect_iopub_for_parent(
+        &runtime,
+        &mut iopub,
+        &codec,
+        &bootstrap.wire_config().delimiter,
+        &execute_header,
+        "signed execute IOPub collection",
+    );
+    harness.assert_exact_execute_iopub_sequence(&iopub_messages, "signed execute IOPub sequence");
+
     let mut saw_signed_execute_result = false;
-    while !saw_signed_execute_result {
-        let message = harness.block_on_result(
-            &runtime,
-            "signed execute-result IOPub message",
-            iopub.recv(),
-        );
-        let wire = frames_to_wire_message(
-            KernelChannel::IoPub,
-            &bootstrap.wire_config().delimiter,
-            zmq_message_to_frames(message),
-        )
-        .expect("signed iopub frames should convert");
+    for (wire, envelope) in &iopub_messages {
         assert!(wire.signature.is_some());
-        let envelope = codec
-            .decode_iopub_message(&wire)
-            .expect("signed iopub message should validate and decode");
         if matches!(
             envelope.payload,
             crate::KernelIoPubPayload::ExecuteResult(ref result)
@@ -139,6 +139,10 @@ fn native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages() 
             saw_signed_execute_result = true;
         }
     }
+    assert!(
+        saw_signed_execute_result,
+        "signed target-parent IOPub sequence should contain the execute result"
+    );
 }
 
 #[test]

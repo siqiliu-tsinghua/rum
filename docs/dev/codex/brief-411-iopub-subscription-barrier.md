@@ -207,3 +207,120 @@ opt-out set. Anything short of that is a stop.
 5. Socket-free test output, verbatim.
 6. Verification output, with an explicit statement of what you could not run.
 7. Stop-loss, risks, open questions.
+
+---
+
+# Report — 2026-09-02
+
+## 1. Per-file changes
+
+- [zeromq_native_test_support.rs](crates/rum-jupyter/src/zeromq_native_test_support.rs:19), lines 19–631: added parent classification, same-path sentinel retries, parent-scoped collection through target Idle, exact four-frame sequence checks, and socket-free late-sentinel coverage.
+- [signed.rs](crates/rum-jupyter/src/zeromq/tests/native/signed.rs:13), lines 13–145: replaced heartbeat readiness, scoped signed IOPub frames to the execute parent, and asserted the exact signed sequence.
+- [execute.rs](crates/rum-jupyter/src/zeromq/tests/native/frontend/execute.rs:13), lines 13–161: installed the real barrier, stage-labelled request/reply waits, and parent-scoped exact collection.
+- [stdin.rs](crates/rum-jupyter/src/zeromq/tests/native/frontend/stdin.rs:15), lines 15–210: applied the barrier and parent filtering while preserving stdin routing and resume assertions.
+- [session_flow.rs](crates/rum-jupyter/src/zeromq/tests/native/frontend/session_flow.rs:15), lines 15–433: parent-scoped all three executes and retained count, stdin, result, and shutdown assertions.
+
+`basic.rs` and `frontend/control.rs` were not changed.
+
+## 2. Barrier causal chain
+
+1. Each retry creates a fresh `kernel_info_request` parent ID and performs a complete Shell round trip at [support:141](crates/rum-jupyter/src/zeromq_native_test_support.rs:141) and [support:420](crates/rum-jupyter/src/zeromq_native_test_support.rs:420).
+2. Production dispatch routes `KernelInfo` through `finish_non_execute_request` at [adapter/mod.rs:368](crates/rum-jupyter/src/adapter/mod.rs:368), which creates parented Busy and Idle IOPub messages at [adapter/mod.rs:544](crates/rum-jupyter/src/adapter/mod.rs:544).
+3. The dispatch is encoded and sent at [event_loop.rs:54](crates/rum-jupyter/src/transport/event_loop.rs:54), [codec.rs:414](crates/rum-jupyter/src/transport/codec.rs:414), and [transport.rs:71](crates/rum-jupyter/src/transport.rs:71).
+4. IOPub routes into the backend’s actual PUB socket at [zeromq.rs:204](crates/rum-jupyter/src/zeromq.rs:204), through [socket.rs:147](crates/rum-jupyter/src/zeromq_native/socket.rs:147) and [handles.rs:185](crates/rum-jupyter/src/zeromq_native/handles.rs:185), then calls the pinned `PubSocket::send` at [workers.rs:105](crates/rum-jupyter/src/zeromq_native/workers.rs:105).
+5. Only `SubSocket::recv` observation completes the barrier at [support:436](crates/rum-jupyter/src/zeromq_native_test_support.rs:436), after decoding and confirming the parent belongs to an issued sentinel at lines 444–450.
+
+Thus completion proves a message passed through the real backend PUB path while its subscription filter was installed. Heartbeat is no longer involved; its independent test remains unchanged in [basic.rs:93](crates/rum-jupyter/src/zeromq/tests/native/basic.rs:93).
+
+## 3. Parent and sentinel rules
+
+[Parent classification](crates/rum-jupyter/src/zeromq_native_test_support.rs:26) compares the complete parent header:
+
+- Different parent: discard.
+- Target parent, non-Idle: collect.
+- Target parent, Idle: collect and terminate.
+
+The collector implements that rule at [support:264](crates/rum-jupyter/src/zeromq_native_test_support.rs:264), then [asserts exactly](crates/rum-jupyter/src/zeromq_native_test_support.rs:291):
+
+```text
+Busy, ExecuteInput, ExecuteResult, Idle
+```
+
+A delayed or duplicate sentinel has a distinct parent and is discarded even if it arrives after target collection has begun. It cannot shift the sequence or count.
+
+## 4. Per-test accounting
+
+- Signed execute: preserved request/reply/IOPub signatures, reply status, execution count `1`, and result `"1"`; added exact parent and four-frame order.
+- Frontend execute: preserved header username/version/parent, metadata, reply status/count, and all four payload assertions.
+- Stdin: preserved frontend identity routing, prompt, input reply, suspension/resume, count `1`, and Busy/Input/`"Ada"`/Idle assertions.
+- Session flow: preserved counts `1/2/3`, all three input/result values, stdin prompt/reply, and shutdown lifecycle/restart assertions.
+- Tampered-signature and Control tests remain unchanged.
+
+Zero tests and zero semantic assertions were deleted. The support module gained one socket-free test.
+
+## 5. Socket-free output
+
+Verbatim:
+
+```text
+running 2 tests
+test zeromq::tests::support::harness_tests::parent_scope_excludes_sentinels_including_late_duplicates_and_stops_at_target_idle ... ok
+
+thread 'zeromq::tests::support::harness_tests::block_on_result_handles_success_inner_error_and_harness_timeout_without_sockets' panicked at crates/rum-jupyter/src/zeromq/tests/../../zeromq_native_test_support.rs:88:31:
+native ZeroMQ stage `inner error outcome` failed: "inner failure"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'zeromq::tests::support::harness_tests::block_on_result_handles_success_inner_error_and_harness_timeout_without_sockets' panicked at crates/rum-jupyter/src/zeromq/tests/../../zeromq_native_test_support.rs:328:9:
+native ZeroMQ harness timeout while waiting for stage `timeout outcome`; this is a harness timeout, not a latency contract
+test zeromq::tests::support::harness_tests::block_on_result_handles_success_inner_error_and_harness_timeout_without_sockets ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 104 filtered out; finished in 0.10s
+```
+
+The two printed panics are deliberately caught and asserted by the existing harness regression test.
+
+## 6. Verification
+
+All Cargo commands used offline mode.
+
+```text
+scripts/run-bounded.py --timeout 300 -- cargo --offline fmt --check
+exit_code=0
+```
+
+No formatter output.
+
+```text
+RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1 scripts/run-bounded.py --timeout 600 -- cargo test --offline -p rum-jupyter
+```
+
+```text
+test result: ok. 106 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+```
+
+```text
+RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1 scripts/run-bounded.py --timeout 2400 -- cargo test --offline --workspace --no-fail-fast
+exit_code=0
+```
+
+The workspace inventory was 2,287 passed, 0 failed, 7 ignored. It emitted the three pre-existing `rum-runtime` dead-code warnings.
+
+Explicit native check:
+
+```text
+running 9 tests
+skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+...
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 97 filtered out; finished in 0.00s
+```
+
+All nine native entries took their early-return skip path. I executed no native socket path and report no native pass rate or stability result.
+
+## 7. Stop-loss, risks, open questions
+
+- The existing single 30-second harness stop-loss remains unchanged; no duration or sleep was added.
+- No stop-loss was reached except the intentionally caught test-only timeout in the harness regression test.
+- The skip gate, port-zero configuration, and resolved `transport_layout()` endpoint propagation remain intact.
+- Only the five scoped test files changed; no production, dependency, wire-format, `Cargo.lock`, or `unsafe` change was made.
+- Authoritative verification of actual PUB/SUB behavior remains the loopback-capable native run.
+- `zeromq_native_test_support.rs` is now 20,320 characters, entering the repository’s split-plan range. A future separately scoped cleanup can move the pure IOPub test helpers into a dedicated test-support module; this brief did not permit adding that file.
