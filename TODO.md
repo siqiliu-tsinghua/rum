@@ -940,6 +940,35 @@ host's own RSS watchdog, which the docs describe as merely "one pattern"; and
 is the same question briefs 397-411, this audit's `$Context` finding, and the
 timeout gap are all instances of.
 
+### Closed by brief-415/416 (`1427bb71`) — the walk itself
+
+A third gap, found reviewing brief-414's plan rather than by the audit.
+`current_memory_proxy_bytes` is the baseline the strided check and all 18
+projected-byte prechecks measure against, and it walked 34 of `Session`'s 93
+fields. It now walks 52; the other 41 carry a recorded exemption, and a macro
+generates both the inventory and an exhaustive `let Session { .. }` pattern, so
+a new field stops compiling until it is classified. `ByteArray` also stopped
+being charged its decoded length instead of the base64 text it holds.
+
+### Opened by that work, not yet briefed
+
+- **The call-stability cache is bounded by entry count, not by bytes.**
+  `CALL_STABILITY_CACHE_MAX_ENTRIES = 1 << 14`
+  (`runtime/evaluation_cache/stability.rs:12`) caps entries at 16 384, but each
+  entry pins a `SharedExpr` head and `SharedArgs` — one entry was measured
+  holding 64 KB. This is the same error as the stride comment: a budget that
+  bounds counts while the quantity at risk is bytes. It was invisible until
+  brief-415 made the cache part of the walk; now a session can approach its
+  ceiling on cache alone. The repair touches insertion paths, so it needs its
+  own brief and the mandated hot-path A/B. Fold it into the Gap B line.
+- **Abandonment retains 1 668 bytes more than completing the same work**, and
+  nobody has explained why. Deterministic: identical across five consecutive
+  runs of `suspension_abandonment_contract`. It is two orders of magnitude
+  below the ~64 KB a genuinely retained `Reap` bucket would cost, so the
+  contract tests absorb it in a stated margin rather than failing — but the
+  constant is unexplained, and an unexplained constant in a test becomes a
+  fossil. Worth one probe before the Gap B line closes.
+
 ### Rulings on the repair line (user, 2026-09-02)
 
 Settled after brief-414's design pass and the director review of it.
