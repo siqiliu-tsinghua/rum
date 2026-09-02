@@ -564,6 +564,7 @@ fn set_positional_part_route_preserves_other_lvalues_and_definition_lhs_forms() 
         "Key",
         "Test-local association key wrapper.",
         test_key_builtin,
+        MemoryGrowthContract::NonAmplifying,
     ));
 
     let associations = session

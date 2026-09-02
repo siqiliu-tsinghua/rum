@@ -1,3 +1,4 @@
+use rum_runtime::kernel_api::MemoryGrowthContract;
 use rum_runtime::kernel_api::{
     Attribute, AttributeSet, BuiltinMessageSpec, BuiltinSpec, Capability, HoldAttribute,
 };
@@ -12,12 +13,14 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates expressions sequentially and returns the last result.",
         HoldAttribute::HoldAll,
         control_flow::eval_compound_expression,
+        MemoryGrowthContract::Delegated,
     ).protected(),
     BuiltinSpec::ordinary_with_hold(
         "If",
         "Evaluates one of several branches conditionally.",
         HoldAttribute::HoldRest,
         control_flow::eval_if,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGTU,
@@ -27,6 +30,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates conditions in order and returns the first matching branch.",
         HoldAttribute::HoldAll,
         control_flow::eval_which,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -39,6 +43,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Matches one evaluated expression against held form/value pairs.",
         HoldAttribute::HoldRest,
         control_flow::eval_switch,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -51,6 +56,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates an expression repeatedly in the current first-pass iterator subset.",
         HoldAttribute::HoldAll,
         control_flow::eval_do,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGFORM_ITERATOR,
@@ -63,6 +69,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Protected)
             .with(Attribute::ReadProtected),
         control_flow::eval_product,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGFORM_ITERATOR,
@@ -75,6 +82,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Protected)
             .with(Attribute::ReadProtected),
         control_flow::eval_sum,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGFORM_ITERATOR,
@@ -85,6 +93,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates a body while its test yields True.",
         HoldAttribute::HoldAll,
         control_flow::eval_while,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGTU,
@@ -94,6 +103,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates a body until its test yields True.",
         HoldAttribute::HoldAll,
         control_flow::eval_until,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGTU,
@@ -103,6 +113,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates start, test, increment, and body in the current first-pass procedural subset.",
         HoldAttribute::HoldAll,
         control_flow::eval_for,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGTU,
@@ -112,6 +123,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Generates lists using the current first-pass iterator subset.",
         HoldAttribute::HoldAll,
         control_flow::eval_table,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGFORM_ITERATOR,
@@ -121,6 +133,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Abort",
         "Generates an abort that terminates the current evaluation unless caught.",
         control_flow::eval_abort,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -129,6 +142,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Exit",
         "Requests host-level termination with an optional integer exit code.",
         control_flow::eval_exit,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -146,6 +160,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates an expression and substitutes a fallback if an Abort occurs.",
         HoldAttribute::HoldAll,
         control_flow::eval_check_abort,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -175,6 +190,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates an expression while delaying any abort until the protected region exits in the current first-pass subset.",
         HoldAttribute::HoldAll,
         control_flow::eval_abort_protect,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -184,6 +200,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates cleanup code even when the main expression exits abnormally in the current first-pass subset.",
         HoldAttribute::HoldAll,
         control_flow::eval_with_cleanup,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGTU,
@@ -192,12 +209,14 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Failsafe",
         "Creates a callable wrapper that preserves failure-like inputs in the current first-pass subset.",
         control_flow::eval_failsafe,
+        MemoryGrowthContract::Delegated,
     ).protected(),
     BuiltinSpec::ordinary_with_hold(
         "Assert",
         "Represents an assertion site and supports the current session flag plus $AssertFunction hook.",
         HoldAttribute::HoldAll,
         control_flow::eval_assert,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -220,16 +239,19 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
     BuiltinSpec::new(
         "$AssertFunction",
         "Stores the optional assertion failure callback used by Assert in the current first-pass subset.",
+        MemoryGrowthContract::NonAmplifying,
     ),
     BuiltinSpec::new(
         "PropagateAborts",
         "Represents the current first-pass CheckAbort option for rethrowing caught aborts.",
+        MemoryGrowthContract::Delegated,
     ).protected(),
     BuiltinSpec::ordinary_with_hold(
         "Enclose",
         "Evaluates an expression and catches confirmation failures in the current first-pass subset.",
         HoldAttribute::HoldAll,
         control_flow::eval_enclose,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGTU,
@@ -239,6 +261,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Confirms that an expression does not evaluate to a failure-like result in the current first-pass subset.",
         HoldAttribute::HoldAll,
         control_flow::eval_confirm,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGTU,
@@ -248,6 +271,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Confirms that a test function returns True for an expression in the current first-pass subset.",
         HoldAttribute::HoldAll,
         control_flow::eval_confirm_by,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGTU,
@@ -257,6 +281,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Confirms that an expression matches a held pattern in the current first-pass subset.",
         HoldAttribute::HoldAll,
         control_flow::eval_confirm_match,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGTU,
@@ -266,6 +291,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Confirms that an evaluation emits no matching messages in the current first-pass subset.",
         HoldAttribute::HoldAll,
         control_flow::eval_confirm_quiet,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -279,6 +305,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Confirms that a test evaluates to True in the current first-pass subset.",
         HoldAttribute::HoldAll,
         control_flow::eval_confirm_assert,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGTU,
@@ -287,6 +314,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Return",
         "Exits the current function-style evaluation with an optional result.",
         control_flow::eval_return,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGTU,
@@ -295,6 +323,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Break",
         "Exits the nearest enclosing loop.",
         control_flow::eval_break,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -307,6 +336,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Continue",
         "Skips to the next iteration of the nearest enclosing loop.",
         control_flow::eval_continue,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -319,6 +349,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Throw",
         "Propagates a nonlocal value, optionally tagged for Catch matching.",
         control_flow::eval_throw,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGTU,
@@ -332,6 +363,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates an expression and intercepts matching Throw values.",
         HoldAttribute::HoldAll,
         control_flow::eval_catch,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGTU,
@@ -339,11 +371,13 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
     BuiltinSpec::new(
         "Exception",
         "Represents a typed exception with an Association payload.",
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::ordinary(
         "RegisterExceptionType",
         "Registers a string exception type with an optional parent type.",
         control_flow::eval_register_exception_type,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGTU,
@@ -360,6 +394,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "ExceptionTypes",
         "Returns registered exception types as sorted type-to-parent rules.",
         control_flow::eval_exception_types,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -368,6 +403,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "ThrowException",
         "Raises a registered typed exception with an optional Association payload.",
         control_flow::eval_throw_exception,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGTU,
@@ -389,6 +425,7 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Catches typed exceptions and dispatches ordered ancestry-aware handler rules.",
         HoldAttribute::HoldAll,
         control_flow::eval_catch_exceptions,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGTU,
@@ -401,11 +438,13 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Failure",
         "Represents a failure object with associated details in the current first-pass subset.",
         control_flow::eval_failure,
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::ordinary(
         "FailureQ",
         "Tests whether an expression is a Failure object.",
         control_flow::eval_failure_q,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -414,10 +453,12 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
         "Success",
         "Represents a success object with associated details in the current first-pass subset.",
         control_flow::eval_success,
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::ordinary(
         "TerminatedEvaluation",
         "Represents a terminated evaluation object in the current first-pass subset.",
         control_flow::eval_terminated_evaluation,
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
 ];

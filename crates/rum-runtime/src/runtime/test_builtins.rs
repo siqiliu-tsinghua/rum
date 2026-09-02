@@ -37,7 +37,12 @@ const TEST_CONTROL: &str = "Test-local moved control builtin.";
 const TEST_REWRITE: &str = "Test-local moved rewrite builtin.";
 
 fn arithmetic_spec(name: &'static str, handler: BuiltinFn) -> BuiltinSpec {
-    BuiltinSpec::ordinary(name, TEST_ARITHMETIC, handler)
+    BuiltinSpec::ordinary(
+        name,
+        TEST_ARITHMETIC,
+        handler,
+        MemoryGrowthContract::Delegated,
+    )
 }
 
 fn arithmetic_attrs_spec(
@@ -45,15 +50,27 @@ fn arithmetic_attrs_spec(
     attributes: AttributeSet,
     handler: BuiltinFn,
 ) -> BuiltinSpec {
-    BuiltinSpec::ordinary_with_attributes(name, TEST_ARITHMETIC, attributes, handler)
+    BuiltinSpec::ordinary_with_attributes(
+        name,
+        TEST_ARITHMETIC,
+        attributes,
+        handler,
+        MemoryGrowthContract::Delegated,
+    )
 }
 
 fn control_spec(name: &'static str, handler: BuiltinFn) -> BuiltinSpec {
-    BuiltinSpec::ordinary(name, TEST_CONTROL, handler)
+    BuiltinSpec::ordinary(name, TEST_CONTROL, handler, MemoryGrowthContract::Delegated)
 }
 
 fn control_hold_spec(name: &'static str, hold: HoldAttribute, handler: BuiltinFn) -> BuiltinSpec {
-    BuiltinSpec::ordinary_with_hold(name, TEST_CONTROL, hold, handler)
+    BuiltinSpec::ordinary_with_hold(
+        name,
+        TEST_CONTROL,
+        hold,
+        handler,
+        MemoryGrowthContract::Delegated,
+    )
 }
 
 fn control_attrs_spec(
@@ -61,11 +78,17 @@ fn control_attrs_spec(
     attributes: AttributeSet,
     handler: BuiltinFn,
 ) -> BuiltinSpec {
-    BuiltinSpec::ordinary_with_attributes(name, TEST_CONTROL, attributes, handler)
+    BuiltinSpec::ordinary_with_attributes(
+        name,
+        TEST_CONTROL,
+        attributes,
+        handler,
+        MemoryGrowthContract::Delegated,
+    )
 }
 
 fn rewrite_spec(name: &'static str, handler: BuiltinFn) -> BuiltinSpec {
-    BuiltinSpec::special(name, TEST_REWRITE, handler)
+    BuiltinSpec::special(name, TEST_REWRITE, handler, MemoryGrowthContract::Delegated)
 }
 
 test_arithmetic_handler!(test_arithmetic_identity, Identity);
@@ -290,6 +313,7 @@ pub(in crate::runtime) fn register_test_compound_expression_builtin(session: &mu
         "Test-local control builtin.",
         HoldAttribute::HoldAll,
         test_control_compound_expression,
+        MemoryGrowthContract::Delegated,
     ));
 }
 
@@ -299,6 +323,7 @@ pub(in crate::runtime) fn register_test_if_builtin(session: &mut Session) {
         "Test-local control builtin.",
         HoldAttribute::HoldRest,
         test_control_if,
+        MemoryGrowthContract::Delegated,
     ));
 }
 
@@ -307,6 +332,7 @@ pub(in crate::runtime) fn register_test_return_builtin(session: &mut Session) {
         "Return",
         "Test-local control builtin.",
         test_control_return,
+        MemoryGrowthContract::NonAmplifying,
     ));
 }
 
@@ -315,6 +341,7 @@ pub(in crate::runtime) fn register_test_sameq_builtin(session: &mut Session) {
         "SameQ",
         "Test-local structural equality builtin.",
         test_same_q,
+        MemoryGrowthContract::NonAmplifying,
     ));
 }
 
@@ -324,6 +351,7 @@ pub(in crate::runtime) fn register_test_first_builtin(session: &mut Session) {
         "Test-local structural first builtin.",
         HoldAttribute::HoldRest,
         test_first,
+        MemoryGrowthContract::NonAmplifying,
     ));
 }
 
@@ -385,10 +413,12 @@ pub(in crate::runtime) fn register_test_control_builtins(session: &mut Session) 
         BuiltinSpec::new(
             "$AssertFunction",
             "Test-local moved control-support symbol.",
+            MemoryGrowthContract::NonAmplifying,
         ),
         BuiltinSpec::new(
             "PropagateAborts",
             "Test-local moved control-support symbol.",
+            MemoryGrowthContract::Delegated,
         ),
         control_hold_spec("Enclose", HoldAttribute::HoldAll, test_control_enclose),
         control_hold_spec("Confirm", HoldAttribute::HoldAll, test_control_confirm),

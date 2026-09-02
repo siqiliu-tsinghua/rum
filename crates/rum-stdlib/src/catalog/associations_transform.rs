@@ -1,3 +1,4 @@
+use rum_runtime::kernel_api::MemoryGrowthContract;
 use rum_runtime::kernel_api::{
     Attribute, AttributeSet, BuiltinMessageSpec, BuiltinSpec, HoldAttribute,
 };
@@ -11,6 +12,7 @@ pub(crate) const ASSOCIATION_TRANSFORM_BUILTINS: &[BuiltinSpec] = &[
         "AssociationMap",
         "Builds an association by mapping a function over keys in the current first-pass subset.",
         associations::eval_association_map,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -30,6 +32,7 @@ pub(crate) const ASSOCIATION_TRANSFORM_BUILTINS: &[BuiltinSpec] = &[
         "AssociationThread",
         "Threads rule or key/value inputs into an association in the current first-pass subset.",
         associations::eval_association_thread,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -49,6 +52,7 @@ pub(crate) const ASSOCIATION_TRANSFORM_BUILTINS: &[BuiltinSpec] = &[
         "KeyUnion",
         "Builds keyed unions, including the current missing-key fill-function form.",
         associations::eval_key_union,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -68,6 +72,7 @@ pub(crate) const ASSOCIATION_TRANSFORM_BUILTINS: &[BuiltinSpec] = &[
         "KeyIntersection",
         "Builds a key-intersection association in the current first-pass subset.",
         associations::eval_key_intersection,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -87,6 +92,7 @@ pub(crate) const ASSOCIATION_TRANSFORM_BUILTINS: &[BuiltinSpec] = &[
         "KeyComplement",
         "Builds a key-complement association in the current first-pass subset.",
         associations::eval_key_complement,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -118,6 +124,7 @@ pub(crate) const ASSOCIATION_TRANSFORM_BUILTINS: &[BuiltinSpec] = &[
         "Normal",
         "Converts an association into a list of rules in the current first-pass subset.",
         associations::eval_normal,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -130,6 +137,7 @@ pub(crate) const ASSOCIATION_TRANSFORM_BUILTINS: &[BuiltinSpec] = &[
         "Adds or replaces association entries, including held symbol mutation in the current first-pass subset.",
         AttributeSet::from_hold(HoldAttribute::HoldFirst).with(Attribute::SubValuesHoldAll),
         associations::eval_associate_to,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -166,6 +174,7 @@ pub(crate) const ASSOCIATION_TRANSFORM_BUILTINS: &[BuiltinSpec] = &[
         "Drops keys from an association, including held symbol mutation in the current first-pass subset.",
         AttributeSet::from_hold(HoldAttribute::HoldFirst).with(Attribute::SubValuesHoldAll),
         associations::eval_key_drop_from,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -192,11 +201,13 @@ pub(crate) const ASSOCIATION_TRANSFORM_BUILTINS: &[BuiltinSpec] = &[
         "KeyValuePattern",
         "Represents an association key/value pattern specification in the current first-pass subset.",
         associations::eval_key_value_pattern,
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::ordinary(
         "Merge",
         "Merges associations by key using a combiner in the current first-pass subset.",
         associations::eval_merge,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -212,6 +223,7 @@ pub(crate) const ASSOCIATION_TRANSFORM_BUILTINS: &[BuiltinSpec] = &[
         "JoinAcross",
         "Joins two lists of associations by shared key values.",
         associations::eval_join_across,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -235,6 +247,7 @@ pub(crate) const ASSOCIATION_TRANSFORM_BUILTINS: &[BuiltinSpec] = &[
         "MergeNested",
         "Recursively merges nested associations by key using a combiner at leaves.",
         associations::eval_merge_nested,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGX_OPERATOR,
@@ -243,6 +256,7 @@ pub(crate) const ASSOCIATION_TRANSFORM_BUILTINS: &[BuiltinSpec] = &[
         "Catenate",
         "Concatenates lists and association values into a list in the current first-pass subset.",
         associations::eval_catenate,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -258,6 +272,7 @@ pub(crate) const ASSOCIATION_TRANSFORM_BUILTINS: &[BuiltinSpec] = &[
         "Counts",
         "Counts repeated elements and returns an association in the current first-pass subset.",
         associations::eval_counts,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -277,6 +292,7 @@ pub(crate) const ASSOCIATION_TRANSFORM_BUILTINS: &[BuiltinSpec] = &[
         "CountsBy",
         "Counts transformed elements and returns an association in the current first-pass subset.",
         associations::eval_counts_by,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -292,6 +308,7 @@ pub(crate) const ASSOCIATION_TRANSFORM_BUILTINS: &[BuiltinSpec] = &[
         "GroupBy",
         "Groups list elements by transformed keys, including the current reducer form.",
         associations::eval_group_by,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -307,6 +324,7 @@ pub(crate) const ASSOCIATION_TRANSFORM_BUILTINS: &[BuiltinSpec] = &[
         "PositionIndex",
         "Builds an association from elements to 1-based position lists in the current first-pass subset.",
         associations::eval_position_index,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -322,11 +340,13 @@ pub(crate) const ASSOCIATION_TRANSFORM_BUILTINS: &[BuiltinSpec] = &[
         "Missing",
         "Represents missing-data markers in the current first-pass subset.",
         associations::eval_missing,
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::ordinary(
         "DeleteMissing",
         "Deletes Missing entries from lists, associations, and rule-list data in the current first-pass subset.",
         associations::eval_delete_missing,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         BuiltinMessageSpec {

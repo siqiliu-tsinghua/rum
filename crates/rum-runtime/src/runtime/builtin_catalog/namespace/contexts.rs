@@ -5,6 +5,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
         "FileNameJoin",
         "Joins path components into a platform path string.",
         builtin_file_name_join,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -18,6 +19,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
         "DirectoryName",
         "Returns a parent directory path string for a file name.",
         builtin_directory_name,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -31,6 +33,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
         "ParentDirectory",
         "Returns the parent directory for an existing directory path.",
         builtin_parent_directory,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -44,6 +47,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
         "FileNameTake",
         "Takes file name components from a path string.",
         builtin_file_name_take,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -58,6 +62,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
         "Returns the context of the current session or of a symbol.",
         HoldAttribute::HoldFirst,
         builtin_context,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -74,6 +79,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
         "Contexts",
         "Lists known contexts in the current session.",
         builtin_contexts,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -90,6 +96,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
         "Names",
         "Lists symbol names matching a current first-pass name pattern subset.",
         builtin_names,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -107,26 +114,31 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
         "Returns the short name of a symbol without its context.",
         AttributeSet::from_attribute(Attribute::Protected),
         Session::eval_symbol_name,
+        MemoryGrowthContract::NonAmplifying,
     ),
     BuiltinSpec::ordinary_with_attributes(
         "NameQ",
         "Tests whether a string is the exact name of an existing symbol.",
         AttributeSet::from_attribute(Attribute::Protected),
         Session::eval_name_q,
+        MemoryGrowthContract::NonAmplifying,
     ),
     BuiltinSpec::new(
         "ResolveContextAliases",
         "Represents the current Names option symbol for context-alias resolution.",
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::new(
         "SpellingCorrection",
         "Represents the current Names option symbol for spelling-correction control.",
+        MemoryGrowthContract::Preflight,
     ).protected(),
-    BuiltinSpec::new("File", "Represents an explicit file specification.").protected(),
+    BuiltinSpec::new("File", "Represents an explicit file specification.", MemoryGrowthContract::NonAmplifying).protected(),
     BuiltinSpec::ordinary(
         "FindFile",
         "Finds the full path of a file or package using the current search path.",
         builtin_find_file,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -145,6 +157,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
         "FileNames",
         "Lists sorted file paths whose names match a folk wildcard pattern.",
         builtin_file_names,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGTU,
@@ -155,6 +168,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
         "Get",
         "Reads a file or package and evaluates the expressions it contains.",
         builtin_get,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -185,6 +199,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
         "Needs",
         "Loads a package only if its context has not already been loaded.",
         builtin_needs,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -206,6 +221,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
         "Begin",
         "Switches into a context and prepends it to the context path.",
         builtin_begin,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -219,6 +235,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
         "End",
         "Restores the previous context after a matching Begin.",
         builtin_end,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -232,6 +249,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
         "BeginPackage",
         "Starts a package context with a package-oriented context path.",
         builtin_begin_package,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -248,6 +266,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
         "EndPackage",
         "Ends a package context and leaves it on the restored context path.",
         builtin_end_package,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -261,6 +280,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
         "DeclarePackage",
         "Declares stub names for a package context and prepends that context to the search path.",
         builtin_declare_package,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -275,6 +295,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
         "Appends a textual first-pass serialization of selected symbols to a file.",
         HoldAttribute::HoldRest,
         builtin_save,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -302,6 +323,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
         "Writes a textual first-pass dump of selected symbols to a file and returns the saved symbol list.",
         HoldAttribute::HoldRest,
         builtin_dump_save,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -333,6 +355,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates an expression at most once per session-local cache key in the current first-pass subset.",
         HoldAttribute::HoldAll,
         builtin_once,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {

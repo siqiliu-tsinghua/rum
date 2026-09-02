@@ -31,22 +31,26 @@ fn structured_exception_session() -> Session {
     session.register_builtin(BuiltinSpec::new(
         "Exception",
         "Test-local structured exception value head.",
+        MemoryGrowthContract::NonAmplifying,
     ));
     session.register_builtin(BuiltinSpec::ordinary(
         "RegisterExceptionType",
         "Test-local structured exception registration.",
         eval_test_register_exception_type,
+        MemoryGrowthContract::Incremental,
     ));
     session.register_builtin(BuiltinSpec::ordinary(
         "ThrowException",
         "Test-local structured exception throw.",
         eval_test_throw_exception,
+        MemoryGrowthContract::NonAmplifying,
     ));
     session.register_builtin(BuiltinSpec::ordinary_with_hold(
         "CatchExceptions",
         "Test-local structured exception catch.",
         HoldAttribute::HoldAll,
         eval_test_catch_exceptions,
+        MemoryGrowthContract::Delegated,
     ));
     session
 }

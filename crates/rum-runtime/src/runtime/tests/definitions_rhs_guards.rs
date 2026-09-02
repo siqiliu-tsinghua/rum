@@ -6,11 +6,13 @@ fn guard_test_session() -> Session {
         "Greater",
         "Test-local exact-integer comparison.",
         test_integer_greater,
+        MemoryGrowthContract::NonAmplifying,
     ));
     session.register_builtin(BuiltinSpec::ordinary(
         "Less",
         "Test-local exact-integer comparison.",
         test_integer_less,
+        MemoryGrowthContract::NonAmplifying,
     ));
     session
 }

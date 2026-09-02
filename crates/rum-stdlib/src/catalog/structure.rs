@@ -1,3 +1,4 @@
+use rum_runtime::kernel_api::MemoryGrowthContract;
 use rum_runtime::kernel_api::{
     Attribute, AttributeSet, BuiltinMessageSpec, BuiltinSpec, HoldAttribute,
 };
@@ -11,6 +12,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "FullForm",
         "Renders the held argument as a canonical structural-form string in the current core expression subset.",
         structure_ops::eval_full_form,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -19,6 +21,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Head",
         "Returns the structural head of an expression, optionally wrapped in a second head.",
         structure_ops::eval_head,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGTU,
@@ -27,6 +30,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Length",
         "Returns the number of structural elements in an expression.",
         structure_ops::eval_length,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -35,6 +39,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Depth",
         "Returns the structural depth of an expression, optionally including heads.",
         structure_ops::eval_depth,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -57,6 +62,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Counts atomic leaves in an expression's full structural tree, including heads.",
         AttributeSet::from_attribute(Attribute::Protected),
         structure_ops::eval_leaf_count,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -66,6 +72,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Returns the first structural element, with an optional held default.",
         HoldAttribute::HoldRest,
         structure_ops::eval_first,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGTU,
@@ -83,6 +90,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Returns the last structural element, with an optional held default.",
         HoldAttribute::HoldRest,
         structure_ops::eval_last,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGTU,
@@ -99,6 +107,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Rest",
         "Returns an expression with its first structural element removed.",
         structure_ops::eval_rest,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -115,6 +124,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Most",
         "Returns an expression with its last structural element removed.",
         structure_ops::eval_most,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -131,6 +141,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Take",
         "Takes structural elements using the current standard sequence-spec subset, including UpTo bounds.",
         structure_ops::eval_take,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -143,6 +154,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Drop",
         "Drops structural elements using the current standard sequence-spec subset, including UpTo bounds.",
         structure_ops::eval_drop,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -155,6 +167,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "TakeDrop",
         "Returns both the taken and dropped structural elements using the current standard sequence-spec subset, including UpTo bounds.",
         structure_ops::eval_take_drop,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -171,6 +184,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Insert",
         "Inserts an element at a top-level structural position in the current first-pass subset.",
         structure_ops::eval_insert,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -183,6 +197,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Delete",
         "Deletes one or more top-level structural positions in the current first-pass subset.",
         structure_ops::eval_delete,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -192,6 +207,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "TakeList",
         "Splits a normal expression into sequential chunks by non-negative counts.",
         structure_ops::eval_take_list,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -204,6 +220,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Range",
         "Constructs a plain list of exact integers from the current one-, two-, and three-argument subset.",
         structure_ops::eval_range,
+        MemoryGrowthContract::Preflight,
     ).protected(),
     BuiltinSpec::ordinary_with_attributes(
         "Differences",
@@ -212,6 +229,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::NonThreadable)
             .with(Attribute::Protected),
         structure_ops::eval_differences,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGTU,
@@ -225,6 +243,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Constructs a constant plain list for non-negative integer scalar and list dimensions.",
         AttributeSet::from_attribute(Attribute::Protected),
         structure_ops::eval_constant_array,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -234,6 +253,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Pads or truncates a normal expression on the left using scalar lengths or rectangular list dimensions.",
         AttributeSet::from_attribute(Attribute::Protected),
         structure_ops::eval_pad_left,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGTU,
@@ -251,6 +271,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Pads or truncates a normal expression on the right using scalar lengths or rectangular list dimensions.",
         AttributeSet::from_attribute(Attribute::Protected),
         structure_ops::eval_pad_right,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGTU,
@@ -268,6 +289,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Returns distinct permutations of a list in rum's canonical lexicographic (sorted-first, not input-first) order; fixed-length forms are deferred.",
         AttributeSet::from_attribute(Attribute::Protected),
         structure_ops::eval_permutations,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -281,6 +303,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Returns subsets of a normal expression in rum's size-major order for scalar, All, Infinity, and range size specs.",
         AttributeSet::from_attribute(Attribute::Protected),
         structure_ops::eval_subsets,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGTU,
@@ -298,6 +321,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Returns repeated tuples or cartesian products for normal expressions in the current subset.",
         AttributeSet::from_attribute(Attribute::Protected),
         structure_ops::eval_tuples,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGTU,
@@ -315,6 +339,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Partitions a flat normal expression into fixed-size blocks; aligned forms anchor the first element at kL and stop once the last element appears at or beyond kR.",
         AttributeSet::from_attribute(Attribute::Protected),
         structure_ops::eval_partition,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -336,6 +361,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Flatten",
         "Flattens nested expressions through the current non-negative level, single-head-spec, and level-list subset.",
         structure_ops::eval_flatten,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGTU,
@@ -364,6 +390,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Join",
         "Concatenates same-head normal expressions and associations in the current top-level subset.",
         structure_ops::eval_join,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -391,6 +418,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Reverse",
         "Reverses normal-expression arguments at positive levels or at every level with All.",
         structure_ops::eval_reverse,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGTU,
@@ -407,6 +435,7 @@ pub(crate) const STRUCTURE_CORE_BUILTINS: &[BuiltinSpec] = &[
         "Transpose",
         "Transposes rectangular plain-list matrices and tensors using identity, first-two-swap, or rank-matching positive permutations.",
         structure_ops::eval_transpose,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGTU,

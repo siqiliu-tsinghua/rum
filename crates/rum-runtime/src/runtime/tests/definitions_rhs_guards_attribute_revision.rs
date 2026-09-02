@@ -207,6 +207,7 @@ fn remaining_attribute_revision_sources_preserve_every_guarded_lane() {
         "RevisionBumpBuiltin",
         "Test-local attribute revision bump.",
         HoldAttribute::HoldFirst,
+        MemoryGrowthContract::NonAmplifying,
     ));
     assert_every_guarded_revision_lane(&mut registered);
 

@@ -6,6 +6,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Emits a message described by a MessageName expression.",
         HoldAttribute::HoldFirst,
         builtin_message,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -23,6 +24,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Represents a symbolic message name such as f::tag.",
         HoldAttribute::HoldAll,
         builtin_message_name,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -37,6 +39,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Lists message names defined for the whole session, a symbol, or one message query.",
         HoldAttribute::HoldAll,
         builtin_messages,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -54,6 +57,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Lists stored message template definitions for the whole session, a symbol, or one message query.",
         HoldAttribute::HoldAll,
         builtin_message_definitions,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -71,6 +75,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Lists message tags defined globally, for a symbol, or for one message query.",
         HoldAttribute::HoldAll,
         builtin_message_tags,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -88,6 +93,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Returns a first-pass InformationData summary for a symbol or symbol-name string.",
         HoldAttribute::HoldFirst,
         Session::eval_information,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGTU,
@@ -98,6 +104,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Returns a held first-pass expression containing visible definitions for a symbol.",
         HoldAttribute::HoldFirst,
         builtin_definition,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -112,6 +119,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Tests whether an expression has a value by trial evaluation without committing side effects.",
         HoldAttribute::HoldFirst,
         builtin_value_q,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -122,6 +130,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Lists stored Default[...] definitions for a symbol in the current optional-pattern subset.",
         HoldAttribute::HoldFirst,
         builtin_default_values,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -136,6 +145,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Lists stored immediate or delayed own-value definitions for a symbol, reconstructing right-hand-side guards.",
         HoldAttribute::HoldFirst,
         builtin_own_values,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -154,6 +164,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Lists stored tagged upvalue definitions for a symbol.",
         HoldAttribute::HoldFirst,
         builtin_up_values,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -172,6 +183,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Lists stored downvalue definitions for a symbol.",
         HoldAttribute::HoldFirst,
         builtin_down_values,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -190,6 +202,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Lists stored subvalue definitions for a symbol.",
         HoldAttribute::HoldFirst,
         builtin_sub_values,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -208,6 +221,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Lists the currently active attributes for a symbol.",
         HoldAttribute::HoldFirst,
         builtin_attributes,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -222,6 +236,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Lists the current syntax-information metadata rules for a symbol.",
         HoldAttribute::HoldFirst,
         builtin_syntax_information,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -236,6 +251,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Lists the current default option rules for a symbol.",
         HoldAttribute::HoldFirst,
         builtin_options,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -250,6 +266,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Looks up an option value from explicit rules or a symbol's defaults.",
         HoldAttribute::HoldAll,
         builtin_option_value,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -272,6 +289,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Partitions a held call into positional arguments and trailing option rules.",
         HoldAttribute::HoldFirst,
         builtin_arguments_options,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -286,6 +304,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Checks whether a held call has an allowed positional argument count and valid trailing options.",
         HoldAttribute::HoldFirst,
         builtin_check_arguments,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -300,6 +319,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Adds attributes to one or more symbols.",
         HoldAttribute::HoldFirst,
         builtin_set_attributes,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -315,6 +335,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Removes attributes from one or more symbols.",
         HoldAttribute::HoldFirst,
         builtin_clear_attributes,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -330,6 +351,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Updates known default options for a symbol.",
         HoldAttribute::HoldFirst,
         builtin_set_options,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -349,6 +371,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Adds the Protected attribute to one or more symbols.",
         HoldAttribute::HoldAll,
         builtin_protect,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -362,6 +385,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Removes the Protected attribute from one or more symbols.",
         HoldAttribute::HoldAll,
         builtin_unprotect,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -375,6 +399,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Removes a specific stored definition or message template.",
         HoldAttribute::HoldFirst,
         builtin_unset,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -390,6 +415,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Clears values and rules from one or more symbols.",
         HoldAttribute::HoldAll,
         builtin_clear,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -404,6 +430,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Clears values, rules, messages, and user-defined attributes from one or more symbols.",
         HoldAttribute::HoldAll,
         builtin_clear_all,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -418,6 +445,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Removes the current stored state for one or more symbols in the first-pass namespace subset.",
         HoldAttribute::HoldAll,
         builtin_remove,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -435,6 +463,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates an expression and substitutes a fallback if matching messages are emitted.",
         HoldAttribute::HoldAll,
         builtin_check,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -452,6 +481,7 @@ pub(in super::super) const NAMESPACE_SYMBOL_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates an expression while suppressing matching runtime messages it emits.",
         HoldAttribute::HoldAll,
         builtin_quiet,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {

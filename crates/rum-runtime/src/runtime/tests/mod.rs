@@ -152,6 +152,7 @@ mod iterative_loop_drivers;
 mod left_chain_lowering;
 mod lowering_and_context;
 mod lowering_golden;
+mod memory_growth_contract;
 mod messages;
 mod messages_part2;
 mod messages_part3;

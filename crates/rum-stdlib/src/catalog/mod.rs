@@ -14,6 +14,8 @@ mod integer_digits;
 mod json;
 mod lazy;
 mod logic;
+#[cfg(test)]
+mod memory_growth_contract;
 mod message_templates;
 mod number_theory;
 mod polynomials;

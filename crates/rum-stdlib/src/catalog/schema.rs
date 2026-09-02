@@ -1,3 +1,4 @@
+use rum_runtime::kernel_api::MemoryGrowthContract;
 use rum_runtime::kernel_api::{BuiltinMessageSpec, BuiltinSpec, HoldAttribute};
 
 use super::message_templates::ARGX_OPERATOR;
@@ -10,6 +11,7 @@ pub(crate) const SCHEMA_BUILTINS: &[BuiltinSpec] = &[
         "Validates a value against a symbolic schema and returns the normalized value with defaults filled.",
         HoldAttribute::HoldRest,
         schema::eval_conform_schema,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -24,6 +26,7 @@ pub(crate) const SCHEMA_BUILTINS: &[BuiltinSpec] = &[
         "Returns path-keyed validation errors for a value checked against a symbolic schema.",
         HoldAttribute::HoldRest,
         schema::eval_schema_errors,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {

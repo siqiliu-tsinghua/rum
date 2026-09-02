@@ -1,3 +1,4 @@
+use rum_runtime::kernel_api::MemoryGrowthContract;
 use rum_runtime::kernel_api::{
     Attribute, AttributeSet, BuiltinMessageSpec, BuiltinSpec, Capability, HoldAttribute,
 };
@@ -14,6 +15,7 @@ pub(crate) const RANDOM_BUILTINS: &[BuiltinSpec] = &[
         "Reseeds the deterministic session PRNG from an exact integer.",
         ATTR_PROTECTED,
         random::eval_seed_random,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -23,6 +25,7 @@ pub(crate) const RANDOM_BUILTINS: &[BuiltinSpec] = &[
         "Draws exact integers uniformly from the deterministic session PRNG.",
         ATTR_PROTECTED,
         random::eval_random_integer,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGTU,
@@ -32,6 +35,7 @@ pub(crate) const RANDOM_BUILTINS: &[BuiltinSpec] = &[
         "Chooses elements from a list using the deterministic session PRNG.",
         ATTR_PROTECTED,
         random::eval_random_choice,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGTU,
@@ -49,6 +53,7 @@ pub(crate) const RANDOM_BUILTINS: &[BuiltinSpec] = &[
         "Samples distinct positions from a list using the deterministic session PRNG.",
         ATTR_PROTECTED,
         random::eval_random_sample,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGTU,
@@ -62,6 +67,7 @@ pub(crate) const RANDOM_BUILTINS: &[BuiltinSpec] = &[
         "Draws a string of characters from an alphabet using the deterministic session PRNG.",
         ATTR_PROTECTED,
         random::eval_random_string,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGTU,
@@ -71,6 +77,7 @@ pub(crate) const RANDOM_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates an expression while restoring the deterministic session PRNG state afterward.",
         AttributeSet::from_hold(HoldAttribute::HoldAll).with(Attribute::Protected),
         random::eval_block_random,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -80,6 +87,7 @@ pub(crate) const RANDOM_BUILTINS: &[BuiltinSpec] = &[
         "Returns a reproducible version-4-format UUID string from the deterministic session PRNG.",
         ATTR_PROTECTED,
         random::eval_random_uuid,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -89,6 +97,7 @@ pub(crate) const RANDOM_BUILTINS: &[BuiltinSpec] = &[
         "Tests whether a string has version-4 UUID format and variant bits.",
         ATTR_PROTECTED,
         random::eval_uuid_q,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -98,6 +107,7 @@ pub(crate) const RANDOM_BUILTINS: &[BuiltinSpec] = &[
         "Returns entropy bytes as a ByteArray using the host entropy provider.",
         ATTR_PROTECTED,
         random::eval_random_bytes,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -109,6 +119,7 @@ pub(crate) const RANDOM_BUILTINS: &[BuiltinSpec] = &[
         "Reseeds the deterministic session PRNG from host entropy. Requires Capability::Random; denied under sandboxed().",
         ATTR_PROTECTED,
         random::eval_reseed_random,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -120,6 +131,7 @@ pub(crate) const RANDOM_BUILTINS: &[BuiltinSpec] = &[
         "Draws an entropy-backed password string from an alphabet, optionally enforcing policy constraints.",
         ATTR_PROTECTED,
         random::eval_random_password,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         BuiltinMessageSpec {

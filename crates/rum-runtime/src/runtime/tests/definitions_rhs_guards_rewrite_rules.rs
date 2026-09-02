@@ -15,6 +15,7 @@ fn rewrite_guard_session() -> Session {
             "ReplaceAllUnheld",
             "Test-local ReplaceAllUnheld builtin.",
             eval_replace_all_unheld,
+            MemoryGrowthContract::Incremental,
         )
         .protected(),
     );

@@ -7,6 +7,7 @@ pub(super) const SCOPING_BUILTINS: &[BuiltinSpec] = &[
         "Lexically substitutes local constants into a body, with each additional declaration list forming a nested stage.",
         HoldAttribute::HoldAll,
         builtin_with,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -21,6 +22,7 @@ pub(super) const SCOPING_BUILTINS: &[BuiltinSpec] = &[
         "Creates lexical local symbols.",
         HoldAttribute::HoldAll,
         builtin_module,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -35,6 +37,7 @@ pub(super) const SCOPING_BUILTINS: &[BuiltinSpec] = &[
         "Registers a held source unit with public, package-scope, and identity-sealed private symbols.",
         AttributeSet::from_attribute(Attribute::HoldAllComplete),
         builtin_define_package,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -56,6 +59,7 @@ pub(super) const SCOPING_BUILTINS: &[BuiltinSpec] = &[
         "Re-links sealed symbol references while evaluating trusted snapshot restore forms.",
         AttributeSet::from_attribute(Attribute::HoldAllComplete),
         builtin_restore_sealed_references,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -77,6 +81,7 @@ pub(super) const SCOPING_BUILTINS: &[BuiltinSpec] = &[
         "Declares public symbols inside a held DefinePackage source unit.",
         HoldAttribute::HoldAll,
         builtin_public,
+        MemoryGrowthContract::Incremental,
     )
     .protected(),
     BuiltinSpec::ordinary_with_hold(
@@ -84,12 +89,14 @@ pub(super) const SCOPING_BUILTINS: &[BuiltinSpec] = &[
         "Declares conventionally package-scoped symbols inside a held DefinePackage source unit.",
         HoldAttribute::HoldAll,
         builtin_package_scope,
+        MemoryGrowthContract::Incremental,
     )
     .protected(),
     BuiltinSpec::ordinary(
         "Unique",
         "Creates fresh symbols using prefix, list, and attribute forms.",
         builtin_unique,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -108,6 +115,7 @@ pub(super) const SCOPING_BUILTINS: &[BuiltinSpec] = &[
         "Temporarily rebinds symbols dynamically.",
         HoldAttribute::HoldAll,
         builtin_block,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -122,60 +130,70 @@ pub(super) const SCOPING_BUILTINS: &[BuiltinSpec] = &[
         "Prevents evaluation of its arguments.",
         HoldAttribute::HoldAll,
         builtin_hold_literal,
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::ordinary_with_hold(
         "HoldFirst",
         "Prevents evaluation of the first argument.",
         HoldAttribute::HoldFirst,
         builtin_hold_literal,
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::ordinary_with_hold(
         "HoldRest",
         "Prevents evaluation of all but the first argument.",
         HoldAttribute::HoldRest,
         builtin_hold_literal,
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::ordinary_with_hold(
         "HoldAll",
         "Prevents evaluation of all arguments.",
         HoldAttribute::HoldAll,
         builtin_hold_literal,
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::ordinary_with_attributes(
         "HoldAllComplete",
         "Prevents evaluation of all arguments and disables Evaluate and Sequence escapes.",
         AttributeSet::from_attribute(Attribute::HoldAllComplete),
         builtin_hold_literal,
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::ordinary_with_attributes(
         "HoldComplete",
         "Prevents evaluation of all arguments and disables Evaluate and Sequence escapes.",
         AttributeSet::from_attribute(Attribute::HoldAllComplete),
         builtin_hold_literal,
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::ordinary_with_attributes(
         "Unevaluated",
         "Temporarily leaves an argument unevaluated as a direct function argument.",
         AttributeSet::from_attribute(Attribute::HoldAllComplete),
         builtin_unevaluated,
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::ordinary_with_hold(
         "Evaluate",
         "Forces evaluation in held contexts.",
         HoldAttribute::HoldAll,
         builtin_evaluate,
+        MemoryGrowthContract::Delegated,
     ).protected(),
     BuiltinSpec::ordinary_with_hold(
         "HoldPattern",
         "Marks a pattern expression so it is matched without prior evaluation.",
         HoldAttribute::HoldAll,
         builtin_hold_literal,
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::ordinary_with_hold(
         "ReleaseHold",
         "Removes one outer layer of Hold, HoldForm, HoldComplete, HoldPattern, HoldFirst, HoldRest, HoldAll, or HoldAllComplete, then resumes evaluation.",
         HoldAttribute::HoldAll,
         builtin_release_hold,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -185,11 +203,13 @@ pub(super) const SCOPING_BUILTINS: &[BuiltinSpec] = &[
         "Sequence",
         "Splices a sequence of arguments into a call.",
         builtin_sequence,
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::ordinary(
         "Thread",
         "Threads an expression over arguments that share a common head.",
         Session::eval_thread,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -211,6 +231,7 @@ pub(super) const SCOPING_BUILTINS: &[BuiltinSpec] = &[
         "Runs the current first-pass dialog subset with Return-sensitive evaluation and host-input suspension; requires Capability::Interactive.",
         HoldAttribute::HoldAll,
         builtin_dialog,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -224,6 +245,7 @@ pub(super) const SCOPING_BUILTINS: &[BuiltinSpec] = &[
         "InputString",
         "Requests one line of host-provided text and returns it as a string; requires Capability::Interactive.",
         builtin_input_string,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -242,6 +264,7 @@ pub(super) const SCOPING_BUILTINS: &[BuiltinSpec] = &[
         "Input",
         "Requests one line of host-provided text, parses it as rum source, and evaluates the resulting expression in the current first-pass subset; requires Capability::Interactive.",
         builtin_input,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -260,11 +283,13 @@ pub(super) const SCOPING_BUILTINS: &[BuiltinSpec] = &[
         "Print",
         "Emits a line of plain print output through the runtime print stream.",
         builtin_print,
+        MemoryGrowthContract::Incremental,
     ).protected(),
     BuiltinSpec::ordinary(
         "Pause",
         "Pauses for at least a nonnegative exact number of seconds in the current first-pass subset.",
         builtin_pause,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,

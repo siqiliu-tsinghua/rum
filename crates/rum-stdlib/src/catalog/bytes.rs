@@ -1,3 +1,4 @@
+use rum_runtime::kernel_api::MemoryGrowthContract;
 use rum_runtime::kernel_api::{Attribute, AttributeSet, BuiltinMessageSpec, BuiltinSpec};
 
 use super::message_templates::*;
@@ -11,6 +12,7 @@ pub(crate) const DIGEST_BUILTINS: &[BuiltinSpec] = &[
         "Computes a SHA-256 digest over a string's UTF-8 bytes or a ByteArray, returning lowercase hex by default.",
         AttributeSet::empty().with(Attribute::Protected),
         bytes::eval_sha256,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGTU,
@@ -22,6 +24,7 @@ pub(crate) const DIGEST_BUILTINS: &[BuiltinSpec] = &[
         "Computes a SHA-512 digest over a string's UTF-8 bytes or a ByteArray, returning lowercase hex by default.",
         AttributeSet::empty().with(Attribute::Protected),
         bytes::eval_sha512,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGTU,
@@ -33,6 +36,7 @@ pub(crate) const DIGEST_BUILTINS: &[BuiltinSpec] = &[
         "Computes a SHA-1 digest over a string's UTF-8 bytes or a ByteArray, returning lowercase hex by default.",
         AttributeSet::empty().with(Attribute::Protected),
         bytes::eval_sha1,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGTU,
@@ -44,6 +48,7 @@ pub(crate) const DIGEST_BUILTINS: &[BuiltinSpec] = &[
         "Computes an MD5 digest over a string's UTF-8 bytes or a ByteArray, returning lowercase hex by default.",
         AttributeSet::empty().with(Attribute::Protected),
         bytes::eval_md5,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGTU,
@@ -55,6 +60,7 @@ pub(crate) const DIGEST_BUILTINS: &[BuiltinSpec] = &[
         "Computes the IEEE CRC-32 checksum over a string's UTF-8 bytes or a ByteArray.",
         AttributeSet::empty().with(Attribute::Protected),
         bytes::eval_crc32,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -68,6 +74,7 @@ pub(crate) const BYTE_BUILTINS: &[BuiltinSpec] = &[
         "Encodes a string's UTF-8 bytes or a ByteArray as lowercase hexadecimal text.",
         AttributeSet::empty().with(Attribute::Protected),
         bytes::eval_to_hex_string,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -78,6 +85,7 @@ pub(crate) const BYTE_BUILTINS: &[BuiltinSpec] = &[
         "Decodes even-length hexadecimal text into a ByteArray, failing closed on malformed input.",
         AttributeSet::empty().with(Attribute::Protected),
         bytes::eval_from_hex_string,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -91,6 +99,7 @@ pub(crate) const BYTE_BUILTINS: &[BuiltinSpec] = &[
         "Encodes a string's UTF-8 bytes or a ByteArray as standard RFC 4648 base64 with padding.",
         AttributeSet::empty().with(Attribute::Protected),
         bytes::eval_to_base64,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -101,6 +110,7 @@ pub(crate) const BYTE_BUILTINS: &[BuiltinSpec] = &[
         "Decodes standard RFC 4648 base64 with padding into a ByteArray, failing closed on malformed input.",
         AttributeSet::empty().with(Attribute::Protected),
         bytes::eval_from_base64,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -114,6 +124,7 @@ pub(crate) const BYTE_BUILTINS: &[BuiltinSpec] = &[
         "Tests whether an expression is a ByteArray with a valid base64 payload.",
         AttributeSet::empty().with(Attribute::Protected),
         bytes::eval_byte_array_q,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -123,6 +134,7 @@ pub(crate) const BYTE_BUILTINS: &[BuiltinSpec] = &[
         "Converts a ByteArray to a string when its payload is valid UTF-8, failing closed otherwise.",
         AttributeSet::empty().with(Attribute::Protected),
         bytes::eval_byte_array_to_string,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGX_EXACT,

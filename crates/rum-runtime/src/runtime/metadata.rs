@@ -288,6 +288,40 @@ pub enum BuiltinDispatch {
 }
 pub type BuiltinFn = fn(&mut Session, &Expr, &SharedArgs) -> Result<Expr, EvalError>;
 
+/// Declares how a builtin handler can retain or return memory beyond its inputs.
+///
+/// `Preflight` is the attachment point for the projector functions added by the
+/// subsequent memory-accounting work. This declaration intentionally has no
+/// default: every builtin construction must select a strategy explicitly.
+#[repr(u8)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum MemoryGrowthContract {
+    /// The result is no more than a fixed allowance larger than the arguments.
+    NonAmplifying = 0,
+    /// A conservative result-size projection can run before construction.
+    Preflight = 1,
+    /// Retained growth must be charged as data-dependent construction proceeds.
+    Incremental = 2,
+    /// Growth is owned by another classified evaluator or host boundary.
+    Delegated = 3,
+}
+
+impl MemoryGrowthContract {
+    pub(in crate::runtime) const fn suspended_code(self) -> u8 {
+        self as u8
+    }
+
+    pub(in crate::runtime) const fn from_suspended_code(code: u8) -> Self {
+        match code {
+            0 => Self::NonAmplifying,
+            1 => Self::Preflight,
+            2 => Self::Incremental,
+            3 => Self::Delegated,
+            _ => panic!("invalid suspended memory-growth contract"),
+        }
+    }
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct BuiltinMessageSpec {
     pub tag: &'static str,
@@ -304,11 +338,16 @@ pub struct BuiltinSpec {
     pub dispatch: BuiltinDispatch,
     pub handler: Option<BuiltinFn>,
     pub capability: Capability,
+    pub memory_growth: MemoryGrowthContract,
     pub messages: &'static [BuiltinMessageSpec],
 }
 
 impl BuiltinSpec {
-    pub const fn new(name: &'static str, summary: &'static str) -> Self {
+    pub const fn new(
+        name: &'static str,
+        summary: &'static str,
+        memory_growth: MemoryGrowthContract,
+    ) -> Self {
         Self {
             name,
             summary,
@@ -316,11 +355,17 @@ impl BuiltinSpec {
             dispatch: BuiltinDispatch::None,
             handler: None,
             capability: Capability::Pure,
+            memory_growth,
             messages: &[],
         }
     }
 
-    pub const fn with_hold(name: &'static str, summary: &'static str, hold: HoldAttribute) -> Self {
+    pub const fn with_hold(
+        name: &'static str,
+        summary: &'static str,
+        hold: HoldAttribute,
+        memory_growth: MemoryGrowthContract,
+    ) -> Self {
         Self {
             name,
             summary,
@@ -328,6 +373,7 @@ impl BuiltinSpec {
             dispatch: BuiltinDispatch::None,
             handler: None,
             capability: Capability::Pure,
+            memory_growth,
             messages: &[],
         }
     }
@@ -336,6 +382,7 @@ impl BuiltinSpec {
         name: &'static str,
         summary: &'static str,
         attributes: AttributeSet,
+        memory_growth: MemoryGrowthContract,
     ) -> Self {
         Self {
             name,
@@ -344,11 +391,17 @@ impl BuiltinSpec {
             dispatch: BuiltinDispatch::None,
             handler: None,
             capability: Capability::Pure,
+            memory_growth,
             messages: &[],
         }
     }
 
-    pub const fn special(name: &'static str, summary: &'static str, handler: BuiltinFn) -> Self {
+    pub const fn special(
+        name: &'static str,
+        summary: &'static str,
+        handler: BuiltinFn,
+        memory_growth: MemoryGrowthContract,
+    ) -> Self {
         Self {
             name,
             summary,
@@ -356,6 +409,7 @@ impl BuiltinSpec {
             dispatch: BuiltinDispatch::SpecialForm,
             handler: Some(handler),
             capability: Capability::Pure,
+            memory_growth,
             messages: &[],
         }
     }
@@ -365,6 +419,7 @@ impl BuiltinSpec {
         summary: &'static str,
         hold: HoldAttribute,
         handler: BuiltinFn,
+        memory_growth: MemoryGrowthContract,
     ) -> Self {
         Self {
             name,
@@ -373,6 +428,7 @@ impl BuiltinSpec {
             dispatch: BuiltinDispatch::SpecialForm,
             handler: Some(handler),
             capability: Capability::Pure,
+            memory_growth,
             messages: &[],
         }
     }
@@ -382,6 +438,7 @@ impl BuiltinSpec {
         summary: &'static str,
         attributes: AttributeSet,
         handler: BuiltinFn,
+        memory_growth: MemoryGrowthContract,
     ) -> Self {
         Self {
             name,
@@ -390,11 +447,17 @@ impl BuiltinSpec {
             dispatch: BuiltinDispatch::SpecialForm,
             handler: Some(handler),
             capability: Capability::Pure,
+            memory_growth,
             messages: &[],
         }
     }
 
-    pub const fn ordinary(name: &'static str, summary: &'static str, handler: BuiltinFn) -> Self {
+    pub const fn ordinary(
+        name: &'static str,
+        summary: &'static str,
+        handler: BuiltinFn,
+        memory_growth: MemoryGrowthContract,
+    ) -> Self {
         Self {
             name,
             summary,
@@ -402,6 +465,7 @@ impl BuiltinSpec {
             dispatch: BuiltinDispatch::Ordinary,
             handler: Some(handler),
             capability: Capability::Pure,
+            memory_growth,
             messages: &[],
         }
     }
@@ -411,6 +475,7 @@ impl BuiltinSpec {
         summary: &'static str,
         hold: HoldAttribute,
         handler: BuiltinFn,
+        memory_growth: MemoryGrowthContract,
     ) -> Self {
         Self {
             name,
@@ -419,6 +484,7 @@ impl BuiltinSpec {
             dispatch: BuiltinDispatch::Ordinary,
             handler: Some(handler),
             capability: Capability::Pure,
+            memory_growth,
             messages: &[],
         }
     }
@@ -428,6 +494,7 @@ impl BuiltinSpec {
         summary: &'static str,
         attributes: AttributeSet,
         handler: BuiltinFn,
+        memory_growth: MemoryGrowthContract,
     ) -> Self {
         Self {
             name,
@@ -436,6 +503,7 @@ impl BuiltinSpec {
             dispatch: BuiltinDispatch::Ordinary,
             handler: Some(handler),
             capability: Capability::Pure,
+            memory_growth,
             messages: &[],
         }
     }
@@ -464,6 +532,7 @@ impl BuiltinSpec {
         if self.handler.is_none() {
             self.handler = fallback.handler;
             self.capability = fallback.capability;
+            self.memory_growth = fallback.memory_growth;
         }
 
         if self.messages.is_empty() {

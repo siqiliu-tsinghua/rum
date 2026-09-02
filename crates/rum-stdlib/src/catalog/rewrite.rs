@@ -1,3 +1,4 @@
+use rum_runtime::kernel_api::MemoryGrowthContract;
 use rum_runtime::kernel_api::{BuiltinMessageSpec, BuiltinSpec};
 
 use super::message_templates::*;
@@ -9,6 +10,7 @@ pub(crate) const REWRITE_BUILTINS: &[BuiltinSpec] = &[
         "MatchQ",
         "Tests whether an expression matches a pattern.",
         rewrite_builtins::eval_match_q,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -17,6 +19,7 @@ pub(crate) const REWRITE_BUILTINS: &[BuiltinSpec] = &[
         "Cases",
         "Collects subexpressions matching a pattern or rule.",
         rewrite_builtins::eval_cases,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -41,6 +44,7 @@ pub(crate) const REWRITE_BUILTINS: &[BuiltinSpec] = &[
         "DeleteCases",
         "Deletes subexpressions matching a pattern on levels specified by a standard levelspec.",
         rewrite_builtins::eval_delete_cases,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -65,6 +69,7 @@ pub(crate) const REWRITE_BUILTINS: &[BuiltinSpec] = &[
         "Replace",
         "Applies rules at the current first-pass Replace levelspec subset.",
         rewrite_builtins::eval_replace,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -78,6 +83,7 @@ pub(crate) const REWRITE_BUILTINS: &[BuiltinSpec] = &[
         "ReplaceList",
         "Returns the current first-pass root replacement results across a rule list, with optional max-result limiting.",
         rewrite_builtins::eval_replace_list,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -90,6 +96,7 @@ pub(crate) const REWRITE_BUILTINS: &[BuiltinSpec] = &[
         "ReplaceAll",
         "Applies rules everywhere in an expression.",
         rewrite_builtins::eval_replace_all,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -102,6 +109,7 @@ pub(crate) const REWRITE_BUILTINS: &[BuiltinSpec] = &[
         "ReplaceAllUnheld",
         "Applies rules throughout the parts of an expression that would evaluate.",
         rewrite_builtins::eval_replace_all_unheld,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -114,6 +122,7 @@ pub(crate) const REWRITE_BUILTINS: &[BuiltinSpec] = &[
         "ReplaceRepeated",
         "Repeatedly applies rules until an expression reaches a fixed point.",
         rewrite_builtins::eval_replace_repeated,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {

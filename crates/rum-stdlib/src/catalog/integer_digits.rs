@@ -1,3 +1,4 @@
+use rum_runtime::kernel_api::MemoryGrowthContract;
 use rum_runtime::kernel_api::{Attribute, AttributeSet, BuiltinMessageSpec, BuiltinSpec};
 
 use super::message_templates::*;
@@ -12,6 +13,7 @@ pub(crate) const INTEGER_DIGITS_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Listable)
             .with(Attribute::Protected),
         integer_digits::eval_integer_length,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGTU, IBASE]),
     BuiltinSpec::ordinary_with_attributes(
@@ -21,6 +23,7 @@ pub(crate) const INTEGER_DIGITS_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Listable)
             .with(Attribute::Protected),
         integer_digits::eval_integer_digits,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGTU,
@@ -37,6 +40,7 @@ pub(crate) const INTEGER_DIGITS_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Protected)
             .with(Attribute::ReadProtected),
         integer_digits::eval_integer_reverse,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGTU, IBASE]),
     BuiltinSpec::ordinary_with_attributes(
@@ -44,6 +48,7 @@ pub(crate) const INTEGER_DIGITS_BUILTINS: &[BuiltinSpec] = &[
         "Constructs an exact integer from a list or string of digits.",
         AttributeSet::from_attribute(Attribute::Protected),
         integer_digits::eval_from_digits,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGTU]),
     BuiltinSpec::ordinary_with_attributes(
@@ -53,6 +58,7 @@ pub(crate) const INTEGER_DIGITS_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Protected)
             .with(Attribute::ReadProtected),
         integer_digits::eval_digit_count,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGTU, IBASE]),
 ];

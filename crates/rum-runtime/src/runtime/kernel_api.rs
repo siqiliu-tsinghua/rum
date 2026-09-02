@@ -66,7 +66,7 @@ pub use super::messages::message_selector_parsing::truthiness_symbol;
 
 // metadata
 pub use super::metadata::{
-    Attribute, AttributeSet, BuiltinMessageSpec, BuiltinSpec, HoldAttribute,
+    Attribute, AttributeSet, BuiltinMessageSpec, BuiltinSpec, HoldAttribute, MemoryGrowthContract,
 };
 
 // numeric traits

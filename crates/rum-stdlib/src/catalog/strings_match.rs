@@ -1,3 +1,4 @@
+use rum_runtime::kernel_api::MemoryGrowthContract;
 use rum_runtime::kernel_api::{Attribute, AttributeSet, BuiltinSpec};
 
 use super::message_templates::*;
@@ -9,6 +10,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "Characters",
         "Splits a string into a list of single-code-point strings.",
         strings::eval_characters,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -17,6 +19,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "CharacterRange",
         "Builds an inclusive range of single-character strings between two endpoints.",
         strings::eval_character_range,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -25,6 +28,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "ToString",
         "Renders an evaluated expression into the current canonical kernel text form.",
         strings::eval_to_string,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGTU,
@@ -33,6 +37,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "StringRepeat",
         "Repeats a string a non-negative number of times.",
         strings::eval_string_repeat,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -41,6 +46,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "LetterQ",
         "Tests whether all characters in a string belong to the current letter subset.",
         strings::eval_letter_q,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -50,6 +56,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "Tests whether every character in a string is lowercase.",
         AttributeSet::from_attribute(Attribute::Protected),
         strings::eval_lower_case_q,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -59,6 +66,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "Tests whether every character in a string is uppercase.",
         AttributeSet::from_attribute(Attribute::Protected),
         strings::eval_upper_case_q,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -67,6 +75,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "DigitQ",
         "Tests whether all characters in a string belong to the current digit subset.",
         strings::eval_digit_q,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -75,6 +84,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "StringContainsQ",
         "Tests whether a string or list of strings contains an exact substring in the current first-pass string subset.",
         strings::eval_string_contains_q,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGTU,
@@ -84,6 +94,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "StringStartsQ",
         "Tests whether a string or list of strings starts with an exact substring in the current first-pass string subset.",
         strings::eval_string_starts_q,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGTU,
@@ -93,6 +104,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "StringEndsQ",
         "Tests whether a string or list of strings ends with an exact substring in the current first-pass string subset.",
         strings::eval_string_ends_q,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGTU,
@@ -102,6 +114,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "StringPosition",
         "Returns 1-based inclusive positions of exact substring matches, including overlaps, in the current first-pass string subset.",
         strings::eval_string_position,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGTU,
@@ -110,6 +123,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "StringSplit",
         "Splits strings using whitespace or exact delimiters in the current first-pass string subset.",
         strings::eval_string_split,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGTU,
@@ -118,6 +132,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "StringTrim",
         "Trims whitespace or exact boundary substrings in the current first-pass string subset.",
         strings::eval_string_trim,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGTU,
@@ -126,6 +141,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "StringReplace",
         "Replaces supported exact and pattern string matches using immediate or delayed rules, including right-hand-side guards.",
         strings::eval_string_replace,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGTU,
@@ -135,6 +151,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "StringCases",
         "Extracts supported string matches or immediate, delayed, and right-hand-side-guarded rule outputs.",
         strings::eval_string_cases,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGTU,
@@ -144,6 +161,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "StringApply",
         "Applies a list-oriented function to string code points and reassembles string output in the current first-pass subset.",
         strings::eval_string_apply,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGTU,
@@ -152,6 +170,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "StringDelete",
         "Deletes exact or current string-pattern matches from strings in the current first-pass subset.",
         strings::eval_string_delete,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGTU,
@@ -161,6 +180,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "StringTake",
         "Extracts a substring using integer counts or inclusive 1-based ranges.",
         strings::eval_string_take,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -169,6 +189,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "StringDrop",
         "Drops a substring using integer counts or inclusive 1-based ranges.",
         strings::eval_string_drop,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -177,6 +198,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "StringTakeDrop",
         "Returns both the taken and dropped substrings using the current StringTake/StringDrop spec subset.",
         strings::eval_string_take_drop,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -185,6 +207,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "StringPart",
         "Extracts individual characters by 1-based positions.",
         strings::eval_string_part,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -193,6 +216,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "StringCount",
         "Counts exact or current string-pattern matches, including the current IgnoreCase and Overlaps option subset.",
         strings::eval_string_count,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGTU,
@@ -201,6 +225,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "StringMatchQ",
         "Tests whether a whole string matches an exact or current string-pattern spec.",
         strings::eval_string_match_q,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGTU,
@@ -210,6 +235,7 @@ pub(crate) const STRING_MATCH_BUILTINS: &[BuiltinSpec] = &[
         "StringFreeQ",
         "Tests whether a string is free of exact or current string-pattern matches.",
         strings::eval_string_free_q,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGTU,

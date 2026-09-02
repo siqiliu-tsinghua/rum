@@ -17,6 +17,7 @@ fn session_with_replace_all_unheld() -> Session {
             "ReplaceAllUnheld",
             "Test-local ReplaceAllUnheld builtin.",
             eval_replace_all_unheld,
+            MemoryGrowthContract::Incremental,
         )
         .protected(),
     );

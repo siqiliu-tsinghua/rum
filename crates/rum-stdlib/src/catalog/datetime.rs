@@ -1,3 +1,4 @@
+use rum_runtime::kernel_api::MemoryGrowthContract;
 use rum_runtime::kernel_api::{Attribute, AttributeSet, BuiltinMessageSpec, BuiltinSpec};
 
 use super::message_templates::*;
@@ -10,6 +11,7 @@ pub(crate) const DATETIME_BUILTINS: &[BuiltinSpec] = &[
         "Converts an exact Unix timestamp to a UTC date list.",
         AttributeSet::empty().with(Attribute::Protected),
         datetime::eval_date_list,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -23,6 +25,7 @@ pub(crate) const DATETIME_BUILTINS: &[BuiltinSpec] = &[
         "Formats an exact timestamp or date list as an ISO 8601 UTC string.",
         AttributeSet::empty().with(Attribute::Protected),
         datetime::eval_date_string,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGTU,
@@ -40,6 +43,7 @@ pub(crate) const DATETIME_BUILTINS: &[BuiltinSpec] = &[
         "Converts a UTC date list {y, mo, d, h, mi, s} to an exact Unix timestamp; the inverse of DateList.",
         AttributeSet::empty().with(Attribute::Protected),
         datetime::eval_from_date_list,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -53,6 +57,7 @@ pub(crate) const DATETIME_BUILTINS: &[BuiltinSpec] = &[
         "Parses the documented ISO 8601 UTC/fixed-offset subset into an exact Unix timestamp.",
         AttributeSet::empty().with(Attribute::Protected),
         datetime::eval_from_date_string,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -66,6 +71,7 @@ pub(crate) const DATETIME_BUILTINS: &[BuiltinSpec] = &[
         "Adds an exact fixed-duration offset to an exact timestamp or date list.",
         AttributeSet::empty().with(Attribute::Protected),
         datetime::eval_date_plus,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -79,6 +85,7 @@ pub(crate) const DATETIME_BUILTINS: &[BuiltinSpec] = &[
         "Returns the exact fixed-duration difference between two timestamps or date lists.",
         AttributeSet::empty().with(Attribute::Protected),
         datetime::eval_date_difference,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -92,6 +99,7 @@ pub(crate) const DATETIME_BUILTINS: &[BuiltinSpec] = &[
         "Returns the ISO weekday symbol for an exact timestamp or date list.",
         AttributeSet::empty().with(Attribute::Protected),
         datetime::eval_day_of_week,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGTU,
@@ -105,6 +113,7 @@ pub(crate) const DATETIME_BUILTINS: &[BuiltinSpec] = &[
         "Tests whether an exact integer year is a leap year in the proleptic Gregorian calendar.",
         AttributeSet::empty().with(Attribute::Protected),
         datetime::eval_leap_year_q,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -118,6 +127,7 @@ pub(crate) const DATETIME_BUILTINS: &[BuiltinSpec] = &[
         "Returns the number of days in a proleptic Gregorian month.",
         AttributeSet::empty().with(Attribute::Protected),
         datetime::eval_days_in_month,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,

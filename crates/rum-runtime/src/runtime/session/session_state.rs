@@ -141,6 +141,7 @@ pub(in crate::runtime) struct SuspendedBuiltinSpec {
     pub(in crate::runtime) name: &'static str,
     pub(in crate::runtime) handler: Option<BuiltinFn>,
     pub(in crate::runtime) capability: SuspendedCapability,
+    pub(in crate::runtime) memory_growth_code: u8,
 }
 
 impl From<BuiltinSpec> for SuspendedBuiltinSpec {
@@ -149,6 +150,7 @@ impl From<BuiltinSpec> for SuspendedBuiltinSpec {
             name: spec.name,
             handler: spec.handler,
             capability: spec.capability.into(),
+            memory_growth_code: spec.memory_growth.suspended_code(),
         }
     }
 }

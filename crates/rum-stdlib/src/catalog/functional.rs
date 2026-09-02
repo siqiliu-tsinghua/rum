@@ -1,3 +1,4 @@
+use rum_runtime::kernel_api::MemoryGrowthContract;
 use rum_runtime::kernel_api::{Attribute, AttributeSet, BuiltinMessageSpec, BuiltinSpec};
 
 use super::message_templates::*;
@@ -9,6 +10,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "BlockMap",
         "Maps a function over contiguous blocks in the current first-pass subset.",
         functional_ops::eval_block_map,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -21,6 +23,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "SubsetMap",
         "Replaces selected exact parts using a mapped subset result in the current first-pass subset.",
         functional_ops::eval_subset_map,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -37,6 +40,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "Comap",
         "Applies selected parts of a function collection to a common expression in the current first-pass subset.",
         functional_ops::eval_comap,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -49,6 +53,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "ComapApply",
         "Applies selected parts of a function collection as heads of a common expression in the current first-pass subset.",
         functional_ops::eval_comap_apply,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -61,6 +66,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "Accumulate",
         "Returns running totals in the current first-pass subset.",
         functional_ops::eval_accumulate,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -69,6 +75,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "MapIndexed",
         "Applies a function to parts together with their positions in the current first-pass subset.",
         functional_ops::eval_map_indexed,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -81,6 +88,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "Map",
         "Applies a function over selected levels of an expression in the current first-pass subset.",
         functional_ops::eval_map,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -93,6 +101,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "MapAll",
         "Applies a function to every subexpression in the current first-pass subset.",
         functional_ops::eval_map_all,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -105,6 +114,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "MapAt",
         "Applies a function at exact part specifications in the current first-pass subset.",
         functional_ops::eval_map_at,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -118,6 +128,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "Scan",
         "Evaluates a function across selected levels for side effects in the current first-pass subset.",
         functional_ops::eval_scan,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -130,6 +141,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "MapThread",
         "Threads corresponding elements from multiple expressions in the current first-pass subset.",
         functional_ops::eval_map_thread,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -142,6 +154,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "TakeWhile",
         "Takes the longest prefix satisfying a criterion in the current first-pass subset.",
         functional_ops::eval_take_while,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGTU,
@@ -150,6 +163,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "LengthWhile",
         "Counts the longest prefix satisfying a criterion in the current first-pass subset.",
         functional_ops::eval_length_while,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGTU,
@@ -158,6 +172,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "Inner",
         "Combines matching tensor dimensions in the current first-pass subset.",
         functional_ops::eval_inner,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGTU,
@@ -170,6 +185,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "Dot",
         "Contracts list tensors over the last axis of each left operand and the first axis of each right operand.",
         functional_ops::eval_dot,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -181,6 +197,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "Fold",
         "Accumulates over elements in the current first-pass subset.",
         functional_ops::eval_fold,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGTU,
@@ -189,6 +206,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "FoldList",
         "Returns successive accumulator states in the current first-pass subset.",
         functional_ops::eval_fold_list,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGTU,
@@ -197,6 +215,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "FoldPair",
         "Accumulates pair-valued state transitions in the current first-pass subset.",
         functional_ops::eval_fold_pair,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGTU,
@@ -205,6 +224,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "FoldWhile",
         "Accumulates while a test stays True in the current first-pass subset.",
         functional_ops::eval_fold_while,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -217,6 +237,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "SequenceFold",
         "Folds a sequence with a sliding history in the current first-pass subset.",
         functional_ops::eval_sequence_fold,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -229,6 +250,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "SequenceFoldList",
         "Returns the running history of a sequence fold in the current first-pass subset.",
         functional_ops::eval_sequence_fold_list,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -241,6 +263,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "Nest",
         "Applies a function repeatedly a fixed number of times.",
         functional_ops::eval_nest,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -253,6 +276,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "NestWhile",
         "Repeatedly applies a function while a test stays True in the current first-pass subset.",
         functional_ops::eval_nest_while,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -265,6 +289,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "NestList",
         "Returns repeated applications of a function in the current first-pass subset.",
         functional_ops::eval_nest_list,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -277,6 +302,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "NestWhileList",
         "Returns repeated applications while a test stays True in the current first-pass subset.",
         functional_ops::eval_nest_while_list,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -289,6 +315,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "FixedPoint",
         "Repeatedly applies a function until the result stops changing in the current first-pass subset.",
         functional_ops::eval_fixed_point,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -301,6 +328,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "FixedPointList",
         "Returns successive repeated applications until a fixed point in the current first-pass subset.",
         functional_ops::eval_fixed_point_list,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -313,6 +341,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "Apply",
         "Replaces the head of an expression in the current first-pass subset.",
         functional_ops::eval_apply,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -325,6 +354,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "MapApply",
         "Applies head replacement one level down in the current first-pass subset.",
         functional_ops::eval_map_apply,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -337,6 +367,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "OperatorApplied",
         "Represents a curried operator wrapper in the current first-pass subset.",
         functional_ops::eval_operator_applied,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -349,6 +380,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "CurryApplied",
         "Represents a left-to-right curried operator wrapper in the current first-pass subset.",
         functional_ops::eval_curry_applied,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -361,6 +393,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "ReverseApplied",
         "Represents a wrapper that reverses current call arguments before application in the current first-pass subset.",
         functional_ops::eval_reverse_applied,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -376,6 +409,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Flat)
             .with(Attribute::OneIdentity),
         functional_ops::eval_composition,
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::ordinary_with_attributes(
         "RightComposition",
@@ -384,11 +418,13 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Flat)
             .with(Attribute::OneIdentity),
         functional_ops::eval_right_composition,
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::ordinary(
         "Through",
         "Threads arguments through a functional head in the current first-pass subset.",
         functional_ops::eval_through,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGTU,
@@ -397,6 +433,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "Operate",
         "Applies an operator to heads in the head chain of an expression in the current first-pass subset.",
         functional_ops::eval_operate,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -409,6 +446,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "Array",
         "Constructs a dense list-like array by applying a function to generated indices in the current first-pass subset.",
         functional_ops::eval_array,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -421,6 +459,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "ArrayFilter",
         "Applies a function to local list-array neighborhoods in the current first-pass subset.",
         functional_ops::eval_array_filter,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -433,6 +472,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "ArrayReduce",
         "Reduces rectangular list arrays across selected dimensions in the current first-pass subset.",
         functional_ops::eval_array_reduce,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -445,6 +485,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "Outer",
         "Forms outer combinations of same-head expressions in the current dense-array subset.",
         functional_ops::eval_outer,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGTU,
@@ -457,6 +498,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "Select",
         "Selects elements satisfying a criterion in the current sequence subset.",
         functional_ops::eval_select,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -469,6 +511,7 @@ pub(crate) const FUNCTIONAL_BUILTINS: &[BuiltinSpec] = &[
         "SelectFirst",
         "Returns the first element satisfying a criterion in the current sequence subset.",
         functional_ops::eval_select_first,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGTU,

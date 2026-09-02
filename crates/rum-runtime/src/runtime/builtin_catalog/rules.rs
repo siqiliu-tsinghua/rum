@@ -6,6 +6,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "Part",
         "Extracts structural parts using integer positions, All, Span, and exact nested part specifications.",
         Session::eval_part,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -34,6 +35,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "Extract",
         "Extracts parts at structural positions, optionally wrapping each result before evaluation.",
         Session::eval_extract,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -65,6 +67,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "ReplacePart",
         "Replaces structural parts via immediate or delayed rules over exact, Span, and pattern-based position specifications, with Heads-aware matching.",
         Session::eval_replace_part,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -82,6 +85,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "ReplaceAt",
         "Applies rules at exact structural positions, with the current operator-form and exact-position first-pass subset.",
         Session::eval_replace_at,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -95,6 +99,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "Set",
         "Assigns an immediate value to a symbol or pattern.",
         builtin_set,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -123,6 +128,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "Adds an evaluated increment to a held symbol or exact Part target and stores the result.",
         AttributeSet::from_hold(HoldAttribute::HoldFirst).with(Attribute::SubValuesHoldAll),
         builtin_add_to,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -139,6 +145,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "Subtracts an evaluated decrement from a held symbol or exact Part target and stores the result.",
         AttributeSet::from_hold(HoldAttribute::HoldFirst).with(Attribute::SubValuesHoldAll),
         builtin_subtract_from,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -155,6 +162,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "Multiplies a held symbol or exact Part target by an evaluated factor and stores the result.",
         AttributeSet::from_hold(HoldAttribute::HoldFirst).with(Attribute::SubValuesHoldAll),
         builtin_times_by,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -171,6 +179,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "Divides a held symbol or exact Part target by an evaluated divisor and stores the result.",
         AttributeSet::from_hold(HoldAttribute::HoldFirst).with(Attribute::SubValuesHoldAll),
         builtin_divide_by,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -187,6 +196,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "Applies an evaluated function to a held symbol or exact Part target and stores the result.",
         AttributeSet::from_hold(HoldAttribute::HoldFirst).with(Attribute::SubValuesHoldAll),
         builtin_apply_to,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -203,6 +213,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "Appends an evaluated item to a held symbol or exact Part target and stores the result.",
         AttributeSet::from_hold(HoldAttribute::HoldFirst).with(Attribute::SubValuesHoldAll),
         builtin_append_to,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -223,6 +234,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "Prepends an evaluated item to a held symbol or exact Part target and stores the result.",
         AttributeSet::from_hold(HoldAttribute::HoldFirst).with(Attribute::SubValuesHoldAll),
         builtin_prepend_to,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -243,6 +255,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "Increments a held symbol or exact Part target and returns its previous value.",
         HoldAttribute::HoldFirst,
         builtin_increment,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -259,6 +272,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "Decrements a held symbol or exact Part target and returns its previous value.",
         HoldAttribute::HoldFirst,
         builtin_decrement,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -275,6 +289,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "Increments a held symbol or exact Part target and returns the updated value.",
         HoldAttribute::HoldFirst,
         builtin_pre_increment,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -291,6 +306,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "Decrements a held symbol or exact Part target and returns the updated value.",
         HoldAttribute::HoldFirst,
         builtin_pre_decrement,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -306,6 +322,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "SetDelayed",
         "Assigns a delayed definition evaluated on use.",
         builtin_set_delayed,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -316,6 +333,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "UpSet",
         "Stores an immediate upvalue definition on one or more tag symbols inferred from the lhs arguments.",
         builtin_up_set,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -327,6 +345,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "UpSetDelayed",
         "Stores a delayed upvalue definition on one or more tag symbols inferred from the lhs arguments.",
         builtin_up_set_delayed,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -338,6 +357,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "TagSet",
         "Stores an immediate tagged definition, including upvalues when the tag appears in an argument position.",
         builtin_tag_set,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -354,6 +374,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "TagSetDelayed",
         "Stores a delayed tagged definition, including upvalues when the tag appears in an argument position.",
         builtin_tag_set_delayed,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -370,6 +391,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "TagUnset",
         "Removes a tagged definition using an explicit tag and lhs.",
         builtin_tag_unset,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -386,6 +408,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "Rule",
         "Represents an immediate rewrite rule.",
         builtin_rule,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -395,6 +418,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "RuleDelayed",
         "Represents a delayed rewrite rule.",
         builtin_rule_delayed,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -404,6 +428,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "Count",
         "Counts subexpressions matching a pattern on levels specified by a standard levelspec.",
         builtin_count,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -431,6 +456,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "MemberQ",
         "Tests whether any subexpression matches a pattern on levels specified by a standard levelspec.",
         builtin_member_q,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -458,6 +484,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "FreeQ",
         "Tests whether no subexpression matches a pattern on levels specified by a standard levelspec.",
         builtin_free_q,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -485,6 +512,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "Level",
         "Collects subexpressions found on levels specified by a standard levelspec.",
         Session::eval_level,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -508,6 +536,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "Position",
         "Finds positions of subexpressions matching a pattern on levels specified by a standard levelspec.",
         builtin_position,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -537,6 +566,7 @@ pub(super) const RULE_BUILTINS: &[BuiltinSpec] = &[
         "Normalizes a rule or rule list into an explicit canonical list form for debugging.",
         HoldAttribute::HoldAll,
         builtin_normalize_rules,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {

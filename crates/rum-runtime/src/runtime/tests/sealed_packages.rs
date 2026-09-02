@@ -46,21 +46,40 @@ fn test_string_join(
 fn sealed_package_session() -> Session {
     let mut session = session_with_test_control_builtins();
     session.register_builtin(
-        BuiltinSpec::ordinary("Symbol", "Test-only resolver adapter.", test_symbol).protected(),
+        BuiltinSpec::ordinary(
+            "Symbol",
+            "Test-only resolver adapter.",
+            test_symbol,
+            MemoryGrowthContract::NonAmplifying,
+        )
+        .protected(),
     );
     session.register_builtin(
         BuiltinSpec::ordinary(
             "ToExpression",
             "Test-only lowering adapter.",
             test_to_expression,
+            MemoryGrowthContract::Incremental,
         )
         .protected(),
     );
     session.register_builtin(
-        BuiltinSpec::ordinary("StringJoin", "Test-only string adapter.", test_string_join)
-            .protected(),
+        BuiltinSpec::ordinary(
+            "StringJoin",
+            "Test-only string adapter.",
+            test_string_join,
+            MemoryGrowthContract::Preflight,
+        )
+        .protected(),
     );
-    session.register_builtin(BuiltinSpec::new("Map", "Test-only known System symbol.").protected());
+    session.register_builtin(
+        BuiltinSpec::new(
+            "Map",
+            "Test-only known System symbol.",
+            MemoryGrowthContract::Incremental,
+        )
+        .protected(),
+    );
     session
 }
 

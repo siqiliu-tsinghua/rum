@@ -1,3 +1,4 @@
+use rum_runtime::kernel_api::MemoryGrowthContract;
 use rum_runtime::kernel_api::{
     Attribute, AttributeSet, BuiltinMessageSpec, BuiltinSpec, HoldAttribute,
 };
@@ -9,6 +10,7 @@ pub(crate) const LAZY_BUILTINS: &[BuiltinSpec] = &[
         "LazyDrop",
         "Builds a lazy sequence that skips a non-negative number of source elements.",
         lazy::eval_lazy_drop,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -25,6 +27,7 @@ pub(crate) const LAZY_BUILTINS: &[BuiltinSpec] = &[
         "LazyFoldList",
         "Builds a lazy sequence of successive accumulated values, including the initial value.",
         lazy::eval_lazy_fold_list,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -41,12 +44,14 @@ pub(crate) const LAZY_BUILTINS: &[BuiltinSpec] = &[
         "LazyList",
         "Represents an opaque pure lazy sequence descriptor.",
         AttributeSet::from_attribute(Attribute::HoldAllComplete),
+        MemoryGrowthContract::NonAmplifying,
     )
     .protected(),
     BuiltinSpec::ordinary(
         "LazyMap",
         "Builds a lazy sequence that applies a function to each source element.",
         lazy::eval_lazy_map,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -63,6 +68,7 @@ pub(crate) const LAZY_BUILTINS: &[BuiltinSpec] = &[
         "LazyNestList",
         "Builds an infinite lazy sequence by repeatedly applying a function to an initial value.",
         lazy::eval_lazy_nest_list,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[BuiltinMessageSpec {
         tag: "argx",
@@ -73,6 +79,7 @@ pub(crate) const LAZY_BUILTINS: &[BuiltinSpec] = &[
         "LazyPermutations",
         "Enumerates distinct list permutations lazily in rum's canonical lexicographic (sorted-first, not input-first) order.",
         lazy::eval_lazy_permutations,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -89,6 +96,7 @@ pub(crate) const LAZY_BUILTINS: &[BuiltinSpec] = &[
         "LazyRange",
         "Builds an infinite lazy arithmetic sequence from an optional start and step.",
         lazy::eval_lazy_range,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -105,6 +113,7 @@ pub(crate) const LAZY_BUILTINS: &[BuiltinSpec] = &[
         "LazySelect",
         "Builds a lazy sequence retaining source elements whose predicate returns True.",
         lazy::eval_lazy_select,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -121,6 +130,7 @@ pub(crate) const LAZY_BUILTINS: &[BuiltinSpec] = &[
         "LazySubsets",
         "Enumerates the subsets of a list lazily in size-major, index-lexicographic order.",
         lazy::eval_lazy_subsets,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -138,6 +148,7 @@ pub(crate) const LAZY_BUILTINS: &[BuiltinSpec] = &[
         "Builds a lazy arithmetic table whose held body evaluates once per realized element.",
         HoldAttribute::HoldAll,
         lazy::eval_lazy_table,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -154,6 +165,7 @@ pub(crate) const LAZY_BUILTINS: &[BuiltinSpec] = &[
         "LazyTake",
         "Builds a finite lazy sequence capped by a non-negative element count.",
         lazy::eval_lazy_take,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -170,6 +182,7 @@ pub(crate) const LAZY_BUILTINS: &[BuiltinSpec] = &[
         "LazyTuples",
         "Enumerates repeated tuples or a list-of-lists cartesian product lazily with the last index varying fastest.",
         lazy::eval_lazy_tuples,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {

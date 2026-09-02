@@ -1,3 +1,4 @@
+use rum_runtime::kernel_api::MemoryGrowthContract;
 use rum_runtime::kernel_api::{Attribute, AttributeSet, BuiltinMessageSpec, BuiltinSpec};
 
 use super::message_templates::*;
@@ -12,6 +13,7 @@ pub(crate) const NUMBER_THEORY_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Listable)
             .with(Attribute::Protected),
         number_theory::eval_divisors,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGX_EXACT]),
     BuiltinSpec::ordinary_with_attributes(
@@ -21,6 +23,7 @@ pub(crate) const NUMBER_THEORY_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Listable)
             .with(Attribute::Protected),
         number_theory::eval_euler_phi,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGX_EXACT]),
     BuiltinSpec::ordinary_with_attributes(
@@ -30,6 +33,7 @@ pub(crate) const NUMBER_THEORY_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Listable)
             .with(Attribute::Protected),
         number_theory::eval_moebius_mu,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGX_EXACT]),
     BuiltinSpec::ordinary_with_attributes(
@@ -40,6 +44,7 @@ pub(crate) const NUMBER_THEORY_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::NHoldAll)
             .with(Attribute::Protected),
         number_theory::eval_divisor_sigma,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGX_EXACT]),
     BuiltinSpec::ordinary_with_attributes(
@@ -49,6 +54,7 @@ pub(crate) const NUMBER_THEORY_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Listable)
             .with(Attribute::Protected),
         number_theory::eval_prime,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -64,6 +70,7 @@ pub(crate) const NUMBER_THEORY_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Listable)
             .with(Attribute::Protected),
         number_theory::eval_prime_pi,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGX_EXACT]),
     BuiltinSpec::ordinary_with_attributes(
@@ -73,6 +80,7 @@ pub(crate) const NUMBER_THEORY_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Protected)
             .with(Attribute::ReadProtected),
         number_theory::eval_prime_nu,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGX_EXACT]),
     BuiltinSpec::ordinary_with_attributes(
@@ -82,6 +90,7 @@ pub(crate) const NUMBER_THEORY_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Protected)
             .with(Attribute::ReadProtected),
         number_theory::eval_prime_omega,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGX_EXACT]),
     BuiltinSpec::ordinary_with_attributes(
@@ -91,6 +100,7 @@ pub(crate) const NUMBER_THEORY_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Protected)
             .with(Attribute::ReadProtected),
         number_theory::eval_next_prime,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGTU]),
 ];

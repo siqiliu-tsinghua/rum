@@ -7,6 +7,7 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates an expression and returns a first-pass structured trace of current evaluation events.",
         HoldAttribute::HoldAll,
         builtin_trace,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -21,6 +22,7 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates an expression and returns a lossless structured trace whose event associations preserve rule and definition details.",
         HoldAttribute::HoldAll,
         builtin_trace_detail,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -35,6 +37,7 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates an expression, emits its current first-pass structured trace through the print stream, and returns the result.",
         HoldAttribute::HoldAll,
         builtin_trace_print,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -49,6 +52,7 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates an expression and returns {elapsed, value}, with elapsed exact rational seconds measured by a monotonic clock.",
         HoldAttribute::HoldAll,
         builtin_timing,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -59,6 +63,7 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
         "AbsoluteTime",
         "Returns the current exact rational Unix timestamp (seconds since 1970-01-01T00:00:00Z); requires Capability::Clock.",
         Session::eval_absolute_time,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -70,6 +75,7 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates an expression and returns {elapsed, value}, with elapsed exact rational seconds measured by a monotonic clock.",
         HoldAttribute::HoldAll,
         builtin_absolute_timing,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -83,6 +89,7 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::HoldFirst)
             .with(Attribute::SequenceHold),
         builtin_repeated_timing,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -93,6 +100,7 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
         "Short",
         "Returns the current canonical-text shortened display subset for an expression.",
         Session::eval_short,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -105,27 +113,32 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
         "Echo",
         "Prints a value through the runtime print stream and returns it.",
         Session::eval_echo,
+        MemoryGrowthContract::Incremental,
     ).protected(),
     BuiltinSpec::ordinary(
         "EchoFunction",
         "Returns a pure function that echoes its argument through the runtime print stream.",
         Session::eval_echo_function,
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::ordinary(
         "EchoLabel",
         "Returns a pure function that echoes its argument with a label through the runtime print stream.",
         Session::eval_echo_label,
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::ordinary(
         "ByteCount",
         "Returns the current canonical-text byte count for an expression in the first-pass resource subset.",
         builtin_byte_count,
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::ordinary_with_hold(
         "On",
         "Enables session-level assertion checking or emission of matching messages in the current selector subset.",
         HoldAttribute::HoldAll,
         builtin_on,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -143,6 +156,7 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
         "Disables session-level assertion checking or emission of matching messages in the current selector subset.",
         HoldAttribute::HoldAll,
         builtin_off,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -159,12 +173,14 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
         "Sow",
         "Collects a value for enclosing Reap in the current first-pass tag-and-group subset.",
         Session::eval_sow,
+        MemoryGrowthContract::Incremental,
     ).protected(),
     BuiltinSpec::ordinary_with_hold(
         "Reap",
         "Evaluates an expression and collects values emitted by Sow in the current first-pass grouping subset.",
         HoldAttribute::HoldFirst,
         builtin_reap,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGTU,
@@ -175,6 +191,7 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates an expression under the current cooperative exact-numeric timeout subset.",
         HoldAttribute::HoldAll,
         builtin_time_constrained,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -190,6 +207,7 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates an expression under the current cooperative memory-proxy limit subset.",
         HoldAttribute::HoldAll,
         builtin_memory_constrained,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -203,12 +221,14 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
         "MemoryInUse",
         "Returns the current session memory-proxy byte count subset.",
         builtin_memory_in_use,
+        MemoryGrowthContract::NonAmplifying,
     ).protected()
     .with_capability(Capability::Diagnostic),
     BuiltinSpec::ordinary(
         "MaxMemoryUsed",
         "Returns the peak session memory-proxy byte count high-water mark subset.",
         builtin_max_memory_used,
+        MemoryGrowthContract::NonAmplifying,
     ).protected()
     .with_capability(Capability::Diagnostic),
     BuiltinSpec::ordinary_with_hold(
@@ -216,6 +236,7 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates an expression while exposing the current first-pass monitor display and callback subset.",
         HoldAttribute::HoldAll,
         builtin_monitor,
+        MemoryGrowthContract::Delegated,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -230,6 +251,7 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
         "Evaluates an expression and returns a first-pass association of result and diagnostics.",
         HoldAttribute::HoldFirst,
         builtin_evaluation_data,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -244,6 +266,7 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
         "RumProfileReset",
         "Internal diagnostic hook: resets rum runtime profile counters when profiling is enabled.",
         builtin_rum_profile_reset,
+        MemoryGrowthContract::NonAmplifying,
     )
     .with_messages(&[
         ARGX_EXACT,
@@ -254,6 +277,7 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
         "RumProfileSnapshot",
         "Internal diagnostic hook: prints rum runtime profile counters when profiling is enabled.",
         builtin_rum_profile_snapshot,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGTU,
@@ -265,11 +289,13 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
         "Builds a first-pass symbolic test specification.",
         HoldAttribute::HoldAll,
         Session::eval_test_create,
+        MemoryGrowthContract::NonAmplifying,
     ).protected(),
     BuiltinSpec::ordinary(
         "TestReport",
         "Runs one or more first-pass symbolic tests and returns an association summary.",
         Session::eval_test_report,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         BuiltinMessageSpec {
@@ -284,6 +310,7 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
         "Returns the current evaluation stack in the first-pass held-expression subset.",
         HoldAttribute::HoldAll,
         builtin_stack,
+        MemoryGrowthContract::Incremental,
     )
     .with_messages(&[
         ARGX_EXACT,

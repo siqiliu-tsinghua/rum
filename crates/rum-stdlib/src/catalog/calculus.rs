@@ -1,3 +1,4 @@
+use rum_runtime::kernel_api::MemoryGrowthContract;
 use rum_runtime::kernel_api::{BuiltinMessageSpec, BuiltinSpec, HoldAttribute};
 
 use super::message_templates::*;
@@ -9,6 +10,7 @@ pub(crate) const CALCULUS_BUILTINS: &[BuiltinSpec] = &[BuiltinSpec::ordinary_wit
     "Differentiates exact arithmetic, rational-function, and abstract-function expressions with held differentiation variables.",
     HoldAttribute::HoldRest,
     calculus::eval_d,
+    MemoryGrowthContract::Incremental,
 )
     .with_messages(&[
         ARGX_AT_LEAST_TWO,

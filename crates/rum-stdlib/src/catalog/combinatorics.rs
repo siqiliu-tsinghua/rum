@@ -1,3 +1,4 @@
+use rum_runtime::kernel_api::MemoryGrowthContract;
 use rum_runtime::kernel_api::{Attribute, AttributeSet, BuiltinSpec};
 
 use super::message_templates::*;
@@ -13,6 +14,7 @@ pub(crate) const COMBINATORICS_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::NumericFunction)
             .with(Attribute::Protected),
         combinatorics::eval_binomial,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGX_EXACT]),
     BuiltinSpec::ordinary_with_attributes(
@@ -24,6 +26,7 @@ pub(crate) const COMBINATORICS_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Protected)
             .with(Attribute::ReadProtected),
         combinatorics::eval_fibonacci,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGX_EXACT]),
     BuiltinSpec::ordinary_with_attributes(
@@ -33,6 +36,7 @@ pub(crate) const COMBINATORICS_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Listable)
             .with(Attribute::Protected),
         combinatorics::eval_partitions_p,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGX_EXACT]),
     BuiltinSpec::ordinary_with_attributes(
@@ -42,6 +46,7 @@ pub(crate) const COMBINATORICS_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Listable)
             .with(Attribute::Protected),
         combinatorics::eval_partitions_q,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGX_EXACT]),
     BuiltinSpec::ordinary_with_attributes(
@@ -51,6 +56,7 @@ pub(crate) const COMBINATORICS_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Listable)
             .with(Attribute::Protected),
         combinatorics::eval_bernoulli_b,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGX_EXACT]),
     BuiltinSpec::ordinary_with_attributes(
@@ -62,6 +68,7 @@ pub(crate) const COMBINATORICS_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Protected)
             .with(Attribute::ReadProtected),
         combinatorics::eval_subfactorial,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGX_EXACT]),
     BuiltinSpec::ordinary_with_attributes(
@@ -71,6 +78,7 @@ pub(crate) const COMBINATORICS_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Listable)
             .with(Attribute::Protected),
         combinatorics::eval_stirling_s1,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGX_EXACT]),
     BuiltinSpec::ordinary_with_attributes(
@@ -80,6 +88,7 @@ pub(crate) const COMBINATORICS_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Listable)
             .with(Attribute::Protected),
         combinatorics::eval_stirling_s2,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGX_EXACT]),
     BuiltinSpec::ordinary_with_attributes(
@@ -91,6 +100,7 @@ pub(crate) const COMBINATORICS_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Protected)
             .with(Attribute::ReadProtected),
         combinatorics::eval_catalan_number,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGX_EXACT]),
     BuiltinSpec::ordinary_with_attributes(
@@ -102,6 +112,7 @@ pub(crate) const COMBINATORICS_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::Orderless)
             .with(Attribute::Protected),
         combinatorics::eval_multinomial,
+        MemoryGrowthContract::Preflight,
     ),
     BuiltinSpec::ordinary_with_attributes(
         "Pochhammer",
@@ -111,6 +122,7 @@ pub(crate) const COMBINATORICS_BUILTINS: &[BuiltinSpec] = &[
             .with(Attribute::NumericFunction)
             .with(Attribute::Protected),
         combinatorics::eval_pochhammer,
+        MemoryGrowthContract::Preflight,
     )
     .with_messages(&[ARGX_EXACT]),
 ];

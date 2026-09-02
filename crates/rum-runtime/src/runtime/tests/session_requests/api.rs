@@ -668,6 +668,7 @@ fn accepted_script_and_file_stop_before_later_forms_after_cancellation() {
         "TestEvaluationStarted",
         "Marks the accepted script's first form as started.",
         mark_file_request_evaluation_started,
+        MemoryGrowthContract::Incremental,
     ));
     let script = script_session
         .accept_cancellable_request()
@@ -704,6 +705,7 @@ fn accepted_script_and_file_stop_before_later_forms_after_cancellation() {
         "TestEvaluationStarted",
         "Marks the accepted file's first form as started.",
         mark_file_request_evaluation_started,
+        MemoryGrowthContract::Incremental,
     ));
     install_test_file_io(&mut file_session);
     let file_request = file_session
@@ -813,6 +815,7 @@ fn file_request_maps_resource_limit_exit_and_cancel_errors() {
         "TestEvaluationStarted",
         "Marks that a cancellation-test file evaluation reached builtin dispatch.",
         mark_file_request_evaluation_started,
+        MemoryGrowthContract::Incremental,
     ));
     let (evaluation_started_tx, evaluation_started_rx) = mpsc::sync_channel(0);
     session.set_print_sink(Box::new(move |line| {

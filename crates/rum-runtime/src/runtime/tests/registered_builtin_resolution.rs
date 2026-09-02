@@ -16,6 +16,7 @@ fn registered_builtin_absent_from_static_catalog_resolves_as_system_symbol() {
         "ZzzProbe",
         "Runtime registration resolution probe.",
         eval_zzz_probe,
+        MemoryGrowthContract::NonAmplifying,
     ));
 
     let result = session.eval_text("ZzzProbe[1]").unwrap();

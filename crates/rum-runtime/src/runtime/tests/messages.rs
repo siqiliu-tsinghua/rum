@@ -363,6 +363,7 @@ fn push_message_allows_test_local_builtins_without_declared_messages() {
     session.register_builtin(BuiltinSpec::new(
         "MessageProbe",
         "Test-local builtin with no declared messages.",
+        MemoryGrowthContract::NonAmplifying,
     ));
 
     session.push_message("MessageProbe", "custom", "undeclared family");

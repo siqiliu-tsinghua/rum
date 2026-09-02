@@ -1,5 +1,10 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
+use std::sync::atomic::{AtomicU8, Ordering};
+
+const BUILTIN_MEMORY_GROWTH_TEST_ENV: &str = "RUM_TEST_BUILTIN_MEMORY_GROWTH";
+const NON_AMPLIFYING_RESULT_ALLOWANCE_BYTES: usize = 1024;
+static BUILTIN_MEMORY_GROWTH_TEST_ENABLED: AtomicU8 = AtomicU8::new(0);
 
 impl Session {
     pub(super) fn build_call_dispatch_plan(&mut self, head: &Expr) -> CallDispatchPlan {
@@ -126,7 +131,10 @@ impl Session {
         &mut self,
         request: RuntimeInputRequest,
     ) -> Result<Option<Expr>, EvalError> {
-        crate::resume_or_suspend!(insert self, RunCallDispatchStageSuspensionFrame);
+        crate::resume_or_suspend!(
+            insert self,
+            RunCallDispatchStageSuspensionFrame::threaded_call()
+        );
         Err(EvalError::InputRequired { request })
     }
 
@@ -163,8 +171,63 @@ impl Session {
         let profile_builtin_start =
             builtin_symbol.map(|symbol| builtin_timing_start(&symbol, args.len()));
         let result = self.run_builtin_handler(handler, head, args);
+        let result = crate::resume_or_suspend!(
+            self,
+            result,
+            ok(value) => Ok(value),
+            suspend => RunCallDispatchStageSuspensionFrame::builtin(
+                spec.name(),
+                spec.memory_growth(),
+                args.clone(),
+            ),
+        );
         record_profile_builtin_timing(profile_builtin_start.flatten(), result.is_ok());
+        self.validate_builtin_memory_growth(spec.name(), spec.memory_growth(), args, &result);
         result.map(Some)
+    }
+
+    #[inline]
+    fn validate_builtin_memory_growth(
+        &mut self,
+        name: &'static str,
+        contract: MemoryGrowthContract,
+        args: &SharedArgs,
+        result: &Result<Expr, EvalError>,
+    ) {
+        if self.current_memory_limit.is_none() && !builtin_memory_growth_test_enabled() {
+            return;
+        }
+        self.validate_builtin_memory_growth_slow(name, contract, args, result);
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn validate_builtin_memory_growth_slow(
+        &mut self,
+        name: &'static str,
+        contract: MemoryGrowthContract,
+        args: &SharedArgs,
+        result: &Result<Expr, EvalError>,
+    ) {
+        if contract != MemoryGrowthContract::NonAmplifying {
+            return;
+        }
+
+        let argument_bytes = args.iter().fold(0usize, |total, arg| {
+            total.saturating_add(self.local_expr_memory_proxy_bytes(arg))
+        });
+        match result {
+            Ok(result) => assert_non_amplifying_result(name, argument_bytes, result, self),
+            Err(_) => {}
+        }
+    }
+
+    fn local_expr_memory_proxy_bytes(&mut self, expr: &Expr) -> usize {
+        let byte_count = self
+            .eval_byte_count(&system_expr("ByteCount"), std::slice::from_ref(expr))
+            .expect("the internal ByteCount proxy cannot fail");
+        expr_as_non_negative_usize(&byte_count)
+            .expect("the internal ByteCount proxy always returns a non-negative integer")
     }
 
     fn sandbox_denied_builtin<S: CallBuiltinSpec>(&mut self, head: &Expr, spec: S) -> Expr {
@@ -193,6 +256,7 @@ pub(super) trait CallBuiltinSpec: Copy {
     fn name(self) -> &'static str;
     fn handler(self) -> Option<BuiltinFn>;
     fn capability(self) -> Capability;
+    fn memory_growth(self) -> MemoryGrowthContract;
 }
 
 impl CallBuiltinSpec for BuiltinSpec {
@@ -206,6 +270,10 @@ impl CallBuiltinSpec for BuiltinSpec {
 
     fn capability(self) -> Capability {
         self.capability
+    }
+
+    fn memory_growth(self) -> MemoryGrowthContract {
+        self.memory_growth
     }
 }
 
@@ -221,19 +289,93 @@ impl CallBuiltinSpec for SuspendedBuiltinSpec {
     fn capability(self) -> Capability {
         self.capability.into_capability()
     }
+
+    fn memory_growth(self) -> MemoryGrowthContract {
+        MemoryGrowthContract::from_suspended_code(self.memory_growth_code)
+    }
+}
+
+#[inline]
+fn builtin_memory_growth_test_enabled() -> bool {
+    if cfg!(test) {
+        return true;
+    }
+
+    match BUILTIN_MEMORY_GROWTH_TEST_ENABLED.load(Ordering::Relaxed) {
+        1 => true,
+        2 => false,
+        _ => initialize_builtin_memory_growth_test_enabled(),
+    }
+}
+
+#[cold]
+fn initialize_builtin_memory_growth_test_enabled() -> bool {
+    let enabled = std::env::var_os(BUILTIN_MEMORY_GROWTH_TEST_ENV)
+        .is_some_and(|value| !value.is_empty() && value != "0");
+    BUILTIN_MEMORY_GROWTH_TEST_ENABLED.store(if enabled { 1 } else { 2 }, Ordering::Relaxed);
+    enabled
+}
+
+#[cold]
+fn assert_non_amplifying_result(
+    name: &'static str,
+    argument_bytes: usize,
+    result: &Expr,
+    session: &mut Session,
+) {
+    let result_bytes = session.local_expr_memory_proxy_bytes(result);
+    assert!(
+        result_bytes <= argument_bytes.saturating_add(NON_AMPLIFYING_RESULT_ALLOWANCE_BYTES),
+        "builtin {name} declared NonAmplifying but returned {result_bytes} proxy bytes from \
+         {argument_bytes} argument proxy bytes (allowance: \
+         {NON_AMPLIFYING_RESULT_ALLOWANCE_BYTES} bytes)"
+    );
 }
 
 #[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
-struct RunCallDispatchStageSuspensionFrame;
+struct RunCallDispatchStageSuspensionFrame {
+    builtin_name: Option<&'static str>,
+    memory_growth_code: u8,
+    args: Option<SharedArgs>,
+}
+
+impl RunCallDispatchStageSuspensionFrame {
+    fn threaded_call() -> Self {
+        Self {
+            builtin_name: None,
+            memory_growth_code: 0,
+            args: None,
+        }
+    }
+
+    fn builtin(name: &'static str, memory_growth: MemoryGrowthContract, args: SharedArgs) -> Self {
+        Self {
+            builtin_name: Some(name),
+            memory_growth_code: memory_growth.suspended_code(),
+            args: Some(args),
+        }
+    }
+}
 
 impl crate::runtime::suspension::SuspensionFrame for RunCallDispatchStageSuspensionFrame {
     fn resume(
         self: std::sync::Arc<Self>,
-        _session: &mut Session,
+        session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
         let resumed = match outcome {
-            Ok(value) => Ok(value),
+            Ok(value) => {
+                let result = Ok(value);
+                if let (Some(name), Some(args)) = (self.builtin_name, self.args.as_ref()) {
+                    session.validate_builtin_memory_growth(
+                        name,
+                        MemoryGrowthContract::from_suspended_code(self.memory_growth_code),
+                        args,
+                        &result,
+                    );
+                }
+                result
+            }
             Err(error) => Err(error),
         };
         crate::runtime::suspension::FrameAction::complete(resumed)

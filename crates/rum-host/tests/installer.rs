@@ -1,5 +1,6 @@
 use rum_core::{BigInt, Expr, SharedArgs};
 use rum_host::{HostConfig, HostEvalOutcome, HostEvalSuccess, HostSession};
+use rum_runtime::kernel_api::MemoryGrowthContract;
 use rum_runtime::kernel_api::{BuiltinSpec, Capability, EvalError, Session, expr_as_exact_integer};
 
 fn successful_eval(outcome: HostEvalOutcome) -> HostEvalSuccess {
@@ -33,12 +34,14 @@ fn install_demo_family(session: &mut Session) {
         "DemoDouble",
         "Doubles an exact integer for host installer tests.",
         demo_double,
+        MemoryGrowthContract::Preflight,
     ));
     session.register_builtin(
         BuiltinSpec::ordinary(
             "DemoRead",
             "Reports that a host installer FileRead builtin reached dispatch.",
             demo_read,
+            MemoryGrowthContract::NonAmplifying,
         )
         .with_capability(Capability::FileRead),
     );
@@ -74,6 +77,7 @@ fn install_order_first(session: &mut Session) {
         "DemoOrder",
         "First installer order probe.",
         demo_order_first,
+        MemoryGrowthContract::NonAmplifying,
     ));
 }
 
@@ -82,6 +86,7 @@ fn install_order_second(session: &mut Session) {
         "DemoOrder",
         "Second installer order probe.",
         demo_order_second,
+        MemoryGrowthContract::NonAmplifying,
     ));
 }
 
