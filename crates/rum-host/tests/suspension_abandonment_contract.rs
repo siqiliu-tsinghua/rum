@@ -5,6 +5,16 @@ use std::sync::{
 };
 use std::time::Duration;
 
+// Subject and control run in separate sessions with different histories, so the
+// abandoned run sits a little above the completed one: 260_758 against 259_090,
+// a 1_668-byte skew, identical across five consecutive runs — the structural
+// proxy is deterministic, not sampled. The margin is twice that observed skew,
+// which leaves room for a bookkeeping change on the abandonment path while
+// staying far below the ~64 KB a genuinely retained 2000-element Reap bucket
+// would cost. Derive it from the printed subject/control numbers if it ever
+// needs revisiting; do not round it to a convenient power of two.
+const COMPLETED_REAP_GROWTH_MARGIN_BYTES: i64 = 3_336;
+
 fn session_with_counting_print(expected: &'static str) -> (HostSession, Arc<AtomicUsize>) {
     let calls = Arc::new(AtomicUsize::new(0));
     let sink_calls = Arc::clone(&calls);
@@ -265,12 +275,20 @@ fn public_monitor_matrix_restores_reap_monitor_trace_constraints_random_and_abor
     assert!(matches!(reap, HostEvalOutcome::Success(ref value) if value.value.text == "Null"));
     let memory_after = integer_value(&mut session, "MemoryInUse[]");
     let memory_growth = memory_after.saturating_sub(memory_before);
+
+    let (mut completed_reap, _completed_refreshes) =
+        session_with_counting_print("monitor-refresh-403");
+    success(&mut completed_reap, "abortAfter403 = 0");
+    let completed_memory_before = integer_value(&mut completed_reap, "MemoryInUse[]");
+    success(&mut completed_reap, "Reap[Sow[Range[2000]]; 1]");
+    let completed_memory_after = integer_value(&mut completed_reap, "MemoryInUse[]");
+    let completed_memory_growth = completed_memory_after.saturating_sub(completed_memory_before);
     println!(
-        "matrix.reap.memory=before:{memory_before},after:{memory_after},growth:{memory_growth}"
+        "matrix.reap.memory=abandoned:before:{memory_before},after:{memory_after},growth:{memory_growth};completed:before:{completed_memory_before},after:{completed_memory_after},growth:{completed_memory_growth};margin:{COMPLETED_REAP_GROWTH_MARGIN_BYTES}"
     );
     assert!(
-        memory_growth < 16_000,
-        "abandoned Reap buckets retained {memory_growth} proxy bytes"
+        memory_growth <= completed_memory_growth.saturating_add(COMPLETED_REAP_GROWTH_MARGIN_BYTES),
+        "abandoned Reap retained {memory_growth} proxy bytes versus completed control {completed_memory_growth} plus {COMPLETED_REAP_GROWTH_MARGIN_BYTES} bytes"
     );
 
     let monitor = session
@@ -472,12 +490,19 @@ fn public_cancelled_suspension_restores_reap_monitor_trace_and_constraint_state(
     );
     let memory_after = integer_value(&mut session, "MemoryInUse[]");
     let memory_growth = memory_after.saturating_sub(memory_before);
+
+    let mut completed_reap = HostSession::new();
+    success(&mut completed_reap, "cancelSentinel404 = 0");
+    let completed_memory_before = integer_value(&mut completed_reap, "MemoryInUse[]");
+    success(&mut completed_reap, "Reap[Sow[Range[2000]]; 1]");
+    let completed_memory_after = integer_value(&mut completed_reap, "MemoryInUse[]");
+    let completed_memory_growth = completed_memory_after.saturating_sub(completed_memory_before);
     println!(
-        "cancel.matrix.reap.memory=before:{memory_before},after:{memory_after},growth:{memory_growth}"
+        "cancel.matrix.reap.memory=cancelled:before:{memory_before},after:{memory_after},growth:{memory_growth};completed:before:{completed_memory_before},after:{completed_memory_after},growth:{completed_memory_growth};margin:{COMPLETED_REAP_GROWTH_MARGIN_BYTES}"
     );
     assert!(
-        memory_growth < 16_000,
-        "cancelled Reap buckets retained {memory_growth} proxy bytes"
+        memory_growth <= completed_memory_growth.saturating_add(COMPLETED_REAP_GROWTH_MARGIN_BYTES),
+        "cancelled Reap retained {memory_growth} proxy bytes versus completed control {completed_memory_growth} plus {COMPLETED_REAP_GROWTH_MARGIN_BYTES} bytes"
     );
     assert_text(&mut session, "cancelSentinel404", "0");
 

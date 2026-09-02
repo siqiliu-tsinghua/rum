@@ -99,10 +99,34 @@ fn byte_count_and_memory_in_use_use_the_current_structural_proxy_subset() {
     );
 
     session.eval_text("On[FindFile::notfound]").unwrap();
-    let after_on = session.eval_text("MemoryInUse[]").unwrap().value;
+
+    // MemoryInUse[] populates the call-stability cache, so a later same-session
+    // sample cannot isolate the bytes released by On. These fresh sessions run
+    // the same On/Off requests in opposite order, leaving the same cache keys
+    // but differing in whether the message selector remains disabled.
+    let mut selector_retained = core_session();
+    selector_retained
+        .eval_text("On[FindFile::notfound]")
+        .unwrap();
+    selector_retained
+        .eval_text("Off[FindFile::notfound]")
+        .unwrap();
+    let retained_memory = selector_retained.eval_text("MemoryInUse[]").unwrap().value;
+
+    let mut selector_removed = core_session();
+    selector_removed
+        .eval_text("Off[FindFile::notfound]")
+        .unwrap();
+    selector_removed
+        .eval_text("On[FindFile::notfound]")
+        .unwrap();
+    let removed_memory = selector_removed.eval_text("MemoryInUse[]").unwrap().value;
     assert_eq!(
-        session
-            .evaluate(Expr::call(system_expr("Less"), vec![after_on, after_off]))
+        selector_removed
+            .evaluate(Expr::call(
+                system_expr("Less"),
+                vec![removed_memory, retained_memory]
+            ))
             .unwrap()
             .to_string(),
         "True"
@@ -182,9 +206,12 @@ fn max_memory_used_tracks_session_memory_proxy_high_water_mark() {
     let initial = session.eval_text("MaxMemoryUsed[]").unwrap().value;
     assert!(initial.to_string().parse::<usize>().unwrap() > 0);
 
+    // MemoryInUse[] itself grows the call-stability cache. A peak sampled first
+    // therefore cannot cover state retained before the later current-use walk;
+    // sample current use first, then observe the high-water mark.
     assert_eq!(
         session
-            .eval_text("MaxMemoryUsed[] >= MemoryInUse[]")
+            .eval_text("MemoryInUse[] <= MaxMemoryUsed[]")
             .unwrap()
             .value
             .to_string(),

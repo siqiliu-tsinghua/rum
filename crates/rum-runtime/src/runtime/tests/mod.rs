@@ -172,6 +172,7 @@ mod sealed_packages;
 mod sealed_snapshot;
 mod sealed_visibility;
 mod session_config;
+mod session_memory;
 mod session_requests;
 mod structure_data;
 mod structured_exceptions;

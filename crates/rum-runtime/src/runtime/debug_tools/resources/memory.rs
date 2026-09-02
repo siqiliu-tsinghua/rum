@@ -55,6 +55,21 @@ impl Session {
                 .len()
                 .saturating_mul(std::mem::size_of::<(Symbol, BuiltinSpec)>()),
         );
+        total = total.saturating_add(render_symbol_keyed_hash_map_memory_proxy_bytes(
+            &self.attribute_set_cache,
+        ));
+        total = total.saturating_add(render_symbol_keyed_hash_map_memory_proxy_bytes(
+            &self.builtin_dispatch_spec_cache,
+        ));
+        total = total.saturating_add(render_symbol_keyed_hash_map_memory_proxy_bytes(
+            &self.stable_symbol_cache,
+        ));
+        total = total.saturating_add(render_symbol_call_effect_cache_memory_proxy_bytes(
+            &self.symbol_call_effect_cache,
+        ));
+        total = total.saturating_add(render_call_stability_cache_memory_proxy_bytes(
+            &self.call_stability_cache,
+        ));
         total = total.saturating_add(self.association_lookup_cache.memory_proxy_bytes());
 
         total = total.saturating_add(self.current_context.capacity());
@@ -71,6 +86,16 @@ impl Session {
         ));
         total = total.saturating_add(render_string_vec_memory_proxy_bytes(&self.loaded_packages));
         total = total.saturating_add(render_path_buf_vec_memory_proxy_bytes(&self.load_stack));
+        total = total.saturating_add(
+            self.file_io
+                .as_ref()
+                .map_or(0, render_file_io_provider_memory_proxy_bytes),
+        );
+        total = total.saturating_add(
+            self.entropy_source
+                .as_ref()
+                .map_or(0, render_entropy_provider_memory_proxy_bytes),
+        );
 
         total = total.saturating_add(
             self.evaluation_stack
@@ -88,6 +113,12 @@ impl Session {
                 })
                 .sum::<usize>(),
         );
+        total = total.saturating_add(render_symbol_hash_set_memory_proxy_bytes(
+            &self.installed_system_own_values,
+        ));
+        total = total.saturating_add(render_installed_system_down_values_memory_proxy_bytes(
+            &self.installed_system_down_values,
+        ));
 
         total = total.saturating_add(
             self.attributes
@@ -146,6 +177,23 @@ impl Session {
                 .sum::<usize>()
                 .saturating_add(vec_spare_capacity_bytes(&self.option_value_scopes)),
         );
+        total = total.saturating_add(
+            self.dynamic_own_values
+                .iter()
+                .map(render_dynamic_own_value_frame_memory_proxy_bytes)
+                .sum::<usize>()
+                .saturating_add(vec_spare_capacity_bytes(&self.dynamic_own_values)),
+        );
+        total = total.saturating_add(
+            self.module_activations
+                .iter()
+                .map(render_module_activation_memory_proxy_bytes)
+                .sum::<usize>()
+                .saturating_add(vec_spare_capacity_bytes(&self.module_activations)),
+        );
+        total = total.saturating_add(render_symbol_hash_set_memory_proxy_bytes(
+            &self.gc_candidate_gensyms,
+        ));
 
         total = total.saturating_add(
             self.disabled_message_selectors
@@ -172,6 +220,19 @@ impl Session {
                 })
                 .sum::<usize>(),
         );
+        total = total.saturating_add(render_exception_types_memory_proxy_bytes(
+            &self.exception_types,
+        ));
+        total = total.saturating_add(render_symbol_keyed_hash_map_memory_proxy_bytes(
+            &self.message_symbol_counts,
+        ));
+        total = total.saturating_add(
+            self.sealed_units
+                .iter()
+                .map(render_source_unit_memory_proxy_bytes)
+                .sum::<usize>()
+                .saturating_add(vec_spare_capacity_bytes(&self.sealed_units)),
+        );
 
         total = total.saturating_add(
             self.messages
@@ -190,6 +251,11 @@ impl Session {
         );
 
         total = total.saturating_add(render_string_vec_memory_proxy_bytes(&self.prints));
+        total = total.saturating_add(
+            self.print_sink
+                .as_ref()
+                .map_or(0, |sink| std::mem::size_of_val(sink.as_ref())),
+        );
 
         total = total.saturating_add(
             self.trace_events
@@ -253,6 +319,17 @@ impl Session {
                 .as_ref()
                 .map_or(0, render_suspended_evaluation_memory_proxy_bytes),
         );
+        total = total.saturating_add(
+            self.abandonment_worklist
+                .iter()
+                .map(render_suspended_evaluation_memory_proxy_bytes)
+                .sum::<usize>()
+                .saturating_add(vec_spare_capacity_bytes(&self.abandonment_worklist)),
+        );
+        let request_interrupt_control = self.request_interrupt_control.borrow();
+        total = total.saturating_add(arc_allocation_memory_proxy_bytes(
+            request_interrupt_control.as_ref(),
+        ));
         total = total.saturating_add(std::mem::size_of::<ResourceLimits>());
 
         let peak = self.peak_memory_proxy_bytes.get().max(total);
@@ -289,10 +366,18 @@ pub(in crate::runtime::debug_tools::resources) fn expr_memory_proxy_bytes(expr: 
         Expr::Call { head, args }
             if is_system_symbol_name(head, "ByteArray") && args.len() == 1 =>
         {
-            let payload_len = args
+            // ByteArray physically owns base64 text in an Expr::String. Validate
+            // the canonical payload to preserve the malformed-value fallback, but
+            // charge that String's encoded capacity and Expr overhead just like any
+            // other held string; decoded length belongs only to a native-byte
+            // representation.
+            let payload_bytes = args
                 .first()
-                .and_then(expr_as_string)
-                .and_then(|encoded| base64_decoded_len(&encoded))
+                .and_then(|arg| {
+                    expr_as_string(arg)
+                        .and_then(base64_decoded_len)
+                        .map(|_| expr_memory_proxy_bytes(arg))
+                })
                 .unwrap_or_else(|| args.iter().map(expr_memory_proxy_bytes).sum::<usize>());
             std::mem::size_of::<Expr>()
                 .saturating_add(expr_memory_proxy_bytes(head))
@@ -301,7 +386,7 @@ pub(in crate::runtime::debug_tools::resources) fn expr_memory_proxy_bytes(expr: 
                         .saturating_sub(args.len())
                         .saturating_mul(std::mem::size_of::<Expr>()),
                 )
-                .saturating_add(payload_len)
+                .saturating_add(payload_bytes)
         }
         Expr::Call { head, args } => {
             let mut total = std::mem::size_of::<Expr>()
@@ -317,6 +402,178 @@ pub(in crate::runtime::debug_tools::resources) fn expr_memory_proxy_bytes(expr: 
             total
         }
     }
+}
+
+fn render_symbol_keyed_hash_map_memory_proxy_bytes<V, S>(values: &HashMap<Symbol, V, S>) -> usize {
+    values
+        .capacity()
+        .saturating_mul(std::mem::size_of::<(Symbol, V)>())
+        .saturating_add(
+            values
+                .keys()
+                .map(|symbol| symbol.context().len().saturating_add(symbol.name().len()))
+                .sum::<usize>(),
+        )
+}
+
+fn render_symbol_hash_set_memory_proxy_bytes<S>(
+    values: &std::collections::HashSet<Symbol, S>,
+) -> usize {
+    values
+        .capacity()
+        .saturating_mul(std::mem::size_of::<Symbol>())
+        .saturating_add(
+            values
+                .iter()
+                .map(|symbol| symbol.context().len().saturating_add(symbol.name().len()))
+                .sum::<usize>(),
+        )
+}
+
+fn render_symbol_call_effect_cache_memory_proxy_bytes(cache: &SymbolCallEffectCache) -> usize {
+    cache
+        .capacity()
+        .saturating_mul(std::mem::size_of::<(
+            SymbolCallEffectKey,
+            CallEffectCacheEntry,
+        )>())
+        .saturating_add(
+            cache
+                .keys()
+                .map(|key| {
+                    key.symbol
+                        .context()
+                        .len()
+                        .saturating_add(key.symbol.name().len())
+                })
+                .sum::<usize>(),
+        )
+}
+
+fn render_call_stability_cache_memory_proxy_bytes(cache: &CallStabilityCache) -> usize {
+    cache
+        .capacity()
+        .saturating_mul(std::mem::size_of::<(
+            CallStabilityCacheKey,
+            CallStabilityCacheEntry,
+        )>())
+        .saturating_add(
+            cache
+                .values()
+                .map(|entry| {
+                    expr_memory_proxy_bytes(entry.head.as_ref())
+                        .saturating_add(render_shared_args_memory_proxy_bytes(&entry.args))
+                })
+                .sum::<usize>(),
+        )
+}
+
+fn render_shared_args_memory_proxy_bytes(args: &SharedArgs) -> usize {
+    args.iter()
+        .map(expr_memory_proxy_bytes)
+        .sum::<usize>()
+        .saturating_add(
+            args.capacity()
+                .saturating_sub(args.len())
+                .saturating_mul(std::mem::size_of::<Expr>()),
+        )
+}
+
+fn render_installed_system_down_values_memory_proxy_bytes(
+    values: &SymbolMap<Vec<(Expr, Expr)>>,
+) -> usize {
+    values
+        .capacity()
+        .saturating_mul(std::mem::size_of::<(Symbol, Vec<(Expr, Expr)>)>())
+        .saturating_add(
+            values
+                .iter()
+                .map(|(symbol, rules)| {
+                    symbol
+                        .context()
+                        .len()
+                        .saturating_add(symbol.name().len())
+                        .saturating_add(
+                            rules
+                                .iter()
+                                .map(|(lhs, rhs)| {
+                                    expr_memory_proxy_bytes(lhs)
+                                        .saturating_add(expr_memory_proxy_bytes(rhs))
+                                })
+                                .sum::<usize>(),
+                        )
+                        .saturating_add(vec_spare_capacity_bytes(rules))
+                })
+                .sum::<usize>(),
+        )
+}
+
+fn render_dynamic_own_value_frame_memory_proxy_bytes(frame: &DynamicOwnValueFrame) -> usize {
+    std::mem::size_of::<DynamicOwnValueFrame>()
+        .saturating_add(frame.symbol.context().len())
+        .saturating_add(frame.symbol.name().len())
+        .saturating_add(frame.value.as_ref().map_or(0, expr_memory_proxy_bytes))
+}
+
+fn render_module_activation_memory_proxy_bytes(activation: &ModuleActivation) -> usize {
+    std::mem::size_of::<ModuleActivation>()
+        .saturating_add(render_symbol_vec_memory_proxy_bytes(&activation.gensyms))
+}
+
+fn render_exception_types_memory_proxy_bytes(
+    exception_types: &BTreeMap<String, Option<String>>,
+) -> usize {
+    exception_types
+        .iter()
+        .map(|(name, parent)| {
+            std::mem::size_of::<(String, Option<String>)>()
+                .saturating_add(name.capacity())
+                .saturating_add(parent.as_ref().map_or(0, String::capacity))
+        })
+        .sum()
+}
+
+fn render_source_unit_memory_proxy_bytes(
+    unit: &crate::runtime::scoping::packages::SourceUnit,
+) -> usize {
+    std::mem::size_of::<crate::runtime::scoping::packages::SourceUnit>()
+        .saturating_add(unit.package_context.capacity())
+        .saturating_add(expr_memory_proxy_bytes(&unit.held_wrapper))
+        .saturating_add(render_symbol_vec_memory_proxy_bytes(&unit.public))
+        .saturating_add(render_symbol_vec_memory_proxy_bytes(&unit.package_scope))
+        .saturating_add(
+            unit.private_index
+                .iter()
+                .map(|(name, symbol)| {
+                    std::mem::size_of::<(String, Symbol)>()
+                        .saturating_add(name.capacity())
+                        .saturating_add(symbol.context().len())
+                        .saturating_add(symbol.name().len())
+                })
+                .sum::<usize>(),
+        )
+}
+
+fn render_symbol_vec_memory_proxy_bytes(values: &Vec<Symbol>) -> usize {
+    values
+        .iter()
+        .map(render_symbol_memory_proxy_bytes)
+        .sum::<usize>()
+        .saturating_add(vec_spare_capacity_bytes(values))
+}
+
+fn render_file_io_provider_memory_proxy_bytes(provider: &FileIoProvider) -> usize {
+    arc_allocation_memory_proxy_bytes(provider.as_file_io())
+}
+
+fn render_entropy_provider_memory_proxy_bytes(provider: &EntropyProvider) -> usize {
+    arc_allocation_memory_proxy_bytes(provider.as_entropy_source())
+}
+
+fn arc_allocation_memory_proxy_bytes<T: ?Sized>(value: &T) -> usize {
+    2usize
+        .saturating_mul(std::mem::size_of::<usize>())
+        .saturating_add(std::mem::size_of_val(value))
 }
 
 fn render_definition_memory_proxy_bytes(definition: &SymbolDefinition) -> usize {

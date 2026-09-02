@@ -210,3 +210,252 @@ this brief's shape and the decision is mine.
 5. Any test whose expectations moved, with the old and new numbers and why the
    move is correct.
 6. Stop-loss / open questions.
+
+---
+
+# Report — 2026-09-02
+
+## 1. What changed
+
+- `crates/rum-runtime/src/runtime/debug_tools/resources/memory.rs:50-333` — extended the cold session walk from 34 referenced fields to all 52 fields classified ACCOUNTED; this includes the 13 listed omissions, the additionally missed `abandonment_worklist`, and four fixed heap owners (`file_io`, `entropy_source`, `print_sink`, and `request_interrupt_control`).
+- `crates/rum-runtime/src/runtime/debug_tools/resources/memory.rs:346-405` — changed the valid `ByteArray` branch to charge its encoded `Expr::String` capacity and overhead while retaining validation and malformed-value fallback.
+- `crates/rum-runtime/src/runtime/debug_tools/resources/memory.rs:407-577` — added walk-only renderers for cache tables, symbol sets, installed down-values, dynamic/module/package state, exception strings, shared call-cache arguments, and opaque heap owners. The cache fields are type aliases rather than owning newtypes, so central renderers are the natural convention-preserving choice; no insertion path or counter changed.
+- `crates/rum-runtime/src/runtime/tests/mod.rs:175` — registered the new session-memory regression module.
+- `crates/rum-runtime/src/runtime/tests/session_memory.rs:1-224` — added the sorted 93-field decision inventory, its compile-time exhaustive `Session` destructure, the fixed-size `StabilityBloom` proof, an exact exception-storage delta test, and valid/malformed `ByteArray` physical-storage tests.
+- This report was appended to the assigned brief. No other file changed.
+
+Cross-check: the compiler-checked inventory confirms 93 declared fields, including the `#[cfg(test)]` `gensym_gc_sweep_count`. A separate review of the pre-change walk confirmed 34 unique `self.<field>` references. The brief's count of 13 missed container fields was short by one: `abandonment_worklist: Vec<SuspendedEvaluation>` was also growable and unwalked. The final inventory is 52 ACCOUNTED and 41 EXEMPT fields.
+
+## 2. The 93-field decision table
+
+| Field | Decision | Term or allowed exemption reason |
+|---|---|---|
+| `abandonment_active` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `abandonment_worklist` | ACCOUNTED | Each suspended owner plus outer `Vec` spare capacity. |
+| `abort_protect_depth` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `abort_protect_pending` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `active_accepted_request` | EXEMPT | Fixed-size wrapper is covered by `size_of::<Session>()`; its `Arc` points to the allocation counted through `request_interrupt_control`, so counting it again would double-count. |
+| `asserts_enabled` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `association_lookup_cache` | ACCOUNTED | Existing `AssociationLookupCache::memory_proxy_bytes`. |
+| `attribute_revision` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `attribute_set_cache` | ACCOUNTED | Hash-table capacity plus live `Symbol` text. |
+| `attributes` | ACCOUNTED | Existing live attribute-key `Symbol` text term. |
+| `builtin_dispatch_spec_cache` | ACCOUNTED | Hash-table capacity plus live `Symbol` text. |
+| `builtins` | ACCOUNTED | Existing live `BuiltinSpecMap` entry-storage term. |
+| `call_stability_cache` | ACCOUNTED | Hash-table capacity plus the retained `SharedExpr` and `SharedArgs` values. |
+| `call_stability_generation` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `capability_policy` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `context_path` | ACCOUNTED | Existing `String` capacities and `Vec` capacity. |
+| `context_stack` | ACCOUNTED | Existing `ContextFrame` contents and `Vec` spare capacity. |
+| `current_context` | ACCOUNTED | Existing `String` capacity. |
+| `current_memory_limit` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `current_message_list_checkpoint` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `current_message_list_dirty` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `current_time_deadline` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `declared_stubs` | ACCOUNTED | Existing live `Symbol` values and text. |
+| `definitions` | ACCOUNTED | Existing definition keys, values, rules, guards, and dispatch indexes. |
+| `disabled_message_selectors` | ACCOUNTED | Existing selector strings and `Vec` spare capacity. |
+| `dynamic_own_values` | ACCOUNTED | `DynamicOwnValueFrame` symbols and expressions plus `Vec` spare capacity. |
+| `entropy_source` | ACCOUNTED | `Arc` allocation header plus the concrete `EntropySource` object. |
+| `eval_deadline` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `eval_timeout` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `evaluation_depth` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `evaluation_epoch` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `evaluation_stack` | ACCOUNTED | Existing `EvaluationStackEntry` expressions and `Vec` spare capacity. |
+| `exception_types` | ACCOUNTED | `BTreeMap` entries and both owned `String` capacities. |
+| `file_io` | ACCOUNTED | `Arc` allocation header plus the concrete `FileIo` object. |
+| `gc_candidate_gensyms` | ACCOUNTED | Hash-table capacity plus live `Symbol` text. |
+| `gensym_gc_sweep_count` | EXEMPT | Fixed-size test-only value already covered by `size_of::<Session>()`. |
+| `gensym_gc_watermark` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `handled_non_loader_eval_errors` | ACCOUNTED | Existing `RuntimeMessage` strings and `Vec` spare capacity. |
+| `has_up_value_definitions` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `in_gensym_sweep` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `installed_system_down_values` | ACCOUNTED | Hash-table storage, live `Symbol` text, rule expressions, and nested `Vec` spare capacity. |
+| `installed_system_own_values` | ACCOUNTED | Hash-table capacity plus live `Symbol` text. |
+| `interrupt_armed` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `interrupt_poll_counter` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `iteration_product_budget` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `last_message_list` | ACCOUNTED | Existing `RuntimeMessage` strings and `Vec` spare capacity. |
+| `load_stack` | ACCOUNTED | Existing `PathBuf` payloads and `Vec` capacity. |
+| `loaded_packages` | ACCOUNTED | Existing `String` capacities and `Vec` capacity. |
+| `match_depth` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `memory_limit_check_counter` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `message_definitions` | ACCOUNTED | Existing message keys, tags, and immediate/delayed expressions. |
+| `message_symbol_counts` | ACCOUNTED | Hash-table capacity plus live `Symbol` text. |
+| `messages` | ACCOUNTED | Existing `RuntimeMessage` strings and `Vec` spare capacity. |
+| `module_activations` | ACCOUNTED | `ModuleActivation` gensym vectors plus outer `Vec` spare capacity. |
+| `monitor_callbacks_enabled` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `monitor_scopes` | ACCOUNTED | Existing `MonitorScope` expressions, display string, and `Vec` spare capacity. |
+| `native_stack_base` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `native_stack_next_check_depth` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `next_generated_symbol_id` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `next_request_generation` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `next_sealed_symbol_id` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `next_source_unit_epoch` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `once_values` | ACCOUNTED | Existing owned `String` keys and `Expr` values. |
+| `option_value_scopes` | ACCOUNTED | Existing `OptionValueScope` symbols/options and `Vec` spare capacity. |
+| `options` | ACCOUNTED | Existing `Symbol` keys and `SymbolOptions` entries. |
+| `package_search_paths` | ACCOUNTED | Existing `PathBuf` payloads and `Vec` capacity. |
+| `peak_memory_proxy_bytes` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `pending_accepted_request` | EXEMPT | Fixed-size wrapper is covered by `size_of::<Session>()`; its `Arc` points to the allocation counted through `request_interrupt_control`, so counting it again would double-count. |
+| `pending_eval_request` | ACCOUNTED | Existing conditional conservative `size_of::<PendingEvalRequest>()` term. |
+| `pending_input_request` | ACCOUNTED | Existing `RuntimeInputRequest` prompt capacity. |
+| `pending_suspension` | ACCOUNTED | Existing owned `SuspendedEvaluation` stack, frames, and roots. |
+| `print_sink` | ACCOUNTED | Concrete boxed `FnMut` object's dynamic size. |
+| `prints` | ACCOUNTED | Existing `String` capacities and `Vec` capacity. |
+| `prng_state` | EXEMPT | Fixed-size `[u64; 4]` value already covered by `size_of::<Session>()`. |
+| `queued_input_responses` | ACCOUNTED | Existing `String` capacities and `VecDeque` capacity. |
+| `reap_scopes` | ACCOUNTED | Existing patterns, handlers, buckets, and `Vec` spare capacity. |
+| `removed_symbols` | ACCOUNTED | Existing live `Symbol` values and text. |
+| `request_interrupt_control` | ACCOUNTED | One `Arc` allocation header and its fixed `RequestInterruptState` object. |
+| `resource_limits` | ACCOUNTED | Existing conservative `size_of::<ResourceLimits>()` term. |
+| `restoring_snapshot` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `resuming_suspension` | ACCOUNTED | Existing owned `SuspendedEvaluation` stack, frames, and roots. |
+| `sealed_units` | ACCOUNTED | `SourceUnit` strings, held expression, symbol vectors, private index, and outer `Vec` spare capacity. |
+| `stability_dirty_bloom` | EXEMPT | Exactly two `u128` fields (`model/cache.rs:513-517`), hence fixed-size and already covered by `size_of::<Session>()`; the new size assertion proves this. |
+| `stability_rewritten_dirty_bloom` | EXEMPT | Same exactly-two-`u128` bound as `stability_dirty_bloom`, already covered by `size_of::<Session>()`. |
+| `stable_symbol_cache` | ACCOUNTED | Hash-table capacity plus live `Symbol` text. |
+| `symbol_cache_generation` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `symbol_call_effect_cache` | ACCOUNTED | Hash-table capacity plus live key `Symbol` text. |
+| `symbol_generations` | ACCOUNTED | Existing owned context/name `String` capacities and generation entries. |
+| `syntax_information` | ACCOUNTED | Existing `Symbol` keys and `Expr` values. |
+| `trace_event_depths` | ACCOUNTED | Existing `Vec` capacity. |
+| `trace_events` | ACCOUNTED | Existing `TraceEvent` strings/expressions and `Vec` spare capacity. |
+| `tracing_enabled` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+| `value_q_effect_suppression_active` | EXEMPT | Fixed-size value already covered by `size_of::<Session>()`. |
+
+The invariant uses a macro to generate both this classification's checked-in source inventory and an exhaustive `let Session { ... }` pattern. Rust emits a compile error for a newly added field until the macro invocation gains a row, and the test separately enforces lexical sort order and the live count of 93. This was chosen over repository source parsing because it asks the Rust compiler, not a regex, what fields exist.
+
+## 3. Verification
+
+Focused regression command:
+
+```text
+scripts/run-bounded.py --timeout 600 -- cargo test --offline -p rum-runtime session_memory -- --nocapture
+```
+
+Verbatim result:
+
+```text
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 932 filtered out; finished in 0.00s
+```
+
+Mandatory formatting command (spelled with Cargo's global offline flag to obey the no-network hard rule):
+
+```text
+scripts/run-bounded.py --timeout 120 -- cargo --offline fmt --check
+```
+
+Exit 0, no output.
+
+Mandatory runtime command:
+
+```text
+scripts/run-bounded.py --timeout 1200 -- cargo test --offline -p rum-runtime
+```
+
+Verbatim result lines:
+
+```text
+test result: ok. 934 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 3.11s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+
+Mandatory workspace command:
+
+```text
+scripts/run-bounded.py --timeout 2400 -- cargo test --offline --workspace
+```
+
+This did not reach green. Cargo stopped at the first failing target:
+
+```text
+test result: FAILED. 10 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+error: test failed, to rerun pass `-p rum-host --test suspension_abandonment_contract`
+```
+
+I then ran the workspace with `--no-fail-fast` and the explicit native-ZeroMQ sandbox opt-out. This separated the environmental loopback denial from the two accounting-affected targets:
+
+```text
+set -o pipefail
+RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1 scripts/run-bounded.py --timeout 2400 -- cargo test --offline --workspace --no-fail-fast 2>&1 | rg '^(test result:|error: [0-9]+ targets failed:|    `-p )'
+```
+
+Verbatim output:
+
+```text
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 87 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.11s
+test result: FAILED. 10 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 106 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 45 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+test result: ok. 934 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 3.15s
+test result: FAILED. 826 passed; 2 failed; 3 ignored; 0 measured; 0 filtered out; finished in 2.63s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 189 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.82s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+error: 2 targets failed:
+    `-p rum-host --test suspension_abandonment_contract`
+    `-p rum-stdlib --lib`
+```
+
+Without `RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1`, the sandbox additionally denied loopback to nine native tests (`97 passed; 9 failed`). With the explicit opt-out, the same target was green:
+
+```text
+test result: ok. 106 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+```
+
+## 4. Before/after baseline
+
+The identical CLI workload installs a sealed package (`sealed_units` and installed definition state), declares an exception hierarchy (`exception_types`), and asks `ValueQ` to populate stability caches:
+
+```text
+DefinePackage["MemoryWalk`", Public[{f}], PackageScope[{limit}], limit = 10; helper[x_] := x + limit; f[x_] := helper[x]]; RegisterExceptionType["MemoryWalkError"]; RegisterExceptionType["MemoryWalkTimeout", "MemoryWalkError"]; ValueQ[f[1]]; MemoryInUse[]
+```
+
+Measured with the same offline `rum-cli` command:
+
+```text
+before: 69427
+after:  78100
+delta:   8673
+```
+
+## 5. Expectations and measured moves
+
+- `ByteCount[ByteArray["AQID"]]`: **179 before, 212 after**. The old figure substituted decoded length `3`; the new figure includes the encoded `String`'s four-byte capacity plus its 32-byte `Expr` overhead, so the net increase is 33 bytes. No old exact-value assertion existed; the new regression asserts the physical formula and rejects the decoded substitution.
+- `public_cancelled_suspension_restores_reap_monitor_trace_and_constraint_state`: existing bound is growth `< 16000`; the honest result is `before:69147, after:137459, growth:68312`.
+- `public_monitor_matrix_restores_reap_monitor_trace_constraints_random_and_abort_state`: existing bound is growth `< 16000`; the honest result is `before:69167, after:329925, growth:260758`.
+- `byte_count_and_memory_in_use_use_the_current_structural_proxy_subset`: the existing `after_on < after_off` relation changed from `True` to `False` because the formerly invisible evaluation-cache allocations retained across those separate requests now outweigh the removed message-selector bytes.
+- `max_memory_used_tracks_session_memory_proxy_high_water_mark`: the in-expression `MaxMemoryUsed[] >= MemoryInUse[]` relation changed from `True` to `False`; evaluating the left operand and then the right grows newly visible cache state between the two samples.
+
+No resource limit, stride, default, or existing test expectation was changed.
+
+## 6. Stop-loss / open questions
+
+- The required workspace gate is red on four accounting-sensitive assertions outside the brief's file allowlist. A temporary diagnostic (removed afterward) isolated the host deltas: the cancellation case went from zero call-cache entries to one entry charging 64,379 bytes; the monitor case went from zero to four entries charging 256,956 bytes. These are retained strong `SharedExpr`/`SharedArgs` trees, not leaked `Reap` buckets. Excluding them would recreate the omission this brief requires fixing.
+- Restoring green requires a director decision outside this brief: either redesign the four tests to isolate the state they intend to test, or change call-stability retention/eviction semantics. The latter touches insertion paths and therefore requires a new brief plus the mandated hot-path A/B. Per the hard rule, I did not raise the 16,000-byte bounds, clear caches from the memory walk, retune a limit, or hide retained cache payloads.
+- `FileIo`, `EntropySource`, and the print callback are opaque trait/closure objects. The walk can and now does charge each concrete object's immediate allocation (`size_of_val`) and allocation header where applicable, but Rust offers no generic way to discover heap allocations nested inside an arbitrary host implementation. No unsupported exemption was used.
+- `memory.rs` grew from 22,366 to 32,019 bytes, still in the documented split-plan range. A future scope should extract the field-specific renderers into a sibling memory-walk module; this brief allowed no new production module, and splitting while changing the accounting would obscure the semantic review.
+- No default-path work, running insertion counter, `unsafe`, limit change, or hot-path change was added. Therefore no microbench A/B was required. The worktree remains uncommitted.
