@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """PreToolUse guard: Codex dispatches must be standalone background Bash calls.
 
-Blocks any Bash command containing `dispatch-brief` or `cdx exec` when it is
+Blocks any Bash command containing `dispatch-brief`, `cdx exec` or `codex exec`
+when it is
 (a) chained with other commands (&&, ||, ;, newline), (b) detached with a bare
 `&`, or (c) not run with run_in_background:true. `DRY_RUN=1` calls are exempt
 (they only resolve, never dispatch). Redirections like `2>&1` / `< /dev/null`
@@ -17,7 +18,10 @@ tool_input = data.get("tool_input") or {}
 cmd = tool_input.get("command") or ""
 bg = bool(tool_input.get("run_in_background"))
 
-is_dispatch = ("dispatch-brief" in cmd or "cdx exec" in cmd) and "DRY_RUN=1" not in cmd
+# The CLI is installed as `cdx` on some hosts and `codex` on others.
+is_dispatch = (
+    "dispatch-brief" in cmd or "cdx exec" in cmd or "codex exec" in cmd
+) and "DRY_RUN=1" not in cmd
 
 if is_dispatch:
     problems = []

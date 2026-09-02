@@ -11,8 +11,8 @@ its own fresh process.
 Options:
   --output-dir PATH    Output directory. Defaults to a /tmp directory.
   --rum-cli PATH       Existing rum-cli binary. Defaults to target/release/rum-cli.
-  --no-rss             Skip /usr/bin/time -l and leave RSS columns empty.
-                       Use this in sandboxes that deny its sysctl probes.
+  --no-rss             Skip the peak-RSS wrapper and leave RSS columns empty.
+                       Use this in sandboxes that deny its process probes.
   -h, --help           Show this help.
 
 Outputs:
@@ -66,8 +66,9 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [[ "${collect_rss}" == "true" && ! -x /usr/bin/time ]]; then
-  echo "error: /usr/bin/time is not executable" >&2
+peak_rss_runner="${script_dir}/peak-rss.py"
+if [[ "${collect_rss}" == "true" && ! -x "${peak_rss_runner}" ]]; then
+  echo "error: ${peak_rss_runner} is not executable" >&2
   exit 2
 fi
 
@@ -226,7 +227,7 @@ run_workload() {
 
   set +e
   if [[ "${collect_rss}" == "true" ]]; then
-    /usr/bin/time -l "${rum_cli_bin}" --eval "${program}" >"${stdout_path}" 2>"${stderr_path}"
+    "${peak_rss_runner}" "${rum_cli_bin}" --eval "${program}" >"${stdout_path}" 2>"${stderr_path}"
   else
     "${rum_cli_bin}" --eval "${program}" >"${stdout_path}" 2>"${stderr_path}"
   fi

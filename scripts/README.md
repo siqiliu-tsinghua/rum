@@ -12,11 +12,13 @@ invocation.
   Rust's monotonic `Instant`, not the wall clock. Run timing gates only on an
   otherwise idle machine and in the normal workspace sandbox.
 - `core-memory-microbench.sh` — the `rum`-vs-`rum` memory-baseline A/B. Pass
-  `--no-rss` in sandboxes that deny `/usr/bin/time -l`'s system probes; Rum's
+  `--no-rss` in sandboxes that deny `peak-rss.py`'s process probes; Rum's
   memory proxies and any enabled allocation count/byte/peak-live profile are
   still recorded, while the RSS columns remain empty.
+- `peak-rss.py` — run a command and report its peak RSS in bytes, reading
+  `getrusage` rather than depending on which `time` the host ships.
 - `sample-self-time.py` — compute per-function self-time from macOS `sample`
-  call-graph output.
+  call-graph output. macOS only: there is no Linux producer for this format.
 - `sample-attribute-callers.py` — attribute a target leaf symbol's samples to its
   nearest interesting callers.
 

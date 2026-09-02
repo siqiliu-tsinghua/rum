@@ -34,9 +34,40 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 [[ $# -ge 1 ]] || { echo "guard: no command given (use -- <cmd>)" >&2; exit 2; }
-[[ -n "$out_log" ]] || out_log=$(mktemp -t guarded_run)
+[[ -n "$out_log" ]] || out_log=$(mktemp "${TMPDIR:-/tmp}/guarded_run.XXXXXX")
 
-pagesize=$(pagesize 2>/dev/null || echo 16384)
+pagesize=$(getconf PAGESIZE 2>/dev/null || echo 4096)
+
+# Free memory and swap use, read per platform. Each prints nothing when the
+# value is unavailable: an unknown free-memory reading must never be taken for
+# zero, which would trip the free-floor breach on the very first poll.
+read_free_gb() {
+  if [[ -r /proc/meminfo ]]; then
+    awk '/^MemAvailable:/ { printf "%.2f", $2 / 1048576; found = 1 }
+         END { if (!found) exit 1 }' /proc/meminfo
+  elif command -v vm_stat >/dev/null 2>&1; then
+    vm_stat | awk -v p="$pagesize" '
+      /Pages free/ { gsub(/\./, ""); free = $3 }
+      /Pages inactive/ { gsub(/\./, ""); inactive = $3 }
+      END {
+        if (free == "" && inactive == "") exit 1;
+        printf "%.2f", (free + inactive) * p / 1073741824
+      }'
+  else
+    return 1
+  fi
+}
+
+read_swap_mb() {
+  if [[ -r /proc/meminfo ]]; then
+    awk '/^SwapTotal:/ { total = $2 } /^SwapFree:/ { free = $2 }
+         END { if (total == "") exit 1; printf "%.1f", (total - free) / 1024 }' /proc/meminfo
+  elif command -v sysctl >/dev/null 2>&1; then
+    sysctl -n vm.swapusage 2>/dev/null | sed -E 's/.*used = ([0-9.]+)M.*/\1/'
+  else
+    return 1
+  fi
+}
 
 # Launch the guarded command; its output goes to out_log.
 "$@" > "$out_log" 2>&1 &
@@ -48,19 +79,19 @@ while kill -0 "$pid" 2>/dev/null; do
   rss_kb=$(ps -o rss= -p "$pid" 2>/dev/null | tr -d ' ')
   [[ -z "$rss_kb" ]] && break
   cpu=$(ps -o %cpu= -p "$pid" 2>/dev/null | tr -d ' ')
-  free_pages=$(vm_stat 2>/dev/null | awk '/Pages free/{gsub(/\./,"");print $3}')
-  inactive_pages=$(vm_stat 2>/dev/null | awk '/Pages inactive/{gsub(/\./,"");print $3}')
-  swap_used=$(sysctl -n vm.swapusage 2>/dev/null | sed -E 's/.*used = ([0-9.]+)M.*/\1/')
+  free_gb=$(read_free_gb 2>/dev/null) || free_gb=""
+  swap_used=$(read_swap_mb 2>/dev/null) || swap_used=""
 
   rss_gb=$(awk -v k="$rss_kb" 'BEGIN{printf "%.2f", k/1048576}')
-  free_gb=$(awk -v f="${free_pages:-0}" -v i="${inactive_pages:-0}" -v p="$pagesize" \
-    'BEGIN{printf "%.2f", (f+i)*p/1073741824}')
 
   printf "[guard] rss=%sGB cpu=%s%% sys_free=%sGB swap_used=%sMB\n" \
-    "$rss_gb" "${cpu:-?}" "$free_gb" "${swap_used:-?}"
+    "$rss_gb" "${cpu:-?}" "${free_gb:-?}" "${swap_used:-?}"
 
   over_rss=$(awk -v a="$rss_gb" -v b="$rss_limit_gb" 'BEGIN{print (a>b)?1:0}')
-  under_free=$(awk -v a="$free_gb" -v b="$free_floor_gb" 'BEGIN{print (a<b)?1:0}')
+  under_free=0
+  if [[ -n "$free_gb" ]]; then
+    under_free=$(awk -v a="$free_gb" -v b="$free_floor_gb" 'BEGIN{print (a<b)?1:0}')
+  fi
   if [[ "$over_rss" == 1 || "$under_free" == 1 ]]; then
     reason="rss ${rss_gb}GB > ${rss_limit_gb}GB"
     [[ "$under_free" == 1 ]] && reason="sys_free ${free_gb}GB < ${free_floor_gb}GB"
