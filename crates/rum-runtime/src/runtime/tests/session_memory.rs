@@ -40,6 +40,7 @@ session_memory_field_decisions! {
     attribute_set_cache => Accounted("hash-table capacity and live Symbol text"),
     attributes => Accounted("live attribute-key Symbol text"),
     builtin_dispatch_spec_cache => Accounted("hash-table capacity and live Symbol text"),
+    builtin_memory_projection_count => Exempt("fixed-size value already covered by size_of::<Session>()"),
     builtins => Accounted("live BuiltinSpecMap entry storage"),
     call_stability_cache => Accounted("hash-table capacity and retained SharedExpr/SharedArgs values"),
     call_stability_generation => Exempt("fixed-size value already covered by size_of::<Session>()"),
@@ -129,7 +130,7 @@ fn session_memory_field_decision_inventory_is_sorted_and_exhaustive() {
     let session = Session::empty();
     assert_session_memory_decisions_are_exhaustive(&session);
 
-    assert_eq!(SESSION_MEMORY_FIELD_DECISIONS.len(), 93);
+    assert_eq!(SESSION_MEMORY_FIELD_DECISIONS.len(), 94);
     assert!(
         SESSION_MEMORY_FIELD_DECISIONS
             .windows(2)

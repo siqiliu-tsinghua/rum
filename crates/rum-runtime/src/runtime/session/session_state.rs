@@ -581,6 +581,7 @@ impl Session {
             attribute_revision: 0,
             attribute_set_cache: AttributeSetCache::default(),
             builtin_dispatch_spec_cache: BuiltinDispatchSpecCache::default(),
+            builtin_memory_projection_count: std::cell::Cell::new(0),
             evaluation_epoch: 0,
             symbol_cache_generation: 0,
             call_stability_generation: 0,

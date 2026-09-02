@@ -4,6 +4,26 @@ use std::sync::atomic::{AtomicU8, Ordering};
 
 const BUILTIN_MEMORY_GROWTH_TEST_ENV: &str = "RUM_TEST_BUILTIN_MEMORY_GROWTH";
 const NON_AMPLIFYING_RESULT_ALLOWANCE_BYTES: usize = 1024;
+pub(in crate::runtime) const KNOWN_UNPROJECTED_PREFLIGHT_BUILTINS: &[&str] = &[
+    "Append",
+    "Commonest",
+    "DeleteDuplicates",
+    "DeleteMissing",
+    "Diff",
+    "FromCsv",
+    "FromIni",
+    "FromJson",
+    "FromToml",
+    "FromXml",
+    "FromYaml",
+    "ParseArgs",
+    "Power",
+    "Range",
+    "RumTokens",
+    "TokenizeWith",
+    "Union",
+    "UrlParse",
+];
 static BUILTIN_MEMORY_GROWTH_TEST_ENABLED: AtomicU8 = AtomicU8::new(0);
 
 impl Session {
@@ -170,6 +190,19 @@ impl Session {
         }
         let profile_builtin_start =
             builtin_symbol.map(|symbol| builtin_timing_start(&symbol, args.len()));
+        if !builtin_memory_growth_test_enabled() {
+            let result = self.run_builtin_handler(handler, head, args);
+            let result = crate::resume_or_suspend!(
+                self,
+                result,
+                ok(value) => Ok(value),
+                suspend => RunCallDispatchStageSuspensionFrame::unchecked_builtin(),
+            );
+            record_profile_builtin_timing(profile_builtin_start.flatten(), result.is_ok());
+            return result.map(Some);
+        }
+
+        let projection_count_before = self.builtin_memory_projection_count.get();
         let result = self.run_builtin_handler(handler, head, args);
         let result = crate::resume_or_suspend!(
             self,
@@ -179,25 +212,28 @@ impl Session {
                 spec.name(),
                 spec.memory_growth(),
                 args.clone(),
+                projection_count_before,
             ),
         );
         record_profile_builtin_timing(profile_builtin_start.flatten(), result.is_ok());
-        self.validate_builtin_memory_growth(spec.name(), spec.memory_growth(), args, &result);
+        self.validate_builtin_memory_growth_slow(
+            spec.name(),
+            spec.memory_growth(),
+            args,
+            projection_count_before,
+            &result,
+        );
         result.map(Some)
     }
 
     #[inline]
-    fn validate_builtin_memory_growth(
-        &mut self,
-        name: &'static str,
-        contract: MemoryGrowthContract,
-        args: &SharedArgs,
-        result: &Result<Expr, EvalError>,
-    ) {
+    pub(in crate::runtime) fn record_builtin_memory_projection_for_growth_test(&self) {
         if !builtin_memory_growth_test_enabled() {
             return;
         }
-        self.validate_builtin_memory_growth_slow(name, contract, args, result);
+
+        self.builtin_memory_projection_count
+            .set(self.builtin_memory_projection_count.get().saturating_add(1));
     }
 
     #[cold]
@@ -207,19 +243,34 @@ impl Session {
         name: &'static str,
         contract: MemoryGrowthContract,
         args: &SharedArgs,
+        projection_count_before: u64,
         result: &Result<Expr, EvalError>,
     ) {
-        if contract != MemoryGrowthContract::NonAmplifying {
+        let Ok(result) = result else {
             return;
-        }
+        };
 
-        let argument_bytes = args.iter().fold(0usize, |total, arg| {
-            total.saturating_add(self.local_expr_memory_proxy_bytes(arg))
-        });
-        match result {
-            Ok(result) => assert_non_amplifying_result(name, argument_bytes, result, self),
-            Err(_) => {}
+        match contract {
+            MemoryGrowthContract::NonAmplifying => {
+                let argument_bytes = self.local_args_memory_proxy_bytes(args);
+                assert_non_amplifying_result(name, argument_bytes, result, self);
+            }
+            MemoryGrowthContract::Preflight
+                if self.builtin_memory_projection_count.get() == projection_count_before =>
+            {
+                let argument_bytes = self.local_args_memory_proxy_bytes(args);
+                assert_preflight_result(name, argument_bytes, result, self);
+            }
+            MemoryGrowthContract::Preflight
+            | MemoryGrowthContract::Incremental
+            | MemoryGrowthContract::Delegated => {}
         }
+    }
+
+    fn local_args_memory_proxy_bytes(&mut self, args: &SharedArgs) -> usize {
+        args.iter().fold(0usize, |total, arg| {
+            total.saturating_add(self.local_expr_memory_proxy_bytes(arg))
+        })
     }
 
     fn local_expr_memory_proxy_bytes(&mut self, expr: &Expr) -> usize {
@@ -296,7 +347,7 @@ impl CallBuiltinSpec for SuspendedBuiltinSpec {
 }
 
 #[inline]
-fn builtin_memory_growth_test_enabled() -> bool {
+pub(in crate::runtime) fn builtin_memory_growth_test_enabled() -> bool {
     if cfg!(any(test, feature = "test-builtin-memory-growth")) {
         return true;
     }
@@ -332,11 +383,35 @@ fn assert_non_amplifying_result(
     );
 }
 
+#[cold]
+fn assert_preflight_result(
+    name: &'static str,
+    argument_bytes: usize,
+    result: &Expr,
+    session: &mut Session,
+) {
+    let result_bytes = session.local_expr_memory_proxy_bytes(result);
+    if result_bytes <= argument_bytes.saturating_add(NON_AMPLIFYING_RESULT_ALLOWANCE_BYTES)
+        || KNOWN_UNPROJECTED_PREFLIGHT_BUILTINS
+            .binary_search(&name)
+            .is_ok()
+    {
+        return;
+    }
+
+    panic!(
+        "builtin {name} declared Preflight but returned {result_bytes} proxy bytes from \
+         {argument_bytes} argument proxy bytes without projecting bytes first (allowance: \
+         {NON_AMPLIFYING_RESULT_ALLOWANCE_BYTES} bytes)"
+    );
+}
+
 #[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct RunCallDispatchStageSuspensionFrame {
     builtin_name: Option<&'static str>,
     memory_growth_code: u8,
     args: Option<SharedArgs>,
+    projection_count_before: u64,
 }
 
 impl RunCallDispatchStageSuspensionFrame {
@@ -345,14 +420,30 @@ impl RunCallDispatchStageSuspensionFrame {
             builtin_name: None,
             memory_growth_code: 0,
             args: None,
+            projection_count_before: 0,
         }
     }
 
-    fn builtin(name: &'static str, memory_growth: MemoryGrowthContract, args: SharedArgs) -> Self {
+    fn unchecked_builtin() -> Self {
+        Self {
+            builtin_name: None,
+            memory_growth_code: 0,
+            args: None,
+            projection_count_before: 0,
+        }
+    }
+
+    fn builtin(
+        name: &'static str,
+        memory_growth: MemoryGrowthContract,
+        args: SharedArgs,
+        projection_count_before: u64,
+    ) -> Self {
         Self {
             builtin_name: Some(name),
             memory_growth_code: memory_growth.suspended_code(),
             args: Some(args),
+            projection_count_before,
         }
     }
 }
@@ -367,10 +458,11 @@ impl crate::runtime::suspension::SuspensionFrame for RunCallDispatchStageSuspens
             Ok(value) => {
                 let result = Ok(value);
                 if let (Some(name), Some(args)) = (self.builtin_name, self.args.as_ref()) {
-                    session.validate_builtin_memory_growth(
+                    session.validate_builtin_memory_growth_slow(
                         name,
                         MemoryGrowthContract::from_suspended_code(self.memory_growth_code),
                         args,
+                        self.projection_count_before,
                         &result,
                     );
                 }

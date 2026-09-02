@@ -32,6 +32,7 @@ pub struct Session {
     pub(in crate::runtime) attribute_revision: u64,
     pub(in crate::runtime) attribute_set_cache: AttributeSetCache,
     pub(in crate::runtime) builtin_dispatch_spec_cache: BuiltinDispatchSpecCache,
+    pub(in crate::runtime) builtin_memory_projection_count: std::cell::Cell<u64>,
     pub(in crate::runtime) evaluation_epoch: u64,
     pub(in crate::runtime) symbol_cache_generation: u64,
     pub(in crate::runtime) call_stability_generation: u64,

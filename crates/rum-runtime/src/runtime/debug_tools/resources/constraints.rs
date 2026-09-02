@@ -176,6 +176,8 @@ impl Session {
         &self,
         bytes: usize,
     ) -> Result<(), EvalError> {
+        self.record_builtin_memory_projection_for_growth_test();
+
         if let Some(limit) = self.current_memory_limit {
             let projected = self.current_memory_proxy_bytes().saturating_add(bytes);
             if projected > limit {

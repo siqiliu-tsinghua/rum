@@ -222,6 +222,34 @@ fn deliberately_amplifying_builtin(
     Ok(Expr::string("x".repeat(4096)))
 }
 
+fn deliberately_projecting_builtin(
+    session: &mut Session,
+    head: &Expr,
+    args: &SharedArgs,
+) -> Result<Expr, EvalError> {
+    session.enforce_active_memory_limit_for_projected_bytes(4096)?;
+    deliberately_amplifying_builtin(session, head, args)
+}
+
+fn deliberately_projecting_then_suspending_builtin(
+    session: &mut Session,
+    _head: &Expr,
+    args: &SharedArgs,
+) -> Result<Expr, EvalError> {
+    session.enforce_active_memory_limit_for_projected_bytes(4096)?;
+    session.eval_input_string(args)
+}
+
+#[test]
+fn known_unprojected_preflight_builtin_allowlist_is_sorted_and_unique() {
+    assert!(
+        KNOWN_UNPROJECTED_PREFLIGHT_BUILTINS
+            .windows(2)
+            .all(|entries| entries[0] < entries[1]),
+        "the known-unprojected Preflight builtin allowlist must stay sorted and unique"
+    );
+}
+
 #[test]
 #[should_panic(expected = "declared NonAmplifying")]
 fn non_amplifying_contract_is_falsifiable_through_dispatch() {
@@ -254,4 +282,73 @@ fn non_amplifying_contract_is_falsifiable_after_input_resume() {
         .eval_request("InputString[\"value: \"]")
         .expect_err("InputString should suspend for host input");
     let _ = session.resume_eval_request_with_input("x".repeat(4096));
+}
+
+#[test]
+#[should_panic(expected = "declared Preflight")]
+fn preflight_contract_is_falsifiable_through_dispatch() {
+    let mut session = Session::new();
+    session.register_builtin(BuiltinSpec::ordinary(
+        "DeliberatelyUnprojectedPreflightBuiltin",
+        "Exercises the test-only Preflight memory-growth contract falsifier.",
+        deliberately_amplifying_builtin,
+        MemoryGrowthContract::Preflight,
+    ));
+
+    let _ = session.eval_text("DeliberatelyUnprojectedPreflightBuiltin[]");
+}
+
+#[test]
+#[should_panic(expected = "declared Preflight")]
+fn preflight_contract_is_falsifiable_after_input_resume() {
+    let mut session = Session::new();
+    let input_string = core_builtin_specs()
+        .iter()
+        .copied()
+        .find(|spec| spec.name == "InputString")
+        .expect("InputString should be in the core catalog");
+    session.register_builtin(BuiltinSpec {
+        memory_growth: MemoryGrowthContract::Preflight,
+        ..input_string
+    });
+
+    session
+        .eval_request("InputString[\"value: \"]")
+        .expect_err("InputString should suspend for host input");
+    let _ = session.resume_eval_request_with_input("x".repeat(4096));
+}
+
+#[test]
+fn preflight_contract_accepts_recorded_projection() {
+    let mut session = Session::new();
+    session.register_builtin(BuiltinSpec::ordinary(
+        "DeliberatelyProjectedPreflightBuiltin",
+        "Exercises the positive path of the test-only Preflight falsifier.",
+        deliberately_projecting_builtin,
+        MemoryGrowthContract::Preflight,
+    ));
+
+    let result = session
+        .eval_text("DeliberatelyProjectedPreflightBuiltin[]")
+        .expect("a recorded projection should discharge the Preflight postcondition");
+    assert_eq!(result.value, Expr::string("x".repeat(4096)));
+}
+
+#[test]
+fn preflight_contract_remembers_projection_across_input_resume() {
+    let mut session = Session::new();
+    session.register_builtin(BuiltinSpec::ordinary(
+        "DeliberatelyProjectedSuspendingPreflightBuiltin",
+        "Exercises projected Preflight validation across suspension.",
+        deliberately_projecting_then_suspending_builtin,
+        MemoryGrowthContract::Preflight,
+    ));
+
+    session
+        .eval_request("DeliberatelyProjectedSuspendingPreflightBuiltin[\"value: \"]")
+        .expect_err("the projected test builtin should suspend for host input");
+    let response = session
+        .resume_eval_request_with_input("x".repeat(4096))
+        .expect("the pre-suspension projection should remain visible after resume");
+    assert_eq!(response.value, Expr::string("x".repeat(4096)));
 }
