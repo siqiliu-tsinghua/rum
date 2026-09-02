@@ -48,39 +48,38 @@ impl NativeRouterSocketHandle {
         }
     }
 
-    pub(super) fn bind(&self, endpoint: &str) -> Result<(), String> {
-        self.send_lifecycle_with_result(ZeroMqLifecycleCommand::Bind {
-            endpoint: endpoint.to_string(),
-            reply: lifecycle_reply_channel().0,
-        })
-    }
-
-    pub(super) fn connect(&self, endpoint: &str) -> Result<(), String> {
-        self.send_lifecycle_with_result(ZeroMqLifecycleCommand::Connect {
-            endpoint: endpoint.to_string(),
-            reply: lifecycle_reply_channel().0,
-        })
-    }
-
-    fn send_lifecycle_with_result(&self, command: ZeroMqLifecycleCommand) -> Result<(), String> {
-        let (reply, receiver) = lifecycle_reply_channel();
-        let command = match command {
-            ZeroMqLifecycleCommand::Bind { endpoint, .. } => {
-                ZeroMqLifecycleCommand::Bind { endpoint, reply }
-            }
-            ZeroMqLifecycleCommand::Connect { endpoint, .. } => {
-                ZeroMqLifecycleCommand::Connect { endpoint, reply }
-            }
-            ZeroMqLifecycleCommand::Start { .. } => unreachable!("start does not return Result"),
-        };
+    pub(super) fn bind(&self, endpoint: &str) -> Result<String, String> {
+        let (reply, receiver) = sync_channel(1);
         self.command_tx
             .as_ref()
             .expect("router worker sender should be present")
-            .unbounded_send(NativeRouterSocketCommand::Lifecycle(command))
+            .unbounded_send(NativeRouterSocketCommand::Lifecycle(
+                ZeroMqLifecycleCommand::Bind {
+                    endpoint: endpoint.to_string(),
+                    reply,
+                },
+            ))
             .map_err(|_| "router worker is no longer running".to_string())?;
         receiver
             .recv()
-            .map_err(|_| "router worker did not acknowledge setup".to_string())?
+            .map_err(|_| "router worker did not acknowledge bind".to_string())?
+    }
+
+    pub(super) fn connect(&self, endpoint: &str) -> Result<(), String> {
+        let (reply, receiver) = lifecycle_reply_channel();
+        self.command_tx
+            .as_ref()
+            .expect("router worker sender should be present")
+            .unbounded_send(NativeRouterSocketCommand::Lifecycle(
+                ZeroMqLifecycleCommand::Connect {
+                    endpoint: endpoint.to_string(),
+                    reply,
+                },
+            ))
+            .map_err(|_| "router worker is no longer running".to_string())?;
+        receiver
+            .recv()
+            .map_err(|_| "router worker did not acknowledge connect".to_string())?
     }
 
     pub(super) fn start(&self) {
@@ -134,39 +133,38 @@ impl NativePubSocketHandle {
         }
     }
 
-    pub(super) fn bind(&self, endpoint: &str) -> Result<(), String> {
-        self.send_lifecycle_with_result(ZeroMqLifecycleCommand::Bind {
-            endpoint: endpoint.to_string(),
-            reply: lifecycle_reply_channel().0,
-        })
-    }
-
-    pub(super) fn connect(&self, endpoint: &str) -> Result<(), String> {
-        self.send_lifecycle_with_result(ZeroMqLifecycleCommand::Connect {
-            endpoint: endpoint.to_string(),
-            reply: lifecycle_reply_channel().0,
-        })
-    }
-
-    fn send_lifecycle_with_result(&self, command: ZeroMqLifecycleCommand) -> Result<(), String> {
-        let (reply, receiver) = lifecycle_reply_channel();
-        let command = match command {
-            ZeroMqLifecycleCommand::Bind { endpoint, .. } => {
-                ZeroMqLifecycleCommand::Bind { endpoint, reply }
-            }
-            ZeroMqLifecycleCommand::Connect { endpoint, .. } => {
-                ZeroMqLifecycleCommand::Connect { endpoint, reply }
-            }
-            ZeroMqLifecycleCommand::Start { .. } => unreachable!("start does not return Result"),
-        };
+    pub(super) fn bind(&self, endpoint: &str) -> Result<String, String> {
+        let (reply, receiver) = sync_channel(1);
         self.command_tx
             .as_ref()
             .expect("pub worker sender should be present")
-            .unbounded_send(NativePubSocketCommand::Lifecycle(command))
+            .unbounded_send(NativePubSocketCommand::Lifecycle(
+                ZeroMqLifecycleCommand::Bind {
+                    endpoint: endpoint.to_string(),
+                    reply,
+                },
+            ))
             .map_err(|_| "pub worker is no longer running".to_string())?;
         receiver
             .recv()
-            .map_err(|_| "pub worker did not acknowledge setup".to_string())?
+            .map_err(|_| "pub worker did not acknowledge bind".to_string())?
+    }
+
+    pub(super) fn connect(&self, endpoint: &str) -> Result<(), String> {
+        let (reply, receiver) = lifecycle_reply_channel();
+        self.command_tx
+            .as_ref()
+            .expect("pub worker sender should be present")
+            .unbounded_send(NativePubSocketCommand::Lifecycle(
+                ZeroMqLifecycleCommand::Connect {
+                    endpoint: endpoint.to_string(),
+                    reply,
+                },
+            ))
+            .map_err(|_| "pub worker is no longer running".to_string())?;
+        receiver
+            .recv()
+            .map_err(|_| "pub worker did not acknowledge connect".to_string())?
     }
 
     pub(super) fn start(&self) {
@@ -216,39 +214,38 @@ impl NativeRepSocketHandle {
         }
     }
 
-    pub(super) fn bind(&self, endpoint: &str) -> Result<(), String> {
-        self.send_lifecycle_with_result(ZeroMqLifecycleCommand::Bind {
-            endpoint: endpoint.to_string(),
-            reply: lifecycle_reply_channel().0,
-        })
-    }
-
-    pub(super) fn connect(&self, endpoint: &str) -> Result<(), String> {
-        self.send_lifecycle_with_result(ZeroMqLifecycleCommand::Connect {
-            endpoint: endpoint.to_string(),
-            reply: lifecycle_reply_channel().0,
-        })
-    }
-
-    fn send_lifecycle_with_result(&self, command: ZeroMqLifecycleCommand) -> Result<(), String> {
-        let (reply, receiver) = lifecycle_reply_channel();
-        let command = match command {
-            ZeroMqLifecycleCommand::Bind { endpoint, .. } => {
-                ZeroMqLifecycleCommand::Bind { endpoint, reply }
-            }
-            ZeroMqLifecycleCommand::Connect { endpoint, .. } => {
-                ZeroMqLifecycleCommand::Connect { endpoint, reply }
-            }
-            ZeroMqLifecycleCommand::Start { .. } => unreachable!("start does not return Result"),
-        };
+    pub(super) fn bind(&self, endpoint: &str) -> Result<String, String> {
+        let (reply, receiver) = sync_channel(1);
         self.command_tx
             .as_ref()
             .expect("rep worker sender should be present")
-            .unbounded_send(NativeRepSocketCommand::Lifecycle(command))
+            .unbounded_send(NativeRepSocketCommand::Lifecycle(
+                ZeroMqLifecycleCommand::Bind {
+                    endpoint: endpoint.to_string(),
+                    reply,
+                },
+            ))
             .map_err(|_| "rep worker is no longer running".to_string())?;
         receiver
             .recv()
-            .map_err(|_| "rep worker did not acknowledge setup".to_string())?
+            .map_err(|_| "rep worker did not acknowledge bind".to_string())?
+    }
+
+    pub(super) fn connect(&self, endpoint: &str) -> Result<(), String> {
+        let (reply, receiver) = lifecycle_reply_channel();
+        self.command_tx
+            .as_ref()
+            .expect("rep worker sender should be present")
+            .unbounded_send(NativeRepSocketCommand::Lifecycle(
+                ZeroMqLifecycleCommand::Connect {
+                    endpoint: endpoint.to_string(),
+                    reply,
+                },
+            ))
+            .map_err(|_| "rep worker is no longer running".to_string())?;
+        receiver
+            .recv()
+            .map_err(|_| "rep worker did not acknowledge connect".to_string())?
     }
 
     pub(super) fn start(&self) {

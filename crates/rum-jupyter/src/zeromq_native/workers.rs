@@ -52,8 +52,10 @@ pub(super) async fn run_router_socket_worker(
                     Some(NativeRouterSocketCommand::Lifecycle(ZeroMqLifecycleCommand::Start { reply })) => {
                         let _ = reply.send(());
                     }
-                    Some(NativeRouterSocketCommand::Lifecycle(ZeroMqLifecycleCommand::Bind { reply, .. }))
-                    | Some(NativeRouterSocketCommand::Lifecycle(ZeroMqLifecycleCommand::Connect { reply, .. })) => {
+                    Some(NativeRouterSocketCommand::Lifecycle(ZeroMqLifecycleCommand::Bind { reply, .. })) => {
+                        let _ = reply.send(Err("router socket cannot be rebound after it starts receiving".to_string()));
+                    }
+                    Some(NativeRouterSocketCommand::Lifecycle(ZeroMqLifecycleCommand::Connect { reply, .. })) => {
                         let _ = reply.send(Err("router socket cannot be rebound after it starts receiving".to_string()));
                     }
                     None => break,
@@ -110,8 +112,12 @@ pub(super) async fn run_pub_socket_worker(
             NativePubSocketCommand::Lifecycle(ZeroMqLifecycleCommand::Start { reply }) => {
                 let _ = reply.send(());
             }
-            NativePubSocketCommand::Lifecycle(ZeroMqLifecycleCommand::Bind { reply, .. })
-            | NativePubSocketCommand::Lifecycle(ZeroMqLifecycleCommand::Connect {
+            NativePubSocketCommand::Lifecycle(ZeroMqLifecycleCommand::Bind { reply, .. }) => {
+                let _ = reply.send(Err(
+                    "pub socket cannot be rebound after it starts sending".to_string()
+                ));
+            }
+            NativePubSocketCommand::Lifecycle(ZeroMqLifecycleCommand::Connect {
                 reply, ..
             }) => {
                 let _ = reply.send(Err(
@@ -168,8 +174,11 @@ pub(super) async fn run_rep_socket_worker(
                             let _ = reply.send(());
                             RepPhase1::Continue
                         }
-                        Some(NativeRepSocketCommand::Lifecycle(ZeroMqLifecycleCommand::Bind { reply, .. }))
-                        | Some(NativeRepSocketCommand::Lifecycle(ZeroMqLifecycleCommand::Connect { reply, .. })) => {
+                        Some(NativeRepSocketCommand::Lifecycle(ZeroMqLifecycleCommand::Bind { reply, .. })) => {
+                            let _ = reply.send(Err("rep socket cannot be rebound after it starts receiving".to_string()));
+                            RepPhase1::Continue
+                        }
+                        Some(NativeRepSocketCommand::Lifecycle(ZeroMqLifecycleCommand::Connect { reply, .. })) => {
                             let _ = reply.send(Err("rep socket cannot be rebound after it starts receiving".to_string()));
                             RepPhase1::Continue
                         }
@@ -213,8 +222,12 @@ pub(super) async fn run_rep_socket_worker(
                 Some(NativeRepSocketCommand::Lifecycle(ZeroMqLifecycleCommand::Bind {
                     reply,
                     ..
-                }))
-                | Some(NativeRepSocketCommand::Lifecycle(ZeroMqLifecycleCommand::Connect {
+                })) => {
+                    let _ = reply.send(Err(
+                        "rep socket cannot be rebound after it starts receiving".to_string(),
+                    ));
+                }
+                Some(NativeRepSocketCommand::Lifecycle(ZeroMqLifecycleCommand::Connect {
                     reply,
                     ..
                 })) => {
@@ -256,7 +269,7 @@ async fn handle_lifecycle_command<S: zeromq::Socket>(
                 socket
                     .bind(&endpoint)
                     .await
-                    .map(|_| ())
+                    .map(|endpoint| endpoint.to_string())
                     .map_err(|error| error.to_string()),
             );
             false

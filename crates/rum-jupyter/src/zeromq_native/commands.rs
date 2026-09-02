@@ -3,7 +3,7 @@ use std::sync::mpsc::SyncSender;
 pub(super) enum ZeroMqLifecycleCommand {
     Bind {
         endpoint: String,
-        reply: SyncSender<Result<(), String>>,
+        reply: SyncSender<Result<String, String>>,
     },
     Connect {
         endpoint: String,

@@ -6,12 +6,12 @@ fn native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_meta
         return;
     };
     let codec = bootstrap.wire_codec();
-    let shell_endpoint = bootstrap.transport_layout().shell.uri();
-    let iopub_endpoint = bootstrap.transport_layout().iopub.uri();
-    let heartbeat_endpoint = bootstrap.transport_layout().heartbeat.uri();
     let runtime = test_runtime();
     let mut backend = NativeZeroMqTransportBackend::new_native(bootstrap.clone())
         .expect("native zeromq backend should build");
+    let shell_endpoint = backend.transport_layout().shell.uri();
+    let iopub_endpoint = backend.transport_layout().iopub.uri();
+    let heartbeat_endpoint = backend.transport_layout().heartbeat.uri();
     let mut driver = backend.socket_driver(Session::new());
 
     let mut shell = runtime.block_on(async {

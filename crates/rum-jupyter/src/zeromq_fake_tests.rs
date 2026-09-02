@@ -63,6 +63,7 @@ fn wait_for_fake_socket_event<S: ZeroMqSocket>(
 
 struct FakeZeroMqSocket {
     state: FakeZeroMqSocketHandle,
+    resolved_bind_endpoint: Option<String>,
 }
 
 impl ZeroMqSocket for FakeZeroMqSocket {
@@ -74,6 +75,14 @@ impl ZeroMqSocket for FakeZeroMqSocket {
             .bound
             .push(endpoint.to_string());
         Ok(())
+    }
+
+    fn bind_resolved(&mut self, endpoint: &str) -> Result<String, String> {
+        self.bind(endpoint)?;
+        Ok(self
+            .resolved_bind_endpoint
+            .clone()
+            .unwrap_or_else(|| endpoint.to_string()))
     }
 
     fn connect(&mut self, endpoint: &str) -> Result<(), String> {
@@ -110,6 +119,9 @@ struct FakeZeroMqFactory {
     router_sockets: Vec<FakeZeroMqSocketHandle>,
     pub_sockets: Vec<FakeZeroMqSocketHandle>,
     rep_sockets: Vec<FakeZeroMqSocketHandle>,
+    router_bind_endpoints: VecDeque<String>,
+    pub_bind_endpoints: VecDeque<String>,
+    rep_bind_endpoints: VecDeque<String>,
 }
 
 impl ZeroMqSocketFactory for FakeZeroMqFactory {
@@ -118,19 +130,28 @@ impl ZeroMqSocketFactory for FakeZeroMqFactory {
     fn router_socket(&mut self) -> Result<Self::Socket, String> {
         let handle = FakeZeroMqSocketHandle::default();
         self.router_sockets.push(handle.clone());
-        Ok(FakeZeroMqSocket { state: handle })
+        Ok(FakeZeroMqSocket {
+            state: handle,
+            resolved_bind_endpoint: self.router_bind_endpoints.pop_front(),
+        })
     }
 
     fn pub_socket(&mut self) -> Result<Self::Socket, String> {
         let handle = FakeZeroMqSocketHandle::default();
         self.pub_sockets.push(handle.clone());
-        Ok(FakeZeroMqSocket { state: handle })
+        Ok(FakeZeroMqSocket {
+            state: handle,
+            resolved_bind_endpoint: self.pub_bind_endpoints.pop_front(),
+        })
     }
 
     fn rep_socket(&mut self) -> Result<Self::Socket, String> {
         let handle = FakeZeroMqSocketHandle::default();
         self.rep_sockets.push(handle.clone());
-        Ok(FakeZeroMqSocket { state: handle })
+        Ok(FakeZeroMqSocket {
+            state: handle,
+            resolved_bind_endpoint: self.rep_bind_endpoints.pop_front(),
+        })
     }
 }
 
@@ -186,6 +207,102 @@ fn zeromq_backend_binds_expected_socket_endpoints() {
     assert_eq!(
         factory.rep_sockets[0].bound_endpoints(),
         vec!["tcp://127.0.0.1:42540"]
+    );
+}
+
+#[test]
+fn zeromq_backend_propagates_independently_resolved_bind_endpoints() {
+    let mut bootstrap = test_connection();
+    bootstrap.connection.shell_port = 0;
+    bootstrap.connection.control_port = 0;
+    bootstrap.connection.stdin_port = 0;
+    bootstrap.connection.iopub_port = 0;
+    bootstrap.connection.hb_port = 0;
+
+    let mut factory = FakeZeroMqFactory {
+        router_bind_endpoints: VecDeque::from([
+            "tcp://127.0.0.1:61001".to_string(),
+            "tcp://127.0.0.1:49123".to_string(),
+            "tcp://127.0.0.1:53007".to_string(),
+        ]),
+        pub_bind_endpoints: VecDeque::from(["tcp://127.0.0.1:42019".to_string()]),
+        rep_bind_endpoints: VecDeque::from(["tcp://127.0.0.1:58043".to_string()]),
+        ..FakeZeroMqFactory::default()
+    };
+    let backend = ZeroMqTransportBackend::from_factory(bootstrap.clone(), &mut factory)
+        .expect("backend should propagate resolved bind endpoints");
+
+    assert_eq!(
+        factory.router_sockets[0].bound_endpoints(),
+        vec!["tcp://127.0.0.1:0"]
+    );
+    assert_eq!(
+        factory.router_sockets[1].bound_endpoints(),
+        vec!["tcp://127.0.0.1:0"]
+    );
+    assert_eq!(
+        factory.router_sockets[2].bound_endpoints(),
+        vec!["tcp://127.0.0.1:0"]
+    );
+    assert_eq!(
+        factory.pub_sockets[0].bound_endpoints(),
+        vec!["tcp://127.0.0.1:0"]
+    );
+    assert_eq!(
+        factory.rep_sockets[0].bound_endpoints(),
+        vec!["tcp://127.0.0.1:0"]
+    );
+
+    let layout = backend.transport_layout();
+    assert_eq!(
+        [
+            layout.shell.uri(),
+            layout.control.uri(),
+            layout.stdin.uri(),
+            layout.iopub.uri(),
+            layout.heartbeat.uri(),
+        ],
+        [
+            "tcp://127.0.0.1:61001",
+            "tcp://127.0.0.1:49123",
+            "tcp://127.0.0.1:53007",
+            "tcp://127.0.0.1:42019",
+            "tcp://127.0.0.1:58043",
+        ]
+    );
+    assert_eq!(
+        backend.transport().session_config(),
+        backend.socket_session_config()
+    );
+    assert_eq!(
+        [
+            backend.socket_session_config().shell.endpoint.port,
+            backend.socket_session_config().control.endpoint.port,
+            backend.socket_session_config().stdin.endpoint.port,
+            backend.socket_session_config().iopub.endpoint.port,
+            backend.socket_session_config().heartbeat.endpoint.port,
+        ],
+        [61001, 49123, 53007, 42019, 58043]
+    );
+    assert_eq!(
+        [
+            backend.bootstrap_config().connection.shell_port,
+            backend.bootstrap_config().connection.control_port,
+            backend.bootstrap_config().connection.stdin_port,
+            backend.bootstrap_config().connection.iopub_port,
+            backend.bootstrap_config().connection.hb_port,
+        ],
+        [61001, 49123, 53007, 42019, 58043]
+    );
+    assert_eq!(
+        [
+            bootstrap.connection.shell_port,
+            bootstrap.connection.control_port,
+            bootstrap.connection.stdin_port,
+            bootstrap.connection.iopub_port,
+            bootstrap.connection.hb_port,
+        ],
+        [0; 5]
     );
 }
 

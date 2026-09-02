@@ -6,15 +6,15 @@ fn native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_r
         return;
     };
     let codec = bootstrap.wire_codec();
-    let shell_endpoint = bootstrap.transport_layout().shell.uri();
-    let stdin_endpoint = bootstrap.transport_layout().stdin.uri();
-    let iopub_endpoint = bootstrap.transport_layout().iopub.uri();
-    let heartbeat_endpoint = bootstrap.transport_layout().heartbeat.uri();
     let frontend_identity =
         PeerIdentity::from_str("frontend-zmq-stdin-client").expect("identity should parse");
     let runtime = test_runtime();
     let mut backend = NativeZeroMqTransportBackend::new_native(bootstrap.clone())
         .expect("native zeromq backend should build");
+    let shell_endpoint = backend.transport_layout().shell.uri();
+    let stdin_endpoint = backend.transport_layout().stdin.uri();
+    let iopub_endpoint = backend.transport_layout().iopub.uri();
+    let heartbeat_endpoint = backend.transport_layout().heartbeat.uri();
     let mut driver = backend.socket_driver(Session::new());
 
     let mut shell = runtime.block_on(async {

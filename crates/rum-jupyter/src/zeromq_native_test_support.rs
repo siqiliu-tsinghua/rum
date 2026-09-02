@@ -7,48 +7,45 @@ use std::{
 
 use super::*;
 
-fn loopback_ports() -> Option<Vec<u16>> {
-    let mut listeners = Vec::with_capacity(5);
-    for _ in 0..5 {
-        match TcpListener::bind("127.0.0.1:0") {
-            Ok(listener) => listeners.push(listener),
-            Err(error) if error.kind() == ErrorKind::PermissionDenied => {
-                eprintln!(
-                    "skipping native ZeroMQ test: loopback socket binding is not permitted"
-                );
-                return None;
-            }
-            Err(error) => panic!("ephemeral port should bind: {error}"),
-        }
-    }
+const ALLOW_NATIVE_ZEROMQ_SKIP: &str = "RUM_ALLOW_NATIVE_ZEROMQ_SKIP";
 
-    let ports = listeners
-        .iter()
-        .map(|listener| {
-            listener
-                .local_addr()
-                .expect("listener should expose a local address")
-                .port()
-        })
-        .collect::<Vec<_>>();
-    drop(listeners);
-    Some(ports)
+fn loopback_bind_available() -> bool {
+    match TcpListener::bind("127.0.0.1:0") {
+        Ok(_probe) => true,
+        Err(error) if error.kind() == ErrorKind::PermissionDenied => {
+            if std::env::var_os(ALLOW_NATIVE_ZEROMQ_SKIP).is_some() {
+                eprintln!(
+                    "skipping native ZeroMQ test: loopback socket binding is not permitted; \
+                     {ALLOW_NATIVE_ZEROMQ_SKIP} explicitly allows this skip"
+                );
+                false
+            } else {
+                panic!(
+                    "native ZeroMQ test cannot bind loopback: {error}; set \
+                     {ALLOW_NATIVE_ZEROMQ_SKIP}=1 to explicitly allow this test to skip"
+                );
+            }
+        }
+        Err(error) => panic!("native ZeroMQ loopback capability probe failed: {error}"),
+    }
 }
 
 fn loopback_connection_with_signature(
     key: &str,
     signature_scheme: crate::KernelSignatureScheme,
 ) -> Option<KernelBootstrapConfig> {
-    let ports = loopback_ports()?;
+    if !loopback_bind_available() {
+        return None;
+    }
 
     Some(KernelBootstrapConfig::from_connection_file(KernelConnectionFile {
         transport: crate::KernelTransportKind::Tcp,
         ip: "127.0.0.1".to_string(),
-        shell_port: ports[0],
-        iopub_port: ports[1],
-        stdin_port: ports[2],
-        control_port: ports[3],
-        hb_port: ports[4],
+        shell_port: 0,
+        iopub_port: 0,
+        stdin_port: 0,
+        control_port: 0,
+        hb_port: 0,
         key: key.to_string(),
         signature_scheme,
         kernel_name: Some("rum".to_string()),

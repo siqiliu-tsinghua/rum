@@ -6,12 +6,12 @@ fn native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages() 
         return;
     };
     let codec = bootstrap.wire_codec();
-    let shell_endpoint = bootstrap.transport_layout().shell.uri();
-    let iopub_endpoint = bootstrap.transport_layout().iopub.uri();
-    let heartbeat_endpoint = bootstrap.transport_layout().heartbeat.uri();
     let runtime = test_runtime();
     let mut backend = NativeZeroMqTransportBackend::new_native(bootstrap.clone())
         .expect("signed native zeromq backend should build");
+    let shell_endpoint = backend.transport_layout().shell.uri();
+    let iopub_endpoint = backend.transport_layout().iopub.uri();
+    let heartbeat_endpoint = backend.transport_layout().heartbeat.uri();
     let mut driver = backend.socket_driver(Session::new());
 
     let mut shell = runtime.block_on(async {
@@ -139,10 +139,10 @@ fn native_zeromq_backend_rejects_tampered_signed_requests_end_to_end() {
         return;
     };
     let codec = bootstrap.wire_codec();
-    let shell_endpoint = bootstrap.transport_layout().shell.uri();
     let runtime = test_runtime();
     let mut backend = NativeZeroMqTransportBackend::new_native(bootstrap.clone())
         .expect("signed native zeromq backend should build");
+    let shell_endpoint = backend.transport_layout().shell.uri();
     let mut driver = backend.socket_driver(Session::new());
 
     let mut shell = runtime.block_on(async {

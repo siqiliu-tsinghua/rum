@@ -47,6 +47,11 @@ impl ZeroMqSocketFactory for NativeZeroMqFactory {
 
 impl ZeroMqSocket for NativeZeroMqSocket {
     fn bind(&mut self, endpoint: &str) -> Result<(), String> {
+        self.bind_resolved(endpoint)?;
+        Ok(())
+    }
+
+    fn bind_resolved(&mut self, endpoint: &str) -> Result<String, String> {
         match &mut self.0 {
             NativeZeroMqSocketInner::Router(socket) => socket.bind(endpoint),
             NativeZeroMqSocketInner::Pub(socket) => socket.bind(endpoint),
@@ -92,7 +97,7 @@ impl NativeRouterSocket {
         }
     }
 
-    fn bind(&mut self, endpoint: &str) -> Result<(), String> {
+    fn bind(&mut self, endpoint: &str) -> Result<String, String> {
         self.handle.bind(endpoint)
     }
 
@@ -131,7 +136,7 @@ impl NativePubSocket {
         }
     }
 
-    fn bind(&mut self, endpoint: &str) -> Result<(), String> {
+    fn bind(&mut self, endpoint: &str) -> Result<String, String> {
         self.handle.bind(endpoint)
     }
 
@@ -169,7 +174,7 @@ impl NativeRepSocket {
         }
     }
 
-    fn bind(&mut self, endpoint: &str) -> Result<(), String> {
+    fn bind(&mut self, endpoint: &str) -> Result<String, String> {
         self.handle.bind(endpoint)
     }
 

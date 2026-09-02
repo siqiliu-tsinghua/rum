@@ -6,10 +6,10 @@ fn native_zeromq_backend_round_trips_execute_over_loopback_sockets() {
         return;
     };
     let codec = bootstrap.wire_codec();
-    let shell_endpoint = bootstrap.transport_layout().shell.uri();
     let runtime = test_runtime();
     let mut backend = NativeZeroMqTransportBackend::new_native(bootstrap.clone())
         .expect("native zeromq backend should build");
+    let shell_endpoint = backend.transport_layout().shell.uri();
     let mut driver = backend.socket_driver(Session::new());
 
     let mut dealer = runtime.block_on(async {
@@ -86,10 +86,10 @@ fn native_zeromq_backend_echoes_heartbeat_over_loopback_req_socket() {
     let Some(bootstrap) = loopback_connection() else {
         return;
     };
-    let heartbeat_endpoint = bootstrap.transport_layout().heartbeat.uri();
     let runtime = test_runtime();
     let mut backend = NativeZeroMqTransportBackend::new_native(bootstrap.clone())
         .expect("native zeromq backend should build");
+    let heartbeat_endpoint = backend.transport_layout().heartbeat.uri();
     let mut driver = backend.socket_driver(Session::new());
 
     let mut heartbeat = runtime.block_on(async {

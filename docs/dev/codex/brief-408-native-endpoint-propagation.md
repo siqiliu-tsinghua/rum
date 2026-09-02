@@ -181,3 +181,137 @@ format, the premise is exceeded — stop and report.
 5. Verification output, with an explicit statement of what you could not run.
 6. Cost statement, and confirmation the wire format is unchanged.
 7. Stop-loss, risks, open questions.
+
+---
+
+# Report — 2026-09-02
+
+## 1. Per-file changes
+
+- [zeromq.rs](crates/rum-jupyter/src/zeromq.rs:28): added a source-compatible resolved-bind hook; stores all five resolved endpoints in the socket session, transport layout, and backend-owned configuration.
+- [commands.rs](crates/rum-jupyter/src/zeromq_native/commands.rs:3): bind lifecycle replies now carry the resolved endpoint string.
+- [handles.rs](crates/rum-jupyter/src/zeromq_native/handles.rs:51): Router, Pub, and Rep handles return their bind reply instead of unit.
+- [socket.rs](crates/rum-jupyter/src/zeromq_native/socket.rs:48): propagates resolved binds through all three native socket kinds.
+- [workers.rs](crates/rum-jupyter/src/zeromq_native/workers.rs:262): preserves `zeromq::Socket::bind`’s returned endpoint and keeps post-start bind/connect errors type-correct.
+- [zeromq_native_test_support.rs](crates/rum-jupyter/src/zeromq_native_test_support.rs:10): replaces five port reservations with one capability-only probe, requests five port-zero binds, and adds the explicit skip gate.
+- [zeromq_fake_tests.rs](crates/rum-jupyter/src/zeromq_fake_tests.rs:213): covers five independent, non-contiguous resolved endpoints reaching the layout and both session configurations.
+- [basic.rs](crates/rum-jupyter/src/zeromq/tests/native/basic.rs:4): Shell and heartbeat frontends now read backend-resolved endpoints.
+- [signed.rs](crates/rum-jupyter/src/zeromq/tests/native/signed.rs:4): signed Shell, IOPub, and heartbeat setup now uses resolved endpoints.
+- [control.rs](crates/rum-jupyter/src/zeromq/tests/native/frontend/control.rs:4): both Control flows use resolved Shell/Control endpoints.
+- [execute.rs](crates/rum-jupyter/src/zeromq/tests/native/frontend/execute.rs:4): uses resolved Shell, IOPub, and heartbeat endpoints.
+- [stdin.rs](crates/rum-jupyter/src/zeromq/tests/native/frontend/stdin.rs:4): uses resolved Shell, Stdin, IOPub, and heartbeat endpoints.
+- [session_flow.rs](crates/rum-jupyter/src/zeromq/tests/native/frontend/session_flow.rs:4): uses all five resolved endpoints.
+
+No file outside the brief’s MAY list changed.
+
+## 2. Resolved-endpoint chain
+
+[zeromq-0.5.0 `Socket::bind`](cargo-registry/zeromq-0.5.0/src/lib.rs:232)  
+→ [worker retains `Endpoint::to_string()`](crates/rum-jupyter/src/zeromq_native/workers.rs:267)  
+→ [bind reply carries `Result<String, String>`](crates/rum-jupyter/src/zeromq_native/commands.rs:4)  
+→ [Router handle receives it](crates/rum-jupyter/src/zeromq_native/handles.rs:51), with equivalent Pub/Rep paths at lines 136 and 217  
+→ [native wrapper dispatches by socket kind](crates/rum-jupyter/src/zeromq_native/socket.rs:53)  
+→ [`setup_socket` installs the returned endpoint](crates/rum-jupyter/src/zeromq.rs:419)  
+→ [backend layout/session configuration copy it](crates/rum-jupyter/src/zeromq.rs:292)  
+→ [native frontend reads that layout](crates/rum-jupyter/src/zeromq/tests/native/frontend/session_flow.rs:14)  
+→ [Shell/Control/Stdin/IOPub connect](crates/rum-jupyter/src/zeromq/tests/native/frontend/session_flow.rs:21) and [heartbeat connects](crates/rum-jupyter/src/zeromq_native_test_support.rs:81).
+
+## 3. Skip gate, both ways
+
+Unset, verbatim excerpt:
+
+```text
+running 9 tests
+
+thread 'zeromq::tests::native::signed::native_zeromq_backend_rejects_tampered_signed_requests_end_to_end' panicked at crates/rum-jupyter/src/zeromq/tests/../../zeromq_native_test_support.rs:23:17:
+native ZeroMQ test cannot bind loopback: Operation not permitted (os error 1); set RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1 to explicitly allow this test to skip
+```
+
+```text
+test result: FAILED. 0 passed; 9 failed; 0 ignored; 0 measured; 95 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p rum-jupyter --lib`
+```
+
+With explicit opt-out, verbatim excerpt:
+
+```text
+running 9 tests
+skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+```
+
+```text
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 95 filtered out; finished in 0.00s
+```
+
+That final libtest summary consists entirely of explicit early-return skips, not native passes.
+
+## 4. Reservation removal evidence
+
+```text
+$ rg -n 'TcpListener|local_addr|\.port\(\)|ports\[' crates/rum-jupyter/src/zeromq_native_test_support.rs
+3:    net::TcpListener,
+13:    match TcpListener::bind("127.0.0.1:0") {
+```
+
+There is no `local_addr`, `.port()`, port collection, or endpoint read from the probe. It exists only to classify `PermissionDenied`.
+
+```text
+44:        shell_port: 0,
+45:        iopub_port: 0,
+46:        stdin_port: 0,
+47:        control_port: 0,
+48:        hb_port: 0,
+```
+
+A search for `bootstrap.transport_layout()` in native tests produced no output. No bind retry loop was added.
+
+## 5. Verification
+
+Final results:
+
+```text
+scripts/run-bounded.py --timeout 300 -- cargo --offline fmt --check
+```
+
+Exit 0, no output.
+
+The brief’s literal `zeromq_fake_tests` filter selected zero tests because the file is included as `zeromq::tests::fake`. I therefore ran the real module path:
+
+```text
+running 4 tests
+test zeromq::tests::fake::zeromq_backend_propagates_independently_resolved_bind_endpoints ... ok
+test zeromq::tests::fake::zeromq_backend_binds_expected_socket_endpoints ... ok
+test zeromq::tests::fake::zeromq_backend_reports_malformed_shell_frames_as_structured_wire_errors ... ok
+test zeromq::tests::fake::zeromq_backend_round_trips_execute_over_fake_router_socket ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 100 filtered out; finished in 0.01s
+```
+
+Crate gate, with explicit sandbox opt-out:
+
+```text
+test result: ok. 104 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+```
+
+The native entries in that aggregate were early-return skips.
+
+Workspace gate:
+
+```text
+RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1 scripts/run-bounded.py --timeout 2400 -- cargo test --offline --workspace --no-fail-fast
+```
+
+Exit 0. The 2,495-line output contained three existing `rum-runtime` dead-code warnings and ended with green doc-test results.
+
+During iteration, the first formatting check found one wrapping difference, and the first focused compilation found four combined match arms whose bind/connect reply types differed. Both were corrected before the final green gates.
+
+I could not execute any native socket behavior in this sandbox. Authoritative native verification remains for the loopback-capable host.
+
+## 6. Cost and compatibility
+
+The added work occurs only during ZeroMQ backend construction: five endpoint strings cross lifecycle reply channels, are parsed once, and are cloned into effective configuration. No evaluator, dispatch, matcher, or steady-state socket hot path changed; no timing A/B was warranted.
+
+The wire protocol, message schema, serde shapes, dependency graph, pinned `zeromq` version, and `Cargo.lock` are unchanged. The existing public `ZeroMqSocket::bind` signature remains source-compatible through a default resolved-bind hook. No `unsafe` or raw-fd transfer was introduced.
+

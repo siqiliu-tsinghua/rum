@@ -27,6 +27,10 @@ pub enum ZeroMqBackendError {
 
 pub trait ZeroMqSocket {
     fn bind(&mut self, endpoint: &str) -> Result<(), String>;
+    fn bind_resolved(&mut self, endpoint: &str) -> Result<String, String> {
+        self.bind(endpoint)?;
+        Ok(endpoint.to_string())
+    }
     fn connect(&mut self, endpoint: &str) -> Result<(), String>;
     fn send_multipart(&mut self, frames: Vec<Vec<u8>>);
     fn try_recv_multipart(&mut self) -> Option<Vec<Vec<u8>>>;
@@ -94,7 +98,7 @@ impl<S: ZeroMqSocket> ZeroMqSocketSession<S> {
     where
         F: ZeroMqSocketFactory<Socket = S>,
     {
-        let session_config = bootstrap_config.socket_session_config();
+        let mut session_config = bootstrap_config.socket_session_config();
         let mut shell =
             factory
                 .router_socket()
@@ -131,11 +135,11 @@ impl<S: ZeroMqSocket> ZeroMqSocketSession<S> {
                     message,
                 })?;
 
-        setup_socket(&mut shell, &session_config.shell)?;
-        setup_socket(&mut control, &session_config.control)?;
-        setup_socket(&mut stdin, &session_config.stdin)?;
-        setup_socket(&mut iopub, &session_config.iopub)?;
-        setup_socket(&mut heartbeat, &session_config.heartbeat)?;
+        setup_socket(&mut shell, &mut session_config.shell)?;
+        setup_socket(&mut control, &mut session_config.control)?;
+        setup_socket(&mut stdin, &mut session_config.stdin)?;
+        setup_socket(&mut iopub, &mut session_config.iopub)?;
+        setup_socket(&mut heartbeat, &mut session_config.heartbeat)?;
 
         Ok(Self {
             session_config,
@@ -279,15 +283,20 @@ pub struct ZeroMqTransportBackend<S> {
 
 impl<S: ZeroMqSocket> ZeroMqTransportBackend<S> {
     pub fn from_factory<F>(
-        bootstrap_config: KernelBootstrapConfig,
+        mut bootstrap_config: KernelBootstrapConfig,
         factory: &mut F,
     ) -> Result<Self, ZeroMqBackendError>
     where
         F: ZeroMqSocketFactory<Socket = S>,
     {
-        let transport_layout = bootstrap_config.transport_layout();
-        let socket_session_config = bootstrap_config.socket_session_config();
         let transport = ZeroMqSocketSession::from_bootstrap(&bootstrap_config, factory)?;
+        let socket_session_config = transport.session_config().clone();
+        let transport_layout = transport_layout_from_session_config(&socket_session_config);
+        bootstrap_config.connection.shell_port = transport_layout.shell.port;
+        bootstrap_config.connection.control_port = transport_layout.control.port;
+        bootstrap_config.connection.stdin_port = transport_layout.stdin.port;
+        bootstrap_config.connection.iopub_port = transport_layout.iopub.port;
+        bootstrap_config.connection.hb_port = transport_layout.heartbeat.port;
 
         Ok(Self {
             bootstrap_config,
@@ -409,22 +418,85 @@ fn bytes_to_string(
 
 fn setup_socket<S: ZeroMqSocket>(
     socket: &mut S,
-    spec: &crate::KernelSocketSpec,
+    spec: &mut crate::KernelSocketSpec,
 ) -> Result<(), ZeroMqBackendError> {
     let endpoint = spec.uri();
-    let result = match spec.bind_mode {
-        crate::KernelSocketBindMode::Bind => socket.bind(&endpoint),
-        crate::KernelSocketBindMode::Connect => socket.connect(&endpoint),
-    };
+    match spec.bind_mode {
+        crate::KernelSocketBindMode::Bind => {
+            let resolved = socket.bind_resolved(&endpoint).map_err(|message| {
+                ZeroMqBackendError::SocketSetup {
+                    endpoint: endpoint.clone(),
+                    operation: "bind",
+                    message,
+                }
+            })?;
+            spec.endpoint =
+                resolved_transport_endpoint(&spec.endpoint, &resolved).map_err(|message| {
+                    ZeroMqBackendError::SocketSetup {
+                        endpoint,
+                        operation: "bind",
+                        message,
+                    }
+                })?;
+            Ok(())
+        }
+        crate::KernelSocketBindMode::Connect => {
+            socket
+                .connect(&endpoint)
+                .map_err(|message| ZeroMqBackendError::SocketSetup {
+                    endpoint,
+                    operation: "connect",
+                    message,
+                })
+        }
+    }
+}
 
-    result.map_err(|message| ZeroMqBackendError::SocketSetup {
-        endpoint,
-        operation: match spec.bind_mode {
-            crate::KernelSocketBindMode::Bind => "bind",
-            crate::KernelSocketBindMode::Connect => "connect",
-        },
-        message,
+fn resolved_transport_endpoint(
+    requested: &crate::KernelTransportEndpoint,
+    resolved: &str,
+) -> Result<crate::KernelTransportEndpoint, String> {
+    let (transport, address) = resolved
+        .split_once("://")
+        .ok_or_else(|| format!("bind returned an invalid resolved endpoint: {resolved}"))?;
+    if transport != requested.transport.as_str() {
+        return Err(format!(
+            "bind returned transport {transport:?}, expected {:?}",
+            requested.transport.as_str()
+        ));
+    }
+
+    let (ip, port) = address
+        .rsplit_once(':')
+        .ok_or_else(|| format!("bind returned an invalid resolved endpoint: {resolved}"))?;
+    let port = port
+        .parse::<u16>()
+        .map_err(|_| format!("bind returned an invalid resolved port: {resolved}"))?;
+    if port == 0 {
+        return Err(format!("bind did not resolve port zero: {resolved}"));
+    }
+
+    Ok(crate::KernelTransportEndpoint {
+        transport: requested.transport,
+        ip: ip
+            .strip_prefix('[')
+            .and_then(|ip| ip.strip_suffix(']'))
+            .unwrap_or(ip)
+            .to_string(),
+        port,
     })
+}
+
+fn transport_layout_from_session_config(
+    config: &KernelSocketSessionConfig,
+) -> KernelTransportLayout {
+    KernelTransportLayout {
+        shell: config.shell.endpoint.clone(),
+        control: config.control.endpoint.clone(),
+        stdin: config.stdin.endpoint.clone(),
+        iopub: config.iopub.endpoint.clone(),
+        heartbeat: config.heartbeat.endpoint.clone(),
+    }
 }
 
 #[path = "zeromq_native.rs"]
