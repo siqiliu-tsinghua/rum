@@ -34,6 +34,7 @@ fn event_pump_preserves_routing_ids_on_replies_and_routes_iopub_separately() {
     );
     assert_eq!(transport.shell.len(), 0);
     assert_eq!(transport.iopub.len(), 2);
+    pump.adapter_mut().wait_for_execute_worker_finished();
     assert!(
         pump.pump_execute_completion(&mut transport)
             .expect("completion poll should succeed")
@@ -177,6 +178,7 @@ fn control_interrupt_cancels_running_execute_and_deferred_shell_runs_after_idle(
     let adapter = KernelAdapter::new(long_running_cancel_session());
     let mut pump = KernelEventPump::new(adapter, codec.clone());
     let mut transport = MockSocketTransport::default();
+    let worker_gate = pump.adapter_mut().gate_next_execute_worker();
 
     let mut infinite = codec
         .encode_request_envelope(&KernelRequestEnvelope {
@@ -200,6 +202,7 @@ fn control_interrupt_cancels_running_execute_and_deferred_shell_runs_after_idle(
         .expect("execute start should pump")
         .expect("execute request should be processed");
     assert_eq!(start_event, KernelPumpEvent::Channel(KernelChannel::Shell));
+    pump.adapter_mut().wait_for_execute_worker_started();
     assert!(pump.adapter().execute_running());
     assert_eq!(pump.adapter().execution_state(), KernelExecutionState::Busy);
     assert!(transport.shell.is_empty());
@@ -245,18 +248,18 @@ fn control_interrupt_cancels_running_execute_and_deferred_shell_runs_after_idle(
             .expect("interrupt request should encode"),
     );
 
-    let started = Instant::now();
-    while transport.shell.is_empty() {
-        assert!(
-            started.elapsed() < ASYNC_TEST_TIMEOUT,
-            "interrupted execute did not produce a shell reply within {ASYNC_TEST_TIMEOUT:?}"
-        );
-        let _ = pump
-            .pump_next(&mut transport)
-            .expect("interrupt loop should keep pumping");
-        thread::sleep(Duration::from_millis(1));
-    }
-    let interrupt_latency = started.elapsed();
+    assert_eq!(
+        pump.pump_next(&mut transport)
+            .expect("interrupt should pump"),
+        Some(KernelPumpEvent::Channel(KernelChannel::Control))
+    );
+    worker_gate.release();
+    pump.adapter_mut().wait_for_execute_worker_finished();
+    assert_eq!(
+        pump.pump_next(&mut transport)
+            .expect("cancelled execute completion should pump"),
+        Some(KernelPumpEvent::ExecuteCompletion)
+    );
 
     assert_eq!(transport.control.len(), 1);
     let interrupt_reply =
@@ -334,11 +337,6 @@ fn control_interrupt_cancels_running_execute_and_deferred_shell_runs_after_idle(
                 KernelIoPubPayload::ExecuteResult(result)
                     if result.data.get("text/plain") == Some("42")
             ))
-    );
-
-    println!(
-        "real_interrupt_latency_ms={}",
-        interrupt_latency.as_millis()
     );
 }
 

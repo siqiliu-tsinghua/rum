@@ -203,3 +203,154 @@ evaluation or dispatch behaviour, the premise is exceeded — stop and report.
 6. Evidence that no production path changed, and the justification for any
    surviving harness stop-loss.
 7. Stop-loss, risks, open questions.
+
+---
+
+# Report — 2026-09-02
+
+## 1. Per-file changes
+
+- [adapter/worker.rs](crates/rum-jupyter/src/adapter/worker.rs:7) — added `#[cfg(test)]` per-worker start/finish channels and a panic-safe one-shot release gate.
+- [adapter/mod.rs](crates/rum-jupyter/src/adapter/mod.rs:32) — exposed test-only gate/wait methods and passed test controls into eval/resume workers.
+- [tests/mod.rs](crates/rum-jupyter/src/tests/mod.rs:60) — replaced the shared two-second sleep/poll loop with a finish-signal wait followed by normal adapter completion.
+- [tests/pump.rs](crates/rum-jupyter/src/tests/pump.rs:4) — synchronized finding A on finish; gated the cancellation worker until Control processing completed.
+- [tests/bootstrap.rs](crates/rum-jupyter/src/tests/bootstrap.rs:442) — replaced delayed shutdown staging and elapsed-time assertions with a running-state handshake and gate.
+- [zeromq_fake_tests.rs](crates/rum-jupyter/src/zeromq_fake_tests.rs:47) — replaced the two-second fake-socket polling loop with the worker finish signal.
+
+No other files changed.
+
+## 2. Synchronization mechanism
+
+Each test-build worker owns instance-specific `mpsc` start and finish channels. Receiving those events creates a channel happens-before edge from that exact worker; there is no spin, sleep, yield, retry budget, or global state.
+
+The optional gate blocks the worker before evaluation. Tests first receive `started`, establish assertions while holding the gate, process Control, then release it. Dropping an unreleased gate disconnects its channel, causing the test worker to terminate promptly rather than hang after a panic.
+
+The worker result remains owned and joined by `KernelAdapter::poll_execute_completion`; no test joins or consumes it externally.
+
+## 3. Per-test accounting
+
+All 15 synchronization-affected tests retained their semantic assertions:
+
+- `event_pump_preserves_routing_ids_on_replies_and_routes_iopub_separately`: removed immediate readiness; preserved routing IDs, Shell/IOPub counts, and IOPub routing separation.
+- `control_interrupt_cancels_running_execute_and_deferred_shell_runs_after_idle`: removed assumed running state and cancellation deadline; preserved Busy state, Shell deferral, Control priority/reply, cancellation outcome, routing IDs, lifecycle recovery, and follow-up result `42`.
+- `socket_driver_observes_shutdown_promptly_during_running_execute`: removed 2 ms sender sleep and one-/two-second assertions; preserved shutdown observation, Control count/reply, lifecycle state, and worker cleanup.
+- `zeromq_backend_round_trips_execute_over_fake_router_socket`: removed two-second polling; preserved completion event, reply status, routing, and execution count.
+- `dispatch_request_emits_iopub_status_execute_input_and_execute_result`: removed shared deadline; preserved exact Busy/Input/Result/Idle sequence and metadata.
+- `shell_request_envelope_dispatches_execute_requests`: preserved Shell reply, parent ID, status, count, and output.
+- `transport_encoding_serializes_reply_and_iopub_messages`: preserved serialization, reply-first ordering, and five-message layout.
+- `mock_socket_transport_routes_reply_and_iopub_messages_by_channel`: preserved Shell/IOPub separation and counts.
+- `transport_codec_decodes_execute_reply_and_iopub_messages`: preserved reply fields and decoded Busy/result payloads.
+- `execute_request_with_inputstring_stages_stdin_and_defers_execute_reply`: preserved deferred reply, prompt, prologue, and Busy state.
+- `execute_request_with_disallowed_stdin_returns_input_error_reply`: preserved error status, no stdin output, and `InputRequired` outcome.
+- `input_reply_without_parent_header_resumes_pending_execute`: preserved parentless resume, count, and `"Alice"` result.
+- `input_reply_resumes_execute_without_rerunning_prefix_side_effects`: preserved side-effect state and resumed result.
+- `input_reply_resumes_delayed_message_templates_through_internal_string_driver`: preserved prompt, rendered message, `Null`, and execution count.
+- `input_reply_resumes_multi_sequence_matcher_backtracking_across_multiple_prompts`: preserved the complete prompt/backtracking sequence and final `True`.
+
+Zero tests and zero semantic assertions were deleted. Only elapsed-time assertions were removed. Existing finite-work `pump_until_idle` tests remain on their production-guaranteed loop, as allowed by the brief.
+
+## 4. Mandatory red, green, and isolation
+
+Red, before edits:
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (target/debug/deps/rum_jupyter-0d2044aa0c254386)
+
+running 1 test
+
+thread 'tests::pump::event_pump_preserves_routing_ids_on_replies_and_routes_iopub_separately' panicked at crates/rum-jupyter/src/tests/pump.rs:37:5:
+assertion failed: pump.pump_execute_completion(&mut transport).expect("completion poll should succeed")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test tests::pump::event_pump_preserves_routing_ids_on_replies_and_routes_iopub_separately ... FAILED
+
+failures:
+
+failures:
+    tests::pump::event_pump_preserves_routing_ids_on_replies_and_routes_iopub_separately
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 102 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p rum-jupyter --lib`
+```
+
+Green, final implementation:
+
+```text
+   Compiling rum-jupyter v0.2.0 (crates/rum-jupyter)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.41s
+     Running unittests src/lib.rs (target/debug/deps/rum_jupyter-0d2044aa0c254386)
+
+running 1 test
+test tests::pump::event_pump_preserves_routing_ids_on_replies_and_routes_iopub_separately ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 102 filtered out; finished in 0.00s
+```
+
+Final isolated counts:
+
+```text
+tests::pump::event_pump_preserves_routing_ids_on_replies_and_routes_iopub_separately 10/10
+tests::pump::control_interrupt_cancels_running_execute_and_deferred_shell_runs_after_idle 10/10
+tests::bootstrap::socket_driver_observes_shutdown_promptly_during_running_execute 10/10
+tests::adapter::dispatch::dispatch_request_emits_iopub_status_execute_input_and_execute_result 10/10
+tests::adapter::dispatch::shell_request_envelope_dispatches_execute_requests 10/10
+tests::wire::transport_encoding_serializes_reply_and_iopub_messages 10/10
+tests::wire::mock_socket_transport_routes_reply_and_iopub_messages_by_channel 10/10
+tests::wire::transport_codec_decodes_execute_reply_and_iopub_messages 10/10
+tests::stdin::execute_request_with_inputstring_stages_stdin_and_defers_execute_reply 10/10
+tests::stdin::execute_request_with_disallowed_stdin_returns_input_error_reply 10/10
+tests::stdin::input_reply_without_parent_header_resumes_pending_execute 10/10
+tests::stdin::input_reply_resumes_execute_without_rerunning_prefix_side_effects 10/10
+tests::stdin::input_reply_resumes_delayed_message_templates_through_internal_string_driver 10/10
+tests::stdin::input_reply_resumes_multi_sequence_matcher_backtracking_across_multiple_prompts 10/10
+zeromq::tests::fake::zeromq_backend_round_trips_execute_over_fake_router_socket 10/10
+```
+
+## 5. Verification
+
+- `cargo --offline fmt --check`: exit 0, no output.
+- `cargo test --offline -p rum-jupyter`: exit 0.
+
+```text
+test result: ok. 103 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+```
+
+- `cargo test --offline --workspace --no-fail-fast`: exit 0. The 2,494-line stream contained only three existing `rum-runtime` dead-code warnings; all test binaries and doctests completed successfully.
+- Additional release-build check:
+
+```text
+    Checking rum-jupyter v0.2.0 (crates/rum-jupyter)
+    Finished `release` profile [optimized] target(s) in 0.41s
+```
+
+Native verification printed nine copies of:
+
+```text
+skipping native ZeroMQ test: loopback socket binding is not permitted
+```
+
+and ended:
+
+```text
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 94 filtered out; finished in 0.00s
+```
+
+All nine native tests took their internal early-return skip path. Their `ok` labels are not evidence that native socket behavior ran, and no native stability claim is made.
+
+## 6. Production-path evidence
+
+All channel types, fields, arguments, sends, waits, and gate behavior are guarded by `#[cfg(test)]`. In release builds:
+
+- no signal/gate field exists;
+- no branch, allocation, channel, lock, or test API exists;
+- `take_finished` still samples `JoinHandle::is_finished`;
+- eval/resume behavior and normal adapter-owned joining remain unchanged.
+
+No `unsafe`, dependency, protocol, serde, runtime, host, socket, or native-test changes were introduced. No internal deadline remains, so no duration needed measurement-based justification. The brief-mandated `run-bounded.py` wrappers were the only harness stop-losses.
+
+## 7. Stop-loss, risks, and open questions
+
+No stop-loss fired and there are no semantic blockers or open questions. `adapter/worker.rs` is now 10,654 characters, just inside the project’s warning range; splitting into a new file was outside the explicit file scope, so it remains colocated with the worker responsibility.
+
+Final `git diff --check` passed. The six scoped modifications remain uncommitted.

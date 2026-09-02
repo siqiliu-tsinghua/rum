@@ -28,10 +28,14 @@ use self::render::{
     input_request_metadata, inspect_metadata, inspect_mime_bundle, kernel_input_request,
     response_metadata, response_msg_type,
 };
+#[cfg(test)]
+pub(crate) use self::worker::ExecuteWorkerGate;
 use self::worker::{
     ExecuteContext, ExecuteState, force_cancelled_success, host_outcome_to_kernel,
     outcome_is_cancelled, outcome_requires_session_reset,
 };
+#[cfg(test)]
+use self::worker::{ExecuteWorkerGateWait, execute_worker_gate};
 
 pub struct KernelAdapter {
     session: Option<HostSession>,
@@ -44,6 +48,8 @@ pub struct KernelAdapter {
     pending_input: Option<KernelInputRequestEnvelope>,
     pending_execute: Option<ExecuteContext>,
     last_input_reply: Option<KernelInputReply>,
+    #[cfg(test)]
+    next_execute_worker_gate: Option<ExecuteWorkerGateWait>,
 }
 
 impl KernelAdapter {
@@ -63,6 +69,8 @@ impl KernelAdapter {
             pending_input: None,
             pending_execute: None,
             last_input_reply: None,
+            #[cfg(test)]
+            next_execute_worker_gate: None,
         }
     }
 
@@ -95,6 +103,27 @@ impl KernelAdapter {
 
     pub fn execute_running(&self) -> bool {
         self.execute_state.is_running()
+    }
+
+    #[cfg(test)]
+    pub(crate) fn gate_next_execute_worker(&mut self) -> ExecuteWorkerGate {
+        assert!(
+            self.next_execute_worker_gate.is_none(),
+            "only one execute worker gate may be pending"
+        );
+        let (gate, wait) = execute_worker_gate();
+        self.next_execute_worker_gate = Some(wait);
+        gate
+    }
+
+    #[cfg(test)]
+    pub(crate) fn wait_for_execute_worker_started(&mut self) {
+        self.execute_state.wait_until_started();
+    }
+
+    #[cfg(test)]
+    pub(crate) fn wait_for_execute_worker_finished(&mut self) {
+        self.execute_state.wait_until_finished();
     }
 
     pub fn pending_input_request(&self) -> Option<&KernelInputRequestEnvelope> {
@@ -398,7 +427,12 @@ impl KernelAdapter {
         };
 
         let session = self.take_idle_session();
-        self.execute_state.start_eval(session, context);
+        self.execute_state.start_eval(
+            session,
+            context,
+            #[cfg(test)]
+            self.next_execute_worker_gate.take(),
+        );
 
         KernelDispatchResult {
             reply: None,
@@ -454,7 +488,13 @@ impl KernelAdapter {
             .expect("pending execute resumes only after an input reply");
         self.execution_state = KernelExecutionState::Busy;
         let session = self.take_idle_session();
-        self.execute_state.start_resume(session, pending, input);
+        self.execute_state.start_resume(
+            session,
+            pending,
+            input,
+            #[cfg(test)]
+            self.next_execute_worker_gate.take(),
+        );
 
         KernelDispatchResult {
             reply: None,

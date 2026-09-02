@@ -1,8 +1,6 @@
 use std::{
     collections::VecDeque,
     sync::{Arc, Mutex},
-    thread,
-    time::{Duration, Instant},
 };
 
 use crate::KernelWireError;
@@ -51,20 +49,16 @@ fn wait_for_fake_socket_event<S: ZeroMqSocket>(
     transport: &mut ZeroMqSocketSession<S>,
     expected: crate::KernelSocketPollEvent,
 ) {
-    let deadline = Instant::now() + Duration::from_secs(2);
-    loop {
-        let event = driver
+    driver
+        .event_pump_mut()
+        .adapter_mut()
+        .wait_for_execute_worker_finished();
+    assert_eq!(
+        driver
             .pump_once(transport)
-            .expect("fake socket driver should keep pumping");
-        if event == Some(expected) {
-            return;
-        }
-        assert!(
-            Instant::now() < deadline,
-            "timed out waiting for fake socket event {expected:?}"
-        );
-        thread::sleep(Duration::from_millis(1));
-    }
+            .expect("finished fake socket execute should pump"),
+        Some(expected)
+    );
 }
 
 struct FakeZeroMqSocket {

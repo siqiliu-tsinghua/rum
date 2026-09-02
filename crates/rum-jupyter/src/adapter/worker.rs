@@ -4,6 +4,9 @@ use std::{
     thread::{self, JoinHandle},
 };
 
+#[cfg(test)]
+use std::sync::mpsc::{self, Receiver, Sender};
+
 use rum_host::{
     HostCancelHandle, HostEvalOutcome, HostEvalRequest, HostEvalSuccess, HostFailure,
     HostFailureCode, HostSession, HostTerminationReason,
@@ -28,6 +31,23 @@ pub(super) struct ExecuteWorker {
     cancel: HostCancelHandle,
     context: ExecuteContext,
     interrupted: bool,
+    #[cfg(test)]
+    started: Option<Receiver<()>>,
+    #[cfg(test)]
+    finished: Option<Receiver<()>>,
+}
+
+#[cfg(test)]
+pub(crate) struct ExecuteWorkerGate(Sender<()>);
+
+#[cfg(test)]
+pub(super) struct ExecuteWorkerGateWait(Receiver<()>);
+
+#[cfg(test)]
+struct ExecuteWorkerSignals {
+    started: Sender<()>,
+    finished: Sender<()>,
+    gate: Option<ExecuteWorkerGateWait>,
 }
 
 enum ExecuteSegment {
@@ -53,9 +73,19 @@ impl ExecuteState {
         true
     }
 
-    pub(super) fn start_eval(&mut self, session: HostSession, context: ExecuteContext) {
+    pub(super) fn start_eval(
+        &mut self,
+        session: HostSession,
+        context: ExecuteContext,
+        #[cfg(test)] gate: Option<ExecuteWorkerGateWait>,
+    ) {
         debug_assert!(!self.is_running());
-        *self = Self::Running(ExecuteWorker::spawn_eval(session, context));
+        *self = Self::Running(ExecuteWorker::spawn_eval(
+            session,
+            context,
+            #[cfg(test)]
+            gate,
+        ));
     }
 
     pub(super) fn start_resume(
@@ -63,16 +93,44 @@ impl ExecuteState {
         session: HostSession,
         context: ExecuteContext,
         input: String,
+        #[cfg(test)] gate: Option<ExecuteWorkerGateWait>,
     ) {
         debug_assert!(!self.is_running());
-        *self = Self::Running(ExecuteWorker::spawn_resume(session, context, input));
+        *self = Self::Running(ExecuteWorker::spawn_resume(
+            session,
+            context,
+            input,
+            #[cfg(test)]
+            gate,
+        ));
+    }
+
+    #[cfg(test)]
+    pub(super) fn wait_until_started(&mut self) {
+        let Self::Running(worker) = self else {
+            panic!("cannot wait for an execute worker that is not running");
+        };
+        worker.wait_until_started();
+    }
+
+    #[cfg(test)]
+    pub(super) fn wait_until_finished(&mut self) {
+        let Self::Running(worker) = self else {
+            panic!("cannot wait for an execute worker that is not running");
+        };
+        worker.wait_until_finished();
     }
 
     pub(super) fn take_finished(&mut self) -> Option<ExecuteWorker> {
         let Self::Running(worker) = self else {
             return None;
         };
+        #[cfg(not(test))]
         if !worker.handle.is_finished() {
+            return None;
+        }
+        #[cfg(test)]
+        if !worker.is_finished() {
             return None;
         }
 
@@ -84,24 +142,78 @@ impl ExecuteState {
 }
 
 impl ExecuteWorker {
-    fn spawn_eval(session: HostSession, context: ExecuteContext) -> Self {
+    fn spawn_eval(
+        session: HostSession,
+        context: ExecuteContext,
+        #[cfg(test)] gate: Option<ExecuteWorkerGateWait>,
+    ) -> Self {
         let cancel = session.cancel_handle();
         let code = context.request.code.clone();
+        #[cfg(test)]
+        let (signals, started, finished) = worker_signals(gate);
         Self {
-            handle: spawn_worker(session, ExecuteSegment::Eval { code }),
+            handle: spawn_worker(
+                session,
+                ExecuteSegment::Eval { code },
+                #[cfg(test)]
+                signals,
+            ),
             cancel,
             context,
             interrupted: false,
+            #[cfg(test)]
+            started: Some(started),
+            #[cfg(test)]
+            finished: Some(finished),
         }
     }
 
-    fn spawn_resume(session: HostSession, context: ExecuteContext, input: String) -> Self {
+    fn spawn_resume(
+        session: HostSession,
+        context: ExecuteContext,
+        input: String,
+        #[cfg(test)] gate: Option<ExecuteWorkerGateWait>,
+    ) -> Self {
         let cancel = session.cancel_handle();
+        #[cfg(test)]
+        let (signals, started, finished) = worker_signals(gate);
         Self {
-            handle: spawn_worker(session, ExecuteSegment::Resume { input }),
+            handle: spawn_worker(
+                session,
+                ExecuteSegment::Resume { input },
+                #[cfg(test)]
+                signals,
+            ),
             cancel,
             context,
             interrupted: false,
+            #[cfg(test)]
+            started: Some(started),
+            #[cfg(test)]
+            finished: Some(finished),
+        }
+    }
+
+    #[cfg(test)]
+    fn is_finished(&self) -> bool {
+        self.finished.is_none() || self.handle.is_finished()
+    }
+
+    #[cfg(test)]
+    fn wait_until_started(&mut self) {
+        if let Some(started) = self.started.take() {
+            started
+                .recv()
+                .expect("execute worker should signal that it started");
+        }
+    }
+
+    #[cfg(test)]
+    fn wait_until_finished(&mut self) {
+        if let Some(finished) = self.finished.take() {
+            finished
+                .recv()
+                .expect("execute worker should signal that it finished");
         }
     }
 
@@ -112,6 +224,38 @@ impl ExecuteWorker {
             .expect("execute worker catches eval/resume panics and returns its session");
         (self.context, session, outcome, self.interrupted)
     }
+}
+
+#[cfg(test)]
+impl ExecuteWorkerGate {
+    pub(crate) fn release(self) {
+        self.0
+            .send(())
+            .expect("gated execute worker should still be waiting for release");
+    }
+}
+
+#[cfg(test)]
+pub(super) fn execute_worker_gate() -> (ExecuteWorkerGate, ExecuteWorkerGateWait) {
+    let (release, wait) = mpsc::channel();
+    (ExecuteWorkerGate(release), ExecuteWorkerGateWait(wait))
+}
+
+#[cfg(test)]
+fn worker_signals(
+    gate: Option<ExecuteWorkerGateWait>,
+) -> (ExecuteWorkerSignals, Receiver<()>, Receiver<()>) {
+    let (started_sender, started) = mpsc::channel();
+    let (finished_sender, finished) = mpsc::channel();
+    (
+        ExecuteWorkerSignals {
+            started: started_sender,
+            finished: finished_sender,
+            gate,
+        },
+        started,
+        finished,
+    )
 }
 
 pub(super) fn host_outcome_to_kernel(outcome: HostEvalOutcome) -> KernelExecuteOutcome {
@@ -168,12 +312,31 @@ pub(super) fn force_cancelled_success(outcome: KernelExecuteOutcome) -> KernelEx
 fn spawn_worker(
     mut session: HostSession,
     segment: ExecuteSegment,
+    #[cfg(test)] mut signals: ExecuteWorkerSignals,
 ) -> JoinHandle<(HostSession, KernelExecuteOutcome)> {
     thread::spawn(move || {
+        #[cfg(test)]
+        let _ = signals.started.send(());
+
+        #[cfg(test)]
+        if signals
+            .gate
+            .take()
+            .is_some_and(|gate| gate.0.recv().is_err())
+        {
+            let outcome = KernelExecuteOutcome::Failure(worker_panic_failure(
+                &"test execute worker gate dropped before release",
+            ));
+            let _ = signals.finished.send(());
+            return (session, outcome);
+        }
+
         let outcome = match catch_unwind(AssertUnwindSafe(|| run_segment(&mut session, segment))) {
             Ok(outcome) => outcome,
             Err(payload) => KernelExecuteOutcome::Failure(worker_panic_failure(&*payload)),
         };
+        #[cfg(test)]
+        let _ = signals.finished.send(());
         (session, outcome)
     })
 }

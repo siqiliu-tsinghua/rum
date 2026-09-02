@@ -1,10 +1,6 @@
 use rum_host::{
     HostConfig, HostEvalOutcome, HostResourceLimits, HostSession as Session, HostSessionBuilder,
 };
-use std::{
-    thread,
-    time::{Duration, Instant},
-};
 
 use super::{
     InMemoryTransport, KernelAdapter, KernelBootstrapConfig, KernelChannel, KernelCommInfoRequest,
@@ -23,8 +19,6 @@ use super::{
     decode_response_message, encode_dispatch_result, encode_input_reply_envelope,
     encode_request_envelope,
 };
-
-const ASYNC_TEST_TIMEOUT: Duration = Duration::from_secs(2);
 
 fn test_connection_file() -> KernelConnectionFile {
     KernelConnectionFile::parse_json(
@@ -64,14 +58,10 @@ fn long_running_cancel_session() -> Session {
 }
 
 fn wait_for_execute_completion(adapter: &mut KernelAdapter) -> KernelDispatchResult {
-    let started = Instant::now();
-    while started.elapsed() < ASYNC_TEST_TIMEOUT {
-        if let Some(dispatch) = adapter.poll_execute_completion() {
-            return dispatch;
-        }
-        thread::sleep(Duration::from_millis(1));
-    }
-    panic!("execute worker did not complete within {ASYNC_TEST_TIMEOUT:?}");
+    adapter.wait_for_execute_worker_finished();
+    adapter
+        .poll_execute_completion()
+        .expect("finished execute worker should complete through the adapter")
 }
 
 fn finish_adapter_execute(

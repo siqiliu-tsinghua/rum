@@ -446,6 +446,10 @@ fn socket_driver_observes_shutdown_promptly_during_running_execute() {
     let mut backend = LocalSocketTransportBackend::new(bootstrap.clone());
     let frontend = backend.frontend();
     let mut driver = bootstrap.socket_driver(long_running_cancel_session());
+    let worker_gate = driver
+        .event_pump_mut()
+        .adapter_mut()
+        .gate_next_execute_worker();
 
     frontend.queue_incoming(
         codec
@@ -469,6 +473,10 @@ fn socket_driver_observes_shutdown_promptly_during_running_execute() {
             .expect("execute should start"),
         Some(KernelSocketPollEvent::Channel(KernelChannel::Shell))
     );
+    driver
+        .event_pump_mut()
+        .adapter_mut()
+        .wait_for_execute_worker_started();
     assert!(driver.event_pump().adapter().execute_running());
 
     let shutdown = codec
@@ -485,25 +493,14 @@ fn socket_driver_observes_shutdown_promptly_during_running_execute() {
             request: KernelRequest::Shutdown(KernelShutdownRequest { restart: false }),
         })
         .expect("shutdown request should encode");
-    let delayed_frontend = frontend.clone();
-    let sender = thread::spawn(move || {
-        thread::sleep(Duration::from_millis(2));
-        delayed_frontend.queue_incoming(shutdown);
-    });
+    frontend.queue_incoming(shutdown);
 
-    let started = Instant::now();
     let report = driver
         .pump_until_idle(backend.transport_mut())
         .expect("shutdown should be observed while execute is running");
-    let elapsed = started.elapsed();
-    sender.join().expect("shutdown sender should not panic");
 
     assert_eq!(report.control_messages, 1);
     assert!(driver.event_pump().adapter().shutdown_requested());
-    assert!(
-        elapsed < Duration::from_secs(1),
-        "running execute observed shutdown after {elapsed:?}"
-    );
     let reply = frontend
         .pop_outgoing(KernelChannel::Control)
         .expect("frontend should receive shutdown reply");
@@ -524,21 +521,17 @@ fn socket_driver_observes_shutdown_promptly_during_running_execute() {
         .event_pump_mut()
         .adapter_mut()
         .interrupt(KernelInterruptRequest);
-    let cleanup_started = Instant::now();
-    loop {
-        assert!(
-            cleanup_started.elapsed() < ASYNC_TEST_TIMEOUT,
-            "shutdown test worker did not cancel within {ASYNC_TEST_TIMEOUT:?}"
-        );
-        if driver
+    worker_gate.release();
+    driver
+        .event_pump_mut()
+        .adapter_mut()
+        .wait_for_execute_worker_finished();
+    assert_eq!(
+        driver
             .pump_once(backend.transport_mut())
-            .expect("cancelled execute completion should pump")
-            == Some(KernelSocketPollEvent::ExecuteCompletion)
-        {
-            break;
-        }
-        thread::sleep(Duration::from_millis(1));
-    }
+            .expect("cancelled execute completion should pump"),
+        Some(KernelSocketPollEvent::ExecuteCompletion)
+    );
 }
 
 #[test]
