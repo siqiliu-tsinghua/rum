@@ -370,6 +370,7 @@ pub(crate) fn eval_diff(
     }
 
     if let (Some(lhs), Some(rhs)) = (expr_as_string(&args[0]), expr_as_string(&args[1])) {
+        enforce_string_diff_memory_constraint(session, lhs, rhs)?;
         let lhs = lhs.chars().collect::<Vec<_>>();
         let rhs = rhs.chars().collect::<Vec<_>>();
         let alignment = global_alignment_blocks(&lhs, &rhs);
@@ -380,9 +381,114 @@ pub(crate) fn eval_diff(
         call_items_with_head(&args[0], &system_expr("List")),
         call_items_with_head(&args[1], &system_expr("List")),
     ) {
+        enforce_expr_diff_memory_constraint(session, lhs, rhs)?;
         let alignment = global_alignment_blocks(lhs, rhs);
         return Ok(render_diff_object_from_exprs(&alignment));
     }
 
     Ok(Expr::call(head.clone(), args.to_vec()))
+}
+
+fn enforce_string_diff_memory_constraint(
+    session: &Session,
+    lhs: &str,
+    rhs: &str,
+) -> Result<(), EvalError> {
+    if session.active_memory_limit().is_none() {
+        return session.enforce_active_memory_limit_for_projected_bytes(0);
+    }
+
+    let lhs_len = lhs.chars().count();
+    let rhs_len = rhs.chars().count();
+    let payload_bytes = lhs.len().saturating_add(rhs.len());
+    session.enforce_active_memory_limit_for_projected_bytes(diff_projected_bytes(
+        lhs_len,
+        rhs_len,
+        payload_bytes,
+        std::mem::size_of::<char>(),
+        std::mem::size_of::<(Option<char>, Option<char>)>(),
+    ))
+}
+
+fn enforce_expr_diff_memory_constraint(
+    session: &Session,
+    lhs: &[Expr],
+    rhs: &[Expr],
+) -> Result<(), EvalError> {
+    if session.active_memory_limit().is_none() {
+        return session.enforce_active_memory_limit_for_projected_bytes(0);
+    }
+
+    let payload_bytes = lhs.iter().chain(rhs).fold(0usize, |total, item| {
+        total.saturating_add(projected_expr_memory_proxy_bytes(item))
+    });
+    session.enforce_active_memory_limit_for_projected_bytes(diff_projected_bytes(
+        lhs.len(),
+        rhs.len(),
+        payload_bytes,
+        std::mem::size_of::<Expr>(),
+        std::mem::size_of::<(Option<Expr>, Option<Expr>)>(),
+    ))
+}
+
+fn diff_projected_bytes(
+    lhs_len: usize,
+    rhs_len: usize,
+    result_payload_bytes: usize,
+    item_bytes: usize,
+    aligned_pair_bytes: usize,
+) -> usize {
+    let rows = lhs_len.saturating_add(1);
+    let columns = rhs_len.saturating_add(1);
+    let cells = rows.saturating_mul(columns);
+    let matrix_bytes = cells
+        .saturating_mul(
+            std::mem::size_of::<isize>().saturating_add(std::mem::size_of::<AlignmentStep>()),
+        )
+        .saturating_add(
+            rows.saturating_mul(
+                std::mem::size_of::<Vec<isize>>()
+                    .saturating_add(std::mem::size_of::<Vec<AlignmentStep>>()),
+            ),
+        );
+    let aligned_len = lhs_len.saturating_add(rhs_len);
+    let alignment_bytes = aligned_len
+        .saturating_mul(aligned_pair_bytes)
+        .saturating_add(aligned_len.saturating_mul(item_bytes))
+        .saturating_add(aligned_len.saturating_mul(std::mem::size_of::<AlignmentBlock<Expr>>()));
+    let result_wrapper_bytes = aligned_len
+        .saturating_mul(12)
+        .saturating_add(17)
+        .saturating_mul(std::mem::size_of::<Expr>());
+
+    matrix_bytes
+        .saturating_add(alignment_bytes)
+        .saturating_add(result_wrapper_bytes)
+        .saturating_add(result_payload_bytes.saturating_mul(2))
+}
+
+fn projected_expr_memory_proxy_bytes(expr: &Expr) -> usize {
+    match expr {
+        Expr::Atom(Atom::Integer(rum_core::IntValue::Small(_))) => std::mem::size_of::<Expr>(),
+        Expr::Atom(Atom::Integer(rum_core::IntValue::Big(value))) => std::mem::size_of::<Expr>()
+            .saturating_add(std::mem::size_of::<BigInt>())
+            .saturating_add(projected_bigint_payload_bytes(value)),
+        Expr::Atom(Atom::Rational(value)) => std::mem::size_of::<Expr>()
+            .saturating_add(std::mem::size_of::<Rational>())
+            .saturating_add(projected_bigint_payload_bytes(value.numerator()))
+            .saturating_add(projected_bigint_payload_bytes(value.denominator())),
+        Expr::Atom(Atom::String(value)) => std::mem::size_of::<Expr>().saturating_add(value.len()),
+        Expr::Atom(Atom::Symbol(symbol)) => std::mem::size_of::<Expr>()
+            .saturating_add(symbol.context().len())
+            .saturating_add(symbol.name().len()),
+        Expr::Call { head, args } => args.iter().fold(
+            std::mem::size_of::<Expr>().saturating_add(projected_expr_memory_proxy_bytes(head)),
+            |total, arg| total.saturating_add(projected_expr_memory_proxy_bytes(arg)),
+        ),
+    }
+}
+
+fn projected_bigint_payload_bytes(value: &BigInt) -> usize {
+    let bytes = u128::from(value.bits()).saturating_add(7) / 8;
+    usize::try_from(bytes.saturating_add(1)).unwrap_or(usize::MAX)
 }

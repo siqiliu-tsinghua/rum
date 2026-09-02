@@ -24,6 +24,7 @@ impl Session {
 
         if let Some(base) = expr_as_exact_rational(&args[0]) {
             let Some(exponent) = expr_as_signed_integer_value(&args[1]) else {
+                self.enforce_symbolic_power_memory_constraint(head, args)?;
                 return Ok(Expr::call(head.clone(), args.to_vec()));
             };
 
@@ -32,12 +33,15 @@ impl Session {
             }
 
             self.enforce_integer_work_limit_for_power(&base, &exponent)?;
+            self.enforce_exact_power_memory_constraint(&base, &exponent)?;
 
             return Ok(base
                 .pow(&exponent)
                 .map(Expr::rational)
                 .unwrap_or_else(|| Expr::call(head.clone(), args.to_vec())));
         }
+
+        self.enforce_symbolic_power_memory_constraint(head, args)?;
 
         if let Some((base, inner_exponent)) = split_power_base_exp(&args[0]) {
             if let Some(outer_exponent) = expr_as_signed_integer_value(&args[1]) {
@@ -133,6 +137,57 @@ impl Session {
         }
 
         Ok(())
+    }
+
+    fn enforce_exact_power_memory_constraint(
+        &self,
+        base: &Rational,
+        exponent: &BigInt,
+    ) -> Result<(), EvalError> {
+        if self.active_memory_limit().is_none() {
+            return self.enforce_active_memory_limit_for_projected_bytes(0);
+        }
+
+        let magnitude = exponent.magnitude().to_u128().unwrap_or(u128::MAX);
+        let numerator_bits = projected_power_bit_length(base.numerator(), magnitude);
+        let denominator_bits = projected_power_bit_length(base.denominator(), magnitude);
+        let result_bytes = std::mem::size_of::<Expr>()
+            .saturating_add(std::mem::size_of::<Rational>())
+            .saturating_add(projected_bit_length_bytes(numerator_bits))
+            .saturating_add(projected_bit_length_bytes(denominator_bits));
+        self.enforce_active_memory_limit_for_projected_bytes(result_bytes)
+    }
+
+    fn enforce_symbolic_power_memory_constraint(
+        &self,
+        head: &Expr,
+        args: &[Expr],
+    ) -> Result<(), EvalError> {
+        if self.active_memory_limit().is_none() {
+            return self.enforce_active_memory_limit_for_projected_bytes(0);
+        }
+
+        let mut projected_bytes = projected_call_memory_proxy_bytes(head, args);
+        if let Expr::Call {
+            head: times_head,
+            args: factors,
+        } = &args[0]
+        {
+            if is_system_symbol_name(times_head, "Times")
+                && expr_as_exact_rational(&args[1]).is_some()
+            {
+                let exponent_bytes = projected_expr_memory_proxy_bytes(&args[1]);
+                let power_wrapper_bytes = std::mem::size_of::<Expr>()
+                    .saturating_add(projected_expr_memory_proxy_bytes(&system_expr("Power")));
+                projected_bytes = projected_bytes.saturating_add(
+                    factors
+                        .len()
+                        .saturating_mul(exponent_bytes.saturating_add(power_wrapper_bytes)),
+                );
+            }
+        }
+
+        self.enforce_active_memory_limit_for_projected_bytes(projected_bytes)
     }
 
     pub(super) fn eval_subtract(&mut self, _head: &Expr, args: &[Expr]) -> Result<Expr, EvalError> {
@@ -331,6 +386,63 @@ impl Session {
             _ => Expr::call(head.clone(), normalized),
         })
     }
+}
+
+fn projected_call_memory_proxy_bytes(head: &Expr, args: &[Expr]) -> usize {
+    args.iter().fold(
+        std::mem::size_of::<Expr>().saturating_add(projected_expr_memory_proxy_bytes(head)),
+        |total, arg| total.saturating_add(projected_expr_memory_proxy_bytes(arg)),
+    )
+}
+
+fn projected_expr_memory_proxy_bytes(expr: &Expr) -> usize {
+    match expr {
+        Expr::Atom(Atom::Integer(rum_core::IntValue::Small(_))) => std::mem::size_of::<Expr>(),
+        Expr::Atom(Atom::Integer(rum_core::IntValue::Big(value))) => std::mem::size_of::<Expr>()
+            .saturating_add(std::mem::size_of::<BigInt>())
+            .saturating_add(projected_bit_length_bytes(value.bits() as u128)),
+        Expr::Atom(Atom::Rational(value)) => std::mem::size_of::<Expr>()
+            .saturating_add(std::mem::size_of::<Rational>())
+            .saturating_add(projected_bit_length_bytes(value.numerator().bits() as u128))
+            .saturating_add(projected_bit_length_bytes(
+                value.denominator().bits() as u128
+            )),
+        Expr::Atom(Atom::String(value)) => std::mem::size_of::<Expr>().saturating_add(value.len()),
+        Expr::Atom(Atom::Symbol(symbol)) => std::mem::size_of::<Expr>()
+            .saturating_add(symbol.context().len())
+            .saturating_add(symbol.name().len()),
+        Expr::Call { head, args } => args.iter().fold(
+            std::mem::size_of::<Expr>().saturating_add(projected_expr_memory_proxy_bytes(head)),
+            |total, arg| total.saturating_add(projected_expr_memory_proxy_bytes(arg)),
+        ),
+    }
+}
+
+fn projected_bit_length_bytes(bits: u128) -> usize {
+    let bytes = bits.saturating_add(7) / 8;
+    usize::try_from(bytes.saturating_add(1)).unwrap_or(usize::MAX)
+}
+
+fn projected_power_bit_length(value: &BigInt, magnitude: u128) -> u128 {
+    if magnitude == 0 {
+        return 1;
+    }
+
+    let bits = value.bits();
+    if bits <= 1 {
+        return bits as u128;
+    }
+
+    // Powers of two have an exact result length. This matters for the common
+    // `2^n` case: the generic `bits * n` upper bound is almost twice the real
+    // payload. `bits()` and `trailing_zeros()` inspect existing limbs only.
+    if value.trailing_zeros() == Some(bits - 1) {
+        return (u128::from(bits - 1))
+            .saturating_mul(magnitude)
+            .saturating_add(1);
+    }
+
+    u128::from(bits).saturating_mul(magnitude)
 }
 
 fn fast_integer_plus(args: &[Expr]) -> Option<Expr> {

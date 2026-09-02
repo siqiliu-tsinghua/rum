@@ -1,5 +1,5 @@
 use rum_core::SharedArgs;
-use rum_core::{BigInt, Expr, Rational};
+use rum_core::{Atom, BigInt, Expr, IntValue, Rational};
 use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{
     EvalError, Session, ToPrimitive, call_items_with_head, compare_expr_canonical,
@@ -43,6 +43,45 @@ pub(crate) fn eval_median(
     average_pair(session, sorted[middle - 1].clone(), sorted[middle].clone())
 }
 
+fn enforce_commonest_memory_constraint(session: &Session, items: &[Expr]) -> Result<(), EvalError> {
+    if session.active_memory_limit().is_none() {
+        return session.enforce_active_memory_limit_for_projected_bytes(0);
+    }
+
+    let projected_bytes = items.iter().fold(
+        std::mem::size_of::<Expr>()
+            .saturating_add(projected_expr_memory_proxy_bytes(&system_expr("List"))),
+        |total, item| total.saturating_add(projected_expr_memory_proxy_bytes(item)),
+    );
+    session.enforce_active_memory_limit_for_projected_bytes(projected_bytes)
+}
+
+fn projected_expr_memory_proxy_bytes(expr: &Expr) -> usize {
+    match expr {
+        Expr::Atom(Atom::Integer(IntValue::Small(_))) => std::mem::size_of::<Expr>(),
+        Expr::Atom(Atom::Integer(IntValue::Big(value))) => std::mem::size_of::<Expr>()
+            .saturating_add(std::mem::size_of::<BigInt>())
+            .saturating_add(projected_bigint_payload_bytes(value)),
+        Expr::Atom(Atom::Rational(value)) => std::mem::size_of::<Expr>()
+            .saturating_add(std::mem::size_of::<Rational>())
+            .saturating_add(projected_bigint_payload_bytes(value.numerator()))
+            .saturating_add(projected_bigint_payload_bytes(value.denominator())),
+        Expr::Atom(Atom::String(value)) => std::mem::size_of::<Expr>().saturating_add(value.len()),
+        Expr::Atom(Atom::Symbol(symbol)) => std::mem::size_of::<Expr>()
+            .saturating_add(symbol.context().len())
+            .saturating_add(symbol.name().len()),
+        Expr::Call { head, args } => args.iter().fold(
+            std::mem::size_of::<Expr>().saturating_add(projected_expr_memory_proxy_bytes(head)),
+            |total, arg| total.saturating_add(projected_expr_memory_proxy_bytes(arg)),
+        ),
+    }
+}
+
+fn projected_bigint_payload_bytes(value: &BigInt) -> usize {
+    let bytes = u128::from(value.bits()).saturating_add(7) / 8;
+    usize::try_from(bytes.saturating_add(1)).unwrap_or(usize::MAX)
+}
+
 pub(crate) fn eval_commonest(
     session: &mut Session,
     head: &Expr,
@@ -58,6 +97,7 @@ pub(crate) fn eval_commonest(
     let Some(items) = call_items_with_head(expr, &system_expr("List")) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
+    enforce_commonest_memory_constraint(session, items)?;
 
     let mut counts = if items.len() >= COMMONEST_INDEX_THRESHOLD {
         StableCounts::collect(items.iter().cloned()).into_entries()
@@ -80,24 +120,26 @@ pub(crate) fn eval_commonest(
                 .expect("count bounded by frequency class count should fit usize")
         };
         counts.sort_by(|(_, left_count), (_, right_count)| right_count.cmp(left_count));
-        return Ok(Expr::call(
-            system_expr("List"),
-            counts
-                .into_iter()
-                .take(take_count)
-                .map(|(item, _)| item)
-                .collect(),
-        ));
+        let mut common = Vec::with_capacity(take_count);
+        common.extend(counts.into_iter().take(take_count).map(|(item, _)| item));
+        return Ok(Expr::call(system_expr("List"), common));
     }
 
-    let max_count = counts.iter().map(|(_, count)| *count).max().unwrap_or(0);
-    Ok(Expr::call(
-        system_expr("List"),
+    let (max_count, common_count) = counts.iter().fold(
+        (0usize, 0usize),
+        |(max_count, common_count), (_, count)| match count.cmp(&max_count) {
+            std::cmp::Ordering::Greater => (*count, 1),
+            std::cmp::Ordering::Equal => (max_count, common_count.saturating_add(1)),
+            std::cmp::Ordering::Less => (max_count, common_count),
+        },
+    );
+    let mut common = Vec::with_capacity(common_count);
+    common.extend(
         counts
             .into_iter()
-            .filter_map(|(item, count)| (count == max_count).then_some(item))
-            .collect(),
-    ))
+            .filter_map(|(item, count)| (count == max_count).then_some(item)),
+    );
+    Ok(Expr::call(system_expr("List"), common))
 }
 
 fn linear_counts(items: &[Expr]) -> Vec<(Expr, usize)> {

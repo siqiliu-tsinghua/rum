@@ -1,5 +1,5 @@
 use super::*;
-use rum_core::SharedArgs;
+use rum_core::{IntValue, SharedArgs};
 
 pub(crate) fn eval_head(
     session: &mut Session,
@@ -232,7 +232,13 @@ pub(crate) fn eval_append(
         [expr, item] => Ok(match expr {
             Expr::Atom(_) => invalid_surface_normal_expression_call(session, "Append", args),
             Expr::Call { head, args } => {
-                let mut new_args = args.to_vec();
+                enforce_projected_call_memory_constraint(
+                    session,
+                    head,
+                    args.iter().chain(std::iter::once(item)),
+                )?;
+                let mut new_args = Vec::with_capacity(args.len().saturating_add(1));
+                new_args.extend(args.iter().cloned());
                 new_args.push(item.clone());
                 Expr::call_with_shared_args(head.as_ref().clone(), SharedArgs::new(new_args))
             }
@@ -240,6 +246,48 @@ pub(crate) fn eval_append(
         [item] => Ok(unary_operator_form("Append", item.clone())),
         _ => Ok(session.invalid_call_with_arg_range("Append", args, 1, 2)),
     }
+}
+
+pub(super) fn enforce_projected_call_memory_constraint<'a>(
+    session: &Session,
+    head: &Expr,
+    items: impl IntoIterator<Item = &'a Expr>,
+) -> Result<(), EvalError> {
+    if session.active_memory_limit().is_none() {
+        return session.enforce_active_memory_limit_for_projected_bytes(0);
+    }
+
+    let projected_bytes = items.into_iter().fold(
+        std::mem::size_of::<Expr>().saturating_add(projected_expr_memory_proxy_bytes(head)),
+        |total, item| total.saturating_add(projected_expr_memory_proxy_bytes(item)),
+    );
+    session.enforce_active_memory_limit_for_projected_bytes(projected_bytes)
+}
+
+pub(super) fn projected_expr_memory_proxy_bytes(expr: &Expr) -> usize {
+    match expr {
+        Expr::Atom(Atom::Integer(IntValue::Small(_))) => std::mem::size_of::<Expr>(),
+        Expr::Atom(Atom::Integer(IntValue::Big(value))) => std::mem::size_of::<Expr>()
+            .saturating_add(std::mem::size_of::<BigInt>())
+            .saturating_add(projected_bigint_payload_bytes(value)),
+        Expr::Atom(Atom::Rational(value)) => std::mem::size_of::<Expr>()
+            .saturating_add(std::mem::size_of::<rum_core::Rational>())
+            .saturating_add(projected_bigint_payload_bytes(value.numerator()))
+            .saturating_add(projected_bigint_payload_bytes(value.denominator())),
+        Expr::Atom(Atom::String(value)) => std::mem::size_of::<Expr>().saturating_add(value.len()),
+        Expr::Atom(Atom::Symbol(symbol)) => std::mem::size_of::<Expr>()
+            .saturating_add(symbol.context().len())
+            .saturating_add(symbol.name().len()),
+        Expr::Call { head, args } => args.iter().fold(
+            std::mem::size_of::<Expr>().saturating_add(projected_expr_memory_proxy_bytes(head)),
+            |total, arg| total.saturating_add(projected_expr_memory_proxy_bytes(arg)),
+        ),
+    }
+}
+
+fn projected_bigint_payload_bytes(value: &BigInt) -> usize {
+    let bytes = u128::from(value.bits()).saturating_add(7) / 8;
+    usize::try_from(bytes.saturating_add(1)).unwrap_or(usize::MAX)
 }
 
 pub(crate) fn eval_prepend(

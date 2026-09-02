@@ -5,24 +5,36 @@ use std::sync::atomic::{AtomicU8, Ordering};
 const BUILTIN_MEMORY_GROWTH_TEST_ENV: &str = "RUM_TEST_BUILTIN_MEMORY_GROWTH";
 const NON_AMPLIFYING_RESULT_ALLOWANCE_BYTES: usize = 1024;
 pub(in crate::runtime) const KNOWN_UNPROJECTED_PREFLIGHT_BUILTINS: &[&str] = &[
-    "Append",
-    "Commonest",
-    "DeleteDuplicates",
-    "DeleteMissing",
-    "Diff",
+    // A quote-aware field/row count is known only after CSV parsing. The
+    // sound cheap bound (one result node per input byte) rejects long scalar
+    // fields and comment-heavy inputs whose decoded result is small.
     "FromCsv",
+    // Sections, comments, blank lines, and scalar widths make the node count
+    // content-dependent. A byte-length multiplier materially over-projects
+    // long values and ignored lines; an exact pass would duplicate the parser.
     "FromIni",
+    // The same byte length can be one string/number or a punctuation-dense
+    // tree. Its worst-case per-byte node bound is not useful for long scalars.
     "FromJson",
+    // Dotted keys, arrays/tables, temporal values, comments, and strings have
+    // sharply different expansion. A useful exact bound requires TOML parse
+    // state rather than a sound up-front length multiplier.
     "FromToml",
+    // Markup, attributes, entities, comments, and text produce very different
+    // node counts. The per-byte worst case over-refuses large text nodes.
     "FromXml",
+    // Indentation, block scalars, comments, collections, and plain scalars
+    // make the result shape parse-dependent; a worst-case length bound is too
+    // loose for ordinary block-scalar and comment-heavy documents.
     "FromYaml",
-    "ParseArgs",
-    "Power",
-    "Range",
+    // Token/trivia/error span cardinality is known only after lexing. One span
+    // per byte is sound but rejects long identifiers, strings, and comments
+    // that lex to one or a few spans.
     "RumTokens",
+    // User-supplied pattern matches decide every boundary. A character-count
+    // bound rejects long unmatched text that becomes a single output span;
+    // discovering the exact count is the tokenizer operation itself.
     "TokenizeWith",
-    "Union",
-    "UrlParse",
 ];
 static BUILTIN_MEMORY_GROWTH_TEST_ENABLED: AtomicU8 = AtomicU8::new(0);
 

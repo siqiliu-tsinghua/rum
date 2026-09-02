@@ -223,14 +223,20 @@ pub(crate) fn eval_union(
 
     let (data_args, explicit_options) = split_same_test_options(args);
     let same_test = effective_same_test(session, "Union", &explicit_options)?;
+    enforce_union_memory_constraint(session, data_args)?;
     let (expr_head, groups) = match same_head_argument_groups(session, "Union", data_args) {
         Ok(groups) => groups,
         Err(value) => return Ok(value),
     };
-    let items = groups.into_iter().flatten().collect::<Vec<_>>();
+    let item_count = groups
+        .iter()
+        .fold(0usize, |total, group| total.saturating_add(group.len()));
+    let mut items = Vec::with_capacity(item_count);
+    items.extend(groups.into_iter().flatten());
     if let Some(same_test) = same_test {
         let mut scan = items;
         scan.sort_by(compare_structural_order);
+        let kept = Vec::with_capacity(scan.len());
         return resume_set_same_test(
             session,
             SetSameTestState {
@@ -238,7 +244,7 @@ pub(crate) fn eval_union(
                 same_test,
                 scan,
                 index: 0,
-                kept: Vec::new(),
+                kept,
                 kind: SetOperationKind::Union,
                 candidate: None,
                 phase: SetSameTestPhase::Scan,
@@ -247,6 +253,30 @@ pub(crate) fn eval_union(
     }
 
     Ok(Expr::call(expr_head, sorted_unique_exprs(items)))
+}
+
+fn enforce_union_memory_constraint(session: &Session, args: &[Expr]) -> Result<(), EvalError> {
+    if session.active_memory_limit().is_none() {
+        return session.enforce_active_memory_limit_for_projected_bytes(0);
+    }
+
+    let Some((first_head, _)) = args.first().and_then(call_head_and_args) else {
+        return Ok(());
+    };
+    if !args
+        .iter()
+        .all(|arg| call_head_and_args(arg).is_some_and(|(head, _)| head == first_head))
+    {
+        return Ok(());
+    }
+
+    super::surface::enforce_projected_call_memory_constraint(
+        session,
+        first_head,
+        args.iter()
+            .filter_map(call_head_and_args)
+            .flat_map(|(_, items)| items.iter()),
+    )
 }
 
 pub(crate) fn eval_intersection(

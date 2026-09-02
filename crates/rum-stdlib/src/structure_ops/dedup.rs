@@ -79,6 +79,7 @@ fn eval_delete_duplicates_structural(
             args,
         ));
     };
+    super::surface::enforce_projected_call_memory_constraint(session, expr_head, expr_args.iter())?;
 
     Ok(Expr::call(
         expr_head.as_ref().clone(),
@@ -103,6 +104,7 @@ fn eval_delete_duplicates_with_test(
             args,
         ));
     };
+    super::surface::enforce_projected_call_memory_constraint(session, expr_head, expr_args.iter())?;
 
     resume_delete_duplicates_test_from_kept(
         session,
@@ -111,7 +113,7 @@ fn eval_delete_duplicates_with_test(
             test: test.clone(),
             items: expr_args.to_vec(),
             index: 0,
-            kept: Vec::new(),
+            kept: Vec::with_capacity(expr_args.len()),
         },
         0,
     )
@@ -391,7 +393,7 @@ fn invalid_delete_duplicates_normal_call(
 
 fn stable_unique_exprs(items: &[Expr]) -> Vec<Expr> {
     let mut remaining = items.iter();
-    let mut kept = Vec::new();
+    let mut kept = Vec::with_capacity(items.len());
     for item in remaining.by_ref() {
         if kept.iter().any(|existing| existing == item) {
             continue;

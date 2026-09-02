@@ -4,6 +4,81 @@ fn eval_to_string(session: &mut Session, source: &str) -> String {
     session.eval_text(source).unwrap().value.to_string()
 }
 
+const POWER_PREFLIGHT_HWM_CHILD_ENV: &str = "RUM_POWER_PREFLIGHT_HWM_CHILD";
+
+#[test]
+fn power_memory_projection_refuses_before_large_allocation() {
+    if std::env::var_os(POWER_PREFLIGHT_HWM_CHILD_ENV).is_none() {
+        let current_exe = std::env::current_exe().unwrap();
+        let test_name = format!(
+            "{}::power_memory_projection_refuses_before_large_allocation",
+            module_path!()
+                .strip_prefix("rum_runtime::")
+                .unwrap_or(module_path!())
+        );
+        let output = std::process::Command::new(current_exe)
+            .arg("--exact")
+            .arg(test_name)
+            .arg("--test-threads=1")
+            .env(POWER_PREFLIGHT_HWM_CHILD_ENV, "1")
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "Power preflight HWM child failed\nstdout:\n{}\nstderr:\n{}",
+            String::from_utf8_lossy(&output.stdout),
+            String::from_utf8_lossy(&output.stderr)
+        );
+        return;
+    }
+
+    let mut session = session_with_test_rewrite_builtins();
+    session.set_integer_work_limit(5_000_000);
+    let warmup = session
+        .eval_text("MemoryConstrained[2^1000, MemoryInUse[] + 1048576, blocked]")
+        .unwrap();
+    assert_ne!(warmup.value, Expr::symbol("blocked"));
+    let before = linux_process_high_water_bytes();
+    let outcome = session
+        .eval_text("MemoryConstrained[2^100000000, MemoryInUse[] + 1048576, blocked]")
+        .unwrap();
+    assert_eq!(outcome.value, Expr::symbol("blocked"));
+    if let Some((before, after)) = before.zip(linux_process_high_water_bytes()) {
+        assert!(
+            after.saturating_sub(before) <= 4 * 1024 * 1024,
+            "Power allocated its projected large integer before refusal: before={before}, after={after}"
+        );
+    }
+}
+
+#[test]
+fn power_realistic_memory_ceiling_admits_one_million_bit_result() {
+    let mut session = session_with_test_rewrite_builtins();
+    session.set_integer_work_limit(5_000_000);
+    let outcome = session
+        .eval_text("MemoryConstrained[2^1000000, MemoryInUse[] + 250000, blocked]")
+        .unwrap();
+    let Expr::Atom(Atom::Integer(value)) = &outcome.value else {
+        panic!(
+            "realistic Power input should fit its ceiling, got {}",
+            outcome.value
+        )
+    };
+    assert!(value.to_bigint().bits() >= 1_000_000);
+}
+
+fn linux_process_high_water_bytes() -> Option<usize> {
+    let status = std::fs::read_to_string("/proc/self/status").ok()?;
+    let kib = status.lines().find_map(|line| {
+        line.strip_prefix("VmHWM:")?
+            .split_whitespace()
+            .next()?
+            .parse::<usize>()
+            .ok()
+    })?;
+    Some(kib.saturating_mul(1024))
+}
+
 #[test]
 fn exact_integer_arithmetic_evaluates_core_heads() {
     let mut session = session_with_test_rewrite_builtins();

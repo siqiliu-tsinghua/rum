@@ -56,7 +56,7 @@ pub(crate) fn eval_url_parse(
     let Some(text) = expr_as_string(text) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
-    let Some(options) = parse_url_parse_options(session, option_args)? else {
+    let Some(options) = parse_url_parse_options(session, text, option_args)? else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
 
@@ -70,6 +70,43 @@ pub(crate) fn eval_url_parse(
         )),
         Err(message) => Ok(failed_with_message(session, "UrlParse", "escape", message)),
     }
+}
+
+fn enforce_url_parse_memory_constraint(
+    session: &Session,
+    text: &str,
+    default_scheme: Option<&str>,
+) -> Result<(), EvalError> {
+    if session.active_memory_limit().is_none() {
+        return session.enforce_active_memory_limit_for_projected_bytes(0);
+    }
+
+    let has_explicit_scheme = text.contains("://");
+    let default_scheme_bytes = default_scheme.map_or(0, str::len);
+    let effective_bytes = if has_explicit_scheme {
+        text.len()
+    } else {
+        text.len()
+            .saturating_add(default_scheme_bytes)
+            .saturating_add(3)
+    };
+    let copied_payload_bytes = if has_explicit_scheme {
+        // A validated DefaultScheme is cloned into the options even when the
+        // explicit URL means parsing will not consume it.
+        effective_bytes.saturating_add(default_scheme_bytes)
+    } else {
+        // The stored option, synthesized source, and parsed component strings
+        // coexist until parsing returns.
+        effective_bytes
+            .saturating_mul(2)
+            .saturating_add(default_scheme_bytes)
+    };
+    // Six fixed association fields, including the canonical pair-vector
+    // capacity and all fixed head/key/Null symbol text, fit in 41 Expr slots.
+    let fixed_result_bytes = 41usize.saturating_mul(std::mem::size_of::<Expr>());
+    session.enforce_active_memory_limit_for_projected_bytes(
+        copied_payload_bytes.saturating_add(fixed_result_bytes),
+    )
 }
 
 struct UrlFormOptions {
@@ -125,22 +162,21 @@ fn parse_url_form_options(
 
 fn parse_url_parse_options(
     session: &mut Session,
+    text: &str,
     explicit: &[Expr],
 ) -> Result<Option<UrlParseOptions>, EvalError> {
     let option_exprs = session.merged_option_exprs_for_system_symbol("UrlParse", explicit)?;
-    let mut options = UrlParseOptions {
-        default_scheme: None,
-        decode_query: false,
-    };
+    let mut default_scheme = None;
+    let mut decode_query = false;
 
-    for expr in option_exprs {
-        let Some((name, value)) = option_rule(&expr) else {
+    for expr in &option_exprs {
+        let Some((name, value)) = option_rule(expr) else {
             return Ok(None);
         };
         match name {
             "DefaultScheme" => {
                 if is_system_symbol_name(value, "None") {
-                    options.default_scheme = None;
+                    default_scheme = None;
                 } else {
                     let Some(value) = expr_as_string(value) else {
                         return Ok(None);
@@ -148,20 +184,24 @@ fn parse_url_parse_options(
                     if !valid_scheme(value) {
                         return Ok(None);
                     }
-                    options.default_scheme = Some(value.to_string());
+                    default_scheme = Some(value);
                 }
             }
             "DecodeQuery" => {
                 let Some(value) = bool_option_value(value) else {
                     return Ok(None);
                 };
-                options.decode_query = value;
+                decode_query = value;
             }
             _ => return Ok(None),
         }
     }
 
-    Ok(Some(options))
+    enforce_url_parse_memory_constraint(session, text, default_scheme)?;
+    Ok(Some(UrlParseOptions {
+        default_scheme: default_scheme.map(str::to_owned),
+        decode_query,
+    }))
 }
 
 #[derive(Debug, PartialEq, Eq)]

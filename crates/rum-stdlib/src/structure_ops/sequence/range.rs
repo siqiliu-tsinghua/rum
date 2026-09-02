@@ -27,7 +27,10 @@ pub(crate) fn eval_range(
 
 fn enforce_range_memory_constraint(session: &Session, count: &BigInt) -> Result<(), EvalError> {
     let Some(limit) = session.active_memory_limit() else {
-        return Ok(());
+        // Keep the BigInt conversion off the unarmed Range path while still
+        // passing through the projection choke point for the structural
+        // Preflight falsifier.
+        return session.enforce_active_memory_limit_for_projected_bytes(0);
     };
     if count > &BigInt::from(usize::MAX) {
         return Err(EvalError::MemoryConstraintExceeded { limit });

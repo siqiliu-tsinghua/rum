@@ -3,7 +3,9 @@ mod resume_frames;
 use resume_frames::*;
 
 use super::*;
-use rum_core::SharedArgs;
+use rum_core::{IntValue, Rational, SharedArgs};
+
+const DELAYED_DELETE_MISSING_WRAPPER_PROXY_BYTES: usize = 64 * std::mem::size_of::<Expr>();
 
 pub(crate) fn eval_missing(
     _session: &mut Session,
@@ -65,6 +67,8 @@ pub(crate) fn eval_delete_missing(
         }
     };
 
+    enforce_delete_missing_memory_constraint(session, expr, mode)?;
+
     let Some(value) = delete_missing_from_keyed_data(session, expr, mode)? else {
         return Ok(session.invalid_call_with_message(
             "DeleteMissing",
@@ -75,6 +79,160 @@ pub(crate) fn eval_delete_missing(
     };
 
     Ok(value)
+}
+
+fn enforce_delete_missing_memory_constraint(
+    session: &Session,
+    expr: &Expr,
+    mode: DeleteMissingMode,
+) -> Result<(), EvalError> {
+    if session.active_memory_limit().is_none() {
+        return session.enforce_active_memory_limit_for_projected_bytes(0);
+    }
+
+    let keyed_input = list_items(expr).is_some()
+        || matches!(expr, Expr::Call { head, .. } if is_system_symbol_name(head, "Association"));
+    if !keyed_input {
+        return Ok(());
+    }
+
+    let wrapper_count = delete_missing_delayed_wrapper_count(expr, mode);
+    let projected_bytes = projected_expr_memory_proxy_bytes(expr)
+        .saturating_add(wrapper_count.saturating_mul(DELAYED_DELETE_MISSING_WRAPPER_PROXY_BYTES));
+    session.enforce_active_memory_limit_for_projected_bytes(projected_bytes)
+}
+
+fn delete_missing_delayed_wrapper_count(expr: &Expr, mode: DeleteMissingMode) -> usize {
+    match mode {
+        DeleteMissingMode::Recursive(depth) => recursive_delayed_wrapper_count(expr, depth),
+        DeleteMissingMode::Target {
+            level: DeleteMissingDepth::Infinity,
+            ..
+        } => recursive_delayed_wrapper_count(expr, DeleteMissingDepth::Infinity),
+        DeleteMissingMode::Target {
+            level: DeleteMissingDepth::Finite(level),
+            ..
+        } => target_delayed_wrapper_count(expr, level),
+    }
+}
+
+fn recursive_delayed_wrapper_count(expr: &Expr, depth: DeleteMissingDepth) -> usize {
+    let Some(child_depth) = depth.descend() else {
+        return 0;
+    };
+
+    if let Some(items) = list_items(expr) {
+        return items.iter().fold(0usize, |total, item| {
+            total.saturating_add(recursive_delayed_wrapper_count(item, child_depth))
+        });
+    }
+
+    let Expr::Call { head, args } = expr else {
+        return 0;
+    };
+    if !is_system_symbol_name(head, "Association") {
+        return 0;
+    }
+    recursive_association_item_wrapper_count(args, child_depth)
+}
+
+fn recursive_association_item_wrapper_count(
+    items: &[Expr],
+    child_depth: DeleteMissingDepth,
+) -> usize {
+    items.iter().fold(0usize, |total, item| {
+        total.saturating_add(match item {
+            Expr::Call { head, args }
+                if (is_system_symbol_name(head, "Rule")
+                    || is_system_symbol_name(head, "RuleDelayed"))
+                    && args.len() == 2 =>
+            {
+                if is_system_symbol_name(head, "RuleDelayed") {
+                    1
+                } else {
+                    recursive_delayed_wrapper_count(&args[1], child_depth)
+                }
+            }
+            Expr::Call { head, args }
+                if is_system_symbol_name(head, "Association")
+                    || is_system_symbol_name(head, "List") =>
+            {
+                recursive_association_item_wrapper_count(args, child_depth)
+            }
+            _ => 0,
+        })
+    })
+}
+
+fn target_delayed_wrapper_count(expr: &Expr, level: usize) -> usize {
+    if level <= 1 {
+        return 0;
+    }
+
+    if let Some(items) = list_items(expr) {
+        return items.iter().fold(0usize, |total, item| {
+            total.saturating_add(target_delayed_wrapper_count(item, level - 1))
+        });
+    }
+
+    let Expr::Call { head, args } = expr else {
+        return 0;
+    };
+    if !is_system_symbol_name(head, "Association") {
+        return 0;
+    }
+    target_association_item_wrapper_count(args, level - 1)
+}
+
+fn target_association_item_wrapper_count(items: &[Expr], child_level: usize) -> usize {
+    items.iter().fold(0usize, |total, item| {
+        total.saturating_add(match item {
+            Expr::Call { head, args }
+                if (is_system_symbol_name(head, "Rule")
+                    || is_system_symbol_name(head, "RuleDelayed"))
+                    && args.len() == 2 =>
+            {
+                if is_system_symbol_name(head, "RuleDelayed") {
+                    1
+                } else {
+                    target_delayed_wrapper_count(&args[1], child_level)
+                }
+            }
+            Expr::Call { head, args }
+                if is_system_symbol_name(head, "Association")
+                    || is_system_symbol_name(head, "List") =>
+            {
+                target_association_item_wrapper_count(args, child_level)
+            }
+            _ => 0,
+        })
+    })
+}
+
+fn projected_expr_memory_proxy_bytes(expr: &Expr) -> usize {
+    match expr {
+        Expr::Atom(Atom::Integer(IntValue::Small(_))) => std::mem::size_of::<Expr>(),
+        Expr::Atom(Atom::Integer(IntValue::Big(value))) => std::mem::size_of::<Expr>()
+            .saturating_add(std::mem::size_of::<BigInt>())
+            .saturating_add(projected_bigint_payload_bytes(value)),
+        Expr::Atom(Atom::Rational(value)) => std::mem::size_of::<Expr>()
+            .saturating_add(std::mem::size_of::<Rational>())
+            .saturating_add(projected_bigint_payload_bytes(value.numerator()))
+            .saturating_add(projected_bigint_payload_bytes(value.denominator())),
+        Expr::Atom(Atom::String(value)) => std::mem::size_of::<Expr>().saturating_add(value.len()),
+        Expr::Atom(Atom::Symbol(symbol)) => std::mem::size_of::<Expr>()
+            .saturating_add(symbol.context().len())
+            .saturating_add(symbol.name().len()),
+        Expr::Call { head, args } => args.iter().fold(
+            std::mem::size_of::<Expr>().saturating_add(projected_expr_memory_proxy_bytes(head)),
+            |total, arg| total.saturating_add(projected_expr_memory_proxy_bytes(arg)),
+        ),
+    }
+}
+
+fn projected_bigint_payload_bytes(value: &BigInt) -> usize {
+    let bytes = u128::from(value.bits()).saturating_add(7) / 8;
+    usize::try_from(bytes.saturating_add(1)).unwrap_or(usize::MAX)
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, FrameRootTrace)]

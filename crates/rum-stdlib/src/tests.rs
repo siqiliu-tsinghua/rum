@@ -146,6 +146,8 @@ mod polynomials;
 mod predicates;
 #[path = "tests/predicates_part2.rs"]
 mod predicates_part2;
+#[path = "tests/preflight_memory.rs"]
+mod preflight_memory;
 #[path = "tests/random.rs"]
 mod random;
 #[path = "tests/resumable_traversal_regression.rs"]
