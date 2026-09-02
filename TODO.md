@@ -779,10 +779,15 @@ The findings and their repairs follow.
   native tests on the director's, and brief-410 added socket-free harness
   coverage so that class is catchable in a sandbox that cannot bind.
 
-- **Comparison-chain coverage omits two stated parts of the contract**: no test
-  lowers a surface uniform-`Less` chain, and none counts the leftmost operand.
+- **Comparison-chain coverage — CLOSED 2026-08-31** (brief-396, `aa8644cf`).
+  Both gaps are covered: `crates/rum-stdlib/src/tests/logic/inequality.rs:31-35`
+  lowers a surface uniform-`Less` chain and keeps its n-ary head, and `:82-98`
+  counts all three operands including the leftmost. The original finding
+  follows.
+
   A uniform-relational lowering regression or a leftmost double evaluation
-  would escape the suite.
+  would have escaped the suite: no test lowered a surface uniform-`Less` chain,
+  and none counted the leftmost operand.
 
 - **Pattern regions — FIXED 2026-08-31** (brief-393, `d423d2d3`). The list of
   protected wrappers is gone; a shared registry names every pattern head once
@@ -832,6 +837,12 @@ The findings and their repairs follow.
   forged value failed to parse, and only a kernel-API consumer could construct
   one — but the guarantee is the point of that design, so the export surface
   should be narrowed. Worth fixing; not urgent.
+
+- **The selector order contract — CLOSED 2026-08-31** (brief-396, `aa8644cf`).
+  `docs/guide/evaluation.md:172-179` now says the selectors evaluate exactly
+  once *when a mutation reaches target selection*, and names the
+  `AssociateTo`/`KeyDropFrom` validation branch explicitly. The original
+  finding follows.
 
 - **The selector order contract is stated unconditionally and is not.**
   `docs/guide/evaluation.md:168` says selectors evaluate exactly once, but
