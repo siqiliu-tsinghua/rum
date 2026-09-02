@@ -288,6 +288,16 @@ not replay the original source to answer input.
 `pending_input_request()` lets a host inspect whether the session is currently
 waiting for input.
 
+While an evaluation is suspended, every new evaluation entrypoint (`eval`,
+`call`, `eval_script`, `eval_file`, and `eval_with_timeout`) returns
+`HostEvalOutcome::Failure` with `HostFailureCode::Other`. The rejection does
+not poison the session, consume queued input, or replace or abandon the pending
+continuation. The original single-source continuation remains resumable through
+`resume_with_input`. `queue_input_response` remains available for future input,
+and reset, snapshot inspection, symbol/editor inspection, and other read-only
+operations remain available; queuing a value is not an implicit resume or
+supersede operation.
+
 The host crate has a public contract test for this flow:
 
 ```text
@@ -335,8 +345,13 @@ Pre-queue every response a batch script needs. If `eval_script` reaches `Input`
 or `InputString` with an empty queue, it returns `InputRequired`. The current
 script-shaped request is not resumable through `resume_with_input`: that call
 returns `Failure` with `HostFailureCode::Other`, and forms after the suspended
-form are not evaluated. Single-source `eval` retains the resumable flow
-described above.
+form are not evaluated. New evaluation requests are also rejected while that
+script suspension remains installed. Because the script has no resumable host
+checkpoint, use `reset()`, `restore_from_bytes()` (which resets first), or
+replace the whole `HostSession` before evaluating again. Read-only inspection
+remains safe and available. Queuing a response after suspension does not turn
+the script into a resumable request. Single-source `eval` retains the resumable
+flow described above.
 
 `eval_script` and `eval_file` are the script-shaped entrypoints. Both evaluate
 forms in order and report the final form's value while aggregating messages and

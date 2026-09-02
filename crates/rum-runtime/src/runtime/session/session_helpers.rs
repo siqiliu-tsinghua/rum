@@ -24,7 +24,7 @@ pub(in crate::runtime) struct EvaluationRollbackSnapshot {
     queued_input_responses: VecDeque<String>,
     pending_input_request: Option<RuntimeInputRequest>,
     pending_eval_request: Option<PendingEvalRequest>,
-    had_pending_suspension: bool,
+    pending_suspension_generation: Option<SuspensionGeneration>,
 }
 
 impl Session {
@@ -128,7 +128,7 @@ impl Session {
             queued_input_responses: self.queued_input_responses.clone(),
             pending_input_request: self.pending_input_request.clone(),
             pending_eval_request: self.pending_eval_request,
-            had_pending_suspension: self.pending_suspension.is_some(),
+            pending_suspension_generation: self.pending_suspension_generation(),
         }
     }
 
@@ -136,6 +136,28 @@ impl Session {
         &mut self,
         snapshot: EvaluationRollbackSnapshot,
     ) {
+        let captured_generation = snapshot.pending_suspension_generation;
+        let current_generation = self.pending_suspension_generation();
+        match (captured_generation, current_generation) {
+            (None, Some(_trial_generation)) => {
+                self.abandon_pending_suspension(AbandonReason::CheckpointRollbackDiscard);
+                assert!(
+                    self.pending_suspension_generation().is_none(),
+                    "checkpoint rollback must empty its trial-created suspension before restoring"
+                );
+            }
+            (Some(captured), Some(current)) => {
+                assert_eq!(
+                    current, captured,
+                    "checkpoint evaluation must not replace its captured suspension owner"
+                );
+            }
+            (Some(_), None) => {
+                panic!("checkpoint evaluation lost its captured suspension owner");
+            }
+            (None, None) => {}
+        }
+
         self.restore_loader_snapshot(snapshot.loader);
         self.option_value_scopes = snapshot.option_value_scopes;
         self.module_activations = snapshot.module_activations;
@@ -156,10 +178,6 @@ impl Session {
         self.queued_input_responses = snapshot.queued_input_responses;
         self.pending_input_request = snapshot.pending_input_request;
         self.pending_eval_request = snapshot.pending_eval_request;
-
-        if !snapshot.had_pending_suspension {
-            self.pending_suspension = None;
-        }
     }
 
     pub(in crate::runtime) fn message_enabled(&self, symbol: &str, tag: &str) -> bool {

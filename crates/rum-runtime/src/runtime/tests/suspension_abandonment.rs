@@ -46,6 +46,70 @@ fn abandonment_generations_are_monotonic_and_pure_frames_run_no_continuation() {
 }
 
 #[test]
+fn queued_input_abandons_the_older_generation_before_consuming_the_value() {
+    let mut session = session_with_test_control_builtins();
+    session.eval_text("queuedBlock403 = outside").unwrap();
+
+    suspend(
+        &mut session,
+        "Block[{queuedBlock403 = inside}, InputString[\"old\"]]",
+    );
+    session.queue_input_response("drain");
+
+    let input = session.lower_text("InputString[\"new\"]").unwrap();
+    assert_eq!(session.evaluate(input).unwrap(), Expr::string("drain"));
+    assert!(session.queued_input_responses.is_empty());
+    assert!(session.pending_suspension.is_none());
+    assert_eq!(value(&mut session, "queuedBlock403"), "outside");
+}
+
+#[test]
+fn checkpoint_rollback_abandons_a_trial_generation_before_restoring_state() {
+    let mut session = session_with_test_control_builtins();
+    session.eval_text("rollbackBlock403 = outside").unwrap();
+    let snapshot = session.capture_evaluation_rollback_snapshot();
+
+    suspend(
+        &mut session,
+        "Block[{rollbackBlock403 = inside}, Table[InputString[\"trial\"], {rollbackIterator403, {7}}]]",
+    );
+    assert!(session.pending_suspension_generation().is_some());
+
+    session.restore_evaluation_rollback_snapshot(snapshot);
+
+    assert!(session.pending_suspension_generation().is_none());
+    assert_eq!(
+        value(&mut session, "{rollbackBlock403, rollbackIterator403}"),
+        "List[outside, rollbackIterator403]"
+    );
+}
+
+#[test]
+fn checkpoint_rollback_preserves_its_captured_generation() {
+    let mut session = session_with_test_control_builtins();
+    suspend(&mut session, "InputString[\"captured\"]");
+    let captured_generation = session.pending_suspension_generation().unwrap();
+    let snapshot = session.capture_evaluation_rollback_snapshot();
+
+    session.queue_input_response("temporary");
+    assert!(session.pending_input_request().is_none());
+    session.restore_evaluation_rollback_snapshot(snapshot);
+
+    assert_eq!(
+        session.pending_suspension_generation(),
+        Some(captured_generation)
+    );
+    assert_eq!(
+        session
+            .pending_input_request()
+            .map(|request| request.prompt.as_str()),
+        Some("captured")
+    );
+    assert!(session.queued_input_responses.is_empty());
+    abandon(&mut session, AbandonReason::CheckpointRollbackDiscard);
+}
+
+#[test]
 fn abandonment_restores_block_initializers_and_bodies_inner_to_outer() {
     let mut session = session_with_test_control_builtins();
     session

@@ -107,13 +107,9 @@ pub struct Session {
     pub(in crate::runtime) queued_input_responses: VecDeque<String>,
     pub(in crate::runtime) pending_input_request: Option<RuntimeInputRequest>,
     pub(in crate::runtime) pending_eval_request: Option<PendingEvalRequest>,
-    pub(in crate::runtime) pending_suspension: Option<SuspendedEvaluation>,
+    pub(in crate::runtime) pending_suspension: SuspensionSlot,
     pub(in crate::runtime) resuming_suspension: Option<SuspendedEvaluation>,
-    pub(in crate::runtime) next_suspension_generation: u64,
-    // The protocol intentionally lands before its production callers (brief-403).
-    #[allow(dead_code)]
     pub(in crate::runtime) abandonment_active: bool,
-    #[allow(dead_code)]
     pub(in crate::runtime) abandonment_worklist: Vec<SuspendedEvaluation>,
     pub(in crate::runtime) interrupt_flag: Arc<AtomicBool>,
     pub(in crate::runtime) eval_timeout: Option<Duration>,

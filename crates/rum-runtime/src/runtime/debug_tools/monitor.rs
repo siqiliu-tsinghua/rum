@@ -112,7 +112,9 @@ impl Session {
     fn run_monitor_callback_best_effort(&mut self, callback: Expr) {
         match self.evaluate(callback) {
             Ok(_) => {}
-            Err(EvalError::InputRequired { .. }) => self.clear_pending_suspension_state(),
+            Err(EvalError::InputRequired { .. }) => {
+                self.abandon_pending_suspension(AbandonReason::HelperBestEffortDiscard);
+            }
             Err(_) => {}
         }
     }
@@ -143,7 +145,9 @@ impl Session {
                     current.last_display = Some(rendered);
                 }
             }
-            Err(EvalError::InputRequired { .. }) => self.clear_pending_suspension_state(),
+            Err(EvalError::InputRequired { .. }) => {
+                self.abandon_pending_suspension(AbandonReason::HelperBestEffortDiscard);
+            }
             Err(_) => {}
         }
     }

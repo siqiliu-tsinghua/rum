@@ -319,6 +319,9 @@ impl HostSession {
     ///
     /// Input suspension is reported as [`HostEvalOutcome::InputRequired`] and
     /// should be resumed with [`Self::resume_with_input`].
+    /// While any evaluation is suspended for input, a new evaluation request is
+    /// rejected with [`HostFailureCode::Other`] without changing the pending
+    /// continuation. Resume it or call [`Self::reset`] first.
     pub fn eval(&mut self, request: impl Into<HostEvalRequest>) -> HostEvalOutcome {
         if self.poisoned {
             return poisoned_eval_outcome();
@@ -338,6 +341,9 @@ impl HostSession {
     /// call semantics, including normal argument evaluation and attributes.
     /// [`HostTyped::Symbol`] arguments resolve exactly as the same symbol text
     /// would in source.
+    ///
+    /// Like [`Self::eval`], this rejects a new call while an evaluation is
+    /// suspended for input and leaves that continuation untouched.
     pub fn call(&mut self, head: &str, args: &[HostTyped]) -> HostEvalOutcome {
         if self.poisoned {
             return poisoned_eval_outcome();
@@ -360,7 +366,9 @@ impl HostSession {
     /// the outcome is [`HostEvalOutcome::InputRequired`]. Script suspension is
     /// not currently resumable through [`Self::resume_with_input`]: that call
     /// returns a [`HostFailureCode::Other`] failure, and the remaining script
-    /// forms are not evaluated.
+    /// forms are not evaluated. Once a script suspends, other evaluation
+    /// entrypoints are rejected; use [`Self::reset`], [`Self::restore_from_bytes`]
+    /// (which resets first), or replace the whole session.
     pub fn eval_script(&mut self, source: &str) -> HostEvalOutcome {
         if self.poisoned {
             return poisoned_eval_outcome();
@@ -381,6 +389,7 @@ impl HostSession {
     /// provider, then evaluated with the same semantics as [`Self::eval_script`].
     /// A session without a provider, including one built from
     /// [`HostConfig::sandboxed`], returns a [`HostFailureCode::Other`] failure.
+    /// A pending input suspension is rejected before the file is read.
     pub fn eval_file(&mut self, path: impl AsRef<Path>) -> HostEvalOutcome {
         if self.poisoned {
             return poisoned_eval_outcome();
@@ -403,6 +412,10 @@ impl HostSession {
     }
 
     fn call_unprotected(&mut self, head: &str, args: &[HostTyped]) -> HostEvalOutcome {
+        if let Err(failure) = self.session.reject_overlapping_evaluation_request() {
+            return eval_failure_from_runtime(failure);
+        }
+
         if head.trim().is_empty() {
             return HostEvalOutcome::Failure(synthesized_host_failure(
                 HostFailureCode::Other,
@@ -485,6 +498,7 @@ impl HostSession {
     /// Evaluates source with a wall-clock timeout for this request.
     ///
     /// The timeout is cleared after the request completes or fails.
+    /// A pending input suspension is rejected without replacing its continuation.
     pub fn eval_with_timeout(
         &mut self,
         request: impl Into<HostEvalRequest>,
@@ -511,7 +525,9 @@ impl HostSession {
     /// This is the intended way to pre-supply input for batch and script
     /// evaluation. Queue responses in consumption order before calling
     /// [`Self::eval_script`] or [`Self::eval_file`]. [`Self::reset`] clears all
-    /// queued responses.
+    /// queued responses. Queuing a response while a continuation is already
+    /// pending does not resume or supersede it, and does not permit a new
+    /// evaluation request; use [`Self::resume_with_input`] for that continuation.
     pub fn queue_input_response(&mut self, input: impl Into<String>) {
         self.session.queue_input_response(input);
     }

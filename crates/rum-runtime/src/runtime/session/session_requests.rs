@@ -42,6 +42,23 @@ impl From<PendingEvalRequest> for RequestCheckpoint {
 }
 
 impl Session {
+    #[doc(hidden)]
+    pub fn reject_overlapping_evaluation_request(&self) -> Result<(), SessionRequestFailure> {
+        if self.pending_suspension_generation().is_none() {
+            return Ok(());
+        }
+
+        Err(SessionRequestFailure {
+            error: SessionRequestError::Other {
+                message: "cannot start a new evaluation while the session is waiting for host input; call resume_with_input or reset first"
+                    .to_string(),
+            },
+            messages: Vec::new(),
+            prints: Vec::new(),
+            trace: Vec::new(),
+        })
+    }
+
     pub fn complete_request(&self, prefix: &str) -> SessionCompletionResponse {
         let prefix = prefix.trim().to_string();
         let matches = self.complete_symbol_prefix(&prefix);
@@ -109,6 +126,7 @@ impl Session {
         &mut self,
         input: &str,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        self.reject_overlapping_evaluation_request()?;
         self.begin_top_level_interrupt_budget();
         let checkpoint = RequestCheckpoint::new(self);
         let parsed = parse_with_diagnostics(input).map_err(request_syntax_failure)?;
@@ -127,6 +145,7 @@ impl Session {
         &mut self,
         expr: Expr,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        self.reject_overlapping_evaluation_request()?;
         self.begin_top_level_interrupt_budget();
         let checkpoint = RequestCheckpoint::new(self);
 
@@ -252,6 +271,7 @@ impl Session {
         &mut self,
         source: &str,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        self.reject_overlapping_evaluation_request()?;
         let checkpoint = RequestCheckpoint::new(self);
 
         match self.eval_script(source) {
@@ -270,6 +290,7 @@ impl Session {
         &mut self,
         path: impl AsRef<Path>,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        self.reject_overlapping_evaluation_request()?;
         let checkpoint = RequestCheckpoint::new(self);
         let path = path.as_ref();
 

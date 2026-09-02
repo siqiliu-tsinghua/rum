@@ -402,15 +402,33 @@ fn suspension_protocol_repository_invariants_hold() {
         "Arc::try_unwrap(",
         "Arc::make_mut(",
     ];
+    let raw_clear_name = ["clear_pending_", "suspension_state"].concat();
+    let raw_owner_option = ["pending_suspension:Option<", "SuspendedEvaluation>"].concat();
+    let raw_owner_replacements = [
+        ["self.pending_", "suspension="].concat(),
+        [".pending_", "suspension.take()"].concat(),
+        ["mem::take(&mutself.pending_", "suspension)"].concat(),
+        ["mem::replace(&mutself.pending_", "suspension"].concat(),
+    ];
     let mut frame_count = 0usize;
     let mut finalizer_count = 0usize;
     let mut pure_abandon_frames = Vec::new();
     let mut stateful_abandon_frames = Vec::new();
     let mut ownership_violations = Vec::new();
+    let mut raw_live_owner_clear_hits = 0usize;
+    let mut raw_live_owner_replacement_hits = 0usize;
 
     for path in &files {
         let source = fs::read_to_string(path).expect("source gate should read Rust source");
         let compact = remove_ascii_whitespace(&source);
+
+        raw_live_owner_clear_hits += source.matches(raw_clear_name.as_str()).count();
+        if path != &core_path {
+            raw_live_owner_replacement_hits += compact.matches(raw_owner_option.as_str()).count();
+            for replacement in &raw_owner_replacements {
+                raw_live_owner_replacement_hits += compact.matches(replacement.as_str()).count();
+            }
+        }
 
         for banned in banned_legacy_names {
             assert!(
@@ -680,6 +698,16 @@ fn suspension_protocol_repository_invariants_hold() {
         println!("stateful_frame_abandon={entry}");
     }
     println!("evaluate_cleanup_allowlist=WithCleanup owner frames (2)");
+    assert_eq!(
+        raw_live_owner_clear_hits, 0,
+        "the deleted raw live-owner clear API returned"
+    );
+    assert_eq!(
+        raw_live_owner_replacement_hits, 0,
+        "raw live-owner replacement escaped suspension/core.rs"
+    );
+    println!("raw_live_owner_clears={raw_live_owner_clear_hits}");
+    println!("raw_live_owner_replacements={raw_live_owner_replacement_hits}");
     assert!(
         ownership_violations.is_empty(),
         "suspension ownership violations:\n{}",

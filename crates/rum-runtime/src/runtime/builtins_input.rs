@@ -229,8 +229,14 @@ impl Session {
     }
 
     fn drive_input_request(&mut self, request: RuntimeInputRequest) -> Result<Expr, EvalError> {
-        if let Some(value) = self.queued_input_responses.pop_front() {
-            self.clear_pending_suspension_state();
+        if !self.queued_input_responses.is_empty() {
+            if self.pending_suspension_generation().is_some() {
+                self.abandon_pending_suspension(AbandonReason::SupersededOrQueuedInputDiscard);
+            }
+            let value = self
+                .queued_input_responses
+                .pop_front()
+                .expect("a checked queued input response should remain available");
             return Ok(Expr::string(value));
         }
 

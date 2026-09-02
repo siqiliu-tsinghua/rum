@@ -221,3 +221,255 @@ dispatch, or matcher code, the cost premise is exceeded — stop and report.
    invariant rows.
 6. Cost statement.
 7. Stop-loss, risks, open questions.
+
+---
+
+# Report — 2026-09-02
+
+## 1. Per-caller migration
+
+- Queued input: [builtins_input.rs:233](crates/rum-runtime/src/runtime/builtins_input.rs:233) calls `abandon_pending_suspension(SupersededOrQueuedInputDiscard)` before [removing the queued value](crates/rum-runtime/src/runtime/builtins_input.rs:238). It neither consumes first nor abandons twice.
+- Monitor callback: [monitor.rs:116](crates/rum-runtime/src/runtime/debug_tools/monitor.rs:116) uses `HelperBestEffortDiscard`.
+- Monitor display: [monitor.rs:149](crates/rum-runtime/src/runtime/debug_tools/monitor.rs:149) uses `HelperBestEffortDiscard`. Neither path calls `finish_monitor`.
+- Checkpoint rollback: [session_helpers.rs:135](crates/rum-runtime/src/runtime/session/session_helpers.rs:135) now captures `Option<SuspensionGeneration>`. A trial-created generation is abandoned with `CheckpointRollbackDiscard`, the empty slot is asserted, and only then is the loader snapshot restored at [line 161](crates/rum-runtime/src/runtime/session/session_helpers.rs:161). A matching pre-existing generation is preserved.
+- Ownership: [SuspensionSlot](crates/rum-runtime/src/runtime/suspension/core.rs:24) owns the continuation and generation counter. Install/take/restore mutations are private to `suspension/core.rs`; installing over a live owner asserts. `clear_pending_suspension_state` is deleted.
+
+## 2. Public entry-point inventory
+
+| Public entry point | Runtime seam | Disposition |
+|---|---|---|
+| [HostSession::eval](crates/rum-host/src/session.rs:325) | `eval_request`, guarded at [session_requests.rs:129](crates/rum-runtime/src/runtime/session/session_requests.rs:129) | Rejected before interrupt setup, parsing, lowering, or checkpoint creation. |
+| [HostSession::call](crates/rum-host/src/session.rs:347) | Host preflight at [session.rs:415](crates/rum-host/src/session.rs:415), then guarded `eval_expr_request` at [session_requests.rs:148](crates/rum-runtime/src/runtime/session/session_requests.rs:148) | Rejected even when the supplied head or typed arguments are invalid; no conversion precedes rejection. |
+| [HostSession::eval_script](crates/rum-host/src/session.rs:372) | Guarded at [session_requests.rs:274](crates/rum-runtime/src/runtime/session/session_requests.rs:274) | Rejected before script evaluation. |
+| [HostSession::eval_file](crates/rum-host/src/session.rs:393) | Guarded at [session_requests.rs:293](crates/rum-runtime/src/runtime/session/session_requests.rs:293) | Rejected before file-provider access. |
+| [HostSession::eval_with_timeout](crates/rum-host/src/session.rs:502) | Routes through guarded `eval_request` | Rejected; the temporary timeout wrapper is cleared afterward. |
+| [HostSession::restore_from_bytes](crates/rum-host/src/session.rs:203) | Resets, then uses `eval_snapshot_restore_request` → guarded script request | Available because valid snapshot restoration destroys the old session before beginning evaluation. Invalid UTF-8 leaves the old session untouched. |
+
+Safe non-new-evaluation operations:
+
+- [reset](crates/rum-host/src/session.rs:174) replaces the whole session, so destruction of the old owner and its contaminated state is safe.
+- [resume_with_input](crates/rum-host/src/session.rs:540) consumes the exact pending request checkpoint and owner rather than beginning unrelated evaluation.
+- [queue_input_response](crates/rum-host/src/session.rs:531) only queues future input; it does not resume, supersede, or unlock a new request.
+- Snapshot, parse/lower, definitions, message catalog, contexts, inspection, completion, completeness, and pending-input inspection do not reach an evaluation request seam.
+- A script-shaped suspension remains non-resumable. Evaluation is rejected until [reset or whole-session restoration](docs/guide/embedding.md:345); inspection remains available.
+
+The rejection is `HostFailureCode::Other`, does not require reset for an ordinary resumable continuation, and preserves that continuation.
+
+## 3. Red first, then green
+
+Initial red run, before the repair:
+
+```text
+   Compiling rum-host v0.2.0 (crates/rum-host)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.43s
+     Running unittests src/lib.rs (target/debug/deps/rum_host-6b9bfeb214af5253)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 87 filtered out; finished in 0.00s
+
+     Running tests/adapter_contract.rs (target/debug/deps/adapter_contract-61fe524a67fb26d2)
+
+running 1 test
+
+thread 'public_contract_rejects_overlapping_eval_and_preserves_block_suspension' panicked at crates/rum-host/tests/adapter_contract.rs:96:18:
+expected overlapping-evaluation rejection, got Success(HostEvalSuccess { value: HostValue { text: "\"replacement\"", typed: Str("replacement") }, termination: None, messages: [], prints: [], trace: [], outputs: [HostStructuredOutput { kind: Result, text: "\"replacement\"" }] })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test public_contract_rejects_overlapping_eval_and_preserves_block_suspension ... FAILED
+
+failures:
+
+failures:
+    public_contract_rejects_overlapping_eval_and_preserves_block_suspension
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p rum-host --test adapter_contract`
+```
+
+Final green target:
+
+```text
+running 1 test
+test public_contract_rejects_overlapping_eval_and_preserves_block_suspension ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s
+```
+
+The test verifies the rejection, unchanged pending prompt, successful original continuation resume, and restoration of the outer `Block` binding.
+
+## 4. Public regression matrix
+
+Before-picture rows reused from brief-401:
+
+```text
+queue.block.suspend=InputRequired(kind=InputString, prompt="old", messages=0, prints=[])
+queue.block.drain=Success(value="drain", termination=None, messages=0, prints=[], trace=0)
+queue.block.after=Success(value="inside", termination=None, messages=0, prints=[], trace=0)
+queue.module.suspend=InputRequired(kind=InputString, prompt="old", messages=0, prints=[])
+queue.module.drain=Success(value="drain", termination=None, messages=0, prints=[], trace=0)
+queue.module.names_after=Success(value=List["Global`queueModule401$1"], termination=None, messages=0, prints=[], trace=0)
+queue.with.suspend=InputRequired(kind=InputString, prompt="old", messages=0, prints=[])
+queue.with.drain=Success(value="drain", termination=None, messages=0, prints=[], trace=0)
+queue.with.after=Success(value="outside", termination=None, messages=0, prints=[], trace=0)
+
+valueq.block.eval=Success(value=True, termination=None, messages=0, prints=[], trace=0)
+valueq.block.after=Success(value=List["outside", 7], termination=None, messages=0, prints=[], trace=0)
+valueq.block.after_clear=Success(value=List[valueQBlock401, 7], termination=None, messages=0, prints=[], trace=0)
+valueq.module.eval=Success(value=True, termination=None, messages=0, prints=[], trace=0)
+valueq.module.names_after=Success(value=List[], termination=None, messages=0, prints=[], trace=0)
+valueq.with.eval=Success(value=True, termination=None, messages=0, prints=[], trace=0)
+valueq.with.after=Success(value="outside", termination=None, messages=0, prints=[], trace=0)
+
+inventory.attributes.after=Success(value=List[Protected], termination=None, messages=0, prints=[], trace=0)
+inventory.reap.memory_before=Success(value=67655, termination=None, messages=0, prints=[], trace=0)
+inventory.reap.memory_after=Success(value=99773, termination=None, messages=0, prints=[], trace=0)
+inventory.monitor.after=Success(value=1, termination=None, messages=0, prints=["1"], trace=0)
+inventory.options.after=Success(value="explicit", termination=None, messages=0, prints=[], trace=0)
+inventory.trace.drain=Success(value="drain", termination=None, messages=0, prints=[], trace=1)
+inventory.trace.after=Success(value=2, termination=None, messages=0, prints=[], trace=1)
+inventory.time.after=Success(value=TerminatedEvaluation["TimeConstraint"], termination=Some(TimeConstraint), messages=1, prints=[], trace=0)
+inventory.random.control=Success(value=488421, termination=None, messages=0, prints=[], trace=0)
+inventory.random.after=Success(value=913882, termination=None, messages=0, prints=[], trace=0)
+inventory.abort_protect.after=Success(value="continued", termination=None, messages=0, prints=[], trace=0)
+inventory.cleanup.after=Success(value="not-run", termination=None, messages=0, prints=[], trace=0)
+```
+
+Current public-host matrix, verbatim:
+
+```text
+running 3 tests
+test public_monitor_matrix_restores_capture_package_and_cleanup_owners ... matrix.capture.evaluation_data=Success(value=Null, termination=None, messages=0, prints=[], trace=0)
+matrix.capture.check=Success(value=Null, termination=None, messages=0, prints=[], trace=0)
+checkFallback403=Success(value=0, termination=None, messages=0, prints=[], trace=0)
+matrix.capture.quiet=Success(value=Null, termination=None, messages=0, prints=[], trace=0)
+matrix.capture.test_report=Success(value=Null, termination=None, messages=0, prints=[], trace=0)
+matrix.package.monitor=Success(value=Null, termination=None, messages=0, prints=[], trace=0)
+Names["AbandonPublic403`*"]=Success(value=List[], termination=None, messages=0, prints=[], trace=0)
+matrix.with_cleanup.valueq=Success(value=True, termination=None, messages=0, prints=[], trace=0)
+matrix.monitor.contract=Success(value=Null, termination=None, messages=0, prints=[], trace=0)
+ok
+test public_monitor_matrix_restores_reap_monitor_trace_constraints_random_and_abort_state ... matrix.reap.monitor=Success(value=Null, termination=None, messages=0, prints=[], trace=0)
+matrix.reap.memory=before:67384,after:68216,growth:832
+matrix.monitor.valueq=Success(value=True, termination=None, messages=0, prints=[], trace=0)
+matrix.monitor.refreshes=abandoned:0,completed:4
+matrix.trace.monitor=Success(value=Null, termination=None, messages=0, prints=[], trace=0)
+matrix.trace.after=Success(value=2, termination=None, messages=0, prints=[], trace=0)
+matrix.time.monitor=Success(value=Null, termination=None, messages=0, prints=[], trace=0)
+matrix.time.after=Success(value="done", termination=None, messages=0, prints=[], trace=0)
+matrix.memory.monitor=Success(value=20000, termination=None, messages=0, prints=[], trace=0)
+matrix.random.monitor=Success(value=Null, termination=None, messages=0, prints=[], trace=0)
+matrix.random.after=Success(value=934555, termination=None, messages=0, prints=[], trace=0)
+matrix.abort_protect.monitor=Success(value=Null, termination=None, messages=0, prints=[], trace=0)
+matrix.abort_protect.abort=Success(value=$Aborted, termination=None, messages=0, prints=[], trace=0)
+abortAfter403=Success(value=0, termination=None, messages=0, prints=[], trace=0)
+ok
+test public_rollback_matrix_restores_lexical_iterator_attribute_and_option_state ... matrix.block.valueq=Success(value=True, termination=None, messages=0, prints=[], trace=0)
+block403=Success(value="outside", termination=None, messages=0, prints=[], trace=0)
+matrix.module.valueq=Success(value=True, termination=None, messages=0, prints=[], trace=0)
+Names["Global`moduleLocal403$*"]=Success(value=List[], termination=None, messages=0, prints=[], trace=0)
+matrix.with.valueq=Success(value=True, termination=None, messages=0, prints=[], trace=0)
+with403=Success(value="outside", termination=None, messages=0, prints=[], trace=0)
+matrix.attributes.valueq=Success(value=True, termination=None, messages=0, prints=[], trace=0)
+Attributes[attribute403]=Success(value=List[], termination=None, messages=0, prints=[], trace=0)
+matrix.iterator.valueq=Success(value=True, termination=None, messages=0, prints=[], trace=0)
+iterator403=Success(value=iterator403, termination=None, messages=0, prints=[], trace=0)
+matrix.option.valueq=Success(value=True, termination=None, messages=0, prints=[], trace=0)
+matrix.option.after=Success(value=OptionValue[choice403], termination=None, messages=1, prints=[], trace=0)
+matrix.valueq.contract=Success(value=True, termination=None, messages=0, prints=[], trace=0)
+ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+```
+
+This covers Block, Module, With, attributes, iterator/product scope, options, Reap, Monitor, trace, time/memory constraints, PRNG, AbortProtect, capture families, package rollback, and WithCleanup. `ValueQ` remains `True`; `Monitor` remains `Null`.
+
+## 5. Verification
+
+Final mandatory task-owned gates:
+
+```text
+scripts/run-bounded.py --timeout 300 -- cargo --offline fmt --check
+exit 0; no output
+
+scripts/run-bounded.py --timeout 900 -- cargo test --offline -p rum-runtime
+test result: ok. 922 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out
+
+scripts/run-bounded.py --timeout 900 -- cargo test --offline -p rum-host
+lib:                    87 passed, 0 failed
+adapter_contract:        7 passed, 0 failed
+installer:               4 passed, 0 failed
+lifecycle_buildout:      7 passed, 0 failed
+lifecycle_contract:     13 passed, 0 failed
+random_password_policy:  2 passed, 0 failed
+stress:                   4 passed, 0 failed, 2 ignored
+abandonment matrix:       3 passed, 0 failed
+doctest:                  1 passed, 0 failed
+```
+
+The final workspace command:
+
+```text
+scripts/run-bounded.py --timeout 2400 -- cargo test --offline --workspace --no-fail-fast
+error: 1 target failed:
+    `-p rum-jupyter --lib`
+```
+
+Both failures are exactly the brief’s declared known failures:
+
+```text
+thread 'tests::pump::control_interrupt_cancels_running_execute_and_deferred_shell_runs_after_idle' panicked at crates/rum-jupyter/src/tests/pump.rs:250:9:
+interrupted execute did not produce a shell reply within 2s
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 102 filtered out; finished in 2.00s
+```
+
+```text
+thread 'tests::pump::event_pump_preserves_routing_ids_on_replies_and_routes_iopub_separately' panicked at crates/rum-jupyter/src/tests/pump.rs:37:5:
+assertion failed: pump.pump_execute_completion(&mut transport).expect("completion poll should succeed")
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 102 filtered out; finished in 0.00s
+```
+
+No other workspace target failed. `rum-jupyter` was not modified.
+
+Repository invariant rows:
+
+```text
+named_suspension_frames=545
+named_pure_finalizers=60
+pure_frame_abandon_derives=516
+handwritten_stateful_frame_abandons=29
+evaluate_cleanup_allowlist=WithCleanup owner frames (2)
+raw_live_owner_clears=0
+raw_live_owner_replacements=0
+legacy_api_hits=0 direct_queue_mutation_hits=0 ownership_hits=0
+test runtime::tests::frame_root_trace::suspension_protocol_repository_invariants_hold ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 923 filtered out
+```
+
+Flipped probe:
+
+```text
+queue.block.setup=Success(value="outside")
+queue.block.suspend=InputRequired(prompt="old")
+queue.block.drain=Failure(code=Other, message="cannot start a new evaluation while the session is waiting for host input; call resume_with_input or reset first")
+queue.block.after=Success(value="outside")
+```
+
+The brief’s literal probe has an internal contradiction: after the mandated rejection, its immediately following `eval("x")` must also be rejected because the owner must remain installed and resumable. To obtain the required `after="outside"` row without violating that contract, the probe performed one unprinted `resume_with_input("answer")` between `drain` and `after`. The temporary `/tmp` crate was removed.
+
+An intermediate runtime run exposed two old white-box GC tests that deliberately began a second public request; they were updated to use internal `eval_text` for their sweep trigger. An intermediate format check also caught two rustfmt-only wraps. Both final focused gates are green.
+
+## 6. Cost statement
+
+All production changes are confined to request and suspension cold paths. No ordinary evaluator, dispatch, matcher, expression construction, or default-path instrumentation was changed. No timing A/B was run, as required. No `unsafe`, dependency, or `Cargo.lock` changes were introduced.
+
+## 7. Stop-loss, risks, open questions
+
+- The only unresolved issue is the contradictory literal flipped-probe sequence described above; the implementation follows the higher-priority rejection-and-preserve contract.
+- The two workspace failures are the predeclared briefs 404/405 `rum-jupyter` failures.
+- No `FrameAbandon` classification was changed.
+- No out-of-scope evaluator, cancellation, Jupyter, generated-reference, or dependency work was performed.
+- Changes remain uncommitted in the working tree, and the brief-400 stash was untouched.

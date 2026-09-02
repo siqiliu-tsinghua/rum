@@ -100,9 +100,11 @@ fn path_a_second_request_keeps_frame_only_candidate_live() {
     assert_input_required(&failure, "A: ");
 
     let sweeps_before = session.gensym_gc_sweep_count;
+    // Public request overlap is rejected while the continuation is pending;
+    // this white-box root test drives an internal evaluation to force the sweep.
     let trigger = session
-        .eval_request("Module[{gcATrigger}, gcATrigger = 1; Hold[gcATrigger]]")
-        .expect("the second request should cross the watermark");
+        .eval_text("Module[{gcATrigger}, gcATrigger = 1; Hold[gcATrigger]]")
+        .expect("the internal evaluation should cross the watermark");
     assert_eq!(trigger.value.to_string(), "Hold[gcATrigger$2]");
     assert!(session.gensym_gc_sweep_count > sweeps_before);
 
@@ -194,8 +196,10 @@ fn block_frame_bare_symbol_is_reclaimed_after_resume_and_next_sweep() {
     assert_input_required(&failure, "S: ");
 
     let first_sweeps_before = session.gensym_gc_sweep_count;
+    // Public request overlap is rejected while the continuation is pending;
+    // this white-box root test drives an internal evaluation to force the sweep.
     session
-        .eval_request("Module[{gcSTrigger}, gcSTrigger = 1; Hold[gcSTrigger]]")
+        .eval_text("Module[{gcSTrigger}, gcSTrigger = 1; Hold[gcSTrigger]]")
         .expect("the suspended Block should survive a real sweep");
     assert!(session.gensym_gc_sweep_count > first_sweeps_before);
 

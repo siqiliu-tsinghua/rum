@@ -13,9 +13,17 @@ pub(in crate::runtime) struct SuspensionGeneration(u64);
 
 pub(in crate::runtime) struct SuspendedEvaluation {
     pub(in crate::runtime) active_stack: Vec<EvaluationStackEntry>,
-    #[allow(dead_code)]
     generation: SuspensionGeneration,
     frames: VecDeque<Arc<DynSuspensionFrame>>,
+}
+
+/// Opaque owner slot for the one pending continuation.
+///
+/// Runtime modules may inspect the owner for rooting and cold-path guards, but
+/// only this module can install, take, or replace it.
+pub(in crate::runtime) struct SuspensionSlot {
+    owner: Option<SuspendedEvaluation>,
+    next_generation: u64,
 }
 
 /// Why a live continuation owner is being abandoned.
@@ -182,25 +190,75 @@ impl SuspendedEvaluation {
     }
 }
 
-struct SuspensionSlot<'a> {
+struct SuspensionAccess<'a> {
     pending_request: &'a mut Option<RuntimeInputRequest>,
-    pending_owner: &'a mut Option<SuspendedEvaluation>,
-    next_generation: &'a mut u64,
+    pending_owner: &'a mut SuspensionSlot,
 }
 
-impl SuspensionSlot<'_> {
+impl SuspensionSlot {
+    pub(in crate::runtime) const fn empty() -> Self {
+        Self {
+            owner: None,
+            next_generation: 0,
+        }
+    }
+
+    pub(in crate::runtime) fn as_ref(&self) -> Option<&SuspendedEvaluation> {
+        self.owner.as_ref()
+    }
+
+    fn as_mut(&mut self) -> Option<&mut SuspendedEvaluation> {
+        self.owner.as_mut()
+    }
+
+    pub(in crate::runtime) fn is_none(&self) -> bool {
+        self.owner.is_none()
+    }
+
+    #[cfg(test)]
+    pub(in crate::runtime) fn is_some(&self) -> bool {
+        self.owner.is_some()
+    }
+
+    fn generation(&self) -> Option<SuspensionGeneration> {
+        self.owner.as_ref().map(|owner| owner.generation)
+    }
+
+    fn install(&mut self, active_stack: Vec<EvaluationStackEntry>) -> SuspensionGeneration {
+        assert!(
+            self.owner.is_none(),
+            "a new suspension must not replace a live continuation owner"
+        );
+        self.next_generation = self
+            .next_generation
+            .checked_add(1)
+            .expect("suspension generation should not wrap");
+        let generation = SuspensionGeneration(self.next_generation);
+        self.owner = Some(SuspendedEvaluation::new(active_stack, generation));
+        generation
+    }
+
+    fn take(&mut self) -> Option<SuspendedEvaluation> {
+        self.owner.take()
+    }
+
+    fn restore_nested(&mut self, suspension: SuspendedEvaluation) {
+        assert!(
+            self.owner.is_none(),
+            "a nested suspension must not replace a live continuation owner"
+        );
+        self.owner = Some(suspension);
+    }
+}
+
+impl SuspensionAccess<'_> {
     fn install(
         &mut self,
         request: RuntimeInputRequest,
         active_stack: Vec<EvaluationStackEntry>,
     ) -> SuspensionGeneration {
-        *self.next_generation = self
-            .next_generation
-            .checked_add(1)
-            .expect("suspension generation should not wrap");
-        let generation = SuspensionGeneration(*self.next_generation);
+        let generation = self.pending_owner.install(active_stack);
         *self.pending_request = Some(request);
-        *self.pending_owner = Some(SuspendedEvaluation::new(active_stack, generation));
         generation
     }
 
@@ -209,7 +267,6 @@ impl SuspensionSlot<'_> {
         self.pending_owner.take()
     }
 
-    #[allow(dead_code)]
     fn take_for_abandon(&mut self) -> Option<SuspendedEvaluation> {
         *self.pending_request = None;
         self.pending_owner.take()
@@ -369,11 +426,10 @@ impl AbandonmentContext<'_> {
 }
 
 impl Session {
-    fn suspension_slot(&mut self) -> SuspensionSlot<'_> {
-        SuspensionSlot {
+    fn suspension_access(&mut self) -> SuspensionAccess<'_> {
+        SuspensionAccess {
             pending_request: &mut self.pending_input_request,
             pending_owner: &mut self.pending_suspension,
-            next_generation: &mut self.next_suspension_generation,
         }
     }
 
@@ -392,7 +448,7 @@ impl Session {
             .cloned()
             .collect::<Vec<_>>();
 
-        self.suspension_slot().install(request, active_stack);
+        self.suspension_access().install(request, active_stack);
     }
 
     /// Inserts a named, traceable frame into the fresh pending suspension.
@@ -408,11 +464,6 @@ impl Session {
             .as_mut()
             .expect("input suspension should be initialized before frames are pushed");
         suspension.push_back(Arc::new(frame));
-    }
-
-    pub(in crate::runtime) fn clear_pending_suspension_state(&mut self) {
-        self.pending_input_request = None;
-        self.pending_suspension = None;
     }
 
     fn finish_completed_resumption(&mut self) {
@@ -439,7 +490,7 @@ impl Session {
             "a Session resumes only one suspended evaluation at a time"
         );
         self.resuming_suspension = Some(
-            self.suspension_slot()
+            self.suspension_access()
                 .take_for_resume()
                 .expect("resume requires a pending suspended evaluation"),
         );
@@ -480,12 +531,11 @@ impl Session {
         }
     }
 
-    #[allow(dead_code)]
     pub(in crate::runtime) fn abandon_pending_suspension(
         &mut self,
         reason: AbandonReason,
     ) -> AbandonReason {
-        let pending = self.suspension_slot().take_for_abandon();
+        let pending = self.suspension_access().take_for_abandon();
         self.pending_eval_request = None;
         let Some(pending) = pending else {
             return reason;
@@ -521,7 +571,7 @@ impl Session {
 
                         let cleanup_outcome = self.evaluate(cleanup.expr);
                         if matches!(cleanup_outcome, Err(EvalError::InputRequired { .. })) {
-                            if let Some(nested) = self.suspension_slot().take_for_abandon() {
+                            if let Some(nested) = self.suspension_access().take_for_abandon() {
                                 self.abandonment_worklist.push(nested);
                             }
                             self.pending_eval_request = None;
@@ -544,11 +594,8 @@ impl Session {
         reason
     }
 
-    #[cfg(test)]
     pub(in crate::runtime) fn pending_suspension_generation(&self) -> Option<SuspensionGeneration> {
-        self.pending_suspension
-            .as_ref()
-            .map(|suspension| suspension.generation)
+        self.pending_suspension.generation()
     }
 
     fn drive_resuming_frames(
@@ -595,7 +642,7 @@ impl Session {
                     .expect("the still-rooted suffix should remain in Session");
                 nested.append(&mut suffix);
                 self.pending_input_request = Some(request.clone());
-                self.pending_suspension = Some(nested);
+                self.pending_suspension.restore_nested(nested);
                 return Err(EvalError::InputRequired {
                     request: request.clone(),
                 });

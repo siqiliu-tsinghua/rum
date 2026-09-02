@@ -1,8 +1,20 @@
 use rum_host::{
     HostCompletenessStatus, HostCompletionRequest, HostConfig, HostEvalOutcome, HostFailureCode,
     HostInputKind, HostInspectRequest, HostIsCompleteRequest, HostSession,
-    HostStructuredOutputKind,
+    HostStructuredOutputKind, HostTyped,
 };
+use std::time::Duration;
+
+fn assert_waiting_for_input_failure(outcome: HostEvalOutcome) {
+    match outcome {
+        HostEvalOutcome::Failure(failure) => {
+            assert_eq!(failure.code, HostFailureCode::Other);
+            assert!(failure.message.contains("waiting for host input"));
+            assert!(!failure.code.requires_reset());
+        }
+        other => panic!("expected waiting-for-input failure, got {other:?}"),
+    }
+}
 
 #[test]
 fn public_contract_covers_eval_outputs_without_runtime_types() {
@@ -67,6 +79,118 @@ fn public_contract_preserves_input_suspension_and_resume_boundaries() {
             assert!(failure.message.contains("no suspended evaluation"));
         }
         other => panic!("expected no-pending-input failure, got {other:?}"),
+    }
+}
+
+#[test]
+fn public_contract_rejects_overlapping_eval_and_preserves_block_suspension() {
+    let mut session = HostSession::new();
+
+    match session.eval("overlapBlock403 = \"outside\"") {
+        HostEvalOutcome::Success(success) => assert_eq!(success.value.text, "\"outside\""),
+        other => panic!("expected setup success, got {other:?}"),
+    }
+
+    match session.eval("Block[{overlapBlock403 = \"inside\"}, InputString[\"old\"]]") {
+        HostEvalOutcome::InputRequired(suspension) => {
+            assert_eq!(suspension.request.kind, HostInputKind::InputString);
+            assert_eq!(suspension.request.prompt, "old");
+        }
+        other => panic!("expected block suspension, got {other:?}"),
+    }
+
+    match session.eval("\"replacement\"") {
+        HostEvalOutcome::Failure(failure) => {
+            assert_eq!(failure.code, HostFailureCode::Other);
+            assert!(failure.message.contains("waiting for host input"));
+            assert!(!failure.code.requires_reset());
+        }
+        other => panic!("expected overlapping-evaluation rejection, got {other:?}"),
+    }
+
+    assert_eq!(
+        session
+            .pending_input_request()
+            .map(|request| request.prompt),
+        Some("old".to_string())
+    );
+
+    match session.resume_with_input("answer") {
+        HostEvalOutcome::Success(success) => assert_eq!(success.value.text, "\"answer\""),
+        other => panic!("expected original continuation to resume, got {other:?}"),
+    }
+
+    match session.eval("overlapBlock403") {
+        HostEvalOutcome::Success(success) => assert_eq!(success.value.text, "\"outside\""),
+        other => panic!("expected restored outer binding, got {other:?}"),
+    }
+}
+
+#[test]
+fn every_public_evaluation_entrypoint_rejects_a_pending_continuation() {
+    let mut session = HostSession::new();
+    assert!(matches!(
+        session.eval("InputString[\"entrypoint\"]"),
+        HostEvalOutcome::InputRequired(_)
+    ));
+
+    assert_waiting_for_input_failure(session.call("", &[]));
+    assert_waiting_for_input_failure(session.call("Identity", &[HostTyped::Integer(1)]));
+    assert_waiting_for_input_failure(session.eval_script("1\n2"));
+    assert_waiting_for_input_failure(session.eval_file("missing-overlap-guard-403.rum"));
+    assert_waiting_for_input_failure(session.eval_with_timeout("1", Duration::from_secs(1)));
+
+    assert_eq!(
+        session
+            .pending_input_request()
+            .map(|request| request.prompt),
+        Some("entrypoint".to_string())
+    );
+    session.queue_input_response("queued");
+    assert_waiting_for_input_failure(session.eval("1"));
+
+    match session.resume_with_input("direct") {
+        HostEvalOutcome::Success(success) => assert_eq!(success.value.text, "\"direct\""),
+        other => panic!("expected pending continuation to resume, got {other:?}"),
+    }
+    match session.eval("InputString[\"prequeued\"]") {
+        HostEvalOutcome::Success(success) => assert_eq!(success.value.text, "\"queued\""),
+        other => panic!("expected queued response to remain available, got {other:?}"),
+    }
+}
+
+#[test]
+fn script_suspension_requires_reset_or_restore_while_inspection_remains_available() {
+    let mut session = HostSession::new();
+    assert!(matches!(
+        session.eval("saved403 = 42"),
+        HostEvalOutcome::Success(_)
+    ));
+    let snapshot = session.snapshot_to_bytes().unwrap();
+
+    assert!(matches!(
+        session.eval_script("InputString[\"script\"]\nscriptTail403 = 1"),
+        HostEvalOutcome::InputRequired(_)
+    ));
+    assert!(session.inspect_symbol("saved403").found);
+
+    match session.resume_with_input("unavailable") {
+        HostEvalOutcome::Failure(failure) => {
+            assert_eq!(failure.code, HostFailureCode::Other);
+            assert!(failure.message.contains("no suspended evaluation"));
+        }
+        other => panic!("expected script resumption failure, got {other:?}"),
+    }
+    assert_waiting_for_input_failure(session.eval("1"));
+
+    session.restore_from_bytes(&snapshot).unwrap();
+    match session.eval("saved403") {
+        HostEvalOutcome::Success(success) => assert_eq!(success.value.text, "42"),
+        other => panic!("expected restored session to evaluate, got {other:?}"),
+    }
+    match session.eval("scriptTail403") {
+        HostEvalOutcome::Success(success) => assert_eq!(success.value.text, "scriptTail403"),
+        other => panic!("expected suspended script tail not to run, got {other:?}"),
     }
 }
 
