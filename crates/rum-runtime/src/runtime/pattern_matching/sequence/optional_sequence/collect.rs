@@ -282,7 +282,7 @@ const _: fn() = || {
     assert_traces::<SuspendedSequenceChoiceCollection>();
 };
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct CollectSequenceChoiceMatchesSuspensionFrame {
     pub(super) state: crate::runtime::pattern_matching::sequence::optional_sequence::collect::SuspendedSequenceChoiceCollection,
     pub(super) rest_values: rum_core::SharedArgs,
@@ -308,7 +308,7 @@ impl crate::runtime::suspension::SuspensionFrame for CollectSequenceChoiceMatche
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct FinishSequenceChoiceCollectionSuspensionFrame {
     pub(super) state: crate::runtime::pattern_matching::sequence::optional_sequence::collect::SuspendedSequenceChoiceCollection,
 }
@@ -368,7 +368,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareSequenceChoiceCol
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ContinueSequenceChoiceCollectionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueSequenceChoiceCollectionFrame {

@@ -1,5 +1,6 @@
 use super::*;
 use rum_core::SharedArgs;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
 pub(crate) fn eval_key_select(
@@ -124,7 +125,7 @@ fn resume_suspended_key_select_with_value(
     resume_suspended_key_select_from_index(session, entries, criterion, index + 1, selected)
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeKeySelectFromIndexSuspensionFrame {
     entries: crate::associations::suspended_state::FrozenAssociationSequence<
         rum_runtime::kernel_api::AssociationEntryForm,
@@ -165,7 +166,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeKeySelectFromIndexSuspen
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeSuspendedKeySelectFromIndexSuspensionFrame {
     entries: crate::associations::suspended_state::FrozenAssociationSequence<
         rum_runtime::kernel_api::AssociationEntryForm,

@@ -1,4 +1,5 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -460,7 +461,7 @@ pub(super) fn evaluate_scan_parts(
     Ok(system_expr("Null"))
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct EvaluateScanPartsSuspensionFrame;
 
 impl rum_runtime::kernel_api::SuspensionFrame for EvaluateScanPartsSuspensionFrame {

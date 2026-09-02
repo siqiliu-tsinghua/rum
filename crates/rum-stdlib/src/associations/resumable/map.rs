@@ -1,5 +1,6 @@
 use super::*;
 use rum_core::SharedArgs;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
 pub(crate) fn eval_association_map(
@@ -246,7 +247,7 @@ fn report_invalid_association_map_value(
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeAssociationMapFromIndexSuspensionFrame {
     function: rum_core::Expr,
     keys: crate::associations::suspended_state::FrozenAssociationSequence<rum_core::Expr>,
@@ -286,7 +287,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeAssociationMapFromIndexS
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeSuspendedAssociationMapFromIndexSuspensionFrame {
     function: rum_core::Expr,
     keys: crate::associations::suspended_state::FrozenAssociationSequence<rum_core::Expr>,
@@ -328,7 +329,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeAssociationMapAssociationFromIndexSuspensionFrame {
     function: rum_core::Expr,
     items: crate::associations::suspended_state::FrozenAssociationSequence<rum_core::Expr>,
@@ -374,7 +375,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeSuspendedAssociationMapAssociationFromIndexSuspensionFrame {
     function: rum_core::Expr,
     items: crate::associations::suspended_state::FrozenAssociationSequence<rum_core::Expr>,

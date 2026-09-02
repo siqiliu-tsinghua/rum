@@ -1,4 +1,5 @@
 use rum_core::SharedArgs;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 use std::collections::HashMap;
 
@@ -581,7 +582,7 @@ fn empty_path_label(path: &str) -> &str {
     if path.is_empty() { "<root>" } else { path }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct EvalSchemaErrorsSuspensionFrame {
     args: rum_core::SharedArgs,
 }
@@ -602,7 +603,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for EvalSchemaErrorsSuspensionFram
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct EvalConformSchemaSuspensionFrame {
     args: rum_core::SharedArgs,
 }

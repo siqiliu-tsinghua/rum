@@ -137,7 +137,7 @@ impl Session {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvalMessageSuspensionFrame {
     symbol_name: std::sync::Arc<std::string::String>,
     tag: std::sync::Arc<std::string::String>,

@@ -23,3 +23,13 @@ impl crate::runtime::suspension::SuspensionFrame
         crate::runtime::suspension::FrameAction::complete(resumed)
     }
 }
+
+impl crate::runtime::suspension::FrameAbandon for EvaluateWithRandomStateRestoredSuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.restore_prng_state(self.saved);
+        crate::runtime::suspension::FrameAbandonAction::Discard
+    }
+}

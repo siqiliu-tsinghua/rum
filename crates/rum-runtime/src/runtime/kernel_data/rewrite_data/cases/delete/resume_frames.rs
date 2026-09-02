@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvalDeleteCasesSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
 }
@@ -28,7 +28,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalDeleteCasesSuspensionFr
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeDeleteCasesAfterTargetSuspensionFrame {
     pub(super) target: rum_core::Expr,
     pub(super) call_args: rum_core::SharedArgs,
@@ -56,7 +56,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeDeleteCasesAfterTarge
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeDeleteCasesAfterPatternSuspensionFrame {
     pub(super) target: rum_core::Expr,
     pub(super) pattern: rum_core::Expr,
@@ -123,7 +123,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareDeleteCasesFinali
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueDeleteCasesFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueDeleteCasesFrame {
@@ -186,7 +186,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueDeleteCasesFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishDeleteCasesAfterResolvedTraversalSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame
@@ -215,7 +215,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishDeleteCasesAtCurrentNodeSuspensionFrame {
     pub(super) depth: usize,
     pub(super) traversal: crate::runtime::CasesTraversalConfig,
@@ -265,7 +265,7 @@ impl crate::runtime::suspension::SuspensionFrame for FinishDeleteCasesAtCurrentN
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct DeleteCasesCallChildrenFromQueueSuspensionFrame1 {
     pub(super) deleted_before: usize,
     pub(super) subtree_start: usize,
@@ -298,7 +298,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct DeleteCasesCallChildrenFromQueueSuspensionFrame2 {
     pub(super) state: crate::runtime::kernel_data::rewrite_data::cases::delete::suspended_state::SuspendedDeleteCallChildren,
 }
@@ -324,7 +324,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct DeleteCasesAssociationChildrenFromQueueSuspensionFrame1 {
     pub(super) deleted_before: usize,
     pub(super) subtree_start: usize,
@@ -357,7 +357,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct DeleteCasesAssociationChildrenFromQueueSuspensionFrame2 {
     pub(super) state: crate::runtime::kernel_data::rewrite_data::cases::delete::suspended_state::SuspendedDeleteAssociationChildren,
 }
@@ -383,7 +383,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedDeleteCallChildrenSuspensionFrame1 {
     pub(super) added: usize,
 }
@@ -413,7 +413,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedDeleteCallChildrenSuspensionFrame2 {
     pub(super) state: crate::runtime::kernel_data::rewrite_data::cases::delete::suspended_state::SuspendedDeleteCallChildren,
 }
@@ -439,7 +439,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedDeleteAssociationChildrenSuspensionFrame1 {
     pub(super) added: usize,
 }
@@ -469,7 +469,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedDeleteAssociationChildrenSuspensionFrame2 {
     pub(super) state: crate::runtime::kernel_data::rewrite_data::cases::delete::suspended_state::SuspendedDeleteAssociationChildren,
 }

@@ -334,6 +334,13 @@ impl Session {
         }
     }
 
+    pub(in crate::runtime) fn abandon_abort_protect(&mut self, pending_checkpoint: usize) {
+        if self.abort_protect_depth > 0 {
+            self.abort_protect_depth -= 1;
+        }
+        self.abort_protect_pending = pending_checkpoint;
+    }
+
     fn invalid_check_abort_option_call(
         &mut self,
         args: &[Expr],

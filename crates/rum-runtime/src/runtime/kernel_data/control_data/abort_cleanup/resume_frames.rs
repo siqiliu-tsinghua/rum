@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvalCheckAbortSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
 }
@@ -56,6 +56,16 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
+impl crate::runtime::suspension::FrameAbandon for ResumeCheckAbortWithPropagationSuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.restore_abort_checkpoint(self.pending_checkpoint);
+        crate::runtime::suspension::FrameAbandonAction::Discard
+    }
+}
+
 #[derive(rum_derive::FrameRootTrace)]
 pub(super) struct EvalAbortProtectSuspensionFrame {
     pub(super) pending_checkpoint: usize,
@@ -71,6 +81,16 @@ impl crate::runtime::suspension::SuspensionFrame for EvalAbortProtectSuspensionF
         let mut pending_checkpoint = self.pending_checkpoint.clone();
         let resumed = (|| session.resume_abort_protect_after_body(pending_checkpoint, outcome))();
         crate::runtime::suspension::FrameAction::complete(resumed)
+    }
+}
+
+impl crate::runtime::suspension::FrameAbandon for EvalAbortProtectSuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.restore_abort_protect_scope(self.pending_checkpoint);
+        crate::runtime::suspension::FrameAbandonAction::Discard
     }
 }
 
@@ -95,6 +115,16 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeCheckAbortAfterPrimar
             session.resume_check_abort_after_fallback(propagate, true, pending_checkpoint, outcome)
         })();
         crate::runtime::suspension::FrameAction::complete(resumed)
+    }
+}
+
+impl crate::runtime::suspension::FrameAbandon for ResumeCheckAbortAfterPrimarySuspensionFrame1 {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.restore_abort_checkpoint(self.pending_checkpoint);
+        crate::runtime::suspension::FrameAbandonAction::Discard
     }
 }
 
@@ -127,5 +157,15 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeCheckAbortAfterPrimar
             )
         })();
         crate::runtime::suspension::FrameAction::complete(resumed)
+    }
+}
+
+impl crate::runtime::suspension::FrameAbandon for ResumeCheckAbortAfterPrimarySuspensionFrame2 {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.restore_abort_checkpoint(self.pending_checkpoint);
+        crate::runtime::suspension::FrameAbandonAction::Discard
     }
 }

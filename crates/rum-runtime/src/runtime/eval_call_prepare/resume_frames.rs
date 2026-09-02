@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame {
     pub(super) state: crate::runtime::eval_call_prepare::SuspendedCallArgumentPreparation,
     pub(super) allow_sequence_splice: bool,
@@ -31,7 +31,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedCallArgumentPreparationSuspensionFrame {
     pub(super) state: crate::runtime::eval_call_prepare::SuspendedCallArgumentPreparation,
     pub(super) allow_sequence_splice: bool,

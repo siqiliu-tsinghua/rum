@@ -31,3 +31,13 @@ impl crate::runtime::suspension::SuspensionFrame for EvalStructuredTraceCaptureE
         crate::runtime::suspension::FrameAction::complete(resumed)
     }
 }
+
+impl crate::runtime::suspension::FrameAbandon for EvalStructuredTraceCaptureExprSuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.restore_trace_capture(self.trace_checkpoint, self.prior_enabled);
+        crate::runtime::suspension::FrameAbandonAction::Discard
+    }
+}

@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeMapAtFromIndexSuspensionFrame {
     pub(super) state: crate::functional_ops::targeted_map::SuspendedMapAtEvalState,
     pub(super) index: usize,
@@ -30,7 +31,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeMapAtFromIndexSuspension
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedMapAtFromIndexSuspensionFrame {
     pub(super) state: crate::functional_ops::targeted_map::SuspendedMapAtEvalState,
     pub(super) index: usize,
@@ -59,7 +60,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSuspendedMapAtFromIndexS
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct FinishSubsetMapFromMappedSuspensionFrame;
 
 impl rum_runtime::kernel_api::SuspensionFrame for FinishSubsetMapFromMappedSuspensionFrame {
@@ -76,7 +77,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for FinishSubsetMapFromMappedSuspe
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct FinishSuspendedSubsetMapFromMappedSuspensionFrame;
 
 impl rum_runtime::kernel_api::SuspensionFrame
@@ -95,7 +96,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ApplySubsetMapSuspensionFrame {
     pub(super) suspended_state: crate::functional_ops::targeted_map::SuspendedSubsetMapEvalState,
 }

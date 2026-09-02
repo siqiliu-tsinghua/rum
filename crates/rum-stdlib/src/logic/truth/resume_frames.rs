@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeAndFromIndexSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) index: usize,
@@ -30,7 +31,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeAndFromIndexSuspensionFr
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedAndFromIndexSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) index: usize,
@@ -59,7 +60,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSuspendedAndFromIndexSus
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeOrFromIndexSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) index: usize,
@@ -88,7 +89,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeOrFromIndexSuspensionFra
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedOrFromIndexSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) index: usize,
@@ -117,7 +118,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSuspendedOrFromIndexSusp
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeNandFromIndexSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) index: usize,
@@ -146,7 +147,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeNandFromIndexSuspensionF
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedNandFromIndexSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) index: usize,
@@ -175,7 +176,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSuspendedNandFromIndexSu
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeNorFromIndexSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) index: usize,
@@ -204,7 +205,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeNorFromIndexSuspensionFr
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedNorFromIndexSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) index: usize,

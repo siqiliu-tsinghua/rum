@@ -1,5 +1,6 @@
 use rum_core::SharedArgs;
 use rum_core::{BigInt, Expr, Rational};
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{
     EvalError, Session, ToPrimitive, call_items_with_head, compare_expr_canonical,
     expr_as_exact_integer, expr_as_exact_rational, system_expr,
@@ -226,7 +227,7 @@ fn ceiling_div_non_negative(numerator: &BigInt, denominator: &BigInt) -> BigInt 
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct AveragePairSuspensionFrame;
 
 impl rum_runtime::kernel_api::SuspensionFrame for AveragePairSuspensionFrame {

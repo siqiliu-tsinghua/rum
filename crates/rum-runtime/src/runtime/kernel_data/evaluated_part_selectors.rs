@@ -156,7 +156,7 @@ impl Session {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct FinishEvaluatedPartSelectorsSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for FinishEvaluatedPartSelectorsSuspensionFrame {
@@ -173,7 +173,7 @@ impl crate::runtime::suspension::SuspensionFrame for FinishEvaluatedPartSelector
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct FinishPublishedEvaluatedPartSelectorsSuspensionFrame {
     completed: Arc<OnceLock<EvaluatedPartSelectors>>,
 }

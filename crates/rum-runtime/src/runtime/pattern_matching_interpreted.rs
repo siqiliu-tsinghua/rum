@@ -489,7 +489,7 @@ fn complete_interpreted_match_action(
     })
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct MatchNamedInterpretedFrame {
     name: Symbol,
     value: Expr,
@@ -513,7 +513,7 @@ impl SuspensionFrame for MatchNamedInterpretedFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct MatchConditionInterpretedFrame {
     condition: Expr,
 }
@@ -538,7 +538,7 @@ impl SuspensionFrame for MatchConditionInterpretedFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct MatchPatternTestInterpretedFrame {
     test: Expr,
     value: Expr,
@@ -569,7 +569,7 @@ impl SuspensionFrame for MatchPatternTestInterpretedFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct PrepareInterpretedExceptFrame {
     excluded: Expr,
     value: Expr,
@@ -637,7 +637,7 @@ fn decode_prepared_interpreted_except(
     (excluded, value, snapshot, outcome)
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ContinueInterpretedExceptFrame;
 
 impl SuspensionFrame for ContinueInterpretedExceptFrame {
@@ -654,7 +654,7 @@ impl SuspensionFrame for ContinueInterpretedExceptFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct FinishInterpretedExcludedFrame {
     snapshot: FrozenMatchBindings,
     accepted_bindings: FrozenMatchBindings,
@@ -694,7 +694,7 @@ impl PureFrameFinalizer for FinishInterpretedExcludedFinalizer {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct PrepareInterpretedCallFrame {
     args: SharedArgs,
     value_args: SharedArgs,
@@ -783,7 +783,7 @@ fn decode_prepared_interpreted_call(prepared: Expr) -> PreparedInterpretedCall {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ContinueInterpretedCallFrame {
     head: Expr,
 }
@@ -804,7 +804,7 @@ impl SuspensionFrame for ContinueInterpretedCallFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct PrepareInterpretedAlternativeFrame {
     alternatives: SharedArgs,
     value: Expr,
@@ -912,7 +912,7 @@ fn decode_prepared_interpreted_alternative(prepared: Expr) -> PreparedInterprete
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ContinueInterpretedAlternativeFrame;
 
 impl SuspensionFrame for ContinueInterpretedAlternativeFrame {
@@ -929,7 +929,7 @@ impl SuspensionFrame for ContinueInterpretedAlternativeFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct FinishInterpretedMatchFrame {
     snapshot: FrozenMatchBindings,
 }

@@ -400,7 +400,7 @@ const _: fn() = || {
     assert_traces::<SuspendedDownValueApplication>();
 };
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct TryApplyDownValuesFromSymbolSuspensionFrame<Scan> {
     pub(super) application:
         crate::runtime::definitions::application::down_values::SuspendedDownValueApplication,

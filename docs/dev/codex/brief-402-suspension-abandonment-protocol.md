@@ -285,3 +285,211 @@ the brief's cost premise is exceeded — stop and report instead of measuring.
    unchanged-leak probe.
 4. Ordinary-path cost statement.
 5. Stop-loss, risks, open questions — empty if none.
+
+---
+
+# Report — 2026-09-02
+
+## 1. Changes and classification counts
+
+Key changes:
+
+| Files and lines | Change |
+|---|---|
+| [rum-derive/src/lib.rs](crates/rum-derive/src/lib.rs:53), [derive tests](crates/rum-derive/tests/derive.rs:1) | Added and tested `PureFrameAbandon`, preserving generics and where clauses and rejecting unions. |
+| [suspension/core.rs](crates/rum-runtime/src/runtime/suspension/core.rs:11) | Added `AbandonReason`, restricted `AbandonmentContext`, closed `FrameAbandonAction`, mandatory `FrameAbandon`, generation tracking, private slot access, completed-resumption assertion, and iterative LIFO abandonment driver. |
+| [suspension.rs](crates/rum-runtime/src/runtime/suspension.rs:11), [kernel_api.rs](crates/rum-runtime/src/runtime/kernel_api.rs:106) | Re-exported protocol types and derive across the runtime/stdlib boundary. |
+| [model/session.rs](crates/rum-runtime/src/runtime/model/session.rs:108), [session_state.rs](crates/rum-runtime/src/runtime/session/session_state.rs:660) | Added generation and iterative-abandonment worklist state. |
+| [block.rs](crates/rum-runtime/src/runtime/scoping/lexical/block.rs:401), [block frames](crates/rum-runtime/src/runtime/scoping/lexical/block/resume_frames.rs:22), [module.rs](crates/rum-runtime/src/runtime/scoping/lexical/module.rs:306), [loop driver](crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/driver.rs:424) | Added structural scope-restoration helpers and handwritten frame abandonment. |
+| [evaluation_data.rs](crates/rum-runtime/src/runtime/debug_tools/evaluation_data.rs:242), [monitor.rs](crates/rum-runtime/src/runtime/debug_tools/monitor.rs:165), [reap.rs](crates/rum-runtime/src/runtime/debug_tools/reap.rs:398), [constraints.rs](crates/rum-runtime/src/runtime/debug_tools/resources/constraints.rs:356), [trace frames](crates/rum-runtime/src/runtime/debug_tools/trace/resume_frames.rs:34), [test-report capture](crates/rum-runtime/src/runtime/debug_tools/test_report/evaluation.rs:530) | Added capture/scope restoration without rendering, refreshing, fallbacks, or result synthesis. |
+| [check_quiet.rs](crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:197), [abort frames](crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:59), [cleanup.rs](crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs:170) | Added checkpoint restoration and the two-frame `WithCleanup` allowlist. |
+| [options/patterns.rs](crates/rum-runtime/src/runtime/options/patterns.rs:185), [iteration/mod.rs](crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/mod.rs:171), [random frame](crates/rum-runtime/src/runtime/session/session_api/resume_frames.rs:26), [package rollback](crates/rum-runtime/src/runtime/scoping/packages.rs:476) | Restored option scope, product budget, PRNG state, and partial package state. |
+| [frame_root_trace.rs](crates/rum-runtime/src/runtime/tests/frame_root_trace.rs:68), [derived inventory](crates/rum-runtime/src/runtime/tests/frame_root_trace/derived_inventory.rs:930) | Added exact pure/stateful inventories and closed-action/driver allowlist gates. |
+| [suspension_abandonment.rs](crates/rum-runtime/src/runtime/tests/suspension_abandonment.rs:1), [tests/mod.rs](crates/rum-runtime/src/runtime/tests/mod.rs:178) | Added 16 direct tests covering every stateful family and forbidden continuation effects. |
+
+The remaining changes across 120 runtime/stdlib frame-declaration files are mechanical `PureFrameAbandon` derives; stdlib files import the derive’s three protocol names through `kernel_api`. The exact 516 path/type rows are frozen in [derived_inventory.rs](crates/rum-runtime/src/runtime/tests/frame_root_trace/derived_inventory.rs:930).
+
+Counts:
+
+- Pure via derive: **516**
+- Handwritten stateful: **29**
+- Total: **545**
+
+The brief’s prose says 377, but the current tree—and brief-401’s own pre-task invariant output—contains 545. The implementation classified the full current inventory: `516 + 29 = 545`.
+
+## 2. Stateful restoration inventory
+
+| Family | Abandonment primitive | Normal cleanup mirrored |
+|---|---|---|
+| `Block` | `restore_single_block_scope` / `restore_block_scope` | `finish_single_symbol_block_scope` and `finish_block_scope` in [block.rs](crates/rum-runtime/src/runtime/scoping/lexical/block.rs:401) |
+| `Module` | `finish_module_activation` → `finish_module_scope(depth, Err(Cancelled))` | [finish_module_scope](crates/rum-runtime/src/runtime/scoping/lexical/module.rs:306) |
+| Loop iterators | Full symbol restore or dynamic-scope truncate/clear | [loop cleanup](crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/driver.rs:424) |
+| `OptionValue` | Pop `option_value_scopes` | Normal pops in [patterns.rs](crates/rum-runtime/src/runtime/options/patterns.rs:11) |
+| `Reap` | Pop/discard `reap_scopes` | [resume_reap_after_body](crates/rum-runtime/src/runtime/debug_tools/reap.rs:84) |
+| `Monitor` | Pop `monitor_scopes`, no refresh | [finish_monitor](crates/rum-runtime/src/runtime/debug_tools/monitor.rs:80) |
+| Constraints | Restore prior deadline/limit | [constraint finishers](crates/rum-runtime/src/runtime/debug_tools/resources/constraints.rs:225) |
+| Trace | `abandon_trace_capture` | Error restoration in [trace.rs](crates/rum-runtime/src/runtime/debug_tools/trace.rs:209) |
+| `EvaluationData` | Restore tracing; truncate trace/message/print/error suffixes | [finish_evaluation_data_capture](crates/rum-runtime/src/runtime/debug_tools/evaluation_data.rs:56) |
+| `Check` / `Quiet` | Restore message and handled-error checkpoints | [check/quiet finishers](crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:91) |
+| `TestReport` | Restore stream-capture checkpoints | [finish_eval_expr_with_stream_capture](crates/rum-runtime/src/runtime/debug_tools/test_report/evaluation.rs:279) |
+| `AbortProtect` / `CheckAbort` | Restore depth and exact pending-abort checkpoint | [abort cleanup](crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup.rs:271) |
+| Iteration product | Restore parent `(budget, consumer)` pair | [with_iteration_product_scope](crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/mod.rs:12) |
+| `BlockRandom` | Restore saved `PrngState` | [evaluate_with_random_state_restored](crates/rum-runtime/src/runtime/session/session_api.rs:575) |
+| Package install | Non-reporting `rollback_package_install` | Normal failure now calls the same rollback in [packages.rs](crates/rum-runtime/src/runtime/scoping/packages.rs:476) |
+| `WithCleanup` | Allowlisted `EvaluateCleanup` action | [resume_with_cleanup_after_primary](crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs:80) |
+
+## 3. Verification
+
+All mandatory commands exited 0.
+
+```text
+scripts/run-bounded.py --timeout 300 -- cargo fmt --check
+```
+
+No output.
+
+```text
+scripts/run-bounded.py --timeout 1500 -- cargo test --offline -p rum-runtime
+```
+
+```text
+test result: ok. 919 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 3.17s
+```
+
+```text
+scripts/run-bounded.py --timeout 2400 -- cargo test --offline --workspace
+```
+
+Exited 0. Notable verbatim summaries include:
+
+```text
+test result: ok. 919 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out
+test result: ok. 828 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out
+test result: ok. 189 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+```
+
+The only warnings were the three pre-existing unused test-builtin helpers.
+
+Invariant output:
+
+```text
+named_suspension_frames=545
+named_pure_finalizers=60
+pure_frame_abandon_derives=516
+handwritten_stateful_frame_abandons=29
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/evaluation_data.rs:EvalEvaluationDataSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/monitor.rs:EvalMonitorSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/reap.rs:EvalReapSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/resources/constraints.rs:ResumeMemoryConstrainedWithLimitSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/resources/constraints.rs:ResumeTimeConstrainedWithLimitSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/test_report/evaluation.rs:EvalExprWithStreamCaptureSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/trace/resume_frames.rs:EvalStructuredTraceCaptureExprSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:EvalAbortProtectSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:ResumeCheckAbortAfterPrimarySuspensionFrame1
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:ResumeCheckAbortAfterPrimarySuspensionFrame2
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:ResumeCheckAbortWithPropagationSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/driver/resume_frames.rs:EvaluateLoopIteratorBodySuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/driver/resume_frames.rs:EvaluateLoopIteratorBodyWithDynamicValueSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/mod.rs:WithIterationProductScopeSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:EvalCheckSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:EvalQuietSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs:DriveWithCleanupPrimarySuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs:EvalWithCleanupSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/options/patterns.rs:EvaluateWithOptionValueScopeSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/block/resume_frames.rs:EvalSingleSymbolBlockSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/block/resume_frames.rs:ResumeBlockBodySuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/block/resume_frames.rs:ResumeBlockInitializersSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/block/resume_frames.rs:ResumeSingleSymbolBlockBodySuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/module.rs:ResumeModuleInitializersSuspensionFrame1
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/module.rs:ResumeModuleInitializersSuspensionFrame2
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/module.rs:ResumeSuspendedModuleInitializersSuspensionFrame1
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/module.rs:ResumeSuspendedModuleInitializersSuspensionFrame2
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/packages/resume_frames.rs:ResumePackageInstallSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/session/session_api/resume_frames.rs:EvaluateWithRandomStateRestoredSuspensionFrame
+evaluate_cleanup_allowlist=WithCleanup owner frames (2)
+legacy_api_hits=0 direct_queue_mutation_hits=0 ownership_hits=0
+test runtime::tests::frame_root_trace::suspension_protocol_repository_invariants_hold ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 920 filtered out; finished in 0.43s
+```
+
+Repository compile-enforcement proof after temporarily removing the derive from `EvalUpdateAttributesSuspensionFrame`, then restoring it:
+
+```text
+error[E0277]: the trait bound `EvalUpdateAttributesSuspensionFrame: suspension::core::FrameAbandon` is not satisfied
+   --> crates/rum-runtime/src/runtime/attributes.rs:234:54
+    |
+234 | impl crate::runtime::suspension::SuspensionFrame for EvalUpdateAttributesSuspensionFrame {
+    |                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `suspension::core::FrameAbandon` is not implemented for `EvalUpdateAttributesSuspensionFrame`
+    |
+note: required by a bound in `suspension::core::SuspensionFrame`
+   --> crates/rum-runtime/src/runtime/suspension/core.rs:68:45
+    |
+68  | pub trait SuspensionFrame: FrameRootTrace + FrameAbandon + Send + Sync + 'static {
+    |                                             ^^^^^^^^^^^^ required by this bound in `SuspensionFrame`
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `rum-runtime` (lib) due to 1 previous error
+```
+
+External `/tmp` crate-edge proof:
+
+```text
+error[E0277]: the trait bound `ExternalFrame: FrameAbandon` is not satisfied
+  --> src/main.rs:14:26
+   |
+14 | impl SuspensionFrame for ExternalFrame {
+   |                          ^^^^^^^^^^^^^ the trait `FrameAbandon` is not implemented for `ExternalFrame`
+   |
+note: required by a bound in `SuspensionFrame`
+  --> crates/rum-runtime/src/runtime/suspension/core.rs:68:45
+   |
+68 | pub trait SuspensionFrame: FrameRootTrace + FrameAbandon + Send + Sync + 'static {
+   |                                             ^^^^^^^^^^^^ required by this bound in `SuspensionFrame`
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `rum-brief402-edge` (bin "rum-brief402-edge") due to 1 previous error
+```
+
+Unchanged public `rum-host` leak probe:
+
+```text
+queue.block.setup=Success(value="outside")
+queue.block.suspend=InputRequired(prompt="old")
+queue.block.drain=Success(value="drain")
+queue.block.after=Success(value="inside")
+```
+
+Both `/tmp` crates were removed afterward.
+
+## 4. Ordinary-path cost
+
+No ordinary evaluator, dispatcher, matcher, expression construction, or drop path gained an allocation, lock, or branch. Pure classifications are compile-time-only; generation work occurs only when an input suspension is installed; the abandonment driver is unreachable from production until brief-403.
+
+`size_of::<Arc<DynSuspensionFrame>>()` remains the suspension accounting unit at [core.rs:175](crates/rum-runtime/src/runtime/suspension/core.rs:175). No timing A/B was required by the brief.
+
+## 5. Stop-loss, risks, and open questions
+
+No stop-loss triggered and no new functional question remains. The legacy raw-clear API and broadly visible pending storage deliberately remain so the forbidden brief-403 callers continue compiling and leaking; new resume/abandon ownership uses the private slot capability.
+
+No `unsafe`, dependency-edge, manifest, lockfile, host, Jupyter, public-doc, or production caller change was made. The pre-existing `.claude`/`scripts` worktree changes were preserved, and no commit, branch, stash, checkout, or git-config operation was performed.
+
+---
+
+## Director's correction to this brief's prose
+
+The brief says 377 frames across 115 files. That was my undercount, not the
+worker's: `git grep -c "SuspensionFrame for"` misses every impl header that
+wraps as
+
+```rust
+impl crate::runtime::suspension::SuspensionFrame
+    for EvalFooSuspensionFrame
+```
+
+A cross-line regex over the same committed tree returns 546, and the enforced
+invariant reports 545 named frames. The design argument the brief makes is
+unaffected — it gets stronger with the larger number — but the figure was
+wrong and the worker was right to say so against the enforced inventory.
+Standing rule, restated: prefer a count some test enforces over one a grep
+produces, and cross-check any script-derived count before relying on it.

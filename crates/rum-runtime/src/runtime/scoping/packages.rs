@@ -45,7 +45,7 @@ pub(in crate::runtime) struct SourceUnit {
 }
 
 #[derive(Clone, FrameRootTrace)]
-struct PackageInstallPlan {
+pub(in crate::runtime) struct PackageInstallPlan {
     forms: Vec<Expr>,
     source_unit: SourceUnit,
     minted_sealed: Vec<Symbol>,
@@ -474,6 +474,20 @@ impl Session {
     }
 
     fn fail_package_install(&mut self, plan: &PackageInstallPlan, error: EvalError) -> Expr {
+        self.rollback_package_install(plan);
+
+        self.push_message(
+            "DefinePackage",
+            "failed",
+            format!(
+                "Registration of {} failed while evaluating its body: {error}",
+                plan.source_unit.package_context
+            ),
+        );
+        system_expr("$Failed")
+    }
+
+    pub(in crate::runtime) fn rollback_package_install(&mut self, plan: &PackageInstallPlan) {
         for symbol in &plan.minted_sealed {
             self.clear_symbol_state(symbol, true, true, true, true, true);
         }
@@ -485,16 +499,6 @@ impl Session {
         {
             self.sealed_units.remove(index);
         }
-
-        self.push_message(
-            "DefinePackage",
-            "failed",
-            format!(
-                "Registration of {} failed while evaluating its body: {error}",
-                plan.source_unit.package_context
-            ),
-        );
-        system_expr("$Failed")
     }
 
     fn package_declaration_failure(&mut self, detail: &str) -> Expr {

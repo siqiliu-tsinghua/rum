@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct PlanGuardedReplacePartTargetsOwnedSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::structure_data::replace::guarded::SuspendedGuardedReplacePartPlanning,
 }
@@ -23,7 +23,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct MatchGuardedReplacePartPatternTargetsOwnedSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::structure_data::replace::guarded::SuspendedGuardedReplacePartPatternMatch,
 }
@@ -47,7 +47,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct SelectGuardedReplacePartTargetsOwnedSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::structure_data::replace::guarded::SuspendedGuardedReplacePartSelection,
 }
@@ -71,7 +71,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct PlanGuardedReplacePartTargetsSuspendedSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::structure_data::replace::guarded::SuspendedGuardedReplacePartPlanning,
 }
@@ -93,7 +93,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct MatchGuardedReplacePartPatternTargetsSuspendedSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::structure_data::replace::guarded::SuspendedGuardedReplacePartPatternMatch,
 }
@@ -117,7 +117,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct SelectGuardedReplacePartTargetsSuspendedSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::structure_data::replace::guarded::SuspendedGuardedReplacePartSelection,
 }

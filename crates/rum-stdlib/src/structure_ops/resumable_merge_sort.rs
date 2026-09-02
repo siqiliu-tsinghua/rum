@@ -1,3 +1,4 @@
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use std::sync::Arc;
 
 use rum_core::Expr;
@@ -311,7 +312,7 @@ where
     }
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct MergeSortComparisonFrame<T: FrameRootTrace, C: FrameRootTrace> {
     state: MergeSortState<T, C>,
 }

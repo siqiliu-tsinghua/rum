@@ -269,7 +269,7 @@ fn own_value_read(value: &Option<Expr>, guards: &Option<Box<[Expr]>>) -> Option<
     })
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvaluateStoredOwnValueSuspensionFrame {
     symbol: rum_core::Symbol,
     body: rum_core::Expr,

@@ -395,7 +395,17 @@ impl crate::runtime::suspension::SuspensionFrame for EvalReapSuspensionFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+impl crate::runtime::suspension::FrameAbandon for EvalReapSuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.pop_reap_scope();
+        crate::runtime::suspension::FrameAbandonAction::Discard
+    }
+}
+
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeReapAfterBodySuspensionFrame {
     suspended_value: rum_core::Expr,
 }
@@ -416,7 +426,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeReapAfterBodySuspensi
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeReapScopeGroupsFromIndexSuspensionFrame {
     suspended: crate::runtime::debug_tools::reap_state::SuspendedReapScopeRender,
 }
@@ -439,7 +449,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeReapScopeGroupsFromIn
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeSuspendedReapScopeGroupsSuspensionFrame {
     state: crate::runtime::debug_tools::reap_state::SuspendedReapScopeRender,
 }
@@ -460,7 +470,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeSuspendedReapScopeGro
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeReapBucketsFromIndexSuspensionFrame {
     suspended: crate::runtime::debug_tools::reap_state::SuspendedReapBucketRender,
 }
@@ -481,7 +491,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeReapBucketsFromIndexS
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeSuspendedReapBucketsSuspensionFrame {
     state: crate::runtime::debug_tools::reap_state::SuspendedReapBucketRender,
 }

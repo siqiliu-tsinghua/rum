@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeDuplicateFreeSameTestSuspensionFrame {
     pub(super) state: crate::predicates::collections::SuspendedDuplicateFreeSameTestState,
 }
@@ -24,7 +25,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeDuplicateFreeSameTestSus
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedDuplicateFreeSameTestSuspensionFrame {
     pub(super) state: crate::predicates::collections::SuspendedDuplicateFreeSameTestState,
 }
@@ -49,7 +50,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSameTestMatrixSuspensionFrame {
     pub(super) state: crate::predicates::collections::SuspendedSameTestMatrixState,
 }
@@ -70,7 +71,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSameTestMatrixSuspension
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedSameTestMatrixSuspensionFrame {
     pub(super) state: crate::predicates::collections::SuspendedSameTestMatrixState,
 }

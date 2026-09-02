@@ -251,7 +251,7 @@ const _: fn() = || {
     assert_traces::<SuspendedIterationAggregate>();
 };
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeIterationAggregateAfterSpecEvalSuspensionFrame {
     pub(super) aggregate: crate::runtime::kernel_data::control_data::branching_loops::iteration_aggregate::IterationAggregate,
     pub(super) args: rum_core::SharedArgs,
@@ -283,7 +283,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeIterationAggregateIterationsSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::control_data::branching_loops::iteration_aggregate::SuspendedIterationAggregate,
 }
@@ -304,7 +304,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeSuspendedIterationAggregateSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::control_data::branching_loops::iteration_aggregate::SuspendedIterationAggregate,
 }

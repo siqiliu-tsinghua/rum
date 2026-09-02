@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeAssociationKeyEvaluationSuspensionFrame {
     pub(super) entries: crate::associations::suspended_state::FrozenAssociationSequence<
         rum_runtime::kernel_api::AssociationEntryForm,
@@ -45,7 +46,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeAssociationKeyEvaluation
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedAssociationKeyEvaluationSuspensionFrame {
     pub(super) entries: crate::associations::suspended_state::FrozenAssociationSequence<
         rum_runtime::kernel_api::AssociationEntryForm,
@@ -91,7 +92,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct EvalLookupSuspensionFrame {
     pub(super) head: rum_core::Expr,
     pub(super) key: rum_core::Expr,
@@ -118,7 +119,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for EvalLookupSuspensionFrame {
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct EvalLookupWithEvaluatedDataSuspensionFrame {
     pub(super) head: rum_core::Expr,
     pub(super) expr: rum_core::Expr,
@@ -145,7 +146,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for EvalLookupWithEvaluatedDataSus
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct FinishEvalLookupSuspensionFrame {
     pub(super) lookup: crate::associations::suspended_state::FrozenAssociationValue<
         crate::associations::basic::PreparedLookup,
@@ -173,7 +174,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for FinishEvalLookupSuspensionFram
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct FinishPreparedLookupSuspensionFrame {
     pub(super) lookup: crate::associations::suspended_state::FrozenAssociationValue<
         crate::associations::basic::PreparedLookup,
@@ -204,7 +205,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for FinishPreparedLookupSuspension
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct FinishSuspendedPreparedLookupSuspensionFrame {
     pub(super) lookup: crate::associations::suspended_state::FrozenAssociationValue<
         crate::associations::basic::PreparedLookup,

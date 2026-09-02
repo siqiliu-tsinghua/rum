@@ -153,7 +153,7 @@ fn assert_failure_messages(test: &Expr, assert_args: &[Expr]) -> Vec<(&'static s
     }]
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvalAssertSuspensionFrame {
     test: std::option::Option<rum_core::Expr>,
     args: rum_core::SharedArgs,
@@ -177,7 +177,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalAssertSuspensionFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeAssertAfterFunctionSuspensionFrame {
     test: rum_core::Expr,
     assert_args: rum_core::SharedArgs,
@@ -202,7 +202,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeAssertAfterFunctionSu
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct FinishAssertFunctionSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for FinishAssertFunctionSuspensionFrame {

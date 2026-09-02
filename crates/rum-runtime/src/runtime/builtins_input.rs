@@ -442,7 +442,7 @@ fn expr_as_nonnegative_duration(expr: &Expr) -> Option<Duration> {
     Duration::try_from_secs_f64(seconds).ok()
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvalDialogSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for EvalDialogSuspensionFrame {
@@ -456,7 +456,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalDialogSuspensionFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvalInputSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for EvalInputSuspensionFrame {
@@ -473,7 +473,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalInputSuspensionFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeInputAfterTextSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ResumeInputAfterTextSuspensionFrame {

@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvalRestoreSealedReferencesSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for EvalRestoreSealedReferencesSuspensionFrame {
@@ -46,6 +46,16 @@ impl crate::runtime::suspension::SuspensionFrame for ResumePackageInstallSuspens
     }
 }
 
+impl crate::runtime::suspension::FrameAbandon for ResumePackageInstallSuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.rollback_package_install(self.state.plan.as_ref());
+        crate::runtime::suspension::FrameAbandonAction::Discard
+    }
+}
+
 struct PreparePackageInstallFinalizer {
     state: SuspendedPackageInstall,
 }
@@ -58,7 +68,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PreparePackageInstallFin
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinuePackageInstallFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinuePackageInstallFrame {

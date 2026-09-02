@@ -1,5 +1,6 @@
 use rum_core::SharedArgs;
 use rum_core::{BigInt, Expr};
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{
     ArithmeticDataBuiltin, EvalError, Session, call_items_with_head, system_expr,
 };
@@ -268,7 +269,7 @@ pub(crate) fn eval_min_max(
     dispatch(session, ArithmeticDataBuiltin::MinMax, head, args)
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct EvalMeanSuspensionFrame;
 
 impl rum_runtime::kernel_api::SuspensionFrame for EvalMeanSuspensionFrame {

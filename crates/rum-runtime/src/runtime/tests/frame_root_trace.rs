@@ -65,7 +65,39 @@ struct GenericRoots<T, const N: usize> {
 }
 
 mod derived_inventory;
-use derived_inventory::DERIVED_FRAME_ROOT_TRACE_TYPES;
+use derived_inventory::{DERIVED_FRAME_ROOT_TRACE_TYPES, PURE_FRAME_ABANDON_TYPES};
+
+const STATEFUL_FRAME_ABANDON_TYPES: &[&str] = &[
+    "crates/rum-runtime/src/runtime/debug_tools/evaluation_data.rs:EvalEvaluationDataSuspensionFrame",
+    "crates/rum-runtime/src/runtime/debug_tools/monitor.rs:EvalMonitorSuspensionFrame",
+    "crates/rum-runtime/src/runtime/debug_tools/reap.rs:EvalReapSuspensionFrame",
+    "crates/rum-runtime/src/runtime/debug_tools/resources/constraints.rs:ResumeMemoryConstrainedWithLimitSuspensionFrame",
+    "crates/rum-runtime/src/runtime/debug_tools/resources/constraints.rs:ResumeTimeConstrainedWithLimitSuspensionFrame",
+    "crates/rum-runtime/src/runtime/debug_tools/test_report/evaluation.rs:EvalExprWithStreamCaptureSuspensionFrame",
+    "crates/rum-runtime/src/runtime/debug_tools/trace/resume_frames.rs:EvalStructuredTraceCaptureExprSuspensionFrame",
+    "crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:EvalAbortProtectSuspensionFrame",
+    "crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:ResumeCheckAbortAfterPrimarySuspensionFrame1",
+    "crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:ResumeCheckAbortAfterPrimarySuspensionFrame2",
+    "crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:ResumeCheckAbortWithPropagationSuspensionFrame",
+    "crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/driver/resume_frames.rs:EvaluateLoopIteratorBodySuspensionFrame",
+    "crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/driver/resume_frames.rs:EvaluateLoopIteratorBodyWithDynamicValueSuspensionFrame",
+    "crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/mod.rs:WithIterationProductScopeSuspensionFrame",
+    "crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:EvalCheckSuspensionFrame",
+    "crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:EvalQuietSuspensionFrame",
+    "crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs:DriveWithCleanupPrimarySuspensionFrame",
+    "crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs:EvalWithCleanupSuspensionFrame",
+    "crates/rum-runtime/src/runtime/options/patterns.rs:EvaluateWithOptionValueScopeSuspensionFrame",
+    "crates/rum-runtime/src/runtime/scoping/lexical/block/resume_frames.rs:EvalSingleSymbolBlockSuspensionFrame",
+    "crates/rum-runtime/src/runtime/scoping/lexical/block/resume_frames.rs:ResumeBlockBodySuspensionFrame",
+    "crates/rum-runtime/src/runtime/scoping/lexical/block/resume_frames.rs:ResumeBlockInitializersSuspensionFrame",
+    "crates/rum-runtime/src/runtime/scoping/lexical/block/resume_frames.rs:ResumeSingleSymbolBlockBodySuspensionFrame",
+    "crates/rum-runtime/src/runtime/scoping/lexical/module.rs:ResumeModuleInitializersSuspensionFrame1",
+    "crates/rum-runtime/src/runtime/scoping/lexical/module.rs:ResumeModuleInitializersSuspensionFrame2",
+    "crates/rum-runtime/src/runtime/scoping/lexical/module.rs:ResumeSuspendedModuleInitializersSuspensionFrame1",
+    "crates/rum-runtime/src/runtime/scoping/lexical/module.rs:ResumeSuspendedModuleInitializersSuspensionFrame2",
+    "crates/rum-runtime/src/runtime/scoping/packages/resume_frames.rs:ResumePackageInstallSuspensionFrame",
+    "crates/rum-runtime/src/runtime/session/session_api/resume_frames.rs:EvaluateWithRandomStateRestoredSuspensionFrame",
+];
 
 #[test]
 fn expr_is_one_whole_root_and_bare_symbol_is_an_independent_root() {
@@ -345,6 +377,8 @@ fn suspension_protocol_repository_invariants_hold() {
     collect_rust_sources(&workspace.join("crates/rum-stdlib/src"), &mut files);
 
     let core_path = workspace.join("crates/rum-runtime/src/runtime/suspension/core.rs");
+    let cleanup_path =
+        workspace.join("crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs");
     let banned_legacy_names = [
         "ClosureFrame",
         "suspend_with_frame",
@@ -370,6 +404,8 @@ fn suspension_protocol_repository_invariants_hold() {
     ];
     let mut frame_count = 0usize;
     let mut finalizer_count = 0usize;
+    let mut pure_abandon_frames = Vec::new();
+    let mut stateful_abandon_frames = Vec::new();
     let mut ownership_violations = Vec::new();
 
     for path in &files {
@@ -396,6 +432,27 @@ fn suspension_protocol_repository_invariants_hold() {
                 "named frames must be inserted only through the data-only macro in {}",
                 path.display()
             );
+            assert!(
+                !compact.contains("FrameAbandonAction::EvaluateCleanup("),
+                "EvaluateCleanup capability payload escaped core in {}",
+                path.display()
+            );
+        }
+        let cleanup_constructor_hits = compact
+            .matches("FrameAbandonAction::evaluate_cleanup(")
+            .count();
+        if path == &cleanup_path {
+            assert_eq!(
+                cleanup_constructor_hits, 2,
+                "only the two WithCleanup owner frames may request cleanup evaluation"
+            );
+        } else {
+            assert_eq!(
+                cleanup_constructor_hits,
+                0,
+                "cleanup evaluation construction escaped the WithCleanup allowlist in {}",
+                path.display()
+            );
         }
 
         for block in trait_impl_blocks(&source, "SuspensionFrame") {
@@ -411,12 +468,45 @@ fn suspension_protocol_repository_invariants_hold() {
                     path.display()
                 )
             });
-            let derive_start = declaration_offset.saturating_sub(300);
+            let derive_start = source[..declaration_offset]
+                .rfind("#[derive(")
+                .expect("named suspension frames should have a derive attribute");
+            let derive_end = source[derive_start..declaration_offset]
+                .find(")]")
+                .map(|offset| derive_start + offset + 2)
+                .expect("frame derive attribute should close before its declaration");
+            let derive = &source[derive_start..derive_end];
             assert!(
-                source[derive_start..declaration_offset].contains("FrameRootTrace"),
+                derive.contains("FrameRootTrace"),
                 "SuspensionFrame {type_name} must derive FrameRootTrace in {}",
                 path.display()
             );
+            let relative_path = path
+                .strip_prefix(workspace)
+                .expect("suspension frame path should be inside the workspace")
+                .display()
+                .to_string()
+                .replace('\\', "/");
+            let inventory_row = format!("{relative_path}:{type_name}");
+            let manual_abandon =
+                trait_impl_blocks(&source, "FrameAbandon")
+                    .iter()
+                    .any(|implementation| {
+                        implemented_type_name(implementation.header, "FrameAbandon") == type_name
+                    });
+            if derive.contains("PureFrameAbandon") {
+                assert!(
+                    !manual_abandon,
+                    "pure frame {inventory_row} must not also hand-write FrameAbandon"
+                );
+                pure_abandon_frames.push(inventory_row);
+            } else {
+                assert!(
+                    manual_abandon,
+                    "stateful frame {inventory_row} must hand-write FrameAbandon"
+                );
+                stateful_abandon_frames.push(inventory_row);
+            }
             let body = declared_struct_body(&source, declaration_offset)
                 .expect("named frame declarations should have a body or be unit structs");
             for owned in directly_owned_frame_fields(body) {
@@ -484,7 +574,10 @@ fn suspension_protocol_repository_invariants_hold() {
         "the suspension protocol must not contain a runtime closure factory"
     );
     assert!(compact_core.contains(
-        "pubtraitSuspensionFrame:FrameRootTrace+Send+Sync+'static{fnresume(self:Arc<Self>,session:&mutSession,outcome:Result<Expr,EvalError>,)->FrameAction;"
+        "pubtraitSuspensionFrame:FrameRootTrace+FrameAbandon+Send+Sync+'static{fnresume(self:Arc<Self>,session:&mutSession,outcome:Result<Expr,EvalError>,)->FrameAction;"
+    ));
+    assert!(compact_core.contains(
+        "pubtraitFrameAbandon{fnabandon(self:Arc<Self>,context:&mutAbandonmentContext<'_>)->FrameAbandonAction;"
     ));
     assert!(compact_core.contains(
         "pubtraitPureFrameFinalizer:Send+'static{fnfinish(self:Box<Self>)->Result<Expr,EvalError>;"
@@ -502,6 +595,19 @@ fn suspension_protocol_repository_invariants_hold() {
         &compact_core[action_open + 1..action_close],
         "Complete(Result<Expr,EvalError>),Evaluate{expr:Expr,next_frame:Arc<DynSuspensionFrame>,},Finalize(Box<dynPureFrameFinalizer>),"
     );
+    let abandon_action_declaration = compact_core
+        .find("pubenumFrameAbandonAction{")
+        .expect("the abandonment transition protocol should be a closed enum");
+    let abandon_action_open = abandon_action_declaration
+        + compact_core[abandon_action_declaration..]
+            .find('{')
+            .expect("FrameAbandonAction should have a body");
+    let abandon_action_close = matching_brace(&compact_core, abandon_action_open)
+        .expect("FrameAbandonAction should have a closed body");
+    assert_eq!(
+        &compact_core[abandon_action_open + 1..abandon_action_close],
+        "Discard,EvaluateCleanup(AbandonCleanup),"
+    );
     let resume_index = compact_core
         .find("letaction=dispatch_frame.resume(self,outcome);")
         .expect("driver should invoke the still-rooted front frame");
@@ -515,15 +621,76 @@ fn suspension_protocol_repository_invariants_hold() {
         .expect("driver should invoke pure finalizers");
     assert!(resume_index < drop_index && drop_index < finalize_index);
 
+    let abandon_driver = compact_core
+        .find("fnabandon_pending_suspension(")
+        .expect("the closed abandonment driver should exist");
+    let abandon_driver_open = abandon_driver
+        + compact_core[abandon_driver..]
+            .find('{')
+            .expect("abandonment driver should have a body");
+    let abandon_driver_close = matching_brace(&compact_core, abandon_driver_open)
+        .expect("abandonment driver should have a closed body");
+    let abandon_driver_body = &compact_core[abandon_driver_open + 1..abandon_driver_close];
+    assert!(abandon_driver_body.contains("frame.abandon("));
+    assert!(
+        !abandon_driver_body.contains(".resume("),
+        "abandonment must never invoke ordinary frame resumption"
+    );
+
+    pure_abandon_frames.sort();
+    stateful_abandon_frames.sort();
+    assert!(
+        PURE_FRAME_ABANDON_TYPES
+            .windows(2)
+            .all(|entries| entries[0] < entries[1]),
+        "the pure abandonment inventory must stay sorted"
+    );
+    assert!(
+        STATEFUL_FRAME_ABANDON_TYPES
+            .windows(2)
+            .all(|entries| entries[0] < entries[1]),
+        "the stateful abandonment inventory must stay sorted"
+    );
+    assert_eq!(
+        pure_abandon_frames,
+        PURE_FRAME_ABANDON_TYPES
+            .iter()
+            .map(|entry| (*entry).to_string())
+            .collect::<Vec<_>>()
+    );
+    assert_eq!(
+        stateful_abandon_frames,
+        STATEFUL_FRAME_ABANDON_TYPES
+            .iter()
+            .map(|entry| (*entry).to_string())
+            .collect::<Vec<_>>()
+    );
+
     println!("named_suspension_frames={frame_count}");
     println!("named_pure_finalizers={finalizer_count}");
+    println!(
+        "pure_frame_abandon_derives={}",
+        PURE_FRAME_ABANDON_TYPES.len()
+    );
+    println!(
+        "handwritten_stateful_frame_abandons={}",
+        STATEFUL_FRAME_ABANDON_TYPES.len()
+    );
+    for entry in STATEFUL_FRAME_ABANDON_TYPES {
+        println!("stateful_frame_abandon={entry}");
+    }
+    println!("evaluate_cleanup_allowlist=WithCleanup owner frames (2)");
     assert!(
         ownership_violations.is_empty(),
         "suspension ownership violations:\n{}",
         ownership_violations.join("\n")
     );
     println!("legacy_api_hits=0 direct_queue_mutation_hits=0 ownership_hits=0");
-    assert!(frame_count > 367);
+    assert_eq!(frame_count, 545);
+    assert_eq!(
+        frame_count,
+        PURE_FRAME_ABANDON_TYPES.len() + STATEFUL_FRAME_ABANDON_TYPES.len()
+    );
     assert!(finalizer_count > 0);
 }
 
@@ -542,7 +709,8 @@ fn trait_impl_blocks<'a>(source: &'a str, trait_name: &str) -> Vec<TraitImplBloc
         };
         let open = impl_offset + relative_open;
         let header = &source[impl_offset..open];
-        if !header.contains(trait_name) || !header.contains(" for ") {
+        let compact_header = remove_ascii_whitespace(header);
+        if !compact_header.contains(&format!("{trait_name}for")) {
             cursor = open + 1;
             continue;
         }

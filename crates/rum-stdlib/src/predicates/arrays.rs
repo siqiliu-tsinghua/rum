@@ -1,5 +1,6 @@
 use super::*;
 use rum_core::SharedArgs;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
 #[derive(Debug, PartialEq, Eq, FrameRootTrace)]
@@ -260,7 +261,7 @@ const _: fn() = || {
     assert_traces::<SuspendedArrayLeafTestState>();
 };
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct EvalArrayQSuspensionFrame {
     leaf_test: std::option::Option<crate::predicates::arrays::SuspendedArrayLeafTestState>,
 }
@@ -281,7 +282,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for EvalArrayQSuspensionFrame {
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeArrayLeafTestFromIndexSuspensionFrame {
     state: crate::predicates::arrays::SuspendedArrayLeafTestState,
 }
@@ -302,7 +303,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeArrayLeafTestFromIndexSu
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeSuspendedArrayLeafTestFromIndexSuspensionFrame {
     state: crate::predicates::arrays::SuspendedArrayLeafTestState,
 }

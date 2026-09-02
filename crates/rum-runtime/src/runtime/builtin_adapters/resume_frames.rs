@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct BuiltinEvaluateSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for BuiltinEvaluateSuspensionFrame {

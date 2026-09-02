@@ -1,4 +1,5 @@
 use rum_core::SharedArgs;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 use std::cmp::Ordering;
 use std::collections::HashSet;
@@ -304,7 +305,7 @@ const _: fn() = || {
     assert_traces::<SuspendedSelectPositionsState>();
 };
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeSelectPositionsFromIndexSuspensionFrame {
     suspended: crate::structure_ops::list_lookup::SuspendedSelectPositionsState,
     state_index: usize,
@@ -339,7 +340,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSelectPositionsFromIndex
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeSuspendedSelectPositionsFromIndexSuspensionFrame {
     state: crate::structure_ops::list_lookup::SuspendedSelectPositionsState,
     index: usize,

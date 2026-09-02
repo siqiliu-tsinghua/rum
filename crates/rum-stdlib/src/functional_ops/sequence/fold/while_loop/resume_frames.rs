@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeFoldWhileFromIndexSuspensionFrame1 {
     pub(super) state:
         crate::functional_ops::sequence::fold::while_loop::SuspendedFoldWhileEvalState,
@@ -32,7 +33,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeFoldWhileFromIndexSuspen
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeFoldWhileFromIndexSuspensionFrame2 {
     pub(super) state:
         crate::functional_ops::sequence::fold::while_loop::SuspendedFoldWhileEvalState,
@@ -68,7 +69,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeFoldWhileFromIndexSuspen
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedFoldWhileFromIndexSuspensionFrame1 {
     pub(super) state:
         crate::functional_ops::sequence::fold::while_loop::SuspendedFoldWhileEvalState,
@@ -101,7 +102,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedFoldWhileFromIndexSuspensionFrame2 {
     pub(super) state:
         crate::functional_ops::sequence::fold::while_loop::SuspendedFoldWhileEvalState,
@@ -139,7 +140,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedFoldWhileWithStepValueSuspensionFrame {
     pub(super) state:
         crate::functional_ops::sequence::fold::while_loop::SuspendedFoldWhileEvalState,
@@ -177,7 +178,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeFoldWhileTailFromIndexSuspensionFrame {
     pub(super) state:
         crate::functional_ops::sequence::fold::while_loop::SuspendedFoldWhileEvalState,
@@ -213,7 +214,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeFoldWhileTailFromIndexSu
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedFoldWhileTailFromIndexSuspensionFrame {
     pub(super) state:
         crate::functional_ops::sequence::fold::while_loop::SuspendedFoldWhileEvalState,

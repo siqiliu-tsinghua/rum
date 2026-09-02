@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeTallyTestFromCountSuspensionFrame {
     pub(super) state_test: rum_core::Expr,
     pub(super) state_index: usize,
@@ -45,7 +46,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeTallyTestFromCountSuspen
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedTallyTestFromCountSuspensionFrame {
     pub(super) test: rum_core::Expr,
     pub(super) items:
@@ -89,7 +90,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSuspendedTallyTestFromCo
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeGatherByFunctionListFromPositionSuspensionFrame {
     pub(super) items:
         crate::structure_ops::suspended_state::FrozenStructureSequence<rum_core::Expr>,
@@ -137,7 +138,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedGatherByFunctionListFromPositionSuspensionFrame {
     pub(super) items:
         crate::structure_ops::suspended_state::FrozenStructureSequence<rum_core::Expr>,
@@ -185,7 +186,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeDecorateByFromIndexSuspensionFrame {
     pub(super) state: crate::structure_ops::collection_stats::SuspendedDecorateByState,
     pub(super) index: usize,
@@ -219,7 +220,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeDecorateByFromIndexSuspe
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedDecorateByFromIndexSuspensionFrame {
     pub(super) state: crate::structure_ops::collection_stats::SuspendedDecorateByState,
     pub(super) index: usize,

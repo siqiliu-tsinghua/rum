@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvalCasesSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
 }
@@ -27,7 +27,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalCasesSuspensionFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeCasesAfterTargetSuspensionFrame {
     pub(super) target: rum_core::Expr,
     pub(super) call_args: rum_core::SharedArgs,
@@ -97,7 +97,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareCasesFinalizer {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueCasesFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueCasesFrame {
@@ -144,7 +144,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueCasesFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeCasesAfterResolvedSpecSuspensionFrame {
     pub(super) target: rum_core::Expr,
     pub(super) spec: crate::runtime::kernel_data::rewrite_data::suspended_state::FrozenRewriteValue<
@@ -173,7 +173,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeCasesAfterResolvedSpe
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishCasesWithTraversalSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for FinishCasesWithTraversalSuspensionFrame {
@@ -196,7 +196,7 @@ impl crate::runtime::suspension::SuspensionFrame for FinishCasesWithTraversalSus
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishCasesAtCurrentNodeSuspensionFrame {
     pub(super) state:
         crate::runtime::kernel_data::rewrite_data::cases::collect::SuspendedCasesNodeFinish,
@@ -218,7 +218,7 @@ impl crate::runtime::suspension::SuspensionFrame for FinishCasesAtCurrentNodeSus
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct CollectCasesChildrenSuspensionFrame {
     pub(super) state:
         crate::runtime::kernel_data::rewrite_data::cases::collect::SuspendedCasesChildren,
@@ -248,7 +248,7 @@ impl crate::runtime::suspension::SuspensionFrame for CollectCasesChildrenSuspens
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct CollectCasesChildrenSuspendedSuspensionFrame {
     pub(super) state:
         crate::runtime::kernel_data::rewrite_data::cases::collect::SuspendedCasesChildren,
@@ -278,7 +278,7 @@ impl crate::runtime::suspension::SuspensionFrame for CollectCasesChildrenSuspend
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishCasesAtCurrentNodeSuspendedSuspensionFrame {
     pub(super) state:
         crate::runtime::kernel_data::rewrite_data::cases::collect::SuspendedCasesNodeFinish,
@@ -312,7 +312,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for FinishCasesCollectionFin
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct TryCollectCaseOwnedSuspensionFrame {
     pub(super) state:
         crate::runtime::kernel_data::rewrite_data::cases::collect::SuspendedCasesRuleMatch,
@@ -337,7 +337,7 @@ impl crate::runtime::suspension::SuspensionFrame for TryCollectCaseOwnedSuspensi
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct TryCollectCaseSuspendedSuspensionFrame {
     pub(super) state:
         crate::runtime::kernel_data::rewrite_data::cases::collect::SuspendedCasesRuleMatch,
@@ -362,7 +362,7 @@ impl crate::runtime::suspension::SuspensionFrame for TryCollectCaseSuspendedSusp
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishCasesPatternMatchSuspensionFrame {
     pub(super) expr: rum_core::Expr,
 }
@@ -384,7 +384,7 @@ impl crate::runtime::suspension::SuspensionFrame for FinishCasesPatternMatchSusp
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishCasesRuleMatchSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for FinishCasesRuleMatchSuspensionFrame {

@@ -223,7 +223,7 @@ impl Session {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvalUpdateAttributesSuspensionFrame {
     symbol_name: std::sync::Arc<std::string::String>,
     args: rum_core::SharedArgs,

@@ -267,7 +267,7 @@ const _: fn() = || {
     assert_traces::<SuspendedExactDefaultValueScan>();
 };
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvaluateFirstExactDefaultValueFromCursorSuspensionFrame {
     pub(super) state:
         crate::runtime::definitions::application::default_values::SuspendedExactDefaultValueScan,

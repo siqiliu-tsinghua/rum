@@ -24,7 +24,7 @@ fn continuation_args(expr: Expr, tag: &'static str) -> std::vec::IntoIter<Expr> 
     args.into_iter()
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct CollectReplaceListRuleBindingsOwnedSuspensionFrame1 {
     pub(super) guards: SharedArgs,
     pub(super) option_scope: Option<FrozenRewriteValue<OptionValueScope>>,
@@ -72,7 +72,7 @@ impl crate::runtime::suspension::PureFrameFinalizer
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueReplaceListInitialGuardFilterFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueReplaceListInitialGuardFilterFrame {
@@ -113,7 +113,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueReplaceListInitialG
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct CollectReplaceListRuleBindingsOwnedSuspensionFrame2 {
     pub(super) state: SuspendedReplaceListCallMatch,
 }
@@ -152,7 +152,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareReplaceListCallMa
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueReplaceListCallMatchFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueReplaceListCallMatchFrame {
@@ -213,7 +213,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueReplaceListCallMatc
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct CollectReplaceListRuleBindingsOwnedSuspensionFrame3;
 
 impl crate::runtime::suspension::SuspensionFrame
@@ -237,7 +237,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FilterReplaceListGuardBindingsOwnedSuspensionFrame {
     pub(super) state: SuspendedReplaceListGuardFilter,
 }
@@ -282,7 +282,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareReplaceListGuardF
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueReplaceListGuardFilterFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueReplaceListGuardFilterFrame {
@@ -333,7 +333,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueReplaceListGuardFil
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct CollectReplaceListRuleResultsOwnedSuspensionFrame {
     pub(super) state: SuspendedReplaceListRuleResults,
 }
@@ -377,7 +377,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareReplaceListRuleRe
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueReplaceListRuleResultsFrame {
     pub(super) target: Expr,
     pub(super) normalized_target: Expr,

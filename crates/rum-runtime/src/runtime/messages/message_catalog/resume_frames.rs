@@ -2,7 +2,7 @@ use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 use std::sync::Arc;
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct RenderDelayedMessageTextFrame {
     pub(super) key: MessageNameKey,
     pub(super) args: Arc<[Expr]>,

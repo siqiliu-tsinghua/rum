@@ -122,7 +122,7 @@ impl Session {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct MatchCompiledSequenceItemsOwnedSuspensionFrame {
     matcher: crate::runtime::pattern_matching::suspended_state::FrozenMatcherValue<
         crate::runtime::session::session_state::MatcherNode,
@@ -178,7 +178,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareCompiledSequenceI
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ContinueCompiledSequenceItemsFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueCompiledSequenceItemsFrame {
@@ -221,7 +221,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueCompiledSequenceIte
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct MatchCompiledSequencePatternOwnedSuspensionFrame {
     spec: crate::runtime::pattern_matching::suspended_state::FrozenMatcherValue<
         crate::runtime::session::session_state::CompiledSequencePattern,
@@ -273,7 +273,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareCompiledSequenceP
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ContinueCompiledSequencePatternFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueCompiledSequencePatternFrame {

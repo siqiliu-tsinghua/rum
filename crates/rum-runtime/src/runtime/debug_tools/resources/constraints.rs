@@ -298,7 +298,7 @@ fn combine_time_deadlines(prior: Option<Instant>, limit: Duration) -> Instant {
     prior.map_or(candidate, |current| current.min(candidate))
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvalTimeConstrainedSuspensionFrame {
     suspended_body: rum_core::Expr,
     suspended_fallback: std::option::Option<rum_core::Expr>,
@@ -353,7 +353,17 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeTimeConstrainedWithLi
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+impl crate::runtime::suspension::FrameAbandon for ResumeTimeConstrainedWithLimitSuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.restore_time_deadline(self.prior_deadline);
+        crate::runtime::suspension::FrameAbandonAction::Discard
+    }
+}
+
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvalMemoryConstrainedSuspensionFrame {
     suspended_body: rum_core::Expr,
     suspended_fallback: std::option::Option<rum_core::Expr>,
@@ -410,7 +420,17 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+impl crate::runtime::suspension::FrameAbandon for ResumeMemoryConstrainedWithLimitSuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.restore_memory_limit(self.prior_limit);
+        crate::runtime::suspension::FrameAbandonAction::Discard
+    }
+}
+
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct FinishTimeConstrainedSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for FinishTimeConstrainedSuspensionFrame {
@@ -427,7 +447,7 @@ impl crate::runtime::suspension::SuspensionFrame for FinishTimeConstrainedSuspen
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct FinishMemoryConstrainedSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for FinishMemoryConstrainedSuspensionFrame {

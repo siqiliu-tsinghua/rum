@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishAssociationSetPartSelectorEvaluationSuspensionFrame {
     pub(super) symbol: Symbol,
     pub(super) direct_single_key: bool,
@@ -32,7 +32,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeAssociationSetLvalueSelectorEvaluationSuspensionFrame {
     pub(super) suspended:
         crate::runtime::kernel_data::association_data::SuspendedAssociationSetLValue,
@@ -56,7 +56,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedAssociationSetLvalueSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::association_data::SuspendedAssociationSetLValue,
 }

@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct EvalStringReplaceSuspensionFrame;
 
 impl rum_runtime::kernel_api::SuspensionFrame for EvalStringReplaceSuspensionFrame {
@@ -24,7 +25,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for EvalStringReplaceSuspensionFra
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct EvalStringCasesSuspensionFrame1;
 
 impl rum_runtime::kernel_api::SuspensionFrame for EvalStringCasesSuspensionFrame1 {
@@ -47,7 +48,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for EvalStringCasesSuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct EvalStringCasesSuspensionFrame2;
 
 impl rum_runtime::kernel_api::SuspensionFrame for EvalStringCasesSuspensionFrame2 {

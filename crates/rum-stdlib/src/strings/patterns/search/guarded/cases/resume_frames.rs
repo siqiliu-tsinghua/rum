@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeCollectStringCasesFromCandidateSuspensionFrame {
     pub(super) state: crate::strings::suspended_state::FrozenStringValue<
         crate::strings::patterns::search::guarded::cases::GuardedStringCasesRuleEvalState,
@@ -58,7 +59,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct EvaluateStringCasesOutputSuspensionFrame {
     pub(super) state: crate::strings::suspended_state::FrozenStringValue<
         crate::strings::patterns::search::guarded::cases::GuardedStringCasesRuleEvalState,
@@ -98,7 +99,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for EvaluateStringCasesOutputSuspe
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedCollectStringCasesFromCandidateSuspensionFrame {
     pub(super) state: crate::strings::suspended_state::FrozenStringValue<
         crate::strings::patterns::search::guarded::cases::GuardedStringCasesRuleEvalState,
@@ -155,7 +156,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct EvaluateSuspendedStringCasesOutputSuspensionFrame {
     pub(super) state: crate::strings::suspended_state::FrozenStringValue<
         crate::strings::patterns::search::guarded::cases::GuardedStringCasesRuleEvalState,
@@ -197,7 +198,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeCollectStringCasesValuesFromIndexSuspensionFrame {
     pub(super) state: crate::strings::suspended_state::FrozenStringValue<
         crate::strings::patterns::search::guarded::cases::GuardedStringCasesValuesEvalState,
@@ -236,7 +237,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedCollectStringCasesValuesFromIndexSuspensionFrame {
     pub(super) state: crate::strings::suspended_state::FrozenStringValue<
         crate::strings::patterns::search::guarded::cases::GuardedStringCasesValuesEvalState,

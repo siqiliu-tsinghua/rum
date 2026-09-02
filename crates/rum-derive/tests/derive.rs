@@ -1,5 +1,18 @@
+use std::sync::Arc;
+
 trait FrameRootVisitor {
     fn visit_value(&mut self, value: u8);
+}
+
+struct AbandonmentContext<'a>(&'a mut ());
+
+#[derive(Debug, PartialEq, Eq)]
+enum FrameAbandonAction {
+    Discard,
+}
+
+trait FrameAbandon {
+    fn abandon(self: Arc<Self>, context: &mut AbandonmentContext<'_>) -> FrameAbandonAction;
 }
 
 trait FrameRootTrace {
@@ -31,6 +44,17 @@ struct Tuple<T>(T, u8);
 
 #[derive(rum_derive::FrameRootTrace)]
 struct Unit;
+
+#[derive(rum_derive::PureFrameAbandon)]
+struct PureNamed<T> {
+    _value: T,
+}
+
+#[derive(rum_derive::PureFrameAbandon)]
+enum PureVariants<T> {
+    Value(T),
+    Unit,
+}
 
 #[derive(rum_derive::FrameRootTrace)]
 enum Variants<T> {
@@ -80,4 +104,24 @@ fn derives_all_enum_variant_shapes() {
     }
 
     assert_eq!(values.0, vec![1, 2, 3, 4]);
+}
+
+#[test]
+fn pure_frame_abandon_discards_structs_and_enums_without_inspecting_fields() {
+    let mut state = ();
+    let mut context = AbandonmentContext(&mut state);
+
+    assert_eq!(
+        Arc::new(PureNamed { _value: 1_u8 }).abandon(&mut context),
+        FrameAbandonAction::Discard
+    );
+    assert_eq!(
+        Arc::new(PureVariants::Value(2_u8)).abandon(&mut context),
+        FrameAbandonAction::Discard
+    );
+    assert_eq!(
+        Arc::new(PureVariants::<u8>::Unit).abandon(&mut context),
+        FrameAbandonAction::Discard
+    );
+    let _ = context.0;
 }

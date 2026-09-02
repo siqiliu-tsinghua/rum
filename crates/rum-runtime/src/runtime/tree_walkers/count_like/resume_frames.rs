@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvalCountSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
 }
@@ -22,7 +22,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalCountSuspensionFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvalMemberQSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
 }
@@ -43,7 +43,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalMemberQSuspensionFrame 
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvalFreeQSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
 }
@@ -64,7 +64,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalFreeQSuspensionFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeCountAfterTargetSuspensionFrame {
     pub(super) target: rum_core::Expr,
     pub(super) args: rum_core::SharedArgs,
@@ -88,7 +88,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeCountAfterTargetSuspe
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeMemberQAfterTargetSuspensionFrame {
     pub(super) target: rum_core::Expr,
     pub(super) args: rum_core::SharedArgs,
@@ -112,7 +112,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeMemberQAfterTargetSus
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeFreeQAfterTargetSuspensionFrame {
     pub(super) target: rum_core::Expr,
     pub(super) args: rum_core::SharedArgs,
@@ -136,7 +136,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeFreeQAfterTargetSuspe
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishCountLikeAfterPatternSuspensionFrame {
     pub(super) builtin_name: &'static str,
     pub(super) target: rum_core::Expr,
@@ -176,7 +176,7 @@ impl crate::runtime::suspension::SuspensionFrame for FinishCountLikeAfterPattern
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishCountLikeAfterTraversalSuspensionFrame {
     pub(super) finish: crate::runtime::tree_walkers::count_like::CountLikeFinish,
 }
@@ -203,7 +203,7 @@ impl crate::runtime::suspension::SuspensionFrame for FinishCountLikeAfterTravers
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishCountAtCurrentNodeSuspensionFrame {
     pub(super) count: usize,
     pub(super) traversal: crate::runtime::CasesTraversalConfig,
@@ -241,7 +241,7 @@ impl crate::runtime::suspension::SuspensionFrame for FinishCountAtCurrentNodeSus
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct CountPatternChildrenSuspensionFrame {
     pub(super) state: crate::runtime::tree_walkers::count_like::SuspendedCountChildren,
 }
@@ -265,7 +265,7 @@ impl crate::runtime::suspension::SuspensionFrame for CountPatternChildrenSuspens
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct CountPatternChildrenSuspendedSuspensionFrame {
     pub(super) state: crate::runtime::tree_walkers::count_like::SuspendedCountChildren,
 }

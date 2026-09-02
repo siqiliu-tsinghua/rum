@@ -218,7 +218,7 @@ fn parse_replace_repeated_max_iterations_value(value: &Expr, ceiling: usize) -> 
         .map(|limit| limit.min(ceiling))
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvalReplaceRepeatedSuspensionFrame {
     args: rum_core::SharedArgs,
     max_iterations_expr: std::option::Option<rum_core::Expr>,
@@ -262,7 +262,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareReplaceRepeatedTa
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ContinueReplaceRepeatedTargetFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueReplaceRepeatedTargetFrame {
@@ -303,7 +303,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueReplaceRepeatedTarg
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeReplaceRepeatedAfterRuleExprsSuspensionFrame {
     call_args: rum_core::SharedArgs,
     current: rum_core::Expr,
@@ -348,7 +348,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResolveReplaceRepeatedLimitOwnedSuspensionFrame {
     ceiling: usize,
 }
@@ -381,7 +381,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeReplaceRepeatedLoopSuspensionFrame {
     current: rum_core::Expr,
     rules: crate::runtime::RewriteRulePlan,

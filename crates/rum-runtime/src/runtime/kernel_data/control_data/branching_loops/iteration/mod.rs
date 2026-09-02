@@ -168,3 +168,13 @@ impl crate::runtime::suspension::SuspensionFrame for WithIterationProductScopeSu
         crate::runtime::suspension::FrameAction::complete(resumed)
     }
 }
+
+impl crate::runtime::suspension::FrameAbandon for WithIterationProductScopeSuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.restore_iteration_product_budget(self.parent_budget);
+        crate::runtime::suspension::FrameAbandonAction::Discard
+    }
+}

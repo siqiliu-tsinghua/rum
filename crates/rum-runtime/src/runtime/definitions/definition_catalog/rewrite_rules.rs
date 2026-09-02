@@ -324,7 +324,7 @@ fn should_evaluate_single_rule_candidate(expr: &Expr) -> bool {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResolveCasesSpecExprForMatchingOwnedSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame
@@ -356,7 +356,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResolveRewriteRuleExprsOwnedSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ResolveRewriteRuleExprsOwnedSuspensionFrame {
@@ -379,7 +379,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResolveRewriteRuleExprsOwne
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct DriveRewriteRuleExprsOwnedSuspensionFrame {
     continuation:
         crate::runtime::definitions::definition_catalog::rewrite_rules::RewriteRuleExprContinuation,
@@ -407,7 +407,7 @@ impl crate::runtime::suspension::SuspensionFrame for DriveRewriteRuleExprsOwnedS
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct DriveRewriteRuleInfosOwnedSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for DriveRewriteRuleInfosOwnedSuspensionFrame {
@@ -430,7 +430,7 @@ impl crate::runtime::suspension::SuspensionFrame for DriveRewriteRuleInfosOwnedS
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct DriveRewriteRulesOwnedSuspensionFrame {
     continuation: crate::runtime::definitions::definition_catalog::rewrite_rules::CompiledRewriteRuleContinuation,
 }

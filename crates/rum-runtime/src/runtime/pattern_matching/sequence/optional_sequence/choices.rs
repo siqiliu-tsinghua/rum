@@ -285,7 +285,7 @@ const _: fn() = || {
     assert_traces::<SuspendedSequenceChoiceState>();
 };
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct DriveSequenceChoiceResultSuspensionFrame {
     pub(super) state: crate::runtime::pattern_matching::sequence::optional_sequence::choices::SuspendedSequenceChoiceState,
     pub(super) rest_values: rum_core::SharedArgs,
@@ -329,7 +329,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareSequenceChoiceRes
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ContinueSequenceChoiceResultFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueSequenceChoiceResultFrame {
@@ -368,7 +368,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueSequenceChoiceResul
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct FinishSequenceChoiceSuspensionFrame {
     pub(super) state: crate::runtime::pattern_matching::sequence::optional_sequence::choices::SuspendedSequenceChoiceState,
 }
@@ -408,7 +408,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareSequenceChoiceRes
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ContinueSequenceChoiceRestFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueSequenceChoiceRestFrame {

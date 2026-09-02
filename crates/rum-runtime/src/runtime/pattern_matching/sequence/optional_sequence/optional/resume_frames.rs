@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct MatchOptionalChoicesSuspensionFrame {
     pub(super) state: crate::runtime::pattern_matching::sequence::optional_sequence::optional::SuspendedOptionalChoiceState,
 }
@@ -41,7 +41,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareOptionalPresentFi
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueOptionalPresentFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueOptionalPresentFrame {
@@ -69,7 +69,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueOptionalPresentFram
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct CollectOptionalMatchesSuspensionFrame {
     pub(super) state: crate::runtime::pattern_matching::sequence::optional_sequence::optional::SuspendedOptionalChoiceState,
 }
@@ -109,7 +109,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareOptionalPresentCo
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueOptionalPresentCollectionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueOptionalPresentCollectionFrame {
@@ -138,7 +138,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueOptionalPresentColl
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishOptionalPresentCollectionSuspensionFrame {
     pub(super) present: crate::runtime::pattern_matching::suspended_state::PersistentMatchResults,
 }
@@ -177,7 +177,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for FinishOptionalPresentCol
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResolveOptionalOmissionSuspensionFrame {
     pub(super) state: crate::runtime::pattern_matching::sequence::optional_sequence::optional::SuspendedOptionalOmissionState,
 }
@@ -217,7 +217,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareOptionalDefaultFi
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueOptionalDefaultFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueOptionalDefaultFrame {
@@ -245,7 +245,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueOptionalDefaultFram
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishOptionalDefaultSuspensionFrame {
     pub(super) state: crate::runtime::pattern_matching::sequence::optional_sequence::optional::SuspendedOptionalOmissionState,
 }
@@ -285,7 +285,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareOptionalDefaultMa
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueOptionalDefaultMatchFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueOptionalDefaultMatchFrame {

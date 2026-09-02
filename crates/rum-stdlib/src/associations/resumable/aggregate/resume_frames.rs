@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeMergeNestedFromIndexSuspensionFrame {
     pub(super) combiner: rum_core::Expr,
     pub(super) grouped: crate::associations::suspended_state::FrozenAssociationSequence<(
@@ -44,7 +45,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeMergeNestedFromIndexSusp
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedMergeNestedFromIndexSuspensionFrame {
     pub(super) combiner: rum_core::Expr,
     pub(super) grouped: crate::associations::suspended_state::FrozenAssociationSequence<(
@@ -89,7 +90,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeMergeFromIndexSuspensionFrame {
     pub(super) combiner: rum_core::Expr,
     pub(super) grouped: crate::associations::suspended_state::FrozenAssociationSequence<(
@@ -132,7 +133,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeMergeFromIndexSuspension
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedMergeFromIndexSuspensionFrame {
     pub(super) combiner: rum_core::Expr,
     pub(super) grouped: crate::associations::suspended_state::FrozenAssociationSequence<(
@@ -175,7 +176,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSuspendedMergeFromIndexS
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeCountsByFromIndexSuspensionFrame {
     pub(super) function: rum_core::Expr,
     pub(super) items:
@@ -208,7 +209,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeCountsByFromIndexSuspens
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedCountsByFromIndexSuspensionFrame {
     pub(super) function: rum_core::Expr,
     pub(super) items:

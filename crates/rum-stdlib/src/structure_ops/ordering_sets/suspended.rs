@@ -1,4 +1,5 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
 #[derive(Clone, FrameRootTrace)]
@@ -220,7 +221,7 @@ const _: fn() = || {
     assert_traces::<SuspendedSetSameTestState>();
 };
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeSuspendedSetSameTestSuspensionFrame1 {
     state: crate::structure_ops::ordering_sets::suspended::SuspendedSetSameTestState,
 }
@@ -241,7 +242,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSuspendedSetSameTestSusp
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeSuspendedSetSameTestSuspensionFrame2 {
     state: crate::structure_ops::ordering_sets::suspended::SuspendedSetSameTestState,
 }
@@ -262,7 +263,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSuspendedSetSameTestSusp
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeSuspendedSetSameTestSuspensionFrame3 {
     state: crate::structure_ops::ordering_sets::suspended::SuspendedSetSameTestState,
 }

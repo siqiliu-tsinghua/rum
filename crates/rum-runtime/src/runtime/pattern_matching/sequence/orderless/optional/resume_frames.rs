@@ -59,7 +59,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareOrderlessOptional
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct MatchOrderlessOptionalChoicesSuspensionFrame {
     pub(super) state: SuspendedOrderlessOptionalState,
 }
@@ -78,7 +78,7 @@ impl crate::runtime::suspension::SuspensionFrame for MatchOrderlessOptionalChoic
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct MatchOrderlessOptionalOmissionSuspensionFrame {
     pub(super) state: SuspendedOrderlessOptionalState,
 }
@@ -97,7 +97,7 @@ impl crate::runtime::suspension::SuspensionFrame for MatchOrderlessOptionalOmiss
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishOrderlessOptionalDefaultSuspensionFrame {
     pub(super) state: SuspendedOrderlessOptionalState,
 }
@@ -116,7 +116,7 @@ impl crate::runtime::suspension::SuspensionFrame for FinishOrderlessOptionalDefa
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct CollectOrderlessOptionalMatchesSuspensionFrame {
     pub(super) state: SuspendedOrderlessOptionalState,
 }
@@ -137,7 +137,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishOrderlessOptionalPresentCollectionSuspensionFrame {
     pub(super) present: PersistentMatchResults,
 }
@@ -174,7 +174,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for FinishOrderlessOptionalC
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct CollectOrderlessOptionalOmissionSuspensionFrame {
     pub(super) state: SuspendedOrderlessOptionalState,
 }
@@ -195,7 +195,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishOrderlessOptionalCollectionDefaultSuspensionFrame {
     pub(super) state: SuspendedOrderlessOptionalState,
 }
@@ -216,7 +216,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueOrderlessOptionalFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueOrderlessOptionalFrame {

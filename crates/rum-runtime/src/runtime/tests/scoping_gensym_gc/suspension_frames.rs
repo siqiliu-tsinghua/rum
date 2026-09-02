@@ -2,7 +2,9 @@ use std::sync::Arc;
 
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
-use crate::runtime::suspension::{FrameAction, SuspensionFrame};
+use crate::runtime::suspension::{
+    AbandonmentContext, FrameAbandon, FrameAbandonAction, FrameAction, SuspensionFrame,
+};
 
 const PATH_A_SUBCASE: &str = "frame-roots-path-a";
 const PATH_B_SUBCASE: &str = "frame-roots-path-b";
@@ -214,7 +216,7 @@ fn block_frame_bare_symbol_is_reclaimed_after_resume_and_next_sweep() {
     assert!(!session.definitions.contains_key(&candidate));
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct CurrentFrameSweepProbe {
     candidate: Expr,
 }
@@ -235,7 +237,7 @@ impl SuspensionFrame for CurrentFrameSweepProbe {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct SuffixFrameProbe {
     candidate: Expr,
 }
@@ -285,7 +287,7 @@ fn executing_frame_and_queued_suffix_remain_rooted_during_resume_sweep() {
     assert_eq!(resumed.to_string(), "List[711, 712]");
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct LargeSuspensionMemoryProbe {
     values: SharedArgs,
 }

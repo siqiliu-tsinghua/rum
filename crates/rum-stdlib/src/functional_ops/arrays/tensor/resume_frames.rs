@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeTensorCallbackFromIndexSuspensionFrame {
     pub(super) state: crate::functional_ops::arrays::tensor::SuspendedTensorCallbackEvalState,
     pub(super) index: usize,
@@ -31,7 +32,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeTensorCallbackFromIndexS
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedTensorCallbackFromIndexSuspensionFrame {
     pub(super) state: crate::functional_ops::arrays::tensor::SuspendedTensorCallbackEvalState,
     pub(super) index: usize,
@@ -63,7 +64,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeInnerFromIndicesSuspensionFrame1 {
     pub(super) state: crate::functional_ops::arrays::tensor::SuspendedInnerEvalState,
     pub(super) output_index: usize,
@@ -108,7 +109,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeInnerFromIndicesSuspensi
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeInnerFromIndicesSuspensionFrame2 {
     pub(super) state: crate::functional_ops::arrays::tensor::SuspendedInnerEvalState,
     pub(super) output_index: usize,
@@ -144,7 +145,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeInnerFromIndicesSuspensi
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedInnerFromIndicesSuspensionFrame1 {
     pub(super) state: crate::functional_ops::arrays::tensor::SuspendedInnerEvalState,
     pub(super) output_index: usize,
@@ -189,7 +190,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSuspendedInnerFromIndice
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedInnerFromIndicesSuspensionFrame2 {
     pub(super) state: crate::functional_ops::arrays::tensor::SuspendedInnerEvalState,
     pub(super) output_index: usize,

@@ -1,5 +1,6 @@
 use super::*;
 use rum_core::SharedArgs;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, FrameRootTrace)]
@@ -290,7 +291,7 @@ fn finalize_truth_aggregate(
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeTruthAggregateFromIndexSuspensionFrame {
     kind: crate::predicates::truth::TruthAggregateKind,
     head: rum_core::Expr,
@@ -341,7 +342,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeTruthAggregateFromIndexS
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeSuspendedTruthAggregateFromIndexSuspensionFrame {
     kind: crate::predicates::truth::TruthAggregateKind,
     head: rum_core::Expr,

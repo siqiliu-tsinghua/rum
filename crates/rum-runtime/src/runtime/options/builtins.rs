@@ -410,7 +410,7 @@ const _: fn() = || {
     assert_traces::<OptionValueQuery>();
 };
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvalSetOptionsSuspensionFrame {
     targets: std::sync::Arc<[rum_core::Symbol]>,
     preserve_target_list_shape: bool,
@@ -444,7 +444,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalSetOptionsSuspensionFra
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvalOptionValueSuspensionFrame {
     pub(super) target: rum_core::Symbol,
     pub(super) query: std::sync::Arc<crate::runtime::options::builtins::OptionValueQuery>,

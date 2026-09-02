@@ -194,6 +194,16 @@ impl crate::runtime::suspension::SuspensionFrame for EvalCheckSuspensionFrame {
     }
 }
 
+impl crate::runtime::suspension::FrameAbandon for EvalCheckSuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.restore_message_capture(self.message_checkpoint, self.handled_error_checkpoint);
+        crate::runtime::suspension::FrameAbandonAction::Discard
+    }
+}
+
 #[derive(rum_derive::FrameRootTrace)]
 struct EvalQuietSuspensionFrame {
     selectors: std::option::Option<std::sync::Arc<[crate::runtime::MessageSelector]>>,
@@ -222,5 +232,15 @@ impl crate::runtime::suspension::SuspensionFrame for EvalQuietSuspensionFrame {
             )
         })();
         crate::runtime::suspension::FrameAction::complete(resumed)
+    }
+}
+
+impl crate::runtime::suspension::FrameAbandon for EvalQuietSuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.restore_message_capture(self.message_checkpoint, self.handled_error_checkpoint);
+        crate::runtime::suspension::FrameAbandonAction::Discard
     }
 }

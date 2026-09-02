@@ -443,7 +443,7 @@ fn test_report_memory_constraint_sentinel() -> Expr {
     )
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct TestCaseOutputMatchesPartsSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for TestCaseOutputMatchesPartsSuspensionFrame {
@@ -466,7 +466,7 @@ impl crate::runtime::suspension::SuspensionFrame for TestCaseOutputMatchesPartsS
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvaluateTestCaseInputSuspensionFrame {
     started: std::time::Instant,
 }
@@ -525,5 +525,19 @@ impl crate::runtime::suspension::SuspensionFrame for EvalExprWithStreamCaptureSu
             Ok(captured.into_continuation_expr())
         })();
         crate::runtime::suspension::FrameAction::complete(resumed)
+    }
+}
+
+impl crate::runtime::suspension::FrameAbandon for EvalExprWithStreamCaptureSuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.restore_stream_capture(
+            self.message_checkpoint,
+            self.print_checkpoint,
+            self.handled_error_checkpoint,
+        );
+        crate::runtime::suspension::FrameAbandonAction::Discard
     }
 }

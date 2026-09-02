@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeNestFromIterationSuspensionFrame {
     pub(super) state: crate::functional_ops::iteration::NestEvalState,
     pub(super) iteration: usize,
@@ -31,7 +32,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeNestFromIterationSuspens
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedNestFromIterationSuspensionFrame {
     pub(super) state: crate::functional_ops::iteration::NestEvalState,
     pub(super) iteration: usize,
@@ -61,7 +62,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSuspendedNestFromIterati
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeFixedPointFromIterationSuspensionFrame {
     pub(super) state: crate::functional_ops::iteration::FixedPointEvalState,
     pub(super) iteration: usize,
@@ -100,7 +101,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeFixedPointFromIterationS
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedFixedPointFromIterationSuspensionFrame {
     pub(super) state: crate::functional_ops::iteration::FixedPointEvalState,
     pub(super) iteration: usize,
@@ -141,7 +142,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeNestWhileTestFromIterationSuspensionFrame {
     pub(super) state: crate::functional_ops::iteration::NestWhileEvalState,
     pub(super) iteration: usize,
@@ -173,7 +174,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeNestWhileTestFromIterati
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedNestWhileTestFromIterationSuspensionFrame {
     pub(super) state: crate::functional_ops::iteration::NestWhileEvalState,
     pub(super) iteration: usize,
@@ -207,7 +208,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeNestWhileWithTestValueSuspensionFrame {
     pub(super) state: crate::functional_ops::iteration::NestWhileEvalState,
     pub(super) iteration: usize,
@@ -239,7 +240,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeNestWhileWithTestValueSu
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedNestWhileWithTestValueSuspensionFrame {
     pub(super) state: crate::functional_ops::iteration::NestWhileEvalState,
     pub(super) iteration: usize,

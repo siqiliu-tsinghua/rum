@@ -1,4 +1,5 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
 #[derive(FrameRootTrace)]
@@ -286,7 +287,7 @@ const _: fn() = || {
     assert_traces::<SuspendedFoldPairEvalState>();
 };
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeFoldPairFromIndexSuspensionFrame1 {
     state: crate::functional_ops::sequence::fold::pair::SuspendedFoldPairEvalState,
     index: usize,
@@ -312,7 +313,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeFoldPairFromIndexSuspens
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeFoldPairFromIndexSuspensionFrame2 {
     state: crate::functional_ops::sequence::fold::pair::SuspendedFoldPairEvalState,
     index: usize,
@@ -342,7 +343,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeFoldPairFromIndexSuspens
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeSuspendedFoldPairFromIndexSuspensionFrame1 {
     state: crate::functional_ops::sequence::fold::pair::SuspendedFoldPairEvalState,
     index: usize,
@@ -368,7 +369,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSuspendedFoldPairFromInd
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeSuspendedFoldPairFromIndexSuspensionFrame2 {
     state: crate::functional_ops::sequence::fold::pair::SuspendedFoldPairEvalState,
     index: usize,
@@ -398,7 +399,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSuspendedFoldPairFromInd
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeSuspendedFoldPairWithPairResultSuspensionFrame {
     state: crate::functional_ops::sequence::fold::pair::SuspendedFoldPairEvalState,
     index: usize,

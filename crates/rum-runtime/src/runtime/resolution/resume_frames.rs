@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvaluateProfiledFixedPointSuspensionFrame {
     pub(super) state: crate::runtime::resolution::SuspendedFixedPointState,
 }
@@ -22,7 +22,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvaluateProfiledFixedPointS
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeFixedPointFromSuspensionFrame {
     pub(super) state: crate::runtime::resolution::SuspendedFixedPointState,
 }

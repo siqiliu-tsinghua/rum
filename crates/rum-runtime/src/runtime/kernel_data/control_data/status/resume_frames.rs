@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FailureVirtualStyledMessageValueSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame
@@ -20,7 +20,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FailureMessageFromTemplateSuspensionFrame {
     pub(super) status: rum_core::Expr,
     pub(super) template: rum_core::Expr,
@@ -47,7 +47,7 @@ impl crate::runtime::suspension::SuspensionFrame for FailureMessageFromTemplateS
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishFailureMessageFromTemplateSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame

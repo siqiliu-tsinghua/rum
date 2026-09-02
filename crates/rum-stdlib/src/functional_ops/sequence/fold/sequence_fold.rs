@@ -1,4 +1,5 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
 #[derive(FrameRootTrace)]
@@ -226,7 +227,7 @@ const _: fn() = || {
     assert_traces::<SuspendedSequenceFoldEvalState>();
 };
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeSequenceFoldFromOffsetSuspensionFrame {
     state: crate::functional_ops::sequence::fold::sequence_fold::SuspendedSequenceFoldEvalState,
     offset: usize,
@@ -255,7 +256,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSequenceFoldFromOffsetSu
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeSuspendedSequenceFoldFromOffsetSuspensionFrame {
     state: crate::functional_ops::sequence::fold::sequence_fold::SuspendedSequenceFoldEvalState,
     offset: usize,

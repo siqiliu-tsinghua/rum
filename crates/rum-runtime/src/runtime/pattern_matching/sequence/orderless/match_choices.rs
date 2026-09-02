@@ -320,7 +320,7 @@ const _: fn() = || {
     assert_traces::<SuspendedOrderlessChoiceState>();
 };
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct MatchOrderlessChoiceSuspensionFrame {
     pub(super) state: crate::runtime::pattern_matching::sequence::orderless::match_choices::SuspendedOrderlessChoiceState,
     pub(super) rest_values: rum_core::SharedArgs,
@@ -364,7 +364,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareOrderlessChoicePa
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ContinueOrderlessChoicePatternFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueOrderlessChoicePatternFrame {
@@ -403,7 +403,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueOrderlessChoicePatt
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct FinishOrderlessChoicePatternSuspensionFrame {
     pub(super) state: crate::runtime::pattern_matching::sequence::orderless::match_choices::SuspendedOrderlessChoiceState,
 }
@@ -443,7 +443,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareOrderlessChoiceRe
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ContinueOrderlessChoiceRestFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueOrderlessChoiceRestFrame {

@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeWhileSequenceFromIndexSuspensionFrame {
     pub(super) sequence: crate::functional_ops::sequence::window::SuspendedSequenceLikeExpr,
     pub(super) criterion: rum_core::Expr,
@@ -35,7 +36,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeWhileSequenceFromIndexSu
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedWhileSequenceFromIndexSuspensionFrame {
     pub(super) sequence: crate::functional_ops::sequence::window::SuspendedSequenceLikeExpr,
     pub(super) criterion: rum_core::Expr,
@@ -71,7 +72,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeAccumulateFromIndexSuspensionFrame {
     pub(super) sequence: crate::functional_ops::sequence::window::SuspendedSequenceLikeExpr,
     pub(super) index: usize,
@@ -101,7 +102,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeAccumulateFromIndexSuspe
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedAccumulateFromIndexSuspensionFrame {
     pub(super) sequence: crate::functional_ops::sequence::window::SuspendedSequenceLikeExpr,
     pub(super) index: usize,
@@ -133,7 +134,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeBlockMapFromIndexSuspensionFrame {
     pub(super) state: crate::functional_ops::sequence::window::SuspendedBlockMapEvalState,
     pub(super) index: usize,
@@ -163,7 +164,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeBlockMapFromIndexSuspens
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedBlockMapFromIndexSuspensionFrame {
     pub(super) state: crate::functional_ops::sequence::window::SuspendedBlockMapEvalState,
     pub(super) index: usize,

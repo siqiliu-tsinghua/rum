@@ -410,6 +410,16 @@ impl Session {
         outcome
     }
 
+    pub(in crate::runtime) fn abandon_single_block_scope(
+        &mut self,
+        symbol: Symbol,
+        saved_state: BlockSymbolState,
+        dynamic_depth: usize,
+    ) {
+        self.truncate_dynamic_own_value_bindings(dynamic_depth);
+        self.restore_single_block_symbol_state(symbol, saved_state);
+    }
+
     fn restore_single_block_symbol_state(&mut self, symbol: Symbol, saved_state: BlockSymbolState) {
         let current_had_up_values = self
             .definitions
@@ -509,6 +519,15 @@ impl Session {
         self.truncate_dynamic_own_value_bindings(dynamic_depth);
         self.restore_block_symbol_states(saved_state);
         outcome
+    }
+
+    pub(in crate::runtime) fn abandon_block_scope(
+        &mut self,
+        saved_state: BTreeMap<Symbol, BlockSymbolState>,
+        dynamic_depth: usize,
+    ) {
+        self.truncate_dynamic_own_value_bindings(dynamic_depth);
+        self.restore_block_symbol_states(saved_state);
     }
 }
 

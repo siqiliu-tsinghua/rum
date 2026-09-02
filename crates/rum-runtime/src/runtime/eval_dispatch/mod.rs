@@ -223,7 +223,7 @@ impl CallBuiltinSpec for SuspendedBuiltinSpec {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct RunCallDispatchStageSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for RunCallDispatchStageSuspensionFrame {

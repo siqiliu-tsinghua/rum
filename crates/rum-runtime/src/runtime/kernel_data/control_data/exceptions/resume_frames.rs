@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvalCatchExceptionsSuspensionFrame {
     pub(super) handlers: std::option::Option<
         std::sync::Arc<[crate::runtime::kernel_data::control_data::exceptions::ExceptionHandler]>,
@@ -22,7 +22,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalCatchExceptionsSuspensi
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct DispatchExceptionHandlersOwnedSuspensionFrame1 {
     pub(super) state:
         crate::runtime::kernel_data::control_data::exceptions::SuspendedExceptionDispatch,
@@ -43,7 +43,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct DispatchExceptionHandlersOwnedSuspensionFrame2 {
     pub(super) state:
         crate::runtime::kernel_data::control_data::exceptions::SuspendedExceptionDispatch,
@@ -64,7 +64,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct DispatchSuspendedExceptionHandlersSuspensionFrame {
     pub(super) state:
         crate::runtime::kernel_data::control_data::exceptions::SuspendedExceptionDispatch,
@@ -85,7 +85,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedExceptionMatchOutcomeSuspensionFrame {
     pub(super) state:
         crate::runtime::kernel_data::control_data::exceptions::SuspendedExceptionDispatch,
@@ -106,7 +106,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvaluateExceptionHandlerRhsSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for EvaluateExceptionHandlerRhsSuspensionFrame {

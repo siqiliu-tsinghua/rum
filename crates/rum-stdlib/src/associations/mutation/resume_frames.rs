@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct FinishHeldAssociationPartSelectorEvaluationSuspensionFrame {
     pub(super) operation: AssociationPartMutationOperation,
     pub(super) target_expr: Expr,
@@ -37,7 +38,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct EvalAssociateToSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) prepared: PreparedDefinitionLhs,
@@ -61,7 +62,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for EvalAssociateToSuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct EvalKeyDropFromSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) prepared: PreparedDefinitionLhs,

@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeKeyUnionMissingValuesFromIndexSuspensionFrame {
     pub(super) fill_function: rum_core::Expr,
     pub(super) plan: crate::associations::suspended_state::FrozenAssociationValue<
@@ -56,7 +57,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedKeyUnionMissingValuesFromIndexSuspensionFrame {
     pub(super) fill_function: rum_core::Expr,
     pub(super) plan: crate::associations::suspended_state::FrozenAssociationValue<

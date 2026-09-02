@@ -350,6 +350,10 @@ impl Session {
         outcome
     }
 
+    pub(in crate::runtime) fn abandon_module_scope(&mut self, activation_depth: usize) {
+        let _ = self.finish_module_scope(activation_depth, Err(EvalError::Cancelled));
+    }
+
     fn module_gensyms_to_reclaim(
         &self,
         activation: &ModuleActivation,
@@ -410,6 +414,16 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeModuleInitializersSus
     }
 }
 
+impl crate::runtime::suspension::FrameAbandon for ResumeModuleInitializersSuspensionFrame1 {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.finish_module_activation(self.activation_depth);
+        crate::runtime::suspension::FrameAbandonAction::Discard
+    }
+}
+
 #[derive(rum_derive::FrameRootTrace)]
 struct ResumeModuleInitializersSuspensionFrame2 {
     pub(super) state: crate::runtime::scoping::lexical::module::SuspendedModuleInitializers,
@@ -425,6 +439,16 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeModuleInitializersSus
         let mut state = self.state.clone();
         let resumed = (|| session.resume_suspended_module_initializers(state, Some(outcome)))();
         crate::runtime::suspension::FrameAction::complete(resumed)
+    }
+}
+
+impl crate::runtime::suspension::FrameAbandon for ResumeModuleInitializersSuspensionFrame2 {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.finish_module_activation(self.state.activation_depth);
+        crate::runtime::suspension::FrameAbandonAction::Discard
     }
 }
 
@@ -448,6 +472,18 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
+impl crate::runtime::suspension::FrameAbandon
+    for ResumeSuspendedModuleInitializersSuspensionFrame1
+{
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.finish_module_activation(self.activation_depth);
+        crate::runtime::suspension::FrameAbandonAction::Discard
+    }
+}
+
 #[derive(rum_derive::FrameRootTrace)]
 struct ResumeSuspendedModuleInitializersSuspensionFrame2 {
     pub(super) state: crate::runtime::scoping::lexical::module::SuspendedModuleInitializers,
@@ -465,5 +501,17 @@ impl crate::runtime::suspension::SuspensionFrame
         let mut state = self.state.clone();
         let resumed = (|| session.resume_suspended_module_initializers(state, Some(outcome)))();
         crate::runtime::suspension::FrameAction::complete(resumed)
+    }
+}
+
+impl crate::runtime::suspension::FrameAbandon
+    for ResumeSuspendedModuleInitializersSuspensionFrame2
+{
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.finish_module_activation(self.state.activation_depth);
+        crate::runtime::suspension::FrameAbandonAction::Discard
     }
 }

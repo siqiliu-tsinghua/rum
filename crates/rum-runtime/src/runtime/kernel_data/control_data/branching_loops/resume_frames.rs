@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvalIfSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
 }
@@ -22,7 +22,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalIfSuspensionFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvalSwitchSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
 }
@@ -43,7 +43,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalSwitchSuspensionFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeWhileLoopSuspensionFrame1 {
     pub(super) args: rum_core::SharedArgs,
 }
@@ -61,7 +61,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeWhileLoopSuspensionFr
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeWhileLoopSuspensionFrame2 {
     pub(super) args: rum_core::SharedArgs,
 }
@@ -79,7 +79,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeWhileLoopSuspensionFr
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeUntilLoopSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) phase: crate::runtime::kernel_data::control_data::branching_loops::UntilPhase,
@@ -100,7 +100,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeUntilLoopSuspensionFr
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeForLoopSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) phase: crate::runtime::kernel_data::control_data::branching_loops::ForPhase,
@@ -121,7 +121,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeForLoopSuspensionFram
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeCompoundExpressionFromIndexSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) index: usize,
@@ -144,7 +144,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeWhichFromIndexSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) index: usize,
@@ -168,7 +168,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeWhichFromIndexSuspens
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeSwitchFromIndexSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) subject: rum_core::Expr,

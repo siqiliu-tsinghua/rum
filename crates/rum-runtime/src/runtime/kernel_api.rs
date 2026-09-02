@@ -103,7 +103,10 @@ pub use super::tree_walkers::collect_level_parts_owned;
 
 // suspension/core (stdlib-only bridge)
 #[doc(hidden)]
-pub use super::suspension::{ContinuationValue, FrameAction, PureFrameFinalizer, SuspensionFrame};
+pub use super::suspension::{
+    AbandonmentContext, ContinuationValue, FrameAbandon, FrameAbandonAction, FrameAction,
+    PureFrameFinalizer, SuspensionFrame,
+};
 #[doc(hidden)]
 pub use crate::resume_or_suspend;
 
@@ -112,6 +115,8 @@ pub use crate::resume_or_suspend;
 pub use super::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 #[doc(hidden)]
 pub use rum_derive::FrameRootTrace;
+#[doc(hidden)]
+pub use rum_derive::PureFrameAbandon;
 
 // text_rendering
 pub use super::kernel_data::text_rendering::{

@@ -138,7 +138,7 @@ impl Session {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvalReplaceAllSuspensionFrame {
     rules_expr: rum_core::Expr,
 }
@@ -159,7 +159,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalReplaceAllSuspensionFra
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeReplaceAllAfterRulesSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ResumeReplaceAllAfterRulesSuspensionFrame {
@@ -176,7 +176,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeReplaceAllAfterRulesS
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvalReplaceAllUnheldSuspensionFrame {
     rules_expr: rum_core::Expr,
 }
@@ -197,7 +197,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalReplaceAllUnheldSuspens
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeReplaceAllUnheldAfterRulesSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame

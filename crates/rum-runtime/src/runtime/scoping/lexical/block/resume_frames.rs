@@ -19,6 +19,20 @@ impl crate::runtime::suspension::SuspensionFrame for EvalSingleSymbolBlockSuspen
     }
 }
 
+impl crate::runtime::suspension::FrameAbandon for EvalSingleSymbolBlockSuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.restore_single_block_scope(
+            self.state.symbol,
+            self.state.saved_state.as_ref().clone(),
+            self.state.dynamic_depth,
+        );
+        crate::runtime::suspension::FrameAbandonAction::Discard
+    }
+}
+
 struct PrepareSingleBlockInitializerFinalizer {
     state: SuspendedSingleBlockScope,
     outcome: Result<Expr, EvalError>,
@@ -30,7 +44,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareSingleBlockInitia
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueSingleBlockInitializerFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueSingleBlockInitializerFrame {
@@ -72,6 +86,19 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeBlockInitializersSusp
     }
 }
 
+impl crate::runtime::suspension::FrameAbandon for ResumeBlockInitializersSuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.restore_block_scope(
+            self.state.saved_state.as_ref().clone(),
+            self.state.dynamic_depth,
+        );
+        crate::runtime::suspension::FrameAbandonAction::Discard
+    }
+}
+
 struct PrepareBlockInitializerFinalizer {
     state: SuspendedBlockInitializers,
     outcome: Result<Expr, EvalError>,
@@ -83,7 +110,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareBlockInitializerF
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueBlockInitializerFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueBlockInitializerFrame {
@@ -126,6 +153,20 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeSingleSymbolBlockBody
     }
 }
 
+impl crate::runtime::suspension::FrameAbandon for ResumeSingleSymbolBlockBodySuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.restore_single_block_scope(
+            self.state.symbol,
+            self.state.saved_state.as_ref().clone(),
+            self.state.dynamic_depth,
+        );
+        crate::runtime::suspension::FrameAbandonAction::Discard
+    }
+}
+
 struct PrepareSingleBlockBodyFinalizer {
     state: SuspendedSingleBlockScope,
     outcome: Result<Expr, EvalError>,
@@ -137,7 +178,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareSingleBlockBodyFi
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueSingleBlockBodyFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueSingleBlockBodyFrame {
@@ -178,6 +219,19 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeBlockBodySuspensionFr
     }
 }
 
+impl crate::runtime::suspension::FrameAbandon for ResumeBlockBodySuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.restore_block_scope(
+            self.state.saved_state.as_ref().clone(),
+            self.state.dynamic_depth,
+        );
+        crate::runtime::suspension::FrameAbandonAction::Discard
+    }
+}
+
 struct PrepareBlockBodyFinalizer {
     state: SuspendedBlockScope,
     outcome: Result<Expr, EvalError>,
@@ -189,7 +243,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareBlockBodyFinalize
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueBlockBodyFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueBlockBodyFrame {

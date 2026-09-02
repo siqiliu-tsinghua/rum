@@ -213,6 +213,14 @@ impl Session {
         }
     }
 
+    pub(in crate::runtime) fn abandon_trace_capture(
+        &mut self,
+        trace_checkpoint: usize,
+        prior_enabled: bool,
+    ) {
+        self.restore_trace_capture_on_error(trace_checkpoint, prior_enabled);
+    }
+
     pub(in crate::runtime::debug_tools) fn truncate_trace_from(&mut self, trace_checkpoint: usize) {
         self.trace_events.truncate(trace_checkpoint);
         self.trace_event_depths.truncate(trace_checkpoint);

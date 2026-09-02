@@ -153,7 +153,7 @@ const _: fn() = || {
     assert_traces::<RepeatedTimingEvalState>();
 };
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvalTimingLikeSuspensionFrame {
     symbol: std::sync::Arc<std::string::String>,
     started: std::time::Instant,
@@ -177,7 +177,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalTimingLikeSuspensionFra
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeRepeatedTimingFromSampleSuspensionFrame {
     pub(super) suspended_state: crate::runtime::debug_tools::timing::RepeatedTimingEvalState,
     pub(super) sample: usize,

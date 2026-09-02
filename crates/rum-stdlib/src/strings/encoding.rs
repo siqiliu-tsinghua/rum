@@ -1,5 +1,6 @@
 use super::*;
 use rum_core::SharedArgs;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
 #[cfg(feature = "hash")]
@@ -373,7 +374,7 @@ fn nibble_to_hex(nibble: u8) -> char {
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct EvalUncompressSuspensionFrame;
 
 impl rum_runtime::kernel_api::SuspensionFrame for EvalUncompressSuspensionFrame {

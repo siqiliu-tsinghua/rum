@@ -162,3 +162,13 @@ impl crate::runtime::suspension::SuspensionFrame for EvalMonitorSuspensionFrame 
         crate::runtime::suspension::FrameAction::complete(resumed)
     }
 }
+
+impl crate::runtime::suspension::FrameAbandon for EvalMonitorSuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.pop_monitor_scope();
+        crate::runtime::suspension::FrameAbandonAction::Discard
+    }
+}

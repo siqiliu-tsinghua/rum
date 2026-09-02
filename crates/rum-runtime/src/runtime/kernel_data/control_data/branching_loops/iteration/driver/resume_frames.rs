@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeDoAfterSpecEvalSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) spec_index: usize,
@@ -25,7 +25,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeDoAfterSpecEvalSuspen
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeDoIterationsSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::control_data::branching_loops::iteration::driver::SuspendedDoIterations,
 }
@@ -43,7 +43,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeDoIterationsSuspensio
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedDoIterationsSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::control_data::branching_loops::iteration::driver::SuspendedDoIterations,
 }
@@ -61,7 +61,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeSuspendedDoIterations
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeTableAfterSpecEvalSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) spec_index: usize,
@@ -85,7 +85,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeTableAfterSpecEvalSus
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeTableIterationsSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::control_data::branching_loops::iteration::driver::SuspendedTableIterations,
 }
@@ -103,7 +103,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeTableIterationsSuspen
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedTableIterationsSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::control_data::branching_loops::iteration::driver::SuspendedTableIterations,
 }
@@ -141,6 +141,16 @@ impl crate::runtime::suspension::SuspensionFrame for EvaluateLoopIteratorBodySus
     }
 }
 
+impl crate::runtime::suspension::FrameAbandon for EvaluateLoopIteratorBodySuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.restore_loop_iterator_scope(self.symbol, self.saved_state.0.as_ref().clone());
+        crate::runtime::suspension::FrameAbandonAction::Discard
+    }
+}
+
 struct PrepareLoopIteratorScopeFinalizer {
     symbol: Symbol,
     saved_state: SuspendedLoopIteratorSymbolState,
@@ -155,7 +165,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareLoopIteratorScope
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueLoopIteratorScopeFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueLoopIteratorScopeFrame {
@@ -194,5 +204,17 @@ impl crate::runtime::suspension::SuspensionFrame
         let resumed =
             (|| session.finish_loop_iterator_dynamic_scope(symbol, dynamic_depth, outcome))();
         crate::runtime::suspension::FrameAction::complete(resumed)
+    }
+}
+
+impl crate::runtime::suspension::FrameAbandon
+    for EvaluateLoopIteratorBodyWithDynamicValueSuspensionFrame
+{
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.restore_loop_iterator_dynamic_scope(self.symbol, self.dynamic_depth);
+        crate::runtime::suspension::FrameAbandonAction::Discard
     }
 }

@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvalPositionSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
 }
@@ -22,7 +22,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalPositionSuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumePositionAfterTargetSuspensionFrame {
     pub(super) target: rum_core::Expr,
     pub(super) args: rum_core::SharedArgs,
@@ -46,7 +46,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumePositionAfterTargetSu
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumePositionAfterPatternSuspensionFrame {
     pub(super) target: rum_core::Expr,
     pub(super) pattern: rum_core::Expr,
@@ -73,7 +73,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumePositionAfterPatternS
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishPositionAfterResolvedTraversalSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame
@@ -98,7 +98,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishPositionsAtCurrentNodeSuspensionFrame {
     pub(super) state: crate::runtime::tree_walkers::position::SuspendedPositionNode,
 }
@@ -120,7 +120,7 @@ impl crate::runtime::suspension::SuspensionFrame for FinishPositionsAtCurrentNod
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct CollectPositionChildrenSuspensionFrame {
     pub(super) state: crate::runtime::tree_walkers::position::SuspendedPositionChildren,
 }
@@ -144,7 +144,7 @@ impl crate::runtime::suspension::SuspensionFrame for CollectPositionChildrenSusp
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct CollectPositionChildrenSuspendedSuspensionFrame {
     pub(super) state: crate::runtime::tree_walkers::position::SuspendedPositionChildren,
 }
@@ -170,7 +170,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishPositionsAtCurrentNodeSuspendedSuspensionFrame {
     pub(super) state: crate::runtime::tree_walkers::position::SuspendedPositionNode,
 }

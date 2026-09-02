@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeArrayFromIndexSuspensionFrame {
     pub(super) state: crate::functional_ops::arrays::generators::SuspendedArrayEvalState,
     pub(super) index: usize,
@@ -31,7 +32,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeArrayFromIndexSuspension
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedArrayFromIndexSuspensionFrame {
     pub(super) state: crate::functional_ops::arrays::generators::SuspendedArrayEvalState,
     pub(super) index: usize,
@@ -61,7 +62,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSuspendedArrayFromIndexS
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeOuterFromIndexSuspensionFrame {
     pub(super) state: crate::functional_ops::arrays::generators::SuspendedOuterEvalState,
     pub(super) index: usize,
@@ -91,7 +92,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeOuterFromIndexSuspension
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedOuterFromIndexSuspensionFrame {
     pub(super) state: crate::functional_ops::arrays::generators::SuspendedOuterEvalState,
     pub(super) index: usize,

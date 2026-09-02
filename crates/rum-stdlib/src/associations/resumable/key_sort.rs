@@ -3,6 +3,7 @@ use crate::structure_ops::{
     ComparatorResultPolicy, MergeCompletion, MergeSortItem, sort_with_comparator,
 };
 use rum_core::SharedArgs;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -335,7 +336,7 @@ const _: fn() = || {
     assert_traces::<KeySortCompletion>();
 };
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeKeySortByFromIndexSuspensionFrame {
     state: crate::associations::resumable::key_sort::SuspendedKeySortByState,
     entry: rum_runtime::kernel_api::AssociationEntryForm,
@@ -361,7 +362,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeKeySortByFromIndexSuspen
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeKeySortByOrderingSuspensionFrame {
     state: crate::associations::resumable::key_sort::SuspendedKeySortByOrderingState,
     entry: rum_runtime::kernel_api::AssociationEntryForm,

@@ -182,3 +182,13 @@ impl crate::runtime::suspension::SuspensionFrame for EvaluateWithOptionValueScop
         crate::runtime::suspension::FrameAction::complete(resumed)
     }
 }
+
+impl crate::runtime::suspension::FrameAbandon for EvaluateWithOptionValueScopeSuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.pop_option_value_scope();
+        crate::runtime::suspension::FrameAbandonAction::Discard
+    }
+}

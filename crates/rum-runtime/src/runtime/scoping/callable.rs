@@ -138,7 +138,7 @@ fn runtime_profile_outcome_for_expr_result(
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct TryApplyFunctionSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for TryApplyFunctionSuspensionFrame {

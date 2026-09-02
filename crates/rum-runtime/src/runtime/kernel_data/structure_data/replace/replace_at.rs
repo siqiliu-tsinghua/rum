@@ -229,7 +229,7 @@ const _: fn() = || {
     assert_traces::<SuspendedReplaceAtPaths>();
 };
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvalReplaceAtSuspensionFrame {
     args: rum_core::SharedArgs,
 }
@@ -256,7 +256,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalReplaceAtSuspensionFram
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeReplaceAtAfterTargetSuspensionFrame {
     target: rum_core::Expr,
     rules_expr: rum_core::Expr,
@@ -321,7 +321,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareReplaceAtSetupFin
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ContinueReplaceAtSetupFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueReplaceAtSetupFrame {
@@ -379,7 +379,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueReplaceAtSetupFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ReplaceAtPathsOwnedSuspensionFrame {
     pub(super) state:
         crate::runtime::kernel_data::structure_data::replace::replace_at::SuspendedReplaceAtPaths,
@@ -405,7 +405,7 @@ impl crate::runtime::suspension::SuspensionFrame for ReplaceAtPathsOwnedSuspensi
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeSuspendedReplaceAtPathsSuspensionFrame {
     pub(super) state:
         crate::runtime::kernel_data::structure_data::replace::replace_at::SuspendedReplaceAtPaths,

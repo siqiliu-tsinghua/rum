@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeCountsAssociationEntriesFromIndexSuspensionFrame {
     pub(super) entries: crate::associations::suspended_state::FrozenAssociationSequence<
         rum_runtime::kernel_api::AssociationEntryForm,
@@ -42,7 +43,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedCountsAssociationEntriesFromIndexSuspensionFrame {
     pub(super) entries: crate::associations::suspended_state::FrozenAssociationSequence<
         rum_runtime::kernel_api::AssociationEntryForm,
@@ -83,7 +84,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeCatenateDirectAssociationEntriesFromIndexSuspensionFrame {
     pub(super) call_args: rum_core::SharedArgs,
     pub(super) entries: crate::associations::suspended_state::FrozenAssociationSequence<
@@ -122,7 +123,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedCatenateDirectAssociationEntriesFromIndexSuspensionFrame {
     pub(super) call_args: rum_core::SharedArgs,
     pub(super) entries: crate::associations::suspended_state::FrozenAssociationSequence<
@@ -161,7 +162,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeCatenateStepsFromIndexSuspensionFrame {
     pub(super) call_args: rum_core::SharedArgs,
     pub(super) steps: crate::associations::suspended_state::FrozenAssociationSequence<
@@ -198,7 +199,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeCatenateStepsFromIndexSu
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedCatenateStepsFromIndexSuspensionFrame {
     pub(super) call_args: rum_core::SharedArgs,
     pub(super) steps: crate::associations::suspended_state::FrozenAssociationSequence<

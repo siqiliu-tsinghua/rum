@@ -402,7 +402,7 @@ const _: fn() = || {
     assert_traces::<SuspendedUpValueScan>();
 };
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct TryApplyUpValuesFromListSuspensionFrame {
     pub(super) state: crate::runtime::definitions::application::up_values::SuspendedUpValueScan,
 }

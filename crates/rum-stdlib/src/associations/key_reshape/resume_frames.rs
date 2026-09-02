@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeKeyGroupByFromIndexSuspensionFrame {
     pub(super) function: rum_core::Expr,
     pub(super) reducer: std::option::Option<rum_core::Expr>,
@@ -45,7 +46,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeKeyGroupByFromIndexSuspe
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedKeyGroupByFromIndexSuspensionFrame {
     pub(super) function: rum_core::Expr,
     pub(super) reducer: std::option::Option<rum_core::Expr>,
@@ -91,7 +92,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeKeyGroupByReduceFromIndexSuspensionFrame {
     pub(super) reducer: rum_core::Expr,
     pub(super) grouped: crate::associations::suspended_state::FrozenAssociationSequence<(
@@ -134,7 +135,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeKeyGroupByReduceFromInde
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedKeyGroupByReduceFromIndexSuspensionFrame {
     pub(super) reducer: rum_core::Expr,
     pub(super) grouped: crate::associations::suspended_state::FrozenAssociationSequence<(

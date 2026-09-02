@@ -250,7 +250,7 @@ impl Session {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvalUpSetSuspensionFrame {
     lhs: Expr,
 }
@@ -269,7 +269,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalUpSetSuspensionFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvalTagSetSuspensionFrame {
     args: SharedArgs,
     tag: Symbol,

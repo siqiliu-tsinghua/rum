@@ -432,6 +432,15 @@ impl Session {
         outcome
     }
 
+    pub(in crate::runtime) fn abandon_loop_iterator_dynamic_scope(
+        &mut self,
+        symbol: Symbol,
+        dynamic_depth: usize,
+    ) {
+        self.truncate_dynamic_own_value_bindings(dynamic_depth);
+        self.clear_dynamic_scope_symbol_side_effects(&symbol);
+    }
+
     fn capture_loop_iterator_symbol_state(&self, symbol: &Symbol) -> BlockSymbolState {
         BlockSymbolState {
             definition: self.definitions.get(symbol).cloned(),
@@ -553,6 +562,14 @@ impl Session {
         }
 
         outcome
+    }
+
+    pub(in crate::runtime) fn abandon_loop_iterator_scope(
+        &mut self,
+        symbol: Symbol,
+        saved_state: BlockSymbolState,
+    ) {
+        let _ = self.finish_loop_iterator_scope(symbol, saved_state, Ok(system_expr("Null")));
     }
 }
 

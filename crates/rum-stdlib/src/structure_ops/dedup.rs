@@ -1,5 +1,6 @@
 use super::*;
 use rum_core::SharedArgs;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 use std::collections::HashSet;
 
@@ -423,7 +424,7 @@ const _: fn() = || {
     assert_traces::<DeleteDuplicatesTestState>();
 };
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeDeleteDuplicatesByFromIndexSuspensionFrame {
     expr_head: rum_core::Expr,
     function: rum_core::Expr,
@@ -466,7 +467,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeDeleteDuplicatesByFromIn
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeSuspendedDeleteDuplicatesByFromIndexSuspensionFrame {
     expr_head: rum_core::Expr,
     function: rum_core::Expr,
@@ -511,7 +512,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeDeleteDuplicatesTestFromKeptSuspensionFrame {
     state_expr_head: rum_core::Expr,
     state_test: rum_core::Expr,
@@ -560,7 +561,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeSuspendedDeleteDuplicatesTestFromKeptSuspensionFrame {
     expr_head: rum_core::Expr,
     test: rum_core::Expr,

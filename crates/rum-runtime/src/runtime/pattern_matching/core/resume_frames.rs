@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct MatchCompiledOwnedSuspensionFrame {
     pub(super) snapshot: crate::runtime::pattern_matching::suspended_state::FrozenMatcherSequence<
         (rum_core::Symbol, std::option::Option<rum_core::Expr>),
@@ -26,7 +26,7 @@ impl crate::runtime::suspension::SuspensionFrame for MatchCompiledOwnedSuspensio
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvaluatePatternTestOwnedSuspensionFrame {
     pub(super) bindings_for_true:
         crate::runtime::pattern_matching::suspended_state::FrozenMatchBindings,
@@ -81,7 +81,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for FinishPatternTestFinaliz
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct MatchCompiledAlternativesOwnedSuspensionFrame {
     pub(super) alternatives:
         crate::runtime::pattern_matching::suspended_state::FrozenMatcherSequence<
@@ -138,7 +138,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareCompiledAlternati
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueCompiledAlternativeFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueCompiledAlternativeFrame {
@@ -185,7 +185,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueCompiledAlternative
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct MatchCompiledNamedOwnedSuspensionFrame {
     pub(super) name: rum_core::Symbol,
     pub(super) value: rum_core::Expr,
@@ -223,7 +223,7 @@ impl crate::runtime::suspension::SuspensionFrame for MatchCompiledNamedOwnedSusp
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct MatchCompiledConditionOwnedSuspensionFrame {
     pub(super) condition: rum_core::Expr,
 }
@@ -256,7 +256,7 @@ impl crate::runtime::suspension::SuspensionFrame for MatchCompiledConditionOwned
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct MatchCompiledPatternTestOwnedSuspensionFrame {
     pub(super) test: rum_core::Expr,
     pub(super) value: rum_core::Expr,
@@ -296,7 +296,7 @@ impl crate::runtime::suspension::SuspensionFrame for MatchCompiledPatternTestOwn
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct MatchCompiledExceptOwnedSuspensionFrame {
     pub(super) excluded: crate::runtime::pattern_matching::suspended_state::FrozenMatcherValue<
         crate::runtime::session::session_state::MatcherNode,
@@ -342,7 +342,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareCompiledExceptFin
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueCompiledExceptFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueCompiledExceptFrame {
@@ -378,7 +378,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueCompiledExceptFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishCompiledExceptInnerSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for FinishCompiledExceptInnerSuspensionFrame {
@@ -399,7 +399,7 @@ impl crate::runtime::suspension::SuspensionFrame for FinishCompiledExceptInnerSu
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct MatchCompiledCallOwnedSuspensionFrame {
     pub(super) args: crate::runtime::pattern_matching::suspended_state::FrozenMatcherSequence<
         crate::runtime::session::session_state::MatcherArg,
@@ -465,7 +465,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareCompiledCallFinal
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueCompiledCallFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueCompiledCallFrame {
@@ -524,7 +524,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueCompiledCallFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct MatchCompiledKeyValuePatternChoiceOwnedSuspensionFrame {
     pub(super) state: crate::runtime::pattern_matching::core::SuspendedKeyValueChoice,
     pub(super) candidate_value: rum_core::Expr,
@@ -552,7 +552,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishKeyValueKeyMatchSuspensionFrame {
     pub(super) state: crate::runtime::pattern_matching::core::SuspendedKeyValueChoice,
 }
@@ -634,7 +634,7 @@ fn decode_key_value_match_payload(
     (state, candidate_value, match_outcome)
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueKeyValueKeyMatchFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueKeyValueKeyMatchFrame {
@@ -658,7 +658,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueKeyValueKeyMatchFra
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueKeyValueValueMatchFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueKeyValueValueMatchFrame {
@@ -679,7 +679,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueKeyValueValueMatchF
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvaluateSequencePatternChecksOwnedSuspensionFrame1 {
     pub(super) checks: crate::runtime::pattern_matching::suspended_state::FrozenMatcherSequence<
         crate::runtime::session::session_state::SequencePatternCheck,
@@ -716,7 +716,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvaluateSequencePatternChecksOwnedSuspensionFrame2 {
     pub(super) checks: crate::runtime::pattern_matching::suspended_state::FrozenMatcherSequence<
         crate::runtime::session::session_state::SequencePatternCheck,
@@ -788,7 +788,7 @@ fn plan_suspended_sequence_check(
     )
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ContinueSuspendedSequenceCheckFrame {
     state: SuspendedSequenceCheckState,
 }

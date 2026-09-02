@@ -348,7 +348,7 @@ fn runtime_profile_outcome_for_expr_result(
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvalCatchSuspensionFrame {
     form: std::option::Option<rum_core::Expr>,
     handler: std::option::Option<rum_core::Expr>,
@@ -369,7 +369,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalCatchSuspensionFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeCatchForThrowSuspensionFrame {
     handler: std::option::Option<rum_core::Expr>,
     value: rum_core::Expr,
@@ -401,7 +401,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeCatchForThrowSuspensi
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct FinishCatchForThrowWithFormSuspensionFrame {
     handler: std::option::Option<rum_core::Expr>,
     value: rum_core::Expr,
@@ -445,7 +445,7 @@ impl crate::runtime::suspension::SuspensionFrame for FinishCatchForThrowWithForm
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeCatchForBypassingThrowSuspensionFrame {
     value: rum_core::Expr,
     tag: rum_core::Expr,
@@ -491,7 +491,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeCatchForBypassingThro
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct FinishCatchForBypassingThrowWithFormSuspensionFrame {
     value: rum_core::Expr,
     tag: rum_core::Expr,

@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct EvalToExpressionSuspensionFrame1;
 
 impl rum_runtime::kernel_api::SuspensionFrame for EvalToExpressionSuspensionFrame1 {
@@ -18,7 +19,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for EvalToExpressionSuspensionFram
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct EvalToExpressionSuspensionFrame2;
 
 impl rum_runtime::kernel_api::SuspensionFrame for EvalToExpressionSuspensionFrame2 {

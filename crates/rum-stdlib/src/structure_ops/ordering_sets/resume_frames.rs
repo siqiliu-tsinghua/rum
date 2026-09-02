@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSetSameTestSuspensionFrame1 {
     pub(super) state: crate::structure_ops::ordering_sets::suspended::SuspendedSetSameTestState,
 }
@@ -22,7 +23,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSetSameTestSuspensionFra
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSetSameTestSuspensionFrame2 {
     pub(super) state: crate::structure_ops::ordering_sets::suspended::SuspendedSetSameTestState,
 }
@@ -43,7 +44,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSetSameTestSuspensionFra
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSetSameTestSuspensionFrame3 {
     pub(super) state: crate::structure_ops::ordering_sets::suspended::SuspendedSetSameTestState,
 }
@@ -64,7 +65,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSetSameTestSuspensionFra
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSortByFromIndexSuspensionFrame {
     pub(super) expr_head: rum_core::Expr,
     pub(super) function: rum_core::Expr,
@@ -107,7 +108,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSortByFromIndexSuspensio
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSortByOrderingFromIndexSuspensionFrame {
     pub(super) expr_head: rum_core::Expr,
     pub(super) function: rum_core::Expr,

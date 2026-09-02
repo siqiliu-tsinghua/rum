@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ApplyReplaceAllSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ApplyReplaceAllSuspensionFrame {
@@ -22,7 +22,7 @@ impl crate::runtime::suspension::SuspensionFrame for ApplyReplaceAllSuspensionFr
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ApplyReplaceAllWithPlanSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ApplyReplaceAllWithPlanSuspensionFrame {
@@ -43,7 +43,7 @@ impl crate::runtime::suspension::SuspensionFrame for ApplyReplaceAllWithPlanSusp
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ApplyReplaceAllOwnedSuspensionFrame {
     pub(super) expr: rum_core::Expr,
     pub(super) rules: crate::runtime::RewriteRulePlan,
@@ -80,7 +80,7 @@ impl crate::runtime::suspension::SuspensionFrame for ApplyReplaceAllOwnedSuspens
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ApplyReplaceAllAfterMissSuspensionFrame {
     pub(super) remaining_args: rum_core::SharedArgs,
     pub(super) rules: crate::runtime::RewriteRulePlan,
@@ -127,7 +127,7 @@ impl crate::runtime::suspension::SuspensionFrame for ApplyReplaceAllAfterMissSus
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ApplyReplaceAllArgsSuspensionFrame {
     pub(super) state:
         crate::runtime::definitions::application::replace_all::SuspendedReplaceAllArgs,
@@ -158,7 +158,7 @@ impl crate::runtime::suspension::SuspensionFrame for ApplyReplaceAllArgsSuspensi
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedReplaceAllArgsSuspensionFrame {
     pub(super) state:
         crate::runtime::definitions::application::replace_all::SuspendedReplaceAllArgs,
@@ -189,7 +189,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeSuspendedReplaceAllAr
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ApplyRulesOnceFromListSuspensionFrame {
     pub(super) state:
         crate::runtime::definitions::application::replace_all::SuspendedRewriteRuleMatch,

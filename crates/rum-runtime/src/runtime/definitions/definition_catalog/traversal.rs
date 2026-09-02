@@ -395,7 +395,7 @@ impl Session {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResolveCasesTraversalOwnedSuspensionFrame {
     defaults: crate::runtime::CasesTraversalConfig,
 }
@@ -428,7 +428,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResolveCasesTraversalOwnedS
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResolvePositionTraversalOwnedSuspensionFrame {
     defaults: crate::runtime::CasesTraversalConfig,
 }
@@ -462,7 +462,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResolvePositionTraversalOwn
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResolveTraversalWithoutLimitOwnedSuspensionFrame {
     defaults: crate::runtime::CasesTraversalConfig,
 }

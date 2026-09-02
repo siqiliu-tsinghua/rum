@@ -164,7 +164,7 @@ const _: fn() = || {
     assert_traces::<SuspendedArgumentResolution>();
 };
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResolveArgumentExprsFromCursorSuspensionFrame {
     pub(super) suspended:
         crate::runtime::definitions::definition_catalog::arguments::SuspendedArgumentResolution,
@@ -191,7 +191,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResolveArgumentExprsFromCur
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeSuspendedArgumentResolutionSuspensionFrame {
     pub(super) state:
         crate::runtime::definitions::definition_catalog::arguments::SuspendedArgumentResolution,

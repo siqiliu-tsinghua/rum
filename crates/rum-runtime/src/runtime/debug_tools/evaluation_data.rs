@@ -239,3 +239,19 @@ impl crate::runtime::suspension::SuspensionFrame for EvalEvaluationDataSuspensio
         crate::runtime::suspension::FrameAction::complete(resumed)
     }
 }
+
+impl crate::runtime::suspension::FrameAbandon for EvalEvaluationDataSuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        context.restore_evaluation_data_capture(
+            self.checkpoint.message_checkpoint,
+            self.checkpoint.print_checkpoint,
+            self.checkpoint.trace_checkpoint,
+            self.checkpoint.handled_error_checkpoint,
+            self.prior_tracing,
+        );
+        crate::runtime::suspension::FrameAbandonAction::Discard
+    }
+}

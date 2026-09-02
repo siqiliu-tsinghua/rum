@@ -1,3 +1,4 @@
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -404,7 +405,7 @@ const _: fn() = || {
     assert_traces::<SuspendedStringApplyEvalState>();
 };
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeStringApplyFromIndexSuspensionFrame {
     state: crate::strings::SuspendedStringApplyEvalState,
     index: usize,
@@ -433,7 +434,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeStringApplyFromIndexSusp
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct ResumeSuspendedStringApplyFromIndexSuspensionFrame {
     state: crate::strings::SuspendedStringApplyEvalState,
     index: usize,

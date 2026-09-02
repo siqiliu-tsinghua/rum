@@ -50,6 +50,38 @@ pub fn derive_frame_root_trace(input: TokenStream) -> TokenStream {
         .into()
 }
 
+/// Marks a suspension frame as pure computation state that is discarded on
+/// abandonment without running ordinary continuation work.
+#[proc_macro_derive(PureFrameAbandon)]
+pub fn derive_pure_frame_abandon(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+    expand_pure_frame_abandon(&input)
+        .unwrap_or_else(syn::Error::into_compile_error)
+        .into()
+}
+
+fn expand_pure_frame_abandon(input: &DeriveInput) -> syn::Result<proc_macro2::TokenStream> {
+    let name = &input.ident;
+    if matches!(input.data, Data::Union(_)) {
+        return Err(syn::Error::new_spanned(
+            name,
+            "PureFrameAbandon cannot be derived for unions; use a struct or enum",
+        ));
+    }
+
+    let (impl_generics, type_generics, where_clause) = input.generics.split_for_impl();
+    Ok(quote! {
+        impl #impl_generics FrameAbandon for #name #type_generics #where_clause {
+            fn abandon(
+                self: ::std::sync::Arc<Self>,
+                _context: &mut AbandonmentContext<'_>,
+            ) -> FrameAbandonAction {
+                FrameAbandonAction::Discard
+            }
+        }
+    })
+}
+
 fn expand_frame_root_trace(input: &DeriveInput) -> syn::Result<proc_macro2::TokenStream> {
     let name = &input.ident;
     let mut generics = input.generics.clone();
@@ -319,6 +351,24 @@ mod tests {
             error.to_string(),
             "FrameRootTrace cannot be derived for unions; use a struct or enum with traceable fields"
         );
+    }
+
+    #[test]
+    fn pure_frame_abandon_preserves_generics_and_where_clauses() {
+        let input: DeriveInput = parse_quote! {
+            struct Generic<T>
+            where
+                T: Clone,
+            {
+                value: T,
+            }
+        };
+
+        let expanded = expand_pure_frame_abandon(&input).unwrap().to_string();
+
+        assert!(expanded.contains("impl < T > FrameAbandon for Generic < T >"));
+        assert!(expanded.contains("where T : Clone"));
+        assert!(expanded.contains("FrameAbandonAction :: Discard"));
     }
 
     fn trace_call_count(input: &DeriveInput) -> usize {

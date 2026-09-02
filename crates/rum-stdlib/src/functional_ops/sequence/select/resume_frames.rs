@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSelectFromIndexSuspensionFrame {
     pub(super) source: crate::functional_ops::sequence::select::SuspendedSelectSource,
     pub(super) criterion: rum_core::Expr,
@@ -39,7 +40,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSelectFromIndexSuspensio
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedSelectFromIndexSuspensionFrame {
     pub(super) source: crate::functional_ops::sequence::select::SuspendedSelectSource,
     pub(super) criterion: rum_core::Expr,
@@ -77,7 +78,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSuspendedSelectFromIndex
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSelectFirstFromIndexSuspensionFrame {
     pub(super) source: crate::functional_ops::sequence::select::SuspendedSelectSource,
     pub(super) criterion: rum_core::Expr,
@@ -111,7 +112,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeSelectFirstFromIndexSusp
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedSelectFirstFromIndexSuspensionFrame {
     pub(super) source: crate::functional_ops::sequence::select::SuspendedSelectSource,
     pub(super) criterion: rum_core::Expr,

@@ -197,7 +197,7 @@ fn matches_pattern_head(head: &Expr) -> bool {
         .is_some_and(|pattern_head| pattern_head != MatcherPatternHead::OptionsPattern)
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvalMatchQSuspensionFrame {
     pattern_expr: rum_core::Expr,
 }
@@ -218,7 +218,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalMatchQSuspensionFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeMatchQAfterValueSuspensionFrame {
     value: rum_core::Expr,
 }
@@ -239,7 +239,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeMatchQAfterValueSuspe
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct FinishMatchQWithPatternSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for FinishMatchQWithPatternSuspensionFrame {

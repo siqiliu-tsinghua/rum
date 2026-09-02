@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct MatchCompiledArgAndRestOwnedSuspensionFrame {
     pub(super) rest_patterns:
         crate::runtime::pattern_matching::suspended_state::FrozenMatcherSequence<
@@ -59,7 +59,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareArgAndRestFinaliz
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueMatchCompiledArgAndRestFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueMatchCompiledArgAndRestFrame {
@@ -82,7 +82,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueMatchCompiledArgAnd
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct MatchFlatSingleChoiceSuspensionFrame {
     pub(super) state: crate::runtime::pattern_matching::sequence::SuspendedFlatSingleChoiceState,
     pub(super) rest_values: rum_core::SharedArgs,
@@ -126,7 +126,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareFlatSinglePattern
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueFlatSinglePatternFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueFlatSinglePatternFrame {
@@ -156,7 +156,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueFlatSinglePatternFr
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishFlatSinglePatternSuspensionFrame {
     pub(super) state: crate::runtime::pattern_matching::sequence::SuspendedFlatSingleChoiceState,
 }
@@ -196,7 +196,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareFlatSingleRestFin
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueFlatSingleRestFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueFlatSingleRestFrame {
@@ -222,7 +222,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueFlatSingleRestFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct CollectCompiledArgAndRestMatchesOwnedSuspensionFrame {
     pub(super) rest_patterns:
         crate::runtime::pattern_matching::suspended_state::FrozenMatcherSequence<
@@ -267,7 +267,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueCollectCompiledArgAndRestFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueCollectCompiledArgAndRestFrame {
@@ -290,7 +290,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueCollectCompiledArgA
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct CollectFlatSingleChoiceSuspensionFrame {
     pub(super) state:
         crate::runtime::pattern_matching::sequence::SuspendedFlatSingleCollectionState,
@@ -337,7 +337,7 @@ impl crate::runtime::suspension::PureFrameFinalizer
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueFlatSingleCollectionPatternFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueFlatSingleCollectionPatternFrame {
@@ -370,7 +370,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueFlatSingleCollectio
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishFlatSingleCollectionPatternSuspensionFrame {
     pub(super) state:
         crate::runtime::pattern_matching::sequence::SuspendedFlatSingleCollectionState,
@@ -413,7 +413,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareFlatSingleCollect
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueFlatSingleCollectionRestFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueFlatSingleCollectionRestFrame {

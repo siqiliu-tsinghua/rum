@@ -145,7 +145,7 @@ impl DefinitionLhsStructuralSelection {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct DefinitionLhsPreparationSuspensionFrame {
     pub(super) state:
         crate::runtime::definitions::definition_lhs_preparation::DefinitionLhsPreparationState,

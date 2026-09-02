@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct MatchCompiledDefinitionConditionOwnedSuspensionFrame {
     pub(super) guards: rum_core::SharedArgs,
     pub(super) option_scope: std::option::Option<crate::runtime::options::OptionValueScope>,
@@ -38,7 +38,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvaluateOwnedGuardsSuspensionFrame {
     pub(super) state: crate::runtime::definitions::rhs_guards::SuspendedGuardEvaluation,
 }
@@ -53,7 +53,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvaluateOwnedGuardsSuspensi
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvaluateReadonlySuspendedGuardsSuspensionFrame {
     pub(super) state: crate::runtime::definitions::rhs_guards::SuspendedReadonlyGuardEvaluation,
 }
@@ -125,7 +125,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for GuardOutcomeFinalizer {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvaluateDefinitionRhsGuardsForMatchSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame

@@ -1,7 +1,8 @@
 use super::*;
+use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeAssociationGroupByFromIndexWithGroupsSuspensionFrame1 {
     pub(super) head: rum_core::Expr,
     pub(super) call_args: rum_core::SharedArgs,
@@ -59,7 +60,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeAssociationGroupByFromIndexWithGroupsSuspensionFrame2 {
     pub(super) entry_key: rum_core::Expr,
     pub(super) entry_delayed: bool,
@@ -137,7 +138,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedAssociationGroupByFromIndexSuspensionFrame1 {
     pub(super) head: rum_core::Expr,
     pub(super) call_args: rum_core::SharedArgs,
@@ -195,7 +196,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedAssociationGroupByFromIndexSuspensionFrame2 {
     pub(super) entry_key: rum_core::Expr,
     pub(super) entry_delayed: bool,
@@ -273,7 +274,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedAssociationGroupByWithKeySuspensionFrame {
     pub(super) entry_key: rum_core::Expr,
     pub(super) entry_delayed: bool,
@@ -351,7 +352,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeAssociationGroupByNestedFromIndexSuspensionFrame {
     pub(super) head: rum_core::Expr,
     pub(super) call_args: rum_core::SharedArgs,
@@ -411,7 +412,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedAssociationGroupByNestedFromIndexSuspensionFrame {
     pub(super) head: rum_core::Expr,
     pub(super) call_args: rum_core::SharedArgs,
@@ -471,7 +472,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeAssociationGroupByReduceFromIndexSuspensionFrame {
     pub(super) head: rum_core::Expr,
     pub(super) call_args: rum_core::SharedArgs,
@@ -522,7 +523,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedAssociationGroupByReduceFromIndexSuspensionFrame {
     pub(super) head: rum_core::Expr,
     pub(super) call_args: rum_core::SharedArgs,

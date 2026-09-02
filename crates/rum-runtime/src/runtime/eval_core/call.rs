@@ -357,7 +357,7 @@ fn call_dispatch_stage_profile_name(stage: CallDispatchStage) -> &'static str {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvaluateCallSuspensionFrame {
     args_for_resume: rum_core::SharedArgs,
 }
@@ -380,7 +380,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvaluateCallSuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeCallWithDispatchPlanSuspensionFrame {
     pub(super) evaluated_head: rum_core::SharedExpr,
     pub(super) plan: crate::runtime::session::session_state::SuspendedCallDispatchPlan,
@@ -418,7 +418,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeCallWithDispatchPlanS
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeSuspendedCallWithDispatchPlanSuspensionFrame {
     pub(super) evaluated_head: rum_core::SharedExpr,
     pub(super) plan: crate::runtime::session::session_state::SuspendedCallDispatchPlan,

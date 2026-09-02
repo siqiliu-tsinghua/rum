@@ -1,20 +1,71 @@
 use std::collections::VecDeque;
 use std::mem::{size_of, size_of_val};
 use std::sync::Arc;
+use std::time::Instant;
 
 use super::trace::{FrameRootTrace, FrameRootVisitor};
 use super::*;
 
 type DynSuspensionFrame = dyn SuspensionFrame;
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+pub(in crate::runtime) struct SuspensionGeneration(u64);
+
 pub(in crate::runtime) struct SuspendedEvaluation {
     pub(in crate::runtime) active_stack: Vec<EvaluationStackEntry>,
+    #[allow(dead_code)]
+    generation: SuspensionGeneration,
     frames: VecDeque<Arc<DynSuspensionFrame>>,
+}
+
+/// Why a live continuation owner is being abandoned.
+#[allow(dead_code)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(in crate::runtime) enum AbandonReason {
+    CancelledRequest,
+    HelperBestEffortDiscard,
+    CheckpointRollbackDiscard,
+    SupersededOrQueuedInputDiscard,
+}
+
+/// The restricted structural-restoration surface available to frames while a
+/// continuation is being abandoned.
+#[doc(hidden)]
+pub struct AbandonmentContext<'a> {
+    session: &'a mut Session,
+    #[allow(dead_code)]
+    reason: AbandonReason,
+}
+
+/// Capability token for the sole abandonment transition allowed to evaluate.
+#[doc(hidden)]
+pub struct AbandonCleanup {
+    #[allow(dead_code)]
+    expr: Expr,
+}
+
+/// The closed transition protocol used only by the abandonment driver.
+#[doc(hidden)]
+pub enum FrameAbandonAction {
+    Discard,
+    EvaluateCleanup(AbandonCleanup),
+}
+
+impl FrameAbandonAction {
+    pub(in crate::runtime) fn evaluate_cleanup(expr: Expr) -> Self {
+        Self::EvaluateCleanup(AbandonCleanup { expr })
+    }
+}
+
+/// Mandatory abandonment classification for every suspension frame.
+#[doc(hidden)]
+pub trait FrameAbandon {
+    fn abandon(self: Arc<Self>, context: &mut AbandonmentContext<'_>) -> FrameAbandonAction;
 }
 
 /// A traceable, immutable continuation frame installed at an input boundary.
 #[doc(hidden)]
-pub trait SuspensionFrame: FrameRootTrace + Send + Sync + 'static {
+pub trait SuspensionFrame: FrameRootTrace + FrameAbandon + Send + Sync + 'static {
     fn resume(
         self: Arc<Self>,
         session: &mut Session,
@@ -72,9 +123,10 @@ pub trait ContinuationValue: Sized {
 }
 
 impl SuspendedEvaluation {
-    fn new(active_stack: Vec<EvaluationStackEntry>) -> Self {
+    fn new(active_stack: Vec<EvaluationStackEntry>, generation: SuspensionGeneration) -> Self {
         Self {
             active_stack,
+            generation,
             frames: VecDeque::new(),
         }
     }
@@ -95,6 +147,15 @@ impl SuspendedEvaluation {
         self.frames
             .pop_front()
             .expect("the resumed suspension frame should remain queued")
+    }
+
+    #[allow(dead_code)]
+    fn take_front(&mut self) -> Option<Arc<DynSuspensionFrame>> {
+        self.frames.pop_front()
+    }
+
+    fn is_empty(&self) -> bool {
+        self.frames.is_empty()
     }
 
     fn append(&mut self, suffix: &mut Self) {
@@ -121,7 +182,201 @@ impl SuspendedEvaluation {
     }
 }
 
+struct SuspensionSlot<'a> {
+    pending_request: &'a mut Option<RuntimeInputRequest>,
+    pending_owner: &'a mut Option<SuspendedEvaluation>,
+    next_generation: &'a mut u64,
+}
+
+impl SuspensionSlot<'_> {
+    fn install(
+        &mut self,
+        request: RuntimeInputRequest,
+        active_stack: Vec<EvaluationStackEntry>,
+    ) -> SuspensionGeneration {
+        *self.next_generation = self
+            .next_generation
+            .checked_add(1)
+            .expect("suspension generation should not wrap");
+        let generation = SuspensionGeneration(*self.next_generation);
+        *self.pending_request = Some(request);
+        *self.pending_owner = Some(SuspendedEvaluation::new(active_stack, generation));
+        generation
+    }
+
+    fn take_for_resume(&mut self) -> Option<SuspendedEvaluation> {
+        *self.pending_request = None;
+        self.pending_owner.take()
+    }
+
+    #[allow(dead_code)]
+    fn take_for_abandon(&mut self) -> Option<SuspendedEvaluation> {
+        *self.pending_request = None;
+        self.pending_owner.take()
+    }
+}
+
+impl AbandonmentContext<'_> {
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn reason(&self) -> AbandonReason {
+        self.reason
+    }
+
+    pub(in crate::runtime) fn restore_block_scope(
+        &mut self,
+        saved_state: BTreeMap<Symbol, BlockSymbolState>,
+        dynamic_depth: usize,
+    ) {
+        self.session.abandon_block_scope(saved_state, dynamic_depth);
+    }
+
+    pub(in crate::runtime) fn restore_single_block_scope(
+        &mut self,
+        symbol: Symbol,
+        saved_state: BlockSymbolState,
+        dynamic_depth: usize,
+    ) {
+        self.session
+            .abandon_single_block_scope(symbol, saved_state, dynamic_depth);
+    }
+
+    pub(in crate::runtime) fn finish_module_activation(&mut self, activation_depth: usize) {
+        self.session.abandon_module_scope(activation_depth);
+    }
+
+    pub(in crate::runtime) fn restore_loop_iterator_scope(
+        &mut self,
+        symbol: Symbol,
+        saved_state: BlockSymbolState,
+    ) {
+        self.session
+            .abandon_loop_iterator_scope(symbol, saved_state);
+    }
+
+    pub(in crate::runtime) fn restore_loop_iterator_dynamic_scope(
+        &mut self,
+        symbol: Symbol,
+        dynamic_depth: usize,
+    ) {
+        self.session
+            .abandon_loop_iterator_dynamic_scope(symbol, dynamic_depth);
+    }
+
+    pub(in crate::runtime) fn pop_option_value_scope(&mut self) {
+        self.session
+            .option_value_scopes
+            .pop()
+            .expect("abandoned OptionValue frame should own a scope");
+    }
+
+    pub(in crate::runtime) fn pop_reap_scope(&mut self) {
+        self.session
+            .reap_scopes
+            .pop()
+            .expect("abandoned Reap frame should own a scope");
+    }
+
+    pub(in crate::runtime) fn pop_monitor_scope(&mut self) {
+        self.session
+            .monitor_scopes
+            .pop()
+            .expect("abandoned Monitor frame should own a scope");
+    }
+
+    pub(in crate::runtime) fn restore_time_deadline(&mut self, prior: Option<Instant>) {
+        self.session.current_time_deadline = prior;
+    }
+
+    pub(in crate::runtime) fn restore_memory_limit(&mut self, prior: Option<usize>) {
+        self.session.current_memory_limit = prior;
+    }
+
+    pub(in crate::runtime) fn restore_trace_capture(
+        &mut self,
+        trace_checkpoint: usize,
+        prior_enabled: bool,
+    ) {
+        self.session
+            .abandon_trace_capture(trace_checkpoint, prior_enabled);
+    }
+
+    pub(in crate::runtime) fn restore_evaluation_data_capture(
+        &mut self,
+        message_checkpoint: usize,
+        print_checkpoint: usize,
+        trace_checkpoint: usize,
+        handled_error_checkpoint: usize,
+        prior_tracing: bool,
+    ) {
+        self.session.tracing_enabled = prior_tracing;
+        self.session.messages.truncate(message_checkpoint);
+        self.session.prints.truncate(print_checkpoint);
+        if !prior_tracing {
+            self.session.trace_events.truncate(trace_checkpoint);
+            self.session.trace_event_depths.truncate(trace_checkpoint);
+        }
+        self.session
+            .handled_non_loader_eval_errors
+            .truncate(handled_error_checkpoint);
+    }
+
+    pub(in crate::runtime) fn restore_message_capture(
+        &mut self,
+        message_checkpoint: usize,
+        handled_error_checkpoint: usize,
+    ) {
+        self.session.messages.truncate(message_checkpoint);
+        self.session
+            .handled_non_loader_eval_errors
+            .truncate(handled_error_checkpoint);
+    }
+
+    pub(in crate::runtime) fn restore_stream_capture(
+        &mut self,
+        message_checkpoint: usize,
+        print_checkpoint: usize,
+        handled_error_checkpoint: usize,
+    ) {
+        self.session.messages.truncate(message_checkpoint);
+        self.session.prints.truncate(print_checkpoint);
+        self.session
+            .handled_non_loader_eval_errors
+            .truncate(handled_error_checkpoint);
+    }
+
+    pub(in crate::runtime) fn restore_abort_checkpoint(&mut self, pending_checkpoint: usize) {
+        self.session.abort_protect_pending = pending_checkpoint;
+    }
+
+    pub(in crate::runtime) fn restore_abort_protect_scope(&mut self, pending_checkpoint: usize) {
+        self.session.abandon_abort_protect(pending_checkpoint);
+    }
+
+    pub(in crate::runtime) fn restore_iteration_product_budget(&mut self, budget: (usize, u8)) {
+        self.session.iteration_product_budget.set(budget);
+    }
+
+    pub(in crate::runtime) fn restore_prng_state(&mut self, state: PrngState) {
+        self.session.prng_state = state;
+    }
+
+    pub(in crate::runtime) fn rollback_package_install(
+        &mut self,
+        plan: &crate::runtime::scoping::packages::PackageInstallPlan,
+    ) {
+        self.session.rollback_package_install(plan);
+    }
+}
+
 impl Session {
+    fn suspension_slot(&mut self) -> SuspensionSlot<'_> {
+        SuspensionSlot {
+            pending_request: &mut self.pending_input_request,
+            pending_owner: &mut self.pending_suspension,
+            next_generation: &mut self.next_suspension_generation,
+        }
+    }
+
     pub(in crate::runtime) fn begin_input_suspension(&mut self, request: RuntimeInputRequest) {
         // The current InputString call and its immediate caller are both
         // resumed from saved suspension frames rather than by restarting
@@ -137,8 +392,7 @@ impl Session {
             .cloned()
             .collect::<Vec<_>>();
 
-        self.pending_input_request = Some(request);
-        self.pending_suspension = Some(SuspendedEvaluation::new(active_stack));
+        self.suspension_slot().install(request, active_stack);
     }
 
     /// Inserts a named, traceable frame into the fresh pending suspension.
@@ -161,9 +415,17 @@ impl Session {
         self.pending_suspension = None;
     }
 
-    pub(in crate::runtime) fn clear_suspension_state(&mut self) {
-        self.clear_pending_suspension_state();
-        self.resuming_suspension = None;
+    fn finish_completed_resumption(&mut self) {
+        debug_assert!(self.pending_suspension.is_none());
+        let completed = self
+            .resuming_suspension
+            .take()
+            .expect("completed resumption should retain its owner until the queue is empty");
+        assert!(
+            completed.is_empty(),
+            "completed resumption must not discard queued frames"
+        );
+        self.pending_input_request = None;
     }
 
     pub(in crate::runtime) fn resume_suspended_evaluation(
@@ -177,8 +439,8 @@ impl Session {
             "a Session resumes only one suspended evaluation at a time"
         );
         self.resuming_suspension = Some(
-            self.pending_suspension
-                .take()
+            self.suspension_slot()
+                .take_for_resume()
                 .expect("resume requires a pending suspended evaluation"),
         );
         let active_stack = std::mem::take(
@@ -204,8 +466,7 @@ impl Session {
 
         match result {
             Ok(value) => {
-                self.pending_input_request = None;
-                self.resuming_suspension = None;
+                self.finish_completed_resumption();
                 Ok(value)
             }
             Err(EvalError::InputRequired { request }) => {
@@ -213,10 +474,81 @@ impl Session {
                 Err(EvalError::InputRequired { request })
             }
             Err(error) => {
-                self.clear_suspension_state();
+                self.finish_completed_resumption();
                 Err(error)
             }
         }
+    }
+
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn abandon_pending_suspension(
+        &mut self,
+        reason: AbandonReason,
+    ) -> AbandonReason {
+        let pending = self.suspension_slot().take_for_abandon();
+        self.pending_eval_request = None;
+        let Some(pending) = pending else {
+            return reason;
+        };
+
+        self.abandonment_worklist.push(pending);
+        if self.abandonment_active {
+            return reason;
+        }
+
+        self.abandonment_active = true;
+        let saved_stack = std::mem::take(&mut self.evaluation_stack);
+        let saved_depth = std::mem::replace(&mut self.evaluation_depth, 0);
+
+        while let Some(mut suspension) = self.abandonment_worklist.pop() {
+            debug_assert!(self.evaluation_stack.is_empty());
+            self.evaluation_stack = std::mem::take(&mut suspension.active_stack);
+            self.evaluation_depth = self.evaluation_stack.len();
+
+            while let Some(frame) = suspension.take_front() {
+                let action = frame.abandon(&mut AbandonmentContext {
+                    session: self,
+                    reason,
+                });
+
+                match action {
+                    FrameAbandonAction::Discard => {}
+                    FrameAbandonAction::EvaluateCleanup(cleanup) => {
+                        if !suspension.is_empty() {
+                            suspension.active_stack = self.evaluation_stack.clone();
+                            self.abandonment_worklist.push(suspension);
+                        }
+
+                        let cleanup_outcome = self.evaluate(cleanup.expr);
+                        if matches!(cleanup_outcome, Err(EvalError::InputRequired { .. })) {
+                            if let Some(nested) = self.suspension_slot().take_for_abandon() {
+                                self.abandonment_worklist.push(nested);
+                            }
+                            self.pending_eval_request = None;
+                        }
+
+                        self.evaluation_stack.clear();
+                        self.evaluation_depth = 0;
+                        break;
+                    }
+                }
+            }
+
+            self.evaluation_stack.clear();
+            self.evaluation_depth = 0;
+        }
+
+        self.evaluation_stack = saved_stack;
+        self.evaluation_depth = saved_depth;
+        self.abandonment_active = false;
+        reason
+    }
+
+    #[cfg(test)]
+    pub(in crate::runtime) fn pending_suspension_generation(&self) -> Option<SuspensionGeneration> {
+        self.pending_suspension
+            .as_ref()
+            .map(|suspension| suspension.generation)
     }
 
     fn drive_resuming_frames(

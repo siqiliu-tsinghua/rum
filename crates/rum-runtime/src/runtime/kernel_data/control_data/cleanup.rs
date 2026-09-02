@@ -167,6 +167,15 @@ impl crate::runtime::suspension::SuspensionFrame for EvalWithCleanupSuspensionFr
     }
 }
 
+impl crate::runtime::suspension::FrameAbandon for EvalWithCleanupSuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        _context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        crate::runtime::suspension::FrameAbandonAction::evaluate_cleanup(self.cleanup.clone())
+    }
+}
+
 #[derive(rum_derive::FrameRootTrace)]
 struct DriveWithCleanupPrimarySuspensionFrame {
     cleanup: rum_core::Expr,
@@ -186,7 +195,16 @@ impl crate::runtime::suspension::SuspensionFrame for DriveWithCleanupPrimarySusp
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+impl crate::runtime::suspension::FrameAbandon for DriveWithCleanupPrimarySuspensionFrame {
+    fn abandon(
+        self: std::sync::Arc<Self>,
+        _context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        crate::runtime::suspension::FrameAbandonAction::evaluate_cleanup(self.cleanup.clone())
+    }
+}
+
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeWithCleanupAfterPrimarySuspensionFrame {
     pub(super) primary_outcome:
         crate::runtime::kernel_data::control_data::cleanup::SuspendedCleanupPrimaryOutcome,

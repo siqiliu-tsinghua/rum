@@ -169,7 +169,7 @@ const _: fn() = || {
     assert_traces::<SuspendedWithBindings>();
 };
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeWithBindingsSuspensionFrame {
     pub(super) state: crate::runtime::scoping::lexical::with::SuspendedWithBindings,
     pub(super) symbol: rum_core::Symbol,
@@ -193,7 +193,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeWithBindingsSuspensio
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeSuspendedWithBindingSuspensionFrame {
     pub(super) state: crate::runtime::scoping::lexical::with::SuspendedWithBindings,
     pub(super) symbol: rum_core::Symbol,

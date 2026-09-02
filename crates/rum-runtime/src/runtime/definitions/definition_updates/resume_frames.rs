@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishHeldPartSelectorEvaluationSuspensionFrame {
     pub(super) operation: crate::runtime::definitions::definition_updates::HeldUpdateOperation,
     pub(super) target: Symbol,
@@ -32,7 +32,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishHeldUpdateSuspensionFrame {
     pub(super) operator: &'static str,
     pub(super) target: crate::runtime::definitions::definition_updates::SuspendedHeldUpdateTarget,

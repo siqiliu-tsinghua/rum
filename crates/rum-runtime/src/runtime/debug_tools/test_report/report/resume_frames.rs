@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeTestReportFromIndexSuspensionFrame {
     pub(super) case_state:
         crate::runtime::debug_tools::test_report::report::SuspendedTestReportCase,
@@ -23,7 +23,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeTestReportFromIndexSu
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeTestReportAfterEvaluationSuspensionFrame {
     pub(super) output_state:
         crate::runtime::debug_tools::test_report::report::SuspendedTestReportOutput,
@@ -47,7 +47,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedTestReportAfterEvaluationSuspensionFrame {
     pub(super) output: crate::runtime::debug_tools::test_report::report::SuspendedTestReportOutput,
 }
@@ -70,7 +70,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedTestReportFromIndexSuspensionFrame {
     pub(super) state: crate::runtime::debug_tools::test_report::report::SuspendedTestReportCase,
 }

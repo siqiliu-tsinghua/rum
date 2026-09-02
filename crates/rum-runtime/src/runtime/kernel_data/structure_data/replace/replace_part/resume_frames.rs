@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ApplyReplacePartRulesOwnedSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::structure_data::replace::replace_part::SuspendedReplacePartRules,
 }
@@ -22,7 +22,7 @@ impl crate::runtime::suspension::SuspensionFrame for ApplyReplacePartRulesOwnedS
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct CollectRuleTargetsOwnedSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::structure_data::replace::replace_part::SuspendedReplacePartRuleTargets,
 }
@@ -43,7 +43,7 @@ impl crate::runtime::suspension::SuspensionFrame for CollectRuleTargetsOwnedSusp
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct CollectPatternPositionTargetsOwnedSuspensionFrame {
     pub(super) expr: rum_core::Expr,
     pub(super) rhs: rum_core::Expr,
@@ -77,7 +77,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct CollectPatternPositionTargetsFromCandidatesOwnedSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::structure_data::replace::replace_part::SuspendedReplacePartPatternCandidates,
     pub(super) path: std::sync::Arc<[isize]>,
@@ -105,7 +105,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedReplacePartRulesSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::structure_data::replace::replace_part::SuspendedReplacePartRules,
 }
@@ -129,7 +129,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedReplacePartRuleTargetsSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::structure_data::replace::replace_part::SuspendedReplacePartRuleTargets,
 }
@@ -152,7 +152,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedReplacePartPatternCandidatesSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::structure_data::replace::replace_part::SuspendedReplacePartPatternCandidates,
     pub(super) path: std::sync::Arc<[isize]>,

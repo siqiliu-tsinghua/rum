@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvalEncloseSuspensionFrame {
     pub(super) handler: std::option::Option<rum_core::Expr>,
     pub(super) form: std::option::Option<rum_core::Expr>,
@@ -25,7 +25,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalEncloseSuspensionFrame 
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvalConfirmSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
 }
@@ -46,7 +46,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalConfirmSuspensionFrame 
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvalConfirmBySuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
 }
@@ -67,7 +67,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalConfirmBySuspensionFram
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvalConfirmMatchSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
 }
@@ -88,7 +88,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalConfirmMatchSuspensionF
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvalConfirmQuietSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) selectors:
@@ -120,7 +120,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalConfirmQuietSuspensionF
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvalConfirmAssertSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
 }
@@ -141,7 +141,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalConfirmAssertSuspension
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeEncloseForFailureSuspensionFrame {
     pub(super) handler: std::option::Option<rum_core::Expr>,
     pub(super) value: rum_core::Expr,
@@ -185,7 +185,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeEncloseForFailureSusp
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeConfirmAfterValueSuspensionFrame {
     pub(super) raw_expr: rum_core::Expr,
     pub(super) value: rum_core::Expr,
@@ -218,7 +218,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeConfirmAfterValueSusp
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishConfirmFailureSuspensionFrame {
     pub(super) raw_expr: rum_core::Expr,
     pub(super) info: std::option::Option<rum_core::Expr>,
@@ -255,7 +255,7 @@ impl crate::runtime::suspension::SuspensionFrame for FinishConfirmFailureSuspens
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeConfirmByAfterValueSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) value: rum_core::Expr,
@@ -279,7 +279,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeConfirmByAfterValueSu
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeConfirmByAfterTestSuspensionFrame {
     pub(super) raw_expr: rum_core::Expr,
     pub(super) raw_function: rum_core::Expr,
@@ -312,7 +312,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeConfirmByAfterTestSus
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeConfirmMatchAfterValueSuspensionFrame1 {
     pub(super) value: rum_core::Expr,
     pub(super) info_expr: std::option::Option<rum_core::Expr>,
@@ -363,7 +363,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeConfirmMatchAfterValu
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeConfirmMatchAfterValueSuspensionFrame2 {
     pub(super) raw_expr: rum_core::Expr,
     pub(super) raw_pattern: rum_core::Expr,
@@ -396,7 +396,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeConfirmMatchAfterValu
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeConfirmQuietAfterBodySuspensionFrame {
     pub(super) raw_expr: rum_core::Expr,
     pub(super) tag: rum_core::Expr,
@@ -429,7 +429,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeConfirmQuietAfterBody
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeConfirmAssertAfterTestSuspensionFrame {
     pub(super) raw_test: rum_core::Expr,
     pub(super) tag: rum_core::Expr,

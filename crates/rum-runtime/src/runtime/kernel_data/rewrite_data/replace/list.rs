@@ -264,7 +264,7 @@ const _: fn() = || {
     assert_traces::<SuspendedReplaceListScan>();
 };
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvalReplaceListSuspensionFrame {
     args: rum_core::SharedArgs,
 }
@@ -291,7 +291,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalReplaceListSuspensionFr
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeReplaceListAfterTargetSuspensionFrame {
     target: rum_core::Expr,
     rules_expr: rum_core::Expr,
@@ -356,7 +356,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareReplaceListSetupF
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ContinueReplaceListSetupFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ContinueReplaceListSetupFrame {
@@ -414,7 +414,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueReplaceListSetupFra
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ResumeReplaceListAfterRuleExprsSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame
@@ -439,7 +439,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct CollectReplaceListResultsWithPendingSuspensionFrame {
     state: crate::runtime::kernel_data::rewrite_data::replace::list::SuspendedReplaceListScan,
 }
@@ -483,7 +483,7 @@ impl crate::runtime::suspension::PureFrameFinalizer
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct ContinueReplaceListResultsWithPendingFrame {
     target: Expr,
     normalized_target: Expr,

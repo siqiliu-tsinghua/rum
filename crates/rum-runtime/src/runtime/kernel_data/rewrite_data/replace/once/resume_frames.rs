@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvalReplaceSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) levels_expr: std::option::Option<rum_core::Expr>,
@@ -32,7 +32,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalReplaceSuspensionFrame 
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResumeReplaceAfterRuleExprsSuspensionFrame {
     pub(super) target: rum_core::Expr,
     pub(super) rule_plan: crate::runtime::RewriteRulePlan,
@@ -64,7 +64,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeReplaceAfterRuleExprs
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishReplaceHeadsResolutionSuspensionFrame {
     pub(super) target: rum_core::Expr,
     pub(super) rule_plan: crate::runtime::RewriteRulePlan,
@@ -142,7 +142,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for PrepareReplaceSetupFinal
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ContinueReplaceSetupFrame {
     pub(super) rule_plan: Option<RewriteRulePlan>,
 }
@@ -226,7 +226,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueReplaceSetupFrame {
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishReplaceLevelsResolutionSuspensionFrame1;
 
 impl crate::runtime::suspension::SuspensionFrame for FinishReplaceLevelsResolutionSuspensionFrame1 {
@@ -255,7 +255,7 @@ impl crate::runtime::suspension::SuspensionFrame for FinishReplaceLevelsResoluti
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct FinishReplaceLevelsResolutionSuspensionFrame2;
 
 impl crate::runtime::suspension::SuspensionFrame for FinishReplaceLevelsResolutionSuspensionFrame2 {
@@ -272,7 +272,7 @@ impl crate::runtime::suspension::SuspensionFrame for FinishReplaceLevelsResoluti
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResolveReplaceHeadsOptionsOwnedSuspensionFrame {
     pub(super) default: bool,
 }
@@ -308,7 +308,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ResolveReplaceLevelSpecOwnedSuspensionFrame;
 
 impl crate::runtime::suspension::SuspensionFrame for ResolveReplaceLevelSpecOwnedSuspensionFrame {
@@ -331,7 +331,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResolveReplaceLevelSpecOwne
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ReplaceOwnedSuspensionFrame {
     pub(super) include_heads: bool,
     pub(super) expr: rum_core::Expr,
@@ -389,7 +389,7 @@ impl crate::runtime::suspension::SuspensionFrame for ReplaceOwnedSuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ReplaceChildrenOwnedSuspensionFrame1 {
     pub(super) args: crate::runtime::kernel_data::rewrite_data::suspended_state::FrozenRewriteQueue<
         rum_core::Expr,
@@ -421,7 +421,7 @@ impl crate::runtime::suspension::SuspensionFrame for ReplaceChildrenOwnedSuspens
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ReplaceChildrenOwnedSuspensionFrame2 {
     pub(super) args: crate::runtime::kernel_data::rewrite_data::suspended_state::FrozenRewriteQueue<
         rum_core::Expr,
@@ -453,7 +453,7 @@ impl crate::runtime::suspension::SuspensionFrame for ReplaceChildrenOwnedSuspens
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ReplaceCallChildrenOwnedSuspensionFrame {
     pub(super) state:
         crate::runtime::kernel_data::rewrite_data::replace::once::SuspendedReplaceCallChildren,
@@ -475,7 +475,7 @@ impl crate::runtime::suspension::SuspensionFrame for ReplaceCallChildrenOwnedSus
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ReplaceAssociationChildrenOwnedSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::rewrite_data::replace::once::SuspendedReplaceAssociationChildren,
 }
@@ -498,7 +498,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct DriveSuspendedReplaceCallChildrenSuspensionFrame {
     pub(super) state:
         crate::runtime::kernel_data::rewrite_data::replace::once::SuspendedReplaceCallChildren,
@@ -522,7 +522,7 @@ impl crate::runtime::suspension::SuspensionFrame
     }
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct DriveSuspendedReplaceAssociationChildrenSuspensionFrame {
     pub(super) state: crate::runtime::kernel_data::rewrite_data::replace::once::SuspendedReplaceAssociationChildren,
 }

@@ -364,7 +364,7 @@ const _: fn() = || {
     assert_traces::<SuspendedSubValueApplication>();
 };
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct TryApplySubValuesFromSymbolSuspensionFrame {
     pub(super) application:
         crate::runtime::definitions::application::sub_values::SuspendedSubValueApplication,
