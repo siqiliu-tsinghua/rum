@@ -5,6 +5,7 @@ fn native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages() 
     let Some(bootstrap) = signed_loopback_connection() else {
         return;
     };
+    let harness = crate::zeromq::tests::support::NativeTestHarness::new();
     let codec = bootstrap.wire_codec();
     let runtime = test_runtime();
     let mut backend = NativeZeroMqTransportBackend::new_native(bootstrap.clone())
@@ -14,14 +15,22 @@ fn native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages() 
     let heartbeat_endpoint = backend.transport_layout().heartbeat.uri();
     let mut driver = backend.socket_driver(Session::new());
 
-    let mut shell = runtime.block_on(async {
-        let mut shell = DealerSocket::new();
-        shell
-            .connect(&shell_endpoint)
-            .await
-            .expect("shell dealer should connect");
-        shell
-    });
+    let mut shell = harness.connect_dealer(
+        &runtime,
+        &shell_endpoint,
+        "signed Shell Dealer/Router connection setup",
+    );
+    harness.establish_dealer_connection(
+        &runtime,
+        &mut shell,
+        &codec,
+        &bootstrap.wire_config().delimiter,
+        &mut driver,
+        backend.transport_mut(),
+        KernelChannel::Shell,
+        "connect-zmq-signed-1",
+        "signed Shell Dealer/Router connection readiness",
+    );
     let mut iopub = runtime.block_on(async {
         let mut iopub = SubSocket::new();
         iopub
@@ -36,6 +45,7 @@ fn native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages() 
     });
 
     acknowledge_iopub_subscription(
+        &harness,
         &runtime,
         &heartbeat_endpoint,
         &mut driver,
@@ -58,39 +68,38 @@ fn native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages() 
         .expect("signed execute request should encode");
     assert!(request.signature.is_some());
 
-    runtime.block_on(async {
-        shell
-            .send(frames_to_zmq_message(
-                wire_message_to_frames(request).frames,
-            ))
-            .await
-            .expect("shell dealer should send signed execute request");
-    });
+    harness.block_on_result(
+        &runtime,
+        "signed execute request send",
+        shell.send(frames_to_zmq_message(
+            wire_message_to_frames(request).frames,
+        )),
+    );
 
     wait_for_socket_event(
+        &harness,
         &mut driver,
         backend.transport_mut(),
         crate::KernelSocketPollEvent::Channel(KernelChannel::Shell),
+        "signed execute request delivery",
     );
     wait_for_socket_event(
+        &harness,
         &mut driver,
         backend.transport_mut(),
         crate::KernelSocketPollEvent::ExecuteCompletion,
+        "signed execute worker completion",
     );
 
     let reply_wire = frames_to_wire_message(
         KernelChannel::Shell,
         &bootstrap.wire_config().delimiter,
-        runtime.block_on(async {
-            tokio::time::timeout(Duration::from_secs(2), shell.recv())
-                .await
-                .expect("signed shell reply should arrive before timeout")
-                .expect("signed shell reply should decode")
-                .into_vec()
-                .into_iter()
-                .map(|frame| frame.to_vec())
-                .collect::<Vec<_>>()
-        }),
+        harness
+            .block_on_result(&runtime, "signed execute reply", shell.recv())
+            .into_vec()
+            .into_iter()
+            .map(|frame| frame.to_vec())
+            .collect::<Vec<_>>(),
     )
     .expect("signed shell reply frames should convert");
     assert!(reply_wire.signature.is_some());
@@ -107,12 +116,11 @@ fn native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages() 
 
     let mut saw_signed_execute_result = false;
     while !saw_signed_execute_result {
-        let message = runtime.block_on(async {
-            tokio::time::timeout(Duration::from_secs(2), iopub.recv())
-                .await
-                .expect("signed iopub message should arrive before timeout")
-                .expect("signed iopub message should decode")
-        });
+        let message = harness.block_on_result(
+            &runtime,
+            "signed execute-result IOPub message",
+            iopub.recv(),
+        );
         let wire = frames_to_wire_message(
             KernelChannel::IoPub,
             &bootstrap.wire_config().delimiter,
@@ -138,6 +146,7 @@ fn native_zeromq_backend_rejects_tampered_signed_requests_end_to_end() {
     let Some(bootstrap) = signed_loopback_connection() else {
         return;
     };
+    let harness = crate::zeromq::tests::support::NativeTestHarness::new();
     let codec = bootstrap.wire_codec();
     let runtime = test_runtime();
     let mut backend = NativeZeroMqTransportBackend::new_native(bootstrap.clone())
@@ -145,18 +154,34 @@ fn native_zeromq_backend_rejects_tampered_signed_requests_end_to_end() {
     let shell_endpoint = backend.transport_layout().shell.uri();
     let mut driver = backend.socket_driver(Session::new());
 
-    let mut shell = runtime.block_on(async {
-        let mut shell = DealerSocket::new();
-        shell
-            .connect(&shell_endpoint)
-            .await
-            .expect("shell dealer should connect");
-        shell
-    });
-
-    runtime.block_on(async {
-        tokio::time::sleep(Duration::from_millis(50)).await;
-    });
+    let mut shell = harness.connect_dealer(
+        &runtime,
+        &shell_endpoint,
+        "tampered-request Shell Dealer/Router connection setup",
+    );
+    harness.establish_dealer_connection(
+        &runtime,
+        &mut shell,
+        &codec,
+        &bootstrap.wire_config().delimiter,
+        &mut driver,
+        backend.transport_mut(),
+        KernelChannel::Shell,
+        "connect-zmq-signed-bad-1",
+        "tampered-request Shell Dealer/Router connection readiness",
+    );
+    let adapter_state_before = {
+        let adapter = driver.event_pump().adapter();
+        assert!(
+            !adapter.execute_running(),
+            "tampered-request absence precondition: connection probe must leave no worker running"
+        );
+        (
+            adapter.execution_count(),
+            adapter.execution_state(),
+            adapter.lifecycle_state(),
+        )
+    };
 
     let mut tampered_request = codec
         .encode_request_envelope(&KernelRequestEnvelope {
@@ -174,35 +199,40 @@ fn native_zeromq_backend_rejects_tampered_signed_requests_end_to_end() {
         .expect("signed request should encode before tampering");
     tampered_request.signature = Some("bad-signature".to_string());
 
-    runtime.block_on(async {
-        shell
-            .send(frames_to_zmq_message(
-                wire_message_to_frames(tampered_request).frames,
-            ))
-            .await
-            .expect("shell dealer should send tampered signed request");
-        tokio::time::sleep(Duration::from_millis(50)).await;
-    });
+    harness.block_on_result(
+        &runtime,
+        "tampered signed request send",
+        shell.send(frames_to_zmq_message(
+            wire_message_to_frames(tampered_request).frames,
+        )),
+    );
+    harness.wait_for_invalid_signature(
+        &mut driver,
+        backend.transport_mut(),
+        "tampered signed request delivery and signature rejection",
+    );
 
-    let deadline = Instant::now() + Duration::from_secs(2);
-    loop {
-        match driver.pump_once(backend.transport_mut()) {
-            Err(crate::KernelWireError::InvalidSignature) => break,
-            Ok(None) | Ok(Some(_)) => {
-                assert!(
-                    Instant::now() < deadline,
-                    "timed out waiting for invalid-signature failure"
-                );
-                thread::sleep(Duration::from_millis(10));
-            }
-            Err(other) => panic!("expected invalid signature error, got {other:?}"),
-        }
-    }
-
-    let shell_timeout = runtime
-        .block_on(async { tokio::time::timeout(Duration::from_millis(200), shell.recv()).await });
+    // Execute dispatch synchronously changes this state and leaves a worker installed until a
+    // later pump. Unchanged idle state therefore proves rejection happened before dispatch and
+    // before any execute reply could be enqueued.
+    let adapter = driver.event_pump().adapter();
+    assert_eq!(
+        (
+            adapter.execution_count(),
+            adapter.execution_state(),
+            adapter.lifecycle_state(),
+        ),
+        adapter_state_before,
+        "tampered-request absence: rejection must not dispatch or enqueue a reply"
+    );
     assert!(
-        shell_timeout.is_err(),
-        "tampered signed request should not produce a shell reply"
+        !adapter.execute_running(),
+        "tampered-request absence: rejection must not start an execute worker"
+    );
+    assert!(
+        !backend
+            .transport()
+            .has_pending_channel(KernelChannel::Shell),
+        "tampered-request absence: rejected Shell input must be consumed without dispatch"
     );
 }

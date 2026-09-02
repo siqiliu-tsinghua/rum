@@ -5,6 +5,7 @@ fn native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_r
     let Some(bootstrap) = loopback_connection() else {
         return;
     };
+    let harness = crate::zeromq::tests::support::NativeTestHarness::new();
     let codec = bootstrap.wire_codec();
     let frontend_identity =
         PeerIdentity::from_str("frontend-zmq-stdin-client").expect("identity should parse");
@@ -51,6 +52,7 @@ fn native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_r
     });
 
     acknowledge_iopub_subscription(
+        &harness,
         &runtime,
         &heartbeat_endpoint,
         &mut driver,
@@ -84,14 +86,18 @@ fn native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_r
     });
 
     wait_for_socket_event(
+        &harness,
         &mut driver,
         backend.transport_mut(),
         crate::KernelSocketPollEvent::Channel(KernelChannel::Shell),
+        "stdin flow execute request delivery",
     );
     wait_for_socket_event(
+        &harness,
         &mut driver,
         backend.transport_mut(),
         crate::KernelSocketPollEvent::ExecuteCompletion,
+        "stdin flow suspension worker completion",
     );
 
     let stdin_request_wire = runtime.block_on(async {
@@ -134,14 +140,18 @@ fn native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_r
     });
 
     wait_for_socket_event(
+        &harness,
         &mut driver,
         backend.transport_mut(),
         crate::KernelSocketPollEvent::Channel(KernelChannel::Stdin),
+        "stdin flow input reply delivery",
     );
     wait_for_socket_event(
+        &harness,
         &mut driver,
         backend.transport_mut(),
         crate::KernelSocketPollEvent::ExecuteCompletion,
+        "stdin flow resume worker completion",
     );
 
     let shell_reply_wire = runtime.block_on(async {

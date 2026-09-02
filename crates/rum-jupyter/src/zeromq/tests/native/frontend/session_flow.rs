@@ -5,6 +5,7 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
     let Some(bootstrap) = loopback_connection() else {
         return;
     };
+    let harness = crate::zeromq::tests::support::NativeTestHarness::new();
     let codec = bootstrap.wire_codec();
     let frontend_identity =
         PeerIdentity::from_str("frontend-zmq-multi-client").expect("identity should parse");
@@ -60,6 +61,7 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
     });
 
     acknowledge_iopub_subscription(
+        &harness,
         &runtime,
         &heartbeat_endpoint,
         &mut driver,
@@ -91,14 +93,18 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
     });
 
     wait_for_socket_event(
+        &harness,
         &mut driver,
         backend.transport_mut(),
         crate::KernelSocketPollEvent::Channel(KernelChannel::Shell),
+        "session-flow first execute request delivery",
     );
     wait_for_socket_event(
+        &harness,
         &mut driver,
         backend.transport_mut(),
         crate::KernelSocketPollEvent::ExecuteCompletion,
+        "session-flow first execute worker completion",
     );
 
     let first_reply_wire = runtime.block_on(async {
@@ -182,14 +188,18 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
     });
 
     wait_for_socket_event(
+        &harness,
         &mut driver,
         backend.transport_mut(),
         crate::KernelSocketPollEvent::Channel(KernelChannel::Shell),
+        "session-flow second execute request delivery",
     );
     wait_for_socket_event(
+        &harness,
         &mut driver,
         backend.transport_mut(),
         crate::KernelSocketPollEvent::ExecuteCompletion,
+        "session-flow suspension worker completion",
     );
 
     let stdin_request_wire = runtime.block_on(async {
@@ -232,14 +242,18 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
     });
 
     wait_for_socket_event(
+        &harness,
         &mut driver,
         backend.transport_mut(),
         crate::KernelSocketPollEvent::Channel(KernelChannel::Stdin),
+        "session-flow input reply delivery",
     );
     wait_for_socket_event(
+        &harness,
         &mut driver,
         backend.transport_mut(),
         crate::KernelSocketPollEvent::ExecuteCompletion,
+        "session-flow resume worker completion",
     );
 
     let second_reply_wire = runtime.block_on(async {
@@ -321,14 +335,18 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
     });
 
     wait_for_socket_event(
+        &harness,
         &mut driver,
         backend.transport_mut(),
         crate::KernelSocketPollEvent::Channel(KernelChannel::Shell),
+        "session-flow third execute request delivery",
     );
     wait_for_socket_event(
+        &harness,
         &mut driver,
         backend.transport_mut(),
         crate::KernelSocketPollEvent::ExecuteCompletion,
+        "session-flow third execute worker completion",
     );
 
     let third_reply_wire = runtime.block_on(async {
@@ -410,9 +428,11 @@ fn native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts
     });
 
     wait_for_socket_event(
+        &harness,
         &mut driver,
         backend.transport_mut(),
         crate::KernelSocketPollEvent::Channel(KernelChannel::Control),
+        "session-flow shutdown request delivery",
     );
 
     let shutdown_reply_wire = runtime.block_on(async {

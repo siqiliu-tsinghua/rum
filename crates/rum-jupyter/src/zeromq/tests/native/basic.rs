@@ -5,6 +5,7 @@ fn native_zeromq_backend_round_trips_execute_over_loopback_sockets() {
     let Some(bootstrap) = loopback_connection() else {
         return;
     };
+    let harness = crate::zeromq::tests::support::NativeTestHarness::new();
     let codec = bootstrap.wire_codec();
     let runtime = test_runtime();
     let mut backend = NativeZeroMqTransportBackend::new_native(bootstrap.clone())
@@ -12,14 +13,22 @@ fn native_zeromq_backend_round_trips_execute_over_loopback_sockets() {
     let shell_endpoint = backend.transport_layout().shell.uri();
     let mut driver = backend.socket_driver(Session::new());
 
-    let mut dealer = runtime.block_on(async {
-        let mut dealer = DealerSocket::new();
-        dealer
-            .connect(&shell_endpoint)
-            .await
-            .expect("dealer should connect");
-        dealer
-    });
+    let mut dealer = harness.connect_dealer(
+        &runtime,
+        &shell_endpoint,
+        "Shell Dealer/Router connection setup",
+    );
+    harness.establish_dealer_connection(
+        &runtime,
+        &mut dealer,
+        &codec,
+        &bootstrap.wire_config().delimiter,
+        &mut driver,
+        backend.transport_mut(),
+        KernelChannel::Shell,
+        "connect-zmq-real-1",
+        "Shell Dealer/Router connection readiness",
+    );
 
     let request = codec
         .encode_request_envelope(&KernelRequestEnvelope {
@@ -35,36 +44,35 @@ fn native_zeromq_backend_round_trips_execute_over_loopback_sockets() {
             request: KernelRequest::Execute(crate::KernelExecuteRequest::new("1 + 1")),
         })
         .expect("request should encode");
-    runtime.block_on(async {
-        dealer
-            .send(frames_to_zmq_message(
-                wire_message_to_frames(request).frames,
-            ))
-            .await
-            .expect("dealer should send request");
-    });
+    harness.block_on_result(
+        &runtime,
+        "execute request send",
+        dealer.send(frames_to_zmq_message(
+            wire_message_to_frames(request).frames,
+        )),
+    );
 
     wait_for_socket_event(
+        &harness,
         &mut driver,
         backend.transport_mut(),
         crate::KernelSocketPollEvent::Channel(KernelChannel::Shell),
+        "execute request delivery",
     );
     wait_for_socket_event(
+        &harness,
         &mut driver,
         backend.transport_mut(),
         crate::KernelSocketPollEvent::ExecuteCompletion,
+        "execute worker completion",
     );
 
-    let reply_frames = runtime.block_on(async {
-        tokio::time::timeout(Duration::from_secs(2), dealer.recv())
-            .await
-            .expect("dealer should receive reply before timeout")
-            .expect("dealer reply should decode")
-            .into_vec()
-            .into_iter()
-            .map(|frame| frame.to_vec())
-            .collect::<Vec<_>>()
-    });
+    let reply_frames = harness
+        .block_on_result(&runtime, "execute reply", dealer.recv())
+        .into_vec()
+        .into_iter()
+        .map(|frame| frame.to_vec())
+        .collect::<Vec<_>>();
     let reply_wire = frames_to_wire_message(
         KernelChannel::Shell,
         &bootstrap.wire_config().delimiter,
@@ -86,38 +94,32 @@ fn native_zeromq_backend_echoes_heartbeat_over_loopback_req_socket() {
     let Some(bootstrap) = loopback_connection() else {
         return;
     };
+    let harness = crate::zeromq::tests::support::NativeTestHarness::new();
     let runtime = test_runtime();
     let mut backend = NativeZeroMqTransportBackend::new_native(bootstrap.clone())
         .expect("native zeromq backend should build");
     let heartbeat_endpoint = backend.transport_layout().heartbeat.uri();
     let mut driver = backend.socket_driver(Session::new());
 
-    let mut heartbeat = runtime.block_on(async {
-        let mut heartbeat = ReqSocket::new();
-        heartbeat
-            .connect(&heartbeat_endpoint)
-            .await
-            .expect("req socket should connect");
-        heartbeat
-    });
-    runtime.block_on(async {
-        heartbeat
-            .send(ZmqMessage::from(Vec::from("hb")))
-            .await
-            .expect("heartbeat request should send");
-    });
-
-    wait_for_socket_event(
+    let mut heartbeat = harness.connect_req(
+        &runtime,
+        &heartbeat_endpoint,
+        "heartbeat Req/Rep connection setup",
+    );
+    harness.heartbeat_round_trip(
+        &runtime,
+        &mut heartbeat,
         &mut driver,
         backend.transport_mut(),
-        crate::KernelSocketPollEvent::Heartbeat,
+        b"heartbeat-connection-ready".to_vec(),
+        "heartbeat Req/Rep connection readiness",
     );
-
-    let reply = runtime.block_on(async {
-        tokio::time::timeout(Duration::from_secs(2), heartbeat.recv())
-            .await
-            .expect("heartbeat reply should arrive before timeout")
-            .expect("heartbeat reply should decode")
-    });
-    assert_eq!(zmq_message_to_frames(reply), vec![b"hb".to_vec()]);
+    harness.heartbeat_round_trip(
+        &runtime,
+        &mut heartbeat,
+        &mut driver,
+        backend.transport_mut(),
+        b"hb".to_vec(),
+        "heartbeat echo",
+    );
 }

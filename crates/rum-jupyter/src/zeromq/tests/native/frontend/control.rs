@@ -5,6 +5,7 @@ fn native_zeromq_backend_frontend_style_control_interrupt_round_trip() {
     let Some(bootstrap) = loopback_connection() else {
         return;
     };
+    let harness = crate::zeromq::tests::support::NativeTestHarness::new();
     let codec = bootstrap.wire_codec();
     let runtime = test_runtime();
     let mut backend = NativeZeroMqTransportBackend::new_native(bootstrap.clone())
@@ -12,18 +13,22 @@ fn native_zeromq_backend_frontend_style_control_interrupt_round_trip() {
     let control_endpoint = backend.transport_layout().control.uri();
     let mut driver = backend.socket_driver(Session::new());
 
-    let mut control = runtime.block_on(async {
-        let mut control = DealerSocket::new();
-        control
-            .connect(&control_endpoint)
-            .await
-            .expect("control dealer should connect");
-        control
-    });
-
-    runtime.block_on(async {
-        tokio::time::sleep(Duration::from_millis(50)).await;
-    });
+    let mut control = harness.connect_dealer(
+        &runtime,
+        &control_endpoint,
+        "interrupt Control Dealer/Router connection setup",
+    );
+    harness.establish_dealer_connection(
+        &runtime,
+        &mut control,
+        &codec,
+        &bootstrap.wire_config().delimiter,
+        &mut driver,
+        backend.transport_mut(),
+        KernelChannel::Control,
+        "connect-zmq-control-interrupt-1",
+        "interrupt Control Dealer/Router connection readiness",
+    );
 
     let interrupt_request = codec
         .encode_request_envelope(&KernelRequestEnvelope {
@@ -39,27 +44,23 @@ fn native_zeromq_backend_frontend_style_control_interrupt_round_trip() {
             request: KernelRequest::Interrupt(crate::KernelInterruptRequest),
         })
         .expect("interrupt request should encode");
-    runtime.block_on(async {
-        control
-            .send(frames_to_zmq_message(
-                wire_message_to_frames(interrupt_request).frames,
-            ))
-            .await
-            .expect("control dealer should send interrupt request");
-    });
+    harness.block_on_result(
+        &runtime,
+        "interrupt request send",
+        control.send(frames_to_zmq_message(
+            wire_message_to_frames(interrupt_request).frames,
+        )),
+    );
 
     wait_for_socket_event(
+        &harness,
         &mut driver,
         backend.transport_mut(),
         crate::KernelSocketPollEvent::Channel(KernelChannel::Control),
+        "interrupt request delivery",
     );
 
-    let reply_wire = runtime.block_on(async {
-        tokio::time::timeout(Duration::from_secs(2), control.recv())
-            .await
-            .expect("control reply should arrive before timeout")
-            .expect("control reply should decode")
-    });
+    let reply_wire = harness.block_on_result(&runtime, "interrupt reply", control.recv());
     let reply = decode_response_message(
         &frames_to_wire_message(
             KernelChannel::Control,
@@ -86,6 +87,7 @@ fn native_zeromq_backend_shutdown_stops_shell_work_and_reports_pending_shell_mes
     let Some(bootstrap) = loopback_connection() else {
         return;
     };
+    let harness = crate::zeromq::tests::support::NativeTestHarness::new();
     let codec = bootstrap.wire_codec();
     let runtime = test_runtime();
     let mut backend = NativeZeroMqTransportBackend::new_native(bootstrap.clone())
@@ -94,26 +96,38 @@ fn native_zeromq_backend_shutdown_stops_shell_work_and_reports_pending_shell_mes
     let control_endpoint = backend.transport_layout().control.uri();
     let mut driver = backend.socket_driver(Session::new());
 
-    let mut shell = runtime.block_on(async {
-        let mut shell = DealerSocket::new();
-        shell
-            .connect(&shell_endpoint)
-            .await
-            .expect("shell dealer should connect");
-        shell
-    });
-    let mut control = runtime.block_on(async {
-        let mut control = DealerSocket::new();
-        control
-            .connect(&control_endpoint)
-            .await
-            .expect("control dealer should connect");
-        control
-    });
-
-    runtime.block_on(async {
-        tokio::time::sleep(Duration::from_millis(50)).await;
-    });
+    let mut shell = harness.connect_dealer(
+        &runtime,
+        &shell_endpoint,
+        "shutdown Shell Dealer/Router connection setup",
+    );
+    let mut control = harness.connect_dealer(
+        &runtime,
+        &control_endpoint,
+        "shutdown Control Dealer/Router connection setup",
+    );
+    harness.establish_dealer_connection(
+        &runtime,
+        &mut shell,
+        &codec,
+        &bootstrap.wire_config().delimiter,
+        &mut driver,
+        backend.transport_mut(),
+        KernelChannel::Shell,
+        "connect-zmq-shutdown-shell-1",
+        "shutdown Shell Dealer/Router connection readiness",
+    );
+    harness.establish_dealer_connection(
+        &runtime,
+        &mut control,
+        &codec,
+        &bootstrap.wire_config().delimiter,
+        &mut driver,
+        backend.transport_mut(),
+        KernelChannel::Control,
+        "connect-zmq-shutdown-control-1",
+        "shutdown Control Dealer/Router connection readiness",
+    );
 
     let execute_request = codec
         .encode_request_envelope(&KernelRequestEnvelope {
@@ -145,26 +159,33 @@ fn native_zeromq_backend_shutdown_stops_shell_work_and_reports_pending_shell_mes
         })
         .expect("shutdown request should encode");
 
-    runtime.block_on(async {
-        control
-            .send(frames_to_zmq_message(
-                wire_message_to_frames(shutdown_request).frames,
-            ))
-            .await
-            .expect("control dealer should send shutdown request");
-        shell
-            .send(frames_to_zmq_message(
-                wire_message_to_frames(execute_request).frames,
-            ))
-            .await
-            .expect("shell dealer should send queued execute request");
-    });
+    harness.block_on_result(
+        &runtime,
+        "shutdown request send",
+        control.send(frames_to_zmq_message(
+            wire_message_to_frames(shutdown_request).frames,
+        )),
+    );
+    harness.block_on_result(
+        &runtime,
+        "queued Shell execute request send",
+        shell.send(frames_to_zmq_message(
+            wire_message_to_frames(execute_request).frames,
+        )),
+    );
 
     wait_for_pending_socket_channels(
+        &harness,
         backend.transport(),
         &[KernelChannel::Control, KernelChannel::Shell],
+        "Control and Shell request delivery precondition",
     );
-    let first_event = wait_for_next_socket_event(&mut driver, backend.transport_mut());
+    let first_event = wait_for_next_socket_event(
+        &harness,
+        &mut driver,
+        backend.transport_mut(),
+        "Control-before-Shell priority dispatch",
+    );
     assert_eq!(
         first_event,
         crate::KernelSocketPollEvent::Channel(KernelChannel::Control)
@@ -178,18 +199,28 @@ fn native_zeromq_backend_shutdown_stops_shell_work_and_reports_pending_shell_mes
     assert_eq!(report.stdin_messages, 0);
     assert_eq!(report.heartbeat_messages, 0);
     assert!(report.stopped_for_shutdown);
+    assert!(
+        backend
+            .transport()
+            .has_pending_channel(KernelChannel::Shell),
+        "post-shutdown absence: queued Shell request must remain pending"
+    );
+    assert_eq!(
+        driver.event_pump().adapter().execution_count(),
+        0,
+        "post-shutdown absence: queued Shell execute request must remain unprocessed"
+    );
+    assert!(
+        !driver.event_pump().adapter().execute_running(),
+        "post-shutdown absence: queued Shell execute request must not start a worker"
+    );
     assert!(driver.event_pump().adapter().shutdown_requested());
     assert_eq!(
         driver.event_pump().adapter().lifecycle_state(),
         crate::KernelLifecycleState::Shutdown
     );
 
-    let control_reply_wire = runtime.block_on(async {
-        tokio::time::timeout(Duration::from_secs(2), control.recv())
-            .await
-            .expect("shutdown reply should arrive before timeout")
-            .expect("shutdown reply should decode")
-    });
+    let control_reply_wire = harness.block_on_result(&runtime, "shutdown reply", control.recv());
     let control_reply = decode_response_message(
         &frames_to_wire_message(
             KernelChannel::Control,
@@ -217,11 +248,4 @@ fn native_zeromq_backend_shutdown_stops_shell_work_and_reports_pending_shell_mes
         }
         other => panic!("expected shutdown reply, got {other:?}"),
     }
-
-    let shell_timeout = runtime
-        .block_on(async { tokio::time::timeout(Duration::from_millis(200), shell.recv()).await });
-    assert!(
-        shell_timeout.is_err(),
-        "queued shell work should remain pending after shutdown"
-    );
 }

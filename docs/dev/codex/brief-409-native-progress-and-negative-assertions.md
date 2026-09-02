@@ -204,3 +204,152 @@ exceeded — stop and report.
 5. Verification output, with an explicit statement of what you could not run.
 6. Any production file touched, and why it was unavoidable.
 7. Stop-loss, risks, open questions.
+
+---
+
+# Report — 2026-09-02
+
+## 1. Per-file changes
+
+- [zeromq_native_test_support.rs](crates/rum-jupyter/src/zeromq_native_test_support.rs:12), lines 12–341: added one per-test 30-second harness stop-loss, stage-labelled condition waits, non-spinning polling, Dealer/Router connection probes, heartbeat round trips, and invalid-signature observation.
+- [basic.rs](crates/rum-jupyter/src/zeromq/tests/native/basic.rs:4), lines 4–127: execute and heartbeat now establish same-path readiness and advance through request delivery, worker completion, and reply conditions.
+- [signed.rs](crates/rum-jupyter/src/zeromq/tests/native/signed.rs:4), lines 4–238: signed Shell readiness and progress are condition-driven; tampered-request absence is structural.
+- [control.rs](crates/rum-jupyter/src/zeromq/tests/native/frontend/control.rs:4), lines 4–251: Control/Shell readiness probes replace sleeps; shutdown absence reads pending and adapter state.
+- [execute.rs](crates/rum-jupyter/src/zeromq/tests/native/frontend/execute.rs:8), lines 8, 40, 72–83: helper-signature migration and stage labels only.
+- [stdin.rs](crates/rum-jupyter/src/zeromq/tests/native/frontend/stdin.rs:8), lines 8, 55, 89–100, 143–154: helper-signature migration and stage labels only.
+- [session_flow.rs](crates/rum-jupyter/src/zeromq/tests/native/frontend/session_flow.rs:8), lines 8, 64, 96–107, 191–202, 245–256, 338–349, 431–435: helper-signature migration and stage labels only.
+
+The last three files’ own IOPub timing assumptions were not changed; those remain for family B.
+
+## 2. Structural negative assertions
+
+Tampered signature, before:
+
+```rust
+let shell_timeout = runtime
+    .block_on(async { tokio::time::timeout(Duration::from_millis(200), shell.recv()).await });
+assert!(
+    shell_timeout.is_err(),
+    "tampered signed request should not produce a shell reply"
+);
+```
+
+After, at [signed.rs:218](crates/rum-jupyter/src/zeromq/tests/native/signed.rs:218):
+
+```rust
+assert_eq!(
+    (
+        adapter.execution_count(),
+        adapter.execution_state(),
+        adapter.lifecycle_state(),
+    ),
+    adapter_state_before,
+    "tampered-request absence: rejection must not dispatch or enqueue a reply"
+);
+assert!(!adapter.execute_running(), ...);
+assert!(!backend.transport().has_pending_channel(KernelChannel::Shell), ...);
+```
+
+Signature validation returns before dispatch at [event_loop.rs:60](crates/rum-jupyter/src/transport/event_loop.rs:60). Any execute dispatch synchronously changes execution count/state and installs a worker at [adapter/mod.rs:420](crates/rum-jupyter/src/adapter/mod.rs:420), before dispatch output can be sent at `event_loop.rs:69`. Unchanged adapter state therefore proves no dispatch or reply enqueue occurred.
+
+Shutdown, before:
+
+```rust
+let shell_timeout = runtime
+    .block_on(async { tokio::time::timeout(Duration::from_millis(200), shell.recv()).await });
+assert!(
+    shell_timeout.is_err(),
+    "queued shell work should remain pending after shutdown"
+);
+```
+
+After, at [control.rs:201](crates/rum-jupyter/src/zeromq/tests/native/frontend/control.rs:201):
+
+```rust
+assert!(report.stopped_for_shutdown);
+assert!(backend.transport().has_pending_channel(KernelChannel::Shell));
+assert_eq!(driver.event_pump().adapter().execution_count(), 0);
+assert!(!driver.event_pump().adapter().execute_running());
+```
+
+The both-channels-pending precondition is preserved. Shell input is buffered at [zeromq.rs:175](crates/rum-jupyter/src/zeromq.rs:175), and shutdown reports pending incoming state at [socket.rs:327](crates/rum-jupyter/src/socket.rs:327).
+
+## 3. Per-test accounting
+
+- Basic execute: removed two-second stage/reply requirements; preserved execute round-trip, status, and execution count.
+- Basic heartbeat: replaced the two-second receive requirement with Req/Rep readiness plus exact payload echo.
+- Signed execute: removed Shell/IOPub receive durations as pass conditions; preserved signatures, status, execution count, and signed execute-result coverage.
+- Tampered signature: removed both 50 ms sleeps, the two-second error deadline, and 200 ms negative receive; preserved real-socket tampering, `InvalidSignature`, and no-dispatch/no-reply semantics.
+- Control interrupt: removed the 50 ms connection sleep and two-second reply requirement; preserved interrupt status and lifecycle assertions.
+- Control shutdown: removed the 50 ms connection sleep, two-second reply requirement, and 200 ms absence window; preserved both-pending precondition, Control priority, report counts, shutdown state, reply metadata, restart flag, and pending Shell work.
+
+Zero tests and zero semantic assertions were deleted.
+
+## 4. Surviving durations
+
+The required search returned:
+
+```text
+crates/rum-jupyter/src/zeromq_native_test_support.rs:6:    time::Duration,
+crates/rum-jupyter/src/zeromq_native_test_support.rs:12:const NATIVE_TEST_HARNESS_STOP_LOSS: Duration = Duration::from_secs(30);
+crates/rum-jupyter/src/zeromq_native_test_support.rs:13:const NATIVE_TEST_POLL_INTERVAL: Duration = Duration::from_millis(10);
+crates/rum-jupyter/src/zeromq_native_test_support.rs:36:        match runtime.block_on(tokio::time::timeout(self.remaining(stage), future)) {
+crates/rum-jupyter/src/zeromq_native_test_support.rs:39:            Err(_) => self.harness_timeout(stage),
+crates/rum-jupyter/src/zeromq_native_test_support.rs:187:    fn remaining(&self, stage: &str) -> Duration {
+crates/rum-jupyter/src/zeromq_native_test_support.rs:191:            .unwrap_or_else(|| self.harness_timeout(stage))
+crates/rum-jupyter/src/zeromq_native_test_support.rs:195:        thread::park_timeout(self.remaining(stage).min(NATIVE_TEST_POLL_INTERVAL));
+crates/rum-jupyter/src/zeromq_native_test_support.rs:198:    fn harness_timeout(&self, stage: &str) -> ! {
+crates/rum-jupyter/src/zeromq_native_test_support.rs:200:            "native ZeroMQ harness timeout while waiting for stage `{stage}`; this is a harness \
+crates/rum-jupyter/src/zeromq_native_test_support.rs:201:             timeout, not a latency contract"
+```
+
+Justifications:
+
+- 30 seconds is the single overall per-test harness stop-loss.
+- 10 ms is only the park cadence preventing a busy spin; observed state remains the success condition.
+- `tokio::time::timeout` uses the remaining portion of that same overall deadline.
+- Other matches are type plumbing or the required diagnostic.
+- No `sleep` remains, and `basic.rs`, `signed.rs`, and `control.rs` have no duration/timeout matches.
+
+The 30-second value was chosen as plainly generous; it was not derived from measurements.
+
+## 5. Verification
+
+The first formatting check exited 1 for three rustfmt-only layout differences. I ran rustfmt, then the mandatory final check produced no output and exited 0:
+
+```text
+scripts/run-bounded.py --timeout 300 -- cargo --offline fmt --check
+exit_code=0
+```
+
+Crate gate:
+
+```text
+running 104 tests
+...
+test result: ok. 104 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+```
+
+Workspace gate exited 0. A quiet repeat showed, among the larger suites:
+
+```text
+running 932 tests
+test result: ok. 930 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 3.07s
+
+running 831 tests
+test result: ok. 828 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 2.53s
+```
+
+The workspace emitted three pre-existing `rum-runtime` dead-code warnings.
+
+
+---
+
+## Director's note
+
+This brief regressed every native test and was never committed on its own.
+`block_on_result` passed `tokio::time::timeout` as an argument to `block_on`,
+constructing the `Sleep` outside the runtime context, so all nine native tests
+panicked with "there is no reactor running" on a host that can bind loopback.
+brief-410 repaired it and added the socket-free harness coverage that would
+have caught it in the worker's sandbox. The two land together.

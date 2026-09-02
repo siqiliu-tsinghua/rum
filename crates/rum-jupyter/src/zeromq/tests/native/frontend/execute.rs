@@ -5,6 +5,7 @@ fn native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_meta
     let Some(bootstrap) = loopback_connection() else {
         return;
     };
+    let harness = crate::zeromq::tests::support::NativeTestHarness::new();
     let codec = bootstrap.wire_codec();
     let runtime = test_runtime();
     let mut backend = NativeZeroMqTransportBackend::new_native(bootstrap.clone())
@@ -36,6 +37,7 @@ fn native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_meta
     });
 
     acknowledge_iopub_subscription(
+        &harness,
         &runtime,
         &heartbeat_endpoint,
         &mut driver,
@@ -67,14 +69,18 @@ fn native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_meta
     });
 
     wait_for_socket_event(
+        &harness,
         &mut driver,
         backend.transport_mut(),
         crate::KernelSocketPollEvent::Channel(KernelChannel::Shell),
+        "frontend execute request delivery",
     );
     wait_for_socket_event(
+        &harness,
         &mut driver,
         backend.transport_mut(),
         crate::KernelSocketPollEvent::ExecuteCompletion,
+        "frontend execute worker completion",
     );
 
     let shell_reply_wire = runtime.block_on(async {
