@@ -940,6 +940,39 @@ host's own RSS watchdog, which the docs describe as merely "one pattern"; and
 is the same question briefs 397-411, this audit's `$Context` finding, and the
 timeout gap are all instances of.
 
+### Rulings on the repair line (user, 2026-09-02)
+
+Settled after brief-414's design pass and the director review of it.
+
+- **The interner becomes session-scoped (option A1), but brief-414's drafted
+  step 4 opens as a spike, not an implementation.** A1 is the only option that
+  both reclaims on `reset()` and attributes bytes to the session that made
+  them; A3 and A4 pay A1's price (`Symbol` stops being `Copy`) and buy less,
+  and A2 keeps `Copy` while leaving the growth permanent. The reason for the
+  spike is that `Symbol`'s `PartialEq`, `Hash` and `Ord` are all built on `id`
+  being a perfect collision-free hash of the text — `eq` is a fast *accept* on
+  `id` (`crates/rum-core/src/expr.rs:250-254`), `Ord` uses it as a fast path
+  (`:275`), `Hash` hashes it alone (`:258`). A content fingerprint collides, so
+  equality must demote to fingerprint-rejects-then-compare-text, and `Symbol`
+  is the key type of `definitions`, `attributes` and six caches. The spike
+  makes `Symbol` non-`Copy`, reports the true compiler-error count, and
+  measures the new equality and clone/drop paths. A1 lands or falls on those
+  numbers; the fallback is A2.
+- **`Symbol::interned_id` is redefined as a stable content fingerprint**, with
+  its rustdoc rewritten to say so. Its documented promise ("symbols with the
+  same text share the id") becomes *stronger* — true across sessions rather
+  than only within one process — and its sole consumer, the call-stability
+  bloom (`evaluation_cache/stability.rs:23`), already multiplies by the
+  golden-ratio constant, which is Fibonacci hashing designed to spread dense
+  ids and is unharmed by receiving a hash instead. This also deletes the
+  `u32::try_from(pairs.len()).expect(...)` panic path at `expr.rs:88`. The
+  density and uniqueness of `id` are what equality relies on today, which is
+  why this ruling and the A1 ruling are one decision, not two.
+- **`ByteArray` is charged its physical representation.** It holds base64 text
+  and was charged its decoded payload length, about 25% under what it occupies
+  — the only shape in `expr_memory_proxy_bytes` charged less than it holds.
+  Folded into brief-415.
+
 ## Decision-gated or deferred
 
 - **Custom `Sort` / `KeySort` comparisons — settled 2026-08-26.** The ordering
