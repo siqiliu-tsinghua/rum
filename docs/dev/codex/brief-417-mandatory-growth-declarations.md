@@ -31,7 +31,7 @@ as one.
 ## Context pointers
 
 - `AGENTS.md` first.
-- **`docs/dev/codex/brief-414-memory-accounting-gaps.md` §3** — your inventory
+- **`docs/dev/codex/brief-414-memory-accounting-gaps.md`, the appended report's §3** (line 354 onward, "Gap B: inventory, structural fix, and stride") — your inventory
   of every multiplicative site, with `path:line`, growth factor, and current
   precheck. This is the source of truth for classification. Do not re-derive it
   from scratch and do not silently disagree with it: if a row is wrong, say so
