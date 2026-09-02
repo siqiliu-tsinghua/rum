@@ -860,6 +860,86 @@ The findings and their repairs follow.
   non-macro insertion in either exempt area would not be caught. `CLAUDE.md`
   has been corrected; whether to narrow the exemption is open.
 
+## Opened by the 2026-09-02 security audit (brief-413)
+
+The first audit of this codebase permitted to say "attack". GLM ran it because
+Codex's cybersecurity filter makes security review there impossible. Seven
+findings; the two HIGH ones share a root — **bytes the memory model cannot
+see**.
+
+- **HIGH — the symbol interner is process-global, leaks by construction, and is
+  invisible to the memory ceiling.** `symbol_interner()`
+  (`crates/rum-core/src/expr.rs:47-55`) is a process-wide
+  `OnceLock<Mutex<SymbolInterner>>`; `intern_text` (`:57-70`) `Box::leak`s every
+  new name; there is no removal or clear API. `current_memory_proxy_bytes`
+  (`runtime/debug_tools/resources/memory.rs:50`) walks session-owned structures
+  only and never mentions the interner, so `eval_memory_limit` cannot see the
+  growth. `HostSession::reset()` rebuilds the session and does not touch it.
+  **Director-reproduced**: under a `{Pure}`-only policy, eight requests each
+  interning 20 000 fresh symbols took RSS 5.6 MB → 57.5 MB monotonically, and
+  `reset()` returned only to 47.0 MB. For a long-lived host — a jupyter kernel,
+  an editor host, a per-request-session service — this is an exhaustion vector
+  no documented kernel mechanism can close, shared across every tenant.
+
+- **HIGH — the modelled memory ceiling is sampled every 64 evaluation points and
+  can be overshot multiplicatively in between.**
+  `ACTIVE_MEMORY_LIMIT_CHECK_STRIDE = 64`
+  (`runtime/debug_tools/resources/constraints.rs:9`). Its own comment claims the
+  interval is "bounded by the existing per-step element, integer, and iteration
+  budgets" — but those bound *counts*, not the bytes of one multiplicative step,
+  and `eval_string_join` (`rum-stdlib/src/strings/text/builtins.rs:13-42`) has no
+  projected-byte precheck at all, unlike `StringRepeat` (`:664-668`) or `Power`.
+  Reported: an 8 MB ceiling reached a 2.04 GB peak before terminating in band.
+  A failed allocation is `handle_alloc_error`, which aborts outside the panic
+  boundary. **Mechanism director-verified in source; the 2 GB overshoot is not
+  director-reproduced.**
+
+- **MEDIUM-HIGH — `rum-jupyter`'s hand-written JSON parser has no depth guard.**
+  `json_support.rs` contains zero occurrences of depth/limit/MAX_, and
+  `parse_value`/`parse_object`/`parse_array` (`:61,86,126`) are mutually
+  recursive. Reported: 50 000 levels of nesting aborts the kernel process with a
+  stack overflow, outside the panic boundary. Reachable unauthenticated when the
+  signature policy is `Disabled` — see the fail-open finding below. The kernel's
+  own parser has a four-level depth guard; the discipline did not reach the
+  adapter. **Not director-reproduced** (it aborts a process).
+
+- **MEDIUM — `eval_with_timeout`'s deadline is silently dropped across an input
+  suspension.** `crates/rum-host/src/session.rs:518-524` clears the timeout
+  unconditionally after the guarded call, and its own rustdoc says the timeout
+  "is cleared after the request completes or fails" — a suspension is neither.
+  `resume_eval_request_with_input` never re-arms it. **Director-reproduced**: a
+  500 ms deadline, suspended on `Input[]`, resumed and ran 1.39 s to completion
+  with no termination reason. The host cannot re-arm it; there is no
+  `set_eval_timeout` on `HostSession` and no timeout variant of
+  `resume_with_input`.
+
+- **LOW — a terminated request leaves `$Context` where the script put it**, and
+  the next request inherits it. Same family as the control-state leaks briefs
+  397-411 closed; `Block` bindings and `TimeConstrained` deadlines were verified
+  to restore correctly, so this is the survivor. No document says whether
+  context is per-request or per-session state.
+
+- **LOW — `restore_from_bytes` is arbitrary code execution by design**, and the
+  documentation states the mechanism without stating the consequence. Restoring
+  untrusted bytes runs them under that session's policy; a sandboxed session
+  refuses the capability-gated parts, an unrestricted one does not.
+
+- **LOW — the jupyter signature policy fails open.** An unrecognised
+  `signature_scheme`, or an empty key, silently yields
+  `KernelSignaturePolicy::Disabled` (`connection.rs:123-131`) rather than
+  refusing to start. HMAC comparison is also not constant-time
+  (`transport/codec/validation.rs:45,50`), which is near-unexploitable on local
+  IPC but differs from the reference implementation.
+
+**Three criticisms of the threat model itself**, which are worth more than some
+of the findings: the shipped jupyter kernel is itself a host and chooses full
+authority with no per-cell timeout or memory ceiling, which no document states;
+the two-stage memory defence has a gap between the modelled ceiling and the
+host's own RSS watchdog, which the docs describe as merely "one pattern"; and
+**no document says which state is per-request and which is per-session**, which
+is the same question briefs 397-411, this audit's `$Context` finding, and the
+timeout gap are all instances of.
+
 ## Decision-gated or deferred
 
 - **Custom `Sort` / `KeySort` comparisons — settled 2026-08-26.** The ordering
