@@ -1909,3 +1909,65 @@ continuation protocol that offered a third.
   suspicion; and that a brief's own background was wrong. Where its evidence
   could not exist, the verification became the director's: forty release
   repetitions on a host where those tests actually run.
+
+## 2026-09-02 — the suspension and cancellation line (briefs 397-411)
+
+The project moved from macOS to Linux, and the first release-profile full-test
+run on the new host produced two `rum-jupyter` failures the debug gate had
+never shown. Fifteen briefs later, three kernel defects and a class of invalid
+test assumptions are closed. Endstate: workspace 2287/0/7, the native ZeroMQ
+suite 0 failures in 30 repetitions on a host where it demonstrably runs.
+
+**What was actually wrong.**
+
+- *Cancellation was erased by the evaluation it was meant to stop.* The
+  prologue cleared a session-global flag as `eval_request`'s first statement,
+  and the jupyter adapter takes its handle before spawning — so the handle was
+  obtained at the right moment, the cancel was set at the right moment, and the
+  evaluation threw it away. Now request-scoped and generation-qualified.
+- *Abandoning a suspension leaked every scope its frames owned* — `Block`,
+  `Module` activations and gensym reclamation, iterator scopes, `OptionValue`,
+  `Reap`, `Monitor`, constraint deadlines, trace and capture checkpoints,
+  `AbortProtect` depth, `BlockRandom`, partial package installs. The leaked
+  `AbortProtect` depth let evaluation continue past `Abort[]`. Reachable
+  through public `rum-host` API alone.
+- *Overlapping public requests silently replaced a pending continuation.* Now
+  rejected, by user ruling; supersede stays unimplemented rather than being an
+  accident.
+- *The jupyter test suite asserted timing properties the implementation does
+  not promise*, in three unrelated families plus an ephemeral-port TOCTOU.
+
+**The lessons worth keeping.**
+
+- *An instrument reported nine skips as nine passes.* A native ZeroMQ test that
+  cannot bind loopback printed one line to stderr and early-returned, and
+  libtest said `ok`. This had already cost the project a false 0-of-30
+  stability result in brief-384. It is now a red test unless a named
+  environment variable opts in. **Silence had been an option; it no longer is.**
+- *A worker's green gate is worth exactly what it can execute.* brief-409
+  passed its own gate and broke all nine native tests on the director's host,
+  because the panic it introduced was masked by the same skip path. The repair
+  was one line; the durable fix was socket-free coverage of the harness, which
+  paid off two briefs later when family B needed a gate the worker could run.
+- *Refuting a repair is worth more than performing one.* brief-401 killed
+  brief-400's proposed mechanism — driving saved frames with `Err(Cancelled)`
+  is not an unwind, because ordinary frames consume errors and run work.
+  Splitting that defect out was a hypothesis at the time; had it been wrong,
+  the repair would have gone back inside brief-400.
+- *Measure the mechanism, not the outcome.* A probe that varied only what
+  happens between dispatch and the first completion poll showed cold, warm,
+  worker-warm and yield all reading not-ready and only a sleep reading ready.
+  That is what forbade a spin as the fix, before anyone wrote one.
+- *After families A and D there was nothing failing*, and C and B still had to
+  be done. A test that passes because a machine happened to be fast is
+  supplying false confidence, so "it still passes" stopped being evidence and
+  the gates became structural.
+- *Waiting cannot prove absence.* Two tests waited 200 ms, saw no reply, and
+  concluded none was produced. They now read state that says so.
+- *My own probes lied three times in one session* — a `git stash show`
+  invocation that reported a conflict for every file, a `grep` for
+  `test result: ok` that is always true when several test binaries run, and a
+  bare test name passed to `--exact` that matched nothing and was counted as
+  failure. Same shape each time: trusting a predicate without first checking it
+  against an answer already known. The verification harness needs calibrating
+  as much as the code does.

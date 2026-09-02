@@ -4,7 +4,7 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-08-26, committed tree through `4f5b85f1`. Uncommitted
+Status checkpoint: 2026-09-02, committed tree through `4c4dbfab`. Uncommitted
 performance candidates do not count as completed until their correctness,
 timing, counter, and memory gates have all been reviewed.
 
@@ -653,6 +653,44 @@ Every item remains subject to the performance gate in
 versus candidate timing plus counters and memory, and reject or report
 regressions and space-for-time tradeoffs.
 
+## The suspension and cancellation line — CLOSED (briefs 397-411)
+
+Opened by the first release-profile full-test run on the Linux host, which
+produced two `rum-jupyter` pump failures that the debug gate never showed.
+brief-397 diagnosed them as one invalid test assumption and one real
+host-contract defect; the repair of the second uncovered a third defect, and
+that one turned out to be the largest.
+
+- **Cancellation was erased by the evaluation it was meant to stop.**
+  `begin_top_level_interrupt_budget` cleared a session-global flag as
+  `eval_request`'s first act. Repaired by briefs 404 and 405 as request-scoped,
+  generation-qualified cancellation: a non-`Clone` accepted-request ticket, a
+  phase word encoding `(generation << 1) | cancelled`, compare-exchange
+  cancellation that cannot reach a later generation, and completion as the
+  linearization point. The legacy `AtomicBool` lane is deleted, so the
+  suppress-or-synchronize conditional that existed only because two mechanisms
+  coexisted is gone with it.
+
+- **Abandoning a suspension leaked every scope its frames owned.** Found while
+  writing brief-400's cancellation test, split out as a pre-existing defect,
+  and confirmed reachable through public `rum-host` API alone. Repaired by
+  briefs 402 and 403: a closed abandonment protocol every one of the 545 named
+  frames must classify, enforced by a supertrait with no default body rather
+  than by a source scan — a distinction that matters because `SuspensionFrame`
+  is `pub` and a scan cannot reach code that does not exist yet.
+
+- **Overlapping public requests are rejected** (user ruling). Superseding a
+  suspended request had been an accident of consuming queued input; it is now
+  refused, and remains unimplemented as an explicit operation.
+
+- **The jupyter timing-assumption class**, closed by briefs 406-411 — see the
+  entry below.
+
+brief-400 is superseded rather than resumed: brief-401 refuted its repair
+(driving saved frames with `Err(Cancelled)` is not an unwind, because ordinary
+frames consume errors and run work), and briefs 402-403 had rewritten the
+files its stash touched. `stash@{0}` is kept as reference material.
+
 ## The 2026-08-31 consistency review — CLOSED (briefs 389-396)
 
 Four reviews of the work from briefs 364-388, run in independent parts so an
@@ -705,21 +743,41 @@ The findings and their repairs follow.
   `crates/rum-host/tests/stress.rs:124-144` still uses a 25 ms sleep; replacing
   that test synchronization remains separate cleanup.
 
-- **Four native IOPub tests depend on a fixed 50 ms PUB/SUB propagation
-  delay** (`native/signed.rs:24`, `frontend/execute.rs:24`,
-  `frontend/stdin.rs:39`, `frontend/session_flow.rs:48`). The pinned zeromq
-  0.5.0 queues subscriptions without publisher acknowledgement, and PUB sends
-  only to subscriptions already processed, so a delayed subscription drops
-  early frames and the two-second receive loops time out. Reached by reading
-  the dependency, not by reproduction — **the native tests skipped in the
-  worker's sandbox** ("loopback socket binding is not permitted").
+- **The rum-jupyter timing-assumption class — CLOSED 2026-09-02** (briefs
+  406-411). The entry that stood here named four IOPub tests and a 50 ms delay;
+  brief-406's inventory found the class was much larger and had three unrelated
+  roots, and two of its own citations were already stale. What actually
+  existed:
 
-  **Note the inconsistency**: during brief-384 the same worker reported these
-  tests running rather than skipping. If they were in fact skipping then, its
-  0-of-30 result there measured nothing — which is why that brief's acceptance
-  was moved to a structural argument and the fix was verified on the director's
-  host instead. Establish which sandbox conditions permit loopback before
-  trusting any future native-test result from that environment.
+  - *In-process worker tests* asserted immediate readiness and turned a shared
+    two-second helper into a semantic requirement, though the production API
+    exposes only a nonblocking poll and promises no latency. Closed by
+    brief-407 with instance-scoped start/finish signals; a probe had first
+    established that a yield is not enough and only a real happens-before edge
+    would do.
+  - *The native IOPub subscription race* was real, but the repository's
+    `acknowledge_iopub_subscription` was not a barrier for it — it did a
+    heartbeat round trip over an independent Req/Rep socket. Closed by
+    brief-411 with a sentinel that travels the backend's own PUB path, plus
+    parent-scoped frame collection so "the next four frames" stopped being an
+    assumption.
+  - *The native `basic` tests* were a third family the old entry could not
+    reach: they open Dealer/Router and Req/Rep only, with no `SubSocket`, so
+    PUB/SUB was never their mechanism. Closed by brief-409 along with the two
+    negative assertions that tried to prove absence by waiting 200 ms.
+  - *An ephemeral-port TOCTOU* nobody was looking for: the helper reserved five
+    ports, read them, dropped every listener, and only then let the backend
+    bind. Closed by brief-408 by recovering the resolved endpoint the pinned
+    library already returns and that the wrapper was discarding.
+
+  **The sandbox note that stood here is now enforced rather than remembered.**
+  A skipped native test used to be reported by libtest as `ok`, which is how
+  brief-384 recorded a 0-of-30 result that measured nothing. Without
+  `RUM_ALLOW_NATIVE_ZEROMQ_SKIP` a host that cannot bind loopback now fails all
+  nine loudly. Verification of native behaviour still belongs on a
+  loopback-capable host: brief-409 passed the worker's gate and broke all nine
+  native tests on the director's, and brief-410 added socket-free harness
+  coverage so that class is catchable in a sandbox that cannot bind.
 
 - **Comparison-chain coverage omits two stated parts of the contract**: no test
   lowers a surface uniform-`Less` chain, and none counts the leftmost operand.

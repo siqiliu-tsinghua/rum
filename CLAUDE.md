@@ -192,6 +192,39 @@ Consequences for how I present and pick work:
 
 ## Current direction (read these for state)
 
+- **The suspension and cancellation line is COMPLETE (2026-09-02, briefs
+  397-411, `8df8f144` through `4c4dbfab`).** It opened with the first
+  release-profile full-test run on the Linux host, which produced two
+  `rum-jupyter` failures the debug gate never showed, and closed three kernel
+  defects: cancellation erased by its own request prologue, abandoning a
+  suspension leaking every scope its frames owned, and overlapping public
+  requests silently replacing a pending continuation (now rejected, by user
+  ruling; supersede stays unimplemented rather than being an accident of
+  consuming queued input). Detail in `TODO.md` and the 2026-09-02
+  `PROGRESS.md` entry.
+
+  **Three things from it are method, not history.**
+
+  - *An instrument reported nine skips as nine passes.* A native ZeroMQ test
+    that cannot bind loopback printed to stderr, early-returned, and libtest
+    said `ok`. That had already cost brief-384 a false 0-of-30. It is now a red
+    test unless `RUM_ALLOW_NATIVE_ZEROMQ_SKIP` opts in. **Before trusting any
+    green from a worker, ask what its environment can actually execute.**
+  - *A worker's gate is worth exactly what it can run.* brief-409 was green in
+    its sandbox and broke all nine native tests on this host, masked by that
+    same skip path. The one-line fix mattered less than brief-410's socket-free
+    harness coverage, which gave the worker a gate it could run — and paid off
+    immediately when family B needed one.
+  - *Refuting a repair beats performing one.* brief-401 killed brief-400's
+    mechanism before it was built: driving saved frames with `Err(Cancelled)`
+    is not an unwind, because ordinary frames consume errors and run work.
+    brief-400 is superseded, not resumed; `stash@{0}` is kept as reference.
+
+  My own recurring failure this line was **trusting a predicate without
+  calibrating it against a known answer** — three bad probes in one session,
+  and a MAY list short twice on module roots. A module root belongs in the list
+  whenever a type it exports changes.
+
 - **Post-`v0.1.0` safe-Rust algorithmic audit is the active maintenance
   line.** Batches 1-7 are closed (through `29c5e174`). `TODO.md` is
   authoritative for what remains; `PROGRESS.md` has the per-batch narrative.

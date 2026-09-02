@@ -5,6 +5,51 @@ based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Pre-1.0,
 minor versions may include breaking changes; the project aims to follow
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once it reaches 1.0.
 
+## [Unreleased]
+
+### Fixed
+
+- Discarding a suspended evaluation no longer leaks the kernel state its frames
+  own. Abandoning a suspension dropped its saved continuation frames without
+  unwinding them, so `Block` bindings, `Module` activations and gensym
+  reclamation, loop iterator scopes, `OptionValue` scopes, open `Reap` and
+  `Monitor` scopes, time and memory constraint nesting, trace and capture
+  checkpoints, `AbortProtect` depth, `BlockRandom` state, and partial package
+  installs all survived into the next request. The leaked `AbortProtect` depth
+  let evaluation continue past `Abort[]`; a leaked deadline terminated an
+  unrelated later evaluation. Abandonment is now a closed protocol that every
+  suspension frame must classify — a supertrait with no default body, so a new
+  frame does not compile until its behaviour is chosen — and `WithCleanup` is
+  its one allowlisted evaluation.
+
+- A cancellation is no longer erased by the evaluation it was meant to stop.
+  The prologue cleared a session-global interrupt flag as its first act, so a
+  cancel that arrived between obtaining a handle and starting the request was
+  lost. Cancellation is now request-scoped and generation-qualified: a handle
+  affects only the request that produced it, is inert after that request
+  completes or the session is reset, and survives its own request's prologue.
+
+- A cancellation accepted while an evaluation is suspended for host input now
+  abandons that continuation before any input is converted, wrapped, or
+  consumed, returns the documented structured termination, and leaves the
+  session reusable.
+
+### Changed
+
+- A new evaluation request arriving while a single-source input continuation is
+  pending is rejected with a documented failure instead of silently replacing
+  it. The pending continuation is untouched and remains resumable through
+  `resume_with_input`; `queue_input_response` remains pre-supply only. A
+  script-shaped suspension, which has never been resumable, is escaped with
+  `reset()` or by cancelling. Superseding a suspended request is no longer an
+  accident of consuming queued input, and remains unimplemented as an explicit
+  operation.
+
+- Cancellation is observed through one mechanism. The legacy `AtomicBool`
+  interrupt lane, its mirror synchronization, and its `Arc`-holder arming
+  heuristic are gone; `rum-stdlib`'s lazy steppers observe the request phase
+  word directly.
+
 ## [0.2.0] — 2026-08-31
 
 ### Fixed
