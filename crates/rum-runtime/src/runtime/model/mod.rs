@@ -31,7 +31,9 @@ pub use messages::{
     TraceEvent,
 };
 pub(super) use messages::{MessageDefinition, MessageNameKey, MessageSelector};
-pub use request_cancellation::{AcceptRequestError, AcceptedRequest, RequestCancelHandle};
+pub use request_cancellation::{
+    AcceptRequestError, AcceptedRequest, CancellationObserver, RequestCancelHandle,
+};
 pub(super) use request_cancellation::{MAX_REQUEST_GENERATION, RequestInterruptState};
 pub(super) use requests::PendingEvalRequest;
 pub use requests::{

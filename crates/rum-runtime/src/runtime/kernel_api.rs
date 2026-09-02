@@ -75,8 +75,8 @@ pub use num_traits::{One, Signed, ToPrimitive, Zero};
 
 // model
 pub use super::model::{
-    CasesLevelSpec, CasesTraversalConfig, RewriteRule, RuleApplicationSource, Session,
-    SymbolExprMap,
+    CancellationObserver, CasesLevelSpec, CasesTraversalConfig, RewriteRule, RuleApplicationSource,
+    Session, SymbolExprMap,
 };
 #[doc(hidden)]
 pub use super::session::TrustedSystemDownValueLhs;

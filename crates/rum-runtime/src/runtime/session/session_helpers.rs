@@ -28,22 +28,12 @@ pub(in crate::runtime) struct EvaluationRollbackSnapshot {
 
 impl Session {
     pub(in crate::runtime) fn begin_top_level_interrupt_budget(&mut self) {
-        let legacy_interrupt_armed = {
-            let control = self.request_interrupt_control.borrow();
-            if self.active_accepted_request.is_none() && control.has_cancelled_request() {
-                control.suppress_legacy_interrupt();
-            } else {
-                control.synchronize_legacy_interrupt();
-            }
-            control.legacy_handle_is_shared()
-        };
         self.interrupt_poll_counter = 0;
         self.eval_deadline = self.eval_timeout.map(|timeout| Instant::now() + timeout);
         self.current_memory_limit = self.resource_limits.eval_memory_limit;
         self.memory_limit_check_counter.set(0);
-        self.interrupt_armed = self.eval_deadline.is_some()
-            || self.active_accepted_request.is_some()
-            || legacy_interrupt_armed;
+        self.interrupt_armed =
+            self.eval_deadline.is_some() || self.active_accepted_request.is_some();
     }
 
     pub(in crate::runtime) fn install_accepted_request(
@@ -93,16 +83,7 @@ impl Session {
 
     pub(in crate::runtime) fn take_active_accepted_request(&mut self) -> Option<AcceptedRequest> {
         let accepted = self.active_accepted_request.take();
-        if accepted.is_some() {
-            self.request_interrupt_control
-                .borrow()
-                .suppress_legacy_interrupt();
-        }
-        self.interrupt_armed = self.eval_deadline.is_some()
-            || self
-                .request_interrupt_control
-                .borrow()
-                .legacy_handle_is_shared();
+        self.interrupt_armed = self.eval_deadline.is_some();
         accepted
     }
 

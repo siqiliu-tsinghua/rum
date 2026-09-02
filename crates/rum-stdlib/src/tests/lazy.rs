@@ -1,6 +1,5 @@
 use crate::install_core;
 use rum_runtime::{Capability, EvalError, Session};
-use std::sync::atomic::Ordering;
 
 fn core_session() -> Session {
     let mut session = Session::new();
@@ -98,16 +97,33 @@ fn lazy_list_is_opaque_structural_and_inert() {
 }
 
 #[test]
-fn lazy_realization_observes_the_session_cancel_flag() {
+fn lazy_pull_cancellation_does_not_stale_the_same_value_for_a_fresh_request() {
     let mut session = core_session();
-    let lazy_list = session.eval_text("LazyRange[1, 1]").unwrap().value;
-    let cancel = session.interrupt_handle();
-    cancel.store(true, Ordering::Relaxed);
+    session
+        .eval_request(
+            "savedLazy405 = LazyTake[LazyMap[Function[x, Print[\"lazy-pull-started\"]; x], LazyRange[1, 1]], 3]",
+        )
+        .expect("the reusable lazy value should be installed");
 
-    assert!(matches!(
-        crate::lazy::realize_all(&mut session, &lazy_list),
-        Err(EvalError::Cancelled)
-    ));
+    let cancel = session.request_cancel_handle();
+    session.set_print_sink(Box::new(move |line| {
+        assert_eq!(line, "lazy-pull-started");
+        cancel.cancel();
+    }));
+    let cancelled = session
+        .eval_request("Normal[savedLazy405]")
+        .expect("lazy cancellation should surface as a terminated evaluation");
+    assert_eq!(
+        cancelled.termination,
+        Some(rum_runtime::EvalTerminationReason::Cancelled)
+    );
+
+    session.clear_print_sink();
+    let fresh = session
+        .eval_request("Normal[savedLazy405]")
+        .expect("the same lazy value should pull in a fresh request");
+    assert_eq!(fresh.termination, None);
+    assert_eq!(fresh.value.to_string(), "List[1, 2, 3]");
 }
 
 #[test]

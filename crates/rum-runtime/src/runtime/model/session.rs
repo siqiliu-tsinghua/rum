@@ -5,9 +5,6 @@ use std::cell::{Cell, RefCell};
 use std::hash::BuildHasherDefault;
 use std::sync::Arc;
 
-#[cfg(test)]
-use std::sync::atomic::AtomicBool;
-
 use std::time::{Duration, Instant};
 
 pub(in crate::runtime) type SymbolMap<T> =
@@ -119,8 +116,6 @@ pub struct Session {
     pub(in crate::runtime) next_request_generation: Cell<u64>,
     pub(in crate::runtime) pending_accepted_request: RefCell<Option<AcceptedRequest>>,
     pub(in crate::runtime) active_accepted_request: Option<AcceptedRequest>,
-    #[cfg(test)]
-    pub(in crate::runtime) interrupt_flag: Arc<AtomicBool>,
     pub(in crate::runtime) eval_timeout: Option<Duration>,
     pub(in crate::runtime) eval_deadline: Option<Instant>,
     pub(in crate::runtime) interrupt_poll_counter: u64,

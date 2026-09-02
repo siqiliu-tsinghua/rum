@@ -1,13 +1,10 @@
 use rum_core::SharedArgs;
-use std::sync::{
-    Arc,
-    atomic::{AtomicBool, Ordering},
-};
 
 use rum_core::{BigInt, Expr, Rational};
 use rum_runtime::kernel_api::{
-    EvalError, Session, compare_expr_canonical, expr_as_exact_rational, expr_as_non_negative_usize,
-    expr_as_symbol, is_system_symbol_name, list_items, system_expr, truthiness_symbol,
+    CancellationObserver, EvalError, Session, compare_expr_canonical, expr_as_exact_rational,
+    expr_as_non_negative_usize, expr_as_symbol, is_system_symbol_name, list_items, system_expr,
+    truthiness_symbol,
 };
 
 use crate::structure_ops::next_permutation;
@@ -30,7 +27,7 @@ impl PullBudget {
 struct PullContext {
     iteration_limit: usize,
     source_pulls: usize,
-    interrupt: Arc<AtomicBool>,
+    cancellation: CancellationObserver,
 }
 
 impl PullContext {
@@ -38,12 +35,12 @@ impl PullContext {
         Self {
             iteration_limit: session.resource_limits().iteration_work_limit,
             source_pulls: 0,
-            interrupt: session.interrupt_handle(),
+            cancellation: session.cancellation_observer(),
         }
     }
 
     fn charge_source_pull(&mut self) -> Result<(), EvalError> {
-        if self.interrupt.load(Ordering::Relaxed) {
+        if self.cancellation.is_cancelled() {
             return Err(EvalError::Cancelled);
         }
         if self.source_pulls >= self.iteration_limit {

@@ -3,7 +3,7 @@ use resume_frames::*;
 
 use super::super::*;
 use std::num::NonZeroU64;
-use std::sync::{Arc, atomic::AtomicBool};
+use std::sync::Arc;
 use std::time::Duration;
 
 struct SnapshotRestoreMode<'a> {
@@ -162,9 +162,9 @@ impl Session {
         Ok(AcceptedRequest::new(Arc::clone(&control), generation))
     }
 
-    /// Returns the low-level interrupt flag used by kernel-resident iterators.
-    pub fn interrupt_handle(&self) -> Arc<AtomicBool> {
-        self.request_interrupt_control.borrow().legacy_handle()
+    /// Returns a generation-agnostic observer of request cancellation.
+    pub fn cancellation_observer(&self) -> CancellationObserver {
+        CancellationObserver::new(Arc::clone(&self.request_interrupt_control.borrow()))
     }
 
     /// Returns a qualified handle for the active request, or reserves the next request.
@@ -187,12 +187,8 @@ impl Session {
     pub fn set_eval_timeout(&mut self, timeout: Option<Duration>) {
         self.eval_timeout = timeout;
         self.eval_deadline = None;
-        self.interrupt_armed = self.eval_timeout.is_some()
-            || self.active_accepted_request.is_some()
-            || self
-                .request_interrupt_control
-                .borrow()
-                .legacy_handle_is_shared();
+        self.interrupt_armed =
+            self.eval_timeout.is_some() || self.active_accepted_request.is_some();
     }
 
     pub fn set_resource_limits(&mut self, limits: ResourceLimits) {

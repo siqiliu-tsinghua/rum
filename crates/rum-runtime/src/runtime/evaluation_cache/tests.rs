@@ -706,9 +706,14 @@ fn association_lvalue_direct_update_polls_interrupt_before_mutation() {
         .unwrap();
     session.interrupt_armed = true;
     session.interrupt_poll_counter = 1023;
+    let accepted = session
+        .accept_cancellable_request()
+        .expect("the direct update test should accept a cancellable request");
+    let cancel = accepted.cancel_handle();
     session
-        .interrupt_flag
-        .store(true, std::sync::atomic::Ordering::Relaxed);
+        .install_accepted_request(accepted)
+        .expect("the direct update test ticket should belong to the session");
+    cancel.cancel();
 
     let result = session.try_direct_association_rule_update(
         &target,

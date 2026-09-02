@@ -217,3 +217,137 @@ cost premise is exceeded — stop and report.
    rows.
 6. Cost statement.
 7. Stop-loss, risks, open questions.
+
+---
+
+# Report — 2026-09-02
+
+## 1. Per-file changes
+
+- [request_cancellation.rs](crates/rum-runtime/src/runtime/model/request_cancellation.rs:116), lines 116–214 — added `CancellationObserver`; removed the Boolean mirror and all synchronization logic.
+- [model/mod.rs](crates/rum-runtime/src/runtime/model/mod.rs:34), lines 34–37 — exported the observer.
+- [model/session.rs](crates/rum-runtime/src/runtime/model/session.rs:115), lines 115–121 — removed the vestigial test-only flag.
+- [session_api.rs](crates/rum-runtime/src/runtime/session/session_api.rs:165), lines 165–191 — exposed `cancellation_observer()`, deleted the raw handle API, and removed strong-count arming.
+- [session_helpers.rs](crates/rum-runtime/src/runtime/session/session_helpers.rs:30), lines 30–36 and 84–87 — deleted the suppress/synchronize prologue and derived arming solely from deadline/accepted request.
+- [session_state.rs](crates/rum-runtime/src/runtime/session/session_state.rs:662), lines 662–670 — removed obsolete flag initialization.
+- [eval_core/mod.rs](crates/rum-runtime/src/runtime/eval_core/mod.rs:80), lines 80–96 — removed both old poll branches and unused `Ordering`; cadence and cold attributes are unchanged.
+- [kernel_api.rs](crates/rum-runtime/src/runtime/kernel_api.rs:77), lines 77–80 — exported `CancellationObserver` to stdlib.
+- [lazy.rs](crates/rum-stdlib/src/lazy.rs:4), lines 4–45 — lazy source pulls now query the phase observer.
+- [lazy tests](crates/rum-stdlib/src/tests/lazy.rs:99), lines 99–127 — migrated the old flag test and proved the same lazy value works in a later request.
+- [evaluation-cache tests](crates/rum-runtime/src/runtime/evaluation_cache/tests.rs:700), lines 700–724 — preserved poll-before-mutation coverage using an accepted qualified request.
+- [Part tests](crates/rum-runtime/src/runtime/tests/part_assignment.rs:382), lines 382–405 — likewise migrated poll-before-eviction/mutation coverage.
+- [request API tests](crates/rum-runtime/src/runtime/tests/session_requests/api.rs:494), lines 494–542 and 826–841 — added arming, `Send + Sync`, rebuild-inertness tests, and migrated file cancellation.
+- [frame_root_trace.rs](crates/rum-runtime/src/runtime/tests/frame_root_trace.rs:370), lines 370–401, 733–744, and 885–895 — added an all-file repository gate for every deleted name.
+
+## 2. Observer shape and stale-cancellation proof
+
+`CancellationObserver` holds only `Arc<RequestInterruptState>`, not a generation. `is_cancelled()` performs one relaxed `AtomicU64` load and reads the cancellation bit. There is no lock or per-pull allocation.
+
+Completion transitions the phase to idle with the existing exact-generation CAS, so an observer immediately reads “not cancelled” afterward. The lazy regression cancels during an actual mapped pull, completes that request, then realizes the same saved lazy value in a fresh request as `List[1, 2, 3]`.
+
+Across reset/rebuild, an observer retains the retired control block and becomes inert. `cancellation_observer_held_across_session_rebuild_is_inert` proves that behavior while a newly rebuilt session has its own cancelled request.
+
+## 3. Arming proof
+
+The prologue is now exactly deadline-or-active-request. Observer `Arc` counts are irrelevant.
+
+Verbatim:
+
+```text
+running 1 test
+ordinary_request_armed=false observer_held_request_armed=false
+test runtime::tests::session_requests::api::ordinary_request_and_lazy_observer_leave_interrupt_poll_unarmed ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 931 filtered out; finished in 0.00s
+```
+
+## 4. Consumer verification
+
+- CLI: [main.rs](crates/rum-cli/src/main.rs:221) routes eval, script, and file through one wrapper. That wrapper installs the sink at line 251 and immediately invokes exactly one request at line 253. The sink obtains the qualified host handle at line 330. The REPL path at lines 214–218 bypasses this sink entirely.
+- Jupyter: [worker.rs](crates/rum-jupyter/src/adapter/worker.rs:87) obtains the qualified handle before spawning Eval. Resume obtains a handle at lines 98–103 while the suspended accepted ticket remains active, so `request_cancel_handle()` returns that same generation. Interrupt calls `cancel()` at lines 47–53. No Jupyter changes were needed.
+
+## 5. Verification
+
+All mandatory final-tree commands returned `exit_code=0`:
+
+```text
+scripts/run-bounded.py --timeout 300  -- cargo --offline fmt --check
+scripts/run-bounded.py --timeout 900  -- cargo test --offline -p rum-runtime
+scripts/run-bounded.py --timeout 900  -- cargo test --offline -p rum-stdlib
+scripts/run-bounded.py --timeout 900  -- cargo test --offline -p rum-host
+scripts/run-bounded.py --timeout 2400 -- cargo test --offline --workspace --no-fail-fast
+```
+
+Key final workspace summaries:
+
+```text
+test result: ok. 103 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+test result: ok. 45 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+test result: ok. 930 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 3.10s
+test result: ok. 828 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 2.54s
+test result: ok. 189 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+```
+
+Both Jupyter suites passed; no known intermittent failure appeared.
+
+Grep proof:
+
+```text
+$ ! rg -n "interrupt_flag|interrupt_handle|legacy_interrupt|legacy_handle|synchronize_legacy_interrupt|suppress_legacy_interrupt" crates/
+exit_code=0
+```
+
+There were no match lines.
+
+Repository invariant rows:
+
+```text
+named_suspension_frames=545
+named_pure_finalizers=60
+pure_frame_abandon_derives=516
+handwritten_stateful_frame_abandons=29
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/evaluation_data.rs:EvalEvaluationDataSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/monitor.rs:EvalMonitorSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/reap.rs:EvalReapSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/resources/constraints.rs:ResumeMemoryConstrainedWithLimitSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/resources/constraints.rs:ResumeTimeConstrainedWithLimitSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/test_report/evaluation.rs:EvalExprWithStreamCaptureSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/debug_tools/trace/resume_frames.rs:EvalStructuredTraceCaptureExprSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:EvalAbortProtectSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:ResumeCheckAbortAfterPrimarySuspensionFrame1
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:ResumeCheckAbortAfterPrimarySuspensionFrame2
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:ResumeCheckAbortWithPropagationSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/driver/resume_frames.rs:EvaluateLoopIteratorBodySuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/driver/resume_frames.rs:EvaluateLoopIteratorBodyWithDynamicValueSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/mod.rs:WithIterationProductScopeSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:EvalCheckSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:EvalQuietSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs:DriveWithCleanupPrimarySuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs:EvalWithCleanupSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/options/patterns.rs:EvaluateWithOptionValueScopeSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/block/resume_frames.rs:EvalSingleSymbolBlockSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/block/resume_frames.rs:ResumeBlockBodySuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/block/resume_frames.rs:ResumeBlockInitializersSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/block/resume_frames.rs:ResumeSingleSymbolBlockBodySuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/module.rs:ResumeModuleInitializersSuspensionFrame1
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/module.rs:ResumeModuleInitializersSuspensionFrame2
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/module.rs:ResumeSuspendedModuleInitializersSuspensionFrame1
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/lexical/module.rs:ResumeSuspendedModuleInitializersSuspensionFrame2
+stateful_frame_abandon=crates/rum-runtime/src/runtime/scoping/packages/resume_frames.rs:ResumePackageInstallSuspensionFrame
+stateful_frame_abandon=crates/rum-runtime/src/runtime/session/session_api/resume_frames.rs:EvaluateWithRandomStateRestoredSuspensionFrame
+evaluate_cleanup_allowlist=WithCleanup owner frames (2)
+raw_live_owner_clears=0
+raw_live_owner_replacements=0
+removed_cancellation_lane_hits=0
+legacy_api_hits=0 direct_queue_mutation_hits=0 ownership_hits=0
+```
+
+## 6. Cost statement
+
+No timing A/B was run, per the brief. Ordinary evaluation loses mirror synchronization and strong-count work. Lazy pulling still performs one relaxed atomic load per source pull; the observer’s `Arc` is cloned once when creating the pull context. No mutex, allocation per pull, extra evaluator poll, cadence change, or new default-path work was introduced.
+
+## 7. Stop-loss, risks, open questions
+
+No stop-loss fired. No out-of-scope files, Jupyter/CLI files, dependency edges, abandonment logic, generated references, or `Cargo.lock` were changed. No `unsafe` was added, `git diff --check` is clean, and no commit/branch/stash operation was performed.
+
+No open correctness questions remain.

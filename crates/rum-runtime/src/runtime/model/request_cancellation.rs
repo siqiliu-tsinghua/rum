@@ -3,7 +3,7 @@ use super::*;
 use std::num::NonZeroU64;
 use std::sync::{
     Arc,
-    atomic::{AtomicBool, AtomicU64, Ordering},
+    atomic::{AtomicU64, Ordering},
 };
 
 const IDLE: u64 = 0;
@@ -113,6 +113,36 @@ impl fmt::Debug for RequestCancelHandle {
     }
 }
 
+/// A generation-agnostic observer of the currently running request.
+///
+/// The observer does not capture a request generation. It reports the phase
+/// word's current cancellation bit, so completion clears its observation and
+/// a later request starts uncancelled. If the session rebuilds or retires its
+/// control block, observers of the old block become inert.
+#[derive(Clone)]
+pub struct CancellationObserver {
+    control: Arc<RequestInterruptState>,
+}
+
+impl CancellationObserver {
+    pub(in crate::runtime) fn new(control: Arc<RequestInterruptState>) -> Self {
+        Self { control }
+    }
+
+    /// Returns whether the request running on this control block is cancelled.
+    pub fn is_cancelled(&self) -> bool {
+        self.control.has_cancelled_request()
+    }
+}
+
+impl fmt::Debug for CancellationObserver {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("CancellationObserver")
+            .finish_non_exhaustive()
+    }
+}
+
 pub(in crate::runtime) struct RequestInterruptState {
     // Invariant: 0 is idle; otherwise the word is
     // `(generation << 1) | cancelled`. A bare boolean cannot distinguish a
@@ -120,46 +150,17 @@ pub(in crate::runtime) struct RequestInterruptState {
     // loses a current cancel. Every writer therefore transitions only its exact
     // generation, and completion closes and observes through the same word.
     phase: AtomicU64,
-    legacy_interrupt: Arc<AtomicBool>,
 }
 
 impl RequestInterruptState {
     pub(in crate::runtime) fn new() -> Self {
         Self {
             phase: AtomicU64::new(IDLE),
-            legacy_interrupt: Arc::new(AtomicBool::new(false)),
         }
-    }
-
-    pub(in crate::runtime) fn legacy_handle(&self) -> Arc<AtomicBool> {
-        Arc::clone(&self.legacy_interrupt)
-    }
-
-    pub(in crate::runtime) fn legacy_interrupt_requested(&self) -> bool {
-        self.legacy_interrupt.load(Ordering::Relaxed)
     }
 
     pub(in crate::runtime) fn has_cancelled_request(&self) -> bool {
         self.phase.load(Ordering::Relaxed) & CANCELLED_BIT != 0
-    }
-
-    pub(in crate::runtime) fn legacy_handle_is_shared(&self) -> bool {
-        Arc::strong_count(&self.legacy_interrupt) > 1
-    }
-
-    pub(in crate::runtime) fn synchronize_legacy_interrupt(&self) {
-        loop {
-            let before = self.phase.load(Ordering::Relaxed);
-            self.legacy_interrupt
-                .store(before & CANCELLED_BIT != 0, Ordering::Relaxed);
-            if self.phase.load(Ordering::Relaxed) == before {
-                return;
-            }
-        }
-    }
-
-    pub(in crate::runtime) fn suppress_legacy_interrupt(&self) {
-        self.legacy_interrupt.store(false, Ordering::Relaxed);
     }
 
     pub(in crate::runtime) fn is_idle(&self) -> bool {
@@ -167,31 +168,22 @@ impl RequestInterruptState {
     }
 
     pub(in crate::runtime) fn try_reserve(&self, generation: NonZeroU64) -> bool {
-        let reserved = self
-            .phase
+        self.phase
             .compare_exchange(
                 IDLE,
                 encode(generation, false),
                 Ordering::Relaxed,
                 Ordering::Relaxed,
             )
-            .is_ok();
-        if reserved {
-            self.synchronize_legacy_interrupt();
-        }
-        reserved
+            .is_ok()
     }
 
     fn cancel(&self, generation: NonZeroU64) {
         let active = encode(generation, false);
         let cancelled = encode(generation, true);
-        if self
-            .phase
-            .compare_exchange(active, cancelled, Ordering::Relaxed, Ordering::Relaxed)
-            .is_ok()
-        {
-            self.synchronize_legacy_interrupt();
-        }
+        let _ =
+            self.phase
+                .compare_exchange(active, cancelled, Ordering::Relaxed, Ordering::Relaxed);
     }
 
     fn is_active(&self, generation: NonZeroU64) -> bool {
@@ -209,25 +201,17 @@ impl RequestInterruptState {
         let active = encode(generation, false);
         let cancelled = encode(generation, true);
 
-        let (closed, cancelled_won) =
-            match self
+        match self
+            .phase
+            .compare_exchange(active, IDLE, Ordering::Relaxed, Ordering::Relaxed)
+        {
+            Ok(_) => false,
+            Err(value) if value == cancelled => self
                 .phase
-                .compare_exchange(active, IDLE, Ordering::Relaxed, Ordering::Relaxed)
-            {
-                Ok(_) => (true, false),
-                Err(value) if value == cancelled => {
-                    let closed = self
-                        .phase
-                        .compare_exchange(cancelled, IDLE, Ordering::Relaxed, Ordering::Relaxed)
-                        .is_ok();
-                    (closed, closed)
-                }
-                Err(_) => (false, false),
-            };
-        if closed {
-            self.synchronize_legacy_interrupt();
+                .compare_exchange(cancelled, IDLE, Ordering::Relaxed, Ordering::Relaxed)
+                .is_ok(),
+            Err(_) => false,
         }
-        cancelled_won
     }
 }
 

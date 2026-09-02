@@ -665,8 +665,6 @@ impl Session {
             next_request_generation: std::cell::Cell::new(1),
             pending_accepted_request: std::cell::RefCell::new(None),
             active_accepted_request: None,
-            #[cfg(test)]
-            interrupt_flag: std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false)),
             eval_timeout: None,
             eval_deadline: None,
             interrupt_poll_counter: 0,

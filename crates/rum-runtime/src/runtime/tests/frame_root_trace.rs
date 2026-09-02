@@ -375,6 +375,30 @@ fn suspension_protocol_repository_invariants_hold() {
     let mut files = Vec::new();
     collect_rust_sources(&workspace.join("crates/rum-runtime/src"), &mut files);
     collect_rust_sources(&workspace.join("crates/rum-stdlib/src"), &mut files);
+    let mut repository_files = Vec::new();
+    collect_repository_files(&workspace.join("crates"), &mut repository_files);
+    let deleted_cancellation_names = [
+        ["interrupt", "_flag"].concat(),
+        ["interrupt", "_handle"].concat(),
+        ["legacy", "_interrupt"].concat(),
+        ["legacy", "_handle"].concat(),
+        ["synchronize", "_legacy_", "interrupt"].concat(),
+        ["suppress", "_legacy_", "interrupt"].concat(),
+    ];
+    let mut cancellation_lane_violations = Vec::new();
+    for path in &repository_files {
+        let source = fs::read_to_string(path).expect("source gate should read Rust source");
+        for name in &deleted_cancellation_names {
+            if source.contains(name) {
+                cancellation_lane_violations.push(format!("{}:{name}", path.display()));
+            }
+        }
+    }
+    assert!(
+        cancellation_lane_violations.is_empty(),
+        "deleted cancellation lane names returned:\n{}",
+        cancellation_lane_violations.join("\n")
+    );
 
     let core_path = workspace.join("crates/rum-runtime/src/runtime/suspension/core.rs");
     let cleanup_path =
@@ -708,6 +732,10 @@ fn suspension_protocol_repository_invariants_hold() {
     );
     println!("raw_live_owner_clears={raw_live_owner_clear_hits}");
     println!("raw_live_owner_replacements={raw_live_owner_replacement_hits}");
+    println!(
+        "removed_cancellation_lane_hits={}",
+        cancellation_lane_violations.len()
+    );
     assert!(
         ownership_violations.is_empty(),
         "suspension ownership violations:\n{}",
@@ -852,6 +880,18 @@ fn collect_rust_sources(path: &Path, files: &mut Vec<PathBuf>) {
     {
         files.push(path.to_path_buf());
     }
+}
+
+fn collect_repository_files(path: &Path, files: &mut Vec<PathBuf>) {
+    if path.is_dir() {
+        for entry in fs::read_dir(path).expect("source gate should read source directories") {
+            let entry = entry.expect("source gate should read source entries");
+            collect_repository_files(&entry.path(), files);
+        }
+        return;
+    }
+
+    files.push(path.to_path_buf());
 }
 
 fn manual_frame_root_trace_impls(path: &Path) -> Vec<String> {

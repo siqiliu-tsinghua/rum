@@ -492,6 +492,56 @@ fn accepted_cancel_before_request_entry_is_observed() {
 }
 
 #[test]
+fn ordinary_request_and_lazy_observer_leave_interrupt_poll_unarmed() {
+    fn assert_send_sync<T: Send + Sync>() {}
+
+    assert_send_sync::<CancellationObserver>();
+    let mut session = session_with_test_control_builtins();
+    assert!(session.eval_timeout.is_none());
+
+    let ordinary = session
+        .eval_request("1 + 1")
+        .expect("an ordinary request should complete");
+    assert_eq!(ordinary.value.to_string(), "2");
+    let ordinary_request_armed = session.interrupt_armed;
+
+    let observer = session.cancellation_observer();
+    let observer_held = session
+        .eval_request("2 + 2")
+        .expect("holding an observer must not arm the request");
+    assert_eq!(observer_held.value.to_string(), "4");
+    assert!(!observer.is_cancelled());
+    let observer_held_request_armed = session.interrupt_armed;
+
+    println!(
+        "ordinary_request_armed={ordinary_request_armed} observer_held_request_armed={observer_held_request_armed}"
+    );
+    assert!(!ordinary_request_armed);
+    assert!(!observer_held_request_armed);
+}
+
+#[test]
+fn cancellation_observer_held_across_session_rebuild_is_inert() {
+    let mut session = session_with_test_control_builtins();
+    let observer = session.cancellation_observer();
+    let old_cancel = session.request_cancel_handle();
+    old_cancel.cancel();
+    assert!(observer.is_cancelled());
+
+    session = session_with_test_control_builtins();
+    let current_cancel = session.request_cancel_handle();
+    current_cancel.cancel();
+    assert!(
+        !observer.is_cancelled(),
+        "an observer retained across a session rebuild must be inert"
+    );
+    let current = session
+        .eval_request("3 + 3")
+        .expect("the rebuilt session's current cancellation should complete");
+    assert_eq!(current.termination, Some(EvalTerminationReason::Cancelled));
+}
+
+#[test]
 fn completed_request_handle_is_inert_for_later_requests() {
     let mut session = session_with_test_control_builtins();
     let first = session
@@ -773,14 +823,14 @@ fn file_request_maps_resource_limit_exit_and_cancel_errors() {
     }));
     install_test_file_io(&mut session);
     session.set_iteration_work_limit(50_000_000);
-    let cancel = session.interrupt_handle();
+    let cancel = session.request_cancel_handle();
     let canceller = {
         let cancel = cancel.clone();
         thread::spawn(move || {
             evaluation_started_rx
                 .recv()
                 .expect("file evaluation should report that it started");
-            cancel.store(true, Ordering::Relaxed);
+            cancel.cancel();
         })
     };
     let cancelled = session

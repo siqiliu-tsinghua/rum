@@ -1,8 +1,5 @@
 use super::*;
 
-#[cfg(test)]
-use std::sync::atomic::Ordering;
-
 use std::time::Instant;
 
 pub(in crate::runtime) mod call;
@@ -88,17 +85,6 @@ impl Session {
             return Ok(());
         }
         if self.active_accepted_request_is_cancelled() {
-            return Err(EvalError::Cancelled);
-        }
-        if self
-            .request_interrupt_control
-            .borrow()
-            .legacy_interrupt_requested()
-        {
-            return Err(EvalError::Cancelled);
-        }
-        #[cfg(test)]
-        if self.interrupt_flag.load(Ordering::Relaxed) {
             return Err(EvalError::Cancelled);
         }
         if let Some(deadline) = self.eval_deadline {

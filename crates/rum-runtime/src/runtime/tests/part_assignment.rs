@@ -391,9 +391,14 @@ fn set_positional_part_direct_path_polls_interrupt_before_cache_eviction_or_muta
 
     session.interrupt_armed = true;
     session.interrupt_poll_counter = 1023;
+    let accepted = session
+        .accept_cancellable_request()
+        .expect("the direct Part test should accept a cancellable request");
+    let cancel = accepted.cancel_handle();
     session
-        .interrupt_flag
-        .store(true, std::sync::atomic::Ordering::Relaxed);
+        .install_accepted_request(accepted)
+        .expect("the direct Part test ticket should belong to the session");
+    cancel.cancel();
     let result =
         session.try_direct_positional_part_assignment(&target, &[1], &Expr::small_integer(9));
 
