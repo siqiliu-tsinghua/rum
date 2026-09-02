@@ -17,3 +17,6 @@ hash = ["rum-host/hash", "rum-terminal/hash"]
 rum-host = { path = "../rum-host", default-features = false }
 rum-syntax = { path = "../rum-syntax" }
 rum-terminal = { path = "../rum-terminal", default-features = false }
+
+[dev-dependencies]
+rum-runtime = { path = "../rum-runtime", features = ["test-builtin-memory-growth"] }

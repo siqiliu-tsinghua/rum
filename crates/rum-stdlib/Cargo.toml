@@ -21,3 +21,6 @@ rum-runtime = { path = "../rum-runtime" }
 rum-syntax = { path = "../rum-syntax" }
 sha1 = { workspace = true, optional = true }
 sha2 = { workspace = true, optional = true }
+
+[dev-dependencies]
+rum-runtime = { path = "../rum-runtime", features = ["test-builtin-memory-growth"] }

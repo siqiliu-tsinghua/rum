@@ -12,8 +12,12 @@ description = "Rust embedding facade for rum runtime sessions, structured outcom
 [features]
 default = ["hash"]
 hash = ["rum-stdlib/hash"]
+test-builtin-memory-growth = ["rum-runtime/test-builtin-memory-growth"]
 
 [dependencies]
 rum-core = { path = "../rum-core" }
 rum-runtime = { path = "../rum-runtime" }
 rum-stdlib = { path = "../rum-stdlib", default-features = false }
+
+[dev-dependencies]
+rum-runtime = { path = "../rum-runtime", features = ["test-builtin-memory-growth"] }

@@ -194,7 +194,7 @@ impl Session {
         args: &SharedArgs,
         result: &Result<Expr, EvalError>,
     ) {
-        if self.current_memory_limit.is_none() && !builtin_memory_growth_test_enabled() {
+        if !builtin_memory_growth_test_enabled() {
             return;
         }
         self.validate_builtin_memory_growth_slow(name, contract, args, result);
@@ -297,7 +297,7 @@ impl CallBuiltinSpec for SuspendedBuiltinSpec {
 
 #[inline]
 fn builtin_memory_growth_test_enabled() -> bool {
-    if cfg!(test) {
+    if cfg!(any(test, feature = "test-builtin-memory-growth")) {
         return true;
     }
 

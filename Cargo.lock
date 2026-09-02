@@ -618,6 +618,7 @@ dependencies = [
  "mimalloc",
  "rum-host",
  "rum-repl",
+ "rum-runtime",
  "rum-syntax",
  "rum-terminal",
 ]
@@ -627,6 +628,7 @@ name = "rum-core"
 version = "0.2.0"
 dependencies = [
  "num-bigint",
+ "rum-runtime",
  "serde",
 ]
 
@@ -636,6 +638,7 @@ version = "0.2.0"
 dependencies = [
  "proc-macro2",
  "quote",
+ "rum-runtime",
  "syn",
 ]
 
@@ -667,6 +670,7 @@ name = "rum-repl"
 version = "0.2.0"
 dependencies = [
  "rum-host",
+ "rum-runtime",
  "rum-syntax",
  "rum-terminal",
 ]
@@ -700,6 +704,7 @@ dependencies = [
 name = "rum-syntax"
 version = "0.2.0"
 dependencies = [
+ "rum-runtime",
  "thiserror 2.0.18",
 ]
 
@@ -708,6 +713,7 @@ name = "rum-terminal"
 version = "0.2.0"
 dependencies = [
  "rum-host",
+ "rum-runtime",
 ]
 
 [[package]]

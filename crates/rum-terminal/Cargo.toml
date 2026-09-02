@@ -15,3 +15,6 @@ hash = ["rum-host/hash"]
 
 [dependencies]
 rum-host = { path = "../rum-host", default-features = false }
+
+[dev-dependencies]
+rum-runtime = { path = "../rum-runtime", features = ["test-builtin-memory-growth"] }

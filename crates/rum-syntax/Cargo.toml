@@ -11,3 +11,6 @@ description = "Syntax tree, lexer, parser, diagnostics, and formatter for rum."
 
 [dependencies]
 thiserror.workspace = true
+
+[dev-dependencies]
+rum-runtime = { path = "../rum-runtime", features = ["test-builtin-memory-growth"] }

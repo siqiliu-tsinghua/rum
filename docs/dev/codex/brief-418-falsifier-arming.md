@@ -178,3 +178,194 @@ the default one. If you find yourself adding work anywhere, that is a stop-loss.
 5. Any builtin the newly-armed workspace suite caught. Report, do not fix.
 6. Verification — every command, verbatim output.
 7. Stop-loss / open questions.
+
+---
+
+# Report — 2026-09-03
+
+## 1. What changed
+
+| File | Lines | Change |
+|---|---:|---|
+| [eval_dispatch/mod.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:189) | 189–200, 298–308 | Removed memory-ceiling arming; enabled the falsifier only for `cfg(test)`, the test feature, or explicit environment opt-in. |
+| [rum-runtime/Cargo.toml](/home/remi/dev/rum/crates/rum-runtime/Cargo.toml:12) | 12–13 | Added `test-builtin-memory-growth`. |
+| [rum-host/Cargo.toml](/home/remi/dev/rum/crates/rum-host/Cargo.toml:15) | 15, 22–23 | Forwarded the feature for Jupyter and enabled it in host tests. |
+| [rum-jupyter/Cargo.toml](/home/remi/dev/rum/crates/rum-jupyter/Cargo.toml:22) | 22–23 | Enabled the feature through `rum-host`, preserving the host-facade boundary. |
+| [rum-cli/Cargo.toml](/home/remi/dev/rum/crates/rum-cli/Cargo.toml:26) | 26–27 | Added the dev-only runtime feature dependency. |
+| [rum-core/Cargo.toml](/home/remi/dev/rum/crates/rum-core/Cargo.toml:16) | 16–17 | Same. |
+| [rum-derive/Cargo.toml](/home/remi/dev/rum/crates/rum-derive/Cargo.toml:18) | 18–19 | Same. |
+| [rum-repl/Cargo.toml](/home/remi/dev/rum/crates/rum-repl/Cargo.toml:21) | 21–22 | Same. |
+| [rum-stdlib/Cargo.toml](/home/remi/dev/rum/crates/rum-stdlib/Cargo.toml:25) | 25–26 | Same. |
+| [rum-syntax/Cargo.toml](/home/remi/dev/rum/crates/rum-syntax/Cargo.toml:15) | 15–16 | Same. |
+| [rum-terminal/Cargo.toml](/home/remi/dev/rum/crates/rum-terminal/Cargo.toml:19) | 19–20 | Same. |
+| [Cargo.lock](/home/remi/dev/rum/Cargo.lock:618) | 618–716 | Cargo-generated path dev-dependency entries only. |
+
+No classifications, tests, documentation, or accounting code remain changed.
+
+## 2. Arming mechanism
+
+`builtin_memory_growth_test_enabled()` now returns true for:
+
+```rust
+cfg!(any(test, feature = "test-builtin-memory-growth"))
+```
+
+Otherwise it retains the cold-loaded atomic environment check for `RUM_TEST_BUILTIN_MEMORY_GROWTH`.
+
+Eight crates directly enable the feature through `dev-dependencies`; `rum-jupyter` enables it through `rum-host` to preserve its architecture test; `rum-runtime` unit tests use `cfg(test)`. Resolver 3 keeps these dev features out of normal targets.
+
+The all-target test graph showed structural activation:
+
+```text
+└── rum-runtime feature "test-builtin-memory-growth"
+    [dev-dependencies]
+    ├── rum-cli v0.2.0
+    ├── rum-core v0.2.0
+    ├── rum-derive v0.2.0
+    ├── rum-host v0.2.0
+    ├── rum-repl v0.2.0
+    ├── rum-stdlib v0.2.0
+    ├── rum-syntax v0.2.0
+    └── rum-terminal v0.2.0
+    └── rum-host feature "test-builtin-memory-growth"
+```
+
+The normal `rum-cli` graph contained only:
+
+```text
+rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+└── rum-runtime feature "default"
+```
+
+Both ordinary debug and release builds completed without the test feature.
+
+## 3. Release-build inertness proof
+
+After `cargo build --offline --release`, the exact release binary ran five under-ceiling samples per size with the opt-in variable unset:
+
+```text
+List[List[300, List["0.000817", "0.000809", "0.000796", "0.000814", "0.000821"]], List[600, List["0.001641", "0.001660", "0.001581", "0.001611", "0.001644"]], List[1200, List["0.003390", "0.003228", "0.003291", "0.003427", "0.003266"]]]
+```
+
+These are the expected inert bands: approximately 0.0008, 0.0016, and 0.0032 seconds.
+
+As a control, the same release binary with explicit opt-in produced:
+
+```text
+List[List[300, List["0.001723", "0.001719", "0.001714", "0.001742", "0.001744"]], List[600, List["0.003443", "0.003405", "0.003413", "0.003432", "0.003401"]], List[1200, List["0.007099", "0.006972", "0.006838", "0.007293", "0.007528"]]]
+```
+
+Thus the release build is inert by default while `RUM_TEST_BUILTIN_MEMORY_GROWTH=1` remains functional.
+
+## 4. Structural falsifier proof
+
+I temporarily changed `Rule` to `NonAmplifying` in its declaration and both inventories, then ran the workspace suite with `RUM_TEST_BUILTIN_MEMORY_GROWTH` unset.
+
+Verbatim failure:
+
+```text
+---- tests::associations::associations_key_sort::custom_key_sorts_obey_the_merge_bound_without_growing_the_stack stdout ----
+
+thread 'tests::associations::associations_key_sort::custom_key_sorts_obey_the_merge_bound_without_growing_the_stack' panicked at crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:327:5:
+builtin Rule declared NonAmplifying but returned 64289 proxy bytes from 424 argument proxy bytes (allowance: 1024 bytes)
+
+---- tests::codecs_text::ini_wide_key_and_section_indexes_preserve_round_trips stdout ----
+
+thread 'tests::codecs_text::ini_wide_key_and_section_indexes_preserve_round_trips' panicked at crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:327:5:
+builtin Rule declared NonAmplifying but returned 4696 proxy bytes from 273 argument proxy bytes (allowance: 1024 bytes)
+
+failures:
+    tests::associations::associations_key_sort::custom_key_sorts_obey_the_merge_bound_without_growing_the_stack
+    tests::codecs_text::ini_wide_key_and_section_indexes_preserve_round_trips
+
+test result: FAILED. 827 passed; 2 failed; 3 ignored; 0 measured; 0 filtered out; finished in 2.97s
+
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+
+All three temporary edits were manually restored. The post-revert compact rerun included:
+
+```text
+running 939 tests
+test result: ok. 937 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 3.73s
+
+running 832 tests
+test result: ok. 829 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 2.99s
+
+running 189 tests
+test result: ok. 189 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+```
+
+The complete workspace result was 2,295 passed, 7 ignored, 0 failed.
+
+## 5. Newly caught builtins
+
+None. The ordinary newly armed suite found no real `NonAmplifying` misclassification. `Rule` was only the mandated temporary falsifier experiment and remains `Delegated`.
+
+## 6. Verification
+
+Formatting:
+
+```text
+$ scripts/run-bounded.py --timeout 120 -- cargo --offline fmt --check
+```
+
+No output; exit 0.
+
+Workspace tests:
+
+```text
+$ env -u RUM_TEST_BUILTIN_MEMORY_GROWTH RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1 scripts/run-bounded.py --timeout 1200 -- cargo test --offline --workspace
+```
+
+Exit 0; 2,295 passed, 7 ignored, 0 failed. The compact verbatim target summaries are reported above.
+
+Release build:
+
+```text
+$ env -u RUM_TEST_BUILTIN_MEMORY_GROWTH scripts/run-bounded.py --timeout 1200 -- cargo build --offline --release
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling rum-terminal v0.2.0 (/home/remi/dev/rum/crates/rum-terminal)
+   Compiling rum-repl v0.2.0 (/home/remi/dev/rum/crates/rum-repl)
+   Compiling rum-cli v0.2.0 (/home/remi/dev/rum/crates/rum-cli)
+    Finished `release` profile [optimized] target(s) in 21.66s
+```
+
+Ordinary build:
+
+```text
+$ env -u RUM_TEST_BUILTIN_MEMORY_GROWTH scripts/run-bounded.py --timeout 600 -- cargo build --offline
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling rum-terminal v0.2.0 (/home/remi/dev/rum/crates/rum-terminal)
+   Compiling rum-repl v0.2.0 (/home/remi/dev/rum/crates/rum-repl)
+   Compiling rum-cli v0.2.0 (/home/remi/dev/rum/crates/rum-cli)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 9.41s
+```
+
+`git diff --check` also returned no output and exit 0.
+
+## 7. Stop-loss / open questions
+
+This sandbox denied loopback binding:
+
+```text
+native ZeroMQ test cannot bind loopback: Operation not permitted (os error 1); set RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1 to explicitly allow this test to skip
+```
+
+Therefore these nine native results are unobserved:
+
+- `native_zeromq_backend_echoes_heartbeat_over_loopback_req_socket`
+- `native_zeromq_backend_round_trips_execute_over_loopback_sockets`
+- `native_zeromq_backend_frontend_style_control_interrupt_round_trip`
+- `native_zeromq_backend_shutdown_stops_shell_work_and_reports_pending_shell_messages`
+- `native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_metadata`
+- `native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts_and_shutdown`
+- `native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_reply`
+- `native_zeromq_backend_rejects_tampered_signed_requests_end_to_end`
+- `native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages`
+
+No other stop-loss or open question. No git operations, network access, `unsafe`, weakened tests, or classification changes were made.

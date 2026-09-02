@@ -18,3 +18,6 @@ sha2.workspace = true
 thiserror.workspace = true
 tokio = { version = "1", features = ["rt", "rt-multi-thread", "time"] }
 zeromq = "0.5"
+
+[dev-dependencies]
+rum-host = { path = "../rum-host", features = ["test-builtin-memory-growth"] }

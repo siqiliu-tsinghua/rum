@@ -9,6 +9,9 @@ keywords.workspace = true
 categories.workspace = true
 description = "Pure rum kernel for lowering, evaluation, definitions, matching, tracing, and host requests."
 
+[features]
+test-builtin-memory-growth = []
+
 [dependencies]
 rum-core = { path = "../rum-core" }
 rum-derive.workspace = true

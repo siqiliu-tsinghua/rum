@@ -12,3 +12,6 @@ description = "Runtime-neutral core expression values shared by rum crates."
 [dependencies]
 num-bigint.workspace = true
 serde.workspace = true
+
+[dev-dependencies]
+rum-runtime = { path = "../rum-runtime", features = ["test-builtin-memory-growth"] }
