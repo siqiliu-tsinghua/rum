@@ -1971,3 +1971,77 @@ suite 0 failures in 30 repetitions on a host where it demonstrably runs.
   failure. Same shape each time: trusting a predicate without first checking it
   against an answer already known. The verification harness needs calibrating
   as much as the code does.
+
+## 2026-09-03 — the memory-accounting and traversal-depth lines (briefs 412-427)
+
+Opened by paying an owed verification and closed nothing; two lines are part
+built and both are recorded in `TODO.md` rather than here.
+
+**The first security audit this project has had** (brief-413, GLM, no scope
+narrowing, because Codex's cybersecurity filter makes such work impossible
+there). Seven findings, two HIGH, both the same root: bytes the memory model
+cannot see. The process-global symbol interner leaks by construction and is
+invisible to `eval_memory_limit`; the ceiling is sampled every 64 evaluation
+points and can be overshot multiplicatively in between. Its three criticisms of
+the threat model were worth more than several of the findings, particularly
+that no document says which state is per-request and which is per-session.
+
+**The memory-accounting line (415-420).** Reviewing the design turned up a
+third gap the audit missed: `current_memory_proxy_bytes` walked 34 of
+`Session`'s 93 fields, so the baseline every ceiling decision measures against
+was itself short. A macro now generates both the checked-in classification and
+an exhaustive `let Session { .. }` pattern, so a new field stops compiling
+until it is classified — verified by adding one and watching the compiler
+refuse, after a first probe that only tripped the constructor and proved
+nothing.
+
+Then `MemoryGrowthContract` became a required argument to all nine
+`BuiltinSpec` constructors across 709 construction sites, and — the part that
+mattered — a falsifier that fails a declaration the handler contradicts. It
+caught eleven wrong declarations immediately, `Rule` returning 64,289 bytes
+from 424. brief-418 then found the falsifier armed on a production memory
+ceiling, where it cost 2.2x and could panic, and unarmed in every crate but
+`rum-runtime`, where `cfg!(test)` does not reach. brief-419's `Preflight`
+falsifier named eighteen more; ten were repaired and eight retained with argued
+reasons. **Five of the eleven that brief-417 reclassified had landed in
+`Preflight` while it had no teeth** — a deferral wearing a repair's clothes,
+which neither the worker nor I noticed at that gate.
+
+**The traversal-depth line (422-427)** began with a claim of mine that Codex
+refuted: I wrote that all eight retained decoders had depth guards after
+checking three of four. `FromXml` had none, and 12,000 levels of nesting built
+with two `Pure` string builtins ended the process outside the panic boundary.
+`TODO.md` records why: the previous repair bounded "all three codecs" when
+there were four.
+
+Four descents were bounded and ten traversals converted; the bound itself is
+not installed, because caching the height that makes admission O(1) costs 30%
+on list rebuilds — `SharedArgs::new` went from `Arc::new` to scanning every
+argument. The stop-loss fired and the spike is in the stash.
+
+**Method, and it is mostly about instruments.**
+
+- *An instrument that has never been seen to fail is not known to work.* Both
+  falsifiers ship with checked-in `#[should_panic]` proofs, one through eager
+  dispatch and one through suspend/resume. I verified each myself by
+  misdeclaring a real catalog builtin and watching the suite go red.
+- *Seven probes of mine measured something other than what they claimed*, all
+  the same shape: `git stash show -p` with a path, a `grep -q` that is always
+  true, `Nest` stopping at the iteration limit before building anything deep,
+  `Level[x, {2}]` barely descending, `grep -rl | head -1` returning a file that
+  references a constant rather than defining it, summing two inventories
+  without checking their overlap, and `MatchQ[x, _]` taking a fast path that
+  never reaches the code under test. The discipline that catches these is
+  calibrating against a known answer before believing a result.
+- *Codex's content filter is not a wording problem.* It killed brief-422 twice
+  — the second time after the security framing was gone, so the trigger was the
+  reproduction transcript — and brief-424 twice more, at 120k tokens, on the
+  worker's own generated probe code. The judgement is whether a brief needs an
+  executable reproduction, not which words it uses. brief-424 I ran myself;
+  brief-427 was rewritten as source reading, which is what a "why" question
+  wanted anyway.
+- *A report that exists only in a dispatch log is one reboot from gone.*
+  brief-414's inventory was never appended, and brief-417 stopped without
+  touching a file because the authority it was told to use was not in the
+  repository. Appending the report is now the first thing I do with a returned
+  brief.

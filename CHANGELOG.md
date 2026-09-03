@@ -9,6 +9,35 @@ minor versions may include breaking changes; the project aims to follow
 
 ### Fixed
 
+- Deeply nested input no longer ends the process in four recursive descents.
+  `FromXml` had no depth bound where `FromJson`, `FromYaml` and `FromToml` were
+  bounded at 256 in the same repair that skipped it; `RegularExpression` group
+  nesting, the postfix-blank chain in the parser, and the four codec encoders
+  had none either. All now refuse in band, naming the limit and the byte offset
+  where the existing codecs already did.
+- Ten traversals now handle values far deeper than before on the 2 MiB stack a
+  spawned thread gets by default: `ToString` from about 1,550 to 43,000,
+  `Level` from 4,000 past 20,000, `Map` and `Apply` from 3,600 to 20,000, and
+  `ReplaceAll`, `Cases`, `MemberQ`, `Count`, `Position` and `FreeQ` from
+  1,100-1,450 to 4,500. Results, traversal order, level semantics and where the
+  short-circuiting predicates stop are unchanged.
+- The per-request memory ceiling now measures the whole session. The proxy
+  walked 34 of `Session`'s 93 fields, missing every cache, the installed
+  system down-values, sealed package units and declared exception types; a
+  `ByteArray` was charged its decoded payload while it holds base64 text.
+
+### Changed
+
+- Every builtin declares how it can grow, as a required argument to every
+  `BuiltinSpec` constructor, so a new builtin cannot be added without choosing.
+  Declaring `NonAmplifying` or `Preflight` falsely now fails a test: eleven
+  declarations were wrong when the first check was added and eighteen more when
+  the second was, and the ten repaired since project their result bytes before
+  allocating.
+- `ToJson`, `ToYaml`, `ToToml` and `ToXml` refuse to encode a value nested
+  deeper than 256, matching what their own decoders already refuse to read.
+
+
 - Discarding a suspended evaluation no longer leaks the kernel state its frames
   own. Abandoning a suspension dropped its saved continuation frames without
   unwinding them, so `Block` bindings, `Module` activations and gensym
