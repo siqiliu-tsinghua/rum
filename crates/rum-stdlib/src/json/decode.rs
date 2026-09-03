@@ -1,9 +1,8 @@
 use std::str::FromStr;
 
+use super::MAX_JSON_DEPTH;
 use super::*;
 use crate::adaptive_set::AdaptiveSet;
-
-const MAX_JSON_DEPTH: usize = 256;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub(super) struct JsonParseError {

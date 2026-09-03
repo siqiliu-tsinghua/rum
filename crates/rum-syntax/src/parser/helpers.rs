@@ -39,8 +39,11 @@ impl<'a, const SPLIT_FORMS: bool> Parser<'a, SPLIT_FORMS> {
         kind: BlankKind,
         start_span: Span,
     ) -> Result<SyntaxExpr, SyntaxError> {
+        // The head parse re-enters `parse_postfix_expr`, whose postfix loop
+        // can consume another blank (`a_b_c_...`), so a blank chain is a
+        // right-associative chain and shares the operator-chain depth guard.
         let head = if self.token_starts_primary() && !self.at_form_boundary() {
-            Some(self.parse_postfix_expr()?)
+            Some(self.with_operator_chain_depth(start_span, |parser| parser.parse_postfix_expr())?)
         } else {
             None
         };

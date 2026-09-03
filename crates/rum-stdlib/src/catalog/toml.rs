@@ -28,8 +28,14 @@ pub(crate) const TOML_BUILTINS: &[BuiltinSpec] = &[
         toml::eval_to_toml,
         MemoryGrowthContract::Preflight,
     )
-    .with_messages(&[BuiltinMessageSpec {
-        tag: "toml",
-        template: "Reports a TOML encoding or argument failure.",
-    }]),
+    .with_messages(&[
+        BuiltinMessageSpec {
+            tag: "depth",
+            template: "TOML nesting exceeds the fixed depth limit of 256.",
+        },
+        BuiltinMessageSpec {
+            tag: "toml",
+            template: "Reports a TOML encoding or argument failure.",
+        },
+    ]),
 ];

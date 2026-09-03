@@ -102,6 +102,33 @@ fn pins_nested_call_parse_depth_boundary() {
 }
 
 #[test]
+fn rejects_deep_postfix_blank_chain_without_panicking() {
+    // Alternating symbol/blank pairs: consecutive underscores would lex as
+    // multi-blank tokens (`___`), which are one chain link each, not three.
+    fn blank_chain(links: usize) -> String {
+        let mut input = String::from("a");
+        for _ in 0..links {
+            input.push('_');
+            input.push('b');
+        }
+        input
+    }
+
+    let accepted = blank_chain(MAX_OPERATOR_CHAIN_DEPTH);
+    assert!(parse_expr(&accepted).is_ok());
+
+    let rejected = blank_chain(MAX_OPERATOR_CHAIN_DEPTH + 1);
+    let error = parse_expr(&rejected).expect_err("blank chain should exceed the parser guard");
+    assert!(matches!(
+        error,
+        SyntaxError::ParseDepthExceeded {
+            max: MAX_OPERATOR_CHAIN_DEPTH,
+            ..
+        }
+    ));
+}
+
+#[test]
 fn rejects_deep_right_associative_chain_without_panicking() {
     let mut input = String::with_capacity(32_001);
     input.push('a');

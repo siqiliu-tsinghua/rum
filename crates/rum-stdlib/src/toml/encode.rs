@@ -3,6 +3,7 @@ use std::fmt::Write;
 use rum_core::{Atom, BigInt, Expr, IntValue, Rational};
 use rum_runtime::kernel_api::{association_entries_from_expr, is_system_symbol_name, list_items};
 
+use super::MAX_TOML_DEPTH;
 use super::TomlEncodeError;
 use super::model::bare_key_byte;
 
@@ -26,6 +27,9 @@ fn write_table_body(
     path: &[String],
     out: &mut String,
 ) -> Result<(), TomlEncodeError> {
+    if path.len() > MAX_TOML_DEPTH {
+        return Err(TomlEncodeError::depth());
+    }
     if !path.is_empty() {
         push_section_spacing(out);
         write_table_header(path, out);
@@ -44,7 +48,7 @@ fn write_table_body(
         }
         write_key(key, out);
         out.push_str(" = ");
-        write_inline_value(value, out)?;
+        write_inline_value(value, path.len(), out)?;
         wrote_assignment = true;
     }
 
@@ -71,6 +75,9 @@ fn write_array_of_tables(
     path: &[String],
     out: &mut String,
 ) -> Result<(), TomlEncodeError> {
+    if path.len() > MAX_TOML_DEPTH {
+        return Err(TomlEncodeError::depth());
+    }
     for entries in items {
         push_section_spacing(out);
         out.push_str("[[");
@@ -97,7 +104,7 @@ fn write_table_assignments_then_children(
         }
         write_key(string_key(key, "ToToml keys must be Strings.")?, out);
         out.push_str(" = ");
-        write_inline_value(value, out)?;
+        write_inline_value(value, path.len(), out)?;
         wrote_assignment = true;
     }
 
@@ -117,9 +124,12 @@ fn write_table_assignments_then_children(
     Ok(())
 }
 
-fn write_inline_value(expr: &Expr, out: &mut String) -> Result<(), TomlEncodeError> {
+fn write_inline_value(expr: &Expr, depth: usize, out: &mut String) -> Result<(), TomlEncodeError> {
     if let Some(entries) = association_entries_from_expr(expr) {
-        return write_inline_table(&entries, out);
+        if depth + 1 > MAX_TOML_DEPTH {
+            return Err(TomlEncodeError::depth());
+        }
+        return write_inline_table(&entries, depth + 1, out);
     }
 
     match expr {
@@ -133,7 +143,10 @@ fn write_inline_value(expr: &Expr, out: &mut String) -> Result<(), TomlEncodeErr
             out.push_str("false");
         }
         Expr::Call { head, args } if is_system_symbol_name(head, "List") => {
-            write_inline_array(args, out)?;
+            if depth + 1 > MAX_TOML_DEPTH {
+                return Err(TomlEncodeError::depth());
+            }
+            write_inline_array(args, depth + 1, out)?;
         }
         _ => {
             return Err(TomlEncodeError::new(format!(
@@ -144,19 +157,27 @@ fn write_inline_value(expr: &Expr, out: &mut String) -> Result<(), TomlEncodeErr
     Ok(())
 }
 
-fn write_inline_array(items: &[Expr], out: &mut String) -> Result<(), TomlEncodeError> {
+fn write_inline_array(
+    items: &[Expr],
+    depth: usize,
+    out: &mut String,
+) -> Result<(), TomlEncodeError> {
     out.push('[');
     for (index, item) in items.iter().enumerate() {
         if index > 0 {
             out.push_str(", ");
         }
-        write_inline_value(item, out)?;
+        write_inline_value(item, depth, out)?;
     }
     out.push(']');
     Ok(())
 }
 
-fn write_inline_table(entries: &[(Expr, Expr)], out: &mut String) -> Result<(), TomlEncodeError> {
+fn write_inline_table(
+    entries: &[(Expr, Expr)],
+    depth: usize,
+    out: &mut String,
+) -> Result<(), TomlEncodeError> {
     out.push('{');
     for (index, (key, value)) in entries.iter().enumerate() {
         if index > 0 {
@@ -167,7 +188,7 @@ fn write_inline_table(entries: &[(Expr, Expr)], out: &mut String) -> Result<(), 
             out,
         );
         out.push_str(" = ");
-        write_inline_value(value, out)?;
+        write_inline_value(value, depth, out)?;
     }
     out.push('}');
     Ok(())
@@ -356,4 +377,48 @@ fn int_value_to_bigint(value: &IntValue) -> BigInt {
 
 fn bare_key_safe(value: &str) -> bool {
     !value.is_empty() && value.bytes().all(bare_key_byte)
+}
+
+#[cfg(test)]
+mod depth_tests {
+    use super::*;
+    use rum_runtime::kernel_api::{render_association, system_expr};
+
+    fn nested_inline_arrays(levels: usize) -> Expr {
+        let mut expr = Expr::integer(BigInt::from(0));
+        for _ in 0..levels {
+            expr = Expr::call(system_expr("List"), vec![expr]);
+        }
+        render_association(vec![(Expr::string("a"), expr)])
+    }
+
+    // `tables` nested sub-tables under the top-level document Association; the
+    // document itself is not a collection, mirroring FromToml's decode count.
+    fn nested_tables(tables: usize) -> Expr {
+        let mut expr = Expr::integer(BigInt::from(0));
+        for _ in 0..tables {
+            expr = render_association(vec![(Expr::string("k"), expr)]);
+        }
+        render_association(vec![(Expr::string("k"), expr)])
+    }
+
+    #[test]
+    fn to_toml_accepts_nesting_at_the_depth_limit() {
+        assert!(to_toml(&nested_inline_arrays(MAX_TOML_DEPTH)).is_ok());
+        assert!(to_toml(&nested_tables(MAX_TOML_DEPTH)).is_ok());
+    }
+
+    #[test]
+    fn to_toml_refuses_nesting_one_past_the_depth_limit() {
+        let error = to_toml(&nested_inline_arrays(MAX_TOML_DEPTH + 1)).unwrap_err();
+        assert_eq!(error, TomlEncodeError::depth());
+        assert_eq!(error.message_tag(), "depth");
+        assert_eq!(
+            error.message(),
+            format!("TOML nesting exceeds the fixed depth limit of {MAX_TOML_DEPTH}.")
+        );
+
+        let error = to_toml(&nested_tables(MAX_TOML_DEPTH + 1)).unwrap_err();
+        assert_eq!(error, TomlEncodeError::depth());
+    }
 }

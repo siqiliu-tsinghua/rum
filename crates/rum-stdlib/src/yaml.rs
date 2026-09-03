@@ -57,18 +57,42 @@ impl YamlParseError {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct YamlEncodeError {
-    message: String,
+    kind: YamlEncodeErrorKind,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+enum YamlEncodeErrorKind {
+    Message(String),
+    Depth,
 }
 
 impl YamlEncodeError {
     fn new(message: impl Into<String>) -> Self {
         Self {
-            message: message.into(),
+            kind: YamlEncodeErrorKind::Message(message.into()),
+        }
+    }
+
+    fn depth() -> Self {
+        Self {
+            kind: YamlEncodeErrorKind::Depth,
+        }
+    }
+
+    fn message_tag(&self) -> &'static str {
+        match self.kind {
+            YamlEncodeErrorKind::Message(_) => "yaml",
+            YamlEncodeErrorKind::Depth => "depth",
         }
     }
 
     fn message(&self) -> String {
-        self.message.clone()
+        match &self.kind {
+            YamlEncodeErrorKind::Message(message) => message.clone(),
+            YamlEncodeErrorKind::Depth => {
+                format!("YAML nesting exceeds the fixed depth limit of {MAX_YAML_DEPTH}.")
+            }
+        }
     }
 }
 
@@ -124,7 +148,12 @@ pub(crate) fn eval_to_yaml(
 
     match encode::to_yaml(expr) {
         Ok(output) => Ok(Expr::string(output)),
-        Err(error) => Ok(fail_yaml(session, "ToYaml", "yaml", error.message())),
+        Err(error) => Ok(fail_yaml(
+            session,
+            "ToYaml",
+            error.message_tag(),
+            error.message(),
+        )),
     }
 }
 

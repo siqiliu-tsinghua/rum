@@ -1,21 +1,46 @@
 use std::fmt::Write;
 
+use super::MAX_JSON_DEPTH;
 use super::*;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub(super) struct JsonEncodeError {
-    message: String,
+    kind: JsonEncodeErrorKind,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+enum JsonEncodeErrorKind {
+    Message(String),
+    Depth,
 }
 
 impl JsonEncodeError {
     fn new(message: impl Into<String>) -> Self {
         Self {
-            message: message.into(),
+            kind: JsonEncodeErrorKind::Message(message.into()),
+        }
+    }
+
+    fn depth() -> Self {
+        Self {
+            kind: JsonEncodeErrorKind::Depth,
+        }
+    }
+
+    pub(super) fn message_tag(&self) -> &'static str {
+        match self.kind {
+            JsonEncodeErrorKind::Message(_) => "json",
+            JsonEncodeErrorKind::Depth => "depth",
         }
     }
 
     pub(super) fn message(&self) -> String {
-        self.message.clone()
+        match &self.kind {
+            JsonEncodeErrorKind::Message(message) => message.clone(),
+            JsonEncodeErrorKind::Depth => {
+                format!("JSON nesting exceeds the fixed depth limit of {MAX_JSON_DEPTH}.")
+            }
+        }
     }
 }
 
@@ -62,6 +87,9 @@ fn write_value(
     out: &mut String,
 ) -> EncodeResult<()> {
     if let Some(entries) = association_entries_from_expr(expr) {
+        if level >= MAX_JSON_DEPTH {
+            return Err(JsonEncodeError::depth());
+        }
         return write_object(expr, &entries, config, level, out);
     }
 
@@ -79,6 +107,9 @@ fn write_value(
             out.push_str("null");
         }
         Expr::Call { head, args } if is_system_symbol_name(head, "List") => {
+            if level >= MAX_JSON_DEPTH {
+                return Err(JsonEncodeError::depth());
+            }
             write_array(args, config, level, out)?;
         }
         _ => {
@@ -273,4 +304,33 @@ fn push_surrogate_pair(out: &mut String, value: u32) {
     let high = 0xd800 + (scalar >> 10);
     let low = 0xdc00 + (scalar & 0x3ff);
     write!(out, "\\u{high:04X}\\u{low:04X}").expect("writing to String should not fail");
+}
+
+#[cfg(test)]
+mod depth_tests {
+    use super::*;
+
+    fn nested_lists(levels: usize) -> Expr {
+        let mut expr = Expr::integer(BigInt::from(0));
+        for _ in 0..levels {
+            expr = Expr::call(system_expr("List"), vec![expr]);
+        }
+        expr
+    }
+
+    #[test]
+    fn to_json_accepts_nesting_at_the_depth_limit() {
+        assert!(to_json(&nested_lists(MAX_JSON_DEPTH), None).is_ok());
+    }
+
+    #[test]
+    fn to_json_refuses_nesting_one_past_the_depth_limit() {
+        let error = to_json(&nested_lists(MAX_JSON_DEPTH + 1), None).unwrap_err();
+        assert_eq!(error, JsonEncodeError::depth());
+        assert_eq!(error.message_tag(), "depth");
+        assert_eq!(
+            error.message(),
+            format!("JSON nesting exceeds the fixed depth limit of {MAX_JSON_DEPTH}.")
+        );
+    }
 }

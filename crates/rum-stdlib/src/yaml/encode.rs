@@ -4,7 +4,7 @@ use rum_core::{Atom, BigInt, Expr, IntValue, Rational};
 use rum_runtime::kernel_api::{association_entries_from_expr, is_system_symbol_name, list_items};
 
 use super::number::parses_as_yaml_number;
-use super::{YamlEncodeError, string_atom};
+use super::{MAX_YAML_DEPTH, YamlEncodeError, string_atom};
 
 pub(super) fn to_yaml(expr: &Expr) -> Result<String, YamlEncodeError> {
     let mut out = String::new();
@@ -27,6 +27,9 @@ fn write_mapping(
     level: usize,
     out: &mut String,
 ) -> Result<(), YamlEncodeError> {
+    if level >= MAX_YAML_DEPTH {
+        return Err(YamlEncodeError::depth());
+    }
     if entries.is_empty() {
         out.push_str("{}");
         return Ok(());
@@ -47,6 +50,9 @@ fn write_mapping(
 }
 
 fn write_sequence(items: &[Expr], level: usize, out: &mut String) -> Result<(), YamlEncodeError> {
+    if level >= MAX_YAML_DEPTH {
+        return Err(YamlEncodeError::depth());
+    }
     if items.is_empty() {
         out.push_str("[]");
         return Ok(());
@@ -278,4 +284,47 @@ fn pow_small(base: u8, exponent: usize) -> BigInt {
 
 fn int_value_to_bigint(value: &IntValue) -> BigInt {
     value.to_bigint()
+}
+
+#[cfg(test)]
+mod depth_tests {
+    use super::super::association_expr;
+    use super::*;
+    use rum_runtime::kernel_api::system_expr;
+
+    fn nested_sequences(levels: usize) -> Expr {
+        let mut expr = Expr::integer(BigInt::from(0));
+        for _ in 0..levels {
+            expr = Expr::call(system_expr("List"), vec![expr]);
+        }
+        expr
+    }
+
+    fn nested_mappings(levels: usize) -> Expr {
+        let mut expr = Expr::integer(BigInt::from(0));
+        for _ in 0..levels {
+            expr = association_expr(vec![("k".to_string(), expr)]);
+        }
+        expr
+    }
+
+    #[test]
+    fn to_yaml_accepts_nesting_at_the_depth_limit() {
+        assert!(to_yaml(&nested_sequences(MAX_YAML_DEPTH)).is_ok());
+        assert!(to_yaml(&nested_mappings(MAX_YAML_DEPTH)).is_ok());
+    }
+
+    #[test]
+    fn to_yaml_refuses_nesting_one_past_the_depth_limit() {
+        let error = to_yaml(&nested_sequences(MAX_YAML_DEPTH + 1)).unwrap_err();
+        assert_eq!(error, YamlEncodeError::depth());
+        assert_eq!(error.message_tag(), "depth");
+        assert_eq!(
+            error.message(),
+            format!("YAML nesting exceeds the fixed depth limit of {MAX_YAML_DEPTH}.")
+        );
+
+        let error = to_yaml(&nested_mappings(MAX_YAML_DEPTH + 1)).unwrap_err();
+        assert_eq!(error, YamlEncodeError::depth());
+    }
 }

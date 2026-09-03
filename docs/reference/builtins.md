@@ -2044,6 +2044,7 @@ Parses XML text into a symbolic XmlElement tree, rejecting DTDs and unsupported 
 - Capability: `Pure`
 - Limits: parses a value-oriented XML element tree only: declaration syntax is validated but not represented, comments are dropped, CDATA becomes text, namespaces remain verbatim, whitespace-only runs around element content are dropped, and DTD/DOCTYPE declarations are deliberately rejected.
 - Messages:
+  - FromXml::depth — XML nesting exceeds the fixed depth limit of 256 at byte offset `1`.
   - FromXml::xml — Reports an XML decoding or argument failure.
 
 ### FromYaml
@@ -5660,6 +5661,7 @@ Renders the JSON-representable subset of rum values as a JSON text string.
 - Attributes: `Protected`
 - Capability: `Pure`
 - Messages:
+  - ToJson::depth — JSON nesting exceeds the fixed depth limit of 256.
   - ToJson::json — Reports an invalid JSON encoding argument or value.
 
 ### ToLowerCase
@@ -5688,6 +5690,7 @@ Renders the TOML-representable subset of rum Associations as TOML text.
 - Capability: `Pure`
 - Limits: renders only top-level Associations with String keys, exact integers, terminating rationals, booleans, strings, Lists, nested Associations, and Lists of Associations; nested Associations use sub-table headers unless inline form is required to preserve same-level key order. It never synthesizes TOML datetime syntax, so date Lists and timestamps encode as arrays or numbers.
 - Messages:
+  - ToToml::depth — TOML nesting exceeds the fixed depth limit of 256.
   - ToToml::toml — Reports a TOML encoding or argument failure.
 
 ### ToUpperCase
@@ -5707,6 +5710,7 @@ Renders a well-formed XmlElement tree as XML text.
 - Capability: `Pure`
 - Limits: renders only well-formed XmlElement[tag_String, attrs_Association, children_List] trees with String attributes and String/XmlElement children; names use the documented ASCII XML-name subset, compact output is default, and Indent pretty-prints only element-only content.
 - Messages:
+  - ToXml::depth — XML nesting exceeds the fixed depth limit of 256.
   - ToXml::xml — Reports an XML encoding or argument failure.
 
 ### ToYaml
@@ -5717,6 +5721,7 @@ Renders the YAML-representable subset of rum values as YAML text.
 - Capability: `Pure`
 - Limits: renders only Associations with String keys, Lists, exact integers, terminating rationals, True, False, Null, and Strings; safe plain strings use the documented Norway-safe rule, other strings are double-quoted or literal blocks, and unsupported YAML surface is never synthesized.
 - Messages:
+  - ToYaml::depth — YAML nesting exceeds the fixed depth limit of 256.
   - ToYaml::yaml — Reports a YAML encoding or argument failure.
 
 ### Together

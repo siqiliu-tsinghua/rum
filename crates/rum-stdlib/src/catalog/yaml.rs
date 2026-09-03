@@ -28,8 +28,14 @@ pub(crate) const YAML_BUILTINS: &[BuiltinSpec] = &[
         yaml::eval_to_yaml,
         MemoryGrowthContract::Preflight,
     )
-    .with_messages(&[BuiltinMessageSpec {
-        tag: "yaml",
-        template: "Reports a YAML encoding or argument failure.",
-    }]),
+    .with_messages(&[
+        BuiltinMessageSpec {
+            tag: "depth",
+            template: "YAML nesting exceeds the fixed depth limit of 256.",
+        },
+        BuiltinMessageSpec {
+            tag: "yaml",
+            template: "Reports a YAML encoding or argument failure.",
+        },
+    ]),
 ];

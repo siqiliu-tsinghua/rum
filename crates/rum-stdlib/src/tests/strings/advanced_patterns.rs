@@ -294,9 +294,48 @@ fn regular_expression_patterns_extend_the_current_string_pattern_subset() {
 }
 
 #[test]
-fn symbolic_blank_patterns_extend_the_current_string_pattern_subset() {
+fn regular_expression_group_nesting_is_capped_and_far_past_shapes_stay_inert() {
     let mut session = core_session();
 
+    fn nested_group_pattern(levels: usize) -> String {
+        format!("{}a{}", "(".repeat(levels), ")".repeat(levels))
+    }
+
+    // At the cap the regex still compiles and evaluates.
+    assert_eq!(
+        eval_to_string(
+            &mut session,
+            &format!(
+                "StringMatchQ[\"a\", RegularExpression[\"{}\"]]",
+                nested_group_pattern(256)
+            )
+        ),
+        "True"
+    );
+
+    // One past the cap and far past it, the compile fails in band the same
+    // way any invalid regular expression does: the call stays inert and the
+    // session keeps evaluating.
+    for levels in [257, 20_000] {
+        let source = format!(
+            "StringMatchQ[\"a\", RegularExpression[\"{}\"]]",
+            nested_group_pattern(levels)
+        );
+        assert_eq!(eval_to_string(&mut session, &source), source);
+    }
+
+    assert_eq!(
+        eval_to_string(
+            &mut session,
+            "StringMatchQ[\"ab12\", RegularExpression[\"\\\\d+\"]]"
+        ),
+        "False"
+    );
+}
+
+#[test]
+fn symbolic_blank_patterns_extend_the_current_string_pattern_subset() {
+    let mut session = core_session();
     assert_eq!(
         eval_to_string(&mut session, "StringMatchQ[\"a\", _]"),
         "True"

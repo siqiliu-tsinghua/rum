@@ -9,7 +9,9 @@ const INFIX_APPLICATION_PRECEDENCE: u8 = 67;
 /// Delimiter rather than "bracket" because `( ... )` is guarded too.
 pub(crate) const MAX_DELIMITER_NESTING_DEPTH: usize = 128;
 /// Guards binary-operator-chain recursion (right-associative spines such as
-/// `^` chains and prefix-operator runs). This cap exists to fail gracefully
+/// `^` chains, prefix-operator runs, and postfix blank chains like
+/// `a_b_c_...`, whose blank-tail head parse re-enters the postfix loop).
+/// This cap exists to fail gracefully
 /// *before* the native stack runs out, so it is sized by the stack budget,
 /// not by semantic analogy with the evaluator's `DEFAULT_RECURSION_LIMIT`:
 /// the parser spends ~4.6 KiB of native stack per chain link, and a 2 MiB
@@ -130,7 +132,7 @@ impl<'a, const SPLIT_FORMS: bool> Parser<'a, SPLIT_FORMS> {
         result
     }
 
-    fn with_operator_chain_depth<T>(
+    pub(super) fn with_operator_chain_depth<T>(
         &mut self,
         span: Span,
         parse: impl FnOnce(&mut Self) -> Result<T, SyntaxError>,

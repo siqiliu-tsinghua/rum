@@ -8,6 +8,8 @@ use rum_runtime::kernel_api::{
 mod decode;
 mod encode;
 
+const MAX_JSON_DEPTH: usize = 256;
+
 pub(crate) fn eval_from_json(
     session: &mut Session,
     _head: &Expr,
@@ -58,7 +60,12 @@ pub(crate) fn eval_to_json(
 
     match encode::to_json(expr, indent) {
         Ok(json) => Ok(Expr::string(json)),
-        Err(error) => Ok(fail_json(session, "ToJson", "json", error.message())),
+        Err(error) => Ok(fail_json(
+            session,
+            "ToJson",
+            error.message_tag(),
+            error.message(),
+        )),
     }
 }
 

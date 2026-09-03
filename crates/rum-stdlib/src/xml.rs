@@ -8,6 +8,8 @@ use rum_runtime::kernel_api::{
 mod decode;
 mod encode;
 
+const MAX_XML_DEPTH: usize = 256;
+
 pub(crate) fn eval_from_xml(
     session: &mut Session,
     _head: &Expr,
@@ -18,6 +20,7 @@ pub(crate) fn eval_from_xml(
         return Ok(fail_xml(
             session,
             "FromXml",
+            "xml",
             "FromXml expects exactly one string argument.",
         ));
     };
@@ -26,13 +29,19 @@ pub(crate) fn eval_from_xml(
         return Ok(fail_xml(
             session,
             "FromXml",
+            "xml",
             "FromXml expects an XML text string.",
         ));
     };
 
     match decode::from_xml(source) {
         Ok(expr) => Ok(expr),
-        Err(error) => Ok(fail_xml(session, "FromXml", error.message())),
+        Err(error) => Ok(fail_xml(
+            session,
+            "FromXml",
+            error.message_tag(),
+            error.message(),
+        )),
     }
 }
 
@@ -44,12 +53,17 @@ pub(crate) fn eval_to_xml(
     let args = args.as_ref();
     let (expr, indent) = match parse_to_xml_args(args) {
         Ok(parsed) => parsed,
-        Err(message) => return Ok(fail_xml(session, "ToXml", message)),
+        Err(message) => return Ok(fail_xml(session, "ToXml", "xml", message)),
     };
 
     match encode::to_xml(expr, indent) {
         Ok(xml) => Ok(Expr::string(xml)),
-        Err(error) => Ok(fail_xml(session, "ToXml", error.message())),
+        Err(error) => Ok(fail_xml(
+            session,
+            "ToXml",
+            error.message_tag(),
+            error.message(),
+        )),
     }
 }
 
@@ -91,8 +105,13 @@ fn option_rule(expr: &Expr) -> Option<(&str, &Expr)> {
     Some((name, &args[1]))
 }
 
-fn fail_xml(session: &mut Session, symbol: &str, message: impl Into<String>) -> Expr {
-    session.push_message(symbol, "xml", message);
+fn fail_xml(
+    session: &mut Session,
+    symbol: &str,
+    tag: &'static str,
+    message: impl Into<String>,
+) -> Expr {
+    session.push_message(symbol, tag, message);
     system_expr("$Failed")
 }
 

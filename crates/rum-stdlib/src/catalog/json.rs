@@ -30,6 +30,10 @@ pub(crate) const JSON_BUILTINS: &[BuiltinSpec] = &[
     )
     .with_messages(&[
         BuiltinMessageSpec {
+            tag: "depth",
+            template: "JSON nesting exceeds the fixed depth limit of 256.",
+        },
+        BuiltinMessageSpec {
             tag: "json",
             template: "Reports an invalid JSON encoding argument or value.",
         },

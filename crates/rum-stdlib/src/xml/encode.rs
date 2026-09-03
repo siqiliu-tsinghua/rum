@@ -1,19 +1,44 @@
+use super::MAX_XML_DEPTH;
 use super::*;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub(super) struct XmlEncodeError {
-    message: String,
+    kind: XmlEncodeErrorKind,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+enum XmlEncodeErrorKind {
+    Message(String),
+    Depth,
 }
 
 impl XmlEncodeError {
     fn new(message: impl Into<String>) -> Self {
         Self {
-            message: message.into(),
+            kind: XmlEncodeErrorKind::Message(message.into()),
+        }
+    }
+
+    fn depth() -> Self {
+        Self {
+            kind: XmlEncodeErrorKind::Depth,
+        }
+    }
+
+    pub(super) fn message_tag(&self) -> &'static str {
+        match self.kind {
+            XmlEncodeErrorKind::Message(_) => "xml",
+            XmlEncodeErrorKind::Depth => "depth",
         }
     }
 
     pub(super) fn message(&self) -> String {
-        self.message.clone()
+        match &self.kind {
+            XmlEncodeErrorKind::Message(message) => message.clone(),
+            XmlEncodeErrorKind::Depth => {
+                format!("XML nesting exceeds the fixed depth limit of {MAX_XML_DEPTH}.")
+            }
+        }
     }
 }
 
@@ -59,6 +84,9 @@ fn write_element(
     level: usize,
     out: &mut String,
 ) -> EncodeResult<()> {
+    if level >= MAX_XML_DEPTH {
+        return Err(XmlEncodeError::depth());
+    }
     let Expr::Call { head, args } = expr else {
         return Err(XmlEncodeError::new(
             "ToXml expects an XmlElement[tag, attrs, children] tree.",
@@ -215,5 +243,34 @@ fn write_escaped_attribute(value: &str, out: &mut String) {
             '"' => out.push_str("&quot;"),
             other => out.push(other),
         }
+    }
+}
+
+#[cfg(test)]
+mod depth_tests {
+    use super::*;
+
+    fn nested_xml_elements(levels: usize) -> Expr {
+        let mut expr = xml_element_expr("a".to_string(), Vec::new(), Vec::new());
+        for _ in 1..levels {
+            expr = xml_element_expr("a".to_string(), Vec::new(), vec![expr]);
+        }
+        expr
+    }
+
+    #[test]
+    fn to_xml_accepts_nesting_at_the_depth_limit() {
+        assert!(to_xml(&nested_xml_elements(MAX_XML_DEPTH), None).is_ok());
+    }
+
+    #[test]
+    fn to_xml_refuses_nesting_one_past_the_depth_limit() {
+        let error = to_xml(&nested_xml_elements(MAX_XML_DEPTH + 1), None).unwrap_err();
+        assert_eq!(error, XmlEncodeError::depth());
+        assert_eq!(error.message_tag(), "depth");
+        assert_eq!(
+            error.message(),
+            format!("XML nesting exceeds the fixed depth limit of {MAX_XML_DEPTH}.")
+        );
     }
 }

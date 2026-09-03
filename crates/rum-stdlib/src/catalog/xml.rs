@@ -13,6 +13,10 @@ pub(crate) const XML_BUILTINS: &[BuiltinSpec] = &[
     )
     .with_messages(&[
         BuiltinMessageSpec {
+            tag: "depth",
+            template: "XML nesting exceeds the fixed depth limit of 256 at byte offset `1`.",
+        },
+        BuiltinMessageSpec {
             tag: "xml",
             template: "Reports an XML decoding or argument failure.",
         },
@@ -25,6 +29,10 @@ pub(crate) const XML_BUILTINS: &[BuiltinSpec] = &[
         MemoryGrowthContract::Preflight,
     )
     .with_messages(&[
+        BuiltinMessageSpec {
+            tag: "depth",
+            template: "XML nesting exceeds the fixed depth limit of 256.",
+        },
         BuiltinMessageSpec {
             tag: "xml",
             template: "Reports an XML encoding or argument failure.",

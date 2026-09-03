@@ -46,10 +46,26 @@ enum RegexQuantifier {
     Range { min: usize, max: Option<usize> },
 }
 
+/// Group-nesting cap for RegularExpression compile, matching the codec
+/// family's fixed depth limit. Exceeding it fails the compile (the call is
+/// left inert, the module's existing in-band refusal) instead of recursing
+/// into a native stack overflow on `((((…))))` pattern strings.
+const MAX_REGEX_GROUP_DEPTH: usize = 256;
+
 pub(super) fn compile_string_regex_pattern(raw: &str) -> Option<RegexPattern> {
+    compile_string_regex_pattern_at_depth(raw, 0)
+}
+
+fn compile_string_regex_pattern_at_depth(raw: &str, depth: usize) -> Option<RegexPattern> {
+    // `depth` counts enclosing groups; the body of group #n compiles at
+    // depth n, so refusing past the cap accepts exactly 256 nested groups.
+    if depth > MAX_REGEX_GROUP_DEPTH {
+        return None;
+    }
+
     let branches = split_regex_branches(raw)?
         .into_iter()
-        .map(|branch| compile_regex_branch(&branch))
+        .map(|branch| compile_regex_branch(&branch, depth))
         .collect::<Option<Vec<_>>>()?;
 
     Some(RegexPattern { branches })
@@ -126,13 +142,13 @@ fn split_regex_branches(raw: &str) -> Option<Vec<String>> {
     Some(branches)
 }
 
-fn compile_regex_branch(raw: &str) -> Option<Vec<RegexToken>> {
+fn compile_regex_branch(raw: &str, depth: usize) -> Option<Vec<RegexToken>> {
     let chars = raw.chars().collect::<Vec<_>>();
     let mut tokens = Vec::new();
     let mut index = 0;
 
     while index < chars.len() {
-        let atom = parse_regex_atom(&chars, &mut index)?;
+        let atom = parse_regex_atom(&chars, &mut index, depth)?;
         let quantifier = parse_regex_quantifier(&chars, &mut index)?;
         tokens.push(RegexToken { atom, quantifier });
     }
@@ -140,7 +156,7 @@ fn compile_regex_branch(raw: &str) -> Option<Vec<RegexToken>> {
     Some(tokens)
 }
 
-fn parse_regex_atom(chars: &[char], index: &mut usize) -> Option<RegexAtom> {
+fn parse_regex_atom(chars: &[char], index: &mut usize, depth: usize) -> Option<RegexAtom> {
     let ch = *chars.get(*index)?;
     *index += 1;
 
@@ -148,16 +164,16 @@ fn parse_regex_atom(chars: &[char], index: &mut usize) -> Option<RegexAtom> {
         '.' => Some(RegexAtom::AnyChar),
         '\\' => parse_regex_escape(chars, index),
         '[' => parse_regex_class(chars, index),
-        '(' => parse_regex_group(chars, index),
+        '(' => parse_regex_group(chars, index, depth),
         '^' | '$' => None,
         ')' | '|' | '{' | '}' | '*' | '+' | '?' => None,
         _ => Some(RegexAtom::Literal(ch)),
     }
 }
 
-fn parse_regex_group(chars: &[char], index: &mut usize) -> Option<RegexAtom> {
+fn parse_regex_group(chars: &[char], index: &mut usize, depth: usize) -> Option<RegexAtom> {
     let mut raw = String::new();
-    let mut depth = 1_usize;
+    let mut paren_depth = 1_usize;
 
     if chars.get(*index) == Some(&'?') && chars.get(*index + 1) == Some(&':') {
         *index += 2;
@@ -186,13 +202,13 @@ fn parse_regex_group(chars: &[char], index: &mut usize) -> Option<RegexAtom> {
                 raw.push(ch);
             }
             '(' if !in_class => {
-                depth += 1;
+                paren_depth += 1;
                 raw.push(ch);
             }
             ')' if !in_class => {
-                depth -= 1;
-                if depth == 0 {
-                    return compile_string_regex_pattern(&raw)
+                paren_depth -= 1;
+                if paren_depth == 0 {
+                    return compile_string_regex_pattern_at_depth(&raw, depth + 1)
                         .map(|pattern| RegexAtom::Group(Box::new(pattern)));
                 }
                 raw.push(ch);

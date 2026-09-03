@@ -1,17 +1,31 @@
+use super::MAX_XML_DEPTH;
 use super::*;
 use crate::adaptive_set::AdaptiveSet;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub(super) struct XmlParseError {
     offset: usize,
-    message: String,
+    kind: XmlParseErrorKind,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+enum XmlParseErrorKind {
+    Syntax(String),
+    Depth,
 }
 
 impl XmlParseError {
     fn syntax(offset: usize, message: impl Into<String>) -> Self {
         Self {
             offset,
-            message: message.into(),
+            kind: XmlParseErrorKind::Syntax(message.into()),
+        }
+    }
+
+    fn depth(offset: usize) -> Self {
+        Self {
+            offset,
+            kind: XmlParseErrorKind::Depth,
         }
     }
 
@@ -22,11 +36,23 @@ impl XmlParseError {
         )
     }
 
+    pub(super) fn message_tag(&self) -> &'static str {
+        match self.kind {
+            XmlParseErrorKind::Syntax(_) => "xml",
+            XmlParseErrorKind::Depth => "depth",
+        }
+    }
+
     pub(super) fn message(&self) -> String {
-        format!(
-            "Invalid XML at byte offset {}: {}.",
-            self.offset, self.message
-        )
+        match &self.kind {
+            XmlParseErrorKind::Syntax(message) => {
+                format!("Invalid XML at byte offset {}: {message}.", self.offset)
+            }
+            XmlParseErrorKind::Depth => format!(
+                "XML nesting exceeds the fixed depth limit of {MAX_XML_DEPTH} at byte offset {}.",
+                self.offset
+            ),
+        }
     }
 }
 
@@ -72,7 +98,7 @@ impl<'a> Parser<'a> {
             return Err(XmlParseError::dtd(self.pos));
         }
 
-        let root = self.parse_element()?;
+        let root = self.parse_element(0)?;
         self.skip_misc()?;
         if self.is_eof() {
             return Ok(root);
@@ -192,7 +218,10 @@ impl<'a> Parser<'a> {
         Ok(())
     }
 
-    fn parse_element(&mut self) -> ParseResult<Expr> {
+    fn parse_element(&mut self, depth: usize) -> ParseResult<Expr> {
+        if depth >= MAX_XML_DEPTH {
+            return Err(XmlParseError::depth(self.pos));
+        }
         let element_offset = self.pos;
         if self.starts_with("<!DOCTYPE") {
             return Err(XmlParseError::dtd(self.pos));
@@ -246,11 +275,16 @@ impl<'a> Parser<'a> {
             attrs.push((name, value));
         }
 
-        let children = self.parse_children(&tag, element_offset)?;
+        let children = self.parse_children(&tag, element_offset, depth)?;
         Ok(xml_element_expr(tag, attrs, children))
     }
 
-    fn parse_children(&mut self, tag: &str, element_offset: usize) -> ParseResult<Vec<Expr>> {
+    fn parse_children(
+        &mut self,
+        tag: &str,
+        element_offset: usize,
+        depth: usize,
+    ) -> ParseResult<Vec<Expr>> {
         let mut children = Vec::new();
         let mut pending_text = String::new();
 
@@ -292,7 +326,7 @@ impl<'a> Parser<'a> {
             } else if self.peek() == Some(b'<') {
                 if self.byte_at(self.pos + 1).is_some_and(is_xml_name_start) {
                     self.flush_text(&mut children, &mut pending_text);
-                    children.push(self.parse_element()?);
+                    children.push(self.parse_element(depth + 1)?);
                 } else {
                     return Err(XmlParseError::syntax(self.pos, "bare '<' in text"));
                 }

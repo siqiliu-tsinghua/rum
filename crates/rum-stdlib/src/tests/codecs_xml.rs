@@ -273,6 +273,67 @@ fn xml_values_compose_with_json() {
     );
 }
 
+const CODEC_DEPTH_LIMIT: usize = 256;
+
+fn nested_xml_elements(levels: usize) -> String {
+    format!("{}{}", "<a>".repeat(levels), "</a>".repeat(levels))
+}
+
+fn assert_xml_depth_failure(session: &mut Session, source: &str, offset: usize) {
+    let value = session.evaluate(from_xml_call(source)).unwrap();
+    let messages = session.take_messages();
+    assert_eq!(value.to_string(), "$Failed");
+    assert_eq!(messages.len(), 1, "{source}: {messages:?}");
+    assert_eq!(messages[0].symbol, "FromXml");
+    assert_eq!(messages[0].tag, "depth");
+    assert_eq!(
+        messages[0].text,
+        format!(
+            "XML nesting exceeds the fixed depth limit of {CODEC_DEPTH_LIMIT} at byte offset {offset}."
+        )
+    );
+}
+
+fn assert_xml_depth_success(session: &mut Session, source: &str) {
+    let value = session.evaluate(from_xml_call(source)).unwrap();
+    let messages = session.take_messages();
+    assert_ne!(value.to_string(), "$Failed");
+    assert!(messages.is_empty(), "{source}: {messages:?}");
+}
+
+#[test]
+fn from_xml_depth_limit_accepts_deep_element_nesting() {
+    let mut session = core_session();
+
+    // 64 rather than CODEC_DEPTH_LIMIT: evaluating a 256-deep XmlElement tree
+    // costs two kernel evaluator cycles per level, which exceeds the default
+    // ~2 MiB debug test-thread stack (JSON/TOML List chains fit; this tree
+    // shape does not). Release builds accept the full 256 (verified at the
+    // brief-422 gate); this pins the accept direction within harness limits.
+    assert_xml_depth_success(&mut session, &nested_xml_elements(64));
+}
+
+#[test]
+fn from_xml_depth_limit_rejects_element_nesting_one_past() {
+    let mut session = core_session();
+
+    let source = nested_xml_elements(CODEC_DEPTH_LIMIT + 1);
+    assert_xml_depth_failure(&mut session, &source, 3 * CODEC_DEPTH_LIMIT);
+}
+
+#[test]
+fn from_xml_depth_limit_rejects_the_far_past_stack_exhaustion_shape() {
+    let mut session = core_session();
+    let source = nested_xml_elements(15_000);
+
+    assert_xml_depth_failure(&mut session, &source, 3 * CODEC_DEPTH_LIMIT);
+
+    assert_eq!(
+        eval_to_string(&mut session, "FromXml[\"<r x=\\\"1\\\"><c/></r>\"]"),
+        "XmlElement[\"r\", Association[Rule[\"x\", \"1\"]], List[XmlElement[\"c\", Association[], List[]]]]"
+    );
+}
+
 fn expr_string(expr: &Expr) -> &str {
     let Expr::Atom(Atom::String(value)) = expr else {
         panic!("expected string atom, got {expr}");

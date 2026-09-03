@@ -59,18 +59,42 @@ impl TomlParseError {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct TomlEncodeError {
-    message: String,
+    kind: TomlEncodeErrorKind,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+enum TomlEncodeErrorKind {
+    Message(String),
+    Depth,
 }
 
 impl TomlEncodeError {
     fn new(message: impl Into<String>) -> Self {
         Self {
-            message: message.into(),
+            kind: TomlEncodeErrorKind::Message(message.into()),
+        }
+    }
+
+    fn depth() -> Self {
+        Self {
+            kind: TomlEncodeErrorKind::Depth,
+        }
+    }
+
+    fn message_tag(&self) -> &'static str {
+        match self.kind {
+            TomlEncodeErrorKind::Message(_) => "toml",
+            TomlEncodeErrorKind::Depth => "depth",
         }
     }
 
     fn message(&self) -> String {
-        self.message.clone()
+        match &self.kind {
+            TomlEncodeErrorKind::Message(message) => message.clone(),
+            TomlEncodeErrorKind::Depth => {
+                format!("TOML nesting exceeds the fixed depth limit of {MAX_TOML_DEPTH}.")
+            }
+        }
     }
 }
 
@@ -126,7 +150,12 @@ pub(crate) fn eval_to_toml(
 
     match encode::to_toml(expr) {
         Ok(output) => Ok(Expr::string(output)),
-        Err(error) => Ok(fail_toml(session, "ToToml", "toml", error.message())),
+        Err(error) => Ok(fail_toml(
+            session,
+            "ToToml",
+            error.message_tag(),
+            error.message(),
+        )),
     }
 }
 
