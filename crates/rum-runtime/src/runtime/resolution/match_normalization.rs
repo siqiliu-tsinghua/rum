@@ -56,33 +56,49 @@ impl Session {
         expr: &Expr,
         remaining_call_depth: usize,
     ) -> Option<Expr> {
-        self.normalize_match_expr_changed_recursive_bounded(expr, remaining_call_depth)
-    }
-
-    fn normalize_match_expr_changed_recursive_bounded(
-        &self,
-        expr: &Expr,
-        remaining_call_depth: usize,
-    ) -> Option<Expr> {
         match expr {
             Expr::Atom(_) => None,
-            Expr::Call { head, args } => {
-                if remaining_call_depth == 0 {
-                    return self.normalize_match_expr_changed_iterative(expr);
-                }
-                let child_call_depth = remaining_call_depth - 1;
-                let normalized_head =
-                    self.normalize_match_expr_changed_recursive_bounded(head, child_call_depth);
-                let head_for_attributes = normalized_head.as_ref().unwrap_or(head);
-                let normalized_args = self.normalize_match_arg_list_changed_recursive_bounded(
-                    args,
-                    head_for_attributes,
-                    child_call_depth,
-                );
-
-                finish_normalized_match_call(head, args, normalized_head, normalized_args)
-            }
+            Expr::Call { head, args } => self.normalize_match_call_changed_recursive_bounded(
+                head,
+                args,
+                remaining_call_depth,
+            ),
         }
+    }
+
+    fn normalize_match_call_changed_recursive_bounded(
+        &self,
+        head: &SharedExpr,
+        args: &SharedArgs,
+        remaining_call_depth: usize,
+    ) -> Option<Expr> {
+        if remaining_call_depth == 0 {
+            let expr = Expr::Call {
+                head: head.clone(),
+                args: args.clone(),
+            };
+            return self.normalize_match_expr_changed_iterative(&expr);
+        }
+        let child_call_depth = remaining_call_depth - 1;
+        let normalized_head = match head.as_ref() {
+            Expr::Atom(_) => None,
+            Expr::Call {
+                head: child_head,
+                args: child_args,
+            } => self.normalize_match_call_changed_recursive_bounded(
+                child_head,
+                child_args,
+                child_call_depth,
+            ),
+        };
+        let head_for_attributes = normalized_head.as_ref().unwrap_or(head);
+        let normalized_args = self.normalize_match_arg_list_changed_recursive_bounded(
+            args,
+            head_for_attributes,
+            child_call_depth,
+        );
+
+        finish_normalized_match_call(head, args, normalized_head, normalized_args)
     }
 
     fn normalize_match_arg_list_changed_recursive_bounded(
@@ -94,8 +110,14 @@ impl Session {
         let mut normalized_args: Option<Vec<Expr>> = None;
 
         for (index, arg) in args.iter().enumerate() {
-            let normalized_arg =
-                self.normalize_match_expr_changed_recursive_bounded(arg, remaining_call_depth);
+            let normalized_arg = match arg {
+                Expr::Atom(_) => None,
+                Expr::Call { head, args } => self.normalize_match_call_changed_recursive_bounded(
+                    head,
+                    args,
+                    remaining_call_depth,
+                ),
+            };
             append_normalized_arg(args, index, arg, normalized_arg, &mut normalized_args);
         }
 
@@ -218,7 +240,7 @@ impl Session {
         expr: &Expr,
         remaining_call_depth: usize,
     ) -> Option<Expr> {
-        self.normalize_match_expr_changed_recursive_bounded(expr, remaining_call_depth)
+        self.normalize_match_expr_changed_with_call_depth(expr, remaining_call_depth)
     }
 
     #[cfg(test)]
