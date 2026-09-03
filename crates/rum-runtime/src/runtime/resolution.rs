@@ -117,6 +117,14 @@ impl Session {
         }
     }
 
+    #[cfg(test)]
+    pub(in crate::runtime) fn normalize_match_expr_changed_for_test(
+        &self,
+        expr: &Expr,
+    ) -> Option<Expr> {
+        self.normalize_match_expr_changed(expr)
+    }
+
     fn normalize_match_arg_list_changed(
         &self,
         args: &SharedArgs,
