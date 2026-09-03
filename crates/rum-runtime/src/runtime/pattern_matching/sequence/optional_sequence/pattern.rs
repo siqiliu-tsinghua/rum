@@ -188,7 +188,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueCompiledSequenceIte
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
         let resumed = outcome.and_then(|payload| {
-            let Expr::Call { head, args, .. } = payload else {
+            let Expr::Call { head, args } = payload else {
                 panic!("unexpected compiled-sequence-items continuation payload")
             };
             assert!(
@@ -283,7 +283,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueCompiledSequencePat
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
         let resumed = outcome.and_then(|payload| {
-            let Expr::Call { head, args, .. } = payload else {
+            let Expr::Call { head, args } = payload else {
                 panic!("unexpected compiled-sequence-pattern continuation payload")
             };
             assert!(

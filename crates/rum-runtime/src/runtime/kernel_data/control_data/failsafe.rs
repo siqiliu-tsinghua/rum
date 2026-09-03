@@ -58,7 +58,7 @@ struct FailsafeWrapperSpec<'a> {
 }
 
 fn parse_failsafe_wrapper(expr: &Expr) -> Option<FailsafeWrapperSpec<'_>> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 

@@ -105,7 +105,7 @@ pub(crate) fn eval_rum_tokens(
 }
 
 fn parse_tokenize_rules(expr: &Expr) -> Result<Vec<TokenizeRule>, &'static str> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return Err("TokenizeWith expects its first argument to be a List of string-class rules.");
     };
     if !is_system_symbol_name(head, "List") {
@@ -118,7 +118,7 @@ fn parse_tokenize_rules(expr: &Expr) -> Result<Vec<TokenizeRule>, &'static str> 
 }
 
 fn parse_tokenize_rule(expr: &Expr) -> Result<TokenizeRule, &'static str> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return Err("TokenizeWith rules must have the form \"class\" -> pattern.");
     };
     if !is_system_symbol_name(head, "Rule") || args.len() != 2 {

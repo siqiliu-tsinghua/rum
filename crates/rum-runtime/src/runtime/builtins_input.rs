@@ -325,7 +325,7 @@ fn split_input_prompt_and_options(args: &[Expr]) -> (Option<&Expr>, &[Expr]) {
 
 fn is_input_option_start_expr(expr: &Expr) -> bool {
     match expr {
-        Expr::Call { head, args, .. }
+        Expr::Call { head, args }
             if (is_system_symbol_name(head, "Rule")
                 || is_system_symbol_name(head, "RuleDelayed"))
                 && args.len() == 2 =>
@@ -333,7 +333,7 @@ fn is_input_option_start_expr(expr: &Expr) -> bool {
             matches!(&args[0], Expr::Atom(Atom::Symbol(_)))
                 || matches!(&args[0], Expr::Atom(Atom::String(_)))
         }
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => {
+        Expr::Call { head, args } if is_system_symbol_name(head, "List") => {
             !args.is_empty() && args.iter().all(is_input_option_start_expr)
         }
         _ => false,
@@ -345,7 +345,7 @@ fn collect_input_option_expr(
     options: &mut Vec<Expr>,
 ) -> Result<(), InputOptionsError> {
     match option_expr {
-        Expr::Call { head, args, .. }
+        Expr::Call { head, args }
             if (is_system_symbol_name(head, "Rule")
                 || is_system_symbol_name(head, "RuleDelayed"))
                 && args.len() == 2 =>
@@ -358,7 +358,7 @@ fn collect_input_option_expr(
             options.push(option_expr.clone());
             Ok(())
         }
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => {
+        Expr::Call { head, args } if is_system_symbol_name(head, "List") => {
             for item in args {
                 if let Err(error) = collect_input_option_expr(item, options) {
                     return Err(match error {
@@ -392,7 +392,7 @@ fn split_dialog_body_and_options(args: &[Expr]) -> (Option<&Expr>, &[Expr]) {
 }
 
 fn is_dialog_option_expr(expr: &Expr) -> bool {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return false;
     };
 

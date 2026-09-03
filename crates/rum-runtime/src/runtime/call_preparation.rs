@@ -188,7 +188,7 @@ pub(super) fn append_prepared_list_argument(
 ) {
     if allow_sequence_splice && !sequence_hold {
         match value {
-            Expr::Call { head, args, .. }
+            Expr::Call { head, args }
                 if is_system_symbol_name(head.as_ref(), heads::functions::SEQUENCE) =>
             {
                 prepared_args.extend(

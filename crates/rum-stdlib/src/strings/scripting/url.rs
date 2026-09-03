@@ -402,7 +402,7 @@ fn valid_scheme(scheme: &str) -> bool {
 }
 
 fn option_rule(expr: &Expr) -> Option<(&str, &Expr)> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
     if !(is_system_symbol_name(head, "Rule") || is_system_symbol_name(head, "RuleDelayed"))

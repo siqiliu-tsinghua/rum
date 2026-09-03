@@ -108,7 +108,7 @@ impl PostOrderTraversal {
     }
 
     fn schedule_standard_call(&mut self, expr: Expr, level: usize) {
-        let Expr::Call { head, args, .. } = &expr else {
+        let Expr::Call { head, args } = &expr else {
             unreachable!("only calls reach the standard-call scheduler");
         };
         let child_count = args.len() + usize::from(self.include_heads);
@@ -283,7 +283,7 @@ impl PostOrderPathTraversal {
     }
 
     fn schedule_standard_call(&mut self, expr: Expr, level: usize, path: Option<usize>) {
-        let Expr::Call { head, args, .. } = &expr else {
+        let Expr::Call { head, args } = &expr else {
             unreachable!("only calls reach the path standard-call scheduler");
         };
         let child_count = args.len() + usize::from(self.include_heads);

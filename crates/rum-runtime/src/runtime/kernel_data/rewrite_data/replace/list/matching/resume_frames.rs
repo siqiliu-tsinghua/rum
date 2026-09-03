@@ -14,7 +14,7 @@ fn option_scope_from_continuation_expr(expr: Expr) -> Option<OptionValueScope> {
 }
 
 fn continuation_args(expr: Expr, tag: &'static str) -> std::vec::IntoIter<Expr> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         panic!("unexpected {tag} continuation payload")
     };
     assert!(

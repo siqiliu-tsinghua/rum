@@ -250,7 +250,7 @@ fn pause_rejects_unrepresentable_integer_and_rational_durations() {
 
     for source in ["Pause[10^100]", "Pause[10^100/3]"] {
         let invalid_pause = session.eval_text(source).unwrap();
-        let Expr::Call { head, args, .. } = &invalid_pause.value else {
+        let Expr::Call { head, args } = &invalid_pause.value else {
             panic!("{source} should remain inert, got {}", invalid_pause.value);
         };
         assert_eq!(head.to_string(), "Pause");

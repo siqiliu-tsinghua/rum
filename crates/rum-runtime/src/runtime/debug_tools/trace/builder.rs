@@ -75,7 +75,7 @@ impl StructuredTraceBuilder {
     fn container_root_matches(&self, depth: usize, target: &Expr) -> bool {
         self.containers.get(depth).and_then(|items| {
             items.iter().find_map(|item| match item {
-                Expr::Call { head, args, .. } if is_system_symbol_name(head, "Hold") => {
+                Expr::Call { head, args } if is_system_symbol_name(head, "Hold") => {
                     args.first().cloned()
                 }
                 _ => None,

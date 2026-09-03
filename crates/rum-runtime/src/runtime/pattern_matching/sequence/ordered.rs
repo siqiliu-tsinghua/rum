@@ -188,11 +188,11 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueMatchCompiledOrdere
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
         let resumed = outcome.and_then(|payload| {
-            let Expr::Call { head, args, .. } = payload else {
+            let Expr::Call { head, args } = payload else {
                 return Ok(payload);
             };
             if !is_system_symbol_name(&head, "InternalContinuationOrderedArgs") {
-                return Ok(Expr::call_shared(head, args));
+                return Ok(Expr::Call { head, args });
             }
             let mut args = args.into_iter();
             let pattern_args = matcher_args_from_continuation_expr(
@@ -262,11 +262,11 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueCollectCompiledOrde
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
         let resumed = outcome.and_then(|payload| {
-            let Expr::Call { head, args, .. } = payload else {
+            let Expr::Call { head, args } = payload else {
                 return Ok(payload);
             };
             if !is_system_symbol_name(&head, "InternalContinuationOrderedArgs") {
-                return Ok(Expr::call_shared(head, args));
+                return Ok(Expr::Call { head, args });
             }
             let mut args = args.into_iter();
             let pattern_args = matcher_args_from_continuation_expr(

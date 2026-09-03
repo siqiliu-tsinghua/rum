@@ -145,7 +145,7 @@ pub(in crate::runtime) struct DownValueShallowSignature {
 impl DownValueShallowSignature {
     fn from_lhs(symbol: &Symbol, lhs: &Expr) -> Option<Self> {
         let lhs = strip_hold_pattern(lhs);
-        let Expr::Call { head, args, .. } = lhs else {
+        let Expr::Call { head, args } = lhs else {
             return None;
         };
         if expr_as_symbol(head).is_none_or(|head_symbol| head_symbol != symbol) {
@@ -245,7 +245,7 @@ pub(in crate::runtime) fn expr_contains_pattern_syntax(expr: &Expr) -> bool {
 
     match expr {
         Expr::Atom(_) => false,
-        Expr::Call { head, args, .. } => {
+        Expr::Call { head, args } => {
             expr_contains_pattern_syntax(head) || args.iter().any(expr_contains_pattern_syntax)
         }
     }

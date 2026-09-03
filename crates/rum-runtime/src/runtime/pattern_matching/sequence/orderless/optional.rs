@@ -27,7 +27,7 @@ impl OrderlessOptionalState {
     }
 
     fn from_continuation_expr(expr: Expr) -> Self {
-        let Expr::Call { head, args, .. } = expr else {
+        let Expr::Call { head, args } = expr else {
             panic!("unexpected orderless-optional continuation payload")
         };
         assert!(

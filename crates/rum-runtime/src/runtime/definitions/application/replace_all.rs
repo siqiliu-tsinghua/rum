@@ -53,7 +53,7 @@ impl ContinuationValue for ReplaceAllTraversalOutcome {
 
     fn from_continuation_expr(expr: Expr) -> Self {
         match expr {
-            Expr::Call { head, args, .. }
+            Expr::Call { head, args }
                 if is_system_symbol_name(
                     &head,
                     "InternalContinuationReplaceAllTraversalOutcome",
@@ -278,7 +278,7 @@ impl Session {
             return;
         }
 
-        let Expr::Call { head, args, .. } = expr else {
+        let Expr::Call { head, args } = expr else {
             state.completed.push(ReplaceAllTraversalOutcome {
                 expr,
                 changed: false,
@@ -337,7 +337,7 @@ impl Session {
         rewritten: Expr,
     ) -> bool {
         match rewritten {
-            Expr::Call { head, args, .. }
+            Expr::Call { head, args }
                 if is_system_symbol_name(&head, heads::functions::SEQUENCE)
                     && !self.attribute_set_for_head(parent_head).sequence_hold() =>
             {

@@ -2,7 +2,7 @@ use super::*;
 
 pub(super) fn is_slot_sequence_expr(expr: &Expr) -> bool {
     match expr {
-        Expr::Call { head, args, .. } => {
+        Expr::Call { head, args } => {
             is_system_symbol_name(head, heads::functions::SLOT_SEQUENCE) && args.len() == 1
         }
         _ => false,
@@ -11,9 +11,7 @@ pub(super) fn is_slot_sequence_expr(expr: &Expr) -> bool {
 
 pub(super) fn sequence_items(expr: &Expr) -> Option<&[Expr]> {
     match expr {
-        Expr::Call { head, args, .. }
-            if is_system_symbol_name(head, heads::functions::SEQUENCE) =>
-        {
+        Expr::Call { head, args } if is_system_symbol_name(head, heads::functions::SEQUENCE) => {
             Some(args)
         }
         _ => None,
@@ -22,7 +20,7 @@ pub(super) fn sequence_items(expr: &Expr) -> Option<&[Expr]> {
 
 pub fn call_items_with_head<'a>(expr: &'a Expr, expected_head: &Expr) -> Option<&'a [Expr]> {
     match expr {
-        Expr::Call { head, args, .. } if head.as_ref() == expected_head => Some(args),
+        Expr::Call { head, args } if head.as_ref() == expected_head => Some(args),
         _ => None,
     }
 }
@@ -104,7 +102,6 @@ pub(super) fn flatten_flat_call_args(head: &Expr, args: Vec<Expr>) -> Vec<Expr> 
             Expr::Call {
                 head: nested_head,
                 args: nested_args,
-                ..
             } if nested_head.as_ref() == head => flattened.extend(nested_args),
             other => flattened.push(other),
         }
@@ -124,12 +121,10 @@ pub fn compare_expr_canonical(lhs: &Expr, rhs: &Expr) -> std::cmp::Ordering {
             Expr::Call {
                 head: lhs_head,
                 args: lhs_args,
-                ..
             },
             Expr::Call {
                 head: rhs_head,
                 args: rhs_args,
-                ..
             },
         ) => compare_call_canonical(lhs_head, lhs_args, rhs_head, rhs_args),
         _ => expr_order_rank(lhs).cmp(&expr_order_rank(rhs)),
@@ -223,9 +218,7 @@ fn power_base(expr: &Expr) -> Option<&Expr> {
 
 fn power_args(expr: &Expr) -> Option<&[Expr; 2]> {
     match expr {
-        Expr::Call { head, args, .. }
-            if is_system_symbol_name(head, "Power") && args.len() == 2 =>
-        {
+        Expr::Call { head, args } if is_system_symbol_name(head, "Power") && args.len() == 2 => {
             args.as_slice().try_into().ok()
         }
         _ => None,

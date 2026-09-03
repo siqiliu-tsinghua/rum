@@ -499,13 +499,13 @@ fn collect_option_names_from_expr(
     names: &mut Vec<Symbol>,
 ) -> Option<()> {
     match expr {
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => {
+        Expr::Call { head, args } if is_system_symbol_name(head, "List") => {
             for item in args {
                 collect_option_names_from_expr(session, item, names)?;
             }
             Some(())
         }
-        Expr::Call { head, args, .. }
+        Expr::Call { head, args }
             if (is_system_symbol_name(head, "Rule")
                 || is_system_symbol_name(head, "RuleDelayed"))
                 && args.len() == 2 =>

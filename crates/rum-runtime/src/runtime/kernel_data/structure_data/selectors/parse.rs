@@ -25,7 +25,7 @@ pub(super) fn parse_part_selector_for_part(expr: &Expr) -> Option<PartSelector> 
         return Some(selector);
     }
 
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 
@@ -53,7 +53,7 @@ pub(super) fn parse_part_selector(expr: &Expr) -> Option<PartSelector> {
         return Some(selector);
     }
 
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 
@@ -81,7 +81,7 @@ fn parse_key_part_selector(expr: &Expr) -> Option<Expr> {
         return Some(expr.clone());
     }
 
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 
@@ -105,7 +105,7 @@ fn parse_atomic_part_spec(expr: &Expr) -> Option<AtomicPartSpec> {
 }
 
 fn parse_span_part_spec(expr: &Expr) -> Option<AtomicPartSpec> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 
@@ -185,7 +185,7 @@ fn parse_span_endpoint(expr: &Expr) -> Option<SpanEndpoint> {
 }
 
 fn parse_upto_span_endpoint(expr: &Expr) -> Option<Option<isize>> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 

@@ -324,7 +324,7 @@ impl crate::runtime::suspension::PureFrameFinalizer for FinishReapBucketsFinaliz
 fn normalize_reap_patterns(expr: Option<&Expr>) -> (Vec<Expr>, bool) {
     match expr {
         None => (vec![Expr::call(system_expr("Blank"), vec![])], false),
-        Some(Expr::Call { head, args, .. }) if is_system_symbol_name(head, "List") => {
+        Some(Expr::Call { head, args }) if is_system_symbol_name(head, "List") => {
             (args.to_vec(), true)
         }
         Some(pattern) => (vec![pattern.clone()], false),

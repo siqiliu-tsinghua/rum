@@ -354,7 +354,7 @@ fn hold_all_literal_args_are_stable(args: &[Expr]) -> bool {
 fn is_direct_hold_escape_wrapper(expr: &Expr) -> bool {
     matches!(
         expr,
-        Expr::Call { head, args, .. }
+        Expr::Call { head, args }
             if args.len() == 1
                 && (is_system_symbol_name(head, "Evaluate")
                     || is_system_symbol_name(head, "Unevaluated"))
@@ -370,7 +370,7 @@ fn failure_details_would_normalize(expr: &Expr) -> bool {
         return true;
     }
 
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return false;
     };
     is_system_symbol_name(head, heads::structure::LIST)
@@ -380,7 +380,7 @@ fn failure_details_would_normalize(expr: &Expr) -> bool {
 fn immediate_rule_entry_expr(expr: &Expr) -> bool {
     matches!(
         expr,
-        Expr::Call { head, args, .. }
+        Expr::Call { head, args }
             if is_system_symbol_name(head, "Rule") && args.len() == 2
     )
 }

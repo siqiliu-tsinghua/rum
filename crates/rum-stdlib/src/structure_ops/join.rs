@@ -183,7 +183,7 @@ fn join_same_head_args(args: &[Expr]) -> Option<(Expr, Vec<Expr>)> {
 
     let mut joined = Vec::new();
     for arg in args {
-        let Expr::Call { head, args, .. } = arg else {
+        let Expr::Call { head, args } = arg else {
             return None;
         };
         if head.as_ref() != first_head.as_ref() {
@@ -215,7 +215,7 @@ fn collect_first_join_level_heads_at(
     depth: usize,
     expected_heads: &mut Vec<Expr>,
 ) -> bool {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return false;
     };
 
@@ -245,7 +245,7 @@ fn validate_join_level_heads(
     depth: usize,
 ) -> Result<(), Expr> {
     let expected_head = &expected_heads[depth];
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return Err(expected_head.clone());
     };
     if head.as_ref() != expected_head {

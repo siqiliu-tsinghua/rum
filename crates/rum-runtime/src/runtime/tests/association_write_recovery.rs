@@ -6,7 +6,7 @@ fn association_entries<'a>(session: &'a Session, target: &Symbol) -> &'a SharedA
         .get(target)
         .and_then(|definition| definition.own_value.as_ref())
         .expect("the write-recovery target must have an Association own value");
-    let Expr::Call { head, args, .. } = current else {
+    let Expr::Call { head, args } = current else {
         panic!("the write-recovery target must store an Association");
     };
     assert!(is_system_symbol_name(head, "Association"));

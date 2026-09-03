@@ -115,7 +115,7 @@ struct GroupBySpec {
 
 fn group_by_spec(function: &Expr) -> GroupBySpec {
     match function {
-        Expr::Call { head, args, .. }
+        Expr::Call { head, args }
             if (is_system_symbol_name(head, "Rule")
                 || is_system_symbol_name(head, "RuleDelayed"))
                 && args.len() == 2 =>

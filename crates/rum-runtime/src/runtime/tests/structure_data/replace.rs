@@ -357,7 +357,7 @@ fn replacepart_handles_twenty_thousand_structural_rules_in_one_walk() {
     let source = format!("ReplacePart[{{{list}}}, {{{rules}}}]");
 
     let outcome = Session::new().eval_text(&source).unwrap();
-    let Expr::Call { head, args, .. } = outcome.value else {
+    let Expr::Call { head, args } = outcome.value else {
         panic!("ReplacePart should return a list, got {}", outcome.value);
     };
     assert!(is_system_symbol_name(&head, "List"));

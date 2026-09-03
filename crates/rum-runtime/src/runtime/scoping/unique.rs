@@ -95,7 +95,7 @@ impl Session {
             Expr::Atom(Atom::String(prefix)) => self
                 .allocate_unique_string_symbol(prefix)
                 .map(|symbol| Expr::Atom(Atom::Symbol(symbol))),
-            Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => {
+            Expr::Call { head, args } if is_system_symbol_name(head, "List") => {
                 if args.is_empty() {
                     return Some(Expr::call(system_expr("List"), Vec::new()));
                 }
@@ -179,7 +179,7 @@ impl Session {
                     self.set_attribute_set_for_symbol(symbol.clone(), current);
                 }
             }
-            Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => {
+            Expr::Call { head, args } if is_system_symbol_name(head, "List") => {
                 for arg in args {
                     self.register_unique_generated_expr(arg, attributes);
                 }

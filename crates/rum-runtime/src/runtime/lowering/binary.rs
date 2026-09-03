@@ -155,7 +155,7 @@ where
 
 fn push_compound_expression_item(items: &mut Vec<Expr>, expr: Expr) {
     match expr {
-        Expr::Call { head, args, .. } if is_system_symbol_name(&head, "CompoundExpression") => {
+        Expr::Call { head, args } if is_system_symbol_name(&head, "CompoundExpression") => {
             items.extend(args);
         }
         other => items.push(other),
@@ -185,7 +185,7 @@ pub(super) fn lower_message_tag_string(expr: &SyntaxExpr) -> String {
 
 pub(super) fn lower_tag_set_sugar(tag: Expr, rhs: Expr) -> Result<Expr, EvalError> {
     match rhs {
-        Expr::Call { head, args, .. }
+        Expr::Call { head, args }
             if is_system_symbol_name(&head, heads::rules::SET) && args.len() == 2 =>
         {
             Ok(canonical_call(
@@ -193,7 +193,7 @@ pub(super) fn lower_tag_set_sugar(tag: Expr, rhs: Expr) -> Result<Expr, EvalErro
                 vec![tag, args[0].clone(), args[1].clone()],
             ))
         }
-        Expr::Call { head, args, .. }
+        Expr::Call { head, args }
             if is_system_symbol_name(&head, heads::rules::SET_DELAYED) && args.len() == 2 =>
         {
             Ok(canonical_call(
@@ -201,7 +201,7 @@ pub(super) fn lower_tag_set_sugar(tag: Expr, rhs: Expr) -> Result<Expr, EvalErro
                 vec![tag, args[0].clone(), args[1].clone()],
             ))
         }
-        Expr::Call { head, args, .. }
+        Expr::Call { head, args }
             if is_system_symbol_name(&head, heads::rules::UNSET) && args.len() == 1 =>
         {
             Ok(canonical_call(

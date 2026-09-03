@@ -59,7 +59,7 @@ impl Session {
         &self,
         expr: &Expr,
     ) -> Option<MessageNameKey> {
-        let Expr::Call { head, args, .. } = expr else {
+        let Expr::Call { head, args } = expr else {
             return None;
         };
 
@@ -188,7 +188,7 @@ impl Session {
         create_if_missing: bool,
     ) -> Option<Vec<Symbol>> {
         match expr {
-            Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => args
+            Expr::Call { head, args } if is_system_symbol_name(head, "List") => args
                 .iter()
                 .map(|item| self.normalize_symbol_target_exprs(item, create_if_missing))
                 .collect::<Option<Vec<_>>>()

@@ -62,7 +62,6 @@ impl Session {
         let Expr::Call {
             head: threaded_head,
             args: threaded_args,
-            ..
         } = &expr
         else {
             return Ok(expr);

@@ -9,7 +9,7 @@ fn rewrite_rule_info_expr(rule: RewriteRuleInfo) -> Expr {
 
 fn rewrite_rule_info_from_expr(expr: Expr) -> RewriteRuleInfo {
     match expr {
-        Expr::Call { head, args, .. }
+        Expr::Call { head, args }
             if (is_system_symbol_name(&head, "Rule")
                 || is_system_symbol_name(&head, "RuleDelayed"))
                 && args.len() == 2 =>
@@ -47,7 +47,7 @@ impl ContinuationValue for Option<Vec<RewriteRuleInfo>> {
 
     fn from_continuation_expr(expr: Expr) -> Self {
         match expr {
-            Expr::Call { head, args, .. }
+            Expr::Call { head, args }
                 if is_system_symbol_name(&head, "InternalContinuationSomeRewriteRuleInfos") =>
             {
                 let mut args = Expr::unwrap_shared_args(args);
@@ -60,19 +60,19 @@ impl ContinuationValue for Option<Vec<RewriteRuleInfo>> {
                 );
 
                 match list_expr {
-                    Expr::Call { head, args, .. } if is_system_symbol_name(&head, "List") => {
+                    Expr::Call { head, args } if is_system_symbol_name(&head, "List") => {
                         Some(args.into_iter().map(rewrite_rule_info_from_expr).collect())
                     }
                     other => Some(vec![rewrite_rule_info_from_expr(other)]),
                 }
             }
-            Expr::Call { head, args, .. }
+            Expr::Call { head, args }
                 if is_system_symbol_name(&head, "InternalContinuationNone") =>
             {
                 debug_assert!(args.is_empty(), "none continuation payloads are empty");
                 None
             }
-            Expr::Call { head, args, .. } if is_system_symbol_name(&head, "List") => {
+            Expr::Call { head, args } if is_system_symbol_name(&head, "List") => {
                 Some(args.into_iter().map(rewrite_rule_info_from_expr).collect())
             }
             other => Some(vec![rewrite_rule_info_from_expr(other)]),

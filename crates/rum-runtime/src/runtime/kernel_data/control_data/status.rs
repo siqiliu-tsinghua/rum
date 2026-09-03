@@ -91,7 +91,6 @@ impl Session {
                 list @ Expr::Call {
                     head: list_head,
                     args: properties,
-                    ..
                 },
             ] if is_system_symbol_name(list_head, heads::structure::LIST) => {
                 let mut values = Vec::with_capacity(properties.len());
@@ -280,11 +279,11 @@ impl Session {
 }
 
 pub(in crate::runtime) fn is_failure_expr(expr: &Expr) -> bool {
-    matches!(expr, Expr::Call { head, args, .. } if is_system_symbol_name(head, "Failure") && args.len() == 2)
+    matches!(expr, Expr::Call { head, args } if is_system_symbol_name(head, "Failure") && args.len() == 2)
 }
 
 pub(in crate::runtime) fn is_success_expr(expr: &Expr) -> bool {
-    matches!(expr, Expr::Call { head, args, .. } if is_system_symbol_name(head, "Success") && args.len() == 2)
+    matches!(expr, Expr::Call { head, args } if is_system_symbol_name(head, "Success") && args.len() == 2)
 }
 
 pub(in crate::runtime) fn is_failure_q_expr(expr: &Expr) -> bool {
@@ -310,7 +309,7 @@ fn normalize_failure_details_expr(expr: &Expr) -> Option<Expr> {
         return Some(render_association_entry_forms_preserving_heads(vec![entry]));
     }
 
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 
@@ -327,7 +326,7 @@ fn normalize_failure_details_expr(expr: &Expr) -> Option<Expr> {
 }
 
 fn parse_immediate_rule_entry(expr: &Expr) -> Option<(Expr, Expr)> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 
@@ -497,7 +496,7 @@ fn status_object_missing_expr(status: &Expr, property: Expr) -> Expr {
 }
 
 fn status_object_parts(status: &Expr) -> Option<(&Expr, &Expr)> {
-    let Expr::Call { head, args, .. } = status else {
+    let Expr::Call { head, args } = status else {
         return None;
     };
 

@@ -144,7 +144,7 @@ pub(super) fn parse_string_take_drop_spec(expr: &Expr) -> Option<StringTakeDropS
         return Some(StringTakeDropSpec::Count(count));
     }
 
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 
@@ -163,7 +163,7 @@ pub(super) fn parse_string_part_spec(expr: &Expr) -> Option<Vec<isize>> {
         return Some(vec![index]);
     }
 
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 

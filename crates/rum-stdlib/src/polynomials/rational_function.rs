@@ -22,10 +22,10 @@ impl RationalFunction {
     pub(super) fn from_expr(expr: &Expr) -> Option<Self> {
         match expr {
             Expr::Atom(_) => Some(Self::from_polynomial(Polynomial::from_expr(expr)?)),
-            Expr::Call { head, args, .. } if is_system_symbol_name(head, "Plus") => {
+            Expr::Call { head, args } if is_system_symbol_name(head, "Plus") => {
                 Self::from_sum(args)
             }
-            Expr::Call { head, args, .. } if is_system_symbol_name(head, "Times") => {
+            Expr::Call { head, args } if is_system_symbol_name(head, "Times") => {
                 let mut result = Self::one();
 
                 for arg in args {
@@ -34,7 +34,7 @@ impl RationalFunction {
 
                 Some(result)
             }
-            Expr::Call { head, args, .. }
+            Expr::Call { head, args }
                 if is_system_symbol_name(head, "Power") && args.len() == 2 =>
             {
                 let exponent = expr_as_exact_integer(&args[1])?;

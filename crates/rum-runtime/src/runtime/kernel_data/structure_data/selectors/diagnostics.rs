@@ -184,7 +184,7 @@ fn span_to_expr(span: PartSpanSpec) -> Expr {
 }
 
 pub(super) fn invalid_span_message_spec(expr: &Expr) -> String {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return expr.to_string();
     };
 

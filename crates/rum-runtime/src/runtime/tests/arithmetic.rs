@@ -444,7 +444,6 @@ fn wide_plus_and_times_group_late_symbolic_duplicates() {
     let Expr::Call {
         head: plus_head,
         args: plus_args,
-        ..
     } = plus
     else {
         panic!("wide symbolic Plus should remain a call")
@@ -465,7 +464,6 @@ fn wide_plus_and_times_group_late_symbolic_duplicates() {
     let Expr::Call {
         head: times_head,
         args: times_args,
-        ..
     } = times
     else {
         panic!("wide symbolic Times should remain a call")

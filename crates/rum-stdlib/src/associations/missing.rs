@@ -127,7 +127,7 @@ fn recursive_delayed_wrapper_count(expr: &Expr, depth: DeleteMissingDepth) -> us
         });
     }
 
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return 0;
     };
     if !is_system_symbol_name(head, "Association") {
@@ -142,7 +142,7 @@ fn recursive_association_item_wrapper_count(
 ) -> usize {
     items.iter().fold(0usize, |total, item| {
         total.saturating_add(match item {
-            Expr::Call { head, args, .. }
+            Expr::Call { head, args }
                 if (is_system_symbol_name(head, "Rule")
                     || is_system_symbol_name(head, "RuleDelayed"))
                     && args.len() == 2 =>
@@ -153,7 +153,7 @@ fn recursive_association_item_wrapper_count(
                     recursive_delayed_wrapper_count(&args[1], child_depth)
                 }
             }
-            Expr::Call { head, args, .. }
+            Expr::Call { head, args }
                 if is_system_symbol_name(head, "Association")
                     || is_system_symbol_name(head, "List") =>
             {
@@ -175,7 +175,7 @@ fn target_delayed_wrapper_count(expr: &Expr, level: usize) -> usize {
         });
     }
 
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return 0;
     };
     if !is_system_symbol_name(head, "Association") {
@@ -187,7 +187,7 @@ fn target_delayed_wrapper_count(expr: &Expr, level: usize) -> usize {
 fn target_association_item_wrapper_count(items: &[Expr], child_level: usize) -> usize {
     items.iter().fold(0usize, |total, item| {
         total.saturating_add(match item {
-            Expr::Call { head, args, .. }
+            Expr::Call { head, args }
                 if (is_system_symbol_name(head, "Rule")
                     || is_system_symbol_name(head, "RuleDelayed"))
                     && args.len() == 2 =>
@@ -198,7 +198,7 @@ fn target_association_item_wrapper_count(items: &[Expr], child_level: usize) -> 
                     target_delayed_wrapper_count(&args[1], child_level)
                 }
             }
-            Expr::Call { head, args, .. }
+            Expr::Call { head, args }
                 if is_system_symbol_name(head, "Association")
                     || is_system_symbol_name(head, "List") =>
             {
@@ -223,7 +223,7 @@ fn projected_expr_memory_proxy_bytes(expr: &Expr) -> usize {
         Expr::Atom(Atom::Symbol(symbol)) => std::mem::size_of::<Expr>()
             .saturating_add(symbol.context().len())
             .saturating_add(symbol.name().len()),
-        Expr::Call { head, args, .. } => args.iter().fold(
+        Expr::Call { head, args } => args.iter().fold(
             std::mem::size_of::<Expr>().saturating_add(projected_expr_memory_proxy_bytes(head)),
             |total, arg| total.saturating_add(projected_expr_memory_proxy_bytes(arg)),
         ),

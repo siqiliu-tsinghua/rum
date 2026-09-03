@@ -47,7 +47,7 @@ pub(super) enum ArrayReduceSpec {
 }
 
 pub(super) fn parse_array_filter_padding(expr: &Expr, rank: usize) -> Option<ArrayFilterPadding> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
     if !(is_system_symbol_name(head, "Rule") || is_system_symbol_name(head, "RuleDelayed"))
@@ -115,9 +115,7 @@ pub(super) fn parse_array_filter_padding_leaf(expr: &Expr) -> Option<ArrayFilter
         Expr::Atom(Atom::String(value)) if value == "Periodic" => {
             Some(ArrayFilterPaddingLeaf::Periodic)
         }
-        Expr::Call { head, args, .. }
-            if is_system_symbol_name(head, "List") && !args.is_empty() =>
-        {
+        Expr::Call { head, args } if is_system_symbol_name(head, "List") && !args.is_empty() => {
             Some(ArrayFilterPaddingLeaf::Cycle(args.to_vec()))
         }
         other => Some(ArrayFilterPaddingLeaf::Constant(other.clone())),

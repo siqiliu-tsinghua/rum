@@ -69,7 +69,7 @@ fn replace_walks_thirty_thousand_children() {
         wide_list_source(30_000)
     );
     let outcome = session.eval_text(&source).unwrap();
-    let Expr::Call { head, args, .. } = outcome.value else {
+    let Expr::Call { head, args } = outcome.value else {
         panic!("Replace should return a list, got {}", outcome.value);
     };
     assert!(is_system_symbol_name(&head, "List"));
@@ -85,7 +85,7 @@ fn cases_walks_thirty_thousand_children() {
 
     let source = format!("Cases[{}, _Integer]", wide_list_source(30_000));
     let outcome = session.eval_text(&source).unwrap();
-    let Expr::Call { head, args, .. } = outcome.value else {
+    let Expr::Call { head, args } = outcome.value else {
         panic!("Cases should return a list, got {}", outcome.value);
     };
     assert!(is_system_symbol_name(&head, "List"));
@@ -124,7 +124,7 @@ fn delete_cases_walks_thirty_thousand_children() {
 
     let source = format!("DeleteCases[{}, 5]", wide_list_source(30_000));
     let outcome = session.eval_text(&source).unwrap();
-    let Expr::Call { head, args, .. } = outcome.value else {
+    let Expr::Call { head, args } = outcome.value else {
         panic!("DeleteCases should return a list, got {}", outcome.value);
     };
     assert!(is_system_symbol_name(&head, "List"));
@@ -140,7 +140,7 @@ fn replace_all_walks_thirty_thousand_children() {
 
     let source = format!("ReplaceAll[{}, 1 -> 0]", wide_list_source(30_000));
     let outcome = session.eval_text(&source).unwrap();
-    let Expr::Call { head, args, .. } = outcome.value else {
+    let Expr::Call { head, args } = outcome.value else {
         panic!("ReplaceAll should return a list, got {}", outcome.value);
     };
     assert!(is_system_symbol_name(&head, "List"));

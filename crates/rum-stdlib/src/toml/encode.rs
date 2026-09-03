@@ -142,7 +142,7 @@ fn write_inline_value(expr: &Expr, depth: usize, out: &mut String) -> Result<(),
         Expr::Atom(Atom::Symbol(_)) if is_system_symbol_name(expr, "False") => {
             out.push_str("false");
         }
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => {
+        Expr::Call { head, args } if is_system_symbol_name(head, "List") => {
             if depth + 1 > MAX_TOML_DEPTH {
                 return Err(TomlEncodeError::depth());
             }
@@ -210,14 +210,14 @@ fn table_like(expr: &Expr) -> bool {
 // success: they answer the same classification question by walking the
 // expression, without building and canonicalizing an entry table per probe.
 fn association_shaped(expr: &Expr) -> bool {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return false;
     };
     is_system_symbol_name(head, "Association") && args.iter().all(deep_entry_shaped)
 }
 
 fn deep_entry_shaped(expr: &Expr) -> bool {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return false;
     };
     if is_system_symbol_name(head, "Rule") || is_system_symbol_name(head, "RuleDelayed") {

@@ -301,7 +301,7 @@ pub(super) fn record_presence_reuse(
         return;
     }
 
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return;
     };
 

@@ -86,7 +86,7 @@ fn is_plain_list_expr(expr: &Expr) -> bool {
 fn is_empty_plain_list_expr(expr: &Expr) -> bool {
     matches!(
         expr,
-        Expr::Call { head, args, .. }
+        Expr::Call { head, args }
             if is_system_symbol_name(head, heads::structure::LIST) && args.is_empty()
     )
 }

@@ -924,7 +924,7 @@ fn gather_by_key(decorated: Vec<KeyedEntry>) -> Vec<Expr> {
 }
 
 fn normal_call_parts(expr: &Expr) -> Option<(Expr, Vec<Expr>)> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 

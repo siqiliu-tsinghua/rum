@@ -292,7 +292,7 @@ fn expr_transport_bytes(expr: &Expr) -> (Vec<u8>, Expr) {
 }
 
 fn expr_as_byte_array_bytes(expr: &Expr) -> Option<Vec<u8>> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
     if !is_system_symbol_name(head, "ByteArray") || args.len() != 1 {

@@ -397,7 +397,7 @@ fn uncaught_exception_failure(error: &EvalError) -> Expr {
     let EvalError::ExceptionThrown { exception } = error else {
         unreachable!("uncaught exception failures require ExceptionThrown")
     };
-    let Expr::Call { head, args, .. } = exception else {
+    let Expr::Call { head, args } = exception else {
         unreachable!("ExceptionThrown must carry an Exception object")
     };
     assert!(is_system_symbol_name(head, "Exception") && args.len() == 2);

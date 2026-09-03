@@ -363,7 +363,7 @@ pub(in crate::runtime::debug_tools::resources) fn expr_memory_proxy_bytes(expr: 
         Expr::Atom(Atom::Symbol(symbol)) => {
             std::mem::size_of::<Expr>().saturating_add(symbol.context().len() + symbol.name().len())
         }
-        Expr::Call { head, args, .. }
+        Expr::Call { head, args }
             if is_system_symbol_name(head, "ByteArray") && args.len() == 1 =>
         {
             // ByteArray physically owns base64 text in an Expr::String. Validate
@@ -388,7 +388,7 @@ pub(in crate::runtime::debug_tools::resources) fn expr_memory_proxy_bytes(expr: 
                 )
                 .saturating_add(payload_bytes)
         }
-        Expr::Call { head, args, .. } => {
+        Expr::Call { head, args } => {
             let mut total = std::mem::size_of::<Expr>()
                 .saturating_add(expr_memory_proxy_bytes(head))
                 .saturating_add(

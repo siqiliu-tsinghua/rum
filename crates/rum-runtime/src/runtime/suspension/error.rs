@@ -5,7 +5,7 @@ fn tagged(name: &'static str, args: Vec<Expr>) -> Expr {
 }
 
 fn tagged_args(expr: Expr, name: &'static str) -> std::vec::IntoIter<Expr> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         panic!("unexpected {name} error-continuation payload")
     };
     assert!(
@@ -144,7 +144,7 @@ fn syntax_error_into_expr(error: SyntaxError) -> Expr {
 }
 
 fn syntax_error_from_expr(expr: Expr) -> SyntaxError {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         panic!("unexpected syntax-error continuation payload")
     };
     let mut args = args.into_iter();
@@ -393,7 +393,7 @@ impl ContinuationValue for EvalError {
     }
 
     fn from_continuation_expr(expr: Expr) -> Self {
-        let Expr::Call { head, args, .. } = expr else {
+        let Expr::Call { head, args } = expr else {
             panic!("unexpected evaluation-error continuation payload")
         };
         let mut args = args.into_iter();
@@ -624,7 +624,7 @@ pub(in crate::runtime) fn result_into_continuation_expr(outcome: Result<Expr, Ev
 }
 
 pub(in crate::runtime) fn result_from_continuation_expr(expr: Expr) -> Result<Expr, EvalError> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         panic!("unexpected evaluation-result continuation payload")
     };
     let mut args = args.into_iter();

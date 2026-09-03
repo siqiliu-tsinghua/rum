@@ -165,7 +165,7 @@ pub(in crate::runtime) fn format_message_arg_placeholder(
 fn format_message_default_fragment(arg: &Expr) -> String {
     match arg {
         Expr::Atom(Atom::String(value)) => value.clone(),
-        Expr::Call { head, args, .. }
+        Expr::Call { head, args }
             if (is_system_symbol_name(head, "HoldForm")
                 || is_system_symbol_name(head, "HoldCompleteForm")
                 || is_system_symbol_name(head, "Defer")

@@ -43,7 +43,7 @@ pub(crate) fn eval_operate(
 }
 
 fn through_expression(expr: &Expr, target: Option<&Expr>) -> Expr {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return expr.clone();
     };
 
@@ -59,7 +59,7 @@ fn through_head_expression(
     call_args: &[Expr],
     target: Option<&Expr>,
 ) -> Option<(Expr, bool)> {
-    let Expr::Call { head, args, .. } = head_expr else {
+    let Expr::Call { head, args } = head_expr else {
         return None;
     };
 
@@ -99,7 +99,7 @@ fn operate_on_head_level(expr: &Expr, operator: &Expr, level: usize) -> Expr {
     }
 
     match expr {
-        Expr::Call { head, args, .. } => {
+        Expr::Call { head, args } => {
             if level == 1 {
                 Expr::call_with_shared_args(
                     Expr::call(operator.clone(), vec![head.as_ref().clone()]),

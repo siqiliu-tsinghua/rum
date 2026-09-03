@@ -111,7 +111,7 @@ fn recursive_pattern_region(region: DefinitionLhsRegion) -> DefinitionLhsRegion 
 pub(in crate::runtime::definitions) fn definition_lhs_contains_pattern_syntax(expr: &Expr) -> bool {
     match expr {
         Expr::Atom(_) => false,
-        Expr::Call { head, args, .. } => {
+        Expr::Call { head, args } => {
             matcher_pattern_head(head).is_some()
                 || definition_lhs_contains_pattern_syntax(head)
                 || args.iter().any(definition_lhs_contains_pattern_syntax)
@@ -177,7 +177,7 @@ mod tests {
             );
 
             assert!(definition_lhs_contains_pattern_syntax(&expr));
-            let Expr::Call { head, args, .. } = expr else {
+            let Expr::Call { head, args } = expr else {
                 unreachable!();
             };
             assert!(

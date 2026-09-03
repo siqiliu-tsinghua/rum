@@ -21,7 +21,6 @@ pub(crate) fn eval_association(
             Expr::Call {
                 head: list_head,
                 args: items,
-                ..
             },
         ] if is_system_symbol_name(list_head, heads::structure::LIST) => items.clone(),
         _ => args.clone(),
@@ -553,7 +552,7 @@ fn normalize_association_expr(expr: &Expr) -> Expr {
     }
 
     match expr {
-        Expr::Call { head, args, .. } => Expr::call(
+        Expr::Call { head, args } => Expr::call(
             (**head).clone(),
             args.iter().map(normalize_association_expr).collect(),
         ),
@@ -743,7 +742,7 @@ fn lookup_entries_outcome(entries: &PreparedLookupEntries, key_spec: &Expr) -> P
 
 fn lookup_key_expr(key_spec: &Expr) -> &Expr {
     match key_spec {
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Key") && args.len() == 1 => {
+        Expr::Call { head, args } if is_system_symbol_name(head, "Key") && args.len() == 1 => {
             &args[0]
         }
         _ => key_spec,

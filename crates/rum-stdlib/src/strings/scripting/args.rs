@@ -13,7 +13,6 @@ pub(crate) fn eval_parse_args(
     let Expr::Call {
         head: items_head,
         args: item_exprs,
-        ..
     } = items
     else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
@@ -201,7 +200,7 @@ fn parse_args(items: Vec<String>, short_options: bool) -> ParsedArgs {
 }
 
 fn option_rule(expr: &Expr) -> Option<(&str, &Expr)> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
     if !(is_system_symbol_name(head, "Rule") || is_system_symbol_name(head, "RuleDelayed"))

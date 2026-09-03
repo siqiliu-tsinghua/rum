@@ -94,7 +94,6 @@ impl Session {
         let Expr::Call {
             head: key_head,
             args: key_args,
-            ..
         } = head
         else {
             return None;

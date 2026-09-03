@@ -331,7 +331,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueReplaceAtSetupFrame
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
         let resumed = outcome.and_then(|payload| {
-            let Expr::Call { head, args, .. } = payload else {
+            let Expr::Call { head, args } = payload else {
                 panic!("unexpected ReplaceAt setup continuation payload")
             };
             let mut args = args.into_iter();

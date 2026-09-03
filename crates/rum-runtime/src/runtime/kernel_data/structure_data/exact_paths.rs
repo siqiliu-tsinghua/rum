@@ -12,7 +12,7 @@ pub(super) fn exact_position_paths_from_expr(
         ));
     }
 
-    let Expr::Call { head, args, .. } = spec_expr else {
+    let Expr::Call { head, args } = spec_expr else {
         return None;
     };
 
@@ -185,15 +185,18 @@ pub(super) fn replace_exact_path(expr: Expr, path: &[isize], rhs: Expr) -> Expr 
 
     match expr {
         Expr::Atom(_) => expr,
-        Expr::Call { head, args, .. } => {
+        Expr::Call { head, args } => {
             let Some(index) = normalize_structural_arg_position(*first, args.len()) else {
-                return Expr::call_shared(head, args);
+                return Expr::Call { head, args };
             };
 
             let mut args = Expr::unwrap_shared_args(args);
             let replaced_child = replace_exact_path(args[index].clone(), rest, rhs);
             args[index] = replaced_child;
-            Expr::call_shared(head, SharedArgs::new(args))
+            Expr::Call {
+                head,
+                args: SharedArgs::new(args),
+            }
         }
     }
 }

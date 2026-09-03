@@ -398,7 +398,7 @@ fn parse_check_abort_propagation_source_expr(
     evaluate_rule_rhs: bool,
     source: &mut Option<CheckAbortPropagationSource>,
 ) -> Result<(), CheckAbortOptionError> {
-    let Expr::Call { head, args, .. } = option_expr else {
+    let Expr::Call { head, args } = option_expr else {
         return Err(CheckAbortOptionError::NonOption(option_expr.clone()));
     };
 

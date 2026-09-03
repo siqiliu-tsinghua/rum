@@ -5,7 +5,7 @@ fn tagged(name: &'static str, args: Vec<Expr>) -> Expr {
 }
 
 fn tagged_args(expr: Expr, name: &'static str) -> Vec<Expr> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         panic!("unexpected {name} continuation payload")
     };
     assert!(
@@ -121,7 +121,7 @@ pub(in crate::runtime) fn matcher_node_into_continuation_expr(matcher: MatcherNo
 }
 
 pub(in crate::runtime) fn matcher_node_from_continuation_expr(expr: Expr) -> MatcherNode {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         panic!("unexpected matcher continuation payload")
     };
     let mut args = args.into_iter();
@@ -261,7 +261,7 @@ pub(in crate::runtime) fn matcher_arg_into_continuation_expr(arg: MatcherArg) ->
 }
 
 pub(in crate::runtime) fn matcher_arg_from_continuation_expr(expr: Expr) -> MatcherArg {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         panic!("unexpected matcher-argument continuation payload")
     };
     let mut args = args.into_iter();
@@ -348,7 +348,7 @@ pub(in crate::runtime) fn sequence_pattern_from_continuation_expr(
     )
     .into_iter()
     .map(|check| {
-        let Expr::Call { head, args, .. } = check else {
+        let Expr::Call { head, args } = check else {
             panic!("unexpected sequence-check continuation payload")
         };
         let mut args = args.into_iter();
@@ -412,7 +412,7 @@ pub(in crate::runtime) fn optional_pattern_from_continuation_expr(
     ));
     let default = args.next().expect("optional pattern stores its default");
     debug_assert!(args.next().is_none());
-    let Expr::Call { head, args, .. } = default else {
+    let Expr::Call { head, args } = default else {
         panic!("unexpected optional-default continuation payload")
     };
     let mut args = args.into_iter();

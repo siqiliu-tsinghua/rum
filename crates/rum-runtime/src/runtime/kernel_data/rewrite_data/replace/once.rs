@@ -332,7 +332,7 @@ impl Session {
                 depth: 1,
                 changed: false,
             }),
-            Expr::Call { head, args, .. } if is_system_symbol_name(&head, "Association") => {
+            Expr::Call { head, args } if is_system_symbol_name(&head, "Association") => {
                 let head = head.into_owned();
                 let args = args.into_vec();
                 if include_heads {
@@ -380,7 +380,7 @@ impl Session {
                     )
                 }
             }
-            Expr::Call { head, args, .. } => {
+            Expr::Call { head, args } => {
                 let head = head.into_owned();
                 let args = args.into_vec();
                 if include_heads {
@@ -535,7 +535,6 @@ impl Session {
                     Some(Expr::Call {
                         head: rule_head,
                         args: rule_args,
-                        ..
                     }) if is_system_symbol_name(rule_head, "Rule") && rule_args.len() == 2 => {
                         rebuilt_entries.push(Expr::call(
                             system_expr("Rule"),
@@ -563,7 +562,6 @@ impl Session {
                 Expr::Call {
                     head: rule_head,
                     args: rule_args,
-                    ..
                 } if is_system_symbol_name(&rule_head, "Rule") && rule_args.len() == 2 => {
                     Expr::unwrap_shared_args(rule_args)
                         .pop()
@@ -642,7 +640,7 @@ impl Session {
                 let child_changed = outcome.changed;
                 let appended_depth = if child_changed {
                     match outcome.expr {
-                        Expr::Call { head, args, .. }
+                        Expr::Call { head, args }
                             if is_system_symbol_name(&head, heads::functions::SEQUENCE)
                                 && !self.attribute_set_for_head(&state.head).sequence_hold() =>
                         {
@@ -741,7 +739,6 @@ impl Session {
                     Some(Expr::Call {
                         head: rule_head,
                         args: rule_args,
-                        ..
                     }) if is_system_symbol_name(rule_head, "Rule") && rule_args.len() == 2 => {
                         Expr::call(
                             system_expr("Rule"),
@@ -768,7 +765,6 @@ impl Session {
                 Expr::Call {
                     head: rule_head,
                     args: rule_args,
-                    ..
                 } if is_system_symbol_name(&rule_head, "Rule") && rule_args.len() == 2 => {
                     Expr::unwrap_shared_args(rule_args)
                         .pop()
@@ -833,7 +829,7 @@ fn replace_expr_depth_with_heads(expr: &Expr) -> usize {
                 .unwrap_or(0);
             1 + 1.max(value_depth).max(replace_expr_depth_with_heads(head))
         }
-        Expr::Call { head, args, .. } => {
+        Expr::Call { head, args } => {
             let args_depth = args
                 .iter()
                 .map(replace_expr_depth_with_heads)
@@ -871,7 +867,7 @@ fn partition_replace_trailing_args(args: &[Expr]) -> Option<(Option<Expr>, Vec<E
 }
 
 fn is_system_option_rule(expr: &Expr, option_name: &str) -> bool {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return false;
     };
 

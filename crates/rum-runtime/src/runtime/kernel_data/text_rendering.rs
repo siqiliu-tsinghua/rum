@@ -36,7 +36,7 @@ pub fn render_to_string_expr(expr: &Expr, format: ToStringFormat) -> String {
 }
 
 fn is_flat_generic_call(expr: &Expr) -> bool {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return false;
     };
     expr_as_symbol(head).is_some_and(|symbol| symbol.context() != SYSTEM_CONTEXT)
@@ -79,7 +79,7 @@ fn schedule_render_expr(
     parent_precedence: u8,
     rendered: &mut String,
 ) {
-    let Expr::Call { head, args, .. } = &expr else {
+    let Expr::Call { head, args } = &expr else {
         rendered.push_str(&expr.to_string());
         return;
     };
@@ -383,7 +383,7 @@ fn transparent_hold_form_expr(expr: &Expr) -> Option<Expr> {
                 }
                 match expr {
                     Expr::Atom(_) => completed.push(expr),
-                    Expr::Call { head, args, .. } => {
+                    Expr::Call { head, args } => {
                         work.push(Work::FinishCall(args.len()));
                         for arg in args.iter().rev() {
                             work.push(Work::Visit(arg.clone()));
@@ -413,7 +413,7 @@ fn transparent_hold_form_expr(expr: &Expr) -> Option<Expr> {
 }
 
 fn transparent_hold_form_arg(expr: &Expr) -> Option<&Expr> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 
@@ -421,7 +421,7 @@ fn transparent_hold_form_arg(expr: &Expr) -> Option<&Expr> {
 }
 
 fn named_blank_pattern_parts(expr: &Expr) -> Option<(Expr, &'static str, Option<Expr>)> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
     if !is_system_symbol_name(head, heads::patterns::PATTERN) || args.len() != 2 {
@@ -431,7 +431,6 @@ fn named_blank_pattern_parts(expr: &Expr) -> Option<(Expr, &'static str, Option<
     let Expr::Call {
         head: blank_head,
         args: blank_args,
-        ..
     } = &args[1]
     else {
         return None;

@@ -60,7 +60,6 @@ impl Session {
                 let Expr::Call {
                     head: value_head,
                     args: value_args,
-                    ..
                 } = candidate
                 else {
                     return true;
@@ -167,7 +166,6 @@ impl Session {
                 let Expr::Call {
                     head: value_head,
                     args: value_args,
-                    ..
                 } = value
                 else {
                     return Some(false);
@@ -254,12 +252,10 @@ impl Session {
                 Expr::Call {
                     head: pattern_head,
                     args: pattern_args,
-                    ..
                 },
                 Expr::Call {
                     head: value_head,
                     args: value_args,
-                    ..
                 },
             ) => {
                 if Self::pattern_args_may_have_variable_arity(pattern_args) {

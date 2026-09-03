@@ -167,7 +167,7 @@ impl Session {
             return Some((vec![pattern], names_pattern_mentions_context(expr)));
         }
 
-        let Expr::Call { head, args, .. } = expr else {
+        let Expr::Call { head, args } = expr else {
             return None;
         };
 
@@ -335,7 +335,7 @@ fn compile_names_pattern(expr: &Expr) -> Option<NamesPattern> {
         return Some(NamesPattern::Wildcard(value.clone()));
     }
 
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 

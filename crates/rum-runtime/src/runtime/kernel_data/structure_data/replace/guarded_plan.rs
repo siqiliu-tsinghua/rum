@@ -85,7 +85,7 @@ fn append_guarded_replace_part_exact_targets_inner(
             }
         }
         PartSelector::Single(AtomicPartSpec::All) => {
-            if let Expr::Call { head, args, .. } = expr {
+            if let Expr::Call { head, args } = expr {
                 if matches!(heads, ReplacePartHeadsMode::Include) {
                     visit(&[0], head);
                 }
@@ -136,7 +136,7 @@ fn append_guarded_replace_part_pattern_candidates_inner(
     path: Vec<isize>,
     targets: &mut Vec<GuardedReplacePartTarget>,
 ) {
-    if let Expr::Call { head, args, .. } = expr {
+    if let Expr::Call { head, args } = expr {
         if include_heads {
             let mut head_path = path.clone();
             head_path.push(0);

@@ -14,13 +14,13 @@ pub(in crate::runtime) struct CompositionSpec<'a> {
 
 pub(in crate::runtime) fn parse_composition(expr: &Expr) -> Option<CompositionSpec<'_>> {
     match expr {
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Composition") => {
+        Expr::Call { head, args } if is_system_symbol_name(head, "Composition") => {
             Some(CompositionSpec {
                 direction: CompositionDirection::Left,
                 functions: args.iter().collect(),
             })
         }
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "RightComposition") => {
+        Expr::Call { head, args } if is_system_symbol_name(head, "RightComposition") => {
             Some(CompositionSpec {
                 direction: CompositionDirection::Right,
                 functions: args.iter().collect(),
@@ -247,7 +247,7 @@ fn apply_comparison_operator_wrapper_to_args(head: &Expr, args: &[Expr]) -> Opti
 }
 
 fn parse_comparison_operator_wrapper(expr: &Expr) -> Option<ComparisonOperatorSpec<'_>> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
     let [bound] = args.as_slice() else {
@@ -309,7 +309,7 @@ fn apply_curried_operator_wrapper_to_args(head: &Expr, args: &[Expr]) -> Option<
 
 fn parse_curried_operator(expr: &Expr) -> Option<CurriedOperatorSpec<'_>> {
     match expr {
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "OperatorApplied") => {
+        Expr::Call { head, args } if is_system_symbol_name(head, "OperatorApplied") => {
             match args.as_slice() {
                 [function] => Some(CurriedOperatorSpec {
                     kind: CurriedOperatorKind::OperatorApplied,
@@ -341,7 +341,7 @@ fn parse_curried_operator(expr: &Expr) -> Option<CurriedOperatorSpec<'_>> {
                 _ => None,
             }
         }
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "CurryApplied") => {
+        Expr::Call { head, args } if is_system_symbol_name(head, "CurryApplied") => {
             match args.as_slice() {
                 [function, spec] => {
                     let (arity, order) = parse_curried_operator_spec(spec)?;
@@ -381,7 +381,7 @@ fn parse_curried_operator_spec(spec: &Expr) -> Option<(usize, Vec<usize>)> {
     }
 
     match spec {
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Rule") && args.len() == 2 => {
+        Expr::Call { head, args } if is_system_symbol_name(head, "Rule") && args.len() == 2 => {
             let arity = expr_as_non_negative_usize(&args[0])?;
             let order = expr_as_index_list(&args[1])?;
             if order.iter().any(|index| *index >= arity) {
@@ -505,7 +505,7 @@ fn apply_reverse_applied_wrapper_to_args(head: &Expr, args: &[Expr]) -> Option<E
 
 fn parse_reverse_applied_wrapper(expr: &Expr) -> Option<ReverseAppliedSpec<'_>> {
     match expr {
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "ReverseApplied") => {
+        Expr::Call { head, args } if is_system_symbol_name(head, "ReverseApplied") => {
             match args.as_slice() {
                 [function] => Some(ReverseAppliedSpec {
                     function,
@@ -554,7 +554,7 @@ fn apply_nearest_to_wrapper_to_args(head: &Expr, args: &[Expr]) -> Option<Expr> 
 }
 
 fn parse_nearest_to_wrapper(expr: &Expr) -> Option<NearestToSpec<'_>> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
     if !is_system_symbol_name(head, "NearestTo") {
@@ -579,7 +579,7 @@ fn is_nearest_to_selection_spec(expr: &Expr) -> bool {
         return true;
     }
 
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return false;
     };
     if !is_system_symbol_name(head, heads::structure::LIST) {
@@ -639,7 +639,7 @@ fn invalid_mutation_operator_wrapper_argx_symbol(
 }
 
 fn parse_mutation_operator_wrapper(expr: &Expr) -> Option<MutationOperatorSpec<'_>> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
     let [value] = args.as_slice() else {
@@ -699,7 +699,7 @@ fn invalid_schema_operator_wrapper_argx_symbol(head: &Expr, args: &[Expr]) -> Op
 }
 
 fn parse_schema_operator_wrapper(expr: &Expr) -> Option<SchemaOperatorSpec<'_>> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
     let [schema] = args.as_slice() else {
@@ -748,7 +748,7 @@ fn invalid_string_unary_operator_wrapper_argx_symbol(
 }
 
 fn parse_string_unary_operator_wrapper(expr: &Expr) -> Option<StringUnaryOperatorSpec<'_>> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
     if args.is_empty() {
@@ -814,7 +814,7 @@ fn invalid_structure_operator_wrapper_argx_symbol(
 }
 
 fn parse_structure_operator_wrapper(expr: &Expr) -> Option<StructureOperatorSpec<'_>> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 
@@ -880,7 +880,7 @@ fn invalid_predicate_operator_wrapper_argx_symbol(
 }
 
 fn parse_predicate_operator_wrapper(expr: &Expr) -> Option<PredicateOperatorSpec<'_>> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 
@@ -943,7 +943,7 @@ fn invalid_rewrite_operator_wrapper_argx_symbol(
 }
 
 fn parse_rewrite_operator_wrapper(expr: &Expr) -> Option<RewriteOperatorSpec<'_>> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 
@@ -976,12 +976,10 @@ fn expr_as_positive_usize(expr: &Expr) -> Option<usize> {
 
 fn parse_key_wrapper(expr: &Expr) -> Option<&Expr> {
     match expr {
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Key") => {
-            match args.as_slice() {
-                [key] => Some(key),
-                _ => None,
-            }
-        }
+        Expr::Call { head, args } if is_system_symbol_name(head, "Key") => match args.as_slice() {
+            [key] => Some(key),
+            _ => None,
+        },
         _ => None,
     }
 }

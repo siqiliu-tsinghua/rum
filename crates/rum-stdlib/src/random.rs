@@ -96,7 +96,6 @@ pub(crate) fn eval_random_choice(
     if let Expr::Call {
         head: rule_head,
         args: rule_args,
-        ..
     } = list
     {
         if is_system_symbol_name(rule_head, "Rule") && rule_args.len() == 2 {

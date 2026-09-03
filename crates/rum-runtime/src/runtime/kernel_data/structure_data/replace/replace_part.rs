@@ -497,7 +497,7 @@ impl Session {
                     Ok(expr)
                 }
             }
-            Expr::Call { head, args, .. } => {
+            Expr::Call { head, args } => {
                 let mut replaced_head = head.as_ref().clone();
                 if let Some(head_plan) = plan.children.remove(&0) {
                     replaced_head = self.apply_replace_plan_owned(replaced_head, head_plan)?;

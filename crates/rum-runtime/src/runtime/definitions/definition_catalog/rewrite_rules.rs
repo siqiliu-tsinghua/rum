@@ -282,7 +282,7 @@ impl Session {
         expr: &Expr,
     ) -> Option<Vec<RewriteRule>> {
         match expr {
-            Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => args
+            Expr::Call { head, args } if is_system_symbol_name(head, "List") => args
                 .iter()
                 .map(|item| self.compile_rewrite_rule_for_matching(item))
                 .collect(),

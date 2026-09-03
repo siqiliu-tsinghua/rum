@@ -31,7 +31,7 @@ impl Session {
 
 pub(in crate::runtime) fn parse_message_selectors(expr: &Expr) -> Option<Vec<MessageSelector>> {
     match expr {
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => args
+        Expr::Call { head, args } if is_system_symbol_name(head, "List") => args
             .iter()
             .map(parse_message_selector_item)
             .collect::<Option<Vec<_>>>(),
@@ -81,7 +81,7 @@ pub(in crate::runtime) fn parse_message_selector_string(spec: &str) -> Option<Me
 }
 
 pub(in crate::runtime) fn message_name_key_from_expr(expr: &Expr) -> Option<MessageNameKey> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 

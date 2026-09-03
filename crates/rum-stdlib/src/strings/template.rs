@@ -116,7 +116,7 @@ fn expr_as_template_source(expr: &Expr) -> Option<&str> {
         return Some(template);
     }
 
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 
@@ -275,7 +275,7 @@ fn template_rule_entries(expr: &Expr) -> Option<Vec<(Expr, Expr)>> {
 }
 
 fn parse_template_rule(expr: &Expr) -> Option<(Expr, Expr)> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 

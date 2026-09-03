@@ -115,7 +115,7 @@ fn structural_length(expr: &Expr) -> usize {
 fn structural_depth(expr: &Expr, include_heads: bool) -> usize {
     match expr {
         Expr::Atom(_) => 1,
-        Expr::Call { head, args, .. } => {
+        Expr::Call { head, args } => {
             if let Some(entries) = association_entries_from_expr(expr) {
                 let head_depth = include_heads
                     .then(|| structural_depth(head, true))
@@ -144,7 +144,7 @@ fn structural_depth(expr: &Expr, include_heads: bool) -> usize {
 fn structural_leaf_count(expr: &Expr) -> usize {
     match expr {
         Expr::Atom(_) => 1,
-        Expr::Call { head, args, .. } => {
+        Expr::Call { head, args } => {
             structural_leaf_count(head) + args.iter().map(structural_leaf_count).sum::<usize>()
         }
     }

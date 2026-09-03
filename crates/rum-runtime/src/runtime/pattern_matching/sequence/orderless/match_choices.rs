@@ -42,7 +42,7 @@ impl OrderlessChoiceState {
     }
 
     fn from_continuation_expr(expr: Expr) -> Self {
-        let Expr::Call { head, args, .. } = expr else {
+        let Expr::Call { head, args } = expr else {
             panic!("unexpected orderless-choice continuation payload")
         };
         assert!(
@@ -64,7 +64,6 @@ impl OrderlessChoiceState {
         let Expr::Call {
             head: choices_head,
             args: choices,
-            ..
         } = choices_expr
         else {
             panic!("unexpected orderless-candidate continuation payload")
@@ -76,7 +75,7 @@ impl OrderlessChoiceState {
         let choices = choices
             .into_iter()
             .map(|choice| {
-                let Expr::Call { head, args, .. } = choice else {
+                let Expr::Call { head, args } = choice else {
                     panic!("unexpected orderless-candidate continuation entry")
                 };
                 assert!(
@@ -375,7 +374,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueOrderlessChoicePatt
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
         let resumed = outcome.and_then(|payload| {
-            let Expr::Call { head, args, .. } = payload else {
+            let Expr::Call { head, args } = payload else {
                 panic!("unexpected orderless-choice-pattern continuation payload")
             };
             assert!(
@@ -454,7 +453,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueOrderlessChoiceRest
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
         let resumed = outcome.and_then(|payload| {
-            let Expr::Call { head, args, .. } = payload else {
+            let Expr::Call { head, args } = payload else {
                 panic!("unexpected orderless-choice-rest continuation payload")
             };
             assert!(

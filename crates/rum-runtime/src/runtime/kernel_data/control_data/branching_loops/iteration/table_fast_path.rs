@@ -123,7 +123,7 @@ fn iterator_integer_list_template(
         return None;
     }
 
-    let Expr::Call { head, args, .. } = body else {
+    let Expr::Call { head, args } = body else {
         return None;
     };
     if !is_system_symbol_name(head, "List")
@@ -186,7 +186,7 @@ fn iterator_integer_plus_offset(session: &Session, body: &Expr, symbol: &Symbol)
         return None;
     }
 
-    let Expr::Call { head, args, .. } = body else {
+    let Expr::Call { head, args } = body else {
         return None;
     };
     if !is_system_symbol_name(head, "Plus") || args.len() != 2 {

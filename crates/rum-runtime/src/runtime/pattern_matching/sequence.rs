@@ -241,7 +241,7 @@ impl FlatSingleCollectionState {
 }
 
 fn flat_single_state_payload(expr: Expr, tag: &'static str) -> std::vec::IntoIter<Expr> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         panic!("unexpected {tag} continuation payload")
     };
     assert!(

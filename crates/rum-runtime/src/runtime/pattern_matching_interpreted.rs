@@ -161,7 +161,6 @@ impl Session {
             Expr::Call {
                 head: value_head,
                 args: value_args,
-                ..
             } => {
                 let head_expr = head.clone();
                 let value_head = value_head.into_owned();
@@ -431,7 +430,7 @@ impl Session {
             (Expr::Atom(lhs), Expr::Atom(rhs)) => {
                 Ok(interpreted_match_outcome(lhs == rhs, bindings))
             }
-            (Expr::Call { head, args, .. }, value) => self.match_call_interpreted_owned(
+            (Expr::Call { head, args }, value) => self.match_call_interpreted_owned(
                 head.into_owned(),
                 args.into_vec(),
                 value,
@@ -620,7 +619,7 @@ impl PureFrameFinalizer for PrepareInterpretedExceptFinalizer {
 fn decode_prepared_interpreted_except(
     prepared: Expr,
 ) -> (Expr, Expr, SymbolExprMap, CompiledMatchOutcome) {
-    let Expr::Call { head, args, .. } = prepared else {
+    let Expr::Call { head, args } = prepared else {
         panic!("prepared interpreted Except payload should be a call")
     };
     assert!(is_system_symbol_name(&head, "InternalInterpretedExcept"));
@@ -753,7 +752,7 @@ enum PreparedInterpretedCall {
 }
 
 fn decode_prepared_interpreted_call(prepared: Expr) -> PreparedInterpretedCall {
-    let Expr::Call { head, args, .. } = prepared else {
+    let Expr::Call { head, args } = prepared else {
         panic!("prepared interpreted call payload should be a call")
     };
     let mut args = args.into_iter();
@@ -872,7 +871,7 @@ enum PreparedInterpretedAlternative {
 }
 
 fn decode_prepared_interpreted_alternative(prepared: Expr) -> PreparedInterpretedAlternative {
-    let Expr::Call { head, args, .. } = prepared else {
+    let Expr::Call { head, args } = prepared else {
         panic!("prepared interpreted alternative payload should be a call")
     };
     let mut args = args.into_iter();

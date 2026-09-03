@@ -307,7 +307,7 @@ fn same_test_option_entries(expr: &Expr) -> Option<Vec<Expr>> {
         return Some(vec![expr.clone()]);
     }
 
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
     if !is_system_symbol_name(head, heads::structure::LIST) || args.is_empty() {
@@ -323,7 +323,7 @@ fn same_test_option_entries(expr: &Expr) -> Option<Vec<Expr>> {
 }
 
 fn same_test_option_rule_value(expr: &Expr) -> Option<&Expr> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
     if !(is_system_symbol_name(head, "Rule") || is_system_symbol_name(head, "RuleDelayed"))

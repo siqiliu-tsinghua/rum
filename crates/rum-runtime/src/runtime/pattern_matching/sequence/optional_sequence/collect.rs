@@ -36,7 +36,7 @@ impl SequenceChoiceCollectionState {
     }
 
     fn from_continuation_expr(expr: Expr) -> Self {
-        let Expr::Call { head, args, .. } = expr else {
+        let Expr::Call { head, args } = expr else {
             panic!("unexpected sequence-choice-collection continuation payload")
         };
         assert!(
@@ -70,7 +70,6 @@ impl SequenceChoiceCollectionState {
         let Expr::Call {
             head: consumes_head,
             args: consumes,
-            ..
         } = consumes_expr
         else {
             panic!("unexpected sequence candidate-length continuation payload")
@@ -379,7 +378,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueSequenceChoiceColle
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
         let resumed = outcome.and_then(|payload| {
-            let Expr::Call { head, args, .. } = payload else {
+            let Expr::Call { head, args } = payload else {
                 panic!("unexpected sequence-choice-collection continuation payload")
             };
             let is_pattern =

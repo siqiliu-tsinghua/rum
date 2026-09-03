@@ -63,7 +63,7 @@ impl Polynomial {
         }
 
         match expr {
-            Expr::Call { head, args, .. } if is_system_symbol_name(head, "Plus") => {
+            Expr::Call { head, args } if is_system_symbol_name(head, "Plus") => {
                 let mut terms = Vec::new();
 
                 for arg in args {
@@ -72,7 +72,7 @@ impl Polynomial {
 
                 Some(Self::from_normalized_terms(terms))
             }
-            Expr::Call { head, args, .. } if is_system_symbol_name(head, "Times") => {
+            Expr::Call { head, args } if is_system_symbol_name(head, "Times") => {
                 let mut monomial_terms = Vec::new();
                 let mut polynomial = None;
 
@@ -97,7 +97,7 @@ impl Polynomial {
                     Self::from_normalized_terms(vec![Term::multiply_many(monomial_terms.iter())])
                 }))
             }
-            Expr::Call { head, args, .. }
+            Expr::Call { head, args }
                 if is_system_symbol_name(head, "Power") && args.len() == 2 =>
             {
                 if let Some(exponent) = expr_as_non_negative_usize(&args[1]) {

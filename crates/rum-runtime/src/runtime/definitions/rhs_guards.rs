@@ -23,7 +23,7 @@ pub fn split_definition_rhs_guards(rhs: Expr) -> (Expr, Box<[Expr]>) {
 
 fn flatten_condition_terms(expr: Expr, terms: &mut Vec<Expr>) {
     match expr {
-        Expr::Call { head, args, .. }
+        Expr::Call { head, args }
             if is_system_symbol_name(&head, heads::patterns::CONDITION) && args.len() == 2 =>
         {
             let mut args = args.into_iter();

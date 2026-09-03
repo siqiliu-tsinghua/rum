@@ -19,7 +19,7 @@ impl OrderlessCandidateChoice {
     }
 
     pub(super) fn from_continuation_expr(expr: Expr) -> Self {
-        let Expr::Call { head, args, .. } = expr else {
+        let Expr::Call { head, args } = expr else {
             panic!("unexpected orderless-candidate continuation payload")
         };
         assert!(

@@ -76,7 +76,10 @@ impl Session {
 
             let updated_head = head.clone();
             let updated_args = args.clone();
-            let updated = Expr::call_shared(updated_head.clone(), updated_args.clone());
+            let updated = Expr::Call {
+                head: updated_head.clone(),
+                args: updated_args.clone(),
+            };
             value_guard.commit();
             (updated_head, updated_args, updated)
         };
@@ -98,7 +101,7 @@ impl Session {
             .get(target)
             .and_then(|definition| definition.own_value.as_ref())?;
         let Some(selector_exprs) = selector_exprs else {
-            let Expr::Call { head, args, .. } = current else {
+            let Expr::Call { head, args } = current else {
                 return None;
             };
             return is_system_symbol_name(head, heads::structure::LIST).then(|| {
@@ -122,7 +125,7 @@ impl Session {
         let mut normalized_path = Vec::with_capacity(path.len());
         let mut ancestor_cache_keys = Vec::with_capacity(path.len());
         for &component in path {
-            let Expr::Call { head, args, .. } = selected else {
+            let Expr::Call { head, args } = selected else {
                 return None;
             };
             if !is_system_symbol_name(head, heads::structure::LIST) {
@@ -134,7 +137,7 @@ impl Session {
             ancestor_cache_keys.push(CallStabilityCacheKey::new(head, args));
         }
 
-        let Expr::Call { head, args, .. } = selected else {
+        let Expr::Call { head, args } = selected else {
             return None;
         };
         if !is_system_symbol_name(head, heads::structure::LIST) {
@@ -184,7 +187,7 @@ fn incremental_append_target(
         return Some((*target, None));
     }
 
-    let Expr::Call { head, args, .. } = target_expr else {
+    let Expr::Call { head, args } = target_expr else {
         return None;
     };
     if !is_system_symbol_name(head, "Part") || args.len() < 2 {
@@ -202,7 +205,7 @@ fn exact_plain_list_leaf_mut<'a>(
 ) -> Option<(&'a SharedExpr, &'a mut SharedArgs)> {
     let mut selected = root;
     for &index in path {
-        let Expr::Call { head, args, .. } = selected else {
+        let Expr::Call { head, args } = selected else {
             return None;
         };
         if !is_system_symbol_name(head, heads::structure::LIST) {
@@ -211,7 +214,7 @@ fn exact_plain_list_leaf_mut<'a>(
         selected = args.make_mut().get_mut(index)?;
     }
 
-    let Expr::Call { head, args, .. } = selected else {
+    let Expr::Call { head, args } = selected else {
         return None;
     };
     is_system_symbol_name(head, heads::structure::LIST).then_some((head, args))

@@ -30,7 +30,7 @@ impl Session {
             return expr.clone();
         }
 
-        let Expr::Call { head, args, .. } = expr else {
+        let Expr::Call { head, args } = expr else {
             return expr.clone();
         };
         let normalized_head = self.normalize_match_expr_changed(head);
@@ -58,7 +58,7 @@ impl Session {
     ) -> Option<Expr> {
         match expr {
             Expr::Atom(_) => None,
-            Expr::Call { head, args, .. } => self.normalize_match_call_changed_recursive_bounded(
+            Expr::Call { head, args } => self.normalize_match_call_changed_recursive_bounded(
                 head,
                 args,
                 remaining_call_depth,
@@ -73,7 +73,10 @@ impl Session {
         remaining_call_depth: usize,
     ) -> Option<Expr> {
         if remaining_call_depth == 0 {
-            let expr = Expr::call_shared(head.clone(), args.clone());
+            let expr = Expr::Call {
+                head: head.clone(),
+                args: args.clone(),
+            };
             return self.normalize_match_expr_changed_iterative(&expr);
         }
         let child_call_depth = remaining_call_depth - 1;
@@ -82,7 +85,6 @@ impl Session {
             Expr::Call {
                 head: child_head,
                 args: child_args,
-                ..
             } => self.normalize_match_call_changed_recursive_bounded(
                 child_head,
                 child_args,
@@ -110,12 +112,11 @@ impl Session {
         for (index, arg) in args.iter().enumerate() {
             let normalized_arg = match arg {
                 Expr::Atom(_) => None,
-                Expr::Call { head, args, .. } => self
-                    .normalize_match_call_changed_recursive_bounded(
-                        head,
-                        args,
-                        remaining_call_depth,
-                    ),
+                Expr::Call { head, args } => self.normalize_match_call_changed_recursive_bounded(
+                    head,
+                    args,
+                    remaining_call_depth,
+                ),
             };
             append_normalized_arg(args, index, arg, normalized_arg, &mut normalized_args);
         }
@@ -132,7 +133,7 @@ impl Session {
         while let Some(task) = work.pop() {
             match task {
                 MatchNormalizationWork::Visit(Expr::Atom(_)) => completed.push(None),
-                MatchNormalizationWork::Visit(Expr::Call { head, args, .. }) => {
+                MatchNormalizationWork::Visit(Expr::Call { head, args }) => {
                     work.push(MatchNormalizationWork::FinishCall { head, args });
                     for arg in args.iter().rev() {
                         work.push(MatchNormalizationWork::Visit(arg));

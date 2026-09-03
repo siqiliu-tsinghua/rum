@@ -78,7 +78,7 @@ pub(in crate::runtime::debug_tools::test_report) fn parse_test_create_options(
     let mut options = Vec::new();
     for item in items {
         match item {
-            Expr::Call { head, args, .. }
+            Expr::Call { head, args }
                 if (is_system_symbol_name(&head, "Rule")
                     || is_system_symbol_name(&head, "RuleDelayed"))
                     && args.len() == 2 =>
@@ -116,7 +116,7 @@ fn parse_test_report_object(expr: &Expr) -> Option<ParsedTestReportObject> {
 
 fn unwrap_hold_complete(expr: &Expr) -> Option<Expr> {
     match expr {
-        Expr::Call { head, args, .. }
+        Expr::Call { head, args }
             if (is_system_symbol_name(head, "Hold")
                 || is_system_symbol_name(head, "HoldComplete")
                 || is_system_symbol_name(head, "HoldForm"))

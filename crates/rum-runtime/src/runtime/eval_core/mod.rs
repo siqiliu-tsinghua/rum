@@ -107,7 +107,7 @@ impl Session {
                 );
                 result
             }
-            Expr::Call { head, args, .. } => {
+            Expr::Call { head, args } => {
                 let runtime_profile = runtime_path_timing_start("evaluate_inner_unstable.call");
                 let result = self.evaluate_call(head.clone(), args);
                 record_profile_runtime_path_timing(

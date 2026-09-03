@@ -22,7 +22,7 @@ impl SuspendedLoopIteratorSymbolState {
     pub(super) fn from_continuation_expr(
         expr: Expr,
     ) -> (Symbol, BlockSymbolState, Result<Expr, EvalError>) {
-        let Expr::Call { head, args, .. } = expr else {
+        let Expr::Call { head, args } = expr else {
             panic!("unexpected loop-iterator continuation payload")
         };
         assert!(

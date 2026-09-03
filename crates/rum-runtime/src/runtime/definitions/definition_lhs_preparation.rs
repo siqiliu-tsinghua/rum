@@ -267,7 +267,7 @@ impl Session {
                             Err(error) => return Err(error),
                         }
                     }
-                    Expr::Call { head, args, .. } => {
+                    Expr::Call { head, args } => {
                         match definition_lhs_syntax_call_plan(&head, args.len(), region) {
                             DefinitionLhsSyntaxCallPlan::Opaque => {
                                 state.work = DefinitionLhsPreparationWork::CompleteNode(

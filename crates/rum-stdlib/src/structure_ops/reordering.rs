@@ -157,7 +157,7 @@ fn expr_as_positive_usize(expr: &Expr) -> Option<usize> {
 fn reverse_at_levels(expr: &Expr, levels: &ReverseLevels, depth: usize) -> Expr {
     match expr {
         Expr::Atom(_) => expr.clone(),
-        Expr::Call { head, args, .. } => {
+        Expr::Call { head, args } => {
             let mut reversed = args
                 .iter()
                 .map(|arg| reverse_at_levels(arg, levels, depth + 1))
@@ -234,7 +234,7 @@ fn transpose_plain_list_matrix(items: &[Expr]) -> Option<Expr> {
 }
 
 fn plain_list_tensor_shape(expr: &Expr) -> Option<Vec<usize>> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return Some(Vec::new());
     };
     if !is_system_symbol_name(head, heads::structure::LIST) {
@@ -320,7 +320,7 @@ fn build_transposed_tensor(
 fn tensor_element_at<'a>(expr: &'a Expr, indices: &[usize]) -> Option<&'a Expr> {
     let mut current = expr;
     for &index in indices {
-        let Expr::Call { head, args, .. } = current else {
+        let Expr::Call { head, args } = current else {
             return None;
         };
         if !is_system_symbol_name(head, heads::structure::LIST) {

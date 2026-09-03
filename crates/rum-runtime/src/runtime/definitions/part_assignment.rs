@@ -13,7 +13,7 @@ impl Session {
         lhs: Expr,
         rhs: Expr,
     ) -> Result<Option<Expr>, EvalError> {
-        let Expr::Call { head, args, .. } = &lhs else {
+        let Expr::Call { head, args } = &lhs else {
             return Ok(None);
         };
         if !is_system_symbol_name(head, "Part") {
@@ -283,7 +283,7 @@ fn direct_positional_part_assignment_plan(
     let mut normalized_path = Vec::with_capacity(path.len());
     let mut cache_keys = Vec::with_capacity(path.len());
     for &component in path {
-        let Expr::Call { head, args, .. } = selected else {
+        let Expr::Call { head, args } = selected else {
             return None;
         };
         if !is_system_symbol_name(head, heads::structure::LIST) {
@@ -311,7 +311,7 @@ fn direct_positional_part_assignment_value_matches_plan(
 
     let mut selected = root;
     for (&index, &cache_key) in plan.path.iter().zip(&plan.cache_keys) {
-        let Expr::Call { head, args, .. } = selected else {
+        let Expr::Call { head, args } = selected else {
             return false;
         };
         if !is_system_symbol_name(head, heads::structure::LIST)
@@ -334,7 +334,7 @@ fn exact_plain_list_part_assignment_slot_mut<'a>(
 ) -> Option<&'a mut Expr> {
     let mut selected = root;
     for (depth, &index) in path.iter().enumerate() {
-        let Expr::Call { head, args, .. } = selected else {
+        let Expr::Call { head, args } = selected else {
             return None;
         };
         if !is_system_symbol_name(head, heads::structure::LIST) {
@@ -386,7 +386,7 @@ fn is_positive_machine_integer_selector(selector: &Expr) -> bool {
 fn plain_list_ancestors_at_exact_path(expr: &Expr, path: &[isize]) -> Result<(), Expr> {
     let mut current = expr;
     for component in path {
-        let Expr::Call { head, args, .. } = current else {
+        let Expr::Call { head, args } = current else {
             return Err(current.clone());
         };
         if !is_system_symbol_name(head, heads::structure::LIST) {

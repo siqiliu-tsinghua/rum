@@ -19,7 +19,7 @@ pub(crate) enum KeyedEntriesListError {
 }
 
 pub(crate) fn rule_list_entries_from_expr(expr: &Expr) -> Option<Vec<(Expr, Expr)>> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 
@@ -94,7 +94,7 @@ pub(crate) fn association_rule_exprs_preserving_heads(expr: &Expr) -> Option<Vec
 }
 
 pub(crate) fn parse_key_spec(expr: &Expr) -> Option<Vec<Expr>> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return Some(vec![key_spec_key_expr(expr)]);
     };
 
@@ -107,7 +107,7 @@ pub(crate) fn parse_key_spec(expr: &Expr) -> Option<Vec<Expr>> {
 
 fn key_spec_key_expr(expr: &Expr) -> Expr {
     match expr {
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Key") && args.len() == 1 => {
+        Expr::Call { head, args } if is_system_symbol_name(head, "Key") && args.len() == 1 => {
             args[0].clone()
         }
         _ => expr.clone(),
@@ -125,7 +125,7 @@ pub(crate) fn parse_association_update_spec_forms(
         return Some(entries);
     }
 
-    let Expr::Call { head, args, .. } = spec else {
+    let Expr::Call { head, args } = spec else {
         return None;
     };
     if !is_system_symbol_name(head, heads::structure::LIST) {
@@ -143,7 +143,7 @@ pub(crate) fn normalize_key_value_pattern_spec(spec: &Expr) -> Option<Expr> {
         ));
     }
 
-    let Expr::Call { head, args, .. } = spec else {
+    let Expr::Call { head, args } = spec else {
         return None;
     };
     if !is_system_symbol_name(head, heads::structure::LIST) {
@@ -202,7 +202,7 @@ pub(crate) fn parse_keyed_entry_forms_list_expr_with_diagnostics(
 }
 
 pub(crate) fn parse_association_entry(expr: &Expr) -> Option<(Expr, Expr)> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 
@@ -216,7 +216,7 @@ pub(crate) fn parse_association_entry(expr: &Expr) -> Option<(Expr, Expr)> {
 }
 
 fn rule_list_entry_forms_from_expr(expr: &Expr) -> Option<Vec<AssociationEntryForm>> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 
@@ -246,7 +246,7 @@ fn parse_association_item_forms_deep(expr: &Expr) -> Option<Vec<AssociationEntry
         return Some(vec![entry]);
     }
 
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
 

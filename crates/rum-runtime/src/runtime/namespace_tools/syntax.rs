@@ -45,7 +45,7 @@ impl Session {
         &self,
         resolved: &Expr,
     ) -> Result<Expr, SyntaxInformationNormalizationError> {
-        let Expr::Call { head, args, .. } = resolved else {
+        let Expr::Call { head, args } = resolved else {
             return Err(SyntaxInformationNormalizationError::InvalidRules);
         };
 
@@ -57,7 +57,6 @@ impl Session {
             let Expr::Call {
                 head: rule_head,
                 args: rule_args,
-                ..
             } = item
             else {
                 return Err(SyntaxInformationNormalizationError::InvalidRules);

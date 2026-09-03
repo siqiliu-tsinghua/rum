@@ -482,7 +482,7 @@ fn information_values_rule(name: &str, symbol: &Symbol, values: Expr) -> Expr {
 
 fn information_value_form_or_none(name: &str, symbol: &Symbol, values: Expr) -> Expr {
     match &values {
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") && args.is_empty() => {
+        Expr::Call { head, args } if is_system_symbol_name(head, "List") && args.is_empty() => {
             system_expr("None")
         }
         _ => Expr::call(
@@ -501,7 +501,7 @@ fn information_value_form_or_none(name: &str, symbol: &Symbol, values: Expr) -> 
 
 fn none_if_empty_list(expr: Expr) -> Expr {
     match &expr {
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") && args.is_empty() => {
+        Expr::Call { head, args } if is_system_symbol_name(head, "List") && args.is_empty() => {
             system_expr("None")
         }
         _ => expr,
@@ -511,6 +511,6 @@ fn none_if_empty_list(expr: Expr) -> Expr {
 fn is_empty_list_expr(expr: &Expr) -> bool {
     matches!(
         expr,
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") && args.is_empty()
+        Expr::Call { head, args } if is_system_symbol_name(head, "List") && args.is_empty()
     )
 }

@@ -36,7 +36,7 @@ pub(super) fn max_rule_rhs_alpha_id(expr: &Expr) -> Option<u64> {
     match expr {
         Expr::Atom(Atom::Symbol(symbol)) => rule_rhs_alpha_id(symbol),
         Expr::Atom(_) => None,
-        Expr::Call { head, args, .. } => {
+        Expr::Call { head, args } => {
             let mut max_id = max_rule_rhs_alpha_id(head);
             for arg in args.iter() {
                 if let Some(arg_id) = max_rule_rhs_alpha_id(arg) {
@@ -93,7 +93,7 @@ fn hash_expr_text_and_exact(
             hash_atom_text_and_exact(atom, text_state, exact_state);
             1
         }
-        Expr::Call { head, args, .. } => {
+        Expr::Call { head, args } => {
             4_u8.hash(text_state);
             4_u8.hash(exact_state);
             let mut nodes =

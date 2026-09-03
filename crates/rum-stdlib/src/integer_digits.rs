@@ -358,7 +358,7 @@ fn from_integer_digits(digits: &[BigInt], base: &BigInt) -> BigInt {
 }
 
 fn expr_as_integer_digit_list(expr: &Expr) -> Option<Vec<BigInt>> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
     if !is_system_symbol_name(head, "List") {
@@ -403,7 +403,7 @@ fn expr_as_digit_count_query(expr: &Expr, base: &BigInt) -> Option<BigInt> {
 }
 
 fn expr_as_digit_count_query_list(expr: &Expr, base: &BigInt) -> Option<Vec<BigInt>> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         return None;
     };
     if !is_system_symbol_name(head, "List") {

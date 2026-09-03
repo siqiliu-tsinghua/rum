@@ -454,7 +454,7 @@ pub(super) fn expr_node_count_with_limit(expr: &Expr, limit: usize) -> Option<us
 
         match expr {
             Expr::Atom(_) => true,
-            Expr::Call { head, args, .. } => {
+            Expr::Call { head, args } => {
                 if !walk(head, remaining) {
                     return false;
                 }

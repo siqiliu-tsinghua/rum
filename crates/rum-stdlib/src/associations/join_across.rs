@@ -177,7 +177,7 @@ fn parse_join_key_spec(expr: &Expr) -> Option<JoinKeySpec> {
 }
 
 fn parse_join_key_component(expr: &Expr) -> Option<(Expr, Expr)> {
-    if let Expr::Call { head, args, .. } = expr {
+    if let Expr::Call { head, args } = expr {
         if is_system_symbol_name(head, "Rule") && args.len() == 2 {
             return Some((parse_join_key(&args[0])?, parse_join_key(&args[1])?));
         }
@@ -190,7 +190,7 @@ fn parse_join_key_component(expr: &Expr) -> Option<(Expr, Expr)> {
 fn parse_join_key(expr: &Expr) -> Option<Expr> {
     match expr {
         Expr::Atom(Atom::String(_)) => Some(expr.clone()),
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Key") && args.len() == 1 => {
+        Expr::Call { head, args } if is_system_symbol_name(head, "Key") && args.len() == 1 => {
             Some(args[0].clone())
         }
         _ => None,

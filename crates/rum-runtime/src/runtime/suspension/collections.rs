@@ -14,7 +14,7 @@ impl ContinuationValue for CasesCollectionOutcome {
 
     fn from_continuation_expr(expr: Expr) -> Self {
         match expr {
-            Expr::Call { head, args, .. }
+            Expr::Call { head, args }
                 if is_system_symbol_name(&head, "InternalContinuationCasesCollection")
                     && args.len() == 3 =>
             {
@@ -26,7 +26,7 @@ impl ContinuationValue for CasesCollectionOutcome {
                 let matches_expr = args.pop().expect("cases-collection payload stores matches");
 
                 let matches = match matches_expr {
-                    Expr::Call { head, args, .. } if is_system_symbol_name(&head, "List") => {
+                    Expr::Call { head, args } if is_system_symbol_name(&head, "List") => {
                         args.into_vec()
                     }
                     other => vec![other],
@@ -60,7 +60,7 @@ impl ContinuationValue for PositionCollectionOutcome {
 
     fn from_continuation_expr(expr: Expr) -> Self {
         match expr {
-            Expr::Call { head, args, .. }
+            Expr::Call { head, args }
                 if is_system_symbol_name(&head, "InternalContinuationPositionCollection")
                     && args.len() == 3 =>
             {
@@ -76,7 +76,7 @@ impl ContinuationValue for PositionCollectionOutcome {
                     .expect("position-collection payload stores positions");
 
                 let positions = match positions_expr {
-                    Expr::Call { head, args, .. } if is_system_symbol_name(&head, "List") => {
+                    Expr::Call { head, args } if is_system_symbol_name(&head, "List") => {
                         args.into_vec()
                     }
                     other => vec![other],
@@ -110,7 +110,7 @@ impl ContinuationValue for TraversalCountOutcome {
 
     fn from_continuation_expr(expr: Expr) -> Self {
         match expr {
-            Expr::Call { head, args, .. }
+            Expr::Call { head, args }
                 if is_system_symbol_name(&head, "InternalContinuationTraversalCount")
                     && args.len() == 3 =>
             {

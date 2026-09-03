@@ -334,7 +334,7 @@ impl Session {
                 }
                 Ok(())
             }
-            Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => {
+            Expr::Call { head, args } if is_system_symbol_name(head, "List") => {
                 for item in args {
                     self.collect_save_symbols(item, collected)?;
                 }

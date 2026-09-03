@@ -65,7 +65,7 @@ impl SequenceChoiceState {
     }
 
     fn from_continuation_expr(expr: Expr) -> Self {
-        let Expr::Call { head, args, .. } = expr else {
+        let Expr::Call { head, args } = expr else {
             panic!("unexpected sequence-choice continuation payload")
         };
         assert!(
@@ -339,7 +339,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueSequenceChoiceResul
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
         let resumed = outcome.and_then(|payload| {
-            let Expr::Call { head, args, .. } = payload else {
+            let Expr::Call { head, args } = payload else {
                 panic!("unexpected sequence-choice result continuation payload")
             };
             assert!(
@@ -418,7 +418,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueSequenceChoiceRestF
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
         let resumed = outcome.and_then(|payload| {
-            let Expr::Call { head, args, .. } = payload else {
+            let Expr::Call { head, args } = payload else {
                 panic!("unexpected sequence-choice-rest continuation payload")
             };
             assert!(

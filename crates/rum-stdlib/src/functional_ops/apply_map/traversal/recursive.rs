@@ -75,7 +75,7 @@ fn apply_heads_standard_call_recursive_bounded(
     level: usize,
     child_call_depth: usize,
 ) -> Option<(Expr, usize)> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         unreachable!("only calls reach the bounded recursive Apply transform");
     };
 
@@ -188,7 +188,7 @@ fn map_parts_standard_call_recursive_bounded(
     level: usize,
     child_call_depth: usize,
 ) -> Option<(Expr, usize)> {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         unreachable!("only calls reach the bounded recursive Map transform");
     };
 

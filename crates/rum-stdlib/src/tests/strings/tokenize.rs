@@ -218,7 +218,7 @@ fn assert_total_coverage(source: &str, spans: &[(String, usize, usize)]) {
 }
 
 fn expect_list(expr: &Expr) -> &[Expr] {
-    let Expr::Call { head, args, .. } = expr else {
+    let Expr::Call { head, args } = expr else {
         panic!("expected List, got {expr}");
     };
     assert_eq!(head.as_ref(), &system_expr("List"));

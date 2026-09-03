@@ -53,14 +53,14 @@ fn part_target_selectors_are_exact_leaf_path(selector_exprs: &EvaluatedPartSelec
         expr_as_signed_isize(expr).is_some()
             || matches!(
                 expr,
-                Expr::Call { head, args, .. } if is_system_symbol_name(head, "Key") && args.len() == 1
+                Expr::Call { head, args } if is_system_symbol_name(head, "Key") && args.len() == 1
             )
     })
 }
 
 fn part_selector_key_expr(expr: &Expr) -> Option<Expr> {
     match expr {
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Key") && args.len() == 1 => {
+        Expr::Call { head, args } if is_system_symbol_name(head, "Key") && args.len() == 1 => {
             Some(args[0].clone())
         }
         _ => None,
@@ -507,7 +507,7 @@ fn normalize_part_mutation_target(
     session: &Session,
     target_expr: &Expr,
 ) -> Option<(Symbol, Vec<Expr>)> {
-    let Expr::Call { head, args, .. } = target_expr else {
+    let Expr::Call { head, args } = target_expr else {
         return None;
     };
 

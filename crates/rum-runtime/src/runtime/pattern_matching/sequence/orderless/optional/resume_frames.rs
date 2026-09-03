@@ -226,7 +226,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueOrderlessOptionalFr
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
         let resumed = outcome.and_then(|payload| {
-            let Expr::Call { head, args, .. } = payload else {
+            let Expr::Call { head, args } = payload else {
                 panic!("unexpected orderless-optional continuation payload")
             };
             let mut args = args.into_iter();

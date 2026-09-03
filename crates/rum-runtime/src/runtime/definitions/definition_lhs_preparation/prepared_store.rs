@@ -232,7 +232,7 @@ impl Session {
             return Ok(PreparedUnsetDefinitionTarget::OwnValue(symbol));
         }
 
-        if let Expr::Call { head, args, .. } = &lhs {
+        if let Expr::Call { head, args } = &lhs {
             if is_system_symbol_name(head, "TagSet") && args.len() == 2 {
                 let tag = self.normalize_tag_target(&args[0])?;
                 return Ok(match classify_tagged_definition(&tag, &args[1]) {
@@ -626,15 +626,17 @@ where
 fn definition_specificity(expr: &Expr) -> usize {
     match expr {
         Expr::Atom(_) => 4,
-        Expr::Call { head, args, .. }
-            if is_system_symbol_name(head, "Pattern") && args.len() == 2 =>
-        {
+        Expr::Call { head, args } if is_system_symbol_name(head, "Pattern") && args.len() == 2 => {
             definition_specificity(&args[1])
         }
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Blank") => {
-            if args.is_empty() { 1 } else { 2 }
+        Expr::Call { head, args } if is_system_symbol_name(head, "Blank") => {
+            if args.is_empty() {
+                1
+            } else {
+                2
+            }
         }
-        Expr::Call { head, args, .. }
+        Expr::Call { head, args }
             if (is_system_symbol_name(head, "Optional")
                 || is_system_symbol_name(head, "Repeated")
                 || is_system_symbol_name(head, "RepeatedNull"))
@@ -642,14 +644,14 @@ fn definition_specificity(expr: &Expr) -> usize {
         {
             definition_specificity(&args[0])
         }
-        Expr::Call { head, args, .. }
+        Expr::Call { head, args }
             if (is_system_symbol_name(head, "Condition")
                 || is_system_symbol_name(head, "PatternTest"))
                 && !args.is_empty() =>
         {
             1 + definition_specificity(&args[0])
         }
-        Expr::Call { head, args, .. } => {
+        Expr::Call { head, args } => {
             3 + definition_specificity(head)
                 + args.iter().map(definition_specificity).sum::<usize>()
         }

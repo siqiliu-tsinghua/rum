@@ -161,7 +161,7 @@ impl Session {
     }
 
     fn evaluate_runtime_option_expr(&mut self, expr: &Expr) -> Result<Expr, EvalError> {
-        let Expr::Call { head, args, .. } = expr else {
+        let Expr::Call { head, args } = expr else {
             return Ok(expr.clone());
         };
 

@@ -111,10 +111,7 @@ fn eval_pad(session: &mut Session, args: &[Expr], side: PadSide) -> Result<Expr,
         return Ok(invalid_pad_length_call(session, symbol, args));
     };
 
-    let Expr::Call {
-        head, args: items, ..
-    } = expr
-    else {
+    let Expr::Call { head, args: items } = expr else {
         return Ok(invalid_pad_normal_call(session, symbol, args));
     };
 
@@ -292,10 +289,7 @@ fn pad_expr_to_shape(
     side: PadSide,
 ) -> Option<Expr> {
     let (&target_len, rest) = shape.split_first()?;
-    let Expr::Call {
-        head, args: items, ..
-    } = expr
-    else {
+    let Expr::Call { head, args: items } = expr else {
         return None;
     };
 

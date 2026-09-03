@@ -29,7 +29,7 @@ fn reap_walks_thirty_thousand_buckets() {
     let outcome = session
         .eval_text("Reap[Do[Sow[i, i], {i, 1, 30000}]]")
         .unwrap();
-    let Expr::Call { head, args, .. } = outcome.value else {
+    let Expr::Call { head, args } = outcome.value else {
         panic!("Reap should return a list pair, got {}", outcome.value);
     };
     assert!(is_system_symbol_name(&head, "List"));
@@ -38,7 +38,6 @@ fn reap_walks_thirty_thousand_buckets() {
     let Expr::Call {
         head: buckets_head,
         args: buckets,
-        ..
     } = &args[1]
     else {
         panic!("Reap harvest should be a list, got {}", args[1]);

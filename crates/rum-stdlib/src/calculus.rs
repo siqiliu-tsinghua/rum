@@ -63,7 +63,6 @@ fn invalid_derivative_spec_call(
     let Expr::Call {
         head,
         args: spec_args,
-        ..
     } = spec_expr
     else {
         return None;
@@ -97,18 +96,16 @@ fn differentiate_expr(session: &Session, expr: &Expr, variable: &Expr) -> Result
 
     match expr {
         Expr::Atom(_) => Ok(Expr::integer(BigInt::from(0_u8))),
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Plus") => {
+        Expr::Call { head, args } if is_system_symbol_name(head, "Plus") => {
             differentiate_plus(session, args, variable)
         }
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Times") => {
+        Expr::Call { head, args } if is_system_symbol_name(head, "Times") => {
             differentiate_times(session, args, variable)
         }
-        Expr::Call { head, args, .. }
-            if is_system_symbol_name(head, "Power") && args.len() == 2 =>
-        {
+        Expr::Call { head, args } if is_system_symbol_name(head, "Power") && args.len() == 2 => {
             differentiate_power(session, expr, &args[0], &args[1], variable)
         }
-        Expr::Call { head, args, .. } => {
+        Expr::Call { head, args } => {
             differentiate_abstract_call(session, expr, head, args, variable)
         }
     }
@@ -230,7 +227,7 @@ fn differentiate_abstract_call(
 
 fn parse_derivative_spec(expr: &Expr) -> Option<DerivativeSpec> {
     match expr {
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") && args.len() == 2 => {
+        Expr::Call { head, args } if is_system_symbol_name(head, "List") && args.len() == 2 => {
             Some(DerivativeSpec {
                 variable: parse_derivative_variable(&args[0])?,
                 order: expr_as_non_negative_usize(&args[1])?,
@@ -259,7 +256,7 @@ fn expr_contains_exact_subexpr(expr: &Expr, needle: &Expr) -> bool {
     }
 
     match expr {
-        Expr::Call { head, args, .. } => {
+        Expr::Call { head, args } => {
             expr_contains_exact_subexpr(head, needle)
                 || args
                     .iter()
@@ -300,12 +297,10 @@ fn parse_derivative_operator(head: &Expr, arity: usize) -> Option<(Expr, Vec<usi
         Expr::Call {
             head: derivative_head,
             args,
-            ..
         } if args.len() == 1 => {
             let Expr::Call {
                 head: derivative_symbol,
                 args: order_args,
-                ..
             } = derivative_head.as_ref()
             else {
                 return None;

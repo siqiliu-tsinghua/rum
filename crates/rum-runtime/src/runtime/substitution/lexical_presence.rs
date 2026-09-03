@@ -70,7 +70,7 @@ fn expr_may_contain_symbol_fast(
     match expr {
         Expr::Atom(Atom::Symbol(symbol)) => symbol == target,
         Expr::Atom(_) => false,
-        Expr::Call { head, args, .. } => {
+        Expr::Call { head, args } => {
             let key = call_presence_key(head, args);
             if let Some(result) = cache.borrow().get(&key).copied() {
                 return result;
@@ -94,7 +94,7 @@ fn expr_may_contain_symbol_counted(
     match expr {
         Expr::Atom(Atom::Symbol(symbol)) => (symbol == target, 1),
         Expr::Atom(_) => (false, 1),
-        Expr::Call { head, args, .. } => {
+        Expr::Call { head, args } => {
             let key = call_presence_key(head, args);
             if let Some(result) = cache.borrow().get(&key).copied() {
                 return (result, 0);
@@ -129,7 +129,7 @@ fn expr_may_contain_any_binding_fast(
     match expr {
         Expr::Atom(Atom::Symbol(symbol)) => bindings.contains_key(symbol),
         Expr::Atom(_) => false,
-        Expr::Call { head, args, .. } => {
+        Expr::Call { head, args } => {
             let key = call_presence_key(head, args);
             if let Some(result) = cache.borrow().get(&key).copied() {
                 return result;
@@ -153,7 +153,7 @@ fn expr_may_contain_any_binding_counted(
     match expr {
         Expr::Atom(Atom::Symbol(symbol)) => (bindings.contains_key(symbol), 1),
         Expr::Atom(_) => (false, 1),
-        Expr::Call { head, args, .. } => {
+        Expr::Call { head, args } => {
             let key = call_presence_key(head, args);
             if let Some(result) = cache.borrow().get(&key).copied() {
                 return (result, 0);

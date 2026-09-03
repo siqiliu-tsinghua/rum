@@ -19,7 +19,6 @@ impl Session {
             Expr::Call {
                 head: list_head,
                 args: items,
-                ..
             } if is_system_symbol_name(list_head, "List") => {
                 let mut operands = Vec::new();
                 flatten_list_operands(items.as_ref(), &mut operands);
@@ -107,7 +106,7 @@ fn flatten_list_operands<'a>(args: &'a [Expr], operands: &mut Vec<&'a Expr>) {
 
 fn flatten_list_operand<'a>(expr: &'a Expr, operands: &mut Vec<&'a Expr>) {
     match expr {
-        Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => {
+        Expr::Call { head, args } if is_system_symbol_name(head, "List") => {
             for arg in args.iter() {
                 flatten_list_operand(arg, operands);
             }
