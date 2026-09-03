@@ -48,7 +48,7 @@ computation:
 | Limit | Default |
 |---|---|
 | Recursion depth | 1024 |
-| Native stack | 6 MiB |
+| Native stack | 1 MiB evaluator budget |
 | Iteration work | 100 000 |
 | Generated elements | 100 000 |
 | Integer work (`Factorial`, `Power`) | 100 000 |
@@ -57,7 +57,13 @@ computation:
 | `ReplaceRepeated` | 256 |
 | Evaluation passes | 256 |
 
-Exceeding one yields an in-band `TerminatedEvaluation[...]` value, not a crash.
+Exceeding one yields an in-band `TerminatedEvaluation[...]` value, not a crash,
+provided the native-stack contract is met. The default native-stack budget is
+calibrated for ordinary shallow entry on a thread whose caller declares at
+least `MIN_SUPPORTED_NATIVE_STACK_BYTES` (2 MiB). A host using a smaller stack,
+or entering evaluation beneath substantial caller frames, must lower
+`native_stack_limit`. Stack capacity is caller-declared because safe Rust has
+no portable API for discovering the current thread's actual stack bounds.
 
 ### Evaluating untrusted scripts — required host settings
 

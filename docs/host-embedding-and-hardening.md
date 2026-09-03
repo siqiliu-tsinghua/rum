@@ -58,6 +58,15 @@ ceiling (`eval_memory_limit`). The memory ceiling is a deterministic structural
 proxy, not process RSS; a host that requires a hard process-wide RSS limit must
 still enforce that outside the kernel.
 
+The default native-stack evaluator budget is 1 MiB, derived from
+`MIN_SUPPORTED_NATIVE_STACK_BYTES` (2 MiB) minus 512 KiB of four-poll headroom
+and 512 KiB of non-evaluator reserve. It assumes ordinary shallow evaluator
+entry on a caller-declared thread stack of at least 2 MiB. Safe Rust provides no
+portable stack-bound discovery, so the kernel cannot verify this precondition.
+Embedders provisioning a larger worker stack should pass the same byte count to
+`native_stack_limit_for_declared_stack` and install the returned budget; hosts
+on smaller stacks or beneath substantial caller frames must lower the budget.
+
 `HostSession::eval_with_timeout` installs a per-request elapsed-time deadline.
 The evaluator checks cancellation and deadlines cooperatively at amortized poll
 points using Rust's monotonic `Instant`. A `HostCancelHandle` is cloneable and
@@ -69,6 +78,8 @@ caught panic becomes `HostFailureCode::Panic` and poisons the session; later
 requests return `Poisoned` until `reset()`. Use
 `HostFailureCode::requires_reset()` instead of matching error text. This boundary
 does not catch process-aborting failures such as a native stack overflow.
+Meeting the declared-stack precondition is what lets the byte guard return an
+in-band stack-limit outcome before that boundary is reached.
 
 ## Lifecycle And Isolation
 

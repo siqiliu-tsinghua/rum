@@ -110,6 +110,12 @@ impl Session {
         self.resource_limits.recursion_limit = limit;
     }
 
+    /// Sets the native-stack bytes evaluator descent may consume from its request base.
+    ///
+    /// This does not resize or discover the current thread's stack. Embedders
+    /// that provision a worker stack should derive its matching budget with
+    /// [`native_stack_limit_for_declared_stack`]; callers entering evaluation
+    /// beneath substantial native frames should lower that budget.
     pub fn set_native_stack_limit(&mut self, limit: usize) {
         self.resource_limits.native_stack_limit = limit;
     }

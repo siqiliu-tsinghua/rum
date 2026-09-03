@@ -2113,3 +2113,64 @@ independently.
 **A record correction.** `7ae6aa3a` is labelled "docs" but also carried
 brief-432's implementation of three source files; a `git add -A` swept it in.
 History is left unrewritten and the fact is recorded in `0f679699`.
+
+## 2026-09-04 — the native stack guard that could never fire (briefs 436-438)
+
+Opened as the first of four repairs for traversals short of the ruled 4,097
+height, and the first one turned out not to be about `StringExpression`.
+
+brief-436 (diagnostic) found the mechanism: a strict head whose call stays
+residual and never acquires an evaluation-stability proof is re-evaluated
+through eager argument preparation on every construction step, one native
+evaluator level per spine level. All three of its offered predictions held at
+the gate, and it correctly refuted my `Sin` control — `Context[Sin]` is
+`Global`, so that probe was a second copy of the `foo` control. Its recommended
+repair reached half the class; `Power`, `Mod`, `Max`, `Min`, `Equal`, `Less`
+and `Not` carry real dispatch and are in the class too.
+
+The gate found what the diagnosis stopped one step short of.
+`poll_native_stack_limit` measures bytes actually consumed, polled every four
+levels — stack-honest by construction — but its default was 6 MiB against the
+ruled 2 MiB embedder stack, so on the ruled configuration it could never fire.
+The same construction returned `reclim` in band on 8 MiB and took SIGABRT on
+2 MiB. `SECURITY.md:43-60` published "Exceeding one yields an in-band
+`TerminatedEvaluation[...]` value, not a crash", which was false there, and
+`codecs_xml.rs` already carried the workaround comment.
+
+brief-437 (design-only) measured the frame: a 4,736 B static packet over seven
+resident frames, against my 4,675 B bisected slope — 1.3% apart by two
+independent methods. It corrected my inventory (`run_call_dispatch_stage` runs
+on ascent, not during descent) and projected a 1.5-2.6 KiB optimization floor,
+which settles that height 4,097 for a strict residual call needs an explicit
+task stack rather than frame polishing.
+
+Its ripple inventory was priced on an unqualified "approximately 20 KiB"
+quoted from the 2026-07-06 entry, without noting that it is a **debug** number
+while its own packet came from a release binary. I measured all three — 4.7
+KiB release strict, 7.5 KiB release user recursion, 20.6 KiB debug — which
+reversed my own first reading: I had taken 7.5 KiB and concluded the projected
+test breakage would not happen, when `cargo test` runs debug on a 2 MiB thread
+where the depth-72 guard-adjacent test already consumes 1.48 MiB. Two invalid
+probes were caught on the way: a literal nested source pinned at 125 levels at
+every stack size because it was hitting the parser's 128 nesting guard, and a
+region above 2 MiB pinned by the fixed-point pass limit rather than the stack.
+
+brief-438 landed it. Four tests broke; all four were repaired by declaring a
+thread and deriving the budget from the same size, with depths and `reclim`
+assertions preserved — I rejected the draft's own proposal to take the
+guard-adjacent tests from 96/72/120 down to 32/24/40, which would shrink
+coverage to fit the budget. The `codecs_xml` workaround is retired and its
+acceptance coverage restored from 64 to the full 256.
+
+Gate: `cargo fmt --check` clean; workspace 2329/0/19 **without** the ZeroMQ
+skip flag the worker's sandbox needed, so the nine native tests it could not
+run actually ran here; 12 release depth certificates green on 2 MiB under the
+tighter budget, confirming the 422-433 traversal work holds; both rewired
+ignored tests green. Behaviour verified directly: `Power`, `StringExpression`
+and `General` at N=3000 on a 2 MiB stack went from exit 134 to exit 1 with
+`General::reslim: evaluation exceeded native stack limit (1048576 bytes)`.
+
+Three items stay open: the strict-residual class is still quadratic in
+construction (brief-436's options A and B), the explicit task stack that would
+actually reach 4,097 is unscheduled, and the byte guard still cannot see a
+recursion that runs entirely inside one builtin.

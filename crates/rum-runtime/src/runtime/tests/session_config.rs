@@ -11,6 +11,32 @@ fn default_session_configuration_matches_default_session_state() {
 }
 
 #[test]
+fn default_native_stack_budget_is_derived_from_minimum_supported_stack() {
+    assert_eq!(
+        NATIVE_STACK_POLL_HEADROOM_BYTES,
+        NATIVE_STACK_DEPTH_POLL_STRIDE * NATIVE_STACK_UNPOLLED_LEVEL_RESERVE_BYTES,
+    );
+    assert_eq!(
+        DEFAULT_NATIVE_STACK_LIMIT
+            + NATIVE_STACK_POLL_HEADROOM_BYTES
+            + NATIVE_STACK_NON_EVALUATOR_RESERVE_BYTES,
+        MIN_SUPPORTED_NATIVE_STACK_BYTES,
+    );
+    assert_eq!(
+        native_stack_limit_for_declared_stack(MIN_SUPPORTED_NATIVE_STACK_BYTES),
+        Some(DEFAULT_NATIVE_STACK_LIMIT),
+    );
+    assert_eq!(
+        native_stack_limit_for_declared_stack(MIN_SUPPORTED_NATIVE_STACK_BYTES - 1),
+        None,
+    );
+    assert_eq!(
+        ResourceLimits::default().native_stack_limit,
+        DEFAULT_NATIVE_STACK_LIMIT,
+    );
+}
+
+#[test]
 fn session_with_config_normalizes_contexts_paths_and_limits() {
     let config = SessionConfig::default()
         .with_resource_limits(ResourceLimits {

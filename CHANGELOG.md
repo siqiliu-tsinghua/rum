@@ -9,6 +9,21 @@ minor versions may include breaking changes; the project aims to follow
 
 ### Fixed
 
+- The native stack guard no longer fails open on the stack an embedder
+  actually gets. Its default budget was 6 MiB against the 2 MiB a spawned
+  thread gets by default, so on that stack the guard could never fire and a
+  deep evaluation ended the process instead of returning a value — while
+  `SECURITY.md` promised the opposite. The budget is now derived by a checked
+  equation from the smallest stack the default profile supports, minus poll
+  headroom and non-evaluator reserve, and `native_stack_limit_for_declared_stack`
+  lets a host that provisions a larger thread derive a matching budget from the
+  same number it passed to `stack_size`. A strict residual construction on a
+  2 MiB stack now returns `TerminatedEvaluation["StackLimit"]` where it
+  previously aborted. The default profile is correspondingly shallower —
+  measured at about 4.7 KiB of stack per level for a release strict call, 7.5
+  KiB for release user recursion and 20.6 KiB for debug — so `recursion_limit`
+  is documented as a ceiling rather than a reachable depth.
+
 - Deeply nested input no longer ends the process in four recursive descents.
   `FromXml` had no depth bound where `FromJson`, `FromYaml` and `FromToml` were
   bounded at 256 in the same repair that skipped it; `RegularExpression` group

@@ -75,6 +75,19 @@ Use `HostSession::builder()` when you need to change configuration:
 The default trusted configuration installs `StdFileIo` and
 `StdEntropySource`; sandboxed configuration omits both providers.
 
+The default `HostResourceLimits::native_stack_limit` is a 1 MiB evaluator
+budget calibrated for ordinary shallow entry on a caller-declared thread stack
+of at least `MIN_SUPPORTED_NATIVE_STACK_BYTES` (2 MiB). The host cannot discover
+or verify the thread's actual stack bounds through portable safe Rust. A host
+using a smaller stack, or entering evaluation beneath substantial caller
+frames, must lower the budget.
+
+When provisioning a larger worker stack, use
+`native_stack_limit_for_declared_stack` with the same byte count and install the
+returned budget in `HostResourceLimits`. The helper reserves four 128 KiB
+unpolled levels plus 512 KiB for non-evaluator frames, and returns `None` for a
+declared stack below 2 MiB.
+
 Downstream builtin families install through
 `HostSession::builder().with_builtin_installer(...)`. Installers receive the
 runtime kernel session, run in builder order after the optional core builtin
@@ -460,6 +473,13 @@ It is intentionally not a shared mutable object. Do not share one session
 concurrently across threads.
 
 Use one session per worker when you need parallel evaluation.
+
+If a worker is created with `std::thread::Builder::stack_size`, derive its
+`native_stack_limit` by passing that exact declared size to
+`native_stack_limit_for_declared_stack`. Raising the evaluator budget without
+provisioning the matching worker stack breaks the recoverable-failure contract;
+lower the budget when caller frames consume a material part of the stack before
+evaluation begins.
 
 `HostCancelHandle` is cloneable and can cross threads.
 

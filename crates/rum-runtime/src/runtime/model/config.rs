@@ -3,6 +3,11 @@ use super::*;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct ResourceLimits {
     pub recursion_limit: usize,
+    /// Maximum native-stack bytes evaluator descent may consume from its request base.
+    ///
+    /// The default is calibrated for a caller-declared stack of at least
+    /// [`MIN_SUPPORTED_NATIVE_STACK_BYTES`]. Larger declared worker stacks can
+    /// derive a matching budget with [`native_stack_limit_for_declared_stack`].
     pub native_stack_limit: usize,
     pub replace_repeated_limit: usize,
     pub evaluation_pass_limit: usize,

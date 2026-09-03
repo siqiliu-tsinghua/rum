@@ -700,26 +700,26 @@ themselves — e.g. `IntegerLength[2^(10^9)]` — read as cybersecurity work), s
 live limit probing is director-run.
 
 Defaults are `ResourceLimits::default()`
-(`crates/rum-runtime/src/runtime/model/config.rs:20-33`) with values from
-`crates/rum-runtime/src/runtime/metadata.rs:3-10`. Probes are the release CLI
+(`crates/rum-runtime/src/runtime/model/config.rs:25-38`) with values from
+`crates/rum-runtime/src/runtime/metadata.rs:4-33`. Probes are the release CLI
 under `scripts/run-bounded.py`; each `TerminatedEvaluation[...]` is a fail-closed
 verdict.
 
 | Resource limit | Default | On by default? | Enforcement point | Probe → verdict |
 |---|---|---|---|---|
-| Recursion depth | `recursion_limit = 1024` | yes | `metadata.rs:4`; config `config.rs:23` | see native-stack row (stack fires first for self-recursion) |
-| Native stack | `native_stack_limit = 6 MiB` | yes | `metadata.rs:5` | `f[n_]:=f[n+1]; f[0]` → `TerminatedEvaluation["StackLimit"]` (`General::reslim`, 6291456 bytes) |
-| Iteration work | `iteration_work_limit = 100_000` | yes | `metadata.rs:10`; `debug_tools/resources/constraints.rs:206-210` | `Do[0,{50000000}]` → `TerminatedEvaluation["IterationWorkLimit"]` |
-| Generated elements | `generated_element_limit = 100_000` | yes | `metadata.rs:8` | `Range[10^9]` → `TerminatedEvaluation["GeneratedElementLimit"]` |
+| Recursion depth | `recursion_limit = 1024` | yes | `metadata.rs:5`; config `config.rs:28` | see native-stack row (stack fires first for self-recursion) |
+| Native stack | `native_stack_limit = 1 MiB` (derived for a declared stack of at least 2 MiB) | yes | `metadata.rs:6-29`; config `config.rs:29` | `f[n_]:=f[n+1]; f[0]` → `TerminatedEvaluation["StackLimit"]` (`General::reslim`, 1048576 bytes) |
+| Iteration work | `iteration_work_limit = 100_000` | yes | `metadata.rs:33`; `debug_tools/resources/constraints.rs:206-210` | `Do[0,{50000000}]` → `TerminatedEvaluation["IterationWorkLimit"]` |
+| Generated elements | `generated_element_limit = 100_000` | yes | `metadata.rs:31` | `Range[10^9]` → `TerminatedEvaluation["GeneratedElementLimit"]` |
 | Parse nesting depth | `MAX_DELIMITER_NESTING_DEPTH = 128` (compile-time) | yes | `crates/rum-syntax/src/parser/front.rs:10,97-113` | 200 nested `(...)` → parse error `parse nesting exceeded limit` (fail-closed at parse time) |
 | Operator-chain depth | `MAX_OPERATOR_CHAIN_DEPTH = 128` (compile-time) | yes | `crates/rum-syntax/src/parser/front.rs:20,115-131` | 16 000-link `^` chain → parse error `parse nesting exceeded limit 128` (fail-closed at parse time; sized to the native stack budget — a 2 MiB thread aborts at ~452 links, so the guard fires first) |
 | Left-associative chain length | `MAX_LEFT_ASSOCIATIVE_CHAIN_LINKS = 4_096` (compile-time) | yes | constant: `crates/rum-syntax/src/lib.rs:17-18`; parser: `crates/rum-syntax/src/parser/front.rs:223-226,257-292,802-812`; direct-AST lowering: `crates/rum-runtime/src/runtime/lowering/binary/left_chain.rs:130-162`, `comparison.rs:75-112` | 4 096 links → accepted; link 4 097 and 20 000-link `+`/comparison chains → syntax error `left-associative chain exceeded limit 4096` at the rejected operator (fail-closed; implicit `Times` included; nested/rhs spines count independently) |
 | Statement-chain length | `MAX_STATEMENT_CHAIN_DEPTH = 256` (compile-time) | yes | `crates/rum-syntax/src/parser/front.rs:27,217-222,294-320,357-396` | 300-statement one-line `;` chain → parse error `statement chain exceeded limit 256 … split the statements across separate lines` (fail-closed at parse time; per-line script splitting unaffected) |
 | Match depth | `MAX_MATCH_DEPTH = 512` (compile-time) | yes | `crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/match_choices.rs:4,17-19` | bounded by construction in the orderless matcher |
-| ReplaceRepeated | `replace_repeated_limit = 256` | yes | `metadata.rs:3` | per-call runaway budget (brief-184) |
-| Evaluation passes | `evaluation_pass_limit = 256` | yes | `metadata.rs:7` | fixed-point runaway budget |
-| Integer work | `integer_work_limit = 100_000` | yes, but **Factorial only** | `metadata.rs:9`; enforced ONLY at `crates/rum-runtime/src/runtime/arithmetic/factorial.rs:16,52,74-81` | **`IntegerLength[2^(10^9)]` → timed out at 12s, NOT fail-closed** — see flagged finding |
-| Request memory ceiling | `eval_memory_limit = None` | **NO — opt-in** | `config.rs:14,27`; `MemoryConstrained` frame + host setter | off in the default/scripting profile; host must set it |
+| ReplaceRepeated | `replace_repeated_limit = 256` | yes | `metadata.rs:4` | per-call runaway budget (brief-184) |
+| Evaluation passes | `evaluation_pass_limit = 256` | yes | `metadata.rs:30` | fixed-point runaway budget |
+| Integer work | `integer_work_limit = 100_000` | yes, but **Factorial only** | `metadata.rs:32`; enforced ONLY at `crates/rum-runtime/src/runtime/arithmetic/factorial.rs:16,52,74-81` | **`IntegerLength[2^(10^9)]` → timed out at 12s, NOT fail-closed** — see flagged finding |
+| Request memory ceiling | `eval_memory_limit = None` | **NO — opt-in** | `config.rs:19,32`; `MemoryConstrained` frame + host setter | off in the default/scripting profile; host must set it |
 | Wall-clock timeout | none | **NO — opt-in** | `crates/rum-runtime/src/runtime/session/session_api.rs:93` (`set_eval_timeout`) | off by default; host must set it |
 
 **Flagged limit-coverage finding (1): `Power`/general big-integer producers are

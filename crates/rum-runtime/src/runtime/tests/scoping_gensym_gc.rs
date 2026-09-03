@@ -554,7 +554,23 @@ fn unique_generated_symbols_are_not_module_gc_candidates() {
 
 #[test]
 fn recursive_module_sweep_reclaims_dead_retained_gensyms() {
+    const STACK_BYTES: usize = 8 * 1024 * 1024;
+
+    std::thread::Builder::new()
+        .name("recursive-module-sweep".to_string())
+        .stack_size(STACK_BYTES)
+        .spawn(|| run_recursive_module_sweep_reclaims_dead_retained_gensyms(STACK_BYTES))
+        .expect("recursive Module sweep thread should start")
+        .join()
+        .expect("recursive Module sweep should finish");
+}
+
+fn run_recursive_module_sweep_reclaims_dead_retained_gensyms(stack_bytes: usize) {
     let mut session = session_with_test_gc_probe_builtins();
+    session.set_native_stack_limit(
+        native_stack_limit_for_declared_stack(stack_bytes)
+            .expect("recursive Module sweep stack should satisfy the supported minimum"),
+    );
 
     session
         .eval_text(

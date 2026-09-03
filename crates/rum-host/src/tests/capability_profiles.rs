@@ -3,6 +3,26 @@ use super::common::*;
 use std::fs;
 
 #[test]
+fn every_host_profile_inherits_the_derived_native_stack_budget() {
+    assert_eq!(
+        HostResourceLimits::default().native_stack_limit,
+        DEFAULT_NATIVE_STACK_LIMIT,
+    );
+
+    for config in [
+        HostConfig::default(),
+        HostConfig::sandboxed(),
+        HostConfig::hermetic(),
+        HostConfig::scripting(),
+    ] {
+        assert_eq!(
+            config.resource_limits.native_stack_limit,
+            DEFAULT_NATIVE_STACK_LIMIT,
+        );
+    }
+}
+
+#[test]
 fn sandboxed_profile_pins_all_capabilities_and_providers() {
     let config = HostConfig::sandboxed();
 

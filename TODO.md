@@ -1205,3 +1205,50 @@ Settled after brief-414's design pass and the director review of it.
 - Continue splitting formatter planner/builder/render/test modules by
   responsibility as they grow; do not create a separate string crate without a
   real ownership boundary.
+
+### The native stack budget — CLOSED (2026-09-04, briefs 436-438)
+
+The 2026-09-03 ruling above ("`DEFAULT_NATIVE_STACK_LIMIT` at 6 MiB fails open
+on a 2 MiB thread where it can never fire") is executed. The route to it was
+not the one expected.
+
+brief-436 diagnosed why a deep `StringExpression` construction died at 375
+levels: a strict head whose call stays residual and never acquires a stability
+proof is re-evaluated through eager argument preparation on every construction
+step, one native evaluator level per spine level. The class is wide — `Power`,
+`Mod`, `Max`, `Min`, `Equal`, `Less`, `Not` and every metadata-only string head
+— and ordinary user-defined heads are outside it.
+
+The gate then found the guard. `poll_native_stack_limit` measures bytes
+actually consumed and is the correct instrument; its default was three times
+the ruled stack, so the same construction failed in band on 8 MiB and killed
+the process on 2 MiB. `SECURITY.md` published the opposite promise, and
+`codecs_xml.rs` already carried a workaround comment blaming the 2 MiB debug
+test thread — this defect observed in the wild and patched at the call site.
+
+brief-437 measured the frame. One evaluation level is a 4,736 B static packet
+across seven resident frames, matching a 4,675 B slope bisected over three
+stack sizes. **Three per-level costs, and a budget argument has to say which it
+means**: 4.7 KiB release strict, 7.5 KiB release user recursion, 20.6 KiB debug
+user recursion. The projected floor from local frame optimization is 1.5-2.6
+KiB, against the 511.875 B that height 4,097 on 2 MiB would allow — so the
+ruled height for a strict residual call needs an explicit task stack, not frame
+polishing. That is open and unscheduled.
+
+brief-438 landed the calibration: `2 MiB - 512 KiB poll headroom - 512 KiB
+non-evaluator reserve = 1 MiB`, computed rather than restated, with
+`native_stack_limit_for_declared_stack` for hosts that provision more. Four
+tests broke and all four were repaired by declaring a thread and deriving the
+budget from the same size — depths and `reclim` assertions untouched — which
+also retired the `codecs_xml` workaround and restored its acceptance coverage
+from 64 back to the full 256.
+
+**The accepted price**: on the default profile a 2 MiB host gets roughly 48
+debug / 140 release levels of user recursion, not the nominal 1024.
+`recursion_limit` is now documented as a ceiling.
+
+**Known limit, recorded not fixed**: the byte guard polls only at
+evaluation-depth increments, so a recursion running entirely inside one builtin
+advances no depth and is invisible to it for that whole descent. Converting
+such walkers to explicit stacks is what closes that, which is what briefs
+422-433 did for ten traversals.

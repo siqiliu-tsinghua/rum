@@ -1,6 +1,6 @@
 use rum_host::{
     HostConfig, HostDefinitionSummary, HostEvalOutcome, HostEvalSuccess, HostResourceLimits,
-    HostSession, HostStructuredOutputKind,
+    HostSession, HostStructuredOutputKind, native_stack_limit_for_declared_stack,
 };
 use rum_runtime::Session;
 use std::sync::mpsc;
@@ -11,6 +11,7 @@ const REWRITE_LOOP_UNDER_LOAD: &str =
     "expr = 0; Do[expr = expr /. n_Integer :> n + 1, 50000000]; expr";
 const CANCELLABLE_REWRITE_LOOP_UNDER_LOAD: &str = "Print[\"evaluation-started\"]; expr = 0; \
      Do[expr = expr /. n_Integer :> n + 1, 50000000]; expr";
+const BATTERED_SESSION_STACK_BYTES: usize = 8 * 1024 * 1024;
 
 fn successful_eval(outcome: HostEvalOutcome) -> HostEvalSuccess {
     match outcome {
@@ -290,7 +291,7 @@ fn assert_runtime_termination(
 #[ignore]
 fn battered_session_recovers_after_repeated_recoverable_limit_trips() {
     thread::Builder::new()
-        .stack_size(8 * 1024 * 1024)
+        .stack_size(BATTERED_SESSION_STACK_BYTES)
         .spawn(run_battered_session_recoverable_limit_trips)
         .expect("battered-session stress thread should start")
         .join()
@@ -299,10 +300,12 @@ fn battered_session_recovers_after_repeated_recoverable_limit_trips() {
 
 fn run_battered_session_recoverable_limit_trips() {
     let mut session = runtime_core_session();
+    let declared_stack_limit = native_stack_limit_for_declared_stack(BATTERED_SESSION_STACK_BYTES)
+        .expect("battered-session stack should satisfy the supported minimum");
 
     for cycle in 0..3 {
         session.set_recursion_limit(32);
-        session.set_native_stack_limit(6 * 1024 * 1024);
+        session.set_native_stack_limit(declared_stack_limit);
         assert_runtime_termination(
             &mut session,
             &format!("rec{cycle}[x_] := rec{cycle}[f[x]]; rec{cycle}[1]"),
@@ -321,7 +324,7 @@ fn run_battered_session_recoverable_limit_trips() {
         );
         assert_eq!(runtime_eval_to_string(&mut session, "2 + 2"), "4");
 
-        session.set_native_stack_limit(6 * 1024 * 1024);
+        session.set_native_stack_limit(declared_stack_limit);
         session.set_iteration_work_limit(2);
         assert_runtime_termination(
             &mut session,

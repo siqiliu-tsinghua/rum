@@ -15,7 +15,7 @@ The host hardening document gives the implementation background:
 `HostResourceLimits` exposes these caller-set budgets:
 
 - `recursion_limit`
-- `native_stack_limit` (default: 6,291,456 bytes)
+- `native_stack_limit` (default: 1,048,576 bytes)
 - `replace_repeated_limit`
 - `evaluation_pass_limit`
 - `eval_memory_limit` (optional modeled-memory ceiling per request)
@@ -76,8 +76,32 @@ notes.
 `recursion_limit` guards recursive evaluator re-entry.
 
 `native_stack_limit` guards the host thread's native stack while evaluator
-recursion is active. The default is 6 MiB of consumed stack, chosen to leave
-about 2 MiB of headroom on an 8 MiB host thread stack.
+recursion is active. Its default is the named calibration equation:
+
+```text
+DEFAULT_NATIVE_STACK_LIMIT
+  = MIN_SUPPORTED_NATIVE_STACK_BYTES
+  - NATIVE_STACK_POLL_HEADROOM_BYTES
+  - NATIVE_STACK_NON_EVALUATOR_RESERVE_BYTES
+  = 2 MiB - (4 * 128 KiB) - 512 KiB
+  = 1 MiB
+```
+
+The four-level poll headroom follows `NATIVE_STACK_DEPTH_POLL_STRIDE`; the
+non-evaluator reserve covers caller/host frames below the evaluator's base plus
+error and drop paths above it. The default is calibrated for ordinary shallow
+entry on a thread of at least `MIN_SUPPORTED_NATIVE_STACK_BYTES` (2 MiB). A
+host with a smaller thread stack, or substantial native frames below the entry,
+must lower the budget.
+
+`native_stack_limit_for_declared_stack(stack_bytes)` derives a matching budget
+for a caller-provisioned stack and returns `None` below the 2 MiB supported
+minimum. This is a declared-stack contract, not stack discovery: safe Rust has
+no portable way to verify the current thread's actual bounds.
+
+The default `recursion_limit` of 1024 is a logical ceiling, not a guarantee
+that every evaluation shape can reach that depth. The native byte guard can
+bind first.
 
 `evaluation_pass_limit` guards top-level fixed-point evaluation.
 
@@ -90,7 +114,7 @@ hosted workloads that should not monopolize a session.
 ```text
 $ cargo run -q -p rum-cli -- --eval 'f[n_] := f[n + 1]; f[0]'
 TerminatedEvaluation["StackLimit"]
-! General::reslim: evaluation exceeded native stack limit (6291456 bytes)
+! General::reslim: evaluation exceeded native stack limit (1048576 bytes)
 ```
 
 ## ReplaceRepeated Limit

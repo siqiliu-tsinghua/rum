@@ -1,7 +1,9 @@
 use crate::install_core;
 use rum_core::{Atom, Expr};
 use rum_runtime::kernel_api::{render_association, system_expr};
-use rum_runtime::{RuntimeMessage, Session};
+use rum_runtime::{RuntimeMessage, Session, native_stack_limit_for_declared_stack};
+
+const XML_DEPTH_ACCEPTANCE_STACK_BYTES: usize = 16 * 1024 * 1024;
 
 const REALISTIC_XML: &str = r#"<?xml version="1.0" encoding="UTF-8"?>
 <cfg env='dev' q="a &amp; b">
@@ -303,14 +305,20 @@ fn assert_xml_depth_success(session: &mut Session, source: &str) {
 
 #[test]
 fn from_xml_depth_limit_accepts_deep_element_nesting() {
-    let mut session = core_session();
-
-    // 64 rather than CODEC_DEPTH_LIMIT: evaluating a 256-deep XmlElement tree
-    // costs two kernel evaluator cycles per level, which exceeds the default
-    // ~2 MiB debug test-thread stack (JSON/TOML List chains fit; this tree
-    // shape does not). Release builds accept the full 256 (verified at the
-    // brief-422 gate); this pins the accept direction within harness limits.
-    assert_xml_depth_success(&mut session, &nested_xml_elements(64));
+    std::thread::Builder::new()
+        .name("xml-depth-acceptance".to_string())
+        .stack_size(XML_DEPTH_ACCEPTANCE_STACK_BYTES)
+        .spawn(|| {
+            let mut session = core_session();
+            session.set_native_stack_limit(
+                native_stack_limit_for_declared_stack(XML_DEPTH_ACCEPTANCE_STACK_BYTES)
+                    .expect("XML acceptance stack should satisfy the supported minimum"),
+            );
+            assert_xml_depth_success(&mut session, &nested_xml_elements(CODEC_DEPTH_LIMIT));
+        })
+        .expect("XML depth-acceptance thread should start")
+        .join()
+        .expect("XML depth acceptance should finish");
 }
 
 #[test]

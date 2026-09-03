@@ -3,12 +3,53 @@ use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
 pub(super) const DEFAULT_REPLACE_REPEATED_LIMIT: usize = 256;
 pub(super) const DEFAULT_RECURSION_LIMIT: usize = 1024;
-pub(super) const DEFAULT_NATIVE_STACK_LIMIT: usize = 6 * 1024 * 1024;
-pub(super) const NATIVE_STACK_DEPTH_POLL_STRIDE: usize = 4;
+/// Smallest declared thread stack supported by the default resource profile.
+///
+/// This is a caller-declared contract; the runtime does not discover the
+/// current thread's stack bounds.
+pub const MIN_SUPPORTED_NATIVE_STACK_BYTES: usize = 2 * 1024 * 1024;
+/// Native-stack allowance for one evaluation level between byte-budget polls.
+///
+/// The 128 KiB reserve is more than six times the measured 20.6 KiB debug
+/// user-recursion cost.
+pub const NATIVE_STACK_UNPOLLED_LEVEL_RESERVE_BYTES: usize = 128 * 1024;
+/// Number of evaluation-depth increments between native-stack byte-budget polls.
+pub const NATIVE_STACK_DEPTH_POLL_STRIDE: usize = 4;
+/// Native-stack headroom reserved for evaluation levels skipped between polls.
+pub const NATIVE_STACK_POLL_HEADROOM_BYTES: usize =
+    NATIVE_STACK_DEPTH_POLL_STRIDE * NATIVE_STACK_UNPOLLED_LEVEL_RESERVE_BYTES;
+/// Native-stack headroom reserved outside the measured evaluator descent.
+pub const NATIVE_STACK_NON_EVALUATOR_RESERVE_BYTES: usize = 512 * 1024;
+/// Default native-stack byte budget available to evaluator descent.
+///
+/// This is derived from the minimum supported declared stack after reserving
+/// poll headroom and non-evaluator capacity.
+pub const DEFAULT_NATIVE_STACK_LIMIT: usize = MIN_SUPPORTED_NATIVE_STACK_BYTES
+    - NATIVE_STACK_POLL_HEADROOM_BYTES
+    - NATIVE_STACK_NON_EVALUATOR_RESERVE_BYTES;
 pub(super) const DEFAULT_EVALUATION_PASS_LIMIT: usize = 256;
 pub(super) const DEFAULT_GENERATED_ELEMENT_LIMIT: usize = 100_000;
 pub(super) const DEFAULT_INTEGER_WORK_LIMIT: usize = 100_000;
 pub(super) const DEFAULT_ITERATION_WORK_LIMIT: usize = 100_000;
+
+/// Derives an evaluator byte budget from a caller-declared thread stack size.
+///
+/// This does not discover or verify the current thread's actual stack size;
+/// safe Rust has no portable API for doing so. Callers must pass the stack size
+/// they provisioned and lower the result if evaluation begins beneath
+/// substantial caller frames. Declared stacks below
+/// [`MIN_SUPPORTED_NATIVE_STACK_BYTES`] are unsupported by this calibration and
+/// return `None`.
+pub const fn native_stack_limit_for_declared_stack(stack_bytes: usize) -> Option<usize> {
+    if stack_bytes < MIN_SUPPORTED_NATIVE_STACK_BYTES {
+        return None;
+    }
+
+    match stack_bytes.checked_sub(NATIVE_STACK_POLL_HEADROOM_BYTES) {
+        Some(remaining) => remaining.checked_sub(NATIVE_STACK_NON_EVALUATOR_RESERVE_BYTES),
+        None => None,
+    }
+}
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, FrameRootTrace)]
 pub enum HoldAttribute {

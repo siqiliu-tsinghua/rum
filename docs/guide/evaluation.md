@@ -266,6 +266,13 @@ Native stack headroom is guarded separately by `native_stack_limit`; unbounded
 definitions can therefore terminate as `TerminatedEvaluation["StackLimit"]`
 before the logical recursion counter reaches `recursion_limit`.
 
+The default recursion limit of 1024 is a ceiling, not a reachable guarantee.
+Native stack consumed per level depends on the evaluation path and build
+profile: calibration measured about 4.7 KiB for a release strict residual call,
+7.5 KiB for release user recursion, and 20.6 KiB for debug user recursion. The
+byte guard may therefore bind at very different logical depths, and can bind
+well before 1024 on the default 1 MiB evaluator budget.
+
 Those limits are separate from the fixed-point pass limit and the pattern-match
 depth guard.
 

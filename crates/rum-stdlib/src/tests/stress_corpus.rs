@@ -2,7 +2,9 @@ use std::{collections::BTreeMap, thread};
 
 use crate::install_core;
 use rum_core::{Atom, Expr, IntValue};
-use rum_runtime::{ResourceLimits, Session, SessionConfig};
+use rum_runtime::{ResourceLimits, Session, SessionConfig, native_stack_limit_for_declared_stack};
+
+const DEEP_EVALUATION_STACK_BYTES: usize = 8 * 1024 * 1024;
 
 fn core_session() -> Session {
     let mut session = Session::new();
@@ -14,6 +16,25 @@ fn core_session_with_limits(limits: ResourceLimits) -> Session {
     let mut session = Session::with_config(SessionConfig::default().with_resource_limits(limits));
     install_core(&mut session);
     session
+}
+
+fn core_session_for_declared_stack(stack_bytes: usize) -> Session {
+    let mut session = core_session();
+    session.set_native_stack_limit(
+        native_stack_limit_for_declared_stack(stack_bytes)
+            .expect("declared test stack should satisfy the supported minimum"),
+    );
+    session
+}
+
+fn run_on_deep_evaluation_thread(name: &str, action: impl FnOnce() + Send + 'static) {
+    thread::Builder::new()
+        .name(name.to_string())
+        .stack_size(DEEP_EVALUATION_STACK_BYTES)
+        .spawn(action)
+        .expect("deep-evaluation test thread should start")
+        .join()
+        .unwrap_or_else(|_| panic!("deep-evaluation test thread {name:?} panicked"));
 }
 
 fn eval_to_string(session: &mut Session, source: &str) -> String {
@@ -43,31 +64,35 @@ fn nested_wrap(depth: usize) -> String {
 
 #[test]
 fn guard_adjacent_user_recursion_below_limit_succeeds() {
-    let mut session = core_session();
-    session.set_recursion_limit(96);
-    session.eval_text("peel[done] := done").unwrap();
-    session.eval_text("peel[wrap[x_]] := peel[x]").unwrap();
+    run_on_deep_evaluation_thread("guard-adjacent-recursion-below", || {
+        let mut session = core_session_for_declared_stack(DEEP_EVALUATION_STACK_BYTES);
+        session.set_recursion_limit(96);
+        session.eval_text("peel[done] := done").unwrap();
+        session.eval_text("peel[wrap[x_]] := peel[x]").unwrap();
 
-    assert_eq!(
-        eval_to_string(&mut session, &format!("peel[{}]", nested_wrap(72))),
-        "done"
-    );
+        assert_eq!(
+            eval_to_string(&mut session, &format!("peel[{}]", nested_wrap(72))),
+            "done"
+        );
+    });
 }
 
 #[test]
 fn guard_adjacent_user_recursion_above_limit_terminates_and_session_recovers() {
-    let mut session = core_session();
-    session.set_recursion_limit(96);
-    session.eval_text("peel[done] := done").unwrap();
-    session.eval_text("peel[wrap[x_]] := peel[x]").unwrap();
+    run_on_deep_evaluation_thread("guard-adjacent-recursion-above", || {
+        let mut session = core_session_for_declared_stack(DEEP_EVALUATION_STACK_BYTES);
+        session.set_recursion_limit(96);
+        session.eval_text("peel[done] := done").unwrap();
+        session.eval_text("peel[wrap[x_]] := peel[x]").unwrap();
 
-    assert_termination(
-        &mut session,
-        &format!("peel[{}]", nested_wrap(120)),
-        "TerminatedEvaluation[\"RecursionLimit\"]",
-        "reclim",
-    );
-    assert_eq!(eval_to_string(&mut session, "2 + 5"), "7");
+        assert_termination(
+            &mut session,
+            &format!("peel[{}]", nested_wrap(120)),
+            "TerminatedEvaluation[\"RecursionLimit\"]",
+            "reclim",
+        );
+        assert_eq!(eval_to_string(&mut session, "2 + 5"), "7");
+    });
 }
 
 #[test]
@@ -189,16 +214,14 @@ fn peano_arithmetic_multiplies_through_pure_rewriting() {
 #[test]
 #[ignore]
 fn peano_arithmetic_heavy_multiplication() {
-    thread::Builder::new()
-        .stack_size(8 * 1024 * 1024)
-        .spawn(run_peano_arithmetic_heavy_multiplication)
-        .expect("peano stress thread should start")
-        .join()
-        .expect("peano stress should finish");
+    run_on_deep_evaluation_thread(
+        "peano-heavy-multiplication",
+        run_peano_arithmetic_heavy_multiplication,
+    );
 }
 
 fn run_peano_arithmetic_heavy_multiplication() {
-    let mut session = core_session();
+    let mut session = core_session_for_declared_stack(DEEP_EVALUATION_STACK_BYTES);
     session.set_recursion_limit(10_000);
 
     assert_eq!(

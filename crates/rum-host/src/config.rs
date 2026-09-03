@@ -62,7 +62,12 @@ pub struct HostResourceLimits {
     pub recursion_limit: usize,
     /// Maximum native stack bytes the evaluator may consume from request start.
     ///
-    /// The default is 6 MiB, leaving about 2 MiB of headroom on an 8 MiB stack.
+    /// The default is derived from a minimum supported declared stack of 2 MiB,
+    /// with 512 KiB reserved for poll headroom and 512 KiB for non-evaluator
+    /// frames. Hosts that provision a larger worker stack can derive its budget
+    /// with [`native_stack_limit_for_declared_stack`](crate::native_stack_limit_for_declared_stack).
+    /// This is a declared-stack contract; the host does not discover or verify
+    /// the current thread's actual stack bounds.
     pub native_stack_limit: usize,
     /// Maximum number of `ReplaceRepeated` iterations.
     pub replace_repeated_limit: usize,
