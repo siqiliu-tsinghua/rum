@@ -1076,11 +1076,60 @@ below 4,097; they are unbounded, which is not the same thing.** Measure them
 against the bound and order by real ceiling before opening briefs, rather than
 scheduling a dozen repairs on source reading alone.
 
-One of them now has a number, measured incidentally at the brief-433 gate:
-**`Depth` clears 20,001 and fails by 43,001** on 2 MiB. It is far above the
-bound, so it is not urgent — but it is the next ceiling on the probe shape this
-line uses, and a probe that calls `Depth` for liveness cannot bracket anything
-above it.
+**They now have numbers (director-measured, 2026-09-03).** Release CLI,
+`ulimit -s 2048`, values built with `x = 1; Do[x = {x}, {i, N}]` or the shape
+each probe needs; every failure below was re-run and confirmed to be a genuine
+`thread 'main' has overflowed its stack`, not an in-band error and not a
+timeout.
+
+| Probe | completes / overflows | against 4,097 |
+|---|---|---|
+| **`StringExpression` nesting (construction)** | 375 / 550 | **10.9x short** |
+| **`Replace[_, _, {0, Infinity}]`** | 1,250 / 1,425 | **3.3x short** |
+| **`MapIndexed[_, _, Infinity]`** | 1,600 / 1,775 | **2.6x short** |
+| **`D` over a nested-`Sin` spine** | 1,600 / 1,775 | **2.6x short** |
+| `FullForm` (`Expr::Display`) | 5,800 / 6,150 | 1.4x |
+| `Save` (session serialization) | 5,800 / 6,150 | 1.4x |
+| `SameQ` (`PartialEq` logical path) | 7,900 / 8,600 | 1.9x |
+| deep `Association` construction | 10,700 / 11,400 | 2.6x |
+| `Merge` over deep associations | 10,700 / 11,400 | masked, see below |
+| `Scan[_, _, Infinity]` | 11,400 / 12,100 | 2.8x |
+| `ArrayQ` | 15,600 / 17,000 | 3.8x |
+| `Flatten[_, Infinity]` | 25,400 / 26,800 | 6.2x |
+| deep `Association` key (`Hash`) | clears 45,000 | — |
+| `Depth` | clears 20,001, fails by 43,001 | — |
+
+**Four fall short, and that is the queue**, in shortfall order:
+`StringExpression` construction, `Replace` at all levels, `MapIndexed`, and the
+calculus walker. brief-427 predicted `MapIndexed` and `Scan` as a pair; `Scan`
+clears by 2.8x and `MapIndexed` does not, so the pair was not a pair.
+
+**Two rows share a bracket and a mechanism.** `FullForm` and `Save` both give
+out at 5,800/6,150 because a session snapshot is a UTF-8 source image, so
+`Save` renders through the same `Expr::Display`. Fixing one fixes both, and it
+is the same renderer brief-424 found at 5,000-8,000.
+
+**`Merge`'s own ceiling is unmeasured**: building the deep association it needs
+gives out at exactly the same 10,700/11,400, so the construction masks it. Any
+probe of an association-consuming traversal has to bracket the construction
+first — this one did, which is the only reason the masking is visible.
+
+**Probes that measured nothing, recorded so they are not repeated.** `D` and
+`Expand` do not descend into lists at all (`D[{{{q}}}, q]` returns a chain-rule
+expression over `List`, `Expand` returns its argument unchanged), so a
+list-shaped probe of either measures the construction; the calculus number above
+comes from a nested-`Sin` spine instead. `ArrayDepth` and `Dimensions` are not
+rum builtins and return unevaluated — which still prints, so they would have
+reported a false ceiling. `Nest[List, 1, N]` fails in band at the fixed-point
+pass limit (256), not on the stack. `MergeNested` with one argument returns an
+operator form.
+
+**Not probed, and why.** String-pattern *matching* machinery (the construction
+probe dies at 400, so matching cannot be reached with a deep pattern this way),
+suspension continuation encoding, `lowering.rs` for host-constructed ASTs (not
+reachable from the source language), profiling fingerprints (diagnostics-gated),
+and polynomial walkers (no cheap deep probe — a deep polynomial expands
+exponentially).
 
 **Adjacent, still open:** `rum-jupyter`'s `json_support.rs:61` has no depth
 guard on wire-message JSON (the 2026-09-02 audit's F3), deliberately untouched.
