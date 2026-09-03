@@ -192,6 +192,37 @@ Consequences for how I present and pick work:
 
 ## Current direction (read these for state)
 
+- **Two lines are PART BUILT and neither is closed (2026-09-03, briefs
+  412-427).** `TODO.md` is authoritative for both; the 2026-09-03 `PROGRESS.md`
+  entry has the narrative. The memory-accounting line made the session walk
+  complete, made every builtin declare how it can grow, and made two of those
+  contracts falsifiable. The traversal-depth line bounded four recursive
+  descents that ended the process and converted ten traversals, but the
+  construction-side bound is **not installed**: caching the physical height
+  that makes admission O(1) costs 30% on list rebuilds, the stop-loss fired,
+  and the spike is in `stash@{0}`.
+
+  **Four things from these are method, not history.**
+
+  - *An instrument that has never been seen to fail is not known to work.* Both
+    growth falsifiers ship with checked-in `#[should_panic]` proofs and I
+    verified each by misdeclaring a real catalog builtin. This is now a
+    required section in any brief that builds a check.
+  - *Seven of my own probes measured something other than what they claimed*,
+    every one the same shape — a fast path, a level spec that barely descends,
+    a `grep -rl | head -1` that returned a reference rather than a definition,
+    two inventories summed without checking their overlap. Calibrate against a
+    known answer before believing a result, including a negative one.
+  - *Codex's content filter is not a wording problem.* It killed brief-422
+    twice, the second time with the security framing already removed, and
+    brief-424 twice at 120k tokens on the worker's own generated probe code.
+    **The judgement is whether the brief needs an executable reproduction**, not
+    which words it uses; if it does, either run it myself or send it to GLM.
+  - *A reclassification into an unenforced contract is a deferral wearing a
+    repair's clothes.* Five of the eleven declarations brief-417 moved landed in
+    `Preflight` while it had no falsifier, and brief-419 caught all five the day
+    it gained one. Briefs since forbid reclassification outright.
+
 - **The suspension and cancellation line is COMPLETE (2026-09-02, briefs
   397-411, `8df8f144` through `4c4dbfab`).** It opened with the first
   release-profile full-test run on the Linux host, which produced two
