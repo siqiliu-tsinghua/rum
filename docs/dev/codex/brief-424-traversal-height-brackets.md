@@ -119,3 +119,102 @@ Then three specific questions:
 4. The three specific questions above.
 5. Anything in the brief-422/423 inventories you could not bracket, and why.
 6. Risks and open questions.
+
+---
+
+# Report — 2026-09-03 — executed by the director
+
+## Why this was not run by a worker
+
+Dispatched to Codex twice. The second attempt reached 120,486 tokens and then
+hit the upstream content filter — not on this brief's text, which I scanned
+clean before dispatch, but on the worker's own generated probe code, whose tail
+in the log is:
+
+```
++    std::mem::forget(build);
++    std::mem::forget(session);
+```
+
+Deliberately leaking a session to avoid its destructor, in a stack-capacity
+probe, is the shape that tripped it. Rewriting the brief cannot fix that: the
+measurement inherently produces such code. GLM was not used because its weekly
+quota was at 18% and this is a long, mechanical measurement. I ran it myself
+against the release CLI.
+
+## Method, and the assumption I verified instead of using
+
+Probe values are built with `x = 1; Do[x = {x}, {i, N}]`, giving physical height
+N+1. `Nest` does not work — it re-evaluates and stops at the iteration limit,
+which is how an earlier probe of mine appeared to clear the encoders without
+ever reaching them.
+
+Rather than measure on 8 MiB and scale, I set the stack directly with
+`ulimit -s 2048` and measured on 2 MiB. I checked the scaling relation anyway,
+because I had been reasoning with it:
+
+```
+ToString, 8192 KiB:  1500 ok  1600 ok  6250 ok  6400 fail
+ToString, 2048 KiB:  1500 ok  1600 fail 6250 fail 6400 fail
+```
+
+6250/1500 = 4.17, 6400/1600 = 4.00 — linear in stack size, as assumed. Every
+number below is nonetheless a direct 2 MiB measurement.
+
+2 MiB is the right target: `docs/guide/resource-limits-and-sandbox.md:122`
+records it as Rust's default for a spawned thread, so it is what an embedder
+gets without setting `stack_size`. Raising the documented minimum would require
+every host to remember a setting, which is the failure mode this project
+replaces with structure.
+
+## The bracket table — 2 MiB stack, ruled bound 4,097
+
+| Traversal | Result at height 4,097 | Ceiling | Clears the bound |
+|---|---|---|---|
+| `ByteCount` | 700619 | far above | yes |
+| `Depth` | 4098 | above | yes |
+| `LeafCount` | 4098 | above | yes |
+| `Expr::Display` (via `FullForm`) | 24583 chars | 5,000–8,000 | yes |
+| `ToString` | — | **1,550–1,600** | **no, 2.6x short** |
+| `Map` | — | below 4,097 | **no** |
+| `Apply` | — | below 4,097 | **no** |
+| `ReplaceAll` | — | below 4,097 | **no** |
+| `Cases[_, _, Infinity]` | — | below 4,097 | **no** |
+| `Level` | — | below 4,097 | **no** |
+| `MemberQ[_, _, Infinity]` | — | below 4,097 | **no** |
+| `Count[_, _, Infinity]` | — | below 4,097 | **no** |
+| `Position` | — | below 4,097 | **no** |
+| `FreeQ` | — | below 4,097 | **no** |
+
+## The conversion list
+
+Ten entries: `ToString`, `Map`, `Apply`, `ReplaceAll`, `Cases`, `Level`,
+`MemberQ`, `Count`, `Position`, `FreeQ`.
+
+## The structural lead this produced
+
+**There are two renderers and only one of them is short.** `FullForm` is
+`Ok(Expr::string(expr.to_string()))` (`structure_ops/surface.rs:78-89`) — it
+uses `Expr`'s own `Display` and clears 4,097 on 2 MiB with headroom to roughly
+5,000–8,000. `ToString` goes through a `ToStringFormat` dispatch
+(`strings/text/builtins.rs:624-640`) and gives out at 1,550.
+
+So the renderer half of the conversion is scoped to `ToString`'s formatter, not
+to rendering in general, and `Expr::Display` — which is in the implicit,
+universal category the brief-423 predictive rule warns about — does not need
+converting at this bound. That is a materially smaller and safer job than the
+design priced.
+
+## What I did not establish
+
+- I bracketed `ToString` and `Expr::Display` precisely; the other nine are
+  recorded only as "below 4,097", not bracketed. Ordering the conversion work by
+  shortfall needs those brackets.
+- brief-422 §3(e)'s source-verified rows — string-pattern machinery, calculus
+  and polynomial walkers, schema conformance, tensor rank, matcher compile,
+  substitution and rewrite traversals, suspension continuation encoding — are
+  not measured here at all. They are the tail of the same class.
+- Debug-profile brackets are unmeasured; every number above is release.
+- The two questions about the backstop poll — what `native_stack_limit` is safe
+  on 2 MiB, and which buckets have a `Session` in scope at all — remain open.
+  `Expr::Display`, the derived traits, and drop glue plainly do not have one.
