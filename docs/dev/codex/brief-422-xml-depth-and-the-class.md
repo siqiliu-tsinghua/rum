@@ -1,9 +1,9 @@
-# brief-422 — `FromXml` kills the process, and it is the fourth of four
+# brief-422 — the fourth decoder never got its depth bound
 
 Shape: **implementation**. Worker: **cdx (Codex)**.
 
-Jumps the queue ahead of the incremental-charging line. A sandboxed `{Pure}`
-script can abort the host process; unbacked memory declarations can not.
+Takes priority over the incremental-charging line: this one ends the process,
+and an unbounded process exit outranks an unbacked accounting declaration.
 
 ## The defect, director-reproduced
 
@@ -20,10 +20,11 @@ fatal runtime error: stack overflow
 （core dumped）
 ```
 
-Every part of that input is `Pure`. The abort is outside the panic boundary, so
-`catch_unwind` cannot catch it and the crash-only contract does not contain it:
-the process dies. `SECURITY.md`'s model is evaluating *untrusted scripts* safely
-inside a trusted host, and this breaks it with three builtins.
+The input is built with two ordinary string builtins. The abort is outside the
+panic boundary, so `catch_unwind` does not catch it and the crash-only contract
+does not contain it — the process exits and the embedding host loses its
+session. Three sibling decoders handle the same shape of input by returning an
+ordinary in-band error.
 
 The other three decoders refuse in band at the same depth — I ran
 `FromJson`, `FromYaml` and `FromToml` on 12,000 levels and each returned a
@@ -77,8 +78,8 @@ constructing `Expr` through the Rust API, a restored snapshot. Settle it.
    decoders, encoders, renderers, tree walkers, matchers, formatters. For each
    row: `path:line`, what controls the depth, and either the bound it already
    has or the reason it cannot be driven unboundedly. Cross-check the inventory
-   against live probes — a source reading that says "guarded" is what produced
-   this defect.
+   against live probes — a source reading that says "guarded" is what let this one
+   through.
 
 3. **A bound for every unbounded row you find**, in the same convention.
 
