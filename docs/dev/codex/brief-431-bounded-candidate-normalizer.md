@@ -228,3 +228,249 @@ bash scripts/core-language-microbench.sh --output-dir <cand-dir>
 4. The A/B — control median first, then the adjusted affected rows.
 5. What the fallback costs on the depth-65 case, measured.
 6. Stop-loss / open questions.
+
+## Worker report (brief-431)
+
+### 1. What changed
+
+- `crates/rum-runtime/src/runtime/resolution/match_normalization.rs:1-274`:
+  added the precedent-based depth-16 recursive front path, a distinct
+  `MatchNormalizerDepthExhausted` result, and a cold `#[inline(never)]`
+  explicit-stack fallback. The recursive and iterative engines both use the
+  single argument-attribute finisher at lines 184-207 and the single four-arm
+  rebuild finisher at lines 262-273. The definition-identity wrapper retains
+  its own hold gate and outer policy while routing each child through the
+  complete bounded/fallback core. No work vector is constructed on the shallow
+  path.
+- `crates/rum-runtime/src/runtime/tests/match_normalization_contract.rs:77-111,238-253,472-599`:
+  added changed and unchanged argument/head spines at depths 17 and 65; compared
+  the ordinary entry, bounded entries at budgets 0/1/15/16/17, and the directly
+  invoked iterative fallback against the frozen reference on `Option`, logical
+  value, and whole-tree Arc-origin signature; and directly checked zero-budget
+  atoms plus the 16/17 call-depth boundary.
+- `crates/rum-stdlib/src/tests/iterative_traversal_depth.rs:15-47`:
+  added the height-parameterized helper, kept `evaluate_certificate`'s signature
+  by delegating to it, and added separate ignored 2 MiB `MatchQ` and construction
+  liveness certificates at physical height 20,001.
+- `docs/dev/codex/brief-431-bounded-candidate-normalizer.md`: appended this
+  report.
+
+Only those four in-scope files are modified. No caller, constructor,
+`Expr`/`SharedExpr`/`SharedArgs` implementation, configuration, or `unsafe` code
+was touched.
+
+### 2. Falsifier
+
+The untouched release CLI was built and copied to `/tmp/rum-cli-base` before
+the production edit. An initial command with `--exact` selected zero tests and
+was not treated as a falsifier. The corrected pre-repair command was:
+
+```text
+$ scripts/run-bounded.py --timeout 120 -- cargo test -p rum-stdlib --release matchq_completes_at_physical_height_20001_on_two_mib -- --ignored
+    Finished `release` profile [optimized] target(s) in 0.02s
+     Running unittests src/lib.rs (target/release/deps/rum_stdlib-eeb79aceb990740c)
+
+running 1 test
+
+thread 'matchq-depth-20001' has overflowed its stack
+fatal runtime error: stack overflow
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+
+Caused by:
+  process didn't exit successfully: `/home/remi/dev/rum/target/release/deps/rum_stdlib-eeb79aceb990740c matchq_completes_at_physical_height_20001_on_two_mib --ignored` (signal: 6, SIGABRT: process abort signal)
+```
+
+The identical post-repair command passed:
+
+```text
+$ scripts/run-bounded.py --timeout 300 -- cargo test -p rum-stdlib --release matchq_completes_at_physical_height_20001_on_two_mib -- --ignored
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+    Finished `release` profile [optimized] target(s) in 31.39s
+     Running unittests src/lib.rs (target/release/deps/rum_stdlib-eeb79aceb990740c)
+
+running 1 test
+test tests::iterative_traversal_depth::matchq_completes_at_physical_height_20001_on_two_mib ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 857 filtered out; finished in 0.02s
+
+     Running unittests src/bin/generate-builtin-reference.rs (target/release/deps/generate_builtin_reference-e09809f9b99114dc)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+
+### 3. Verification
+
+The focused contract command passed before the A/B:
+
+```text
+$ scripts/run-bounded.py --timeout 300 -- cargo test --offline -p rum-runtime match_normalization_contract
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+warning: function `register_test_if_builtin` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:320:27
+    |
+320 | pub(in crate::runtime) fn register_test_if_builtin(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` on by default
+
+warning: function `register_test_return_builtin` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:330:27
+    |
+330 | pub(in crate::runtime) fn register_test_return_builtin(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `register_test_vm_template_builtins` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:358:27
+    |
+358 | pub(in crate::runtime) fn register_test_vm_template_builtins(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `rum-runtime` (lib test) generated 3 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.30s
+     Running unittests src/lib.rs (target/debug/deps/rum_runtime-95cd5fbb46da4f1c)
+
+running 8 tests
+test runtime::tests::match_normalization_contract::match_normalization_contract_argument_finisher_collapses_equal_changed_prefix ... ok
+test runtime::tests::match_normalization_contract::match_normalization_contract_uses_normalized_function_head_attributes ... ok
+test runtime::tests::match_normalization_contract::match_normalization_contract_rebuild_arms_preserve_root_arc_origins ... ok
+test runtime::tests::match_normalization_contract::match_normalization_contract_nested_flat_is_bottom_up_and_fully_flattened ... ok
+test runtime::tests::match_normalization_contract::match_normalization_contract_definition_identity_hold_gate_and_four_arms ... ok
+test runtime::tests::match_normalization_contract::match_normalization_contract_changed_arg_boundary_keeps_unchanged_child_arcs ... ok
+test runtime::tests::match_normalization_contract::match_normalization_contract_bounded_front_distinguishes_completion_from_exhaustion ... ok
+test runtime::tests::match_normalization_contract::match_normalization_contract_corpus_matches_frozen_reference ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 948 filtered out; finished in 0.01s
+```
+
+`cargo fmt --check`, `cargo test --workspace`, and
+`cargo test -p rum-stdlib --release iterative_traversal_depth -- --ignored`
+were not run: the required A/B below triggered the stop-loss first. `cargo fmt
+--all` and `git diff --check` had completed successfully during iteration, but
+they are not reported as substitutes for the unrun mandatory commands.
+
+### 4. Required A/B
+
+The base and candidate release builds both completed in 20.42 seconds. Their
+SHA-256 hashes differed (`d7c72076...f519` base,
+`caeb794b...4719` candidate). The stock commands completed successfully:
+
+```text
+$ scripts/run-bounded.py --timeout 240 -- bash scripts/core-language-microbench.sh --rum-cli /tmp/rum-cli-base --output-dir /tmp/brief431-micro-base
+core microbench output: /tmp/brief431-micro-base
+$ scripts/run-bounded.py --timeout 60 -- bash scripts/core-language-microbench.sh --output-dir /tmp/brief431-micro-candidate
+core microbench output: /tmp/brief431-micro-candidate
+```
+
+Both `runs.tsv` rows were green: base elapsed 0.849413 seconds and candidate
+elapsed 0.799196 seconds. The script explicitly set all profiling variables to
+zero. The named-control median candidate/base delta was **-1.775737%**. The
+adjusted value below is `raw delta - control median`, as required.
+
+| Affected row | Base seconds | Candidate seconds | Raw delta | Offset-adjusted |
+|---|---:|---:|---:|---:|
+| `matchq-integer-success` | 0.000316397 | 0.000319219 | +0.891917% | +2.667655% |
+| `matchq-integer-fail` | 0.000321353 | 0.000319130 | -0.691763% | +1.083974% |
+| `matcher-single-tiny` | 0.000677484 | 0.000708952 | +4.644833% | +6.420570% |
+| `matcher-single-wide-small` | 0.000038579 | 0.000041116 | +6.576117% | +8.351854% |
+| `matcher-single-wide-large` | 0.000075318 | 0.000081170 | +7.769723% | +9.545460% |
+| `replaceall-simple` | 0.000364513 | 0.000360886 | -0.995026% | +0.780711% |
+| `rewrite-guarded-hit` | 0.001806880 | 0.001816300 | +0.521341% | +2.297078% |
+| `rewrite-guarded-decline-fallback` | 0.002540410 | 0.002537040 | -0.132656% | +1.643081% |
+| `cases-wide-no-match` | 0.000157926 | 0.000173993 | +10.173752% | +11.949489% |
+| `count-wide-no-match` | 0.000146572 | 0.000160791 | +9.701034% | +11.476771% |
+| `position-wide-no-match` | 0.000178180 | 0.000194232 | +9.008867% | +10.784605% |
+| `deletecases-wide-no-match` | 0.000174190 | 0.000187995 | +7.925254% | +9.700991% |
+| `deletecases-wide-association-no-match` | 0.000416611 | 0.000412659 | -0.948607% | +0.827130% |
+| `replace-wide-no-match` | 0.000104645 | 0.000088599 | -15.333747% | -13.558010% |
+
+The three `matcher-single-*` rows are a coherent +6.42% to +9.55% adjusted
+slowdown family. The four list-traversal rows `Cases`/`Count`/`Position`/
+`DeleteCases` are a second coherent +9.70% to +11.95% adjusted slowdown family.
+Either exceeds the brief's coherent-family 3% stop-loss, so no second A/B was
+run and no tuning was attempted.
+
+### 5. Depth-65 fallback cost
+
+No depth-65 cost timing was run. The A/B stop-loss required an immediate stop,
+so reporting a number here would require violating the acceptance ordering.
+The depth-65 changed/unchanged argument/head cases did pass the frozen-reference
+equivalence test, but that is correctness evidence rather than a cost
+measurement.
+
+### 6. Stop-loss / open questions
+
+- **Stop-loss fired.** The implementation remains in the uncommitted working
+  tree for review, but it is not an accepted repair. No constant tuning,
+  constructor work, deferred `Cases` work removal, or other compensating edit
+  was attempted.
+- The broad workspace gate, full ignored deployment-depth module, and the
+  separate height-20,001 construction liveness test remain unrun because the
+  performance gate stopped the step.
+- No existing contract assertion failed; all eight focused contract tests were
+  green.
+- The independent recursive `Orderless` comparator and logical-equality paths
+  remain outside scope, as stated in the brief.
+
+## Director's gate (2026-09-03)
+
+**The stop-loss stands, but only half of it survived verification, and the
+worker's A/B could not have told the difference.** I rebuilt both binaries and
+confirmed the SHA-256 hashes match the ones reported above, then ran four
+microbench passes in one window — base, candidate, base, candidate — to measure
+the same-binary noise floor the single A/B never established.
+
+Same-binary spread on the affected labels: **−7.78% to +11.19%.**
+
+| Label | base1→base2 (SAME BINARY) | b1→c1 adj | b2→c2 adj |
+|---|---:|---:|---:|
+| `matchq-integer-success` | −1.55% | +4.14% | +2.56% |
+| `matchq-integer-fail` | −1.81% | +3.36% | +2.51% |
+| `matcher-single-tiny` | −6.86% | +1.08% | +5.68% |
+| `matcher-single-wide-small` | **+11.19%** | +13.31% | +0.11% |
+| `matcher-single-wide-large` | **+9.73%** | +12.44% | +0.21% |
+| `replaceall-simple` | −4.49% | −0.45% | +8.59% |
+| `rewrite-guarded-hit` | −7.73% | −3.27% | +9.19% |
+| `rewrite-guarded-decline-fallback` | −7.78% | −3.77% | +10.29% |
+| `cases-wide-no-match` | +2.68% | +15.57% | +6.45% |
+| `count-wide-no-match` | +0.66% | +13.40% | +8.37% |
+| `position-wide-no-match` | +3.42% | +12.49% | +6.59% |
+| `deletecases-wide-no-match` | +2.13% | +11.30% | +6.22% |
+| `deletecases-wide-association-no-match` | +10.73% | +5.44% | −0.34% |
+| `replace-wide-no-match` | +1.98% | +3.17% | +1.32% |
+
+Control median moved −3.42% between two runs of the identical binary, so the
+whole-run offset is itself of the same size as several of the reported effects.
+
+**What is real.** Four traversal labels — `cases`, `count`, `position`,
+`deletecases-wide-no-match` — are positive in *both* replicates (+6.2% to
++15.6%) while their same-binary spread is +0.66% to +3.42%. `matchq-integer-*`
+is smaller but likewise positive in both (+2.5% to +4.1%) against a same-binary
+spread under 2%. That is a regression.
+
+**What is not.** The `matcher-single-*` family, cited in the report as one of
+the two coherent families, has a same-binary spread of +9.7% to +11.2% — larger
+than the effect attributed to it, and its two replicates read +13.31% and
++0.11%. It carries no information. `replace-wide-no-match`'s reported −13.6%
+"improvement" reads +3.17% and +1.32% here; it was noise in the other
+direction. The worker followed the brief exactly; the brief's protocol was
+wrong, and that is my error, not the worker's.
+
+**The mechanism, from which labels moved.** The regression tracks the number of
+*nodes visited per normalization*, not the number of call nodes: a wide list of
+1,600 atoms moved most, a single-node `MatchQ` least. The depth budget is
+consumed only on `Expr::Call`, and `cases-wide-no-match` has exactly one call
+node per candidate — so the decrement cannot be what costs 6-15% there. What is
+paid 1,601 times is the new return type: the recursive worker went from
+returning `Option<Expr>` to `Result<Option<Expr>, MatchNormalizerDepthExhausted>`,
+and every atom now returns `Ok(None)` through a `?`.
+
+**Verdict: rejected as built, and the design is not refuted — its plumbing is.**
+The implementation is correct: the pre-repair certificate failed, the post-repair
+certificate passed, and all eight contract tests including the three-producer
+equivalence stayed green. It is preserved in `stash@{0}`. brief-432 keeps the
+engine and removes the wrapper: the recursive path's return type goes back to
+`Option<Expr>` and exhaustion is handled locally at the node where it is
+detected, rather than propagated to the root and restarted.
