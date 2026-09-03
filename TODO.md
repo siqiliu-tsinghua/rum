@@ -993,13 +993,36 @@ build, then `ToString` dumps core. Observed abort thresholds: `ToString`,
 `ByteCount` and the sort comparators are lean enough to survive 80 000 but are
 equally unbounded.
 
-**Why a per-builtin depth cap is the wrong fix.** `Depth[x]` legally returns
-80001 today, so a 256 cap would refuse values that work; and the renderers are
-error-message and trace infrastructure with no refusal channel. The two
-structural options are a construction-side depth admission gate — bound how
-deep a value can become, not what may traverse it — or iterative traversals,
-which is the shape plan-330 already used for the sixteen operator chains. This
-needs a design brief, not a repair brief.
+**Designed by brief-423; ruled 2026-09-03.** The shape is a construction-side
+bound on **physical expression height** — not the `Depth` builtin, which omits
+heads and treats associations specially and so certifies a different tree than
+drop and the renderers walk — with the height cached in the private `Arc`
+allocations so admission is O(1). Only the infrastructure that must be total,
+and the traversals measured short of the bound, become iterative; `Drop`,
+derived traits and equality stay recursive, because that is where three earlier
+iterative-`Drop` designs cost 8-49% and were rejected while plan-330's
+sixteen-operator conversion cost nothing.
+
+**`L >= 4097` (user ruling).** `L = 1024` was cheaper and was rejected: it
+supersedes plan-330's documented 4,096-link contract, whose test builds a
+4,096-deep `Expr` and drops it naturally on a 2 MiB thread. The same tree that
+drops safely at 4,096 on 2 MiB cannot be *rendered* there, so the renderer and
+the traversals that fall short must be converted before the bound is safe.
+
+**Two further rulings.** Traversals get no new knob — rum already pairs a fixed
+portable limit with a measured backstop (`recursion_limit` beside
+`poll_native_stack_limit`, which measures actual consumed bytes), and the design
+extends that pair. And `DEFAULT_NATIVE_STACK_LIMIT` at 6 MiB fails open on a
+2 MiB thread where it can never fire; it becomes safe-by-default on the smallest
+supported stack, raised by hosts that have more.
+
+**Reference point, design input only:** the same class exists in WL — evaluating
+a 4,096-deep value errors there, `ToString` of one succeeds, and a large enough
+one ends the kernel. Its `ToString` boundary is 13,088/13,089 against rum's
+6,250-6,400 on an 8 MiB stack, so the gap is about 2.1x, not the two orders of
+magnitude an earlier reading of mine suggested. No conformance obligation
+follows; it only establishes that neither system has solved this and that a
+structural answer here is not a divergence to justify.
 
 **Adjacent, still open:** `rum-jupyter`'s `json_support.rs:61` has no depth
 guard on wire-message JSON (the 2026-09-02 audit's F3), deliberately untouched
