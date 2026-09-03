@@ -994,15 +994,46 @@ that pair; and `DEFAULT_NATIVE_STACK_LIMIT` at 6 MiB fails open on a 2 MiB
 thread where it can never fire, so it becomes safe-by-default on the smallest
 supported stack, raised by hosts that have more.
 
-**The bound is not installed, because the way to know a height is not
-affordable.** brief-426 cached a saturating physical height in the private
-`Arc` allocations, which is what makes admission O(1). The maintenance is not:
-`SharedArgs::new` went from `Arc::new(args)` to scanning every argument for a
-max, so every list rebuild pays O(width). Against controls within ±0.5%,
-`set-part-fixed100-len800` regressed 30.04% and repeated list append 8.5-8.9%.
-The stop-loss fired; the spike is preserved in the stash, not committed. **A
-different way to maintain the height, or a different design, is needed before
-`L` can be installed.**
+**The construction-side bound is CLOSED as not affordable (user ruling,
+2026-09-03, after four spikes).** Admission is O(1) only if the physical height
+is cached, and every way of knowing it costs more than the bound is worth. The
+decomposition is complete and each term was measured separately:
+
+| Term | Where measured | Cost |
+|---|---|---|
+| 8 bytes per `Arc` allocation, height never computed | brief-434 V1 vs V0 (director) | **+5% to +14%** |
+| `SharedArgs::new` scan with an Arc dereference per child | brief-434 V2/V1 | +3.9% to +11.4% |
+| full rescan after every mutation | brief-434 V3/V2 | free |
+| O(1) conservative maintenance (`max(old, written)`) | brief-434 V4/V2 | free |
+| `max` over args at construction, inline in `Expr::Call`, no allocation growth | brief-435 (director-confirmed) | **+6% to +9.5%** |
+
+Two of those results are worth keeping. **The allocation term was the hidden
+one**: `stringtrim-literal-list-32000` builds no call spines and never reads a
+height, and it cost +14.21% from a field that was never computed —
+`SharedArgsInner` 40→48 bytes moves it into the next allocator chunk class.
+`Expr` and `Atom` are both 32 bytes while `Expr::Call` carries 16, so an inline
+height grows no allocation, and brief-435 proved that removes the term
+completely (those same rows return to −0.40%…+0.93%). **What no design removes
+is the pass itself**: computing `max` over the arguments at construction costs
++6% to +9.5% on the construction and mutation families.
+
+**The one untried shape, and why it was not tried.** The caller could supply the
+height, fused into a loop it already runs — a `Table` builder tracks a running
+max, a `Part` assignment knows `max(old, replacement)`, a permutation knows the
+max is unchanged. That is the only remaining place the cost can go. It was
+rejected on a semantic argument rather than a measurement: a supplied height can
+only be checked by a debug assertion, and the construction-side bound was worth
+its price precisely because it turned an omitted traversal check into a *type*
+invariant. A height that callers must get right is the "relies on people
+remembering" shape this project replaces with structure, so the design no longer
+buys what made it attractive.
+
+All four spikes are preserved: brief-426 and brief-434 V4 in the stash,
+brief-435 in history at `74082418` (reverted by `c8031ee1`).
+
+**Consequence for this line: the tail is now the work.** Without a construction
+bound, each recursion in brief-422 §3(e) has to be measured and, if it falls
+below 4,097, bounded on its own. That is the next item.
 
 **The 4,500 ceiling was candidate normalization, and it is now fixed**
 (briefs 427-433, `0f679699`). `match_expr_owned` recursively normalized the
