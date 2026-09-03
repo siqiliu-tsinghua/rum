@@ -5,41 +5,17 @@ use super::*;
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
 #[derive(Clone, FrameRootTrace)]
-struct SuspendedCasesChildren {
-    children: FrozenRewriteQueue<(Expr, bool)>,
-    child_index: usize,
-    expr: Expr,
+struct SuspendedCasesTraversal {
+    walker: PostOrderTraversal,
     spec: FrozenRewriteValue<CasesSpec>,
     traversal: CasesTraversalConfig,
-    level: usize,
-    seen_before: usize,
     matches: PersistentRewriteExprs,
-    max_child_depth: usize,
-}
-
-#[derive(Clone, FrameRootTrace)]
-struct SuspendedCasesNodeFinish {
-    matches: PersistentRewriteExprs,
-    traversal: CasesTraversalConfig,
-    depth: usize,
-    seen_before: usize,
+    current_depth: usize,
 }
 
 #[derive(Clone, FrameRootTrace)]
 struct SuspendedCasesRuleMatch {
     spec: FrozenRewriteValue<CasesSpec>,
-}
-
-struct SuspendedCasesCollectionOutcome {
-    matches: PersistentRewriteExprs,
-    depth: usize,
-    exhausted: bool,
-}
-
-impl SuspendedCasesCollectionOutcome {
-    fn into_owned(self) -> CasesCollectionOutcome {
-        CasesCollectionOutcome::new(self.matches.into_vec(), self.depth, self.exhausted)
-    }
 }
 
 impl Session {
@@ -203,12 +179,11 @@ impl Session {
             return Ok(Expr::call(system_expr("List"), Vec::new()));
         }
 
-        let matches_result = self.collect_cases_with_suspended_spec(target, spec, traversal, 0, 0);
+        let matches_result = self.collect_cases_with_suspended_spec(target, spec, traversal);
         crate::resume_or_suspend!(
             self,
             matches_result,
             ok(outcome) => {
-                let outcome = outcome.into_owned();
                 Ok(Expr::call(system_expr("List"), outcome.matches))
             },
             suspend => FinishCasesWithTraversalSuspensionFrame,
@@ -225,7 +200,7 @@ impl Session {
             return Ok(Expr::call(system_expr("List"), Vec::new()));
         }
 
-        let matches_result = self.collect_cases_owned(target, spec, traversal, 0, 0);
+        let matches_result = self.collect_cases_owned(target, spec, traversal);
         crate::resume_or_suspend!(
             self,
             matches_result,
@@ -241,277 +216,44 @@ impl Session {
         expr: Expr,
         spec: CasesSpec,
         traversal: CasesTraversalConfig,
-        level: usize,
-        seen_before: usize,
     ) -> Result<CasesCollectionOutcome, EvalError> {
-        match expr.clone() {
-            Expr::Atom(_) => self.finish_cases_at_current_node(
-                expr,
-                spec,
-                traversal,
-                level,
-                1,
-                seen_before,
-                Vec::new(),
-            ),
-            Expr::Call { head, .. } if is_system_symbol_name(&head, "Association") => {
-                if let Some(entries) = association_entries_from_expr(&expr) {
-                    let mut children = Vec::new();
-                    if traversal.include_heads {
-                        children.push((head.as_ref().clone(), false));
+        let mut walker = PostOrderTraversal::new(expr, traversal.include_heads, 0);
+        let mut matches = Vec::new();
+        let mut current_depth = 1;
+        while let Some(node) = walker.next() {
+            current_depth = node.depth;
+            if traversal.limit_reached(matches.len()) {
+                return Ok(CasesCollectionOutcome::new(matches, node.depth, true));
+            }
+            if !traversal.levels.matches(node.level, node.depth) {
+                continue;
+            }
+
+            let case_result = self.try_collect_case_owned(node.expr, &spec);
+            match case_result {
+                Ok(Some(case)) => {
+                    matches.push(case);
+                    if traversal.limit_reached(matches.len()) {
+                        return Ok(CasesCollectionOutcome::new(matches, node.depth, true));
                     }
-                    children.extend(entries.into_iter().map(|(_, value)| (value, true)));
-
-                    self.collect_cases_children(
-                        children,
-                        0,
-                        expr,
-                        spec,
-                        traversal,
-                        level + 1,
-                        seen_before,
-                        Vec::new(),
-                        1,
-                        None,
-                    )
-                } else {
-                    self.collect_cases_in_standard_call(expr, spec, traversal, level, seen_before)
                 }
-            }
-            Expr::Call { .. } => {
-                self.collect_cases_in_standard_call(expr, spec, traversal, level, seen_before)
-            }
-        }
-    }
-
-    fn collect_cases_in_standard_call(
-        &mut self,
-        expr: Expr,
-        spec: CasesSpec,
-        traversal: CasesTraversalConfig,
-        level: usize,
-        seen_before: usize,
-    ) -> Result<CasesCollectionOutcome, EvalError> {
-        match expr.clone() {
-            Expr::Atom(_) => self.finish_cases_at_current_node(
-                expr,
-                spec,
-                traversal,
-                level,
-                1,
-                seen_before,
-                Vec::new(),
-            ),
-            Expr::Call { head, args } => {
-                let mut children = Vec::new();
-                if traversal.include_heads {
-                    children.push((head.into_owned(), false));
-                }
-                children.extend(args.into_iter().map(|arg| (arg, true)));
-
-                self.collect_cases_children(
-                    children,
-                    0,
-                    expr,
-                    spec,
-                    traversal,
-                    level + 1,
-                    seen_before,
-                    Vec::new(),
-                    1,
-                    None,
-                )
-            }
-        }
-    }
-
-    fn finish_cases_at_current_node(
-        &mut self,
-        expr: Expr,
-        spec: CasesSpec,
-        traversal: CasesTraversalConfig,
-        level: usize,
-        depth: usize,
-        seen_before: usize,
-        matches: Vec<Expr>,
-    ) -> Result<CasesCollectionOutcome, EvalError> {
-        if traversal.limit_reached(seen_before + matches.len()) {
-            return Ok(CasesCollectionOutcome::new(matches, depth, true));
-        }
-
-        let case_result = if traversal.levels.matches(level, depth) {
-            self.try_collect_case_owned(expr, spec)
-        } else {
-            Ok(None)
-        };
-        match case_result {
-            Ok(case) => Ok(finish_cases_node(
-                matches,
-                traversal,
-                depth,
-                seen_before,
-                case,
-            )),
-            Err(EvalError::InputRequired { request }) => {
-                let state = SuspendedCasesNodeFinish {
-                    matches: PersistentRewriteExprs::freeze(matches),
-                    traversal,
-                    depth,
-                    seen_before,
-                };
-                crate::resume_or_suspend!(insert self, FinishCasesAtCurrentNodeSuspensionFrame { state });
-                Err(EvalError::InputRequired { request })
-            }
-            Err(error) => Err(error),
-        }
-    }
-
-    /// Walks the children one per loop iteration, keeping the accumulated
-    /// matches in place instead of recursing per element. `pending` carries an
-    /// already-computed child outcome across a suspension resume, so the merge
-    /// step runs exactly once per element on both the live and the resumed
-    /// paths.
-    fn collect_cases_children(
-        &mut self,
-        children: Vec<(Expr, bool)>,
-        mut child_index: usize,
-        expr: Expr,
-        spec: CasesSpec,
-        traversal: CasesTraversalConfig,
-        level: usize,
-        seen_before: usize,
-        mut matches: Vec<Expr>,
-        mut max_child_depth: usize,
-        mut pending: Option<CasesCollectionOutcome>,
-    ) -> Result<CasesCollectionOutcome, EvalError> {
-        loop {
-            if let Some(child_outcome) = pending.take() {
-                matches.extend(child_outcome.matches);
-                let contributes_depth = children
-                    .get(child_index)
-                    .is_some_and(|(_, contributes_depth)| *contributes_depth);
-                if contributes_depth {
-                    max_child_depth = max_child_depth.max(child_outcome.depth);
-                }
-
-                if child_outcome.exhausted {
-                    return Ok(CasesCollectionOutcome::new(
-                        matches,
-                        max_child_depth + 1,
-                        true,
-                    ));
-                }
-
-                child_index += 1;
-            }
-
-            let Some((child, _contributes_depth)) = children.get(child_index).cloned() else {
-                let depth = max_child_depth.saturating_add(1);
-                return self.finish_cases_at_current_node(
-                    expr,
-                    spec,
-                    traversal,
-                    level - 1,
-                    depth,
-                    seen_before,
-                    matches,
-                );
-            };
-
-            let child_result = self.collect_cases_owned(
-                child,
-                spec.clone(),
-                traversal,
-                level,
-                seen_before + matches.len(),
-            );
-
-            match child_result {
-                Ok(outcome) => pending = Some(outcome),
+                Ok(None) => {}
                 Err(EvalError::InputRequired { request }) => {
-                    let state = SuspendedCasesChildren {
-                        children: FrozenRewriteQueue::freeze(children),
-                        child_index,
-                        expr,
+                    let state = SuspendedCasesTraversal {
+                        walker,
                         spec: FrozenRewriteValue::freeze(spec),
                         traversal,
-                        level,
-                        seen_before,
                         matches: PersistentRewriteExprs::freeze(matches),
-                        max_child_depth,
+                        current_depth: node.depth,
                     };
-                    crate::resume_or_suspend!(insert self, CollectCasesChildrenSuspensionFrame { state });
+                    crate::resume_or_suspend!(insert self, ContinueCasesTraversalSuspensionFrame { state });
                     return Err(EvalError::InputRequired { request });
                 }
                 Err(error) => return Err(error),
             }
         }
-    }
 
-    fn resume_suspended_cases_children(
-        &mut self,
-        state: SuspendedCasesChildren,
-        outcome: CasesCollectionOutcome,
-    ) -> Result<SuspendedCasesCollectionOutcome, EvalError> {
-        self.collect_cases_children_suspended(state, Some(outcome))
-    }
-
-    fn collect_cases_children_suspended(
-        &mut self,
-        mut state: SuspendedCasesChildren,
-        mut pending: Option<CasesCollectionOutcome>,
-    ) -> Result<SuspendedCasesCollectionOutcome, EvalError> {
-        loop {
-            if let Some(child_outcome) = pending.take() {
-                state.matches = state.matches.appended_values(child_outcome.matches);
-                let contributes_depth = state
-                    .children
-                    .as_slice()
-                    .get(state.child_index)
-                    .is_some_and(|(_, contributes_depth)| *contributes_depth);
-                if contributes_depth {
-                    state.max_child_depth = state.max_child_depth.max(child_outcome.depth);
-                }
-
-                if child_outcome.exhausted {
-                    return Ok(SuspendedCasesCollectionOutcome {
-                        matches: state.matches,
-                        depth: state.max_child_depth + 1,
-                        exhausted: true,
-                    });
-                }
-                state.child_index += 1;
-            }
-
-            let Some((child, _)) = state.children.as_slice().get(state.child_index).cloned() else {
-                let depth = state.max_child_depth.saturating_add(1);
-                return self.finish_cases_at_current_node_suspended(
-                    state.expr,
-                    state.spec,
-                    state.traversal,
-                    state.level - 1,
-                    depth,
-                    state.seen_before,
-                    state.matches,
-                );
-            };
-
-            let child_result = self.collect_cases_with_suspended_spec(
-                child,
-                state.spec.clone(),
-                state.traversal,
-                state.level,
-                state.seen_before + state.matches.len(),
-            );
-            match child_result {
-                Ok(outcome) => pending = Some(outcome.into_owned()),
-                Err(EvalError::InputRequired { request }) => {
-                    crate::resume_or_suspend!(insert self, CollectCasesChildrenSuspendedSuspensionFrame { state });
-                    return Err(EvalError::InputRequired { request });
-                }
-                Err(error) => return Err(error),
-            }
-        }
+        Ok(CasesCollectionOutcome::new(matches, current_depth, false))
     }
 
     fn collect_cases_with_suspended_spec(
@@ -519,161 +261,95 @@ impl Session {
         expr: Expr,
         spec: FrozenRewriteValue<CasesSpec>,
         traversal: CasesTraversalConfig,
-        level: usize,
-        seen_before: usize,
-    ) -> Result<SuspendedCasesCollectionOutcome, EvalError> {
-        match expr.clone() {
-            Expr::Atom(_) => self.finish_cases_at_current_node_suspended(
-                expr,
-                spec,
-                traversal,
-                level,
-                1,
-                seen_before,
-                PersistentRewriteExprs::freeze(Vec::new()),
-            ),
-            Expr::Call { head, .. } if is_system_symbol_name(&head, "Association") => {
-                if let Some(entries) = association_entries_from_expr(&expr) {
-                    let mut children = Vec::new();
-                    if traversal.include_heads {
-                        children.push((head.as_ref().clone(), false));
+    ) -> Result<CasesCollectionOutcome, EvalError> {
+        self.drive_suspended_cases_traversal(SuspendedCasesTraversal {
+            walker: PostOrderTraversal::new(expr, traversal.include_heads, 0),
+            spec,
+            traversal,
+            matches: PersistentRewriteExprs::freeze(Vec::new()),
+            current_depth: 1,
+        })
+    }
+
+    fn resume_cases_traversal(
+        &mut self,
+        mut state: SuspendedCasesTraversal,
+        case: Option<Expr>,
+    ) -> Result<CasesCollectionOutcome, EvalError> {
+        if let Some(case) = case {
+            state.matches = state.matches.appended(case);
+            if state.traversal.limit_reached(state.matches.len()) {
+                return Ok(CasesCollectionOutcome::new(
+                    state.matches.into_vec(),
+                    state.current_depth,
+                    true,
+                ));
+            }
+        }
+        self.drive_suspended_cases_traversal(state)
+    }
+
+    fn drive_suspended_cases_traversal(
+        &mut self,
+        mut state: SuspendedCasesTraversal,
+    ) -> Result<CasesCollectionOutcome, EvalError> {
+        while let Some(node) = state.walker.next() {
+            state.current_depth = node.depth;
+            if state.traversal.limit_reached(state.matches.len()) {
+                return Ok(CasesCollectionOutcome::new(
+                    state.matches.into_vec(),
+                    node.depth,
+                    true,
+                ));
+            }
+            if !state.traversal.levels.matches(node.level, node.depth) {
+                continue;
+            }
+
+            let case_result = self.try_collect_case_suspended(node.expr, state.spec.clone());
+            match case_result {
+                Ok(Some(case)) => {
+                    state.matches = state.matches.appended(case);
+                    if state.traversal.limit_reached(state.matches.len()) {
+                        return Ok(CasesCollectionOutcome::new(
+                            state.matches.into_vec(),
+                            node.depth,
+                            true,
+                        ));
                     }
-                    children.extend(entries.into_iter().map(|(_, value)| (value, true)));
-                    self.collect_cases_children_suspended(
-                        SuspendedCasesChildren {
-                            children: FrozenRewriteQueue::freeze(children),
-                            child_index: 0,
-                            expr,
-                            spec,
-                            traversal,
-                            level: level + 1,
-                            seen_before,
-                            matches: PersistentRewriteExprs::freeze(Vec::new()),
-                            max_child_depth: 1,
-                        },
-                        None,
-                    )
-                } else {
-                    self.collect_cases_standard_call_with_suspended_spec(
-                        expr,
-                        spec,
-                        traversal,
-                        level,
-                        seen_before,
-                    )
                 }
-            }
-            Expr::Call { .. } => self.collect_cases_standard_call_with_suspended_spec(
-                expr,
-                spec,
-                traversal,
-                level,
-                seen_before,
-            ),
-        }
-    }
-
-    fn collect_cases_standard_call_with_suspended_spec(
-        &mut self,
-        expr: Expr,
-        spec: FrozenRewriteValue<CasesSpec>,
-        traversal: CasesTraversalConfig,
-        level: usize,
-        seen_before: usize,
-    ) -> Result<SuspendedCasesCollectionOutcome, EvalError> {
-        match expr.clone() {
-            Expr::Atom(_) => self.finish_cases_at_current_node_suspended(
-                expr,
-                spec,
-                traversal,
-                level,
-                1,
-                seen_before,
-                PersistentRewriteExprs::freeze(Vec::new()),
-            ),
-            Expr::Call { head, args } => {
-                let mut children = Vec::new();
-                if traversal.include_heads {
-                    children.push((head.into_owned(), false));
+                Ok(None) => {}
+                Err(EvalError::InputRequired { request }) => {
+                    let matches = std::mem::replace(
+                        &mut state.matches,
+                        PersistentRewriteExprs::freeze(Vec::new()),
+                    )
+                    .into_vec();
+                    state.matches = PersistentRewriteExprs::freeze(matches);
+                    crate::resume_or_suspend!(insert self, ContinueCasesTraversalSuspensionFrame { state });
+                    return Err(EvalError::InputRequired { request });
                 }
-                children.extend(args.into_iter().map(|arg| (arg, true)));
-                self.collect_cases_children_suspended(
-                    SuspendedCasesChildren {
-                        children: FrozenRewriteQueue::freeze(children),
-                        child_index: 0,
-                        expr,
-                        spec,
-                        traversal,
-                        level: level + 1,
-                        seen_before,
-                        matches: PersistentRewriteExprs::freeze(Vec::new()),
-                        max_child_depth: 1,
-                    },
-                    None,
-                )
+                Err(error) => return Err(error),
             }
         }
-    }
-
-    #[allow(clippy::too_many_arguments)]
-    fn finish_cases_at_current_node_suspended(
-        &mut self,
-        expr: Expr,
-        spec: FrozenRewriteValue<CasesSpec>,
-        traversal: CasesTraversalConfig,
-        level: usize,
-        depth: usize,
-        seen_before: usize,
-        matches: PersistentRewriteExprs,
-    ) -> Result<SuspendedCasesCollectionOutcome, EvalError> {
-        if traversal.limit_reached(seen_before + matches.len()) {
-            return Ok(SuspendedCasesCollectionOutcome {
-                matches,
-                depth,
-                exhausted: true,
-            });
-        }
-
-        let case_result = if traversal.levels.matches(level, depth) {
-            self.try_collect_case_suspended(expr, spec)
-        } else {
-            Ok(None)
-        };
-        match case_result {
-            Ok(case) => Ok(finish_suspended_cases_node(
-                SuspendedCasesNodeFinish {
-                    matches,
-                    traversal,
-                    depth,
-                    seen_before,
-                },
-                case,
-            )),
-            Err(EvalError::InputRequired { request }) => {
-                let state = SuspendedCasesNodeFinish {
-                    matches,
-                    traversal,
-                    depth,
-                    seen_before,
-                };
-                crate::resume_or_suspend!(insert self, FinishCasesAtCurrentNodeSuspendedSuspensionFrame { state });
-                Err(EvalError::InputRequired { request })
-            }
-            Err(error) => Err(error),
-        }
+        Ok(CasesCollectionOutcome::new(
+            state.matches.into_vec(),
+            state.current_depth,
+            false,
+        ))
     }
 
     fn try_collect_case_owned(
         &mut self,
         expr: Expr,
-        spec: CasesSpec,
+        spec: &CasesSpec,
     ) -> Result<Option<Expr>, EvalError> {
         let normalized_expr = self.normalize_match_expr(&expr);
 
         match spec {
             CasesSpec::Pattern(pattern) => {
                 let match_result =
-                    self.match_expr_owned(pattern, expr.clone(), SymbolExprMap::default());
+                    self.match_expr_owned(pattern.clone(), expr.clone(), SymbolExprMap::default());
                 self.finish_cases_pattern_match(match_result, expr)
             }
             CasesSpec::Rule(rule) => {
@@ -683,10 +359,10 @@ impl Session {
                     SymbolExprMap::default(),
                 );
                 match match_result {
-                    Ok(outcome) => self.finish_cases_rule_match(&rule, outcome),
+                    Ok(outcome) => self.finish_cases_rule_match(rule, outcome),
                     Err(EvalError::InputRequired { request }) => {
                         let state = SuspendedCasesRuleMatch {
-                            spec: FrozenRewriteValue::freeze(CasesSpec::Rule(rule)),
+                            spec: FrozenRewriteValue::freeze(CasesSpec::Rule(rule.clone())),
                         };
                         crate::resume_or_suspend!(insert self, TryCollectCaseOwnedSuspensionFrame { state });
                         Err(EvalError::InputRequired { request })
@@ -779,41 +455,9 @@ impl Session {
     }
 }
 
-fn finish_cases_node(
-    mut matches: Vec<Expr>,
-    traversal: CasesTraversalConfig,
-    depth: usize,
-    seen_before: usize,
-    case: Option<Expr>,
-) -> CasesCollectionOutcome {
-    if let Some(case) = case {
-        matches.push(case);
-    }
-    let exhausted = traversal.limit_reached(seen_before + matches.len());
-    CasesCollectionOutcome::new(matches, depth, exhausted)
-}
-
-fn finish_suspended_cases_node(
-    mut state: SuspendedCasesNodeFinish,
-    case: Option<Expr>,
-) -> SuspendedCasesCollectionOutcome {
-    if let Some(case) = case {
-        state.matches = state.matches.appended(case);
-    }
-    let exhausted = state
-        .traversal
-        .limit_reached(state.seen_before + state.matches.len());
-    SuspendedCasesCollectionOutcome {
-        matches: state.matches,
-        depth: state.depth,
-        exhausted,
-    }
-}
-
 #[cfg(test)]
 const _: fn() = || {
     fn assert_traces<T: FrameRootTrace>() {}
-    assert_traces::<SuspendedCasesChildren>();
-    assert_traces::<SuspendedCasesNodeFinish>();
+    assert_traces::<SuspendedCasesTraversal>();
     assert_traces::<SuspendedCasesRuleMatch>();
 };

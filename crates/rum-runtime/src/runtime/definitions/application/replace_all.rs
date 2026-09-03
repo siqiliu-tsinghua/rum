@@ -3,79 +3,34 @@ use resume_frames::*;
 
 use super::*;
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
-use std::sync::Arc;
 
 mod plan;
 
 pub(in crate::runtime) use plan::RewriteRulePlan;
 use plan::RewriteRuleScanCursor;
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, FrameRootTrace)]
 struct ReplaceAllTraversalOutcome {
     expr: Expr,
     changed: bool,
 }
 
 #[derive(Clone, FrameRootTrace)]
-struct PersistentReplaceAllArgs {
-    prefix: SharedArgs,
-    tail: Option<Arc<PersistentReplaceAllArgNode>>,
-    len: usize,
-}
-
-#[derive(FrameRootTrace)]
-struct PersistentReplaceAllArgNode {
-    previous: Option<Arc<PersistentReplaceAllArgNode>>,
-    value: Expr,
-}
-
-impl PersistentReplaceAllArgs {
-    fn freeze(values: Vec<Expr>) -> Self {
-        let len = values.len();
-        Self {
-            prefix: SharedArgs::new(values),
-            tail: None,
-            len,
-        }
-    }
-
-    fn appended(&self, value: Expr) -> Self {
-        Self {
-            prefix: self.prefix.clone(),
-            tail: Some(Arc::new(PersistentReplaceAllArgNode {
-                previous: self.tail.clone(),
-                value,
-            })),
-            len: self.len + 1,
-        }
-    }
-
-    fn into_vec(self) -> Vec<Expr> {
-        let mut suffix = Vec::with_capacity(self.len.saturating_sub(self.prefix.len()));
-        let mut node = self.tail;
-        while let Some(current) = node {
-            let current = Arc::try_unwrap(current)
-                .unwrap_or_else(|_| panic!("completed ReplaceAll output must be uniquely owned"));
-            suffix.push(current.value);
-            node = current.previous;
-        }
-        suffix.reverse();
-
-        let mut values = self.prefix.into_vec();
-        values.reserve(suffix.len());
-        values.extend(suffix);
-        values
-    }
+enum ReplaceAllTraversalWork {
+    Visit(Expr),
+    FinishCall {
+        original_head: SharedExpr,
+        original_args: SharedArgs,
+        rewrite_args: Vec<bool>,
+    },
 }
 
 #[derive(Clone, FrameRootTrace)]
-struct SuspendedReplaceAllArgs {
-    head: Expr,
-    rewritten_args: PersistentReplaceAllArgs,
-    remaining_args: SharedArgs,
+struct ReplaceAllTraversalState {
+    work: Vec<ReplaceAllTraversalWork>,
+    completed: Vec<ReplaceAllTraversalOutcome>,
     rules: RewriteRulePlan,
-    changed: bool,
-    argument_index: usize,
+    source: RuleApplicationSource,
 }
 
 #[derive(Clone, FrameRootTrace)]
@@ -184,71 +139,178 @@ impl Session {
         rules: RewriteRulePlan,
         source: RuleApplicationSource,
     ) -> Result<ReplaceAllTraversalOutcome, EvalError> {
-        let normalized_expr = self.normalize_match_expr(&expr);
-        let cursor = rules.start_scan(&normalized_expr);
-        let replace_result = self.apply_rules_once_from_list(
-            expr.clone(),
-            normalized_expr,
-            rules.clone(),
-            source,
-            cursor,
-        );
+        if matches!(expr, Expr::Atom(_)) {
+            let replace_result =
+                self.apply_rewrite_rule_plan_once(expr.clone(), rules.clone(), source);
+            return match replace_result {
+                Ok(Some(replaced)) => Ok(ReplaceAllTraversalOutcome {
+                    expr: replaced,
+                    changed: true,
+                }),
+                Ok(None) => Ok(ReplaceAllTraversalOutcome {
+                    expr,
+                    changed: false,
+                }),
+                Err(EvalError::InputRequired { request }) => {
+                    let state = ReplaceAllTraversalState {
+                        work: Vec::new(),
+                        completed: Vec::new(),
+                        rules,
+                        source,
+                    };
+                    crate::resume_or_suspend!(insert self, ApplyReplaceAllOwnedSuspensionFrame { state, expr });
+                    Err(EvalError::InputRequired { request })
+                }
+                Err(error) => Err(error),
+            };
+        }
 
-        crate::resume_or_suspend!(
-            self,
-            replace_result,
-            ok(outcome) => { let session = self; (|| { match outcome {
-                    Some(replaced) => Ok(ReplaceAllTraversalOutcome {
-                        expr: replaced,
-                        changed: true,
-                    }),
-                    None => session.apply_replace_all_after_miss(expr, rules, source),
-                } })() },
-            suspend => ApplyReplaceAllOwnedSuspensionFrame { expr, rules, source },
-        )
+        self.drive_replace_all_traversal(ReplaceAllTraversalState {
+            work: vec![ReplaceAllTraversalWork::Visit(expr)],
+            completed: Vec::new(),
+            rules,
+            source,
+        })
     }
 
-    fn apply_replace_all_after_miss(
+    fn drive_replace_all_traversal(
         &mut self,
-        expr: Expr,
-        rules: RewriteRulePlan,
-        source: RuleApplicationSource,
+        mut state: ReplaceAllTraversalState,
     ) -> Result<ReplaceAllTraversalOutcome, EvalError> {
-        match expr {
-            Expr::Atom(_) => Ok(ReplaceAllTraversalOutcome {
-                expr,
-                changed: false,
-            }),
-            Expr::Call { head, args } => {
-                let hold_attribute = if source == RuleApplicationSource::ReplaceAllUnheld {
-                    self.replace_all_unheld_hold_attribute_for_head(&head)
-                } else {
-                    HoldAttribute::None
-                };
-                let remaining_args = args;
-                let head_result =
-                    self.apply_replace_all_owned(head.into_owned(), rules.clone(), source);
-                crate::resume_or_suspend!(
-                    self,
-                    head_result,
-                    ok(head_outcome) => { let session = self; (|| {
-                                    let rewritten_args = Vec::with_capacity(remaining_args.len());
-                                    session.apply_replace_all_args(
-                                        head_outcome.expr,
-                                        rewritten_args,
-                                        remaining_args,
-                                        rules,
-                                        source,
-                                        head_outcome.changed,
-                                        hold_attribute,
-                                        0,
-                                        None,
-                                    )
-                                })() },
-                    suspend => ApplyReplaceAllAfterMissSuspensionFrame { remaining_args, rules, source, hold_attribute },
-                )
+        while let Some(work) = state.work.pop() {
+            match work {
+                ReplaceAllTraversalWork::Visit(expr) => {
+                    let replace_result = self.apply_rewrite_rule_plan_once(
+                        expr.clone(),
+                        state.rules.clone(),
+                        state.source,
+                    );
+                    match replace_result {
+                        Ok(replaced) => {
+                            self.finish_replace_all_visit(&mut state, expr, replaced);
+                        }
+                        Err(EvalError::InputRequired { request }) => {
+                            crate::resume_or_suspend!(insert self, ApplyReplaceAllOwnedSuspensionFrame { state, expr });
+                            return Err(EvalError::InputRequired { request });
+                        }
+                        Err(error) => return Err(error),
+                    }
+                }
+                ReplaceAllTraversalWork::FinishCall {
+                    original_head,
+                    original_args,
+                    rewrite_args,
+                } => {
+                    let rewritten_child_count =
+                        1 + rewrite_args.iter().filter(|rewrite| **rewrite).count();
+                    let first_child = state
+                        .completed
+                        .len()
+                        .checked_sub(rewritten_child_count)
+                        .expect("ReplaceAll traversal results remain balanced");
+                    let mut children = state.completed.split_off(first_child).into_iter();
+                    let head_outcome = children
+                        .next()
+                        .expect("ReplaceAll call traversal completes its head");
+                    let mut changed = head_outcome.changed;
+                    let head = head_outcome.expr;
+                    let mut rewritten_args = Vec::with_capacity(original_args.len());
+                    for (index, original_arg) in original_args.iter().enumerate() {
+                        if rewrite_args[index] {
+                            let outcome = children
+                                .next()
+                                .expect("ReplaceAll call traversal completes each selected arg");
+                            changed |= outcome.changed;
+                            if outcome.changed {
+                                self.append_changed_rewrite_argument(
+                                    &head,
+                                    &mut rewritten_args,
+                                    outcome.expr,
+                                );
+                            } else {
+                                rewritten_args.push(outcome.expr);
+                            }
+                        } else {
+                            rewritten_args.push(original_arg.clone());
+                        }
+                    }
+                    debug_assert!(children.next().is_none());
+                    let expr = if changed {
+                        Expr::call(head, rewritten_args)
+                    } else {
+                        Expr::call_shared(original_head, original_args)
+                    };
+                    state
+                        .completed
+                        .push(ReplaceAllTraversalOutcome { expr, changed });
+                }
             }
         }
+
+        debug_assert_eq!(state.completed.len(), 1);
+        Ok(state
+            .completed
+            .pop()
+            .expect("ReplaceAll traversal completes its root"))
+    }
+
+    fn resume_replace_all_traversal(
+        &mut self,
+        mut state: ReplaceAllTraversalState,
+        expr: Expr,
+        replaced: Option<Expr>,
+    ) -> Result<ReplaceAllTraversalOutcome, EvalError> {
+        self.finish_replace_all_visit(&mut state, expr, replaced);
+        self.drive_replace_all_traversal(state)
+    }
+
+    fn finish_replace_all_visit(
+        &mut self,
+        state: &mut ReplaceAllTraversalState,
+        expr: Expr,
+        replaced: Option<Expr>,
+    ) {
+        if let Some(replaced) = replaced {
+            state.completed.push(ReplaceAllTraversalOutcome {
+                expr: replaced,
+                changed: true,
+            });
+            return;
+        }
+
+        let Expr::Call { head, args } = expr else {
+            state.completed.push(ReplaceAllTraversalOutcome {
+                expr,
+                changed: false,
+            });
+            return;
+        };
+
+        let hold_attribute = if state.source == RuleApplicationSource::ReplaceAllUnheld {
+            self.replace_all_unheld_hold_attribute_for_head(&head)
+        } else {
+            HoldAttribute::None
+        };
+        let rewrite_args = (0..args.len())
+            .map(|index| {
+                state.source != RuleApplicationSource::ReplaceAllUnheld
+                    || !hold_attribute.holds_argument(index)
+            })
+            .collect::<Vec<_>>();
+
+        state.work.push(ReplaceAllTraversalWork::FinishCall {
+            original_head: head.clone(),
+            original_args: args.clone(),
+            rewrite_args: rewrite_args.clone(),
+        });
+        for (index, arg) in args.iter().enumerate().rev() {
+            if rewrite_args[index] {
+                state.work.push(ReplaceAllTraversalWork::Visit(arg.clone()));
+            }
+        }
+        state
+            .work
+            .push(ReplaceAllTraversalWork::Visit(head.into_owned()));
     }
 
     fn replace_all_unheld_hold_attribute_for_head(&mut self, head: &Expr) -> HoldAttribute {
@@ -266,145 +328,6 @@ impl Session {
         }
 
         attributes.hold_attribute()
-    }
-
-    /// Walks the arguments one per loop iteration, keeping the accumulated
-    /// `rewritten_args` in place instead of recursing per element (the
-    /// continuation self-recursion overflowed the native stack on wide flat
-    /// lists). `pending` carries an already-computed argument outcome across a
-    /// suspension resume, so the merge step runs exactly once per element on
-    /// both the live and the resumed paths.
-    fn apply_replace_all_args(
-        &mut self,
-        head: Expr,
-        mut rewritten_args: Vec<Expr>,
-        remaining_args: SharedArgs,
-        rules: RewriteRulePlan,
-        source: RuleApplicationSource,
-        mut changed: bool,
-        hold_attribute: HoldAttribute,
-        mut argument_index: usize,
-        mut pending: Option<ReplaceAllTraversalOutcome>,
-    ) -> Result<ReplaceAllTraversalOutcome, EvalError> {
-        loop {
-            if let Some(outcome) = pending.take() {
-                if outcome.changed {
-                    self.append_changed_rewrite_argument(&head, &mut rewritten_args, outcome.expr);
-                } else {
-                    rewritten_args.push(outcome.expr);
-                }
-                changed = changed || outcome.changed;
-                argument_index += 1;
-            }
-
-            let Some(current) = remaining_args.get(argument_index) else {
-                return Ok(ReplaceAllTraversalOutcome {
-                    expr: Expr::call(head, rewritten_args),
-                    changed,
-                });
-            };
-
-            if source == RuleApplicationSource::ReplaceAllUnheld
-                && hold_attribute.holds_argument(argument_index)
-            {
-                rewritten_args.push(current.clone());
-                argument_index += 1;
-                continue;
-            }
-
-            let current = current.clone();
-            let arg_result = self.apply_replace_all_owned(current, rules.clone(), source);
-
-            match arg_result {
-                Ok(outcome) => pending = Some(outcome),
-                Err(EvalError::InputRequired { request }) => {
-                    let state = SuspendedReplaceAllArgs {
-                        head,
-                        rewritten_args: PersistentReplaceAllArgs::freeze(rewritten_args),
-                        remaining_args,
-                        rules,
-                        changed,
-                        argument_index,
-                    };
-                    crate::resume_or_suspend!(insert self, ApplyReplaceAllArgsSuspensionFrame { state, source, hold_attribute });
-                    return Err(EvalError::InputRequired { request });
-                }
-                Err(error) => return Err(error),
-            }
-        }
-    }
-
-    fn resume_suspended_replace_all_args(
-        &mut self,
-        mut state: SuspendedReplaceAllArgs,
-        source: RuleApplicationSource,
-        hold_attribute: HoldAttribute,
-        mut outcome: ReplaceAllTraversalOutcome,
-    ) -> Result<ReplaceAllTraversalOutcome, EvalError> {
-        loop {
-            state.rewritten_args = self.append_suspended_replace_all_argument(
-                &state.head,
-                state.rewritten_args,
-                outcome.expr,
-                outcome.changed,
-            );
-            state.changed |= outcome.changed;
-            state.argument_index += 1;
-
-            loop {
-                let Some(current) = state.remaining_args.get(state.argument_index) else {
-                    return Ok(ReplaceAllTraversalOutcome {
-                        expr: Expr::call(state.head, state.rewritten_args.into_vec()),
-                        changed: state.changed,
-                    });
-                };
-
-                if source == RuleApplicationSource::ReplaceAllUnheld
-                    && hold_attribute.holds_argument(state.argument_index)
-                {
-                    state.rewritten_args = state.rewritten_args.appended(current.clone());
-                    state.argument_index += 1;
-                    continue;
-                }
-
-                let arg_result =
-                    self.apply_replace_all_owned(current.clone(), state.rules.clone(), source);
-                match arg_result {
-                    Ok(next_outcome) => {
-                        outcome = next_outcome;
-                        break;
-                    }
-                    Err(EvalError::InputRequired { request }) => {
-                        crate::resume_or_suspend!(insert self, ResumeSuspendedReplaceAllArgsSuspensionFrame { state, source, hold_attribute });
-                        return Err(EvalError::InputRequired { request });
-                    }
-                    Err(error) => return Err(error),
-                }
-            }
-        }
-    }
-
-    fn append_suspended_replace_all_argument(
-        &self,
-        parent_head: &Expr,
-        mut rebuilt_args: PersistentReplaceAllArgs,
-        rewritten: Expr,
-        changed: bool,
-    ) -> PersistentReplaceAllArgs {
-        if changed {
-            if let Expr::Call { head, args } = rewritten {
-                if is_system_symbol_name(&head, heads::functions::SEQUENCE)
-                    && !self.attribute_set_for_head(parent_head).sequence_hold()
-                {
-                    for arg in args {
-                        rebuilt_args = rebuilt_args.appended(arg);
-                    }
-                    return rebuilt_args;
-                }
-                return rebuilt_args.appended(Expr::call_with_shared_args(head.into_owned(), args));
-            }
-        }
-        rebuilt_args.appended(rewritten)
     }
 
     pub(in crate::runtime) fn append_changed_rewrite_argument(
@@ -529,8 +452,8 @@ impl Session {
 #[cfg(test)]
 const _: fn() = || {
     fn assert_traces<T: FrameRootTrace>() {}
-    assert_traces::<PersistentReplaceAllArgs>();
-    assert_traces::<PersistentReplaceAllArgNode>();
-    assert_traces::<SuspendedReplaceAllArgs>();
+    assert_traces::<ReplaceAllTraversalOutcome>();
+    assert_traces::<ReplaceAllTraversalWork>();
+    assert_traces::<ReplaceAllTraversalState>();
     assert_traces::<SuspendedRewriteRuleMatch>();
 };

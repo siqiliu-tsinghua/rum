@@ -70,6 +70,24 @@ fn position_collection_continuation_roundtrip_matches_uninterrupted_run() {
 }
 
 #[test]
+fn position_collection_survives_multiple_matcher_suspensions() {
+    assert_suspend_resume_matches_queued(
+        "Position[f[1, 2, 3], x_Integer /; If[MatchQ[x, 1], MatchQ[InputString[\"cond: \"], \"yes\"], If[MatchQ[x, 2], MatchQ[InputString[\"cond: \"], \"yes\"], True]], Infinity]",
+        &["yes", "yes"],
+        "List[List[1], List[2], List[3]]",
+    );
+}
+
+#[test]
+fn cases_collection_survives_multiple_matcher_suspensions() {
+    assert_suspend_resume_matches_queued(
+        "Cases[f[1, 2, 3], x_Integer /; If[MatchQ[x, 1], MatchQ[InputString[\"cond: \"], \"yes\"], If[MatchQ[x, 2], MatchQ[InputString[\"cond: \"], \"yes\"], True]], Infinity]",
+        &["yes", "yes"],
+        "List[1, 2, 3]",
+    );
+}
+
+#[test]
 fn traversal_count_continuation_roundtrip_matches_uninterrupted_run() {
     assert_suspend_resume_matches_queued(
         "Count[f[1, 2, 3], x_Integer /; If[MatchQ[x, 2], MatchQ[InputString[\"cond: \"], \"yes\"], True], Infinity]",

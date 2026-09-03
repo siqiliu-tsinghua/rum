@@ -3,7 +3,6 @@ use resume_frames::*;
 
 use super::*;
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
-use std::sync::Arc;
 
 #[derive(Clone, Copy, FrameRootTrace)]
 enum CountLikeFinish {
@@ -13,16 +12,12 @@ enum CountLikeFinish {
 }
 
 #[derive(Clone, FrameRootTrace)]
-struct SuspendedCountChildren {
-    children: Arc<[(Expr, bool)]>,
-    child_index: usize,
-    expr: Expr,
+struct SuspendedCountTraversal {
+    walker: PostOrderTraversal,
     pattern: Expr,
     traversal: CasesTraversalConfig,
-    level: usize,
-    seen_before: usize,
     count: usize,
-    max_child_depth: usize,
+    current_depth: usize,
 }
 
 impl CountLikeFinish {
@@ -277,7 +272,7 @@ impl Session {
             }
         };
 
-        let outcome_result = self.count_pattern_matches_owned(target, pattern, traversal, 0, 0);
+        let outcome_result = self.count_pattern_matches_owned(target, pattern, traversal);
         crate::resume_or_suspend!(
             self,
             outcome_result,
@@ -293,271 +288,68 @@ impl Session {
         expr: Expr,
         pattern: Expr,
         traversal: CasesTraversalConfig,
-        level: usize,
-        seen_before: usize,
     ) -> Result<TraversalCountOutcome, EvalError> {
-        match expr.clone() {
-            Expr::Atom(_) => self.finish_count_at_current_node(
-                expr,
-                pattern,
-                traversal,
-                level,
-                1,
-                seen_before,
-                0,
-            ),
-            Expr::Call { head, .. } if is_system_symbol_name(&head, "Association") => {
-                if let Some(entries) = association_entries_from_expr(&expr) {
-                    let mut children = Vec::new();
-                    if traversal.include_heads {
-                        children.push((head.as_ref().clone(), false));
-                    }
-                    children.extend(entries.into_iter().map(|(_, value)| (value, true)));
-
-                    self.count_pattern_children(
-                        children,
-                        0,
-                        expr,
-                        pattern,
-                        traversal,
-                        level + 1,
-                        seen_before,
-                        0,
-                        1,
-                        None,
-                    )
-                } else {
-                    self.count_pattern_matches_in_standard_call(
-                        expr,
-                        pattern,
-                        traversal,
-                        level,
-                        seen_before,
-                    )
-                }
-            }
-            Expr::Call { .. } => self.count_pattern_matches_in_standard_call(
-                expr,
-                pattern,
-                traversal,
-                level,
-                seen_before,
-            ),
-        }
-    }
-
-    fn count_pattern_matches_in_standard_call(
-        &mut self,
-        expr: Expr,
-        pattern: Expr,
-        traversal: CasesTraversalConfig,
-        level: usize,
-        seen_before: usize,
-    ) -> Result<TraversalCountOutcome, EvalError> {
-        match expr.clone() {
-            Expr::Atom(_) => self.finish_count_at_current_node(
-                expr,
-                pattern,
-                traversal,
-                level,
-                1,
-                seen_before,
-                0,
-            ),
-            Expr::Call { head, args } => {
-                let mut children = Vec::new();
-                if traversal.include_heads {
-                    children.push((head.into_owned(), false));
-                }
-                children.extend(args.into_iter().map(|arg| (arg, true)));
-
-                self.count_pattern_children(
-                    children,
-                    0,
-                    expr,
-                    pattern,
-                    traversal,
-                    level + 1,
-                    seen_before,
-                    0,
-                    1,
-                    None,
-                )
-            }
-        }
-    }
-
-    fn finish_count_at_current_node(
-        &mut self,
-        expr: Expr,
-        pattern: Expr,
-        traversal: CasesTraversalConfig,
-        level: usize,
-        depth: usize,
-        seen_before: usize,
-        count: usize,
-    ) -> Result<TraversalCountOutcome, EvalError> {
-        if traversal.limit_reached(seen_before + count) {
-            return Ok(TraversalCountOutcome::new(count, depth, true));
-        }
-
-        let match_result = if traversal.levels.matches(level, depth) {
-            self.match_expr_owned(pattern, expr, SymbolExprMap::default())
-        } else {
-            Ok(CompiledMatchOutcome {
-                matched: false,
-                bindings: SymbolExprMap::default(),
-            })
+        let state = SuspendedCountTraversal {
+            walker: PostOrderTraversal::new(expr, traversal.include_heads, 0),
+            pattern,
+            traversal,
+            count: 0,
+            current_depth: 1,
         };
-
-        crate::resume_or_suspend!(
-            self,
-            match_result,
-            ok(outcome) => { (|| {
-                    let next_count = count + usize::from(outcome.matched);
-                    let exhausted = traversal.limit_reached(seen_before + next_count);
-                    Ok(TraversalCountOutcome::new(next_count, depth, exhausted))
-                })() },
-            suspend => FinishCountAtCurrentNodeSuspensionFrame { count, traversal, seen_before, depth },
-        )
+        self.drive_count_pattern_matches(state)
     }
 
-    /// Walks the children one per loop iteration, keeping the running count in
-    /// place instead of recursing per element. `pending` carries an
-    /// already-computed child outcome across a suspension resume, so the merge
-    /// step runs exactly once per element on both the live and the resumed
-    /// paths.
-    fn count_pattern_children(
+    fn drive_count_pattern_matches(
         &mut self,
-        children: Vec<(Expr, bool)>,
-        mut child_index: usize,
-        expr: Expr,
-        pattern: Expr,
-        traversal: CasesTraversalConfig,
-        level: usize,
-        seen_before: usize,
-        mut count: usize,
-        mut max_child_depth: usize,
-        mut pending: Option<TraversalCountOutcome>,
+        mut state: SuspendedCountTraversal,
     ) -> Result<TraversalCountOutcome, EvalError> {
-        loop {
-            if let Some(child_outcome) = pending.take() {
-                count += child_outcome.count;
-                let contributes_depth = children
-                    .get(child_index)
-                    .is_some_and(|(_, contributes_depth)| *contributes_depth);
-                if contributes_depth {
-                    max_child_depth = max_child_depth.max(child_outcome.depth);
-                }
-
-                if child_outcome.exhausted {
-                    return Ok(TraversalCountOutcome::new(count, max_child_depth + 1, true));
-                }
-
-                child_index += 1;
+        while let Some(node) = state.walker.next() {
+            state.current_depth = node.depth;
+            if state.traversal.limit_reached(state.count) {
+                return Ok(TraversalCountOutcome::new(state.count, node.depth, true));
+            }
+            if !state.traversal.levels.matches(node.level, node.depth) {
+                continue;
             }
 
-            let Some((child, _contributes_depth)) = children.get(child_index).cloned() else {
-                let depth = max_child_depth.saturating_add(1);
-                return self.finish_count_at_current_node(
-                    expr,
-                    pattern,
-                    traversal,
-                    level - 1,
-                    depth,
-                    seen_before,
-                    count,
-                );
-            };
-
-            let child_result = self.count_pattern_matches_owned(
-                child,
-                pattern.clone(),
-                traversal,
-                level,
-                seen_before + count,
-            );
-
-            match child_result {
-                Ok(outcome) => pending = Some(outcome),
+            let match_result =
+                self.match_expr_owned(state.pattern.clone(), node.expr, SymbolExprMap::default());
+            match match_result {
+                Ok(outcome) => {
+                    state.count += usize::from(outcome.matched);
+                    if state.traversal.limit_reached(state.count) {
+                        return Ok(TraversalCountOutcome::new(state.count, node.depth, true));
+                    }
+                }
                 Err(EvalError::InputRequired { request }) => {
-                    let state = SuspendedCountChildren {
-                        children: Arc::from(children),
-                        child_index,
-                        expr,
-                        pattern,
-                        traversal,
-                        level,
-                        seen_before,
-                        count,
-                        max_child_depth,
-                    };
-                    crate::resume_or_suspend!(insert self, CountPatternChildrenSuspensionFrame { state });
+                    crate::resume_or_suspend!(insert self, ContinueCountTraversalSuspensionFrame { state });
                     return Err(EvalError::InputRequired { request });
                 }
                 Err(error) => return Err(error),
             }
         }
+
+        Ok(TraversalCountOutcome::new(
+            state.count,
+            state.current_depth,
+            false,
+        ))
     }
 
-    fn count_pattern_children_suspended(
+    fn resume_count_traversal(
         &mut self,
-        mut state: SuspendedCountChildren,
-        mut pending: Option<TraversalCountOutcome>,
+        mut state: SuspendedCountTraversal,
+        outcome: CompiledMatchOutcome,
     ) -> Result<TraversalCountOutcome, EvalError> {
-        loop {
-            if let Some(child_outcome) = pending.take() {
-                state.count += child_outcome.count;
-                let contributes_depth = state
-                    .children
-                    .get(state.child_index)
-                    .is_some_and(|(_, contributes_depth)| *contributes_depth);
-                if contributes_depth {
-                    state.max_child_depth = state.max_child_depth.max(child_outcome.depth);
-                }
-
-                if child_outcome.exhausted {
-                    return Ok(TraversalCountOutcome::new(
-                        state.count,
-                        state.max_child_depth + 1,
-                        true,
-                    ));
-                }
-
-                state.child_index += 1;
-            }
-
-            let Some((child, _contributes_depth)) = state.children.get(state.child_index).cloned()
-            else {
-                let depth = state.max_child_depth.saturating_add(1);
-                return self.finish_count_at_current_node(
-                    state.expr,
-                    state.pattern,
-                    state.traversal,
-                    state.level - 1,
-                    depth,
-                    state.seen_before,
-                    state.count,
-                );
-            };
-
-            let child_result = self.count_pattern_matches_owned(
-                child,
-                state.pattern.clone(),
-                state.traversal,
-                state.level,
-                state.seen_before + state.count,
-            );
-
-            match child_result {
-                Ok(outcome) => pending = Some(outcome),
-                Err(EvalError::InputRequired { request }) => {
-                    crate::resume_or_suspend!(insert self, CountPatternChildrenSuspendedSuspensionFrame { state });
-                    return Err(EvalError::InputRequired { request });
-                }
-                Err(error) => return Err(error),
-            }
+        state.count += usize::from(outcome.matched);
+        if state.traversal.limit_reached(state.count) {
+            return Ok(TraversalCountOutcome::new(
+                state.count,
+                state.current_depth,
+                true,
+            ));
         }
+        self.drive_count_pattern_matches(state)
     }
 }
 
@@ -565,5 +357,5 @@ impl Session {
 const _: fn() = || {
     fn assert_traces<T: FrameRootTrace>() {}
     assert_traces::<CountLikeFinish>();
-    assert_traces::<SuspendedCountChildren>();
+    assert_traces::<SuspendedCountTraversal>();
 };

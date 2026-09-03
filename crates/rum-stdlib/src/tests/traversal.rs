@@ -519,6 +519,35 @@ fn count_memberq_and_freeq_share_standard_traversal_semantics() {
 }
 
 #[test]
+fn count_like_condition_guards_preserve_short_circuit_points() {
+    let mut session = core_session();
+
+    let member_q = session
+        .eval_text(
+            "seen = 0; {MemberQ[f[1, 2, 3], x_Integer /; \
+             (seen = seen + 1; x == 2), Infinity], seen}",
+        )
+        .unwrap();
+    assert_eq!(member_q.value.to_string(), "List[True, 2]");
+
+    let free_q = session
+        .eval_text(
+            "seen = 0; {FreeQ[f[1, 2, 3], x_Integer /; \
+             (seen = seen + 1; x == 2)], seen}",
+        )
+        .unwrap();
+    assert_eq!(free_q.value.to_string(), "List[False, 2]");
+
+    let count = session
+        .eval_text(
+            "seen = 0; {Count[f[1, 2, 3], x_Integer /; \
+             (seen = seen + 1; x == 2), Infinity], seen}",
+        )
+        .unwrap();
+    assert_eq!(count.value.to_string(), "List[1, 3]");
+}
+
+#[test]
 fn level_supports_heads_and_apply_head_forms() {
     let mut session = core_session();
 

@@ -1,92 +1,32 @@
 use super::*;
 
+mod recursive;
+use recursive::{apply_heads_recursive_bounded, map_parts_recursive_bounded};
+
+const RECURSIVE_TRANSFORM_CALL_DEPTH: usize = 16;
+
 pub(super) fn apply_heads_with_config(
     expr: &Expr,
     operator: &Expr,
     config: TraversalConfig,
     flavor: ApplyFlavor,
 ) -> (Expr, usize) {
-    apply_heads_recursive(expr, operator, config, flavor, 0)
-}
-
-pub(super) fn apply_heads_recursive(
-    expr: &Expr,
-    operator: &Expr,
-    config: TraversalConfig,
-    flavor: ApplyFlavor,
-    level: usize,
-) -> (Expr, usize) {
-    match expr {
-        Expr::Atom(_) => (expr.clone(), 1),
-        Expr::Call { head, args: _ } if is_system_symbol_name(head, "Association") => {
-            if let Some(entries) = association_entries_from_expr(expr) {
-                let mut max_depth = 1usize;
-                let mut transformed_entries = Vec::with_capacity(entries.len());
-
-                for (key, value) in entries {
-                    let (transformed_value, value_depth) =
-                        apply_heads_recursive(&value, operator, config, flavor, level + 1);
-                    max_depth = max_depth.max(value_depth);
-                    transformed_entries.push((key, transformed_value));
-                }
-
-                let depth = 1 + max_depth;
-                let rendered =
-                    if config.levels.matches(level, depth) && flavor == ApplyFlavor::Apply {
-                        Expr::call(
-                            operator.clone(),
-                            transformed_entries
-                                .iter()
-                                .map(|(_, value)| value.clone())
-                                .collect::<Vec<_>>(),
-                        )
-                    } else {
-                        render_association(transformed_entries)
-                    };
-
-                (rendered, depth)
-            } else {
-                apply_heads_on_standard_call(expr, operator, config, flavor, level)
-            }
-        }
-        Expr::Call { .. } => apply_heads_on_standard_call(expr, operator, config, flavor, level),
-    }
-}
-
-pub(super) fn apply_heads_on_standard_call(
-    expr: &Expr,
-    operator: &Expr,
-    config: TraversalConfig,
-    flavor: ApplyFlavor,
-    level: usize,
-) -> (Expr, usize) {
-    let Expr::Call { head, args } = expr else {
-        return (expr.clone(), 1);
-    };
-
-    let (transformed_head, head_depth) = if config.include_heads {
-        apply_heads_recursive(head, operator, config, flavor, level + 1)
-    } else {
-        (head.as_ref().clone(), 0)
-    };
-
-    let mut transformed_args = Vec::with_capacity(args.len());
-    let mut max_arg_depth = 1usize;
-    for arg in args {
-        let (transformed_arg, arg_depth) =
-            apply_heads_recursive(arg, operator, config, flavor, level + 1);
-        max_arg_depth = max_arg_depth.max(arg_depth);
-        transformed_args.push(transformed_arg);
-    }
-
-    let depth = 1 + head_depth.max(max_arg_depth);
-    let rebuilt = Expr::call(transformed_head, transformed_args.clone());
-
-    if config.levels.matches(level, depth) {
-        (Expr::call(operator.clone(), transformed_args), depth)
-    } else {
-        (rebuilt, depth)
-    }
+    apply_heads_recursive_bounded(
+        expr,
+        operator,
+        config,
+        flavor,
+        0,
+        RECURSIVE_TRANSFORM_CALL_DEPTH,
+    )
+    .unwrap_or_else(|| {
+        transform_parts_iterative(
+            expr,
+            operator,
+            config,
+            IterativeTransformFlavor::Apply(flavor),
+        )
+    })
 }
 
 pub(super) fn map_parts_with_config(
@@ -103,94 +43,259 @@ pub(super) fn map_parts_with_mode(
     config: TraversalConfig,
     flavor: MapTraversalFlavor,
 ) -> (Expr, usize) {
-    map_parts_recursive(expr, operator, config, flavor, 0)
+    map_parts_recursive_bounded(
+        expr,
+        operator,
+        config,
+        flavor,
+        0,
+        RECURSIVE_TRANSFORM_CALL_DEPTH,
+    )
+    .unwrap_or_else(|| {
+        transform_parts_iterative(
+            expr,
+            operator,
+            config,
+            IterativeTransformFlavor::Map(flavor),
+        )
+    })
 }
 
-pub(super) fn map_parts_recursive(
+#[derive(Clone, Copy)]
+enum IterativeTransformFlavor {
+    Apply(ApplyFlavor),
+    Map(MapTraversalFlavor),
+}
+
+enum TransformWork {
+    Visit {
+        expr: Expr,
+        level: usize,
+    },
+    FinishCall {
+        original_expr: Expr,
+        original_head: Expr,
+        arg_count: usize,
+        level: usize,
+    },
+    FinishAssociation {
+        original_expr: Expr,
+        keys: Vec<Expr>,
+        level: usize,
+    },
+}
+
+struct TransformResult {
+    expr: Expr,
+    depth: usize,
+    changed: bool,
+}
+
+fn transform_parts_iterative(
     expr: &Expr,
     operator: &Expr,
     config: TraversalConfig,
-    flavor: MapTraversalFlavor,
-    level: usize,
+    flavor: IterativeTransformFlavor,
 ) -> (Expr, usize) {
-    match expr {
-        Expr::Atom(_) => {
-            let depth = 1;
-            let rendered = if config.levels.matches(level, depth) {
-                Expr::call(operator.clone(), vec![expr.clone()])
-            } else {
-                expr.clone()
-            };
+    let mut work = vec![TransformWork::Visit {
+        expr: expr.clone(),
+        level: 0,
+    }];
+    let mut completed = Vec::<TransformResult>::new();
 
-            (rendered, depth)
-        }
-        Expr::Call { head, args: _ } if is_system_symbol_name(head, "Association") => {
-            if let Some(entries) = association_entries_from_expr(expr) {
-                let mut max_depth = 1usize;
-                let mut transformed_entries = Vec::with_capacity(entries.len());
-
-                for (key, value) in entries {
-                    let (transformed_value, value_depth) =
-                        map_parts_recursive(&value, operator, config, flavor, level + 1);
-                    max_depth = max_depth.max(value_depth);
-                    transformed_entries.push((key, transformed_value));
+    while let Some(task) = work.pop() {
+        match task {
+            TransformWork::Visit { expr, level } => match &expr {
+                Expr::Atom(_) => {
+                    let transformed = match flavor {
+                        IterativeTransformFlavor::Map(_) if config.levels.matches(level, 1) => {
+                            Expr::call(operator.clone(), vec![expr])
+                        }
+                        _ => expr,
+                    };
+                    completed.push(TransformResult {
+                        expr: transformed,
+                        depth: 1,
+                        changed: matches!(flavor, IterativeTransformFlavor::Map(_))
+                            && config.levels.matches(level, 1),
+                    });
                 }
-
-                let depth = 1 + max_depth;
-                let rebuilt = render_association(transformed_entries);
-                let rendered = if config.levels.matches(level, depth)
-                    && !(flavor == MapTraversalFlavor::MapAll
-                        && association_entries_from_expr(expr).is_some())
-                {
-                    Expr::call(operator.clone(), vec![rebuilt])
+                Expr::Call { head, .. } if is_system_symbol_name(head, "Association") => {
+                    if let Some(entries) = association_entries_from_expr(&expr) {
+                        let mut keys = Vec::with_capacity(entries.len());
+                        let mut values = Vec::with_capacity(entries.len());
+                        for (key, value) in entries {
+                            keys.push(key);
+                            values.push(value);
+                        }
+                        work.push(TransformWork::FinishAssociation {
+                            original_expr: expr,
+                            keys,
+                            level,
+                        });
+                        for value in values.into_iter().rev() {
+                            work.push(TransformWork::Visit {
+                                expr: value,
+                                level: level + 1,
+                            });
+                        }
+                    } else {
+                        schedule_transform_call(&mut work, expr, level, config.include_heads);
+                    }
+                }
+                Expr::Call { .. } => {
+                    schedule_transform_call(&mut work, expr, level, config.include_heads);
+                }
+            },
+            TransformWork::FinishCall {
+                original_expr,
+                original_head,
+                arg_count,
+                level,
+            } => {
+                let child_count = arg_count + usize::from(config.include_heads);
+                let first_child = completed
+                    .len()
+                    .checked_sub(child_count)
+                    .expect("transform child results remain balanced");
+                let children = completed.split_off(first_child);
+                let mut children = children.into_iter();
+                let (transformed_head, head_depth, mut children_changed) = if config.include_heads {
+                    let result = children
+                        .next()
+                        .expect("head-inclusive traversal completes its head");
+                    (result.expr, result.depth, result.changed)
                 } else {
-                    rebuilt
+                    (original_head, 0, false)
                 };
-
-                (rendered, depth)
-            } else {
-                map_parts_on_standard_call(expr, operator, config, flavor, level)
+                let mut transformed_args = Vec::with_capacity(arg_count);
+                let mut max_arg_depth = 1usize;
+                for result in children {
+                    transformed_args.push(result.expr);
+                    max_arg_depth = max_arg_depth.max(result.depth);
+                    children_changed |= result.changed;
+                }
+                let depth = head_depth.max(max_arg_depth).saturating_add(1);
+                let selected = config.levels.matches(level, depth);
+                let rebuilt = if children_changed {
+                    Expr::call(transformed_head, transformed_args)
+                } else {
+                    original_expr
+                };
+                let transformed = match flavor {
+                    IterativeTransformFlavor::Apply(_) if selected => {
+                        let args = rebuilt
+                            .into_call_parts()
+                            .expect("a completed call remains a call")
+                            .1;
+                        Expr::call(operator.clone(), args)
+                    }
+                    IterativeTransformFlavor::Apply(_) => rebuilt,
+                    IterativeTransformFlavor::Map(_) if selected => {
+                        Expr::call(operator.clone(), vec![rebuilt])
+                    }
+                    IterativeTransformFlavor::Map(_) => rebuilt,
+                };
+                completed.push(TransformResult {
+                    expr: transformed,
+                    depth,
+                    changed: children_changed || selected,
+                });
+            }
+            TransformWork::FinishAssociation {
+                original_expr,
+                keys,
+                level,
+            } => {
+                let first_value = completed
+                    .len()
+                    .checked_sub(keys.len())
+                    .expect("association transform results remain balanced");
+                let values = completed.split_off(first_value);
+                let mut max_value_depth = 1usize;
+                let mut transformed_values = Vec::with_capacity(values.len());
+                let mut children_changed = false;
+                for result in values {
+                    max_value_depth = max_value_depth.max(result.depth);
+                    transformed_values.push(result.expr);
+                    children_changed |= result.changed;
+                }
+                let depth = max_value_depth.saturating_add(1);
+                let selected = config.levels.matches(level, depth);
+                let transformed = match flavor {
+                    IterativeTransformFlavor::Apply(ApplyFlavor::Apply) if selected => {
+                        Expr::call(operator.clone(), transformed_values)
+                    }
+                    IterativeTransformFlavor::Apply(_) if children_changed => {
+                        render_association(keys.into_iter().zip(transformed_values).collect())
+                    }
+                    IterativeTransformFlavor::Apply(_) => original_expr,
+                    IterativeTransformFlavor::Map(map_flavor) => {
+                        let rebuilt = if children_changed {
+                            render_association(keys.into_iter().zip(transformed_values).collect())
+                        } else {
+                            original_expr
+                        };
+                        if selected && map_flavor != MapTraversalFlavor::MapAll {
+                            Expr::call(operator.clone(), vec![rebuilt])
+                        } else {
+                            rebuilt
+                        }
+                    }
+                };
+                let changed = match flavor {
+                    IterativeTransformFlavor::Apply(ApplyFlavor::Apply) => {
+                        children_changed || selected
+                    }
+                    IterativeTransformFlavor::Apply(_) => children_changed,
+                    IterativeTransformFlavor::Map(map_flavor) => {
+                        children_changed || (selected && map_flavor != MapTraversalFlavor::MapAll)
+                    }
+                };
+                completed.push(TransformResult {
+                    expr: transformed,
+                    depth,
+                    changed,
+                });
             }
         }
-        Expr::Call { .. } => map_parts_on_standard_call(expr, operator, config, flavor, level),
     }
+
+    let result = completed
+        .pop()
+        .expect("a transform traversal always completes its root");
+    (result.expr, result.depth)
 }
 
-pub(super) fn map_parts_on_standard_call(
-    expr: &Expr,
-    operator: &Expr,
-    config: TraversalConfig,
-    flavor: MapTraversalFlavor,
+fn schedule_transform_call(
+    work: &mut Vec<TransformWork>,
+    expr: Expr,
     level: usize,
-) -> (Expr, usize) {
+    include_heads: bool,
+) {
+    let original_expr = expr.clone();
     let Expr::Call { head, args } = expr else {
-        return (expr.clone(), 1);
+        unreachable!("only calls reach the transform call scheduler");
     };
-
-    let (transformed_head, head_depth) = if config.include_heads {
-        map_parts_recursive(head, operator, config, flavor, level + 1)
-    } else {
-        (head.as_ref().clone(), 0)
-    };
-
-    let mut transformed_args = Vec::with_capacity(args.len());
-    let mut max_arg_depth = 1usize;
-    for arg in args {
-        let (transformed_arg, arg_depth) =
-            map_parts_recursive(arg, operator, config, flavor, level + 1);
-        max_arg_depth = max_arg_depth.max(arg_depth);
-        transformed_args.push(transformed_arg);
+    let original_head = head.as_ref().clone();
+    work.push(TransformWork::FinishCall {
+        original_expr,
+        original_head,
+        arg_count: args.len(),
+        level,
+    });
+    for arg in args.iter().rev() {
+        work.push(TransformWork::Visit {
+            expr: arg.clone(),
+            level: level + 1,
+        });
     }
-
-    let depth = 1 + head_depth.max(max_arg_depth);
-    let rebuilt = Expr::call(transformed_head, transformed_args);
-    let rendered = if config.levels.matches(level, depth) {
-        Expr::call(operator.clone(), vec![rebuilt])
-    } else {
-        rebuilt
-    };
-
-    (rendered, depth)
+    if include_heads {
+        work.push(TransformWork::Visit {
+            expr: head.into_owned(),
+            level: level + 1,
+        });
+    }
 }
 
 pub(super) fn map_indexed_parts_with_config(

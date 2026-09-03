@@ -99,95 +99,21 @@ impl crate::runtime::suspension::SuspensionFrame
 }
 
 #[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
-pub(super) struct FinishPositionsAtCurrentNodeSuspensionFrame {
-    pub(super) state: crate::runtime::tree_walkers::position::SuspendedPositionNode,
+pub(super) struct ContinuePositionTraversalSuspensionFrame {
+    pub(super) state: crate::runtime::tree_walkers::position::SuspendedPositionTraversal,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for FinishPositionsAtCurrentNodeSuspensionFrame {
+impl crate::runtime::suspension::SuspensionFrame for ContinuePositionTraversalSuspensionFrame {
     fn resume(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut state = self.state.clone();
+        let state = self.state.clone();
         let resumed = (|| {
+            let outcome = CompiledMatchOutcome::from_continuation_expr(outcome?);
             session
-                .finish_suspended_position_node(state, outcome)
-                .map(|outcome| outcome.into_continuation_expr())
-        })();
-        crate::runtime::suspension::FrameAction::complete(resumed)
-    }
-}
-
-#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
-pub(super) struct CollectPositionChildrenSuspensionFrame {
-    pub(super) state: crate::runtime::tree_walkers::position::SuspendedPositionChildren,
-}
-
-impl crate::runtime::suspension::SuspensionFrame for CollectPositionChildrenSuspensionFrame {
-    fn resume(
-        self: std::sync::Arc<Self>,
-        session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut state = self.state.clone();
-        let value = outcome;
-        let resumed = (|| {
-            let outcome = PositionCollectionOutcome::from_continuation_expr(value?);
-            session
-                .collect_position_children_suspended(state, Some(outcome))
-                .map(|outcome| outcome.into_continuation_expr())
-        })();
-        crate::runtime::suspension::FrameAction::complete(resumed)
-    }
-}
-
-#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
-pub(super) struct CollectPositionChildrenSuspendedSuspensionFrame {
-    pub(super) state: crate::runtime::tree_walkers::position::SuspendedPositionChildren,
-}
-
-impl crate::runtime::suspension::SuspensionFrame
-    for CollectPositionChildrenSuspendedSuspensionFrame
-{
-    fn resume(
-        self: std::sync::Arc<Self>,
-        session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut state = self.state.clone();
-        let value = outcome;
-        let resumed = (|| {
-            let outcome = PositionCollectionOutcome::from_continuation_expr(value?);
-            session
-                .collect_position_children_suspended(state, Some(outcome))
-                .map(|outcome| outcome.into_continuation_expr())
-        })();
-        crate::runtime::suspension::FrameAction::complete(resumed)
-    }
-}
-
-#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
-pub(super) struct FinishPositionsAtCurrentNodeSuspendedSuspensionFrame {
-    pub(super) state: crate::runtime::tree_walkers::position::SuspendedPositionNode,
-}
-
-impl crate::runtime::suspension::SuspensionFrame
-    for FinishPositionsAtCurrentNodeSuspendedSuspensionFrame
-{
-    fn resume(
-        self: std::sync::Arc<Self>,
-        session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut state = self.state.clone();
-        let resumed = (|| {
-            session
-                .finish_suspended_position_node(state, outcome)
+                .resume_position_traversal(state, outcome)
                 .map(|outcome| outcome.into_continuation_expr())
         })();
         crate::runtime::suspension::FrameAction::complete(resumed)

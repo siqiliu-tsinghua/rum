@@ -197,118 +197,25 @@ impl crate::runtime::suspension::SuspensionFrame for FinishCasesWithTraversalSus
 }
 
 #[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
-pub(super) struct FinishCasesAtCurrentNodeSuspensionFrame {
+pub(super) struct ContinueCasesTraversalSuspensionFrame {
     pub(super) state:
-        crate::runtime::kernel_data::rewrite_data::cases::collect::SuspendedCasesNodeFinish,
+        crate::runtime::kernel_data::rewrite_data::cases::collect::SuspendedCasesTraversal,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for FinishCasesAtCurrentNodeSuspensionFrame {
+impl crate::runtime::suspension::SuspensionFrame for ContinueCasesTraversalSuspensionFrame {
     fn resume(
         self: std::sync::Arc<Self>,
-        _session: &mut Session,
+        session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
         let case = match outcome {
             Ok(value) => Option::<Expr>::from_continuation_expr(value),
             Err(error) => return crate::runtime::suspension::FrameAction::complete(Err(error)),
         };
-        crate::runtime::suspension::FrameAction::finalize(FinishCasesCollectionFinalizer {
-            outcome: finish_suspended_cases_node(self.state.clone(), case),
-        })
-    }
-}
-
-#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
-pub(super) struct CollectCasesChildrenSuspensionFrame {
-    pub(super) state:
-        crate::runtime::kernel_data::rewrite_data::cases::collect::SuspendedCasesChildren,
-}
-
-impl crate::runtime::suspension::SuspensionFrame for CollectCasesChildrenSuspensionFrame {
-    fn resume(
-        self: std::sync::Arc<Self>,
-        session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut state = self.state.clone();
-        let value = outcome;
-        let outcome = match value {
-            Ok(value) => CasesCollectionOutcome::from_continuation_expr(value),
-            Err(error) => return crate::runtime::suspension::FrameAction::complete(Err(error)),
-        };
-        match session.resume_suspended_cases_children(state, outcome) {
-            Ok(outcome) => {
-                crate::runtime::suspension::FrameAction::finalize(FinishCasesCollectionFinalizer {
-                    outcome,
-                })
-            }
-            Err(error) => crate::runtime::suspension::FrameAction::complete(Err(error)),
-        }
-    }
-}
-
-#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
-pub(super) struct CollectCasesChildrenSuspendedSuspensionFrame {
-    pub(super) state:
-        crate::runtime::kernel_data::rewrite_data::cases::collect::SuspendedCasesChildren,
-}
-
-impl crate::runtime::suspension::SuspensionFrame for CollectCasesChildrenSuspendedSuspensionFrame {
-    fn resume(
-        self: std::sync::Arc<Self>,
-        session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut state = self.state.clone();
-        let value = outcome;
-        let outcome = match value {
-            Ok(value) => CasesCollectionOutcome::from_continuation_expr(value),
-            Err(error) => return crate::runtime::suspension::FrameAction::complete(Err(error)),
-        };
-        match session.resume_suspended_cases_children(state, outcome) {
-            Ok(outcome) => {
-                crate::runtime::suspension::FrameAction::finalize(FinishCasesCollectionFinalizer {
-                    outcome,
-                })
-            }
-            Err(error) => crate::runtime::suspension::FrameAction::complete(Err(error)),
-        }
-    }
-}
-
-#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
-pub(super) struct FinishCasesAtCurrentNodeSuspendedSuspensionFrame {
-    pub(super) state:
-        crate::runtime::kernel_data::rewrite_data::cases::collect::SuspendedCasesNodeFinish,
-}
-
-impl crate::runtime::suspension::SuspensionFrame
-    for FinishCasesAtCurrentNodeSuspendedSuspensionFrame
-{
-    fn resume(
-        self: std::sync::Arc<Self>,
-        _session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        let case = match outcome {
-            Ok(value) => Option::<Expr>::from_continuation_expr(value),
-            Err(error) => return crate::runtime::suspension::FrameAction::complete(Err(error)),
-        };
-        crate::runtime::suspension::FrameAction::finalize(FinishCasesCollectionFinalizer {
-            outcome: finish_suspended_cases_node(self.state.clone(), case),
-        })
-    }
-}
-
-struct FinishCasesCollectionFinalizer {
-    outcome: SuspendedCasesCollectionOutcome,
-}
-
-impl crate::runtime::suspension::PureFrameFinalizer for FinishCasesCollectionFinalizer {
-    fn finish(self: Box<Self>) -> Result<Expr, EvalError> {
-        Ok(self.outcome.into_owned().into_continuation_expr())
+        let resumed = session
+            .resume_cases_traversal(self.state.clone(), case)
+            .map(|outcome| outcome.into_continuation_expr());
+        crate::runtime::suspension::FrameAction::complete(resumed)
     }
 }
 

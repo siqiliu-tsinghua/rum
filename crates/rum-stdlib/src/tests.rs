@@ -132,6 +132,8 @@ mod incidental_structure_ops_surface;
 mod incidental_thread_and_dispatch;
 #[path = "tests/integer_digits.rs"]
 mod integer_digits;
+#[path = "tests/iterative_traversal_depth.rs"]
+mod iterative_traversal_depth;
 #[path = "tests/json.rs"]
 mod json;
 #[path = "tests/lazy.rs"]
