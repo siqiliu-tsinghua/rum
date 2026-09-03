@@ -13,18 +13,37 @@ fn run_on_two_mib_thread(name: &str, action: impl FnOnce() -> String + Send + 's
 }
 
 fn evaluate_certificate(body: &str) -> String {
+    evaluate_certificate_at_height(TARGET_PHYSICAL_HEIGHT, body)
+}
+
+fn evaluate_certificate_at_height(physical_height: usize, body: &str) -> String {
     let mut session = Session::new();
     install_core(&mut session);
-    let mut source = format!(
-        "x = 1; Do[x = {{x}}, {{i, {}}}]; ",
-        TARGET_PHYSICAL_HEIGHT - 1
-    );
+    let mut source = format!("x = 1; Do[x = {{x}}, {{i, {}}}]; ", physical_height - 1);
     source.push_str(body);
     session
         .eval_text(&source)
         .expect("depth certificate should evaluate")
         .value
         .to_string()
+}
+
+#[test]
+#[ignore = "release-only deployment-stack probe; run explicitly with --release"]
+fn matchq_completes_at_physical_height_20001_on_two_mib() {
+    let certificate = run_on_two_mib_thread("matchq-depth-20001", || {
+        evaluate_certificate_at_height(20_001, "MatchQ[x, _?IntegerQ]")
+    });
+    assert_eq!(certificate, "False");
+}
+
+#[test]
+#[ignore = "release-only deployment-stack probe; run explicitly with --release"]
+fn construction_reaches_physical_height_20001_on_two_mib() {
+    let certificate = run_on_two_mib_thread("construction-depth-20001", || {
+        evaluate_certificate_at_height(20_001, "Depth[x]")
+    });
+    assert_eq!(certificate, "20001");
 }
 
 #[test]

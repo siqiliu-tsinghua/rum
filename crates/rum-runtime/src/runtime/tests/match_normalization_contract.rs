@@ -83,9 +83,27 @@ fn changed_argument_spine(depth: usize) -> Expr {
     expr
 }
 
+fn unchanged_argument_spine(depth: usize) -> Expr {
+    assert!(depth > 0);
+    let mut expr = inert_child("argumentSpineLeaf");
+    for _ in 1..depth {
+        expr = call(PLAIN, vec![expr]);
+    }
+    expr
+}
+
 fn changed_head_spine(depth: usize) -> Expr {
     assert!(depth > 0);
     let mut expr = orderless_change();
+    for _ in 1..depth {
+        expr = Expr::call(expr, vec![Expr::symbol("spineArg")]);
+    }
+    expr
+}
+
+fn unchanged_head_spine(depth: usize) -> Expr {
+    assert!(depth > 0);
+    let mut expr = inert_child("headSpineLeaf");
     for _ in 1..depth {
         expr = Expr::call(expr, vec![Expr::symbol("spineArg")]);
     }
@@ -218,9 +236,21 @@ fn corpus() -> Vec<CorpusCase> {
             true,
         ),
         corpus_case("argument-spine-17", changed_argument_spine(17), true),
+        corpus_case(
+            "unchanged-argument-spine-17",
+            unchanged_argument_spine(17),
+            false,
+        ),
         corpus_case("argument-spine-65", changed_argument_spine(65), true),
+        corpus_case(
+            "unchanged-argument-spine-65",
+            unchanged_argument_spine(65),
+            false,
+        ),
         corpus_case("head-spine-17", changed_head_spine(17), true),
+        corpus_case("unchanged-head-spine-17", unchanged_head_spine(17), false),
         corpus_case("head-spine-65", changed_head_spine(65), true),
+        corpus_case("unchanged-head-spine-65", unchanged_head_spine(65), false),
     ]
 }
 
@@ -439,6 +469,35 @@ fn assert_root_arc_origin(
     );
 }
 
+fn assert_producer_matches_frozen_reference(
+    case: &CorpusCase,
+    producer: &str,
+    production: &Option<Expr>,
+    reference: &Option<Expr>,
+) {
+    assert_eq!(
+        production.is_some(),
+        reference.is_some(),
+        "{} ({producer}): Option discriminant differs from frozen reference",
+        case.name
+    );
+    let production_output = production.as_ref().unwrap_or(&case.input);
+    let reference_output = reference.as_ref().unwrap_or(&case.input);
+    assert!(
+        logical_expr_eq(production_output, reference_output),
+        "{} ({producer}): logical expression differs\nproduction: {}\n reference: {}",
+        case.name,
+        production_output,
+        reference_output
+    );
+    assert_eq!(
+        arc_origin_signature(&case.input, production_output),
+        arc_origin_signature(&case.input, reference_output),
+        "{} ({producer}): input Arc reuse differs",
+        case.name
+    );
+}
+
 #[test]
 fn match_normalization_contract_corpus_matches_frozen_reference() {
     let session = contract_session();
@@ -473,6 +532,77 @@ fn match_normalization_contract_corpus_matches_frozen_reference() {
             arc_origin_signature(&case.input, &reference_output),
             "{}: input Arc reuse differs",
             case.name
+        );
+
+        for budget in [0, 1, 15, 16, 17] {
+            let bounded =
+                session.normalize_match_expr_changed_with_call_depth_for_test(&case.input, budget);
+            assert_producer_matches_frozen_reference(
+                &case,
+                &format!("bounded entry at budget {budget}"),
+                &bounded,
+                &reference,
+            );
+        }
+
+        let iterative = session.normalize_match_expr_changed_iterative_for_test(&case.input);
+        assert_producer_matches_frozen_reference(
+            &case,
+            "iterative fallback",
+            &iterative,
+            &reference,
+        );
+    }
+}
+
+#[test]
+fn match_normalization_contract_bounded_front_handles_exhaustion_locally() {
+    let session = contract_session();
+    let atom = Expr::small_integer(1);
+    let atom_outcome = session.normalize_match_expr_changed_recursive_bounded_for_test(&atom, 0);
+    assert!(atom_outcome.is_none());
+
+    let one_call = unchanged_argument_spine(1);
+    assert!(
+        session
+            .normalize_match_expr_changed_recursive_bounded_for_test(&one_call, 0)
+            .is_none(),
+        "a zero-budget call must complete unchanged through local fallback"
+    );
+    assert!(
+        session
+            .normalize_match_expr_changed_recursive_bounded_for_test(&one_call, 1)
+            .is_none(),
+        "one call must complete unchanged on a one-call budget"
+    );
+
+    let depth_cases = [
+        ("changed argument", changed_argument_spine(17), true),
+        ("unchanged argument", unchanged_argument_spine(17), false),
+        ("changed head", changed_head_spine(17), true),
+        ("unchanged head", unchanged_head_spine(17), false),
+    ];
+    for (name, input, changed) in depth_cases {
+        let case = corpus_case(name, input, changed);
+        let reference = frozen_normalize_match_expr_changed(&session, &case.input);
+        let fallback =
+            session.normalize_match_expr_changed_recursive_bounded_for_test(&case.input, 16);
+        assert_eq!(fallback.is_some(), changed, "{name}: fallback outcome");
+        assert_producer_matches_frozen_reference(
+            &case,
+            "depth 17 at a 16-call budget",
+            &fallback,
+            &reference,
+        );
+
+        let completed =
+            session.normalize_match_expr_changed_recursive_bounded_for_test(&case.input, 17);
+        assert_eq!(completed.is_some(), changed, "{name}: completed outcome");
+        assert_producer_matches_frozen_reference(
+            &case,
+            "depth 17 at a 17-call budget",
+            &completed,
+            &reference,
         );
     }
 }
