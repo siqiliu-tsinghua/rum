@@ -969,6 +969,42 @@ being charged its decoded length instead of the base64 text it holds.
   constant is unexplained, and an unexplained constant in a test becomes a
   fossil. Worth one probe before the Gap B line closes.
 
+### Opened by brief-422 — traversal runs outside `evaluation_depth`
+
+Four unbounded recursive descents were closed (`FromXml`,
+`RegularExpression` group nesting, `rum-syntax`'s postfix-blank chain, the four
+codec encoders). The class behind them is not closed and is a director
+decision.
+
+**A script builds arbitrarily deep values.** `x = 1; Do[x = {x}, {i, N}]`
+reaches N≈80 000: the wrap is iterative and the stored value is never
+re-descended, so no iteration or recursion limit applies. (`Nest` does not work
+for this — it re-evaluates and hits the iteration limit, which is why an
+earlier director probe wrongly cleared the encoders.)
+
+**Every per-node traversal in the kernel and stdlib then runs unguarded.** The
+evaluator's own cycle is bounded — `recursion_limit` 1024 plus a 6 MiB
+native-stack poll every 4 levels — but `evaluation_depth` does not cover a
+traversal walking a value it was handed. Director-reproduced: 20 000 levels
+build, then `ToString` dumps core. Observed abort thresholds: `ToString`,
+`Print`, `FullForm` between 6 000 and 20 000; `Map`, `Apply`, `ReplaceAll`,
+`Cases`, `Level`, `MemberQ`, `Scan`, `Count`, `FreeQ`, `Position`, `Save`,
+`DeleteMissing[_, Infinity]` between 20 000 and 50 000. `Depth`, `LeafCount`,
+`ByteCount` and the sort comparators are lean enough to survive 80 000 but are
+equally unbounded.
+
+**Why a per-builtin depth cap is the wrong fix.** `Depth[x]` legally returns
+80001 today, so a 256 cap would refuse values that work; and the renderers are
+error-message and trace infrastructure with no refusal channel. The two
+structural options are a construction-side depth admission gate — bound how
+deep a value can become, not what may traverse it — or iterative traversals,
+which is the shape plan-330 already used for the sixteen operator chains. This
+needs a design brief, not a repair brief.
+
+**Adjacent, still open:** `rum-jupyter`'s `json_support.rs:61` has no depth
+guard on wire-message JSON (the 2026-09-02 audit's F3), deliberately untouched
+by brief-422.
+
 ### Rulings on the repair line (user, 2026-09-02)
 
 Settled after brief-414's design pass and the director review of it.
