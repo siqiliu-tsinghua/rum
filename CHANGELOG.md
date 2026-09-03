@@ -15,6 +15,17 @@ minor versions may include breaking changes; the project aims to follow
   nesting, the postfix-blank chain in the parser, and the four codec encoders
   had none either. All now refuse in band, naming the limit and the byte offset
   where the existing codecs already did.
+- Pattern matching no longer grows the native stack in proportion to the height
+  of the value being matched. Normalizing a match candidate was recursive, so a
+  single match against a deeply nested value ended the process at about height
+  4,600 on the 2 MiB stack a spawned thread gets by default — and that, not the
+  traversals themselves, was the ceiling `Cases`, `Count`, `Position`,
+  `MemberQ`, `FreeQ` and `ReplaceAll` shared at about 4,500. A single
+  `MatchQ` against a non-trivial pattern now clears height 43,000 and those
+  traversals clear 20,000. Results, argument order, `Flat` and `Orderless`
+  normalization, and which values are rebuilt rather than shared are all
+  unchanged.
+
 - Ten traversals now handle values far deeper than before on the 2 MiB stack a
   spawned thread gets by default: `ToString` from about 1,550 to 43,000,
   `Level` from 4,000 past 20,000, `Map` and `Apply` from 3,600 to 20,000, and

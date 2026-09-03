@@ -969,7 +969,7 @@ being charged its decoded length instead of the base64 text it holds.
   constant is unexplained, and an unexplained constant in a test becomes a
   fossil. Worth one probe before the Gap B line closes.
 
-### The traversal-depth line (briefs 422-427) — bounded, not closed
+### The traversal-depth line (briefs 422-433) — the per-node bound is in; the construction-side bound is not
 
 **What is fixed.** brief-422 bounded four unbounded recursive descents that
 ended the process: `FromXml`, `RegularExpression` group nesting, `rum-syntax`'s
@@ -1004,18 +1004,34 @@ The stop-loss fired; the spike is preserved in the stash, not committed. **A
 different way to maintain the height, or a different design, is needed before
 `L` can be installed.**
 
-**The 4,500 ceiling is candidate normalization** (brief-427, source-level).
-`match_expr_owned` recursively normalizes the whole candidate before dispatch
-(`pattern_matching/core.rs:23-32`); post-order visits the root last, so `Cases`
-pays a full-depth normalization on its final node. It is not accumulated
-per-node state and not the cursor. Confirmed at the gate: `MatchQ` with
-`_?IntegerQ`, which defeats `fast_match_q_resolved_pattern`, gives out at 8,000
-on 2 MiB exactly where `Cases` does, while `MatchQ[x, _]` clears 20,000 on the
-fast path. **The repair has a precedent that costs nothing** — `Level` and
-`Map`/`Apply` already use a depth-16 recursive front path with an
-explicit-stack fallback. It removes stack growth and not repeated work: the
-general entry normalizes the entire candidate on every invocation, so `Cases`
-over a deep tree stays quadratic.
+**The 4,500 ceiling was candidate normalization, and it is now fixed**
+(briefs 427-433, `0f679699`). `match_expr_owned` recursively normalized the
+whole candidate before dispatch (`pattern_matching/core.rs:23-32`), so the
+ceiling belonged to one normalization and not to the traversal at all: a single
+`MatchQ[x, _?IntegerQ]` — which defeats `fast_match_q_resolved_pattern` — died
+in the same bracket as an all-level `Count` over the same value. The normalizer
+now runs a depth-16 recursive front path and hands an over-deep subtree to a
+cold explicit-stack engine in place, following `Level` and `Map`/`Apply`.
+
+Measured on 2 MiB, director-run: `MatchQ[x, _?IntegerQ]` went from 4,601
+completing / 4,651 overflowing to clearing **43,001**, and
+`Count[x, _, Infinity]` from 4,501 / 4,701 to clearing **20,001** — 10.5x and
+4.9x the ruled 4,097 minimum. Above 43,000 the limiter is `Depth`'s own
+recursion, not the normalizer; the checked-in certificate therefore excludes
+`Depth` and a separate liveness test carries the height assertion.
+
+**It removes stack growth, not repeated work.** The general entry still
+normalizes the entire candidate on every invocation, so `Cases` over a deep
+tree is still quadratic. Two deferred work-removal items sit here, priced by
+brief-428 §6 and deliberately kept out of that A/B: `Cases` normalizes each
+candidate twice, and the pattern is recompiled per selected node.
+
+**The cost took three shapes to get to zero, and that is the lesson.**
+Propagating exhaustion as a `Result` cost 6-15% on wide traversal normalization
+because every atom returned through it; handling exhaustion locally fixed that
+but left ~8% on `matcher-single-*` because atoms still entered a function
+carrying a depth parameter their arm ignored. The recursive worker now takes a
+decomposed call, so an atom cannot reach it.
 
 **What remains, and why it is not queued.** brief-427 classified brief-422
 §3(e)'s tail: only the rewrite family shares the normalizer mechanism, and
@@ -1028,6 +1044,12 @@ encoding is "unclear — needs measurement". **None of these is known to fall
 below 4,097; they are unbounded, which is not the same thing.** Measure them
 against the bound and order by real ceiling before opening briefs, rather than
 scheduling a dozen repairs on source reading alone.
+
+One of them now has a number, measured incidentally at the brief-433 gate:
+**`Depth` clears 20,001 and fails by 43,001** on 2 MiB. It is far above the
+bound, so it is not urgent — but it is the next ceiling on the probe shape this
+line uses, and a probe that calls `Depth` for liveness cannot bracket anything
+above it.
 
 **Adjacent, still open:** `rum-jupyter`'s `json_support.rs:61` has no depth
 guard on wire-message JSON (the 2026-09-02 audit's F3), deliberately untouched.

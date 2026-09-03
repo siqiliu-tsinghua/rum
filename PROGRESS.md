@@ -2045,3 +2045,71 @@ argument. The stop-loss fired and the spike is in the stash.
   touching a file because the authority it was told to use was not in the
   repository. Appending the report is now the first thing I do with a returned
   brief.
+
+## 2026-09-03 (later) — the candidate normalizer's recursion (briefs 428-433)
+
+The 4,500-height ceiling six converted traversals shared turned out not to be
+in the traversals. A single `MatchQ[x, _?IntegerQ]` — no traversal at all — died
+in the same bracket as an all-level `Count` over the same value, while
+`MatchQ[x, _]` cleared 20,001 through the blank fast path. The whole ceiling was
+one recursive normalization of the match candidate, which is now bounded:
+43,001 for the single match, 20,001 for the traversals, against a ruled minimum
+of 4,097.
+
+**Six briefs, three of them the same repair in three shapes.** The design
+(428) was sound and the plumbing was not. Propagating exhaustion as a `Result`
+cost 6-15% on wide traversal normalization, because the depth budget is
+consumed only on call nodes but the return type was paid on every atom.
+Handling exhaustion locally removed that and left ~8% on `matcher-single-*`,
+because atoms still entered a function carrying a depth parameter their arm
+ignored. Giving the recursive worker a decomposed call — so an atom cannot be
+passed to it — took it to parity. Each shape was predicted before it was
+measured, and each prediction named what would falsify it.
+
+**The measurement lessons are the durable part of this line.**
+
+- *A single base/candidate pair cannot gate this panel.* brief-431's stop-loss
+  named two coherent regressing families. Four passes in one window put the
+  same-binary spread at −7.78% to +11.19%: `matcher-single-wide-small` moved
+  +11.19% between two runs of the identical binary, larger than the regression
+  attributed to it, and its two replicates read +13.31% and +0.11%. Half that
+  stop-loss was noise, and the protocol that produced it was the director's.
+- *Layout is not noise and has to be sampled separately.* A third binary — HEAD
+  with one function moved to the end of its `impl` block, identical semantics —
+  moves this panel at most 4.45% and the `matcher-single` family 0.10%-1.52%.
+  Without that number there is no way to say whether an 8% movement is the
+  change. The first attempt at that control used `#[no_mangle]`, which does not
+  compile here without an `unsafe` attribute the project forbids; the `cp` that
+  followed silently copied the previous binary, and only the hash check caught
+  that the "control" was the candidate.
+- *When every affected label moves the same direction by a similar amount after
+  control adjustment, the adjustment is the artifact.* The final A/B read +1.3%
+  to +5.3% across the whole panel — including labels the change cannot touch.
+  The within-run quotient against a same-tier untouched neighbour, which is
+  immune to a whole-run offset by construction, read −0.52% to +2.64% with
+  every label inside its own same-binary quotient spread. That is the measure
+  that settled it.
+- *A liveness probe can be the thing that fails.* `MatchQ` at height 43,000
+  failed with a `Depth[x]` prelude and passed without it: `Depth` is its own
+  unbounded recursion and gives out between 20,001 and 43,001. The checked-in
+  certificate therefore excludes `Depth`, and a separate test carries the
+  height assertion.
+- *Three attempts is a plan, not drift, when each one is falsifiable.* Each
+  brief named the labels that would have to move and the number at which to
+  stop and hand the decision back, so a fourth shape was never on the table.
+
+**Method that worked and should be reused.** The repair was split into three
+gated steps — lock the contract in tests, move the module, change the
+algorithm — so the semantic diff was readable on its own. The contract lock is
+a frozen transcription of the old algorithm compared against production on
+three axes per case: the `Option` discriminant, the logical value, and which
+input `Arc`s the output reuses, mapped over the whole output tree. That third
+axis is the one that matters, because pointer identity here is an observable
+contract: the evaluation-stability cache validates entries by exact pointer
+equality, and its uncached path is another recursion. Both red calibrations
+were recorded before the green run, and the director reproduced the sharing one
+independently.
+
+**A record correction.** `7ae6aa3a` is labelled "docs" but also carried
+brief-432's implementation of three source files; a `git add -A` swept it in.
+History is left unrewritten and the fact is recorded in `0f679699`.
