@@ -35,7 +35,7 @@ impl OrderlessChoiceCollectionState {
     }
 
     fn from_continuation_expr(expr: Expr) -> Self {
-        let Expr::Call { head, args } = expr else {
+        let Expr::Call { head, args, .. } = expr else {
             panic!("unexpected orderless-choice-collection continuation payload")
         };
         assert!(
@@ -61,6 +61,7 @@ impl OrderlessChoiceCollectionState {
         let Expr::Call {
             head: choices_head,
             args: choices,
+            ..
         } = choices_expr
         else {
             panic!("unexpected orderless choices continuation payload")
@@ -370,7 +371,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueOrderlessChoiceColl
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
         let resumed = outcome.and_then(|payload| {
-            let Expr::Call { head, args } = payload else {
+            let Expr::Call { head, args, .. } = payload else {
                 panic!("unexpected orderless-choice-collection continuation payload")
             };
             let is_pattern = is_system_symbol_name(

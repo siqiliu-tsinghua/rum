@@ -189,6 +189,7 @@ pub(crate) fn eval_row(
     let Expr::Call {
         head: items_head,
         args: items,
+        ..
     } = items_expr
     else {
         return Ok(Expr::call(head.clone(), args.to_vec()));

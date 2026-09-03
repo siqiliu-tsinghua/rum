@@ -48,7 +48,7 @@ fn invalid_sequence_normal_expression_call(
 }
 
 fn parse_take_list_counts(counts_expr: &Expr) -> Option<Vec<usize>> {
-    let Expr::Call { head, args } = counts_expr else {
+    let Expr::Call { head, args, .. } = counts_expr else {
         return None;
     };
 
@@ -65,7 +65,7 @@ fn parse_take_list_counts(counts_expr: &Expr) -> Option<Vec<usize>> {
 }
 
 fn apply_take_list_counts(expr: &Expr, counts: &[usize]) -> Option<Vec<Expr>> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 

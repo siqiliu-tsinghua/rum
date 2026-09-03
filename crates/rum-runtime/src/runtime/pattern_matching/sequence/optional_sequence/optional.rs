@@ -58,7 +58,7 @@ impl OptionalChoiceState {
     }
 
     fn from_continuation_expr(expr: Expr) -> Self {
-        let Expr::Call { head, args } = expr else {
+        let Expr::Call { head, args, .. } = expr else {
             panic!("unexpected optional-choice continuation payload")
         };
         assert!(
@@ -144,7 +144,7 @@ impl OptionalOmissionState {
     }
 
     fn from_continuation_expr(expr: Expr) -> Self {
-        let Expr::Call { head, args } = expr else {
+        let Expr::Call { head, args, .. } = expr else {
             panic!("unexpected optional-omission continuation payload")
         };
         assert!(

@@ -460,7 +460,7 @@ impl Session {
 }
 
 fn parse_exception_handlers(expr: &Expr) -> Option<Vec<ExceptionHandler>> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
     if !is_system_symbol_name(head, "List") {
@@ -471,7 +471,7 @@ fn parse_exception_handlers(expr: &Expr) -> Option<Vec<ExceptionHandler>> {
 }
 
 fn parse_exception_handler(expr: &Expr) -> Option<ExceptionHandler> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
     if !(is_system_symbol_name(head, "Rule") || is_system_symbol_name(head, "RuleDelayed"))
@@ -491,7 +491,7 @@ fn parse_exception_handler(expr: &Expr) -> Option<ExceptionHandler> {
 }
 
 fn exception_parts(exception: &Expr) -> Option<(String, Expr)> {
-    let Expr::Call { head, args } = exception else {
+    let Expr::Call { head, args, .. } = exception else {
         return None;
     };
     if !is_system_symbol_name(head, "Exception") || args.len() != 2 {

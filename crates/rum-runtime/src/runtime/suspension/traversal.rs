@@ -14,7 +14,7 @@ fn cases_level_spec_expr(spec: CasesLevelSpec) -> Expr {
 
 fn cases_level_spec_from_expr(expr: Expr) -> CasesLevelSpec {
     match expr {
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if is_system_symbol_name(&head, "InternalContinuationCasesLevelSpec")
                 && args.len() == 2 =>
         {
@@ -51,7 +51,7 @@ impl ContinuationValue for Option<CasesLevelSpec> {
 
     fn from_continuation_expr(expr: Expr) -> Self {
         match expr {
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, "InternalContinuationSomeCasesLevelSpec")
                     && args.len() == 1 =>
             {
@@ -61,7 +61,7 @@ impl ContinuationValue for Option<CasesLevelSpec> {
                     .expect("some-cases-level-spec payload stores one item");
                 Some(cases_level_spec_from_expr(spec_expr))
             }
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, "InternalContinuationNone") =>
             {
                 debug_assert!(args.is_empty(), "none continuation payloads are empty");
@@ -88,7 +88,7 @@ impl ContinuationValue for CasesTraversalConfig {
 
     fn from_continuation_expr(expr: Expr) -> Self {
         match expr {
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, "InternalContinuationCasesTraversalConfig")
                     && args.len() == 3 =>
             {
@@ -135,7 +135,7 @@ impl ContinuationValue for CasesTraversalResolution {
 
     fn from_continuation_expr(expr: Expr) -> Self {
         match expr {
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, "InternalContinuationCasesTraversalValid")
                     && args.len() == 1 =>
             {
@@ -143,7 +143,7 @@ impl ContinuationValue for CasesTraversalResolution {
                 let config_expr = args.pop().expect("valid cases-traversal stores config");
                 Self::Valid(CasesTraversalConfig::from_continuation_expr(config_expr))
             }
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, "InternalContinuationCasesTraversalInvalid")
                     && args.len() == 1 =>
             {

@@ -107,7 +107,7 @@ impl Session {
         &self,
         expr: &Expr,
     ) -> Option<(ValueTableKind, Symbol)> {
-        let Expr::Call { head, args } = expr else {
+        let Expr::Call { head, args, .. } = expr else {
             return None;
         };
         if args.len() != 1 {
@@ -289,7 +289,7 @@ fn parse_assigned_value_table(
     target: Symbol,
     rhs: &Expr,
 ) -> Result<Vec<AssignedValueTableRule>, String> {
-    let Expr::Call { head, args } = rhs else {
+    let Expr::Call { head, args, .. } = rhs else {
         return Err(format!(
             "{}[{}] must be assigned a List of Rule or RuleDelayed entries; received {}.",
             kind.inspector_name(),
@@ -311,6 +311,7 @@ fn parse_assigned_value_table(
         let Expr::Call {
             head: rule_head,
             args: rule_args,
+            ..
         } = rule_expr
         else {
             return Err(malformed_value_table_rule_message(kind, target, rule_expr));

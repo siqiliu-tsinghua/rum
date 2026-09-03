@@ -102,7 +102,7 @@ impl EvaluatedPartSelectors {
 
     pub(in crate::runtime) fn from_continuation_expr(expr: Expr) -> Self {
         match expr {
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, "InternalContinuationEvaluatedPartSelectors") =>
             {
                 Self::from_evaluated(args.into_vec())

@@ -43,7 +43,7 @@ impl ContinuationValue for Option<Expr> {
 
     fn from_continuation_expr(expr: Expr) -> Self {
         match expr {
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, "InternalContinuationSome") =>
             {
                 let mut items = args.into_iter();
@@ -54,7 +54,7 @@ impl ContinuationValue for Option<Expr> {
                 );
                 first
             }
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, "InternalContinuationNone") =>
             {
                 debug_assert!(args.is_empty(), "none continuation payloads are empty");
@@ -72,7 +72,7 @@ impl ContinuationValue for Vec<Expr> {
 
     fn from_continuation_expr(expr: Expr) -> Self {
         match expr {
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, "InternalContinuationVec") =>
             {
                 args.into_vec()
@@ -107,17 +107,17 @@ impl ContinuationValue for Vec<SymbolExprMap> {
 
     fn from_continuation_expr(expr: Expr) -> Self {
         match expr {
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, "InternalContinuationBindingVec") =>
             {
                 args.into_iter()
                     .map(|item| match item {
-                        Expr::Call { head, args }
+                        Expr::Call { head, args, .. }
                             if is_system_symbol_name(&head, "InternalContinuationBindingMap") =>
                         {
                             args.into_iter()
                                 .map(|entry| match entry {
-                                    Expr::Call { head, args }
+                                    Expr::Call { head, args, .. }
                                         if is_system_symbol_name(&head, "Rule")
                                             && args.len() == 2 =>
                                     {
@@ -165,7 +165,7 @@ impl ContinuationValue for Option<Vec<Expr>> {
 
     fn from_continuation_expr(expr: Expr) -> Self {
         match expr {
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, "InternalContinuationSomeVec") =>
             {
                 let mut items = args.into_iter();
@@ -178,19 +178,19 @@ impl ContinuationValue for Option<Vec<Expr>> {
                 );
 
                 match list_expr {
-                    Expr::Call { head, args } if is_system_symbol_name(&head, "List") => {
+                    Expr::Call { head, args, .. } if is_system_symbol_name(&head, "List") => {
                         Some(args.into_vec())
                     }
                     other => Some(vec![other]),
                 }
             }
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, "InternalContinuationNone") =>
             {
                 debug_assert!(args.is_empty(), "none continuation payloads are empty");
                 None
             }
-            Expr::Call { head, args } if is_system_symbol_name(&head, "List") => {
+            Expr::Call { head, args, .. } if is_system_symbol_name(&head, "List") => {
                 Some(args.into_vec())
             }
             other => Some(vec![other]),

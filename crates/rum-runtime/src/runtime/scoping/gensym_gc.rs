@@ -270,7 +270,7 @@ pub(in crate::runtime) fn for_each_symbol_in_expr(expr: &Expr, visit: &mut dyn F
     match expr {
         Expr::Atom(Atom::Symbol(symbol)) => visit(symbol),
         Expr::Atom(_) => {}
-        Expr::Call { head, args } => {
+        Expr::Call { head, args, .. } => {
             for_each_symbol_in_expr(head, visit);
             for arg in args {
                 for_each_symbol_in_expr(arg, visit);

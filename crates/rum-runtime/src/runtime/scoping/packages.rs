@@ -19,7 +19,7 @@ pub(in crate::runtime) fn sealed_symbols_in_expr(expr: &Expr) -> BTreeSet<Symbol
             Expr::Atom(Atom::Symbol(symbol)) if symbol_is_sealed_private(symbol) => {
                 sealed.insert(*symbol);
             }
-            Expr::Call { head, args } => {
+            Expr::Call { head, args, .. } => {
                 collect(head, sealed);
                 for arg in args {
                     collect(arg, sealed);
@@ -84,7 +84,7 @@ impl PackageInstallPlan {
     }
 
     fn from_continuation_expr(expr: Expr) -> (Self, usize) {
-        let Expr::Call { head, args } = expr else {
+        let Expr::Call { head, args, .. } = expr else {
             panic!("unexpected package-install continuation payload")
         };
         assert!(
@@ -122,6 +122,7 @@ impl PackageInstallPlan {
         let Expr::Call {
             head: private_head,
             args: private_entries,
+            ..
         } = private_index_expr
         else {
             panic!("unexpected package private-index continuation payload")
@@ -133,7 +134,7 @@ impl PackageInstallPlan {
         let private_index = private_entries
             .into_iter()
             .map(|entry| {
-                let Expr::Call { head, args } = entry else {
+                let Expr::Call { head, args, .. } = entry else {
                     panic!("unexpected package private-symbol continuation payload")
                 };
                 assert!(is_system_symbol_name(
@@ -191,7 +192,7 @@ fn symbols_into_continuation_expr(symbols: Vec<Symbol>) -> Expr {
 }
 
 fn symbols_from_continuation_expr(expr: Expr) -> Vec<Symbol> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         panic!("unexpected package-symbol continuation payload")
     };
     assert!(is_system_symbol_name(
@@ -359,6 +360,7 @@ impl Session {
         let Expr::Call {
             head: held_head,
             args: held_args,
+            ..
         } = held_expr
         else {
             return Ok(self.invalid_call_with_arg_form(
@@ -514,7 +516,7 @@ const _: fn() = || {
 };
 
 fn restore_unit_contexts(expr: &Expr) -> Option<Vec<String>> {
-    if let Expr::Call { head, args } = expr {
+    if let Expr::Call { head, args, .. } = expr {
         if is_system_symbol_name(head, "List") {
             let contexts = args
                 .iter()
@@ -528,7 +530,7 @@ fn restore_unit_contexts(expr: &Expr) -> Option<Vec<String>> {
 }
 
 fn restore_unit_context(expr: &Expr) -> Option<String> {
-    if let Expr::Call { head, args } = expr {
+    if let Expr::Call { head, args, .. } = expr {
         if is_system_symbol_name(head, "Rule") {
             let [context, _epoch] = args.as_slice() else {
                 return None;
@@ -573,7 +575,7 @@ fn collect_package_declarations_and_body(
     let mut body = Vec::new();
 
     for arg in args {
-        let Expr::Call { head, args } = arg else {
+        let Expr::Call { head, args, .. } = arg else {
             flatten_compound_expression(arg, &mut body);
             continue;
         };
@@ -599,6 +601,7 @@ fn collect_package_declarations_and_body(
             Expr::Call {
                 head: list_head,
                 args: symbols,
+                ..
             },
         ] = args.as_slice()
         else {
@@ -639,7 +642,7 @@ fn collect_package_declarations_and_body(
 }
 
 fn flatten_compound_expression(expr: &Expr, forms: &mut Vec<Expr>) {
-    if let Expr::Call { head, args } = expr {
+    if let Expr::Call { head, args, .. } = expr {
         if is_system_symbol_name(head, "CompoundExpression") {
             for arg in args {
                 flatten_compound_expression(arg, forms);
@@ -659,7 +662,7 @@ fn scan_package_bindings(
     let mut bound = BTreeSet::new();
 
     for form in forms {
-        let Expr::Call { head, args } = form else {
+        let Expr::Call { head, args, .. } = form else {
             continue;
         };
 
@@ -715,7 +718,7 @@ fn collect_package_symbol_targets(
         Expr::Atom(Atom::Symbol(symbol)) => {
             insert_package_local(bound, *symbol, current_context);
         }
-        Expr::Call { head, args } if is_system_symbol_name(head, "List") => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => {
             for arg in args {
                 collect_package_symbol_targets(arg, current_context, bound);
             }

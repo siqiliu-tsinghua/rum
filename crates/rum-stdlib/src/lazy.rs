@@ -415,6 +415,7 @@ pub(crate) fn eval_lazy_table(
     let Expr::Call {
         head: spec_head,
         args: spec_args,
+        ..
     } = spec
     else {
         return Ok(invalid_lazy_table_spec(session, args));
@@ -606,7 +607,7 @@ fn parse_lazy_take_count(expr: &Expr) -> Option<usize> {
         return Some(count);
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
     if !is_system_symbol_name(head, "UpTo") {
@@ -683,7 +684,7 @@ fn advance_tuple_cursor(inner_lists: &[Expr], digits: &mut [usize]) -> bool {
 }
 
 fn stepper_from_descriptor(descriptor: &Expr) -> Option<PullStepper> {
-    let Expr::Call { head, args } = descriptor else {
+    let Expr::Call { head, args, .. } = descriptor else {
         return None;
     };
 

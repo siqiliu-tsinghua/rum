@@ -55,7 +55,7 @@ impl AssociationEntryCursor<'_> {
 }
 
 pub fn association_entries_from_expr(expr: &Expr) -> Option<Vec<(Expr, Expr)>> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -69,7 +69,7 @@ pub fn association_entries_from_expr(expr: &Expr) -> Option<Vec<(Expr, Expr)>> {
 }
 
 pub fn association_entry_forms_from_expr(expr: &Expr) -> Option<Vec<AssociationEntryForm>> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -111,7 +111,7 @@ fn parse_association_item_deep(expr: &Expr) -> Option<Vec<(Expr, Expr)>> {
         return Some(entries);
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -163,7 +163,7 @@ pub(in crate::runtime) fn normalize_key_value_pattern_spec(spec: &Expr) -> Optio
         ));
     }
 
-    let Expr::Call { head, args } = spec else {
+    let Expr::Call { head, args, .. } = spec else {
         return None;
     };
     if !is_system_symbol_name(head, heads::structure::LIST) {
@@ -182,7 +182,7 @@ pub(in crate::runtime) fn normalize_key_value_pattern_spec(spec: &Expr) -> Optio
 
 pub fn list_items(expr: &Expr) -> Option<&[Expr]> {
     match expr {
-        Expr::Call { head, args } if is_system_symbol_name(head, heads::structure::LIST) => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, heads::structure::LIST) => {
             Some(args)
         }
         _ => None,
@@ -229,7 +229,7 @@ fn canonicalize_association_entries(entries: Vec<(Expr, Expr)>) -> Vec<(Expr, Ex
 }
 
 pub(in crate::runtime) fn parse_association_entry(expr: &Expr) -> Option<(Expr, Expr)> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -243,7 +243,7 @@ pub(in crate::runtime) fn parse_association_entry(expr: &Expr) -> Option<(Expr, 
 }
 
 pub fn parse_association_entry_form(expr: &Expr) -> Option<AssociationEntryForm> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -261,7 +261,7 @@ pub fn parse_association_entry_form(expr: &Expr) -> Option<AssociationEntryForm>
 }
 
 fn rule_list_entry_forms_from_expr(expr: &Expr) -> Option<Vec<AssociationEntryForm>> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -291,7 +291,7 @@ fn parse_association_item_forms_deep(expr: &Expr) -> Option<Vec<AssociationEntry
         return Some(vec![entry]);
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -413,7 +413,7 @@ impl Session {
         &mut self,
         expr: &'a Expr,
     ) -> Option<AssociationEntryCursor<'a>> {
-        let Expr::Call { head, args } = expr else {
+        let Expr::Call { head, args, .. } = expr else {
             return None;
         };
         if !is_system_symbol_name(head, "Association") {
@@ -458,7 +458,7 @@ impl Session {
     }
 
     fn lookup_flat_association_key(&mut self, expr: &Expr, key: &Expr) -> Option<Option<Expr>> {
-        let Expr::Call { head, args } = expr else {
+        let Expr::Call { head, args, .. } = expr else {
             return None;
         };
         if !is_system_symbol_name(head, "Association") {
@@ -547,7 +547,7 @@ impl Session {
 }
 
 pub(in crate::runtime) fn flat_association_rule_parts(expr: &Expr) -> Option<(&Expr, &Expr)> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
     if !(is_system_symbol_name(head, "Rule") || is_system_symbol_name(head, "RuleDelayed"))
@@ -740,7 +740,7 @@ impl Session {
         &self,
         lhs: &Expr,
     ) -> Option<AssociationSetLValueTarget> {
-        let Expr::Call { head, args } = lhs else {
+        let Expr::Call { head, args, .. } = lhs else {
             return None;
         };
 
@@ -953,7 +953,7 @@ fn association_part_key_path(selectors: &EvaluatedPartSelectors) -> Option<Vec<E
 
 fn explicit_association_key_selector(selector: &Expr) -> Option<&Expr> {
     match selector {
-        Expr::Call { head, args } if is_system_symbol_name(head, "Key") && args.len() == 1 => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Key") && args.len() == 1 => {
             Some(&args[0])
         }
         _ => None,
@@ -966,7 +966,7 @@ fn association_part_key_selector(selector: &Expr) -> Option<Expr> {
     }
 
     match selector {
-        Expr::Call { head, args } if is_system_symbol_name(head, "Key") && args.len() == 1 => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Key") && args.len() == 1 => {
             Some(args[0].clone())
         }
         _ => None,

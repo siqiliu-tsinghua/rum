@@ -183,7 +183,7 @@ impl Session {
 }
 
 fn replace_repeated_max_iterations_option_value(expr: &Expr) -> Option<&Expr> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -272,7 +272,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueReplaceRepeatedTarg
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
         let resumed = outcome.and_then(|payload| {
-            let Expr::Call { head, args } = payload else {
+            let Expr::Call { head, args, .. } = payload else {
                 panic!("unexpected ReplaceRepeated target continuation payload")
             };
             assert!(

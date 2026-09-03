@@ -445,7 +445,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueFlatSingleCollectio
 fn compiled_arg_and_rest_payload(
     payload: Expr,
 ) -> Option<(Vec<MatcherArg>, Vec<Expr>, SymbolExprMap)> {
-    let Expr::Call { head, args } = payload else {
+    let Expr::Call { head, args, .. } = payload else {
         return None;
     };
     if !is_system_symbol_name(&head, "InternalContinuationCompiledArgAndRest") {
@@ -469,7 +469,7 @@ fn compiled_arg_and_rest_payload(
 }
 
 fn sequence_frame_payload(payload: Expr, tag: &'static str) -> std::vec::IntoIter<Expr> {
-    let Expr::Call { head, args } = payload else {
+    let Expr::Call { head, args, .. } = payload else {
         panic!("unexpected {tag} continuation payload")
     };
     assert!(

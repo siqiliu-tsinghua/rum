@@ -358,7 +358,7 @@ fn tokenize_with_ini_grammar_handles_heavy_generated_config() {
 }
 
 fn expect_list(expr: &Expr) -> &[Expr] {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         panic!("expected List, got {expr}");
     };
     assert_eq!(head.as_ref().to_string(), "List");

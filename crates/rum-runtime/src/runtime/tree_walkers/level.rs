@@ -158,7 +158,7 @@ fn collect_standard_call_recursive_bounded(
     level: usize,
     remaining_call_depth: usize,
 ) -> Option<LevelCollection> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         unreachable!("standard call collection requires a call")
     };
     let mut parts = Vec::new();

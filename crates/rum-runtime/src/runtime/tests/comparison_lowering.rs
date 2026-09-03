@@ -38,7 +38,7 @@ fn comparison_lowering_accepts_a_uniform_chain_at_the_boundary() {
     let syntax = parse_expr(&source).expect("boundary comparison source should parse");
     let lowered = lower_syntax_expr(&syntax).expect("boundary comparison source should lower");
 
-    let Expr::Call { head, args } = lowered else {
+    let Expr::Call { head, args, .. } = lowered else {
         panic!("boundary comparison should lower to a call");
     };
     assert!(is_system_symbol_name(&head, "Equal"));
@@ -69,7 +69,7 @@ fn comparison_lowering_bounds_direct_chain_nodes() {
     let accepted = hand_built_comparison_chain(MAX_LEFT_ASSOCIATIVE_CHAIN_LINKS, 1_000);
     let lowered = lower_syntax_expr(&accepted)
         .expect("a direct comparison chain at the parser limit should lower");
-    let Expr::Call { head, args } = &lowered else {
+    let Expr::Call { head, args, .. } = &lowered else {
         panic!("direct comparison tree should lower to a call");
     };
     assert!(is_system_symbol_name(head, "Equal"));
@@ -99,7 +99,7 @@ fn comparison_lowering_keeps_parenthesized_subtrees_independent() {
     let lowered = lower_syntax_expr(&syntax)
         .expect("independent parenthesized chains should not share a link budget");
 
-    let Expr::Call { head, args } = &lowered else {
+    let Expr::Call { head, args, .. } = &lowered else {
         panic!("outer parenthesized comparison should lower to a call");
     };
     assert!(is_system_symbol_name(head, "Equal"));
@@ -108,6 +108,7 @@ fn comparison_lowering_keeps_parenthesized_subtrees_independent() {
         let Expr::Call {
             head: inner_head,
             args: inner_args,
+            ..
         } = arg
         else {
             panic!("parenthesized chain should remain an inner call");

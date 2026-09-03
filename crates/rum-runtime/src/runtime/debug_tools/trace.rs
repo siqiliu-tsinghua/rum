@@ -339,7 +339,7 @@ impl Session {
         levels: Option<CasesLevelSpec>,
         include_heads: bool,
     ) -> Result<Expr, EvalError> {
-        let Expr::Call { head, args } = trace else {
+        let Expr::Call { head, args, .. } = trace else {
             return Ok(trace);
         };
         if !is_system_symbol_name(&head, "List") {
@@ -362,7 +362,7 @@ impl Session {
         levels: Option<CasesLevelSpec>,
         include_heads: bool,
     ) -> Result<Expr, EvalError> {
-        let Expr::Call { head, args } = trace else {
+        let Expr::Call { head, args, .. } = trace else {
             return Ok(trace);
         };
         if !is_system_symbol_name(&head, "List") {
@@ -389,7 +389,7 @@ impl Session {
 
         for item in items {
             match item {
-                Expr::Call { head, args } if is_system_symbol_name(&head, "List") => {
+                Expr::Call { head, args, .. } if is_system_symbol_name(&head, "List") => {
                     let nested = self.filter_structured_trace_detail_items(
                         args.into_vec(),
                         pattern,
@@ -398,7 +398,7 @@ impl Session {
                     )?;
                     if !nested.is_empty() {
                         if nested.len() == 1 {
-                            if let Expr::Call { head, args } = &nested[0] {
+                            if let Expr::Call { head, args, .. } = &nested[0] {
                                 if is_system_symbol_name(head, "List") {
                                     filtered.push(Expr::call_with_shared_args(
                                         system_expr("List"),
@@ -524,7 +524,7 @@ impl Session {
 
         for item in items {
             match item {
-                Expr::Call { head, args } if is_system_symbol_name(&head, "List") => {
+                Expr::Call { head, args, .. } if is_system_symbol_name(&head, "List") => {
                     let nested = self.filter_structured_trace_items(
                         args.into_vec(),
                         pattern,
@@ -533,7 +533,7 @@ impl Session {
                     )?;
                     if !nested.is_empty() {
                         if nested.len() == 1 {
-                            if let Expr::Call { head, args } = &nested[0] {
+                            if let Expr::Call { head, args, .. } = &nested[0] {
                                 if is_system_symbol_name(head, "List") {
                                     filtered.push(Expr::call_with_shared_args(
                                         system_expr("List"),
@@ -767,7 +767,7 @@ fn push_unique_trace_item(items: &mut Vec<Expr>, item: Expr) {
 
 fn unwrap_trace_hold(expr: &Expr) -> Option<Expr> {
     match expr {
-        Expr::Call { head, args } if is_system_symbol_name(head, "Hold") && args.len() == 1 => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Hold") && args.len() == 1 => {
             Some(args[0].clone())
         }
         _ => None,
@@ -786,10 +786,10 @@ fn render_structured_trace_lines(trace: &Expr) -> Vec<String> {
 
 fn collect_structured_trace_lines(trace: &Expr, depth: usize, lines: &mut Vec<(usize, String)>) {
     match trace {
-        Expr::Call { head, args } if is_system_symbol_name(head, "List") => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => {
             for item in args {
                 match item {
-                    Expr::Call { head, args: _ } if is_system_symbol_name(head, "List") => {
+                    Expr::Call { head, args: _, .. } if is_system_symbol_name(head, "List") => {
                         collect_structured_trace_lines(item, depth + 1, lines);
                     }
                     other => {
@@ -813,7 +813,7 @@ fn collect_structured_trace_lines(trace: &Expr, depth: usize, lines: &mut Vec<(u
 }
 fn normalize_trace_patterns(expr: &Expr) -> Vec<Expr> {
     match expr {
-        Expr::Call { head, args } if is_system_symbol_name(head, "List") => args.to_vec(),
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => args.to_vec(),
         other => vec![other.clone()],
     }
 }

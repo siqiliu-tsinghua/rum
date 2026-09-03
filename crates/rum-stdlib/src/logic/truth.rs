@@ -536,7 +536,7 @@ fn append_flat_logical_residual(
     head_name: &str,
 ) -> PersistentLogicSequence<Expr> {
     match value {
-        Expr::Call { head, args } if is_system_symbol_name(&head, head_name) => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(&head, head_name) => {
             for value in args {
                 residual = residual.appended(value);
             }
@@ -548,7 +548,7 @@ fn append_flat_logical_residual(
 
 fn extend_flat_logical_residual(residual: &mut Vec<Expr>, value: Expr, head_name: &str) {
     match value {
-        Expr::Call { head, args } if is_system_symbol_name(&head, head_name) => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(&head, head_name) => {
             residual.extend(args);
         }
         other => residual.push(other),
@@ -630,7 +630,7 @@ fn negate_logical_expr(expr: Expr) -> Expr {
         None => {}
     }
 
-    if let Expr::Call { head, args } = expr {
+    if let Expr::Call { head, args, .. } = expr {
         if is_system_symbol_name(&head, "Not") && args.len() == 1 {
             return args.into_iter().next().expect("single Not argument");
         }
@@ -641,7 +641,7 @@ fn negate_logical_expr(expr: Expr) -> Expr {
             }
         }
 
-        return Expr::call(system_expr("Not"), vec![Expr::Call { head, args }]);
+        return Expr::call(system_expr("Not"), vec![Expr::call_shared(head, args)]);
     }
 
     Expr::call(system_expr("Not"), vec![expr])

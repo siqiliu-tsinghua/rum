@@ -60,7 +60,7 @@ impl Session {
 
         match expr {
             Expr::Atom(_) => Ok(expr.clone()),
-            Expr::Call { head, args } => {
+            Expr::Call { head, args, .. } => {
                 if matches_pattern_head(head) {
                     return Ok(expr.clone());
                 }
@@ -134,6 +134,7 @@ impl Session {
         let Expr::Call {
             head: pattern_head,
             args: pattern_args,
+            ..
         } = pattern
         else {
             return None;
@@ -153,7 +154,7 @@ impl Session {
             return None;
         }
 
-        let Expr::Call { head, args } = value else {
+        let Expr::Call { head, args, .. } = value else {
             return Some(false);
         };
 
@@ -164,7 +165,7 @@ impl Session {
 fn is_plain_blank_pattern(expr: &Expr) -> bool {
     matches!(
         expr,
-        Expr::Call { head, args } if MatcherPatternHead::Blank.matches(head) && args.is_empty()
+        Expr::Call { head, args, .. } if MatcherPatternHead::Blank.matches(head) && args.is_empty()
     )
 }
 
@@ -179,7 +180,7 @@ fn contains_pattern_syntax(expr: &Expr) -> bool {
 
     match expr {
         Expr::Atom(_) => false,
-        Expr::Call { head, args } => {
+        Expr::Call { head, args, .. } => {
             if matches_pattern_head(head) {
                 true
             } else {

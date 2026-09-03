@@ -70,7 +70,7 @@ fn projected_expr_memory_proxy_bytes(expr: &Expr) -> usize {
         Expr::Atom(Atom::Symbol(symbol)) => std::mem::size_of::<Expr>()
             .saturating_add(symbol.context().len())
             .saturating_add(symbol.name().len()),
-        Expr::Call { head, args } => args.iter().fold(
+        Expr::Call { head, args, .. } => args.iter().fold(
             std::mem::size_of::<Expr>().saturating_add(projected_expr_memory_proxy_bytes(head)),
             |total, arg| total.saturating_add(projected_expr_memory_proxy_bytes(arg)),
         ),

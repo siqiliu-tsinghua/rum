@@ -20,7 +20,7 @@ pub(in crate::runtime) fn parse_thread_arg_spec(expr: &Expr) -> Option<ThreadArg
         };
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -173,7 +173,7 @@ pub fn parse_standard_level_spec(expr: &Expr) -> Option<CasesLevelSpec> {
         return Some(CasesLevelSpec::range(0, None));
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -213,7 +213,7 @@ fn parse_level_bound(expr: &Expr) -> Option<isize> {
 }
 
 fn is_negative_infinity_expr(expr: &Expr) -> bool {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return false;
     };
 
@@ -276,7 +276,7 @@ impl ContinuationValue for HeadsOptionClassification {
 
     fn from_continuation_expr(expr: Expr) -> Self {
         match expr {
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, "InternalContinuationHeadsOptionValue") =>
             {
                 match args.as_slice() {
@@ -285,7 +285,7 @@ impl ContinuationValue for HeadsOptionClassification {
                     _ => panic!("heads option value continuation stores zero or one item"),
                 }
             }
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, "InternalContinuationHeadsOptionUnknown")
                     && args.len() == 1 =>
             {
@@ -294,7 +294,7 @@ impl ContinuationValue for HeadsOptionClassification {
                     args.pop().expect("unknown option stores a symbol"),
                 ))
             }
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(
                     &head,
                     "InternalContinuationHeadsOptionInvalidTruthValue",
@@ -307,7 +307,7 @@ impl ContinuationValue for HeadsOptionClassification {
                 let value = args.next().expect("invalid truth option stores a value");
                 Self::InvalidTruthValue { option, value }
             }
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, "InternalContinuationHeadsOptionNonOption")
                     && args.len() == 2 =>
             {
@@ -321,7 +321,7 @@ impl ContinuationValue for HeadsOptionClassification {
                     offender,
                 }
             }
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(
                     &head,
                     "InternalContinuationHeadsOptionNotOptionSyntax",
@@ -369,7 +369,7 @@ pub fn classify_heads_option_expr(expr: &Expr) -> HeadsOptionClassification {
         return classification;
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return HeadsOptionClassification::NotOptionSyntax;
     };
 
@@ -416,7 +416,7 @@ pub fn classify_heads_option_expr(expr: &Expr) -> HeadsOptionClassification {
 }
 
 fn classify_heads_option_rule(expr: &Expr) -> Option<HeadsOptionClassification> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -451,14 +451,14 @@ fn heads_option_symbol(expr: &Expr) -> Option<Symbol> {
 
 fn heads_option_expr_contains_rule(expr: &Expr) -> bool {
     match expr {
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if (is_system_symbol_name(head, "Rule")
                 || is_system_symbol_name(head, "RuleDelayed"))
                 && args.len() == 2 =>
         {
             heads_option_symbol(&args[0]).is_some()
         }
-        Expr::Call { head, args } if is_system_symbol_name(head, heads::structure::LIST) => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, heads::structure::LIST) => {
             args.iter().any(heads_option_expr_contains_rule)
         }
         _ => false,

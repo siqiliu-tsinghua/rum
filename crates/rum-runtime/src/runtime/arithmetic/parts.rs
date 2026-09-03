@@ -152,7 +152,7 @@ fn expr_as_positive_total_level(expr: &Expr) -> Option<TotalLevel> {
 
 fn list_args(expr: &Expr) -> Option<&SharedArgs> {
     match expr {
-        Expr::Call { head, args } if is_system_symbol_name(head, "List") => Some(args),
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => Some(args),
         _ => None,
     }
 }

@@ -362,7 +362,7 @@ fn on_and_off_gate_matching_messages_at_session_scope() {
 }
 
 fn trace_list_nesting_shape(expr: &Expr) -> String {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return String::new();
     };
     if !is_system_symbol_name(head, "List") {

@@ -592,7 +592,7 @@ fn resume_suspended_inner_reduced_with_value(
 
 pub(super) fn parse_tensor_node(expr: &Expr, expected_head: &Expr) -> TensorNode {
     match expr {
-        Expr::Call { head, args } if head.as_ref() == expected_head => TensorNode::Array(
+        Expr::Call { head, args, .. } if head.as_ref() == expected_head => TensorNode::Array(
             args.iter()
                 .map(|arg| parse_tensor_node(arg, expected_head))
                 .collect(),

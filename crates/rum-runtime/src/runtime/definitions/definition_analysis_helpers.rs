@@ -58,7 +58,7 @@ impl DefinitionTargetNormalizationError {
 }
 
 pub(in crate::runtime) fn collect_with_binding_symbols(expr: &Expr, locals: &mut BTreeSet<Symbol>) {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return;
     };
 
@@ -74,7 +74,7 @@ pub(in crate::runtime) fn collect_with_binding_symbols(expr: &Expr, locals: &mut
 }
 
 pub(in crate::runtime) fn default_value_lhs_targets_symbol(lhs: &Expr, symbol: &Symbol) -> bool {
-    let Expr::Call { head, args } = lhs else {
+    let Expr::Call { head, args, .. } = lhs else {
         return false;
     };
 
@@ -116,7 +116,7 @@ impl Session {
             Expr::Atom(Atom::String(pattern)) if pattern.contains('*') => {
                 self.resolve_names_matching_expr(expr)
             }
-            Expr::Call { head, args } if is_system_symbol_name(head, "List") => args
+            Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => args
                 .iter()
                 .map(|item| self.normalize_clear_target_expr(item))
                 .collect::<Option<Vec<_>>>()
@@ -154,7 +154,7 @@ impl Session {
     }
 
     pub(in crate::runtime) fn normalize_options_target_expr(&self, expr: &Expr) -> Option<Symbol> {
-        let Expr::Call { head, args } = expr else {
+        let Expr::Call { head, args, .. } = expr else {
             return None;
         };
 
@@ -169,7 +169,7 @@ impl Session {
         &self,
         expr: &Expr,
     ) -> Option<Symbol> {
-        let Expr::Call { head, args } = expr else {
+        let Expr::Call { head, args, .. } = expr else {
             return None;
         };
 
@@ -199,7 +199,7 @@ pub(in crate::runtime) fn classify_tagged_definition(
     tag: &Symbol,
     lhs: &Expr,
 ) -> Result<TaggedDefinitionTarget, TagDefinitionError> {
-    if let Expr::Call { head, args } = strip_hold_pattern(lhs) {
+    if let Expr::Call { head, args, .. } = strip_hold_pattern(lhs) {
         if is_system_symbol_name(head, "Condition") && !args.is_empty() {
             return classify_tagged_definition(tag, &args[0]);
         }
@@ -244,7 +244,7 @@ pub(in crate::runtime) fn expr_contains_symbol(expr: &Expr, target: &Symbol) -> 
     match expr {
         Expr::Atom(Atom::Symbol(symbol)) => symbol == target,
         Expr::Atom(_) => false,
-        Expr::Call { head, args } => {
+        Expr::Call { head, args, .. } => {
             expr_contains_symbol(head, target)
                 || args.iter().any(|arg| expr_contains_symbol(arg, target))
         }
@@ -313,7 +313,7 @@ fn collect_upvalue_candidate_symbols_in_matching_order(
             }
         }
         Expr::Atom(_) => {}
-        Expr::Call { head, args } => {
+        Expr::Call { head, args, .. } => {
             collect_upvalue_candidate_symbols_in_matching_order(
                 head,
                 candidate_symbols,
@@ -344,7 +344,7 @@ pub(in crate::runtime) fn collect_upset_target_symbols(lhs: &Expr) -> Vec<Symbol
 }
 
 fn collect_upset_target_symbols_from_lhs(expr: &Expr, symbols: &mut UniqueSymbolCollector) {
-    if let Expr::Call { head, args } = expr {
+    if let Expr::Call { head, args, .. } = expr {
         if is_system_symbol_name(head, "Condition") && !args.is_empty() {
             collect_upset_target_symbols_from_lhs(&args[0], symbols);
             return;
@@ -407,7 +407,9 @@ pub(in crate::runtime) fn collect_pattern_name_mapping(
     next_id: &mut u64,
 ) {
     match expr {
-        Expr::Call { head, args } if is_system_symbol_name(head, "Pattern") && args.len() == 2 => {
+        Expr::Call { head, args, .. }
+            if is_system_symbol_name(head, "Pattern") && args.len() == 2 =>
+        {
             if let Some(symbol) = expr_as_symbol(&args[0]) {
                 mapping.entry(symbol.clone()).or_insert_with(|| {
                     *next_id += 1;
@@ -417,7 +419,7 @@ pub(in crate::runtime) fn collect_pattern_name_mapping(
 
             collect_pattern_name_mapping(&args[1], mapping, next_id);
         }
-        Expr::Call { head, args } => {
+        Expr::Call { head, args, .. } => {
             collect_pattern_name_mapping(head, mapping, next_id);
 
             for arg in args {
@@ -439,7 +441,7 @@ pub(in crate::runtime) fn substitute_pattern_name_mapping(
             .map(|symbol| Expr::Atom(Atom::Symbol(symbol)))
             .unwrap_or_else(|| Expr::Atom(Atom::Symbol(symbol.clone()))),
         Expr::Atom(atom) => Expr::Atom(atom.clone()),
-        Expr::Call { head, args } => Expr::call(
+        Expr::Call { head, args, .. } => Expr::call(
             substitute_pattern_name_mapping(head, mapping),
             args.iter()
                 .map(|arg| substitute_pattern_name_mapping(arg, mapping))
@@ -450,7 +452,7 @@ pub(in crate::runtime) fn substitute_pattern_name_mapping(
 
 pub(in crate::runtime) fn downvalue_head_symbol(expr: &Expr) -> Option<&Symbol> {
     match strip_hold_pattern(expr) {
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if is_system_symbol_name(head, "Condition") && !args.is_empty() =>
         {
             downvalue_head_symbol(&args[0])
@@ -462,7 +464,7 @@ pub(in crate::runtime) fn downvalue_head_symbol(expr: &Expr) -> Option<&Symbol> 
 
 pub(in crate::runtime) fn subvalue_base_symbol(expr: &Expr) -> Option<&Symbol> {
     match strip_hold_pattern(expr) {
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if is_system_symbol_name(head, "Condition") && !args.is_empty() =>
         {
             subvalue_base_symbol(&args[0])
@@ -484,7 +486,7 @@ pub(in crate::runtime) fn base_head_symbol_of_nested_call(expr: &Expr) -> Option
 
 pub(in crate::runtime) fn normalize_rewrite_rules(expr: &Expr) -> Option<Vec<RewriteRule>> {
     match expr {
-        Expr::Call { head, args } if is_system_symbol_name(head, "List") => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => {
             let mut rules = Vec::new();
 
             for item in args {
@@ -500,7 +502,7 @@ pub(in crate::runtime) fn normalize_rewrite_rules(expr: &Expr) -> Option<Vec<Rew
 
 pub(in crate::runtime) fn normalize_single_rewrite_rule(expr: &Expr) -> Option<RewriteRule> {
     match expr {
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if (is_system_symbol_name(head, "Rule")
                 || is_system_symbol_name(head, "RuleDelayed"))
                 && args.len() == 2 =>

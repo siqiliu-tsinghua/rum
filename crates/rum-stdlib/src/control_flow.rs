@@ -173,7 +173,7 @@ fn static_iterator_count(spec: &Expr, accepts_bare_count: bool) -> Option<usize>
         return accepts_bare_count.then_some(count);
     }
 
-    let Expr::Call { head, args } = spec else {
+    let Expr::Call { head, args, .. } = spec else {
         return None;
     };
     if !is_system_symbol_name(head, "List") {
@@ -187,6 +187,7 @@ fn static_iterator_count(spec: &Expr, accepts_bare_count: bool) -> Option<usize>
             if let Expr::Call {
                 head: values_head,
                 args: values,
+                ..
             } = values_or_end
             {
                 if is_system_symbol_name(values_head, "List")
@@ -230,7 +231,7 @@ fn static_exact_machine_integer(expr: &Expr) -> Option<i128> {
         };
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
     if is_system_symbol_name(head, "Plus") {

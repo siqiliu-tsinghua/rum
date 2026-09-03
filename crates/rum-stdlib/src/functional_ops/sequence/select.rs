@@ -392,7 +392,7 @@ fn sequence_like_from_expr(expr: &Expr) -> Option<SelectSource> {
         return Some(SelectSource::Association(entries));
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -464,7 +464,7 @@ fn render_select_result(source: SelectSource, selected: Vec<Expr>) -> Expr {
             selected
                 .into_iter()
                 .filter_map(|expr| {
-                    let Expr::Call { head, args } = expr else {
+                    let Expr::Call { head, args, .. } = expr else {
                         return None;
                     };
                     if !is_system_symbol_name(&head, "Rule") || args.len() != 2 {
@@ -488,7 +488,7 @@ fn render_suspended_select_result(
             selected
                 .into_iter()
                 .filter_map(|expr| {
-                    let Expr::Call { head, args } = expr else {
+                    let Expr::Call { head, args, .. } = expr else {
                         return None;
                     };
                     if !is_system_symbol_name(&head, "Rule") || args.len() != 2 {

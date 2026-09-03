@@ -34,6 +34,7 @@ pub(crate) fn eval_delete(
     let Expr::Call {
         head: expr_head,
         args: expr_args,
+        ..
     } = expr
     else {
         return Ok(invalid_normal_expression_call(session, "Delete", args));
@@ -87,7 +88,7 @@ fn delete_atom_part_message_part(positions_expr: &Expr) -> Option<Expr> {
         return Some(positions_expr.clone());
     }
 
-    let Expr::Call { head, args } = positions_expr else {
+    let Expr::Call { head, args, .. } = positions_expr else {
         return None;
     };
 
@@ -104,7 +105,7 @@ fn parse_delete_position_paths(positions_expr: &Expr) -> Option<Vec<Vec<isize>>>
         return Some(vec![vec![position]]);
     }
 
-    let Expr::Call { head, args } = positions_expr else {
+    let Expr::Call { head, args, .. } = positions_expr else {
         return None;
     };
 
@@ -128,7 +129,7 @@ fn parse_delete_position_paths(positions_expr: &Expr) -> Option<Vec<Vec<isize>>>
 }
 
 fn parse_delete_position_path_list(expr: &Expr) -> Option<Vec<isize>> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -212,7 +213,7 @@ fn delete_canonical_path(expr: Expr, path: &[isize]) -> Expr {
 
     match expr {
         Expr::Atom(_) => expr,
-        Expr::Call { head, args } if *first == 0 => {
+        Expr::Call { head, args, .. } if *first == 0 => {
             if rest.is_empty() {
                 return expression_without_head(args.into_vec());
             }
@@ -220,10 +221,10 @@ fn delete_canonical_path(expr: Expr, path: &[isize]) -> Expr {
             let replaced_head = delete_canonical_path(head.as_ref().clone(), rest);
             Expr::call_with_shared_args(replaced_head, args)
         }
-        Expr::Call { head, args } => {
+        Expr::Call { head, args, .. } => {
             let index = (*first as usize).saturating_sub(1);
             if index >= args.len() {
-                return Expr::Call { head, args };
+                return Expr::call_shared(head, args);
             }
 
             let mut args = Expr::unwrap_shared_args(args);
@@ -232,10 +233,7 @@ fn delete_canonical_path(expr: Expr, path: &[isize]) -> Expr {
             } else {
                 args[index] = delete_canonical_path(args[index].clone(), rest);
             }
-            Expr::Call {
-                head,
-                args: SharedArgs::new(args),
-            }
+            Expr::call_shared(head, SharedArgs::new(args))
         }
     }
 }

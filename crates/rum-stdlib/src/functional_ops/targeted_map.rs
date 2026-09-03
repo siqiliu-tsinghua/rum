@@ -487,6 +487,7 @@ fn map_thread_inputs(
     let Expr::Call {
         head: common_head,
         args: first_args,
+        ..
     } = first
     else {
         return Ok(MapThreadDispatch::NotApplicable);
@@ -500,7 +501,7 @@ fn map_thread_inputs(
     let mut lengths = vec![first_args.len()];
 
     for input in inputs.iter().skip(1) {
-        let Expr::Call { head, args } = input else {
+        let Expr::Call { head, args, .. } = input else {
             return Ok(MapThreadDispatch::NotApplicable);
         };
 
@@ -702,7 +703,7 @@ fn map_at_explicit_integer_paths_from_expr(spec_expr: &Expr) -> Option<Vec<Vec<i
         return Some(vec![path]);
     }
 
-    let Expr::Call { head, args } = spec_expr else {
+    let Expr::Call { head, args, .. } = spec_expr else {
         return None;
     };
     if !is_system_symbol_name(head, "List") || !args.iter().all(is_plain_list_call) {
@@ -717,7 +718,7 @@ fn subset_map_explicit_integer_paths_from_expr(spec_expr: &Expr) -> Option<Vec<V
         return Some(vec![vec![index]]);
     }
 
-    let Expr::Call { head, args } = spec_expr else {
+    let Expr::Call { head, args, .. } = spec_expr else {
         return None;
     };
     if !is_system_symbol_name(head, "List") {
@@ -739,7 +740,7 @@ fn exact_integer_path_from_expr(expr: &Expr) -> Option<Vec<isize>> {
         return Some(vec![index]);
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
     if !is_system_symbol_name(head, "List") {

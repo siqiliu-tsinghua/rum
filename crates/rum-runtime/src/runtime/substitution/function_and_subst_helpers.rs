@@ -2,7 +2,9 @@ use super::super::*;
 
 pub(in crate::runtime) fn evaluate_wrapper_arg(expr: &Expr) -> Option<&Expr> {
     match expr {
-        Expr::Call { head, args } if is_system_symbol_name(head, "Evaluate") && args.len() == 1 => {
+        Expr::Call { head, args, .. }
+            if is_system_symbol_name(head, "Evaluate") && args.len() == 1 =>
+        {
             Some(&args[0])
         }
         _ => None,
@@ -11,7 +13,7 @@ pub(in crate::runtime) fn evaluate_wrapper_arg(expr: &Expr) -> Option<&Expr> {
 
 pub(in crate::runtime) fn unevaluated_wrapper_arg(expr: &Expr) -> Option<&Expr> {
     match expr {
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if is_system_symbol_name(head, "Unevaluated") && args.len() == 1 =>
         {
             Some(&args[0])
@@ -22,7 +24,7 @@ pub(in crate::runtime) fn unevaluated_wrapper_arg(expr: &Expr) -> Option<&Expr> 
 
 pub(in crate::runtime) fn strip_hold_pattern<'a>(expr: &'a Expr) -> &'a Expr {
     match expr {
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if MatcherPatternHead::HoldPattern.matches(head) && args.len() == 1 =>
         {
             strip_hold_pattern(&args[0])
@@ -32,7 +34,7 @@ pub(in crate::runtime) fn strip_hold_pattern<'a>(expr: &'a Expr) -> &'a Expr {
 }
 
 pub(in crate::runtime) fn release_hold_once(expr: &Expr) -> Option<Expr> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -91,13 +93,17 @@ impl FunctionSpec<'_> {
 
 pub(in crate::runtime) fn parse_function(expr: &Expr) -> Option<FunctionSpec<'_>> {
     match expr {
-        Expr::Call { head, args } if is_system_symbol_name(head, "Function") && args.len() == 1 => {
+        Expr::Call { head, args, .. }
+            if is_system_symbol_name(head, "Function") && args.len() == 1 =>
+        {
             Some(FunctionSpec::SlotBased {
                 body: &args[0],
                 attributes: AttributeSet::empty(),
             })
         }
-        Expr::Call { head, args } if is_system_symbol_name(head, "Function") && args.len() == 2 => {
+        Expr::Call { head, args, .. }
+            if is_system_symbol_name(head, "Function") && args.len() == 2 =>
+        {
             if let Some(params) = parse_function_parameters(&args[0]) {
                 Some(FunctionSpec::Explicit {
                     params,
@@ -111,7 +117,9 @@ pub(in crate::runtime) fn parse_function(expr: &Expr) -> Option<FunctionSpec<'_>
                 })
             }
         }
-        Expr::Call { head, args } if is_system_symbol_name(head, "Function") && args.len() == 3 => {
+        Expr::Call { head, args, .. }
+            if is_system_symbol_name(head, "Function") && args.len() == 3 =>
+        {
             Some(FunctionSpec::Explicit {
                 params: parse_function_parameters(&args[0])?,
                 body: &args[1],
@@ -127,7 +135,7 @@ pub(in crate::runtime) fn parse_function_parameters(expr: &Expr) -> Option<Vec<S
         return Some(vec![symbol.clone()]);
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -142,7 +150,7 @@ pub(in crate::runtime) fn parse_function_parameters(expr: &Expr) -> Option<Vec<S
 
 pub(in crate::runtime) fn parse_with_binding_item(expr: &Expr) -> Option<(Symbol, Expr)> {
     match expr {
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if (is_system_symbol_name(head, "Set") || is_system_symbol_name(head, "Rule"))
                 && args.len() == 2 =>
         {
@@ -153,7 +161,7 @@ pub(in crate::runtime) fn parse_with_binding_item(expr: &Expr) -> Option<(Symbol
 }
 
 pub(in crate::runtime) fn parse_with_binding_list(expr: &Expr) -> Option<Vec<(Symbol, Expr)>> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -167,7 +175,7 @@ pub(in crate::runtime) fn parse_with_binding_list(expr: &Expr) -> Option<Vec<(Sy
 pub(in crate::runtime) fn parse_module_binding_list(
     expr: &Expr,
 ) -> Option<Vec<(Symbol, Option<Expr>)>> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -184,7 +192,7 @@ pub(in crate::runtime) fn parse_module_binding_item(expr: &Expr) -> Option<(Symb
     }
 
     match expr {
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if (is_system_symbol_name(head, "Set") || is_system_symbol_name(head, "Rule"))
                 && args.len() == 2 =>
         {

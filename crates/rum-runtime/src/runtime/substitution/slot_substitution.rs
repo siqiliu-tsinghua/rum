@@ -10,6 +10,7 @@ pub(in crate::runtime) fn substitute_slots(expr: &Expr, args: &[Expr]) -> Expr {
         Expr::Call {
             head,
             args: call_args,
+            ..
         } => {
             let substituted_head = substitute_slots(head, args);
             let mut substituted_args = Vec::new();
@@ -37,6 +38,7 @@ pub(in crate::runtime) fn substitute_single_slot(expr: &Expr, args: &[Expr]) -> 
     let Expr::Call {
         head,
         args: slot_args,
+        ..
     } = expr
     else {
         return None;
@@ -77,6 +79,7 @@ pub(in crate::runtime) fn lookup_named_slot(args: &[Expr], name: &str) -> Option
         let Expr::Call {
             head,
             args: call_args,
+            ..
         } = arg
         else {
             continue;
@@ -99,6 +102,7 @@ pub(in crate::runtime) fn lookup_named_slot(args: &[Expr], name: &str) -> Option
             let Expr::Call {
                 head: rule_head,
                 args: rule_args,
+                ..
             } = entry
             else {
                 continue;

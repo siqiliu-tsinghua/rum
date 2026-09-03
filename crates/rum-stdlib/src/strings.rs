@@ -103,7 +103,7 @@ fn is_strict_option_rule(expr: &Expr) -> bool {
 }
 
 fn string_option_rule(expr: &Expr) -> Option<(&str, &Expr)> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
     if !(is_system_symbol_name(head, "Rule") || is_system_symbol_name(head, "RuleDelayed"))
@@ -361,7 +361,7 @@ fn resume_string_apply_values(
 fn string_apply_output_expr(expr: Expr) -> Option<Expr> {
     match expr {
         Expr::Atom(Atom::String(_)) => Some(expr),
-        Expr::Call { head, args } if is_system_symbol_name(&head, "List") => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(&head, "List") => {
             if args
                 .iter()
                 .all(|item| matches!(item, Expr::Atom(Atom::String(_))))

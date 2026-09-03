@@ -329,7 +329,7 @@ impl Session {
             });
         }
 
-        let Expr::Call { head, args } = expr else {
+        let Expr::Call { head, args, .. } = expr else {
             return Err(OptionsNormalizationError::InvalidOptionName);
         };
 
@@ -353,7 +353,7 @@ impl Session {
         &self,
         expr: &Expr,
     ) -> Result<Vec<SymbolOptionEntry>, OptionsNormalizationError> {
-        let Expr::Call { head, args } = expr else {
+        let Expr::Call { head, args, .. } = expr else {
             return Err(OptionsNormalizationError::InvalidRules);
         };
 
@@ -379,14 +379,14 @@ impl Session {
         expr: &Expr,
     ) -> Result<Vec<SymbolOptionEntry>, OptionsNormalizationError> {
         match expr {
-            Expr::Call { head, args } if is_system_symbol_name(head, "List") => {
+            Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => {
                 let mut entries = Vec::new();
                 for item in args {
                     entries.extend(self.parse_option_entries_from_resolved(item)?);
                 }
                 Ok(entries)
             }
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if (is_system_symbol_name(head, "Rule")
                     || is_system_symbol_name(head, "RuleDelayed"))
                     && args.len() == 2 =>

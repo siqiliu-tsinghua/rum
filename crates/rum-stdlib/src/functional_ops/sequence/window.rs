@@ -548,7 +548,7 @@ fn sequence_like_from_expr(expr: &Expr) -> Option<SequenceLikeExpr> {
         return Some(SequenceLikeExpr::Association(entries));
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -581,6 +581,7 @@ fn apply_block_map(
     let Expr::Call {
         head: block_head,
         args: items,
+        ..
     } = expr
     else {
         return Ok(Expr::call_with_shared_args(head.clone(), raw_args.clone()));

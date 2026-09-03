@@ -418,7 +418,7 @@ fn assert_homogeneous_chain_shape(expr: &Expr, op: BinaryOp, link_count: usize) 
 }
 
 fn assert_flat_homogeneous_chain_shape(expr: &Expr, op: BinaryOp, link_count: usize) {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         panic!("flat left chain should lower to a call");
     };
     let expected_head = match op {
@@ -454,7 +454,7 @@ fn assert_flat_homogeneous_chain_shape(expr: &Expr, op: BinaryOp, link_count: us
 }
 
 fn assert_flat_additive_pair(expr: &Expr) -> &Expr {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         panic!("additive pair should lower to a call");
     };
     assert!(is_system_symbol_name(head, heads::arithmetic::PLUS));
@@ -465,7 +465,7 @@ fn assert_flat_additive_pair(expr: &Expr) -> &Expr {
 }
 
 fn assert_flat_multiplicative_pair(expr: &Expr) -> &Expr {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         panic!("multiplicative pair should lower to a call");
     };
     assert!(is_system_symbol_name(head, heads::arithmetic::TIMES));
@@ -476,7 +476,7 @@ fn assert_flat_multiplicative_pair(expr: &Expr) -> &Expr {
 }
 
 fn assert_negated_global_a(expr: &Expr) {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         panic!("subtracted term should lower to Times[-1, a]");
     };
     assert!(is_system_symbol_name(head, heads::arithmetic::TIMES));
@@ -486,7 +486,7 @@ fn assert_negated_global_a(expr: &Expr) {
 }
 
 fn assert_reciprocal_global_a(expr: &Expr) {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         panic!("divisor should lower to Power[a, -1]");
     };
     assert!(is_system_symbol_name(head, heads::arithmetic::POWER));
@@ -496,7 +496,7 @@ fn assert_reciprocal_global_a(expr: &Expr) {
 }
 
 fn assert_link_shape(expr: &Expr, op: BinaryOp, pattern_lhs_was_symbol: bool) -> &Expr {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         panic!("left-chain link should lower to a call");
     };
 

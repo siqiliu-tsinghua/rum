@@ -143,6 +143,7 @@ pub(crate) fn eval_sort(
             let Expr::Call {
                 head: expr_head,
                 args: expr_args,
+                ..
             } = expr
             else {
                 return Ok(invalid_ordering_normal_call(session, "Sort", args, 1));
@@ -174,6 +175,7 @@ pub(crate) fn eval_sort_by(
             let Expr::Call {
                 head: expr_head,
                 args: expr_args,
+                ..
             } = expr
             else {
                 return Ok(invalid_ordering_normal_call(session, "SortBy", args, 1));
@@ -192,6 +194,7 @@ pub(crate) fn eval_sort_by(
             let Expr::Call {
                 head: expr_head,
                 args: expr_args,
+                ..
             } = expr
             else {
                 return Ok(invalid_ordering_normal_call(session, "SortBy", args, 1));
@@ -402,6 +405,7 @@ fn sort_normal_expression(
     let Expr::Call {
         head: expr_head,
         args: expr_args,
+        ..
     } = expr
     else {
         return Ok(invalid_ordering_normal_call(session, symbol, args, 1));
@@ -482,7 +486,7 @@ fn same_test_option_entries(expr: &Expr) -> Option<Vec<Expr>> {
         return Some(vec![expr.clone()]);
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
     if !is_system_symbol_name(head, heads::structure::LIST) || args.is_empty() {
@@ -498,7 +502,7 @@ fn same_test_option_entries(expr: &Expr) -> Option<Vec<Expr>> {
 }
 
 fn same_test_option_rule_value(expr: &Expr) -> Option<&Expr> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
     if !(is_system_symbol_name(head, "Rule") || is_system_symbol_name(head, "RuleDelayed"))
@@ -1005,7 +1009,7 @@ fn sort_by_key_expression(function: &Expr, item: &Expr) -> Expr {
 
 fn call_head_and_args(expr: &Expr) -> Option<(&Expr, &[Expr])> {
     match expr {
-        Expr::Call { head, args } => Some((head.as_ref(), args)),
+        Expr::Call { head, args, .. } => Some((head.as_ref(), args)),
         Expr::Atom(_) => None,
     }
 }
@@ -1025,10 +1029,12 @@ pub(super) fn compare_structural_order(lhs: &Expr, rhs: &Expr) -> Ordering {
             Expr::Call {
                 head: lhs_head,
                 args: lhs_args,
+                ..
             },
             Expr::Call {
                 head: rhs_head,
                 args: rhs_args,
+                ..
             },
         ) => compare_structural_order(lhs_head, rhs_head)
             .then_with(|| compare_expr_slices(lhs_args, rhs_args)),

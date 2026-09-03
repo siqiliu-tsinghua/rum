@@ -51,7 +51,9 @@ fn current_own_value(session: &Session, target: &Symbol) -> Expr {
 
 fn own_args_ptr_key(session: &Session, target: &Symbol) -> usize {
     match &current_own_value(session, target) {
-        Expr::Call { head, args } if is_system_symbol_name(head, "Association") => args.ptr_key(),
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Association") => {
+            args.ptr_key()
+        }
         _ => panic!("the target must store an Association"),
     }
 }

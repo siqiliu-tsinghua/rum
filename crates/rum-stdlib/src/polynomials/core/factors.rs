@@ -150,7 +150,7 @@ impl Monomial {
         }
 
         match expr {
-            Expr::Call { head, args } if is_system_symbol_name(head, "Times") => {
+            Expr::Call { head, args, .. } if is_system_symbol_name(head, "Times") => {
                 let mut factors = Vec::new();
 
                 for arg in args {
@@ -159,7 +159,7 @@ impl Monomial {
 
                 Some(Self { factors }.normalized())
             }
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(head, "Power") && args.len() == 2 =>
             {
                 let exponent = expr_as_non_negative_usize(&args[1])?;
@@ -305,7 +305,7 @@ pub(in crate::polynomials) fn parse_coefficient_list_monomials(
     expr: &Expr,
 ) -> Option<Vec<Monomial>> {
     match expr {
-        Expr::Call { head, args } if is_system_symbol_name(head, "List") => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => {
             args.iter().map(Monomial::from_indeterminate).collect()
         }
         _ => Some(vec![Monomial::from_indeterminate(expr)?]),

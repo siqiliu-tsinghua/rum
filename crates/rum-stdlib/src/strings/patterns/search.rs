@@ -153,7 +153,7 @@ fn parse_string_split_args(
 }
 
 fn is_string_split_option_expr(expr: &Expr) -> bool {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return false;
     };
 

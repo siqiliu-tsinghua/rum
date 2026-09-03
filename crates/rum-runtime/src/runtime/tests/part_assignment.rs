@@ -32,7 +32,7 @@ fn definition_plain_list_path(
     let mut cache_keys = Vec::with_capacity(path.len());
     let mut args_keys = Vec::with_capacity(path.len());
     for &index in path {
-        let Expr::Call { head, args } = selected else {
+        let Expr::Call { head, args, .. } = selected else {
             panic!("the Part-assignment test path must contain only calls");
         };
         assert!(is_system_symbol_name(head, heads::structure::LIST));

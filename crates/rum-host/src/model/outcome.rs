@@ -572,7 +572,7 @@ fn host_typed_from_expr(expr: &Expr) -> HostTyped {
 fn host_typed_from_expr_at_depth(expr: &Expr, depth: usize) -> HostTyped {
     match expr {
         Expr::Atom(atom) => host_typed_from_atom(atom),
-        Expr::Call { head, args } => {
+        Expr::Call { head, args, .. } => {
             if depth >= MAX_TYPED_DEPTH {
                 return host_typed_other(head.as_ref(), expr);
             }

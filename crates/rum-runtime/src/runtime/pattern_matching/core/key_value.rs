@@ -205,7 +205,7 @@ impl KeyValueChoiceState {
     }
 
     pub(super) fn from_continuation_expr(expr: Expr) -> Self {
-        let Expr::Call { head, args } = expr else {
+        let Expr::Call { head, args, .. } = expr else {
             panic!("unexpected key-value-choice continuation payload")
         };
         assert!(
@@ -231,6 +231,7 @@ impl KeyValueChoiceState {
         let Expr::Call {
             head: entries_head,
             args: entries,
+            ..
         } = entries_expr
         else {
             panic!("unexpected key-value-pattern entries continuation payload")
@@ -242,7 +243,7 @@ impl KeyValueChoiceState {
         let remaining_entries = entries
             .into_iter()
             .map(|entry| {
-                let Expr::Call { head, args } = entry else {
+                let Expr::Call { head, args, .. } = entry else {
                     panic!("unexpected key-value-pattern entry continuation payload")
                 };
                 assert!(
@@ -271,6 +272,7 @@ impl KeyValueChoiceState {
         let Expr::Call {
             head: candidates_head,
             args: candidates,
+            ..
         } = candidates_expr
         else {
             panic!("unexpected key-value candidates continuation payload")
@@ -282,7 +284,7 @@ impl KeyValueChoiceState {
         let candidates = candidates
             .into_iter()
             .map(|candidate| {
-                let Expr::Call { head, args } = candidate else {
+                let Expr::Call { head, args, .. } = candidate else {
                     panic!("unexpected key-value candidate continuation payload")
                 };
                 assert!(

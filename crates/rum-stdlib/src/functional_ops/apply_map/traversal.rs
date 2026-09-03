@@ -274,7 +274,7 @@ fn schedule_transform_call(
     include_heads: bool,
 ) {
     let original_expr = expr.clone();
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         unreachable!("only calls reach the transform call scheduler");
     };
     let original_head = head.as_ref().clone();
@@ -373,7 +373,7 @@ pub(super) fn map_indexed_parts_on_standard_call(
     level: usize,
     path: &[isize],
 ) -> (Expr, usize) {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return (expr.clone(), 1);
     };
 
@@ -426,7 +426,7 @@ pub(super) fn collect_scan_parts_recursive(
 
             ScanCollection { parts, depth: 1 }
         }
-        Expr::Call { head, args: _ } if is_system_symbol_name(head, "Association") => {
+        Expr::Call { head, args: _, .. } if is_system_symbol_name(head, "Association") => {
             if let Some(entries) = association_entries_from_expr(expr) {
                 let mut parts = Vec::new();
                 let mut max_depth = 1usize;
@@ -456,7 +456,7 @@ pub(super) fn collect_scan_parts_on_standard_call(
     config: TraversalConfig,
     level: usize,
 ) -> ScanCollection {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return ScanCollection {
             parts: vec![expr.clone()],
             depth: 1,

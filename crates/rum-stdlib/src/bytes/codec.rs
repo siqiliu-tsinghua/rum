@@ -25,13 +25,13 @@ pub(super) fn input_bytes(expr: &Expr) -> ByteInput {
 pub(super) fn has_byte_array_head(expr: &Expr) -> bool {
     matches!(
         expr,
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if is_system_symbol_name(head, "ByteArray") && args.len() == 1
     )
 }
 
 pub(super) fn expr_as_byte_array_bytes(expr: &Expr) -> Option<Vec<u8>> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
     if !is_system_symbol_name(head, "ByteArray") || args.len() != 1 {

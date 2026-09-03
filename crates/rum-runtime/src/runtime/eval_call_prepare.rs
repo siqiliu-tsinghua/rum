@@ -109,11 +109,11 @@ fn finish_suspended_prepared_call(state: SuspendedPreparedCallArguments) -> Expr
 pub(super) fn prepared_call_arguments_from_continuation_expr(
     expr: Expr,
 ) -> Result<PreparedCallArguments, Expr> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return Err(expr);
     };
     if !is_system_symbol_name(&head, "InternalContinuationPreparedCallArguments") {
-        return Err(Expr::Call { head, args });
+        return Err(Expr::call_shared(head, args));
     }
     let mut parts = args.into_iter();
     let evaluated_expr = parts
@@ -127,6 +127,7 @@ pub(super) fn prepared_call_arguments_from_continuation_expr(
     let Expr::Call {
         head: evaluated_head,
         args: evaluated_args,
+        ..
     } = evaluated_expr
     else {
         panic!("prepared-call arguments should be stored as a List")
@@ -135,6 +136,7 @@ pub(super) fn prepared_call_arguments_from_continuation_expr(
     let Expr::Call {
         head: restores_head,
         args: restores,
+        ..
     } = restores_expr
     else {
         panic!("prepared-call restore entries should be stored as a List")
@@ -144,7 +146,7 @@ pub(super) fn prepared_call_arguments_from_continuation_expr(
     let wrappers = restores
         .into_iter()
         .map(|entry| {
-            let Expr::Call { head, args } = entry else {
+            let Expr::Call { head, args, .. } = entry else {
                 panic!("prepared-call restore entry should be a call")
             };
             assert!(is_system_symbol_name(

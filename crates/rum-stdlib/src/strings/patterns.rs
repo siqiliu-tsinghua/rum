@@ -182,7 +182,7 @@ struct StringRepeatedBoundsError {
 }
 
 fn first_invalid_string_repeated_bounds(expr: &Expr) -> Option<StringRepeatedBoundsError> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -280,7 +280,7 @@ fn parse_string_patterns(expr: &Expr) -> Option<Vec<StringPattern>> {
         return Some(vec![pattern]);
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -362,7 +362,7 @@ pub(in crate::strings) fn parse_string_pattern(expr: &Expr) -> Option<StringPatt
         return Some(StringPattern::WordBoundary);
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -535,7 +535,7 @@ fn parse_exact_string_replacement_rules(expr: &Expr) -> Option<ParsedExactString
         });
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -570,7 +570,7 @@ fn parse_exact_string_replacement_rules(expr: &Expr) -> Option<ParsedExactString
 }
 
 fn parse_exact_string_replacement_rule(expr: &Expr) -> Option<GuardedExactStringReplacementRule> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -619,7 +619,7 @@ fn parse_exact_string_case_spec(expr: &Expr) -> Option<ParsedExactStringCaseSpec
         });
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -664,7 +664,7 @@ fn parse_exact_string_case_spec(expr: &Expr) -> Option<ParsedExactStringCaseSpec
 }
 
 fn parse_exact_string_case_rule(expr: &Expr) -> Option<GuardedExactStringCaseRule> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -700,7 +700,7 @@ fn parse_string_delete_options(options: &[Expr]) -> Option<StringDeleteConfig> {
     let mut config = StringDeleteConfig::default();
 
     for option in options {
-        let Expr::Call { head, args } = option else {
+        let Expr::Call { head, args, .. } = option else {
             return None;
         };
         if !is_system_symbol_name(head, "Rule") || args.len() != 2 {
@@ -722,7 +722,7 @@ fn parse_string_match_config(options: &[Expr]) -> Option<StringPatternMatchConfi
     let mut config = StringPatternMatchConfig::default();
 
     for option in options {
-        let Expr::Call { head, args } = option else {
+        let Expr::Call { head, args, .. } = option else {
             return None;
         };
         if !is_system_symbol_name(head, "Rule") || args.len() != 2 {
@@ -755,7 +755,7 @@ fn parse_string_match_limit_and_options(
             continue;
         }
 
-        let Expr::Call { head, args } = extra else {
+        let Expr::Call { head, args, .. } = extra else {
             return None;
         };
         if !is_system_symbol_name(head, "Rule") || args.len() != 2 {
@@ -784,7 +784,7 @@ fn parse_string_cases_limit_and_options(extras: &[Expr]) -> Option<(usize, Strin
             continue;
         }
 
-        let Expr::Call { head, args } = extra else {
+        let Expr::Call { head, args, .. } = extra else {
             return None;
         };
         if !is_system_symbol_name(head, "Rule") || args.len() != 2 {
@@ -817,7 +817,7 @@ fn parse_string_position_args(extras: &[Expr]) -> Option<(Option<usize>, StringP
             continue;
         }
 
-        let Expr::Call { head, args } = extra else {
+        let Expr::Call { head, args, .. } = extra else {
             return None;
         };
         if !is_system_symbol_name(head, "Rule") || args.len() != 2 {
@@ -841,7 +841,7 @@ fn parse_string_count_options(options: &[Expr]) -> Option<StringCountConfig> {
     let mut config = StringCountConfig::default();
 
     for option in options {
-        let Expr::Call { head, args } = option else {
+        let Expr::Call { head, args, .. } = option else {
             return None;
         };
         if !is_system_symbol_name(head, "Rule") || args.len() != 2 {

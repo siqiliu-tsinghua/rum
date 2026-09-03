@@ -298,10 +298,10 @@ pub(super) fn is_confirmation_failure_like(expr: &Expr) -> bool {
 
 fn rewrite_untagged_confirms(expr: Expr, tag: &Expr) -> Expr {
     match expr {
-        Expr::Call { head, args } if is_system_symbol_name(&head, "Enclose") => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(&head, "Enclose") => {
             Expr::call_shared(head, args)
         }
-        Expr::Call { head, args } => {
+        Expr::Call { head, args, .. } => {
             let rewritten_head = rewrite_untagged_confirms(head.as_ref().clone(), tag);
             let rewritten_args = args
                 .into_iter()

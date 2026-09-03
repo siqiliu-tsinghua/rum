@@ -207,7 +207,7 @@ impl Session {
     ) -> (bool, StabilityBloom) {
         record_evaluation_cache_counter(&STABILITY_CHECK_COUNT, "stability_checks");
         match expr {
-            Expr::Call { head, args } => self.call_stability_with_bloom(head, args),
+            Expr::Call { head, args, .. } => self.call_stability_with_bloom(head, args),
             Expr::Atom(Atom::Symbol(symbol)) => (
                 self.symbol_is_atom_evaluation_stable(symbol),
                 symbol_stability_bloom(symbol),

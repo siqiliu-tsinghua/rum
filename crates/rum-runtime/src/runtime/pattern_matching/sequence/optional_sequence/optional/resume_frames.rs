@@ -315,7 +315,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueOptionalDefaultMatc
 }
 
 fn optional_state_payload(payload: Expr, tag: &'static str) -> std::vec::IntoIter<Expr> {
-    let Expr::Call { head, args } = payload else {
+    let Expr::Call { head, args, .. } = payload else {
         panic!("unexpected {tag} continuation payload")
     };
     assert!(

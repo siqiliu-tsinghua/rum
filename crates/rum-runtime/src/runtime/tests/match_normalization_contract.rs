@@ -267,6 +267,7 @@ fn frozen_normalize_match_expr_changed(session: &Session, expr: &Expr) -> Option
         Expr::Call {
             head: shared_head,
             args,
+            ..
         } => {
             let head = shared_head.as_ref();
             let normalized_head = frozen_normalize_match_expr_changed(session, head);
@@ -341,7 +342,7 @@ fn frozen_normalize_definition_identity(
         return expr.clone();
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return expr.clone();
     };
     let normalized_head = frozen_normalize_match_expr_changed(session, head);
@@ -371,10 +372,12 @@ fn logical_expr_eq(lhs: &Expr, rhs: &Expr) -> bool {
             Expr::Call {
                 head: lhs_head,
                 args: lhs_args,
+                ..
             },
             Expr::Call {
                 head: rhs_head,
                 args: rhs_args,
+                ..
             },
         ) => {
             logical_expr_eq(lhs_head, rhs_head)
@@ -397,7 +400,7 @@ fn logical_slice_eq(lhs: &[Expr], rhs: &[Expr]) -> bool {
 }
 
 fn collect_input_calls<'a>(expr: &'a Expr, path: String, calls: &mut Vec<InputCall<'a>>) {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return;
     };
     calls.push(InputCall {
@@ -412,7 +415,7 @@ fn collect_input_calls<'a>(expr: &'a Expr, path: String, calls: &mut Vec<InputCa
 }
 
 fn collect_output_origins(expr: &Expr, inputs: &[InputCall<'_>], origins: &mut Vec<CallArcOrigin>) {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return;
     };
     origins.push(CallArcOrigin {
@@ -442,7 +445,7 @@ fn arc_origin_signature(input: &Expr, output: &Expr) -> Vec<CallArcOrigin> {
 }
 
 fn call_parts(expr: &Expr) -> (&SharedExpr, &SharedArgs) {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         panic!("expected call, got {expr}");
     };
     (head, args)

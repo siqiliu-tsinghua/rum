@@ -237,7 +237,7 @@ fn parse_structural_sequence_spec(
         return Some(StructuralSequenceSpec::Count(count));
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -330,7 +330,7 @@ fn apply_drop_specs(expr: &Expr, specs: &[StructuralSequenceSpec]) -> Option<Exp
         return Some(expr.clone());
     };
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -377,7 +377,7 @@ fn apply_take_drop_rest_to_expr(
 ) -> Option<Expr> {
     match expr {
         Expr::Atom(_) => None,
-        Expr::Call { head, args } => Some(Expr::call(
+        Expr::Call { head, args, .. } => Some(Expr::call(
             head.as_ref().clone(),
             args.iter()
                 .map(|arg| recurse(arg, rest))

@@ -54,7 +54,7 @@ fn reap_index_preserves_wide_order_and_appends_to_existing_buckets() {
         .unwrap();
     assert!(outcome.messages.is_empty());
 
-    let Expr::Call { head, args } = outcome.value else {
+    let Expr::Call { head, args, .. } = outcome.value else {
         panic!("Reap should return a list pair, got {}", outcome.value);
     };
     assert!(is_system_symbol_name(&head, "List"));
@@ -63,6 +63,7 @@ fn reap_index_preserves_wide_order_and_appends_to_existing_buckets() {
     let Expr::Call {
         head: buckets_head,
         args: buckets,
+        ..
     } = &args[1]
     else {
         panic!("Reap harvest should be a list, got {}", args[1]);

@@ -184,7 +184,7 @@ pub(crate) fn eval_sequence_fold_list(
 
 pub(super) fn iterable_items(expr: &Expr) -> Option<Vec<Expr>> {
     match expr {
-        Expr::Call { head, args: _ } if is_system_symbol_name(head, "Association") => Some(
+        Expr::Call { head, args: _, .. } if is_system_symbol_name(head, "Association") => Some(
             association_entries_from_expr(expr)?
                 .into_iter()
                 .map(|(_, value)| value)

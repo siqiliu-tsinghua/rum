@@ -71,6 +71,7 @@ fn eval_delete_duplicates_structural(
     let Expr::Call {
         head: expr_head,
         args: expr_args,
+        ..
     } = expr
     else {
         return Ok(invalid_delete_duplicates_normal_call(
@@ -96,6 +97,7 @@ fn eval_delete_duplicates_with_test(
     let Expr::Call {
         head: expr_head,
         args: expr_args,
+        ..
     } = expr
     else {
         return Ok(invalid_delete_duplicates_normal_call(
@@ -135,6 +137,7 @@ pub(crate) fn eval_delete_duplicates_by(
     let Expr::Call {
         head: expr_head,
         args: expr_args,
+        ..
     } = expr
     else {
         return Ok(invalid_delete_duplicates_normal_call(

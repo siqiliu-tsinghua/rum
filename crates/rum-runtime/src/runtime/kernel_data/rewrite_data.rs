@@ -64,7 +64,7 @@ impl ContinuationValue for DeleteCasesOutcome {
 
     fn from_continuation_expr(expr: Expr) -> Self {
         match expr {
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, "InternalContinuationDeleteCasesOutcome")
                     && args.len() == 4 =>
             {
@@ -77,7 +77,7 @@ impl ContinuationValue for DeleteCasesOutcome {
                 let result_expr = args.pop().expect("delete-cases payload stores result");
 
                 let result = match result_expr {
-                    Expr::Call { head, args }
+                    Expr::Call { head, args, .. }
                         if is_system_symbol_name(&head, "InternalContinuationDeleteCasesKeep")
                             && args.len() == 1 =>
                     {
@@ -86,7 +86,7 @@ impl ContinuationValue for DeleteCasesOutcome {
                             args.pop().expect("delete-cases keep payload stores expr"),
                         )
                     }
-                    Expr::Call { head, args }
+                    Expr::Call { head, args, .. }
                         if is_system_symbol_name(
                             &head,
                             "InternalContinuationDeleteCasesDelete",
@@ -94,7 +94,7 @@ impl ContinuationValue for DeleteCasesOutcome {
                     {
                         DeleteCasesResult::Delete
                     }
-                    Expr::Call { head, args }
+                    Expr::Call { head, args, .. }
                         if is_system_symbol_name(
                             &head,
                             "InternalContinuationDeleteCasesSplice",
@@ -105,7 +105,9 @@ impl ContinuationValue for DeleteCasesOutcome {
                             .pop()
                             .expect("delete-cases splice payload stores items");
                         let items = match items_expr {
-                            Expr::Call { head, args } if is_system_symbol_name(&head, "List") => {
+                            Expr::Call { head, args, .. }
+                                if is_system_symbol_name(&head, "List") =>
+                            {
                                 args.into_vec()
                             }
                             other => vec![other],
@@ -143,7 +145,7 @@ impl ContinuationValue for ReplaceOutcome {
 
     fn from_continuation_expr(expr: Expr) -> Self {
         match expr {
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, "InternalContinuationReplaceOutcome")
                     && args.len() == 3 =>
             {

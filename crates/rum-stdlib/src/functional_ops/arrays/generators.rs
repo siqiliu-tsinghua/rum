@@ -415,7 +415,7 @@ fn parse_array_dimensions(expr: &Expr) -> Option<Vec<BigInt>> {
         return Some(vec![dim]);
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
     if !is_system_symbol_name(head, "List") {
@@ -435,7 +435,7 @@ fn parse_array_origins(origin: Option<&Expr>, rank: usize) -> Option<Vec<Expr>> 
         return Some(vec![Expr::integer(BigInt::from(1_u8)); rank]);
     };
 
-    if let Expr::Call { head, args } = origin {
+    if let Expr::Call { head, args, .. } = origin {
         if is_system_symbol_name(head, "List") {
             if args.len() != rank {
                 return None;
@@ -575,7 +575,7 @@ fn collect_tensor_values_at_level(
     }
 
     match expr {
-        Expr::Call { head, args } if head.as_ref() == expected_head => {
+        Expr::Call { head, args, .. } if head.as_ref() == expected_head => {
             for arg in args {
                 collect_tensor_values_at_level(
                     arg,

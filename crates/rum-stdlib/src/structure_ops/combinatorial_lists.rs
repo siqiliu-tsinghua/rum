@@ -57,6 +57,7 @@ pub(crate) fn eval_subsets(
     let Expr::Call {
         head: expr_head,
         args: items,
+        ..
     } = expr
     else {
         return Ok(invalid_subsets_normal_call(session, args));
@@ -157,6 +158,7 @@ pub(crate) fn eval_partition(
     let Expr::Call {
         head: expr_head,
         args: items,
+        ..
     } = expr
     else {
         return Ok(invalid_partition_normal_call(session, args));
@@ -211,6 +213,7 @@ fn eval_repeated_tuples(
     let Expr::Call {
         head: tuple_head,
         args: items,
+        ..
     } = expr
     else {
         return Ok(invalid_tuples_normal_call(session, args, "1"));
@@ -246,6 +249,7 @@ fn eval_cartesian_tuples(
     let Expr::Call {
         head: tuple_head,
         args: factor_exprs,
+        ..
     } = factors_expr
     else {
         return Ok(invalid_tuples_normal_call(session, args, "1"));

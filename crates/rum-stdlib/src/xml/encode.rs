@@ -87,7 +87,7 @@ fn write_element(
     if level >= MAX_XML_DEPTH {
         return Err(XmlEncodeError::depth());
     }
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return Err(XmlEncodeError::new(
             "ToXml expects an XmlElement[tag, attrs, children] tree.",
         ));

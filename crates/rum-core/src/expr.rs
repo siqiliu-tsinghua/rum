@@ -746,8 +746,31 @@ impl<'a> IntoIterator for &'a SharedArgs {
     }
 }
 
-#[derive(Clone, Debug, Hash, Serialize, Deserialize)]
+#[derive(Clone, Debug)]
 pub enum Expr {
+    Atom(Atom),
+    Call {
+        head: SharedExpr,
+        args: SharedArgs,
+        physical_height: u16,
+    },
+}
+
+const _: () = assert!(std::mem::size_of::<Expr>() == 32);
+
+#[derive(Serialize)]
+#[serde(rename = "Expr")]
+enum ExprSerialize<'a> {
+    Atom(&'a Atom),
+    Call {
+        head: &'a SharedExpr,
+        args: &'a SharedArgs,
+    },
+}
+
+#[derive(Deserialize)]
+#[serde(rename = "Expr")]
+enum ExprDeserialize {
     Atom(Atom),
     Call { head: SharedExpr, args: SharedArgs },
 }
@@ -760,10 +783,12 @@ impl PartialEq for Expr {
                 Self::Call {
                     head: lhs_head,
                     args: lhs_args,
+                    ..
                 },
                 Self::Call {
                     head: rhs_head,
                     args: rhs_args,
+                    ..
                 },
             ) => {
                 (SharedExpr::ptr_eq(lhs_head, rhs_head) || lhs_head.as_ref() == rhs_head.as_ref())
@@ -777,7 +802,49 @@ impl PartialEq for Expr {
 
 impl Eq for Expr {}
 
+impl Hash for Expr {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        std::mem::discriminant(self).hash(state);
+        match self {
+            Self::Atom(atom) => atom.hash(state),
+            Self::Call { head, args, .. } => {
+                head.hash(state);
+                args.hash(state);
+            }
+        }
+    }
+}
+
+impl Serialize for Expr {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        match self {
+            Self::Atom(atom) => ExprSerialize::Atom(atom).serialize(serializer),
+            Self::Call { head, args, .. } => {
+                ExprSerialize::Call { head, args }.serialize(serializer)
+            }
+        }
+    }
+}
+
+impl<'de> Deserialize<'de> for Expr {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        Ok(match ExprDeserialize::deserialize(deserializer)? {
+            ExprDeserialize::Atom(atom) => Self::Atom(atom),
+            ExprDeserialize::Call { head, args } => Self::call_shared(head, args),
+        })
+    }
+}
+
 impl Expr {
+    pub fn physical_height(&self) -> u16 {
+        match self {
+            Self::Atom(_) => 1,
+            Self::Call {
+                physical_height, ..
+            } => *physical_height,
+        }
+    }
+
     pub fn integer(value: BigInt) -> Self {
         Self::Atom(Atom::Integer(IntValue::from_bigint(value)))
     }
@@ -811,20 +878,29 @@ impl Expr {
     }
 
     pub fn call(head: Expr, args: Vec<Expr>) -> Self {
+        let physical_height = call_physical_height(&head, &args);
         Self::Call {
             head: SharedExpr::new(head),
             args: SharedArgs::new(args),
+            physical_height,
         }
     }
 
     pub fn call_shared(head: SharedExpr, args: SharedArgs) -> Self {
-        Self::Call { head, args }
+        let physical_height = call_physical_height(&head, &args);
+        Self::Call {
+            head,
+            args,
+            physical_height,
+        }
     }
 
     pub fn call_with_shared_args(head: Expr, args: SharedArgs) -> Self {
+        let physical_height = call_physical_height(&head, &args);
         Self::Call {
             head: SharedExpr::new(head),
             args,
+            physical_height,
         }
     }
 
@@ -838,7 +914,7 @@ impl Expr {
 
     pub fn into_call_parts(self) -> Option<(Self, Vec<Self>)> {
         match self {
-            Self::Call { head, args } => Some((
+            Self::Call { head, args, .. } => Some((
                 Self::unwrap_shared_expr(head),
                 Self::unwrap_shared_args(args),
             )),
@@ -851,7 +927,7 @@ impl fmt::Display for Expr {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Atom(atom) => write!(f, "{atom}"),
-            Self::Call { head, args } => {
+            Self::Call { head, args, .. } => {
                 if let Some(rendered) = format_message_name_call(head, args) {
                     return f.write_str(&rendered);
                 }
@@ -870,6 +946,13 @@ impl fmt::Display for Expr {
             }
         }
     }
+}
+
+fn call_physical_height(head: &Expr, args: &[Expr]) -> u16 {
+    args.iter()
+        .map(Expr::physical_height)
+        .fold(head.physical_height(), u16::max)
+        .saturating_add(1)
 }
 
 fn format_message_name_call(head: &Expr, args: &[Expr]) -> Option<String> {
@@ -997,5 +1080,54 @@ mod tests {
     fn displays_string_atoms_with_escaped_special_characters() {
         let expr = Expr::string("he said \"hi\"\n\\");
         assert_eq!(expr.to_string(), "\"he said \\\"hi\\\"\\n\\\\\"");
+    }
+
+    #[test]
+    fn physical_height_matches_recursive_reference_across_construction_routes() {
+        fn reference_height(expr: &Expr) -> u16 {
+            match expr {
+                Expr::Atom(_) => 1,
+                Expr::Call { head, args, .. } => args
+                    .iter()
+                    .map(reference_height)
+                    .fold(reference_height(head), u16::max)
+                    .saturating_add(1),
+            }
+        }
+
+        let atoms = [
+            Expr::small_integer(7),
+            Expr::string("leaf"),
+            Expr::symbol("x"),
+        ];
+        let unary = Expr::call(Expr::symbol("unary"), vec![atoms[0].clone()]);
+        let wide = Expr::call(
+            Expr::symbol("wide"),
+            (0..128).map(Expr::small_integer).collect(),
+        );
+        let call_head = Expr::call(
+            Expr::call(Expr::symbol("headFactory"), vec![atoms[1].clone()]),
+            vec![unary.clone()],
+        );
+        let shared = Expr::call_shared(
+            SharedExpr::new(call_head),
+            SharedArgs::new(vec![wide.clone()]),
+        );
+        let shared_args = Expr::call_with_shared_args(
+            Expr::call(Expr::symbol("nestedHead"), vec![shared.clone()]),
+            SharedArgs::new(vec![atoms[2].clone(), unary.clone()]),
+        );
+        let mut spine = Expr::symbol("spineLeaf");
+        for _ in 0..65 {
+            spine = Expr::call(Expr::symbol("spine"), vec![spine]);
+        }
+
+        let corpus = atoms
+            .iter()
+            .chain([&unary, &wide, &shared, &shared_args, &spine]);
+        for expr in corpus {
+            assert_eq!(expr.physical_height(), reference_height(expr));
+        }
+        assert_eq!(spine.physical_height(), 66);
     }
 }

@@ -344,7 +344,7 @@ impl Session {
     }
 
     fn push_invalid_upto_messages_in_span(&mut self, expr: &Expr) {
-        let Expr::Call { head, args } = expr else {
+        let Expr::Call { head, args, .. } = expr else {
             return;
         };
 

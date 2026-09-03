@@ -5,7 +5,7 @@ fn session_with_compound_expression() -> Session {
 }
 
 fn call_parts(expr: &Expr) -> (&SharedExpr, &SharedArgs) {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         panic!("expected a call expression");
     };
     (head, args)
@@ -156,7 +156,7 @@ fn append_to_args_become_exclusive_after_definition_take_and_cache_entry_removal
         .get_mut(&target)
         .and_then(|definition| definition.own_value.take())
         .expect("AppendTo must leave its updated List in the definition");
-    let Expr::Call { head, args } = &mut current else {
+    let Expr::Call { head, args, .. } = &mut current else {
         panic!("AppendTo must store a call expression");
     };
     let key = CallStabilityCacheKey::new(head, args);

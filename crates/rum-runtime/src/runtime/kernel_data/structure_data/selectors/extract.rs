@@ -18,7 +18,7 @@ pub(super) fn parse_extract_position_spec(expr: &Expr) -> Option<ExtractPosition
         });
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -50,7 +50,7 @@ fn parse_single_position_spec_with_nested_lists(
         return Some(vec![selector]);
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -80,7 +80,7 @@ fn parse_extract_position_selector(expr: &Expr) -> Option<PartSelector> {
         return Some(selector);
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 

@@ -8,7 +8,7 @@ pub(super) fn parse_replace_part_rules(
         return Ok(Some(vec![rule]));
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return Ok(None);
     };
 
@@ -30,7 +30,7 @@ fn parse_replace_part_rule_with_heads(
     expr: &Expr,
     heads: ReplacePartHeadsMode,
 ) -> Result<Option<ReplacePartRule>, Expr> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return Ok(None);
     };
 
@@ -61,7 +61,7 @@ fn parse_replace_part_position_specs(expr: &Expr) -> Result<Vec<ReplacePartPosit
         return Ok(vec![ReplacePartPositionSpec::Exact(position_spec)]);
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return Ok(vec![ReplacePartPositionSpec::Pattern(expr.clone())]);
     };
 
@@ -89,7 +89,7 @@ fn parse_replace_part_exact_position_spec(expr: &Expr) -> Result<Option<Vec<Part
         return Ok(Some(vec![selector]));
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return Ok(None);
     };
 
@@ -141,7 +141,7 @@ fn parse_replace_part_exact_selector(expr: &Expr) -> Result<Option<PartSelector>
 }
 
 fn parse_replace_part_key_selector(expr: &Expr) -> Option<Expr> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 

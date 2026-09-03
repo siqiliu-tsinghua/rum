@@ -35,7 +35,7 @@ pub(super) fn batch_insert_canonical_paths(expr: Expr, item: &Expr, paths: &[Vec
 #[cold]
 #[inline(never)]
 fn insert_paths_at_depth(expr: Expr, item: &Expr, paths: &[Vec<usize>], depth: usize) -> Expr {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return expr;
     };
     let original_len = args.len();
@@ -100,10 +100,7 @@ fn insert_paths_at_depth(expr: Expr, item: &Expr, paths: &[Vec<usize>], depth: u
         }
     }
 
-    Expr::Call {
-        head,
-        args: SharedArgs::new(output),
-    }
+    Expr::call_shared(head, SharedArgs::new(output))
 }
 
 #[cold]
@@ -115,7 +112,7 @@ pub(super) fn batch_delete_canonical_paths(expr: Expr, paths: &[Vec<isize>]) -> 
 #[cold]
 #[inline(never)]
 fn delete_paths_at_depth(expr: Expr, paths: &[Vec<isize>], depth: usize) -> Expr {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return expr;
     };
     let mut replaced_head = None;
@@ -165,7 +162,7 @@ fn delete_paths_at_depth(expr: Expr, paths: &[Vec<isize>], depth: usize) -> Expr
     if deletion_indices.is_empty() && child_edits.is_empty() && !delete_head {
         return match replaced_head {
             Some(head) => Expr::call_with_shared_args(head, args),
-            None => Expr::Call { head, args },
+            None => Expr::call_shared(head, args),
         };
     }
 
@@ -199,7 +196,7 @@ fn delete_paths_at_depth(expr: Expr, paths: &[Vec<isize>], depth: usize) -> Expr
     let args = SharedArgs::new(output);
     match replaced_head {
         Some(head) => Expr::call_with_shared_args(head, args),
-        None => Expr::Call { head, args },
+        None => Expr::call_shared(head, args),
     }
 }
 
@@ -376,7 +373,7 @@ mod tests {
         let Some((first, rest)) = path.split_first() else {
             return expr;
         };
-        let Expr::Call { head, args } = expr else {
+        let Expr::Call { head, args, .. } = expr else {
             return expr;
         };
         let mut args = Expr::unwrap_shared_args(args);
@@ -385,10 +382,7 @@ mod tests {
         } else {
             args[*first] = reference_insert_path(args[*first].clone(), rest, item);
         }
-        Expr::Call {
-            head,
-            args: SharedArgs::new(args),
-        }
+        Expr::call_shared(head, SharedArgs::new(args))
     }
 
     fn reference_delete_paths(expr: Expr, mut paths: Vec<Vec<isize>>) -> Expr {
@@ -403,7 +397,7 @@ mod tests {
         let Some((first, rest)) = path.split_first() else {
             return expr;
         };
-        let Expr::Call { head, args } = expr else {
+        let Expr::Call { head, args, .. } = expr else {
             return expr;
         };
         if *first == 0 {
@@ -423,9 +417,6 @@ mod tests {
         } else {
             args[index] = reference_delete_path(args[index].clone(), rest);
         }
-        Expr::Call {
-            head,
-            args: SharedArgs::new(args),
-        }
+        Expr::call_shared(head, SharedArgs::new(args))
     }
 }

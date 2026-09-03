@@ -82,6 +82,7 @@ impl Session {
                     Expr::Call {
                         head: value_head,
                         args: value_args,
+                        ..
                     } => {
                         let flat_head = value_head.as_ref().clone();
                         let value_head = value_head.into_owned();

@@ -53,6 +53,7 @@ impl Session {
         if let Expr::Call {
             head: times_head,
             args: factors,
+            ..
         } = &args[0]
         {
             if is_system_symbol_name(times_head, "Times")
@@ -171,6 +172,7 @@ impl Session {
         if let Expr::Call {
             head: times_head,
             args: factors,
+            ..
         } = &args[0]
         {
             if is_system_symbol_name(times_head, "Times")
@@ -278,7 +280,9 @@ impl Session {
                     } else {
                         let coefficient = Expr::rational(coefficient);
                         combined.push(match kernel {
-                            Expr::Call { head, args } if is_system_symbol_name(&head, "Times") => {
+                            Expr::Call { head, args, .. }
+                                if is_system_symbol_name(&head, "Times") =>
+                            {
                                 let mut factors = Vec::with_capacity(args.len() + 1);
                                 factors.push(coefficient);
                                 factors.extend(args);
@@ -411,7 +415,7 @@ fn projected_expr_memory_proxy_bytes(expr: &Expr) -> usize {
         Expr::Atom(Atom::Symbol(symbol)) => std::mem::size_of::<Expr>()
             .saturating_add(symbol.context().len())
             .saturating_add(symbol.name().len()),
-        Expr::Call { head, args } => args.iter().fold(
+        Expr::Call { head, args, .. } => args.iter().fold(
             std::mem::size_of::<Expr>().saturating_add(projected_expr_memory_proxy_bytes(head)),
             |total, arg| total.saturating_add(projected_expr_memory_proxy_bytes(arg)),
         ),
@@ -492,7 +496,7 @@ fn split_base_exp_requires_rebuild(factor: &Expr, base: &Expr, exponent: &Ration
         return base != factor;
     }
 
-    let Expr::Call { head, args } = factor else {
+    let Expr::Call { head, args, .. } = factor else {
         return true;
     };
     if !is_system_symbol_name(head, "Power") || args.len() != 2 {
@@ -553,7 +557,7 @@ fn simple_base_exp(expr: &Expr) -> Option<(&Expr, Rational)> {
         return Some((expr, Rational::one()));
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
     if !is_system_symbol_name(head, "Power") || args.len() != 2 {
@@ -576,7 +580,7 @@ fn split_power_base_exp(expr: &Expr) -> Option<(Expr, Rational)> {
 }
 
 fn split_power_base_exp_ref(expr: &Expr) -> Option<(&Expr, Rational)> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
     if !is_system_symbol_name(head, "Power") || args.len() != 2 {
@@ -592,7 +596,7 @@ fn split_power_base_exp_ref(expr: &Expr) -> Option<(&Expr, Rational)> {
 }
 
 fn split_coeff_kernel(expr: &Expr) -> (Rational, Cow<'_, Expr>) {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return (Rational::one(), Cow::Borrowed(expr));
     };
     if !is_system_symbol_name(head, "Times") {
@@ -675,7 +679,7 @@ fn simple_coeff_kernel(expr: &Expr) -> Option<(Rational, &Expr)> {
         return Some((Rational::one(), expr));
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
     if !is_system_symbol_name(head, "Times") || args.len() != 2 {
@@ -699,7 +703,7 @@ fn split_coeff_kernel_requires_rebuild(term: &Expr, coefficient: &Rational, kern
         return kernel != term;
     }
 
-    let Expr::Call { head, args } = term else {
+    let Expr::Call { head, args, .. } = term else {
         return true;
     };
     if !is_system_symbol_name(head, "Times") || args.is_empty() {
@@ -717,6 +721,7 @@ fn split_coeff_kernel_requires_rebuild(term: &Expr, coefficient: &Rational, kern
         Expr::Call {
             head: kernel_head,
             args: kernel_args,
+            ..
         } if is_system_symbol_name(kernel_head, "Times") => args[1..] != kernel_args[..],
         _ => args.len() != 2 || &args[1] != kernel,
     }
@@ -724,7 +729,9 @@ fn split_coeff_kernel_requires_rebuild(term: &Expr, coefficient: &Rational, kern
 fn expr_as_signed_integer_value(expr: &Expr) -> Option<BigInt> {
     match expr {
         Expr::Atom(Atom::Integer(value)) => Some(value.to_bigint()),
-        Expr::Call { head, args } if is_system_symbol_name(head, "Times") && args.len() == 2 => {
+        Expr::Call { head, args, .. }
+            if is_system_symbol_name(head, "Times") && args.len() == 2 =>
+        {
             if is_negative_one_expr(&args[0]) {
                 expr_as_exact_integer(&args[1]).map(|value| -value)
             } else if is_negative_one_expr(&args[1]) {

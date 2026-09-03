@@ -143,7 +143,7 @@ pub(crate) fn eval_factor(
 
 fn expr_contains_pattern_language(expr: &Expr) -> bool {
     match expr {
-        Expr::Call { head, args } => {
+        Expr::Call { head, args, .. } => {
             is_pattern_language_head(head)
                 || expr_contains_pattern_language(head)
                 || args.iter().any(expr_contains_pattern_language)
@@ -194,7 +194,7 @@ fn monomial_factor_bases(monomials: &[Monomial]) -> Vec<Expr> {
 
 fn output_has_negative_target_power(expr: &Expr, targets: &[Expr]) -> bool {
     match expr {
-        Expr::Call { head, args } => {
+        Expr::Call { head, args, .. } => {
             if is_system_symbol_name(head, "Power")
                 && args.len() == 2
                 && targets.iter().any(|target| target == &args[0])

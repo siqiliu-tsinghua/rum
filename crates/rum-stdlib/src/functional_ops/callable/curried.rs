@@ -81,7 +81,7 @@ fn parse_curried_operator_spec(spec: &Expr) -> Option<(usize, Vec<usize>)> {
     }
 
     match spec {
-        Expr::Call { head, args } if is_system_symbol_name(head, "Rule") && args.len() == 2 => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Rule") && args.len() == 2 => {
             let arity = expr_as_non_negative_usize(&args[0])?;
             let order = expr_as_index_list(&args[1])?;
             if order.iter().any(|index| *index >= arity) {

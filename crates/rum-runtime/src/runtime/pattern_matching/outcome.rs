@@ -30,7 +30,7 @@ impl ContinuationValue for CompiledMatchOutcome {
 
     fn from_continuation_expr(expr: Expr) -> Self {
         match expr {
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, "List") && args.len() == 2 =>
             {
                 let mut items = args.into_iter();
@@ -50,7 +50,7 @@ impl ContinuationValue for CompiledMatchOutcome {
 }
 
 fn bindings_from_continuation_expr(expr: Expr) -> SymbolExprMap {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         panic!("binding payload should be a List expression");
     };
     assert!(
@@ -60,7 +60,7 @@ fn bindings_from_continuation_expr(expr: Expr) -> SymbolExprMap {
 
     args.into_iter()
         .map(|item| {
-            let Expr::Call { head, args } = item else {
+            let Expr::Call { head, args, .. } = item else {
                 panic!("binding payload items should be Rule expressions");
             };
             assert!(

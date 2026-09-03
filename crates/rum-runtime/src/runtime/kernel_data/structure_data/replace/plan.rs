@@ -21,12 +21,12 @@ impl ContinuationValue for Vec<ReplacePartTarget> {
 
     fn from_continuation_expr(expr: Expr) -> Self {
         match expr {
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, "InternalContinuationReplacePartTargets") =>
             {
                 args.into_iter()
                     .map(|item| match item {
-                        Expr::Call { head, args }
+                        Expr::Call { head, args, .. }
                             if is_system_symbol_name(&head, "List") && args.len() == 3 =>
                         {
                             let mut parts = args.into_iter();
@@ -165,7 +165,7 @@ fn collect_planned_exact_paths(
             }
         }
         PartSelector::Single(AtomicPartSpec::All) => {
-            if let Expr::Call { head, args } = expr {
+            if let Expr::Call { head, args, .. } = expr {
                 if matches!(heads, ReplacePartHeadsMode::Include) {
                     visit(0, head);
                 }
@@ -214,27 +214,29 @@ pub(super) fn wrap_replace_part_pattern_position(pattern: Expr) -> Expr {
 fn replace_part_pattern_is_explicit_list(expr: &Expr) -> bool {
     match expr {
         Expr::Call { head, .. } if is_system_symbol_name(head, heads::structure::LIST) => true,
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if is_system_symbol_name(head, heads::patterns::PATTERN) && args.len() == 2 =>
         {
             replace_part_pattern_is_explicit_list(&args[1])
         }
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if is_system_symbol_name(head, heads::patterns::PATTERN_TEST) && args.len() == 2 =>
         {
             replace_part_pattern_is_explicit_list(&args[0])
         }
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if is_system_symbol_name(head, heads::patterns::CONDITION) && args.len() == 2 =>
         {
             replace_part_pattern_is_explicit_list(&args[0])
         }
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if is_system_symbol_name(head, heads::patterns::OPTIONAL) && !args.is_empty() =>
         {
             replace_part_pattern_is_explicit_list(&args[0])
         }
-        Expr::Call { head, args } if is_system_symbol_name(head, heads::patterns::ALTERNATIVES) => {
+        Expr::Call { head, args, .. }
+            if is_system_symbol_name(head, heads::patterns::ALTERNATIVES) =>
+        {
             !args.is_empty() && args.iter().all(replace_part_pattern_is_explicit_list)
         }
         _ => false,
@@ -259,7 +261,7 @@ fn replace_part_pattern_mentions_explicit_zero(expr: &Expr) -> bool {
 
     match expr {
         Expr::Atom(_) => false,
-        Expr::Call { head, args } => {
+        Expr::Call { head, args, .. } => {
             replace_part_pattern_mentions_explicit_zero(head)
                 || args.iter().any(replace_part_pattern_mentions_explicit_zero)
         }
@@ -281,7 +283,7 @@ pub(super) fn collect_replace_part_candidate_paths_inner(
     path: Vec<isize>,
     paths: &mut Vec<Vec<isize>>,
 ) {
-    if let Expr::Call { head, args } = expr {
+    if let Expr::Call { head, args, .. } = expr {
         if include_heads {
             let mut head_path = path.clone();
             head_path.push(0);
@@ -309,13 +311,14 @@ pub(super) fn replace_part_position_expr(path: &[isize]) -> Expr {
 
 fn replace_part_path_from_expr(expr: Expr) -> Vec<isize> {
     match expr {
-        Expr::Call { head, args } if is_system_symbol_name(&head, heads::structure::LIST) => args
-            .into_iter()
-            .map(|component| {
-                expr_as_signed_isize(&component)
-                    .expect("replace-part continuation paths should store integers")
-            })
-            .collect(),
+        Expr::Call { head, args, .. } if is_system_symbol_name(&head, heads::structure::LIST) => {
+            args.into_iter()
+                .map(|component| {
+                    expr_as_signed_isize(&component)
+                        .expect("replace-part continuation paths should store integers")
+                })
+                .collect()
+        }
         other => panic!("replace-part continuation paths should use List expressions: {other:?}"),
     }
 }

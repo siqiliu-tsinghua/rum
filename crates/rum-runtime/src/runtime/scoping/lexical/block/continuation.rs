@@ -5,7 +5,7 @@ fn tagged(name: &'static str, args: Vec<Expr>) -> Expr {
 }
 
 fn tagged_args(expr: Expr, name: &'static str) -> std::vec::IntoIter<Expr> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         panic!("unexpected {name} Block continuation payload")
     };
     assert!(

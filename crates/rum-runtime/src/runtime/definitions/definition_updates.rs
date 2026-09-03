@@ -433,6 +433,7 @@ impl Session {
                 let Expr::Call {
                     head,
                     args: current_args,
+                    ..
                 } = current
                 else {
                     let held_call = Expr::call(system_expr(operator), args.to_vec());
@@ -450,10 +451,7 @@ impl Session {
                     current_args.insert(0, args[1].clone());
                 }
                 (
-                    Expr::Call {
-                        head,
-                        args: SharedArgs::new(current_args),
-                    },
+                    Expr::call_shared(head, SharedArgs::new(current_args)),
                     HeldUpdateReturn::Updated,
                 )
             }
@@ -636,7 +634,7 @@ impl Session {
 }
 
 fn normalize_part_update_target(expr: &Expr) -> Option<(Symbol, Vec<Expr>)> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -692,7 +690,7 @@ fn part_update_replacement_values(
     match shape_matched {
         Some(values) => values,
         None => match &updated {
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if path_count > 1
                     && is_system_symbol_name(head, "List")
                     && args.len() == path_count =>
@@ -728,10 +726,11 @@ fn replacement_values_matching_selection_shape(
     updated: &Expr,
 ) -> Option<Vec<Expr>> {
     match selection_shape {
-        Expr::Call { head, args } if is_system_symbol_name(head, "List") => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => {
             let Expr::Call {
                 head: updated_head,
                 args: updated_args,
+                ..
             } = updated
             else {
                 return None;

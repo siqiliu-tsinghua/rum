@@ -69,7 +69,7 @@ impl Session {
                 1,
                 deleted_before,
             ),
-            Expr::Call { head, args } if is_system_symbol_name(&head, "Association") => self
+            Expr::Call { head, args, .. } if is_system_symbol_name(&head, "Association") => self
                 .delete_cases_association_children(
                     head.into_owned(),
                     args.into_vec(),
@@ -81,7 +81,7 @@ impl Session {
                     1,
                     false,
                 ),
-            Expr::Call { head, args } => self.delete_cases_call_children(
+            Expr::Call { head, args, .. } => self.delete_cases_call_children(
                 head.into_owned(),
                 args.into_vec(),
                 pattern,
@@ -293,6 +293,7 @@ impl Session {
                 Expr::Call {
                     head: rule_head,
                     args: rule_args,
+                    ..
                 } if is_system_symbol_name(rule_head, "Rule") && rule_args.len() == 2 => {
                     children.push((
                         false,

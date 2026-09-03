@@ -20,7 +20,7 @@ impl ContinuationValue for TraversalWithoutLimitResolution {
 
     fn from_continuation_expr(expr: Expr) -> Self {
         match expr {
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(
                     &head,
                     "InternalContinuationTraversalWithoutLimitValid",
@@ -32,7 +32,7 @@ impl ContinuationValue for TraversalWithoutLimitResolution {
                     .expect("valid traversal-without-limit stores config");
                 Self::Valid(CasesTraversalConfig::from_continuation_expr(config_expr))
             }
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(
                     &head,
                     "InternalContinuationTraversalWithoutLimitInvalid",
@@ -83,7 +83,7 @@ impl ContinuationValue for TraversalWithoutLimitNormalizationError {
         }
 
         match expr {
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(
                     &head,
                     "InternalContinuationTraversalWithoutLimitHeadsOptionInvalid",
@@ -142,7 +142,7 @@ impl ContinuationValue for CasesTraversalNormalizationError {
         }
 
         match expr {
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(
                     &head,
                     "InternalContinuationCasesTraversalHeadsOptionInvalid",

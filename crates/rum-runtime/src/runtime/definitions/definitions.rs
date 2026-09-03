@@ -171,7 +171,7 @@ impl Session {
     fn evaluate_pattern_rule_lhs(&mut self, expr: Expr) -> Result<Expr, EvalError> {
         match expr {
             Expr::Atom(_) => self.evaluate(expr),
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, heads::patterns::PATTERN) && args.len() == 2 =>
             {
                 let pattern = self.evaluate_pattern_rule_lhs(args[1].clone())?;
@@ -180,7 +180,7 @@ impl Session {
                     vec![args[0].clone(), pattern],
                 ))
             }
-            Expr::Call { head, args } if definition_lhs_blank_head(&head) => {
+            Expr::Call { head, args, .. } if definition_lhs_blank_head(&head) => {
                 let evaluated_args = args
                     .iter()
                     .cloned()
@@ -188,7 +188,7 @@ impl Session {
                     .collect::<Result<Vec<_>, _>>()?;
                 Ok(Expr::call(head.as_ref().clone(), evaluated_args))
             }
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, heads::patterns::PATTERN_TEST)
                     && args.len() == 2 =>
             {
@@ -198,7 +198,7 @@ impl Session {
                     vec![pattern, args[1].clone()],
                 ))
             }
-            Expr::Call { head, args }
+            Expr::Call { head, args, .. }
                 if is_system_symbol_name(&head, heads::patterns::CONDITION) && args.len() == 2 =>
             {
                 let pattern = self.evaluate_pattern_rule_lhs(args[0].clone())?;
@@ -207,10 +207,10 @@ impl Session {
                     vec![pattern, args[1].clone()],
                 ))
             }
-            Expr::Call { head, args } if is_system_symbol_name(&head, "HoldPattern") => {
+            Expr::Call { head, args, .. } if is_system_symbol_name(&head, "HoldPattern") => {
                 Ok(Expr::call_with_shared_args(head.as_ref().clone(), args))
             }
-            Expr::Call { head, args } if definition_lhs_pattern_wrapper_head(&head) => {
+            Expr::Call { head, args, .. } if definition_lhs_pattern_wrapper_head(&head) => {
                 let evaluated_args = args
                     .iter()
                     .cloned()
@@ -218,7 +218,7 @@ impl Session {
                     .collect::<Result<Vec<_>, _>>()?;
                 Ok(Expr::call(head.as_ref().clone(), evaluated_args))
             }
-            Expr::Call { head, args } => {
+            Expr::Call { head, args, .. } => {
                 let evaluated_head = self.evaluate_rule_lhs(head.as_ref().clone())?;
                 let mut evaluated_args = Vec::with_capacity(args.len());
 
@@ -560,7 +560,7 @@ fn normalize_context_list(contexts: Vec<String>) -> Vec<String> {
 
 fn list_expr_args(expr: &Expr) -> Option<&[Expr]> {
     match expr {
-        Expr::Call { head, args } if is_system_symbol_name(head, heads::structure::LIST) => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, heads::structure::LIST) => {
             Some(args)
         }
         _ => None,

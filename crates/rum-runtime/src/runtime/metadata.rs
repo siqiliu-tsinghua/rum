@@ -266,7 +266,7 @@ pub(super) const ALL_ATTRIBUTES: [Attribute; 16] = [
 
 pub(super) fn parse_attribute_set_expr(expr: &Expr) -> Option<AttributeSet> {
     match expr {
-        Expr::Call { head, args } if is_system_symbol_name(head, "List") => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => {
             let mut attributes = AttributeSet::empty();
 
             for item in args {

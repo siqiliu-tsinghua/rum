@@ -414,7 +414,7 @@ fn parse_options(option_exprs: &[Expr]) -> Result<SchemaOptions, String> {
 }
 
 fn option_rule(expr: &Expr) -> Option<(&str, &Expr)> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
     if !(is_system_symbol_name(head, "Rule") || is_system_symbol_name(head, "RuleDelayed"))
@@ -472,7 +472,7 @@ fn parse_list_schema<'a>(schema: &'a Expr, path: &SchemaPath) -> Result<&'a Expr
 }
 
 fn parse_entry_spec(spec: &Expr, path: &SchemaPath) -> Result<EntrySpec, SchemaAbort> {
-    let Expr::Call { head, args } = spec else {
+    let Expr::Call { head, args, .. } = spec else {
         return Ok(EntrySpec::Required(spec.clone()));
     };
     if !is_system_symbol_name(head, "Optional") {

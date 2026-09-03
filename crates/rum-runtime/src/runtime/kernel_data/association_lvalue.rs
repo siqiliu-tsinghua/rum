@@ -17,7 +17,7 @@ impl Session {
             .definitions
             .get(symbol)
             .and_then(|definition| definition.own_value.as_ref())?;
-        let Expr::Call { head, args } = current else {
+        let Expr::Call { head, args, .. } = current else {
             return None;
         };
         is_system_symbol_name(head, "Association").then(|| CallStabilityCacheKey::new(head, args))
@@ -70,7 +70,7 @@ impl Session {
                     return Ok(false);
                 };
                 let matches_plan = match &current {
-                    Expr::Call { head, args } => {
+                    Expr::Call { head, args, .. } => {
                         is_system_symbol_name(head, "Association")
                             && CallStabilityCacheKey::new(head, args) == plan.cache_key
                     }
@@ -90,7 +90,7 @@ impl Session {
             let Some(definition) = self.definitions.get_mut(target) else {
                 return Ok(false);
             };
-            let Some(Expr::Call { head, args }) = definition.own_value.as_mut() else {
+            let Some(Expr::Call { head, args, .. }) = definition.own_value.as_mut() else {
                 return Ok(false);
             };
             if !is_system_symbol_name(head, "Association")
@@ -156,7 +156,7 @@ impl Session {
             .definitions
             .get(target)
             .and_then(|definition| definition.own_value.as_ref())?;
-        let Expr::Call { head, args } = current else {
+        let Expr::Call { head, args, .. } = current else {
             return None;
         };
         if !is_system_symbol_name(head, "Association") {
@@ -260,6 +260,7 @@ fn direct_association_scan_position(args: &SharedArgs, key: &Expr) -> Option<Opt
         let Expr::Call {
             head: rule_head,
             args: rule_args,
+            ..
         } = entry
         else {
             return None;

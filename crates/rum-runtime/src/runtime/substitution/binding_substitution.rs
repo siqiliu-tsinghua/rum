@@ -52,7 +52,7 @@ fn substitute_bindings_changed(expr: &Expr, bindings: &SymbolExprMap) -> Option<
     match expr {
         Expr::Atom(Atom::Symbol(symbol)) => bindings.get(symbol).cloned(),
         Expr::Atom(_) => None,
-        Expr::Call { head, args } => {
+        Expr::Call { head, args, .. } => {
             let substituted_head = substitute_bindings_changed(head, bindings);
             let mut substituted_args = None;
 
@@ -112,7 +112,7 @@ pub(in crate::runtime) fn substitute_rule_bindings_for_rhs(
 
 pub(in crate::runtime) fn rule_rhs_may_splice_without_bindings(expr: &Expr) -> bool {
     match expr {
-        Expr::Call { head, args } => {
+        Expr::Call { head, args, .. } => {
             rule_rhs_may_splice_without_bindings(head)
                 || args.iter().any(|arg| {
                     sequence_items(arg).is_some() || rule_rhs_may_splice_without_bindings(arg)
@@ -141,16 +141,18 @@ fn substitute_rule_bindings_changed(
             }
         }
         Expr::Atom(_) => None,
-        Expr::Call { head, args } if is_system_symbol_name(head, "Module") && args.len() == 2 => {
+        Expr::Call { head, args, .. }
+            if is_system_symbol_name(head, "Module") && args.len() == 2 =>
+        {
             substitute_rule_scoped_call_changed(head, args, bindings, alpha_renames)
         }
-        Expr::Call { head, args } if is_system_symbol_name(head, "With") && args.len() == 2 => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "With") && args.len() == 2 => {
             substitute_rule_with_call_changed(head, args, bindings, alpha_renames)
         }
-        Expr::Call { head, args } if is_system_symbol_name(head, "Function") => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Function") => {
             substitute_rule_function_call_changed(head, args, bindings, alpha_renames)
         }
-        Expr::Call { head, args } => substitute_rule_call_changed_with_arg_alphas(
+        Expr::Call { head, args, .. } => substitute_rule_call_changed_with_arg_alphas(
             head,
             args,
             bindings,
@@ -335,7 +337,7 @@ fn substitute_rule_with_binding_list_changed(
     scoped_alpha_renames: &SymbolExprMap,
 ) -> Option<Expr> {
     let start = rule_rhs_timing_start();
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         let result = substitute_rule_bindings_changed(expr, bindings, alpha_renames);
         record_profile_rule_rhs_timing("with_binding_list", start, Some(result.is_some()));
         return result;
@@ -404,7 +406,7 @@ fn substitute_rule_with_binding_item_changed(
 ) -> Option<Expr> {
     let start = rule_rhs_timing_start();
     match expr {
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if (is_system_symbol_name(head, "Set") || is_system_symbol_name(head, "Rule"))
                 && args.len() == 2
                 && expr_as_symbol(&args[0]).is_some() =>
@@ -734,10 +736,12 @@ mod tests {
             Expr::Call {
                 head: expected_head,
                 args: expected_args,
+                ..
             },
             Expr::Call {
                 head: actual_head,
                 args: actual_args,
+                ..
             },
         ) = (expected, actual)
         else {

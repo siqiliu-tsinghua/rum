@@ -147,7 +147,7 @@ impl SymbolOptions {
     }
 
     pub(super) fn from_continuation_expr(expr: Expr) -> Self {
-        let Expr::Call { head, args } = expr else {
+        let Expr::Call { head, args, .. } = expr else {
             panic!("unexpected Block options continuation payload")
         };
         assert!(is_system_symbol_name(
@@ -157,7 +157,7 @@ impl SymbolOptions {
         Self::from_entries(
             args.into_iter()
                 .map(|entry| {
-                    let Expr::Call { head, args } = entry else {
+                    let Expr::Call { head, args, .. } = entry else {
                         panic!("unexpected Block option continuation payload")
                     };
                     assert!(is_system_symbol_name(
@@ -211,7 +211,7 @@ impl OptionValueScope {
     }
 
     pub(super) fn from_continuation_expr(expr: Expr) -> Self {
-        let Expr::Call { head, args } = expr else {
+        let Expr::Call { head, args, .. } = expr else {
             panic!("unexpected option-value-scope continuation payload")
         };
         assert!(

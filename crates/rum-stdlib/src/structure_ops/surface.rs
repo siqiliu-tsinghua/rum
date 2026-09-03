@@ -178,7 +178,7 @@ pub(crate) fn eval_rest(
         Expr::Call { args, .. } if args.is_empty() => {
             invalid_empty_sequence_selection_call(session, "Rest", "norest", expr)
         }
-        Expr::Call { head, args } => Expr::call(
+        Expr::Call { head, args, .. } => Expr::call(
             head.as_ref().clone(),
             args.iter().skip(1).cloned().collect::<Vec<_>>(),
         ),
@@ -212,7 +212,7 @@ pub(crate) fn eval_most(
         Expr::Call { args, .. } if args.is_empty() => {
             invalid_empty_sequence_selection_call(session, "Most", "nomost", expr)
         }
-        Expr::Call { head, args } => Expr::call(
+        Expr::Call { head, args, .. } => Expr::call(
             head.as_ref().clone(),
             args.iter()
                 .take(args.len().saturating_sub(1))
@@ -231,7 +231,7 @@ pub(crate) fn eval_append(
     match args {
         [expr, item] => Ok(match expr {
             Expr::Atom(_) => invalid_surface_normal_expression_call(session, "Append", args),
-            Expr::Call { head, args } => {
+            Expr::Call { head, args, .. } => {
                 enforce_projected_call_memory_constraint(
                     session,
                     head,
@@ -278,7 +278,7 @@ pub(super) fn projected_expr_memory_proxy_bytes(expr: &Expr) -> usize {
         Expr::Atom(Atom::Symbol(symbol)) => std::mem::size_of::<Expr>()
             .saturating_add(symbol.context().len())
             .saturating_add(symbol.name().len()),
-        Expr::Call { head, args } => args.iter().fold(
+        Expr::Call { head, args, .. } => args.iter().fold(
             std::mem::size_of::<Expr>().saturating_add(projected_expr_memory_proxy_bytes(head)),
             |total, arg| total.saturating_add(projected_expr_memory_proxy_bytes(arg)),
         ),
@@ -299,7 +299,7 @@ pub(crate) fn eval_prepend(
     match args {
         [expr, item] => Ok(match expr {
             Expr::Atom(_) => invalid_surface_normal_expression_call(session, "Prepend", args),
-            Expr::Call { head, args } => {
+            Expr::Call { head, args, .. } => {
                 let mut new_args = Vec::with_capacity(args.len() + 1);
                 new_args.push(item.clone());
                 new_args.extend(args.clone());

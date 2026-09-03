@@ -222,7 +222,7 @@ fn validate_flatten_level_repetitions(groups: &[Vec<usize>]) -> Result<(), Flatt
 }
 
 fn flatten_same_head(expr: &Expr, depth: FlattenDepth, explicit_head: Option<&Expr>) -> Expr {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return expr.clone();
     };
 
@@ -248,7 +248,7 @@ fn flatten_matching_arg(
     match depth {
         FlattenDepth::Finite(0) => flattened.push(expr.clone()),
         FlattenDepth::Finite(level) => match expr {
-            Expr::Call { head, args } if head.as_ref() == target_head => {
+            Expr::Call { head, args, .. } if head.as_ref() == target_head => {
                 for arg in args {
                     flatten_matching_arg(
                         arg,
@@ -261,7 +261,7 @@ fn flatten_matching_arg(
             _ => flattened.push(expr.clone()),
         },
         FlattenDepth::Infinity => match expr {
-            Expr::Call { head, args } if head.as_ref() == target_head => {
+            Expr::Call { head, args, .. } if head.as_ref() == target_head => {
                 for arg in args {
                     flatten_matching_arg(arg, target_head, FlattenDepth::Infinity, flattened);
                 }
@@ -272,7 +272,7 @@ fn flatten_matching_arg(
 }
 
 fn flattenable_depth(expr: &Expr, target_head: &Expr) -> usize {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return 0;
     };
     if head.as_ref() != target_head {
@@ -353,7 +353,7 @@ fn collect_flatten_level_records(
         return;
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return;
     };
     if head.as_ref() != target_head {

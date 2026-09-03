@@ -98,7 +98,7 @@ fn parse_insert_position_paths(positions_expr: &Expr) -> Option<Vec<Vec<isize>>>
         return Some(vec![vec![position]]);
     }
 
-    let Expr::Call { head, args } = positions_expr else {
+    let Expr::Call { head, args, .. } = positions_expr else {
         return None;
     };
 
@@ -118,7 +118,7 @@ fn parse_insert_position_paths(positions_expr: &Expr) -> Option<Vec<Vec<isize>>>
 }
 
 fn parse_insert_position_path_list(expr: &Expr) -> Option<Vec<isize>> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -190,25 +190,19 @@ fn insert_canonical_path(expr: Expr, path: &[usize], item: &Expr) -> Expr {
 
     match expr {
         Expr::Atom(_) => expr,
-        Expr::Call { head, args } => {
+        Expr::Call { head, args, .. } => {
             if rest.is_empty() {
                 if *first <= args.len() {
                     let mut args = Expr::unwrap_shared_args(args);
                     args.insert(*first, item.clone());
-                    return Expr::Call {
-                        head,
-                        args: SharedArgs::new(args),
-                    };
+                    return Expr::call_shared(head, SharedArgs::new(args));
                 }
             } else if *first < args.len() {
                 let mut args = Expr::unwrap_shared_args(args);
                 args[*first] = insert_canonical_path(args[*first].clone(), rest, item);
-                return Expr::Call {
-                    head,
-                    args: SharedArgs::new(args),
-                };
+                return Expr::call_shared(head, SharedArgs::new(args));
             }
-            Expr::Call { head, args }
+            Expr::call_shared(head, args)
         }
     }
 }

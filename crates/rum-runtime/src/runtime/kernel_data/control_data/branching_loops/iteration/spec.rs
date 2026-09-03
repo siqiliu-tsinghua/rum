@@ -5,7 +5,7 @@ pub(in crate::runtime::kernel_data::control_data::branching_loops) fn evaluate_d
     raw_spec: Expr,
 ) -> Result<Expr, EvalError> {
     match raw_spec {
-        Expr::Call { head, args } if is_system_symbol_name(&head, heads::structure::LIST) => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(&head, heads::structure::LIST) => {
             let evaluated = if let Some((first, rest)) = args.split_first() {
                 if expr_as_symbol(first).is_some() {
                     let mut normalized = Vec::with_capacity(args.len());
@@ -39,7 +39,7 @@ pub(in crate::runtime::kernel_data::control_data::branching_loops) fn parse_do_s
         )?)));
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return Ok(None);
     };
 
@@ -61,7 +61,7 @@ pub(in crate::runtime::kernel_data::control_data::branching_loops) fn parse_do_s
                 return Ok(None);
             };
 
-            if let Expr::Call { head, args } = values_expr {
+            if let Expr::Call { head, args, .. } = values_expr {
                 if is_system_symbol_name(head, heads::structure::LIST) {
                     checked_iteration_count(session, &BigInt::from(args.len()), consumer)?;
                     return Ok(Some(DoSpec::Iterator {
@@ -139,7 +139,7 @@ pub(super) fn parse_do_spec_iteration_count(
         return Ok(Some(checked_iteration_count(session, &count, consumer)?));
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return Ok(None);
     };
 
@@ -159,7 +159,7 @@ pub(super) fn parse_do_spec_iteration_count(
                 return Ok(None);
             };
 
-            if let Expr::Call { head, args } = values_expr {
+            if let Expr::Call { head, args, .. } = values_expr {
                 if is_system_symbol_name(head, heads::structure::LIST) {
                     let count = BigInt::from(args.len());
                     return Ok(Some(checked_iteration_count(session, &count, consumer)?));
@@ -213,7 +213,7 @@ pub(super) fn parse_do_spec_iteration_count(
 
 fn parse_held_loop_symbol(expr: &Expr) -> Option<Symbol> {
     match expr {
-        Expr::Call { head, args } if is_system_symbol_name(head, "Hold") && args.len() == 1 => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Hold") && args.len() == 1 => {
             expr_as_symbol(&args[0]).cloned()
         }
         _ => expr_as_symbol(expr).cloned(),
@@ -223,7 +223,9 @@ fn parse_held_loop_symbol(expr: &Expr) -> Option<Symbol> {
 fn expr_as_signed_bigint(expr: &Expr) -> Option<BigInt> {
     match expr {
         Expr::Atom(Atom::Integer(value)) => Some(value.to_bigint()),
-        Expr::Call { head, args } if is_system_symbol_name(head, "Times") && args.len() == 2 => {
+        Expr::Call { head, args, .. }
+            if is_system_symbol_name(head, "Times") && args.len() == 2 =>
+        {
             if is_negative_one_expr(&args[0]) {
                 expr_as_exact_integer(&args[1]).map(|value| -value)
             } else if is_negative_one_expr(&args[1]) {

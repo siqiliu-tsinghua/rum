@@ -72,7 +72,7 @@ pub(super) fn compile_matcher(expr: &Expr) -> MatcherNode {
 
     match expr {
         Expr::Atom(_) => MatcherNode::Exact(expr.clone()),
-        Expr::Call { head, args } => MatcherNode::Call {
+        Expr::Call { head, args, .. } => MatcherNode::Call {
             head: Box::new(compile_matcher(head)),
             args: compile_matcher_args(head.as_ref(), args),
         },
@@ -161,7 +161,7 @@ fn compile_matcher_group_items(
 
 pub(super) fn pattern_named_pattern(expr: &Expr) -> Option<(&Symbol, &Expr)> {
     match expr {
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if MatcherPatternHead::Pattern.matches(head) && args.len() == 2 =>
         {
             let name = expr_as_symbol(&args[0])?;
@@ -173,7 +173,7 @@ pub(super) fn pattern_named_pattern(expr: &Expr) -> Option<(&Symbol, &Expr)> {
 
 pub(super) fn pattern_condition(expr: &Expr) -> Option<(&Expr, &Expr)> {
     match expr {
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if MatcherPatternHead::Condition.matches(head) && args.len() == 2 =>
         {
             Some((&args[0], &args[1]))
@@ -184,7 +184,7 @@ pub(super) fn pattern_condition(expr: &Expr) -> Option<(&Expr, &Expr)> {
 
 pub(super) fn pattern_test(expr: &Expr) -> Option<(&Expr, &Expr)> {
     match expr {
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if MatcherPatternHead::PatternTest.matches(head) && args.len() == 2 =>
         {
             Some((&args[0], &args[1]))
@@ -195,12 +195,12 @@ pub(super) fn pattern_test(expr: &Expr) -> Option<(&Expr, &Expr)> {
 
 pub(super) fn pattern_except(expr: &Expr) -> Option<(&Expr, Option<&Expr>)> {
     match expr {
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if MatcherPatternHead::Except.matches(head) && args.len() == 1 =>
         {
             Some((&args[0], None))
         }
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if MatcherPatternHead::Except.matches(head) && args.len() == 2 =>
         {
             Some((&args[0], Some(&args[1])))
@@ -211,12 +211,12 @@ pub(super) fn pattern_except(expr: &Expr) -> Option<(&Expr, Option<&Expr>)> {
 
 pub(super) fn pattern_optional(expr: &Expr) -> Option<(&Expr, Option<&Expr>)> {
     match expr {
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if MatcherPatternHead::Optional.matches(head) && args.len() == 1 =>
         {
             Some((&args[0], None))
         }
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if MatcherPatternHead::Optional.matches(head) && args.len() == 2 =>
         {
             Some((&args[0], Some(&args[1])))
@@ -226,7 +226,7 @@ pub(super) fn pattern_optional(expr: &Expr) -> Option<(&Expr, Option<&Expr>)> {
 }
 
 pub(super) fn pattern_key_value_pattern_entries(expr: &Expr) -> Option<Vec<AssociationEntryForm>> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -238,6 +238,7 @@ pub(super) fn pattern_key_value_pattern_entries(expr: &Expr) -> Option<Vec<Assoc
     let Expr::Call {
         head: list_head,
         args: items,
+        ..
     } = normalized_spec
     else {
         return None;
@@ -255,14 +256,16 @@ pub(super) fn pattern_key_value_pattern_entries(expr: &Expr) -> Option<Vec<Assoc
 
 pub(super) fn pattern_alternatives(expr: &Expr) -> Option<&[Expr]> {
     match expr {
-        Expr::Call { head, args } if MatcherPatternHead::Alternatives.matches(head) => Some(args),
+        Expr::Call { head, args, .. } if MatcherPatternHead::Alternatives.matches(head) => {
+            Some(args)
+        }
         _ => None,
     }
 }
 
 pub(super) fn pattern_sequence_items(expr: &Expr) -> Option<&[Expr]> {
     match expr {
-        Expr::Call { head, args } if MatcherPatternHead::PatternSequence.matches(head) => {
+        Expr::Call { head, args, .. } if MatcherPatternHead::PatternSequence.matches(head) => {
             Some(args)
         }
         _ => None,
@@ -271,7 +274,9 @@ pub(super) fn pattern_sequence_items(expr: &Expr) -> Option<&[Expr]> {
 
 pub(super) fn pattern_orderless_sequence_items(expr: &Expr) -> Option<&[Expr]> {
     match expr {
-        Expr::Call { head, args } if MatcherPatternHead::OrderlessPatternSequence.matches(head) => {
+        Expr::Call { head, args, .. }
+            if MatcherPatternHead::OrderlessPatternSequence.matches(head) =>
+        {
             Some(args)
         }
         _ => None,
@@ -280,7 +285,7 @@ pub(super) fn pattern_orderless_sequence_items(expr: &Expr) -> Option<&[Expr]> {
 
 pub(super) fn pattern_verbatim_inner(expr: &Expr) -> Option<&Expr> {
     match expr {
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if MatcherPatternHead::Verbatim.matches(head) && args.len() == 1 =>
         {
             Some(&args[0])
@@ -293,7 +298,7 @@ pub(super) fn decompose_sequence_pattern(expr: &Expr) -> Option<CompiledSequence
     let expr = strip_hold_pattern(expr);
 
     match expr {
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if MatcherPatternHead::Pattern.matches(head) && args.len() == 2 =>
         {
             let mut spec = decompose_sequence_pattern(&args[1])?;
@@ -306,7 +311,7 @@ pub(super) fn decompose_sequence_pattern(expr: &Expr) -> Option<CompiledSequence
             spec.name = Some(name.clone());
             Some(spec)
         }
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if MatcherPatternHead::Condition.matches(head) && args.len() == 2 =>
         {
             let mut spec = decompose_sequence_pattern(&args[0])?;
@@ -314,21 +319,21 @@ pub(super) fn decompose_sequence_pattern(expr: &Expr) -> Option<CompiledSequence
                 .push(SequencePatternCheck::Condition(args[1].clone()));
             Some(spec)
         }
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if MatcherPatternHead::Longest.matches(head) && args.len() == 1 =>
         {
             let mut spec = decompose_sequence_pattern(&args[0])?;
             spec.greediness = SequenceGreediness::Longest;
             Some(spec)
         }
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if MatcherPatternHead::Shortest.matches(head) && args.len() == 1 =>
         {
             let mut spec = decompose_sequence_pattern(&args[0])?;
             spec.greediness = SequenceGreediness::Shortest;
             Some(spec)
         }
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if MatcherPatternHead::PatternTest.matches(head) && args.len() == 2 =>
         {
             let mut spec = decompose_sequence_pattern(&args[0])?;
@@ -336,7 +341,7 @@ pub(super) fn decompose_sequence_pattern(expr: &Expr) -> Option<CompiledSequence
                 .push(SequencePatternCheck::PatternTest(args[1].clone()));
             Some(spec)
         }
-        Expr::Call { head, args } if MatcherPatternHead::BlankSequence.matches(head) => {
+        Expr::Call { head, args, .. } if MatcherPatternHead::BlankSequence.matches(head) => {
             if args.len() > 1 {
                 return None;
             }
@@ -352,7 +357,7 @@ pub(super) fn decompose_sequence_pattern(expr: &Expr) -> Option<CompiledSequence
                 greediness: SequenceGreediness::Shortest,
             })
         }
-        Expr::Call { head, args } if MatcherPatternHead::BlankNullSequence.matches(head) => {
+        Expr::Call { head, args, .. } if MatcherPatternHead::BlankNullSequence.matches(head) => {
             if args.len() > 1 {
                 return None;
             }
@@ -369,10 +374,10 @@ pub(super) fn decompose_sequence_pattern(expr: &Expr) -> Option<CompiledSequence
             })
         }
         expr if is_options_pattern_expr(expr) => Some(options_pattern_sequence_matcher()),
-        Expr::Call { head, args } if MatcherPatternHead::Repeated.matches(head) => {
+        Expr::Call { head, args, .. } if MatcherPatternHead::Repeated.matches(head) => {
             compile_repeated_pattern(args, 1)
         }
-        Expr::Call { head, args } if MatcherPatternHead::RepeatedNull.matches(head) => {
+        Expr::Call { head, args, .. } if MatcherPatternHead::RepeatedNull.matches(head) => {
             compile_repeated_pattern(args, 0)
         }
         _ => None,
@@ -387,7 +392,7 @@ pub(super) struct RepeatedBoundsError {
 
 pub(super) fn first_invalid_repeated_bounds(expr: &Expr) -> Option<RepeatedBoundsError> {
     let expr = strip_hold_pattern(expr);
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -476,7 +481,7 @@ fn parse_repeated_bounds(expr: &Expr) -> Option<(usize, Option<usize>)> {
         return Some((count, Some(count)));
     }
 
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
 
@@ -566,7 +571,7 @@ pub(super) fn max_possible_matcher_arg_count(patterns: &[MatcherArg]) -> Option<
 
 pub(super) fn pattern_blank_head(expr: &Expr) -> Option<Option<&Expr>> {
     match expr {
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if matches!(
                 matcher_pattern_head(head),
                 Some(

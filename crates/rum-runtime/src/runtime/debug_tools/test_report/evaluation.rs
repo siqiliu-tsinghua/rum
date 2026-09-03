@@ -37,7 +37,7 @@ impl ContinuationValue for EvalCapturedOutcome {
     }
 
     fn from_continuation_expr(expr: Expr) -> Self {
-        let Expr::Call { head, args } = expr else {
+        let Expr::Call { head, args, .. } = expr else {
             return EvalCapturedOutcome {
                 value: expr,
                 failure_type: Some("Error"),
@@ -322,7 +322,7 @@ impl Session {
 }
 
 fn runtime_messages_from_continuation_expr(expr: Expr) -> Option<Vec<RuntimeMessage>> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
     if !is_system_symbol_name(&head, "List") {
@@ -331,7 +331,7 @@ fn runtime_messages_from_continuation_expr(expr: Expr) -> Option<Vec<RuntimeMess
 
     args.into_iter()
         .map(|item| {
-            let Expr::Call { head, args } = item else {
+            let Expr::Call { head, args, .. } = item else {
                 return None;
             };
             if !is_system_symbol_name(&head, "List") || args.len() != 3 {
@@ -348,7 +348,7 @@ fn runtime_messages_from_continuation_expr(expr: Expr) -> Option<Vec<RuntimeMess
 }
 
 fn strings_from_continuation_expr(expr: Expr) -> Option<Vec<String>> {
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return None;
     };
     if !is_system_symbol_name(&head, "List") {

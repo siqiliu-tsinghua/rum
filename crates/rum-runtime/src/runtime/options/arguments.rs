@@ -87,7 +87,7 @@ fn classify_option_expr(
     known_options: &SymbolOptions,
 ) -> Option<Result<Vec<Expr>, Symbol>> {
     match expr {
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if (is_system_symbol_name(head, "Rule")
                 || is_system_symbol_name(head, "RuleDelayed"))
                 && args.len() == 2 =>
@@ -104,7 +104,7 @@ fn classify_option_expr(
                 Some(Err(name))
             }
         }
-        Expr::Call { head, args } if is_system_symbol_name(head, "List") => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => {
             let mut flattened = Vec::new();
             for item in args {
                 match classify_option_expr(item, known_options)? {
@@ -359,7 +359,7 @@ impl Session {
     }
 
     fn arguments_options_target_call(&self, expr: &Expr) -> Option<(Symbol, Vec<Expr>)> {
-        let Expr::Call { head, args } = expr else {
+        let Expr::Call { head, args, .. } = expr else {
             return None;
         };
 

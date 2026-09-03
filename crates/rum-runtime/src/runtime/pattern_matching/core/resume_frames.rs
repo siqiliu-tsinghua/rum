@@ -148,7 +148,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueCompiledAlternative
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
         let resumed = outcome.and_then(|payload| {
-            let Expr::Call { head, args } = payload else {
+            let Expr::Call { head, args, .. } = payload else {
                 panic!("unexpected compiled-alternative continuation payload")
             };
             assert!(
@@ -352,7 +352,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueCompiledExceptFrame
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
         let resumed = outcome.and_then(|payload| {
-            let Expr::Call { head, args } = payload else {
+            let Expr::Call { head, args, .. } = payload else {
                 panic!("unexpected compiled-except continuation payload")
             };
             assert!(
@@ -475,7 +475,7 @@ impl crate::runtime::suspension::SuspensionFrame for ContinueCompiledCallFrame {
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
         let resumed = outcome.and_then(|payload| {
-            let Expr::Call { head, args } = payload else {
+            let Expr::Call { head, args, .. } = payload else {
                 panic!("unexpected compiled-call continuation payload")
             };
             assert!(
@@ -610,7 +610,7 @@ fn decode_key_value_match_payload(
     payload: Expr,
     tag: &'static str,
 ) -> (KeyValueChoiceState, Option<Expr>, CompiledMatchOutcome) {
-    let Expr::Call { head, args } = payload else {
+    let Expr::Call { head, args, .. } = payload else {
         panic!("unexpected {tag} continuation payload")
     };
     assert!(

@@ -106,7 +106,7 @@ fn write_value(
         Expr::Atom(Atom::Symbol(_)) if is_system_symbol_name(expr, "Null") => {
             out.push_str("null");
         }
-        Expr::Call { head, args } if is_system_symbol_name(head, "List") => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "List") => {
             if level >= MAX_JSON_DEPTH {
                 return Err(JsonEncodeError::depth());
             }

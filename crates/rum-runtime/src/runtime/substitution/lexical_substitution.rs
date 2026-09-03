@@ -393,10 +393,12 @@ fn substitute_lexical_bindings_changed(
             substitute_symbol_binding_changed(symbol, bindings, shadowed)
         }
         Expr::Atom(_) => None,
-        Expr::Call { head, args } if is_system_symbol_name(head, "Pattern") && args.len() == 2 => {
+        Expr::Call { head, args, .. }
+            if is_system_symbol_name(head, "Pattern") && args.len() == 2 =>
+        {
             substitute_pattern_call_changed(head, args, bindings, shadowed)
         }
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if (is_system_symbol_name(head, "Rule")
                 || is_system_symbol_name(head, "RuleDelayed")
                 || is_system_symbol_name(head, "SetDelayed"))
@@ -404,24 +406,24 @@ fn substitute_lexical_bindings_changed(
         {
             substitute_assignment_like_call_changed(head, args, bindings, shadowed)
         }
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if is_system_symbol_name(head, "Condition") && args.len() == 2 =>
         {
             substitute_condition_call_changed(head, args, bindings, shadowed)
         }
-        Expr::Call { head, args } if is_system_symbol_name(head, "With") && args.len() == 2 => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "With") && args.len() == 2 => {
             substitute_with_call_changed(head, args, bindings, shadowed)
         }
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if (is_system_symbol_name(head, "Module") || is_system_symbol_name(head, "Block"))
                 && !args.is_empty() =>
         {
             substitute_scoped_call_changed(head, args, bindings, shadowed)
         }
-        Expr::Call { head, args } if is_system_symbol_name(head, "Function") => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Function") => {
             substitute_function_call_changed(expr, head, args, bindings, shadowed)
         }
-        Expr::Call { head, args } => {
+        Expr::Call { head, args, .. } => {
             substitute_generic_call_changed(head, args, bindings, shadowed)
         }
     }
@@ -433,7 +435,7 @@ fn substitute_with_binding_list_changed(
     shadowed: &BTreeSet<Symbol>,
 ) -> Option<Expr> {
     let _profile_context = lexical_profile_context("with_binding_list");
-    let Expr::Call { head, args } = expr else {
+    let Expr::Call { head, args, .. } = expr else {
         return substitute_lexical_bindings_changed(expr, bindings, shadowed);
     };
 
@@ -481,7 +483,7 @@ fn substitute_with_binding_item_changed(
     let _profile_context = lexical_profile_context("with_binding_item");
     match expr {
         Expr::Atom(Atom::Symbol(_)) => None,
-        Expr::Call { head, args }
+        Expr::Call { head, args, .. }
             if (is_system_symbol_name(head, "Set") || is_system_symbol_name(head, "Rule"))
                 && args.len() == 2
                 && expr_as_symbol(&args[0]).is_some() =>
@@ -510,7 +512,9 @@ fn substitute_with_binding_item_changed(
 
 pub(in crate::runtime) fn collect_pattern_locals(expr: &Expr, locals: &mut BTreeSet<Symbol>) {
     match expr {
-        Expr::Call { head, args } if is_system_symbol_name(head, "Pattern") && args.len() == 2 => {
+        Expr::Call { head, args, .. }
+            if is_system_symbol_name(head, "Pattern") && args.len() == 2 =>
+        {
             if let Some(symbol) = expr_as_symbol(&args[0]) {
                 locals.insert(symbol.clone());
             }

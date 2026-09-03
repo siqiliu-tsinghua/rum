@@ -70,7 +70,7 @@ fn expr_has_system_head(expr: &Expr, name: &str) -> bool {
 
 fn list_items(expr: &Expr) -> Option<&[Expr]> {
     match expr {
-        Expr::Call { head, args } if is_system_symbol_name(head, heads::structure::LIST) => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, heads::structure::LIST) => {
             Some(args)
         }
         _ => None,
@@ -263,7 +263,7 @@ where
 }
 
 fn parse_polynomial_variable_spec(expr: &Expr) -> Option<Vec<Expr>> {
-    if let Expr::Call { head, args } = expr {
+    if let Expr::Call { head, args, .. } = expr {
         if is_system_symbol_name(head, heads::structure::LIST) {
             return args.iter().map(parse_indeterminate_expr).collect();
         }
@@ -283,13 +283,15 @@ fn is_polynomial_expression_unconstrained(expr: &Expr) -> bool {
     match expr {
         Expr::Atom(Atom::String(_)) => false,
         Expr::Atom(_) => true,
-        Expr::Call { head, args } if is_system_symbol_name(head, "Plus") => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Plus") => {
             args.iter().all(is_polynomial_expression_unconstrained)
         }
-        Expr::Call { head, args } if is_system_symbol_name(head, "Times") => {
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Times") => {
             args.iter().all(is_polynomial_expression_unconstrained)
         }
-        Expr::Call { head, args } if is_system_symbol_name(head, "Power") && args.len() == 2 => {
+        Expr::Call { head, args, .. }
+            if is_system_symbol_name(head, "Power") && args.len() == 2 =>
+        {
             if let Some(exponent) = expr_as_non_negative_usize(&args[1]) {
                 return exponent == 0 || is_polynomial_expression_unconstrained(&args[0]);
             }
@@ -314,13 +316,15 @@ fn is_polynomial_expression_in_variables(expr: &Expr, variables: &[Expr]) -> boo
     }
 
     match expr {
-        Expr::Call { head, args } if is_system_symbol_name(head, "Plus") => args
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Plus") => args
             .iter()
             .all(|arg| is_polynomial_expression_in_variables(arg, variables)),
-        Expr::Call { head, args } if is_system_symbol_name(head, "Times") => args
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Times") => args
             .iter()
             .all(|arg| is_polynomial_expression_in_variables(arg, variables)),
-        Expr::Call { head, args } if is_system_symbol_name(head, "Power") && args.len() == 2 => {
+        Expr::Call { head, args, .. }
+            if is_system_symbol_name(head, "Power") && args.len() == 2 =>
+        {
             expr_as_non_negative_usize(&args[1]).is_some()
                 && is_polynomial_expression_in_variables(&args[0], variables)
         }
@@ -334,13 +338,15 @@ fn is_rational_expression_in_variables(expr: &Expr, variables: &[Expr]) -> bool 
     }
 
     match expr {
-        Expr::Call { head, args } if is_system_symbol_name(head, "Plus") => args
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Plus") => args
             .iter()
             .all(|arg| is_rational_expression_in_variables(arg, variables)),
-        Expr::Call { head, args } if is_system_symbol_name(head, "Times") => args
+        Expr::Call { head, args, .. } if is_system_symbol_name(head, "Times") => args
             .iter()
             .all(|arg| is_rational_expression_in_variables(arg, variables)),
-        Expr::Call { head, args } if is_system_symbol_name(head, "Power") && args.len() == 2 => {
+        Expr::Call { head, args, .. }
+            if is_system_symbol_name(head, "Power") && args.len() == 2 =>
+        {
             expr_as_exact_integer(&args[1]).is_some()
                 && is_rational_expression_in_variables(&args[0], variables)
         }
@@ -361,7 +367,7 @@ fn expr_contains_exact_subexpr(expr: &Expr, needle: &Expr) -> bool {
     }
 
     match expr {
-        Expr::Call { head, args } => {
+        Expr::Call { head, args, .. } => {
             expr_contains_exact_subexpr(head, needle)
                 || args
                     .iter()
@@ -399,7 +405,7 @@ fn polynomial_predicate_bool_expr(value: bool) -> Expr {
 
 pub(super) fn expr_contains_pattern_language(expr: &Expr) -> bool {
     match expr {
-        Expr::Call { head, args } => {
+        Expr::Call { head, args, .. } => {
             is_pattern_language_head(head)
                 || expr_contains_pattern_language(head)
                 || args.iter().any(expr_contains_pattern_language)
