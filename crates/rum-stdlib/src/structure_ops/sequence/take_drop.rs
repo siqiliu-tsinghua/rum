@@ -15,6 +15,8 @@ enum StructuralSequenceSpec {
     },
 }
 
+const RECURSIVE_TAKE_DROP_SPEC_DEPTH: usize = 16;
+
 pub(crate) fn eval_take(
     session: &mut Session,
     head: &Expr,
@@ -301,48 +303,90 @@ fn parse_structural_sequence_spec(
 }
 
 fn apply_take_specs(expr: &Expr, specs: &[StructuralSequenceSpec]) -> Option<Expr> {
+    apply_take_specs_recursive_bounded(expr, specs, RECURSIVE_TAKE_DROP_SPEC_DEPTH)
+}
+
+fn apply_take_specs_recursive_bounded(
+    expr: &Expr,
+    specs: &[StructuralSequenceSpec],
+    remaining_spec_depth: usize,
+) -> Option<Expr> {
+    if remaining_spec_depth == 0 {
+        return apply_take_drop_specs_iterative(expr, specs, apply_take_spec);
+    }
+
     let Some((first, rest)) = specs.split_first() else {
         return Some(expr.clone());
     };
 
+    let selected = apply_take_spec(expr, *first)?;
+
+    if rest.is_empty() {
+        Some(selected)
+    } else {
+        apply_take_drop_rest_to_expr(
+            selected,
+            rest,
+            remaining_spec_depth - 1,
+            apply_take_specs_recursive_bounded,
+        )
+    }
+}
+
+fn apply_take_spec(expr: &Expr, spec: StructuralSequenceSpec) -> Option<Expr> {
     let Expr::Call { .. } = expr else {
         return None;
     };
 
-    let components = resolve_take_components(*first, structural_length(expr))?;
+    let components = resolve_take_components(spec, structural_length(expr))?;
     let selectors = vec![PartSelector::Multi(
         components
             .into_iter()
             .map(|component| PartSelector::Single(AtomicPartSpec::Index(component)))
             .collect(),
     )];
-    let selected = apply_part_selectors(expr, &selectors)?;
-
-    if rest.is_empty() {
-        Some(selected)
-    } else {
-        apply_take_drop_rest_to_expr(selected, rest, apply_take_specs)
-    }
+    apply_part_selectors(expr, &selectors)
 }
 
 fn apply_drop_specs(expr: &Expr, specs: &[StructuralSequenceSpec]) -> Option<Expr> {
+    apply_drop_specs_recursive_bounded(expr, specs, RECURSIVE_TAKE_DROP_SPEC_DEPTH)
+}
+
+fn apply_drop_specs_recursive_bounded(
+    expr: &Expr,
+    specs: &[StructuralSequenceSpec],
+    remaining_spec_depth: usize,
+) -> Option<Expr> {
+    if remaining_spec_depth == 0 {
+        return apply_take_drop_specs_iterative(expr, specs, apply_drop_spec);
+    }
+
     let Some((first, rest)) = specs.split_first() else {
         return Some(expr.clone());
     };
 
-    let Expr::Call { head, args } = expr else {
-        return None;
-    };
-
-    let dropped = resolve_take_components(*first, args.len())?;
-    let kept_args = retain_args_except_positions(args, dropped);
-    let kept = Expr::call(head.as_ref().clone(), kept_args);
+    let kept = apply_drop_spec(expr, *first)?;
 
     if rest.is_empty() {
         Some(kept)
     } else {
-        apply_take_drop_rest_to_expr(kept, rest, apply_drop_specs)
+        apply_take_drop_rest_to_expr(
+            kept,
+            rest,
+            remaining_spec_depth - 1,
+            apply_drop_specs_recursive_bounded,
+        )
     }
+}
+
+fn apply_drop_spec(expr: &Expr, spec: StructuralSequenceSpec) -> Option<Expr> {
+    let Expr::Call { head, args } = expr else {
+        return None;
+    };
+
+    let dropped = resolve_take_components(spec, args.len())?;
+    let kept_args = retain_args_except_positions(args, dropped);
+    Some(Expr::call(head.as_ref().clone(), kept_args))
 }
 
 // Keep the wide scan out of the recursive spec walker. Release A/B found no
@@ -373,17 +417,89 @@ fn retain_args_except_positions(args: &[Expr], mut dropped: Vec<isize>) -> Vec<E
 fn apply_take_drop_rest_to_expr(
     expr: Expr,
     rest: &[StructuralSequenceSpec],
-    recurse: fn(&Expr, &[StructuralSequenceSpec]) -> Option<Expr>,
+    remaining_spec_depth: usize,
+    recurse: fn(&Expr, &[StructuralSequenceSpec], usize) -> Option<Expr>,
 ) -> Option<Expr> {
     match expr {
         Expr::Atom(_) => None,
         Expr::Call { head, args } => Some(Expr::call(
             head.as_ref().clone(),
             args.iter()
-                .map(|arg| recurse(arg, rest))
+                .map(|arg| recurse(arg, rest, remaining_spec_depth))
                 .collect::<Option<Vec<_>>>()?,
         )),
     }
+}
+
+enum TakeDropSpecWork<'a> {
+    Visit {
+        expr: Expr,
+        specs: &'a [StructuralSequenceSpec],
+    },
+    FinishCall {
+        head: Expr,
+        arg_count: usize,
+    },
+}
+
+#[cold]
+#[inline(never)]
+fn apply_take_drop_specs_iterative(
+    expr: &Expr,
+    specs: &[StructuralSequenceSpec],
+    apply_spec: fn(&Expr, StructuralSequenceSpec) -> Option<Expr>,
+) -> Option<Expr> {
+    let mut work = vec![TakeDropSpecWork::Visit {
+        expr: expr.clone(),
+        specs,
+    }];
+    let mut completed = Vec::new();
+
+    while let Some(task) = work.pop() {
+        match task {
+            TakeDropSpecWork::Visit { expr, specs } => {
+                let Some((first, rest)) = specs.split_first() else {
+                    completed.push(expr);
+                    continue;
+                };
+
+                let selected = apply_spec(&expr, *first)?;
+                if rest.is_empty() {
+                    completed.push(selected);
+                    continue;
+                }
+
+                let Expr::Call { head, args } = selected else {
+                    return None;
+                };
+                let arg_count = args.len();
+                let head = head.as_ref().clone();
+                if arg_count == 0 {
+                    completed.push(Expr::call(head, Vec::new()));
+                    continue;
+                }
+
+                work.push(TakeDropSpecWork::FinishCall { head, arg_count });
+                for arg in args.iter().rev() {
+                    work.push(TakeDropSpecWork::Visit {
+                        expr: arg.clone(),
+                        specs: rest,
+                    });
+                }
+            }
+            TakeDropSpecWork::FinishCall { head, arg_count } => {
+                let first_arg = completed
+                    .len()
+                    .checked_sub(arg_count)
+                    .expect("Take/Drop iterative results remain balanced");
+                let args = completed.split_off(first_arg);
+                completed.push(Expr::call(head, args));
+            }
+        }
+    }
+
+    debug_assert_eq!(completed.len(), 1);
+    completed.pop()
 }
 
 fn resolve_take_components(spec: StructuralSequenceSpec, len: usize) -> Option<Vec<isize>> {
@@ -451,6 +567,68 @@ fn normalize_exact_structural_component(position: isize, len: usize) -> Option<i
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn wrap_unary_lists(mut expr: Expr, count: usize) -> Expr {
+        for _ in 0..count {
+            expr = Expr::call(system_expr("List"), vec![expr]);
+        }
+        expr
+    }
+
+    fn branching_take_drop_fixture() -> Expr {
+        Expr::call(
+            system_expr("f"),
+            vec![
+                Expr::call(system_expr("g"), vec![system_expr("a"), system_expr("b")]),
+                Expr::call(system_expr("h"), vec![system_expr("c"), system_expr("d")]),
+            ],
+        )
+    }
+
+    fn branching_take_drop_expected() -> Expr {
+        Expr::call(
+            system_expr("f"),
+            vec![
+                Expr::call(system_expr("g"), vec![system_expr("b")]),
+                Expr::call(system_expr("h"), vec![system_expr("d")]),
+            ],
+        )
+    }
+
+    #[test]
+    fn iterative_take_tail_preserves_fanout_order() {
+        let wrapper_count = RECURSIVE_TAKE_DROP_SPEC_DEPTH;
+        let expr = wrap_unary_lists(branching_take_drop_fixture(), wrapper_count);
+        let mut specs = vec![StructuralSequenceSpec::Single(1); wrapper_count];
+        specs.extend([
+            StructuralSequenceSpec::All,
+            StructuralSequenceSpec::Single(2),
+        ]);
+
+        assert_eq!(
+            apply_take_specs(&expr, &specs),
+            Some(wrap_unary_lists(
+                branching_take_drop_expected(),
+                wrapper_count
+            ))
+        );
+    }
+
+    #[test]
+    fn iterative_drop_tail_preserves_fanout_order() {
+        let wrapper_count = RECURSIVE_TAKE_DROP_SPEC_DEPTH;
+        let expr = wrap_unary_lists(branching_take_drop_fixture(), wrapper_count);
+        let mut specs = vec![StructuralSequenceSpec::None; wrapper_count + 1];
+        specs.push(StructuralSequenceSpec::Count(1));
+
+        assert_eq!(
+            apply_drop_specs(&expr, &specs),
+            Some(wrap_unary_lists(
+                branching_take_drop_expected(),
+                wrapper_count
+            ))
+        );
+    }
 
     #[test]
     fn linear_drop_filter_matches_set_membership_for_small_ranges() {

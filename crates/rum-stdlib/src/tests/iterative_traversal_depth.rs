@@ -91,6 +91,35 @@ fn tostring_completes_at_physical_height_4097_on_two_mib() {
 
 #[test]
 #[ignore = "release-only deployment-stack probe; run explicitly with --release"]
+fn take_multispec_completes_at_physical_height_4097_on_two_mib() {
+    let certificate = run_on_two_mib_thread("take-multispec-depth-4097", || {
+        let spec_count = TARGET_PHYSICAL_HEIGHT - 1;
+        let body =
+            format!("ToString[Take @@ Prepend[Table[{{1}}, {{{spec_count}}}], x], InputForm]");
+        evaluate_string_certificate(&body)
+    });
+    assert_eq!(
+        certificate,
+        nested_input_form(TARGET_PHYSICAL_HEIGHT - 1, "1")
+    );
+}
+
+#[test]
+#[ignore = "release-only deployment-stack probe; run explicitly with --release"]
+fn replacepart_deep_path_completes_at_physical_height_4097_on_two_mib() {
+    let certificate = run_on_two_mib_thread("replacepart-deep-path-depth-4097", || {
+        let path_length = TARGET_PHYSICAL_HEIGHT - 1;
+        let body = format!("ToString[ReplacePart[x, Table[1, {{{path_length}}}] -> 9], InputForm]");
+        evaluate_string_certificate(&body)
+    });
+    assert_eq!(
+        certificate,
+        nested_input_form(TARGET_PHYSICAL_HEIGHT - 1, "9")
+    );
+}
+
+#[test]
+#[ignore = "release-only deployment-stack probe; run explicitly with --release"]
 fn map_completes_at_physical_height_4097_on_two_mib() {
     let certificate = run_on_two_mib_thread("map-depth-4097", || {
         evaluate_string_certificate("ToString[Map[deepMapProbe, x, {-1}], InputForm]")

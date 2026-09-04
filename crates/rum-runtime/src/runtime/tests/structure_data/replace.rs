@@ -1,6 +1,20 @@
 use super::*;
 
 #[test]
+fn replacepart_deep_path_shallow_companion_pins_three_level_rebuild() {
+    let mut session = Session::new();
+
+    let outcome = session
+        .eval_text("ReplacePart[{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}}, {1, 2, 1} -> 9]")
+        .unwrap();
+    assert_eq!(
+        outcome.value.to_string(),
+        "List[List[List[0, 1], List[9, 3]], List[List[4, 5], List[6, 7]]]"
+    );
+    assert!(outcome.messages.is_empty(), "{:?}", outcome.messages);
+}
+
+#[test]
 fn replacepart_supports_immediate_delayed_and_head_replacements() {
     let mut session = Session::new();
 

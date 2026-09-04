@@ -66,6 +66,38 @@ fn range_respects_generated_element_limit_before_allocating() {
 }
 
 #[test]
+fn take_multispec_shallow_companion_pins_three_level_fanout() {
+    let mut session = core_session();
+
+    let outcome = session
+        .eval_text("Take[{{{1, 2}, {3, 4}}, {{5, 6}, {7, 8}}}, All, All, 1]")
+        .unwrap();
+    assert_eq!(
+        outcome.value.to_string(),
+        "List[List[List[1], List[3]], List[List[5], List[7]]]"
+    );
+    assert!(outcome.messages.is_empty(), "{:?}", outcome.messages);
+}
+
+#[test]
+fn take_multispec_failure_below_first_spec_preserves_message_channel() {
+    let mut session = core_session();
+
+    let outcome = session.eval_text("Take[{{1}, {2}}, All, 2]").unwrap();
+    assert_eq!(
+        outcome.value.to_string(),
+        "Take[List[List[1], List[2]], All, 2]"
+    );
+    assert_eq!(outcome.messages.len(), 1, "{:?}", outcome.messages);
+    assert_eq!(outcome.messages[0].symbol, "Take");
+    assert_eq!(outcome.messages[0].tag, "take");
+    assert_eq!(
+        outcome.messages[0].text,
+        "Cannot apply the requested sequence specification in Take[List[List[1], List[2]], All, 2]."
+    );
+}
+
+#[test]
 fn take_drop_insert_delete_and_take_list_cover_current_structural_subset() {
     let mut session = core_session();
 

@@ -232,10 +232,12 @@ ClearAll[
   gMicroGuardedRewriteFallbackRules,
   gMicroWideTraversal,
   gMicroDeleteCasesLeafDeleteSmall,
+  gMicroTakeMultispecSmall,
   gMicroWideAssociation,
   gMicroAssociationPartWidth4000,
   gMicroAssociationPartWidth32000,
   gMicroReplacePartRules,
+  gMicroReplacePartDeepPathSmall,
   gMicroGuardedReplacePartRule,
   gMicroGuardedReplacePartFallbackRules,
   gMicroStringLiteralHaystack,
@@ -370,12 +372,14 @@ gMicroGuardedRewriteFallbackRules = {
 gMicroWideTraversal = Range[rumMicroN[1600]];
 gMicroDeleteCasesLeafDeleteSmall = Nest[List, 1, 8];
 gMicroReplaceLeafRebuildSmall = Nest[List, 1, 8];
+gMicroTakeMultispecSmall = Nest[List, 1, 8];
 gMicroWideAssociation = AssociationThread[
   Range[rumMicroN[1600]] -> Range[rumMicroN[1600]]
 ];
 gMicroAssociationPartWidth4000 = AssociationThread[Range[4000], Range[4000]];
 gMicroAssociationPartWidth32000 = AssociationThread[Range[32000], Range[32000]];
 gMicroReplacePartRules = Table[{1} -> i, {i, 1, rumMicroN[1600]}];
+gMicroReplacePartDeepPathSmall = Nest[List, 0, 8];
 gMicroGuardedReplacePartRule = 1 :> 1 /; True;
 gMicroGuardedReplacePartFallbackRules = {1 -> 0, 1 :> 1 /; False};
 gMicroStringLiteralHaystack = StringJoin[
@@ -620,6 +624,18 @@ rumMicroBench[
   Replace[gMicroReplaceLeafRebuildSmall, 1 -> 2, {0, Infinity}]
 ];
 If[SameQ[rumMicroSink, Nest[List, 2, 8]], Null, Exit[2]];
+rumMicroBench[
+  "take-multispec-small",
+  rumMicroN[500],
+  Take[gMicroTakeMultispecSmall, {1}, {1}, {1}, {1}, {1}, {1}, {1}, {1}]
+];
+If[SameQ[rumMicroSink, gMicroTakeMultispecSmall], Null, Exit[2]];
+rumMicroBench[
+  "replacepart-deep-path-small",
+  rumMicroN[500],
+  ReplacePart[gMicroReplacePartDeepPathSmall, {1, 1, 1, 1, 1, 1, 1, 1} -> 9]
+];
+If[SameQ[rumMicroSink, Nest[List, 9, 8]], Null, Exit[2]];
 rumMicroOnce[
   "replacepart-wide-rule-list",
   rumMicroN[1600],

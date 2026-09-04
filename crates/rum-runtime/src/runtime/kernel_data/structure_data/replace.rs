@@ -5,6 +5,7 @@ mod guarded;
 mod guarded_plan;
 mod parsing;
 mod plan;
+mod plan_application;
 mod replace_at;
 mod replace_part;
 mod suspended_state;
