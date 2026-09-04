@@ -1509,9 +1509,10 @@ must require the worker to report the whole-panel median beside each label.
 
 **Settled by counters instead, and the timing instrument is now known to be
 weak on this host (user ruling, 2026-09-04).** This machine is an i9-14900HX
-with 8 P-cores at 5.6-5.8 GHz and 16 E-cores at 4.1 GHz — a 1.41x clock ratio
-plus a different microarchitecture — and nothing pins a benchmark to a core
-class. Any wall-time percentage here can be a scheduling artifact larger than
+with 8 P-cores and 16 E-cores. One core is unhealthy at full turbo, so a kernel
+module caps every core at 5.2 GHz; `scaling_max_freq` reads 5 200 000 on the
+P-cores and 4 100 000 on the E-cores, so the clock ratio is **1.27x**, not the
+1.41x the spec sheet implies. Nothing pins a benchmark to a core class. Any wall-time percentage here can be a scheduling artifact larger than
 the effect being judged, so **a timing A/B is an indication, never proof**.
 `CLAUDE.md`'s standing rule "counters beat timings, report counters first" was
 not applied at the briefs 447-449 gates; it is reinstated.
@@ -1540,6 +1541,15 @@ time-adaptive parts (the retained-module GC batches keyed off
 `AbsoluteTiming`). The base-vs-candidate panel total differed by +530 in 10
 million, inside that same-binary spread. Use isolated per-label probes and
 calibrate the same-binary spread before believing any counter delta.
+
+**Nothing was overturned by the re-measurement.** The three A/B accepts it
+re-checked (briefs 447, 448, 449) are all confirmed by the counters; what the
+timing numbers were weak evidence *for* turned out to be true. The residual
+limit is worth stating: allocation counts see work that allocates, not pure CPU
+cost, so a few-percent constant-factor regression on these labels would be
+invisible to both instruments on this host. Each of the three changes adds one
+integer comparison to its shallow path, which is the size of effect that falls
+in that gap.
 
 **Recorded for the memory-accounting line, found by accident here.** A release
 test spelling `DeleteCases[x, 1, Infinity]` literally trips the `NonAmplifying`
