@@ -226,6 +226,10 @@ ClearAll[
   gMicroGuardedDefault,
   gMicroDNestedSinSmall,
   gMicroDVariable,
+  gMicroWithBinding,
+  gMicroWithDeepBodySmall,
+  gMicroRuleBinding,
+  gMicroRuleRhsDeepSmall,
   list10,
   rulesSimple,
   gMicroGuardedRewriteRule,
@@ -429,6 +433,8 @@ gMicroDefaultMiss[x_.] := x;
 Default[gMicroGuardedDefault] := 1 /; True;
 gMicroGuardedDefault[x_.] := x;
 gMicroDNestedSinSmall = Nest[Sin, gMicroDVariable, 8];
+gMicroWithDeepBodySmall = Nest[List, gMicroWithBinding, 8];
+gMicroRuleRhsDeepSmall = Nest[List, gMicroRuleBinding, 8];
 
 Print["RUM_CORE_MICRO_BEGIN"];
 
@@ -504,6 +510,12 @@ rumMicroOnce["block-symbol-only-repeat", rumMicroN[1000], Do[Block[{b}, Null], {
 rumMicroOnce["block-init-null-repeat", rumMicroN[1000], Do[Block[{b = 1}, Null], {1000 * rumMicroScale}]];
 rumMicroOnce["block-init-read-repeat", rumMicroN[1000], Do[Block[{b = 1}, b], {1000 * rumMicroScale}]];
 rumMicroBench["with-local", rumMicroN[500], With[{x = 1}, x + 1]];
+rumMicroBench[
+  "with-deep-body-small",
+  rumMicroN[500],
+  With @@ {{gMicroWithBinding -> 7}, gMicroWithDeepBodySmall}
+];
+If[SameQ[rumMicroSink, Nest[List, 7, 8]], Null, Exit[2]];
 rumMicroBench["table-small", rumMicroN[200], Table[i, {i, 1, 5}]];
 rumMicroOnce["table-iterator-plus", rumMicroN[1000], Table[j + 1, {j, 1000 * rumMicroScale}]];
 rumMicroOnce["table-iterator-pair-list", rumMicroN[1000], Table[{j, j}, {j, 1000 * rumMicroScale}]];
@@ -572,6 +584,18 @@ rumMicroOnce[
 ];
 If[SameQ[rumMicroSink, True], Null, Exit[2]];
 rumMicroBench["replaceall-simple", rumMicroN[500], a /. rulesSimple];
+rumMicroBench[
+  "rule-rhs-deep-small",
+  rumMicroN[500],
+  Replace[
+    7,
+    RuleDelayed @@ {
+      Pattern[gMicroRuleBinding, Blank[]],
+      gMicroRuleRhsDeepSmall
+    }
+  ]
+];
+If[SameQ[rumMicroSink, Nest[List, 7, 8]], Null, Exit[2]];
 rumMicroBench[
   "rewrite-guarded-hit",
   rumMicroN[500],

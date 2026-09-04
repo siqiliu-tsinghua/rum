@@ -167,6 +167,59 @@ fn replace_completes_at_physical_height_4097_on_two_mib() {
 }
 
 #[test]
+#[ignore = "release-only deployment-stack probe; run explicitly with --release"]
+fn with_substitution_completes_at_physical_height_4097_on_two_mib() {
+    let certificate = run_on_two_mib_thread("with-substitution-depth-4097", || {
+        let mut session = Session::new();
+        install_core(&mut session);
+        let source = format!(
+            "deepBody = q; Do[deepBody = {{deepBody}}, {{i, {}}}]; \
+             ToString[With @@ {{{{q -> 7}}, deepBody}}, InputForm]",
+            TARGET_PHYSICAL_HEIGHT - 1
+        );
+        let value = session
+            .eval_text(&source)
+            .expect("deep With substitution should complete")
+            .value;
+        let Expr::Atom(Atom::String(value)) = value else {
+            panic!("deep With substitution should return an Atom::String")
+        };
+        value
+    });
+    assert_eq!(
+        certificate,
+        nested_input_form(TARGET_PHYSICAL_HEIGHT - 1, "7")
+    );
+}
+
+#[test]
+#[ignore = "release-only deployment-stack probe; run explicitly with --release"]
+fn rule_rhs_substitution_completes_at_physical_height_4097_on_two_mib() {
+    let certificate = run_on_two_mib_thread("rule-rhs-substitution-depth-4097", || {
+        let mut session = Session::new();
+        install_core(&mut session);
+        let source = format!(
+            "deepTemplate = q; Do[deepTemplate = {{deepTemplate}}, {{i, {}}}]; \
+             ToString[Replace[7, RuleDelayed @@ {{Pattern[q, Blank[]], deepTemplate}}], \
+             InputForm]",
+            TARGET_PHYSICAL_HEIGHT - 1
+        );
+        let value = session
+            .eval_text(&source)
+            .expect("deep rule RHS substitution should complete")
+            .value;
+        let Expr::Atom(Atom::String(value)) = value else {
+            panic!("deep rule RHS substitution should return an Atom::String")
+        };
+        value
+    });
+    assert_eq!(
+        certificate,
+        nested_input_form(TARGET_PHYSICAL_HEIGHT - 1, "7")
+    );
+}
+
+#[test]
 #[ignore = "release-only active-spine safety probe; run explicitly with --release"]
 fn replace_active_spine_returns_in_band_resource_error_on_two_mib() {
     let result = run_on_two_mib_thread("replace-active-spine", || {
@@ -325,6 +378,40 @@ fn deletecases_limit_pins_post_order_visit_order() {
     assert_eq!(
         evaluate_shallow_input_form("DeleteCases[{{{1}}, {2}, {3}}, _List, Infinity, 2]"),
         "{{2}, {3}}"
+    );
+}
+
+#[test]
+fn lexical_substitution_certificate_companion_pins_three_level_body() {
+    assert_eq!(
+        evaluate_shallow_input_form("With[{q = 7}, {{{q}}}]"),
+        "{{{7}}}"
+    );
+}
+
+#[test]
+fn rule_rhs_substitution_certificate_companion_pins_three_level_body() {
+    assert_eq!(
+        evaluate_shallow_input_form("Replace[7, RuleDelayed @@ {Pattern[q, Blank[]], {{{q}}}}]"),
+        "{{{7}}}"
+    );
+}
+
+#[test]
+fn lexical_substitution_keeps_nested_with_shadow_local_to_its_subtree() {
+    assert_eq!(
+        evaluate_shallow_input_form("With[{q = 7}, {{{With[{q = 11}, Hold[q]]}, q}}]"),
+        "{{{Hold[11]}, 7}}"
+    );
+}
+
+#[test]
+fn lexical_substitution_iterative_tail_keeps_shadow_local_to_nested_with() {
+    let body = nested_input_form(20, "{With[{q = 11}, Hold[q]], q}");
+    let expected = nested_input_form(20, "{Hold[11], 7}");
+    assert_eq!(
+        evaluate_shallow_input_form(&format!("With[{{q = 7}}, {body}]")),
+        expected
     );
 }
 

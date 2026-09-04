@@ -1,6 +1,14 @@
 use super::super::*;
 use super::lexical_presence::LexicalPresenceCache;
 
+mod iterative;
+use iterative::{
+    substitute_lexical_bindings_changed_iterative, substitute_with_binding_item_changed_iterative,
+    substitute_with_binding_list_changed_iterative,
+};
+
+const RECURSIVE_LEXICAL_SUBSTITUTION_CALL_DEPTH: usize = 16;
+
 struct LexicalBindings<'a> {
     map: &'a SymbolExprMap,
     single: Option<(&'a Symbol, &'a Expr)>,
@@ -42,6 +50,48 @@ impl<'a> LexicalBindings<'a> {
     }
 }
 
+#[derive(Clone, Copy)]
+struct LexicalWalk<'bindings, 'map, 'shadowed> {
+    bindings: &'bindings LexicalBindings<'map>,
+    shadowed: &'shadowed BTreeSet<Symbol>,
+    remaining_call_depth: usize,
+}
+
+impl<'bindings, 'map, 'shadowed> LexicalWalk<'bindings, 'map, 'shadowed> {
+    fn new(
+        bindings: &'bindings LexicalBindings<'map>,
+        shadowed: &'shadowed BTreeSet<Symbol>,
+    ) -> Self {
+        Self {
+            bindings,
+            shadowed,
+            remaining_call_depth: RECURSIVE_LEXICAL_SUBSTITUTION_CALL_DEPTH,
+        }
+    }
+
+    #[inline]
+    fn descend(&self) -> Self {
+        debug_assert!(self.remaining_call_depth > 0);
+        Self {
+            bindings: self.bindings,
+            shadowed: self.shadowed,
+            remaining_call_depth: self.remaining_call_depth - 1,
+        }
+    }
+
+    #[inline]
+    fn with_shadowed<'next>(
+        &self,
+        shadowed: &'next BTreeSet<Symbol>,
+    ) -> LexicalWalk<'bindings, 'map, 'next> {
+        LexicalWalk {
+            bindings: self.bindings,
+            shadowed,
+            remaining_call_depth: self.remaining_call_depth,
+        }
+    }
+}
+
 fn substitute_symbol_binding_changed(
     symbol: &Symbol,
     bindings: &LexicalBindings<'_>,
@@ -75,12 +125,11 @@ fn shadowed_with_binding_symbols(shadowed: &BTreeSet<Symbol>, expr: &Expr) -> BT
 fn substitute_pattern_call_changed(
     head: &Expr,
     args: &[Expr],
-    bindings: &LexicalBindings<'_>,
-    shadowed: &BTreeSet<Symbol>,
+    walk: &LexicalWalk<'_, '_, '_>,
 ) -> Option<Expr> {
     let _profile_context = lexical_profile_context("pattern_call");
-    let substituted_head = substitute_lexical_bindings_changed(head, bindings, shadowed);
-    let substituted_pattern = substitute_lexical_bindings_changed(&args[1], bindings, shadowed);
+    let substituted_head = substitute_lexical_bindings_changed_bounded(head, walk);
+    let substituted_pattern = substitute_lexical_bindings_changed_bounded(&args[1], walk);
 
     if substituted_head.is_none() && substituted_pattern.is_none() {
         return None;
@@ -100,15 +149,15 @@ fn substitute_pattern_call_changed(
 fn substitute_assignment_like_call_changed(
     head: &Expr,
     args: &[Expr],
-    bindings: &LexicalBindings<'_>,
-    shadowed: &BTreeSet<Symbol>,
+    walk: &LexicalWalk<'_, '_, '_>,
 ) -> Option<Expr> {
     let _profile_context = lexical_profile_context("assignment_like_call");
-    let substituted_head = substitute_lexical_bindings_changed(head, bindings, shadowed);
-    let substituted_lhs = substitute_lexical_bindings_changed(&args[0], bindings, shadowed);
+    let substituted_head = substitute_lexical_bindings_changed_bounded(head, walk);
+    let substituted_lhs = substitute_lexical_bindings_changed_bounded(&args[0], walk);
     let lhs_for_shadow = substituted_lhs.as_ref().unwrap_or(&args[0]);
-    let rhs_shadowed = shadowed_with_pattern_locals(shadowed, lhs_for_shadow);
-    let substituted_rhs = substitute_lexical_bindings_changed(&args[1], bindings, &rhs_shadowed);
+    let rhs_shadowed = shadowed_with_pattern_locals(walk.shadowed, lhs_for_shadow);
+    let rhs_walk = walk.with_shadowed(&rhs_shadowed);
+    let substituted_rhs = substitute_lexical_bindings_changed_bounded(&args[1], &rhs_walk);
 
     if substituted_head.is_none() && substituted_lhs.is_none() && substituted_rhs.is_none() {
         return None;
@@ -129,16 +178,16 @@ fn substitute_assignment_like_call_changed(
 fn substitute_condition_call_changed(
     head: &Expr,
     args: &[Expr],
-    bindings: &LexicalBindings<'_>,
-    shadowed: &BTreeSet<Symbol>,
+    walk: &LexicalWalk<'_, '_, '_>,
 ) -> Option<Expr> {
     let _profile_context = lexical_profile_context("condition_call");
-    let substituted_head = substitute_lexical_bindings_changed(head, bindings, shadowed);
-    let substituted_lhs = substitute_lexical_bindings_changed(&args[0], bindings, shadowed);
+    let substituted_head = substitute_lexical_bindings_changed_bounded(head, walk);
+    let substituted_lhs = substitute_lexical_bindings_changed_bounded(&args[0], walk);
     let lhs_for_shadow = substituted_lhs.as_ref().unwrap_or(&args[0]);
-    let condition_shadowed = shadowed_with_pattern_locals(shadowed, lhs_for_shadow);
+    let condition_shadowed = shadowed_with_pattern_locals(walk.shadowed, lhs_for_shadow);
+    let condition_walk = walk.with_shadowed(&condition_shadowed);
     let substituted_condition =
-        substitute_lexical_bindings_changed(&args[1], bindings, &condition_shadowed);
+        substitute_lexical_bindings_changed_bounded(&args[1], &condition_walk);
 
     if substituted_head.is_none() && substituted_lhs.is_none() && substituted_condition.is_none() {
         return None;
@@ -159,14 +208,14 @@ fn substitute_condition_call_changed(
 fn substitute_with_call_changed(
     head: &Expr,
     args: &[Expr],
-    bindings: &LexicalBindings<'_>,
-    shadowed: &BTreeSet<Symbol>,
+    walk: &LexicalWalk<'_, '_, '_>,
 ) -> Option<Expr> {
     let _profile_context = lexical_profile_context("with_call");
-    let substituted_head = substitute_lexical_bindings_changed(head, bindings, shadowed);
-    let substituted_bindings = substitute_with_binding_list_changed(&args[0], bindings, shadowed);
-    let body_shadowed = shadowed_with_binding_symbols(shadowed, &args[0]);
-    let substituted_body = substitute_lexical_bindings_changed(&args[1], bindings, &body_shadowed);
+    let substituted_head = substitute_lexical_bindings_changed_bounded(head, walk);
+    let substituted_bindings = substitute_with_binding_list_changed(&args[0], walk);
+    let body_shadowed = shadowed_with_binding_symbols(walk.shadowed, &args[0]);
+    let body_walk = walk.with_shadowed(&body_shadowed);
+    let substituted_body = substitute_lexical_bindings_changed_bounded(&args[1], &body_walk);
 
     if substituted_head.is_none() && substituted_bindings.is_none() && substituted_body.is_none() {
         return None;
@@ -187,15 +236,14 @@ fn substitute_with_call_changed(
 fn substitute_scoped_call_changed(
     head: &Expr,
     args: &[Expr],
-    bindings: &LexicalBindings<'_>,
-    shadowed: &BTreeSet<Symbol>,
+    walk: &LexicalWalk<'_, '_, '_>,
 ) -> Option<Expr> {
     let _profile_context = lexical_profile_context("scoped_call");
-    let substituted_head = substitute_lexical_bindings_changed(head, bindings, shadowed);
-    let substituted_bindings = substitute_with_binding_list_changed(&args[0], bindings, shadowed);
-    let body_shadowed = shadowed_with_binding_symbols(shadowed, &args[0]);
-    let substituted_rest =
-        substitute_arg_list_changed(&args[1..], bindings, &body_shadowed, head, 1);
+    let substituted_head = substitute_lexical_bindings_changed_bounded(head, walk);
+    let substituted_bindings = substitute_with_binding_list_changed(&args[0], walk);
+    let body_shadowed = shadowed_with_binding_symbols(walk.shadowed, &args[0]);
+    let body_walk = walk.with_shadowed(&body_shadowed);
+    let substituted_rest = substitute_arg_list_changed(&args[1..], head, 1, &body_walk);
 
     if substituted_head.is_none() && substituted_bindings.is_none() && substituted_rest.is_none() {
         return None;
@@ -219,16 +267,14 @@ fn substitute_function_call_changed(
     expr: &Expr,
     head: &Expr,
     args: &[Expr],
-    bindings: &LexicalBindings<'_>,
-    shadowed: &BTreeSet<Symbol>,
+    walk: &LexicalWalk<'_, '_, '_>,
 ) -> Option<Expr> {
     let _profile_context = lexical_profile_context("function_call");
-    let substituted_head = substitute_lexical_bindings_changed(head, bindings, shadowed);
+    let substituted_head = substitute_lexical_bindings_changed_bounded(head, walk);
     match parse_function(expr) {
         Some(FunctionSpec::SlotBased { body, .. }) => {
-            let substituted_body = substitute_lexical_bindings_changed(body, bindings, shadowed);
-            let substituted_rest =
-                substitute_arg_list_changed(&args[1..], bindings, shadowed, head, 1);
+            let substituted_body = substitute_lexical_bindings_changed_bounded(body, walk);
+            let substituted_rest = substitute_arg_list_changed(&args[1..], head, 1, walk);
 
             if substituted_head.is_none()
                 && substituted_body.is_none()
@@ -251,13 +297,12 @@ fn substitute_function_call_changed(
             ))
         }
         Some(FunctionSpec::Explicit { params, body, .. }) => {
-            let mut body_shadowed = shadowed.clone();
+            let mut body_shadowed = walk.shadowed.clone();
             body_shadowed.extend(params);
 
-            let substituted_body =
-                substitute_lexical_bindings_changed(body, bindings, &body_shadowed);
-            let substituted_rest =
-                substitute_arg_list_changed(&args[2..], bindings, shadowed, head, 2);
+            let body_walk = walk.with_shadowed(&body_shadowed);
+            let substituted_body = substitute_lexical_bindings_changed_bounded(body, &body_walk);
+            let substituted_rest = substitute_arg_list_changed(&args[2..], head, 2, walk);
 
             if substituted_head.is_none()
                 && substituted_body.is_none()
@@ -280,19 +325,18 @@ fn substitute_function_call_changed(
                 ),
             ))
         }
-        None => substitute_generic_call_changed(head, args, bindings, shadowed),
+        None => substitute_generic_call_changed(head, args, walk),
     }
 }
 
 fn substitute_generic_call_changed(
     head: &Expr,
     args: &[Expr],
-    bindings: &LexicalBindings<'_>,
-    shadowed: &BTreeSet<Symbol>,
+    walk: &LexicalWalk<'_, '_, '_>,
 ) -> Option<Expr> {
     let _profile_context = lexical_profile_context("generic_call");
-    let substituted_head = substitute_lexical_bindings_changed(head, bindings, shadowed);
-    let substituted_args = substitute_arg_list_changed(args, bindings, shadowed, head, 0);
+    let substituted_head = substitute_lexical_bindings_changed_bounded(head, walk);
+    let substituted_args = substitute_arg_list_changed(args, head, 0, walk);
 
     match (substituted_head, substituted_args) {
         (None, None) => None,
@@ -313,10 +357,9 @@ fn substitute_generic_call_changed(
 
 fn substitute_arg_list_changed(
     args: &[Expr],
-    bindings: &LexicalBindings<'_>,
-    shadowed: &BTreeSet<Symbol>,
     parent_head: &Expr,
     index_offset: usize,
+    walk: &LexicalWalk<'_, '_, '_>,
 ) -> Option<Vec<Expr>> {
     record_profile_arg_list_start(args.len());
     let profile_detail = lexical_profile_detail_enabled();
@@ -327,7 +370,7 @@ fn substitute_arg_list_changed(
             let _profile_site =
                 lexical_profile_arg_prefilter_site(parent_head, index + index_offset);
             let _profile_context = lexical_profile_context("arg_prefilter");
-            bindings.may_contain_binding_symbol(arg)
+            walk.bindings.may_contain_binding_symbol(arg)
         };
         record_profile_arg_prefilter(maybe_contains_binding);
         if !maybe_contains_binding {
@@ -344,7 +387,7 @@ fn substitute_arg_list_changed(
         };
         let substituted_arg = {
             let _profile_context = lexical_profile_context("arg_substitution");
-            substitute_lexical_bindings_changed(arg, bindings, shadowed)
+            substitute_lexical_bindings_changed_bounded(arg, walk)
         };
         if profile_detail {
             record_profile_arg_substitution_attempt(profile_start, substituted_arg.is_some());
@@ -388,66 +431,79 @@ fn substitute_lexical_bindings_changed(
     bindings: &LexicalBindings<'_>,
     shadowed: &BTreeSet<Symbol>,
 ) -> Option<Expr> {
+    let walk = LexicalWalk::new(bindings, shadowed);
+    substitute_lexical_bindings_changed_bounded(expr, &walk)
+}
+
+fn substitute_lexical_bindings_changed_bounded(
+    expr: &Expr,
+    walk: &LexicalWalk<'_, '_, '_>,
+) -> Option<Expr> {
     match expr {
         Expr::Atom(Atom::Symbol(symbol)) => {
-            substitute_symbol_binding_changed(symbol, bindings, shadowed)
+            substitute_symbol_binding_changed(symbol, walk.bindings, walk.shadowed)
         }
         Expr::Atom(_) => None,
-        Expr::Call { head, args } if is_system_symbol_name(head, "Pattern") && args.len() == 2 => {
-            substitute_pattern_call_changed(head, args, bindings, shadowed)
-        }
-        Expr::Call { head, args }
-            if (is_system_symbol_name(head, "Rule")
+        Expr::Call { head, args } => {
+            if walk.remaining_call_depth == 0 {
+                return substitute_lexical_bindings_changed_iterative(
+                    expr,
+                    walk.bindings,
+                    walk.shadowed,
+                );
+            }
+
+            let walk = walk.descend();
+            if is_system_symbol_name(head, "Pattern") && args.len() == 2 {
+                substitute_pattern_call_changed(head, args, &walk)
+            } else if (is_system_symbol_name(head, "Rule")
                 || is_system_symbol_name(head, "RuleDelayed")
                 || is_system_symbol_name(head, "SetDelayed"))
-                && args.len() == 2 =>
-        {
-            substitute_assignment_like_call_changed(head, args, bindings, shadowed)
-        }
-        Expr::Call { head, args }
-            if is_system_symbol_name(head, "Condition") && args.len() == 2 =>
-        {
-            substitute_condition_call_changed(head, args, bindings, shadowed)
-        }
-        Expr::Call { head, args } if is_system_symbol_name(head, "With") && args.len() == 2 => {
-            substitute_with_call_changed(head, args, bindings, shadowed)
-        }
-        Expr::Call { head, args }
-            if (is_system_symbol_name(head, "Module") || is_system_symbol_name(head, "Block"))
-                && !args.is_empty() =>
-        {
-            substitute_scoped_call_changed(head, args, bindings, shadowed)
-        }
-        Expr::Call { head, args } if is_system_symbol_name(head, "Function") => {
-            substitute_function_call_changed(expr, head, args, bindings, shadowed)
-        }
-        Expr::Call { head, args } => {
-            substitute_generic_call_changed(head, args, bindings, shadowed)
+                && args.len() == 2
+            {
+                substitute_assignment_like_call_changed(head, args, &walk)
+            } else if is_system_symbol_name(head, "Condition") && args.len() == 2 {
+                substitute_condition_call_changed(head, args, &walk)
+            } else if is_system_symbol_name(head, "With") && args.len() == 2 {
+                substitute_with_call_changed(head, args, &walk)
+            } else if (is_system_symbol_name(head, "Module")
+                || is_system_symbol_name(head, "Block"))
+                && !args.is_empty()
+            {
+                substitute_scoped_call_changed(head, args, &walk)
+            } else if is_system_symbol_name(head, "Function") {
+                substitute_function_call_changed(expr, head, args, &walk)
+            } else {
+                substitute_generic_call_changed(head, args, &walk)
+            }
         }
     }
 }
 
 fn substitute_with_binding_list_changed(
     expr: &Expr,
-    bindings: &LexicalBindings<'_>,
-    shadowed: &BTreeSet<Symbol>,
+    walk: &LexicalWalk<'_, '_, '_>,
 ) -> Option<Expr> {
-    let _profile_context = lexical_profile_context("with_binding_list");
     let Expr::Call { head, args } = expr else {
-        return substitute_lexical_bindings_changed(expr, bindings, shadowed);
+        let _profile_context = lexical_profile_context("with_binding_list");
+        return substitute_lexical_bindings_changed_bounded(expr, walk);
     };
 
-    if !is_system_symbol_name(head, "List") {
-        return substitute_lexical_bindings_changed(expr, bindings, shadowed);
+    if walk.remaining_call_depth == 0 {
+        return substitute_with_binding_list_changed_iterative(expr, walk.bindings, walk.shadowed);
     }
 
-    let substituted_head = substitute_lexical_bindings_changed(head, bindings, shadowed);
+    let walk = walk.descend();
+    let _profile_context = lexical_profile_context("with_binding_list");
+    if !is_system_symbol_name(head, "List") {
+        return substitute_lexical_bindings_changed_bounded(expr, &walk);
+    }
+
+    let substituted_head = substitute_lexical_bindings_changed_bounded(head, &walk);
     let mut substituted_items = None;
 
     for (index, item) in args.iter().enumerate() {
-        if let Some(substituted_item) =
-            substitute_with_binding_item_changed(item, bindings, shadowed)
-        {
+        if let Some(substituted_item) = substitute_with_binding_item_changed(item, &walk) {
             substituted_items
                 .get_or_insert_with(|| args[..index].to_vec())
                 .push(substituted_item);
@@ -475,36 +531,62 @@ fn substitute_with_binding_list_changed(
 
 fn substitute_with_binding_item_changed(
     expr: &Expr,
-    bindings: &LexicalBindings<'_>,
-    shadowed: &BTreeSet<Symbol>,
+    walk: &LexicalWalk<'_, '_, '_>,
 ) -> Option<Expr> {
-    let _profile_context = lexical_profile_context("with_binding_item");
     match expr {
-        Expr::Atom(Atom::Symbol(_)) => None,
+        Expr::Atom(Atom::Symbol(_)) => {
+            let _profile_context = lexical_profile_context("with_binding_item");
+            None
+        }
+        Expr::Atom(_) => {
+            let _profile_context = lexical_profile_context("with_binding_item");
+            substitute_lexical_bindings_changed_bounded(expr, walk)
+        }
         Expr::Call { head, args }
             if (is_system_symbol_name(head, "Set") || is_system_symbol_name(head, "Rule"))
                 && args.len() == 2
                 && expr_as_symbol(&args[0]).is_some() =>
         {
-            let substituted_head = substitute_lexical_bindings_changed(head, bindings, shadowed);
-            let substituted_rhs = substitute_lexical_bindings_changed(&args[1], bindings, shadowed);
-
-            if substituted_head.is_none() && substituted_rhs.is_none() {
-                return None;
+            if walk.remaining_call_depth == 0 {
+                return substitute_with_binding_item_changed_iterative(
+                    expr,
+                    walk.bindings,
+                    walk.shadowed,
+                );
             }
 
-            Some(record_lexical_rebuild(
-                "with_binding_item",
-                Expr::call(
-                    substituted_head.unwrap_or_else(|| head.as_ref().clone()),
-                    vec![
-                        args[0].clone(),
-                        substituted_rhs.unwrap_or_else(|| args[1].clone()),
-                    ],
-                ),
-            ))
+            let walk = walk.descend();
+            let _profile_context = lexical_profile_context("with_binding_item");
+            let substituted_head = substitute_lexical_bindings_changed_bounded(head, &walk);
+            let substituted_rhs = substitute_lexical_bindings_changed_bounded(&args[1], &walk);
+
+            if substituted_head.is_none() && substituted_rhs.is_none() {
+                None
+            } else {
+                Some(record_lexical_rebuild(
+                    "with_binding_item",
+                    Expr::call(
+                        substituted_head.unwrap_or_else(|| head.as_ref().clone()),
+                        vec![
+                            args[0].clone(),
+                            substituted_rhs.unwrap_or_else(|| args[1].clone()),
+                        ],
+                    ),
+                ))
+            }
         }
-        _ => substitute_lexical_bindings_changed(expr, bindings, shadowed),
+        Expr::Call { .. } => {
+            if walk.remaining_call_depth == 0 {
+                return substitute_with_binding_item_changed_iterative(
+                    expr,
+                    walk.bindings,
+                    walk.shadowed,
+                );
+            }
+
+            let _profile_context = lexical_profile_context("with_binding_item");
+            substitute_lexical_bindings_changed_bounded(expr, &walk.descend())
+        }
     }
 }
 
