@@ -1469,6 +1469,55 @@ and the median over all 46 same-tier labels was -0.18%. A three-label
 denominator has no stable median of its own; take the tier median over tens of
 labels, or the quotient invents a regression.
 
+**Draft 6 is SPLIT on measurement, and its `DeleteCases` half is CLOSED
+(brief-449, `d83929fe`).** Probing the substitution engines before briefing them
+found that draft 6's bundle was three different problems:
+
+| site | last ok / first fail | against 4,097 |
+|---|---|---|
+| `DeleteCases[_, _, Infinity]` | 1,808 / 1,816 | 2.3x short |
+| `Function` slot substitution over a deep body | 3,685 / 3,693 | 1.11x short |
+| `Module` lexical substitution over a deep body | 3,677 / 3,685 | 1.11x short |
+| `With` lexical substitution over a deep body | 3,677 / 3,685 | 1.11x short |
+| rule-RHS binding substitution over a deep template | clears 4,097, kills by 8,001 | **not short** |
+
+All are process kills; `substitution/` and `cases/delete/` both have zero poll
+points. **The engine draft 6 named first is not short of the contract at all** —
+it is merely fail-open above roughly 6,000, which is the lesser problem in this
+line's own taxonomy. So `DeleteCases` went alone (its own subtree, no caller
+ripple), and the substitution engines get their own brief with their own
+numbers and their ten-file consumer surface.
+
+`DeleteCases` now completes at 4,097 and fails closed above 5,408 — the same
+bracket as `Replace`, confirming the prediction above that converted sites land
+where the shared stability walk binds.
+
+**The second worker A/B stop-loss in a row was noise, and this one needed the
+layout control to settle.** The worker reported +7.14% on the new
+`deletecases-leaf-delete-small` label after two isolated revisions and stopped.
+At my gate, over a six-pass base/candidate/layout window: the target moved
++0.96% against a **+0.87% whole-panel median**, and a layout-control binary —
+HEAD with one function relocated inside its `impl` block, semantically identical
+— moved the same label's within-run quotient **+1.57%** against the candidate's
++1.51%. The candidate is inside the layout floor. The label also measures a
+depth-9 value, which never reaches the iterative tail at all, so the only change
+it can see is one integer comparison.
+
+**Consequence for briefing**: best-of-2 without a whole-panel median is not
+enough to declare a regression on this panel, and the next brief in this line
+must require the worker to report the whole-panel median beside each label.
+
+**Recorded for the memory-accounting line, found by accident here.** A release
+test spelling `DeleteCases[x, 1, Infinity]` literally trips the `NonAmplifying`
+growth assertion: `DeleteCases` is a special form, so the validator measures the
+raw argument — the symbol `x`, 298 proxy bytes — while the result is the
+evaluated 700 KB tree. The declaration is right and the measurement is wrong for
+any special form whose argument is a symbol bound to a large value. It is
+**test-only** (the check lives behind the `test-builtin-memory-growth` cargo
+feature that `rum-stdlib` enables through a dev-dependency), so it is an
+instrument gap rather than a user-facing defect. The certificate works around it
+with `Apply`; fixing the model belongs to the growth-contract line.
+
 **Correction to the organization-line note above.** Re-measured at `59410b75`,
 only one of the three files named there is over 35k: `evaluation_cache/tests.rs`
 at 38 294. `debug_tools/resources/memory.rs` is 32 019 and both `stability.rs`
