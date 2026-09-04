@@ -1571,6 +1571,39 @@ classes reads about 55% high** and must be discarded (both counters non-zero);
 core-class independent, so an all-E-core run is directly comparable with an
 all-P-core one.
 
+**Draft 5 is CUT DOWN on measurement and its fail-open half is CLOSED
+(brief-450, `b7f390ac`).** Probing all nine consumers draft 5 named found that
+**six already clear 4,097** — `MapAt`, `ReplaceAt`, `Insert`, `Delete`,
+`Extract` and list part assignment — so its shared-primitive refactor across
+about fifteen files would have mostly rewritten working code. Two were short and
+fail open, and they are what shipped: multi-spec `Take` 2,573 and deep-path
+`ReplacePart` 2,854, both now completing at 4,097 with the exact rebuilt value.
+
+The third short site is **left open deliberately**: nested association part
+assignment at 1,106 / 1,114, in band. It fails closed, and it brackets
+identically to `MergeNested` (1,114 / 1,122), which points at a shared
+association-side cause worth diagnosing once rather than patching twice.
+
+**This was the first brief to forbid a wall-time A/B**, and the protocol worked
+on both sides. The worker reported identical allocation counts with a
+sensitivity calibration, instruction counts from clean clusters, and the
+migrated runs it discarded — no stop-loss, no revisions chasing noise. At my
+gate the instruments agreed: allocation counts identical, instructions **-1.65%
+on `Take` and -0.94% on `ReplacePart`** against a 0.006% within-cluster spread,
+so both operations are slightly *faster*.
+
+**Opened by this work — a second recursion above the contract.** Above roughly
+11,000 levels both operations return to terminating the process (in band at
+10,000, killed at 12,000), while `Replace`, `DeleteCases` and `ReplaceAll` stay
+in band at 12,000 and the fixture alone clears 20,001. So a different recursion
+in the same two operations reaches that far. For `ReplacePart` the named
+candidate is plan *construction* — `merge_replace_plans`
+(`.../structure_data/replace/plan.rs:113`) recurses over a plan whose depth is
+the path length, and brief-450 bounded only plan *application*. The `Take`-side
+cause is unidentified. It is 2.9x above the ruled height and fails open, so it
+belongs in the same class as binding substitution: a safety gap above the
+contract, needing its own diagnosis, not a patch bolted onto this repair.
+
 **Recorded for the memory-accounting line, found by accident here.** A release
 test spelling `DeleteCases[x, 1, Infinity]` literally trips the `NonAmplifying`
 growth assertion: `DeleteCases` is a special form, so the validator measures the
