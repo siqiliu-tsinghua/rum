@@ -4,7 +4,7 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-02, committed tree through `4c4dbfab`. Uncommitted
+Status checkpoint: 2026-09-04, committed tree through `cc8ba769`. Uncommitted
 performance candidates do not count as completed until their correctness,
 timing, counter, and memory gates have all been reviewed.
 
@@ -1064,8 +1064,15 @@ but left ~8% on `matcher-single-*` because atoms still entered a function
 carrying a depth parameter their arm ignored. The recursive worker now takes a
 decomposed call, so an atom cannot reach it.
 
-**What remains, and why it is not queued.** brief-427 classified brief-422
-§3(e)'s tail: only the rewrite family shares the normalizer mechanism, and
+**What remains, and why it is not queued** — *superseded 2026-09-04 by briefs
+436-446; see "The deep-rebuild class" and "The native stack budget" below. Most
+of the deep failures listed here turned out to share one defect downstream of
+the traversals, the evaluation-stability walk, and the per-site conversions that
+survive that repair are brief-439's steps 2-8. The paragraph is kept because its
+inventory is still the map, and because its warning — measure before briefing —
+is exactly what re-probing under the new budget vindicated.*
+
+brief-427 classified brief-422 §3(e)'s tail: only the rewrite family shares the normalizer mechanism, and
 everything else is its own independent recursion — string-pattern machinery,
 calculus, polynomials, schema conformance, `Flatten[_, Infinity]`, tensor rank,
 `Merge` nested, substitution walks, fingerprints, `MapIndexed` and `Scan`

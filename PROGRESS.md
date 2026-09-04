@@ -2174,3 +2174,91 @@ Three items stay open: the strict-residual class is still quadratic in
 construction (brief-436's options A and B), the explicit task stack that would
 actually reach 4,097 is unscheduled, and the byte guard still cannot see a
 recursion that runs entirely inside one builtin.
+
+## 2026-09-04 (later) — the deep-rebuild class and the stability walk (briefs 439-446)
+
+Opened as "dispatch the remaining three traversal repairs" and re-probing them
+under the new 1 MiB budget found one shared defect instead of three.
+
+**brief-439 (design-only).** A traversal that rebuilds a deep result hands the
+evaluator a tree with fresh `Arc` identities at every level, so every stability
+cache key misses and `call_stability_uncached_with_bloom` walks the whole tree
+through `cached_expr_stability_with_bloom` — mutual recursion in a file where
+`evaluation_depth` never appears, so the byte guard has no poll point for the
+entire descent. That is why `ReplaceAll` on a match, `Apply` at a descending
+spec and `Replace` at all levels died the same way, and why the same operations
+with a rule that never matches survived: the traversal returns
+`Expr::call_shared` with the original pointers and the root's proof still hits.
+brief-425's conversions were not wrong; the shared post-result check downstream
+of them was never converted.
+
+**The certificate panel had a matching hole, and it is the session's largest
+finding.** None of the twelve exercised a rebuild. `Map` and `Apply` used
+`{-4097, 0}`, which in rum selects level 0 only — intended, test-pinned
+semantics, verified against `traversal.rs:142-149` — so they wrapped the value
+once and handed it to an already-iterative `Depth`. `ReplaceAll` replaced a
+symbol absent from the value. All three now assert the exact rebuilt
+`InputForm` string, and each is paired with a shallow companion that pins its
+selector on a three-level fixture. Those companions are the falsifier: pointed
+at the old selectors they fail, and they need no deep value, which matters
+because the pre-fix deep case aborts the test binary.
+
+**Two repairs were rejected before the third worked.** briefs 440 and 441 made
+the walk iterative behind a depth-bounded front. Both were functionally
+complete — every invariant covered by differential tests including an exact
+cache-insertion-order trace, twelve certificates green, counters identical —
+and both cost. Reproduced in my own four-pass window with within-run quotients:
+`downvalue-exact-miss-repeat` +5.6%/+6.9% against a 0.62% base spread,
+`cases-wide` +5.7%/+3.8%, `matcher-single-tiny` +2.4%/+2.2%. A depth parameter
+and an `Option` return on the most-consulted function in the system is not
+free. Preserved as stashes.
+
+**What worked was moving locals, not control flow (brief-442).** The walk cost
+811 B per level and its dominant frame was 584 B — not because the function is
+large but because the whole chain is inlined into it, making the frame the union
+of thirteen data-constructor arms, cache lookup and insertion, head-effect
+computation and profiling tokens. A deep descent executes almost none of that.
+Outlining them gave 255.6 B/level measured, a 3.17x reduction, with the
+previously-regressed families neutral to faster.
+
+**brief-443 measured three fail-closed shapes and none fit** — a per-level floor
+check grew the frame to 272 B and bailed at 3,797; the same check on a stride
+held 256 B but bailed at 4,040; a bare depth counter kept the certificates but
+was not stack-size-honest. All three would have turned nine certificates into
+in-band failures. A well-measured no was the outcome, and it found the route
+out: about 64 bytes of off-by-default profiling state resident in the hot
+recursive frame, which is a hard-line violation independent of any poll. Its
+method is worth keeping — gdb ptrace is denied in the worker's sandbox, so it
+measured the slope from `/proc` VmStk high-water at four heights, without a
+single abort.
+
+**brief-444 removed that state.** The key is a pure function of the head, so it
+is derived inside the cold enabled path rather than carried; the start instant
+moved to a thread-local stack. Prologue 248 → 184, walk 256 → 192 B/level.
+Height 9,500 completes on 2 MiB where 8,008 was the ceiling. The per-head
+profiling surface had no test anywhere; it has an env-gated one now, run against
+HEAD before the change and pasted.
+
+**briefs 445-446 made the walk fail closed.** The strided poll fits at 192
+B/level: bail-out bisected at my gate to 5,339 ok / 5,341, a margin of 1,242
+levels (30%) over the ruled 4,097, and height 20,001 on a 2 MiB stack moves from
+exit 134 to an in-band `General::reslim`. The bail-out is the existing
+early-unstable return of `(false, bloom)` — stability only decides whether
+evaluation may be skipped, so a conservative `false` is always safe and needs no
+error channel. brief-445 put the counter at the walk's entry, where it also ran
+for atoms and cache hits and cost `list-literal-small` +7.99%/+7.98%; moving it
+to the call-cache miss path removed that entirely and is the more honest meter.
+Two codec depth tests surfaced with the budget enforced and were given declared
+threads like their XML sibling, not a lowered depth.
+
+Gate at each step: workspace 2333/0/20 without the ZeroMQ skip flag, twelve
+release certificates, the profiling certificate, and a four-pass panel I ran
+myself rather than reading. My own instrument lied twice — a parser reading the
+wrong filename that printed a table of zeroes, and a bisection whose binaries
+this host had wiped from `/tmp`, so every run failed with exit 127 and it
+converged on the low bound. The calibration point caught the second.
+
+Still open: brief-439's steps 2-8, the per-site conversions whose projections
+rest on brackets measured under the old 6 MiB budget; the same profiling-state
+defect in the evaluator's own 4.7 KiB/level chain, worth an order of magnitude
+more than the one just fixed; and three files over the 35k organization line.

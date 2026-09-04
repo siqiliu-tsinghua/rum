@@ -192,6 +192,49 @@ Consequences for how I present and pick work:
 
 ## Current direction (read these for state)
 
+- **The traversal-depth line's second half is CLOSED (2026-09-04, briefs
+  436-446, `0f679699` through `cc8ba769`).** `TODO.md` is authoritative; the two
+  2026-09-04 `PROGRESS.md` entries have the narrative. Three defects, each found
+  by re-probing the one before it: the native stack guard's default was 6 MiB
+  against the ruled 2 MiB embedder stack, so on the ruled configuration it could
+  never fire and `SECURITY.md` published the opposite promise; a traversal that
+  rebuilds a deep result was killed not by its own walker but by the shared
+  evaluation-stability walk downstream of it; and that walk carried
+  off-by-default profiling state in its recursive frame. It now costs 192 bytes
+  per level instead of 811, reaches physical height 4,097 with 30% margin, and
+  fails closed above it.
+
+  **Four things from this are method, not history.**
+
+  - *A certificate must force the transformation it names.* Twelve release
+    certificates were green and **none exercised a rebuild** — two used a level
+    spec selecting only the root, one replaced a symbol absent from the value,
+    and every one asserted a summary (`Depth`, `Length`) that is correct when
+    the transform never ran. The rule now: a unique deepest target whose change
+    must propagate, an assertion on the exact result, and a selector pinned
+    separately on a shallow fixture. That shallow companion is also the
+    falsifier when the deep case aborts the test binary.
+  - *On the hottest function, move locals, not control flow.* Two functionally
+    complete iterative conversions — differential tests, cache-insertion-order
+    traces, all invariants — cost 2-7% on the evaluator's hottest label
+    families, because a depth parameter and an `Option` return on the
+    most-consulted function is not free. Outlining the cold branches instead
+    cost nothing and cut the frame 3.17x. Both rejections are kept as stashes.
+  - *Stack bytes per level are a first-class cost, and off-by-default state
+    living in a hot recursive frame is a hard-line violation even at zero CPU
+    cost.* The profiling key returned `None` immediately when disabled; its
+    64 bytes of frame were what the depth contract was actually made of.
+  - *Put the check where the growth is.* The same strided poll cost
+    +7.99%/+7.98% on an atom-heavy label at the walk's entry and nothing at all
+    on the call-cache miss path, which is the only place that recurses.
+
+  Measurement notes worth reusing: `/proc` VmStk high-water at four heights
+  gives a stack slope with no abort at all, and is what to use when gdb ptrace
+  is denied. Two of my own instruments lied again — a parser reading the wrong
+  filename that printed a table of zeroes, and a bisection whose binaries this
+  host had wiped from `/tmp` mid-session, so every run failed and it converged
+  on the low bound.
+
 - **Two lines are PART BUILT and neither is closed (2026-09-03, briefs
   412-427).** `TODO.md` is authoritative for both; the 2026-09-03 `PROGRESS.md`
   entry has the narrative. The memory-accounting line made the session walk
