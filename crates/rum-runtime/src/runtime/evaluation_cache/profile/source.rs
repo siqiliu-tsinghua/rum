@@ -13,7 +13,7 @@ pub(super) struct SymbolTimingFrame {
 
 #[derive(Clone, Copy, Debug)]
 pub(super) struct CallStabilityTimingFrame {
-    key: Option<CallStabilitySourceHeadKey>,
+    start: Instant,
     child_nanos: u64,
 }
 
@@ -154,16 +154,6 @@ fn record_symbol_timing_profile_counter(
     entry.self_nanos = entry.self_nanos.saturating_add(self_nanos);
 }
 
-pub(in crate::runtime::evaluation_cache) fn call_stability_source_head_key(
-    head: &Expr,
-) -> Option<CallStabilitySourceHeadKey> {
-    if !evaluation_cache_profile_enabled() {
-        return None;
-    }
-
-    call_stability_source_head_key_enabled(head)
-}
-
 #[cold]
 #[inline(never)]
 fn call_stability_source_head_key_enabled(head: &Expr) -> Option<CallStabilitySourceHeadKey> {
@@ -188,22 +178,25 @@ fn call_stability_head_shape(head: &Expr) -> CallStabilityHeadShape {
 }
 
 pub(in crate::runtime::evaluation_cache) fn record_call_stability_source_head_outcome(
-    key: Option<CallStabilitySourceHeadKey>,
+    head: &Expr,
     outcome: CallStabilityProfileOutcome,
 ) {
-    let Some(key) = key else {
+    if !evaluation_cache_profile_enabled() {
         return;
-    };
+    }
 
-    record_call_stability_source_head_outcome_enabled(key, outcome);
+    record_call_stability_source_head_outcome_enabled(head, outcome);
 }
 
 #[cold]
 #[inline(never)]
 fn record_call_stability_source_head_outcome_enabled(
-    key: CallStabilitySourceHeadKey,
+    head: &Expr,
     outcome: CallStabilityProfileOutcome,
 ) {
+    let Some(key) = call_stability_source_head_key_enabled(head) else {
+        return;
+    };
     CALL_STABILITY_SOURCE_HEAD_STATS.with(|stats| {
         let mut stats = stats.borrow_mut();
         let entry = stats.entry(key).or_default();
@@ -232,61 +225,58 @@ fn record_call_stability_source_head_outcome_enabled(
     });
 }
 
-pub(in crate::runtime::evaluation_cache) fn call_stability_timing_start(
-    key: Option<CallStabilitySourceHeadKey>,
-) -> Option<Instant> {
+pub(in crate::runtime::evaluation_cache) fn call_stability_timing_start() {
     if !evaluation_cache_profile_enabled() {
-        return None;
+        return;
     }
 
-    call_stability_timing_start_enabled(key)
+    call_stability_timing_start_enabled();
 }
 
 #[cold]
 #[inline(never)]
-fn call_stability_timing_start_enabled(key: Option<CallStabilitySourceHeadKey>) -> Option<Instant> {
+fn call_stability_timing_start_enabled() {
     CALL_STABILITY_TIMING_STACK.with(|stack| {
         stack.borrow_mut().push(CallStabilityTimingFrame {
-            key,
+            start: Instant::now(),
             child_nanos: 0,
         });
     });
-    Some(Instant::now())
 }
 
 pub(in crate::runtime::evaluation_cache) fn record_call_stability_source_head_timing(
+    head: &Expr,
     outcome: CallStabilityProfileOutcome,
-    start: Option<Instant>,
 ) {
-    let Some(start) = start else {
+    if !evaluation_cache_profile_enabled() {
         return;
-    };
+    }
 
-    record_call_stability_source_head_timing_enabled(outcome, start);
+    record_call_stability_source_head_timing_enabled(head, outcome);
 }
 
 #[cold]
 #[inline(never)]
 fn record_call_stability_source_head_timing_enabled(
+    head: &Expr,
     outcome: CallStabilityProfileOutcome,
-    start: Instant,
 ) {
-    let elapsed_nanos = elapsed_nanos_since(start);
-    let frame = CALL_STABILITY_TIMING_STACK.with(|stack| {
+    let timing = CALL_STABILITY_TIMING_STACK.with(|stack| {
         let mut stack = stack.borrow_mut();
-        let frame = stack.pop();
+        let frame = stack.pop()?;
+        let elapsed_nanos = elapsed_nanos_since(frame.start);
         if let Some(parent) = stack.last_mut() {
             parent.child_nanos = parent.child_nanos.saturating_add(elapsed_nanos);
         }
-        frame
+        Some((elapsed_nanos, frame.child_nanos))
     });
-    let Some(frame) = frame else {
+    let Some((elapsed_nanos, child_nanos)) = timing else {
         return;
     };
-    let Some(key) = frame.key else {
+    let Some(key) = call_stability_source_head_key_enabled(head) else {
         return;
     };
-    let self_nanos = elapsed_nanos.saturating_sub(frame.child_nanos);
+    let self_nanos = elapsed_nanos.saturating_sub(child_nanos);
 
     CALL_STABILITY_SOURCE_HEAD_STATS.with(|stats| {
         let mut stats = stats.borrow_mut();
@@ -315,18 +305,21 @@ fn record_call_stability_source_head_timing_enabled(
 }
 
 pub(in crate::runtime::evaluation_cache) fn record_call_stability_source_head_insertion(
-    key: Option<CallStabilitySourceHeadKey>,
+    head: &Expr,
 ) {
-    let Some(key) = key else {
+    if !evaluation_cache_profile_enabled() {
         return;
-    };
+    }
 
-    record_call_stability_source_head_insertion_enabled(key);
+    record_call_stability_source_head_insertion_enabled(head);
 }
 
 #[cold]
 #[inline(never)]
-fn record_call_stability_source_head_insertion_enabled(key: CallStabilitySourceHeadKey) {
+fn record_call_stability_source_head_insertion_enabled(head: &Expr) {
+    let Some(key) = call_stability_source_head_key_enabled(head) else {
+        return;
+    };
     CALL_STABILITY_SOURCE_HEAD_STATS.with(|stats| {
         let mut stats = stats.borrow_mut();
         let entry = stats.entry(key).or_default();
@@ -335,18 +328,21 @@ fn record_call_stability_source_head_insertion_enabled(key: CallStabilitySourceH
 }
 
 pub(in crate::runtime::evaluation_cache) fn record_call_stability_source_head_rewritten_dirty_skip(
-    key: Option<CallStabilitySourceHeadKey>,
+    head: &Expr,
 ) {
-    let Some(key) = key else {
+    if !evaluation_cache_profile_enabled() {
         return;
-    };
+    }
 
-    record_call_stability_source_head_rewritten_dirty_skip_enabled(key);
+    record_call_stability_source_head_rewritten_dirty_skip_enabled(head);
 }
 
 #[cold]
 #[inline(never)]
-fn record_call_stability_source_head_rewritten_dirty_skip_enabled(key: CallStabilitySourceHeadKey) {
+fn record_call_stability_source_head_rewritten_dirty_skip_enabled(head: &Expr) {
+    let Some(key) = call_stability_source_head_key_enabled(head) else {
+        return;
+    };
     CALL_STABILITY_SOURCE_HEAD_STATS.with(|stats| {
         let mut stats = stats.borrow_mut();
         let entry = stats.entry(key).or_default();

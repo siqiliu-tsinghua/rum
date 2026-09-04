@@ -1297,8 +1297,25 @@ Outlining them behind `#[cold] #[inline(never)]` gave **255.6 B/level measured**
 counters byte-identical and the previously-regressed families neutral to
 faster.
 
-**Still open, deliberately.** Above about 8,008 levels on a 2 MiB stack the walk
-still ends the process, because it remains unbounded and unpolled. The ruled
+**brief-443 measured three fail-closed shapes and none fit** — a per-level floor
+check grows the frame to 272 B and bails at 3,797; the same check on a stride
+holds 256 B but bails at 4,040; a bare depth counter keeps the certificates but
+is not stack-size-honest and regresses `do-count-null`. All three would have
+turned nine certificates into in-band failures, so a well-measured no was the
+outcome. It also found the route out: about 64 bytes of off-by-default
+profiling state resident in the hot recursive frame, which is a hard-line
+violation independent of any poll. **brief-444 removed it** — the key is derived
+inside the cold enabled path and the start instant moved to a thread-local
+stack — taking the walk to **192 B/level** (184 B prologue plus the return
+address, `/proc` slope 191.1). Height 9,500 now completes on 2 MiB where 8,008
+was the ceiling, and the previously untested per-head profiling surface gained
+an env-gated certificate that was run against HEAD before the change.
+
+**Still open, deliberately.** Above about 10,700 levels on a 2 MiB stack the walk
+still ends the process, because it remains unbounded and unpolled. The strided
+poll is now worth re-measuring: at 192 B/level a 1 MiB budget holds 5,461
+levels, 33% above the ruled 4,097, where at 256 B it held 4,096 and fell 57
+short. The ruled
 4,097 contract is met with roughly 2x headroom, but the fail-closed promise is
 not. A strided poll inside the walk would convert that into an in-band error at
 some hot-path cost that has not been measured. That is the next decision, and it

@@ -904,3 +904,65 @@ fn repeated_unrelated_writes_do_not_bump_call_stability_generation() {
         "h[1, 2, 3]"
     );
 }
+
+const CALL_STABILITY_PROFILE_GATE_CHILD_ENV: &str = "RUM_CALL_STABILITY_PROFILE_GATE_CHILD";
+
+#[test]
+#[ignore = "release-only profiling gate; run with RUM_PROFILE_EVALUATION_CACHE=1"]
+fn call_stability_profile_reports_per_source_head_outcomes() {
+    assert!(
+        std::env::var_os("RUM_PROFILE_EVALUATION_CACHE")
+            .is_some_and(|value| !value.is_empty() && value != "0"),
+        "this profiling gate must be run with RUM_PROFILE_EVALUATION_CACHE=1"
+    );
+
+    if std::env::var_os(CALL_STABILITY_PROFILE_GATE_CHILD_ENV).is_some() {
+        let mut session = Session::default();
+        session
+            .eval_text("profileGate[] := profileLeaf[1]")
+            .unwrap();
+        reset_evaluation_cache_profile_counters();
+
+        let outcome = session.eval_script("profileGate[]\nprofileGate[]").unwrap();
+        assert_eq!(outcome.value.to_string(), "profileLeaf[1]");
+        print_evaluation_cache_profile_snapshot("call-stability-profile-gate");
+        return;
+    }
+
+    let current_exe = std::env::current_exe().unwrap();
+    let test_name = format!(
+        "{}::call_stability_profile_reports_per_source_head_outcomes",
+        module_path!()
+            .strip_prefix("rum_runtime::")
+            .unwrap_or(module_path!())
+    );
+    let output = std::process::Command::new(current_exe)
+        .arg("--exact")
+        .arg(test_name)
+        .arg("--ignored")
+        .arg("--nocapture")
+        .arg("--test-threads=1")
+        .env(CALL_STABILITY_PROFILE_GATE_CHILD_ENV, "1")
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "profiling gate child failed\nstdout:\n{}\nstderr:\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
+
+    let stderr = String::from_utf8(output.stderr).unwrap();
+    let rows = stderr
+        .lines()
+        .filter(|line| line.starts_with("rum-profile evaluation-cache call-stability-source-head "))
+        .collect::<Vec<_>>();
+    assert_eq!(
+        rows,
+        [
+            "rum-profile evaluation-cache call-stability-source-head rank=1 source=profileGate head=profileLeaf checks=2 hits=1 misses=1 miss_absent=1 miss_generation=0 miss_dirty=0 miss_pointer=0 insertions=1 rewritten_dirty_skips=0"
+        ],
+        "the profiling gate must retain its per-source/head outcome row\nchild stderr:\n{stderr}"
+    );
+    eprintln!("{}", rows[0]);
+}

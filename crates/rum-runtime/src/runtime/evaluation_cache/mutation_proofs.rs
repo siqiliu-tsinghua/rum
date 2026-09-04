@@ -79,9 +79,8 @@ impl Session {
             self.clear_call_stability_cache_for_size_cap();
         }
 
-        let profile_key = call_stability_source_head_key(head.as_ref());
         record_evaluation_cache_counter(&CALL_STABILITY_INSERT_COUNT, "call_stability_insertions");
-        record_call_stability_source_head_insertion(profile_key);
+        record_call_stability_source_head_insertion(head.as_ref());
         self.call_stability_cache.insert(
             CallStabilityCacheKey::new(head, args),
             CallStabilityCacheEntry {

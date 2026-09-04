@@ -13,9 +13,8 @@ use source::{
     EVALUATION_PROFILE_SOURCE_STACK, EVALUATION_PROFILE_TIMING_STACK,
 };
 pub(super) use source::{
-    call_stability_source_head_key, call_stability_timing_start,
-    current_evaluation_profile_source_symbol, record_call_stability_source_head_insertion,
-    record_call_stability_source_head_outcome,
+    call_stability_timing_start, current_evaluation_profile_source_symbol,
+    record_call_stability_source_head_insertion, record_call_stability_source_head_outcome,
     record_call_stability_source_head_rewritten_dirty_skip,
     record_call_stability_source_head_timing,
 };

@@ -9,6 +9,19 @@ minor versions may include breaking changes; the project aims to follow
 
 ### Fixed
 
+- Off-by-default profiling state no longer occupies the evaluation-stability
+  walk's recursive frame. The walk computed a source/head profiling key and a
+  start instant at the top of each level and held both across the recursive
+  call. The key constructor returns immediately when profiling is disabled, so
+  no work was done on the default path — but the locals still occupied about 64
+  bytes of frame per level, and on a recursive walk stack bytes per level are
+  what the depth contract is made of. The key is now derived inside the cold
+  profiling-enabled path from the head it already has, and the start instant
+  moved to a thread-local stack, taking the walk from 256 to 192 bytes per
+  level. A rebuilt result of physical height 9,500 now completes on a 2 MiB
+  stack where 8,008 was previously the ceiling. Profiling output, cache
+  contents and counters are unchanged.
+
 - A traversal that rebuilds a deep result no longer ends the process. The
   rebuilt tree carries fresh identities at every level, so every
   evaluation-stability cache key misses and the stability walk descends the
