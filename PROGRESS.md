@@ -2262,3 +2262,87 @@ Still open: brief-439's steps 2-8, the per-site conversions whose projections
 rest on brackets measured under the old 6 MiB budget; the same profiling-state
 defect in the evaluator's own 4.7 KiB/level chain, worth an order of magnitude
 more than the one just fixed; and three files over the 35k organization line.
+
+## 2026-09-05 — the deep-rebuild tail, and three instruments that lied (briefs 447-456)
+
+Ten briefs closing brief-439's tail and the association class brief-454 opened.
+Every one of them was scoped by re-probing first, and **every re-probe moved the
+scope** — that is the finding of the session, not any single conversion.
+
+**What landed.** `Replace` (1,308 -> 5,843, fail-closed), `D` (1,738 -> completes
+at 4,097), `DeleteCases` (1,808 -> 5,408), multi-spec `Take` (2,573) and
+deep-path `ReplacePart` (2,854) both to 4,097, the lexical and rule-binding
+substitution engines (3,385 and 4,430 -> 5,867/5,843), the association arm of the
+stability walk, and `MergeNested`. The last three association sites — `Map` over
+a deep association, a read after nested key-path assignment, and `MergeNested` —
+now run to the construction ceiling at 5,457 wrappers, so the operation is no
+longer the limit in any of them.
+
+**Re-probing changed the plan five times.** draft 5 lost six of its nine named
+consumers, which already cleared the contract; draft 6 split into two briefs
+because `DeleteCases` and the substitution engines had different shortfalls and
+different caller surfaces; slot substitution left the scope entirely once a
+probe using a real `Slot[1]` replaced one that used a named parameter and
+therefore measured the lexical engine; rule-binding substitution entered the
+scope despite clearing the contract, because its 1.08x margin was thinner than
+the ~8% these brackets drift between unrelated builds; and `MergeNested` flipped
+from fail-closed to fail-open the moment brief-455 removed the polled cost that
+used to be hit first. **Removing a guard-adjacent cost can convert a
+fail-closed site into a fail-open one.**
+
+**The measurement lane was rebuilt mid-session, on a user ruling.** This host has
+P-cores and E-cores 1.27x apart in clock with no pinning, so a wall-time
+percentage is an indication and never proof. Two worker stop-losses (+0.61% and
++7.14%) turned out to be noise; the second needed a layout-control binary to
+settle. `CLAUDE.md`'s standing "counters beat timings" rule had lapsed and is
+reinstated, and the lane now has three instruments: allocation counts
+(`RUM_PROFILE_ALLOC`), retired instructions (`perf stat -e instructions:u`,
+readable unprivileged here), and depth brackets, which are integers and immune
+to all of it.
+
+**Three instruments lied, and each cost a wrong conclusion before it was
+caught.**
+
+- *The hybrid PMU.* A run that migrates between `cpu_atom` and `cpu_core` reads
+  about 55% high. Discard it; both counters non-zero is the tell.
+- *The build path.* Comparing a binary built in a `git worktree` under `/tmp`
+  against one built in the repository read **-8.4%** on probes the change could
+  not touch. Same-shaped paths bring it to **+0.005%**. At the brief-455 gate I
+  attributed those numbers to codegen from a module growing 444 KB and shipped
+  that attribution into the record; the brief-456 gate refuted it. The tell was
+  already in my data — two unrelated changes produced the same figure on the
+  same untouched probes — and I stopped at the first explanation that fit.
+- *The height unit.* One logical association wrapper is two physical levels,
+  because `Association["k" -> v]` renders as `Association[Rule[…]]`. I compared
+  wrapper counts against a physical-height contract and overstated three
+  shortfalls twofold. `Depth` hides the `Rule` layer and must never be the unit.
+
+**A worker diagnosis was accepted and one of its sections refuted.** brief-454
+correctly identified that `Map` and post-assignment reads are the association
+arm of the same stability walk this line had already shrunk on its generic arm,
+carrying a 400 B association helper and a 112 B rule helper above the 192 B
+generic packet. Its attribution of the shared 5,455 bracket to `Expr` teardown
+was wrong: construction alone brackets identically, in band, before any output.
+That mattered because the teardown reading would have sent a later reader to
+optimize `Expr::drop`, a lane the standing debt already records as tried and
+rejected.
+
+**One change was accepted over its own stated bar, deliberately.** The lexical
+substitution front costs +0.714% instructions on `With[{x = 1}, x + 1]` against
+a ±0.15% bar. Two shapes were built and measured; the alternative, a
+thread-local depth, was slower at +1.085% and carried five manual enter/leave
+pairs with no `Drop` guard, whose breakage would silently shrink a thread's
+recursion budget. The cost buys the removal of a process kill at 3,385 levels,
+and the decision is recorded as a measured trade rather than a waiver.
+
+**Dispatch failures, cause open.** Three dispatches were terminated mid-run with
+no error text and no exit line, each after edits had landed and before
+verification. It is not the content filter — the three recorded filter kills
+ended with `exit 1` and a policy message — and not a size or duration ceiling,
+since the three failures are the three shortest logs in the line while a 15.3 MB
+run over 18 minutes completed. Recorded as sightings; the recovery that worked
+was to shrink the brief and keep the long verification on the director's side.
+
+Still open: brief-454's drafts C through J, `MapIndexed` at 2,694 (fail-closed),
+and the second recursion inside `Take`/`ReplacePart` that terminates the process
+above roughly 11,000, for which `merge_replace_plans` is the named candidate.

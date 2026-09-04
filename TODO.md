@@ -4,7 +4,7 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-04, committed tree through `59410b75`. Uncommitted
+Status checkpoint: 2026-09-05, committed tree through `bd172345`. Uncommitted
 performance candidates do not count as completed until their correctness,
 timing, counter, and memory gates have all been reviewed.
 
