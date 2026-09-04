@@ -231,6 +231,7 @@ ClearAll[
   gMicroGuardedRewriteRule,
   gMicroGuardedRewriteFallbackRules,
   gMicroWideTraversal,
+  gMicroDeleteCasesLeafDeleteSmall,
   gMicroWideAssociation,
   gMicroAssociationPartWidth4000,
   gMicroAssociationPartWidth32000,
@@ -367,6 +368,7 @@ gMicroGuardedRewriteFallbackRules = {
   x_Integer :> x
 };
 gMicroWideTraversal = Range[rumMicroN[1600]];
+gMicroDeleteCasesLeafDeleteSmall = Nest[List, 1, 8];
 gMicroReplaceLeafRebuildSmall = Nest[List, 1, 8];
 gMicroWideAssociation = AssociationThread[
   Range[rumMicroN[1600]] -> Range[rumMicroN[1600]]
@@ -601,6 +603,12 @@ rumMicroOnce[
   rumMicroN[1600],
   DeleteCases[gMicroWideAssociation, _String, {1}]
 ];
+rumMicroBench[
+  "deletecases-leaf-delete-small",
+  rumMicroN[500],
+  DeleteCases[gMicroDeleteCasesLeafDeleteSmall, 1, Infinity]
+];
+If[SameQ[rumMicroSink, Nest[List, {}, 7]], Null, Exit[2]];
 rumMicroOnce[
   "replace-wide-no-match",
   rumMicroN[1600],

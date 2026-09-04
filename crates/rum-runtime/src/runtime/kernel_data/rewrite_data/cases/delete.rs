@@ -4,10 +4,15 @@ use resume_frames::*;
 use super::*;
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
+mod iterative;
+use iterative::*;
+
 mod suspended_state;
 use suspended_state::*;
 
 mod traversal;
+
+const RECURSIVE_DELETE_CASES_CALL_DEPTH: usize = 16;
 
 impl Session {
     pub(in crate::runtime) fn eval_delete_cases(

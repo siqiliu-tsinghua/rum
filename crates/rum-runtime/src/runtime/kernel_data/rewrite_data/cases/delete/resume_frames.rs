@@ -266,6 +266,33 @@ impl crate::runtime::suspension::SuspensionFrame for FinishDeleteCasesAtCurrentN
 }
 
 #[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
+pub(super) struct DriveDeleteCasesTraversalSuspensionFrame {
+    pub(super) state: DeleteCasesTraversalState,
+    pub(super) added: usize,
+}
+
+impl crate::runtime::suspension::SuspensionFrame for DriveDeleteCasesTraversalSuspensionFrame {
+    fn resume(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+    ) -> crate::runtime::suspension::FrameAction {
+        let state = self.state.clone();
+        let added = self.added;
+        let resumed = match outcome {
+            Ok(resumed_value) => {
+                let outcome = <rewrite_data::DeleteCasesOutcome as crate::runtime::suspension::ContinuationValue>::from_continuation_expr(resumed_value);
+                session
+                    .resume_delete_cases_traversal(state, outcome, added)
+                    .map(|value| <rewrite_data::DeleteCasesOutcome as crate::runtime::suspension::ContinuationValue>::into_continuation_expr(value))
+            }
+            Err(error) => Err(error),
+        };
+        crate::runtime::suspension::FrameAction::complete(resumed)
+    }
+}
+
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct DeleteCasesCallChildrenFromQueueSuspensionFrame1 {
     pub(super) deleted_before: usize,
     pub(super) subtree_start: usize,

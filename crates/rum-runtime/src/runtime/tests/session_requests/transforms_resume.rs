@@ -438,3 +438,43 @@ fn resume_eval_request_with_input_can_finish_deletecases_after_suspending_match_
 
     assert_eq!(response.value.to_string(), "f[g[], h[3]]");
 }
+
+#[test]
+fn deletecases_iterative_tail_match_resume_matches_uninterrupted_call_walk() {
+    let wrapper_count = 20;
+    let target = format!(
+        "{}1{}",
+        "f[".repeat(wrapper_count),
+        "]".repeat(wrapper_count)
+    );
+    let expected = format!(
+        "{}{}",
+        "f[".repeat(wrapper_count),
+        "]".repeat(wrapper_count)
+    );
+    let source = format!(
+        "DeleteCases[{target}, x_Integer /; MatchQ[InputString[\"cond: \"], \"yes\"], Infinity, 1]"
+    );
+
+    assert_suspend_resume_matches_queued(&source, &["yes"], &expected);
+}
+
+#[test]
+fn deletecases_iterative_tail_match_resume_matches_uninterrupted_association_walk() {
+    let wrapper_count = 17;
+    let target = format!(
+        "{}<|a -> 1, b -> 2|>{}",
+        "f[".repeat(wrapper_count),
+        "]".repeat(wrapper_count)
+    );
+    let expected = format!(
+        "{}Association[Rule[b, 2]]{}",
+        "f[".repeat(wrapper_count),
+        "]".repeat(wrapper_count)
+    );
+    let source = format!(
+        "DeleteCases[{target}, x_Integer /; MatchQ[InputString[\"cond: \"], \"yes\"], Infinity, 1]"
+    );
+
+    assert_suspend_resume_matches_queued(&source, &["yes"], &expected);
+}

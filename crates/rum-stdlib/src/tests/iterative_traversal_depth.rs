@@ -170,6 +170,50 @@ fn replace_active_spine_returns_in_band_resource_error_on_two_mib() {
 }
 
 #[test]
+#[ignore = "release-only deployment-stack probe; run explicitly with --release"]
+fn deletecases_completes_at_physical_height_4097_on_two_mib() {
+    let certificate = run_on_two_mib_thread("deletecases-depth-4097", || {
+        evaluate_string_certificate("ToString[Apply[DeleteCases, {x, 1, Infinity}], InputForm]")
+    });
+    assert_eq!(
+        certificate,
+        nested_input_form(TARGET_PHYSICAL_HEIGHT - 1, "")
+    );
+}
+
+#[test]
+#[ignore = "release-only active-spine safety probe; run explicitly with --release"]
+fn deletecases_active_spine_returns_in_band_resource_error_on_two_mib() {
+    let result = run_on_two_mib_thread("deletecases-active-spine", || {
+        let mut session = Session::new();
+        install_core(&mut session);
+        let source = format!(
+            "x = 1; Do[x = f[x], {{i, {}}}]; held = Apply[HoldComplete, {{x}}]; f[y_] := y; Apply[DeleteCases, {{held, HoldComplete, All, Heads -> True}}]",
+            TARGET_PHYSICAL_HEIGHT - 1
+        );
+        let outcome = session
+            .eval_text(&source)
+            .expect("active DeleteCases spine should fail in band");
+        assert!(
+            outcome
+                .messages
+                .iter()
+                .any(|message| message.symbol == "General" && message.tag == "reslim")
+        );
+        assert_eq!(
+            session
+                .eval_text("1 + 1")
+                .expect("session should remain usable after the resource error")
+                .value
+                .to_string(),
+            "2"
+        );
+        outcome.value.to_string()
+    });
+    assert_eq!(result, "TerminatedEvaluation[\"StackLimit\"]");
+}
+
+#[test]
 #[ignore = "release-only active-spine safety probe; run explicitly with --release"]
 fn d_nested_sin_completes_at_physical_height_4097_on_two_mib() {
     let certificate = run_on_two_mib_thread("d-nested-sin-depth-4097", || {
@@ -236,6 +280,22 @@ fn replace_certificate_companion_pins_descending_selector() {
     assert_eq!(
         evaluate_shallow_input_form("Replace[{{{1}}}, 1 -> 2, {0, Infinity}]"),
         "{{{2}}}"
+    );
+}
+
+#[test]
+fn deletecases_certificate_companion_pins_descending_selector() {
+    assert_eq!(
+        evaluate_shallow_input_form("DeleteCases[{{{1}}}, 1, Infinity]"),
+        "{{{}}}"
+    );
+}
+
+#[test]
+fn deletecases_limit_pins_post_order_visit_order() {
+    assert_eq!(
+        evaluate_shallow_input_form("DeleteCases[{{{1}}, {2}, {3}}, _List, Infinity, 2]"),
+        "{{2}, {3}}"
     );
 }
 

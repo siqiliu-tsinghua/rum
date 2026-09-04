@@ -1,7 +1,7 @@
 use super::*;
 
 impl Session {
-    fn finish_delete_cases_at_current_node(
+    pub(super) fn finish_delete_cases_at_current_node(
         &mut self,
         expr: Expr,
         pattern: Expr,
@@ -60,6 +60,16 @@ impl Session {
         level: usize,
         deleted_before: usize,
     ) -> Result<DeleteCasesOutcome, EvalError> {
+        if level >= RECURSIVE_DELETE_CASES_CALL_DEPTH && matches!(expr, Expr::Call { .. }) {
+            return self.delete_cases_owned_iterative(
+                expr,
+                pattern,
+                traversal,
+                level,
+                deleted_before,
+            );
+        }
+
         match expr {
             Expr::Atom(_) => self.finish_delete_cases_at_current_node(
                 expr,
