@@ -12,6 +12,38 @@ changing any behaviour.
 **The working tree already contains brief-451's change. Revise it in place.**
 Do not revert it, do not start over, and do not lower `TARGET_PHYSICAL_HEIGHT`.
 
+## State of the working tree — read this first (updated 2026-09-04)
+
+An earlier dispatch of this brief was interrupted by a network fault **after its
+edits were applied and before any verification ran**. The tree you are looking at
+therefore already contains, on top of brief-451's conversion, a first revision
+attempt: a `LexicalWalk<'bindings, 'map, 'shadowed>` context struct with
+`descend()` and a shadow-swapping constructor
+(`lexical_substitution.rs:54-90`), with the arms taking `(expr, &LexicalWalk)`.
+
+**Nothing in that state has been tested.** No `cargo test` run exists for it.
+Verify it before building on it: if the first attempt broke behaviour you need
+to know that before a second shape is layered on top.
+
+**I measured it at the gate**, base `3890308a` against that tree, plain
+`--release`, minimum of the tight clean cluster:
+
+| probe | brief-451 shape | first attempt | bar |
+|---|---:|---:|---|
+| `With[{wx = 1}, wx + 1]` x20 000 | +1.115% | **+0.713%** | ±0.15% |
+| `With @@ {{wv -> 7}, Nest[List, wv, 8]}` x2 000 | +0.748% | **+0.411%** | +0.15% |
+
+The context struct is a real improvement — it removed about a third of the cost
+— and it does not meet the bar. **That counts as attempt one.** Keep it if your
+next shape builds on it, or replace it; either way you have one more attempt,
+and then you report the numbers for each.
+
+The obvious untried shape is a **thread-local depth**, which removes even the
+per-child `descend()` copy of two references and a `usize`. brief-444 did the
+analogous thing on the stability walk, moving a profiling start instant into a
+thread-local stack to get it out of the hot frame. Anything else that meets the
+bar is equally welcome.
+
 ## What I measured at the gate — treat as given, do not re-run
 
 Base is `3890308a` (brief-451's brief commit, before its code), candidate is the
