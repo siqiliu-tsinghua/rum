@@ -1592,7 +1592,47 @@ gate the instruments agreed: allocation counts identical, instructions **-1.65%
 on `Take` and -0.94% on `ReplacePart`** against a 0.006% within-cluster spread,
 so both operations are slightly *faster*.
 
-**Opened by this work — a second recursion above the contract.** Above roughly
+**Draft 6's substitution half is CLOSED (briefs 451-453, `7acff251`), and it is
+the first change this line accepted over its own stated bar.** The lexical
+engine ended the process at 3,385 — `With`, `Module` and a named-parameter
+`Function` share that bracket through `substitute_lexical_bindings_changed` —
+and rule binding at 4,430. Both now complete at 4,097 with the exact substituted
+value and fail closed above 5,867 and 5,843, the same bracket as every other
+converted site.
+
+Two corrections the re-probe forced, both of which moved the scope:
+**slot substitution was never short** — the earlier "3,685" figure came from a
+probe using a *named parameter*, which routes through the lexical engine; a true
+`Slot[1]` probe clears 4,097 and fails closed at 5,867 — and **rule binding was
+in scope after all**, because its 1.08x margin is thinner than the ~8% the
+lexical bracket drifted over fourteen unrelated commits. A margin thinner than
+the drift is not a margin.
+
+**The cost, and why it was accepted.** The ordinary `With[{x = 1}, x + 1]` path
+costs **+0.714% instructions**; `Module` is -0.083% and rule RHS -0.159%, and
+allocation counts are unchanged. That is over the ±0.15% bar brief-452 set, and
+it is accepted on measurement rather than waived: two shapes were built and
+measured, and the alternative — a thread-local depth — was **slower** at +1.085%
+and carried five manual `enter`/`leave` pairs with no `Drop` guard, a shape
+whose breakage would be a silently shrinking recursion budget for the rest of a
+thread rather than a failure. The accepted shape puts the depth in a
+`LexicalWalk` context struct beside the bindings and the shadow set, so the arms
+take *fewer* arguments than before the bound existed.
+
+**Two method notes.** The instrument is what made this decision possible at all:
++0.714% is invisible under this host's 27% scheduling spread, so on wall time
+this would have shipped unexamined. And the semantics at risk was the per-subtree
+shadow set — several arms build a different set for one child than for its
+siblings — which is now pinned by a regression at depth 20, past the recursive
+front, asserting that an inner `With` shadows only inside its own subtree.
+
+**Also recorded: two dispatches were cut off mid-measurement by an upstream
+fault**, each after its edits had landed and before any verification ran. The
+recovery that worked was to shrink the brief — brief-453 changed one file and
+ran only `fmt` plus two crate suites and two instruction probes, with the
+workspace run and the release panel kept on the director's side.
+
+**Opened by brief-450 — a second recursion above the contract.** Above roughly
 11,000 levels both operations return to terminating the process (in band at
 10,000, killed at 12,000), while `Replace`, `DeleteCases` and `ReplaceAll` stay
 in band at 12,000 and the fixture alone clears 20,001. So a different recursion
