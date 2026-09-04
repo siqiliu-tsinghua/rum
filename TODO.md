@@ -1665,20 +1665,39 @@ complete at raw physical height 4,097 (`N=2048` wrappers), up from 966 and
 1,145. `Map` runs to the construction ceiling at 5,457 wrappers, so the
 operation is no longer the limit — the fixture is.
 
-**A measurement limit learned here, and it is the instruction-count analogue of
-the layout control.** My generic probes read -7% to -8.7% on paths this change
-cannot touch, while the worker's read within ±0.15%. **Allocation counts are
-identical to the byte on all of them**, so the work is unchanged and the
-difference is a codegen shift inside the same module, which grew 444 KB.
-Instruction counting is immune to core placement and load but **not** to
-codegen: it reliably detects a regression, and it does not attribute a small
-delta to the mechanism you intended. Pair it with allocation counts before
-believing either sign.
+**A measurement limit learned here — and my first reading of it was wrong,
+corrected at the brief-456 gate.** My generic probes read -7% to -8.7% on paths
+this change cannot touch, while the worker's read within ±0.15%. I attributed
+that to codegen from the module growing 444 KB. **It was the build path.** I
+compared a binary built in a `git worktree` under `/tmp/…` against one built in
+`/home/remi/dev/rum`; rebuilding the candidate under a same-shaped `/tmp/…` path
+brings the unrelated probe from -8.42% to **+0.005%**. The tell was already in
+the data and I missed it: briefs 455 and 456 are unrelated changes and produced
+*the same* -8.4% on *the same* untouched probes.
 
-**Still open in this class**: drafts B through J of brief-454, to be re-derived
-against post-A measurements rather than dispatched from projections.
-`MergeNested` is the next one and is a genuinely separate native recursion at
-about 1,008 B per logical wrapper.
+**The rule: build base and candidate at the same filesystem path, or
+instruction counts are not comparable.** Allocation counts are path-immune —
+identical to the byte across the boundary in both gates — so pair every
+instruction number with them. The worker's numbers were right throughout,
+because it built both arms in one path.
+
+**Draft B is CLOSED (brief-456, `d0e80b1b`), and the re-probe that opened it
+found the failure mode had flipped.** After brief-455, `MergeNested` went from
+1,153 wrappers failing **in band** to 2,027 **terminating the process** — the
+association stability arm used to exhaust the byte budget first, and that arm
+polls; once it was cheap, `MergeNested`'s own unpolled recursion reached the raw
+stack instead. That moved it from 3.6x short and fail-closed to 1.01x short and
+fail-open. **Removing a guard-adjacent cost can convert a fail-closed site into
+a fail-open one** — worth carrying into the remaining drafts.
+
+The walk is now explicit enter/finish work items behind a bounded front, with
+suspension freezing the whole stack. It completes at raw 4,097 and runs to the
+construction ceiling at 5,457 wrappers; instructions are neutral (-0.119% on the
+merge probe, +0.005% on an unrelated control) with allocation counts identical.
+
+**Still open in this class**: drafts C through J of brief-454, to be re-derived
+against current measurements rather than dispatched from projections — every
+re-probe in this line so far has moved the scope.
 
 **Opened by brief-450 — a second recursion above the contract.** Above roughly
 11,000 levels both operations return to terminating the process (in band at
