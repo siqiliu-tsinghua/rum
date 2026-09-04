@@ -1422,6 +1422,24 @@ four, in shortfall order — then 3 and 8, with 7 reduced to a confirmation prob
 The evaluator task stack is tracked separately and opens with its own
 design-only brief.
 
+**Draft 2 is CLOSED (brief-447, `c71d808a`).** `Replace` keeps a depth-16
+recursive front and hands the tail to an explicit work/completed stack; both
+depth helpers get a single-chain fast path plus an explicit stack for branching
+shapes. Repeated depth work was held out of scope so the bound could be gated
+alone. Director-measured: 4,097 completes with the exact rebuilt value, the
+ceiling moves 1,308 -> 5,843 (1.43x margin), and above it the failure is an
+in-band native stack limit instead of a dead process — the same bracket and the
+same direction as `ReplaceAll`, which is the endstate this repair was aiming at.
+
+Two gate notes worth keeping. The worker reported its own two-revision A/B
+stop-loss on a residual +0.61% on `replacepart-wide-rule-list`; four passes with
+within-run quotients read -3.26% raw and -1.50% quotient on that label, with a
+same-binary spread of 1.80%. **The stop-loss was noise, and reporting it rather
+than tuning through it was the correct call.** Second, the ceiling is now the
+shared stability walk rather than `Replace` itself, so the remaining fail-open
+sites should be expected to land in the same 5,800-level bracket once
+converted.
+
 **Correction to the organization-line note above.** Re-measured at `59410b75`,
 only one of the three files named there is over 35k: `evaluation_cache/tests.rs`
 at 38 294. `debug_tools/resources/memory.rs` is 32 019 and both `stability.rs`
