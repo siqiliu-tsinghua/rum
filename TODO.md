@@ -1626,10 +1626,21 @@ shadow set — several arms build a different set for one child than for its
 siblings — which is now pinned by a regression at depth 20, past the recursive
 front, asserting that an inner `With` shadows only inside its own subtree.
 
-**Also recorded: two dispatches were cut off mid-measurement by an upstream
-fault**, each after its edits had landed and before any verification ran. The
-recovery that worked was to shrink the brief — brief-453 changed one file and
-ran only `fmt` plus two crate suites and two instruction probes, with the
+**Recorded as an unexplained sighting, not a diagnosis: two dispatches of
+brief-452 were terminated mid-run**, each after its edits had landed and before
+any verification. What is established is only what it was *not*: the three
+recorded content-filter kills (briefs 422, 424, 439) ended with `exit 1` and a
+policy message in the log tail, while both of these ended with **no `codex
+exit=` line at all**, and neither log contains any filter text. It was not a
+size or duration ceiling either — brief-451 succeeded with a 15.3 MB log over
+18m40s, while these died at 623 KB. The only error present is
+`codex_models_manager: failed to refresh available models: timeout waiting for
+child process to exit`. That is suggestive of the connection, but this failure
+has not been seen before on this project and the cause is **open** (user, first
+occurrence). Record the next sighting rather than explaining this one away.
+
+The recovery that worked was to shrink the brief — brief-453 changed one file
+and ran only `fmt` plus two crate suites and two instruction probes, with the
 workspace run and the release panel kept on the director's side.
 
 **Opened by brief-450 — a second recursion above the contract.** Above roughly
