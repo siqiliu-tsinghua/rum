@@ -1543,13 +1543,33 @@ million, inside that same-binary spread. Use isolated per-label probes and
 calibrate the same-binary spread before believing any counter delta.
 
 **Nothing was overturned by the re-measurement.** The three A/B accepts it
-re-checked (briefs 447, 448, 449) are all confirmed by the counters; what the
-timing numbers were weak evidence *for* turned out to be true. The residual
-limit is worth stating: allocation counts see work that allocates, not pure CPU
-cost, so a few-percent constant-factor regression on these labels would be
-invisible to both instruments on this host. Each of the three changes adds one
-integer comparison to its shallow path, which is the size of effect that falls
-in that gap.
+re-checked (briefs 447, 448, 449) are all confirmed; what the timing numbers
+were weak evidence *for* turned out to be true.
+
+**The gap the allocation counters left is now closed with the PMU.**
+`perf_event_paranoid` is 2 on this host, so `perf stat -e instructions:u`
+works unprivileged and sees the pure CPU cost that allocation counts cannot.
+Minimum of the tight cluster, migrated runs discarded:
+
+| probe | pre-447 | HEAD | delta |
+|---|---|---|---|
+| `Replace[Nest[List,1,8], 1 -> 2, {0, Infinity}]` x500 | 43 442 724 | 43 381 754 | **-0.140%** |
+| `DeleteCases[Nest[List,1,8], 1, Infinity]` x500 | 37 991 580 | 38 019 336 | **+0.073%** |
+| `D[Nest[Sin, v, 8], v]` x200 | 96 361 697 | 96 587 958 | **+0.235%** |
+
+All three are real signals — the within-cluster spread is 0.006% to 0.08%, so
+these are 3x to 40x the noise — and all three are negligible. `DeleteCases`
+costs about 50 extra instructions per call over a nine-level value, which is
+the depth-16 front check running once per node and nothing else. **The disputed
+figure was +7.14% from the worker and +0.96% from my own timing window; the
+true cost is +0.073%.** `Replace` is faster, not slower.
+
+Three PMU traps, met on first use and worth reusing: the hybrid PMU reports
+`cpu_atom` and `cpu_core` separately and a run that **migrates between core
+classes reads about 55% high** and must be discarded (both counters non-zero);
+`<not counted>` means that PMU never ran; and instruction counts are
+core-class independent, so an all-E-core run is directly comparable with an
+all-P-core one.
 
 **Recorded for the memory-accounting line, found by accident here.** A release
 test spelling `DeleteCases[x, 1, Infinity]` literally trips the `NonAmplifying`
