@@ -37,7 +37,7 @@ impl Session {
         &mut self,
         head: &Expr,
         args: &[Expr],
-        mut bloom: StabilityBloom,
+        bloom: StabilityBloom,
     ) -> Option<(bool, StabilityBloom)> {
         let symbol = expr_as_symbol(head)?;
         if symbol.context() != SYSTEM_CONTEXT {
@@ -54,31 +54,13 @@ impl Session {
             "Function" | "Hold" | "HoldAll" | "HoldPattern" => {
                 Some((hold_all_literal_args_are_stable(args), bloom))
             }
-            "Rule" => {
-                let [lhs, rhs] = args else {
-                    return Some((false, bloom));
-                };
-                let (lhs_stable, lhs_bloom) = self.cached_expr_stability_with_bloom(lhs);
-                bloom.union_assign(lhs_bloom);
-                if !lhs_stable {
-                    return Some((false, bloom));
-                }
-                let (rhs_stable, rhs_bloom) = self.cached_expr_stability_with_bloom(rhs);
-                bloom.union_assign(rhs_bloom);
-                Some((rhs_stable, bloom))
-            }
-            "RuleDelayed" => {
-                let [lhs, _rhs] = args else {
-                    return Some((false, bloom));
-                };
-                let (lhs_stable, lhs_bloom) = self.cached_expr_stability_with_bloom(lhs);
-                bloom.union_assign(lhs_bloom);
-                Some((lhs_stable, bloom))
-            }
+            "Rule" => Some(self.rule_data_stability_with_bloom(args, bloom)),
+            "RuleDelayed" => Some(self.rule_delayed_data_stability_with_bloom(args, bloom)),
             _ => None,
         }
     }
 
+    #[inline(never)]
     fn all_args_stability_with_bloom(
         &mut self,
         args: &[Expr],
@@ -95,6 +77,8 @@ impl Session {
         (true, bloom)
     }
 
+    #[cold]
+    #[inline(never)]
     fn failure_data_stability_with_bloom(
         &mut self,
         args: &[Expr],
@@ -110,6 +94,7 @@ impl Session {
         self.all_args_stability_with_bloom(args, bloom)
     }
 
+    #[inline(never)]
     fn association_data_stability_with_bloom(
         &mut self,
         args: &[Expr],
@@ -147,6 +132,39 @@ impl Session {
         }
 
         (true, bloom)
+    }
+
+    #[inline(never)]
+    fn rule_data_stability_with_bloom(
+        &mut self,
+        args: &[Expr],
+        mut bloom: StabilityBloom,
+    ) -> (bool, StabilityBloom) {
+        let [lhs, rhs] = args else {
+            return (false, bloom);
+        };
+        let (lhs_stable, lhs_bloom) = self.cached_expr_stability_with_bloom(lhs);
+        bloom.union_assign(lhs_bloom);
+        if !lhs_stable {
+            return (false, bloom);
+        }
+        let (rhs_stable, rhs_bloom) = self.cached_expr_stability_with_bloom(rhs);
+        bloom.union_assign(rhs_bloom);
+        (rhs_stable, bloom)
+    }
+
+    #[inline(never)]
+    fn rule_delayed_data_stability_with_bloom(
+        &mut self,
+        args: &[Expr],
+        mut bloom: StabilityBloom,
+    ) -> (bool, StabilityBloom) {
+        let [lhs, _rhs] = args else {
+            return (false, bloom);
+        };
+        let (lhs_stable, lhs_bloom) = self.cached_expr_stability_with_bloom(lhs);
+        bloom.union_assign(lhs_bloom);
+        (lhs_stable, bloom)
     }
 
     pub(in crate::runtime) fn symbol_is_atom_evaluation_stable(&mut self, symbol: &Symbol) -> bool {
@@ -210,6 +228,7 @@ impl Session {
         })
     }
 
+    #[inline(never)]
     fn call_head_has_evaluation_effect(&mut self, head: &Expr, args: &[Expr]) -> bool {
         if let Some(symbol) = expr_as_symbol(head) {
             if symbol.is_system_name(heads::structure::LIST)
@@ -346,6 +365,7 @@ impl Session {
     }
 }
 
+#[inline(never)]
 fn hold_all_literal_args_are_stable(args: &[Expr]) -> bool {
     args.iter()
         .all(|arg| !is_direct_hold_escape_wrapper(arg) && sequence_items(arg).is_none())
@@ -361,6 +381,8 @@ fn is_direct_hold_escape_wrapper(expr: &Expr) -> bool {
     )
 }
 
+#[cold]
+#[inline(never)]
 fn failure_details_would_normalize(expr: &Expr) -> bool {
     if association_entries_from_expr(expr).is_some() {
         return false;

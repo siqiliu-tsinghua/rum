@@ -1252,3 +1252,61 @@ evaluation-depth increments, so a recursion running entirely inside one builtin
 advances no depth and is invisible to it for that whole descent. Converting
 such walkers to explicit stacks is what closes that, which is what briefs
 422-433 did for ten traversals.
+
+### The deep-rebuild class — stability walk CLOSED (2026-09-04, briefs 439-442)
+
+Re-probing the three remaining traversal items under the new 1 MiB budget found
+one shared defect instead of three separate ones.
+
+**The mechanism.** A traversal that rebuilds a deep result hands the evaluator a
+tree with fresh `Arc` identities at every level. Every stability cache key
+misses, and `call_stability_uncached_with_bloom` walks the whole tree through
+`cached_expr_stability_with_bloom` — mutual recursion in a file where
+`evaluation_depth` never appears, so the byte guard has no poll point for the
+entire descent. That is why `ReplaceAll` on a match, `Apply` at a descending
+spec and `Replace` at all levels died the same way, and why the same operations
+with a rule that never matches survived: the traversal returns
+`Expr::call_shared` with the original pointers and the root's proof still hits.
+brief-425's conversions were not wrong; the shared post-result check downstream
+of them was never converted.
+
+**The certificate panel had a matching hole.** None of the twelve exercised a
+rebuild. `Map` and `Apply` used `{-4097, 0}`, which in rum selects level 0 only
+— intended, test-pinned semantics, not a defect — and `ReplaceAll` replaced an
+absent symbol. Repaired under a three-part rule: a unique deepest target that
+must propagate `changed`, an assertion on the exact rebuilt value rather than a
+summary, and a selector pinned separately on a shallow fixture.
+
+**Two repairs were rejected before the third worked.** briefs 440 and 441 made
+the walk iterative behind a depth-bounded front. Both were functionally
+complete — every invariant covered by differential tests including an exact
+cache-insertion-order trace, all twelve certificates green, counters identical
+— and both cost. Reproduced in my own four-pass window with within-run
+quotients: `downvalue-exact-miss-repeat` +5.6%/+6.9% against a 0.62% base
+spread, `downvalue-pattern` +4.4%/+7.1%, `cases-wide` +5.7%/+3.8%,
+`matcher-single-tiny` +2.4%/+2.2%. A depth parameter and an `Option` return on
+the most-consulted function in the system is not free. Preserved as stashes.
+
+**What worked was moving locals, not control flow.** The walk cost 811 B per
+level and its dominant frame was 584 B — not because the function is large but
+because the whole chain is inlined into it, making the frame the union of
+thirteen data-constructor arms, cache lookup and insertion, head-effect
+computation and profiling tokens. A deep descent executes almost none of that.
+Outlining them behind `#[cold] #[inline(never)]` gave **255.6 B/level measured**
+(bisected at 1024 and 2048 KiB: 3,905 and 8,008 levels), a 3.17x reduction, with
+counters byte-identical and the previously-regressed families neutral to
+faster.
+
+**Still open, deliberately.** Above about 8,008 levels on a 2 MiB stack the walk
+still ends the process, because it remains unbounded and unpolled. The ruled
+4,097 contract is met with roughly 2x headroom, but the fail-closed promise is
+not. A strided poll inside the walk would convert that into an in-band error at
+some hot-path cost that has not been measured. That is the next decision, and it
+needs its own measurement rather than an assumption.
+
+**Also still open:** brief-439's steps 2-8, the per-site native conversions
+(`Replace`, `MapIndexed`, `D`, exact-path engines, substitution engines, tensor
+rebuilders). Their projections rest on brackets measured under the old 6 MiB
+budget and must be re-probed before briefing. And three files are now over the
+35k organization line: `eval_core/stability.rs`, `evaluation_cache/tests.rs`,
+`memory.rs`.

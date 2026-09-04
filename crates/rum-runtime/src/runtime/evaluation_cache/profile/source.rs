@@ -161,6 +161,12 @@ pub(in crate::runtime::evaluation_cache) fn call_stability_source_head_key(
         return None;
     }
 
+    call_stability_source_head_key_enabled(head)
+}
+
+#[cold]
+#[inline(never)]
+fn call_stability_source_head_key_enabled(head: &Expr) -> Option<CallStabilitySourceHeadKey> {
     let source = current_evaluation_profile_source_symbol()?;
     Some(CallStabilitySourceHeadKey {
         source,
@@ -189,6 +195,15 @@ pub(in crate::runtime::evaluation_cache) fn record_call_stability_source_head_ou
         return;
     };
 
+    record_call_stability_source_head_outcome_enabled(key, outcome);
+}
+
+#[cold]
+#[inline(never)]
+fn record_call_stability_source_head_outcome_enabled(
+    key: CallStabilitySourceHeadKey,
+    outcome: CallStabilityProfileOutcome,
+) {
     CALL_STABILITY_SOURCE_HEAD_STATS.with(|stats| {
         let mut stats = stats.borrow_mut();
         let entry = stats.entry(key).or_default();
@@ -224,6 +239,12 @@ pub(in crate::runtime::evaluation_cache) fn call_stability_timing_start(
         return None;
     }
 
+    call_stability_timing_start_enabled(key)
+}
+
+#[cold]
+#[inline(never)]
+fn call_stability_timing_start_enabled(key: Option<CallStabilitySourceHeadKey>) -> Option<Instant> {
     CALL_STABILITY_TIMING_STACK.with(|stack| {
         stack.borrow_mut().push(CallStabilityTimingFrame {
             key,
@@ -241,6 +262,15 @@ pub(in crate::runtime::evaluation_cache) fn record_call_stability_source_head_ti
         return;
     };
 
+    record_call_stability_source_head_timing_enabled(outcome, start);
+}
+
+#[cold]
+#[inline(never)]
+fn record_call_stability_source_head_timing_enabled(
+    outcome: CallStabilityProfileOutcome,
+    start: Instant,
+) {
     let elapsed_nanos = elapsed_nanos_since(start);
     let frame = CALL_STABILITY_TIMING_STACK.with(|stack| {
         let mut stack = stack.borrow_mut();
@@ -291,6 +321,12 @@ pub(in crate::runtime::evaluation_cache) fn record_call_stability_source_head_in
         return;
     };
 
+    record_call_stability_source_head_insertion_enabled(key);
+}
+
+#[cold]
+#[inline(never)]
+fn record_call_stability_source_head_insertion_enabled(key: CallStabilitySourceHeadKey) {
     CALL_STABILITY_SOURCE_HEAD_STATS.with(|stats| {
         let mut stats = stats.borrow_mut();
         let entry = stats.entry(key).or_default();
@@ -305,6 +341,12 @@ pub(in crate::runtime::evaluation_cache) fn record_call_stability_source_head_re
         return;
     };
 
+    record_call_stability_source_head_rewritten_dirty_skip_enabled(key);
+}
+
+#[cold]
+#[inline(never)]
+fn record_call_stability_source_head_rewritten_dirty_skip_enabled(key: CallStabilitySourceHeadKey) {
     CALL_STABILITY_SOURCE_HEAD_STATS.with(|stats| {
         let mut stats = stats.borrow_mut();
         let entry = stats.entry(key).or_default();

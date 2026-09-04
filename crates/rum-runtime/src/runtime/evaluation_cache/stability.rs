@@ -228,71 +228,46 @@ impl Session {
         if let Some(entry) = self.call_stability_cache.get(&key) {
             match self.call_stability_entry_outcome(entry, head, args) {
                 CallStabilityProfileOutcome::Hit => {
-                    record_evaluation_cache_counter(
-                        &CALL_STABILITY_HIT_COUNT,
-                        "call_stability_hits",
-                    );
-                    record_call_stability_source_head_outcome(
-                        profile_key,
-                        CallStabilityProfileOutcome::Hit,
-                    );
-                    record_call_stability_source_head_timing(
-                        CallStabilityProfileOutcome::Hit,
-                        timing_start,
-                    );
+                    record_call_stability_hit(profile_key, timing_start);
                     return (entry.stable, entry.bloom);
                 }
                 CallStabilityProfileOutcome::MissGeneration => {
                     miss_outcome = CallStabilityProfileOutcome::MissGeneration;
-                    record_evaluation_cache_counter(
-                        &CALL_STABILITY_MISS_GENERATION_COUNT,
-                        "call_stability_miss_generation",
-                    );
-                    record_call_stability_source_head_outcome(
-                        profile_key,
-                        CallStabilityProfileOutcome::MissGeneration,
-                    );
+                    record_present_call_stability_miss(profile_key, miss_outcome);
                 }
                 CallStabilityProfileOutcome::MissPointer => {
                     miss_outcome = CallStabilityProfileOutcome::MissPointer;
-                    record_evaluation_cache_counter(
-                        &CALL_STABILITY_MISS_POINTER_COUNT,
-                        "call_stability_miss_pointer",
-                    );
-                    record_call_stability_source_head_outcome(
-                        profile_key,
-                        CallStabilityProfileOutcome::MissPointer,
-                    );
+                    record_present_call_stability_miss(profile_key, miss_outcome);
                 }
                 CallStabilityProfileOutcome::MissDirty => {
                     miss_outcome = CallStabilityProfileOutcome::MissDirty;
-                    record_evaluation_cache_counter(
-                        &CALL_STABILITY_MISS_DIRTY_COUNT,
-                        "call_stability_miss_dirty",
-                    );
-                    record_call_stability_source_head_outcome(
-                        profile_key,
-                        CallStabilityProfileOutcome::MissDirty,
-                    );
+                    record_present_call_stability_miss(profile_key, miss_outcome);
                 }
                 CallStabilityProfileOutcome::MissAbsent => {
                     unreachable!("an existing call-stability entry cannot be absent")
                 }
             }
         } else {
-            record_evaluation_cache_counter(
-                &CALL_STABILITY_MISS_ABSENT_COUNT,
-                "call_stability_miss_absent",
-            );
-            record_call_stability_source_head_outcome(
-                profile_key,
-                CallStabilityProfileOutcome::MissAbsent,
-            );
+            record_absent_call_stability_miss(profile_key);
         }
 
         record_evaluation_cache_counter(&CALL_STABILITY_MISS_COUNT, "call_stability_misses");
         let (stable, bloom) = self.call_stability_uncached_with_bloom(head, args);
         record_call_stability_source_head_timing(miss_outcome, timing_start);
+        self.cache_call_stability_result(key, head, args, stable, bloom, profile_key);
+        (stable, bloom)
+    }
+
+    #[inline(never)]
+    fn cache_call_stability_result(
+        &mut self,
+        key: CallStabilityCacheKey,
+        head: &SharedExpr,
+        args: &SharedArgs,
+        stable: bool,
+        bloom: StabilityBloom,
+        profile_key: Option<CallStabilitySourceHeadKey>,
+    ) {
         // Only stable verdicts are worth caching: an unstable expression is
         // about to be rewritten by evaluation, so its entry would pin a dead
         // tree and never be asked again, while stable subtrees are re-checked
@@ -326,7 +301,6 @@ impl Session {
             );
             record_call_stability_source_head_rewritten_dirty_skip(profile_key);
         }
-        (stable, bloom)
     }
 
     pub(super) fn call_stability_entry_outcome(
@@ -365,6 +339,52 @@ impl Session {
         );
         self.call_stability_cache.clear();
     }
+}
+
+#[inline(never)]
+fn record_call_stability_hit(
+    profile_key: Option<CallStabilitySourceHeadKey>,
+    timing_start: Option<std::time::Instant>,
+) {
+    record_evaluation_cache_counter(&CALL_STABILITY_HIT_COUNT, "call_stability_hits");
+    record_call_stability_source_head_outcome(profile_key, CallStabilityProfileOutcome::Hit);
+    record_call_stability_source_head_timing(CallStabilityProfileOutcome::Hit, timing_start);
+}
+
+#[cold]
+#[inline(never)]
+fn record_present_call_stability_miss(
+    profile_key: Option<CallStabilitySourceHeadKey>,
+    outcome: CallStabilityProfileOutcome,
+) {
+    let (counter, name) = match outcome {
+        CallStabilityProfileOutcome::MissGeneration => (
+            &CALL_STABILITY_MISS_GENERATION_COUNT,
+            "call_stability_miss_generation",
+        ),
+        CallStabilityProfileOutcome::MissDirty => (
+            &CALL_STABILITY_MISS_DIRTY_COUNT,
+            "call_stability_miss_dirty",
+        ),
+        CallStabilityProfileOutcome::MissPointer => (
+            &CALL_STABILITY_MISS_POINTER_COUNT,
+            "call_stability_miss_pointer",
+        ),
+        CallStabilityProfileOutcome::Hit | CallStabilityProfileOutcome::MissAbsent => {
+            unreachable!("a present call-stability miss must classify its invalidation")
+        }
+    };
+    record_evaluation_cache_counter(counter, name);
+    record_call_stability_source_head_outcome(profile_key, outcome);
+}
+
+#[inline(never)]
+fn record_absent_call_stability_miss(profile_key: Option<CallStabilitySourceHeadKey>) {
+    record_evaluation_cache_counter(
+        &CALL_STABILITY_MISS_ABSENT_COUNT,
+        "call_stability_miss_absent",
+    );
+    record_call_stability_source_head_outcome(profile_key, CallStabilityProfileOutcome::MissAbsent);
 }
 
 #[inline]

@@ -9,6 +9,28 @@ minor versions may include breaking changes; the project aims to follow
 
 ### Fixed
 
+- A traversal that rebuilds a deep result no longer ends the process. The
+  rebuilt tree carries fresh identities at every level, so every
+  evaluation-stability cache key misses and the stability walk descends the
+  whole tree natively — and because that walk never crosses `Session::evaluate`,
+  the native-stack guard has no poll point during the descent. `ReplaceAll` on a
+  rule that matches, `Apply` at a descending level spec, and `Replace` at all
+  levels all aborted at roughly 1,300 levels on a 2 MiB stack, while the same
+  operations with a rule that never matches survived, because nothing was
+  rebuilt. The walk's frame was the union of every branch it can take —
+  thirteen data-constructor arms, cache insertion, head-effect computation and
+  the profiling tokens — even though a deep descent executes almost none of
+  them. Outlining those branches took it from 811 to 256 bytes per level, so a
+  rebuilt result of physical height 4,097 now completes with room to spare.
+  Semantics, cache contents and counters are unchanged.
+- Three release depth certificates could not fail for the reason they existed.
+  The `Map` and `Apply` certificates used a level spec that selects only the
+  outermost level, so they wrapped the value once and handed it to an
+  already-iterative `Depth`; the `ReplaceAll` certificate replaced a symbol
+  absent from the value, so no rebuild ever ran. All three now assert the exact
+  rebuilt expression, and each is paired with a shallow companion that pins its
+  selector's semantics on a three-level value.
+
 - The native stack guard no longer fails open on the stack an embedder
   actually gets. Its default budget was 6 MiB against the 2 MiB a spawned
   thread gets by default, so on that stack the guard could never fire and a
