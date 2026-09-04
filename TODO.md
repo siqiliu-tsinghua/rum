@@ -1507,6 +1507,40 @@ it can see is one integer comparison.
 enough to declare a regression on this panel, and the next brief in this line
 must require the worker to report the whole-panel median beside each label.
 
+**Settled by counters instead, and the timing instrument is now known to be
+weak on this host (user ruling, 2026-09-04).** This machine is an i9-14900HX
+with 8 P-cores at 5.6-5.8 GHz and 16 E-cores at 4.1 GHz — a 1.41x clock ratio
+plus a different microarchitecture — and nothing pins a benchmark to a core
+class. Any wall-time percentage here can be a scheduling artifact larger than
+the effect being judged, so **a timing A/B is an indication, never proof**.
+`CLAUDE.md`'s standing rule "counters beat timings, report counters first" was
+not applied at the briefs 447-449 gates; it is reinstated.
+
+Re-measured with `RUM_PROFILE_ALLOC=1` on a `--features alloc-count` build,
+pre-447 (`b9cdb56d`) against `a0432c43`, each label as an isolated probe
+(fixture plus the exact statement in a `Do` loop):
+
+| probe | pre-447 | HEAD |
+|---|---|---|
+| empty script (baseline) | 1 572 | 1 572 |
+| `Replace[Nest[List,1,8], 1 -> 2, {0, Infinity}]` x500 | 25 466 | 25 466 |
+| `DeleteCases[Nest[List,1,8], 1, Infinity]` x500 | 24 915 | 24 915 |
+| `D[Nest[Sin, v, 8], v]` x200 | 92 895 | 92 895 |
+| `ReplacePart[{0}, rules]` x20 | 379 678 | 379 678 |
+
+Allocation counts identical to the byte, `bytes_total` and `peak_live_bytes`
+too. **The disputed +7.14% is settled: the three conversions do no extra
+allocation on their labels' shallow paths.** The counter was calibrated for
+sensitivity first — one extra `Do` iteration moves it +46 allocations.
+
+**One caveat found while doing it: a counter is load-immune only if the
+workload is deterministic.** The whole-panel total is not — two runs of the
+identical binary read 9 999 973 and 10 000 216 — because the harness has
+time-adaptive parts (the retained-module GC batches keyed off
+`AbsoluteTiming`). The base-vs-candidate panel total differed by +530 in 10
+million, inside that same-binary spread. Use isolated per-label probes and
+calibrate the same-binary spread before believing any counter delta.
+
 **Recorded for the memory-accounting line, found by accident here.** A release
 test spelling `DeleteCases[x, 1, Infinity]` literally trips the `NonAmplifying`
 growth assertion: `DeleteCases` is a special form, so the validator measures the
