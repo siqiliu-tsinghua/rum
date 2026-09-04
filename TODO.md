@@ -1643,6 +1643,33 @@ The recovery that worked was to shrink the brief — brief-453 changed one file
 and ran only `fmt` plus two crate suites and two instruction probes, with the
 workspace run and the release panel kept on the director's side.
 
+**Draft A of brief-454 is CLOSED (brief-455, `9f8e89b2`).** The association arm
+of the stability walk is bounded: an association-rooted chain takes over the
+whole subtree once the walk meets an `Association`, keeps a depth-16 borrowed
+front, and carries its depth through intervening ordinary calls — which is what
+the `Map` result needs, since it produces `ff[Association[Rule[…]]]` at every
+level. The generic chain is untouched.
+
+`Map` over a deep association and a read after a nested key-path assignment now
+complete at raw physical height 4,097 (`N=2048` wrappers), up from 966 and
+1,145. `Map` runs to the construction ceiling at 5,457 wrappers, so the
+operation is no longer the limit — the fixture is.
+
+**A measurement limit learned here, and it is the instruction-count analogue of
+the layout control.** My generic probes read -7% to -8.7% on paths this change
+cannot touch, while the worker's read within ±0.15%. **Allocation counts are
+identical to the byte on all of them**, so the work is unchanged and the
+difference is a codegen shift inside the same module, which grew 444 KB.
+Instruction counting is immune to core placement and load but **not** to
+codegen: it reliably detects a regression, and it does not attribute a small
+delta to the mechanism you intended. Pair it with allocation counts before
+believing either sign.
+
+**Still open in this class**: drafts B through J of brief-454, to be re-derived
+against post-A measurements rather than dispatched from projections.
+`MergeNested` is the next one and is a genuinely separate native recursion at
+about 1,008 B per logical wrapper.
+
 **Opened by brief-450 — a second recursion above the contract.** Above roughly
 11,000 levels both operations return to terminating the process (in band at
 10,000, killed at 12,000), while `Replace`, `DeleteCases` and `ReplaceAll` stay
