@@ -4,7 +4,7 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-04, committed tree through `cc8ba769`. Uncommitted
+Status checkpoint: 2026-09-04, committed tree through `59410b75`. Uncommitted
 performance candidates do not count as completed until their correctness,
 timing, counter, and memory gates have all been reviewed.
 
@@ -1342,7 +1342,90 @@ needs its own measurement rather than an assumption.
 
 **Also still open:** brief-439's steps 2-8, the per-site native conversions
 (`Replace`, `MapIndexed`, `D`, exact-path engines, substitution engines, tensor
-rebuilders). Their projections rest on brackets measured under the old 6 MiB
-budget and must be re-probed before briefing. And three files are now over the
-35k organization line: `eval_core/stability.rs`, `evaluation_cache/tests.rs`,
-`memory.rs`.
+rebuilders). Their projections rested on brackets measured under the old 6 MiB
+budget; they have now been re-probed, and the results, the reordered dispatch
+queue, and a correction to the organization-line note are in the last section of
+this file.
+
+### The tail re-probed under the 1 MiB budget (2026-09-04, director)
+
+brief-439's gate ruled that steps 2-8 would be re-derived against post-step-1
+measurements rather than dispatched from projections
+(`docs/dev/codex/brief-439-deep-rebuild-class-design.md:1300-1308`). They now
+have those measurements, and they reorder the queue.
+
+Release `rum-cli` at `59410b75`, `ulimit -s 2048`, 1 MiB evaluator budget. Every
+probe carries a liveness assertion on the exact rebuilt value — the replaced
+leaf, the deleted atom, the factor count, the swapped pair — and was calibrated
+at height 3 before any bracket was believed.
+
+| Site | last ok / first fail | mode | against 4,097 | draft |
+|---|---|---|---|---|
+| `StringExpression` construction | **216 / 224** | in-band | **19x short** | none |
+| `Alternatives` construction | 210 / 218 | in-band | 19x short | none |
+| `MergeNested` over deep associations | 1,114 / 1,122 | in-band | 3.7x short | 8 |
+| `Replace[_, _, {0, Infinity}]` | 1,308 / 1,316 | **process kill** | 3.1x short | 2 |
+| `D` over a nested-`Sin` spine | 1,738 / 1,746 | **process kill** | 2.4x short | 4 |
+| `DeleteCases[_, _, Infinity]` | 1,808 / 1,816 | **process kill** | 2.3x short | 6 |
+| `MapIndexed[ff, _, {0, Infinity}]` | 2,694 / 2,702 | in-band | 1.5x short | 3 |
+| `ReplacePart` at a full deep path | 2,854 / 2,862 | **process kill** | 1.4x short | 5 |
+| `Reverse[_, All]` | — | — | **clears** | 7 |
+| deep association construction | — | — | clears | — |
+| `FullForm` (`Expr::Display`) | 5,846 / 5,851 | **process kill** | clears, 1.4x | none |
+
+**Controls, run in the same window.** `ReplaceAll[x, 1 -> 2]` and
+`Apply[gg, x, {0, Infinity}]` clear 4,097 with a real rebuild (depth 4,098,
+`MemberQ` hit), and `Cases`/`Count`/`Position`/`ToString`/`Level` all clear.
+Step 1 and brief-425 are therefore verified independently of their own briefs.
+
+**The instrument was calibrated before any result was believed.** The
+classifier was shown printing each of its four verdicts on a known case:
+`fRec[n_] := fRec[n + 1]` for in-band, deep `FullForm` for process kill,
+`ToString` for pass, and a 200 000-iteration build for the invalid-probe class.
+Its first version scored two known failures as `UNKNOWN`.
+
+**Two probes measured nothing and were replaced.** `D[Nest[Sin, q, 4097], q]`
+fails on the **fixed-point pass limit (256)**, not the stack — the same trap
+`Nest[List, 1, N]` set earlier in this line; building the spine with
+`Do[e = Sin[e], {i, N}]` reaches it. `Reverse[x, {1, Infinity}]` is not a legal
+rum call (`Reverse` takes `All` or a list of positive levels), so it returned
+unevaluated and would have certified a false ceiling. A third guard held: deep
+association construction was bracketed first and clears 4,097, so `MergeNested`'s
+number is its own and not its fixture's.
+
+**Three findings reorder the queue.**
+
+1. **`Replace`'s ceiling did not move.** 1,308 is identical to brief-439's
+   pre-step-1 bracket, which is both the proof that step 1 never touched these
+   sites and a consistency check on the harness. Confirmed in source: the
+   strings `poll_native_stack_limit` and `evaluation_depth` occur **zero** times
+   under `kernel_data/rewrite_data/replace/`, in `structure_data/exact_paths.rs`,
+   under `runtime/substitution/`, and in `rum-stdlib/src/calculus.rs`. No poll
+   point is why these four end the process instead of raising an error.
+2. **Order by failure direction, not by shortfall.** Drafts 2, 4, 6 and 5 fail
+   open; drafts 3 and 8 already fail closed and are short only on the contract.
+   Draft 7's representative clears 4,097 outright, which matches brief-439
+   scoping 7 and 8 as budget-gated rather than unconditional.
+3. **The worst shortfall is not in steps 2-8 at all.** The strict-residual
+   construction class is at 216, worse than the 375 recorded under the old
+   guard, because the budget now fires: the failure direction improved and the
+   height fell. `Alternatives` at 210 confirms a class rather than a
+   `StringExpression` quirk, and 1 MiB / 213 ≈ 4.9 KiB per level matches
+   brief-437's measured 4,736 B evaluation-level packet. brief-437 already
+   priced frame polishing out of this (floor 1.5-2.6 KiB against the 511.875 B
+   that 4,097 allows), so this is the evaluator task stack — its own design
+   line, not a per-site conversion.
+
+**Dispatch order for the tail**: draft 2 (`Replace`), then 4 (calculus), 6
+(`DeleteCases` and the substitution engines), 5 (exact paths) — the fail-open
+four, in shortfall order — then 3 and 8, with 7 reduced to a confirmation probe.
+The evaluator task stack is tracked separately and opens with its own
+design-only brief.
+
+**Correction to the organization-line note above.** Re-measured at `59410b75`,
+only one of the three files named there is over 35k: `evaluation_cache/tests.rs`
+at 38 294. `debug_tools/resources/memory.rs` is 32 019 and both `stability.rs`
+files are 12 476 and 17 066, all under the line. Three files that were not named
+are over it: `tests/context_and_loader.rs` 38 873, `tests/frame_root_trace.rs`
+37 971, and `tests/scoping_gensym_gc.rs` 36 121, beside the generated
+`frame_root_trace/derived_inventory.rs` at 162 506.
