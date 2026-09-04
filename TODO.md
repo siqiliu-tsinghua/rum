@@ -1639,6 +1639,16 @@ child process to exit`. That is suggestive of the connection, but this failure
 has not been seen before on this project and the cause is **open** (user, first
 occurrence). Record the next sighting rather than explaining this one away.
 
+**Third sighting, 2026-09-05, brief-456.** Same signature: the log stops mid
+output at 193 KB with no error text and no `codex exit=` line, and the process
+exits some time later having applied only its first edit. It ran 27 minutes and
+died about 25 minutes *after* an unrelated SIGTERM of mine had killed the
+foreground wrapper, so it is not that either. The three failures are all
+**early** — 193 KB to 636 KB of log — while every completed dispatch in this
+line ran to between 745 KB and 15.3 MB, so it is not a size or duration
+ceiling. What it costs is bounded: the tree held only unvalidated falsifier
+tests, which were discarded rather than kept.
+
 The recovery that worked was to shrink the brief — brief-453 changed one file
 and ran only `fmt` plus two crate suites and two instruction probes, with the
 workspace run and the release panel kept on the director's side.
