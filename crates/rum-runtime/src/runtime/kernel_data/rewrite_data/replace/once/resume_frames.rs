@@ -338,6 +338,7 @@ pub(super) struct ReplaceOwnedSuspensionFrame {
     pub(super) rule_plan: crate::runtime::RewriteRulePlan,
     pub(super) levels: crate::runtime::CasesLevelSpec,
     pub(super) level: usize,
+    pub(super) remaining_call_depth: usize,
 }
 
 impl crate::runtime::suspension::SuspensionFrame for ReplaceOwnedSuspensionFrame {
@@ -356,6 +357,8 @@ impl crate::runtime::suspension::SuspensionFrame for ReplaceOwnedSuspensionFrame
         let mut levels = self.levels.clone();
         #[allow(unused_mut)]
         let mut level = self.level.clone();
+        #[allow(unused_mut)]
+        let mut remaining_call_depth = self.remaining_call_depth.clone();
         let resumed = match outcome {
             Ok(resumed_value) => {
                 let replaced = <Option<rum_core::Expr> as crate::runtime::suspension::ContinuationValue>::from_continuation_expr(resumed_value);
@@ -378,9 +381,40 @@ impl crate::runtime::suspension::SuspensionFrame for ReplaceOwnedSuspensionFrame
                         levels,
                         level + 1,
                         include_heads,
+                        remaining_call_depth,
                     )
                 }
             })()
+                    .map(|value| <rewrite_data::ReplaceOutcome as crate::runtime::suspension::ContinuationValue>::into_continuation_expr(value))
+            }
+            Err(error) => Err(error),
+        };
+        crate::runtime::suspension::FrameAction::complete(resumed)
+    }
+}
+
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
+pub(super) struct DriveReplaceTraversalSuspensionFrame {
+    pub(super) state:
+        crate::runtime::kernel_data::rewrite_data::replace::once::ReplaceTraversalState,
+    pub(super) expr: rum_core::Expr,
+    pub(super) level: usize,
+}
+
+impl crate::runtime::suspension::SuspensionFrame for DriveReplaceTraversalSuspensionFrame {
+    fn resume(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+    ) -> crate::runtime::suspension::FrameAction {
+        let state = self.state.clone();
+        let expr = self.expr.clone();
+        let level = self.level;
+        let resumed = match outcome {
+            Ok(resumed_value) => {
+                let replaced = <Option<rum_core::Expr> as crate::runtime::suspension::ContinuationValue>::from_continuation_expr(resumed_value);
+                session
+                    .resume_replace_traversal(state, expr, level, replaced)
                     .map(|value| <rewrite_data::ReplaceOutcome as crate::runtime::suspension::ContinuationValue>::into_continuation_expr(value))
             }
             Err(error) => Err(error),
@@ -398,6 +432,7 @@ pub(super) struct ReplaceChildrenOwnedSuspensionFrame1 {
     pub(super) levels: crate::runtime::CasesLevelSpec,
     pub(super) child_level: usize,
     pub(super) include_heads: bool,
+    pub(super) remaining_call_depth: usize,
 }
 
 impl crate::runtime::suspension::SuspensionFrame for ReplaceChildrenOwnedSuspensionFrame1 {
@@ -416,6 +451,7 @@ impl crate::runtime::suspension::SuspensionFrame for ReplaceChildrenOwnedSuspens
             self.levels,
             self.child_level,
             self.include_heads,
+            self.remaining_call_depth,
             outcome,
         ))
     }
@@ -430,6 +466,7 @@ pub(super) struct ReplaceChildrenOwnedSuspensionFrame2 {
     pub(super) levels: crate::runtime::CasesLevelSpec,
     pub(super) child_level: usize,
     pub(super) include_heads: bool,
+    pub(super) remaining_call_depth: usize,
 }
 
 impl crate::runtime::suspension::SuspensionFrame for ReplaceChildrenOwnedSuspensionFrame2 {
@@ -448,6 +485,7 @@ impl crate::runtime::suspension::SuspensionFrame for ReplaceChildrenOwnedSuspens
             self.levels,
             self.child_level,
             self.include_heads,
+            self.remaining_call_depth,
             outcome,
         ))
     }

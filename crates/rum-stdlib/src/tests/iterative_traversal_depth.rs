@@ -126,6 +126,50 @@ fn replaceall_completes_at_physical_height_4097_on_two_mib() {
 }
 
 #[test]
+#[ignore = "release-only deployment-stack probe; run explicitly with --release"]
+fn replace_completes_at_physical_height_4097_on_two_mib() {
+    let certificate = run_on_two_mib_thread("replace-depth-4097", || {
+        evaluate_string_certificate("ToString[Replace[x, 1 -> 2, {0, Infinity}], InputForm]")
+    });
+    assert_eq!(
+        certificate,
+        nested_input_form(TARGET_PHYSICAL_HEIGHT - 1, "2")
+    );
+}
+
+#[test]
+#[ignore = "release-only active-spine safety probe; run explicitly with --release"]
+fn replace_active_spine_returns_in_band_resource_error_on_two_mib() {
+    let result = run_on_two_mib_thread("replace-active-spine", || {
+        let mut session = Session::new();
+        install_core(&mut session);
+        let source = format!(
+            "x = 1; Do[x = {{x}}, {{i, {}}}]; Replace[x, List -> Identity, {{0, Infinity}}, Heads -> True]",
+            TARGET_PHYSICAL_HEIGHT - 1
+        );
+        let outcome = session
+            .eval_text(&source)
+            .expect("active Replace spine should fail in band");
+        assert!(
+            outcome
+                .messages
+                .iter()
+                .any(|message| message.symbol == "General" && message.tag == "reslim")
+        );
+        assert_eq!(
+            session
+                .eval_text("1 + 1")
+                .expect("session should remain usable after the resource error")
+                .value
+                .to_string(),
+            "2"
+        );
+        outcome.value.to_string()
+    });
+    assert_eq!(result, "TerminatedEvaluation[\"StackLimit\"]");
+}
+
+#[test]
 fn map_certificate_companion_pins_descending_selector() {
     assert_eq!(
         evaluate_shallow_input_form("Map[deepMapProbe, {{{1}}}, {-1}]"),
@@ -145,6 +189,14 @@ fn apply_certificate_companion_pins_descending_selector() {
 fn replaceall_certificate_companion_pins_matching_rule() {
     assert_eq!(
         evaluate_shallow_input_form("ReplaceAll[{{{1}}}, 1 -> 2]"),
+        "{{{2}}}"
+    );
+}
+
+#[test]
+fn replace_certificate_companion_pins_descending_selector() {
+    assert_eq!(
+        evaluate_shallow_input_form("Replace[{{{1}}}, 1 -> 2, {0, Infinity}]"),
         "{{{2}}}"
     );
 }

@@ -365,6 +365,7 @@ gMicroGuardedRewriteFallbackRules = {
   x_Integer :> x
 };
 gMicroWideTraversal = Range[rumMicroN[1600]];
+gMicroReplaceLeafRebuildSmall = Nest[List, 1, 8];
 gMicroWideAssociation = AssociationThread[
   Range[rumMicroN[1600]] -> Range[rumMicroN[1600]]
 ];
@@ -596,6 +597,12 @@ rumMicroOnce[
   rumMicroN[1600],
   Replace[gMicroWideTraversal, z -> 0, {1}]
 ];
+rumMicroBench[
+  "replace-leaf-rebuild-small",
+  rumMicroN[500],
+  Replace[gMicroReplaceLeafRebuildSmall, 1 -> 2, {0, Infinity}]
+];
+If[SameQ[rumMicroSink, Nest[List, 2, 8]], Null, Exit[2]];
 rumMicroOnce[
   "replacepart-wide-rule-list",
   rumMicroN[1600],

@@ -1,8 +1,14 @@
+mod depth;
 mod resume_frames;
+mod traversal;
+use depth::{replace_expr_depth, replace_expr_depth_for_heads, replace_expr_depth_with_heads};
 use resume_frames::*;
+use traversal::*;
 
 use super::*;
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+
+const RECURSIVE_REPLACE_CALL_DEPTH: usize = 16;
 
 #[derive(Clone, FrameRootTrace)]
 struct SuspendedReplaceCallChildren {
@@ -13,6 +19,7 @@ struct SuspendedReplaceCallChildren {
     levels: CasesLevelSpec,
     child_level: usize,
     include_heads: bool,
+    remaining_call_depth: usize,
     rebuilt_args: PersistentRewriteExprs,
     max_child_depth: usize,
     changed: bool,
@@ -27,6 +34,7 @@ struct SuspendedReplaceAssociationChildren {
     levels: CasesLevelSpec,
     child_level: usize,
     include_heads: bool,
+    remaining_call_depth: usize,
     rebuilt_entries: PersistentRewriteExprs,
     max_child_depth: usize,
     changed: bool,
@@ -275,6 +283,29 @@ impl Session {
         level: usize,
         include_heads: bool,
     ) -> Result<ReplaceOutcome, EvalError> {
+        self.replace_owned_recursive_bounded(
+            expr,
+            rule_plan,
+            levels,
+            level,
+            include_heads,
+            RECURSIVE_REPLACE_CALL_DEPTH,
+        )
+    }
+
+    fn replace_owned_recursive_bounded(
+        &mut self,
+        expr: Expr,
+        rule_plan: RewriteRulePlan,
+        levels: CasesLevelSpec,
+        level: usize,
+        include_heads: bool,
+        remaining_call_depth: usize,
+    ) -> Result<ReplaceOutcome, EvalError> {
+        if remaining_call_depth == 0 && matches!(expr, Expr::Call { .. }) {
+            return self.replace_owned_iterative(expr, rule_plan, levels, level, include_heads);
+        }
+
         let depth = if include_heads {
             replace_expr_depth_with_heads(&expr)
         } else {
@@ -308,14 +339,22 @@ impl Session {
                                     levels,
                                     level + 1,
                                     include_heads,
+                                    remaining_call_depth,
                                 )
                             }
                         })() },
-                suspend => ReplaceOwnedSuspensionFrame { include_heads, expr, rule_plan, levels, level },
+                suspend => ReplaceOwnedSuspensionFrame { include_heads, expr, rule_plan, levels, level, remaining_call_depth },
             );
         }
 
-        self.replace_children_owned(expr, rule_plan, levels, level + 1, include_heads)
+        self.replace_children_owned(
+            expr,
+            rule_plan,
+            levels,
+            level + 1,
+            include_heads,
+            remaining_call_depth,
+        )
     }
 
     fn replace_children_owned(
@@ -325,6 +364,7 @@ impl Session {
         levels: CasesLevelSpec,
         child_level: usize,
         include_heads: bool,
+        remaining_call_depth: usize,
     ) -> Result<ReplaceOutcome, EvalError> {
         match expr {
             Expr::Atom(_) => Ok(ReplaceOutcome {
@@ -333,15 +373,19 @@ impl Session {
                 changed: false,
             }),
             Expr::Call { head, args } if is_system_symbol_name(&head, "Association") => {
+                let remaining_call_depth = remaining_call_depth
+                    .checked_sub(1)
+                    .expect("iterative fallback handles the bounded traversal tail");
                 let head = head.into_owned();
                 let args = args.into_vec();
                 if include_heads {
-                    let head_result = self.replace_owned(
+                    let head_result = self.replace_owned_recursive_bounded(
                         head,
                         rule_plan.clone(),
                         levels,
                         child_level,
                         include_heads,
+                        remaining_call_depth,
                     );
                     match head_result {
                         Ok(outcome) => self.replace_association_children_owned(
@@ -351,6 +395,7 @@ impl Session {
                             levels,
                             child_level,
                             include_heads,
+                            remaining_call_depth,
                             Vec::new(),
                             outcome.depth,
                             outcome.changed,
@@ -359,7 +404,7 @@ impl Session {
                         ),
                         Err(EvalError::InputRequired { request }) => {
                             let args = FrozenRewriteQueue::freeze(args);
-                            crate::resume_or_suspend!(insert self, ReplaceChildrenOwnedSuspensionFrame1 { args, rule_plan, levels, child_level, include_heads });
+                            crate::resume_or_suspend!(insert self, ReplaceChildrenOwnedSuspensionFrame1 { args, rule_plan, levels, child_level, include_heads, remaining_call_depth });
                             Err(EvalError::InputRequired { request })
                         }
                         Err(error) => Err(error),
@@ -372,6 +417,7 @@ impl Session {
                         levels,
                         child_level,
                         include_heads,
+                        remaining_call_depth,
                         Vec::new(),
                         1,
                         false,
@@ -381,15 +427,19 @@ impl Session {
                 }
             }
             Expr::Call { head, args } => {
+                let remaining_call_depth = remaining_call_depth
+                    .checked_sub(1)
+                    .expect("iterative fallback handles the bounded traversal tail");
                 let head = head.into_owned();
                 let args = args.into_vec();
                 if include_heads {
-                    let head_result = self.replace_owned(
+                    let head_result = self.replace_owned_recursive_bounded(
                         head,
                         rule_plan.clone(),
                         levels,
                         child_level,
                         include_heads,
+                        remaining_call_depth,
                     );
                     match head_result {
                         Ok(outcome) => self.replace_call_children_owned(
@@ -400,6 +450,7 @@ impl Session {
                             levels,
                             child_level,
                             include_heads,
+                            remaining_call_depth,
                             Vec::new(),
                             outcome.depth,
                             outcome.changed,
@@ -407,7 +458,7 @@ impl Session {
                         ),
                         Err(EvalError::InputRequired { request }) => {
                             let args = FrozenRewriteQueue::freeze(args);
-                            crate::resume_or_suspend!(insert self, ReplaceChildrenOwnedSuspensionFrame2 { args, rule_plan, levels, child_level, include_heads });
+                            crate::resume_or_suspend!(insert self, ReplaceChildrenOwnedSuspensionFrame2 { args, rule_plan, levels, child_level, include_heads, remaining_call_depth });
                             Err(EvalError::InputRequired { request })
                         }
                         Err(error) => Err(error),
@@ -421,6 +472,7 @@ impl Session {
                         levels,
                         child_level,
                         include_heads,
+                        remaining_call_depth,
                         Vec::new(),
                         1,
                         false,
@@ -445,6 +497,7 @@ impl Session {
         levels: CasesLevelSpec,
         child_level: usize,
         include_heads: bool,
+        remaining_call_depth: usize,
         mut rebuilt_args: Vec<Expr>,
         mut max_child_depth: usize,
         mut changed: bool,
@@ -486,8 +539,14 @@ impl Session {
                 });
             };
 
-            let child_result =
-                self.replace_owned(child, rule_plan.clone(), levels, child_level, include_heads);
+            let child_result = self.replace_owned_recursive_bounded(
+                child,
+                rule_plan.clone(),
+                levels,
+                child_level,
+                include_heads,
+                remaining_call_depth,
+            );
 
             match child_result {
                 Ok(outcome) => pending = Some(outcome),
@@ -500,6 +559,7 @@ impl Session {
                         levels,
                         child_level,
                         include_heads,
+                        remaining_call_depth,
                         rebuilt_args: PersistentRewriteExprs::freeze(rebuilt_args),
                         max_child_depth,
                         changed,
@@ -523,6 +583,7 @@ impl Session {
         levels: CasesLevelSpec,
         child_level: usize,
         include_heads: bool,
+        remaining_call_depth: usize,
         mut rebuilt_entries: Vec<Expr>,
         mut max_child_depth: usize,
         mut changed: bool,
@@ -569,8 +630,14 @@ impl Session {
                 }
                 other => other,
             };
-            let entry_result =
-                self.replace_owned(child, rule_plan.clone(), levels, child_level, include_heads);
+            let entry_result = self.replace_owned_recursive_bounded(
+                child,
+                rule_plan.clone(),
+                levels,
+                child_level,
+                include_heads,
+                remaining_call_depth,
+            );
 
             match entry_result {
                 Ok(outcome) => pending = Some(outcome),
@@ -583,6 +650,7 @@ impl Session {
                         levels,
                         child_level,
                         include_heads,
+                        remaining_call_depth,
                         rebuilt_entries: PersistentRewriteExprs::freeze(rebuilt_entries),
                         max_child_depth,
                         changed,
@@ -603,6 +671,7 @@ impl Session {
         levels: CasesLevelSpec,
         child_level: usize,
         include_heads: bool,
+        remaining_call_depth: usize,
         outcome: ReplaceOutcome,
     ) -> Result<SuspendedReplaceCompletion, EvalError> {
         self.drive_suspended_replace_call_children(
@@ -614,6 +683,7 @@ impl Session {
                 levels,
                 child_level,
                 include_heads,
+                remaining_call_depth,
                 rebuilt_args: PersistentRewriteExprs::freeze(Vec::new()),
                 max_child_depth: outcome.depth,
                 changed: outcome.changed,
@@ -675,12 +745,13 @@ impl Session {
                     changed: state.changed,
                 });
             };
-            let child_result = self.replace_owned(
+            let child_result = self.replace_owned_recursive_bounded(
                 child,
                 state.rule_plan.clone(),
                 state.levels,
                 state.child_level,
                 state.include_heads,
+                state.remaining_call_depth,
             );
             match child_result {
                 Ok(outcome) => pending = Some(outcome),
@@ -701,6 +772,7 @@ impl Session {
         levels: CasesLevelSpec,
         child_level: usize,
         include_heads: bool,
+        remaining_call_depth: usize,
         outcome: ReplaceOutcome,
     ) -> Result<SuspendedReplaceCompletion, EvalError> {
         self.drive_suspended_replace_association_children(
@@ -712,6 +784,7 @@ impl Session {
                 levels,
                 child_level,
                 include_heads,
+                remaining_call_depth,
                 rebuilt_entries: PersistentRewriteExprs::freeze(Vec::new()),
                 max_child_depth: outcome.depth,
                 changed: outcome.changed,
@@ -772,12 +845,13 @@ impl Session {
                 }
                 other => other,
             };
-            let child_result = self.replace_owned(
+            let child_result = self.replace_owned_recursive_bounded(
                 child,
                 state.rule_plan.clone(),
                 state.levels,
                 state.child_level,
                 state.include_heads,
+                state.remaining_call_depth,
             );
             match child_result {
                 Ok(outcome) => pending = Some(outcome),
@@ -787,55 +861,6 @@ impl Session {
                 }
                 Err(error) => return Err(error),
             }
-        }
-    }
-}
-
-fn replace_expr_depth_for_heads(expr: &Expr, include_heads: bool) -> usize {
-    if include_heads {
-        replace_expr_depth_with_heads(expr)
-    } else {
-        replace_expr_depth(expr)
-    }
-}
-
-fn replace_expr_depth(expr: &Expr) -> usize {
-    match expr {
-        Expr::Atom(_) => 1,
-        Expr::Call { .. } if association_entries_from_expr(expr).is_some() => {
-            let value_depth = association_entries_from_expr(expr)
-                .expect("association shape checked above")
-                .into_iter()
-                .map(|(_, value)| replace_expr_depth(&value))
-                .max()
-                .unwrap_or(0);
-            1 + 1.max(value_depth)
-        }
-        Expr::Call { args, .. } => {
-            1 + 1.max(args.iter().map(replace_expr_depth).max().unwrap_or(0))
-        }
-    }
-}
-
-fn replace_expr_depth_with_heads(expr: &Expr) -> usize {
-    match expr {
-        Expr::Atom(_) => 1,
-        Expr::Call { head, .. } if association_entries_from_expr(expr).is_some() => {
-            let value_depth = association_entries_from_expr(expr)
-                .expect("association shape checked above")
-                .into_iter()
-                .map(|(_, value)| replace_expr_depth_with_heads(&value))
-                .max()
-                .unwrap_or(0);
-            1 + 1.max(value_depth).max(replace_expr_depth_with_heads(head))
-        }
-        Expr::Call { head, args } => {
-            let args_depth = args
-                .iter()
-                .map(replace_expr_depth_with_heads)
-                .max()
-                .unwrap_or(0);
-            1 + 1.max(args_depth).max(replace_expr_depth_with_heads(head))
         }
     }
 }

@@ -254,6 +254,17 @@ fn replace_and_replaceat_indexed_rule_plans_survive_mid_traversal_suspension() {
 }
 
 #[test]
+fn replace_iterative_tail_resumes_at_the_same_deep_rule_attempt() {
+    let nested = (0..20).fold("1".to_string(), |inner, _| format!("f[{inner}]"));
+    let expected = (0..20).fold("hit[1]".to_string(), |inner, _| format!("f[{inner}]"));
+    let source = format!(
+        "Replace[{nested}, x_Integer /; MatchQ[InputString[\"deep: \"], \"yes\"] :> hit[x], {{0, Infinity}}]"
+    );
+
+    assert_suspend_resume_matches_queued(&source, &["yes"], &expected);
+}
+
+#[test]
 fn resume_eval_request_with_input_can_finish_replacelist_after_suspending_delayed_rhs() {
     let mut session = session_with_test_control_builtins();
 
