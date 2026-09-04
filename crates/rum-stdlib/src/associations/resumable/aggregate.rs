@@ -1,6 +1,9 @@
 mod resume_frames;
 use resume_frames::*;
 
+mod merge_nested;
+pub(crate) use merge_nested::eval_merge_nested;
+
 use super::super::grouping::IndexedGroups;
 use super::*;
 use rum_core::SharedArgs;
@@ -52,38 +55,6 @@ pub(crate) fn eval_merge(
     }
 }
 
-pub(crate) fn eval_merge_nested(
-    session: &mut Session,
-    head: &Expr,
-    args: &SharedArgs,
-) -> Result<Expr, EvalError> {
-    let args = args.as_ref();
-    match args {
-        [combiner] => Ok(keyed_operator_form_slot_first(
-            "MergeNested",
-            combiner.clone(),
-        )),
-        [associations_expr, combiner] => {
-            let Some(items) = list_items(associations_expr) else {
-                return Ok(inert_call(head, args));
-            };
-
-            let Some(associations) = parse_association_list(items) else {
-                return Ok(inert_call(head, args));
-            };
-
-            resume_merge_nested_from_index(
-                session,
-                combiner.clone(),
-                group_merge_nested_values(associations),
-                0,
-                Vec::new(),
-            )
-        }
-        _ => Ok(inert_call(head, args)),
-    }
-}
-
 pub(crate) fn eval_counts_by(
     session: &mut Session,
     _head: &Expr,
@@ -117,108 +88,6 @@ pub(crate) fn eval_counts_by(
             one_or_two_argument_count_message("CountsBy", args.len()),
         )),
     }
-}
-
-fn resume_merge_nested_from_index(
-    session: &mut Session,
-    combiner: Expr,
-    grouped: Vec<(Expr, Vec<Expr>)>,
-    mut index: usize,
-    mut merged: Vec<(Expr, Expr)>,
-) -> Result<Expr, EvalError> {
-    loop {
-        let Some((key, values)) = grouped.get(index).cloned() else {
-            return Ok(render_association(merged));
-        };
-
-        let value = match evaluate_merge_nested_group(session, combiner.clone(), values) {
-            Ok(value) => value,
-            Err(EvalError::InputRequired { request }) => {
-                return rum_runtime::resume_or_suspend!(
-                    session,
-                    Err(EvalError::InputRequired { request }),
-                    ok(value) => Ok(value),
-                    suspend => {
-                let grouped = FrozenAssociationSequence::freeze(grouped);
-                                        let merged = PersistentAssociationSequence::freeze(merged);
-                ResumeMergeNestedFromIndexSuspensionFrame { combiner, grouped, index, merged, key }
-                },
-                );
-            }
-            Err(error) => return Err(error),
-        };
-
-        merged.push((key, value));
-        index += 1;
-    }
-}
-
-fn resume_suspended_merge_nested_from_index(
-    session: &mut Session,
-    combiner: Expr,
-    grouped: FrozenAssociationSequence<(Expr, Vec<Expr>)>,
-    mut index: usize,
-    mut merged: PersistentAssociationSequence<(Expr, Expr)>,
-) -> Result<Expr, EvalError> {
-    loop {
-        let Some((key, values)) = grouped.get(index).cloned() else {
-            return Ok(render_association(merged.to_vec()));
-        };
-
-        let value = match evaluate_merge_nested_group(session, combiner.clone(), values) {
-            Ok(value) => value,
-            Err(EvalError::InputRequired { request }) => {
-                return rum_runtime::resume_or_suspend!(
-                    session,
-                    Err(EvalError::InputRequired { request }),
-                    ok(value) => Ok(value),
-                    suspend => ResumeSuspendedMergeNestedFromIndexSuspensionFrame { combiner, grouped, index, merged, key },
-                );
-            }
-            Err(error) => return Err(error),
-        };
-
-        merged = merged.appended((key, value));
-        index += 1;
-    }
-}
-
-fn resume_suspended_merge_nested_with_value(
-    session: &mut Session,
-    combiner: Expr,
-    grouped: FrozenAssociationSequence<(Expr, Vec<Expr>)>,
-    index: usize,
-    merged: PersistentAssociationSequence<(Expr, Expr)>,
-    key: Expr,
-    value: Expr,
-) -> Result<Expr, EvalError> {
-    let merged = merged.appended((key, value));
-    resume_suspended_merge_nested_from_index(session, combiner, grouped, index + 1, merged)
-}
-
-fn evaluate_merge_nested_group(
-    session: &mut Session,
-    combiner: Expr,
-    values: Vec<Expr>,
-) -> Result<Expr, EvalError> {
-    if let Some(nested_associations) = nested_association_values(&values) {
-        return resume_merge_nested_from_index(
-            session,
-            combiner,
-            group_merge_nested_values(nested_associations),
-            0,
-            Vec::new(),
-        );
-    }
-
-    session.evaluate(Expr::call(
-        combiner,
-        vec![Expr::call(system_expr("List"), values)],
-    ))
-}
-
-fn nested_association_values(values: &[Expr]) -> Option<Vec<Vec<(Expr, Expr)>>> {
-    values.iter().map(association_entries_from_expr).collect()
 }
 
 fn resume_merge_from_index(
@@ -256,14 +125,6 @@ fn resume_merge_from_index(
         merged.push((key, combined));
         index += 1;
     }
-}
-
-fn parse_association_list(items: &[Expr]) -> Option<Vec<Vec<(Expr, Expr)>>> {
-    items.iter().map(association_entries_from_expr).collect()
-}
-
-fn group_merge_nested_values(associations: Vec<Vec<(Expr, Expr)>>) -> Vec<(Expr, Vec<Expr>)> {
-    IndexedGroups::collect(associations.into_iter().flatten()).into_entries()
 }
 
 fn inert_call(head: &Expr, args: &[Expr]) -> Expr {

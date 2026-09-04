@@ -1,20 +1,12 @@
+use super::merge_nested::{MergeNestedWork, resume_suspended_merge_nested_work};
 use super::*;
 use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
 #[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeMergeNestedFromIndexSuspensionFrame {
-    pub(super) combiner: rum_core::Expr,
-    pub(super) grouped: crate::associations::suspended_state::FrozenAssociationSequence<(
-        rum_core::Expr,
-        std::vec::Vec<rum_core::Expr>,
-    )>,
-    pub(super) index: usize,
-    pub(super) merged: crate::associations::suspended_state::PersistentAssociationSequence<(
-        rum_core::Expr,
-        rum_core::Expr,
-    )>,
-    pub(super) key: rum_core::Expr,
+    pub(super) work:
+        crate::associations::suspended_state::FrozenAssociationSequence<MergeNestedWork>,
 }
 
 impl rum_runtime::kernel_api::SuspensionFrame for ResumeMergeNestedFromIndexSuspensionFrame {
@@ -24,21 +16,9 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeMergeNestedFromIndexSusp
         outcome: Result<Expr, EvalError>,
     ) -> rum_runtime::kernel_api::FrameAction {
         #[allow(unused_mut)]
-        let mut combiner = self.combiner.clone();
-        #[allow(unused_mut)]
-        let mut grouped = self.grouped.clone();
-        #[allow(unused_mut)]
-        let mut index = self.index.clone();
-        #[allow(unused_mut)]
-        let mut merged = self.merged.clone();
-        #[allow(unused_mut)]
-        let mut key = self.key.clone();
+        let mut work = self.work.clone();
         let resumed = match outcome {
-            Ok(value) => (|| {
-                resume_suspended_merge_nested_with_value(
-                    session, combiner, grouped, index, merged, key, value,
-                )
-            })(),
+            Ok(value) => (|| resume_suspended_merge_nested_work(session, work, value))(),
             Err(error) => Err(error),
         };
         rum_runtime::kernel_api::FrameAction::complete(resumed)
@@ -47,17 +27,8 @@ impl rum_runtime::kernel_api::SuspensionFrame for ResumeMergeNestedFromIndexSusp
 
 #[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 pub(super) struct ResumeSuspendedMergeNestedFromIndexSuspensionFrame {
-    pub(super) combiner: rum_core::Expr,
-    pub(super) grouped: crate::associations::suspended_state::FrozenAssociationSequence<(
-        rum_core::Expr,
-        std::vec::Vec<rum_core::Expr>,
-    )>,
-    pub(super) index: usize,
-    pub(super) merged: crate::associations::suspended_state::PersistentAssociationSequence<(
-        rum_core::Expr,
-        rum_core::Expr,
-    )>,
-    pub(super) key: rum_core::Expr,
+    pub(super) work:
+        crate::associations::suspended_state::FrozenAssociationSequence<MergeNestedWork>,
 }
 
 impl rum_runtime::kernel_api::SuspensionFrame
@@ -69,21 +40,9 @@ impl rum_runtime::kernel_api::SuspensionFrame
         outcome: Result<Expr, EvalError>,
     ) -> rum_runtime::kernel_api::FrameAction {
         #[allow(unused_mut)]
-        let mut combiner = self.combiner.clone();
-        #[allow(unused_mut)]
-        let mut grouped = self.grouped.clone();
-        #[allow(unused_mut)]
-        let mut index = self.index.clone();
-        #[allow(unused_mut)]
-        let mut merged = self.merged.clone();
-        #[allow(unused_mut)]
-        let mut key = self.key.clone();
+        let mut work = self.work.clone();
         let resumed = match outcome {
-            Ok(value) => (|| {
-                resume_suspended_merge_nested_with_value(
-                    session, combiner, grouped, index, merged, key, value,
-                )
-            })(),
+            Ok(value) => (|| resume_suspended_merge_nested_work(session, work, value))(),
             Err(error) => Err(error),
         };
         rum_runtime::kernel_api::FrameAction::complete(resumed)

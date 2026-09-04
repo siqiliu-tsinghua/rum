@@ -1,5 +1,6 @@
 use super::*;
 use rum_core::Atom;
+use rum_runtime::kernel_api::association_entries_from_expr;
 
 const TARGET_PHYSICAL_HEIGHT: usize = 4_097;
 const ASSOCIATION_WRAPPER_COUNT: usize = 2_048;
@@ -90,6 +91,57 @@ fn assert_raw_association_fixture_height(expr: &Expr) {
         vec![TARGET_PHYSICAL_HEIGHT],
         "the fixture must contain one sentinel at its unique deepest value"
     );
+}
+
+fn assert_raw_height_with_unique_deepest_integer(expr: &Expr, expected_integer: i64) {
+    let mut work = vec![(expr, 1_usize)];
+    let mut max_depth = 0;
+    let mut integer_depths = Vec::new();
+    while let Some((current, depth)) = work.pop() {
+        max_depth = max_depth.max(depth);
+        match current {
+            Expr::Call { head, args } => {
+                work.push((head, depth + 1));
+                work.extend(args.iter().map(|arg| (arg, depth + 1)));
+            }
+            Expr::Atom(Atom::Integer(value)) => {
+                integer_depths.push((value.as_i64(), depth));
+            }
+            Expr::Atom(_) => {}
+        }
+    }
+
+    assert_eq!(max_depth, TARGET_PHYSICAL_HEIGHT);
+    assert_eq!(
+        integer_depths,
+        vec![(Some(expected_integer), TARGET_PHYSICAL_HEIGHT)],
+        "the input must contain one integer at its unique deepest value"
+    );
+}
+
+fn assert_exact_merge_nested_chain(expr: &Expr) {
+    let root_entries = association_entries_from_expr(expr)
+        .expect("the complete MergeNested result should be an association");
+    assert_eq!(root_entries.len(), 3);
+    assert_eq!(root_entries[0].0, Expr::string("leftSentinel"));
+    assert_eq!(root_entries[0].1.to_string(), "mergeLeftSentinel");
+    assert_eq!(root_entries[1].0, Expr::string("k"));
+    assert_eq!(root_entries[2].0, Expr::string("rightSentinel"));
+    assert_eq!(root_entries[2].1.to_string(), "mergeRightSentinel");
+
+    let mut current = root_entries[1].1.clone();
+    for level in 1..ASSOCIATION_WRAPPER_COUNT {
+        let entries = association_entries_from_expr(&current)
+            .unwrap_or_else(|| panic!("merged level {level} should be an association"));
+        assert_eq!(entries.len(), 1, "merged level {level} should have one key");
+        let (key, value) = entries
+            .into_iter()
+            .next()
+            .expect("a one-entry association should contain its entry");
+        assert_eq!(key, Expr::string("k"));
+        current = value;
+    }
+    assert_eq!(current, Expr::small_integer(42));
 }
 
 fn construct_association_depth_fixture(session: &mut Session, target: &str) -> Expr {
@@ -237,6 +289,49 @@ fn association_assignment_read_completes_at_physical_height_4097_on_two_mib() {
         certificate,
         nested_association_input_form(ASSOCIATION_WRAPPER_COUNT, "8")
     );
+}
+
+#[test]
+#[ignore = "release-only deployment-stack probe; run explicitly with --release"]
+fn merge_nested_completes_at_physical_height_4097_on_two_mib() {
+    let certificate = run_on_two_mib_thread("merge-nested-depth-4097", || {
+        let mut session = Session::new();
+        install_core(&mut session);
+        let source = format!(
+            "mergeLeftInput = 17; mergeRightInput = 25; \
+             Do[mergeLeftInput = Association[\"k\" -> mergeLeftInput]; \
+                mergeRightInput = Association[\"k\" -> mergeRightInput], \
+                {{i, {}}}]; \
+             mergeLeftInput = Association[\"leftSentinel\" -> mergeLeftSentinel, \
+                                          \"k\" -> mergeLeftInput]; \
+             mergeRightInput = Association[\"k\" -> mergeRightInput, \
+                                           \"rightSentinel\" -> mergeRightSentinel]; \
+             Null",
+            ASSOCIATION_WRAPPER_COUNT - 1
+        );
+        session
+            .eval_text(&source)
+            .expect("deep MergeNested inputs should be constructed");
+
+        let left = session
+            .eval_text("mergeLeftInput")
+            .expect("left deep MergeNested input should be readable")
+            .value;
+        let right = session
+            .eval_text("mergeRightInput")
+            .expect("right deep MergeNested input should be readable")
+            .value;
+        assert_raw_height_with_unique_deepest_integer(&left, 17);
+        assert_raw_height_with_unique_deepest_integer(&right, 25);
+
+        let outcome = session
+            .eval_text("MergeNested[{mergeLeftInput, mergeRightInput}, Total]")
+            .expect("deep MergeNested should complete");
+        assert!(outcome.messages.is_empty(), "{:?}", outcome.messages);
+        assert_exact_merge_nested_chain(&outcome.value);
+        "complete".to_string()
+    });
+    assert_eq!(certificate, "complete");
 }
 
 #[test]

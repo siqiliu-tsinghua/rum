@@ -797,6 +797,22 @@ rumMicroOnce[
     {gMicroAssociationSmallLiteralRepeat, 1, 500 * rumMicroScale}
   ]
 ];
+rumMicroBench[
+  "merge-nested-small",
+  rumMicroN[200],
+  MergeNested[
+    {
+      <|a -> <|x -> 1, y -> 2|>, b -> 3|>,
+      <|a -> <|x -> 4, z -> 5|>, b -> 6|>
+    },
+    Total
+  ]
+];
+If[
+  SameQ[rumMicroSink, <|a -> <|x -> 5, y -> 2, z -> 5|>, b -> 9|>],
+  Null,
+  Exit[2]
+];
 
 gMicroSetPartFixed100Len100 = Table[0, {100}];
 rumMicroOnce[
