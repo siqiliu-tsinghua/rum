@@ -1,6 +1,10 @@
 use super::*;
 use std::collections::HashSet;
 
+mod association_tail;
+
+const ASSOCIATION_STABILITY_RECURSIVE_FRONT_DEPTH: usize = 16;
+
 impl Session {
     pub(in crate::runtime) fn call_stability_uncached_with_bloom(
         &mut self,
@@ -24,6 +28,45 @@ impl Session {
 
         for arg in args.iter() {
             let (arg_stable, arg_bloom) = self.cached_expr_stability_with_bloom(arg);
+            bloom.union_assign(arg_bloom);
+            if !arg_stable {
+                return (false, bloom);
+            }
+        }
+
+        (true, bloom)
+    }
+
+    pub(in crate::runtime) fn call_stability_uncached_with_bloom_association_rooted(
+        &mut self,
+        head: &SharedExpr,
+        args: &SharedArgs,
+        remaining_depth: usize,
+    ) -> (bool, StabilityBloom) {
+        let (head_stable, mut bloom) =
+            self.association_rooted_cached_expr_stability_with_bloom(head, remaining_depth);
+        if !head_stable {
+            return (false, bloom);
+        }
+
+        if let Some((stable, data_bloom)) = self
+            .data_constructor_stability_with_bloom_association_rooted(
+                head,
+                args,
+                bloom,
+                remaining_depth,
+            )
+        {
+            return (stable, data_bloom);
+        }
+
+        if self.call_head_has_evaluation_effect(head, args) {
+            return (false, bloom);
+        }
+
+        for arg in args.iter() {
+            let (arg_stable, arg_bloom) =
+                self.association_rooted_cached_expr_stability_with_bloom(arg, remaining_depth);
             bloom.union_assign(arg_bloom);
             if !arg_stable {
                 return (false, bloom);
@@ -60,6 +103,54 @@ impl Session {
         }
     }
 
+    fn data_constructor_stability_with_bloom_association_rooted(
+        &mut self,
+        head: &Expr,
+        args: &[Expr],
+        bloom: StabilityBloom,
+        remaining_depth: usize,
+    ) -> Option<(bool, StabilityBloom)> {
+        let symbol = expr_as_symbol(head)?;
+        if symbol.context() != SYSTEM_CONTEXT {
+            return None;
+        }
+
+        match symbol.name() {
+            "Association" => Some(
+                self.association_data_stability_with_bloom_association_rooted(
+                    args,
+                    bloom,
+                    remaining_depth,
+                ),
+            ),
+            "Failure" => Some(self.failure_data_stability_with_bloom_association_rooted(
+                args,
+                bloom,
+                remaining_depth,
+            )),
+            "Missing" | "Success" | "TerminatedEvaluation" => Some(
+                self.all_args_stability_with_bloom_association_rooted(args, bloom, remaining_depth),
+            ),
+            "HoldAllComplete" | "HoldComplete" => Some((true, bloom)),
+            "Function" | "Hold" | "HoldAll" | "HoldPattern" => {
+                Some((hold_all_literal_args_are_stable(args), bloom))
+            }
+            "Rule" => Some(self.rule_data_stability_with_bloom_association_rooted(
+                args,
+                bloom,
+                remaining_depth,
+            )),
+            "RuleDelayed" => Some(
+                self.rule_delayed_data_stability_with_bloom_association_rooted(
+                    args,
+                    bloom,
+                    remaining_depth,
+                ),
+            ),
+            _ => None,
+        }
+    }
+
     #[inline(never)]
     fn all_args_stability_with_bloom(
         &mut self,
@@ -68,6 +159,25 @@ impl Session {
     ) -> (bool, StabilityBloom) {
         for arg in args {
             let (arg_stable, arg_bloom) = self.cached_expr_stability_with_bloom(arg);
+            bloom.union_assign(arg_bloom);
+            if !arg_stable {
+                return (false, bloom);
+            }
+        }
+
+        (true, bloom)
+    }
+
+    #[inline(never)]
+    fn all_args_stability_with_bloom_association_rooted(
+        &mut self,
+        args: &[Expr],
+        mut bloom: StabilityBloom,
+        remaining_depth: usize,
+    ) -> (bool, StabilityBloom) {
+        for arg in args {
+            let (arg_stable, arg_bloom) =
+                self.association_rooted_cached_expr_stability_with_bloom(arg, remaining_depth);
             bloom.union_assign(arg_bloom);
             if !arg_stable {
                 return (false, bloom);
@@ -94,11 +204,47 @@ impl Session {
         self.all_args_stability_with_bloom(args, bloom)
     }
 
+    #[cold]
+    #[inline(never)]
+    fn failure_data_stability_with_bloom_association_rooted(
+        &mut self,
+        args: &[Expr],
+        bloom: StabilityBloom,
+        remaining_depth: usize,
+    ) -> (bool, StabilityBloom) {
+        let [_, details] = args else {
+            return self.all_args_stability_with_bloom_association_rooted(
+                args,
+                bloom,
+                remaining_depth,
+            );
+        };
+        if failure_details_would_normalize(details) {
+            return (false, bloom);
+        }
+
+        self.all_args_stability_with_bloom_association_rooted(args, bloom, remaining_depth)
+    }
+
     #[inline(never)]
     fn association_data_stability_with_bloom(
         &mut self,
         args: &[Expr],
+        bloom: StabilityBloom,
+    ) -> (bool, StabilityBloom) {
+        self.association_data_stability_with_bloom_association_rooted(
+            args,
+            bloom,
+            ASSOCIATION_STABILITY_RECURSIVE_FRONT_DEPTH,
+        )
+    }
+
+    #[inline(never)]
+    fn association_data_stability_with_bloom_association_rooted(
+        &mut self,
+        args: &[Expr],
         mut bloom: StabilityBloom,
+        remaining_depth: usize,
     ) -> (bool, StabilityBloom) {
         let mut linear_keys: Vec<Expr> =
             Vec::with_capacity(args.len().min(ASSOCIATION_INDEX_THRESHOLD + 1));
@@ -124,7 +270,8 @@ impl Session {
                 }
             }
 
-            let (arg_stable, arg_bloom) = self.cached_expr_stability_with_bloom(arg);
+            let (arg_stable, arg_bloom) =
+                self.association_rooted_cached_expr_stability_with_bloom(arg, remaining_depth);
             bloom.union_assign(arg_bloom);
             if !arg_stable {
                 return (false, bloom);
@@ -154,6 +301,28 @@ impl Session {
     }
 
     #[inline(never)]
+    fn rule_data_stability_with_bloom_association_rooted(
+        &mut self,
+        args: &[Expr],
+        mut bloom: StabilityBloom,
+        remaining_depth: usize,
+    ) -> (bool, StabilityBloom) {
+        let [lhs, rhs] = args else {
+            return (false, bloom);
+        };
+        let (lhs_stable, lhs_bloom) =
+            self.association_rooted_cached_expr_stability_with_bloom(lhs, remaining_depth);
+        bloom.union_assign(lhs_bloom);
+        if !lhs_stable {
+            return (false, bloom);
+        }
+        let (rhs_stable, rhs_bloom) =
+            self.association_rooted_cached_expr_stability_with_bloom(rhs, remaining_depth);
+        bloom.union_assign(rhs_bloom);
+        (rhs_stable, bloom)
+    }
+
+    #[inline(never)]
     fn rule_delayed_data_stability_with_bloom(
         &mut self,
         args: &[Expr],
@@ -163,6 +332,22 @@ impl Session {
             return (false, bloom);
         };
         let (lhs_stable, lhs_bloom) = self.cached_expr_stability_with_bloom(lhs);
+        bloom.union_assign(lhs_bloom);
+        (lhs_stable, bloom)
+    }
+
+    #[inline(never)]
+    fn rule_delayed_data_stability_with_bloom_association_rooted(
+        &mut self,
+        args: &[Expr],
+        mut bloom: StabilityBloom,
+        remaining_depth: usize,
+    ) -> (bool, StabilityBloom) {
+        let [lhs, _rhs] = args else {
+            return (false, bloom);
+        };
+        let (lhs_stable, lhs_bloom) =
+            self.association_rooted_cached_expr_stability_with_bloom(lhs, remaining_depth);
         bloom.union_assign(lhs_bloom);
         (lhs_stable, bloom)
     }

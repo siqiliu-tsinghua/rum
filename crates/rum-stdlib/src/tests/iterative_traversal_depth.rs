@@ -2,6 +2,8 @@ use super::*;
 use rum_core::Atom;
 
 const TARGET_PHYSICAL_HEIGHT: usize = 4_097;
+const ASSOCIATION_WRAPPER_COUNT: usize = 2_048;
+const ASSOCIATION_DEPTH_SENTINEL: &str = "association-depth-sentinel-455";
 
 fn run_on_two_mib_thread(name: &str, action: impl FnOnce() -> String + Send + 'static) -> String {
     std::thread::Builder::new()
@@ -46,6 +48,62 @@ fn nested_input_form(wrapper_count: usize, centre: &str) -> String {
         "{".repeat(wrapper_count),
         "}".repeat(wrapper_count)
     )
+}
+
+fn nested_association_input_form(wrapper_count: usize, centre: &str) -> String {
+    format!(
+        "{}{centre}{}",
+        "<|\"k\" -> ".repeat(wrapper_count),
+        "|>".repeat(wrapper_count)
+    )
+}
+
+fn mapped_nested_association_input_form(wrapper_count: usize) -> String {
+    format!(
+        "{}ff[\"{ASSOCIATION_DEPTH_SENTINEL}\"]{}",
+        "ff[<|\"k\" -> ".repeat(wrapper_count),
+        "|>]".repeat(wrapper_count)
+    )
+}
+
+fn assert_raw_association_fixture_height(expr: &Expr) {
+    let mut work = vec![(expr, 1_usize)];
+    let mut max_depth = 0;
+    let mut sentinel_depths = Vec::new();
+    while let Some((current, depth)) = work.pop() {
+        max_depth = max_depth.max(depth);
+        match current {
+            Expr::Call { head, args } => {
+                work.push((head, depth + 1));
+                work.extend(args.iter().map(|arg| (arg, depth + 1)));
+            }
+            Expr::Atom(Atom::String(value)) if value == ASSOCIATION_DEPTH_SENTINEL => {
+                sentinel_depths.push(depth);
+            }
+            Expr::Atom(_) => {}
+        }
+    }
+
+    assert_eq!(max_depth, TARGET_PHYSICAL_HEIGHT);
+    assert_eq!(
+        sentinel_depths,
+        vec![TARGET_PHYSICAL_HEIGHT],
+        "the fixture must contain one sentinel at its unique deepest value"
+    );
+}
+
+fn construct_association_depth_fixture(session: &mut Session, target: &str) -> Expr {
+    let source = format!(
+        "{target} = \"{ASSOCIATION_DEPTH_SENTINEL}\"; \
+         Do[{target} = Association[\"k\" -> {target}], {{i, {ASSOCIATION_WRAPPER_COUNT}}}]; \
+         {target}"
+    );
+    let value = session
+        .eval_text(&source)
+        .expect("deep association fixture should be constructed")
+        .value;
+    assert_raw_association_fixture_height(&value);
+    value
 }
 
 fn evaluate_shallow_input_form(body: &str) -> String {
@@ -127,6 +185,57 @@ fn map_completes_at_physical_height_4097_on_two_mib() {
     assert_eq!(
         certificate,
         nested_input_form(TARGET_PHYSICAL_HEIGHT - 1, "deepMapProbe[1]")
+    );
+}
+
+#[test]
+#[ignore = "release-only deployment-stack probe; run explicitly with --release"]
+fn association_map_completes_at_physical_height_4097_on_two_mib() {
+    let certificate = run_on_two_mib_thread("association-map-depth-4097", || {
+        let mut session = Session::new();
+        install_core(&mut session);
+        let input = construct_association_depth_fixture(&mut session, "associationMapInput");
+        let value = session
+            .eval_text("ToString[Map[ff, associationMapInput, {0, Infinity}], InputForm]")
+            .expect("deep association Map should complete")
+            .value;
+        drop(input);
+        let Expr::Atom(Atom::String(value)) = value else {
+            panic!("deep association Map should return an Atom::String")
+        };
+        value
+    });
+    assert_eq!(
+        certificate,
+        mapped_nested_association_input_form(ASSOCIATION_WRAPPER_COUNT)
+    );
+}
+
+#[test]
+#[ignore = "release-only deployment-stack probe; run explicitly with --release"]
+fn association_assignment_read_completes_at_physical_height_4097_on_two_mib() {
+    let certificate = run_on_two_mib_thread("association-assignment-read-depth-4097", || {
+        let mut session = Session::new();
+        install_core(&mut session);
+        let input = construct_association_depth_fixture(&mut session, "associationAssignmentInput");
+        let selectors = std::iter::repeat_n("\"k\"", ASSOCIATION_WRAPPER_COUNT)
+            .collect::<Vec<_>>()
+            .join(", ");
+        let source =
+            format!("b = associationAssignmentInput; b[[{selectors}]] = 8; ToString[b, InputForm]");
+        let value = session
+            .eval_text(&source)
+            .expect("deep association assignment and read should complete")
+            .value;
+        drop(input);
+        let Expr::Atom(Atom::String(value)) = value else {
+            panic!("deep association assignment read should return an Atom::String")
+        };
+        value
+    });
+    assert_eq!(
+        certificate,
+        nested_association_input_form(ASSOCIATION_WRAPPER_COUNT, "8")
     );
 }
 
@@ -338,6 +447,26 @@ fn map_certificate_companion_pins_descending_selector() {
     assert_eq!(
         evaluate_shallow_input_form("Map[deepMapProbe, {{{1}}}, {-1}]"),
         "{{{deepMapProbe[1]}}}"
+    );
+}
+
+#[test]
+fn association_map_certificate_companion_pins_descending_selector() {
+    assert_eq!(
+        evaluate_shallow_input_form(
+            "Map[ff, Association[\"k\" -> Association[\"k\" -> Association[\"k\" -> deepestAssociationSentinel]]], {0, Infinity}]",
+        ),
+        "ff[<|\"k\" -> ff[<|\"k\" -> ff[<|\"k\" -> ff[deepestAssociationSentinel]|>]|>]|>]"
+    );
+}
+
+#[test]
+fn association_assignment_certificate_companion_pins_full_key_selector_chain() {
+    assert_eq!(
+        evaluate_shallow_input_form(
+            "b = Association[\"k\" -> Association[\"k\" -> Association[\"k\" -> deepestAssociationSentinel]]]; b[[\"k\", \"k\", \"k\"]] = 8; b",
+        ),
+        "<|\"k\" -> <|\"k\" -> <|\"k\" -> 8|>|>|>"
     );
 }
 

@@ -3,6 +3,14 @@ use super::*;
 use std::panic::Location;
 use std::sync::OnceLock;
 
+#[cfg(test)]
+use std::cell::RefCell;
+
+mod association_front;
+pub(in crate::runtime) use association_front::{
+    AssociationCallCacheMiss, AssociationCallCacheStart,
+};
+
 const CALL_STABILITY_CACHE_MAX_ENTRIES_ENV: &str = "RUM_CALL_STABILITY_CACHE_MAX_ENTRIES";
 const STABILITY_DIRTY_BLOOM_MAX_BITS_ENV: &str = "RUM_STABILITY_DIRTY_BLOOM_MAX_BITS";
 
@@ -14,6 +22,45 @@ const CALL_STABILITY_CACHE_MAX_ENTRIES: usize = 1 << 14;
 /// Dirty-bit population bound before bloom-based invalidation falls back to a
 /// full call-cache generation bump.
 const STABILITY_DIRTY_BLOOM_MAX_BITS: u32 = 96;
+
+#[cfg(test)]
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub(super) enum CallStabilityCacheTraceEvent {
+    ClearForSizeCap,
+    Insert(Expr),
+}
+
+#[cfg(test)]
+thread_local! {
+    static CALL_STABILITY_CACHE_TRACE: RefCell<Option<Vec<CallStabilityCacheTraceEvent>>> =
+        const { RefCell::new(None) };
+}
+
+#[cfg(test)]
+pub(super) fn start_call_stability_cache_trace() {
+    CALL_STABILITY_CACHE_TRACE.with(|trace| {
+        *trace.borrow_mut() = Some(Vec::new());
+    });
+}
+
+#[cfg(test)]
+pub(super) fn take_call_stability_cache_trace() -> Vec<CallStabilityCacheTraceEvent> {
+    CALL_STABILITY_CACHE_TRACE.with(|trace| {
+        trace
+            .borrow_mut()
+            .take()
+            .expect("the call-stability cache trace must have been started")
+    })
+}
+
+#[cfg(test)]
+fn record_call_stability_cache_trace(event: CallStabilityCacheTraceEvent) {
+    CALL_STABILITY_CACHE_TRACE.with(|trace| {
+        if let Some(trace) = trace.borrow_mut().as_mut() {
+            trace.push(event);
+        }
+    });
+}
 
 pub(in crate::runtime) fn symbol_stability_bloom_bit(symbol: &Symbol) -> u128 {
     let identity = match symbol.identity() {
@@ -288,6 +335,11 @@ impl Session {
                 "call_stability_insertions",
             );
             record_call_stability_source_head_insertion(head.as_ref());
+            #[cfg(test)]
+            record_call_stability_cache_trace(CallStabilityCacheTraceEvent::Insert(Expr::call(
+                head.as_ref().clone(),
+                args.to_vec(),
+            )));
             self.call_stability_cache.insert(
                 key,
                 CallStabilityCacheEntry {
@@ -342,6 +394,8 @@ impl Session {
             &CALL_STABILITY_SIZE_CAP_CLEAR_COUNT,
             "call_stability_size_cap_clears",
         );
+        #[cfg(test)]
+        record_call_stability_cache_trace(CallStabilityCacheTraceEvent::ClearForSizeCap);
         self.call_stability_cache.clear();
     }
 }

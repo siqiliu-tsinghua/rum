@@ -5,7 +5,7 @@ use super::*;
 #[cfg_attr(not(test), allow(dead_code))]
 mod mutation_proofs;
 mod profile;
-mod stability;
+pub(in crate::runtime) mod stability;
 
 #[cfg(test)]
 mod tests;

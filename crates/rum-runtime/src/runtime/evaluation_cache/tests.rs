@@ -1,5 +1,7 @@
 use super::*;
 
+mod association_stability_tail;
+
 fn session_with_compound_expression() -> Session {
     crate::runtime::test_builtins::session_with_test_compound_expression_builtin()
 }
