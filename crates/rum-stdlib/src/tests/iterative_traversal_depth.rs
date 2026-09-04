@@ -170,6 +170,44 @@ fn replace_active_spine_returns_in_band_resource_error_on_two_mib() {
 }
 
 #[test]
+#[ignore = "release-only active-spine safety probe; run explicitly with --release"]
+fn d_nested_sin_completes_at_physical_height_4097_on_two_mib() {
+    let certificate = run_on_two_mib_thread("d-nested-sin-depth-4097", || {
+        let physical_height = TARGET_PHYSICAL_HEIGHT;
+        let mut session = Session::new();
+        install_core(&mut session);
+        let source = format!(
+            "e = q; Do[e = Sin[e], {{i, {}}}]; Depth[e]",
+            physical_height - 1
+        );
+        assert_eq!(
+            session
+                .eval_text(&source)
+                .expect("nested-Sin spine should be constructed")
+                .value
+                .to_string(),
+            physical_height.to_string()
+        );
+
+        let outcome = session
+            .eval_text("Length[D[e, q]]")
+            .expect("nested-Sin derivative should complete");
+        assert_eq!(outcome.value.to_string(), (physical_height - 1).to_string());
+        assert!(outcome.messages.is_empty(), "{:?}", outcome.messages);
+        assert_eq!(
+            session
+                .eval_text("1 + 1")
+                .expect("session should remain usable after D")
+                .value
+                .to_string(),
+            "2"
+        );
+        outcome.value.to_string()
+    });
+    assert_eq!(certificate, (TARGET_PHYSICAL_HEIGHT - 1).to_string());
+}
+
+#[test]
 fn map_certificate_companion_pins_descending_selector() {
     assert_eq!(
         evaluate_shallow_input_form("Map[deepMapProbe, {{{1}}}, {-1}]"),

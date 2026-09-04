@@ -224,6 +224,8 @@ ClearAll[
   gMicroDefaultHit,
   gMicroDefaultMiss,
   gMicroGuardedDefault,
+  gMicroDNestedSinSmall,
+  gMicroDVariable,
   list10,
   rulesSimple,
   gMicroGuardedRewriteRule,
@@ -420,6 +422,7 @@ gMicroDefaultHit[x_.] := x;
 gMicroDefaultMiss[x_.] := x;
 Default[gMicroGuardedDefault] := 1 /; True;
 gMicroGuardedDefault[x_.] := x;
+gMicroDNestedSinSmall = Nest[Sin, gMicroDVariable, 8];
 
 Print["RUM_CORE_MICRO_BEGIN"];
 
@@ -499,6 +502,12 @@ rumMicroBench["table-small", rumMicroN[200], Table[i, {i, 1, 5}]];
 rumMicroOnce["table-iterator-plus", rumMicroN[1000], Table[j + 1, {j, 1000 * rumMicroScale}]];
 rumMicroOnce["table-iterator-pair-list", rumMicroN[1000], Table[{j, j}, {j, 1000 * rumMicroScale}]];
 rumMicroBench["do-small", rumMicroN[200], Module[{s = 0}, Do[s = i, {i, 1, 5}]; s]];
+rumMicroBench[
+  "d-nested-sin-small",
+  rumMicroN[200],
+  D[gMicroDNestedSinSmall, gMicroDVariable]
+];
+If[SameQ[Length[rumMicroSink], 8], Null, Exit[2]];
 
 rumMicroBench["downvalue-exact-hit", rumMicroN[2000], fExact[1]];
 rumMicroBench["downvalue-exact-miss", rumMicroN[2000], fExact[2]];

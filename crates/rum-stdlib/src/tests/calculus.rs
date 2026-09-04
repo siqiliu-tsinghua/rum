@@ -105,6 +105,84 @@ fn d_uses_abstract_derivative_forms_for_symbol_headed_calls() {
 }
 
 #[test]
+fn d_preserves_nested_chain_rule_factor_order() {
+    let mut session = core_session();
+
+    assert_eq!(
+        session
+            .eval_text("D[Nest[Sin, q, 3], q]")
+            .unwrap()
+            .value
+            .to_string(),
+        "Times[Derivative[1][Sin][q], Derivative[1][Sin][Sin[q]], Derivative[1][Sin][Sin[Sin[q]]]]"
+    );
+}
+
+#[test]
+fn d_preserves_plus_zero_elision_and_combination() {
+    let mut session = core_session();
+
+    assert_eq!(
+        session
+            .eval_text("D[x + f[y] + g[x], x]")
+            .unwrap()
+            .value
+            .to_string(),
+        "Plus[1, Derivative[1][g][x]]"
+    );
+}
+
+#[test]
+fn d_preserves_times_term_and_factor_order() {
+    let mut session = core_session();
+
+    assert_eq!(
+        session
+            .eval_text("D[f[x] * g[x] * h[y], x]")
+            .unwrap()
+            .value
+            .to_string(),
+        "Plus[Times[f[x], h[y], Derivative[1][g][x]], Times[g[x], h[y], Derivative[1][f][x]]]"
+    );
+}
+
+#[test]
+fn d_preserves_rational_and_abstract_power_rules() {
+    let mut session = core_session();
+
+    assert_eq!(
+        session
+            .eval_text("D[x^(3/2), x]")
+            .unwrap()
+            .value
+            .to_string(),
+        "Times[3/2, Power[x, 1/2]]"
+    );
+    assert_eq!(
+        session.eval_text("D[x^y, x]").unwrap().value.to_string(),
+        "Derivative[1, 0][Power][x, y]"
+    );
+}
+
+#[test]
+fn d_preserves_abstract_call_fallback_and_variable_free_prepass() {
+    let mut session = core_session();
+
+    assert_eq!(
+        session
+            .eval_text("D[f[x][x], x]")
+            .unwrap()
+            .value
+            .to_string(),
+        "D[f[x][x], x]"
+    );
+    assert_eq!(
+        session.eval_text("D[f[y], x]").unwrap().value.to_string(),
+        "0"
+    );
+}
+
+#[test]
 fn d_keeps_current_variable_boundary_for_pattern_or_non_symbol_heads() {
     let mut session = core_session();
 
