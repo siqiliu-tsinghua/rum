@@ -1440,6 +1440,35 @@ shared stability walk rather than `Replace` itself, so the remaining fail-open
 sites should be expected to land in the same 5,800-level bracket once
 converted.
 
+**Draft 4 is CLOSED (brief-448, `bd3820c1`), and it refuted its own
+projection.** Both of `D`'s walks — the containment prepass that runs once per
+visited node, and the four-way differentiation group — keep a depth-16 recursive
+front and hand the tail to explicit stacks. `calculus.rs` split into containment
+and differentiation modules declared from it, `lib.rs` untouched.
+
+brief-439's draft had written that 4,097 must end in a recoverable in-band
+error, and its stop-loss forbade demanding successful evaluation. **It
+completes**: `Length[D[e, q]]` is 4,096 with no messages and a usable session
+afterwards. The projection predated the stability-walk repair, which is why the
+brief asked for the outcome to be measured and asserted rather than assumed —
+dispatching the draft as written would have produced a certificate asserting an
+error that no longer happens.
+
+**Two costs recorded, not fixed.** Repeated containment work was held out of
+scope, so `D` is near-cubic on a deep spine — director-measured 0.146 s at 256,
+0.970 s at 512, 7.26 s at 1,024, about 440 s at 4,097 — and the release-only
+certificate panel now takes about 460 s end to end. Budget that into any future
+gate that runs the panel. Removing the repeated prepass is the work-removal item
+this leaves behind, and it sits beside the `Cases` double-normalization entry
+above.
+
+**A denominator lesson for the A/B protocol.** The within-run quotient read
++0.96% against the 3 nearest-magnitude neighbors and +2.43% against 12, both
+outside their same-binary spreads — while the target's raw movement was -0.06%
+and the median over all 46 same-tier labels was -0.18%. A three-label
+denominator has no stable median of its own; take the tier median over tens of
+labels, or the quotient invents a regression.
+
 **Correction to the organization-line note above.** Re-measured at `59410b75`,
 only one of the three files named there is over 35k: `evaluation_cache/tests.rs`
 at 38 294. `debug_tools/resources/memory.rs` is 32 019 and both `stability.rs`
