@@ -632,6 +632,7 @@ impl Session {
             match_depth: 0,
             native_stack_base: 0,
             native_stack_next_check_depth: NATIVE_STACK_DEPTH_POLL_STRIDE,
+            stability_native_stack_poll_counter: 0,
             interrupt_armed: false,
             evaluation_stack: Vec::new(),
             tracing_enabled: false,

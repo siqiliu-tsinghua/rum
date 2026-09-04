@@ -1,7 +1,9 @@
 use crate::install_core;
 use rum_core::{Atom, Expr};
 use rum_runtime::kernel_api::system_expr;
-use rum_runtime::{RuntimeMessage, Session};
+use rum_runtime::{RuntimeMessage, Session, native_stack_limit_for_declared_stack};
+
+const YAML_DEPTH_ACCEPTANCE_STACK_BYTES: usize = 16 * 1024 * 1024;
 
 fn core_session() -> Session {
     let mut session = Session::new();
@@ -315,19 +317,31 @@ fn from_yaml_golden_error_corpus_is_byte_stable() {
 
 #[test]
 fn from_yaml_depth_limit_accepts_every_collection_descent_at_the_limit() {
-    let mut session = core_session();
+    std::thread::Builder::new()
+        .name("yaml-depth-acceptance".to_string())
+        .stack_size(YAML_DEPTH_ACCEPTANCE_STACK_BYTES)
+        .spawn(|| {
+            let mut session = core_session();
+            session.set_native_stack_limit(
+                native_stack_limit_for_declared_stack(YAML_DEPTH_ACCEPTANCE_STACK_BYTES)
+                    .expect("YAML acceptance stack should satisfy the supported minimum"),
+            );
 
-    let (mappings, _) = nested_yaml_blocks(CODEC_DEPTH_LIMIT, "k:");
-    assert_yaml_depth_success(&mut session, &mappings);
+            let (mappings, _) = nested_yaml_blocks(CODEC_DEPTH_LIMIT, "k:");
+            assert_yaml_depth_success(&mut session, &mappings);
 
-    let (sequences, _) = nested_yaml_blocks(CODEC_DEPTH_LIMIT, "-");
-    assert_yaml_depth_success(&mut session, &sequences);
+            let (sequences, _) = nested_yaml_blocks(CODEC_DEPTH_LIMIT, "-");
+            assert_yaml_depth_success(&mut session, &sequences);
 
-    let (sequence_mapping, _) = nested_yaml_sequence_leaf(CODEC_DEPTH_LIMIT - 1, "k: 0");
-    assert_yaml_depth_success(&mut session, &sequence_mapping);
+            let (sequence_mapping, _) = nested_yaml_sequence_leaf(CODEC_DEPTH_LIMIT - 1, "k: 0");
+            assert_yaml_depth_success(&mut session, &sequence_mapping);
 
-    let (sequence_flow, _) = nested_yaml_sequence_leaf(CODEC_DEPTH_LIMIT - 1, "{}");
-    assert_yaml_depth_success(&mut session, &sequence_flow);
+            let (sequence_flow, _) = nested_yaml_sequence_leaf(CODEC_DEPTH_LIMIT - 1, "{}");
+            assert_yaml_depth_success(&mut session, &sequence_flow);
+        })
+        .expect("YAML depth-acceptance thread should start")
+        .join()
+        .expect("YAML depth acceptance should finish");
 }
 
 #[test]

@@ -1,7 +1,9 @@
 use crate::install_core;
 use rum_core::{Atom, Expr};
 use rum_runtime::kernel_api::system_expr;
-use rum_runtime::{RuntimeMessage, Session};
+use rum_runtime::{RuntimeMessage, Session, native_stack_limit_for_declared_stack};
+
+const TOML_DEPTH_ACCEPTANCE_STACK_BYTES: usize = 16 * 1024 * 1024;
 
 fn core_session() -> Session {
     let mut session = Session::new();
@@ -444,19 +446,31 @@ fn from_toml_golden_error_corpus_is_byte_stable() {
 
 #[test]
 fn from_toml_depth_limit_accepts_each_descent_at_the_limit() {
-    let mut session = core_session();
+    std::thread::Builder::new()
+        .name("toml-depth-acceptance".to_string())
+        .stack_size(TOML_DEPTH_ACCEPTANCE_STACK_BYTES)
+        .spawn(|| {
+            let mut session = core_session();
+            session.set_native_stack_limit(
+                native_stack_limit_for_declared_stack(TOML_DEPTH_ACCEPTANCE_STACK_BYTES)
+                    .expect("TOML acceptance stack should satisfy the supported minimum"),
+            );
 
-    assert_toml_depth_success(&mut session, &nested_toml_arrays(CODEC_DEPTH_LIMIT));
-    assert_toml_depth_success(&mut session, &nested_toml_inline_tables(CODEC_DEPTH_LIMIT));
+            assert_toml_depth_success(&mut session, &nested_toml_arrays(CODEC_DEPTH_LIMIT));
+            assert_toml_depth_success(&mut session, &nested_toml_inline_tables(CODEC_DEPTH_LIMIT));
 
-    let header = format!("[{}]\nx = 0\n", dotted_toml_path(CODEC_DEPTH_LIMIT));
-    assert_toml_depth_success(&mut session, &header);
+            let header = format!("[{}]\nx = 0\n", dotted_toml_path(CODEC_DEPTH_LIMIT));
+            assert_toml_depth_success(&mut session, &header);
 
-    let dotted_assignment = format!("{} = 0\n", dotted_toml_path(CODEC_DEPTH_LIMIT + 1));
-    assert_toml_depth_success(&mut session, &dotted_assignment);
+            let dotted_assignment = format!("{} = 0\n", dotted_toml_path(CODEC_DEPTH_LIMIT + 1));
+            assert_toml_depth_success(&mut session, &dotted_assignment);
 
-    let inline_dotted = format!("a = {{ {} = 0 }}\n", dotted_toml_path(CODEC_DEPTH_LIMIT));
-    assert_toml_depth_success(&mut session, &inline_dotted);
+            let inline_dotted = format!("a = {{ {} = 0 }}\n", dotted_toml_path(CODEC_DEPTH_LIMIT));
+            assert_toml_depth_success(&mut session, &inline_dotted);
+        })
+        .expect("TOML depth-acceptance thread should start")
+        .join()
+        .expect("TOML depth acceptance should finish");
 }
 
 #[test]

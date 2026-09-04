@@ -83,6 +83,7 @@ pub struct Session {
     pub(in crate::runtime) match_depth: usize,
     pub(in crate::runtime) native_stack_base: usize,
     pub(in crate::runtime) native_stack_next_check_depth: usize,
+    pub(in crate::runtime) stability_native_stack_poll_counter: u64,
     pub(in crate::runtime) interrupt_armed: bool,
     pub(in crate::runtime) evaluation_stack: Vec<EvaluationStackEntry>,
     pub(in crate::runtime) tracing_enabled: bool,

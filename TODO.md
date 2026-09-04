@@ -1311,11 +1311,23 @@ address, `/proc` slope 191.1). Height 9,500 now completes on 2 MiB where 8,008
 was the ceiling, and the previously untested per-head profiling surface gained
 an env-gated certificate that was run against HEAD before the change.
 
-**Still open, deliberately.** Above about 10,700 levels on a 2 MiB stack the walk
-still ends the process, because it remains unbounded and unpolled. The strided
-poll is now worth re-measuring: at 192 B/level a 1 MiB budget holds 5,461
-levels, 33% above the ruled 4,097, where at 256 B it held 4,096 and fell 57
-short. The ruled
+**The walk now fails closed (briefs 445-446).** The strided poll fits once the
+frame is 192 B/level: the check sits on the call-cache miss path, immediately
+before the recursion, and on budget exhaustion returns a conservative "not
+stable" — always safe, because stability only decides whether evaluation may be
+skipped, and the value then goes through the evaluator's own guarded path.
+Measured at my gate: bail-out bisected at 5,339 ok / 5,341, a margin of 1,242
+levels (30%) over the ruled 4,097; height 20,001 on a 2 MiB stack moves from
+exit 134 to an in-band `General::reslim`.
+
+brief-445 put the counter at the walk's entry, where it also ran for atoms and
+cache hits — neither of which can grow the stack — and cost `list-literal-small`
++7.99%/+7.98%. Moving it to the miss path removed that and is the more honest
+meter, since the stride's overshoot arithmetic already assumes it counts
+recursive descents. Two codec depth tests surfaced at the same time: they were
+passing by consuming more stack than the declared budget permits, and were given
+declared threads like their XML sibling rather than having their accepted depth
+lowered. The ruled
 4,097 contract is met with roughly 2x headroom, but the fail-closed promise is
 not. A strided poll inside the walk would convert that into an in-band error at
 some hot-path cost that has not been measured. That is the next decision, and it

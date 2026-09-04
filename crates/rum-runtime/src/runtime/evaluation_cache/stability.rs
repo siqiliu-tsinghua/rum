@@ -251,6 +251,13 @@ impl Session {
         }
 
         record_evaluation_cache_counter(&CALL_STABILITY_MISS_COUNT, "call_stability_misses");
+        self.stability_native_stack_poll_counter =
+            self.stability_native_stack_poll_counter.wrapping_add(1);
+        if self.stability_native_stack_poll_counter & (STABILITY_NATIVE_STACK_POLL_STRIDE - 1) == 0
+            && self.native_stack_budget_exhausted()
+        {
+            return (false, StabilityBloom::default());
+        }
         let (stable, bloom) = self.call_stability_uncached_with_bloom(head, args);
         record_call_stability_source_head_timing(head.as_ref(), miss_outcome);
         self.cache_call_stability_result(key, head, args, stable, bloom);

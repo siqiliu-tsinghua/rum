@@ -113,6 +113,7 @@ session_memory_field_decisions! {
     resuming_suspension => Accounted("owned SuspendedEvaluation stack, frames, and roots"),
     sealed_units => Accounted("SourceUnit strings, expressions, symbol vectors, private index, and outer Vec spare capacity"),
     stability_dirty_bloom => Exempt("fixed-size two-u128 value already covered by size_of::<Session>()"),
+    stability_native_stack_poll_counter => Exempt("fixed-size value already covered by size_of::<Session>()"),
     stability_rewritten_dirty_bloom => Exempt("fixed-size two-u128 value already covered by size_of::<Session>()"),
     stable_symbol_cache => Accounted("hash-table capacity and live Symbol text"),
     symbol_cache_generation => Exempt("fixed-size value already covered by size_of::<Session>()"),
@@ -130,7 +131,7 @@ fn session_memory_field_decision_inventory_is_sorted_and_exhaustive() {
     let session = Session::empty();
     assert_session_memory_decisions_are_exhaustive(&session);
 
-    assert_eq!(SESSION_MEMORY_FIELD_DECISIONS.len(), 94);
+    assert_eq!(SESSION_MEMORY_FIELD_DECISIONS.len(), 95);
     assert!(
         SESSION_MEMORY_FIELD_DECISIONS
             .windows(2)

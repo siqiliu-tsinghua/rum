@@ -9,6 +9,24 @@ minor versions may include breaking changes; the project aims to follow
 
 ### Fixed
 
+- A deep rebuilt expression no longer ends the process. The
+  evaluation-stability walk descends a freshly rebuilt tree without crossing
+  `Session::evaluate`, so the native-stack guard had no poll point during that
+  descent and a value past the walk's reach aborted the host. The walk now
+  polls the same byte budget on a stride, at the one place that can grow the
+  stack — a call-cache miss, immediately before it recurses — and on exhaustion
+  returns a conservative "not stable", which is always safe because stability
+  only decides whether evaluation may be skipped. The value is then evaluated
+  through the evaluator's own guarded path and stops in band. At physical
+  height 20,001 on a 2 MiB stack the result is
+  `TerminatedEvaluation["StackLimit"]` where the process previously aborted,
+  and the walk still succeeds to about 5,340 levels — 30% above the ruled
+  4,097. Cache contents, counters and profiling output are unchanged.
+- The TOML and YAML codec depth-acceptance tests now declare the stack they
+  need, as their XML sibling already did. Both were passing by consuming more
+  native stack than the declared budget permits, which only became visible once
+  the stability walk began enforcing it. The accepted depth is unchanged.
+
 - Off-by-default profiling state no longer occupies the evaluation-stability
   walk's recursive frame. The walk computed a source/head profiling key and a
   start instant at the top of each level and held both across the recursive

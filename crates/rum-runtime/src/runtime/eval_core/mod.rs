@@ -79,6 +79,15 @@ impl Session {
 
     #[cold]
     #[inline(never)]
+    pub(in crate::runtime) fn native_stack_budget_exhausted(&self) -> bool {
+        let stack_marker = 0_u8;
+        let current_addr = (&stack_marker as *const u8) as usize;
+        let consumed = self.native_stack_base.saturating_sub(current_addr);
+        consumed > self.resource_limits.native_stack_limit
+    }
+
+    #[cold]
+    #[inline(never)]
     pub(in crate::runtime) fn poll_host_interrupt_if_due(&mut self) -> Result<(), EvalError> {
         self.interrupt_poll_counter = self.interrupt_poll_counter.wrapping_add(1);
         if self.interrupt_poll_counter & INTERRUPT_POLL_MASK != 0 {

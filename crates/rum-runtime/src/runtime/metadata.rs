@@ -15,6 +15,8 @@ pub const MIN_SUPPORTED_NATIVE_STACK_BYTES: usize = 2 * 1024 * 1024;
 pub const NATIVE_STACK_UNPOLLED_LEVEL_RESERVE_BYTES: usize = 128 * 1024;
 /// Number of evaluation-depth increments between native-stack byte-budget polls.
 pub const NATIVE_STACK_DEPTH_POLL_STRIDE: usize = 4;
+/// Number of recursive stability checks between native-stack byte-budget polls.
+pub(super) const STABILITY_NATIVE_STACK_POLL_STRIDE: u64 = 16;
 /// Native-stack headroom reserved for evaluation levels skipped between polls.
 pub const NATIVE_STACK_POLL_HEADROOM_BYTES: usize =
     NATIVE_STACK_DEPTH_POLL_STRIDE * NATIVE_STACK_UNPOLLED_LEVEL_RESERVE_BYTES;
