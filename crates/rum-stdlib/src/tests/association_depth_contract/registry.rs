@@ -211,10 +211,10 @@ const ASSOCIATION_DEPTH_REGISTRY: &[AssociationDepthRow] = &[
     AssociationDepthRow {
         surface: "KeyDrop",
         catalog_name: Some("KeyDrop"),
-        mechanism: Mechanism::UnguardedNative,
-        contract_status: ContractStatus::ShortOfContract,
-        failure_direction: Some(FailureDirection::FailsOpen),
-        owed_by: Some("deferred collection-shape queue"),
+        mechanism: Mechanism::BoundedHeap,
+        contract_status: ContractStatus::MeetsContract,
+        failure_direction: Some(FailureDirection::FailsClosed),
+        owed_by: None,
         recursion_declarations: &["key-take-drop-nested-lists"],
     },
     AssociationDepthRow {
@@ -310,10 +310,10 @@ const ASSOCIATION_DEPTH_REGISTRY: &[AssociationDepthRow] = &[
     AssociationDepthRow {
         surface: "KeyTake",
         catalog_name: Some("KeyTake"),
-        mechanism: Mechanism::UnguardedNative,
-        contract_status: ContractStatus::ShortOfContract,
-        failure_direction: Some(FailureDirection::FailsOpen),
-        owed_by: Some("deferred collection-shape queue"),
+        mechanism: Mechanism::BoundedHeap,
+        contract_status: ContractStatus::MeetsContract,
+        failure_direction: Some(FailureDirection::FailsClosed),
+        owed_by: None,
         recursion_declarations: &["key-take-drop-nested-lists"],
     },
     AssociationDepthRow {

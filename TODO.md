@@ -2347,9 +2347,48 @@ open; `Normal` is the only one that fails closed.
 margin): `Lookup`, `KeyComplement`, `Values`, the `Association` parser, and
 `Normal` last because it already fails closed.
 
-**Next**: that queue, and the four short-of-contract sites — `GroupBy`, and
-`Keys`/`KeyTake`/`KeyDrop` in the collection-shape lane, which is fail-open and
-therefore ahead of the schema validator and generic `MapIndexed`. Then the remaining four conversions:
+### The `basic.rs` key family (briefs 471-472)
+
+**brief-471 corrected the inventory, and the correction mattered.** brief-454
+recorded `Keys` and `Values` as one walk at `basic.rs:752-810`; they are
+**two separate functions** — `keys_result_for_expr` at `:752-779` and
+`values_result_for_expr` at `:781-810` — and the old citation spanned both.
+Director-verified from the source. `Keys`' iterator helpers stay resident across
+its recursion for a nominal 704 bytes per layer against `Values`' 336, and that
+2.1x ratio matches the measured 5,896 against 3,056. `KeyTake` and `KeyDrop`
+*do* share their walk, which is why they bracket identically — so the pairing
+convention was not the error, only that one entry. **A repair planned on "one
+shared walk, fix it once" would have left one of them unfixed.**
+
+Seven recursive edges across the five operations, none diagnostic-only, and
+**none takes a `Session`** — director-verified as zero session parameters across
+`basic.rs:690-920` — so the simple bounded-front-plus-redo shape applies to all
+of them.
+
+**`KeyTake` and `KeyDrop` are converted (brief-472).** One function,
+`keyed_take_drop_result_for_expr`, one edge, serving both through a
+`keep_selected` flag; now a depth-16 front over a heap tail in
+`basic/key_take_drop.rs`. Both **reach the ruled 4,097, which neither could do
+before** — they died at 2,856 — and the certificates assert the exact result
+including its wrapper shape, since these operations return lists wrapping an
+`Association` and a values-only assertion would miss that.
+
+**The conversion improved two things the brief only asked to hold.** It flipped
+the failure direction: at 12,000 both now refuse **in band** where they used to
+terminate the process, so their rows carry `FailsClosed` rather than the
+`Unmeasured` the brief specified — measured, so the honest entry. And it
+*removed* allocations: `KeyTake` -24.6% and `KeyDrop` -25.4`%`, about sixteen
+fewer per call, while the `Keys` and `Values` same-file controls are
+byte-identical. The old recursive form was allocating an intermediate per level.
+
+Gate: 2 407 tests green, both release certificates at raw physical height 4,097,
+the forced-front falsifier reproduced red under both flag settings by turning
+its tail loop from LIFO into FIFO.
+
+**Next in this family**, in the plan's order: `Keys` (3,056, still short and
+still fail-open — confirmed still dying at the contract height after this
+conversion), then `Lookup`'s four phases, then `Values`. Outside it: `GroupBy`,
+the schema validator, and generic `MapIndexed`. Then the remaining four conversions:
 `AssociationKeyFlatten`, `AssociationKeyDeflatten`, association `MapIndexed`,
 and the `AssociateTo`/`KeyDropFrom` Part target. None fits the 1 MiB budget at
 contract height, which is why a guard is not an option for any of them.

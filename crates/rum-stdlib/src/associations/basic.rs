@@ -7,8 +7,10 @@ use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 use std::collections::HashMap;
 
 mod key_predicates;
+mod key_take_drop;
 
 pub(crate) use self::key_predicates::{eval_key_free_q, eval_key_member_q};
+pub(crate) use self::key_take_drop::{eval_key_drop, eval_key_take};
 
 pub(crate) fn eval_association(
     session: &mut Session,
@@ -416,62 +418,6 @@ pub(crate) fn eval_key_exists_q(
     ))
 }
 
-pub(crate) fn eval_key_take(
-    session: &mut Session,
-    _head: &Expr,
-    args: &SharedArgs,
-) -> Result<Expr, EvalError> {
-    let args = args.as_ref();
-    match args {
-        [key_spec] => Ok(keyed_operator_form_slot_first("KeyTake", key_spec.clone())),
-        [expr, key_spec] => {
-            match keyed_take_drop_result_for_expr("KeyTake", expr, key_spec, true) {
-                Ok(value) => Ok(value),
-                Err(error) => Ok(session.invalid_call_with_message(
-                    "KeyTake",
-                    args,
-                    error.tag,
-                    invalid_association_or_rule_list_message(&error.invalid),
-                )),
-            }
-        }
-        _ => Ok(session.invalid_call_with_message(
-            "KeyTake",
-            args,
-            "argt",
-            one_or_two_argument_count_message("KeyTake", args.len()),
-        )),
-    }
-}
-
-pub(crate) fn eval_key_drop(
-    session: &mut Session,
-    _head: &Expr,
-    args: &SharedArgs,
-) -> Result<Expr, EvalError> {
-    let args = args.as_ref();
-    match args {
-        [key_spec] => Ok(keyed_operator_form_slot_first("KeyDrop", key_spec.clone())),
-        [expr, key_spec] => {
-            match keyed_take_drop_result_for_expr("KeyDrop", expr, key_spec, false) {
-                Ok(value) => Ok(value),
-                Err(error) => Ok(session.invalid_call_with_message(
-                    "KeyDrop",
-                    args,
-                    error.tag,
-                    invalid_association_or_rule_list_message(&error.invalid),
-                )),
-            }
-        }
-        _ => Ok(session.invalid_call_with_message(
-            "KeyDrop",
-            args,
-            "argt",
-            one_or_two_argument_count_message("KeyDrop", args.len()),
-        )),
-    }
-}
-
 pub(crate) fn eval_normal(
     session: &mut Session,
     head: &Expr,
@@ -809,110 +755,6 @@ fn values_result_for_expr(expr: &Expr, wrapper: Option<&Expr>) -> Result<Expr, E
     Ok(Expr::call(system_expr("List"), values))
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-struct KeyTakeDropInvalid {
-    tag: &'static str,
-    invalid: Expr,
-}
-
-fn keyed_take_drop_result_for_expr(
-    symbol: &'static str,
-    expr: &Expr,
-    key_spec: &Expr,
-    keep_selected: bool,
-) -> Result<Expr, KeyTakeDropInvalid> {
-    let selected_keys = parse_key_spec(key_spec).ok_or_else(|| KeyTakeDropInvalid {
-        tag: "invrl",
-        invalid: expr.clone(),
-    })?;
-
-    if list_items(expr).is_some_and(|items| items.is_empty()) {
-        return Ok(Expr::call(system_expr(heads::structure::LIST), vec![]));
-    }
-
-    if let Some(entries) = single_rule_or_keyed_entry_forms_from_expr(expr) {
-        const KEY_SELECT_INDEX_THRESHOLD: usize = 16;
-        let indexed = entries.len() > KEY_SELECT_INDEX_THRESHOLD
-            && selected_keys.len() > KEY_SELECT_INDEX_THRESHOLD;
-        let filtered = if keep_selected {
-            if indexed {
-                // The result keeps selection order, so index the entries by
-                // key and walk the selected keys. Overwriting inserts keep
-                // the last entry for a duplicated key — what rendering's
-                // canonicalization would pick — and `remove` emits a repeated
-                // selection once while missing keys fall through silently.
-                let mut by_key = HashMap::with_capacity(entries.len());
-                for entry in &entries {
-                    by_key.insert(entry.key.clone(), entry.clone());
-                }
-                let mut taken = Vec::new();
-                for selected_key in &selected_keys {
-                    if let Some(entry) = by_key.remove(selected_key) {
-                        taken.push(entry);
-                    }
-                }
-                taken
-            } else {
-                let mut taken = Vec::new();
-                for selected_key in &selected_keys {
-                    taken.extend(
-                        entries
-                            .iter()
-                            .filter(|entry| &entry.key == selected_key)
-                            .cloned(),
-                    );
-                }
-                taken
-            }
-        } else if indexed {
-            let selected = selected_keys
-                .iter()
-                .cloned()
-                .collect::<std::collections::HashSet<_>>();
-            entries
-                .into_iter()
-                .filter(|entry| !selected.contains(&entry.key))
-                .collect()
-        } else {
-            entries
-                .into_iter()
-                .filter(|entry| {
-                    !selected_keys
-                        .iter()
-                        .any(|candidate| candidate == &entry.key)
-                })
-                .collect()
-        };
-
-        return Ok(render_association_entry_forms_preserving_heads(filtered));
-    }
-
-    let Some(items) = list_items(expr) else {
-        return Err(KeyTakeDropInvalid {
-            tag: "invrl",
-            invalid: expr.clone(),
-        });
-    };
-
-    let mut results = Vec::with_capacity(items.len());
-    for item in items {
-        match keyed_take_drop_result_for_expr(symbol, item, key_spec, keep_selected) {
-            Ok(value) => results.push(value),
-            Err(error) => {
-                return Err(KeyTakeDropInvalid {
-                    tag: "invru",
-                    invalid: if keep_selected {
-                        expr.clone()
-                    } else {
-                        error.invalid
-                    },
-                });
-            }
-        }
-    }
-
-    Ok(Expr::call(system_expr("List"), results))
-}
 #[cfg(test)]
 const _: fn() = || {
     fn assert_traces<T: FrameRootTrace>() {}

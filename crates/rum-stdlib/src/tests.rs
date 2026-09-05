@@ -8,6 +8,8 @@ use file_io_support::install_test_file_io;
 mod association_depth_contract;
 #[path = "tests/association_key_reshape_depth.rs"]
 mod association_key_reshape_depth;
+#[path = "tests/association_key_take_drop_depth.rs"]
+mod association_key_take_drop_depth;
 #[path = "tests/associations/mod.rs"]
 mod associations;
 #[path = "tests/associations_missing_surface.rs"]
