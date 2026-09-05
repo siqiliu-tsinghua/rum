@@ -2091,9 +2091,40 @@ post-suspension functions and eight heap frames have no bracket at all, because
 no supplied probe requests input. Their correctness has to come from forced-tail
 multi-suspension tests, not from a number.
 
-**Next**: the plan's step A — lock the eight observable behaviours with shallow
-tests **against the untouched implementation** — then step B, the unified
-conversion. Then the remaining four conversions:
+**Step A is IN (2026-09-05, brief-465): the semantic net is under the
+conversion.** Ten tests, test-only, written against the untouched
+implementation — exact value and order for both parent shapes and both `scan`
+settings, `RuleDelayed` reached exactly once, the `level - 1` delayed wrapper,
+resume without replay at the first, middle and last sibling, two suspensions in
+different branches, non-input error propagation, and cancellation discarding
+frames without callbacks.
+
+**The falsifier method was corrected from the plan's draft, and the correction
+is the point.** brief-464 proposed perturbing the tests' *expected values* and
+checking they fail. That is not a falsifier: a test whose expectation you
+corrupt always fails, which demonstrates the assertion is wired up and says
+nothing about detection power. The brief instead named a minimal perturbation to
+the **production source** per contract item, each reverted afterwards.
+
+**Director-reproduced, and the selectivity is what matters.** Perturbing the
+post-suspension resume to restart its level at index 0 turns **all four**
+resume/replay tests red while the six non-suspension tests stay green. Prefix
+replay on resume is the exact failure the next step's shape risks — a handoff
+that carries a live continuation instead of restarting — so a net that catches
+it precisely, and nothing else, is the thing this step existed to build.
+
+Item 8 got the honest answer the brief asked for: the error-propagation half has
+a behavioural perturbation, while the pure-discard half is structural, supplied
+by `PureFrameAbandon`, with a cancellation test asserting no continuation
+callback runs when those frames are discarded.
+
+Gate: 2 389 tests green, `git diff` is test files and wiring only, no production
+edit survived.
+
+**Next**: step B, the unified `BoundedHeap` conversion — sibling advance as an
+explicit loop, depth overflow to a cold work stack, and an exhausted handoff
+that carries the live continuation and completed prefixes rather than redoing
+the traversal. Then the remaining four conversions:
 `AssociationKeyFlatten`, `AssociationKeyDeflatten`, association `MapIndexed`,
 and the `AssociateTo`/`KeyDropFrom` Part target. None fits the 1 MiB budget at
 contract height, which is why a guard is not an option for any of them.
