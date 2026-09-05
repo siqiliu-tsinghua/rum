@@ -355,10 +355,10 @@ const ASSOCIATION_DEPTH_REGISTRY: &[AssociationDepthRow] = &[
     AssociationDepthRow {
         surface: "Lookup",
         catalog_name: Some("Lookup"),
-        mechanism: Mechanism::UnguardedNative,
+        mechanism: Mechanism::BoundedHeap,
         contract_status: ContractStatus::MeetsContract,
-        failure_direction: Some(FailureDirection::Unmeasured),
-        owed_by: Some("residual association-owned shapes queue"),
+        failure_direction: Some(FailureDirection::FailsClosed),
+        owed_by: None,
         recursion_declarations: &["lookup-nested-key-specifications"],
     },
     AssociationDepthRow {

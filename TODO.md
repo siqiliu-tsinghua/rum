@@ -2416,10 +2416,47 @@ Gate: 2 410 tests green, the release certificate at raw physical height 4,097,
 and the forced-front falsifier reproduced red by turning its tail loop from LIFO
 into FIFO.
 
-**Next in this family**: `Lookup`'s four phases — count, planning, owned
-rendering and resumed borrowed rendering — at 4,760, the thinnest margin in the
-class, then `Values` at 5,896. Outside it: `GroupBy`, the schema validator, and
-generic `MapIndexed`. Then the remaining four conversions:
+**`Lookup` is converted (brief-474), and its four walks are not the four
+brief-471 named.** Enumerating every self-recursive function in the file gives
+`lookup_query_count` (`:620`), `lookup_entries_outcome` (`:630`), and
+`LookupOutcome::into_expr` and `::to_expr` — the owned and borrowed rendering
+methods. `finish_prepared_lookup` and `finish_suspended_prepared_lookup` do take
+a `&mut Session` but are **not recursive**; they are the callers. So the "no
+walker takes a `Session`" property holds for the four that recurse, and the
+simple shape applied. All four now run depth-16 fronts over heap tails in
+`basic/lookup.rs`.
+
+**The recursive-enum drop hazard was real, and the worker went past what the
+brief asked.** `LookupOutcome` carries `List(Vec<Self>)`, so its derived `Drop`
+recurses — the class brief-468 hit with `NestedPathNodes`, where one
+implementation terminated the process at depth 60,000 on a drop path and only
+the cross-comparison caught it. `into_expr` consumes as it renders, but
+`to_expr` borrows, so the resume path drops the outcome afterwards. Rather than
+argue reachability, brief-474 gave `LookupOutcome` a **manual iterative `Drop`**
+and a dedicated release certificate for it at 4,097.
+
+**The agreement assertion earned its place.** `into_expr` and `to_expr` are one
+contract on the ordinary and resume paths, and nothing else in the suite
+compares them — a divergence would surface only after a suspension.
+Director-reproduced: perturbing **only** the borrowed renderer's tail from LIFO
+to FIFO reddens exactly
+`lookup_rendering_forced_fronts_agree_owned_borrowed_and_exactly` and leaves the
+count and planning falsifiers green.
+
+Gate: 2 414 tests green, three release certificates including the drop one,
+allocation counts identical across a nested-spec probe, a **flat `Lookup` hot
+probe**, and the `Values`/`Keys` same-file controls — so the manual `Drop` costs
+nothing. Direction measured at the gate and the row corrected to `FailsClosed`:
+in band at 8 000, 15 000 and 30 000.
+
+A measurement note: the candidate build reported "Finished in 0.02s", which
+reads like a stale binary. The md5s settled it — the base binary is
+byte-identical to brief-473's candidate, which is exactly what a correct base
+is, and the candidate differs. **Check the binaries, not the build log.**
+
+**Next in this family**: `Values` at 5,896, the last unconverted walk in
+`basic.rs`. Outside it: `GroupBy`, the schema validator, and generic
+`MapIndexed`. Then the remaining four conversions:
 `AssociationKeyFlatten`, `AssociationKeyDeflatten`, association `MapIndexed`,
 and the `AssociateTo`/`KeyDropFrom` Part target. None fits the 1 MiB budget at
 contract height, which is why a guard is not an option for any of them.
