@@ -1837,6 +1837,68 @@ target requires `Key["k"]` selectors; with bare string selectors it returns
 `AssociateTo` accepts both, so the two heads differ in strictness — worth a
 look, but not a defect on this evidence.
 
+### The class-wide fail-open repair — step 1 is IN (2026-09-05, brief-459)
+
+The guard substrate is installed and has one real consumer. `Merge` over a
+collection nested past the budget now returns an in-band `StackLimitExceeded`
+and leaves the session usable, where it previously terminated the process, and
+it still completes at raw physical height 4,097 with the exact merged value.
+
+**Two rulings were made at the design gate and are now implemented.**
+
+- **The operation boundary is `native_stack_limit`, 1 MiB on the default
+  profile.** brief-458 proposed `native_stack_limit +
+  NATIVE_STACK_NON_EVALUATOR_RESERVE_BYTES` = 1.5 MiB. Rejected: consumption is
+  measured from `native_stack_base`, set at the request base
+  (`resolution.rs:292`), so the 512 KiB non-evaluator reserve covers frames
+  *below* that base and spending it above the base counts the same bytes twice.
+  A host that actually used its reserve would overflow — the same shape as the
+  6 MiB default that could never fire on a 2 MiB stack.
+- **`Merge` is guarded; the other five sites are converted, not guarded.**
+  Director-measured under a 1 MiB budget at the contract height, three runs
+  each: `DeleteMissing`, `AssociationKeyDeflatten`, association `MapIndexed` and
+  `AssociateTo` cannot do the work at all, and `AssociationKeyFlatten` sits on
+  the line. Only `Merge`'s collection parser passes 3/3. **A guard at the honest
+  budget would have converted four contract-meeting sites into contract-failing
+  ones** — trading a fail-open above the contract for a fail-closed below it,
+  which is strictly worse. That is what makes conversion the repair for the
+  other five, and it is also why `Merge` was the right first consumer: it proves
+  the mechanism and the boundary together.
+
+**The shape of the substrate.** A scoped runner captures base and limit once and
+owns a sticky exhaustion flag; a branded `NativeStackDepth<'scope>` yields one
+child token per recursive edge, polling actual bytes every fourth edge through a
+`#[cold] #[inline(never)]` check that returns before the recursion. Logical
+depth is a stride only, never a refusal criterion — the bare-counter shape
+brief-443 measured and rejected. `kernel_api` exports exactly two
+`#[doc(hidden)]` items and no raw poll, base, limit, address, or constructor.
+Exhaustion travels through the parser's existing `Result`, so no per-node
+`Result` was introduced — the shape that cost 6-15% in brief-431.
+
+**Falsifiers, all four verified at the gate rather than reported.** Two
+`compile_fail` doctests (the token cannot enter a `FrameRootTrace` frame, and
+cannot escape the HRTB scope) pass in the workspace run; the zero-boundary test
+returns `TerminatedEvaluation["StackLimit"]` in band with the session usable;
+and the **red/green was reproduced by the director** — removing the guard from
+`data.rs:186` turns the focused test red, restoring it turns it green.
+
+**Cost, counters first.** Allocation counts are identical to the byte on all
+three probes with a same-binary spread of zero, and the counter was calibrated
+first: one extra `Do` iteration moves it +35. Instructions: the untouched
+control is -0.020% against a 0.13-0.20% cluster spread, and the `Merge` probe is
+**+0.381%** against a 0.098% cluster spread — a real signal, about 15
+instructions per guarded edge, on a probe built so guarded edges dominate
+(depth 8, 500 iterations, nothing else). The microbench panel was **not** run,
+and the reason is that it cannot see this change: `Merge[` occurs zero times in
+`scripts/core-language-microbench.sh`, and its one merge label exercises
+`MergeNested`, a different operation whose parser is untouched.
+
+**Next in this line**: step 2 is the enforcement layers — the `rum-derive`
+group validator that rejects an unwrapped recursive edge, the `syn` recursion
+inventory, and the association surface registry where each site declares
+`BoundedHeap`, `GuardedNative`, or `DeferredShort`. Then the five conversions,
+each flipping its declaration from `DeferredShort` to `BoundedHeap`.
+
 **Opened by brief-450 — a second recursion above the contract.** Above roughly
 11,000 levels both operations return to terminating the process (in band at
 10,000, killed at 12,000), while `Replace`, `DeleteCases` and `ReplaceAll` stay

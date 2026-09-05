@@ -115,6 +115,14 @@ pub(crate) fn eval_key_union(
                 invalid_association_or_rule_message(&expr),
             ));
         }
+        Err(KeyedEntriesListError::StackLimitExceeded) => {
+            return Ok(session.invalid_call_with_message(
+                "KeyUnion",
+                args,
+                "reslim",
+                keyed_collection_stack_limit_message(),
+            ));
+        }
     };
 
     let plan = KeyUnionPlan::new(collections);
@@ -166,6 +174,14 @@ pub(crate) fn eval_key_intersection(
                 args,
                 "invas",
                 invalid_association_or_rule_message(&expr),
+            ));
+        }
+        Err(KeyedEntriesListError::StackLimitExceeded) => {
+            return Ok(session.invalid_call_with_message(
+                "KeyIntersection",
+                args,
+                "reslim",
+                keyed_collection_stack_limit_message(),
             ));
         }
     };
@@ -270,6 +286,14 @@ pub(crate) fn eval_key_complement(
                 args,
                 "invrl",
                 invalid_association_or_rule_list_message(&expr),
+            ));
+        }
+        Err(KeyedEntriesListError::StackLimitExceeded) => {
+            return Ok(session.invalid_call_with_message(
+                "KeyComplement",
+                args,
+                "reslim",
+                keyed_collection_stack_limit_message(),
             ));
         }
     };

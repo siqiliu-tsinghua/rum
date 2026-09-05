@@ -1,13 +1,13 @@
 use rum_core::{Atom, BigInt, Expr, Symbol, heads};
 use rum_runtime::kernel_api::{
     AssociationEntryForm, EvalError, EvaluatedPartSelectors, EvaluatedPartSelectorsContinuation,
-    EvaluatedPartSelectorsEvaluation, Session, association_entries_from_expr,
+    EvaluatedPartSelectorsEvaluation, NativeStackDepth, Session, association_entries_from_expr,
     association_entry_forms_from_expr, call_items_with_head, compare_expr_canonical,
     exact_expr_at_path, exact_position_paths_from_part_selector_exprs, expr_as_non_negative_usize,
     expr_as_signed_isize, invalid_part_selector_expr, is_missing_expr, is_system_symbol_name,
     list_items, missing_key_absent_expr, parse_association_entry_form, render_association,
-    render_association_entry_forms_preserving_heads, replace_exact_path, system_expr,
-    truthiness_symbol,
+    render_association_entry_forms_preserving_heads, replace_exact_path,
+    run_with_native_stack_guard, system_expr, truthiness_symbol,
 };
 
 mod aggregate;

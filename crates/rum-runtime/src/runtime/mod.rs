@@ -39,6 +39,7 @@ mod messages;
 mod metadata;
 mod model;
 mod namespace_tools;
+mod native_stack_guard;
 mod options;
 mod package_tools;
 mod pattern_matching;

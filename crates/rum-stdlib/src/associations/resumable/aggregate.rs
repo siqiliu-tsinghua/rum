@@ -17,26 +17,36 @@ pub(crate) fn eval_merge(
     match args {
         [combiner] => Ok(keyed_operator_form_slot_first("Merge", combiner.clone())),
         [associations_expr, combiner] => {
-            let associations =
-                match parse_keyed_entries_list_expr_with_diagnostics(associations_expr) {
-                    Ok(associations) => associations,
-                    Err(KeyedEntriesListError::NotList) => {
-                        return Ok(session.invalid_call_with_message(
-                            "Merge",
-                            args,
-                            "list1",
-                            invalid_keyed_collection_list_message(associations_expr),
-                        ));
-                    }
-                    Err(KeyedEntriesListError::InvalidElement(expr)) => {
-                        return Ok(session.invalid_call_with_message(
-                            "Merge",
-                            args,
-                            "list1",
-                            invalid_keyed_collection_list_message(&expr),
-                        ));
-                    }
-                };
+            let parsed = run_with_native_stack_guard(session, |depth| {
+                parse_keyed_entries_list_expr_with_diagnostics(associations_expr, &depth)
+            })?;
+            let associations = match parsed {
+                Ok(associations) => associations,
+                Err(KeyedEntriesListError::NotList) => {
+                    return Ok(session.invalid_call_with_message(
+                        "Merge",
+                        args,
+                        "list1",
+                        invalid_keyed_collection_list_message(associations_expr),
+                    ));
+                }
+                Err(KeyedEntriesListError::InvalidElement(expr)) => {
+                    return Ok(session.invalid_call_with_message(
+                        "Merge",
+                        args,
+                        "list1",
+                        invalid_keyed_collection_list_message(&expr),
+                    ));
+                }
+                Err(KeyedEntriesListError::StackLimitExceeded) => {
+                    return Ok(session.invalid_call_with_message(
+                        "Merge",
+                        args,
+                        "reslim",
+                        keyed_collection_stack_limit_message(),
+                    ));
+                }
+            };
 
             if associations.is_empty() {
                 return Ok(render_association(Vec::new()));

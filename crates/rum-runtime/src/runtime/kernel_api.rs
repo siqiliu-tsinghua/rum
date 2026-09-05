@@ -81,6 +81,10 @@ pub use super::model::{
 #[doc(hidden)]
 pub use super::session::TrustedSystemDownValueLhs;
 
+// native_stack_guard (stdlib-only bridge)
+#[doc(hidden)]
+pub use super::native_stack_guard::{NativeStackDepth, run_with_native_stack_guard};
+
 // parse_and_message_helpers
 pub use super::messages::parse_and_message_helpers::{
     HeadsOptionClassification, classify_heads_option_expr, parse_heads_option,

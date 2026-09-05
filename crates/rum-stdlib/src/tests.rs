@@ -140,6 +140,8 @@ mod json;
 mod lazy;
 #[path = "tests/logic/mod.rs"]
 mod logic;
+#[path = "tests/merge_native_stack_guard.rs"]
+mod merge_native_stack_guard;
 #[path = "tests/number_theory.rs"]
 mod number_theory;
 #[path = "tests/polynomials.rs"]

@@ -2415,3 +2415,57 @@ Still open: the class-wide fail-open direction above the contract, multi-spec
 `GroupBy`, the deferred collection-shape lane, generic-shape `MapIndexed`, the
 schema validator's per-pair evaluator crossing, and — unchanged from the last
 entry — the second recursion inside `Take`/`ReplacePart` above roughly 11,000.
+
+## 2026-09-05 — the native-descent guard, and a boundary the gate refused
+
+brief-458 designed the class-wide fail-open repair and brief-459 landed its
+first step: a guard substrate plus one real consumer, `Merge`'s nested
+collection parser, which now fails closed in band instead of terminating the
+process while still completing at raw physical height 4,097.
+
+**The gate refused the proposed boundary, and the refusal changed the plan.**
+brief-458 wanted the operation guard to run to `native_stack_limit` plus the
+512 KiB non-evaluator reserve. But consumption is measured from the request
+base, and that reserve covers frames below it, so granting it to frames above
+the base counts the same bytes twice. Refusing it exposed the real finding:
+measured under a 1 MiB budget at contract height, four of the six sites cannot
+do the work at all and a fifth sits on the line, while the two already-converted
+controls clear it with room. **A guard at the honest budget would have converted
+four contract-meeting sites into contract-failing ones.** So the repair for
+those five is conversion, not a guard — and `Merge`, the one site that passes
+1 MiB, became the first consumer precisely because it proves the mechanism and
+the boundary together.
+
+**Three things from this are method, not history.**
+
+- *A design that needs a bigger budget is telling you the budget is not the
+  problem.* The 1.5 MiB proposal was arithmetically correct and would have
+  worked; what it was really encoding is that five walks are too expensive per
+  level. Raising the boundary would have hidden that, and the standing debt
+  would have grown a number nobody could later justify.
+- *A mechanism with no consumer cannot demonstrate its own boundary.* The
+  worker's draft shipped the substrate with no production caller, which is
+  cheaper to gate and proves less: the question was never whether a guard can
+  fire, it was whether it can fire without costing the height contract.
+- *Reproduce the red, not just the green.* The worker reported its red/green;
+  the gate redid it by hand — removing the guard from the real edge and watching
+  the focused test fail — because a falsifier reported rather than reproduced is
+  the same claim the whole falsifier rule exists to distrust.
+
+**The dispatch instrument was upgraded in the same session and immediately
+showed something.** codex logs through `tracing` and emits only ERROR by
+default: across fourteen dispatch logs and about 1.5 million captured lines the
+entire tracing output was 25 ERROR lines from two targets. That is why three
+silent mid-run terminations left nothing to read, and why "cause is open" had
+been declared on an instrument that can only see ERROR. The dispatcher now
+exports `RUST_LOG`, and the very next run captured INFO lines never seen before
+at negligible volume. A false lead was retracted at the same time: the
+`codex_models_manager` timeout appears in successful runs too, five times in one
+that completed. Codex's own session rollout for the failed run ends on a
+mid-turn reasoning record with no terminal event, which is the shape a stream
+cut leaves; the user's report of WebSocket transport disconnects in other
+sessions is now the leading hypothesis, and it remains formally open.
+
+Still open: the enforcement layers, the five conversions, and — unchanged — the
+four sites short of the contract and the second recursion inside
+`Take`/`ReplacePart` above roughly 11,000.

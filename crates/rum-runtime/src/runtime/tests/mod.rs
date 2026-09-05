@@ -159,6 +159,7 @@ mod messages_part2;
 mod messages_part3;
 mod mutation_operator_forms;
 mod namespace_names;
+mod native_stack_guard;
 mod nothing;
 mod options_and_protection;
 mod package_tools;

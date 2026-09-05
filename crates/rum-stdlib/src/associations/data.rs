@@ -16,6 +16,7 @@ pub(crate) struct KeyedEntries {
 pub(crate) enum KeyedEntriesListError {
     NotList,
     InvalidElement(Expr),
+    StackLimitExceeded,
 }
 
 pub(crate) fn rule_list_entries_from_expr(expr: &Expr) -> Option<Vec<(Expr, Expr)>> {
@@ -162,16 +163,18 @@ pub(crate) fn normalize_key_value_pattern_spec(spec: &Expr) -> Option<Expr> {
 
 pub(crate) fn parse_keyed_entries_list_expr_with_diagnostics(
     expr: &Expr,
+    depth: &NativeStackDepth<'_>,
 ) -> Result<Vec<Vec<(Expr, Expr)>>, KeyedEntriesListError> {
     let items = list_items(expr).ok_or(KeyedEntriesListError::NotList)?;
     items
         .iter()
-        .map(parse_merge_keyed_entries_collection_with_diagnostics)
+        .map(|item| parse_merge_keyed_entries_collection_with_diagnostics(item, depth))
         .collect()
 }
 
 fn parse_merge_keyed_entries_collection_with_diagnostics(
     expr: &Expr,
+    depth: &NativeStackDepth<'_>,
 ) -> Result<Vec<(Expr, Expr)>, KeyedEntriesListError> {
     if let Some(entries) = single_rule_or_keyed_entries_from_expr(expr) {
         return Ok(entries);
@@ -183,7 +186,13 @@ fn parse_merge_keyed_entries_collection_with_diagnostics(
 
     let mut entries = Vec::new();
     for item in items {
-        entries.extend(parse_merge_keyed_entries_collection_with_diagnostics(item)?);
+        let Some(child_depth) = depth.child() else {
+            return Err(KeyedEntriesListError::StackLimitExceeded);
+        };
+        entries.extend(parse_merge_keyed_entries_collection_with_diagnostics(
+            item,
+            &child_depth,
+        )?);
     }
     Ok(entries)
 }
@@ -300,6 +309,10 @@ pub(crate) fn invalid_keyed_collection_list_message(expr: &Expr) -> String {
 
 pub(crate) fn invalid_keyed_collection_outer_list_message(expr: &Expr) -> String {
     format!("The argument {expr} is not a valid list of Associations or rules.")
+}
+
+pub(crate) fn keyed_collection_stack_limit_message() -> &'static str {
+    "The native stack limit was exceeded while parsing keyed collections."
 }
 
 pub(crate) fn invalid_association_update_spec_message(expr: &Expr) -> String {
