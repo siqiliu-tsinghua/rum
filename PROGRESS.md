@@ -2601,3 +2601,40 @@ instructions -0.639% on the converted path.
 Still open: the finite-target/resume family, the remaining four conversions, the
 four sites short of the contract, and the second recursion inside
 `Take`/`ReplacePart`.
+
+## 2026-09-05 — a width defect nobody had looked for, and a conversion shape that will not transfer
+
+brief-464 planned `DeleteMissing`'s finite-target/resume conversion. The
+measurement that preceded it mattered more than the plan.
+
+**`DeleteMissing[Table[Missing[], {3000}], 1, 0]` terminates the process.** The
+value has physical height 2. The whole line has been measuring *depth* because
+the ruled contract is about depth, and this defect sits on an axis nobody had a
+probe for. brief-454 had dismissed those edges as "loops or tail transitions
+over siblings"; Rust does not guarantee tail-call elimination and they are not
+loops. **A reasoned claim about what the compiler will do is a hypothesis, and
+it wants a measurement before a plan rests on it.**
+
+**The conversion shape this line has used four times does not transfer.** Every
+previous conversion — `Replace`, `DeleteCases`, `MergeNested`, and
+`DeleteMissing`'s own recursive mode — lets a cold iterative tail redo the
+traversal once the bounded front exhausts. That is only sound for a pure walker.
+Here a target-level delayed evaluation runs user code, so a restart could run it
+twice; the exhausted handoff has to carry the live continuation and the
+completed prefixes instead. Finding that before writing an implementation brief
+is exactly why the step was design-only.
+
+**A negative result was calibrated instead of asserted.** The plan surveyed ten
+other association sites sharing the same `index + 1` idiom and concluded each
+lands in an explicit loop, so no other registry row is dishonest. That is the
+shape of claim this project distrusts, so it was spot-checked by measurement at
+a width where `DeleteMissing` reliably dies: `Counts`, `AssociationMap` and
+`KeySelect` all clear 10,000 siblings 3/3. The probe could have contradicted the
+survey.
+
+My own per-edge axis reading was corrected in both directions — right but
+incomplete on both axes — which is the ordinary outcome of asking a second
+reader and the reason the plan-first rule exists.
+
+Still open: the two-step repair, the remaining four conversions, the four sites
+short of the contract, and the second recursion inside `Take`/`ReplacePart`.

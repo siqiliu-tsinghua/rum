@@ -2038,9 +2038,62 @@ control. The split landed by responsibility — `counting.rs` 14 493,
 `deletion.rs` 16 929, `projection.rs` 7 348 — after brief-462's single
 `traversal.rs` came in at 35 131, over the architecture-debt line.
 
-**Next in this line**: brief-464, `DeleteMissing`'s finite-target/resume family
-— the thinner margin at 1.20x, suspension-bearing, and the last thing between
-this row and `BoundedHeap`. Then the remaining four conversions:
+**brief-464 planned the finite-target/resume family (design-only), and the
+measurement that preceded it found a second defect.**
+
+**A flat list of 3,000 `Missing[]` entries at the target level terminates the
+process** — `DeleteMissing[Table[Missing[], {N}], 1, 0]`, stable ok <= 2,921
+siblings and fail >= 2,968, same bracket for the association shape. That value
+has **physical height 2**. It is not deep, not adversarial, and not near any
+documented limit. brief-454 had written these edges off — *"the many `resume_*`
+calls that advance `index + 1` are loops or tail transitions over siblings, not
+tree height"* — and Rust does not guarantee tail-call elimination, so they are
+not loops. **A reasoned claim about what the compiler will do is a hypothesis.**
+
+The recursive mode, converted in the same file by briefs 462-463, now clears
+**64,000** siblings as well as its depth certificate: one conversion closed both
+of its axes.
+
+**Three things the plan established that change how the repair must be built.**
+
+- *The bounded-front-then-restart shape this whole line has used does not work
+  here.* Every previous conversion lets the cold tail redo the traversal after
+  the front exhausts. Here a target-level delayed evaluation runs user code and
+  can mutate state before a later child exhausts, so a restart would re-run it.
+  **The exhausted handoff must carry the live continuation and the completed
+  prefixes.** That is materially harder than every conversion before it.
+- *One conversion can close both axes, but only if it does both jobs.* A
+  depth-only bounded front leaves the measured width edges at `:256` and `:463`
+  native; converting siblings alone leaves the measured child descent at `:562`
+  native. Sibling advance becomes an explicit `loop`, not a tail-call assumption.
+- *The observable contract is eight items*, each cited in the plan: visit order,
+  the rule-like short circuit ahead of the scan, syntactic-`Missing` drop before
+  any delayed evaluation, **each reached `RuleDelayed` RHS evaluated exactly
+  once**, the delayed-wrapper rule above target level, leaf and head
+  preservation, what a suspension resumes into, and pure frame abandonment.
+
+**My axis reading was corrected in both directions.** The depth edges I named
+were right but incomplete (add `:383`, `:393`, `:722`, `:732`); so were the
+sibling edges (eleven more). The classification rule is checkable from the
+argument lists: a sibling edge keeps `level` and passes `index + 1`, a depth edge
+passes `level - 1` and resets index and accumulator.
+
+**No other registry row is dishonest, and that negative was calibrated.** Ten
+other association sites share the textual `index + 1` idiom, but each
+continuation lands in a function containing an explicit `loop`, established from
+control flow rather than from assuming tail-call elimination. Director
+spot-check at width 10,000, where `DeleteMissing`'s target mode is a stable
+process kill: `Counts`, `AssociationMap` and `KeySelect` all pass 3/3. The probe
+could have contradicted the survey and did not.
+
+**Open, and needing measurement rather than argument**: the five
+post-suspension functions and eight heap frames have no bracket at all, because
+no supplied probe requests input. Their correctness has to come from forced-tail
+multi-suspension tests, not from a number.
+
+**Next**: the plan's step A — lock the eight observable behaviours with shallow
+tests **against the untouched implementation** — then step B, the unified
+conversion. Then the remaining four conversions:
 `AssociationKeyFlatten`, `AssociationKeyDeflatten`, association `MapIndexed`,
 and the `AssociateTo`/`KeyDropFrom` Part target. None fits the 1 MiB budget at
 contract height, which is why a guard is not an option for any of them.
