@@ -42,6 +42,8 @@ mod debug_tools_resources;
 mod definition_lhs_assignment_resume;
 #[path = "tests/delete_missing_depth.rs"]
 mod delete_missing_depth;
+#[path = "tests/delete_missing_target_certificates.rs"]
+mod delete_missing_target_certificates;
 #[path = "tests/delete_missing_target_semantic_locks.rs"]
 mod delete_missing_target_semantic_locks;
 #[path = "tests/exact_reduction_shapes.rs"]

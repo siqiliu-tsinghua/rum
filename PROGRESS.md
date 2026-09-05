@@ -2638,3 +2638,52 @@ reader and the reason the plan-first rule exists.
 
 Still open: the two-step repair, the remaining four conversions, the four sites
 short of the contract, and the second recursion inside `Take`/`ReplacePart`.
+
+## 2026-09-05 — DeleteMissing reaches BoundedHeap, and a crux that dissolved
+
+briefs 466-467 converted `DeleteMissing`'s finite-target/resume family. Both
+axes are closed: a flat 3,000-element list that terminated the process now
+completes, 64,000 siblings complete, and depth runs to 8,000 against a previous
+ceiling of 4,944. The ten semantic locks from step A passed unmodified, which is
+what step A was for.
+
+**The interesting part is what happened to the crux.** brief-464 had identified
+the carried handoff as the thing that made this conversion different: a cold
+tail that redid the traversal could re-run user code, so the exhausted handoff
+had to carry live cursors and completed prefixes. At the gate I perturbed the
+entry point to discard its work and restart from the root — and **890 tests
+stayed green**, including the test named for exactly that property.
+
+The follow-up brief asked for a test that would catch it. It stop-lossed with a
+proof that the test cannot exist: delayed right-hand sides are evaluated only at
+`level == 1`, front exhaustion happens only at front depth zero where `level` is
+still above 1, so on the only path with a front, exhaustion strictly precedes
+any user-code evaluation. I confirmed the other half myself — the resume driver
+runs entirely on the heap with no front, including after a suspension.
+
+**A restart would therefore be invisible, and the risk was real in the abstract
+and unreachable in the concrete.** Three things follow.
+
+- *Stopping with a proof beat producing a test.* The worker could have written
+  something that passes and claims coverage; it wrote the invariant instead.
+  That is the same judgement brief-465 asked for on its item 8, and the same
+  answer: a property nothing can violate is either structural or not a property.
+- *The invariant is now recorded beside the handoff*, naming the two changes
+  that would re-open it — a predicate evaluated above target level, or a front
+  reintroduced on the resume path. A structural guarantee that nobody wrote down
+  is one refactor from being gone.
+- *A test whose name claims more than its fixture can see is worse than no
+  test.* The in-module one hand-assembled a cursor at index 1 with the prefix
+  already accumulated, so it never exercised the real entry. Renamed to say what
+  it establishes.
+
+**A procedural self-inflicted failure, recorded because it mimics the open
+dispatch-interruption sighting.** The first brief-467 dispatch produced no log
+and exited 0 because I piped the dispatcher through `head -6`; with a dirty tree
+the extra warning line pushed a later `echo` past the closed pipe, and
+`set -euo pipefail` killed the script before it dispatched. Read carelessly —
+exit 0, no new tests — it looks exactly like the silent mid-run terminations
+this project has been chasing. The tell was the missing `rust-log:` line.
+
+Still open: four conversions, the four sites short of the contract, and the
+second recursion inside `Take`/`ReplacePart`.

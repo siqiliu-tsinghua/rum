@@ -2121,10 +2121,50 @@ callback runs when those frames are discarded.
 Gate: 2 389 tests green, `git diff` is test files and wiring only, no production
 edit survived.
 
-**Next**: step B, the unified `BoundedHeap` conversion — sibling advance as an
-explicit loop, depth overflow to a cold work stack, and an exhausted handoff
-that carries the live continuation and completed prefixes rather than redoing
-the traversal. Then the remaining four conversions:
+**Step B is IN, and `DeleteMissing` is `BoundedHeap` (2026-09-05, briefs
+466-467).** Sibling advance is an explicit loop, child descent has a depth-16
+front over a cold work stack, and the exhausted handoff carries live cursors and
+completed prefixes. The target machine moved to
+`crates/rum-stdlib/src/associations/missing/target.rs`; `missing.rs` is down to
+8 113 bytes and `resume_frames.rs` to 5 573, since the eight frames collapse to
+one that freezes the whole work vector.
+
+**Both axes are closed, verified at the CLI.** Width 3,000 — which terminated
+the process before — and width 64,000 both complete; depth 4,097 and 8,000 both
+complete, against a previous ceiling of 4,944. Four release certificates cover
+depth at both `scan` settings and 64,000 siblings in both container shapes.
+
+**The ten semantic locks passed unmodified**, which was the acceptance criterion
+and the whole reason step A existed. Allocation counts are byte-identical to
+base on a shallow probe, a 2,000-sibling wide probe and an untouched control.
+
+**The crux property turned out to be unobservable, and that is the finding.**
+brief-464 identified the carried handoff as this conversion's crux: unlike every
+previous conversion, a cold tail that redid the traversal could re-run user code.
+At the gate, perturbing the entry point to discard its carried work and restart
+from the root left **890 rum-stdlib tests green** — locks, certificates and both
+in-module handoff tests. brief-467 was dispatched to close that, and stop-lossed
+with a proof instead: **delayed right-hand sides are evaluated only at
+`level == 1`, while front exhaustion happens only at remaining front depth zero,
+which is still `level > 1`.** On the only path that has a front, exhaustion
+strictly precedes any user-code evaluation. The director confirmed the other
+half: `resume_delete_missing_target_work` drives entirely on the heap with no
+front at all, including after a suspension resumes into it.
+
+So a restarting handoff would redo pure structural work and be invisible. The
+carried shape is still the right one — it is also cheaper — but its correctness
+is **structural, not test-enforced**, and the invariant is now recorded beside
+the handoff so that a change which lets user code run before an exhaustion knows
+it has re-opened the question. The in-module test that claimed to cover this was
+renamed to
+`resume_target_work_given_a_carried_prefix_does_not_replay_it`, which is what it
+actually establishes.
+
+Gate: 2 392 tests green without the ZeroMQ skip.
+
+**Next**: the remaining four conversions — `AssociationKeyFlatten`,
+`AssociationKeyDeflatten`, association `MapIndexed`, and the
+`AssociateTo`/`KeyDropFrom` Part target. Then the remaining four conversions:
 `AssociationKeyFlatten`, `AssociationKeyDeflatten`, association `MapIndexed`,
 and the `AssociateTo`/`KeyDropFrom` Part target. None fits the 1 MiB budget at
 contract height, which is why a guard is not an option for any of them.

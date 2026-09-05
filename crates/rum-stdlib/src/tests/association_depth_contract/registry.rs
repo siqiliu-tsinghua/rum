@@ -163,11 +163,14 @@ const ASSOCIATION_DEPTH_REGISTRY: &[AssociationDepthRow] = &[
     AssociationDepthRow {
         surface: "DeleteMissing",
         catalog_name: Some("DeleteMissing"),
-        mechanism: Mechanism::UnguardedNative,
+        mechanism: Mechanism::BoundedHeap,
         contract_status: ContractStatus::MeetsContract,
-        failure_direction: Some(FailureDirection::FailsOpen),
-        owed_by: Some("brief-464 DeleteMissing target/resume conversion"),
-        recursion_declarations: &["delete-missing", "delete-missing-bounded-front"],
+        failure_direction: Some(FailureDirection::Unmeasured),
+        owed_by: None,
+        recursion_declarations: &[
+            "delete-missing-bounded-front",
+            "delete-missing-target-bounded-front",
+        ],
     },
     AssociationDepthRow {
         surface: "GroupBy",
