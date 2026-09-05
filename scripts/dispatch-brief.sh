@@ -13,6 +13,10 @@
 #
 # WORKER SELECTION (env BRIEF_WORKER, default codex)
 #
+# BRIEF_RUST_LOG overrides the codex log filter (default `warn,codex_core=info`).
+# codex emits only ERROR at its own default, which is why a mid-run stream
+# termination has so far left no diagnostic in the log.
+#
 #   BRIEF_WORKER=codex   `cdx exec` — Codex. The default worker.
 #   BRIEF_WORKER=cgl     `cgl -p`   — claude-code on a GLM backend. EMERGENCY FALLBACK for
 #                                     when Codex has no quota. Not the normal path.
@@ -159,6 +163,22 @@ echo "command: $worker_cmd ($dispatch_shell)"
 if [[ "$worker" == codex ]]; then
   sandbox="${CDX_SANDBOX:-workspace-write}"
   echo "sandbox: $sandbox"
+  # codex logs through `tracing` and honours RUST_LOG (the binary carries both
+  # RUST_LOG and tracing_subscriber's EnvFilter). At its default only ERROR is
+  # emitted: across fourteen dispatch logs and ~1.5M captured lines the only
+  # tracing output at all was 25 ERROR lines from two targets. That is why the
+  # three silent mid-run terminations left nothing to read - a transport notice
+  # such as "Falling back from WebSockets to HTTPS transport" is WARN or INFO
+  # and could never have appeared. Capture WARN globally plus INFO from
+  # codex_core, which is where the client/transport lives.
+  rust_log="${BRIEF_RUST_LOG:-warn,codex_core=info}"
+  echo "rust-log: $rust_log"
+  # Exported here, in bash, rather than prefixed onto the inner command. The
+  # worker is a SHELL FUNCTION, so `env VAR=v cdx ...` cannot work — env execs a
+  # binary and would fail to find it — and a bare `VAR=v cmd` prefix is not
+  # valid in fish, which is the dispatch shell on this host. Exporting lets the
+  # interactive shell inherit it whatever its syntax.
+  export RUST_LOG="$rust_log"
   cmd="$worker_cmd exec -C '$repo_root' -s $sandbox '$task'"
 else
   permission_mode="${CGL_PERMISSION_MODE:-acceptEdits}"
@@ -176,12 +196,13 @@ working tree. Report with verbatim evidence."
   # 32000 default). The cap belongs to cgl, not to this repo, so it lives in
   # ~/.claude-glm/settings.json; set CGL_MAX_OUTPUT_TOKENS only to override a
   # single dispatch.
-  cgl_env=""
   if [[ -n "${CGL_MAX_OUTPUT_TOKENS:-}" ]]; then
-    cgl_env="CLAUDE_CODE_MAX_OUTPUT_TOKENS=$CGL_MAX_OUTPUT_TOKENS "
+    # Exported for the same reason as RUST_LOG above: `cgl` is a shell function
+    # and the dispatch shell may be fish, so a prefix assignment would not run.
+    export CLAUDE_CODE_MAX_OUTPUT_TOKENS="$CGL_MAX_OUTPUT_TOKENS"
     echo "max-output-tokens: $CGL_MAX_OUTPUT_TOKENS (overriding cgl default)"
   fi
-  cmd="cd '$repo_root' && ${cgl_env}$worker_cmd -p '$task' \
+  cmd="cd '$repo_root' && $worker_cmd -p '$task' \
 --permission-mode $permission_mode \
 --allowedTools Bash Edit Write Read Grep Glob \
 --append-system-prompt '$role'"

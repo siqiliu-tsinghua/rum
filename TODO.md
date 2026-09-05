@@ -1653,6 +1653,45 @@ The recovery that worked was to shrink the brief — brief-453 changed one file
 and ran only `fmt` plus two crate suites and two instruction probes, with the
 workspace run and the release panel kept on the director's side.
 
+**Re-examined 2026-09-05 after the user reported seeing, in other Codex
+sessions, `Falling back from WebSockets to HTTPS transport` and
+`stream disconnected before completion: websocket closed by server before
+response.completed`. That is now the leading hypothesis, and one line above is
+retracted.**
+
+- **Retracted.** "The only error present is `codex_models_manager: … timeout` …
+  That is suggestive of the connection" is wrong. That error appears in
+  *successful* runs too — five times in brief-455, which completed, and also in
+  briefs 445, 446, 447, 449, 451, 454 and 457 — while briefs 448, 450, 453 and
+  456 have none. In the failed brief-452 log it sits at line 7,509 of 12,110,
+  38% short of the truncation. It is background noise.
+- **What Codex's own session record shows.** The rollout for the failed run
+  (`~/.codex/sessions/2026/09/04/rollout-2026-09-04T20-26-46-*.jsonl`) has 243
+  records and its **last one is a `reasoning` response_item, mid-turn**. No
+  error record, no abort record, no completion record. That is the shape a
+  stream cut leaves.
+- **Why the absence of the message proved nothing.** codex logs through
+  `tracing` and at its default emits **only ERROR**: across fourteen dispatch
+  logs and about 1.5 million captured lines, the entire tracing output is 25
+  ERROR lines from two targets, with no WARN, INFO or DEBUG at all. A transport
+  fallback notice is WARN or INFO and could never have appeared in what we
+  capture. **The earlier "cause is open" was declared on an instrument that can
+  only see ERROR** — the same failure this line keeps making, believing a
+  negative from an uncalibrated probe.
+- **The instrument is fixed rather than the sighting explained.**
+  `scripts/dispatch-brief.sh` now exports `RUST_LOG` (default
+  `warn,codex_core=info`, overridable with `BRIEF_RUST_LOG`), verified to reach
+  the worker through the interactive fish shell and the `with_proxy` wrapper.
+  It is exported rather than prefixed because the worker is a shell function:
+  `env VAR=v cdx …` cannot exec a function, and fish has no prefix-assignment
+  syntax. The same latent bug was fixed in the `cgl` branch, where
+  `CGL_MAX_OUTPUT_TOKENS` had been passed as a prefix assignment that fish
+  would not have applied.
+
+The cause remains formally **open** — the specific message has not been seen in
+our own logs — but the next occurrence should now be explicable rather than
+merely recorded.
+
 **Draft A of brief-454 is CLOSED (brief-455, `9f8e89b2`).** The association arm
 of the stability walk is bounded: an association-rooted chain takes over the
 whole subtree once the walk meets an `Association`, keeps a depth-16 borrowed
