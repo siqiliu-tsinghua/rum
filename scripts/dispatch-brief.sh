@@ -9,7 +9,11 @@
 #
 # This does NOT touch git — commit the brief separately FIRST (keep commit and dispatch as
 # two steps). Invoke this via the Bash tool with run_in_background:true so the run is
-# harness-tracked; never append `&` to a dispatch.
+# harness-tracked; never append `&` to a dispatch, and never pipe this script's output.
+# `set -euo pipefail` plus a closed downstream pipe (`| head -n`) kills it mid-header,
+# BEFORE it dispatches, and the result — exit 0, no log file, no worker changes — reads
+# exactly like the silent mid-run terminations recorded in TODO.md. The tell is a missing
+# header line.
 #
 # WORKER SELECTION (env BRIEF_WORKER, default codex)
 #
