@@ -8,9 +8,11 @@ use std::collections::HashMap;
 
 mod key_predicates;
 mod key_take_drop;
+mod keys;
 
 pub(crate) use self::key_predicates::{eval_key_free_q, eval_key_member_q};
 pub(crate) use self::key_take_drop::{eval_key_drop, eval_key_take};
+pub(crate) use self::keys::eval_keys;
 
 pub(crate) fn eval_association(
     session: &mut Session,
@@ -329,33 +331,6 @@ pub(crate) fn eval_key(
     };
 
     Ok(Expr::call(head.clone(), vec![key.clone()]))
-}
-
-pub(crate) fn eval_keys(
-    session: &mut Session,
-    _head: &Expr,
-    args: &SharedArgs,
-) -> Result<Expr, EvalError> {
-    let args = args.as_ref();
-    if !(1..=2).contains(&args.len()) {
-        return Ok(session.invalid_call_with_message(
-            "Keys",
-            args,
-            "argt",
-            one_or_two_argument_count_message("Keys", args.len()),
-        ));
-    }
-
-    let wrapper = args.get(1);
-    match keys_result_for_expr(&args[0], wrapper) {
-        Ok(value) => Ok(value),
-        Err(invalid) => Ok(session.invalid_call_with_message(
-            "Keys",
-            args,
-            "invrl",
-            invalid_association_or_rule_list_message(&invalid),
-        )),
-    }
 }
 
 pub(crate) fn eval_values(
@@ -693,35 +668,6 @@ fn lookup_key_expr(key_spec: &Expr) -> &Expr {
         }
         _ => key_spec,
     }
-}
-
-fn keys_result_for_expr(expr: &Expr, wrapper: Option<&Expr>) -> Result<Expr, Expr> {
-    if let Some((key, _)) = parse_association_entry(expr) {
-        return Ok(wrap_keyed_result(key, wrapper));
-    }
-
-    if let Some(keyed) = keyed_entries_from_expr(expr) {
-        return Ok(Expr::call(
-            system_expr("List"),
-            keyed
-                .entries
-                .into_iter()
-                .map(|(key, _)| wrap_keyed_result(key, wrapper))
-                .collect(),
-        ));
-    }
-
-    let Some(items) = list_items(expr) else {
-        return Err(expr.clone());
-    };
-
-    Ok(Expr::call(
-        system_expr("List"),
-        items
-            .iter()
-            .map(|item| keys_result_for_expr(item, wrapper))
-            .collect::<Result<Vec<_>, _>>()?,
-    ))
 }
 
 fn values_result_for_expr(expr: &Expr, wrapper: Option<&Expr>) -> Result<Expr, Expr> {

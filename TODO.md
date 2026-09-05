@@ -2385,10 +2385,41 @@ Gate: 2 407 tests green, both release certificates at raw physical height 4,097,
 the forced-front falsifier reproduced red under both flag settings by turning
 its tail loop from LIFO into FIFO.
 
-**Next in this family**, in the plan's order: `Keys` (3,056, still short and
-still fail-open — confirmed still dying at the contract height after this
-conversion), then `Lookup`'s four phases, then `Values`. Outside it: `GroupBy`,
-the schema validator, and generic `MapIndexed`. Then the remaining four conversions:
+**`Keys` is converted (brief-473).** `keys_result_for_expr` had its one
+recursive edge **inside the closure passed to `map`**, so the iterator adaptor
+and the `collect` machinery stayed live in the frame across the recursive call —
+the 704 bytes per layer against `Values`' 336 that brief-471 measured, visible in
+the source. It now runs a depth-16 front over a heap tail in
+`basic/keys.rs` and **reaches 4,097, which it could not do before** (it died at
+3,056).
+
+The brief ruled out the alternative repair explicitly: outlining could have
+recovered most of that 2x, but a fix sized to just clear the contract leaves a
+margin thinner than the drift this line has watched, and structural beats
+tuned-to-fit.
+
+**The subtle contract held.** `collect::<Result<_, _>>()` short-circuits on the
+first error and its payload — the offending sub-expression — reaches a
+user-visible diagnostic, so a tail that visited in a different order would
+return a different message while every successful case still matched.
+Director-verified at the CLI: `Keys[{1, 2}]` reports `1`, and
+`Keys[{{"k" -> 7}, 2}]` reports `2`.
+
+**Direction measured at the gate and corrected**, as for `KeyTake`/`KeyDrop`:
+in band at 8,000, 12,000 and 20,000, so the row carries `FailsClosed` rather
+than the `Unmeasured` the brief specified. **Allocation counts are unchanged**
+while `bytes_total` fell 10.6% and peak live bytes 10.8%; the `Values` and
+`KeyTake` same-file controls are byte-identical. `Keys`' allocation profile now
+matches `Values`'.
+
+Gate: 2 410 tests green, the release certificate at raw physical height 4,097,
+and the forced-front falsifier reproduced red by turning its tail loop from LIFO
+into FIFO.
+
+**Next in this family**: `Lookup`'s four phases — count, planning, owned
+rendering and resumed borrowed rendering — at 4,760, the thinnest margin in the
+class, then `Values` at 5,896. Outside it: `GroupBy`, the schema validator, and
+generic `MapIndexed`. Then the remaining four conversions:
 `AssociationKeyFlatten`, `AssociationKeyDeflatten`, association `MapIndexed`,
 and the `AssociateTo`/`KeyDropFrom` Part target. None fits the 1 MiB budget at
 contract height, which is why a guard is not an option for any of them.

@@ -10,6 +10,8 @@ mod association_depth_contract;
 mod association_key_reshape_depth;
 #[path = "tests/association_key_take_drop_depth.rs"]
 mod association_key_take_drop_depth;
+#[path = "tests/association_keys_depth.rs"]
+mod association_keys_depth;
 #[path = "tests/associations/mod.rs"]
 mod associations;
 #[path = "tests/associations_missing_surface.rs"]

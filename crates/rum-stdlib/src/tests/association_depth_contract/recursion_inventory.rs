@@ -360,13 +360,6 @@ const EXPECTED_RECURSION: &[(&str, &str, &str, usize, &str)] = &[
     ),
     (
         "crates/rum-stdlib/src/associations/basic.rs",
-        "keys_result_for_expr",
-        "keys_result_for_expr",
-        1,
-        "keys-nested-lists",
-    ),
-    (
-        "crates/rum-stdlib/src/associations/basic.rs",
         "lookup_entries_outcome",
         "lookup_entries_outcome",
         1,
@@ -392,6 +385,13 @@ const EXPECTED_RECURSION: &[(&str, &str, &str, usize, &str)] = &[
         "keyed_take_drop_result_for_expr_recursive_bounded",
         1,
         "key-take-drop-nested-lists",
+    ),
+    (
+        "crates/rum-stdlib/src/associations/basic/keys.rs",
+        "keys_result_for_expr_recursive_bounded",
+        "keys_result_for_expr_recursive_bounded",
+        1,
+        "keys-nested-lists",
     ),
     (
         "crates/rum-stdlib/src/associations/data.rs",
