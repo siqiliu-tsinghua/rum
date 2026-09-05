@@ -4,6 +4,8 @@ use super::*;
 mod file_io_support;
 use file_io_support::install_test_file_io;
 
+#[path = "tests/association_depth_contract/mod.rs"]
+mod association_depth_contract;
 #[path = "tests/associations/mod.rs"]
 mod associations;
 #[path = "tests/associations_missing_surface.rs"]

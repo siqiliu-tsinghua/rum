@@ -2469,3 +2469,48 @@ sessions is now the leading hypothesis, and it remains formally open.
 Still open: the enforcement layers, the five conversions, and — unchanged — the
 four sites short of the contract and the second recursion inside
 `Take`/`ReplacePart` above roughly 11,000.
+
+## 2026-09-05 — the association depth class becomes a closed declaration
+
+brief-460 installed the two enforcement layers: a 52-row surface registry where
+every association builtin and cross-family axis declares how it is bounded and
+whether it meets 4,097, and a `syn` recursion inventory where every recursive
+descent in the implementation surface declares which row it implements. Tests
+only; `git diff` is `Cargo.lock`, a dev-dependency, module wiring and the new
+test directory.
+
+**The design rule that did the work: a row states what is true now, never what
+a later brief will make true.** Each row carries two orthogonal fields —
+mechanism today, and measured contract status with failure direction and the
+brief that owes the work — and neither may borrow from the other. brief-458's
+draft had proposed `GuardedNative` for two sites that are not guarded; they are
+recorded as `UnguardedNative + MeetsContract + Unmeasured`. Nineteen rows read
+`UnguardedNative`, which is visibly unfinished, and that is the point: the
+registry makes the remaining work un-forgettable instead of remembered.
+
+**`Unmeasured` earned its place.** Two sites clear the association fixture's own
+cap, so their behaviour above it has never been observed. The brief made "this
+cell is unmeasured" an acceptable deliverable, and the alternative — inventing a
+direction to fill a cell — is the failure this whole line keeps paying for.
+
+**Both falsifiers were reproduced by hand rather than accepted on report**: one
+extra syntactic recursive call added to a real function turned the inventory red
+with the exact changed count, and deleting one registry row failed the
+exhaustiveness check naming that builtin, which is what proves the
+catalog comparison is live and not a list compared with itself.
+
+**The dispatcher's new WARN capture paid for itself on its second run.** The
+worker's `cargo test --workspace` hit `WARN codex_sandboxing::violation:
+operation_not_permitted` and exited 101; its final green then used
+`RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1`, so it never exercised the nine native tests.
+Under the previous ERROR-only capture none of that would have appeared in the
+log, and the worker's green would have looked complete. The director's run,
+without that variable on a loopback-capable host, is 2 209 tests green.
+
+Deferred with a re-open condition: the `rum-derive` compile-time validator that
+would make an unwrapped recursive edge a build error. Stronger than the
+inventory, but a separate correctness surface, and the inventory covers the same
+class meanwhile.
+
+Still open: two guards, five conversions, and — unchanged — the four sites short
+of the contract and the second recursion inside `Take`/`ReplacePart`.

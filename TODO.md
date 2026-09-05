@@ -1893,11 +1893,65 @@ and the reason is that it cannot see this change: `Merge[` occurs zero times in
 `scripts/core-language-microbench.sh`, and its one merge label exercises
 `MergeNested`, a different operation whose parser is untouched.
 
-**Next in this line**: step 2 is the enforcement layers — the `rum-derive`
-group validator that rejects an unwrapped recursive edge, the `syn` recursion
-inventory, and the association surface registry where each site declares
-`BoundedHeap`, `GuardedNative`, or `DeferredShort`. Then the five conversions,
-each flipping its declaration from `DeferredShort` to `BoundedHeap`.
+**Step 2 is IN (2026-09-05, brief-460): the class is now a closed
+declaration.** Two enforcement layers, tests only, no behavior change.
+
+- **The surface registry** — 52 rows covering both association catalogs plus
+  the cross-family axes (`Map`, `Apply`, `MapIndexed`, `Scan`, `Set`, keyed
+  `Part`). Distribution: 26 `NoProportionalDescent`, 19 `UnguardedNative`, 4
+  `BoundedHeap`, 1 `GuardedNative`, 1 `EvaluatorPolled`. The catalog comparison
+  is **bidirectional and live** — director-verified by deleting the
+  `DeleteMissing` row, which fails with `catalog entries without rows:
+  ["DeleteMissing"]`.
+- **The recursion inventory** — a `syn` scan over `associations/**`,
+  `functional_ops/apply_map/**`, `association_data.rs` and `exact_paths.rs`,
+  exhaustive within those roots with no per-function allowlist, comparing exact
+  `(path, caller, callee, occurrence count)` rows. Blind spots are documented in
+  the test itself: trait-object and function-pointer dispatch, macro-generated
+  recursion, and anything outside those roots.
+
+**Each row carries two orthogonal fields and neither may borrow from the
+other** — mechanism today, and measured contract status with failure direction
+and the brief that owes the work. brief-458's draft had proposed `GuardedNative`
+for `Scan` and nested key-path `Set`, which are not guarded; the registry
+records them as `UnguardedNative + MeetsContract + Unmeasured` with an owed
+queue item. `Unmeasured` is the honest entry: those two clear the association
+fixture's own cap, so their direction above it has never been observed, and the
+brief made "this cell is unmeasured" an acceptable deliverable rather than a
+gap to fill with a guess.
+
+**Both falsifiers were reproduced at the gate, not accepted on report.** The
+registry's checked-in `#[should_panic]` misdeclares the real catalog entry
+`AssociationKeyFlatten` and must name its real edge
+(`key_reshape.rs`, `flatten_association_entries`, count 1). For the inventory
+the director added one extra syntactic recursive call to a real function and
+captured the red — `("crates/rum-stdlib/src/associations/data.rs",
+"parse_merge_keyed_entries_collection_with_diagnostics", …, 2)` against the
+declared 1 — then restored it and captured green.
+
+**A gate note worth keeping.** The worker's own workspace run needed
+`RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1`, so its green did not cover the nine native
+ZeroMQ tests. The director's run, on this loopback-capable host and without
+that variable, is 2 209 tests green. This is the standing rule that a worker's
+gate is worth exactly what its sandbox can execute — and it was **visible only
+because the dispatcher now captures WARN**: the run that first hit it logged
+`WARN codex_sandboxing::violation: … operation_not_permitted` and exited 101,
+a line that would have been invisible under the previous ERROR-only capture.
+
+**Deferred, with a re-open condition**: the `rum-derive` compile-time group
+validator that would make an unwrapped recursive edge a build error rather than
+a test failure. It is stronger, and it is a separate correctness surface whose
+gate should not be shared with the registry's; meanwhile the inventory covers
+the same class, because an edge added inside a guarded function changes that
+function's occurrence count. Re-open it when the guarded population stops being
+small — today `Merge`, with `Scan` and nested key-path `Set` measured
+guard-eligible — or when a conversion is rejected and a site stays natively
+recursive by decision rather than by schedule.
+
+**Next in this line**: the two remaining guards (`Scan`, nested key-path `Set`
+— both measured to pass at contract height under the 1 MiB boundary, 3/3), then
+the five conversions, each flipping its row from `UnguardedNative` to
+`BoundedHeap`.
 
 **Opened by brief-450 — a second recursion above the contract.** Above roughly
 11,000 levels both operations return to terminating the process (in band at
