@@ -1985,10 +1985,64 @@ existed to force — the **`Map` control, which shares the `apply_map` machinery
 three of the four edges live in, moves +0.002%**. Clusters were tight on every
 row.
 
-**Next in this line**: the five conversions — `DeleteMissing`,
+**The first conversion is HALF IN (2026-09-05, briefs 462-463).**
+`DeleteMissing`'s recursive-mode walkers, both pairs of delayed-wrapper
+counters, the memory preflight projection and the missing scan are now bounded
+by a depth-16 front plus explicit work stacks. **The finite-target/resume family
+is untouched, so the registry row stays `UnguardedNative`** with `owed_by`
+naming brief-464 — a row that said `BoundedHeap` while a reachable path still
+recursed would be the reclassification failure this project has already paid
+for.
+
+**Measured before briefing, and it corrected three earlier claims.**
+`DeleteMissing[expr, level]` is the *recursive* mode — `Target` is the
+**three-argument** form — so brief-454's and brief-457's per-mode reasoning
+rested on a distinction that a two-argument probe silently gets wrong. The
+memory preflight is unreachable unless a limit is armed
+(`missing.rs:89-91`), and armed it costs essentially nothing extra (6,240
+against 6,272 physical), the opposite of brief-457's risk 3. And the target mode
+is 1.27x costlier per level, not the 5x its recorded packets implied. Brackets,
+all fail-open: recursive 6,272, armed 6,240, target 4,944, target with scan
+`All` 4,928.
+
+**brief-462 stop-lossed correctly and the gate found two things it had not.**
+
+- *Its failing certificate was a bad probe.* It used an absolute
+  `MemoryConstrained[…, 1000000000]` while `MemoryInUse[]` at height 4,097 is
+  **2 810 469 079 bytes**, so the call aborted before running and returned
+  `$Aborted`. It had copied the two-argument form from its own shallow
+  companion, where 1e9 is above usage. The allowance had to be relative.
+- *A default-path allocation regression of +1 per association level*, invisible
+  to the worker because it never reached the cost gate. The base's
+  `entries.into_iter().filter_map(…).collect()` can be satisfied **in place,
+  reusing the source buffer**; the rewrite rebuilt into a fresh
+  `Vec::with_capacity` and lost that on every level. The sibling list walk was
+  not affected — its base iterated a borrowed slice and always allocated.
+- *The forced-front falsifier the brief required was never delivered*, which
+  mattered because every certificate fixture is a single chain: branch handling
+  in the heap tail was untested.
+
+**brief-463 closed all three**, and its falsifier is better than the shape I
+specified: instead of a test-only cargo feature it calls the private
+`*_with_front_depth` directly with a front of zero, asserts that front zero
+really reports `Exhausted` and front 16 reports `Complete`, then asserts
+**tail == front == expected** on a three-entry-per-level fixture with a
+per-level witness. Director-verified that it fires: reversing the tail's entry
+order fails it with `keep` and `k` transposed.
+
+**Gate.** 2 379 tests green on a loopback-capable host with no ZeroMQ skip;
+three release certificates at raw physical height 4,097 including the armed one;
+allocation counts back to base **byte-identical** on all three probes;
+instructions `-0.639%` on the recursive probe, `+0.003%` armed, `+0.001%`
+control. The split landed by responsibility — `counting.rs` 14 493,
+`deletion.rs` 16 929, `projection.rs` 7 348 — after brief-462's single
+`traversal.rs` came in at 35 131, over the architecture-debt line.
+
+**Next in this line**: brief-464, `DeleteMissing`'s finite-target/resume family
+— the thinner margin at 1.20x, suspension-bearing, and the last thing between
+this row and `BoundedHeap`. Then the remaining four conversions:
 `AssociationKeyFlatten`, `AssociationKeyDeflatten`, association `MapIndexed`,
-and the `AssociateTo`/`KeyDropFrom` Part target — each flipping its row from
-`UnguardedNative` to `BoundedHeap`. None of them fits the 1 MiB budget at
+and the `AssociateTo`/`KeyDropFrom` Part target. None fits the 1 MiB budget at
 contract height, which is why a guard is not an option for any of them.
 
 **Opened by brief-450 — a second recursion above the contract.** Above roughly

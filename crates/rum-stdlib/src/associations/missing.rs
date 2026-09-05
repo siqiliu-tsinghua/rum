@@ -1,9 +1,11 @@
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 mod resume_frames;
+mod traversal;
 use resume_frames::*;
+use traversal::*;
 
 use super::*;
-use rum_core::{IntValue, Rational, SharedArgs};
+use rum_core::SharedArgs;
 
 const DELAYED_DELETE_MISSING_WRAPPER_PROXY_BYTES: usize = 64 * std::mem::size_of::<Expr>();
 
@@ -114,125 +116,6 @@ fn delete_missing_delayed_wrapper_count(expr: &Expr, mode: DeleteMissingMode) ->
             ..
         } => target_delayed_wrapper_count(expr, level),
     }
-}
-
-fn recursive_delayed_wrapper_count(expr: &Expr, depth: DeleteMissingDepth) -> usize {
-    let Some(child_depth) = depth.descend() else {
-        return 0;
-    };
-
-    if let Some(items) = list_items(expr) {
-        return items.iter().fold(0usize, |total, item| {
-            total.saturating_add(recursive_delayed_wrapper_count(item, child_depth))
-        });
-    }
-
-    let Expr::Call { head, args } = expr else {
-        return 0;
-    };
-    if !is_system_symbol_name(head, "Association") {
-        return 0;
-    }
-    recursive_association_item_wrapper_count(args, child_depth)
-}
-
-fn recursive_association_item_wrapper_count(
-    items: &[Expr],
-    child_depth: DeleteMissingDepth,
-) -> usize {
-    items.iter().fold(0usize, |total, item| {
-        total.saturating_add(match item {
-            Expr::Call { head, args }
-                if (is_system_symbol_name(head, "Rule")
-                    || is_system_symbol_name(head, "RuleDelayed"))
-                    && args.len() == 2 =>
-            {
-                if is_system_symbol_name(head, "RuleDelayed") {
-                    1
-                } else {
-                    recursive_delayed_wrapper_count(&args[1], child_depth)
-                }
-            }
-            Expr::Call { head, args }
-                if is_system_symbol_name(head, "Association")
-                    || is_system_symbol_name(head, "List") =>
-            {
-                recursive_association_item_wrapper_count(args, child_depth)
-            }
-            _ => 0,
-        })
-    })
-}
-
-fn target_delayed_wrapper_count(expr: &Expr, level: usize) -> usize {
-    if level <= 1 {
-        return 0;
-    }
-
-    if let Some(items) = list_items(expr) {
-        return items.iter().fold(0usize, |total, item| {
-            total.saturating_add(target_delayed_wrapper_count(item, level - 1))
-        });
-    }
-
-    let Expr::Call { head, args } = expr else {
-        return 0;
-    };
-    if !is_system_symbol_name(head, "Association") {
-        return 0;
-    }
-    target_association_item_wrapper_count(args, level - 1)
-}
-
-fn target_association_item_wrapper_count(items: &[Expr], child_level: usize) -> usize {
-    items.iter().fold(0usize, |total, item| {
-        total.saturating_add(match item {
-            Expr::Call { head, args }
-                if (is_system_symbol_name(head, "Rule")
-                    || is_system_symbol_name(head, "RuleDelayed"))
-                    && args.len() == 2 =>
-            {
-                if is_system_symbol_name(head, "RuleDelayed") {
-                    1
-                } else {
-                    target_delayed_wrapper_count(&args[1], child_level)
-                }
-            }
-            Expr::Call { head, args }
-                if is_system_symbol_name(head, "Association")
-                    || is_system_symbol_name(head, "List") =>
-            {
-                target_association_item_wrapper_count(args, child_level)
-            }
-            _ => 0,
-        })
-    })
-}
-
-fn projected_expr_memory_proxy_bytes(expr: &Expr) -> usize {
-    match expr {
-        Expr::Atom(Atom::Integer(IntValue::Small(_))) => std::mem::size_of::<Expr>(),
-        Expr::Atom(Atom::Integer(IntValue::Big(value))) => std::mem::size_of::<Expr>()
-            .saturating_add(std::mem::size_of::<BigInt>())
-            .saturating_add(projected_bigint_payload_bytes(value)),
-        Expr::Atom(Atom::Rational(value)) => std::mem::size_of::<Expr>()
-            .saturating_add(std::mem::size_of::<Rational>())
-            .saturating_add(projected_bigint_payload_bytes(value.numerator()))
-            .saturating_add(projected_bigint_payload_bytes(value.denominator())),
-        Expr::Atom(Atom::String(value)) => std::mem::size_of::<Expr>().saturating_add(value.len()),
-        Expr::Atom(Atom::Symbol(symbol)) => std::mem::size_of::<Expr>()
-            .saturating_add(symbol.context().len())
-            .saturating_add(symbol.name().len()),
-        Expr::Call { head, args } => args.iter().fold(
-            std::mem::size_of::<Expr>().saturating_add(projected_expr_memory_proxy_bytes(head)),
-            |total, arg| total.saturating_add(projected_expr_memory_proxy_bytes(arg)),
-        ),
-    }
-}
-
-fn projected_bigint_payload_bytes(value: &BigInt) -> usize {
-    let bytes = u128::from(value.bits()).saturating_add(7) / 8;
-    usize::try_from(bytes.saturating_add(1)).unwrap_or(usize::MAX)
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, FrameRootTrace)]
@@ -933,75 +816,6 @@ fn resume_suspended_delete_missing_association_after_child(
     )
 }
 
-fn delete_missing_from_keyed_data_recursive(
-    expr: &Expr,
-    depth: DeleteMissingDepth,
-) -> Option<Expr> {
-    if let Some(items) = list_items(expr) {
-        return Some(delete_missing_from_list_recursive(items, depth));
-    }
-
-    let entries = association_entry_forms_from_expr(expr)?;
-    Some(render_association_entry_forms_preserving_heads(
-        delete_missing_from_association_entries_recursive(entries, depth),
-    ))
-}
-
-fn delete_missing_from_list_recursive(items: &[Expr], depth: DeleteMissingDepth) -> Expr {
-    Expr::call(
-        system_expr("List"),
-        items
-            .iter()
-            .filter_map(|item| delete_missing_list_item_recursive(item, depth))
-            .collect(),
-    )
-}
-
-fn delete_missing_list_item_recursive(item: &Expr, depth: DeleteMissingDepth) -> Option<Expr> {
-    if is_missing_expr(item) || rule_like_expr_has_missing_value(item) {
-        return None;
-    }
-
-    if let Some(child_depth) = depth.descend() {
-        if list_items(item).is_some() || association_entry_forms_from_expr(item).is_some() {
-            return delete_missing_from_keyed_data_recursive(item, child_depth);
-        }
-    }
-
-    Some(item.clone())
-}
-
-fn delete_missing_from_association_entries_recursive(
-    entries: Vec<AssociationEntryForm>,
-    depth: DeleteMissingDepth,
-) -> Vec<AssociationEntryForm> {
-    entries
-        .into_iter()
-        .filter_map(|mut entry| {
-            if is_missing_expr(&entry.value) {
-                return None;
-            }
-
-            if !entry.delayed {
-                if let Some(child_depth) = depth.descend() {
-                    if let Some(value) =
-                        delete_missing_from_keyed_data_recursive(&entry.value, child_depth)
-                    {
-                        entry.value = value;
-                    }
-                }
-            } else if let Some(child_depth) = depth.descend() {
-                entry.value = delete_missing_delayed_wrapper(
-                    entry.value,
-                    DeleteMissingMode::Recursive(child_depth),
-                );
-            }
-
-            Some(entry)
-        })
-        .collect()
-}
-
 fn delete_missing_delayed_wrapper(value: Expr, mode: DeleteMissingMode) -> Expr {
     let local = system_expr("rum$deleteMissingValue");
     let cleanup = Expr::call(
@@ -1033,23 +847,6 @@ fn delete_missing_call_args(expr: Expr, mode: DeleteMissingMode) -> Vec<Expr> {
         DeleteMissingMode::Recursive(depth) => vec![expr, depth.expr()],
         DeleteMissingMode::Target { level, scan } => vec![expr, level.expr(), scan.expr()],
     }
-}
-
-fn contains_missing_within(expr: &Expr, depth: DeleteMissingDepth) -> bool {
-    if is_missing_expr(expr) {
-        return true;
-    }
-
-    let Some(child_depth) = depth.descend_scan() else {
-        return false;
-    };
-
-    let Expr::Call { args, .. } = expr else {
-        return false;
-    };
-
-    args.iter()
-        .any(|arg| contains_missing_within(arg, child_depth))
 }
 
 fn rule_like_expr_has_missing_value(expr: &Expr) -> bool {

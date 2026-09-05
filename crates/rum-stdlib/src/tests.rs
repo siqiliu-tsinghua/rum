@@ -40,6 +40,8 @@ mod debug_tools_reports;
 mod debug_tools_resources;
 #[path = "tests/definition_lhs_assignment_resume.rs"]
 mod definition_lhs_assignment_resume;
+#[path = "tests/delete_missing_depth.rs"]
+mod delete_missing_depth;
 #[path = "tests/exact_reduction_shapes.rs"]
 mod exact_reduction_shapes;
 #[path = "tests/functional_ops/mod.rs"]

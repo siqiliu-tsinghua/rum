@@ -2549,3 +2549,55 @@ a claim, not a fact, and wants a hand cross-check before it is recorded.
 
 Still open: the five conversions, the four sites short of the contract, and the
 second recursion inside `Take`/`ReplacePart`.
+
+## 2026-09-05 — the first conversion, and a stop-loss that was right for the wrong reason
+
+briefs 462-463 converted `DeleteMissing`'s recursive-mode walkers, its two pairs
+of delayed-wrapper counters, its memory preflight projection and its missing
+scan to bounded fronts over explicit work stacks. The finite-target/resume
+family is untouched and the registry row stays `UnguardedNative`.
+
+**brief-462 stopped on a red certificate and was right to stop — but the red was
+its own probe.** It armed `MemoryConstrained` with an absolute ceiling of 1e9
+while `MemoryInUse[]` at the certificate's height is 2.8 GB, so the limit sat
+below current usage and the call aborted before running. It had copied the
+two-argument form from its own shallow companion, where 1e9 is comfortably above
+usage. **A constant that is generous at depth 3 and impossible at depth 4,097 is
+a scaling assumption, and this line keeps finding them in probes rather than in
+code.**
+
+**The gate then found two things the stop-loss had hidden**, because stopping
+early meant the worker never reached its own cost gate or its last deliverable:
+
+- *An allocation regression on the default path*, +1 per association level, at a
+  depth shallower than the front so no heap tail ran at all. The cause is a
+  detail worth carrying: `entries.into_iter().filter_map(…).collect()` over an
+  **owned** `Vec` can be satisfied in place, reusing the source buffer, and
+  rewriting it as `Vec::with_capacity` plus `push` silently gives that up. The
+  sibling list walk looked identical and was unaffected, because its base
+  iterated a borrowed slice and had to allocate anyway.
+- *The forced-front falsifier was missing*, and it mattered more than it looks:
+  every certificate fixture in the conversion is a single chain, so nothing
+  exercised branch handling in the heap tail. A tail that dropped or reordered
+  entries would have passed the whole panel.
+
+**The replacement falsifier is better than the one I specified.** I had asked
+for a test-only cargo feature to force the front; brief-463 instead calls the
+private `*_with_front_depth` with a front of zero from an in-module test — no
+feature, no production branch — and asserts front-zero really reports
+`Exhausted`, front-16 reports `Complete`, and **tail == front == expected** on a
+three-entry-per-level fixture carrying a per-level witness. Verified to fire by
+reversing the tail's push order.
+
+**Not committing the conversion before the repair** was the other decision here.
+A known allocation regression shipped now and fixed later is the stopgap-now
+shape this project rules out, so brief-462's tree stayed uncommitted and
+brief-463 built on it; the two land as one correct change.
+
+Gate: 2 379 tests green without the ZeroMQ skip, three release certificates at
+raw physical height 4,097, allocation counts byte-identical to base, and
+instructions -0.639% on the converted path.
+
+Still open: the finite-target/resume family, the remaining four conversions, the
+four sites short of the contract, and the second recursion inside
+`Take`/`ReplacePart`.

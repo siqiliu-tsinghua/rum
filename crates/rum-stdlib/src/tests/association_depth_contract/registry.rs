@@ -166,8 +166,8 @@ const ASSOCIATION_DEPTH_REGISTRY: &[AssociationDepthRow] = &[
         mechanism: Mechanism::UnguardedNative,
         contract_status: ContractStatus::MeetsContract,
         failure_direction: Some(FailureDirection::FailsOpen),
-        owed_by: Some("DeleteMissing conversion queue"),
-        recursion_declarations: &["delete-missing"],
+        owed_by: Some("brief-464 DeleteMissing target/resume conversion"),
+        recursion_declarations: &["delete-missing", "delete-missing-bounded-front"],
     },
     AssociationDepthRow {
         surface: "GroupBy",
