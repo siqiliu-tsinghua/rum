@@ -70,10 +70,10 @@ const ASSOCIATION_DEPTH_REGISTRY: &[AssociationDepthRow] = &[
     AssociationDepthRow {
         surface: "AssociateTo",
         catalog_name: Some("AssociateTo"),
-        mechanism: Mechanism::UnguardedNative,
+        mechanism: Mechanism::BoundedHeap,
         contract_status: ContractStatus::MeetsContract,
-        failure_direction: Some(FailureDirection::FailsOpen),
-        owed_by: Some("association Part-target conversion queue"),
+        failure_direction: Some(FailureDirection::Unmeasured),
+        owed_by: None,
         recursion_declarations: &["held-association-part-exact-paths"],
     },
     AssociationDepthRow {
@@ -220,10 +220,10 @@ const ASSOCIATION_DEPTH_REGISTRY: &[AssociationDepthRow] = &[
     AssociationDepthRow {
         surface: "KeyDropFrom",
         catalog_name: Some("KeyDropFrom"),
-        mechanism: Mechanism::UnguardedNative,
+        mechanism: Mechanism::BoundedHeap,
         contract_status: ContractStatus::MeetsContract,
-        failure_direction: Some(FailureDirection::FailsOpen),
-        owed_by: Some("association Part-target conversion queue"),
+        failure_direction: Some(FailureDirection::Unmeasured),
+        owed_by: None,
         recursion_declarations: &["held-association-part-exact-paths"],
     },
     AssociationDepthRow {

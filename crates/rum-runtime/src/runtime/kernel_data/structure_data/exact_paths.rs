@@ -1,5 +1,22 @@
 use super::*;
 
+const RECURSIVE_EXACT_EXPR_AT_PATH_DEPTH: usize = 16;
+const RECURSIVE_COLLECT_EXACT_PATHS_DEPTH: usize = 16;
+const RECURSIVE_REPLACE_EXACT_PATH_DEPTH: usize = 16;
+
+enum BoundedTraversal<T> {
+    Complete(T),
+    Exhausted(T),
+}
+
+impl<T> BoundedTraversal<T> {
+    fn into_value(self) -> T {
+        match self {
+            Self::Complete(value) | Self::Exhausted(value) => value,
+        }
+    }
+}
+
 pub(super) fn exact_position_paths_from_expr(
     expr: &Expr,
     spec_expr: &Expr,
@@ -33,12 +50,36 @@ pub(super) fn exact_position_paths_from_expr(
 }
 
 pub(super) fn exact_expr_at_path(expr: &Expr, path: &[isize]) -> Option<Expr> {
+    exact_expr_at_path_with_front_depth(expr, path, RECURSIVE_EXACT_EXPR_AT_PATH_DEPTH).into_value()
+}
+
+fn exact_expr_at_path_with_front_depth(
+    expr: &Expr,
+    path: &[isize],
+    remaining_path_depth: usize,
+) -> BoundedTraversal<Option<Expr>> {
     let Some((first, rest)) = path.split_first() else {
-        return Some(expr.clone());
+        return BoundedTraversal::Complete(Some(expr.clone()));
     };
 
-    let selected = select_exact_part(expr, *first)?;
-    exact_expr_at_path(&selected, rest)
+    if remaining_path_depth == 0 {
+        return BoundedTraversal::Exhausted(exact_expr_at_path_iterative(expr, path));
+    }
+
+    let Some(selected) = select_exact_part(expr, *first) else {
+        return BoundedTraversal::Complete(None);
+    };
+    exact_expr_at_path_with_front_depth(&selected, rest, remaining_path_depth - 1)
+}
+
+#[cold]
+#[inline(never)]
+fn exact_expr_at_path_iterative(expr: &Expr, path: &[isize]) -> Option<Expr> {
+    let mut selected = expr.clone();
+    for component in path {
+        selected = select_exact_part(&selected, *component)?;
+    }
+    Some(selected)
 }
 
 pub(super) fn select_exact_part(expr: &Expr, index: isize) -> Option<Expr> {
@@ -90,26 +131,197 @@ pub(super) fn collect_exact_paths_for_position_spec(
     selectors: &[PartSelector],
     heads: ReplacePartHeadsMode,
 ) -> Vec<Vec<isize>> {
+    collect_exact_paths_for_position_spec_with_front_depth(
+        expr,
+        selectors,
+        heads,
+        RECURSIVE_COLLECT_EXACT_PATHS_DEPTH,
+    )
+    .into_value()
+}
+
+fn collect_exact_paths_for_position_spec_with_front_depth(
+    expr: &Expr,
+    selectors: &[PartSelector],
+    heads: ReplacePartHeadsMode,
+    remaining_path_depth: usize,
+) -> BoundedTraversal<Vec<Vec<isize>>> {
     let Some((first, rest)) = selectors.split_first() else {
-        return vec![Vec::new()];
+        return BoundedTraversal::Complete(vec![Vec::new()]);
     };
 
+    if remaining_path_depth == 0 {
+        return BoundedTraversal::Exhausted(collect_exact_paths_for_position_spec_iterative(
+            expr, selectors, heads,
+        ));
+    }
+
     let Some(selected) = select_positioned_parts_for_selector(expr, first, heads) else {
-        return Vec::new();
+        return BoundedTraversal::Complete(Vec::new());
     };
 
     let mut paths = Vec::new();
+    let mut exhausted = false;
     for (prefix, value) in selected {
-        for mut tail in collect_exact_paths_for_position_spec(&value, rest, heads) {
+        let tails = match collect_exact_paths_for_position_spec_with_front_depth(
+            &value,
+            rest,
+            heads,
+            remaining_path_depth - 1,
+        ) {
+            BoundedTraversal::Complete(tails) => tails,
+            BoundedTraversal::Exhausted(tails) => {
+                exhausted = true;
+                tails
+            }
+        };
+        for mut tail in tails {
             let mut path = prefix.clone();
             path.append(&mut tail);
             paths.push(path);
         }
     }
+
+    if exhausted {
+        BoundedTraversal::Exhausted(paths)
+    } else {
+        BoundedTraversal::Complete(paths)
+    }
+}
+
+enum CollectExactPathWork {
+    Visit {
+        expr: Expr,
+        selector_index: usize,
+        prefix: Vec<isize>,
+    },
+    Exit {
+        component_count: usize,
+    },
+}
+
+#[cold]
+#[inline(never)]
+fn collect_exact_paths_for_position_spec_iterative(
+    expr: &Expr,
+    selectors: &[PartSelector],
+    heads: ReplacePartHeadsMode,
+) -> Vec<Vec<isize>> {
+    let mut work = vec![CollectExactPathWork::Visit {
+        expr: expr.clone(),
+        selector_index: 0,
+        prefix: Vec::new(),
+    }];
+    let mut current_path = Vec::new();
+    let mut paths = Vec::new();
+
+    while let Some(task) = work.pop() {
+        match task {
+            CollectExactPathWork::Visit {
+                expr,
+                selector_index,
+                prefix,
+            } => {
+                let component_count = prefix.len();
+                current_path.extend(prefix);
+                work.push(CollectExactPathWork::Exit { component_count });
+
+                let Some(selector) = selectors.get(selector_index) else {
+                    paths.push(current_path.clone());
+                    continue;
+                };
+                let Some(selected) = select_positioned_parts_for_selector(&expr, selector, heads)
+                else {
+                    continue;
+                };
+
+                work.extend(selected.into_iter().rev().map(|(prefix, expr)| {
+                    CollectExactPathWork::Visit {
+                        expr,
+                        selector_index: selector_index + 1,
+                        prefix,
+                    }
+                }));
+            }
+            CollectExactPathWork::Exit { component_count } => {
+                current_path.truncate(current_path.len() - component_count);
+            }
+        }
+    }
+
     paths
 }
 
 fn select_positioned_parts_for_selector(
+    expr: &Expr,
+    selector: &PartSelector,
+    heads: ReplacePartHeadsMode,
+) -> Option<Vec<(Vec<isize>, Expr)>> {
+    match selector {
+        PartSelector::Multi(_) => select_positioned_parts_for_selector_with_front_depth(
+            expr,
+            selector,
+            heads,
+            RECURSIVE_COLLECT_EXACT_PATHS_DEPTH,
+        )
+        .into_value(),
+        PartSelector::Single(_) | PartSelector::Key(_) => {
+            select_positioned_parts_for_non_multi_selector(expr, selector, heads)
+        }
+    }
+}
+
+fn select_positioned_parts_for_selector_with_front_depth(
+    expr: &Expr,
+    selector: &PartSelector,
+    heads: ReplacePartHeadsMode,
+    remaining_selector_depth: usize,
+) -> BoundedTraversal<Option<Vec<(Vec<isize>, Expr)>>> {
+    match selector {
+        PartSelector::Single(_) | PartSelector::Key(_) => BoundedTraversal::Complete(
+            select_positioned_parts_for_non_multi_selector(expr, selector, heads),
+        ),
+        PartSelector::Multi(specs) => {
+            if remaining_selector_depth == 0 {
+                return BoundedTraversal::Exhausted(
+                    select_positioned_parts_for_selector_iterative(expr, selector, heads),
+                );
+            }
+
+            let mut selected = Vec::new();
+            let mut exhausted = false;
+            for spec in specs {
+                let parts = match select_positioned_parts_for_selector_with_front_depth(
+                    expr,
+                    spec,
+                    heads,
+                    remaining_selector_depth - 1,
+                ) {
+                    BoundedTraversal::Complete(parts) => parts,
+                    BoundedTraversal::Exhausted(parts) => {
+                        exhausted = true;
+                        parts
+                    }
+                };
+                let Some(parts) = parts else {
+                    return if exhausted {
+                        BoundedTraversal::Exhausted(None)
+                    } else {
+                        BoundedTraversal::Complete(None)
+                    };
+                };
+                selected.extend(parts);
+            }
+            if exhausted {
+                BoundedTraversal::Exhausted(Some(selected))
+            } else {
+                BoundedTraversal::Complete(Some(selected))
+            }
+        }
+    }
+}
+
+fn select_positioned_parts_for_non_multi_selector(
     expr: &Expr,
     selector: &PartSelector,
     heads: ReplacePartHeadsMode,
@@ -123,14 +335,32 @@ fn select_positioned_parts_for_selector(
         ),
         PartSelector::Key(key) => association_position_and_value_by_key(expr, key)
             .map(|(component, value)| vec![(vec![component, 2], value)]),
-        PartSelector::Multi(specs) => {
-            let mut selected = Vec::new();
-            for spec in specs {
-                selected.extend(select_positioned_parts_for_selector(expr, spec, heads)?);
-            }
-            Some(selected)
+        PartSelector::Multi(_) => {
+            unreachable!("the non-multi selector helper receives only selector leaves")
         }
     }
+}
+
+#[cold]
+#[inline(never)]
+fn select_positioned_parts_for_selector_iterative(
+    expr: &Expr,
+    selector: &PartSelector,
+    heads: ReplacePartHeadsMode,
+) -> Option<Vec<(Vec<isize>, Expr)>> {
+    let mut work = vec![selector];
+    let mut selected = Vec::new();
+
+    while let Some(selector) = work.pop() {
+        match selector {
+            PartSelector::Multi(specs) => work.extend(specs.iter().rev()),
+            PartSelector::Single(_) | PartSelector::Key(_) => selected.extend(
+                select_positioned_parts_for_non_multi_selector(expr, selector, heads)?,
+            ),
+        }
+    }
+
+    Some(selected)
 }
 
 fn select_positioned_parts_for_atomic_spec_with_heads(
@@ -171,32 +401,148 @@ fn select_positioned_parts_for_atomic_spec_with_heads(
 }
 
 pub(super) fn replace_exact_path(expr: Expr, path: &[isize], rhs: Expr) -> Expr {
+    replace_exact_path_with_front_depth(expr, path, rhs, RECURSIVE_REPLACE_EXACT_PATH_DEPTH)
+        .into_value()
+}
+
+fn replace_exact_path_with_front_depth(
+    expr: Expr,
+    path: &[isize],
+    rhs: Expr,
+    remaining_path_depth: usize,
+) -> BoundedTraversal<Expr> {
     let Some((first, rest)) = path.split_first() else {
-        return rhs;
+        return BoundedTraversal::Complete(rhs);
     };
 
+    if remaining_path_depth == 0 {
+        return BoundedTraversal::Exhausted(replace_exact_path_iterative(expr, path, rhs));
+    }
+
     if *first == 0 {
-        let replaced_head = replace_exact_path(structural_head_expr(&expr), rest, rhs);
-        return match expr {
-            Expr::Atom(_) => Expr::call(replaced_head, Vec::new()),
-            Expr::Call { args, .. } => Expr::call_with_shared_args(replaced_head, args),
+        let replaced_head = replace_exact_path_with_front_depth(
+            structural_head_expr(&expr),
+            rest,
+            rhs,
+            remaining_path_depth - 1,
+        );
+        return match replaced_head {
+            BoundedTraversal::Complete(replaced_head) => {
+                BoundedTraversal::Complete(rebuild_exact_path_head(expr, replaced_head))
+            }
+            BoundedTraversal::Exhausted(replaced_head) => {
+                BoundedTraversal::Exhausted(rebuild_exact_path_head(expr, replaced_head))
+            }
         };
     }
 
     match expr {
-        Expr::Atom(_) => expr,
+        expr @ Expr::Atom(_) => BoundedTraversal::Complete(expr),
         Expr::Call { head, args } => {
             let Some(index) = normalize_structural_arg_position(*first, args.len()) else {
-                return Expr::Call { head, args };
+                return BoundedTraversal::Complete(Expr::Call { head, args });
             };
 
-            let mut args = Expr::unwrap_shared_args(args);
-            let replaced_child = replace_exact_path(args[index].clone(), rest, rhs);
-            args[index] = replaced_child;
-            Expr::Call {
-                head,
-                args: SharedArgs::new(args),
+            let args = Expr::unwrap_shared_args(args);
+            let replaced_child = replace_exact_path_with_front_depth(
+                args[index].clone(),
+                rest,
+                rhs,
+                remaining_path_depth - 1,
+            );
+            match replaced_child {
+                BoundedTraversal::Complete(replaced_child) => BoundedTraversal::Complete(
+                    rebuild_exact_path_child(head, args, index, replaced_child),
+                ),
+                BoundedTraversal::Exhausted(replaced_child) => BoundedTraversal::Exhausted(
+                    rebuild_exact_path_child(head, args, index, replaced_child),
+                ),
             }
         }
     }
 }
+
+fn rebuild_exact_path_head(expr: Expr, replaced_head: Expr) -> Expr {
+    match expr {
+        Expr::Atom(_) => Expr::call(replaced_head, Vec::new()),
+        Expr::Call { args, .. } => Expr::call_with_shared_args(replaced_head, args),
+    }
+}
+
+fn rebuild_exact_path_child(
+    head: SharedExpr,
+    mut args: Vec<Expr>,
+    index: usize,
+    replaced_child: Expr,
+) -> Expr {
+    args[index] = replaced_child;
+    Expr::Call {
+        head,
+        args: SharedArgs::new(args),
+    }
+}
+
+enum ReplaceExactPathAncestor {
+    Head(Expr),
+    Child {
+        head: SharedExpr,
+        args: Vec<Expr>,
+        index: usize,
+    },
+}
+
+#[cold]
+#[inline(never)]
+fn replace_exact_path_iterative(mut expr: Expr, path: &[isize], rhs: Expr) -> Expr {
+    let mut ancestors = Vec::new();
+    let mut path_index = 0;
+    let mut replacement = Some(rhs);
+
+    while let Some(component) = path.get(path_index).copied() {
+        if component == 0 {
+            let selected = structural_head_expr(&expr);
+            ancestors.push(ReplaceExactPathAncestor::Head(expr));
+            expr = selected;
+            path_index += 1;
+            continue;
+        }
+
+        if matches!(&expr, Expr::Atom(_)) {
+            break;
+        }
+        let Expr::Call { head, args } = expr else {
+            unreachable!("an exact-path child descent has a call after the atom check")
+        };
+        let Some(index) = normalize_structural_arg_position(component, args.len()) else {
+            expr = Expr::Call { head, args };
+            break;
+        };
+
+        let args = Expr::unwrap_shared_args(args);
+        let selected = args[index].clone();
+        ancestors.push(ReplaceExactPathAncestor::Child { head, args, index });
+        expr = selected;
+        path_index += 1;
+    }
+
+    if path_index == path.len() {
+        expr = replacement
+            .take()
+            .expect("an exact-path replacement is consumed only at its target");
+    }
+
+    while let Some(ancestor) = ancestors.pop() {
+        expr = match ancestor {
+            ReplaceExactPathAncestor::Head(parent) => rebuild_exact_path_head(parent, expr),
+            ReplaceExactPathAncestor::Child { head, args, index } => {
+                rebuild_exact_path_child(head, args, index, expr)
+            }
+        };
+    }
+
+    expr
+}
+
+#[cfg(test)]
+#[path = "exact_paths_tests.rs"]
+mod tests;

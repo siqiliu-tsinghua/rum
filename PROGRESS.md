@@ -2767,3 +2767,39 @@ centre — is what makes the option observable.
 
 Still open: one conversion, the four sites short of the contract, and the second
 recursion inside `Take`/`ReplacePart`.
+
+## 2026-09-05 — the conversion phase closes, and the registry corrects my summary
+
+brief-470 converted the runtime's three exact-path walks, so `AssociateTo` and
+`KeyDropFrom` on a `Part` target are `BoundedHeap`. That was the last of the
+five conversions. Gate: 2 404 tests green, two release certificates at raw
+physical height 4,097 — one per head, since `KeyDropFrom` needs `Key[...]`
+selectors where `AssociateTo` also accepts a bare string — three forced-front
+falsifiers, and allocation counts byte-identical to base on the `ReplacePart`
+and `MapAt` controls that share these helpers.
+
+The axis was **path length**, not value depth, which is the one thing about this
+site that could have sent a fixture to the wrong walk. `mutation.rs` turned out
+to need no change at all.
+
+**The registry corrected my own summary of where the line stands, which is the
+point of having built it.** I had been saying the conversion phase would leave
+only the four short-of-contract sites. It leaves nine unguarded rows: four short
+of the contract — and the deferred collection-shape lane has *three* members,
+`Keys`, `KeyTake` and `KeyDrop`, not the two I had repeated several times — plus
+**five that meet the contract and are still unbounded**: `Association`,
+`KeyComplement`, `Lookup`, `Normal`, `Values`.
+
+Those five are brief-454's second table, recursion on collection, selector and
+wrapper axes rather than association value nesting. They are **reasoned** to
+clear 4,097 and have never been bracketed. Every time this line has measured
+something it had only reasoned about — the `DeleteMissing` width axis, the
+`Keys` ceiling, the target-mode packet ratio — the scope moved. So they are the
+next thing to measure, not the next thing to convert.
+
+A structural detail worth keeping: the registry refuses an `UnguardedNative` row
+whose `owed_by` is `None`. That is what kept these five visible instead of
+quietly reading as finished work.
+
+Still open: bracket the five residual shapes, the four short sites, and the
+second recursion inside `Take`/`ReplacePart`.

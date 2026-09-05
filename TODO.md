@@ -2255,8 +2255,54 @@ five-minute probe would have shown**, and both times the worker or the gate
 found it rather than the brief. Probe a certificate's premise before demanding
 it.
 
-**Next**: the last conversion — the `AssociateTo`/`KeyDropFrom` Part target
-(8,048 physical, fail-open). Then the remaining four conversions:
+**The exact-path walks are converted and the conversion phase is closed
+(2026-09-05, brief-470).** `AssociateTo` and `KeyDropFrom` on a `Part` target are
+`BoundedHeap`: the runtime's `exact_expr_at_path`,
+`collect_exact_paths_for_position_spec` and `replace_exact_path` each run behind
+a depth-16 front over a heap tail. Two release certificates at raw physical
+height 4,097 — one per head, since the two are not interchangeable — a shallow
+companion pinning both selector spellings, and a **shared-consumer behaviour
+test** the worker added on its own. Three forced-front falsifiers, one per walk;
+the director reproduced the `replace_exact_path` one red by unwinding its
+ancestor stack FIFO instead of LIFO, which reddens that test and only that test.
+
+`mutation.rs` needed no change — it has no depth recursion of its own, which is
+the useful negative the brief asked for. `targeted_map.rs` is untouched, and
+allocation counts are byte-identical to base on an `AssociateTo` probe and on
+the **`ReplacePart` and `MapAt` shared-consumer controls**.
+
+**The axis here was path length, not value depth** — `exact_expr_at_path`
+recurses once per path component and a key selector expands to more than one raw
+component — so a fixture built around nesting would have measured a different
+walk.
+
+### Registry endstate after the conversion phase
+
+44 rows: **23 `NoProportionalDescent`, 9 `BoundedHeap`, 3 `GuardedNative`, 9
+`UnguardedNative`.** Gate note: 2 404 tests green.
+
+The nine unguarded rows are **not** all the short-of-contract queue, which is
+what I had assumed before reading them:
+
+- **Four are short of the contract** and have their own queue items: `GroupBy`
+  (multi-spec), and `Keys`, `KeyTake`, `KeyDrop` in the deferred
+  collection-shape lane. That lane has **three** members, not the two I had been
+  saying.
+- **Five meet the contract but are still unbounded**: `Association`,
+  `KeyComplement`, `Lookup`, `Normal`, `Values`. These are brief-454's second
+  table — recursion on collection, selector and wrapper axes rather than
+  association value nesting — and they are **reasoned** to clear 4,097, not
+  measured. They fail open above whatever their real ceiling is, and nobody has
+  bracketed them.
+
+So the conversion phase closed every **measured** fail-open site. The residual
+five are the honest remainder, and the registry enforces that each names what
+owes it: a row that is `UnguardedNative` with no `owed_by` fails the test.
+
+**Next, in the order the line's own ranking gives**: bracket those five residual
+shapes — they are unmeasured, and every time this line has measured something it
+had only reasoned about, the scope moved. Then the four short sites, of which
+the collection-shape lane is fail-open and therefore first. Then the remaining four conversions:
 `AssociationKeyFlatten`, `AssociationKeyDeflatten`, association `MapIndexed`,
 and the `AssociateTo`/`KeyDropFrom` Part target. None fits the 1 MiB budget at
 contract height, which is why a guard is not an option for any of them.

@@ -52,6 +52,8 @@ mod delete_missing_target_semantic_locks;
 mod exact_reduction_shapes;
 #[path = "tests/functional_ops/mod.rs"]
 mod functional_ops;
+#[path = "tests/held_association_exact_path_depth.rs"]
+mod held_association_exact_path_depth;
 #[path = "tests/holding_and_control.rs"]
 mod holding_and_control;
 #[path = "tests/holding_and_control_abort.rs"]
