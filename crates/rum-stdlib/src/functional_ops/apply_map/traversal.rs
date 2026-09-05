@@ -1,4 +1,5 @@
 use super::*;
+use rum_runtime::kernel_api::NativeStackDepth;
 
 mod recursive;
 use recursive::{apply_heads_recursive_bounded, map_parts_recursive_bounded};
@@ -408,14 +409,19 @@ pub(super) fn map_indexed_parts_on_standard_call(
     (rendered, depth)
 }
 
-pub(super) fn collect_scan_parts_with_config(expr: &Expr, config: TraversalConfig) -> Vec<Expr> {
-    collect_scan_parts_recursive(expr, config, 0).parts
+pub(super) fn collect_scan_parts_with_config(
+    expr: &Expr,
+    config: TraversalConfig,
+    depth: &NativeStackDepth<'_>,
+) -> Vec<Expr> {
+    collect_scan_parts_recursive(expr, config, 0, depth).parts
 }
 
 pub(super) fn collect_scan_parts_recursive(
     expr: &Expr,
     config: TraversalConfig,
     level: usize,
+    depth: &NativeStackDepth<'_>,
 ) -> ScanCollection {
     match expr {
         Expr::Atom(_) => {
@@ -432,7 +438,14 @@ pub(super) fn collect_scan_parts_recursive(
                 let mut max_depth = 1usize;
 
                 for (_, value) in entries {
-                    let child = collect_scan_parts_recursive(&value, config, level + 1);
+                    let Some(child_depth) = depth.child() else {
+                        return ScanCollection {
+                            parts: Vec::new(),
+                            depth: 1,
+                        };
+                    };
+                    let child =
+                        collect_scan_parts_recursive(&value, config, level + 1, &child_depth);
                     max_depth = max_depth.max(child.depth);
                     parts.extend(child.parts);
                 }
@@ -444,10 +457,10 @@ pub(super) fn collect_scan_parts_recursive(
 
                 ScanCollection { parts, depth }
             } else {
-                collect_scan_parts_on_standard_call(expr, config, level)
+                collect_scan_parts_on_standard_call(expr, config, level, depth)
             }
         }
-        Expr::Call { .. } => collect_scan_parts_on_standard_call(expr, config, level),
+        Expr::Call { .. } => collect_scan_parts_on_standard_call(expr, config, level, depth),
     }
 }
 
@@ -455,6 +468,7 @@ pub(super) fn collect_scan_parts_on_standard_call(
     expr: &Expr,
     config: TraversalConfig,
     level: usize,
+    depth: &NativeStackDepth<'_>,
 ) -> ScanCollection {
     let Expr::Call { head, args } = expr else {
         return ScanCollection {
@@ -467,13 +481,25 @@ pub(super) fn collect_scan_parts_on_standard_call(
     let mut max_child_depth = 1usize;
 
     if config.include_heads {
-        let head_result = collect_scan_parts_recursive(head, config, level + 1);
+        let Some(child_depth) = depth.child() else {
+            return ScanCollection {
+                parts: Vec::new(),
+                depth: 1,
+            };
+        };
+        let head_result = collect_scan_parts_recursive(head, config, level + 1, &child_depth);
         max_child_depth = max_child_depth.max(head_result.depth);
         parts.extend(head_result.parts);
     }
 
     for arg in args {
-        let child = collect_scan_parts_recursive(arg, config, level + 1);
+        let Some(child_depth) = depth.child() else {
+            return ScanCollection {
+                parts: Vec::new(),
+                depth: 1,
+            };
+        };
+        let child = collect_scan_parts_recursive(arg, config, level + 1, &child_depth);
         max_child_depth = max_child_depth.max(child.depth);
         parts.extend(child.parts);
     }

@@ -1896,10 +1896,12 @@ and the reason is that it cannot see this change: `Merge[` occurs zero times in
 **Step 2 is IN (2026-09-05, brief-460): the class is now a closed
 declaration.** Two enforcement layers, tests only, no behavior change.
 
-- **The surface registry** — 52 rows covering both association catalogs plus
-  the cross-family axes (`Map`, `Apply`, `MapIndexed`, `Scan`, `Set`, keyed
-  `Part`). Distribution: 26 `NoProportionalDescent`, 19 `UnguardedNative`, 4
-  `BoundedHeap`, 1 `GuardedNative`, 1 `EvaluatorPolled`. The catalog comparison
+- **The surface registry** — **44 rows** covering both association catalogs
+  plus the cross-family axes (`Map`, `Apply`, `MapIndexed`, `Scan`, `Set`,
+  keyed `Part`). *(Corrected: this entry first said 52, from a grep that counted
+  the enum declaration and the vocabulary list alongside the rows — the
+  "a script-derived count is a claim, not a fact" rule, violated in the same
+  session that wrote it into a brief.)* The catalog comparison
   is **bidirectional and live** — director-verified by deleting the
   `DeleteMissing` row, which fails with `catalog entries without rows:
   ["DeleteMissing"]`.
@@ -1948,10 +1950,46 @@ small — today `Merge`, with `Scan` and nested key-path `Set` measured
 guard-eligible — or when a conversion is rejected and a site stays natively
 recursive by decision rather than by schedule.
 
-**Next in this line**: the two remaining guards (`Scan`, nested key-path `Set`
-— both measured to pass at contract height under the 1 MiB boundary, 3/3), then
-the five conversions, each flipping its row from `UnguardedNative` to
-`BoundedHeap`.
+**The two remaining guards are IN (2026-09-05, brief-461).** Association `Scan`
+and nested key-path `Set` now return an in-band `StackLimitExceeded` with a
+usable session where they terminated the process, and both still complete at
+raw physical height 4,097 — which on a 2 MiB thread exercises the guard at its
+real 1 MiB boundary, so the certificate is the direct proof that guarding costs
+no contract height. Registry rows flipped to `GuardedNative` with
+`FailureDirection::FailsClosed` and `owed_by` cleared; the distribution is now
+23 `NoProportionalDescent`, 15 `UnguardedNative`, 3 `BoundedHeap`, 3
+`GuardedNative`. **Every remaining `UnguardedNative` row is a conversion, not a
+guard.**
+
+Both recursive workers return a plain value rather than a `Result`, so they use
+the substrate's throwaway-fallback path — `ScanCollection { parts: vec![],
+depth: 1 }` and `AssociationSetUpdate::Unchanged` — with the sticky bit giving
+the error precedence. No per-node `Result` was introduced anywhere in this line.
+
+**Scope closure is the property that mattered, and it is visible in the diff
+rather than asserted.** `Scan`'s guard closes at the `?` before
+`evaluate_scan_parts` runs the user callbacks, so no scope is open across a
+possible suspension; `Set`'s closes before the `match update` that writes
+`definitions`, so an exhausted path cannot half-write.
+
+**Four edges, four reds, reproduced at the gate.** Removing the wrapper from
+each real edge in turn — `traversal.rs` association values, head and arguments,
+and `association_data.rs`'s key-path edge — turns its focused test red; all four
+did. An edge whose removal leaves the suite green has no coverage, and that is
+the check that finds it.
+
+**Cost.** Allocation counts are identical to the byte on all four probes,
+including `bytes_total` and `peak_live_bytes`. Instructions: `Scan` +0.082%,
+key-path `Set` +0.175%, untouched control -0.013%, and — the check this brief
+existed to force — the **`Map` control, which shares the `apply_map` machinery
+three of the four edges live in, moves +0.002%**. Clusters were tight on every
+row.
+
+**Next in this line**: the five conversions — `DeleteMissing`,
+`AssociationKeyFlatten`, `AssociationKeyDeflatten`, association `MapIndexed`,
+and the `AssociateTo`/`KeyDropFrom` Part target — each flipping its row from
+`UnguardedNative` to `BoundedHeap`. None of them fits the 1 MiB budget at
+contract height, which is why a guard is not an option for any of them.
 
 **Opened by brief-450 — a second recursion above the contract.** Above roughly
 11,000 levels both operations return to terminating the process (in band at

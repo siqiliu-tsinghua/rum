@@ -328,7 +328,7 @@ const EXPECTED_RECURSION: &[(&str, &str, &str, usize, &str)] = &[
         "set_association_key_path",
         "set_association_key_path",
         1,
-        "set-nested-key-path",
+        "set-nested-key-path-guarded-native",
     ),
     (
         "crates/rum-runtime/src/runtime/kernel_data/structure_data/exact_paths.rs",
@@ -741,21 +741,21 @@ const EXPECTED_RECURSION: &[(&str, &str, &str, usize, &str)] = &[
         "collect_scan_parts_on_standard_call",
         "collect_scan_parts_recursive",
         2,
-        "scan-association",
+        "scan-association-guarded-native",
     ),
     (
         "crates/rum-stdlib/src/functional_ops/apply_map/traversal.rs",
         "collect_scan_parts_recursive",
         "collect_scan_parts_on_standard_call",
         2,
-        "scan-association",
+        "scan-association-guarded-native",
     ),
     (
         "crates/rum-stdlib/src/functional_ops/apply_map/traversal.rs",
         "collect_scan_parts_recursive",
         "collect_scan_parts_recursive",
         1,
-        "scan-association",
+        "scan-association-guarded-native",
     ),
     (
         "crates/rum-stdlib/src/functional_ops/apply_map/traversal.rs",

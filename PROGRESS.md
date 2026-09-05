@@ -2514,3 +2514,38 @@ class meanwhile.
 
 Still open: two guards, five conversions, and — unchanged — the four sites short
 of the contract and the second recursion inside `Take`/`ReplacePart`.
+
+## 2026-09-05 — the guarded population closes at three
+
+brief-461 guarded association `Scan` and nested key-path `Set`, the two sites
+measured to fit the 1 MiB operation boundary at contract height. Both now fail
+closed in band where they terminated the process, and both still complete at
+raw physical height 4,097. Every remaining `UnguardedNative` row in the registry
+is now a conversion, not a guard — which is the useful thing the registry does:
+the remaining work is a list rather than a memory.
+
+**A guard refuses at the budget; it cannot make work fit inside it.** That
+sentence is the whole selection rule for this line, and it is why only three of
+the eight sites are guarded. The other five do not fit 1 MiB at 4,097, so a
+guard would convert contract-meeting sites into contract-failing ones.
+
+**Two verification habits earned their place again.**
+
+- *Four edges, four reds.* Removing each real wrapper in turn and watching its
+  focused test fail is what distinguishes a guarded edge from a decorated one.
+  All four turned red; an edge whose removal leaves the suite green would have
+  been coverage theatre, and this is the only check that finds it.
+- *Name the control that shares the machinery.* Three of the four edges live in
+  `apply_map`, which `Map` also uses, so `Map` was required in the cost gate
+  rather than a generic control. It moved +0.002% against the guarded
+  operations' +0.082% and +0.175%, with allocation counts identical to the byte
+  throughout.
+
+**I miscounted my own registry in the previous entry** — 52 rows where there are
+44, from a grep that swept up the enum declaration and the vocabulary list
+alongside the rows. The correction is in `TODO.md`. The rule it breaks is one I
+had written into the brief that produced the registry: a script-derived count is
+a claim, not a fact, and wants a hand cross-check before it is recorded.
+
+Still open: the five conversions, the four sites short of the contract, and the
+second recursion inside `Take`/`ReplacePart`.

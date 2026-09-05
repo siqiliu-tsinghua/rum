@@ -3,6 +3,7 @@ use resume_frames::*;
 
 use super::super::*;
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::native_stack_guard::{NativeStackDepth, run_with_native_stack_guard};
 use std::collections::HashMap;
 use std::sync::Arc;
 
@@ -856,7 +857,9 @@ impl Session {
             return Ok(rhs);
         };
 
-        let update = set_association_key_path(current, &evaluated_selectors, rhs.clone());
+        let update = run_with_native_stack_guard(self, |depth| {
+            set_association_key_path(current, &evaluated_selectors, rhs.clone(), &depth)
+        })?;
 
         match update {
             AssociationSetUpdate::Updated(updated) => {
@@ -898,7 +901,9 @@ impl Session {
         let Some(current) = self.association_lvalue_current(&symbol) else {
             return Ok(rhs);
         };
-        let update = set_association_part_path(current, &evaluated_selectors, rhs.clone());
+        let update = run_with_native_stack_guard(self, |depth| {
+            set_association_part_path(current, &evaluated_selectors, rhs.clone(), &depth)
+        })?;
         match update {
             AssociationSetUpdate::Updated(updated) => {
                 let definition = self.definitions.entry(symbol).or_default();
@@ -935,9 +940,10 @@ fn set_association_part_path(
     current: Expr,
     selectors: &EvaluatedPartSelectors,
     rhs: Expr,
+    depth: &NativeStackDepth<'_>,
 ) -> AssociationSetUpdate {
     if let Some(keys) = association_part_key_path(selectors) {
-        return set_association_key_path(current, &keys, rhs);
+        return set_association_key_path(current, &keys, rhs, depth);
     }
 
     AssociationSetUpdate::Unchanged
@@ -973,7 +979,12 @@ fn association_part_key_selector(selector: &Expr) -> Option<Expr> {
     }
 }
 
-fn set_association_key_path(current: Expr, selectors: &[Expr], rhs: Expr) -> AssociationSetUpdate {
+fn set_association_key_path(
+    current: Expr,
+    selectors: &[Expr],
+    rhs: Expr,
+    depth: &NativeStackDepth<'_>,
+) -> AssociationSetUpdate {
     let Some((key, rest)) = selectors.split_first() else {
         return AssociationSetUpdate::Unchanged;
     };
@@ -993,7 +1004,10 @@ fn set_association_key_path(current: Expr, selectors: &[Expr], rhs: Expr) -> Ass
         return AssociationSetUpdate::MissingKey(key.clone());
     };
 
-    match set_association_key_path(entries[index].value.clone(), rest, rhs) {
+    let Some(child_depth) = depth.child() else {
+        return AssociationSetUpdate::Unchanged;
+    };
+    match set_association_key_path(entries[index].value.clone(), rest, rhs, &child_depth) {
         AssociationSetUpdate::Updated(updated_child) => {
             entries[index].value = updated_child;
             entries[index].delayed = false;

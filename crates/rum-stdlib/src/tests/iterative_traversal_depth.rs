@@ -273,13 +273,23 @@ fn association_assignment_read_completes_at_physical_height_4097_on_two_mib() {
         let selectors = std::iter::repeat_n("\"k\"", ASSOCIATION_WRAPPER_COUNT)
             .collect::<Vec<_>>()
             .join(", ");
-        let source =
-            format!("b = associationAssignmentInput; b[[{selectors}]] = 8; ToString[b, InputForm]");
-        let value = session
+        let source = format!("b = associationAssignmentInput; b[[{selectors}]] = 8");
+        let assignment = session
             .eval_text(&source)
             .expect("deep association assignment and read should complete")
             .value;
+        assert_eq!(assignment, Expr::small_integer(8));
+        let written = session
+            .eval_text("b")
+            .expect("deep association assignment should store its complete value")
+            .value;
+        assert_raw_height_with_unique_deepest_integer(&written, 8);
+        let value = session
+            .eval_text("ToString[b, InputForm]")
+            .expect("deep association assignment should render after exact inspection")
+            .value;
         drop(input);
+        drop(written);
         let Expr::Atom(Atom::String(value)) = value else {
             panic!("deep association assignment read should return an Atom::String")
         };
@@ -556,10 +566,16 @@ fn association_map_certificate_companion_pins_descending_selector() {
 }
 
 #[test]
-fn association_assignment_certificate_companion_pins_full_key_selector_chain() {
+fn association_assignment_certificate_companion_pins_both_key_selector_spellings() {
     assert_eq!(
         evaluate_shallow_input_form(
             "b = Association[\"k\" -> Association[\"k\" -> Association[\"k\" -> deepestAssociationSentinel]]]; b[[\"k\", \"k\", \"k\"]] = 8; b",
+        ),
+        "<|\"k\" -> <|\"k\" -> <|\"k\" -> 8|>|>|>"
+    );
+    assert_eq!(
+        evaluate_shallow_input_form(
+            "b = Association[\"k\" -> Association[\"k\" -> Association[\"k\" -> deepestAssociationSentinel]]]; b[[Key[\"k\"], Key[\"k\"], Key[\"k\"]]] = 8; b",
         ),
         "<|\"k\" -> <|\"k\" -> <|\"k\" -> 8|>|>|>"
     );

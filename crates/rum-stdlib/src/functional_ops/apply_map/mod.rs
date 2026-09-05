@@ -1,5 +1,6 @@
 use super::*;
 use rum_core::SharedArgs;
+use rum_runtime::kernel_api::run_with_native_stack_guard;
 
 mod normalize;
 mod traversal;
@@ -125,7 +126,9 @@ pub(crate) fn eval_scan(
             expr,
             config,
         } => {
-            let parts = collect_scan_parts_with_config(&expr, config);
+            let parts = run_with_native_stack_guard(session, |depth| {
+                collect_scan_parts_with_config(&expr, config, &depth)
+            })?;
             evaluate_scan_parts(session, &operator, parts)
         }
     }
