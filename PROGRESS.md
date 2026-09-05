@@ -2687,3 +2687,44 @@ this project has been chasing. The tell was the missing `rust-log:` line.
 
 Still open: four conversions, the four sites short of the contract, and the
 second recursion inside `Take`/`ReplacePart`.
+
+## 2026-09-05 — two independent implementations of one brief, and what the second saw
+
+brief-468 converted the association key-reshape walks. Its first dispatch was
+interrupted while running its own verification, so on the user's suggestion the
+partial work was parked outside the repository and outside `/tmp` — both inside
+the worker's write fence — and the brief was re-dispatched from a clean tree.
+That produced two independent implementations of the same specification, which
+is not something this project has had before.
+
+**They converged on architecture.** Both chose three separate depth-16 front
+constants rather than one shared constant, both produced the same three heap
+loops and the same render work enum, and their files are within 7% on size. When
+two independent runs of a brief produce the same design, the brief was specific
+enough to determine it — which is a useful thing to be able to say about a brief
+format.
+
+**They diverged on one thing, and the divergence was a real defect.**
+`NestedPathNode::Branch(NestedPathNodes)` is recursive, so its derived `Drop`
+recurses; deflatten's error path drops a partially built tree. The second
+attempt added an iterative drop, the first did not. Measured on the same probe:
+attempt 1 terminates the process at depth 60,000, attempt 2 completes. Neither
+the brief nor I had thought about the drop of the *intermediate* structure — the
+standing debt covers deep `Expr` drop, and this is a local type nobody had
+looked at.
+
+**My first probe of that defect measured nothing**, and the reason is worth
+keeping: I assumed a non-list association key would be rejected, so I built a
+fixture around `"notalist"`. `path_from_key` treats any non-list key as a
+one-element path and rejects **only** an empty list. The probe ran the ordinary
+success path at every depth and both implementations passed it. Calibrating the
+trigger at depth 3 — checking the operation actually returned unevaluated — is
+what exposed the difference.
+
+**The recorded gap.** The iterative drop has no test. It is unrequested
+hardening that closes a real fail-open, every deliverable the brief asked for is
+complete and verified, and holding a finished conversion over a bonus would be
+the wrong trade — so it is committed with the certificate owed and named.
+
+Still open: the drop-path certificate, two conversions, the four sites short of
+the contract, and the second recursion inside `Take`/`ReplacePart`.

@@ -1,63 +1,13 @@
 mod resume_frames;
 use resume_frames::*;
 
+mod traversal;
+use traversal::*;
+
 use rum_core::SharedArgs;
-use std::collections::HashMap;
 
 use super::grouping::IndexedGroups;
 use super::*;
-
-const NESTED_PATH_INDEX_THRESHOLD: usize = 16;
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-enum NestedPathNode {
-    Branch(NestedPathNodes),
-    Leaf { value: Expr, delayed: bool },
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-struct NestedPathNodes {
-    entries: Vec<(Expr, NestedPathNode)>,
-    positions: Option<HashMap<Expr, usize>>,
-}
-
-impl NestedPathNodes {
-    fn new() -> Self {
-        Self {
-            entries: Vec::new(),
-            positions: None,
-        }
-    }
-
-    fn get_mut(&mut self, key: &Expr) -> Option<&mut NestedPathNode> {
-        let position = self.positions.as_ref().map_or_else(
-            || {
-                self.entries
-                    .iter()
-                    .position(|(existing, _)| existing == key)
-            },
-            |positions| positions.get(key).copied(),
-        )?;
-        Some(&mut self.entries[position].1)
-    }
-
-    fn push(&mut self, key: Expr, node: NestedPathNode) {
-        let position = self.entries.len();
-        if let Some(positions) = self.positions.as_mut() {
-            positions.insert(key.clone(), position);
-        }
-        self.entries.push((key, node));
-        if self.positions.is_none() && self.entries.len() > NESTED_PATH_INDEX_THRESHOLD {
-            self.positions = Some(
-                self.entries
-                    .iter()
-                    .enumerate()
-                    .map(|(index, (key, _))| (key.clone(), index))
-                    .collect(),
-            );
-        }
-    }
-}
 
 pub(crate) fn eval_key_group_by(
     session: &mut Session,
@@ -335,108 +285,6 @@ fn key_group_by_groups(grouped: Vec<(Expr, Vec<AssociationEntryForm>)>) -> Vec<(
             )
         })
         .collect()
-}
-
-fn association_key_deflatten_entries(entries: Vec<AssociationEntryForm>) -> Option<Expr> {
-    let mut nested = NestedPathNodes::new();
-
-    for entry in entries {
-        let path = path_from_key(entry.key)?;
-        insert_path(&mut nested, &path, entry.value, entry.delayed)?;
-    }
-
-    Some(render_nested_path_entries(nested))
-}
-
-fn path_from_key(key: Expr) -> Option<Vec<Expr>> {
-    match list_items(&key) {
-        Some(items) if items.is_empty() => None,
-        Some(items) => Some(items.to_vec()),
-        None => Some(vec![key]),
-    }
-}
-
-fn insert_path(
-    nodes: &mut NestedPathNodes,
-    path: &[Expr],
-    value: Expr,
-    delayed: bool,
-) -> Option<()> {
-    let (key, remaining) = path.split_first()?;
-
-    if remaining.is_empty() {
-        if let Some(node) = nodes.get_mut(key) {
-            if matches!(node, NestedPathNode::Branch(_)) {
-                return None;
-            }
-            *node = NestedPathNode::Leaf { value, delayed };
-        } else {
-            nodes.push(key.clone(), NestedPathNode::Leaf { value, delayed });
-        }
-        return Some(());
-    }
-
-    if let Some(node) = nodes.get_mut(key) {
-        let NestedPathNode::Branch(children) = node else {
-            return None;
-        };
-        return insert_path(children, remaining, value, delayed);
-    }
-
-    let mut children = NestedPathNodes::new();
-    insert_path(&mut children, remaining, value, delayed)?;
-    nodes.push(key.clone(), NestedPathNode::Branch(children));
-    Some(())
-}
-
-fn render_nested_path_entries(nodes: NestedPathNodes) -> Expr {
-    render_association_entry_forms_preserving_heads(
-        nodes
-            .entries
-            .into_iter()
-            .map(render_nested_path_entry)
-            .collect(),
-    )
-}
-
-fn render_nested_path_entry((key, node): (Expr, NestedPathNode)) -> AssociationEntryForm {
-    match node {
-        NestedPathNode::Branch(children) => AssociationEntryForm {
-            key,
-            value: render_nested_path_entries(children),
-            delayed: false,
-        },
-        NestedPathNode::Leaf { value, delayed } => AssociationEntryForm {
-            key,
-            value,
-            delayed,
-        },
-    }
-}
-
-fn flatten_association_entries(
-    prefix: Vec<Expr>,
-    entries: Vec<AssociationEntryForm>,
-) -> Vec<AssociationEntryForm> {
-    let mut flattened = Vec::new();
-
-    for entry in entries {
-        let mut path = prefix.clone();
-        path.push(entry.key);
-
-        match association_entry_forms_from_expr(&entry.value) {
-            Some(children) if !children.is_empty() => {
-                flattened.extend(flatten_association_entries(path, children));
-            }
-            _ => flattened.push(AssociationEntryForm {
-                key: Expr::call(system_expr(heads::structure::LIST), path),
-                value: entry.value,
-                delayed: entry.delayed,
-            }),
-        }
-    }
-
-    flattened
 }
 
 fn inert_call(head: &Expr, args: &[Expr]) -> Expr {

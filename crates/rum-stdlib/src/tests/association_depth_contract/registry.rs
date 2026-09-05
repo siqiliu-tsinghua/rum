@@ -91,19 +91,19 @@ const ASSOCIATION_DEPTH_REGISTRY: &[AssociationDepthRow] = &[
     AssociationDepthRow {
         surface: "AssociationKeyDeflatten",
         catalog_name: Some("AssociationKeyDeflatten"),
-        mechanism: Mechanism::UnguardedNative,
+        mechanism: Mechanism::BoundedHeap,
         contract_status: ContractStatus::MeetsContract,
-        failure_direction: Some(FailureDirection::FailsOpen),
-        owed_by: Some("association key-reshape conversion queue"),
+        failure_direction: Some(FailureDirection::Unmeasured),
+        owed_by: None,
         recursion_declarations: &["association-key-deflatten"],
     },
     AssociationDepthRow {
         surface: "AssociationKeyFlatten",
         catalog_name: Some("AssociationKeyFlatten"),
-        mechanism: Mechanism::UnguardedNative,
+        mechanism: Mechanism::BoundedHeap,
         contract_status: ContractStatus::MeetsContract,
-        failure_direction: Some(FailureDirection::FailsOpen),
-        owed_by: Some("association key-reshape conversion queue"),
+        failure_direction: Some(FailureDirection::Unmeasured),
+        owed_by: None,
         recursion_declarations: &["association-key-flatten"],
     },
     AssociationDepthRow {
@@ -590,7 +590,7 @@ fn association_depth_registry_is_sorted_and_exhaustive() {
 
 #[test]
 #[should_panic(
-    expected = "AssociationKeyFlatten declares NoProportionalDescent but recursive edge (\"crates/rum-stdlib/src/associations/key_reshape.rs\", \"flatten_association_entries\", \"flatten_association_entries\", 1)"
+    expected = "AssociationKeyFlatten declares NoProportionalDescent but recursive edge (\"crates/rum-stdlib/src/associations/key_reshape/traversal.rs\", \"flatten_association_entries_with_front_depth\", \"flatten_association_entries_with_front_depth\", 1)"
 )]
 fn real_catalog_misdeclaration_names_association_key_flatten_recursive_edge() {
     let mut rows = ASSOCIATION_DEPTH_REGISTRY.to_vec();

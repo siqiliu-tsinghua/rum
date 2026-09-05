@@ -2162,9 +2162,61 @@ actually establishes.
 
 Gate: 2 392 tests green without the ZeroMQ skip.
 
-**Next**: the remaining four conversions — `AssociationKeyFlatten`,
-`AssociationKeyDeflatten`, association `MapIndexed`, and the
-`AssociateTo`/`KeyDropFrom` Part target. Then the remaining four conversions:
+**The key-reshape conversions are IN (2026-09-05, brief-468).**
+`AssociationKeyFlatten` and `AssociationKeyDeflatten` are `BoundedHeap`: three
+walks converted — the flatten walk, deflatten's insertion phase, and its
+mutually recursive render pair — each behind its own depth-16 front over a heap
+tail. Certificates at raw physical height 4,097 for both operations plus a
+round trip that exercises all three walks in one value; three forced-front
+falsifiers, one of which the director reproduced red by reversing the render
+tail's assembly order. Allocation counts byte-identical to base on shallow
+flatten, shallow deflatten, a 4,000-entry wide probe, and an untouched control.
+
+**Width was measured clean before briefing.** All four remaining conversion
+sites pass 3/3 at 1,000 through 64,000 entries, so `DeleteMissing`'s target
+family was the only site with the width defect. This brief was depth-only, and
+the negative was calibrated — the same harness caught `DeleteMissing` at 3,000.
+
+**The brief told the worker to use the simple shape and not to build
+`DeleteMissing`'s carried-continuation handoff**, on a fact checkable from the
+signatures: none of the three walkers takes a `Session`, so none can run user
+code mid-walk and a cold tail may redo the traversal. Scope is set by the
+problem; the harder shape would have bought nothing.
+
+### What the cross-comparison found (2026-09-05)
+
+The first dispatch was interrupted mid-self-verification. Its work was kept
+outside the repository and outside `/tmp` — both inside the worker's fence — and
+the brief was re-dispatched from a clean tree, giving two independent
+implementations of the same brief.
+
+**They converged on the architecture**: both chose three separate front
+constants rather than one shared, both produced the same three loops and the
+same render work enum, within 7% on file size. That is evidence the brief was
+specific enough to determine the design.
+
+**They diverged on one thing, and it is a real defect the second caught.**
+`NestedPathNode::Branch(NestedPathNodes)` is recursive, so its derived `Drop`
+recurses. On the deflatten error path a partially built tree is dropped, and the
+first attempt let that drop recursively while the second added
+`drop_nested_path_nodes_iterative`. Director-measured on the same calibrated
+probe — a deep good path followed by an empty-list key, which is the **only**
+input `path_from_key` rejects: **attempt 1 terminates the process at depth
+60,000 and attempt 2 completes.** The second implementation is also cleaner on a
+second axis, generalising `BoundedTraversal<T>` with `Exhausted(T)` where the
+first added a separate `InsertPathTraversal` enum.
+
+**Recorded gap, and the reason it did not block the commit.** That iterative
+drop is unrequested hardening the worker added on its own, it closes a real
+fail-open, and **it has no test** — a future refactor could revert it silently.
+Every deliverable the brief required is complete and verified, so the conversion
+was not held for a bonus; the certificate for the drop path is owed and is the
+next small step. My own first probe of it measured nothing, because a non-list
+key is treated as a one-element path rather than an error; only `{}` is
+rejected.
+
+**Next**: the drop-path certificate, then the last two conversions —
+association `MapIndexed` and the `AssociateTo`/`KeyDropFrom` Part target. Then the remaining four conversions:
 `AssociationKeyFlatten`, `AssociationKeyDeflatten`, association `MapIndexed`,
 and the `AssociateTo`/`KeyDropFrom` Part target. None fits the 1 MiB budget at
 contract height, which is why a guard is not an option for any of them.
