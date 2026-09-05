@@ -2299,10 +2299,57 @@ So the conversion phase closed every **measured** fail-open site. The residual
 five are the honest remainder, and the registry enforces that each names what
 owes it: a row that is `UnguardedNative` with no `owed_by` fails the test.
 
-**Next, in the order the line's own ranking gives**: bracket those five residual
-shapes — they are unmeasured, and every time this line has measured something it
-had only reasoned about, the scope moved. Then the four short sites, of which
-the collection-shape lane is fail-open and therefore first. Then the remaining four conversions:
+### The five residual shapes, now measured (2026-09-05, director)
+
+Release, `ulimit -s 2048`, physical levels, highest value passing 3/3 against
+lowest failing 3/3. Every probe carries a liveness assertion on the exact value.
+
+| shape | at 4,097 | ok <= | fail >= | direction above | margin |
+|---|---|---|---|---|---|
+| **`Lookup`, nested key spec** | pass | **4,760** | 4,784 | **kill** | **1.16x** |
+| `KeyComplement`, option-name walk | pass | 5,808 | 5,824 | kill | 1.42x |
+| `Values` over nested lists | pass | 5,896 | 5,904 | kill | 1.44x |
+| `Normal` below wrappers | pass | 5,896 | 5,904 | **in band** | 1.44x |
+| `Association`, deep parser | pass | 7,560 | 7,600 | kill | 1.85x |
+
+**The reasoning held this time, and that is worth saying.** All five were
+`MeetsContract` by reasoning and all five clear 4,097 by measurement. This line
+has mostly found the opposite — the `DeleteMissing` width axis, the `Keys`
+ceiling, the target-mode packet ratio — so a reasoned column that survives
+measurement is a data point about when to trust one: these are operation-local
+native walks that never reach the evaluator, which is exactly the class
+brief-457 identified as safe to reason about.
+
+**What was genuinely unknown was the direction, and now it is not.** Four fail
+open; `Normal` is the only one that fails closed.
+
+**Three findings that reorder what is left.**
+
+1. **`Lookup` at 1.16x is the thinnest margin anywhere in this class** — thinner
+   than the `DeleteMissing` target mode's 1.20x that this line treated as
+   urgent — and it fails open. It goes to the top of the residual queue.
+2. **`KeyComplement`'s recursion is on an error-message path.** A second
+   argument is walked by `collect_option_names_from_tail`
+   (`crates/rum-stdlib/src/associations/transforms/key_collections.rs:512-538`)
+   to name the offending option, and that walk recurses through nested `List`s.
+   So the reachability shape is not a deep *value* but a deep *bad argument* —
+   `KeyComplement[assoc, deeplyNestedList]`. Worth carrying: diagnostic paths
+   are reachable with inputs nobody writes deliberately.
+3. **I doubted the registry on `Keys` versus `Values` and the registry was
+   right.** brief-454 records them as sharing the walk at `basic.rs:752-810`,
+   and they carry different contract statuses, which looked inconsistent.
+   Measured on the same fixture shape: `Keys` gives out at 3,056 and `Values` at
+   5,896, nearly 2x apart. Either they do not share the walk or the two paths
+   cost very differently; either way the rows are measured-correct and the
+   inventory citation is what wants re-reading.
+
+**The residual queue, by this line's ranking** (fail-open first, then thinnest
+margin): `Lookup`, `KeyComplement`, `Values`, the `Association` parser, and
+`Normal` last because it already fails closed.
+
+**Next**: that queue, and the four short-of-contract sites — `GroupBy`, and
+`Keys`/`KeyTake`/`KeyDrop` in the collection-shape lane, which is fail-open and
+therefore ahead of the schema validator and generic `MapIndexed`. Then the remaining four conversions:
 `AssociationKeyFlatten`, `AssociationKeyDeflatten`, association `MapIndexed`,
 and the `AssociateTo`/`KeyDropFrom` Part target. None fits the 1 MiB budget at
 contract height, which is why a guard is not an option for any of them.

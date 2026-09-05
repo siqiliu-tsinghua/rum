@@ -2803,3 +2803,37 @@ quietly reading as finished work.
 
 Still open: bracket the five residual shapes, the four short sites, and the
 second recursion inside `Take`/`ReplacePart`.
+
+## 2026-09-05 — the residual shapes measured, and the reasoning held
+
+The five association rows that were `UnguardedNative + MeetsContract` on
+reasoning alone now have brackets. All five clear the ruled 4,097, so the
+reasoned column was right — which is unusual enough in this line to be worth
+recording. The pattern it fits: these are operation-local native walks that
+never reach the evaluator, and brief-457 already identified that as the class
+where packet arithmetic is reliable. Where it has failed, the descent crossed
+`Session::evaluate`.
+
+What was actually unknown was the failure direction. Four fail open; `Normal`
+alone fails closed.
+
+**`Lookup` is the thinnest margin in the whole class at 1.16x**, thinner than
+the `DeleteMissing` target mode that this line treated as urgent, and it fails
+open. It leads the residual queue.
+
+**`KeyComplement`'s recursion lives on an error-message path.** Passing a second
+argument sends it through `collect_option_names_from_tail`, which recurses over
+nested `List`s to name the offending option. The reachable shape is therefore a
+deep *bad argument*, not a deep value. Diagnostic paths take inputs nobody
+writes on purpose, and this line has not been looking at them.
+
+**I doubted the registry and the registry was right.** brief-454 records `Keys`
+and `Values` as sharing one walk, yet their rows carry different contract
+statuses, which read as an inconsistency worth catching. Measured on the same
+fixture: `Keys` 3,056, `Values` 5,896. The rows are correct and the shared-walk
+citation is what needs re-reading. Building the registry so that a row must
+state what it is and who owes it has now caught my summary twice and been wrong
+zero times.
+
+Still open: the residual queue in ranked order, the four short-of-contract
+sites, and the second recursion inside `Take`/`ReplacePart`.
