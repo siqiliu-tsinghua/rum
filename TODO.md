@@ -2206,14 +2206,19 @@ input `path_from_key` rejects: **attempt 1 terminates the process at depth
 second axis, generalising `BoundedTraversal<T>` with `Exhausted(T)` where the
 first added a separate `InsertPathTraversal` enum.
 
-**Recorded gap, and the reason it did not block the commit.** That iterative
-drop is unrequested hardening the worker added on its own, it closes a real
-fail-open, and **it has no test** — a future refactor could revert it silently.
-Every deliverable the brief required is complete and verified, so the conversion
-was not held for a bonus; the certificate for the drop path is owed and is the
-next small step. My own first probe of it measured nothing, because a non-list
-key is treated as a one-element path rather than an error; only `{}` is
-rejected.
+**The gap is closed (director, same day).** That iterative drop was
+unrequested hardening the worker added on its own; it closed a real fail-open
+and had no test, so a future refactor could have reverted it silently. The
+certificate now exists — a 60 000-element good path followed by an empty-list
+key, on a declared 2 MiB thread, asserting the call returns unevaluated with its
+argument intact. **Verified to fire**: replacing both
+`drop_nested_path_nodes_iterative` calls with ordinary drops overflows the
+stack in the named certificate thread.
+
+The depth is measured rather than chosen — a recursive drop survives 20 000 and
+dies at 60 000 on that thread — and the comment records the trigger, because my
+own first probe measured nothing: `path_from_key` treats a non-list key as a
+one-element path and rejects **only** `{}`.
 
 **Next**: the drop-path certificate, then the last two conversions —
 association `MapIndexed` and the `AssociateTo`/`KeyDropFrom` Part target. Then the remaining four conversions:

@@ -306,3 +306,44 @@ fn association_key_deflatten_flatten_round_trip_is_exact_at_physical_height_4097
         assert_eq!(round_trip, input);
     });
 }
+
+/// The deflatten error path drops a partially built `NestedPathNodes`, whose
+/// `Branch` arm is recursive and would otherwise drop recursively.
+///
+/// `path_from_key` rejects exactly one shape — an **empty list** key — so a
+/// deep good path followed by `{}` is the only way to build a deep intermediate
+/// tree and then abandon it. A non-list key is treated as a one-element path,
+/// not an error, which is why a fixture built around one measures the ordinary
+/// success path instead.
+///
+/// The depth is measured, not chosen: on this 2 MiB thread a recursive drop of
+/// the intermediate tree survives 20 000 and terminates the process at 60 000.
+const DROP_PATH_LEVELS: usize = 60_000;
+
+#[test]
+#[ignore = "release-only deployment-stack probe; run explicitly with --release"]
+fn association_key_deflatten_abandons_a_deep_partial_tree_without_growing_the_stack() {
+    run_on_two_mib_thread("association-key-deflatten-drop-path", || {
+        let mut session = core_session();
+        let deep = list(
+            (0..DROP_PATH_LEVELS)
+                .map(|level| Expr::string(format!("drop-key-{level}")))
+                .collect(),
+        );
+        let input = association(vec![
+            rule(deep, Expr::string("drop-path-value"), false),
+            rule(list(Vec::new()), Expr::string("unreachable"), false),
+        ]);
+
+        let head = system_expr("AssociationKeyDeflatten");
+        let args = SharedArgs::new(vec![input.clone()]);
+        let outcome =
+            association_builtins::eval_association_key_deflatten(&mut session, &head, &args)
+                .expect("abandoning the partial tree must not fail the evaluation");
+
+        // The empty-list key is refused, so the call returns unevaluated with
+        // its argument intact - and the deep intermediate tree built before the
+        // refusal has been discarded without recursing.
+        assert_eq!(outcome, Expr::call(head, vec![input]));
+    });
+}
