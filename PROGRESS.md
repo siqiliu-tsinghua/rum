@@ -2346,3 +2346,72 @@ was to shrink the brief and keep the long verification on the director's side.
 Still open: brief-454's drafts C through J, `MapIndexed` at 2,694 (fail-closed),
 and the second recursion inside `Take`/`ReplacePart` that terminates the process
 above roughly 11,000, for which `merge_replace_plans` is the named candidate.
+
+## 2026-09-05 — the association depth class re-derived; six of eight drafts dropped
+
+brief-457 (design-only) re-derived brief-454's drafts C-J against `80c8acce`,
+and the director bracketed every site in parallel. The split was deliberate: a
+past-ceiling probe is not delegable in this line — brief-454 forbade the worker
+from running one, and the three recorded content-filter kills were all
+executable failure reproductions — so Codex got the source-side derivation and
+the brackets stayed here.
+
+**The re-pricing was the point.** brief-455 was the shared prerequisite every
+one of drafts C-J was priced against; removing it re-priced the class. Six of
+the eight drafts are dropped because their priced target now clears the ruled
+4,097, the same outcome brief-450 reached when six of nine consumers already
+cleared. What survives is one draft (multi-spec `GroupBy`, 2.03x short and
+fail-open), one lane brief-454 had deferred (`Keys` and `KeyTake` over nested
+lists, both short and fail-open), the generic-shape `MapIndexed` post-result
+ceiling, and the schema validator.
+
+**Four things from it are method, not history.**
+
+- *A ceiling is not a deterministic quantity, and this line has been reporting
+  it as one.* Inside a band a few tens of levels wide the same height flips run
+  to run — `DeleteMissing` read 3 PASS / 2 KILL over five runs at one height —
+  because the stack base moves between processes. A single-run bisection reports
+  a bracket 8 wide when the real uncertainty is nearer 50. Every bracket in this
+  entry is the highest height passing 3/3 against the lowest failing 3/3, with
+  the failure direction read well inside the stable-fail region.
+- *Reasoned packet arithmetic is reliable for an operation-local native walk and
+  unreliable the moment the descent crosses the evaluator.* Ten of twelve
+  projections landed within 2-25%, four within 2%. Both failures are the same
+  error: an evaluator crossing priced as a native frame. The schema validator was
+  reasoned at 1,986 pairs failing open and measures 104 pairs failing closed —
+  19x, and the direction wrong — because it crosses the evaluator at every
+  nested pair, not only at the leaf. `Keys` was reasoned to clear and does not.
+- *Removing a guard-adjacent cost converts fail-closed into fail-open, and it
+  did so to an entire class.* brief-456 saw this in one operation. Measured
+  across the class, **every** site that now clears the contract terminates the
+  process above it and not one fails in band: brief-455 lifted them over 4,097
+  and removed the polling frame they had been borrowing in the same stroke. The
+  contract is met with 1.5x-2x margin; the fail-closed promise is not. That is
+  now the largest open item here, ahead of any individual site.
+- *Decompose a composite probe before believing its attribution.* The schema
+  probe varies two axes at once. Split, a deep value against a shallow schema
+  clears outright and only a nested schema descends — so the site's axis is
+  schema depth, and a repair aimed at value traversal would have missed it.
+
+**The instrument was calibrated before anything was believed, and it lied
+twice.** The classifier was shown printing each of its four verdicts on a known
+case; its first known process-kill case was wrong, because `ToString[_,
+InputForm]` runs on the iterative `RenderTask` path and survives 30,000 levels,
+so the kill branch had never been demonstrated until `FullForm` replaced it.
+Nineteen probes were then calibrated at height 3 against exact deepest-target
+assertions, which caught three broken ones: a `Scan` count off by a factor, a
+malformed `Merge` collection, and a `KeyDropFrom` written with bare string
+selectors — that last one returns `invak`, which reads exactly like a depth
+failure and is not one. A literal deep association source turned out to be
+unreachable entirely: rum refuses source nesting past 128.
+
+**A stated worker risk was settled by measurement rather than argued.**
+brief-457 named `GroupBy`'s failure direction as its largest likely
+contradiction, on the reasoning that a callback with enough evaluator depth
+might reach a poll and fail in band. It does not: the direction stays a process
+kill and the ceiling drops below 1,008 specs.
+
+Still open: the class-wide fail-open direction above the contract, multi-spec
+`GroupBy`, the deferred collection-shape lane, generic-shape `MapIndexed`, the
+schema validator's per-pair evaluator crossing, and — unchanged from the last
+entry — the second recursion inside `Take`/`ReplacePart` above roughly 11,000.

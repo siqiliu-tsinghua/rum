@@ -1695,9 +1695,108 @@ suspension freezing the whole stack. It completes at raw 4,097 and runs to the
 construction ceiling at 5,457 wrappers; instructions are neutral (-0.119% on the
 merge probe, +0.005% on an unrelated control) with allocation counts identical.
 
-**Still open in this class**: drafts C through J of brief-454, to be re-derived
-against current measurements rather than dispatched from projections — every
-re-probe in this line so far has moved the scope.
+**Drafts C-J were re-derived and re-measured (2026-09-05, brief-457 plus the
+director's brackets), and six of the eight drafts are DROPPED.** brief-455 was
+the shared prerequisite every one of them was priced against, so removing it
+re-priced the whole class. Codex re-derived the plan from source; the brackets
+below are the director's, measured in parallel because a past-ceiling probe is
+not delegable in this line.
+
+Release CLI at `80c8acce`, `ulimit -s 2048`, 1 MiB evaluator budget, heights in
+**physical levels**. A verdict is 3/3 runs; see the measurement note below.
+
+| draft | site | at 4,097 | ok <= | fail >= | verdict |
+|---|---|---|---|---|---|
+| **C** | `ConformSchema` / `SchemaErrors` | in band | 208 | 224 | **19.7x short**, fail-closed |
+| **E** | multi-spec `GroupBy` | kill | 2,016 | 2,032 | **2.03x short, fail-open** |
+| **J'** | `KeyTake` over nested lists | kill | 2,856 | 2,864 | **1.43x short, fail-open** |
+| 439-3 | `MapIndexed` generic list shape | in band | 2,944 | 2,952 | 1.39x short, fail-closed |
+| **J'** | `Keys` over nested lists | kill | 3,056 | 3,080 | **1.34x short, fail-open** |
+| D | `DeleteMissing` | pass | 6,272 | 6,304 | clears 1.53x, **kills above** |
+| H | `AssociationKeyDeflatten` | pass | 7,344 | 7,376 | clears 1.79x, kills above |
+| I | `MapIndexed` association shape | pass | 7,344 | 7,376 | clears 1.79x, kills above |
+| G | `AssociateTo` / `KeyDropFrom` Part target | pass | 8,048 | 8,080 | clears 1.96x, kills above |
+| H | `AssociationKeyFlatten` | pass | 8,292 | 8,334 | clears 2.02x, kills above |
+| F | nested key-path assignment | pass | >= 10,800 | — | fixture-bound |
+| I | `Scan` association shape | pass | >= 10,800 | — | fixture-bound |
+| J | `Merge` collection parser | pass | 16,072 | 16,128 | clears 3.92x |
+| ctl | `Map`, `MergeNested` | pass | >= 10,800 | — | confirms 455/456 independently |
+
+**Four findings, in the order they change the queue.**
+
+1. **The direction flip is the whole class, not `MergeNested`.** Every site that
+   now clears the contract **terminates the process** above it; not one fails in
+   band. brief-455 lifted them over 4,097 and removed the polling frame they
+   were borrowing in the same stroke. The contract is met with 1.5x-2x margin
+   and the fail-closed promise is not, which is the same shape as the stability
+   walk before briefs 445-446 — and it is now the largest open item in the
+   class, ahead of any individual site.
+2. **Draft C's axis is schema depth, not value depth, and its packet is
+   ten times what was reasoned.** Decomposed: a deep value against a shallow
+   schema (`_`, or one level) clears `N=2049` outright; only a nested *schema*
+   descends. 1 MiB / 104 pairs is roughly 10 KiB per pair, the scale of an
+   evaluation-level packet (brief-437: 4.7-7.5 KiB), not of the 1,056 B native
+   frame brief-454 priced. So the validator crosses the evaluator at **every
+   nested pair**, not only at the leaf as both brief-454 and brief-457 reasoned
+   — which is also why it fails closed. That mechanism should be confirmed in
+   source before the repair is briefed.
+3. **`Keys` and `KeyTake` over nested lists are short and fail-open**, and they
+   are in the one lane brief-454 deliberately deferred ("should be briefed in
+   its generic collection-shape lane rather than silently bundled here").
+   brief-454 reasoned `KeyTake` at about 2,900 (right) and `Keys` at about 6,200
+   (**2x optimistic, and the verdict was wrong**). Draft J as scoped — the
+   parsers — is correctly dropped; the deferred sibling lane is not a note any
+   more, it is two fail-open shortfalls.
+4. **`GroupBy`'s failure direction does not depend on the callback**, which was
+   brief-457's own largest stated risk. A callback consuming evaluator depth
+   (`Function[u, deepf[u]]` over a `Module` + `Nest`) stays a process kill and
+   *lowers* the ceiling below 1,008 specs rather than converting it to an
+   in-band error.
+
+**The re-derivation's accuracy, since it decides how much to trust the next
+one.** Ten of twelve reasoned projections landed within 2-25% of measurement,
+four of them within 2% (`Merge` parser 16,384 vs 16,072; exact-path replacement
+8,192 vs 8,048; `AssociationKeyFlatten` 4,228 vs 4,146; association `MapIndexed`
+3,745 vs 3,672), and it correctly picked the binding mode inside `DeleteMissing`
+before measuring it. The two failures are both in the same direction — an
+evaluator crossing priced as a native frame: schema (19x, and the direction
+wrong) and `Keys` (2x, and the verdict wrong). **Reasoned packet arithmetic is
+reliable for an operation-local native walk and unreliable the moment the
+descent crosses the evaluator.**
+
+**The re-ordered queue**, fail-open before fail-closed, then by shortfall:
+
+1. The class-wide fail-open direction above the contract (new; supersedes
+   ranking the individual passing sites).
+2. Draft E, multi-spec `GroupBy` — 2.03x short, fail-open.
+3. The deferred collection-shape lane — `Keys` and `KeyTake` over nested lists,
+   1.34x and 1.43x short, fail-open.
+4. brief-439 draft 3, generic-shape `MapIndexed` — 1.39x short, fail-closed.
+   One source walker with draft I, but the surviving defect is the generic
+   post-result path, so only an evaluator-side task stack lifts it.
+5. Draft C, the schema validator — 19.7x short but fail-closed, and on its own
+   axis; re-diagnose the per-pair evaluator crossing before briefing a repair.
+
+**DROPPED as drafted**: D, F, G, H, I, J. Each one's priced target now clears,
+and rewriting a passing site is what brief-450 established not to do.
+
+**A measurement note that applies to every bracket in this line.** The ceiling
+is **not deterministic**: inside a band a few tens of levels wide the same `N`
+flips run to run (`DeleteMissing` at 3,144 read 3 PASS / 2 KILL over five runs),
+because the stack base moves between processes. A single-run bisection therefore
+reports a bracket 8 wide when the real uncertainty is nearer 50. Every number
+above is the highest `N` passing 3/3 and the lowest failing 3/3, with the
+failure direction read well inside the stable-fail region, never from the band.
+
+**Two probes that measured nothing, recorded so they are not repeated.** A
+literal deep association source (`<|"k" -> <|"k" -> ... |>|>`) cannot reach the
+association parser at all — rum refuses source nesting past 128
+(`parse nesting exceeded limit 128`) — so draft J's parser site is reachable only
+through construction, which clears. And `KeyDropFrom` on an association `Part`
+target requires `Key["k"]` selectors; with bare string selectors it returns
+`KeyDropFrom::invak`, which reads exactly like a depth failure and is not one.
+`AssociateTo` accepts both, so the two heads differ in strictness — worth a
+look, but not a defect on this evidence.
 
 **Opened by brief-450 — a second recursion above the contract.** Above roughly
 11,000 levels both operations return to terminating the process (in band at
