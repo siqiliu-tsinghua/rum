@@ -2728,3 +2728,42 @@ the wrong trade — so it is committed with the certificate owed and named.
 
 Still open: the drop-path certificate, two conversions, the four sites short of
 the contract, and the second recursion inside `Take`/`ReplacePart`.
+
+## 2026-09-05 — association MapIndexed bounded, and a certificate that could not exist
+
+brief-469 converted `MapIndexed`'s three traversal edges behind a depth-16 front
+over a heap tail. Gate: 2 399 tests green, the plain certificate exact at raw
+physical height 4,097, the forced-front falsifier reproduced red by reversing
+the tail's assembly order, and allocation counts byte-identical to base on the
+`Map` and `Scan` controls that share the file.
+
+**The brief's two named traps were both real and both avoided.** `Scan` sits in
+the same file with the same three-edge shape and was *guarded* rather than
+converted, because it fits the 1 MiB boundary at contract height and
+`MapIndexed` does not; naming that explicitly is what kept the worker from
+copying the neighbour. And the walker is shared with the generic shape, so the
+brief drew the line: convert the walker, flip only the association-axis row,
+leave the generic shortfall's tracking alone because it lives downstream.
+
+**A certificate I demanded turned out to be impossible, for the second time.**
+I asked for a deep `Heads -> True` certificate so the head edge would have
+certificate coverage. It fails — identically on the pre-conversion build. The
+head-bearing centre is a call of undefined symbols, which the evaluator descends
+as real evaluation levels, while an `Association` is a data constructor costing
+none; the shape refuses in band from height 515 upward, nowhere near where the
+walker matters. Rewritten to pin the honest property: it must fail closed, never
+terminate the process.
+
+brief-467 was the first instance of this. The lesson is narrow and repeatable:
+**probe a certificate's premise before writing it into a brief.** Both times the
+impossibility was structural and a few minutes of probing would have shown it,
+and both times it cost a dispatch or a gate cycle to discover.
+
+A smaller one worth keeping: my first probe of the heads shape used
+`Heads -> True` on a pure association chain and produced output identical to the
+plain call, because there are no heads to map there. It looked like the option
+was ignored. The certificate's own fixture — an `outerHead[innerHead[...]]`
+centre — is what makes the option observable.
+
+Still open: one conversion, the four sites short of the contract, and the second
+recursion inside `Take`/`ReplacePart`.

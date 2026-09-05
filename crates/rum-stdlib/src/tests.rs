@@ -150,6 +150,8 @@ mod json;
 mod lazy;
 #[path = "tests/logic/mod.rs"]
 mod logic;
+#[path = "tests/map_indexed_association_depth.rs"]
+mod map_indexed_association_depth;
 #[path = "tests/merge_native_stack_guard.rs"]
 mod merge_native_stack_guard;
 #[path = "tests/number_theory.rs"]

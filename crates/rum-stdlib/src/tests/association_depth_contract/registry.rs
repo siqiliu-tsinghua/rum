@@ -373,11 +373,11 @@ const ASSOCIATION_DEPTH_REGISTRY: &[AssociationDepthRow] = &[
     AssociationDepthRow {
         surface: "MapIndexed (association axis)",
         catalog_name: None,
-        mechanism: Mechanism::UnguardedNative,
+        mechanism: Mechanism::BoundedHeap,
         contract_status: ContractStatus::MeetsContract,
-        failure_direction: Some(FailureDirection::FailsOpen),
-        owed_by: Some("association MapIndexed conversion queue"),
-        recursion_declarations: &["map-indexed-recursive-walker"],
+        failure_direction: Some(FailureDirection::Unmeasured),
+        owed_by: None,
+        recursion_declarations: &["map-indexed-bounded-front"],
     },
     AssociationDepthRow {
         surface: "Merge",

@@ -2220,8 +2220,43 @@ dies at 60 000 on that thread — and the comment records the trigger, because m
 own first probe measured nothing: `path_from_key` treats a non-list key as a
 one-element path and rejects **only** `{}`.
 
-**Next**: the drop-path certificate, then the last two conversions —
-association `MapIndexed` and the `AssociateTo`/`KeyDropFrom` Part target. Then the remaining four conversions:
+**Association `MapIndexed` is `BoundedHeap` (2026-09-05, brief-469).** Three
+edges — association values, the head, and arguments — behind a depth-16 front
+over a heap tail, in a new `apply_map/traversal/map_indexed.rs`. The plain
+certificate completes at raw physical height 4,097 with the exact rebuilt value;
+the forced-front falsifier runs with `include_heads: true`, so the head edge is
+covered by a tail-versus-front comparison, and the director reproduced it red by
+reversing the tail's assembly order. Allocation counts byte-identical to base on
+a `MapIndexed` probe and on the **`Map` and `Scan` controls that share this
+file**.
+
+**Two traps the brief named, both avoided.** `Scan` sits beside this walker and
+was *guarded* by brief-461 rather than converted, because `Scan` fits the 1 MiB
+boundary at contract height and `MapIndexed` does not; its three guard edges are
+untouched. And the shared walker serves the generic shape too, so only the
+`MapIndexed (association axis)` row flipped — the generic shortfall is
+downstream on the post-result stability path and is still owed.
+
+**One certificate I demanded could not exist, and it is the second time.** I
+required a deep certificate with `Heads -> True` so the head edge would be
+covered by a certificate and not only by a falsifier. It fails — and fails
+**identically on the pre-conversion build**, so it is not a regression. The
+reason is not the walker: the head-bearing centre is a call of undefined
+symbols, which the evaluator descends as genuine evaluation levels, unlike an
+`Association`, which is a data constructor and costs none. That shape refuses in
+band from physical height 515 upward, long before the walker matters. The
+certificate was rewritten to assert what is true and worth pinning — the
+head-bearing shape must fail **closed**, never terminate the process — with the
+reason recorded in the test.
+
+brief-467 was the first instance: a test specified without checking it was
+achievable. **Both times the shape was impossible for a structural reason that a
+five-minute probe would have shown**, and both times the worker or the gate
+found it rather than the brief. Probe a certificate's premise before demanding
+it.
+
+**Next**: the last conversion — the `AssociateTo`/`KeyDropFrom` Part target
+(8,048 physical, fail-open). Then the remaining four conversions:
 `AssociationKeyFlatten`, `AssociationKeyDeflatten`, association `MapIndexed`,
 and the `AssociateTo`/`KeyDropFrom` Part target. None fits the 1 MiB budget at
 contract height, which is why a guard is not an option for any of them.

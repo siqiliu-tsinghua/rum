@@ -1,7 +1,9 @@
 use super::*;
 use rum_runtime::kernel_api::NativeStackDepth;
 
+mod map_indexed;
 mod recursive;
+pub(super) use map_indexed::map_indexed_parts_with_config;
 use recursive::{apply_heads_recursive_bounded, map_parts_recursive_bounded};
 
 const RECURSIVE_TRANSFORM_CALL_DEPTH: usize = 16;
@@ -297,116 +299,6 @@ fn schedule_transform_call(
             level: level + 1,
         });
     }
-}
-
-pub(super) fn map_indexed_parts_with_config(
-    expr: &Expr,
-    operator: &Expr,
-    config: TraversalConfig,
-) -> (Expr, usize) {
-    map_indexed_parts_recursive(expr, operator, config, 0, &[])
-}
-
-pub(super) fn map_indexed_parts_recursive(
-    expr: &Expr,
-    operator: &Expr,
-    config: TraversalConfig,
-    level: usize,
-    path: &[isize],
-) -> (Expr, usize) {
-    match expr {
-        Expr::Atom(_) => {
-            let depth = 1;
-            let rendered = if config.levels.matches(level, depth) {
-                Expr::call(
-                    operator.clone(),
-                    vec![expr.clone(), position_expr_from_path(path)],
-                )
-            } else {
-                expr.clone()
-            };
-            (rendered, depth)
-        }
-        Expr::Call { head, .. } if is_system_symbol_name(head, "Association") => {
-            if let Some(entries) = association_entries_from_expr(expr) {
-                let mut max_depth = 1usize;
-                let mut rebuilt_entries = Vec::with_capacity(entries.len());
-
-                for (index, (key, value)) in entries.into_iter().enumerate() {
-                    let child_path = extend_isize_path(path, index as isize + 1);
-                    let (mapped_value, child_depth) = map_indexed_parts_recursive(
-                        &value,
-                        operator,
-                        config,
-                        level + 1,
-                        &child_path,
-                    );
-                    max_depth = max_depth.max(child_depth);
-                    rebuilt_entries.push((key, mapped_value));
-                }
-
-                let depth = 1 + max_depth;
-                let rebuilt = render_association(rebuilt_entries);
-                let rendered = if config.levels.matches(level, depth) {
-                    Expr::call(
-                        operator.clone(),
-                        vec![rebuilt, position_expr_from_path(path)],
-                    )
-                } else {
-                    rebuilt
-                };
-
-                (rendered, depth)
-            } else {
-                map_indexed_parts_on_standard_call(expr, operator, config, level, path)
-            }
-        }
-        Expr::Call { .. } => {
-            map_indexed_parts_on_standard_call(expr, operator, config, level, path)
-        }
-    }
-}
-
-pub(super) fn map_indexed_parts_on_standard_call(
-    expr: &Expr,
-    operator: &Expr,
-    config: TraversalConfig,
-    level: usize,
-    path: &[isize],
-) -> (Expr, usize) {
-    let Expr::Call { head, args } = expr else {
-        return (expr.clone(), 1);
-    };
-
-    let (transformed_head, head_depth) = if config.include_heads {
-        let child_path = extend_isize_path(path, 0);
-        map_indexed_parts_recursive(head, operator, config, level + 1, &child_path)
-    } else {
-        (head.as_ref().clone(), 0)
-    };
-
-    let mut transformed_args = Vec::with_capacity(args.len());
-    let mut max_arg_depth = 1usize;
-    for (index, arg) in args.iter().enumerate() {
-        let child_path = extend_isize_path(path, index as isize + 1);
-        let (transformed_arg, arg_depth) =
-            map_indexed_parts_recursive(arg, operator, config, level + 1, &child_path);
-        max_arg_depth = max_arg_depth.max(arg_depth);
-        transformed_args.push(transformed_arg);
-    }
-
-    let depth = 1 + head_depth.max(max_arg_depth);
-    let rebuilt = Expr::call(transformed_head, transformed_args);
-    let rendered = if config.levels.matches(level, depth) {
-        Expr::call(
-            operator.clone(),
-            vec![rebuilt, position_expr_from_path(path)],
-        )
-    } else {
-        rebuilt
-    };
-
-    (rendered, depth)
 }
 
 pub(super) fn collect_scan_parts_with_config(
