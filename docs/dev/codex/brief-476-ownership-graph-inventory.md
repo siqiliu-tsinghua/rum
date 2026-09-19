@@ -98,14 +98,27 @@ why.
   decision — which would move a debt that currently lives in a prose paragraph
   into the same ledger as everything else. Confirm the citation and propose the
   row.
-- **The `Persistent*Node` family.** Eleven files define
+- **The `Persistent*Node` family — brief-477 has since settled this, and the
+  answer is the bad one.** Eleven files define
   `previous: Option<Arc<Persistent…Node<T>>>` — a singly linked list with no
-  compaction and no length cap at the append site. Director-measured: **every one
-  of the 152 `.appended(` sites is reachable only from a `resume_suspended_*`
-  path**, and five separate probes failed to reach the linked-list builder from
-  the source language at all (see brief-477, which measures exactly this). Until
-  that lands, the honest row is `Unbounded(owed_by = brief-477)`, not a guess in
-  either direction.
+  compaction and no length cap at the append site. All 152 `.appended(` sites sit
+  behind a `resume_suspended_*` path, but **a source-language construction
+  exists**: on the string-replacement resume paths the tail grows **per element**,
+  one suspension and then a node per character, so it needs one host round trip
+  and not N. Two constructions reached tail length 1 000, each verified by
+  instrumentation planted in the `appended` path.
+
+  **Nothing caps it.** With the generated-element limit and the iteration-work
+  limit *both set to 8*, the sequence still reached 1 000: those suffix loops
+  enforce neither, and the scalar replacement count defaults to `usize::MAX`
+  (`crates/rum-stdlib/src/strings/patterns.rs:746`).
+
+  So this family's row is **reachable and unbounded**, and it is the strongest
+  argument that this inventory needs to exist. What is still unmeasured is the
+  *drop ceiling* — how long the chain has to be before its destruction stops
+  being survivable — and that bracket is the director's, not yours. Your row must
+  record the reachability and the absence of a cap; it must **not** guess the
+  ceiling.
 
 ## Also deliver
 
