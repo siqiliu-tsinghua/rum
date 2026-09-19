@@ -192,6 +192,46 @@ Consequences for how I present and pick work:
 
 ## Current direction (read these for state)
 
+- **THE ACTIVE LINE (2026-09-08/19, briefs 459-479, `153e49fc`): association
+  depth, then the ownership graph it exposed.** `TODO.md` is authoritative; the
+  2026-09-18/19 `PROGRESS.md` entry has the narrative; memories
+  `stability-walk-and-rebuild-class.md` and `ownership-graph-line.md`.
+
+  The class-wide **fail-open** direction is closed for associations: a guard
+  substrate (`runtime/native_stack_guard.rs`, two `#[doc(hidden)]` `kernel_api`
+  items, two `compile_fail` doctests), two enforcement layers (a 44-row per-site
+  registry and a recursion inventory where an `UnguardedNative` row owing
+  nothing fails the test), and conversions to a depth-16 recursive front plus a
+  cold iterative heap tail. `basic.rs` is fully closed.
+
+  **Three rules this produced.** A conversion may *redo* its traversal only when
+  the walker takes no `Session` and therefore cannot run user code. Its
+  certificate must be an in-module forced-front falsifier on a **branched**
+  fixture — private `*_with_front_depth`, front `0` → `Exhausted`, front `16` →
+  `Complete`, `tail == front == exact expected` — because nothing weaker proves
+  the tail ran. And **probe a certificate's premise before writing it into a
+  brief**: two briefs demanded certificates that fail identically on the
+  pre-conversion build.
+
+  **The open front is ownership, not depth.** The byte guard constrains the call
+  stack; the host *destructor* walks an ownership graph nothing modelled, which
+  is why both real drop hazards this month (`NestedPathNodes`, `LookupOutcome`)
+  were found by accident. brief-479 measured the exposure: **48
+  `UnknownHostPayload` sites, only 6 of them owned storage edges**; 7 068
+  `UnknownConstruct` of which only 70 are storage or representation. Step two of
+  the ledger is blocked on a design decision — `UnknownConstruct` needs a second
+  axis, "unknown expansion" versus "unknown that could add an owning edge", or
+  the ledger can never be green and will never be used.
+
+  **Next**: the 6 owned storage edges (list them before deciding whether the
+  embedding API should demand bounded destruction), the ledger's step two, the
+  `Persistent*Node` drop ceiling (still `NotMeasured`, blocking nothing), then
+  `GroupBy` and the residual shapes.
+
+  **Dispatcher**: never pipe `scripts/dispatch-brief.sh` — `pipefail` plus a
+  closed pipe kills it before it dispatches and the result mimics a silent
+  worker termination. `cgl` is now proven for ordinary conversions too.
+
 - **The traversal-depth line's second half is CLOSED (2026-09-04, briefs
   436-446, `0f679699` through `cc8ba769`).** `TODO.md` is authoritative; the two
   2026-09-04 `PROGRESS.md` entries have the narrative. Three defects, each found

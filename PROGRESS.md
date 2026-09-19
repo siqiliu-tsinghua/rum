@@ -2837,3 +2837,77 @@ zero times.
 
 Still open: the residual queue in ranked order, the four short-of-contract
 sites, and the second recursion inside `Take`/`ReplacePart`.
+
+## 2026-09-18/19 — a neighbouring project's review, and the axis rum's tooling did not model
+
+A sibling project, `serval`, took three measures from rum — the stack-byte
+probe, the `syn` self-recursion inventory, and the per-site registry — and had
+them reviewed by a third model, which rejected them as a final architecture. The
+user asked whether that review helps rum. It does, though not in the way it
+helps serval.
+
+**Its diagnosis transfers and its prescription does not.** The central claim is
+that the host call stack carries growable computation while the host destructor
+carries a growable ownership graph, and the budget error constrains only part of
+the former. rum's tooling is exactly that shape: the recursion inventory models
+**call** cycles, the registry models per-builtin **descent**, and neither models
+**ownership**. The evidence was already on the record and nobody had read it that
+way — the two real drop hazards found this month, `NestedPathNodes` in brief-468
+and `LookupOutcome` in brief-474, were both found **by accident**, one by an
+unplanned cross-comparison of two implementations and one because the director
+remembered the first. The prescription — arena plus flat IDs plus an explicit
+state machine — does not transfer: it is a representation change for a
+dependent-type kernel, rum's pain is in intermediate and suspended-state types,
+and rum already rejected iterative `Drop` for `Expr` on a measured 20-50%
+hot-path regression.
+
+**Measuring the exposure took five failed probes and produced a better answer
+than the reasoning did.** The `Persistent*Node` family — eleven files, a singly
+linked `Option<Arc<Node>>` with no compaction — looked unbounded and I could not
+reach it. Five shapes failed, each verified by a `panic!` planted in the target
+as a liveness assertion. brief-477 found it: the tail grows **per element** on
+the string-replacement resume paths, one suspension and then a node per
+character, and with the generated-element and iteration-work limits **both set to
+8** the sequence still reached 1 000. My probes had simply been the wrong
+operation family. A negative from a probe that never reached its target says
+nothing, which is the whole content of that standing lesson.
+
+**The ledger was split so its first step would produce a number.** The open
+question — whether to change the embedding API so host payloads declare their
+ownership — was deferred until the scale was measured rather than argued, so
+brief-479 ships discovery only. The answer: **48 `UnknownHostPayload` sites, of
+which only 6 are places rum stores an opaque payload and therefore owns its
+destruction**; the other 42 are public inputs taken by value. The structural fix
+needs a contract on six sites, not forty-eight — an order of magnitude smaller
+than the option looked while it was only an argument.
+
+**Three things from this are method.**
+
+- *A check's specification can be the director's own failure.* My scan for
+  self-referential types missed both known hazards — one says `Vec<Self>`, the
+  other is a mutual pair whose edge runs through a tuple inside a `Vec` — so the
+  brief required the new scanner to rediscover both **without being told their
+  names**. It did, and the witnesses name exactly the two constructs my regex
+  could not see.
+- *Maximal conservatism produces a number you cannot act on.* Told never to skip
+  an undecidable construct, the scanner reported 7 068 — of which 1 271 are plain
+  `derive` and only 70 are storage or representation. The instruction was right
+  and the classification is now the design problem: an unknown expansion that
+  cannot introduce an owning edge is not the same fact as one that can.
+- *Pick work by how expensive it is to gate, not only by its rank.* On a
+  low-quota day the two dispatches were a measurement whose gate is a number and
+  a pure test-file move whose gate is `wc -c` plus an unchanged test-name set.
+  Both were heavy for the worker and nearly free to verify, and a design-only
+  brief was preferred over a conversion precisely because it leaves a clean tree
+  if the session ends mid-review.
+
+**Five instrument slips in two days, all the same shape**: a `git grep` that
+could not see untracked files, a classification keyed on the function containing
+a call rather than its callers, a perturbation applied to synthetic fixtures
+instead of the production inventory, a size listing that globbed `*.rs` while the
+inventory is a `.tsv`, and a probe set whose controls moved so much that a real
++0.6% read as noise. Every one reported something confidently about ground it
+had never touched.
+
+Still open: the disposition ledger and its second axis, the `Persistent*Node`
+drop ceiling, `GroupBy`, the residual shapes, and the schema validator.

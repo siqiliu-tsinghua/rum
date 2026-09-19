@@ -4,7 +4,7 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-05, committed tree through `bd172345`. Uncommitted
+Status checkpoint: 2026-09-19, committed tree through `153e49fc`. Uncommitted
 performance candidates do not count as completed until their correctness,
 timing, counter, and memory gates have all been reviewed.
 
@@ -2499,7 +2499,9 @@ ZeroMQ skip.
 **Next**: `GroupBy` (short of the contract and fail-open), then the residual
 queue — `KeyComplement` 1.42x, the `Association` parser 1.85x, `Normal` 1.44x
 and fail-closed — and outside this line the schema validator and generic
-`MapIndexed`. ### The `Persistent*Node` chains are source-reachable and unbounded (brief-477)
+`MapIndexed`.
+
+### The `Persistent*Node` chains are source-reachable and unbounded (brief-477)
 
 Settled by measurement, 2026-09-19. **A source-language construction exists**, on
 the string-replacement resume paths, and the tail grows **per element** — one
