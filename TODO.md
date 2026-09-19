@@ -2545,8 +2545,62 @@ reported tests as missing. Re-run over the filesystem it is identical. Third
 instrument slip of this arc and the same shape as the others — the tool did not
 reach what it claimed to cover.
 
-Also queued: brief-476, the ownership-graph inventory, which brief-477's result
-makes more urgent. Then the remaining four conversions:
+### The ownership-graph inventory is designed (brief-476)
+
+The design is accepted. It answers the question rum's existing tooling cannot:
+the recursion inventory models **call** cycles, the registry models per-builtin
+**descent**, and neither models **ownership** — which is why both real drop
+hazards this month were found by accident.
+
+**It rediscovers both known hazards structurally, which was the specification.**
+Not by name but by field AST: `LookupOutcome --List.0 / Vec element / resolve
+Self--> LookupOutcome`, and the mutual pair `NestedPathNodes --entries / Vec
+element / tuple.1--> NestedPathNode --Branch.0--> NestedPathNodes`. Citations
+verified. Two details it caught that my own scan could not: `LookupOutcome` is
+**declared in `basic.rs` while its `Drop` lives in `basic/lookup.rs`**, so
+per-file destructor association misses it; and the mutual edge runs through
+`Vec<(Expr, NestedPathNode)>`, a tuple inside a Vec.
+
+**Four judgements worth keeping.**
+
+- **`CallSiteDiscipline` is allowed only as explicit debt**, never as a
+  structural safety classification — the answer I wanted. And it found that
+  `NestedPathNodes`' call set is not the two error-path calls I had counted: the
+  success path transfers to the renderer, so the row must bind the enclosing
+  function rather than a count.
+- **A new disposition I had not proposed, `ViaIterativeDrop`**, for an SCC member
+  whose cycles are cut by *another* member's handler. That is exactly the
+  `NestedPathNodes`/`NestedPathNode` pair, where only one can carry the `Drop`;
+  my four-value vocabulary would have forced a wrong label on the other.
+- **Conditional ownership is handled as `LastStrongHolder`**, and "usually
+  shared" is explicitly not a bound. With a trap I had not seen: a certified
+  self-cycle confers nothing on the payloads — `LookupOutcome`'s `Expr` leaves
+  still carry `Expr`'s own debt.
+- **`Expr` becomes three rows**, not one: `Expr`, `SharedExpr` and `SharedArgs`,
+  each `Unbounded` with `owed_by` pointing at the standing debt and the three
+  rejected `Drop` designs. They are exemptions **from remediation, not from
+  discovery or classification**, so the debt stops living only in a prose
+  paragraph.
+
+**A blocking decision it surfaced, and my ruling on it.** A source-only check
+cannot certify host-supplied payloads passed through `set_print_sink` or
+`FileIoProvider::from_arc` (`session.rs:137`, `file_io.rs:105`). Those are
+existing API boundaries, so my brief's two demands — "an unknown must fail" and
+"an exhaustive green production inventory" — are **incompatible today**, and the
+report refused to paper over it.
+
+**Ruling: a distinct `UnknownHostPayload` disposition, fatal by default and
+waivable only with a named owner and the specific boundary cited.** Not a silent
+skip, which is the failure astra's review names and which this project has been
+burned by; not a hard block either, which would keep the check permanently red
+and therefore unused. It is the same shape as the registry's `owed_by`
+enforcement: the unknown stays visible and belongs to someone. Overrule me if
+you would rather change the host API instead — that is the larger and stronger
+alternative the report also names.
+
+**Next**: the drop ceiling for the `Persistent*Node` chains — director work, and
+the last fact missing before the implementation brief — then that implementation,
+then `GroupBy`. Then the remaining four conversions:
 `AssociationKeyFlatten`, `AssociationKeyDeflatten`, association `MapIndexed`,
 and the `AssociateTo`/`KeyDropFrom` Part target. None fits the 1 MiB budget at
 contract height, which is why a guard is not an option for any of them.
