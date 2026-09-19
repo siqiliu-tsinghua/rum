@@ -68,7 +68,7 @@ pub enum FileWriteMode {
     Append,
 }
 
-pub trait FileIo: Send + Sync {
+pub trait FileIo: super::host_payload::BoundedDestruction + Send + Sync {
     fn read_to_string(&self, path: &Path) -> Result<String, FileIoError>;
 
     /// Lists the immediate entries of one directory.

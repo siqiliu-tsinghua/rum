@@ -3,7 +3,9 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::sync::OnceLock;
 
-use rum_runtime::kernel_api::{FileIo, FileIoError, FileIoProvider, FileProbe, FileWriteMode};
+use rum_runtime::kernel_api::{
+    BoundedDestruction, FileIo, FileIoError, FileIoProvider, FileProbe, FileWriteMode,
+};
 
 /// Host filesystem provider backed by `std::fs`.
 ///
@@ -27,6 +29,9 @@ impl StdFileIo {
             .clone()
     }
 }
+
+/// This fieldless unit struct has no state to destroy, including at the last shared holder.
+impl BoundedDestruction for StdFileIo {}
 
 impl FileIo for StdFileIo {
     fn read_to_string(&self, path: &Path) -> Result<String, FileIoError> {

@@ -135,6 +135,9 @@ struct LoopingFileIo {
     list_calls: AtomicUsize,
 }
 
+/// Its sole atomic counter has no owned state to recurse into, even at the last Arc.
+impl BoundedDestruction for LoopingFileIo {}
+
 impl FileIo for LoopingFileIo {
     fn read_to_string(&self, _path: &Path) -> Result<String, FileIoError> {
         Err(FileIoError::new("read unsupported"))

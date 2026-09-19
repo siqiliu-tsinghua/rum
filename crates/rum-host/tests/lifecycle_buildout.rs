@@ -58,6 +58,9 @@ impl InMemoryFileIo {
     }
 }
 
+/// The string map and shared string-vector log drop iteratively, including at the last Arc.
+impl BoundedDestruction for InMemoryFileIo {}
+
 impl FileIo for InMemoryFileIo {
     fn read_to_string(&self, path: &Path) -> Result<String, FileIoError> {
         let key = Self::key(path).unwrap_or_else(|| path.display().to_string());

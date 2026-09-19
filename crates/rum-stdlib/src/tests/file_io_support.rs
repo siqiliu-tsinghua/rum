@@ -3,10 +3,15 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 
 use rum_runtime::Session;
-use rum_runtime::kernel_api::{FileIo, FileIoError, FileIoProvider, FileProbe, FileWriteMode};
+use rum_runtime::kernel_api::{
+    BoundedDestruction, FileIo, FileIoError, FileIoProvider, FileProbe, FileWriteMode,
+};
 
 #[derive(Clone, Copy, Debug)]
 struct TestFileIo;
+
+/// This fieldless unit struct has no state to destroy.
+impl BoundedDestruction for TestFileIo {}
 
 impl FileIo for TestFileIo {
     fn read_to_string(&self, path: &Path) -> Result<String, FileIoError> {

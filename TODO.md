@@ -2746,6 +2746,17 @@ compile and the runner goes red. The fixtures contain **no reference to
 `BoundedDestruction`**, which is what makes them valid baseline-sensitive
 negatives. All six inventory TSVs stayed byte-identical.
 
-**Not dispatched, by user ruling on gate cost**: steps B, C, D and E. Step C
+**Step B is IN (brief-482).** `FileIo` requires the marker; all five
+implementors declare it with a rationale. The certificate was **extended and
+tightened, not loosened**: each case now carries its own expected type name,
+trait name and impl line, and the span check moved from substring containment
+to exact equality. Director-reproduced: 2 431 tests green with nine native
+ZeroMQ tests really binding loopback and zero skip notices, certificate 10/10,
+and the falsifier fires per family — removing the `FileIo` supertrait turns its
+three negatives green-compiling and the runner red while entropy's five stay
+enforced, which shows the two families are independently gated. Inventory
+untouched: adding a supertrait is a same-line edit, so no row drifted.
+
+**Not dispatched, by user ruling on gate cost**: steps C, D and E. Step C
 carries a microbench A/B and step D carries the 29-chain prerequisite, so
 neither is a cheap-to-verify dispatch.

@@ -4,6 +4,7 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 
+use super::host_payload::BoundedDestruction;
 use super::test_builtins::{
     session_with_test_control_builtins, session_with_test_rewrite_builtins,
 };
@@ -48,6 +49,9 @@ impl Drop for TempDirGuard {
 
 #[derive(Clone, Copy, Debug)]
 struct TestFileIo;
+
+/// This fieldless unit struct has no state to destroy.
+impl BoundedDestruction for TestFileIo {}
 
 impl FileIo for TestFileIo {
     fn read_to_string(&self, path: &Path) -> Result<String, FileIoError> {
