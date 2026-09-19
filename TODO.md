@@ -2683,3 +2683,58 @@ files are 12 476 and 17 066, all under the line. Three files that were not named
 are over it: `tests/context_and_loader.rs` 38 873, `tests/frame_root_trace.rs`
 37 971, and `tests/scoping_gensym_gc.rs` 36 121, beside the generated
 `frame_root_trace/derived_inventory.rs` at 162 506.
+
+### The host-payload destruction contract is planned (brief-480), step A dispatched
+
+**User ruling 2026-09-19: change the embedding API rather than document the
+hazard.** rum has no downstream consumers and the API is deliberately not
+locked, so a contract on the six owned storage edges is cheaper now than it
+will ever be. A documentation-only contract is the fallback to argue against,
+not the recommendation.
+
+**Same day, a second ruling on releases: do not tag.** `v0.2.0` onward is the
+**security-hardening line**; the ownership-graph work is a branch inserted from
+`serval`'s third-party review, not a replacement for it. Hardening resumes when
+this branch closes, and `v0.3.0` is considered only once hardening is
+*finished*. No tag lands mid-line, and no step of this contract is a release.
+
+**The plan (brief-480, design-only, tree left clean).** A safe public opt-in
+marker `BoundedDestruction`, no blanket impl, no derive, no automatic
+implementation from `FrameRootTrace`/`FrameAbandon` or inventory membership;
+implementing it *is* the stance. Five steps: A entropy, B file I/O, C print
+sink, D the two suspension traits, E the ledger's strict check. The ledger word
+is **declared** — the compiler enforces that a stance was taken, never that it
+is true, and no `unsafe` may rest on it.
+
+**`print_sink` was the crux and the answer holds.** A trait cannot be
+implemented on the host's closure, so the sink becomes a named `PrintSink`
+trait plus an explicit adapter whose constructor is named
+`assert_bounded_destruction`. Excluding closures was rejected: rum owns their
+captured state from installation until replacement, clear, reset or session
+destruction.
+
+**Two findings reorder the work.**
+
+1. **The suspension implementor count was wrong by 38x and the plan corrected
+   it.** The director's `grep "impl SuspensionFrame for"` found 14 and 5; the
+   dominant spelling in this tree is the fully qualified
+   `impl rum_runtime::kernel_api::SuspensionFrame for …`, which that pattern
+   cannot reach. Director-reproduced with a newline-tolerant scan: **539
+   `SuspensionFrame` impls and 59 `PureFrameFinalizer` impls**, exactly the
+   plan's numbers. Sixth instrument slip of this arc, same shape as the other
+   five — the tool did not reach what it claimed to cover.
+2. **Step D is blocked by the `Persistent*Node` drop ceiling, which was
+   recorded as `NotMeasured` and "blocking nothing".** The plan refused to sign
+   every frame bounded, citing `MergeSortComparisonFrame` →
+   `MergeSortState.merged` → `PersistentIndexBuffer` → an `IndexChunk` chain
+   extended per frozen batch (`resumable_merge_sort.rs:42-49,60-67,104-115`,
+   pinned at `inventory/self_reaching.tsv:50`). Director-verified. Following it,
+   the family is **29 chain-shaped self-reaching types**, not the eleven files
+   brief-477 recorded — `PersistentStringTextNode`, `PersistentMatchResultsNode`,
+   `WithBindingNode` and the rest, across `rum-runtime` and `rum-stdlib`, all of
+   them living inside suspension frames. So the drop ceiling is now **the gate
+   on step D**, not an optional measurement.
+
+**Not dispatched, by user ruling on gate cost**: steps B, C, D and E. Step C
+carries a microbench A/B and step D carries the 29-chain prerequisite, so
+neither is a cheap-to-verify dispatch.

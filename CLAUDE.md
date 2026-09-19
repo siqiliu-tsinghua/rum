@@ -119,6 +119,14 @@ Consequences for how I present and pick work:
   pattern; a `Mutex`/allocation/branch paid on every call when the flag is
   off is a regression.
 - **No new `unsafe` in `rum-core`/`rum-runtime`** (zero today).
+- **Do not tag (user ruling 2026-09-19).** `v0.2.0` onward is the
+  **security-hardening line**; the ownership-graph work is a branch inserted
+  from `serval`'s third-party review, not a replacement for it. Hardening
+  resumes when this branch closes, and `v0.3.0` is considered only once
+  hardening is *finished*. No tag lands mid-line, and no single step of a
+  line is a release. An API break inside the line is fine — rum has no
+  downstream consumers and the API is deliberately unlocked — but it is not a
+  reason to cut a version.
 - **Measure honestly**: profiling env OFF for any timing number; one variable
   per A/B; persist raw output to files before parsing; derive timeouts from
   data, not guesses. Elapsed probes use in-kernel `AbsoluteTiming` backed by
