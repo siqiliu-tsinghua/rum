@@ -9,6 +9,7 @@ mod key_predicates;
 mod key_take_drop;
 mod keys;
 mod lookup;
+mod values;
 
 pub(crate) use self::key_predicates::{eval_key_free_q, eval_key_member_q};
 pub(crate) use self::key_take_drop::{eval_key_drop, eval_key_take};
@@ -17,6 +18,7 @@ pub(crate) use self::lookup::eval_lookup;
 use self::lookup::{
     eval_lookup_with_evaluated_data, finish_eval_lookup, finish_suspended_prepared_lookup,
 };
+pub(crate) use self::values::eval_values;
 
 pub(crate) fn eval_association(
     session: &mut Session,
@@ -160,33 +162,6 @@ pub(crate) fn eval_key(
     };
 
     Ok(Expr::call(head.clone(), vec![key.clone()]))
-}
-
-pub(crate) fn eval_values(
-    session: &mut Session,
-    _head: &Expr,
-    args: &SharedArgs,
-) -> Result<Expr, EvalError> {
-    let args = args.as_ref();
-    if !(1..=2).contains(&args.len()) {
-        return Ok(session.invalid_call_with_message(
-            "Values",
-            args,
-            "argt",
-            one_or_two_argument_count_message("Values", args.len()),
-        ));
-    };
-
-    let wrapper = args.get(1);
-    match values_result_for_expr(&args[0], wrapper) {
-        Ok(value) => Ok(value),
-        Err(invalid) => Ok(session.invalid_call_with_message(
-            "Values",
-            args,
-            "invrl",
-            invalid_association_or_rule_list_message(&invalid),
-        )),
-    }
 }
 
 pub(crate) fn eval_key_exists_q(
@@ -336,37 +311,6 @@ fn wrap_keyed_result(value: Expr, wrapper: Option<&Expr>) -> Expr {
         Some(head) => Expr::call(head, vec![value]),
         None => value,
     }
-}
-
-fn values_result_for_expr(expr: &Expr, wrapper: Option<&Expr>) -> Result<Expr, Expr> {
-    if let Some((_, value)) = parse_association_entry(expr) {
-        return Ok(wrap_keyed_result(value, wrapper));
-    }
-
-    if let Some(keyed) = keyed_entries_from_expr(expr) {
-        return Ok(Expr::call(
-            system_expr("List"),
-            keyed
-                .entries
-                .into_iter()
-                .map(|(_, value)| wrap_keyed_result(value, wrapper))
-                .collect(),
-        ));
-    }
-
-    let Some(items) = list_items(expr) else {
-        return Err(expr.clone());
-    };
-
-    let mut values = Vec::with_capacity(items.len());
-    for item in items {
-        match values_result_for_expr(item, wrapper) {
-            Ok(value) => values.push(value),
-            Err(_) => return Err(expr.clone()),
-        }
-    }
-
-    Ok(Expr::call(system_expr("List"), values))
 }
 
 #[cfg(test)]

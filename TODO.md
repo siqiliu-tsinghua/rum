@@ -2454,9 +2454,53 @@ reads like a stale binary. The md5s settled it — the base binary is
 byte-identical to brief-473's candidate, which is exactly what a correct base
 is, and the candidate differs. **Check the binaries, not the build log.**
 
-**Next in this family**: `Values` at 5,896, the last unconverted walk in
-`basic.rs`. Outside it: `GroupBy`, the schema validator, and generic
-`MapIndexed`. Then the remaining four conversions:
+**`Values` is converted (brief-475) and `basic.rs` is closed.** All five walks
+in that file — `KeyTake`/`KeyDrop`, `Keys`, the four `Lookup` phases, and
+`Values` — are now `BoundedHeap`. `Values` reaches raw physical height 4,097
+with the exact result and, measured at the gate, now refuses **in band** at
+8 000, 15 000 and 30 000, so its row carries `FailsClosed` like its three
+siblings.
+
+**The contract the brief pinned survived.** `Keys` reports the innermost
+offending element and `Values` reports the level that failed; a conversion that
+harmonised them would have changed a user-visible diagnostic while every
+successful case still matched. Director-verified at the CLI on four shapes:
+`Keys[{{1, 2}}]` still says `1`, `Values[{{1, 2}}]` still says
+`List[List[1, …]]`. The worker also built a dedicated in-module falsifier for it,
+`values_forced_tail_preserves_outer_expression_error_payload`, which the director
+reproduced red alongside the standard forced-front one.
+
+**This is the only conversion in the family that cost instructions, and the
+reason is structural.** `values_result_for_expr` was already the lean shape — an
+explicit loop, 336 bytes per layer against `Keys`' 704 — so the front and tail
+machinery had nothing to recover, where `KeyTake`/`KeyDrop` and `Keys` each gave
+back more than they cost. Allocation counts are byte-identical on all four
+probes.
+
+**Its price is paid only by the shape the conversion exists for.**
+Director-measured: **depth 1, which is what almost every real `Values` call is,
+moves +0.020%** — indistinguishable from the untouched controls — while the
+depth-9 stress probe moves +0.606%. Accepted on that split, and on the brief-453
+precedent where +0.714% bought the removal of a process kill.
+
+**A gate correction worth keeping.** The worker reported the instruction reading
+as unattributable, on the grounds that untouched code had moved by the same
+magnitude. In the director's control set it had not: the same-file untouched
+`Keys` and `Lookup` probes moved +0.012% and -0.163%, an order of magnitude below
+the target. **An inability to attribute a cost can be a property of the control
+set rather than of the change** — name the controls before concluding noise.
+
+**First ordinary conversion dispatched to `cgl`** rather than to Codex, which
+until now had only taken security work. It came back in scope, with the siblings
+untouched, and its report was honest about what it could not attribute and about
+one self-inflicted edit that the compiler caught. Gate: 2 417 tests green with no
+ZeroMQ skip.
+
+**Next**: `GroupBy` (short of the contract and fail-open), then the residual
+queue — `KeyComplement` 1.42x, the `Association` parser 1.85x, `Normal` 1.44x
+and fail-closed — and outside this line the schema validator and generic
+`MapIndexed`. Also queued: brief-476, the ownership-graph inventory, and
+brief-477, the `Persistent*Node` reachability measurement. Then the remaining four conversions:
 `AssociationKeyFlatten`, `AssociationKeyDeflatten`, association `MapIndexed`,
 and the `AssociateTo`/`KeyDropFrom` Part target. None fits the 1 MiB budget at
 contract height, which is why a guard is not an option for any of them.

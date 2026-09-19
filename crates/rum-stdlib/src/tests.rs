@@ -14,6 +14,8 @@ mod association_key_take_drop_depth;
 mod association_keys_depth;
 #[path = "tests/association_lookup_depth.rs"]
 mod association_lookup_depth;
+#[path = "tests/association_values_depth.rs"]
+mod association_values_depth;
 #[path = "tests/associations/mod.rs"]
 mod associations;
 #[path = "tests/associations_missing_surface.rs"]

@@ -359,13 +359,6 @@ const EXPECTED_RECURSION: &[(&str, &str, &str, usize, &str)] = &[
         "held-association-part-exact-paths",
     ),
     (
-        "crates/rum-stdlib/src/associations/basic.rs",
-        "values_result_for_expr",
-        "values_result_for_expr",
-        1,
-        "values-nested-lists",
-    ),
-    (
         "crates/rum-stdlib/src/associations/basic/key_take_drop.rs",
         "keyed_take_drop_result_for_expr_recursive_bounded",
         "keyed_take_drop_result_for_expr_recursive_bounded",
@@ -406,6 +399,13 @@ const EXPECTED_RECURSION: &[(&str, &str, &str, usize, &str)] = &[
         "lookup_query_count_recursive_bounded",
         1,
         "lookup-nested-key-specifications",
+    ),
+    (
+        "crates/rum-stdlib/src/associations/basic/values.rs",
+        "values_result_for_expr_recursive_bounded",
+        "values_result_for_expr_recursive_bounded",
+        1,
+        "values-nested-lists",
     ),
     (
         "crates/rum-stdlib/src/associations/data.rs",
