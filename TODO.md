@@ -2528,8 +2528,25 @@ so we know the chain can be made arbitrarily long and do **not** yet know at
 what length its drop stops being survivable. Eight of the eleven families are
 also still unexamined.
 
-Also queued: brief-476, the ownership-graph inventory, which this result makes
-more urgent, and brief-478, splitting the four over-line test files. Then the remaining four conversions:
+**The four over-line test files are split (brief-478).** Nothing is over the
+35 000-byte line any more except the generated `derived_inventory.rs`, which has
+no responsibility boundary to cut on and is excluded by design. Cuts were made on
+real boundaries — file loading and script forms, association lvalue, root
+visitation, reachability — and the largest resulting file is 29 725 bytes.
+
+Gated mechanically, which is why this was the work chosen for a low-quota day:
+no production file in the diff, every file under the line, **2 417 tests green
+with no ZeroMQ skip**, and the sorted set of 2 472 `#[test]` names identical
+before and after. A pure move needs no A/B, no certificate and no falsifier.
+
+*My first attempt at that name-set check was wrong*: `git grep` searches only
+tracked files, so the newly created split files were invisible and the check
+reported tests as missing. Re-run over the filesystem it is identical. Third
+instrument slip of this arc and the same shape as the others — the tool did not
+reach what it claimed to cover.
+
+Also queued: brief-476, the ownership-graph inventory, which brief-477's result
+makes more urgent. Then the remaining four conversions:
 `AssociationKeyFlatten`, `AssociationKeyDeflatten`, association `MapIndexed`,
 and the `AssociateTo`/`KeyDropFrom` Part target. None fits the 1 MiB budget at
 contract height, which is why a guard is not an option for any of them.
