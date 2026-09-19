@@ -166,6 +166,8 @@ mod map_indexed_association_depth;
 mod merge_native_stack_guard;
 #[path = "tests/number_theory.rs"]
 mod number_theory;
+#[path = "tests/ownership_graph/mod.rs"]
+mod ownership_graph;
 #[path = "tests/polynomials.rs"]
 mod polynomials;
 #[path = "tests/predicates.rs"]

@@ -2598,9 +2598,55 @@ enforcement: the unknown stays visible and belongs to someone. Overrule me if
 you would rather change the host API instead — that is the larger and stronger
 alternative the report also names.
 
-**Next**: the drop ceiling for the `Persistent*Node` chains — director work, and
-the last fact missing before the implementation brief — then that implementation,
-then `GroupBy`. Then the remaining four conversions:
+### The ownership graph's discovery half is IN (brief-479), and it produced the number
+
+A test-only scanner over `rum-core`, `rum-runtime` and `rum-stdlib` type
+definitions, nine modules, no production source touched. **2 430 tests green on
+a loopback-capable host without the ZeroMQ skip** the worker's sandbox needed.
+
+**The counts.**
+
+| kind | count |
+|---|---|
+| **`UnknownHostPayload`** | **48** — 6 owned storage edges, 42 public by-value inputs |
+| `UnknownConstruct` | 7 068 |
+| self-reaching types | 57 |
+
+**The 48 is the number the API decision rests on, and its shape matters more
+than its size.** Only **6** are places rum *stores* an opaque host payload and
+therefore owns its destruction; the other 42 are public inputs that take one by
+value. So closing the hazard structurally — the "change the host API" route —
+would need a contract on six storage sites, not on forty-eight. That is a much
+smaller change than the option looked like when it was only an argument.
+
+**The 7 068 is correct but too coarse to act on, and that is a step-two problem
+rather than a defect.** The brief demanded maximal conservatism — "never skip
+silently, an unknown is an analysis failure" — and the scanner obeyed. The
+partition: 2 896 macro sites, 2 774 closure captures, 1 328 attribute sites of
+which **1 271 are plain `derive`**, and **70 storage/representation sites**. A
+`#[derive(Clone)]` on a type whose fields are already visible introduces no
+owning edge; only that last group of 70 can hide one. **Step two needs a second
+axis — "unknown expansion" versus "unknown that could add an owning edge" — or
+the ledger will never be green and therefore never used.**
+
+**The acceptance held: rediscovery is structural, not name-fed.** No hazard name
+appears anywhere in the scanner. The witnesses show why a naive scan cannot do
+this: `LookupOutcome.List.0/std::vec::Vec[Own]/arg0 -> LookupOutcome` resolves
+`Self`, and `NestedPathNodes.entries/std::vec::Vec[Own]/arg0/tuple/.1` reaches
+through a **tuple inside a Vec** — the exact edge the director's own scan could
+not see. Director-reproduced: deleting one member of the mutual pair from
+`inventory/self_reaching.tsv` fails with `missing inventory row:` naming the
+type, file, line and full cycle; restoring it goes green.
+
+*Fifth instrument slip of this arc, same shape as the others*: my first
+perturbation edited `fixtures.rs`, the synthetic fixtures, not the production
+inventory — and my earlier size listing missed the inventory entirely because it
+globbed `*.rs` and the inventory is a `.tsv`.
+
+**Next**: step two, the disposition ledger — which now has a concrete design
+problem to solve, the `UnknownConstruct` second axis — and the
+`Persistent*Node` drop ceiling, which remains the director's measurement and is
+recorded as `NotMeasured` rather than blocking anything. Then `GroupBy`. Then the remaining four conversions:
 `AssociationKeyFlatten`, `AssociationKeyDeflatten`, association `MapIndexed`,
 and the `AssociateTo`/`KeyDropFrom` Part target. None fits the 1 MiB budget at
 contract height, which is why a guard is not an option for any of them.

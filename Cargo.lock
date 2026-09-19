@@ -693,6 +693,8 @@ version = "0.2.0"
 dependencies = [
  "crc32fast",
  "md-5",
+ "proc-macro2",
+ "quote",
  "rum-core",
  "rum-runtime",
  "rum-syntax",
