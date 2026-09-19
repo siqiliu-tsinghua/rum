@@ -2499,8 +2499,37 @@ ZeroMQ skip.
 **Next**: `GroupBy` (short of the contract and fail-open), then the residual
 queue — `KeyComplement` 1.42x, the `Association` parser 1.85x, `Normal` 1.44x
 and fail-closed — and outside this line the schema validator and generic
-`MapIndexed`. Also queued: brief-476, the ownership-graph inventory, and
-brief-477, the `Persistent*Node` reachability measurement. Then the remaining four conversions:
+`MapIndexed`. ### The `Persistent*Node` chains are source-reachable and unbounded (brief-477)
+
+Settled by measurement, 2026-09-19. **A source-language construction exists**, on
+the string-replacement resume paths, and the tail grows **per element** — one
+suspension, then a node per character — so it does **not** need repeated host
+round trips. Two constructions reached tail length 1 000, each verified by
+instrumentation planted in the `appended` path and then removed; the tree was
+left clean.
+
+**Nothing caps it.** The worker set the generated-element limit and the
+iteration-work limit **both to 8** and the sequence still reached 1 000: those
+suffix loops enforce neither. The scalar replacement count defaults to
+`usize::MAX` (`crates/rum-stdlib/src/strings/patterns.rs:746`). So the honest row
+for the family in brief-476's inventory is **unbounded and reachable**, not
+`Unbounded(owed_by = …)` pending an answer.
+
+**My five failed probes were the wrong operation family**, not evidence of
+unreachability — I kept trying `And`, and the reachable shape is the string
+path this brief itself had named as the strongest candidate
+(`resume_suspended_replace_string_value_from_index`, appending per character).
+A negative from a probe that never reached the target says nothing, which is the
+whole content of `calibrate-the-predicate-before-trusting-it`.
+
+**Still unmeasured, and first thing next session**: the drop ceiling. The brief
+deliberately forbade driving it to a crash — that bracket is the director's —
+so we know the chain can be made arbitrarily long and do **not** yet know at
+what length its drop stops being survivable. Eight of the eleven families are
+also still unexamined.
+
+Also queued: brief-476, the ownership-graph inventory, which this result makes
+more urgent, and brief-478, splitting the four over-line test files. Then the remaining four conversions:
 `AssociationKeyFlatten`, `AssociationKeyDeflatten`, association `MapIndexed`,
 and the `AssociateTo`/`KeyDropFrom` Part target. None fits the 1 MiB budget at
 contract height, which is why a guard is not an option for any of them.
