@@ -50,6 +50,9 @@ pub use super::file_io::{FileIo, FileIoError, FileIoProvider, FileProbe, FileWri
 // entropy/random
 pub use super::random::{EntropyError, EntropyProvider, EntropySource};
 
+// host payload destruction
+pub use super::host_payload::BoundedDestruction;
+
 // definition rhs guards (stdlib-only bridge)
 #[doc(hidden)]
 pub use super::definitions::rhs_guards::{

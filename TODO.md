@@ -2735,6 +2735,17 @@ destruction.
    them living inside suspension frames. So the drop ceiling is now **the gate
    on step D**, not an optional measurement.
 
+**Step A is IN (brief-481).** `BoundedDestruction` exists as a safe opt-in
+marker with no blanket impl and no derive; `EntropySource` requires it; all four
+implementors declare it with a rationale. Director-reproduced: 2 431 tests green
+with the native ZeroMQ suite really binding loopback (zero skip notices), and
+the crate-edge certificate 5/5 — three unchanged legacy fixtures rejected with
+`E0277` naming the missing bound, two declared fixtures compiling. The falsifier
+was reproduced by removing the supertrait: all three legacy fixtures then
+compile and the runner goes red. The fixtures contain **no reference to
+`BoundedDestruction`**, which is what makes them valid baseline-sensitive
+negatives. All six inventory TSVs stayed byte-identical.
+
 **Not dispatched, by user ruling on gate cost**: steps B, C, D and E. Step C
 carries a microbench A/B and step D carries the 29-chain prerequisite, so
 neither is a cheap-to-verify dispatch.

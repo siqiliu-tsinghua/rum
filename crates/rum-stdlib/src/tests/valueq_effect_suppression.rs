@@ -6,7 +6,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::install_core;
 use crate::tests::install_test_file_io;
-use rum_runtime::kernel_api::{EntropyError, EntropyProvider, EntropySource};
+use rum_runtime::kernel_api::{BoundedDestruction, EntropyError, EntropyProvider, EntropySource};
 use rum_runtime::{Capability, CapabilityPolicy, EvalError, Session};
 
 static NEXT_TEMP_ID: AtomicU64 = AtomicU64::new(0);
@@ -43,6 +43,9 @@ impl Drop for TempDirGuard {
 
 #[derive(Debug)]
 struct FixedEntropy;
+
+/// This fieldless unit struct has no state to destroy.
+impl BoundedDestruction for FixedEntropy {}
 
 impl EntropySource for FixedEntropy {
     fn fill(&self, buf: &mut [u8]) -> Result<(), EntropyError> {

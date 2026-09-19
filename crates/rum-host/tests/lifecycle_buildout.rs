@@ -3,8 +3,8 @@ use rum_host::{
     HostEvalRequest, HostEvalSuccess, HostFailureCode, HostIsCompleteRequest, HostSession,
 };
 use rum_runtime::kernel_api::{
-    EntropyError, EntropyProvider, EntropySource, FileIo, FileIoError, FileIoProvider, FileProbe,
-    FileWriteMode,
+    BoundedDestruction, EntropyError, EntropyProvider, EntropySource, FileIo, FileIoError,
+    FileIoProvider, FileProbe, FileWriteMode,
 };
 use std::collections::BTreeMap;
 use std::path::Path;
@@ -112,6 +112,9 @@ impl FixedEntropy {
         self.fills.load(Ordering::Relaxed)
     }
 }
+
+/// The flat byte vector and atomic counter have bounded destruction, even at the last Arc.
+impl BoundedDestruction for FixedEntropy {}
 
 impl EntropySource for FixedEntropy {
     fn fill(&self, buf: &mut [u8]) -> Result<(), EntropyError> {

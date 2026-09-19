@@ -1,7 +1,9 @@
 use crate::install_core;
 use rum_runtime::{
     Session,
-    kernel_api::{EntropyError, EntropyProvider, EntropySource, expr_as_string},
+    kernel_api::{
+        BoundedDestruction, EntropyError, EntropyProvider, EntropySource, expr_as_string,
+    },
 };
 use std::collections::VecDeque;
 use std::sync::Mutex;
@@ -73,6 +75,9 @@ impl SequentialEntropy {
         })
     }
 }
+
+/// The mutex owns a flat byte deque whose destruction has no recursive ownership chain.
+impl BoundedDestruction for SequentialEntropy {}
 
 impl EntropySource for SequentialEntropy {
     fn fill(&self, buf: &mut [u8]) -> Result<(), EntropyError> {

@@ -138,7 +138,7 @@ impl fmt::Display for EntropyError {
 
 impl Error for EntropyError {}
 
-pub trait EntropySource: Send + Sync {
+pub trait EntropySource: super::host_payload::BoundedDestruction + Send + Sync {
     fn fill(&self, buf: &mut [u8]) -> Result<(), EntropyError>;
 }
 

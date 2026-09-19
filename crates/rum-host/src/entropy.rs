@@ -2,7 +2,7 @@ use std::fs::File;
 use std::io::Read;
 use std::sync::OnceLock;
 
-use rum_runtime::kernel_api::{EntropyError, EntropyProvider, EntropySource};
+use rum_runtime::kernel_api::{BoundedDestruction, EntropyError, EntropyProvider, EntropySource};
 
 /// Host entropy provider backed by `/dev/urandom`.
 ///
@@ -26,6 +26,9 @@ impl StdEntropySource {
             .clone()
     }
 }
+
+/// This fieldless unit struct has no state to destroy, including at the last shared holder.
+impl BoundedDestruction for StdEntropySource {}
 
 impl EntropySource for StdEntropySource {
     fn fill(&self, buf: &mut [u8]) -> Result<(), EntropyError> {

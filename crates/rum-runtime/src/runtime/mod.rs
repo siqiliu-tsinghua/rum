@@ -96,5 +96,7 @@ impl Session {
     }
 }
 
+mod host_payload;
+
 #[cfg(test)]
 mod tests;
