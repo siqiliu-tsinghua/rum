@@ -82,11 +82,8 @@ Files you MAY modify:
   (`WithBindingNode`).
 - `crates/rum-runtime/src/runtime/tests/frame_root_trace.rs` and its
   `derived_inventory.rs`, if the wrapper changes a recorded traversal.
-- `crates/rum-stdlib/src/tests/ownership_graph/inventory/*.tsv` — **position
-  drift only**, plus any row whose *ownership path* legitimately changes
-  because the link now sits behind the wrapper. Report every content change
-  with its witness; a new `UnknownHostPayload` row, a removed row, or a
-  reclassification is a **stop**, not a snapshot update.
+- `crates/rum-stdlib/src/tests/ownership_graph/inventory/*.tsv` — see the
+  inventory rule below, whose **shape changed on 2026-09-21**.
 
 MUST NOT touch: `rum-core` and `Expr`/`Symbol` representation or destruction
 (`Expr`'s iterative drop was rejected on a measured 20-50% hot-path regression
@@ -94,6 +91,32 @@ and stays standing debt); `host_payload.rs`; the suspension traits;
 `SECURITY.md`, `AGENTS.md`, `PROGRESS.md`, `TODO.md`, other `docs/**`,
 `docs/dev/codex/**` except your own report; the other 27 members;
 the ownership scanner's `.rs` code; `.git`, git config, `Cargo.lock`.
+
+## The inventory rule — inverted, after three misses
+
+Three times in this line the director wrote an inventory permission by
+enumerating the changes he was thinking about, and three times the scanner
+recorded an axis he had not enumerated: a second row carrying the same payload
+spelling, then a new public-input row for a constructor, and now — correctly
+stopped by the worker — **derive-attribute rows**, since `visit_attribute`
+(`ownership_graph/source_items.rs:527`) records every attribute verbatim as an
+`UnknownConstruct` and this brief adds a derive to two types. Enumerating
+harder is not the fix; the rule's shape was wrong.
+
+**So: you MAY update any of the six `.tsv` files as discovery requires.** The
+obligation moves from permission to disclosure:
+
+- List **every** content change (position drift excepted) in your report, each
+  with its witness line, sorted into: (a) an attribute/derive row added or
+  changed by this brief's new derive; (b) an ownership-path change caused by
+  the link moving behind the wrapper; (c) anything else.
+- **Class (c) is a stop.** So, regardless of class, is any of: a new
+  `UnknownHostPayload` row, a removed row, or a row whose kind is
+  reclassified.
+- Never edit a row by hand to make a check pass — regenerate, then explain.
+
+The director reads the diff at the gate; disclosure is what makes that
+possible, and it cannot be under-enumerated the way a permission list can.
 
 ## The mechanism, as ruled
 
