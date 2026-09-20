@@ -2815,6 +2815,43 @@ long chain terminates the test binary *before* the repair, so it cannot be a
 before/after pair in one binary, and "did not crash at N" is too weak because
 it passes on a recursive drop with a slightly larger stack.
 
-**Not dispatched**: step D itself (blocked on brief-484) and step E. Step C
+**The drain is IN for two members (brief-485), after four stop-losses.**
+`AccumulatorChain<N>` is a `#[repr(transparent)]` wrapper over the existing
+`Option<Arc<N>>` carrying the single `Drop`; a derive supplies the node
+accessor so forgetting it is a compile error; the drain is `#[cold]` and holds
+one node at a time, acquiring with `Arc::into_inner` and stopping at a shared
+node. `IndexChunk` and `WithBindingNode` are converted; **27 members remain and
+step D stays blocked**.
+
+*The certificate discriminates the mechanism.* A payload whose `Drop` records
+the maximum simultaneously-active destruction nesting reads **exactly 1** for a
+drain. Director-reproduced falsifier: replacing the drain body with an ordinary
+recursive release makes it read the chain length — 64 at length 64, 16 at 16,
+8 in the shared-tail case — and four tests go red; restored byte-identical and
+green. "Survived at length N" would have passed on a recursive drop with a
+slightly larger stack.
+
+*Gate*: fmt clean, **2 444 tests green** (+13) with nine native ZeroMQ tests
+binding loopback and zero skip notices, five derive `compile_fail` doctests.
+Inventory disclosed and verified: one added `UnknownHostPayload` (the
+authorized generic constructor), two `self_reaching` witnesses gaining the
+wrapper step, the rest derive and position drift. **Both types stay in
+`self_reaching.tsv`, correctly** — the repair bounds destruction, it does not
+remove the ownership cycle.
+
+*A/B, and why the panel was not re-run.* `with-deep-body-small` +2.06% and
+`with-local` -1.44% sit inside a control band that itself spans -0.38% to
+-4.05%, so there is no distinguishable `With` movement. Three labels moved
+further — `table-count-null` +13.48%, `table-iterator-null` +10.72%,
+`module-chain-escape-large` +5.63% — and all of them are on code this diff does
+not touch: `WithBindingNode` is referenced only by `with.rs` and `IndexChunk`
+only by `resumable_merge_sort.rs`, while Table's accumulator
+(`PersistentExprAccumulatorNode`) is one of the 27 unconverted members. The two
+largest movers are also microsecond-tier (19 us and 81 us), the
+layout-lottery-prone class. One pair cannot gate this panel, so this is
+recorded as observed movement on untouched code rather than tuned.
+
+**Not dispatched**: the remaining 27 conversions, step D (still blocked), and
+step E. Step C
 carries a microbench A/B and step D carries the 29-chain prerequisite, so
 neither is a cheap-to-verify dispatch.

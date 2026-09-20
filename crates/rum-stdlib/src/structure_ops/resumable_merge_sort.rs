@@ -3,8 +3,8 @@ use std::sync::Arc;
 
 use rum_core::Expr;
 use rum_runtime::kernel_api::{
-    EvalError, FrameAction, FrameRootTrace, FrameRootVisitor, PureFrameFinalizer, Session,
-    SuspensionFrame,
+    AccumulatorChain, AccumulatorChainNode, EvalError, FrameAction, FrameRootTrace,
+    FrameRootVisitor, PureFrameFinalizer, Session, SuspensionFrame,
 };
 
 use super::is_true_expr;
@@ -38,15 +38,16 @@ impl MergeSortItem for Expr {
     }
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct IndexChunk {
-    previous: Option<Arc<IndexChunk>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<IndexChunk>,
     values: Vec<usize>,
 }
 
 #[derive(Default, FrameRootTrace)]
 struct PersistentIndexBuffer {
-    tail: Option<Arc<IndexChunk>>,
+    tail: AccumulatorChain<IndexChunk>,
     pending: Vec<usize>,
     len: usize,
 }
@@ -61,10 +62,10 @@ impl PersistentIndexBuffer {
         if self.pending.is_empty() {
             return;
         }
-        self.tail = Some(Arc::new(IndexChunk {
+        self.tail = AccumulatorChain::new(Some(Arc::new(IndexChunk {
             previous: self.tail.take(),
             values: std::mem::take(&mut self.pending),
-        }));
+        })));
     }
 
     fn clone_frozen(&self) -> Self {

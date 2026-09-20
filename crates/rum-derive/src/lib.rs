@@ -1,5 +1,7 @@
 //! Derive macros for rum runtime data contracts.
 
+mod accumulator_chain;
+
 use std::collections::HashSet;
 
 use proc_macro::TokenStream;
@@ -9,6 +11,72 @@ use syn::{
     Data, DataEnum, DataStruct, DeriveInput, Fields, Generics, Ident, Type, TypeParamBound,
     parse_macro_input, parse_quote,
 };
+
+/// Derives access to exactly one explicitly marked accumulator link.
+///
+/// Requires a named-field struct with one `#[accumulator_link]` field of type
+/// `AccumulatorChain<Self>` (the concrete node spelling also works). Import
+/// `AccumulatorChainNode` from the kernel API alongside this derive. This does
+/// not generate `Drop` or a bounded-destruction declaration.
+///
+/// Missing link annotations are rejected:
+///
+/// ```compile_fail
+/// use rum_runtime::kernel_api::{AccumulatorChain, AccumulatorChainNode};
+/// #[derive(AccumulatorChainNode)]
+/// struct Node { previous: AccumulatorChain<Self> }
+/// ```
+///
+/// More than one marked link is rejected:
+///
+/// ```compile_fail
+/// use rum_runtime::kernel_api::{AccumulatorChain, AccumulatorChainNode};
+/// #[derive(AccumulatorChainNode)]
+/// struct Node {
+///     #[accumulator_link]
+///     previous: AccumulatorChain<Self>,
+///     #[accumulator_link]
+///     next: AccumulatorChain<Self>,
+/// }
+/// ```
+///
+/// A raw link cannot stand in for the wrapper:
+///
+/// ```compile_fail
+/// use rum_runtime::kernel_api::AccumulatorChainNode;
+/// #[derive(AccumulatorChainNode)]
+/// struct Node {
+///     #[accumulator_link]
+///     previous: Option<std::sync::Arc<Self>>,
+/// }
+/// ```
+///
+/// The wrapper requires the node contract even if the derive is forgotten:
+///
+/// ```compile_fail
+/// use rum_runtime::kernel_api::AccumulatorChain;
+/// struct Node { previous: AccumulatorChain<Self> }
+/// ```
+///
+/// Deriving link access does not declare bounded payload destruction:
+///
+/// ```compile_fail
+/// use rum_runtime::kernel_api::{AccumulatorChain, AccumulatorChainNode, BoundedDestruction};
+/// #[derive(AccumulatorChainNode)]
+/// struct Node {
+///     #[accumulator_link]
+///     previous: AccumulatorChain<Self>,
+/// }
+/// fn requires_bounded<T: BoundedDestruction>() {}
+/// requires_bounded::<Node>();
+/// ```
+#[proc_macro_derive(AccumulatorChainNode, attributes(accumulator_link))]
+pub fn derive_accumulator_chain_node(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+    accumulator_chain::expand(&input)
+        .unwrap_or_else(syn::Error::into_compile_error)
+        .into()
+}
 
 /// Derives borrowed, field-recursive frame-root traversal.
 ///

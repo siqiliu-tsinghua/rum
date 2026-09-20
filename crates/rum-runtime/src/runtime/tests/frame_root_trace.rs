@@ -92,7 +92,10 @@ fn manual_frame_root_trace_implementations_match_sorted_allowlist() {
         .collect::<Vec<_>>();
     implementations.sort();
 
-    assert_eq!(implementations, MANUAL_FRAME_ROOT_TRACE_IMPLS);
+    let mut expected = MANUAL_FRAME_ROOT_TRACE_IMPLS.to_vec();
+    expected.push("AccumulatorChain<N>");
+    expected.sort_unstable();
+    assert_eq!(implementations, expected);
 }
 
 #[test]

@@ -5,6 +5,12 @@
 //! conversion at a time. Items exported here become semver-relevant when the
 //! crate split ships.
 
+// accumulator links (stdlib-only bridge)
+#[doc(hidden)]
+pub use super::accumulator_chain::{AccumulatorChain, AccumulatorChainNode};
+#[doc(hidden)]
+pub use rum_derive::AccumulatorChainNode;
+
 // capabilities
 pub use super::capabilities::Capability;
 

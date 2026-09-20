@@ -1,16 +1,19 @@
 use super::*;
-use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::kernel_api::{
+    AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
+};
 use std::sync::Arc;
 
 #[derive(Clone, FrameRootTrace)]
 struct PersistentWithBindings {
     base: Arc<SymbolExprMap>,
-    tail: Option<Arc<WithBindingNode>>,
+    tail: AccumulatorChain<WithBindingNode>,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct WithBindingNode {
-    previous: Option<Arc<WithBindingNode>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<WithBindingNode>,
     symbol: Symbol,
     value: Expr,
 }
@@ -27,18 +30,18 @@ impl PersistentWithBindings {
     fn freeze(bindings: SymbolExprMap) -> Self {
         Self {
             base: Arc::new(bindings),
-            tail: None,
+            tail: AccumulatorChain::default(),
         }
     }
 
     fn inserted(&self, symbol: Symbol, value: Expr) -> Self {
         Self {
             base: self.base.clone(),
-            tail: Some(Arc::new(WithBindingNode {
+            tail: AccumulatorChain::new(Some(Arc::new(WithBindingNode {
                 previous: self.tail.clone(),
                 symbol,
                 value,
-            })),
+            }))),
         }
     }
 
