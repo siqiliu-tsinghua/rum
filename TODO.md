@@ -2789,6 +2789,32 @@ path. Ownership held through a generic field is therefore invisible to the
 storage side. Harmless here, because a `dyn` boundary sits in front of it; not
 harmless in general.
 
-**Not dispatched, by user ruling on gate cost**: steps D and E. Step C
+**Step D's prerequisite is measured, and the chains are reachable.** Director
+probe, a faithful replica of `IndexChunk`'s shape (`Option<Arc<Self>>` plus a
+payload), release build, `ulimit -s 2048`, three runs per point: **64 000 nodes
+survive 3/3 and 66 000 die 3/3** with `fatal runtime error: stack overflow` —
+about **32 bytes of stack per level**. brief-477 had already shown such a tail
+growing one node per element on the string-replacement resume paths, reaching
+1 000 with both limits set to 8, so a 65 000-character string reaches the
+ceiling. The kill happens **during destruction**, where the native stack guard
+cannot reach: it bounds the evaluator's call stack, not the destructor.
+
+Calibration caveat, stated in the brief rather than buried: the probe measures
+the *shape*. `WithBindingNode` carries a `Symbol` and an `Expr`,
+`PersistentStringTextNode` a `String`; a heavier node means a **lower** ceiling.
+65 000 is an order-of-magnitude anchor, not any type's number.
+
+So the frames owning these chains cannot honestly declare bounded destruction,
+and **step D is blocked on repairing them** rather than on measuring them.
+brief-484 (design-only) plans that repair. Its crux is that an `Arc` chain
+cannot use the `LookupOutcome` worklist idiom
+(`stdlib/associations/basic/lookup.rs:24-45`, the only iterative destructor in
+the tree): unlinking requires being the last strong holder, so the loop must
+stop at a shared node. Its other crux is the certificate — a test that drops a
+long chain terminates the test binary *before* the repair, so it cannot be a
+before/after pair in one binary, and "did not crash at N" is too weak because
+it passes on a recursive drop with a slightly larger stack.
+
+**Not dispatched**: step D itself (blocked on brief-484) and step E. Step C
 carries a microbench A/B and step D carries the 29-chain prerequisite, so
 neither is a cheap-to-verify dispatch.
