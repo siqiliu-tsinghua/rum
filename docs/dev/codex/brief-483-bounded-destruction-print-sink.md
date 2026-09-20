@@ -125,19 +125,33 @@ STOP and report — do not proceed and do not silently run an A/B instead.
 
 ## The inventory rule — different from steps A and B
 
-This step **legitimately changes one row's content**. The pinned
-`host_payloads.tsv` row for `Session.print_sink` names the payload
-`dyn FnMut (& str) + Send`; after this change the payload is `dyn PrintSink`.
+**Revised 2026-09-21 after a correct stop-loss.** The first version of this
+brief permitted one content change and there are two; the worker stopped rather
+than exceed the permission, which was right. The director then enumerated every
+affected row instead of reasoning from the one he had looked at.
 
-- **Exactly one row may change content**: the `Session.print_sink` storage row,
-  and only in its payload type. Its ownership path
-  (`Option[Own]/Box[Own]`) must still be `Option[Own]/Box[Own]`.
+This step legitimately changes **exactly two rows**, both in
+`host_payloads.tsv`, both in `crates/rum-runtime/src/runtime/model/session.rs`,
+and both only in their payload spelling — today
+`dyn FnMut (& str) + Send`, afterwards the new sink type:
+
+- the **storage** row (currently line 23, `session.rs:95`,
+  `Session.print_sink`) — its ownership path must still be
+  `Option[Own]/Box[Own]`;
+- the **public-input** row (currently line 24, `session.rs:137`,
+  `set_print_sink(sink)`) — its path must still be `Box[Own]`.
+
+Everything else holds as in steps A and B:
+
 - Every other row is **position drift only** — line and column columns, nothing
   else.
-- New rows may appear only if the adapter introduces a genuinely new opaque
+- A new row may appear only if the adapter introduces a genuinely new opaque
   storage edge. If one appears, **STOP and report it with its witness** rather
   than pinning it; whether the adapter's `F` is an opaque payload of its own is
   a director decision, not a snapshot update.
+- `rum-host` is **not** a scanner root (`ownership_graph/source.rs:18` lists
+  `rum-core`, `rum-runtime`, `rum-stdlib`), so the host setter contributes no
+  row. A row appearing for it is a stop.
 - Anything else — a removed row, a changed ownership path, a reclassification —
   is a stop.
 
