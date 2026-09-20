@@ -336,8 +336,12 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 12 filtered out; fin
 
 ## Streaming prints and batch input
 
-`HostSession::set_print_sink` sends each `Print` line to the host-selected sink
-as it is produced on the evaluating thread. Routing is exclusive: while the
+`HostSession::set_print_sink` accepts a `PrintSink`, whose `BoundedDestruction`
+declaration covers its owned state. For a closure, use
+`ClosurePrintSink::assert_bounded_destruction(closure)` to assert the destruction
+bound for everything it captures; the compiler does not verify that assertion.
+All three types are available from `rum_host`. Each `Print` line is sent to the
+sink as it is produced on the evaluating thread. Routing is exclusive: while the
 sink is installed, the `prints` field on both successful and failed outcomes is
 empty. `clear_print_sink()` restores per-request buffering. A sink must not
 panic, because its panic is caught at the host boundary and poisons the session.

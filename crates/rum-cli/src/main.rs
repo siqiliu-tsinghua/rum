@@ -14,8 +14,8 @@ use std::sync::{
 };
 
 use rum_host::{
-    HostConfig, HostEvalOutcome, HostEvalSuccess, HostFailure, HostFailureCode, HostInputRequest,
-    HostInputSuspension, HostSession,
+    ClosurePrintSink, HostConfig, HostEvalOutcome, HostEvalSuccess, HostFailure, HostFailureCode,
+    HostInputRequest, HostInputSuspension, HostSession,
 };
 use rum_repl::Repl;
 use rum_syntax::{format_parsed_source, parse_format_cli_args, parse_with_diagnostics};
@@ -329,7 +329,7 @@ fn install_stdout_print_sink(session: &mut HostSession) -> Arc<AtomicBool> {
     let sink_broken_pipe = Arc::clone(&broken_pipe);
     let cancel = session.cancel_handle();
 
-    session.set_print_sink(move |text| {
+    session.set_print_sink(ClosurePrintSink::assert_bounded_destruction(move |text| {
         if sink_broken_pipe.load(Ordering::Relaxed) {
             return;
         }
@@ -340,7 +340,7 @@ fn install_stdout_print_sink(session: &mut HostSession) -> Arc<AtomicBool> {
                 cancel.cancel();
             }
         }
-    });
+    }));
 
     broken_pipe
 }

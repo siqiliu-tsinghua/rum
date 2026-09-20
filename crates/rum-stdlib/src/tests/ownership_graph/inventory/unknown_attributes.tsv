@@ -544,7 +544,7 @@ UnknownConstruct	crates/rum-runtime/src/runtime/model/requests.rs	213	1	unresolv
 UnknownConstruct	crates/rum-runtime/src/runtime/model/requests.rs	221	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq)
 UnknownConstruct	crates/rum-runtime/src/runtime/model/session.rs	13	1	unresolved attribute/expansion derive (Clone , Debug , PartialEq , Eq)
 UnknownConstruct	crates/rum-runtime/src/runtime/model/session.rs	20	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq)
-UnknownConstruct	crates/rum-runtime/src/runtime/model/session.rs	172	1	unresolved attribute/expansion derive (Clone , Debug , PartialEq , Eq)
+UnknownConstruct	crates/rum-runtime/src/runtime/model/session.rs	176	1	unresolved attribute/expansion derive (Clone , Debug , PartialEq , Eq)
 UnknownConstruct	crates/rum-runtime/src/runtime/model/traversal.rs	4	1	unresolved attribute/expansion derive (Clone , Debug , PartialEq , Eq , FrameRootTrace)
 UnknownConstruct	crates/rum-runtime/src/runtime/model/traversal.rs	10	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , FrameRootTrace)
 UnknownConstruct	crates/rum-runtime/src/runtime/model/traversal.rs	60	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , FrameRootTrace)

@@ -219,12 +219,12 @@ fn host_cancel_handle_interrupts_running_eval_from_another_thread() {
     let cancel = session.cancel_handle();
     let (cancelled_tx, cancelled_rx) = mpsc::channel();
     let (evaluation_started_tx, evaluation_started_rx) = mpsc::sync_channel(0);
-    session.set_print_sink(move |line| {
+    session.set_print_sink(ClosurePrintSink::assert_bounded_destruction(move |line| {
         assert_eq!(line, "evaluation-started");
         evaluation_started_tx
             .send(())
             .expect("canceller should receive evaluation-start signal");
-    });
+    }));
 
     let canceller = {
         let cancel = cancel.clone();

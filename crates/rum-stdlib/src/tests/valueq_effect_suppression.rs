@@ -7,7 +7,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use crate::install_core;
 use crate::tests::install_test_file_io;
 use rum_runtime::kernel_api::{BoundedDestruction, EntropyError, EntropyProvider, EntropySource};
-use rum_runtime::{Capability, CapabilityPolicy, EvalError, Session};
+use rum_runtime::{Capability, CapabilityPolicy, ClosurePrintSink, EvalError, Session};
 
 static NEXT_TEMP_ID: AtomicU64 = AtomicU64::new(0);
 
@@ -120,9 +120,11 @@ fn valueq_suppresses_an_installed_print_sink_and_restores_it() {
     let mut session = core_session();
     let received = Arc::new(Mutex::new(Vec::new()));
     let sink_received = Arc::clone(&received);
-    session.set_print_sink(Box::new(move |text| {
-        sink_received.lock().unwrap().push(text.to_string());
-    }));
+    session.set_print_sink(Box::new(ClosurePrintSink::assert_bounded_destruction(
+        move |text| {
+            sink_received.lock().unwrap().push(text.to_string());
+        },
+    )));
 
     let success = session.eval_request("ValueQ[Print[\"LEAK\"]]").unwrap();
     assert_eq!(success.value.to_string(), "True");

@@ -92,7 +92,7 @@ pub struct Session {
     pub(in crate::runtime) disabled_message_selectors: Vec<MessageSelector>,
     pub(in crate::runtime) messages: Vec<RuntimeMessage>,
     pub(in crate::runtime) prints: Vec<String>,
-    pub(in crate::runtime) print_sink: Option<Box<dyn FnMut(&str) + Send>>,
+    pub(in crate::runtime) print_sink: Option<Box<dyn PrintSink>>,
     pub(in crate::runtime) peak_memory_proxy_bytes: std::cell::Cell<usize>,
     pub(in crate::runtime) last_message_list: Vec<RuntimeMessage>,
     pub(in crate::runtime) current_message_list_checkpoint: Option<usize>,
@@ -134,7 +134,11 @@ impl Session {
     /// goes. Without a sink, output is buffered into the request response. A host
     /// that owns stdout as a protocol channel must not install a sink that writes
     /// there.
-    pub fn set_print_sink(&mut self, sink: Box<dyn FnMut(&str) + Send>) {
+    ///
+    /// Sinks declare bounded-stack destruction through [`PrintSink`]. Wrap a
+    /// closure with [`ClosurePrintSink::assert_bounded_destruction`] to declare
+    /// the bound for its captured state.
+    pub fn set_print_sink(&mut self, sink: Box<dyn PrintSink>) {
         self.print_sink = Some(sink);
     }
 

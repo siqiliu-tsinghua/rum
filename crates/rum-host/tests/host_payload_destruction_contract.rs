@@ -2,21 +2,21 @@ use std::path::Path;
 use std::process::Command;
 
 #[test]
-fn entropy_and_file_io_providers_declare_bounded_destruction_at_the_crate_edge() {
+fn host_payloads_declare_bounded_destruction_at_the_crate_edge() {
     let repo = Path::new(env!("CARGO_MANIFEST_DIR"))
         .parent()
         .unwrap()
         .parent()
         .unwrap();
-    // The recorded cold ten-consumer run took 60.71s. Ten times that,
-    // rounded up to a minute, gives 660s for the whole gate (each check also
-    // has its own bound). See report-482-bounded-destruction-file-io.md.
+    // The recorded cold-sixteen-final run took 129.24s. Ten times that, rounded up
+    // to a minute, gives 1320s for the whole gate (each check also has its own
+    // bound). See report-483-bounded-destruction-print-sink.md.
     let output = Command::new("python3")
         .current_dir(repo)
         .args([
             "scripts/run-bounded.py",
             "--timeout",
-            "660",
+            "1320",
             "--",
             "python3",
             "scripts/check-host-payload-destruction.py",

@@ -1,6 +1,7 @@
 use rum_host::{
-    HostConfig, HostDefinitionSummary, HostEvalOutcome, HostEvalSuccess, HostResourceLimits,
-    HostSession, HostStructuredOutputKind, native_stack_limit_for_declared_stack,
+    ClosurePrintSink, HostConfig, HostDefinitionSummary, HostEvalOutcome, HostEvalSuccess,
+    HostResourceLimits, HostSession, HostStructuredOutputKind,
+    native_stack_limit_for_declared_stack,
 };
 use rum_runtime::Session;
 use std::sync::mpsc;
@@ -58,12 +59,12 @@ fn cancel_interrupts_heavy_rewrite_loop_and_session_recovers() {
     let cancel = session.cancel_handle();
     let (cancelled_tx, cancelled_rx) = mpsc::channel();
     let (evaluation_started_tx, evaluation_started_rx) = mpsc::sync_channel(0);
-    session.set_print_sink(move |line| {
+    session.set_print_sink(ClosurePrintSink::assert_bounded_destruction(move |line| {
         assert_eq!(line, "evaluation-started");
         evaluation_started_tx
             .send(())
             .expect("canceller should receive evaluation-start signal");
-    });
+    }));
 
     let canceller = thread::spawn(move || {
         evaluation_started_rx

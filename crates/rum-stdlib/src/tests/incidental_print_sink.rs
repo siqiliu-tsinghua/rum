@@ -1,6 +1,7 @@
 use std::sync::{Arc, Mutex};
 
 use super::*;
+use rum_runtime::ClosurePrintSink;
 
 fn core_session() -> Session {
     let mut session = Session::new();
@@ -14,9 +15,11 @@ fn print_sink_streams_prints_and_leaves_outcome_prints_empty() {
     let received = Arc::new(Mutex::new(Vec::new()));
     let sink_received = Arc::clone(&received);
 
-    session.set_print_sink(Box::new(move |text| {
-        sink_received.lock().unwrap().push(text.to_string());
-    }));
+    session.set_print_sink(Box::new(ClosurePrintSink::assert_bounded_destruction(
+        move |text| {
+            sink_received.lock().unwrap().push(text.to_string());
+        },
+    )));
 
     let outcome = session.eval_request("Do[Print[i], {i,1,3}]").unwrap();
     assert_eq!(

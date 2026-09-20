@@ -2757,6 +2757,38 @@ three negatives green-compiling and the runner red while entropy's five stay
 enforced, which shows the two families are independently gated. Inventory
 untouched: adding a supertrait is a same-line edit, so no row drifted.
 
-**Not dispatched, by user ruling on gate cost**: steps C, D and E. Step C
+**Step C is IN (brief-483), after two correct stop-losses.** The sink is now a
+named `PrintSink: BoundedDestruction + Send`; a closure reaches the setter only
+through `ClosurePrintSink::assert_bounded_destruction`, whose field is private
+and which has no `From`, no `Default` and no blanket impl. All twelve
+installation sites migrated, `rum-cli` among them through `rum-host`'s
+re-export — it has no `rum-runtime` dependency and must not gain one.
+Certificate 16/16 with three failure shapes, each checked exactly: `E0277` on
+the missing bound, `E0308` where a raw `Box<dyn FnMut>` no longer type-checks,
+`E0451` where the adapter's field is private. Director-reproduced, including
+the perturbation that matters — adding the forbidden blanket
+`impl<F: FnMut(&str) + Send> PrintSink for F` makes the raw-closure negative
+compile and the runner red. No A/B: `push_print`
+(`session_helpers.rs:302-307`) is the only invocation, the no-sink branch is
+untouched, and one boxed indirect call replaced another.
+
+**Both stop-losses were the director's omissions**, and both were the same
+shape — a rule written from the row he had looked at rather than from a search.
+The first: the inventory rule allowed one content change when the setter's
+public-input row carries the same payload spelling, so there are two. The
+second, correctly escalated rather than pinned: the adapter's constructor adds
+a new opaque **public-input** row. Ruled in: the storage side stays covered,
+since the session's row is now `dyn PrintSink` and every implementor must
+declare the marker, so the new row is the ledger recording where a host closure
+is admitted.
+
+**A ledger shape found while deciding that, for step two.** All eight
+`generic parameter` rows in `host_payloads.tsv` are public inputs and **none is
+a storage row** — `effects.rs:399` emits that spelling only on the public-input
+path. Ownership held through a generic field is therefore invisible to the
+storage side. Harmless here, because a `dyn` boundary sits in front of it; not
+harmless in general.
+
+**Not dispatched, by user ruling on gate cost**: steps D and E. Step C
 carries a microbench A/B and step D carries the 29-chain prerequisite, so
 neither is a cheap-to-verify dispatch.

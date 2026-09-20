@@ -302,7 +302,7 @@ impl Session {
     pub(in crate::runtime) fn push_print(&mut self, text: impl Into<String>) {
         let text = text.into();
         if let Some(sink) = self.print_sink.as_mut() {
-            sink(&text);
+            sink.print_line(&text);
         } else {
             self.prints.push(text);
         }

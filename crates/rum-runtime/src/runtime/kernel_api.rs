@@ -53,6 +53,9 @@ pub use super::random::{EntropyError, EntropyProvider, EntropySource};
 // host payload destruction
 pub use super::host_payload::BoundedDestruction;
 
+// print sinks
+pub use super::print_sink::{ClosurePrintSink, PrintSink};
+
 // definition rhs guards (stdlib-only bridge)
 #[doc(hidden)]
 pub use super::definitions::rhs_guards::{

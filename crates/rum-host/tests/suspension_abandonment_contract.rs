@@ -1,4 +1,7 @@
-use rum_host::{HostEvalOutcome, HostEvalSuccess, HostSession, HostTerminationReason, HostTyped};
+use rum_host::{
+    ClosurePrintSink, HostEvalOutcome, HostEvalSuccess, HostSession, HostTerminationReason,
+    HostTyped,
+};
 use std::sync::{
     Arc,
     atomic::{AtomicUsize, Ordering},
@@ -19,11 +22,11 @@ fn session_with_counting_print(expected: &'static str) -> (HostSession, Arc<Atom
     let calls = Arc::new(AtomicUsize::new(0));
     let sink_calls = Arc::clone(&calls);
     let mut session = HostSession::new();
-    session.set_print_sink(move |line| {
+    session.set_print_sink(ClosurePrintSink::assert_bounded_destruction(move |line| {
         if line == expected {
             sink_calls.fetch_add(1, Ordering::Relaxed);
         }
-    });
+    }));
     (session, calls)
 }
 

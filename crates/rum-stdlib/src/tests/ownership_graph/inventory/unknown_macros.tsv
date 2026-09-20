@@ -950,7 +950,7 @@ UnknownConstruct	crates/rum-runtime/src/runtime/messages/parse_and_message_helpe
 UnknownConstruct	crates/rum-runtime/src/runtime/messages/parse_and_message_helpers.rs	538	21	unexpanded macro format! (ends at 540:22)
 UnknownConstruct	crates/rum-runtime/src/runtime/messages/parse_and_message_helpers.rs	547	21	unexpanded macro format! (ends at 549:22)
 UnknownConstruct	crates/rum-runtime/src/runtime/metadata.rs	363	18	unexpanded macro panic! (ends at 363:68)
-UnknownConstruct	crates/rum-runtime/src/runtime/mod.rs	87	16	unexpanded macro matches! (ends at 90:14)
+UnknownConstruct	crates/rum-runtime/src/runtime/mod.rs	88	16	unexpanded macro matches! (ends at 91:14)
 UnknownConstruct	crates/rum-runtime/src/runtime/model/cache.rs	429	17	unexpanded macro debug_assert! (ends at 429:88)
 UnknownConstruct	crates/rum-runtime/src/runtime/model/cache.rs	432	13	unexpanded macro debug_assert_eq! (ends at 432:49)
 UnknownConstruct	crates/rum-runtime/src/runtime/model/config.rs	57	27	unexpanded macro vec! (ends at 57:87)

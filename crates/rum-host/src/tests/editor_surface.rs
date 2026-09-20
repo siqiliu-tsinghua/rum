@@ -44,9 +44,9 @@ fn host_print_sink_streams_exclusively_and_clear_restores_buffering() {
     let streamed = Arc::new(Mutex::new(Vec::new()));
     let sink_streamed = Arc::clone(&streamed);
 
-    session.set_print_sink(move |line| {
+    session.set_print_sink(ClosurePrintSink::assert_bounded_destruction(move |line| {
         sink_streamed.lock().unwrap().push(line.to_string());
-    });
+    }));
 
     let streamed_outcome = successful_eval(session.eval("Print[1]; Print[2]; 3"));
     assert_eq!(

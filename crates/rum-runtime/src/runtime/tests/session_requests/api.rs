@@ -34,15 +34,17 @@ fn cancel_after_evaluation_start(
 ) -> thread::JoinHandle<()> {
     let (evaluation_started_tx, evaluation_started_rx) = mpsc::sync_channel(0);
     let (cancelled_tx, cancelled_rx) = mpsc::sync_channel(0);
-    session.set_print_sink(Box::new(move |line| {
-        assert_eq!(line, "evaluation-started");
-        evaluation_started_tx
-            .send(())
-            .expect("canceller should receive evaluation-start signal");
-        cancelled_rx
-            .recv()
-            .expect("canceller should acknowledge the qualified cancel");
-    }));
+    session.set_print_sink(Box::new(ClosurePrintSink::assert_bounded_destruction(
+        move |line| {
+            assert_eq!(line, "evaluation-started");
+            evaluation_started_tx
+                .send(())
+                .expect("canceller should receive evaluation-start signal");
+            cancelled_rx
+                .recv()
+                .expect("canceller should acknowledge the qualified cancel");
+        },
+    )));
 
     thread::spawn(move || {
         evaluation_started_rx
@@ -818,12 +820,14 @@ fn file_request_maps_resource_limit_exit_and_cancel_errors() {
         MemoryGrowthContract::Incremental,
     ));
     let (evaluation_started_tx, evaluation_started_rx) = mpsc::sync_channel(0);
-    session.set_print_sink(Box::new(move |line| {
-        assert_eq!(line, "evaluation-started");
-        evaluation_started_tx
-            .send(())
-            .expect("canceller should receive evaluation-start signal");
-    }));
+    session.set_print_sink(Box::new(ClosurePrintSink::assert_bounded_destruction(
+        move |line| {
+            assert_eq!(line, "evaluation-started");
+            evaluation_started_tx
+                .send(())
+                .expect("canceller should receive evaluation-start signal");
+        },
+    )));
     install_test_file_io(&mut session);
     session.set_iteration_work_limit(50_000_000);
     let cancel = session.request_cancel_handle();

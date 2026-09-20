@@ -17,52 +17,88 @@ REPO = Path(__file__).resolve().parent.parent
 FIXTURES = REPO / "crates/rum-host/tests/fixtures/host_payload_destruction_contract"
 
 
+class Diagnostic(NamedTuple):
+    code: str
+    message: str
+    source_line: str
+    note: str | None = None
+    primary_label: str | None = None
+
+
 class Case(NamedTuple):
     name: str
-    type_name: str
-    trait_name: str
-    impl_line: str
-    declared: bool = False
+    diagnostic: Diagnostic | None
+    dependency: str = "rum-runtime"
+    legacy: bool = False
+
+
+def missing_bound(type_name: str, trait_name: str) -> Diagnostic:
+    return Diagnostic(
+        "E0277",
+        f"the trait bound `{type_name}: BoundedDestruction` is not satisfied",
+        f"impl {trait_name} for {type_name} {{",
+        f"required by a bound in `{trait_name}`",
+    )
 
 
 CASES = (
-    Case("legacy_impl", "LegacyEntropy", "EntropySource", "impl EntropySource for LegacyEntropy {"),
-    Case("legacy_new", "LegacyEntropy", "EntropySource", "impl EntropySource for LegacyEntropy {"),
-    Case("legacy_from_arc", "LegacyEntropy", "EntropySource", "impl EntropySource for LegacyEntropy {"),
-    Case("declared_new", "LegacyEntropy", "EntropySource", "impl EntropySource for LegacyEntropy {", True),
-    Case("declared_from_arc", "LegacyEntropy", "EntropySource", "impl EntropySource for LegacyEntropy {", True),
-    Case("legacy_file_io_impl", "LegacyFileIo", "FileIo", "impl FileIo for LegacyFileIo {"),
-    Case("legacy_file_io_new", "LegacyFileIo", "FileIo", "impl FileIo for LegacyFileIo {"),
-    Case("legacy_file_io_from_arc", "LegacyFileIo", "FileIo", "impl FileIo for LegacyFileIo {"),
-    Case("declared_file_io_new", "LegacyFileIo", "FileIo", "impl FileIo for LegacyFileIo {", True),
-    Case("declared_file_io_from_arc", "LegacyFileIo", "FileIo", "impl FileIo for LegacyFileIo {", True),
+    Case("legacy_impl", missing_bound("LegacyEntropy", "EntropySource"), legacy=True),
+    Case("legacy_new", missing_bound("LegacyEntropy", "EntropySource"), legacy=True),
+    Case("legacy_from_arc", missing_bound("LegacyEntropy", "EntropySource"), legacy=True),
+    Case("declared_new", None),
+    Case("declared_from_arc", None),
+    Case("legacy_file_io_impl", missing_bound("LegacyFileIo", "FileIo"), legacy=True),
+    Case("legacy_file_io_new", missing_bound("LegacyFileIo", "FileIo"), legacy=True),
+    Case("legacy_file_io_from_arc", missing_bound("LegacyFileIo", "FileIo"), legacy=True),
+    Case("declared_file_io_new", None),
+    Case("declared_file_io_from_arc", None),
+    Case("legacy_raw_closure_sink", Diagnostic(
+        "E0277",
+        "the trait bound `{closure@src/lib.rs:6:28: 6:45}: PrintSink` is not satisfied",
+        "session.set_print_sink(move |line: &str| {",
+        "required by a bound in `HostSession::set_print_sink`",
+    ), "rum-host", True),
+    Case("legacy_boxed_fnmut_sink", Diagnostic(
+        "E0308", "mismatched types", "session.set_print_sink(sink);",
+        "expected struct `Box<(dyn PrintSink + 'static)>`\n"
+        "   found struct `Box<dyn for<'a> FnMut(&'a str) + Send>`",
+        "expected trait `PrintSink`, found trait `for<'a> FnMut(&'a str) + Send`",
+    ), legacy=True),
+    Case("named_sink_without_marker", missing_bound("NamedSink", "PrintSink"), "rum-host"),
+    Case("adapter_private_field_bypass", Diagnostic(
+        "E0451", "field `closure` of struct `ClosurePrintSink` is private",
+        "closure: |_: &str| {},",
+        primary_label="private field",
+    ), "rum-host"),
+    Case("declared_named_sink", None, "rum-host"),
+    Case("declared_closure_adapter", None, "rum-host"),
 )
-# The 2026-09-19 cold ten-case run took 60.71s, at most 6.31s per check.
+# The 2026-09-21 cold-sixteen-final run took 129.24s, at most 10.13s per check.
 # Ten times that per-check maximum, rounded up to a minute, is 120s.
-# Full output: docs/dev/codex/report-482-bounded-destruction-file-io.md.
+# Full output: docs/dev/codex/report-483-bounded-destruction-print-sink.md.
 CHECK_TIMEOUT_SECONDS = 120
 
 
-def missing_declaration(message: dict, source: Path, case: Case) -> bool:
-    """Admit only this case's exact missing-bound E0277 at its implementation."""
+def expected_diagnostic(message: dict, source: Path, expected: Diagnostic) -> bool:
+    """Admit only the exact diagnostic at the expected consumer source line."""
     return (
-        (message.get("code") or {}).get("code") == "E0277"
-        and message.get("message")
-        == f"the trait bound `{case.type_name}: BoundedDestruction` is not satisfied"
+        (message.get("code") or {}).get("code") == expected.code
+        and message.get("message") == expected.message
         and any(
             span.get("is_primary")
             and (source.parent.parent / span["file_name"]).resolve() == source.resolve()
             and any(
-                line["text"].strip() == case.impl_line
+                line["text"].strip() == expected.source_line
                 for line in span.get("text", [])
             )
+            and (expected.primary_label is None or span.get("label") == expected.primary_label)
             for span in message.get("spans", [])
         )
-        and any(
+        and (expected.note is None or any(
             child.get("level") == "note"
-            and child.get("message") == f"required by a bound in `{case.trait_name}`"
+            and child.get("message") == expected.note
             for child in message.get("children", [])
-        )
+        ))
     )
 
 
@@ -75,7 +111,7 @@ def check_case(case: Case, work_dir: Path, baseline: bool, timeout: float) -> bo
     (consumer / "Cargo.toml").write_text(
         f'[package]\nname = "{package}"\nversion = "0.0.0"\nedition = "2024"\n'
         'publish = false\n\n[workspace]\n\n[dependencies]\n'
-        f'rum-runtime = {{ path = {json.dumps(str(REPO / "crates/rum-runtime"))} }}\n',
+        f'{case.dependency} = {{ path = {json.dumps(str(REPO / "crates" / case.dependency))} }}\n',
         encoding="utf-8",
     )
     command = [
@@ -115,7 +151,7 @@ def check_case(case: Case, work_dir: Path, baseline: bool, timeout: float) -> bo
         if item.get("reason") == "compiler-message" and item["message"]["level"] == "error"
     ]
     finished = [item["success"] for item in messages if item.get("reason") == "build-finished"]
-    expect_success = baseline or case.declared
+    expect_success = baseline or case.diagnostic is None
     if expect_success:
         passed = result.returncode == 0 and not errors and finished == [True]
         detail = "compiled" if passed else "expected a successful compile"
@@ -124,14 +160,14 @@ def check_case(case: Case, work_dir: Path, baseline: bool, timeout: float) -> bo
             result.returncode == 101
             and finished == [False]
             and bool(errors)
-            and all(missing_declaration(error, source, case) for error in errors)
+            and all(expected_diagnostic(error, source, case.diagnostic) for error in errors)
         )
         if passed:
-            detail = f"rejected only for missing BoundedDestruction ({len(errors)} E0277)"
+            detail = f"rejected only for {case.diagnostic.message} ({len(errors)} {case.diagnostic.code})"
         elif result.returncode == 0:
-            detail = "compiled without BoundedDestruction; boundary is not enforced"
+            detail = "compiled despite expected rejection; boundary is not enforced"
         else:
-            detail = "failure was not solely the missing BoundedDestruction declaration"
+            detail = "failure was not solely the expected diagnostic"
     print(result.stderr, end="")
     for error in errors:
         print(error.get("rendered") or error["message"], end="\n")
@@ -170,7 +206,7 @@ def main() -> int:
     started = time.monotonic()
     cases = [
         case for case in CASES
-        if (not args.legacy_baseline or not case.declared)
+        if (not args.legacy_baseline or case.legacy)
         and (args.case is None or case.name in args.case)
     ]
     if not cases:

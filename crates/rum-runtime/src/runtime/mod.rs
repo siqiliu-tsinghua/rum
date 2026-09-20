@@ -46,6 +46,7 @@ mod pattern_matching;
 #[cfg(test)]
 mod pattern_matching_interpreted;
 mod pattern_syntax;
+mod print_sink;
 mod profiling;
 mod random;
 mod resolution;
@@ -70,7 +71,7 @@ use self::{
 };
 pub use self::{
     builtin_catalog::core_builtin_specs, capabilities::*, file_io::*, lowering::lower_syntax_expr,
-    metadata::*, model::*, random::*, session::session_state::EvalError,
+    metadata::*, model::*, print_sink::*, random::*, session::session_state::EvalError,
 };
 
 impl Session {

@@ -1,5 +1,5 @@
 use crate::install_core;
-use rum_runtime::{Capability, EvalError, Session};
+use rum_runtime::{Capability, ClosurePrintSink, EvalError, Session};
 
 fn core_session() -> Session {
     let mut session = Session::new();
@@ -106,10 +106,12 @@ fn lazy_pull_cancellation_does_not_stale_the_same_value_for_a_fresh_request() {
         .expect("the reusable lazy value should be installed");
 
     let cancel = session.request_cancel_handle();
-    session.set_print_sink(Box::new(move |line| {
-        assert_eq!(line, "lazy-pull-started");
-        cancel.cancel();
-    }));
+    session.set_print_sink(Box::new(ClosurePrintSink::assert_bounded_destruction(
+        move |line| {
+            assert_eq!(line, "lazy-pull-started");
+            cancel.cancel();
+        },
+    )));
     let cancelled = session
         .eval_request("Normal[savedLazy405]")
         .expect("lazy cancellation should surface as a terminated evaluation");

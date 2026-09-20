@@ -66,6 +66,7 @@ pub use rum_runtime::Capability;
 pub use rum_runtime::CapabilityPolicy;
 /// Builder for constructing a [`CapabilityPolicy`].
 pub use rum_runtime::CapabilityPolicyBuilder;
+pub use rum_runtime::kernel_api::{BoundedDestruction, ClosurePrintSink, PrintSink};
 pub use rum_runtime::{
     DEFAULT_NATIVE_STACK_LIMIT, MIN_SUPPORTED_NATIVE_STACK_BYTES, NATIVE_STACK_DEPTH_POLL_STRIDE,
     NATIVE_STACK_NON_EVALUATOR_RESERVE_BYTES, NATIVE_STACK_POLL_HEADROOM_BYTES,

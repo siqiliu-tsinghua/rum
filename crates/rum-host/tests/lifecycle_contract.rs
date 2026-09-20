@@ -1,7 +1,7 @@
 use rum_host::{
-    HostCancelHandle, HostConfig, HostDefinitionSummary, HostEvalOutcome, HostEvalSuccess,
-    HostFailureCode, HostInputKind, HostResourceLimits, HostSession, HostStructuredOutputKind,
-    HostTyped,
+    ClosurePrintSink, HostCancelHandle, HostConfig, HostDefinitionSummary, HostEvalOutcome,
+    HostEvalSuccess, HostFailureCode, HostInputKind, HostResourceLimits, HostSession,
+    HostStructuredOutputKind, HostTyped,
 };
 use std::sync::mpsc;
 use std::thread;
@@ -173,12 +173,12 @@ fn cancel_handle_interrupts_running_eval_and_session_remains_usable() {
     let cancel = session.cancel_handle();
     let (cancelled_tx, cancelled_rx) = mpsc::channel();
     let (evaluation_started_tx, evaluation_started_rx) = mpsc::sync_channel(0);
-    session.set_print_sink(move |line| {
+    session.set_print_sink(ClosurePrintSink::assert_bounded_destruction(move |line| {
         assert_eq!(line, "evaluation-started");
         evaluation_started_tx
             .send(())
             .expect("canceller should receive evaluation-start signal");
-    });
+    }));
 
     let canceller = thread::spawn(move || {
         evaluation_started_rx

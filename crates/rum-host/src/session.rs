@@ -5,6 +5,7 @@ use std::panic::{AssertUnwindSafe, catch_unwind};
 use std::path::Path;
 use std::time::Duration;
 
+use crate::PrintSink;
 use crate::config::HostConfig;
 use crate::cursor::{completion_prefix, symbol_at_cursor};
 use crate::model::{
@@ -252,7 +253,11 @@ impl HostSession {
     /// is caught like any other panic at the host boundary and poisons the
     /// session. The sink does not survive [`Self::reset`]; reinstall it after a
     /// reset.
-    pub fn set_print_sink(&mut self, sink: impl FnMut(&str) + Send + 'static) {
+    ///
+    /// Sinks declare [`crate::BoundedDestruction`] for their owned state. Wrap a
+    /// closure with [`crate::ClosurePrintSink::assert_bounded_destruction`] to
+    /// declare the bound for everything it captures.
+    pub fn set_print_sink(&mut self, sink: impl PrintSink + 'static) {
         self.session.set_print_sink(Box::new(sink));
     }
 
