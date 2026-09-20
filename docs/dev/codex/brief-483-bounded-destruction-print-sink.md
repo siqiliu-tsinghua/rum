@@ -155,6 +155,29 @@ Everything else holds as in steps A and B:
 - Anything else — a removed row, a changed ownership path, a reclassification —
   is a stop.
 
+**Ruling 2026-09-21 on the row the second run found — pin it.** Discovery
+reports exactly one new row, a *public input* at the adapter's constructor:
+
+```text
+UnknownHostPayload  crates/rum-runtime/src/runtime/print_sink.rs  <line>  <col>
+  public input …::assert_bounded_destruction(closure):
+  opaque owned generic parameter F : FnMut (& str) + Send
+```
+
+Authorized, and the criterion matters more than the permission. The *storage*
+side is not lost: the session's row becomes `dyn PrintSink`, and every
+`PrintSink` implementor — `ClosurePrintSink<F>` included — must declare
+`BoundedDestruction`, with the adapter's declaration made by the caller at the
+named constructor. This row is therefore the ledger **recording the admission
+point**, not an unmodelled hazard, and pinning it makes where a host closure
+enters visible rather than silent.
+
+Pin whatever position discovery reports for that constructor; do not hand-edit
+the line and column. Still a stop, with no exception: any new **storage** row,
+any other new input row, a changed ownership path, a removed row, or a
+reclassification. Ordinary source-position drift in unrelated rows is allowed
+as before.
+
 ## Extending the certificate, not loosening it
 
 The runner's `Case` table currently models one failure shape: `E0277` whose
