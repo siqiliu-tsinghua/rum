@@ -118,6 +118,36 @@ obligation moves from permission to disclosure:
 The director reads the diff at the gate; disclosure is what makes that
 possible, and it cannot be under-enumerated the way a permission list can.
 
+**Ruling 2026-09-21 on the row the run found — pin it.** The stop was the rule
+working as designed, not another under-enumeration: this needed a decision.
+Discovery adds exactly one `UnknownHostPayload`, for the wrapper's own
+constructor:
+
+```text
+UnknownHostPayload  crates/rum-runtime/src/runtime/accumulator_chain.rs  27  22
+  public input …::impl(AccumulatorChain < N >)@25::new(link)/
+  std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/…
+```
+
+Authorized, for three reasons worth carrying into the later steps:
+
+1. **It is not a host payload.** `N` is bounded by `AccumulatorChainNode`, a
+   rum trait whose every implementor is one of rum's own 29 node types. The
+   scanner cannot distinguish "opaque because generic" from "opaque because
+   host-supplied", and here it is the former.
+2. **It is one row for the whole family.** The wrapper is generic, so
+   converting the remaining 27 members adds no further rows. The cost does not
+   scale.
+3. **It is the first worked instance of the axis step E owes.** brief-479 left
+   the ledger needing a second axis — "unknown expansion" versus "unknown that
+   could add an owning edge"; this is a third flavour, an unknown that is
+   provably *not* a host payload. Record it in the report as such so step E
+   inherits a concrete example rather than an argument.
+
+Everything else in the always-stop list stands unchanged: any *further* new
+`UnknownHostPayload`, any removed row, any reclassification. If a second one
+appears, stop again.
+
 ## The mechanism, as ruled
 
 1. **A transparent wrapper** over the existing `Option<Arc<N>>` with a private
