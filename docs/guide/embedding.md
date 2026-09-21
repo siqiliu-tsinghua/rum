@@ -462,7 +462,23 @@ or delivered, the continuation is structurally abandoned, and the returned
 success carries `HostTerminationReason::Cancelled`.
 
 Use `eval_with_timeout(source, duration)` for a per-evaluation elapsed-time
-deadline backed by Rust's monotonic `Instant`.
+deadline backed by Rust's monotonic `Instant`. The original absolute deadline
+stays armed across `Input` and `InputString` suspensions and every
+`resume_with_input` call. Time spent waiting for the host's input counts toward
+the budget; resuming does not pause the clock or grant a fresh duration. A host
+that needs more time for input should choose a longer timeout or use `eval`
+without a timeout.
+
+The timeout is cleared when the evaluation completes or fails, including after
+resume or cancellation, and by `reset()`. An overlapping evaluation rejected
+while input is pending leaves the suspended request's deadline unchanged,
+including when the rejected call supplies a different timeout.
+
+An unhandled timeout during resumed evaluation has the ordinary timeout shape:
+`HostEvalOutcome::Success` with value `TerminatedEvaluation["TimeConstraint"]`,
+`termination: Some(HostTerminationReason::TimeConstraint)`, and a
+`General::timelim` message. Check the structured termination reason to distinguish
+it from a program that returns the same expression as an ordinary value.
 
 Both are cooperative checks. The session remains usable after normal
 recoverable cancellation and timeout outcomes.

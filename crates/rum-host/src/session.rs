@@ -91,6 +91,7 @@ impl HostSessionBuilder {
             config: self.config,
             install_core_builtins,
             poisoned: false,
+            owns_eval_timeout: false,
         }
     }
 }
@@ -105,6 +106,8 @@ pub struct HostSession {
     config: HostConfig,
     install_core_builtins: bool,
     poisoned: bool,
+    // The runtime owns the deadline; this flag owns only its request lifetime.
+    owns_eval_timeout: bool,
 }
 
 /// Cloneable cancellation handle for a [`HostSession`].
@@ -172,6 +175,7 @@ impl HostSession {
     pub fn reset(&mut self) {
         self.session = Self::build_inner_session(&self.config);
         self.poisoned = false;
+        self.owns_eval_timeout = false;
     }
 
     /// Serializes this session's WL-level user definitions to a text image.
@@ -509,7 +513,10 @@ impl HostSession {
     /// Evaluates source with a wall-clock timeout for this request.
     ///
     /// The timeout is cleared after the request completes or fails.
-    /// A pending input suspension is rejected without replacing its continuation.
+    /// Input suspension preserves the original absolute deadline, so time spent
+    /// waiting for host input counts toward the timeout. Resuming does not
+    /// grant a fresh budget. A pending input suspension is rejected without
+    /// replacing its continuation or changing its timeout.
     pub fn eval_with_timeout(
         &mut self,
         request: impl Into<HostEvalRequest>,
@@ -522,10 +529,14 @@ impl HostSession {
         let request = request.into();
         self.guard(
             |session| {
+                if session.session.pending_input_request().is_some() {
+                    // Let request admission reject the overlap or finish an
+                    // accepted cancellation before changing timeout ownership.
+                    return session.eval_request_unprotected(request);
+                }
                 session.session.set_eval_timeout(Some(timeout));
-                let outcome = session.eval_request_unprotected(request);
-                session.session.set_eval_timeout(None);
-                outcome
+                session.owns_eval_timeout = true;
+                session.eval_request_unprotected(request)
             },
             panic_eval_outcome,
         )
@@ -548,6 +559,8 @@ impl HostSession {
     /// The host should call this only after receiving
     /// [`HostEvalOutcome::InputRequired`] or observing
     /// [`Self::pending_input_request`].
+    /// A timeout installed by [`Self::eval_with_timeout`] keeps its original
+    /// deadline across every suspension and is cleared on completion or failure.
     pub fn resume_with_input(&mut self, input: impl Into<String>) -> HostEvalOutcome {
         if self.poisoned {
             return poisoned_eval_outcome();
@@ -658,14 +671,30 @@ impl HostSession {
             .map(Into::into)
     }
 
+    fn clear_owned_eval_timeout(&mut self) {
+        if self.owns_eval_timeout {
+            self.session.set_eval_timeout(None);
+            self.owns_eval_timeout = false;
+        }
+    }
+
     fn guard<T>(
         &mut self,
         body: impl FnOnce(&mut Self) -> T,
         on_panic: impl FnOnce(String) -> T,
     ) -> T {
         match catch_unwind(AssertUnwindSafe(|| body(self))) {
-            Ok(outcome) => outcome,
+            Ok(outcome) => {
+                // A suspension (including a rejected overlapping request) still
+                // owns its deadline. Completion, failure, and cancellation via
+                // any guest-code entrypoint release it at this shared boundary.
+                if self.session.pending_input_request().is_none() {
+                    self.clear_owned_eval_timeout();
+                }
+                outcome
+            }
             Err(payload) => {
+                self.clear_owned_eval_timeout();
                 self.poisoned = true;
                 on_panic(panic_payload_message(&*payload))
             }
