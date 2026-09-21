@@ -368,9 +368,11 @@ returns `Failure` with `HostFailureCode::Other`, and forms after the suspended
 form are not evaluated. New evaluation requests are also rejected while that
 script suspension remains installed. Because the script has no resumable host
 checkpoint, the ordinary escape routes are `reset()`, `restore_from_bytes()`
-(which resets first), or replacing the whole `HostSession`. Request-scoped
-cancellation is a second escape: cancel the handle accepted for the script,
-then re-enter through `resume_with_input` or a guest-code evaluation entrypoint.
+(which resets after decoding; see [Snapshot And Restore](#snapshot-and-restore)
+for termination failures and partial state), or replacing the whole
+`HostSession`. Request-scoped cancellation is a second escape: cancel the
+handle accepted for the script, then re-enter through `resume_with_input` or a
+guest-code evaluation entrypoint.
 That re-entry reports cancellation for the old script without converting its
 argument or evaluating new source, structurally abandons the script
 continuation, and makes the following request usable. Read-only inspection
@@ -422,7 +424,13 @@ and a relaunched host starts clean.
 `snapshot_to_bytes()` serializes user definitions and attributes for defined
 symbols to a UTF-8 source image.
 
-`restore_from_bytes(bytes)` resets the session and evaluates that source image.
+`restore_from_bytes(bytes)` decodes the image, resets the session, and evaluates
+the source. If evaluation terminates early, restore returns a `HostFailure`
+with `HostFailureCode::Other` and a message naming the termination reason.
+Restore is not transactional: a failure after reset leaves any snapshot state
+installed before the failure in place, so the session may be partially
+populated. The prior state is not recovered and partial state is not cleared.
+Invalid UTF-8 is rejected before reset, leaving the session unchanged.
 
 This is an in-memory text image, not a binary snapshot.
 

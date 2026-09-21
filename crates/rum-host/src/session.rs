@@ -202,6 +202,14 @@ impl HostSession {
     /// not capture attribute-only symbols, `$` variables, options, messages,
     /// installer-provided builtin handlers, the gensym counter, PRNG state, or
     /// contexts beyond what the source re-establishes.
+    ///
+    /// If snapshot evaluation terminates early, restore returns a [`HostFailure`]
+    /// with [`HostFailureCode::Other`] and a message naming the termination reason.
+    /// Restore is not transactional: a failure after reset leaves any snapshot
+    /// state installed before the failure in place, so the session may be
+    /// partially populated. The prior state is not recovered and partial state
+    /// is not cleared. Invalid UTF-8 is rejected before reset, leaving the
+    /// session unchanged.
     pub fn restore_from_bytes(&mut self, bytes: &[u8]) -> Result<(), HostFailure> {
         let source = std::str::from_utf8(bytes).map_err(snapshot_decode_failure)?;
         self.reset();
@@ -211,7 +219,13 @@ impl HostSession {
 
         self.guard(
             |session| match session.session.eval_snapshot_restore_request(source) {
-                Ok(_) => Ok(()),
+                Ok(response) => match response.termination {
+                    Some(reason) => Err(synthesized_host_failure(
+                        HostFailureCode::Other,
+                        format!("snapshot restore terminated: {}", reason.tag()),
+                    )),
+                    None => Ok(()),
+                },
                 Err(failure) => match eval_failure_from_runtime(failure) {
                     HostEvalOutcome::Failure(failure) => Err(failure),
                     HostEvalOutcome::InputRequired(suspension) => {

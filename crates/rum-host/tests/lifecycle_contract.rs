@@ -1,7 +1,7 @@
 use rum_host::{
     ClosurePrintSink, HostCancelHandle, HostConfig, HostDefinitionSummary, HostEvalOutcome,
-    HostEvalSuccess, HostFailureCode, HostInputKind, HostResourceLimits, HostSession,
-    HostStructuredOutputKind, HostTyped,
+    HostEvalSuccess, HostFailure, HostFailureCode, HostInputKind, HostMessage, HostResourceLimits,
+    HostSession, HostStructuredOutputKind, HostTerminationReason, HostTyped,
 };
 use std::sync::mpsc;
 use std::thread;
@@ -271,6 +271,67 @@ fn snapshot_restore_preserves_package_contexts_and_replaces_prior_state() {
 
     assert_success_text(restored.eval("public[9]"), "10");
     assert_success_text(restored.eval("stale"), "stale");
+}
+
+#[test]
+fn terminated_snapshot_restore_fails_while_unlimited_restore_succeeds() {
+    // Contract: HostSession::restore_from_bytes and the embedding guide's
+    // Snapshot And Restore section. Zero allowed evaluator depth rejects Set
+    // at its first evaluation, without timing, memory sampling, or threads.
+    let mut source = HostSession::new();
+    let success = assert_success_text(source.eval("a = 1"), "1");
+    assert_eq!(success.termination, None);
+    let bytes = source.snapshot_to_bytes().expect("snapshot should render");
+
+    // The exact same image must restore completely without the low depth limit.
+    let mut control = HostSession::new();
+    assert_eq!(control.restore_from_bytes(&bytes), Ok(()));
+    assert_eq!(control.definitions(), source.definitions());
+    let success = assert_success_text(control.eval("a"), "1");
+    assert_eq!(success.termination, None);
+
+    let limits = HostResourceLimits {
+        recursion_limit: 0,
+        ..HostResourceLimits::default()
+    };
+    let mut restored = HostSession::builder()
+        .with_config(HostConfig::default().with_resource_limits(limits))
+        .build();
+
+    // Prove this is a synthesized termination in an Ok runtime response, not
+    // an unrelated syntax or request failure that restore already rejected.
+    let terminated = successful_eval(restored.eval_script(std::str::from_utf8(&bytes).unwrap()));
+    assert_eq!(
+        terminated.termination,
+        Some(HostTerminationReason::RecursionLimit),
+        "snapshot: {}; outcome: {terminated:?}",
+        std::str::from_utf8(&bytes).unwrap()
+    );
+    assert_eq!(
+        terminated.messages,
+        vec![HostMessage {
+            symbol: "General".to_string(),
+            tag: "reclim".to_string(),
+            text: "evaluation exceeded recursion limit (0)".to_string(),
+        }]
+    );
+    assert!(terminated.prints.is_empty());
+
+    assert_eq!(
+        restored.restore_from_bytes(&bytes),
+        Err(HostFailure {
+            code: HostFailureCode::Other,
+            exit_status: None,
+            message: "snapshot restore terminated: RecursionLimit".to_string(),
+            syntax_rendered: None,
+            messages: Vec::new(),
+            prints: Vec::new(),
+            trace: Vec::new(),
+            outputs: Vec::new(),
+        })
+    );
+
+    assert!(restored.definitions().is_empty());
 }
 
 #[test]
