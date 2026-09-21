@@ -3012,3 +3012,77 @@ silences it; maximal conservatism is loud and useless but never lies.
 
 Still open: the security-hardening mainline's own findings, and the three
 criticisms of the threat model that the 2026-09-02 audit left unanswered.
+
+## 2026-09-21 — the A1 spike refutes its own remedy, and the ruling that follows (briefs 499-504)
+
+The security-hardening mainline reopened on its HIGH finding — a process-global
+symbol interner that leaks by construction and is invisible to the per-session
+memory ceiling — and the 2026-09-02 ruling had already chosen the remedy:
+session-scoped ownership, option A1, opening as a spike because it makes
+`Symbol` non-`Copy`. The spike was built and the remedy did not survive it.
+
+**The migration was the cheap half.** Removing `Copy` from `Symbol` cost
++0.06% to +0.84% and touched 92 files, and its fallout turned out not to be a
+count at all but a fixpoint: each repair pass exposed the next layer of types
+forced to drop their own `derive(Copy)`, converging 304 → 80 → 5 → 0. The
+closure is 35 types, and 29 of the 34 containing types are the off-by-default
+profiling keys — so what `Symbol`'s `Copy`-ness was holding up is very nearly
+just diagnostics.
+
+**The representation was not.** With sizes unchanged — `Symbol` 24, `Expr` 32
+on every arm — the candidate cost **+14.33% instructions on ordinary
+evaluation**, and +10.4% to +18.9% on every one of twelve workloads. A split
+into two correct variants attributed it cleanly, residuals under 0.1
+percentage points: **+10.93% for the owning representation, +3.42% for the
+equality demotion.** The variant that pays only the first is the cheapest
+owning `Symbol` that can exist, and it is not a valid A1 — its dense-id
+equality is sound only while the interner stays global, which is the thing A1
+exists to change.
+
+**The finding the spike was not looking for.** `Symbol`'s `needs_drop` flips
+false to true, the debug stack slope rises 11.39%, and a depth-48 rewrite
+recursion goes red. Release is untouched — the slope is 3.36% *smaller* and
+the margin over 4 097 is 44.84% against a historical 30% — so the contract
+never moved. Measuring the stack first was right and its answer was no.
+
+**The ruling (user, 2026-09-21).** `Symbol` keeps its lifetime-free public
+type. brief-504's design pass had surveyed six options and recommended a
+generatively branded session epoch — the only compiler-enforced candidate —
+but stated plainly that a brand forces scoped continuations and a scoped host
+API. The embedding line deliberately built an owned, movable `HostSession`;
+suspension frames are `Send + Sync + 'static`. That is semantic loss rather
+than cost, which is why it counts, and with the type frozen no in-process
+reclaiming fix exists. The finding stays open behind a bounded, loud
+mitigation: a process-wide byte quota, a compiler-enforced refusal in place of
+the `u32` panic, and documentation that says out loud that `reset()` does not
+reclaim and one tenant can exhaust the shared quota.
+
+**Method, in the order it cost the most.**
+
+- *A stop-loss keyed on the failure's reason fires on every converging
+  mechanical repair.* "Stop if the same crate fails twice for the same reason"
+  was guaranteed to trip: a non-`Copy` migration emits only ownership errors,
+  so the rule could stop the work but never diagnose it. It now keys on
+  whether the distinct count fell.
+- *A gate is worth what the worker's environment can run.* The expected
+  failure set was recorded on this host with `RUM_ALLOW_NATIVE_ZEROMQ_SKIP`
+  set and written into the brief without it, so nine sandbox-bound ZeroMQ
+  failures read as regressions. The lesson was already in memory and was not
+  applied when writing the gate.
+- *HEAD is process-global.* A background job switching branches to build A/B
+  arms swallowed a foreground commit onto a detached HEAD; `cherry-pick`
+  recovered it, but the script had been sitting on `main` for 25 seconds.
+- *Calibrate before believing, again.* The first instruction probe measured
+  process startup, because a `Do` over 200 000 iterations hits the 100 000
+  iteration ceiling and bails. The tell is that instruction counts must scale
+  with `N`; at N=25 000 and 50 000 they read a ratio of 1.995, and only then
+  was the recipe trustworthy — at which point it repeated to 0.00005%.
+- *A worker that reports a preparation gap is worth more than one that
+  improvises.* `alloc-count` is an off-by-default feature, so the supplied
+  binaries could not report allocations; brief-501 said so instead of
+  producing numbers.
+- *Name the constraint you actually mean.* brief-504 was told `Symbol`'s
+  representation was frozen and noticed that this does not say whether its
+  lifetime-free type is frozen too — a difference that decides whether any
+  fix exists — and refused to resolve it silently. That refusal is what
+  produced the ruling.

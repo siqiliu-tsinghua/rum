@@ -8,7 +8,14 @@ Status checkpoint: 2026-09-21, committed tree through `c07cb414`. Uncommitted
 performance candidates do not count as completed until their correctness,
 timing, counter, and memory gates have all been reviewed.
 
-**Where work resumes.** The ownership branch (briefs 480-498) is closed — the
+**Where work resumes.** The interner finding's repair line is live: A1 was
+refuted by measurement (briefs 499-503) and the user ruled on 2026-09-21 that
+`Symbol` keeps its lifetime-free public type, which excludes every surveyed
+in-process reclaiming fix. The finding therefore stays open behind a bounded,
+loud mitigation — see §The interner ruling of 2026-09-21. After it, the rest
+of the security-hardening mainline.
+
+**Where the previous line ended.** The ownership branch (briefs 480-498) is closed — the
 host-payload destruction contract, the accumulator-chain family and its
 participation gate, the scanner's root set, and the four defects that turned up
 along the way. **Next is the security-hardening mainline**, whose open items
@@ -1153,7 +1160,65 @@ exponentially).
 **Adjacent, still open:** `rum-jupyter`'s `json_support.rs:61` has no depth
 guard on wire-message JSON (the 2026-09-02 audit's F3), deliberately untouched.
 
-### Rulings on the repair line (user, 2026-09-02)
+### The interner ruling of 2026-09-21 — A1 is refuted, the fix is bounded not reclaiming
+
+**This supersedes the A1 half of the 2026-09-02 rulings below.** Read this
+first; the 2026-09-02 text is kept because its reasoning about `Symbol`'s
+equality contract is still correct, not because its choice still stands.
+
+**What the spike measured** (briefs 499-503, code on branch
+`spike/brief-499-symbol-non-copy`, reports in `docs/dev/codex/`):
+
+- The non-`Copy` migration alone costs **+0.06% to +0.84%** and is a fixpoint
+  rather than a count: 92 files, a 35-type `Copy`-loss closure of which 29 are
+  the off-by-default profiling keys.
+- The full A1 candidate costs **+14.33% instructions on ordinary evaluation**,
+  splitting cleanly into **+10.93%** for the owning representation and
+  **+3.42%** for the equality demotion, residuals under 0.1 pp across twelve
+  workloads.
+- `V-arc` — `Arc<SymbolText>` keeping the dense-id fast accept — is the
+  **cheapest owning variant that can exist** at +10.93%, and it is not even a
+  valid A1: its equality is sound only while the interner stays process-global.
+  Session-scoped ownership forces the fingerprint equality back.
+- Type sizes are unchanged and the depth contract survives (release slope
+  3.36% *smaller*, margin 44.84% over 4 097). `Symbol`'s `needs_drop` flip
+  costs 11.39% of the debug slope and turns a depth-48 test red; that dies
+  with the candidate.
+
+**What the user ruled (2026-09-21).** `Symbol` keeps its **lifetime-free
+public type** — `'static`-compatible and unbranded — as well as its 24-byte
+`Copy` representation and id-based fast-accept equality. The embedding API
+line deliberately built an owned, movable `HostSession`, suspension frames are
+`Send + Sync + 'static`, and jupyter moves a session through a worker thread;
+a generative brand would force scoped continuations and a scoped host API.
+That is semantic loss, not cost, which is why it counts.
+
+**The consequence, stated plainly so it is not softened later.** brief-504
+surveyed six options: with the lifetime-free type frozen, **no in-process
+reclaiming fix exists**. The finding is therefore **not closed**. It is
+converted from unbounded invisible growth into a bounded, loud limit:
+
+- a process-wide interner **byte** quota — count-only is insufficient because
+  names vary in length — with a recoverable refusal replacing the `u32`
+  `expect` at `crates/rum-core/src/expr.rs:88`;
+- refusal coverage made **compiler-enforced**: the only arbitrary-name
+  insertion API returns `Result`, and every constructor and serde path is
+  converted to it;
+- preflight of string and hash-table growth **before** anything is leaked,
+  with fixed error/bootstrap symbols reserved so refusal can be reported;
+- honest documentation: interner bytes are process-global, `reset()` does not
+  reclaim them, one tenant can permanently exhaust the shared quota, and host
+  process isolation remains the pattern for hard multi-tenant isolation.
+
+Rejected with their reasons, so they are not re-proposed: a reclaimable global
+interner cannot exclude escaped-handle invalidation (a reissued dense id makes
+an escaped `Symbol` denote different text); an arena lease on exported roots is
+defeated by extracting the bare `Copy` `Symbol` and dropping the leased root;
+session-local ids with an ordinary import function are convention-enforced,
+since the same unbranded `Expr` enters four other ingresses; A2 as ruled is a
+process-wide quota that cannot attribute bytes to a session.
+
+### Rulings on the repair line (user, 2026-09-02) — A1 half SUPERSEDED above
 
 Settled after brief-414's design pass and the director review of it.
 
