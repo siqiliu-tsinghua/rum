@@ -1427,10 +1427,21 @@ request prologue (briefs 397-411), the deadline dropped across an input
 suspension (brief-511), the restore discard (brief-512), and now the
 aggregation loop underneath them. **Diagnose the aggregation before briefing
 another instance**, and settle whether a terminated form should be sticky or
-whether `terminated_handling` deliberately allows continuation. Source-level
-observation, not yet reproduced — **re-probe first.**
+whether `terminated_handling` deliberately allows continuation. **Director re-probe,
+2026-09-22: two attempts failed to construct the erasure, which lowers this
+finding's severity rather than raising it.** A depth-12 `f[f[…]]` under
+`recursion_limit: 4` does not terminate at all — the head is undefined, so
+nothing recurses — and a 500-element literal list under
+`generated_element_limit: 10` does not terminate either. Restore forms are
+structurally uniform `Set[…]` of already-evaluated values, so a limit that
+fires on one form but not the next may be hard or impossible to reach through
+restore; and `recursion_limit: 0`, the one trigger known to work, fires on
+*every* form, so the last termination survives and restore correctly fails.
+**The code shape is confirmed by reading; its reachability is not.** Establish
+reachability before briefing a repair, and if it is unreachable through
+restore, check the other entrypoints before concluding the class is benign.
 
-**Closed by brief-512 (`acfda0e0`):** `restore_from_bytes` discarded the
+**Mostly closed by brief-512 (`acfda0e0`) — see the reachability note below:** `restore_from_bytes` discarded the
 response's `termination`, so a restore truncated by a resource limit reported
 `Ok(())`. It now fails with the reason in the message; restore stays
 non-transactional and both the rustdoc and `docs/guide/embedding.md` now
@@ -1438,7 +1449,9 @@ state that a failed restore leaves the session partially populated. The
 regression test's trigger is a zero recursion limit — deterministic by
 construction, no timing — with a no-limit control. **Bounded by the finding
 above:** it catches the termination present in the response, and the
-aggregation loop can have erased it already.
+aggregation loop can in principle have erased it already — but see the
+reachability probe recorded there, which failed twice to construct that
+case.
 
 **Opened by D5, not yet briefed:** `restore_from_bytes` reports `Ok` for an
 evaluation that terminated during restore, so a caller cannot tell a restored
