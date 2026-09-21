@@ -1266,6 +1266,48 @@ admission instrument) -> B (integrate) -> C (independently falsify and gate).
 - **D7 — approved as a separate brief**, not folded in. The audit's
   per-request-versus-per-session criticism stays open and is listed below.
 
+**The census retargeted the line (brief-506, 2026-09-22).** Measured on
+`main`: bootstrap 662 strings / 661 pairs (~77-85 KB proxy); the ordinary
+workspace suite's **maximum over test binaries** 14.4-15.9 MB; `Unique[]`
+~122-138 bytes/call; `Symbol[StringJoin[…]]` ~220-244; **`Module`
+~120 bytes per activation, permanently**.
+
+Three corrections came out of it, one of them the director's:
+
+1. **`Module` leaks interner text on every activation, and the director's
+   claim that it does not was wrong.** `module.rs:46-50` →
+   `allocate_fresh_symbol` → `allocate_generated_symbol` → `Symbol::new` with
+   formatted fresh text (`scoping/unique.rs:36-42`). `with_identity` sharing
+   an interned pair is a true API property and was not evidence about this
+   call path; the director read `resolution.rs`'s generation lookup and
+   generalized it to a different mechanism. The gensym GC cannot help — the
+   interner has no removal path at all.
+2. **Lookup is itself an insertion ingress.** Resolving a fresh unqualified
+   name constructs candidates per probed context and charges **two** pairs
+   (`resolution.rs:101-138`). A refusal inventory assuming one pair per
+   textual symbol is wrong.
+3. **8 MiB is below this repository's own test suite.** 32 MiB is the first
+   envelope clearing bootstrap, the suite maximum and the panel allowance —
+   a comparison, not yet a chosen default.
+
+**Therefore the target moved, and this is a director retarget on evidence,
+not a change of line.** A cap that ordinary code exhausts is a timer, not a
+defence: with `Module` leaking, a long-lived host refuses after enough
+*legitimate* work. So the dominant legitimate consumer is addressed first,
+and the cap is sized afterwards against a system where ordinary code does not
+leak. The cap itself is not abandoned — brief-505's plan and the D1-D7
+rulings stand and resume after this.
+
+**Feasibility, probed before briefing.** `Symbol::with_identity` already
+shares one interned pair across distinct identities and is already the
+mechanism `active_symbol_for_name` uses; serde already carries `identity`
+as its own field, so snapshots survive. Only five source locations assert a
+gensym's printed `name$n` text, and they are concentrated in `Unique[]`'s
+own tests — and `Unique[]` returning a freshly *named* symbol is documented
+behavior, while a `Module` local's printed name is not. The crux for the
+design is therefore whether the `$n` suffix can become a **display**
+concern rather than interned text.
+
 **Opened by D5, not yet briefed:** `restore_from_bytes` reports `Ok` for an
 evaluation that terminated during restore, so a caller cannot tell a restored
 session from a truncated one. Found by design review, not reproduced yet —
