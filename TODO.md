@@ -1347,6 +1347,54 @@ So "only callers explicitly asking for fresh names grow the interner" is
 false, and `Unique` is not the dominant remaining consumer. Schedule its
 repair before sizing the cap, or carry its measured demand into the sizing.
 
+### The root constraint, found by two refutations (2026-09-22)
+
+Two independent repairs were designed and both were refused on the same
+evidence — `Module`'s locals (brief-507) and `Enclose`'s internal tag
+(brief-509). The obstruction is not in either construct. It is this:
+
+> **A symbol's identity must be expressible as text, because the host
+> snapshot is source text.**
+
+The mechanism, stated once: `qualified_name` ignores `identity`
+(`crates/rum-core/src/expr.rs:174`) and `Display` delegates to it (`:322`), so
+two same-text symbols with distinct identities are **indistinguishable the
+moment they are rendered**. The resolver returns `Symbol::system(name)` with
+no identity (`crates/rum-runtime/src/runtime/resolution.rs:129`), so even a
+rendered `$n` suffix would not teach it to reconstruct one. `Symbol`'s serde
+does preserve identity (`crates/rum-core/src/expr.rs:288`) and **is not the
+host snapshot format** (`crates/rum-host/src/session.rs:185`).
+
+Therefore every generator of distinguishable fresh symbols must mint fresh
+**text**; therefore the interner grows with generated symbols; therefore it
+leaks. `Module`, `Enclose` and `Unique` are three instances of one cause, and
+patching them one at a time cannot work. This also connects to an existing
+standing-debt entry: *"Session snapshots are UTF-8 source images. A direct
+binary snapshot format is deferred."* That deferral is what makes the
+constraint binding.
+
+**Three ways out, all requiring a user ruling.** None is free and none is
+obviously right:
+
+1. **Make identity expressible in the rendered form** — a reserved textual
+   encoding the resolver can decode back to text-plus-identity. Changes the
+   accepted symbol-name and `Unique` namespace, and must not decode sealed
+   ids (brief-504).
+2. **Change the snapshot format** so persistence is not source text — the
+   binary format already deferred in Standing Engineering Debt. This removes
+   the constraint at its root and is the largest of the three.
+3. **Accept the leak and ship the cap**, documenting that ordinary code
+   consumes it and that a long-lived host will eventually refuse. brief-508
+   proved the cap's mechanism works; this is the honest-but-weakest option.
+
+**What is proven and waiting.** brief-508's scratch proof is green and
+director-reproduced: exact charging including backing-table bytes, refusal
+that publishes and leaks nothing, the two-pair ingress admitted or refused
+atomically, a full interner still serving lookups it already holds, and a
+falsifier watched going red with enforcement disabled. The cap's mechanism is
+not in doubt; only whether it is a defence or a timer, which is what the
+ruling above decides.
+
 **Opened by D5, not yet briefed:** `restore_from_bytes` reports `Ok` for an
 evaluation that terminated during restore, so a caller cannot tell a restored
 session from a truncated one. Found by design review, not reproduced yet —
