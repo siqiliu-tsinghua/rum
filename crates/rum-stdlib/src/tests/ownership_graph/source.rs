@@ -14,24 +14,34 @@ use super::model::*;
 
 #[path = "source_items.rs"]
 mod items;
+#[path = "root_set.rs"]
+mod root_set;
 
-pub(super) const ROOTS: &[&str] = &["rum-core", "rum-runtime", "rum-stdlib"];
+// Start with the kernel/stdlib and include workspace crates whose values they
+// own, transitively. rum-runtime owns rum-syntax ASTs and diagnostics; syntax
+// owns no other workspace types. Host/adapters depend in the opposite direction;
+// rum-derive supplies macros, not stored runtime values.
+pub(super) const ROOTS: &[&str] = &["rum-core", "rum-runtime", "rum-stdlib", "rum-syntax"];
 
 pub(super) fn production() -> Source {
+    scan(production_files(ROOTS), ROOTS)
+}
+
+fn production_files(roots: &[&str]) -> BTreeMap<String, String> {
     let workspace = Path::new(env!("CARGO_MANIFEST_DIR"))
         .parent()
         .unwrap()
         .parent()
         .unwrap();
     let mut files = BTreeMap::new();
-    for krate in ROOTS {
+    for krate in roots {
         collect_files(
             workspace,
             &workspace.join(format!("crates/{krate}/src")),
             &mut files,
         );
     }
-    scan(files, ROOTS)
+    files
 }
 
 fn collect_files(workspace: &Path, dir: &Path, files: &mut BTreeMap<String, String>) {

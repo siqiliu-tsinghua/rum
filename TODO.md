@@ -3050,9 +3050,54 @@ have certified nothing about attribution. Re-run with a single-bound payload,
 the check rejected it on the attribution itself. **A falsifier that goes red is
 not evidence until you have read why.**
 
-**What remains outside this line**: step E2, the `UnknownConstruct` second axis
-(7 068 rows, of which only 70 are storage or representation) — still the design
-problem brief-479 left open, and a separate decision from resuming the
-security-hardening mainline. Step C
+**E2 was examined and not built (director, 2026-09-21).** The 7 068
+`UnknownConstruct` rows are 2 895 macros, 2 774 closure captures, 1 357
+attributes and **70 storage/representation**. Only the 70 can hide an owning
+edge, and their originating crates are **29 `std`, 6 `num_bigint`, 6
+`rum_syntax`**, the rest flat leaves — hashers, `Instant`, `PathBuf`, `BigInt`,
+`NonZeroU64`, `Duration`, `AtomicU64`. So the axis would have classified
+noise: the maintenance tax is real (three inventory regenerations in one
+session) but it is a tax, not a safety gap. **Against that, an axis declaring
+some unknown "cannot introduce an owning edge" *silences* it** — maximal
+conservatism is loud and useless but never lies. Reopen it when the ledger
+needs `UnknownConstruct` to be green for a concrete purpose, which will
+constrain the design.
+
+**The same examination found the scanner's own blind spot, and brief-495 closed
+it.** `rum-syntax` was not a scanner root while the scanned crates own its
+types in four places. The root set is now a **criterion, not a list**: the
+kernel and stdlib plus workspace crates whose values they own, transitively —
+host and adapters depend in the opposite direction, and `rum-derive` supplies
+macros rather than stored runtime values. Gate: fmt clean, **2 465 tests
+green**, nine native ZeroMQ tests binding loopback, zero skip notices, no
+production source changed. Falsifier: a deliberately added recursive type in
+`rum-syntax` is discovered, and was invisible before.
+
+*It surfaced three recursive trees* — `SyntaxExpr`, `SyntaxExprKind` (a mutual
+cycle, public) and the formatter's `Doc` — and eight new `PublicInput` ledger
+rows.
+
+**A source-reachable fail-open above the contract, measured by the director.**
+The worker's claim was that the parser's guards do not bound every AST spine:
+`MAX_DELIMITER_NESTING_DEPTH` and `MAX_OPERATOR_CHAIN_DEPTH` are 128, but a
+**call-head chain** boxes the prior head without touching either counter.
+Verified: `f[1][1]…` parses at 5 000 applications. At the ruled `ulimit -s
+2048`, three runs per point:
+
+| applications | result |
+|---|---|
+| 4 097 (the contract height) | 3/3 survive |
+| 5 000 | 3/3 survive |
+| 6 000 | **3/3 killed** — `thread 'main' has overflowed its stack` |
+
+So the ceiling is **1.22x-1.46x the ruled contract height, and it fails open**
+— a process kill, not an in-band error. That is the same band as the residual
+queue's thinnest entries (`Lookup` 1.16x, `KeyComplement` 1.42x), in a
+construct nothing could see until the root set was fixed.
+
+**Open, and it is the next item this line hands over**: *which phase* overflows
+— the parser's own recursion over the chain, the AST's construction, or its
+drop. The failure precedes any output, so it is not yet attributed. The fix
+differs by phase, so diagnose before briefing a repair. Step C
 carries a microbench A/B and step D carries the 29-chain prerequisite, so
 neither is a cheap-to-verify dispatch.
