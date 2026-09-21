@@ -3086,3 +3086,98 @@ reclaim and one tenant can exhaust the shared quota.
   lifetime-free type is frozen too — a difference that decides whether any
   fix exists — and refused to resolve it silently. That refusal is what
   produced the ruling.
+
+## 2026-09-22 — the interner line finds its root constraint, and one defect closes (briefs 505-511)
+
+Seven briefs. The line set out to bound the process-global symbol interner
+and instead found why it cannot currently be bounded usefully; one unrelated
+defect on the same mainline was diagnosed and fixed along the way.
+
+**The census came before the build, and earned its place immediately.**
+brief-505's design plan proposed an 8 MiB default while stating that the
+source offers no measured legitimate working set to argue from, so the
+director turned the default into a measurement obligation rather than
+approving a number. brief-506 measured: bootstrap is 662 strings and 661
+pairs at about 77-85 KB, and the **ordinary workspace suite's maximum over
+test binaries is 14.4-15.9 MB**. The proposed default was below this
+repository's own test suite.
+
+**It also refuted a premise the director had asserted as verified.** The
+claim was that `Module`'s gensyms do not grow the interner because
+`with_identity` varies only a numeric identity. True of that API, and
+irrelevant to `Module`, whose locals reach `Symbol::new` with formatted fresh
+text. Every activation permanently adds a string and a pair, about 120 bytes,
+and the gensym GC cannot help because the interner has no removal path at
+all. The director had read one call path and generalized it to another. A
+third correction came with it: lookup is itself an insertion ingress,
+charging **two** pairs for one fresh unqualified name.
+
+**That retargeted the line, and then the retarget was refuted twice.** A cap
+that ordinary code exhausts is a timer rather than a defence, so the dominant
+legitimate consumer had to go first. brief-507 found the `Module` repair
+feasible in representation — `Symbol` already carries the identity field —
+and blocked on semantics. brief-509 found the same wall at `Enclose`'s
+internal tag, which had looked like a safe pilot because the user never
+writes its name.
+
+**Two refutations on identical evidence is the line's actual result:**
+
+> A symbol's identity must be expressible as text, because the host snapshot
+> is source text.
+
+`qualified_name` ignores `identity` and `Display` delegates to it, so two
+same-text symbols with distinct identities are indistinguishable the moment
+they are rendered; the resolver rebuilds no identity from a name. `Symbol`'s
+serde does preserve identity and is not the snapshot format. So every
+generator of distinguishable fresh symbols must mint fresh text, the interner
+grows with generated symbols, and `Module`, `Enclose` and `Unique` are three
+instances of one cause. Patching constructs one at a time cannot work. The
+already-deferred binary snapshot format in Standing Engineering Debt is the
+deferral that makes the constraint binding, and three ways out — a reserved
+textual encoding, a non-source snapshot format, or accepting the leak behind
+the cap — all await a user ruling.
+
+**The cap's mechanism is nevertheless proven.** brief-508's scratch package
+is green and director-reproduced: exact charging including backing-table
+bytes, refusal that publishes and leaks nothing, the two-pair ingress
+admitted or refused atomically, a full interner still serving lookups it
+already holds, and — with enforcement disabled — a falsifier watched going
+red at peak 4307 against cap 4306. What is in doubt is whether the cap is a
+defence or a timer, which is exactly what the pending ruling decides.
+
+**One defect closed while the line waited.** `eval_with_timeout` cleared its
+timeout unconditionally, so an evaluation suspended for host input lost its
+bound. Re-probing before briefing shrank it: the rustdoc three lines above
+already said the timeout is cleared after the request completes or fails, and
+a suspension is neither, so the repair honours an existing contract instead
+of inventing one. The deadline stays absolute across the suspension because
+the kernel cannot do otherwise — `TimeConstrained` computes an `Instant` once
+and nothing recomputes or pauses it — and a characterization test pins that
+precedent before production changed. 2 490 passed, 0 failed, 57 ignored, with
+the nine native ZeroMQ scenarios actually executing.
+
+**Method, in the order it cost the most.**
+
+- *A premise asserted as verified is still a premise.* The `Module` claim was
+  written into a brief as director-verified and was wrong. The brief told the
+  worker to confirm rather than assume, and that instruction is the only
+  reason it was caught the same day.
+- *A stop-loss keyed on the failure's reason fires on every converging
+  mechanical repair.* brief-499's rule stopped a repair at 304 → 80 → 5
+  distinct diagnostics, five one-line sites from green, because a non-`Copy`
+  migration emits only ownership errors. It now keys on whether the count
+  fell.
+- *A gate is worth what the worker's environment can run.* An expected
+  failure set recorded with `RUM_ALLOW_NATIVE_ZEROMQ_SKIP` set, and written
+  into a brief without it, turned nine sandbox-bound failures into apparent
+  regressions. The lesson was already in memory.
+- *HEAD is process-global.* A background job switching branches to build A/B
+  arms swallowed a foreground commit onto a detached HEAD.
+- *Calibrate before believing.* The first instruction probe measured process
+  startup, because a `Do` over 200 000 iterations hits the iteration ceiling
+  and bails; counts must be shown to scale with `N` first.
+- *Workers that report a gap beat workers that improvise.* brief-501 reported
+  that the supplied binaries lacked allocation counters instead of producing
+  numbers; brief-510 reported that it could not build the harness its
+  precedent check needed instead of inferring the answer. Both gaps were then
+  closed deliberately.
