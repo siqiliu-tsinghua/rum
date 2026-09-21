@@ -1414,6 +1414,32 @@ falsifier watched going red with enforcement disabled. The cap's mechanism is
 not in doubt; only whether it is a defence or a timer, which is what the
 ruling above decides.
 
+**Opened by brief-512, and it is the root of a class — not yet briefed.**
+`crates/rum-runtime/src/runtime/session/session_eval.rs:328-338` assigns
+`termination = outcome.termination` for **each script form** and breaks early
+only for accepted cancellation. So a later ordinary form **erases** an
+earlier form's resource termination before any caller sees it: termination is
+last-write-wins across forms rather than sticky. A multi-form snapshot whose
+middle form terminates still reports success even after `acfda0e0`.
+
+This is the fourth sighting of one shape — cancellation erased by its own
+request prologue (briefs 397-411), the deadline dropped across an input
+suspension (brief-511), the restore discard (brief-512), and now the
+aggregation loop underneath them. **Diagnose the aggregation before briefing
+another instance**, and settle whether a terminated form should be sticky or
+whether `terminated_handling` deliberately allows continuation. Source-level
+observation, not yet reproduced — **re-probe first.**
+
+**Closed by brief-512 (`acfda0e0`):** `restore_from_bytes` discarded the
+response's `termination`, so a restore truncated by a resource limit reported
+`Ok(())`. It now fails with the reason in the message; restore stays
+non-transactional and both the rustdoc and `docs/guide/embedding.md` now
+state that a failed restore leaves the session partially populated. The
+regression test's trigger is a zero recursion limit — deterministic by
+construction, no timing — with a no-limit control. **Bounded by the finding
+above:** it catches the termination present in the response, and the
+aggregation loop can have erased it already.
+
 **Opened by D5, not yet briefed:** `restore_from_bytes` reports `Ok` for an
 evaluation that terminated during restore, so a caller cannot tell a restored
 session from a truncated one. Found by design review, not reproduced yet —
