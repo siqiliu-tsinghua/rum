@@ -1456,6 +1456,50 @@ discussed after it.
   macro-generated session-walk inventory that briefs 415-416 built, or
   replace it.
 
+### Director rulings on brief-516's five decisions (2026-09-22)
+
+Ten drafts, A-J: **A-E** build the occurrence-based session total that
+removes the 43x; **F-J** discharge the 165 per-builtin declarations. All five
+decisions ruled, so the line can start.
+
+1. **Split and order approved.** Occurrence-based session sum first, local
+   retained builders after. This keeps the existing contract, so the
+   **ceiling's meaning does not change** — a unique/physical counting model
+   would be a separate explicit ruling and would invalidate the plan.
+2. **Overflow: conservative saturation approved**, with a non-lossy or
+   explicitly invalid state for releases. Both directions fail closed — a
+   saturated charge makes the session look over its limit, and a
+   non-representable release leaves the total too high rather than too low.
+3. **The ledger's own storage is charged, and that is not negotiable.**
+   Every new inline or heap bookkeeping byte appears in the proxy, with its
+   overhead measured and its threshold effects documented. Silently exempting
+   the accountant is precisely the class of invisible bytes this whole line
+   exists to remove — it is the interner's mistake in miniature.
+4. **B's boundary: public extension behavior is preserved.** `BuiltinSpec`
+   is a public host-facing registration surface; an externally registered
+   builtin must not break and must not be **silently** mis-accounted. If a
+   route cannot cover host-registered builtins at zero default cost, that is
+   a **stated gap plus the stop condition already in the draft** — keep
+   correct walking; never accept unobserved drift.
+5. **F's coverage extension approved**, including the clause that matters:
+   keep the existing S oracle separately and **do not pretend the extension
+   is numerically identical** to the old session-plus-expression
+   observation. It is a different number and is to be reported as one.
+
+**Rejection conditions stand as the draft wrote them**: unavoidable default
+cost, meaningful mutation or extension paths that cannot be covered without
+silent drift, or repeated unchanged-root checks still scaling with session
+size. In any of those, the correct armed walk remains and its measured cost
+becomes a documented property.
+
+**Opened by brief-516, not yet briefed — a doc-versus-code conflict.**
+`docs/guide/resource-limits-and-sandbox.md:318` says a consumed local
+`MemoryConstrained` returns with `General::memlim`; the handler at
+`runtime/debug_tools/resources/constraints.rs:262` returns the fallback or
+`$Aborted` **without emitting that message**. Source observation, not a probe
+— **re-probe before briefing**, and settle which side is wrong. Do not fold
+it into the ledger cutover and do not weaken the guide incidentally.
+
 ### The root constraint, found by two refutations (2026-09-22)
 
 Two independent repairs were designed and both were refused on the same
