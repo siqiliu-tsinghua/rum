@@ -13,14 +13,16 @@
 //!
 //! The TSV files are exact data, grouped by construct class because expansion
 //! and capture failures dominate their size. Discovery never reads them and
-//! there is no auto-update mode, wildcard, disposition, or exemption. A match
+//! there is no auto-update mode, wildcard, or exemption in discovery. A match
 //! certifies the inventory only: unresolved rows remain analysis failures.
+//! The separate host-payload ledger checks dispositions without changing facts.
 
 mod accumulator_coverage;
 mod effects;
 mod evidence;
 mod fixtures;
 mod graph;
+mod host_payload_ledger;
 mod model;
 mod resolve;
 mod source;

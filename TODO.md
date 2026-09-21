@@ -3011,8 +3011,48 @@ line. Same shape as brief-475's accepted split (depth 1 at +0.020%, depth 9 at
 +0.606%), larger in magnitude. **Accepted on that split**, recorded rather than
 hidden.
 
-**Step D is now unblocked**: the declaration on `SuspensionFrame` and
-`PureFrameFinalizer`, 539 and 59 impls. Then step E, the ledger's strict
-check. Step C
+**Step D was cancelled, on evidence (brief-493).** The marker promises a bound
+on destroying a value *and everything it can reach*; `Expr`'s destruction is
+recorded unbounded standing debt (`TODO.md` §Standing engineering debt, three
+iterative `Drop` designs rejected at 20-50%); and 266 of 535 frame implementor
+structs own an `Expr`-family field directly, with `FrameAction::Complete`
+carrying `Result<Expr, EvalError>` in the protocol itself. A supertrait would
+have asked ~598 implementors to assert something the project records as false.
+
+Two qualifications from the review are worth keeping. **Returning an `Expr`
+does not make a particular frame unbounded** — the evidence refutes a *universal
+supertrait requirement*, not every individual declaration; a fieldless frame
+could sign honestly. And **`#[doc(hidden)]` does not close the implementation
+set**: both traits are public through `kernel_api` and accepted by public
+admission, so recording the in-tree `Expr` debt cannot discharge external
+implementations.
+
+**The line closes at step E1 (brief-494), test-only.** A disposition ledger over
+all **50** `UnknownHostPayload` rows — **3 `Declared`** (the provider and sink
+edges, enforced by supertrait), **3 `Unbounded`** (the suspension edges, owed to
+the `Expr` debt, each carrying
+`external_implementation_coverage: unresolved`), **44 `PublicInput`**. Gate: fmt
+clean, **2 464 tests green**, nine native ZeroMQ tests binding loopback, zero
+skip notices, no production file and no existing inventory row changed.
+
+*The third check is what makes it a ledger rather than an excuse table*, and the
+director's reproduction of it is worth recording. An `Unbounded` entry's claim
+is **verified**: the row's ownership must actually reach
+`Expr`/`SharedExpr`/`SharedArgs`. Adding a recursive field unrelated to `Expr`
+and attributing it to the `Expr` debt anyway was rejected with
+`has no verified path to Expr/SharedExpr/SharedArgs; cannot attribute Expr
+debt`.
+
+**But the first rejection was for the wrong reason and had to be re-run.** The
+first perturbation used `Box<dyn Debug + Send>` and was refused by a *different*
+precondition — "opaque proof requires one unambiguous trait bound" — which would
+have certified nothing about attribution. Re-run with a single-bound payload,
+the check rejected it on the attribution itself. **A falsifier that goes red is
+not evidence until you have read why.**
+
+**What remains outside this line**: step E2, the `UnknownConstruct` second axis
+(7 068 rows, of which only 70 are storage or representation) — still the design
+problem brief-479 left open, and a separate decision from resuming the
+security-hardening mainline. Step C
 carries a microbench A/B and step D carries the 29-chain prerequisite, so
 neither is a cheap-to-verify dispatch.
