@@ -2893,9 +2893,42 @@ Adding `#[derive(Clone)]` rewrites an attribute row and deleting the `panic!`
 removes a macro row. The director applied exactly the two rows discovery's own
 failure message dictates and re-ran to green.
 
-**Not dispatched**: brief-486's conversion (parked in `stash@{0}`; its
-instruction to preserve the uniqueness panic is now obsolete, and its
-`cfg(test)` divergence in `into_vec` and unresolved A/B must be fixed on
-redispatch), the remaining 26 conversions, step D (still blocked), and step E. Step C
+**Step 2 is IN (brief-486, third dispatch).** The iteration accumulator's two
+owning links are wrapper-typed; `into_vec` keeps brief-488's move-or-clone with
+**one body for production and tests**, the `cfg(test)` divergence of the first
+attempt being forbidden outright. Gate: fmt clean, **2 454 tests green**, nine
+native ZeroMQ tests binding loopback, zero skip notices.
+
+*The certificate decomposes, honestly.* brief-485's helper test proves the
+**mechanism** (destruction nesting exactly 1); these tests bind this member's
+two production links to that mechanism by type identity, and `Weak` handles
+prove the **behaviour** — a clone's drop leaves the shared prefix alive and
+releases only the exclusive branch. The worker said plainly which half each
+certifies rather than claiming one proved both. The director verified the
+wiring statically from source (`tail` and `previous` are both
+`AccumulatorChain<...>`) rather than re-running the revert, having already
+reproduced the mechanism falsifier at brief-485.
+
+*The A/B, and a premise of the director's that was wrong.* The brief asserted
+`appended` is the hot path. It is not: `PersistentExprAccumulator::freeze` is
+called **only** from the `Err(EvalError::InputRequired)` arm
+(`iteration/driver.rs:294-300`), so an unsuspended `Table` accumulates into a
+plain `Vec` and never builds a node. The changed code runs only after a
+suspension — i.e. behind a host round trip. The worker measured and then said
+so itself, disclosing that its CLI workload could not reach `appended` and
+therefore proved nothing about the changed path. That is the right call, and
+the negative result still matters as a control: on the untouched ordinary path
+the instruction count moved **-0.000713%** (-408 of 57.19 M), inside both arms'
+spreads of 0.0013% and 0.0019%, with allocation counters identical.
+
+*The instrument is the reusable part.* The timing panel could not resolve this
+question — its own controls moved +3.70% to +12.45% and one target swung 25
+points between pairs. Instruction counts pinned to one core type
+(`taskset -c 2 perf stat -e instructions:u`, reading `cpu_core` at `100.00`
+multiplex coverage) repeat to **0.003%** on this host. Calibrate and hand over
+the recipe, not the tool name.
+
+**Not dispatched**: the remaining 26 conversions, step D (still blocked), and
+step E. `stash@{0}` holds the stale first attempt and should be dropped. Step C
 carries a microbench A/B and step D carries the 29-chain prerequisite, so
 neither is a cheap-to-verify dispatch.

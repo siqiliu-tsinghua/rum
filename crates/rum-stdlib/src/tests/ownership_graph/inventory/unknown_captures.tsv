@@ -579,7 +579,7 @@ UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/control_data/branchi
 UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/driver/resume_frames.rs	119	24	closure captures: || (capture types/modes unresolved)
 UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/driver/resume_frames.rs	177	40	closure captures: |payload| (capture types/modes unresolved)
 UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/driver/resume_frames.rs	205	14	closure captures: || (capture types/modes unresolved)
-UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/mod.rs	164	24	closure captures: || (capture types/modes unresolved)
+UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/mod.rs	169	24	closure captures: || (capture types/modes unresolved)
 UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/spec.rs	228	53	closure captures: |value| (capture types/modes unresolved)
 UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/spec.rs	230	53	closure captures: |value| (capture types/modes unresolved)
 UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/table_fast_path.rs	52	41	closure captures: |body_symbol| (capture types/modes unresolved)
