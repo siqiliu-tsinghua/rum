@@ -923,6 +923,25 @@ see**.
   adapter. **Not director-reproduced** (it aborts a process).
 
 - **MEDIUM — `eval_with_timeout`'s deadline is silently dropped across an input
+  suspension — FIXED 2026-09-22** (briefs 510-511, `40a429df`). Re-probed
+  before briefing and still present verbatim three weeks on. The repair
+  needed no new contract: the rustdoc three lines above already promised the
+  timeout is cleared after the request completes or fails, and a suspension
+  is neither. The deadline now stays **absolute** across the suspension,
+  matching the kernel — `TimeConstrained` computes its deadline once as an
+  `Instant` and nothing anywhere recomputes or pauses it — so time spent
+  waiting for host input counts toward the budget, which
+  `docs/guide/embedding.md` now states along with the shape of a timeout
+  during a resumed segment. Ownership is a private marker released at the
+  `guard` boundary, the shared exit of every guest-code entrypoint. A
+  characterization test pins the `TimeConstrained` precedent first; that was
+  the observation brief-510 reported it could not take rather than inferring
+  it. Gate: 2 490 passed, 0 failed, 57 ignored, run without
+  `RUM_ALLOW_NATIVE_ZEROMQ_SKIP`. **Left open deliberately:** nested
+  file-form deadline renewal, diagnosed by brief-510 and not folded into a
+  correctness patch. The original finding follows.
+
+- **MEDIUM — `eval_with_timeout`'s deadline is silently dropped across an input
   suspension.** `crates/rum-host/src/session.rs:518-524` clears the timeout
   unconditionally after the guarded call, and its own rustdoc says the timeout
   "is cleared after the request completes or fails" — a suspension is neither.
