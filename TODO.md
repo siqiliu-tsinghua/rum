@@ -1210,6 +1210,15 @@ converted from unbounded invisible growth into a bounded, loud limit:
   reclaim them, one tenant can permanently exhaust the shared quota, and host
   process isolation remains the pattern for hard multi-tenant isolation.
 
+**Next action, and it is the director's, not a worker's.** brief-505's design
+pass is complete and its plan is blocked on five ruled decisions, D1-D5 in its
+§4 — the 8 MiB default and the supported embedding envelope, the exact
+charged-storage contract, public fallibility across the seven constructors,
+and the two after them. Nothing is dispatched until those are settled. The
+census it produced is the reason plan-first was used: **337 direct constructor
+references across 78 files**, not the 179 a `Symbol::`-only regex finds, since
+`Expr::symbol` and `Expr::system_symbol` add 157 more.
+
 Rejected with their reasons, so they are not re-proposed: a reclaimable global
 interner cannot exclude escaped-handle invalidation (a reissued dense id makes
 an escaped `Symbol` denote different text); an arena lease on exported roots is
