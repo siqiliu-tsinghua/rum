@@ -3144,10 +3144,37 @@ the exact-inventory test's own mismatch output: **58 removed, 87 added, all
 `UnknownConstruct`, confined to the two lowering files**, with no new
 `UnknownHostPayload` and no reclassification.
 
-**Still open, recorded not fixed**: `rum --parse` on the same chain times out
-from about 1 000 applications while `--format` on the same input is fast, so the
-syntax-tree *rendering* (`rum-cli/src/main.rs:66` → `debug_dump` →
-`rum-syntax/src/document.rs:380`, pretty `Debug` with depth-dependent
-indentation) appears superlinear. A separate defect. Step C
+**The parse dump was cubic and is fixed (brief-498)** — a leftover of the
+superlinear-elimination line, cleaned before the hardening mainline resumes by
+user ruling.
+
+*The mechanism.* `debug_dump` rendered the tree with `{:#?}`, and Rust's
+alternate `Debug` wraps the writer in another pad adapter **per nesting level**,
+so every byte passed through O(depth) layers. Measured: instructions grew
+**7.9x per doubling (2^3)** while output grew 3.88x — quadratic and inherent for
+an indented dump of a deep spine. The work was **one order worse than the bytes
+it produced**, and that gap was the defect. A 300-character program cost 1.36
+**billion** instructions.
+
+*The repair* is a purpose-built emitter (`rum-syntax/src/syntax_dump.rs`): one
+`Indented` writer carrying a depth, so indentation is written once per line
+rather than layered, plus this line's bounded front and cold iterative tail —
+all tree edges borrowed, so the work stack acquires no ownership and only one
+inventory partition moved.
+
+*Director-verified, and the first reading needed correcting.* The worker
+reported after-ratios of 2.03-3.09x, **below** the quadratic asymptote the
+output demands, which cannot be right while the output is byte-identical. The
+cause was process startup dominating the total at these sizes. Subtracting the
+`--parse f` baseline (1 068 805 instructions), the marginal ratios are
+**2.31 → 2.56 → 3.19 → 3.39, converging on 4** — quadratic, matching the
+output. At n=800 the cost fell from 648 797 287 375 to 78 001 406, about
+**8 300x**.
+
+| check | result |
+|---|---|
+| 1 000 applications | **0.062 s**, against a 60 s timeout before |
+| output identity | byte-identical across six shape-varied expressions and depths 50/200/900 |
+| gate | fmt clean, **2 474 tests green**, nine native ZeroMQ binding loopback, zero skips | Step C
 carries a microbench A/B and step D carries the 29-chain prerequisite, so
 neither is a cheap-to-verify dispatch.

@@ -377,7 +377,7 @@ impl ParsedSource {
     pub fn debug_dump(&self) -> String {
         let mut output = String::new();
         writeln!(&mut output, "syntax:").unwrap();
-        writeln!(&mut output, "{:#?}", self.syntax).unwrap();
+        writeln!(&mut output, "{}", syntax_dump::Dump(&self.syntax)).unwrap();
         writeln!(&mut output, "tokens:").unwrap();
 
         for (index, token) in self.lexed.tokens().iter().enumerate() {
@@ -447,6 +447,9 @@ fn debug_text(text: &str) -> String {
         .collect::<String>()
 }
 
+#[path = "syntax_dump.rs"]
+mod syntax_dump;
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -486,6 +489,66 @@ mod tests {
         assert!(dump.contains("symbol @ 0..1"));
         assert!(dump.contains("trivia comment"));
         assert!(dump.contains("(* note *)"));
+    }
+
+    #[test]
+    fn debug_dump_matches_alternate_debug_across_front_and_tail() {
+        // The call-head edge takes two traversal steps. These depths straddle
+        // the 16-step front and exercise its iterative continuation.
+        for depth in [0, 1, 7, 8, 9, 16, 17, 32] {
+            let parsed = ParsedSource::parse(format!("f{}", "[1]".repeat(depth))).unwrap();
+            let expected = format!("syntax:\n{:#?}\ntokens:\n", parsed.syntax);
+            assert!(parsed.debug_dump().starts_with(&expected), "depth {depth}");
+        }
+    }
+
+    #[test]
+    fn debug_dump_preserves_every_syntax_variant_and_leaf_layout() {
+        let source = r#"(* dump layout *) { {}, <||>, {123, "a\n\t\"\\", café},
+            <|"key" -> {x_, y__Integer, z___, _Real}, a :> b|>,
+            f[][x_Integer, y:(_|_Real), #, #2, #name, ##, ##3],
+            -x + y z/2^3, !p, ++x, x++, f'''[x],
+            a < b <= c != d, (x; y;), (# + #2)& }"#;
+        let mut syntax = ParsedSource::parse(source).unwrap().syntax;
+        for depth in 0..=9 {
+            assert_eq!(
+                format!("{}", syntax_dump::Dump(&syntax)),
+                format!("{syntax:#?}"),
+                "shape fixture at head depth {depth}",
+            );
+            let span = syntax.span();
+            syntax = SyntaxExpr::call(syntax, Vec::new(), span);
+        }
+
+        let syntax = SyntaxExpr::string("\0\r\t\n\\\"\u{7f}\u{85}\u{200d}é", Span::new(1, 99));
+        assert_eq!(
+            format!("{}", syntax_dump::Dump(&syntax)),
+            format!("{syntax:#?}"),
+        );
+    }
+
+    #[test]
+    fn debug_dump_deep_head_chain_completes_on_small_stack() {
+        let depth = 1_000;
+        let parsed = ParsedSource::parse(format!("f{}", "[1]".repeat(depth))).unwrap();
+        let (parsed, expressions, spans, has_tokens) = std::thread::Builder::new()
+            .stack_size(512 * 1024)
+            .spawn(move || {
+                let dump = parsed.debug_dump();
+                let expressions = dump.matches("SyntaxExpr {").count();
+                let spans = dump.matches("span: Span {").count();
+                let has_tokens = dump.contains("\ntokens:\n");
+                // Drop the AST on the parent stack: its independent recursive
+                // destruction is outside the dump emitter's contract.
+                (parsed, expressions, spans, has_tokens)
+            })
+            .unwrap()
+            .join()
+            .unwrap();
+        assert_eq!(expressions, 2 * depth + 1);
+        assert_eq!(spans, expressions);
+        assert!(has_tokens);
+        drop(parsed);
     }
 
     #[test]
