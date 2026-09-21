@@ -1406,6 +1406,56 @@ So "only callers explicitly asking for fresh names grow the interner" is
 false, and `Unique` is not the dominant remaining consumer. Schedule its
 repair before sizing the cap, or carry its measured demand into the sizing.
 
+### User rulings of 2026-09-22 — the snapshot format, and Incremental first
+
+**Ruling 1: the snapshot format changes (option ②).** The root constraint is
+that a symbol's identity must be expressible as text because the host
+snapshot is source text. The user ruled that this is **an old debt now forced
+into the open and it has to be paid**: Standing Engineering Debt's deferred
+*"direct binary snapshot format"* becomes a planned line rather than a
+deferral. The reserved-textual-encoding option (①) and the
+accept-the-leak-behind-a-cap option (③) are **not** chosen.
+
+Consequences to carry: the interner quota work (briefs 505-508) is **not the
+remedy** and is parked, not cancelled — brief-508's proof stands and D1-D7
+remain ruled if it is ever resumed. `Module`'s and `Enclose`'s leaks are
+**not** patched individually; they dissolve when identity stops needing to be
+text. The `Unique[]` case does not, and remains by design.
+
+**Ruling 2: build `Incremental` (decision two, as recommended).** The
+unstrided armed ceiling (`d1e5de5c`) is correct and stays, but armed sessions
+pay **2.26x to 43.34x** instructions — and the people paying are exactly the
+ones who asked for safety, since `eval_memory_limit` defaults to `None`. The
+risk is losing safety by the back door, as hosts stop arming a limit they
+cannot afford.
+
+**Ruling 3: sequencing.** `Incremental` first; the snapshot format is
+discussed after it.
+
+**What the Incremental line has to settle, before any implementation.**
+
+- **165 builtins already declare `Incremental`**
+  (`crates/rum-stdlib/src/catalog/memory_growth_contract.rs`) against a
+  contract with no implementation — "retained growth must be charged as
+  data-dependent construction proceeds"
+  (`crates/rum-runtime/src/runtime/metadata.rs:346-348`). The unstrided walk
+  is currently discharging all 165 obligations at O(session) per checkpoint.
+  That is the 43x.
+- **Two different designs both called Incremental**, and the line must pick:
+  per-builtin charging at 165 sites, which is what the declaration says; or
+  incremental maintenance of the session total at the few places session
+  state changes, which makes `current_memory_proxy_bytes()` O(1) and is what
+  actually kills the 43x.
+- **The models disagree and that is the crux.** The existing walker charges
+  repeated shared subtrees **by occurrence**; a counter of unique allocations
+  does not reproduce that. Changing it changes what the ceiling means, so the
+  discrepancy has to be resolved deliberately rather than discovered.
+- It must also account for capacity growth, expression import and sharing,
+  retention in definitions and caches, prints/traces/reaps, suspension and
+  abandonment, and release on every exit — and stay consistent with the
+  macro-generated session-walk inventory that briefs 415-416 built, or
+  replace it.
+
 ### The root constraint, found by two refutations (2026-09-22)
 
 Two independent repairs were designed and both were refused on the same
