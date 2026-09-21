@@ -1308,6 +1308,45 @@ behavior, while a `Module` local's printed name is not. The crux for the
 design is therefore whether the `$n` suffix can become a **display**
 concern rather than interned text.
 
+**The Module repair is feasible but BLOCKED ON A USER RULING (brief-507,
+2026-09-22).** Representation: **yes** — `Symbol` already carries the
+independent identity field, so reusing one interned pair while varying a
+checked identity preserves the ruled equality and layout and removes the
+retained suffix text. Display-only patch: **no**, and the obstruction is
+text-to-value identity, not aesthetics. ``("Global`", "x", identity 3)`` and
+``("Global`", "x$3", None)`` are different symbols, so printing the first as
+`x$3` does not tell the resolver how to recreate it — and that round trip is
+in use: source, `Symbol` and `ToExpression` probes all reach the current
+local, `Names` targeting performs the conversion
+(`crates/rum-runtime/src/runtime/namespace_tools/names.rs:152`), and **host
+snapshots are source text** (`crates/rum-host/src/session.rs:185`). `Symbol`'s
+serde carrying `identity` is not evidence against this, because the snapshot
+is not serde.
+
+**The ruling the user must make.** Three ways forward, none free:
+
+- **Separate `Module`'s display label from a source-resolvable name.** The
+  guide's Module paragraph does not promise that round trip
+  (`docs/guide/scoping-and-contexts.md:44`), but the surrounding public
+  surfaces must be judged rather than permission inferred from silence.
+  Cost: gensym snapshot round-trip, `Names` targeting, documented surfaces.
+- **A lossless alias map**, retained forever — trades an interner leak for
+  another activation-count-dependent store, so it is not obviously a win;
+  collecting aliases changes what old strings can recover.
+- **A reserved textual encoding** — changes the accepted symbol-name and
+  `Unique` namespace, and must not decode sealed ids.
+
+Until that ruling, `Module` keeps leaking and the quota work proceeds, since
+the quota is required under every one of these outcomes.
+
+**Opened by brief-507, not yet briefed: `Enclose` leaks too.** An untagged
+`Enclose` adds one lazy seed plus one string and pair per call — 10 665
+strings / 10 664 pairs and 1.24-1.36 MB at 10 000 calls, about 117-127 proxy
+bytes each (`crates/rum-runtime/src/runtime/kernel_data/control_data/confirmation.rs:118`).
+So "only callers explicitly asking for fresh names grow the interner" is
+false, and `Unique` is not the dominant remaining consumer. Schedule its
+repair before sizing the cap, or carry its measured demand into the sizing.
+
 **Opened by D5, not yet briefed:** `restore_from_bytes` reports `Ok` for an
 evaluation that terminated during restore, so a caller cannot tell a restored
 session from a truncated one. Found by design review, not reproduced yet —
