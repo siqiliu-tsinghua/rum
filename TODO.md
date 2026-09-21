@@ -913,9 +913,8 @@ see**.
   boundary. **Mechanism director-verified in source; the 2 GB overshoot is not
   director-reproduced.**
 
-- **HIGH — the strided ceiling: reproduced, repaired, default gate PASSED,
-  two mechanical blockers left (briefs 513-514, code on branch
-  `spike/brief-514-unstride`).** Director-reproduced with a control: an 8 MB
+- **HIGH — the strided ceiling — FIXED 2026-09-22** (briefs 513-515,
+  `d1e5de5c`).** Director-reproduced with a control: an 8 MB
   `MemoryConstrained` let `Nest[StringJoin[#,#]&, seed, 16]` complete at
   65 536 000 characters and ~358 MB peak RSS, while the same ceiling aborts a
   single large `StringRepeat`. **The audit's mechanism was wrong**:
@@ -939,11 +938,20 @@ see**.
   `association-part-key-read-width4000`, one of the flagged labels, moves
   +18.43% between two runs of the *identical* binary.
 
-  **Left to finish:** three ownership-inventory tests fail because source
-  locations moved and the inventory needs regenerating, and the permanent
-  falsifier needs a home the brief excluded. Both are scope, not substance.
-  **Armed-path cost is reported and is the director's call**, separately from
-  the default gate.
+  **Landed.** Every armed checkpoint now walks; the stride constant and its
+  false comment are gone, replaced by the guarantee the code actually makes
+  including its limitation. Falsifier director-verified both ways — with the
+  stride restored it fails with "repeated string growth escaped its
+  200000-byte ceiling". All 61 inventory changes are location shifts,
+  verified including the line numbers embedded in symbol paths and `ends at`
+  spans. Gate 2 493 passed, 0 failed, 57 ignored.
+
+  **Still owed, deliberately:** the armed-path cost curve was measured and
+  reported but never judged — the walk is O(session), so an armed workload
+  now pays on every checkpoint instead of one in 64. That is a director
+  decision about whether armed sessions need a cheaper accounting route, and
+  it is the entry point to the `Incremental` contract, which `TODO.md` still
+  records as unbuilt.
 
 - **MEDIUM-HIGH — `rum-jupyter`'s hand-written JSON parser has no depth guard.**
   `json_support.rs` contains zero occurrences of depth/limit/MAX_, and
