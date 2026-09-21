@@ -89,6 +89,30 @@ fn host_eval_script_suspends_but_resume_fails_without_running_remaining_forms() 
 }
 
 #[test]
+fn host_iteration_accumulator_completes_after_multiple_inputs_without_poisoning() {
+    let mut session = HostSession::new();
+
+    assert!(matches!(
+        session.eval("Table[InputString[], 2]"),
+        HostEvalOutcome::InputRequired(_)
+    ));
+    assert!(matches!(
+        session.resume_with_input("0"),
+        HostEvalOutcome::InputRequired(_)
+    ));
+
+    let success = successful_eval(session.resume_with_input("1"));
+    assert_eq!(success.value.text, "List[\"0\", \"1\"]");
+    assert!(success.messages.is_empty());
+    assert_eq!(success.termination, None);
+    assert!(!session.poisoned_for_test());
+
+    let next = successful_eval(session.eval("1 + 1"));
+    assert_eq!(next.value.text, "2");
+    assert_eq!(next.termination, None);
+}
+
+#[test]
 fn host_failures_use_stable_failure_codes() {
     let mut session = HostSession::new();
 

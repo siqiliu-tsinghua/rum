@@ -152,6 +152,87 @@ fn module_resumes_mid_initializer_without_replaying_bindings() {
 }
 
 #[test]
+fn table_iteration_accumulator_completes_after_multiple_input_suspensions() {
+    let mut session = session_with_test_control_builtins();
+
+    let failure = session.eval_request("Table[InputString[], 2]").unwrap_err();
+    assert_input_prompt(&failure, "");
+    let failure = session.resume_eval_request_with_input("0").unwrap_err();
+    assert_input_prompt(&failure, "");
+
+    let response = session.resume_eval_request_with_input("1").unwrap();
+    assert_eq!(response.value.to_string(), "List[\"0\", \"1\"]");
+    assert!(response.messages.is_empty());
+}
+
+#[test]
+fn sum_iteration_accumulator_completes_after_multiple_input_suspensions() {
+    let mut session = session_with_test_control_builtins();
+
+    let failure = session.eval_request("Sum[Input[], {i, 2}]").unwrap_err();
+    assert_input_prompt(&failure, "?");
+    let failure = session.resume_eval_request_with_input("2").unwrap_err();
+    assert_input_prompt(&failure, "?");
+
+    let response = session.resume_eval_request_with_input("3").unwrap();
+    assert_eq!(response.value.to_string(), "5");
+    assert!(response.messages.is_empty());
+}
+
+#[test]
+fn product_iteration_accumulator_completes_after_multiple_input_suspensions() {
+    let mut session = session_with_test_control_builtins();
+
+    let failure = session
+        .eval_request("Product[Input[], {i, 2}]")
+        .unwrap_err();
+    assert_input_prompt(&failure, "?");
+    let failure = session.resume_eval_request_with_input("2").unwrap_err();
+    assert_input_prompt(&failure, "?");
+
+    let response = session.resume_eval_request_with_input("3").unwrap();
+    assert_eq!(response.value.to_string(), "6");
+    assert!(response.messages.is_empty());
+}
+
+#[test]
+fn iteration_accumulator_preserves_unsuspended_values() {
+    for (source, expected) in [
+        ("Table[InputString[], 2]", "List[\"2\", \"3\"]"),
+        ("Sum[Input[], {i, 2}]", "5"),
+        ("Product[Input[], {i, 2}]", "6"),
+    ] {
+        let mut session = session_with_test_control_builtins();
+        session.queue_input_response("2");
+        session.queue_input_response("3");
+
+        let response = session.eval_request(source).unwrap();
+        assert_eq!(response.value.to_string(), expected, "{source}");
+        assert!(response.messages.is_empty());
+    }
+}
+
+#[test]
+fn iteration_accumulator_preserves_frozen_prefix_and_unique_tail_values() {
+    for (source, expected) in [
+        (
+            "Table[If[SameQ[i, 2], Input[], i], {i, 3}]",
+            "List[1, 5, 3]",
+        ),
+        ("Sum[If[SameQ[i, 2], Input[], i], {i, 3}]", "9"),
+        ("Product[If[SameQ[i, 2], Input[], i], {i, 3}]", "15"),
+    ] {
+        let mut session = loop_driver_session();
+        let failure = session.eval_request(source).unwrap_err();
+        assert_input_prompt(&failure, "?");
+
+        let response = session.resume_eval_request_with_input("5").unwrap();
+        assert_eq!(response.value.to_string(), expected, "{source}");
+        assert!(response.messages.is_empty());
+    }
+}
+
+#[test]
 fn unbounded_while_reaches_the_existing_eval_deadline() {
     let mut session = loop_driver_session();
     session.set_eval_timeout(Some(Duration::from_millis(0)));

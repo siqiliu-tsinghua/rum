@@ -2851,7 +2851,51 @@ largest movers are also microsecond-tier (19 us and 81 us), the
 layout-lottery-prone class. One pair cannot gate this panel, so this is
 recorded as observed movement on untouched code rather than tuned.
 
-**Not dispatched**: the remaining 27 conversions, step D (still blocked), and
-step E. Step C
+**A live kernel defect, found incidentally and now fixed (briefs 487-488).**
+`Table[InputString[], 2]` resumed to completion **panicked the kernel** —
+`PersistentExprAccumulator::into_vec` asserted unique ownership of its tail
+with `Arc::try_unwrap` and panicked otherwise. Nothing in `TODO.md` or `docs/`
+recorded it. Director-reproduced on the pristine tree before briefing, because
+the finding arrived inside a failing submission and the claim "it fails without
+my change too" is exactly the claim to check rather than accept.
+
+*The mechanism.* The resume driver legitimately roots the frame while the
+continuation runs — `Session.resuming_suspension` →
+`SuspendedEvaluation.frames.front()` →
+`ResumeSuspendedTableIterationsSuspensionFrame.state.collected.tail` — so the
+tail genuinely is shared at completion. The sharing is neither a leak nor an
+accident; the uniqueness precondition was simply wrong. `Sum` and `Product`
+share it through the same completion path; `Do` does not collect and is
+unaffected.
+
+*The repair is two lines*: move out of a uniquely owned node, **clone out of a
+shared one**. What decided it is internal consistency — the accumulator's own
+frozen prefix already does exactly this (`SharedArgs::into_vec`,
+`rum-core/src/expr.rs:647`), so requiring uniqueness of the linked suffix made
+one struct inconsistent with itself. An `EvalError` conversion was rejected as
+a stopgap: it leaves a valid program failing.
+
+*A correction to the director's own framing.* brief-487 claimed a panic is the
+one outcome the embedding API cannot classify. False — `rum-host`'s
+`catch_unwind` (`session.rs:661`) reports `HostFailureCode::Panic`, the next
+evaluation returns `Poisoned`, and `reset()` recovers. The accurate statement
+is that an ordinary valid program poisoned its session instead of completing.
+
+*Gate*: fmt clean, **2 450 tests green** (+6), nine native ZeroMQ tests binding
+loopback, zero skip notices. A genuine before/after certificate pair at both
+kernel and host level, each asserting the exact collected result rather than
+merely the absence of a panic.
+
+*A director omission, the fourth of this shape in this line.* brief-488's Scope
+did not list the inventory TSVs, so the worker correctly left them alone and
+**said plainly that the workspace gate was not green** rather than claiming it.
+Adding `#[derive(Clone)]` rewrites an attribute row and deleting the `panic!`
+removes a macro row. The director applied exactly the two rows discovery's own
+failure message dictates and re-ran to green.
+
+**Not dispatched**: brief-486's conversion (parked in `stash@{0}`; its
+instruction to preserve the uniqueness panic is now obsolete, and its
+`cfg(test)` divergence in `into_vec` and unresolved A/B must be fixed on
+redispatch), the remaining 26 conversions, step D (still blocked), and step E. Step C
 carries a microbench A/B and step D carries the 29-chain prerequisite, so
 neither is a cheap-to-verify dispatch.

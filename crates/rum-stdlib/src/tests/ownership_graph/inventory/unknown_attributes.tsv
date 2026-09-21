@@ -244,7 +244,7 @@ UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/control_data/branchi
 UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/mod.rs	33	1	unresolved attribute/expansion derive (Clone , Debug , PartialEq , Eq , FrameRootTrace)
 UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/mod.rs	39	1	unresolved attribute/expansion derive (Clone , Debug , PartialEq , Eq , FrameRootTrace)
 UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/mod.rs	57	1	unresolved attribute/expansion derive (Clone , FrameRootTrace)
-UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/mod.rs	64	1	unresolved attribute/expansion derive (FrameRootTrace)
+UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/mod.rs	64	1	unresolved attribute/expansion derive (Clone , FrameRootTrace)
 UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/mod.rs	111	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq)
 UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/mod.rs	151	1	unresolved attribute/expansion derive (rum_derive :: FrameRootTrace)
 UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/table_fast_path.rs	5	1	unresolved attribute/expansion derive (Clone , Debug , PartialEq , Eq)

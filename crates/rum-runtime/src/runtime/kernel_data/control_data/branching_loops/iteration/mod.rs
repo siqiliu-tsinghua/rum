@@ -61,7 +61,7 @@ pub(super) struct PersistentExprAccumulator {
     len: usize,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(Clone, FrameRootTrace)]
 struct PersistentExprAccumulatorNode {
     previous: Option<Arc<PersistentExprAccumulatorNode>>,
     value: Expr,
@@ -94,7 +94,7 @@ impl PersistentExprAccumulator {
         while let Some(current) = node {
             let current = match Arc::try_unwrap(current) {
                 Ok(current) => current,
-                Err(_) => panic!("completed iteration accumulator must be uniquely owned"),
+                Err(current) => current.as_ref().clone(),
             };
             suffix.push(current.value);
             node = current.previous;
