@@ -297,6 +297,14 @@ the termination as `MemoryLimit`, emits `General::memlim`, and leaves the
 session usable. Nested `MemoryConstrained` frames use the lower of their local
 limit and the request ceiling while active.
 
+While a memory limit is active, every existing per-expression resource
+checkpoint checks the session-plus-expression model against that limit.
+Projected-byte prechecks also check every time they are called. A single
+construction larger than the limit is rejected before allocation only where
+such a precheck exists; otherwise its excess is detected at the next existing
+checkpoint that observes it. This does not bound transient allocations between
+checkpoints or memory omitted from the model.
+
 The model counts deterministic session/expression structures. It is not an
 allocator meter or process RSS measurement, so a native host that requires a
 hard process-wide memory bound must enforce one outside the kernel. One pattern

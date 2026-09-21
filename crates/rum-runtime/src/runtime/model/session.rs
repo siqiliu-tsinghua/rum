@@ -103,7 +103,6 @@ pub struct Session {
     pub(in crate::runtime) monitor_callbacks_enabled: bool,
     pub(in crate::runtime) current_time_deadline: Option<Instant>,
     pub(in crate::runtime) current_memory_limit: Option<usize>,
-    pub(in crate::runtime) memory_limit_check_counter: std::cell::Cell<u32>,
     pub(in crate::runtime) asserts_enabled: bool,
     pub(in crate::runtime) abort_protect_depth: usize,
     pub(in crate::runtime) abort_protect_pending: usize,

@@ -2,12 +2,6 @@ use super::memory::expr_memory_proxy_bytes;
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
-/// Full proxy walks occur every 64 armed per-expression checks. Projected-byte
-/// prechecks remain unstrided for single large allocations; between sampled
-/// walks, overshoot is bounded by the existing per-step element, integer, and
-/// iteration budgets.
-const ACTIVE_MEMORY_LIMIT_CHECK_STRIDE: u32 = 64;
-
 impl Session {
     pub(in crate::runtime) fn eval_time_constrained(
         &mut self,
@@ -136,6 +130,11 @@ impl Session {
         }
     }
 
+    /// Every armed checkpoint checks the session-plus-expression proxy against
+    /// the memory limit. A single construction larger than the limit is rejected
+    /// before allocation only where a projected-byte precheck exists; otherwise
+    /// the excess is detected at the next existing checkpoint that observes it.
+    /// This structural model is not an allocator or process RSS bound.
     pub(in crate::runtime) fn enforce_active_resource_limits_for_expr(
         &self,
         expr: &Expr,
@@ -143,21 +142,21 @@ impl Session {
         self.enforce_active_time_limit()?;
 
         if let Some(limit) = self.current_memory_limit {
-            let stride_counter = self.memory_limit_check_counter.get();
-            if stride_counter == 0 {
-                self.memory_limit_check_counter
-                    .set(ACTIVE_MEMORY_LIMIT_CHECK_STRIDE - 1);
-                let projected = self
-                    .current_memory_proxy_bytes()
-                    .saturating_add(expr_memory_proxy_bytes(expr));
-                if projected > limit {
-                    return Err(EvalError::MemoryConstraintExceeded { limit });
-                }
-            } else {
-                self.memory_limit_check_counter.set(stride_counter - 1);
-            }
+            self.enforce_memory_limit_for_expr(expr, limit)?;
         }
 
+        Ok(())
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn enforce_memory_limit_for_expr(&self, expr: &Expr, limit: usize) -> Result<(), EvalError> {
+        let projected = self
+            .current_memory_proxy_bytes()
+            .saturating_add(expr_memory_proxy_bytes(expr));
+        if projected > limit {
+            return Err(EvalError::MemoryConstraintExceeded { limit });
+        }
         Ok(())
     }
 

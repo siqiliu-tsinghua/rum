@@ -95,6 +95,44 @@ fn time_and_memory_constraints_cover_current_first_pass_resource_subset() {
     );
 }
 
+// Contract: docs/guide/resource-limits-and-sandbox.md, Memory Ceilings And Hard RSS Limits.
+// Eight doublings grow a 1,000-byte seed to 256,000 bytes, crossing the 200,000-byte limit.
+#[test]
+fn memory_constraint_checks_each_repeated_string_growth_step() {
+    let mut session = core_session();
+    session
+        .eval_request("seed = StringRepeat[\"x\", 1000]")
+        .unwrap();
+
+    let response = session
+        .eval_request("MemoryConstrained[Nest[StringJoin[#, #] &, seed, 8], 200000]")
+        .expect("the local memory constraint should return an in-band value");
+    assert!(
+        response.value.to_string() == "$Aborted",
+        "repeated string growth escaped its 200000-byte ceiling"
+    );
+    assert_eq!(response.termination, None);
+    let recovered = session.eval_request("1 + 1").unwrap();
+    assert_eq!(recovered.value.to_string(), "2");
+    assert_eq!(recovered.termination, None);
+}
+
+#[test]
+fn memory_constraint_keeps_projected_string_repeat_precheck() {
+    let mut session = core_session();
+    let response = session
+        .eval_request("MemoryConstrained[StringRepeat[\"x\", 256000], 200000]")
+        .expect("the projected-byte precheck should return an in-band value");
+    assert!(
+        response.value.to_string() == "$Aborted",
+        "projected string repetition escaped its 200000-byte ceiling"
+    );
+    assert_eq!(response.termination, None);
+    let recovered = session.eval_request("1 + 1").unwrap();
+    assert_eq!(recovered.value.to_string(), "2");
+    assert_eq!(recovered.termination, None);
+}
+
 fn assert_constraint_input(
     session: &Session,
     failure: SessionRequestFailure,

@@ -79,7 +79,6 @@ session_memory_field_decisions! {
     load_stack => Accounted("PathBuf payloads and Vec capacity"),
     loaded_packages => Accounted("String capacities and Vec capacity"),
     match_depth => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    memory_limit_check_counter => Exempt("fixed-size value already covered by size_of::<Session>()"),
     message_definitions => Accounted("message keys, tags, and definition expressions"),
     message_symbol_counts => Accounted("hash-table capacity and live Symbol text"),
     messages => Accounted("RuntimeMessage strings and Vec spare capacity"),
@@ -131,7 +130,7 @@ fn session_memory_field_decision_inventory_is_sorted_and_exhaustive() {
     let session = Session::empty();
     assert_session_memory_decisions_are_exhaustive(&session);
 
-    assert_eq!(SESSION_MEMORY_FIELD_DECISIONS.len(), 95);
+    assert_eq!(SESSION_MEMORY_FIELD_DECISIONS.len(), 94);
     assert!(
         SESSION_MEMORY_FIELD_DECISIONS
             .windows(2)

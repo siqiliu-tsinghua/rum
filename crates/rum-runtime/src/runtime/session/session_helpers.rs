@@ -31,7 +31,6 @@ impl Session {
         self.interrupt_poll_counter = 0;
         self.eval_deadline = self.eval_timeout.map(|timeout| Instant::now() + timeout);
         self.current_memory_limit = self.resource_limits.eval_memory_limit;
-        self.memory_limit_check_counter.set(0);
         self.interrupt_armed =
             self.eval_deadline.is_some() || self.active_accepted_request.is_some();
     }

@@ -652,7 +652,6 @@ impl Session {
             monitor_callbacks_enabled: true,
             current_time_deadline: None,
             current_memory_limit: None,
-            memory_limit_check_counter: std::cell::Cell::new(0),
             asserts_enabled: false,
             abort_protect_depth: 0,
             abort_protect_pending: 0,
