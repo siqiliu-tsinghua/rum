@@ -1210,9 +1210,73 @@ converted from unbounded invisible growth into a bounded, loud limit:
   reclaim them, one tenant can permanently exhaust the shared quota, and host
   process isolation remains the pattern for hard multi-tenant isolation.
 
-**Next action, and it is the director's, not a worker's.** brief-505's design
-pass is complete and its plan is blocked on five ruled decisions, D1-D5 in its
-§4 — the 8 MiB default and the supported embedding envelope, the exact
+**The director's rulings on brief-505's D1-D7 (2026-09-22).** The design pass
+is complete; these settle it. Sequence stays A (prove bounded storage and the
+admission instrument) -> B (integrate) -> C (independently falsify and gate).
+
+- **D1 — the default is NOT set here; it becomes a measurement obligation.**
+  Draft A measures and reports, the director chooses, and the worker may not
+  tune it. Three workloads must be measured: the bootstrap footprint, the peak
+  interner bytes across the ordinary test suite and the microbench panel, and
+  **`Unique[]` in a loop**. That third one is the point: director-verified
+  2026-09-22, `Module` gensyms do **not** grow the interner — `with_identity`
+  varies only the numeric identity while the interner is keyed on
+  `(context, name)` (`crates/rum-core/src/expr.rs:80-96,115-122`) — but
+  `Unique[]` mints fresh text every call
+  (`crates/rum-runtime/src/runtime/scoping/unique.rs:42`). So the language has
+  a built-in legitimate unbounded interner consumer, and the report must say
+  how many `Unique[]` calls a candidate default permits. A default that
+  refuses a supported workload repeats the 6 MiB guard on a 2 MiB thread.
+- **D2 — approved as a proxy, and only as a proxy.** Exact Rust
+  allocation-layout bytes plus a conservative fixed reserve, explicitly
+  excluding allocator metadata, rounding and RSS. That is consistent with
+  `current_memory_proxy_bytes`, which is already a documented model rather
+  than a physical meter, and with `SECURITY.md` telling embedders to run
+  their own RSS watchdog. The portable-physical-bound reading is **rejected**;
+  do not let it return as "conservative". Private explicitly-sized indexes
+  replacing the opaque `HashMap`/`HashSet` are approved, gated by D6.
+- **D3 — approved in full.** `Result` on all seven constructors, arbitrary
+  registration, installer callbacks, configured host build/reset, and serde.
+  **No quota-panic compatibility layer** — that would be the convention-
+  enforced version of the thing we are making compiler-enforced. Zero identity
+  becomes a constructor/serde error rather than a panic: approved, it removes
+  a panic. The infallible fixed-name subset stands only behind its own closed-
+  installer proof; without that proof it is fallible too.
+- **D4 — approved with one constraint.** `heads.rs` already puts canonical
+  spellings in `rum-core` (`crates/rum-core/src/heads.rs:112`), so a
+  spelling/identity table there extends an existing boundary rather than
+  opening a new one. The constraint: it carries **spellings and identities
+  only** — no attributes, no specs, no behavior, and it confers no builtin
+  status — and a consistency test cross-checks it against the stdlib catalog
+  so divergence is loud. If the implementation finds it needs any behavioural
+  field in core, that is a **STOP**, not a judgement call.
+- **D5 — approved for the new kind only, and it surfaced a separate defect.**
+  `InternerLimit` termination, `General::internerlim`, typed host failure and
+  explicit reset/restore semantics: approved. But brief-505 noticed that
+  restore's `Ok(_)` **discards termination** today
+  (`crates/rum-host/src/session.rs:201-220`) — a terminated evaluation during
+  restore is reported as success. Handle the interner kind here and **do not**
+  make restore transactional or touch other termination kinds; the general
+  case is its own item, recorded below.
+- **D6 — approved as stated.** Gate with the instruction-count recipe
+  (`taskset -c 2 perf stat -e instructions:u`), not the timing panel. Two arms
+  suffice here — `main` versus the change, built at the same path. A
+  regression is a defect to fix or report. No substituting an unbounded table,
+  an approximate undercharge, or any ruled-out `Symbol` representation.
+- **D7 — approved as a separate brief**, not folded in. The audit's
+  per-request-versus-per-session criticism stays open and is listed below.
+
+**Opened by D5, not yet briefed:** `restore_from_bytes` reports `Ok` for an
+evaluation that terminated during restore, so a caller cannot tell a restored
+session from a truncated one. Found by design review, not reproduced yet —
+**re-probe before briefing a fix.**
+
+**Superseded note.** The earlier line here said five decisions; there are
+seven. brief-505's census is also the argument for plan-first: **337 direct
+constructor references across 78 files**, not the 179 a `Symbol::`-only regex
+finds, since `Expr::symbol` and `Expr::system_symbol` add 157 more.
+
+**Previously recorded, now settled.** brief-505's plan was blocked on D1-D7 — the 8 MiB default and the supported embedding envelope, the exact
 charged-storage contract, public fallibility across the seven constructors,
 and the two after them. Nothing is dispatched until those are settled. The
 census it produced is the reason plan-first was used: **337 direct constructor
