@@ -109,9 +109,30 @@ taskset -c 2 perf stat -e instructions:u -x, -- <rum-cli> <workload>.rum < /dev/
 Read `cpu_core/instructions/u`, require `100.00` multiplex coverage, build both
 arms at the same path, release profile, profiling env OFF, three runs per arm,
 judge the delta against the observed within-arm spread (~0.02% on this host).
-Use a workload dominated by parsing and lowering many ordinary small forms, not
-by evaluation; state the workload. Run the CLI with stdin closed or probes
-hang. Allocation counters must be identical.
+Run the CLI with stdin closed or probes hang. Allocation counters must be
+identical.
+
+**Two workloads, and the split is what decides acceptance.** The first dispatch
+measured **+0.608%** on a parse-and-lower workload — but measured the
+*superseded* layout and never re-measured the final one, so there is currently
+no number for what is in the tree.
+
+- **Lowering-dominated**: many ordinary small forms, parsing and lowering
+  rather than evaluating. This is the worst case for this change.
+- **Evaluation-dominated**: a small program that does real work, so lowering is
+  a vanishing fraction. This is what almost every real program looks like.
+
+Report both, for the layout actually in the tree. Acceptance is judged on the
+split, exactly as the accumulator-chain work was: a cost confined to the
+workload the change is about, with the ordinary case unmoved, is acceptable on
+this line's precedent — brief-453 took +0.714% and brief-475 +0.606% to remove
+a process kill, and this removes one too. A cost that shows up on the
+evaluation-dominated workload is a different matter and must be reported as
+such.
+
+**Ignore the timing panel.** Its controls have moved +3.7% to +12.45% on this
+host; it cannot resolve a question this size. Instruction counts decide, and if
+counters and instructions agree, no timing number overrules them.
 
 ## Scope
 
@@ -119,6 +140,16 @@ Files you MAY modify: `crates/rum-runtime/src/runtime/lowering.rs` and
 `crates/rum-runtime/src/runtime/lowering/binary.rs`, plus the test module for
 the certificate. Touch the session path (`runtime/resolution.rs`) only if the
 bound cannot otherwise reach it, and say why.
+
+- `crates/rum-stdlib/src/tests/ownership_graph/inventory/*.tsv` — **added
+  2026-09-21 after a correct stop-loss.** The first dispatch forbade these, so
+  the workspace gate could not pass: editing `lowering.rs` shifts pinned rows.
+  That was the director's omission, the fifth of this shape on this line. They
+  are now in scope under the disclosure rule: regenerate as discovery requires,
+  list **every** content change with its witness, classified (a) position drift
+  and closure/macro rows from this brief's own edits, or (b) anything else —
+  and **(b) is a stop**, as is any new `UnknownHostPayload`, any removed row,
+  or any reclassification. Never hand-edit a row to make a check pass.
 
 MUST NOT touch: `crates/rum-syntax/**` — **no parser cap, no AST change**;
 `accumulator_chain.rs`, `host_payload.rs`, `crates/rum-derive/**`, the
