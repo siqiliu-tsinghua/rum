@@ -4,9 +4,21 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-19, committed tree through `153e49fc`. Uncommitted
+Status checkpoint: 2026-09-21, committed tree through `c07cb414`. Uncommitted
 performance candidates do not count as completed until their correctness,
 timing, counter, and memory gates have all been reviewed.
+
+**Where work resumes.** The ownership branch (briefs 480-498) is closed — the
+host-payload destruction contract, the accumulator-chain family and its
+participation gate, the scanner's root set, and the four defects that turned up
+along the way. **Next is the security-hardening mainline**, whose open items
+are §Opened by the 2026-09-02 security audit (brief-413) and §Opened by that
+work, not yet briefed: the process-global symbol interner the memory ceiling
+cannot see, the strided ceiling sample, `rum-jupyter`'s unguarded JSON depth,
+the dropped deadline across an input suspension, the call-stability cache
+bounded by count rather than bytes, and the unexplained 1 668-byte abandonment
+retention. The audit's three criticisms of the threat model itself are still
+unanswered and are worth more than several of the findings.
 
 ## Active — post-v0.1 algorithmic audit
 

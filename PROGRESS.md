@@ -2911,3 +2911,104 @@ had never touched.
 
 Still open: the disposition ledger and its second axis, the `Persistent*Node`
 drop ceiling, `GroupBy`, the residual shapes, and the schema validator.
+
+## 2026-09-21 — the ownership branch closes, and four defects it was not looking for (briefs 480-498)
+
+The branch opened from `serval`'s review with one question — should the
+embedding API demand bounded destruction — and the user ruled to change the
+API rather than document the hazard. It closes with that contract built, the
+one class of unbounded destruction rum could actually repair repaired, and
+four defects that had nothing to do with the question.
+
+**The contract.** `BoundedDestruction` is a safe opt-in marker with no blanket
+impl and no derive; implementing it *is* the stance, and its rustdoc says
+plainly that the compiler enforces only that a stance was taken. `EntropySource`
+and `FileIo` require it. The print sink could not: a trait cannot be implemented
+on a host's closure, so `Session` now stores a named `PrintSink` and closures
+arrive through `ClosurePrintSink::assert_bounded_destruction`, whose field is
+private and which has no `From`, no `Default` and above all no blanket impl —
+that blanket impl being both the shortcut that would silently restore the old
+permissiveness and, therefore, the falsifier. The authoritative evidence is a
+compiler error from crates **outside** the workspace; `compile_fail` doctests
+stayed documentation. `rum-cli` migrated through `rum-host`'s re-export and did
+not gain a `rum-runtime` dependency.
+
+**Step D was cancelled rather than executed, which is the arc's best
+judgement.** Making the marker a supertrait of `SuspensionFrame` and
+`PureFrameFinalizer` would have asked about 598 implementors to assert what the
+project records as false: `Expr`'s destruction is unbounded standing debt and
+266 of 535 frame structs own an `Expr`-family field directly. The review added
+two qualifications worth keeping — returning an `Expr` does not make a
+*particular* frame unbounded, so what the evidence refutes is a universal
+supertrait rather than every declaration; and `#[doc(hidden)]` does not close an
+implementation set, so recording the in-tree debt cannot discharge external
+implementors. The line ends with a disposition ledger over all 50
+`UnknownHostPayload` rows whose `Unbounded` entries are **verified** against the
+discovered graph rather than merely written, so a row that does not reach
+`Expr` cannot borrow its debt.
+
+**The repair that was possible.** All 29 accumulator-chain members — every
+`Option<Arc<Self>>` spine in the kernel and stdlib — now destroy through one
+`#[repr(transparent)]` wrapper carrying a single cold drain that acquires with
+`Arc::into_inner` and stops at a shared node. Three enforcement layers, one
+claim each: the derive rejects a non-wrapper link at compile time, a depth
+observer proves the drain is iterative (exactly 1 nesting at chain lengths 16
+and 64), and a discovery-derived gate proves the family is complete — with no
+name list, allowlist or exemption table, so a future type of the shape must be
+converted or the tree is red.
+
+**Four defects, none of them the question.** A resumed `Table[InputString[], 2]`
+panicked the kernel, because `into_vec` demanded unique ownership of a tail the
+resume driver legitimately roots; the repair moves out of a unique node and
+clones out of a shared one, which is what the accumulator's own frozen prefix
+already did. A **call-head chain** evades the parser's 128 delimiter and
+operator counters — `f[1][1]…` accepted at 5 000 where the nested form of the
+same depth is refused at 300 — and overflowed AST-to-`Expr` lowering at 1.22x to
+1.46x the contract height, failing open; lowering is now bounded. The parse dump
+was **cubic**, because `{:#?}` wraps the writer in another pad adapter per
+nesting level. And the standing-debt entry claiming source-created trees are
+depth-guarded was false for that shape and is corrected.
+
+**The scanner could not see a crate the kernel owns.** `rum-syntax` was not a
+root while `rum-runtime` owns its types in four places, and its AST is
+recursive. The root set is now a criterion — kernel and stdlib plus workspace
+crates whose values they own, transitively — rather than a list.
+
+**E2 was examined and declined.** Of 7 068 `UnknownConstruct` rows only 70 can
+hide an owning edge, and those are 29 `std`, 6 `num_bigint`, 6 `rum_syntax` and
+flat leaves. An axis declaring an unknown "cannot introduce an owning edge"
+silences it; maximal conservatism is loud and useless but never lies.
+
+**Method, in the order it cost the most.**
+
+- *A permission list gets under-enumerated; a disclosure duty cannot.* Five
+  stop-losses on this branch were the director's MAY-list and inventory-rule
+  omissions, every one a correct worker stop. The rule's shape was wrong, not
+  its care: "regenerate as discovery requires, list every content change with
+  its witness, classified, and anything unclassified is a stop" is the form that
+  survives.
+- *A falsifier that goes red is not evidence until you read why.* The ledger's
+  attribution falsifier first went red on an unrelated precondition about
+  ambiguous trait bounds and had to be re-run before it certified anything; an
+  exit-status-only probe turned 60-second timeouts into phantom stack overflows;
+  and a growth ratio believed without subtracting process startup made a cubic
+  look sub-quadratic.
+- *Calibrate the instrument and hand over the recipe, not the tool name.* The
+  timing panel cannot resolve a question this size — its own controls moved
+  +3.70% to +12.45%. Instruction counts pinned to one core type
+  (`taskset -c 2 perf stat -e instructions:u`, `cpu_core` at 100.00 multiplex)
+  repeat to **0.003%** on this host, and that recipe went into the briefs.
+- *Acceptance is judged on the split.* The chain work costs +3.57% on a
+  `DeleteMissing` deep enough to enter the heap tail and **-0.005%** at ordinary
+  depth; bounded lowering moves +0.117% on a lowering-dominated workload, inside
+  both arms' spreads, and is 0.351% faster on an evaluation-dominated one. A
+  cost confined to the shape the change is about, with the ordinary case
+  unmoved, is what this project's precedents accepted for removing a process
+  kill.
+- *`git checkout` restores from the index, so on a worker's uncommitted output
+  it is a delete.* The director did it twice while warning others against it;
+  recovery cost a diff extraction from the dispatch log, a hand rewrite, a test
+  recovered from the log, and two inventory regeneration passes.
+
+Still open: the security-hardening mainline's own findings, and the three
+criticisms of the threat model that the 2026-09-02 audit left unanswered.

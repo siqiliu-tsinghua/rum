@@ -206,7 +206,14 @@ Consequences for how I present and pick work:
 
 ## Current direction (read these for state)
 
-- **THE ACTIVE LINE (2026-09-08/19, briefs 459-479, `153e49fc`): association
+- **THE PREVIOUS LINE IS CLOSED (2026-09-08/21, briefs 459-498, through
+  `c07cb414`): association depth, the ownership graph it exposed, and that
+  branch's own leftovers.** `TODO.md` is authoritative; the 2026-09-21
+  `PROGRESS.md` entry has the narrative; memories
+  `stability-walk-and-rebuild-class.md` and `ownership-graph-line.md`.
+  **NEXT: the security-hardening mainline resumes** — the 2026-09-02 audit's
+  open findings, headed by the process-global symbol interner that the memory
+  ceiling cannot see, plus the two items that work opened and never briefed.
   depth, then the ownership graph it exposed.** `TODO.md` is authoritative; the
   2026-09-18/19 `PROGRESS.md` entry has the narrative; memories
   `stability-walk-and-rebuild-class.md` and `ownership-graph-line.md`.
@@ -227,20 +234,36 @@ Consequences for how I present and pick work:
   brief**: two briefs demanded certificates that fail identically on the
   pre-conversion build.
 
-  **The open front is ownership, not depth.** The byte guard constrains the call
-  stack; the host *destructor* walks an ownership graph nothing modelled, which
-  is why both real drop hazards this month (`NestedPathNodes`, `LookupOutcome`)
-  were found by accident. brief-479 measured the exposure: **48
-  `UnknownHostPayload` sites, only 6 of them owned storage edges**; 7 068
-  `UnknownConstruct` of which only 70 are storage or representation. Step two of
-  the ledger is blocked on a design decision — `UnknownConstruct` needs a second
-  axis, "unknown expansion" versus "unknown that could add an owning edge", or
-  the ledger can never be green and will never be used.
+  **The ownership branch is closed.** The byte guard constrains the call stack;
+  the host *destructor* walks an ownership graph nothing modelled, which is why
+  both real drop hazards were found by accident. It ends with: all **29**
+  accumulator-chain members draining iteratively behind one `#[repr(transparent)]`
+  wrapper, kept closed by a discovery-derived participation gate; a disposition
+  ledger over all **50** `UnknownHostPayload` rows (3 `Declared`, 3 `Unbounded`
+  owed to the `Expr` debt with external implementations stated unresolved, 44
+  `PublicInput`), whose attribution is *verified* rather than written; and the
+  scanner's own root set corrected — `rum-syntax` was unscanned while the kernel
+  owned its recursive AST.
 
-  **Next**: the 6 owned storage edges (list them before deciding whether the
-  embedding API should demand bounded destruction), the ledger's step two, the
-  `Persistent*Node` drop ceiling (still `NotMeasured`, blocking nothing), then
-  `GroupBy` and the residual shapes.
+  **Step D was cancelled on evidence, and that is the line's best judgement.**
+  Declaring `SuspensionFrame`/`PureFrameFinalizer` bounded would have asked ~598
+  implementors to assert what the project records as false: `Expr`'s destruction
+  is unbounded standing debt and two thirds of the frames own one. **A
+  declaration that is not true is not made acceptable by being cheap.**
+
+  **Four defects it found on the way**, none of them what it was looking for: a
+  resumed `Table` panicking the kernel (`Arc::try_unwrap` demanding uniqueness a
+  suspension frame legitimately breaks); a **source-reachable** fail-open where a
+  call-head chain evades the parser's 128 counters and overflowed lowering at
+  1.2-1.5x the contract height; a **cubic** parse dump (`{:#?}` wraps the writer
+  per nesting level); and the standing-debt entry's claim that source-created
+  trees are depth-guarded, which was false for that shape and is now corrected.
+
+  **E2 was examined and declined.** Of 7 068 `UnknownConstruct` rows only 70 can
+  hide an owning edge, and those are 29 `std`, 6 `num_bigint`, 6 `rum_syntax`
+  and flat leaves. The maintenance tax is real; the safety yield is not. **An
+  axis declaring an unknown "cannot introduce an owning edge" silences it —
+  maximal conservatism is loud and useless but never lies.**
 
   **Dispatcher**: never pipe `scripts/dispatch-brief.sh` — `pipefail` plus a
   closed pipe kills it before it dispatches and the result mimics a silent
