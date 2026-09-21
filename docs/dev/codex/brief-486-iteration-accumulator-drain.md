@@ -9,6 +9,19 @@ stop-loss room rather than being buried in a batch.
 **Do not declare any suspension frame `BoundedDestruction`.** Step D stays
 blocked until all 29 members are converted.
 
+**Redispatched 2026-09-21 after brief-488.** The first attempt found a
+pre-existing kernel panic, which is now fixed (`8fe40eb0`): `into_vec` moves
+out of a uniquely owned node and **clones out of a shared one**. Three things
+changed for you:
+
+- This brief's earlier instruction to preserve the uniqueness panic is
+  **obsolete**. Preserve brief-488's move-or-clone behavior exactly instead.
+- `stash@{0}` holds the first attempt. It is **stale** — it predates the
+  repair. Do not apply, inspect-and-copy, or otherwise touch any stash. Redo
+  the conversion on the current tree.
+- The A/B is re-specified below with a calibrated instrument, because the
+  timing panel could not resolve it.
+
 ## Why this one is alone, and why it matters most
 
 - **It grows one node per collected element.** `PersistentExprAccumulator::appended`
@@ -70,12 +83,25 @@ payload in this family having an observable destructor, and `Expr` does not.
 
 Two things specific to this member:
 
-1. **`into_vec` must keep working unchanged in behavior**, including its
-   `Arc::try_unwrap` uniqueness expectation and its existing panic message. It
-   consumes the chain itself, so it must take the wrapper's contents rather
-   than fighting the `Drop`. If the wrapper makes that panic unreachable or
-   changes when it fires, STOP and report — that is a semantic change, not a
-   refactor.
+1. **`into_vec` must keep brief-488's behavior exactly**: move out of a
+   uniquely owned node, clone out of a shared one, never panic. It consumes
+   the chain itself, so it must take the wrapper's contents rather than
+   fighting the `Drop`.
+
+   One interaction to get right rather than discover: the shared branch clones
+   a node, and that clone's link is a wrapper whose `Drop` runs at the end of
+   the iteration. That is correct — the clone's link is an `Arc` clone, so
+   `Arc::into_inner` fails at once and the drain stops immediately — but say
+   in your report that you checked it, because a naive reading suggests the
+   tail is drained twice.
+
+3. **No `#[cfg(test)]` divergence in production code.** The first attempt gave
+   `into_vec` one body for test builds and another for production. That makes
+   the certificate prove something about code production never runs, which is
+   a trap this project has been caught by before. Production and test builds
+   must execute the same `into_vec`. If an observer cannot be added without
+   forking the path, put the observer in the test's own types, or STOP and
+   report.
 2. **`appended` is the hot path.** The wrapper is `#[repr(transparent)]` and
    its constructor is `#[inline]`, so the collection path should pay exactly
    nothing. That is a claim the A/B has to support, not an assumption.
@@ -128,19 +154,36 @@ python3 scripts/run-bounded.py --timeout 2400 -- cargo test --workspace --offlin
 ```
 
 **The A/B is the real gate here**, because `appended` runs per collected
-element. One pair cannot gate this panel — the previous step saw untouched
-`table-*` labels move +13.48% and +10.72% on pure layout lottery — so:
+element — and the first attempt showed the timing panel cannot resolve it: the
+named controls themselves moved +3.70% to +12.45%, and one target read +19.13%
+in one pair and -6.34% in the other. Do not try to win that argument with more
+timing runs.
 
-- **Allocation counts decide first.** They are load-immune. Report the
-  allocation counters for the `table-*` and `do-*` labels; the wrapper adds no
-  allocation, so **any change in allocation count is a defect**, and if the
-  counters do not move, do not let a timing number overrule them.
-- Then **two base/candidate pairs**, alternating order, profiling env OFF,
-  machine otherwise idle. Build both arms at the same path.
-- Name the untouched control labels **before** judging, and report the control
-  band alongside the targets. If the targets sit inside the band, that is no
-  regression; say so rather than tuning.
-- Report `table-*`, `do-*`, and their same-tier neighbors.
+**Use instruction counts. The director calibrated the instrument for you:**
+
+```
+taskset -c 2 perf stat -e instructions:u -x, -- <command>
+```
+
+Read the `cpu_core/instructions/u` row and require its multiplex column to read
+`100.00`; pinning to CPU 2 keeps the run on one core type, which this host
+needs because its P and E cores count separately. Repeatability measured by the
+director on a trivial command: 167 565 / 167 562 / 167 567 instructions, a
+spread of 0.003%.
+
+- Build base and candidate **at the same path**, release profile, profiling env
+  OFF.
+- Drive a fixed `Table`/`Do` workload from a `.rum` script through the release
+  `rum-cli`; state the script and keep it fixed across arms.
+- **Three runs per arm.** Report every count, each arm's spread, and the delta.
+- **The acceptance criterion**: the candidate's delta must not exceed the
+  observed within-arm spread. If it does, that is a real cost — the plausible
+  mechanism is a `#[cold]` drain call replacing an inlined refcount decrement
+  on a per-iteration drop — and it must be fixed or reported, not averaged
+  away.
+- Allocation counts must also be identical, as they were in the first attempt.
+  If counters and instructions both say no change, no timing number overrules
+  them; say so and move on rather than running the panel again.
 
 ## Hard rules
 
