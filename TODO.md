@@ -1195,10 +1195,19 @@ Settled after brief-414's design pass and the director review of it.
 ## Standing engineering debt
 
 - Deep `Expr` trees constructed directly through the Rust API can overflow the
-  native stack on drop. Source-created trees are depth-guarded; three iterative
-  `Drop` designs regressed the hot path by 20-50% and were rejected. Keep the
-  host limitation documented in
+  native stack on drop. Three iterative `Drop` designs regressed the hot path by
+  20-50% and were rejected. Keep the host limitation documented in
   [docs/host-embedding-and-hardening.md](./docs/host-embedding-and-hardening.md).
+
+  **Corrected 2026-09-21.** This entry used to say source-created trees are
+  depth-guarded. That was false for one shape: the parser's
+  `MAX_DELIMITER_NESTING_DEPTH` and `MAX_OPERATOR_CHAIN_DEPTH` (both 128) count
+  delimiter nesting and operator chains, and a **call-head chain** boxes the
+  prior head without touching either, so `Hold[f[1][1]…]` was accepted at any
+  depth while the nested `Hold[f[f[f[…]]]]` of the same depth was refused.
+  brief-497 bounds AST-to-`Expr` lowering, so that shape now fails closed; the
+  *drop* limitation above is unchanged and still applies to trees built through
+  the Rust API.
 - Session snapshots are UTF-8 source images. A direct binary snapshot format is
   deferred until substantially larger session images justify the extra format
   and compatibility surface.
@@ -3095,9 +3104,50 @@ So the ceiling is **1.22x-1.46x the ruled contract height, and it fails open**
 queue's thinnest entries (`Lookup` 1.16x, `KeyComplement` 1.42x), in a
 construct nothing could see until the root set was fixed.
 
-**Open, and it is the next item this line hands over**: *which phase* overflows
-— the parser's own recursion over the chain, the AST's construction, or its
-drop. The failure precedes any output, so it is not yet attributed. The fix
-differs by phase, so diagnose before briefing a repair. Step C
+**Diagnosed and repaired (briefs 496-497).** The phase is **AST-to-`Expr`
+lowering** — director-verified independently of the worker's source sequencing:
+a script printing before and after the deep form prints only the first, so the
+overflow is inside the form's processing, not at drop time. Parsing is not the
+phase: `--format` parses the same input, builds and renders the formatter's
+`Doc`, and survives 6 000.
+
+*No parser cap and no language change.* Lowering is publicly callable
+(`runtime/lowering.rs:7`, `runtime/resolution.rs:67`), so a host can hand in
+constructed syntax of any depth and a cap could not replace the repair; and once
+lowering fails closed the deep chain yields an in-band error anyway. That
+removed a user-visible decision rather than raising one.
+
+*After brief-497*, at `ulimit -s 2048`: 4 097 and 5 000 unchanged, **6 000 now
+returns `! evaluation exceeded recursion limit (5500)`** instead of killing the
+process, and nested 300 is still refused in band with its old message. Gate:
+fmt clean, **2 471 tests green**, nine native ZeroMQ tests binding loopback,
+zero skip notices.
+
+*The A/B, director-measured because the worker's number was for a layout it had
+already superseded.* Ten runs per arm, alternating blocks:
+
+| workload | base | candidate | delta | arm spreads |
+|---|---:|---:|---:|---|
+| lowering-dominated | 2 822 055 018 | 2 825 351 546 | **+0.117%** | 0.137% / 0.202% |
+| evaluation-dominated | 885 857 984 | 882 745 193 | **-0.351%** | 0.0017% / 0.0014% |
+
+The lowering delta is **smaller than either arm's own spread**, so it is not
+resolvable; the ordinary evaluation workload is faster. Accepted.
+
+*Two director notes worth keeping.* The worker stopped twice, both times
+correctly: once because the brief's Scope forbade the ownership inventory that
+editing `lowering.rs` inevitably shifts — the **fifth** permission-list omission
+on this line, now fixed in the brief as a disclosure duty — and once after
+inventory witness matching failed twice under the two-strike rule. The director
+regenerated those rows with the script this session has used twice, driven by
+the exact-inventory test's own mismatch output: **58 removed, 87 added, all
+`UnknownConstruct`, confined to the two lowering files**, with no new
+`UnknownHostPayload` and no reclassification.
+
+**Still open, recorded not fixed**: `rum --parse` on the same chain times out
+from about 1 000 applications while `--format` on the same input is fast, so the
+syntax-tree *rendering* (`rum-cli/src/main.rs:66` → `debug_dump` →
+`rum-syntax/src/document.rs:380`, pretty `Debug` with depth-dependent
+indentation) appears superlinear. A separate defect. Step C
 carries a microbench A/B and step D carries the 29-chain prerequisite, so
 neither is a cheap-to-verify dispatch.
