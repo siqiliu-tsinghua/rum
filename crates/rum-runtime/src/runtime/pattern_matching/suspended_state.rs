@@ -1,5 +1,7 @@
 use super::*;
-use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::kernel_api::{
+    AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
+};
 use std::sync::Arc;
 
 /// A binding table captured only after matching has actually suspended.
@@ -71,13 +73,14 @@ impl<T: FrameRootTrace> FrozenMatcherValue<T> {
 #[derive(Clone, FrameRootTrace)]
 pub(in crate::runtime) struct PersistentMatchResults {
     prefix: Arc<Vec<SymbolExprMap>>,
-    tail: Option<Arc<PersistentMatchResultsNode>>,
+    tail: AccumulatorChain<PersistentMatchResultsNode>,
     len: usize,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct PersistentMatchResultsNode {
-    previous: Option<Arc<PersistentMatchResultsNode>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<PersistentMatchResultsNode>,
     values: Arc<Vec<SymbolExprMap>>,
 }
 
@@ -86,14 +89,14 @@ impl PersistentMatchResults {
         let len = values.len();
         Self {
             prefix: Arc::new(values),
-            tail: None,
+            tail: AccumulatorChain::default(),
             len,
         }
     }
 
     pub(in crate::runtime) fn into_vec(self) -> Vec<SymbolExprMap> {
         let mut suffix = Vec::new();
-        let mut node = self.tail;
+        let mut node = self.tail.into_inner();
         while let Some(current) = node {
             let current = Arc::try_unwrap(current).unwrap_or_else(|_| {
                 panic!("completed matcher result chain must be uniquely owned")
@@ -102,7 +105,7 @@ impl PersistentMatchResults {
                 panic!("completed matcher result chunk must be uniquely owned")
             });
             suffix.push(values);
-            node = current.previous;
+            node = current.previous.into_inner();
         }
         suffix.reverse();
 

@@ -3,18 +3,21 @@ mod resume_frames;
 use resume_frames::*;
 
 use super::*;
-use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::kernel_api::{
+    AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
+};
 use std::sync::Arc;
 
 #[derive(Clone, FrameRootTrace)]
 struct FixedPointHistory {
     prefix: SharedArgs,
-    tail: Option<Arc<FixedPointHistoryNode>>,
+    tail: AccumulatorChain<FixedPointHistoryNode>,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct FixedPointHistoryNode {
-    previous: Option<Arc<FixedPointHistoryNode>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<FixedPointHistoryNode>,
     value: Expr,
 }
 
@@ -29,7 +32,7 @@ impl FixedPointHistory {
     fn freeze(values: Vec<Expr>) -> Self {
         Self {
             prefix: SharedArgs::new(values),
-            tail: None,
+            tail: AccumulatorChain::default(),
         }
     }
 
@@ -51,10 +54,10 @@ impl FixedPointHistory {
     fn appended(&self, value: Expr) -> Self {
         Self {
             prefix: self.prefix.clone(),
-            tail: Some(Arc::new(FixedPointHistoryNode {
+            tail: AccumulatorChain::new(Some(Arc::new(FixedPointHistoryNode {
                 previous: self.tail.clone(),
                 value,
-            })),
+            }))),
         }
     }
 }

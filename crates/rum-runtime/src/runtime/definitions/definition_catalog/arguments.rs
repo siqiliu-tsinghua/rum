@@ -1,17 +1,20 @@
 use super::*;
-use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::kernel_api::{
+    AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
+};
 use std::sync::Arc;
 
 #[derive(Clone, FrameRootTrace)]
 struct ResolvedArgumentAccumulator {
     prefix: SharedArgs,
-    tail: Option<Arc<ResolvedArgumentNode>>,
+    tail: AccumulatorChain<ResolvedArgumentNode>,
     len: usize,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct ResolvedArgumentNode {
-    previous: Option<Arc<ResolvedArgumentNode>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<ResolvedArgumentNode>,
     value: Expr,
 }
 
@@ -20,7 +23,7 @@ impl ResolvedArgumentAccumulator {
         let len = values.len();
         Self {
             prefix: SharedArgs::new(values),
-            tail: None,
+            tail: AccumulatorChain::default(),
             len,
         }
     }
@@ -28,22 +31,22 @@ impl ResolvedArgumentAccumulator {
     fn appended(&self, value: Expr) -> Self {
         Self {
             prefix: self.prefix.clone(),
-            tail: Some(Arc::new(ResolvedArgumentNode {
+            tail: AccumulatorChain::new(Some(Arc::new(ResolvedArgumentNode {
                 previous: self.tail.clone(),
                 value,
-            })),
+            }))),
             len: self.len + 1,
         }
     }
 
     fn into_vec(self) -> Vec<Expr> {
         let mut suffix = Vec::with_capacity(self.len.saturating_sub(self.prefix.len()));
-        let mut node = self.tail;
+        let mut node = self.tail.into_inner();
         while let Some(current) = node {
             let current = Arc::try_unwrap(current)
                 .unwrap_or_else(|_| panic!("completed argument accumulator must be unique"));
             suffix.push(current.value);
-            node = current.previous;
+            node = current.previous.into_inner();
         }
         suffix.reverse();
 

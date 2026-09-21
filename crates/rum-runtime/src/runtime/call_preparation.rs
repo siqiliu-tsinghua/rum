@@ -1,5 +1,7 @@
 use super::*;
-use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::kernel_api::{
+    AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
+};
 use std::sync::Arc;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, FrameRootTrace)]
@@ -40,13 +42,14 @@ pub(super) enum CallArgumentMode {
 #[derive(Clone, FrameRootTrace)]
 pub(super) struct PreparedArgumentAccumulator {
     prefix: SharedArgs,
-    tail: Option<Arc<PreparedArgumentNode>>,
+    tail: AccumulatorChain<PreparedArgumentNode>,
     pub(super) len: usize,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct PreparedArgumentNode {
-    previous: Option<Arc<PreparedArgumentNode>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<PreparedArgumentNode>,
     value: Expr,
 }
 
@@ -55,7 +58,7 @@ impl PreparedArgumentAccumulator {
         let len = values.len();
         Self {
             prefix: SharedArgs::new(values),
-            tail: None,
+            tail: AccumulatorChain::default(),
             len,
         }
     }
@@ -63,22 +66,22 @@ impl PreparedArgumentAccumulator {
     fn appended(&self, value: Expr) -> Self {
         Self {
             prefix: self.prefix.clone(),
-            tail: Some(Arc::new(PreparedArgumentNode {
+            tail: AccumulatorChain::new(Some(Arc::new(PreparedArgumentNode {
                 previous: self.tail.clone(),
                 value,
-            })),
+            }))),
             len: self.len + 1,
         }
     }
 
     pub(super) fn into_vec(self) -> Vec<Expr> {
         let mut suffix = Vec::with_capacity(self.len.saturating_sub(self.prefix.len()));
-        let mut node = self.tail;
+        let mut node = self.tail.into_inner();
         while let Some(current) = node {
             let current = Arc::try_unwrap(current)
                 .unwrap_or_else(|_| panic!("completed call argument state must be unique"));
             suffix.push(current.value);
-            node = current.previous;
+            node = current.previous.into_inner();
         }
         suffix.reverse();
 
@@ -90,16 +93,16 @@ impl PreparedArgumentAccumulator {
 
     pub(super) fn into_vec_allow_shared(self) -> Vec<Expr> {
         let mut suffix = Vec::with_capacity(self.len.saturating_sub(self.prefix.len()));
-        let mut node = self.tail;
+        let mut node = self.tail.into_inner();
         while let Some(current) = node {
             match Arc::try_unwrap(current) {
                 Ok(current) => {
                     suffix.push(current.value);
-                    node = current.previous;
+                    node = current.previous.into_inner();
                 }
                 Err(current) => {
                     suffix.push(current.value.clone());
-                    node = current.previous.clone();
+                    node = current.previous.clone().into_inner();
                 }
             }
         }

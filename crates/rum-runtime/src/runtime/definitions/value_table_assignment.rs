@@ -3,7 +3,9 @@ use super::definition_lhs_preparation::{
     DefinitionLhsPreparationContinuation, DefinitionLhsPreparationContinuationResult,
     PreparedDefinitionLhs, PreparedDefinitionStore,
 };
-use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::kernel_api::{
+    AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
+};
 use std::sync::Arc;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, FrameRootTrace)]
@@ -31,13 +33,14 @@ struct PreparedValueTableRule {
 
 #[derive(Clone, Default, FrameRootTrace)]
 struct PreparedValueTableRuleAccumulator {
-    tail: Option<Arc<PreparedValueTableRuleNode>>,
+    tail: AccumulatorChain<PreparedValueTableRuleNode>,
     len: usize,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct PreparedValueTableRuleNode {
-    previous: Option<Arc<PreparedValueTableRuleNode>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<PreparedValueTableRuleNode>,
     rule: PreparedValueTableRule,
 }
 
@@ -54,26 +57,26 @@ pub(super) struct ValueTableAssignmentState {
 impl PreparedValueTableRuleAccumulator {
     fn appended(&self, rule: PreparedValueTableRule) -> Self {
         Self {
-            tail: Some(Arc::new(PreparedValueTableRuleNode {
+            tail: AccumulatorChain::new(Some(Arc::new(PreparedValueTableRuleNode {
                 previous: self.tail.clone(),
                 rule,
-            })),
+            }))),
             len: self.len + 1,
         }
     }
 
     fn into_vec_allow_shared(self) -> Vec<PreparedValueTableRule> {
         let mut rules = Vec::with_capacity(self.len);
-        let mut node = self.tail;
+        let mut node = self.tail.into_inner();
         while let Some(current) = node {
             match Arc::try_unwrap(current) {
                 Ok(current) => {
                     rules.push(current.rule);
-                    node = current.previous;
+                    node = current.previous.into_inner();
                 }
                 Err(current) => {
                     rules.push(current.rule.clone());
-                    node = current.previous.clone();
+                    node = current.previous.clone().into_inner();
                 }
             }
         }
@@ -350,6 +353,46 @@ fn malformed_value_table_rule_message(kind: ValueTableKind, target: Symbol, rule
         kind.inspector_name(),
         target
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::runtime::suspension::AbandonReason;
+    use crate::runtime::test_builtins::session_with_test_control_builtins;
+
+    #[test]
+    fn abandoning_prepared_value_table_keeps_old_definitions_and_skips_pending_lhs() {
+        let mut session = session_with_test_control_builtins();
+        session
+            .eval_text("f[0] := old; hits = 0; kind := (hits++; InputString[\"type\"])")
+            .unwrap();
+        let before = session.eval_text("DownValues[f]").unwrap().value;
+        let failure = session
+            .eval_request(
+                "DownValues[f] = {HoldPattern[f[1]] :> one, HoldPattern[f[2]] :> two, \
+                 HoldPattern[f[1 + 1, g[x_kind]]] :> three}",
+            )
+            .unwrap_err();
+        assert!(matches!(
+            failure.error,
+            SessionRequestError::InputRequired { request } if request.prompt == "type"
+        ));
+        assert_eq!(
+            session.abandon_pending_suspension(AbandonReason::CancelledRequest),
+            AbandonReason::CancelledRequest
+        );
+        assert!(session.pending_input_request().is_none());
+        assert_eq!(session.eval_text("DownValues[f]").unwrap().value, before);
+        assert_eq!(
+            session
+                .eval_text("{hits, f[0], f[1], f[2]}")
+                .unwrap()
+                .value
+                .to_string(),
+            "List[1, old, f[1], f[2]]"
+        );
+    }
 }
 
 #[cfg(test)]

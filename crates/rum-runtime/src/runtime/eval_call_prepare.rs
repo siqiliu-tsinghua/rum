@@ -2,7 +2,9 @@ mod resume_frames;
 use resume_frames::*;
 
 use super::*;
-use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::kernel_api::{
+    AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
+};
 use std::sync::Arc;
 
 pub(super) struct PreparedCallArguments {
@@ -19,13 +21,14 @@ pub(super) struct UnevaluatedRestorePlan {
 #[derive(Clone, FrameRootTrace)]
 struct UnevaluatedRestoreAccumulator {
     prefix: Arc<[(usize, Expr)]>,
-    tail: Option<Arc<UnevaluatedRestoreNode>>,
+    tail: AccumulatorChain<UnevaluatedRestoreNode>,
     len: usize,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct UnevaluatedRestoreNode {
-    previous: Option<Arc<UnevaluatedRestoreNode>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<UnevaluatedRestoreNode>,
     value: (usize, Expr),
 }
 
@@ -49,7 +52,7 @@ impl UnevaluatedRestoreAccumulator {
         let len = values.len();
         Self {
             prefix: Arc::from(values),
-            tail: None,
+            tail: AccumulatorChain::default(),
             len,
         }
     }
@@ -57,22 +60,22 @@ impl UnevaluatedRestoreAccumulator {
     fn appended(&self, value: (usize, Expr)) -> Self {
         Self {
             prefix: self.prefix.clone(),
-            tail: Some(Arc::new(UnevaluatedRestoreNode {
+            tail: AccumulatorChain::new(Some(Arc::new(UnevaluatedRestoreNode {
                 previous: self.tail.clone(),
                 value,
-            })),
+            }))),
             len: self.len + 1,
         }
     }
 
     fn into_vec(self) -> Vec<(usize, Expr)> {
         let mut suffix = Vec::with_capacity(self.len.saturating_sub(self.prefix.len()));
-        let mut node = self.tail;
+        let mut node = self.tail.into_inner();
         while let Some(current) = node {
             let current = Arc::try_unwrap(current)
                 .unwrap_or_else(|_| panic!("completed Unevaluated restore state must be unique"));
             suffix.push(current.value);
-            node = current.previous;
+            node = current.previous.into_inner();
         }
         suffix.reverse();
 
@@ -80,6 +83,39 @@ impl UnevaluatedRestoreAccumulator {
         values.reserve(suffix.len());
         values.extend(suffix);
         values
+    }
+}
+
+#[cfg(test)]
+mod abandonment_tests {
+    use super::*;
+    use crate::runtime::suspension::AbandonReason;
+    use crate::runtime::test_builtins::session_with_test_control_builtins;
+
+    #[test]
+    fn abandoning_prepared_arguments_and_restores_skips_remaining_arguments() {
+        let mut session = session_with_test_control_builtins();
+        let first = session
+            .eval_request(
+                "hits = 0; f[InputString[\"first\"], Unevaluated[kept], \
+                 InputString[\"stop\"], hits++]",
+            )
+            .unwrap_err();
+        assert!(matches!(
+            first.error,
+            SessionRequestError::InputRequired { request } if request.prompt == "first"
+        ));
+        let second = session.resume_eval_request_with_input("ready").unwrap_err();
+        assert!(matches!(
+            second.error,
+            SessionRequestError::InputRequired { request } if request.prompt == "stop"
+        ));
+        assert_eq!(
+            session.abandon_pending_suspension(AbandonReason::CancelledRequest),
+            AbandonReason::CancelledRequest
+        );
+        assert!(session.pending_input_request().is_none());
+        assert_eq!(session.eval_text("hits").unwrap().value.to_string(), "0");
     }
 }
 

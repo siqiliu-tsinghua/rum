@@ -1,5 +1,7 @@
 use super::*;
-use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::kernel_api::{
+    AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
+};
 use std::sync::Arc;
 
 /// Immutable queue storage created only after a rewrite traversal suspends.
@@ -40,7 +42,7 @@ impl<T: FrameRootTrace> FrozenRewriteValue<T> {
 /// elements (notably binding maps) without cloning them out of an Arc slice.
 #[derive(FrameRootTrace)]
 pub(super) struct PersistentRewriteQueue<T: FrameRootTrace> {
-    head: Option<Arc<PersistentRewriteQueueNode<T>>>,
+    head: AccumulatorChain<PersistentRewriteQueueNode<T>>,
     len: usize,
 }
 
@@ -53,24 +55,28 @@ impl<T: FrameRootTrace> Clone for PersistentRewriteQueue<T> {
     }
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct PersistentRewriteQueueNode<T: FrameRootTrace> {
     value: T,
-    next: Option<Arc<PersistentRewriteQueueNode<T>>>,
+    #[accumulator_link]
+    next: AccumulatorChain<PersistentRewriteQueueNode<T>>,
 }
 
 impl<T: FrameRootTrace> PersistentRewriteQueue<T> {
     pub(super) fn freeze(values: Vec<T>) -> Self {
         let len = values.len();
-        let mut head = None;
+        let mut head = AccumulatorChain::default();
         for value in values.into_iter().rev() {
-            head = Some(Arc::new(PersistentRewriteQueueNode { value, next: head }));
+            head = AccumulatorChain::new(Some(Arc::new(PersistentRewriteQueueNode {
+                value,
+                next: head,
+            })));
         }
         Self { head, len }
     }
 
     pub(super) fn pop_front(self) -> Option<(T, Self)> {
-        let head = self.head?;
+        let head = self.head.into_inner()?;
         let node = Arc::try_unwrap(head)
             .unwrap_or_else(|_| panic!("consumed rewrite queue must be uniquely owned"));
         Some((
@@ -97,13 +103,14 @@ impl<T: FrameRootTrace> PersistentRewriteQueue<T> {
 #[derive(Clone, FrameRootTrace)]
 pub(super) struct PersistentRewriteExprs {
     prefix: SharedArgs,
-    tail: Option<Arc<PersistentRewriteExprNode>>,
+    tail: AccumulatorChain<PersistentRewriteExprNode>,
     len: usize,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct PersistentRewriteExprNode {
-    previous: Option<Arc<PersistentRewriteExprNode>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<PersistentRewriteExprNode>,
     values: SharedArgs,
 }
 
@@ -112,7 +119,7 @@ impl PersistentRewriteExprs {
         let len = values.len();
         Self {
             prefix: SharedArgs::new(values),
-            tail: None,
+            tail: AccumulatorChain::default(),
             len,
         }
     }
@@ -128,10 +135,10 @@ impl PersistentRewriteExprs {
         let added = values.len();
         Self {
             prefix: self.prefix.clone(),
-            tail: Some(Arc::new(PersistentRewriteExprNode {
+            tail: AccumulatorChain::new(Some(Arc::new(PersistentRewriteExprNode {
                 previous: self.tail.clone(),
                 values: SharedArgs::new(values),
-            })),
+            }))),
             len: self.len + added,
         }
     }
@@ -142,12 +149,12 @@ impl PersistentRewriteExprs {
 
     pub(super) fn into_vec(self) -> Vec<Expr> {
         let mut suffix = Vec::new();
-        let mut node = self.tail;
+        let mut node = self.tail.into_inner();
         while let Some(current) = node {
             let current = Arc::try_unwrap(current)
                 .unwrap_or_else(|_| panic!("completed rewrite output must be uniquely owned"));
             suffix.push(current.values.into_vec());
-            node = current.previous;
+            node = current.previous.into_inner();
         }
         suffix.reverse();
 
@@ -170,3 +177,26 @@ const _: fn() = || {
     assert_traces::<PersistentRewriteExprs>();
     assert_traces::<PersistentRewriteExprNode>();
 };
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn abandoning_shared_rewrite_queue_preserves_remaining_binding_order() {
+        let key = Symbol::from_name("x");
+        let expected: Vec<_> = (0..3)
+            .map(|value| {
+                let mut bindings = SymbolExprMap::default();
+                bindings.insert(key, Expr::integer(value.into()));
+                bindings
+            })
+            .collect();
+        let queue = PersistentRewriteQueue::freeze(expected.clone());
+        let (first, remaining) = queue.pop_front().unwrap();
+        assert_eq!(first, expected[0]);
+        let survivor = remaining.clone();
+        drop(remaining);
+        assert_eq!(survivor.into_vec(), expected[1..]);
+    }
+}

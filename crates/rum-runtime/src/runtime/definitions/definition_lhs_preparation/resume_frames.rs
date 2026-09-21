@@ -1,4 +1,5 @@
 use super::*;
+use crate::runtime::kernel_api::{AccumulatorChain, AccumulatorChainNode};
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 use std::sync::Arc;
 
@@ -43,25 +44,26 @@ pub(super) enum DefinitionLhsPreparationWork {
 
 #[derive(Clone, Default, rum_derive::FrameRootTrace)]
 pub(super) struct DefinitionLhsParentStack {
-    tail: Option<Arc<DefinitionLhsParentNode>>,
+    tail: AccumulatorChain<DefinitionLhsParentNode>,
 }
 
-#[derive(rum_derive::FrameRootTrace)]
+#[derive(rum_derive::FrameRootTrace, rum_derive::AccumulatorChainNode)]
 struct DefinitionLhsParentNode {
-    previous: Option<Arc<DefinitionLhsParentNode>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<DefinitionLhsParentNode>,
     context: DefinitionLhsParentContext,
 }
 
 impl DefinitionLhsParentStack {
     pub(super) fn push(&mut self, context: DefinitionLhsParentContext) {
-        self.tail = Some(Arc::new(DefinitionLhsParentNode {
+        self.tail = AccumulatorChain::new(Some(Arc::new(DefinitionLhsParentNode {
             previous: self.tail.clone(),
             context,
-        }));
+        })));
     }
 
     pub(super) fn pop(&mut self) -> Option<DefinitionLhsParentContext> {
-        let node = self.tail.take()?;
+        let node = self.tail.take().into_inner()?;
         self.tail = node.previous.clone();
         Some(node.context.clone())
     }

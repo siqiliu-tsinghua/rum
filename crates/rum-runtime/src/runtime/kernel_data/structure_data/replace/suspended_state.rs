@@ -1,6 +1,8 @@
 use super::plan::insert_replace_plan_target;
 use super::*;
-use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::kernel_api::{
+    AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
+};
 use std::sync::Arc;
 
 #[derive(Clone, FrameRootTrace)]
@@ -19,13 +21,14 @@ impl<T: FrameRootTrace> FrozenReplaceSequence<T> {
 #[derive(Clone, FrameRootTrace)]
 pub(super) struct PersistentReplacePartTargets {
     prefix: Arc<Vec<ReplacePartTarget>>,
-    tail: Option<Arc<PersistentReplacePartTargetNode>>,
+    tail: AccumulatorChain<PersistentReplacePartTargetNode>,
     len: usize,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct PersistentReplacePartTargetNode {
-    previous: Option<Arc<PersistentReplacePartTargetNode>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<PersistentReplacePartTargetNode>,
     values: Arc<Vec<ReplacePartTarget>>,
 }
 
@@ -34,7 +37,7 @@ impl PersistentReplacePartTargets {
         let len = values.len();
         Self {
             prefix: Arc::new(values),
-            tail: None,
+            tail: AccumulatorChain::default(),
             len,
         }
     }
@@ -46,10 +49,10 @@ impl PersistentReplacePartTargets {
         let added = values.len();
         Self {
             prefix: self.prefix.clone(),
-            tail: Some(Arc::new(PersistentReplacePartTargetNode {
+            tail: AccumulatorChain::new(Some(Arc::new(PersistentReplacePartTargetNode {
                 previous: self.tail.clone(),
                 values: Arc::new(values),
-            })),
+            }))),
             len: self.len + added,
         }
     }
@@ -60,7 +63,7 @@ impl PersistentReplacePartTargets {
 
     pub(super) fn into_vec(self) -> Vec<ReplacePartTarget> {
         let mut suffix = Vec::new();
-        let mut node = self.tail;
+        let mut node = self.tail.into_inner();
         while let Some(current) = node {
             let current = Arc::try_unwrap(current).unwrap_or_else(|_| {
                 panic!("completed ReplacePart target chain must be uniquely owned")
@@ -69,7 +72,7 @@ impl PersistentReplacePartTargets {
                 panic!("completed ReplacePart target chunk must be uniquely owned")
             });
             suffix.push(values);
-            node = current.previous;
+            node = current.previous.into_inner();
         }
         suffix.reverse();
         let mut values = Arc::try_unwrap(self.prefix).unwrap_or_else(|_| {
@@ -83,9 +86,10 @@ impl PersistentReplacePartTargets {
     }
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct GuardedTargetChunk {
-    previous: Option<Arc<GuardedTargetChunk>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<GuardedTargetChunk>,
     start: usize,
     values: Arc<[GuardedReplacePartTarget]>,
 }
@@ -97,9 +101,10 @@ struct GuardedTargetUpdate {
     option_scope: Option<OptionValueScope>,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct GuardedTargetUpdateNode {
-    previous: Option<Arc<GuardedTargetUpdateNode>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<GuardedTargetUpdateNode>,
     index: usize,
     update: GuardedTargetUpdate,
 }
@@ -110,18 +115,18 @@ struct GuardedTargetUpdateNode {
 #[derive(Clone, FrameRootTrace)]
 pub(super) struct SuspendedGuardedTargetList {
     prefix: Arc<[GuardedReplacePartTarget]>,
-    tail: Option<Arc<GuardedTargetChunk>>,
+    tail: AccumulatorChain<GuardedTargetChunk>,
     len: usize,
-    updates: Option<Arc<GuardedTargetUpdateNode>>,
+    updates: AccumulatorChain<GuardedTargetUpdateNode>,
 }
 
 impl SuspendedGuardedTargetList {
     pub(super) fn freeze(mut values: Vec<GuardedReplacePartTarget>) -> Self {
         let len = values.len();
-        let mut updates = None;
+        let mut updates = AccumulatorChain::default();
         for (index, target) in values.iter_mut().enumerate() {
             if !target.bindings.is_empty() {
-                updates = Some(Arc::new(GuardedTargetUpdateNode {
+                updates = AccumulatorChain::new(Some(Arc::new(GuardedTargetUpdateNode {
                     previous: updates,
                     index,
                     update: GuardedTargetUpdate {
@@ -131,12 +136,12 @@ impl SuspendedGuardedTargetList {
                         ))),
                         option_scope: target.option_scope.take(),
                     },
-                }));
+                })));
             }
         }
         Self {
             prefix: Arc::from(values),
-            tail: None,
+            tail: AccumulatorChain::default(),
             len,
             updates,
         }
@@ -247,11 +252,11 @@ impl SuspendedGuardedTargetList {
     }
 
     fn push_update(&mut self, index: usize, update: GuardedTargetUpdate) {
-        self.updates = Some(Arc::new(GuardedTargetUpdateNode {
+        self.updates = AccumulatorChain::new(Some(Arc::new(GuardedTargetUpdateNode {
             previous: self.updates.clone(),
             index,
             update,
-        }));
+        })));
     }
 
     pub(super) fn append_exact_targets(&mut self, mut values: Vec<GuardedReplacePartTarget>) {
@@ -304,11 +309,11 @@ impl SuspendedGuardedTargetList {
         }
         let start = self.len;
         self.len += values.len();
-        self.tail = Some(Arc::new(GuardedTargetChunk {
+        self.tail = AccumulatorChain::new(Some(Arc::new(GuardedTargetChunk {
             previous: self.tail.clone(),
             start,
             values: Arc::from(values),
-        }));
+        })));
     }
 
     pub(super) fn build_plan(&self, rules: &[ReplacePartRule]) -> ReplacePlanNode {
@@ -342,3 +347,44 @@ const _: fn() = || {
     assert_traces::<PersistentReplacePartTargetNode>();
     assert_traces::<PersistentReplacePartTargets>();
 };
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn abandoning_guarded_target_branch_preserves_surviving_chunks_and_updates() {
+        let key = Symbol::from_name("x");
+        let mut bindings = SymbolExprMap::default();
+        bindings.insert(key, Expr::integer(7.into()));
+        let target = GuardedReplacePartTarget {
+            path: vec![1],
+            rule_index: 0,
+            bindings: bindings.clone(),
+            option_scope: None,
+            state: GuardedReplacePartTargetState::PendingGuard,
+        };
+        let mut survivor = SuspendedGuardedTargetList::freeze(vec![target.clone()]);
+        survivor.append_pattern_candidates(vec![GuardedReplacePartTarget {
+            path: vec![2],
+            bindings: SymbolExprMap::default(),
+            state: GuardedReplacePartTargetState::PatternCandidate,
+            ..target.clone()
+        }]);
+        survivor.set_state(0, GuardedReplacePartTargetState::Accepted);
+        let mut abandoned = survivor.clone();
+        abandoned.set_state(0, GuardedReplacePartTargetState::Inactive);
+        abandoned.append_exact_targets(vec![target]);
+        drop(abandoned);
+
+        assert_eq!(survivor.len(), 2);
+        assert_eq!(survivor.path(0), &[1]);
+        assert_eq!(survivor.path(1), &[2]);
+        assert_eq!(survivor.state(0), GuardedReplacePartTargetState::Accepted);
+        assert_eq!(survivor.bindings(0), &bindings);
+        assert_eq!(
+            survivor.state(1),
+            GuardedReplacePartTargetState::PatternCandidate
+        );
+    }
+}

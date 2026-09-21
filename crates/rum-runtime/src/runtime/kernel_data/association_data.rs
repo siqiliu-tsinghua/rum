@@ -2,7 +2,9 @@ mod resume_frames;
 use resume_frames::*;
 
 use super::super::*;
-use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::kernel_api::{
+    AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
+};
 use crate::runtime::native_stack_guard::{NativeStackDepth, run_with_native_stack_guard};
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -582,13 +584,14 @@ enum AssociationSetLValueTarget {
 #[derive(Clone, FrameRootTrace)]
 struct AssociationSelectorAccumulator {
     prefix: SharedArgs,
-    tail: Option<Arc<AssociationSelectorNode>>,
+    tail: AccumulatorChain<AssociationSelectorNode>,
     len: usize,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct AssociationSelectorNode {
-    previous: Option<Arc<AssociationSelectorNode>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<AssociationSelectorNode>,
     value: Expr,
 }
 
@@ -606,7 +609,7 @@ impl AssociationSelectorAccumulator {
         let len = values.len();
         Self {
             prefix: SharedArgs::new(values),
-            tail: None,
+            tail: AccumulatorChain::default(),
             len,
         }
     }
@@ -614,22 +617,22 @@ impl AssociationSelectorAccumulator {
     fn appended(&self, value: Expr) -> Self {
         Self {
             prefix: self.prefix.clone(),
-            tail: Some(Arc::new(AssociationSelectorNode {
+            tail: AccumulatorChain::new(Some(Arc::new(AssociationSelectorNode {
                 previous: self.tail.clone(),
                 value,
-            })),
+            }))),
             len: self.len + 1,
         }
     }
 
     fn into_vec(self) -> Vec<Expr> {
         let mut suffix = Vec::with_capacity(self.len.saturating_sub(self.prefix.len()));
-        let mut node = self.tail;
+        let mut node = self.tail.into_inner();
         while let Some(current) = node {
             let current = Arc::try_unwrap(current)
                 .unwrap_or_else(|_| panic!("completed association selector state must be unique"));
             suffix.push(current.value);
-            node = current.previous;
+            node = current.previous.into_inner();
         }
         suffix.reverse();
 

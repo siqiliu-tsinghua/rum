@@ -2928,7 +2928,52 @@ points between pairs. Instruction counts pinned to one core type
 multiplex coverage) repeat to **0.003%** on this host. Calibrate and hand over
 the recipe, not the tool name.
 
-**Not dispatched**: the remaining 26 conversions, step D (still blocked), and
-step E. `stash@{0}` holds the stale first attempt and should be dropped. Step C
+**The sixteen runtime conversions are IN (brief-489), with a measured cost the
+director accepted rather than hid.** 19 of 29 members now drain iteratively;
+ten `rum-stdlib` members and the family coverage gate remain. Gate: fmt clean,
+**2 458 tests green**, nine native ZeroMQ tests binding loopback, zero skip
+notices.
+
+*The gate caught a real regression, which is what it is for.* Three ordinary
+paths cost instructions — `prepared-arguments` **+0.567%**, `lhs-parents`
+**+1.044%**, `value-table-rules` **+0.774%**, director-reproduced, arm spreads
+0.019%, allocation counters identical. Not every member is post-suspension like
+the iteration accumulator; these three build chains on ordinary evaluation.
+
+*Three drain shapes were measured and the cost is not in the drain.* The
+committed `#[cold] #[inline(never)]` shape costs the figures above; brief-490's
+inlined fast path made it **two to three times worse** (+2.243/+1.941/+3.572);
+and removing the cold attributes entirely changed almost nothing
+(+0.492/+0.994/+0.689). **The cost is intrinsic to the link wrapper carrying a
+`Drop` at all** — a holder whose field has a destructor gets different drop
+glue, loses field-wise moves, and gains drop flags.
+
+*The alternative was prototyped and is only marginally better (brief-491).*
+Node-level `Drop`, returning the holder's field to a plain `Option<Arc<N>>`,
+was built for `PreparedArgumentNode` with safe move-out (no `unsafe`, no
+`ManuallyDrop`) and measured **+0.475%** against the wrapper's +0.567% — it
+recovers **0.09 points on the workload named for that very member**. So the
+wrapper is not the dominant term, and converting the mechanism has an unproven
+family-wide payoff against a certain rework of a built, certified mechanism.
+**Ruling: keep the wrapper and accept the cost**, on the precedent that
+brief-453 accepted +0.714% to remove a process-kill class and brief-475
++0.606% for the same kind of gain. Node-level `Drop` stays recorded as measured
+and marginally better, not as a deferred obligation.
+
+*Adjacent question answered, no second defect:* `call_preparation.rs:81`'s
+uniqueness panic looked like brief-487's defect but is unreachable — the
+`PureFrameFinalizer` runs after frame release, so the retaining owner is gone
+before `into_vec`.
+
+*A director slip worth recording.* `git checkout` on two files to revert
+brief-491's prototype also reverted brief-489's conversions in them — the
+**exact trap the briefs warn workers about**, second time this session. Both
+were recovered: one from the dispatch log's diff, one rewritten by hand, plus a
+behavioural test extracted from the log; the inventory rows that shifted were
+regenerated mechanically from the exact-inventory test's own mismatch output,
+never hand-edited. The final count matches the worker's 2 458 exactly.
+
+**Not dispatched**: the ten stdlib conversions with the family coverage gate,
+step D (still blocked), and step E. Step C
 carries a microbench A/B and step D carries the 29-chain prerequisite, so
 neither is a cheap-to-verify dispatch.

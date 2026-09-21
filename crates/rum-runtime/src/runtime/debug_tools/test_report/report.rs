@@ -4,7 +4,9 @@ use resume_frames::*;
 use super::model::{EvalCapturedOutcome, TestCaseSpec, TestReportOptions};
 use super::parsing::{parse_test_case, parse_test_case_exprs, parse_test_report_objects};
 use super::*;
-use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::kernel_api::{
+    AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
+};
 use std::sync::Arc;
 
 #[derive(Clone, FrameRootTrace)]
@@ -30,13 +32,14 @@ struct TestReportCaseEvalState {
 #[derive(Clone, FrameRootTrace)]
 struct TestReportResultAccumulator {
     prefix: SharedArgs,
-    tail: Option<Arc<TestReportResultNode>>,
+    tail: AccumulatorChain<TestReportResultNode>,
     len: usize,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct TestReportResultNode {
-    previous: Option<Arc<TestReportResultNode>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<TestReportResultNode>,
     value: Expr,
 }
 
@@ -89,7 +92,7 @@ impl TestReportResultAccumulator {
         let len = values.len();
         Self {
             prefix: SharedArgs::new(values),
-            tail: None,
+            tail: AccumulatorChain::default(),
             len,
         }
     }
@@ -97,22 +100,22 @@ impl TestReportResultAccumulator {
     fn appended(&self, value: Expr) -> Self {
         Self {
             prefix: self.prefix.clone(),
-            tail: Some(Arc::new(TestReportResultNode {
+            tail: AccumulatorChain::new(Some(Arc::new(TestReportResultNode {
                 previous: self.tail.clone(),
                 value,
-            })),
+            }))),
             len: self.len + 1,
         }
     }
 
     fn into_vec(self) -> Vec<Expr> {
         let mut suffix = Vec::with_capacity(self.len.saturating_sub(self.prefix.len()));
-        let mut node = self.tail;
+        let mut node = self.tail.into_inner();
         while let Some(current) = node {
             let current = Arc::try_unwrap(current)
                 .unwrap_or_else(|_| panic!("completed TestReport result state must be unique"));
             suffix.push(current.value);
-            node = current.previous;
+            node = current.previous.into_inner();
         }
         suffix.reverse();
 

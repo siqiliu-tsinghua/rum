@@ -2,19 +2,22 @@ mod resume_frames;
 use resume_frames::*;
 
 use super::*;
-use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::kernel_api::{
+    AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
+};
 use std::sync::Arc;
 
 #[derive(Clone, FrameRootTrace)]
 struct PersistentPositionAccumulator {
     prefix: SharedArgs,
-    tail: Option<Arc<PersistentPositionNode>>,
+    tail: AccumulatorChain<PersistentPositionNode>,
     len: usize,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct PersistentPositionNode {
-    previous: Option<Arc<PersistentPositionNode>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<PersistentPositionNode>,
     values: SharedArgs,
 }
 
@@ -23,7 +26,7 @@ impl PersistentPositionAccumulator {
         let len = values.len();
         Self {
             prefix: SharedArgs::new(values),
-            tail: None,
+            tail: AccumulatorChain::default(),
             len,
         }
     }
@@ -35,10 +38,10 @@ impl PersistentPositionAccumulator {
         let added = values.len();
         Self {
             prefix: self.prefix.clone(),
-            tail: Some(Arc::new(PersistentPositionNode {
+            tail: AccumulatorChain::new(Some(Arc::new(PersistentPositionNode {
                 previous: self.tail.clone(),
                 values: SharedArgs::new(values),
-            })),
+            }))),
             len: self.len + added,
         }
     }
@@ -53,16 +56,16 @@ impl PersistentPositionAccumulator {
 
     fn into_vec(self) -> Vec<Expr> {
         let mut suffix = Vec::new();
-        let mut node = self.tail;
+        let mut node = self.tail.into_inner();
         while let Some(current) = node {
             match Arc::try_unwrap(current) {
                 Ok(current) => {
                     suffix.push(current.values.into_vec());
-                    node = current.previous;
+                    node = current.previous.into_inner();
                 }
                 Err(current) => {
                     suffix.push(current.values.as_ref().to_vec());
-                    node = current.previous.clone();
+                    node = current.previous.clone().into_inner();
                 }
             }
         }

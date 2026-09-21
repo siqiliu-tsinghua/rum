@@ -1,17 +1,20 @@
 use super::*;
-use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::kernel_api::{
+    AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
+};
 use std::sync::Arc;
 
 #[derive(Clone, FrameRootTrace)]
 pub(super) struct ReapRenderAccumulator {
     prefix: SharedArgs,
-    tail: Option<Arc<ReapRenderNode>>,
+    tail: AccumulatorChain<ReapRenderNode>,
     len: usize,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct ReapRenderNode {
-    previous: Option<Arc<ReapRenderNode>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<ReapRenderNode>,
     value: Expr,
 }
 
@@ -20,7 +23,7 @@ impl ReapRenderAccumulator {
         let len = values.len();
         Self {
             prefix: SharedArgs::new(values),
-            tail: None,
+            tail: AccumulatorChain::default(),
             len,
         }
     }
@@ -28,24 +31,24 @@ impl ReapRenderAccumulator {
     pub(super) fn appended(&self, value: Expr) -> Self {
         Self {
             prefix: self.prefix.clone(),
-            tail: Some(Arc::new(ReapRenderNode {
+            tail: AccumulatorChain::new(Some(Arc::new(ReapRenderNode {
                 previous: self.tail.clone(),
                 value,
-            })),
+            }))),
             len: self.len + 1,
         }
     }
 
     pub(super) fn into_vec(self) -> Vec<Expr> {
         let mut suffix = Vec::with_capacity(self.len.saturating_sub(self.prefix.len()));
-        let mut node = self.tail;
+        let mut node = self.tail.into_inner();
         while let Some(current) = node {
             let current = match Arc::try_unwrap(current) {
                 Ok(current) => current,
                 Err(_) => panic!("completed Reap accumulator must be uniquely owned"),
             };
             suffix.push(current.value);
-            node = current.previous;
+            node = current.previous.into_inner();
         }
         suffix.reverse();
 
