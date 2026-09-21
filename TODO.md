@@ -913,6 +913,38 @@ see**.
   boundary. **Mechanism director-verified in source; the 2 GB overshoot is not
   director-reproduced.**
 
+- **HIGH — the strided ceiling: reproduced, repaired, default gate PASSED,
+  two mechanical blockers left (briefs 513-514, code on branch
+  `spike/brief-514-unstride`).** Director-reproduced with a control: an 8 MB
+  `MemoryConstrained` let `Nest[StringJoin[#,#]&, seed, 16]` complete at
+  65 536 000 characters and ~358 MB peak RSS, while the same ceiling aborts a
+  single large `StringRepeat`. **The audit's mechanism was wrong**:
+  `StringJoin` does not amplify per call, so the `Preflight` growth assertion
+  passes it correctly — and that assertion is a **test-only instrument**
+  bypassed unless `RUM_TEST_BUILTIN_MEMORY_GROWTH` is set, so it never
+  described production anyway. The overshoot is repeating a non-amplifying
+  step between strided walks. brief-513 also corrected the director twice
+  more: a proper `StringJoin` precheck *would* catch this example (projection
+  is unstrided), and last-sample adaptive stride has no useful factor bound.
+
+  The repair (option A, every armed checkpoint walks) catches the
+  reproduction, with the falsifier watched failing when the stride is
+  restored. **Default-path gate passed, director-established 2026-09-22:**
+  instruction counts are flat (−0.000387% to +0.000948% over six calibrated
+  workloads once the armed walk moved to a cold helper), and the timing
+  panel's apparent regression is **indistinguishable from the panel compared
+  with itself** — splitting the four base runs two ways gives 69/120 and
+  72/120 positive medians with 28 and 30 labels consistently slower and a
+  worst outlier of +18.43%, against the candidate's 64/120, 9, and +16.66%.
+  `association-part-key-read-width4000`, one of the flagged labels, moves
+  +18.43% between two runs of the *identical* binary.
+
+  **Left to finish:** three ownership-inventory tests fail because source
+  locations moved and the inventory needs regenerating, and the permanent
+  falsifier needs a home the brief excluded. Both are scope, not substance.
+  **Armed-path cost is reported and is the director's call**, separately from
+  the default gate.
+
 - **MEDIUM-HIGH — `rum-jupyter`'s hand-written JSON parser has no depth guard.**
   `json_support.rs` contains zero occurrences of depth/limit/MAX_, and
   `parse_value`/`parse_object`/`parse_array` (`:61,86,126`) are mutually
