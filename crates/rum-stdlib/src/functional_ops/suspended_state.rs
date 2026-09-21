@@ -1,6 +1,8 @@
 use std::sync::Arc;
 
-use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use rum_runtime::kernel_api::{
+    AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
+};
 
 /// Immutable functional-family input storage created only after suspension.
 #[derive(Clone, FrameRootTrace)]
@@ -28,13 +30,14 @@ impl<T: FrameRootTrace> FrozenFunctionalSequence<T> {
 #[derive(Clone, FrameRootTrace)]
 pub(super) struct PersistentFunctionalSequence<T: FrameRootTrace> {
     prefix: Arc<[T]>,
-    tail: Option<Arc<PersistentFunctionalSequenceNode<T>>>,
+    tail: AccumulatorChain<PersistentFunctionalSequenceNode<T>>,
     len: usize,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct PersistentFunctionalSequenceNode<T: FrameRootTrace> {
-    previous: Option<Arc<PersistentFunctionalSequenceNode<T>>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<PersistentFunctionalSequenceNode<T>>,
     value: T,
 }
 
@@ -43,7 +46,7 @@ impl<T: FrameRootTrace> PersistentFunctionalSequence<T> {
         let len = values.len();
         Self {
             prefix: Arc::from(values),
-            tail: None,
+            tail: AccumulatorChain::default(),
             len,
         }
     }
@@ -51,10 +54,10 @@ impl<T: FrameRootTrace> PersistentFunctionalSequence<T> {
     pub(super) fn appended(&self, value: T) -> Self {
         Self {
             prefix: self.prefix.clone(),
-            tail: Some(Arc::new(PersistentFunctionalSequenceNode {
+            tail: AccumulatorChain::new(Some(Arc::new(PersistentFunctionalSequenceNode {
                 previous: self.tail.clone(),
                 value,
-            })),
+            }))),
             len: self.len + 1,
         }
     }

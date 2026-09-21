@@ -2973,7 +2973,46 @@ behavioural test extracted from the log; the inventory rows that shifted were
 regenerated mechanically from the exact-inventory test's own mismatch output,
 never hand-edited. The final count matches the worker's 2 458 exactly.
 
-**Not dispatched**: the ten stdlib conversions with the family coverage gate,
-step D (still blocked), and step E. Step C
+**The family is closed (brief-492). All 29 members drain iteratively, and a
+gate keeps it that way.** Gate: fmt clean, **2 460 tests green**, nine native
+ZeroMQ tests binding loopback, zero skip notices.
+
+*The coverage gate is structural.* `every_self_reaching_arc_chain_participates`
+runs over `graph::discover(source::production())` — not the pinned snapshot,
+which could be satisfied by editing it — and requires every self-reaching type
+whose path runs `Option[Own]/arg0/std::sync::Arc` back to itself to carry
+`AccumulatorChain`. No name list, no allowlist, no exemption table. The
+director verified the selector before the brief was written: 29 rows matched
+the chain shape, 19 already carried the wrapper, and the 10 that did not were
+exactly the members left.
+
+*Director-reproduced falsifier, and it caught something nobody told it about.*
+Appending a **new** chain-shaped type to an unrelated stdlib file turned the
+gate red with the type, `file:line` and full ownership path in the message.
+That is the gate's actual purpose — a future type of this shape must be
+converted or the tree is red. A first attempt at the falsifier instead removed
+a converted member's link field and **failed to compile**, because the derive
+rejects a node without its accessor: layer one firing before layer three, seen
+live.
+
+*The measured cost splits, and the split is what makes it acceptable.* The
+worker reported `DeleteMissing` at **+3.563%** and did not tune it, as
+instructed. The director then measured the half the brief had not asked for:
+
+| workload | base | candidate | delta |
+|---|---:|---:|---:|
+| depth 20, crossing the 16-level front/tail handoff | 21 723 027 | 22 499 154 | **+3.573%** |
+| depth 3, the ordinary shape | 8 713 146 | 8 712 738 | **-0.005%** |
+
+**Shallow traversals pay nothing**; the cost is borne only by traversals deep
+enough to enter the heap tail — the very path that exists so that depth does
+not end the process, and which had no destruction bound at all before this
+line. Same shape as brief-475's accepted split (depth 1 at +0.020%, depth 9 at
++0.606%), larger in magnitude. **Accepted on that split**, recorded rather than
+hidden.
+
+**Step D is now unblocked**: the declaration on `SuspensionFrame` and
+`PureFrameFinalizer`, 539 and 59 impls. Then step E, the ledger's strict
+check. Step C
 carries a microbench A/B and step D carries the 29-chain prerequisite, so
 neither is a cheap-to-verify dispatch.

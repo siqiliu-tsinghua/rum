@@ -1,7 +1,9 @@
 use std::sync::Arc;
 use std::{collections::HashSet, hash::Hash};
 
-use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use rum_runtime::kernel_api::{
+    AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
+};
 
 const PERSISTENT_SEQUENCE_CHUNK_CAPACITY: usize = 32;
 
@@ -48,13 +50,14 @@ impl<T: FrameRootTrace> FrozenStructureValue<T> {
 #[derive(Clone, FrameRootTrace)]
 pub(super) struct PersistentStructureSequence<T: FrameRootTrace> {
     prefix: Arc<[T]>,
-    tail: Option<Arc<PersistentStructureSequenceNode<T>>>,
+    tail: AccumulatorChain<PersistentStructureSequenceNode<T>>,
     len: usize,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct PersistentStructureSequenceNode<T: FrameRootTrace> {
-    previous: Option<Arc<PersistentStructureSequenceNode<T>>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<PersistentStructureSequenceNode<T>>,
     values: Vec<T>,
 }
 
@@ -63,15 +66,17 @@ impl<T: FrameRootTrace> PersistentStructureSequence<T> {
         let len = values.len();
         Self {
             prefix: Arc::from(values),
-            tail: None,
+            tail: AccumulatorChain::default(),
             len,
         }
     }
 
     pub(super) fn push(&mut self, value: T) {
-        if let Some(tail) = self.tail.as_mut().and_then(Arc::get_mut) {
+        let mut previous = self.tail.take().into_inner();
+        if let Some(tail) = previous.as_mut().and_then(Arc::get_mut) {
             if tail.values.len() < PERSISTENT_SEQUENCE_CHUNK_CAPACITY {
                 tail.values.push(value);
+                self.tail = AccumulatorChain::new(previous);
                 self.len += 1;
                 return;
             }
@@ -79,10 +84,10 @@ impl<T: FrameRootTrace> PersistentStructureSequence<T> {
 
         let mut values = Vec::with_capacity(PERSISTENT_SEQUENCE_CHUNK_CAPACITY);
         values.push(value);
-        self.tail = Some(Arc::new(PersistentStructureSequenceNode {
-            previous: self.tail.take(),
+        self.tail = AccumulatorChain::new(Some(Arc::new(PersistentStructureSequenceNode {
+            previous: AccumulatorChain::new(previous),
             values,
-        }));
+        })));
         self.len += 1;
     }
 
@@ -136,19 +141,20 @@ impl<T: Clone + FrameRootTrace> PersistentStructureSequence<T> {
 #[derive(Clone, FrameRootTrace)]
 pub(super) struct PersistentStructureSet<T: FrameRootTrace> {
     base: Arc<HashSet<T>>,
-    tail: Option<Arc<PersistentStructureSetNode<T>>>,
+    tail: AccumulatorChain<PersistentStructureSetNode<T>>,
 }
 
 #[derive(Clone, FrameRootTrace)]
 pub(super) struct PersistentStructureCounts {
     base: Arc<[(rum_core::Expr, usize)]>,
-    tail: Option<Arc<PersistentStructureCountNode>>,
+    tail: AccumulatorChain<PersistentStructureCountNode>,
     len: usize,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct PersistentStructureCountNode {
-    previous: Option<Arc<PersistentStructureCountNode>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<PersistentStructureCountNode>,
     update: PersistentStructureCountUpdate,
 }
 
@@ -163,7 +169,7 @@ impl PersistentStructureCounts {
         let len = values.len();
         Self {
             base: Arc::from(values),
-            tail: None,
+            tail: AccumulatorChain::default(),
             len,
         }
     }
@@ -193,10 +199,10 @@ impl PersistentStructureCounts {
     pub(super) fn incremented(&self, index: usize) -> Self {
         Self {
             base: self.base.clone(),
-            tail: Some(Arc::new(PersistentStructureCountNode {
+            tail: AccumulatorChain::new(Some(Arc::new(PersistentStructureCountNode {
                 previous: self.tail.clone(),
                 update: PersistentStructureCountUpdate::Increment(index),
-            })),
+            }))),
             len: self.len,
         }
     }
@@ -204,10 +210,10 @@ impl PersistentStructureCounts {
     pub(super) fn appended(&self, item: rum_core::Expr) -> Self {
         Self {
             base: self.base.clone(),
-            tail: Some(Arc::new(PersistentStructureCountNode {
+            tail: AccumulatorChain::new(Some(Arc::new(PersistentStructureCountNode {
                 previous: self.tail.clone(),
                 update: PersistentStructureCountUpdate::Append(item),
-            })),
+            }))),
             len: self.len + 1,
         }
     }
@@ -230,9 +236,10 @@ impl PersistentStructureCounts {
     }
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct PersistentStructureSetNode<T: FrameRootTrace> {
-    previous: Option<Arc<PersistentStructureSetNode<T>>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<PersistentStructureSetNode<T>>,
     value: T,
 }
 
@@ -240,7 +247,7 @@ impl<T: Clone + Eq + Hash + FrameRootTrace> PersistentStructureSet<T> {
     pub(super) fn freeze(values: HashSet<T>) -> Self {
         Self {
             base: Arc::new(values),
-            tail: None,
+            tail: AccumulatorChain::default(),
         }
     }
 
@@ -258,10 +265,10 @@ impl<T: Clone + Eq + Hash + FrameRootTrace> PersistentStructureSet<T> {
         (
             Self {
                 base: self.base.clone(),
-                tail: Some(Arc::new(PersistentStructureSetNode {
+                tail: AccumulatorChain::new(Some(Arc::new(PersistentStructureSetNode {
                     previous: self.tail.clone(),
                     value,
-                })),
+                }))),
             },
             true,
         )

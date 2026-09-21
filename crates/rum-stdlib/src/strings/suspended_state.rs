@@ -1,6 +1,8 @@
 use std::sync::Arc;
 
-use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use rum_runtime::kernel_api::{
+    AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
+};
 
 #[derive(Clone, FrameRootTrace)]
 pub(super) struct FrozenStringSequence<T: FrameRootTrace>(Arc<[T]>);
@@ -37,13 +39,14 @@ impl<T: FrameRootTrace> FrozenStringValue<T> {
 #[derive(Clone, FrameRootTrace)]
 pub(super) struct PersistentStringSequence<T: FrameRootTrace> {
     prefix: Arc<[T]>,
-    tail: Option<Arc<PersistentStringSequenceNode<T>>>,
+    tail: AccumulatorChain<PersistentStringSequenceNode<T>>,
     len: usize,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct PersistentStringSequenceNode<T: FrameRootTrace> {
-    previous: Option<Arc<PersistentStringSequenceNode<T>>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<PersistentStringSequenceNode<T>>,
     value: T,
 }
 
@@ -52,7 +55,7 @@ impl<T: FrameRootTrace> PersistentStringSequence<T> {
         let len = values.len();
         Self {
             prefix: Arc::from(values),
-            tail: None,
+            tail: AccumulatorChain::default(),
             len,
         }
     }
@@ -60,10 +63,10 @@ impl<T: FrameRootTrace> PersistentStringSequence<T> {
     pub(super) fn appended(&self, value: T) -> Self {
         Self {
             prefix: self.prefix.clone(),
-            tail: Some(Arc::new(PersistentStringSequenceNode {
+            tail: AccumulatorChain::new(Some(Arc::new(PersistentStringSequenceNode {
                 previous: self.tail.clone(),
                 value,
-            })),
+            }))),
             len: self.len + 1,
         }
     }
@@ -93,13 +96,14 @@ impl<T: Clone + FrameRootTrace> PersistentStringSequence<T> {
 #[derive(Clone, FrameRootTrace)]
 pub(super) struct PersistentStringText {
     prefix: Arc<String>,
-    tail: Option<Arc<PersistentStringTextNode>>,
+    tail: AccumulatorChain<PersistentStringTextNode>,
     len: usize,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct PersistentStringTextNode {
-    previous: Option<Arc<PersistentStringTextNode>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<PersistentStringTextNode>,
     fragment: String,
 }
 
@@ -108,7 +112,7 @@ impl PersistentStringText {
         let len = value.len();
         Self {
             prefix: Arc::new(value),
-            tail: None,
+            tail: AccumulatorChain::default(),
             len,
         }
     }
@@ -116,10 +120,10 @@ impl PersistentStringText {
     pub(super) fn appended(mut self, fragment: impl Into<String>) -> Self {
         let fragment = fragment.into();
         let len = self.len + fragment.len();
-        self.tail = Some(Arc::new(PersistentStringTextNode {
+        self.tail = AccumulatorChain::new(Some(Arc::new(PersistentStringTextNode {
             previous: self.tail,
             fragment,
-        }));
+        })));
         self.len = len;
         self
     }

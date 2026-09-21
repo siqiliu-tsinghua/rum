@@ -16,6 +16,7 @@
 //! there is no auto-update mode, wildcard, disposition, or exemption. A match
 //! certifies the inventory only: unresolved rows remain analysis failures.
 
+mod accumulator_coverage;
 mod effects;
 mod evidence;
 mod fixtures;

@@ -1,6 +1,8 @@
 use std::sync::Arc;
 
-use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use rum_runtime::kernel_api::{
+    AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
+};
 
 use super::{Expr, grouping::IndexedGroups};
 
@@ -49,13 +51,14 @@ impl<T: FrameRootTrace> FrozenAssociationValue<T> {
 #[derive(Clone, FrameRootTrace)]
 pub(super) struct PersistentAssociationSequence<T: FrameRootTrace> {
     prefix: Arc<[T]>,
-    tail: Option<Arc<PersistentAssociationSequenceNode<T>>>,
+    tail: AccumulatorChain<PersistentAssociationSequenceNode<T>>,
     len: usize,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct PersistentAssociationSequenceNode<T: FrameRootTrace> {
-    previous: Option<Arc<PersistentAssociationSequenceNode<T>>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<PersistentAssociationSequenceNode<T>>,
     value: T,
 }
 
@@ -64,7 +67,7 @@ impl<T: FrameRootTrace> PersistentAssociationSequence<T> {
         let len = values.len();
         Self {
             prefix: Arc::from(values),
-            tail: None,
+            tail: AccumulatorChain::default(),
             len,
         }
     }
@@ -72,10 +75,10 @@ impl<T: FrameRootTrace> PersistentAssociationSequence<T> {
     pub(super) fn appended(&self, value: T) -> Self {
         Self {
             prefix: self.prefix.clone(),
-            tail: Some(Arc::new(PersistentAssociationSequenceNode {
+            tail: AccumulatorChain::new(Some(Arc::new(PersistentAssociationSequenceNode {
                 previous: self.tail.clone(),
                 value,
-            })),
+            }))),
             len: self.len + 1,
         }
     }
@@ -104,12 +107,13 @@ impl<T: Clone + FrameRootTrace> PersistentAssociationSequence<T> {
 #[derive(Clone, FrameRootTrace)]
 pub(super) struct PersistentAssociationGroups<T: FrameRootTrace> {
     base: Arc<[(Expr, Vec<T>)]>,
-    tail: Option<Arc<PersistentAssociationGroupNode<T>>>,
+    tail: AccumulatorChain<PersistentAssociationGroupNode<T>>,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct PersistentAssociationGroupNode<T: FrameRootTrace> {
-    previous: Option<Arc<PersistentAssociationGroupNode<T>>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<PersistentAssociationGroupNode<T>>,
     key: Expr,
     value: T,
 }
@@ -118,18 +122,18 @@ impl<T: FrameRootTrace> PersistentAssociationGroups<T> {
     pub(super) fn freeze(groups: IndexedGroups<T>) -> Self {
         Self {
             base: Arc::from(groups.into_entries()),
-            tail: None,
+            tail: AccumulatorChain::default(),
         }
     }
 
     pub(super) fn appended(&self, key: Expr, value: T) -> Self {
         Self {
             base: self.base.clone(),
-            tail: Some(Arc::new(PersistentAssociationGroupNode {
+            tail: AccumulatorChain::new(Some(Arc::new(PersistentAssociationGroupNode {
                 previous: self.tail.clone(),
                 key,
                 value,
-            })),
+            }))),
         }
     }
 }

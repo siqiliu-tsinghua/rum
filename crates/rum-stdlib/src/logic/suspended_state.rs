@@ -1,17 +1,20 @@
 use std::sync::Arc;
 
-use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use rum_runtime::kernel_api::{
+    AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
+};
 
 #[derive(Clone, FrameRootTrace)]
 pub(super) struct PersistentLogicSequence<T: FrameRootTrace> {
     prefix: Arc<[T]>,
-    tail: Option<Arc<PersistentLogicSequenceNode<T>>>,
+    tail: AccumulatorChain<PersistentLogicSequenceNode<T>>,
     len: usize,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct PersistentLogicSequenceNode<T: FrameRootTrace> {
-    previous: Option<Arc<PersistentLogicSequenceNode<T>>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<PersistentLogicSequenceNode<T>>,
     value: T,
 }
 
@@ -20,7 +23,7 @@ impl<T: FrameRootTrace> PersistentLogicSequence<T> {
         let len = values.len();
         Self {
             prefix: Arc::from(values),
-            tail: None,
+            tail: AccumulatorChain::default(),
             len,
         }
     }
@@ -28,10 +31,10 @@ impl<T: FrameRootTrace> PersistentLogicSequence<T> {
     pub(super) fn appended(&self, value: T) -> Self {
         Self {
             prefix: self.prefix.clone(),
-            tail: Some(Arc::new(PersistentLogicSequenceNode {
+            tail: AccumulatorChain::new(Some(Arc::new(PersistentLogicSequenceNode {
                 previous: self.tail.clone(),
                 value,
-            })),
+            }))),
             len: self.len + 1,
         }
     }

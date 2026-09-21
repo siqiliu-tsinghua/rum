@@ -1,6 +1,8 @@
 use std::sync::Arc;
 
-use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use rum_runtime::kernel_api::{
+    AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
+};
 
 #[derive(Clone, FrameRootTrace)]
 pub(super) struct FrozenPredicateSequence<T: FrameRootTrace>(Arc<[T]>);
@@ -22,12 +24,13 @@ impl<T: FrameRootTrace> FrozenPredicateSequence<T> {
 #[derive(Clone, FrameRootTrace)]
 pub(super) struct PersistentPredicateMatches {
     base: Arc<[Vec<bool>]>,
-    tail: Option<Arc<PersistentPredicateMatchNode>>,
+    tail: AccumulatorChain<PersistentPredicateMatchNode>,
 }
 
-#[derive(FrameRootTrace)]
+#[derive(FrameRootTrace, AccumulatorChainNode)]
 struct PersistentPredicateMatchNode {
-    previous: Option<Arc<PersistentPredicateMatchNode>>,
+    #[accumulator_link]
+    previous: AccumulatorChain<PersistentPredicateMatchNode>,
     lhs_index: usize,
     rhs_index: usize,
 }
@@ -36,18 +39,18 @@ impl PersistentPredicateMatches {
     pub(super) fn freeze(values: Vec<Vec<bool>>) -> Self {
         Self {
             base: Arc::from(values),
-            tail: None,
+            tail: AccumulatorChain::default(),
         }
     }
 
     pub(super) fn matched(&self, lhs_index: usize, rhs_index: usize) -> Self {
         Self {
             base: self.base.clone(),
-            tail: Some(Arc::new(PersistentPredicateMatchNode {
+            tail: AccumulatorChain::new(Some(Arc::new(PersistentPredicateMatchNode {
                 previous: self.tail.clone(),
                 lhs_index,
                 rhs_index,
-            })),
+            }))),
         }
     }
 
