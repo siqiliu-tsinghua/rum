@@ -119,6 +119,12 @@ Consequences for how I present and pick work:
   pattern; a `Mutex`/allocation/branch paid on every call when the flag is
   off is a regression.
 - **No new `unsafe` in `rum-core`/`rum-runtime`** (zero today).
+- **A line, once opened, is finished (user ruling 2026-09-21).** Stopping a
+  line half-built is worse than either finishing it or never starting: the
+  ownership branch at 2 of 29 members converted left 27 types with a live
+  hazard and step D blocked. When a branch is inserted into another line, it
+  still runs to completion before the interrupted line resumes. Present the
+  cost of finishing, not a menu that includes abandonment.
 - **Do not tag (user ruling 2026-09-19).** `v0.2.0` onward is the
   **security-hardening line**; the ownership-graph work is a branch inserted
   from `serval`'s third-party review, not a replacement for it. Hardening
