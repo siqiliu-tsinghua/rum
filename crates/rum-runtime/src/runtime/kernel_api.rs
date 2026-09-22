@@ -5,6 +5,11 @@
 //! conversion at a time. Items exported here become semver-relevant when the
 //! crate split ships.
 
+// Explicit accounting route; only the evaluation-stack owner is maintained.
+pub use super::accounting_mode::{
+    AccountingBuiltinFn, AccountingContext, AccountingShadow, AccountingSnapshot,
+};
+
 // accumulator links (stdlib-only bridge)
 #[doc(hidden)]
 pub use super::accumulator_chain::{AccumulatorChain, AccumulatorChainNode};

@@ -72,7 +72,14 @@ pub fn install_core(session: &mut Session) {
         session.register_builtin(*spec);
     }
     for spec in catalog::CONTROL_BUILTINS {
-        session.register_builtin(*spec);
+        if spec.name == "CompoundExpression" {
+            session.register_accounting_builtin(
+                *spec,
+                control_flow::eval_accounted_compound_expression,
+            );
+        } else {
+            session.register_builtin(*spec);
+        }
     }
     for spec in catalog::CSV_BUILTINS {
         session.register_builtin(*spec);

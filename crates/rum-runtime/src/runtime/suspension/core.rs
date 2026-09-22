@@ -501,7 +501,7 @@ impl Session {
                 .expect("resuming suspension was just installed")
                 .active_stack,
         );
-        let saved_stack = std::mem::replace(&mut self.evaluation_stack, active_stack);
+        let saved_stack = self.replace_accounted_evaluation_stack(active_stack);
         let saved_depth =
             std::mem::replace(&mut self.evaluation_depth, self.evaluation_stack.len());
         self.native_stack_next_check_depth = self
@@ -512,7 +512,7 @@ impl Session {
 
         let result = self.drive_resuming_frames(outcome);
 
-        self.evaluation_stack = saved_stack;
+        self.replace_accounted_evaluation_stack(saved_stack);
         self.evaluation_depth = saved_depth;
 
         match result {
@@ -547,12 +547,12 @@ impl Session {
         }
 
         self.abandonment_active = true;
-        let saved_stack = std::mem::take(&mut self.evaluation_stack);
+        let saved_stack = self.replace_accounted_evaluation_stack(Vec::new());
         let saved_depth = std::mem::replace(&mut self.evaluation_depth, 0);
 
         while let Some(mut suspension) = self.abandonment_worklist.pop() {
             debug_assert!(self.evaluation_stack.is_empty());
-            self.evaluation_stack = std::mem::take(&mut suspension.active_stack);
+            self.replace_accounted_evaluation_stack(std::mem::take(&mut suspension.active_stack));
             self.evaluation_depth = self.evaluation_stack.len();
 
             while let Some(frame) = suspension.take_front() {
@@ -577,18 +577,18 @@ impl Session {
                             self.pending_eval_request = None;
                         }
 
-                        self.evaluation_stack.clear();
+                        self.clear_accounted_evaluation_stack();
                         self.evaluation_depth = 0;
                         break;
                     }
                 }
             }
 
-            self.evaluation_stack.clear();
+            self.clear_accounted_evaluation_stack();
             self.evaluation_depth = 0;
         }
 
-        self.evaluation_stack = saved_stack;
+        self.replace_accounted_evaluation_stack(saved_stack);
         self.evaluation_depth = saved_depth;
         self.abandonment_active = false;
         reason

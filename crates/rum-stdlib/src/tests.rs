@@ -1,5 +1,8 @@
 use super::*;
 
+#[path = "tests/accounting_mode_route.rs"]
+mod accounting_mode_route;
+
 #[path = "tests/file_io_support.rs"]
 mod file_io_support;
 use file_io_support::install_test_file_io;

@@ -333,6 +333,7 @@ fn large_frame_state_trips_memory_limit_and_session_recovers() {
     limits.eval_memory_limit = Some(limit);
     session.set_resource_limits(limits);
     session.current_memory_limit = Some(limit);
+    session.note_accounting_arm();
 
     let response = session
         .resume_eval_request_with_input("resume")

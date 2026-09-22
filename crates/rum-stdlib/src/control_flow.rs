@@ -21,6 +21,14 @@ pub(crate) fn eval_compound_expression(
     dispatch(session, ControlDataBuiltin::CompoundExpression, head, args)
 }
 
+pub(crate) fn eval_accounted_compound_expression(
+    context: &mut rum_runtime::kernel_api::AccountingContext<'_>,
+    _head: &Expr,
+    args: &SharedArgs,
+) -> Result<Expr, EvalError> {
+    context.compound_expression(args)
+}
+
 pub(crate) fn eval_if(
     session: &mut Session,
     head: &Expr,

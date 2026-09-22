@@ -311,6 +311,9 @@ impl Session {
         head: &Expr,
         args: &SharedArgs,
     ) -> Result<Expr, EvalError> {
+        if self.current_memory_limit.is_some() {
+            return self.run_accounting_builtin(handler, head, args);
+        }
         handler(self, head, args)
     }
 }

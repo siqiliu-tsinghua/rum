@@ -11,6 +11,7 @@ use rum_syntax::{
     SyntaxError, SyntaxExpr, SyntaxExprKind, parse_expr, parse_with_diagnostics,
 };
 
+mod accounting_mode;
 mod accumulator_chain;
 mod arithmetic;
 mod attributes;

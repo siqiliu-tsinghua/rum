@@ -31,6 +31,9 @@ impl Session {
         self.interrupt_poll_counter = 0;
         self.eval_deadline = self.eval_timeout.map(|timeout| Instant::now() + timeout);
         self.current_memory_limit = self.resource_limits.eval_memory_limit;
+        if self.current_memory_limit.is_some() {
+            self.note_accounting_arm();
+        }
         self.interrupt_armed =
             self.eval_deadline.is_some() || self.active_accepted_request.is_some();
     }
@@ -217,14 +220,14 @@ impl Session {
         self.load_stack = snapshot.load_stack;
         self.evaluation_depth = snapshot.evaluation_depth;
         self.match_depth = snapshot.match_depth;
-        self.evaluation_stack = snapshot.evaluation_stack;
+        self.current_memory_limit = snapshot.current_memory_limit;
+        self.replace_accounted_evaluation_stack(snapshot.evaluation_stack);
         self.prints = snapshot.prints;
         self.handled_non_loader_eval_errors = snapshot.handled_non_loader_eval_errors;
         self.reap_scopes = snapshot.reap_scopes;
         self.monitor_scopes = snapshot.monitor_scopes;
         self.monitor_callbacks_enabled = snapshot.monitor_callbacks_enabled;
         self.current_time_deadline = snapshot.current_time_deadline;
-        self.current_memory_limit = snapshot.current_memory_limit;
         self.asserts_enabled = snapshot.asserts_enabled;
         self.abort_protect_depth = snapshot.abort_protect_depth;
         self.abort_protect_pending = snapshot.abort_protect_pending;

@@ -270,6 +270,11 @@ impl Session {
 
     pub fn register_builtin(&mut self, spec: BuiltinSpec) {
         let symbol = Symbol::system(spec.name);
+        if let Some(route) = &mut self.accounting_route {
+            route
+                .adapters
+                .retain(|(registered, _)| *registered != symbol);
+        }
         let spec = self
             .builtins
             .get(&symbol)

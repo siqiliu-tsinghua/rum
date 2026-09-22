@@ -27,6 +27,8 @@ pub(in crate::runtime) struct SideTableStamp {
 }
 
 pub struct Session {
+    pub(in crate::runtime) accounting_route:
+        Option<Box<crate::runtime::accounting_mode::AccountingRoute>>,
     pub(in crate::runtime) builtins: BuiltinSpecMap,
     pub(in crate::runtime) attributes: AttributeMap,
     pub(in crate::runtime) attribute_revision: u64,

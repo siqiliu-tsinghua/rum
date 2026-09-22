@@ -8,6 +8,8 @@ use super::message_templates::*;
 use crate::control_flow;
 
 pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
+    // The installer's sole accounting companion is CompoundExpression.
+    // This unchanged public spec remains the unarmed and legacy handler.
     BuiltinSpec::ordinary_with_hold(
         "CompoundExpression",
         "Evaluates expressions sequentially and returns the last result.",

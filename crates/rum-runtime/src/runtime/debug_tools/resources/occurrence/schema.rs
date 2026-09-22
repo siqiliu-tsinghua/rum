@@ -49,6 +49,14 @@ session_memory_field_decisions! {
         sequence(abandonment_worklist, SuspendedEvaluation::occurrence_bytes),
     abort_protect_depth => Exempt("fixed-size value already covered by size_of::<Session>()"),
     abort_protect_pending => Exempt("fixed-size value already covered by size_of::<Session>()"),
+    accounting_route => Accounted("shadow route box, adapter vector and session-owned counter allocation") =
+        accounting_route.as_ref().map_or(Bytes::Exact(0), |route| {
+            use crate::runtime::accounting_mode::{AccountingBuiltinFn, AccountingRoute, Counter};
+            slots::<AccountingRoute>(1)
+                .add(slots::<(Symbol, AccountingBuiltinFn)>(route.adapters.capacity()))
+                .add(sum(route.adapters.iter().map(|(key, _)| Bytes::Exact(key.to_string().len()))))
+                .add(route.shadow.as_ref().map_or(Bytes::Exact(0), |_| slots::<Counter>(1).add(slots::<usize>(2))))
+        }),
     active_accepted_request => Exempt("fixed-size wrapper already covered by size_of::<Session>(); Arc contents are already counted through request_interrupt_control"),
     asserts_enabled => Exempt("fixed-size value already covered by size_of::<Session>()"),
     association_lookup_cache => Accounted("AssociationLookupCache::memory_proxy_bytes") =

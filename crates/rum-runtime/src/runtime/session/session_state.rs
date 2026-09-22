@@ -576,6 +576,7 @@ pub enum EvalError {
 impl Session {
     pub(in crate::runtime) fn empty() -> Self {
         Self {
+            accounting_route: None,
             builtins: BuiltinSpecMap::default(),
             attributes: AttributeMap::default(),
             attribute_revision: 0,

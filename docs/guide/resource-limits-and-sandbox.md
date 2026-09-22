@@ -449,11 +449,19 @@ specification, not changes to runtime enforcement in this step.
 Any future maintained accountant is charged too: new inline bookkeeping grows
 `S(Session)` or the containing frame/index, and every added bookkeeping heap
 and spare capacity must receive a contribution. Existing omissions do not
-authorize an exemption for new accounting metadata. There is currently no
-maintained ledger or cached total. The armed walk still runs at every existing
-checkpoint, with no stride or adaptive sampling. `MemoryInUse[]` samples that
-walk; `MaxMemoryUsed[]` returns its sampled high-water mark, not a continuously
-observed allocator peak.
+authorize an exemption for new accounting metadata. Armed checkpoints currently
+maintain only the live evaluation-stack contribution. Every other owner is
+walked at each existing checkpoint, with no stride or adaptive sampling; there
+is no cached session total. Stack maintenance runs only while a memory limit is
+active, counts shared expressions per occurrence, and retains vector capacity
+after a pop. Each arming performs a full walk and rebuilds the stack term from
+the actual roots, including roots retained before arming. Repeated local
+`MemoryConstrained` entries therefore pay that cold walk repeatedly. Resume,
+abandonment and rollback reconcile the actual incoming stack while armed.
+`MemoryInUse[]` always samples the complete walker, including the stack;
+`MaxMemoryUsed[]` returns the sampled high-water mark, not a continuously
+observed allocator peak. This is a partly maintained, partly walked slice,
+not a complete maintained accountant.
 
 ## Poison Recovery
 

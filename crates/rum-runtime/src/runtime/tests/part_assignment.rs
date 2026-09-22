@@ -365,6 +365,7 @@ fn set_positional_part_observable_constrained_and_dynamic_scopes_use_generic_pat
         .eval_text("memoryConstrainedPartOwner = {1, 2}")
         .unwrap();
     memory_session.current_memory_limit = Some(usize::MAX);
+    memory_session.note_accounting_arm();
     assert_generic_part_assignment_replaces_root_args(&mut memory_session, memory_target);
 
     let mut dynamic_session = Session::default();

@@ -112,6 +112,7 @@ impl Session {
 
         let prior_limit = self.current_memory_limit;
         self.current_memory_limit = Some(prior_limit.map_or(limit, |current| current.min(limit)));
+        self.note_accounting_arm();
 
         let body_result = self.evaluate(body);
         let outcome = crate::resume_or_suspend!(
@@ -151,9 +152,10 @@ impl Session {
     #[cold]
     #[inline(never)]
     fn enforce_memory_limit_for_expr(&self, expr: &Expr, limit: usize) -> Result<(), EvalError> {
-        let projected = self
-            .current_memory_proxy_bytes()
-            .saturating_add(expr_memory_proxy_bytes(expr));
+        let total = self
+            .checkpoint_memory_proxy_bytes()
+            .ok_or(EvalError::MemoryConstraintExceeded { limit })?;
+        let projected = total.saturating_add(expr_memory_proxy_bytes(expr));
         if projected > limit {
             return Err(EvalError::MemoryConstraintExceeded { limit });
         }
@@ -178,7 +180,10 @@ impl Session {
         self.record_builtin_memory_projection_for_growth_test();
 
         if let Some(limit) = self.current_memory_limit {
-            let projected = self.current_memory_proxy_bytes().saturating_add(bytes);
+            let total = self
+                .checkpoint_memory_proxy_bytes()
+                .ok_or(EvalError::MemoryConstraintExceeded { limit })?;
+            let projected = total.saturating_add(bytes);
             if projected > limit {
                 return Err(EvalError::MemoryConstraintExceeded { limit });
             }

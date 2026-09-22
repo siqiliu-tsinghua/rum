@@ -48,7 +48,24 @@ impl Session {
     }
 
     pub(in crate::runtime::debug_tools::resources) fn current_memory_proxy_bytes(&self) -> usize {
+        self.memory_proxy_bytes_with_stack(self.walked_evaluation_stack_bytes())
+    }
+
+    pub(super) fn walked_evaluation_stack_bytes(&self) -> usize {
+        self.evaluation_stack
+            .iter()
+            .map(render_evaluation_stack_entry_memory_proxy_bytes)
+            .sum::<usize>()
+            .saturating_add(vec_spare_capacity_bytes(&self.evaluation_stack))
+    }
+
+    pub(super) fn memory_proxy_bytes_with_stack(&self, stack_bytes: usize) -> usize {
         let mut total = std::mem::size_of::<Session>();
+        total = total.saturating_add(
+            self.accounting_route
+                .as_ref()
+                .map_or(0, |route| route.memory_bytes()),
+        );
 
         total = total.saturating_add(
             self.builtins
@@ -97,13 +114,7 @@ impl Session {
                 .map_or(0, render_entropy_provider_memory_proxy_bytes),
         );
 
-        total = total.saturating_add(
-            self.evaluation_stack
-                .iter()
-                .map(render_evaluation_stack_entry_memory_proxy_bytes)
-                .sum::<usize>()
-                .saturating_add(vec_spare_capacity_bytes(&self.evaluation_stack)),
-        );
+        total = total.saturating_add(stack_bytes);
 
         total = total.saturating_add(
             self.definitions

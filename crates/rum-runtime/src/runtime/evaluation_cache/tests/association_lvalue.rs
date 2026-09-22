@@ -277,6 +277,7 @@ fn association_lvalue_observable_or_constrained_environments_use_fallback() {
         session_with_stable_association("memoryConstrainedAssociation");
     let memory_before = association_definition_args_key(&memory_session, &memory_target);
     memory_session.current_memory_limit = Some(usize::MAX);
+    memory_session.note_accounting_arm();
     memory_session
         .try_set_association_lvalue(
             association_function_lvalue(memory_target, Expr::symbol("x")),

@@ -3,6 +3,8 @@ use crate::runtime::debug_tools::resources::occurrence::*;
 
 #[path = "session_memory_arithmetic.rs"]
 mod arithmetic;
+#[path = "session_memory_maintained.rs"]
+mod maintained;
 #[path = "session_memory_oracle.rs"]
 mod oracle;
 #[path = "session_memory_structures.rs"]
@@ -13,13 +15,13 @@ fn session_memory_field_decision_inventory_is_sorted_and_exhaustive() {
     let session = Session::empty();
     assert_session_memory_decisions_are_exhaustive(&session);
 
-    assert_eq!(SESSION_MEMORY_FIELD_DECISIONS.len(), 94);
+    assert_eq!(SESSION_MEMORY_FIELD_DECISIONS.len(), 95);
     assert_eq!(
         SESSION_MEMORY_FIELD_DECISIONS
             .iter()
             .filter(|(_, decision)| matches!(decision, SessionMemoryFieldDecision::Accounted(_)))
             .count(),
-        52,
+        53,
     );
     let breakdown = session_breakdown(&session);
     assert_eq!(breakdown.fields.len(), SESSION_MEMORY_FIELD_DECISIONS.len());

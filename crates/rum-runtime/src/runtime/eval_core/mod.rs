@@ -1,4 +1,5 @@
 use super::*;
+use crate::runtime::accounting_mode::{AccountingMode, Unarmed};
 
 use std::time::Instant;
 
@@ -15,6 +16,20 @@ impl Session {
         &mut self,
         expr: Expr,
         track_cycle: bool,
+    ) -> Result<Expr, EvalError> {
+        if self.current_memory_limit.is_some() {
+            let mode = self.ensure_accounting_shadow();
+            self.evaluate_once_in_accounting_mode(expr, track_cycle, mode)
+        } else {
+            self.evaluate_once_in_accounting_mode(expr, track_cycle, Unarmed)
+        }
+    }
+
+    fn evaluate_once_in_accounting_mode<M: AccountingMode>(
+        &mut self,
+        expr: Expr,
+        track_cycle: bool,
+        mode: M,
     ) -> Result<Expr, EvalError> {
         let evaluation_depth = self.evaluation_depth;
         if self.interrupt_armed {
@@ -42,18 +57,37 @@ impl Session {
             self.poll_native_stack_limit()?;
         }
 
-        if track_cycle {
-            self.evaluation_stack.push(EvaluationStackEntry {
+        let stack_payload = if track_cycle {
+            let entry = EvaluationStackEntry {
                 expr: expr.clone(),
                 epoch: self.evaluation_epoch,
-            });
-        }
+            };
+            if M::ARMED {
+                self.push_accounted_evaluation_entry(entry)
+            } else {
+                self.evaluation_stack.push(entry);
+                0
+            }
+        } else {
+            0
+        };
         self.evaluation_depth = evaluation_depth + 1;
+        let shadow_stack = mode.stack_push(track_cycle);
         let result = self.evaluate_inner_unstable(expr);
         self.evaluation_depth = evaluation_depth;
         if track_cycle {
-            self.evaluation_stack.pop();
+            if M::ARMED {
+                self.pop_accounted_evaluation_entry(stack_payload);
+            } else if matches!(&result, Err(EvalError::InputRequired { .. }))
+                && self.current_memory_limit.is_some()
+            {
+                // This frame predates a local arming that survived suspension.
+                self.pop_cold_armed_evaluation_entry();
+            } else {
+                self.evaluation_stack.pop();
+            }
         }
+        drop(shadow_stack);
         match result {
             Ok(value) => {
                 self.enforce_active_resource_limits_for_expr(&value)?;
