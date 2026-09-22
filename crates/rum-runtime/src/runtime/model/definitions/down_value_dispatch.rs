@@ -578,3 +578,9 @@ const _: fn() = || {
     assert_traces::<DownValueDispatchIndexCache>();
     assert_traces::<DownValueDispatchMetadata>();
 };
+
+// Test-only oracle access; keep production inventory source locations unchanged.
+#[cfg(test)]
+mod occurrence_memory {
+    crate::runtime::debug_tools::resources::occurrence::dispatch::define_oracle!();
+}

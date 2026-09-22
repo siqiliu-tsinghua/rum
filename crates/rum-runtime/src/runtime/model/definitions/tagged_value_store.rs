@@ -309,3 +309,9 @@ const _: fn() = || {
     assert_traces::<TaggedValueStoreIndex>();
     assert_traces::<TaggedValueStoreMetadata>();
 };
+
+// Test-only oracle access; keep production inventory source locations unchanged.
+#[cfg(test)]
+mod occurrence_memory {
+    crate::runtime::debug_tools::resources::occurrence::tagged::define_oracle!();
+}

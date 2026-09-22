@@ -9,7 +9,7 @@ mod monitor;
 mod properties;
 mod reap;
 mod reap_state;
-mod resources;
+pub(in crate::runtime) mod resources;
 mod shared;
 mod test_report;
 mod timing;

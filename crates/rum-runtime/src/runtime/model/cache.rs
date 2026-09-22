@@ -540,3 +540,9 @@ impl StabilityBloom {
         (self.regular & rhs.regular) != 0 || (self.generated & rhs.generated) != 0
     }
 }
+
+// Test-only oracle access; keep production inventory source locations unchanged.
+#[cfg(test)]
+mod occurrence_memory {
+    crate::runtime::debug_tools::resources::occurrence::association::define_oracle!();
+}

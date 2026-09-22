@@ -1,129 +1,12 @@
 use super::*;
+use crate::runtime::debug_tools::resources::occurrence::*;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-enum SessionMemoryFieldDecision {
-    Accounted(&'static str),
-    Exempt(&'static str),
-}
-
-macro_rules! session_memory_field_decisions {
-    ($($field:ident => $decision:ident($detail:literal),)*) => {
-        const SESSION_MEMORY_FIELD_DECISIONS: &[(&str, SessionMemoryFieldDecision)] = &[
-            $(
-                (
-                    stringify!($field),
-                    SessionMemoryFieldDecision::$decision($detail),
-                ),
-            )*
-        ];
-
-        fn assert_session_memory_decisions_are_exhaustive(session: &Session) {
-            let Session {
-                $($field: _,)*
-            } = session;
-        }
-    };
-}
-
-// This sorted inventory is also a compile-time completeness gate: the macro's
-// exhaustive Session pattern stops compiling when a field is added without an
-// ACCOUNTED or EXEMPT row here.
-session_memory_field_decisions! {
-    abandonment_active => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    abandonment_worklist => Accounted("suspended owners plus Vec spare capacity"),
-    abort_protect_depth => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    abort_protect_pending => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    active_accepted_request => Exempt("fixed-size wrapper already covered by size_of::<Session>(); Arc contents are already counted through request_interrupt_control"),
-    asserts_enabled => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    association_lookup_cache => Accounted("AssociationLookupCache::memory_proxy_bytes"),
-    attribute_revision => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    attribute_set_cache => Accounted("hash-table capacity and live Symbol text"),
-    attributes => Accounted("live attribute-key Symbol text"),
-    builtin_dispatch_spec_cache => Accounted("hash-table capacity and live Symbol text"),
-    builtin_memory_projection_count => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    builtins => Accounted("live BuiltinSpecMap entry storage"),
-    call_stability_cache => Accounted("hash-table capacity and retained SharedExpr/SharedArgs values"),
-    call_stability_generation => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    capability_policy => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    context_path => Accounted("String capacities and Vec capacity"),
-    context_stack => Accounted("ContextFrame contents and Vec spare capacity"),
-    current_context => Accounted("String capacity"),
-    current_memory_limit => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    current_message_list_checkpoint => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    current_message_list_dirty => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    current_time_deadline => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    declared_stubs => Accounted("live Symbol values and text"),
-    definitions => Accounted("definition keys, values, rules, guards, and dispatch indexes"),
-    disabled_message_selectors => Accounted("selector strings and Vec spare capacity"),
-    dynamic_own_values => Accounted("DynamicOwnValueFrame symbols, expressions, and Vec spare capacity"),
-    entropy_source => Accounted("Arc allocation header and concrete EntropySource object"),
-    eval_deadline => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    eval_timeout => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    evaluation_depth => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    evaluation_epoch => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    evaluation_stack => Accounted("EvaluationStackEntry expressions and Vec spare capacity"),
-    exception_types => Accounted("BTreeMap entries and owned String capacities"),
-    file_io => Accounted("Arc allocation header and concrete FileIo object"),
-    gc_candidate_gensyms => Accounted("hash-table capacity and live Symbol text"),
-    gensym_gc_sweep_count => Exempt("fixed-size test-only value already covered by size_of::<Session>()"),
-    gensym_gc_watermark => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    handled_non_loader_eval_errors => Accounted("RuntimeMessage strings and Vec spare capacity"),
-    has_up_value_definitions => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    in_gensym_sweep => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    installed_system_down_values => Accounted("hash-table storage, Symbol text, rule expressions, and nested Vec spare capacity"),
-    installed_system_own_values => Accounted("hash-table capacity and live Symbol text"),
-    interrupt_armed => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    interrupt_poll_counter => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    iteration_product_budget => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    last_message_list => Accounted("RuntimeMessage strings and Vec spare capacity"),
-    load_stack => Accounted("PathBuf payloads and Vec capacity"),
-    loaded_packages => Accounted("String capacities and Vec capacity"),
-    match_depth => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    message_definitions => Accounted("message keys, tags, and definition expressions"),
-    message_symbol_counts => Accounted("hash-table capacity and live Symbol text"),
-    messages => Accounted("RuntimeMessage strings and Vec spare capacity"),
-    module_activations => Accounted("ModuleActivation gensym vectors and outer Vec spare capacity"),
-    monitor_callbacks_enabled => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    monitor_scopes => Accounted("MonitorScope expressions, display String, and Vec spare capacity"),
-    native_stack_base => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    native_stack_next_check_depth => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    next_generated_symbol_id => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    next_request_generation => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    next_sealed_symbol_id => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    next_source_unit_epoch => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    once_values => Accounted("owned String keys and Expr values"),
-    option_value_scopes => Accounted("OptionValueScope symbols, options, and Vec spare capacity"),
-    options => Accounted("Symbol keys and SymbolOptions entries"),
-    package_search_paths => Accounted("PathBuf payloads and Vec capacity"),
-    peak_memory_proxy_bytes => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    pending_accepted_request => Exempt("fixed-size wrapper already covered by size_of::<Session>(); Arc contents are already counted through request_interrupt_control"),
-    pending_eval_request => Accounted("existing conditional PendingEvalRequest conservative term"),
-    pending_input_request => Accounted("RuntimeInputRequest prompt capacity"),
-    pending_suspension => Accounted("owned SuspendedEvaluation stack, frames, and roots"),
-    print_sink => Accounted("concrete boxed FnMut object"),
-    prints => Accounted("String capacities and Vec capacity"),
-    prng_state => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    queued_input_responses => Accounted("String capacities and VecDeque capacity"),
-    reap_scopes => Accounted("ReapScope patterns, handlers, buckets, and Vec spare capacity"),
-    removed_symbols => Accounted("live Symbol values and text"),
-    request_interrupt_control => Accounted("Arc allocation header and fixed RequestInterruptState object"),
-    resource_limits => Accounted("existing ResourceLimits conservative term"),
-    restoring_snapshot => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    resuming_suspension => Accounted("owned SuspendedEvaluation stack, frames, and roots"),
-    sealed_units => Accounted("SourceUnit strings, expressions, symbol vectors, private index, and outer Vec spare capacity"),
-    stability_dirty_bloom => Exempt("fixed-size two-u128 value already covered by size_of::<Session>()"),
-    stability_native_stack_poll_counter => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    stability_rewritten_dirty_bloom => Exempt("fixed-size two-u128 value already covered by size_of::<Session>()"),
-    stable_symbol_cache => Accounted("hash-table capacity and live Symbol text"),
-    symbol_cache_generation => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    symbol_call_effect_cache => Accounted("hash-table capacity and live key Symbol text"),
-    symbol_generations => Accounted("owned context/name String capacities and generation entries"),
-    syntax_information => Accounted("Symbol keys and Expr values"),
-    trace_event_depths => Accounted("Vec capacity"),
-    trace_events => Accounted("TraceEvent strings, expressions, and Vec spare capacity"),
-    tracing_enabled => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    value_q_effect_suppression_active => Exempt("fixed-size value already covered by size_of::<Session>()"),
-}
+#[path = "session_memory_arithmetic.rs"]
+mod arithmetic;
+#[path = "session_memory_oracle.rs"]
+mod oracle;
+#[path = "session_memory_structures.rs"]
+mod structures;
 
 #[test]
 fn session_memory_field_decision_inventory_is_sorted_and_exhaustive() {
@@ -131,6 +14,15 @@ fn session_memory_field_decision_inventory_is_sorted_and_exhaustive() {
     assert_session_memory_decisions_are_exhaustive(&session);
 
     assert_eq!(SESSION_MEMORY_FIELD_DECISIONS.len(), 94);
+    assert_eq!(
+        SESSION_MEMORY_FIELD_DECISIONS
+            .iter()
+            .filter(|(_, decision)| matches!(decision, SessionMemoryFieldDecision::Accounted(_)))
+            .count(),
+        52,
+    );
+    let breakdown = session_breakdown(&session);
+    assert_eq!(breakdown.fields.len(), SESSION_MEMORY_FIELD_DECISIONS.len());
     assert!(
         SESSION_MEMORY_FIELD_DECISIONS
             .windows(2)
@@ -142,6 +34,7 @@ fn session_memory_field_decision_inventory_is_sorted_and_exhaustive() {
         let detail = match decision {
             SessionMemoryFieldDecision::Accounted(term) => term,
             SessionMemoryFieldDecision::Exempt(reason) => {
+                assert_eq!(breakdown.field(field), Bytes::Exact(0));
                 assert!(
                     reason.starts_with("fixed-size"),
                     "{field} uses an unsupported exemption reason: {reason}"
@@ -151,6 +44,28 @@ fn session_memory_field_decision_inventory_is_sorted_and_exhaustive() {
         };
         assert!(!detail.is_empty(), "{field} must record a term or reason");
     }
+}
+
+fn assert_model(session: &Session) -> MemoryBreakdown {
+    let peak = session.peak_memory_proxy_bytes.get();
+    let first = session_breakdown(session);
+    assert_eq!(session.peak_memory_proxy_bytes.get(), peak);
+    assert_eq!(
+        session_breakdown(session),
+        first,
+        "oracle must be observational"
+    );
+    assert_eq!(
+        first.total(),
+        Bytes::Exact(session.current_memory_proxy_bytes_for_test())
+    );
+    first
+}
+
+fn reserved(text: &str, capacity: usize) -> String {
+    let mut value = String::with_capacity(capacity);
+    value.push_str(text);
+    value
 }
 
 #[test]

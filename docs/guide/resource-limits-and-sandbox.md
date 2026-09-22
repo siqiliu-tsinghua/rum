@@ -322,6 +322,139 @@ Deliberate contract note: a tripped memory constraint is CONSUMED by
 bound is also its handler. A breach of the outer request ceiling does surface
 as `TerminatedEvaluation["MemoryLimit"]`.
 
+### Occurrence memory model
+
+The proxy counts **occurrences**, not unique allocations. Each retained
+expression root, head, argument, rule, cache entry, and traced frame root is
+charged where it occurs. Two edges to the same shared subtree each charge the
+whole subtree. Interned symbol text is likewise charged at each modeled symbol
+occurrence. No `Arc` identity set or sharing discount is part of the model.
+The two accepted-request wrappers remain explicit exceptions: their interrupt
+state allocation is charged through `request_interrupt_control` alone.
+
+`ByteCount[expr]` measures an expression with the following formula. Write
+`S(T)` for Rust's `size_of::<T>()`, `E(x)` for the expression charge, and
+`I(n)` for the length of an integer's signed little-endian bytes (at least one).
+Sizes depend on the target layout; this is a structural proxy, not a portable
+serialization size.
+
+| Expression | Charge |
+| --- | --- |
+| Small integer | `S(Expr)` |
+| Big integer | `S(Expr) + S(BigInt) + I(n)` |
+| Rational | `S(Expr) + S(Rational) + I(numerator) + I(denominator)` |
+| String | `S(Expr) + String.capacity()` |
+| Symbol | `S(Expr) + context.len() + name.len()` |
+| Call | `S(Expr) + E(head) + sum(E(argument)) + (args.capacity() - args.len()) * S(Expr)` |
+
+`ByteArray` uses the call formula, including the **base64 String's capacity**
+and its `Expr` slot, not decoded byte length. Malformed text and non-string
+payloads use the same structural formula. Shared expression allocation headers
+and allocator metadata are omitted.
+
+The session total begins with `S(Session)`, including its inline bookkeeping,
+then adds each classified field's contribution. An independent test oracle
+reports those contributions without sampling the peak, clearing caches, or
+building indexes. Its exhaustive schema has 52 walked fields and 42 exemptions
+in a test build (41 exemptions in a production build, which omits the test-only
+gensym sweep counter). Adding an unclassified field fails compilation of the
+tests. The rules for the field contributions are:
+
+| Fields or payload | Contribution beyond `S(Session)` |
+| --- | --- |
+| `builtins` | Live entry count times `S((Symbol, BuiltinSpec))`; static catalog text omitted |
+| Attribute, builtin-dispatch, stable-symbol and message-count caches; installed ownvalue and GC symbol sets | Container capacity times entry size, plus context/name text for every live key |
+| Symbol call-effect cache | Capacity times key/value size, plus each live key's symbol text |
+| Call-stability cache | Capacity times key/value size, plus each retained head and argument occurrence and argument spare slots |
+| Association cache | Entry-vector capacity times entry size, plus each live index's hash capacity times `S((u64, usize))` and collision-vector capacity times `S(usize)`; stale entries remain charged until the owner prunes them |
+| `current_context`, string vectors/deque | String capacities; vectors/deque also charge capacity times `S(String)` |
+| Path vectors | Path **lengths**, plus vector capacity times `S(PathBuf)` |
+| Context, evaluation-stack, dynamic-ownvalue, module, option, monitor and trace frames; message and selector vectors; sealed units | Each live element's inline size and specified payload, plus outer vector spare slots |
+| `attributes` | Each live key's formatted symbol length |
+| `definitions`, `options`, `syntax_information` | Each key's formatted symbol length plus definition, options, or expression charge |
+| `declared_stubs`, `removed_symbols` | Each live symbol's `S(Symbol)` and context/name text; unused hash capacity omitted |
+| `symbol_generations` | Each `S(((String, String), u64))` and the two String capacities |
+| `once_values` | Each key's String capacity and value expression |
+| Installed downvalues | Hash capacity times entry size, key text, each rule pair's expression occurrences and nested rule-vector spare slots |
+| Message definitions | Formatted symbol length, tag **length**, immediate and delayed expression occurrences |
+| Exception-type registry | Each `S((String, Option<String>))`, name capacity and optional parent capacity |
+| Trace depths | Vector capacity times `S(usize)` |
+| Reap scopes | Outer vector capacity times `S(ReapScope)`, pattern and handler expressions, bucket tags and values |
+| Input request | When present, `S(RuntimeInputRequest) + prompt.capacity() + 1` |
+| Pending evaluation request | When present, an additional `S(PendingEvalRequest)` |
+| Pending/resuming suspension and abandonment worklist | Each owner, saved live stack entries, frame queue capacity, frame allocations and traced expression/symbol occurrences; abandonment vector spare slots too |
+| File/entropy providers and request interrupt control | Two word-sized Arc counters plus the concrete object's immediate `size_of_val` |
+| Print sink | Concrete boxed object's immediate `size_of_val` |
+| Resource limits | An additional `S(ResourceLimits)` |
+
+A definition charges `S(SymbolDefinition)`, immediate/delayed ownvalues and
+ownvalue guards, and each rule's inline size, left/right expressions and guards.
+Options charge `S(SymbolOptions)`, entry-vector capacity times
+`S(SymbolOptionEntry)`, each option name's formatted length and its value
+expression. An option scope additionally charges its own inline size and target
+name. Context frames charge their two String capacities and saved context-path
+vector. Module activations charge their gensym vector's capacity and live symbol
+text. Dynamic frames charge symbol text and optional value. Monitor frames
+charge display/callback expressions and optional display String capacity.
+Messages/selectors charge their String capacities. Trace events charge their
+expression occurrences and any symbol String capacity. Sealed units charge
+package String capacity, held wrapper, two symbol vectors and each private
+index entry's `S((String, Symbol))`, String capacity and symbol text.
+
+Definition dispatch metadata charges its inline size when present. A built
+index adds its inline size, hash capacity times `S((u64, usize))`, and collision,
+non-ground and wrapped-ground vector capacities times `S(usize)`. Each optional
+tagged upvalue/subvalue index adds its own inline size, hash capacity and
+collision-vector capacity. Merely measuring a lazy index does not build it.
+
+A suspension charges `S(SuspendedEvaluation)`, each saved live stack entry's
+`S(EvaluationStackEntry) + E(expr)`, frame-queue capacity times the frame Arc
+slot size, and, for every queued frame, two word-sized Arc counters and its
+concrete inline size. `FrameRootTrace` then contributes `E(expr)` for each
+expression root and `S(Symbol) + context.len() + name.len()` for each bare
+symbol root, including expressions inside pending throws/exceptions. Repeated
+roots are charged again. The traversal protocol is shared with rooting; the
+oracle's arithmetic is independent of the production memory walker.
+
+Several conservative terms intentionally charge inline storage again: resource
+limits, pending request wrappers, frame expressions, definition expressions,
+and option structures. These are part of the existing ceiling, not deductions
+to make when interpreting it as physical memory.
+
+Deliberate omissions include allocator overhead, hash control bytes and B-tree
+node overhead, process-global interner storage, unobserved temporaries, opaque
+host objects' nested heaps, bigint limb spare capacity, definition matcher
+payloads and rule-vector spare capacity, dispatch shallow-signature heaps,
+Reap bucket/group storage and tag-position indexes beyond the expression roots,
+and saved suspension-stack spare capacity. A traced frame's nested container
+capacity, strings and other non-root heap payloads are omitted unless its
+concrete inline size already covers them. Paths and message-definition tags
+use length rather than capacity. These omissions are boundaries of this proxy;
+they are not claims that the omitted storage is free.
+
+**Arithmetic specification:** every charge, product and intermediate sum must
+saturate conservatively on overflow. Exact `usize::MAX` is distinct from an
+invalid (information-losing) total. An invalid total projects to `usize::MAX`
+and must reject every ceiling, including `usize::MAX`. Releases must either
+retain non-lossy information or leave the total explicitly invalid and too high;
+subtracting from a saturated number is insufficient. An over-release or a
+non-representable release also invalidates the result. Only a fresh independent
+walk can re-establish an exact total. Synthetic tests exercise this rule without
+large allocations. The current production walker still contains unchecked
+intermediate sums/additions (which can panic or wrap). Its saturated `usize`
+also loses the invalid-state distinction, so `projected > limit` can admit an
+overflow when the ceiling is `usize::MAX`. These are recorded gaps against the
+specification, not changes to runtime enforcement in this step.
+
+Any future maintained accountant is charged too: new inline bookkeeping grows
+`S(Session)` or the containing frame/index, and every added bookkeeping heap
+and spare capacity must receive a contribution. Existing omissions do not
+authorize an exemption for new accounting metadata. There is currently no
+maintained ledger or cached total. The armed walk still runs at every existing
+checkpoint, with no stride or adaptive sampling. `MemoryInUse[]` samples that
+walk; `MaxMemoryUsed[]` returns its sampled high-water mark, not a continuously
+observed allocator peak.
+
 ## Poison Recovery
 
 Public `HostSession` entrypoints catch panics from guest execution.

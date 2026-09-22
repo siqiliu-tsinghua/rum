@@ -673,3 +673,9 @@ macro_rules! resume_or_suspend {
     }};
     (insert $session:expr, $frame:expr $(,)?) => {{ $session.insert_suspension_frame($frame) }};
 }
+
+// Test-only oracle access; keep production inventory source locations unchanged.
+#[cfg(test)]
+mod occurrence_memory {
+    crate::runtime::debug_tools::resources::occurrence::suspension::define_oracle!();
+}
