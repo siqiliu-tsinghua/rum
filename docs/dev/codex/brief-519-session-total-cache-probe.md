@@ -124,3 +124,50 @@ marked as throwaway and removed before you finish, as brief-506 did.
 4. Measured hit rates.
 5. The plan and falsifier, or the refutation and what it implies.
 6. Proof the tree is clean of throwaway instrumentation.
+
+---
+
+## Resume note (director, 2026-09-22)
+
+A first dispatch of this brief died at **`Selected model is at capacity`** —
+an upstream failure, not a content filter and not a scope stop — after about
+151k tokens. It had already produced most of the evidence and wrote no
+report. The working tree was left clean; its throwaway instrumentation was
+already removed.
+
+**Reuse that evidence rather than re-measuring it**, under
+`target/session-total-cache-519/`:
+
+- `walked-fields.json` — the 52 walked fields, enumerated.
+- `field-references.tsv` — field-to-source cross-reference, the raw material
+  for question 1.
+- `instruction-medians.tsv`, `instruction-comparison.json`,
+  `base-instructions.json`, `candidate-instructions.json`,
+  `counter-instructions.json`, `signal-instructions.json`,
+  `calibration-instructions.json` — the question-2 measurements.
+- `control-hit-runs.json`, `observer-hit-runs.json` — the question-3
+  measurements.
+- `rum-base`, `rum-candidate`, `rum-stack-counter`,
+  `rum-stack-caches-counter` — the binaries, plus `initial-sha256.json`.
+- `measure.py`, `run-hits.py`, `sources/`, `logs/`.
+
+**Verify their provenance before you rely on them**, and say how you did.
+The director read `instruction-comparison.json` and found all three families
+**negative** — smoke −0.397%, symbol-ownvalue-read −0.659%,
+downvalue-pattern-hit −0.260% — meaning the counter arm used *fewer*
+instructions than base, with within-arm spreads of 0.0002% to 0.008%.
+
+**That is the first thing to explain, not to accept.** Adding a counter does
+not make a program faster. Either the two arms differ by more than the
+counter, the base binary is not built from the same source as main, the
+builds are not at the same path, or it is layout luck at a magnitude the
+recipe should not show. Settle which. **A favourable number you cannot
+explain is not a pass** — this line has already been misled once by a
+measurement whose instrument was wrong.
+
+If the evidence does not survive that check, re-measure only what failed and
+say what you discarded.
+
+Everything else in this brief is unchanged, including the bar: any unarmed
+regression refutes the route, and a single uncovered field makes the cache
+fail open.
