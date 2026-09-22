@@ -1500,6 +1500,51 @@ becomes a documented property.
 — **re-probe before briefing**, and settle which side is wrong. Do not fold
 it into the ledger cutover and do not weaken the guide incidentally.
 
+### Corrected ruling (user, 2026-09-22): the armed cost IS the security model's cost
+
+**The director's framing was wrong and the user corrected it.** Two errors,
+both mine:
+
+1. **The armed path was treated as a niche opt-in.** `SECURITY.md` says the
+   opposite, and more strongly: rum's security model *"is about evaluating
+   untrusted `rum` scripts safely inside a trusted Rust host"*, and a host
+   evaluating untrusted input **MUST** set the request memory ceiling and the
+   elapsed timeout, both off by default. So the armed path is not a minority
+   configuration — it is the configuration the threat model is written for,
+   and its 2.26x-43.34x is **the running cost of the security model**, not a
+   performance curiosity.
+2. **The wrong hard line was invoked.** "No default-path cost" was written
+   about off-by-default **diagnostics** — the `RUM_PROFILE_*` counter family.
+   The memory ceiling is not diagnostics; it is the sandbox's core bound and
+   a documented MUST. Applying the diagnostics standard to it is what
+   produced brief-518's refutation.
+
+**The standard is therefore changed**: for this line, an unarmed cost of up
+to about **0.7%** is acceptable if it buys an affordable armed path, because
+the unarmed path is by definition the one *not* evaluating untrusted input.
+brief-518's measurement stands (0.465994% / 0.697458% / 0.622776%); only its
+acceptance criterion was wrong.
+
+**Route ② stays dead** regardless: it was refused on **fail-open**
+correctness — 42 of 52 walked fields uncovered, and a stale low total reused
+on the very reproduction — not on cost.
+
+**What arming still does not guarantee, and must not be oversold.** The
+ceiling is a structural model, not an allocator bound: a single construction
+larger than the limit is rejected before allocation only where a projected
+precheck exists, and a real allocation failure reaches `handle_alloc_error`,
+which aborts outside the panic boundary. "Guest code cannot kill the kernel"
+needs the host's RSS or process bound as well — the audit's third criticism,
+still open.
+
+**Sequencing decided before spending the 0.7%.** Route ① is the *enabler*,
+not the fix: it carries the mode, while the 43x is the O(session) walk that
+only a maintained total removes at step E. Paying 0.7% for plumbing whose
+payoff is unmeasured would be backwards, so the next brief measures the
+**ceiling of the achievable win** — an armed build whose session-proxy term
+is stubbed to O(1), deliberately incorrect and used only for timing — before
+the line commits.
+
 ### The Incremental line: two routes measured, both refused (briefs 516-519)
 
 **Where it stands.** The correctness half is done and landed; the cost half
