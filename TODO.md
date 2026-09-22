@@ -1500,6 +1500,36 @@ becomes a documented property.
 — **re-probe before briefing**, and settle which side is wrong. Do not fold
 it into the ledger cutover and do not weaken the guide incidentally.
 
+### Standing user ruling (2026-09-22): not knowing is the only unacceptable outcome
+
+> 我们是研究型项目，所有路径都要确定地趟过，量过真实的代价才能得出结论，
+> 可以回退，可以浪费时间，但不能不知道。
+
+This extends the 2026-08-27 standard ("pick the best and most correct option;
+cost arguments do not count") with something stronger and different: **a path
+is not closed by an estimate, a projection, or a cheaper proxy measurement.
+It is closed by walking it and measuring what it actually costs.** Rollback is
+free, wasted time is acceptable, an unmeasured conclusion is not.
+
+Consequences for how briefs are written from here:
+
+- **A bar is a data point, not a stop condition**, unless it guards
+  correctness. "Unarmed cost exceeded 0.7%, so I stopped" is the wrong
+  response; "here is the curve past 0.7%" is the right one.
+- **Do not offer "stop here" as an option** alongside paths that have not
+  been walked. Present the cost of finishing, as the 2026-09-21 line rule
+  already says, and let the user rule.
+- **Do not substitute a cheap distribution probe for building the thing**,
+  though measuring as you build is exactly right — the curve is part of the
+  result.
+- Refutations still count, but only measured ones. brief-518, 519 and 521
+  are closed because each was walked and measured, not because any looked
+  unpromising.
+
+**Applied immediately**: the user ruled option ① for the `Incremental` line —
+build all 52 owners — over the director's recommendation of a cheaper
+distribution probe first.
+
 ### Corrected ruling (user, 2026-09-22): the armed cost IS the security model's cost
 
 **The director's framing was wrong and the user corrected it.** Two errors,
