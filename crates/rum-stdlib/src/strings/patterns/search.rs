@@ -1,4 +1,6 @@
+mod option_resume;
 mod resume_frames;
+use option_resume::StringOptionsSuspensionFrame;
 use resume_frames::*;
 
 use super::matcher::{
@@ -27,7 +29,14 @@ pub(crate) fn eval_string_contains_q(
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
-    eval_string_pattern_predicate(session, head, args, "StringContainsQ", string_contains_q)
+    eval_string_pattern_predicate(
+        session,
+        head,
+        args,
+        "StringContainsQ",
+        string_contains_q,
+        None,
+    )
 }
 
 pub(crate) fn eval_string_starts_q(
@@ -36,7 +45,7 @@ pub(crate) fn eval_string_starts_q(
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
-    eval_string_pattern_predicate(session, head, args, "StringStartsQ", string_starts_q)
+    eval_string_pattern_predicate(session, head, args, "StringStartsQ", string_starts_q, None)
 }
 
 pub(crate) fn eval_string_ends_q(
@@ -45,13 +54,22 @@ pub(crate) fn eval_string_ends_q(
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
-    eval_string_pattern_predicate(session, head, args, "StringEndsQ", string_ends_q)
+    eval_string_pattern_predicate(session, head, args, "StringEndsQ", string_ends_q, None)
 }
 
 pub(crate) fn eval_string_position(
     session: &mut Session,
     head: &Expr,
     args: &SharedArgs,
+) -> Result<Expr, EvalError> {
+    eval_string_position_with_options(session, head, args, None)
+}
+
+fn eval_string_position_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &SharedArgs,
+    resolved_options: Option<Vec<Expr>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if !(2..=4).contains(&args.len()) {
@@ -62,8 +80,19 @@ pub(crate) fn eval_string_position(
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
 
-    let option_exprs =
-        session.merged_option_exprs_for_system_symbol("StringPosition", &args[2..])?;
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => rum_runtime::resume_or_suspend!(
+            session,
+            session.merged_option_exprs_for_system_symbol("StringPosition", &args[2..]),
+            ok(options) => Ok(options),
+            suspend => StringOptionsSuspensionFrame {
+                symbol: "StringPosition",
+                head: head.clone(),
+                args: args.to_vec().into(),
+            },
+        )?,
+    };
     let Some((max_results, config)) = parse_string_position_args(&option_exprs) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
@@ -89,6 +118,15 @@ pub(crate) fn eval_string_split(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_string_split_with_options(session, head, args, None)
+}
+
+fn eval_string_split_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &SharedArgs,
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if !(1..=4).contains(&args.len()) {
         return Ok(session.invalid_call_with_arg_range("StringSplit", args, 1, 4));
@@ -97,8 +135,19 @@ pub(crate) fn eval_string_split(
     let Some((delimiter_spec, limit, option_exprs)) = parse_string_split_args(args) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
-    let option_exprs =
-        session.merged_option_exprs_for_system_symbol("StringSplit", option_exprs)?;
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => rum_runtime::resume_or_suspend!(
+            session,
+            session.merged_option_exprs_for_system_symbol("StringSplit", option_exprs),
+            ok(options) => Ok(options),
+            suspend => StringOptionsSuspensionFrame {
+                symbol: "StringSplit",
+                head: head.clone(),
+                args: args.to_vec().into(),
+            },
+        )?,
+    };
     let Some(config) = parse_string_match_config(&option_exprs) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
@@ -200,6 +249,15 @@ pub(crate) fn eval_string_replace(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_string_replace_with_options(session, head, args, None)
+}
+
+fn eval_string_replace_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &SharedArgs,
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if args.len() == 1 {
         return Ok(Expr::call(head.clone(), args.to_vec()));
@@ -211,8 +269,19 @@ pub(crate) fn eval_string_replace(
     let Some(rules) = parse_exact_string_replacement_rules(&args[1]) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
-    let option_exprs =
-        session.merged_option_exprs_for_system_symbol("StringReplace", &args[2..])?;
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => rum_runtime::resume_or_suspend!(
+            session,
+            session.merged_option_exprs_for_system_symbol("StringReplace", &args[2..]),
+            ok(options) => Ok(options),
+            suspend => StringOptionsSuspensionFrame {
+                symbol: "StringReplace",
+                head: head.clone(),
+                args: args.to_vec().into(),
+            },
+        )?,
+    };
     let Some((max_replacements, config)) = parse_string_match_limit_and_options(&option_exprs)
     else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
@@ -274,6 +343,15 @@ pub(crate) fn eval_string_cases(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_string_cases_with_options(session, head, args, None)
+}
+
+fn eval_string_cases_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &SharedArgs,
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if args.len() == 1 {
         return Ok(Expr::call(head.clone(), args.to_vec()));
@@ -285,7 +363,19 @@ pub(crate) fn eval_string_cases(
     let Some(spec) = parse_exact_string_case_spec(&args[1]) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
-    let option_exprs = session.merged_option_exprs_for_system_symbol("StringCases", &args[2..])?;
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => rum_runtime::resume_or_suspend!(
+            session,
+            session.merged_option_exprs_for_system_symbol("StringCases", &args[2..]),
+            ok(options) => Ok(options),
+            suspend => StringOptionsSuspensionFrame {
+                symbol: "StringCases",
+                head: head.clone(),
+                args: args.to_vec().into(),
+            },
+        )?,
+    };
     let Some((max_matches, config)) = parse_string_cases_limit_and_options(&option_exprs) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
@@ -378,6 +468,15 @@ pub(crate) fn eval_string_count(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_string_count_with_options(session, head, args, None)
+}
+
+fn eval_string_count_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &SharedArgs,
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if args.len() < 2 {
         return Ok(session.invalid_call_with_arg_range("StringCount", args, 2, 4));
@@ -386,7 +485,19 @@ pub(crate) fn eval_string_count(
     let Some(patterns) = parse_string_patterns(&args[1]) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
-    let option_exprs = session.merged_option_exprs_for_system_symbol("StringCount", &args[2..])?;
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => rum_runtime::resume_or_suspend!(
+            session,
+            session.merged_option_exprs_for_system_symbol("StringCount", &args[2..]),
+            ok(options) => Ok(options),
+            suspend => StringOptionsSuspensionFrame {
+                symbol: "StringCount",
+                head: head.clone(),
+                args: args.to_vec().into(),
+            },
+        )?,
+    };
     let Some(config) = parse_string_count_options(&option_exprs) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
@@ -418,6 +529,15 @@ pub(crate) fn eval_string_delete(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_string_delete_with_options(session, head, args, None)
+}
+
+fn eval_string_delete_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &SharedArgs,
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if args.len() == 1 {
         return Ok(Expr::call(head.clone(), args.to_vec()));
@@ -429,7 +549,19 @@ pub(crate) fn eval_string_delete(
     let Some(patterns) = parse_string_patterns(&args[1]) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
-    let option_exprs = session.merged_option_exprs_for_system_symbol("StringDelete", &args[2..])?;
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => rum_runtime::resume_or_suspend!(
+            session,
+            session.merged_option_exprs_for_system_symbol("StringDelete", &args[2..]),
+            ok(options) => Ok(options),
+            suspend => StringOptionsSuspensionFrame {
+                symbol: "StringDelete",
+                head: head.clone(),
+                args: args.to_vec().into(),
+            },
+        )?,
+    };
     let Some(config) = parse_string_delete_options(&option_exprs) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
@@ -481,7 +613,7 @@ pub(crate) fn eval_string_match_q(
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
-    eval_string_patterns_predicate(session, head, args, "StringMatchQ", string_match_q)
+    eval_string_patterns_predicate(session, head, args, "StringMatchQ", string_match_q, None)
 }
 
 pub(crate) fn eval_string_free_q(
@@ -490,15 +622,16 @@ pub(crate) fn eval_string_free_q(
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
-    eval_string_patterns_predicate(session, head, args, "StringFreeQ", string_free_q)
+    eval_string_patterns_predicate(session, head, args, "StringFreeQ", string_free_q, None)
 }
 
 fn eval_string_pattern_predicate(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    symbol: &str,
+    symbol: &'static str,
     predicate: fn(&[char], &StringPattern, StringPatternMatchConfig) -> bool,
+    resolved_options: Option<Vec<Expr>>,
 ) -> Result<Expr, EvalError> {
     if args.len() == 1 {
         return Ok(Expr::call(head.clone(), args.to_vec()));
@@ -510,7 +643,19 @@ fn eval_string_pattern_predicate(
     let Some(pattern) = parse_string_pattern(&args[1]) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
-    let option_exprs = session.merged_option_exprs_for_system_symbol(symbol, &args[2..])?;
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => rum_runtime::resume_or_suspend!(
+            session,
+            session.merged_option_exprs_for_system_symbol(symbol, &args[2..]),
+            ok(options) => Ok(options),
+            suspend => StringOptionsSuspensionFrame {
+                symbol: symbol,
+                head: head.clone(),
+                args: args.to_vec().into(),
+            },
+        )?,
+    };
     let Some(config) = parse_string_match_config(&option_exprs) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
@@ -539,8 +684,9 @@ fn eval_string_patterns_predicate(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    symbol: &str,
+    symbol: &'static str,
     predicate: fn(&[char], &[StringPattern], StringPatternMatchConfig) -> bool,
+    resolved_options: Option<Vec<Expr>>,
 ) -> Result<Expr, EvalError> {
     if args.len() == 1 {
         return Ok(Expr::call(head.clone(), args.to_vec()));
@@ -552,7 +698,19 @@ fn eval_string_patterns_predicate(
     let Some(patterns) = parse_string_patterns(&args[1]) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
-    let option_exprs = session.merged_option_exprs_for_system_symbol(symbol, &args[2..])?;
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => rum_runtime::resume_or_suspend!(
+            session,
+            session.merged_option_exprs_for_system_symbol(symbol, &args[2..]),
+            ok(options) => Ok(options),
+            suspend => StringOptionsSuspensionFrame {
+                symbol: symbol,
+                head: head.clone(),
+                args: args.to_vec().into(),
+            },
+        )?,
+    };
     let Some(config) = parse_string_match_config(&option_exprs) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };

@@ -300,3 +300,6 @@ fn stdlib_catalog_specs() -> impl Iterator<Item = &'static rum_runtime::kernel_a
     .into_iter()
     .flatten()
 }
+
+#[path = "tests/options_suspension.rs"]
+mod options_suspension;

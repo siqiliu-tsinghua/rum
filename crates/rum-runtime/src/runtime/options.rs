@@ -6,6 +6,9 @@ mod builtins;
 mod core;
 mod defaults;
 mod patterns;
+mod resume_frames;
+
+use resume_frames::{MergedOptionsSuspensionFrame, RuntimeOptionSuspensionFrame};
 
 pub(super) use defaults::default_system_options;
 pub(super) use patterns::{is_options_pattern_expr, options_pattern_sequence_matcher};

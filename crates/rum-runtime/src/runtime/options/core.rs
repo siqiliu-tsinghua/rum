@@ -89,17 +89,65 @@ impl Session {
         symbol: &Symbol,
         explicit: &[Expr],
     ) -> Result<Vec<Expr>, EvalError> {
-        let mut merged = Vec::new();
-        for expr in self.option_rule_exprs_for_symbol(symbol) {
-            merged.push(self.evaluate_runtime_option_expr(&expr)?);
-        }
-        for expr in explicit {
-            merged.push(self.evaluate_runtime_option_expr(expr)?);
+        let defaults = self.option_rule_exprs_for_symbol(symbol);
+        self.resume_merged_option_exprs(symbol, &defaults, explicit, 0, Vec::new())
+    }
+
+    pub(super) fn resume_merged_option_exprs(
+        &mut self,
+        symbol: &Symbol,
+        defaults: &[Expr],
+        explicit: &[Expr],
+        mut index: usize,
+        mut merged: Vec<Expr>,
+    ) -> Result<Vec<Expr>, EvalError> {
+        while index < defaults.len() + explicit.len() {
+            let expr = if index < defaults.len() {
+                &defaults[index]
+            } else {
+                &explicit[index - defaults.len()]
+            };
+            let value = crate::resume_or_suspend!(
+                self,
+                self.evaluate_runtime_option_expr(expr),
+                ok(value) => Ok(value),
+                suspend => MergedOptionsSuspensionFrame {
+                    target: symbol.clone(),
+                    defaults: defaults.to_vec().into(),
+                    explicit: explicit.to_vec().into(),
+                    next_index: index + 1,
+                    merged: std::mem::take(&mut merged).into(),
+                },
+            )?;
+            merged.push(value);
+            index += 1;
         }
         Ok(merged)
     }
 
+    pub(super) fn resume_merged_options_after_value(
+        &mut self,
+        frame: &MergedOptionsSuspensionFrame,
+        value: Expr,
+    ) -> Result<Vec<Expr>, EvalError> {
+        // The driver retains the frozen frame while this mutable loop runs.
+        // Clone its prefix rather than assuming the frame has a unique owner.
+        let mut merged = frame.merged.to_vec();
+        merged.push(value);
+        self.resume_merged_option_exprs(
+            &frame.target,
+            &frame.defaults,
+            &frame.explicit,
+            frame.next_index,
+            merged,
+        )
+    }
+
     /// Returns evaluated default and explicit options for a System` symbol.
+    ///
+    /// On suspension the continuation yields an encoded `Vec<Expr>` through
+    /// `ContinuationValue`. The caller must install a consumer frame to use
+    /// that list and finish its own operation.
     pub fn merged_option_exprs_for_system_symbol(
         &mut self,
         symbol_name: &str,
@@ -168,11 +216,15 @@ impl Session {
         };
 
         if is_system_symbol_name(head, "RuleDelayed") && args.len() == 2 {
-            let value = self.evaluate(args[1].clone())?;
-            Ok(Expr::call(
-                system_expr("Rule"),
-                vec![args[0].clone(), value],
-            ))
+            crate::resume_or_suspend!(
+                self,
+                self.evaluate(args[1].clone()),
+                ok(value) => Ok(Expr::call(
+                    system_expr("Rule"),
+                    vec![args[0].clone(), value],
+                )),
+                suspend => RuntimeOptionSuspensionFrame { name: args[0].clone() },
+            )
         } else {
             Ok(expr.clone())
         }

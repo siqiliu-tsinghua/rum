@@ -26,6 +26,36 @@ director-reproduced, and rulings D1-D7 stand if it is ever resumed.
 
 **Also open, in rough order of weight:**
 
+- **Nine option call sites still lose their continuation, covering 22
+  builtins** (opened by brief-530, 2026-09-23). A delayed option whose
+  right-hand side suspends used to complete the whole builtin call with the
+  option's own value; the eight string-search sites now resume correctly, and
+  the rest do not. Their option loop finishes, but dispatch treats its encoded
+  list as the call's result, so `StringWrap` returns
+  `InternalContinuationVec[Rule[PreserveNewlines, False], …]` where the queued
+  path returns `"a\nb"` — an internal encoding escaping to user level, which
+  is a worse shape than the wrong value it replaced even though both only
+  occur on the already-broken suspension path. The sites are
+  `strings.rs:78` (Uncompress, HtmlUnescape, TemplateApply),
+  `structure_ops/ordering_sets.rs:528` (Union, Intersection, Complement),
+  `predicates/collections.rs:353` (nine containment predicates),
+  `strings/scripting/args.rs:153` (ParseArgs),
+  `strings/scripting/url.rs:140,168` (UrlEncode, UrlDecode, UrlParse), and
+  `strings/scripting/text_shape.rs:163,190,215` (StringWrap, StringIndent,
+  AlignColumns). The contract they must satisfy is stated in the public
+  wrapper's rustdoc (`runtime/options/core.rs:147-150`). **Close these before
+  the lease conversion**; an escaping internal marker is not an acceptable
+  resting state.
+
+- **The retention checker lost reach on the region it exists to convert**
+  (opened by brief-530). `OPTION_FRONTIER` fell from 17 resolved bodies / 5
+  files / 50 rejected edges to **4 / 3 / 15**, because C02's Rule construction
+  now sits inside `resume_or_suspend!` and the restricted checker reports an
+  unexpanded macro boundary (`RET003` at `options/core.rs:219-227`). The
+  visibility loss was disclosed rather than silenced, but D2b cannot convert
+  what the checker cannot see: either the macro gets a versioned, arm-specific
+  expansion contract, or the construction moves back out of it.
+
 - The **165 per-builtin `Incremental` declarations** remain undischarged.
   The session total is now maintained (`46126cab`), which removes the armed
   walk, but the declarations themselves still promise per-builtin charging
