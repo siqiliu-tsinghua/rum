@@ -1500,6 +1500,47 @@ becomes a documented property.
 — **re-probe before briefing**, and settle which side is wrong. Do not fold
 it into the ledger cutover and do not weaken the guide incidentally.
 
+### The Incremental line: two routes measured, both refused (briefs 516-519)
+
+**Where it stands.** The correctness half is done and landed; the cost half
+is blocked by a hard line, and that is now evidence rather than opinion.
+
+**Landed:**
+- `d1e5de5c` — every armed checkpoint walks, so the ceiling a loop used to
+  walk through now holds.
+- `902aea1f` — the occurrence model is specified per field, with an
+  independent oracle, an exhaustive schema whose compile barrier was watched
+  stopping an unclassified field, and pinned formula and overflow tests.
+  This is what any future attempt is checked against.
+
+**Refused, both on measurement:**
+- **The accounting-mode route** (brief-518). Works across all four
+  crossings; costs the **unarmed** path 0.465994% / 0.697458% / 0.622776%.
+  Its own distinction is the useful part: *the counter hooks erase, the mode
+  route does not* — carrying the mode is the cost, not the accounting.
+- **The session-total cache** (brief-519), refused twice over. Its
+  favourable first numbers were an **inlining artifact** — adding the counter
+  made the compiler inline `evaluate_inner_unstable` — and with inlining and
+  field layout held constant the mandatory mutation signal costs
+  **+0.182073% / +0.470698% / +0.134833%**, scaling with N. Independently of
+  cost it is **fail-open**: 42 of the 52 walked fields have no covering
+  existing counter, and the eight-counter tuple reuses a stale low total on
+  the very reproduction this line exists to fix.
+
+**Why F-J does not rescue it.** Per-builtin charging discharges the 165
+declarations but does not remove the walk, and the 43x *is* the walk. The
+cost fix and the declaration debt are separate problems, and only the second
+is still reachable.
+
+**So the standing position is: the armed ceiling costs 2.26x-43.34x and that
+is a documented property**, unless a constraint moves. The binding constraint
+is the hard line that off-by-default machinery must not charge the default
+path. Both refutations are ~0.13% to 0.70% of default-path cost — and this
+project has accepted +0.714% and +0.606% before, to remove a process kill.
+**Whether to spend default-path budget to make armed sessions affordable is
+a user ruling, because it breaks a standing hard line.** It is not the
+director's to take.
+
 ### The root constraint, found by two refutations (2026-09-22)
 
 Two independent repairs were designed and both were refused on the same
