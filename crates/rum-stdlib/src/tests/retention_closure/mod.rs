@@ -1,6 +1,7 @@
 //! Restricted retention proof on compiled fixtures; no production coverage.
 
 mod catalog;
+mod consumers;
 mod effects;
 mod fixtures;
 mod leaves;
@@ -89,6 +90,7 @@ fn production_obligations_are_exact() {
         println!("PUBLIC_REJECTED\t{error}");
     }
     regions::proposed_boundaries(&source);
+    consumers::verify(&source);
     catalog::installed();
     let classes = obligations::census(&source);
     let routes = catalog::catalog_routes(&source);
