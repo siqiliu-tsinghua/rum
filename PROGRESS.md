@@ -3181,3 +3181,107 @@ the nine native ZeroMQ scenarios actually executing.
   numbers; brief-510 reported that it could not build the harness its
   precedent check needed instead of inferring the answer. Both gaps were then
   closed deliberately.
+
+## 2026-09-22 — three defects closed, three routes refuted, and the armed ceiling made affordable (briefs 512-523)
+
+The security-hardening mainline's memory half. It closed three defects, spent
+three full implementations on routes that were then refused on measurement,
+and ended with the armed memory ceiling costing 93-99.9% less than it did
+that morning.
+
+**Three defects closed.** A truncated snapshot restore reported success,
+because `restore_from_bytes` discarded the whole response including its
+termination; it now fails with the reason, restore stays non-transactional,
+and the partial-state consequence is documented rather than discovered
+(`acfda0e0`). The audit's second HIGH — a ceiling a loop walked straight
+through — reproduced with a control: an 8 MB `MemoryConstrained` let
+`Nest[StringJoin[#,#]&, seed, 16]` finish at 65 536 000 characters and ~358 MB
+RSS while the same ceiling aborted a single large `StringRepeat`. Every armed
+checkpoint now walks (`d1e5de5c`). And the occurrence model that walk computes
+was specified per field with an independent oracle, an exhaustive schema whose
+compile barrier was watched stopping an unclassified field, and pinned formula
+and overflow tests (`902aea1f`).
+
+**The audit's mechanism for that HIGH was wrong, and so were two of the
+director's own claims.** `StringJoin` is declared `Preflight` and does not
+amplify per call — concatenation rearranges bytes — so the growth assertion
+passes it correctly; and that assertion is a **test-only instrument**,
+bypassed unless `RUM_TEST_BUILTIN_MEMORY_GROWTH` is set, so it never described
+production at all. The overshoot was repetition of a non-amplifying step
+between strided walks. The director then claimed a `StringJoin` precheck could
+not have caught it, which was also wrong: projecting output bytes into the
+unstrided enforcement refuses at 1000 × 2^13 > 8 000 000.
+
+**Then the cost of that fix became the problem, and the user reframed it.**
+Walking every armed checkpoint cost 2.26x-43.34x. The director treated that as
+a niche opt-in and invoked the no-default-path-cost hard line to refuse a
+repair. `SECURITY.md` says the opposite: rum's model *is* evaluating untrusted
+scripts, and a host doing so **MUST** arm the ceiling. So the armed path is the
+security model's own path, its cost is the security model's cost, and the hard
+line — written about off-by-default diagnostics — did not apply. The bar became
+~0.7% unarmed.
+
+**Three routes were built and measured before one worked.** Carrying an
+accounting mode costs 0.466%/0.697%/0.623% unarmed and, alone, buys nothing —
+the counter hooks erase, the mode does not. Inferring freshness from existing
+counters is **fail-open**: 42 of 52 walked fields have no covering counter, and
+it reused a stale low total on the reproduction itself. Maintaining
+unconditionally costs 2.4%-3.1% for the evaluation stack **alone**, one owner
+of 52 — which is precisely what the mode is for, and refuted the director's
+claim that the mode bought nothing once an unarmed cost was accepted.
+
+**A stubbed measurement decided whether to continue.** Replacing the session
+term with an O(1) stub — deliberately incorrect, purely for timing — removed
+99.79%-99.99% of the armed overhead, taking the worst shape from 801 714 469
+instructions to 5 374 916, with a residual of ~50 instructions per checkpoint
+that disassembly fully accounts for. That bounded the prize before the work was
+bought.
+
+**The user then ruled the line's method, not just its direction.** Asked to
+choose between building all 52 owners and probing the distribution first, the
+answer was to build: *所有路径都要确定地趟过，量过真实的代价才能得出结论，可以
+回退，可以浪费时间，但不能不知道*. A bar became a data point; "stop here" stopped
+being an option to offer beside an unwalked path.
+
+**The result.** All 52 owners maintain their term behind the mode; the armed
+checkpoint reads the maintained total; cold arming's double walk is gone.
+Armed overhead removed: **93.206%-99.858%**, landing essentially on the
+stub's ceiling. Unarmed cost: **+0.965% / +3.239% / +1.018%**, recorded rather
+than tuned.
+
+**And the curve paid for itself.** Of ownvalue's 3.24 points, **2.26 come from
+two batches** — options and syntax information, then exceptions, scopes and
+sealed units — while the other ten add under one point between them. A
+distribution probe would have measured how walk cost is spread; only building
+it measured how *maintenance* cost is spread, and those are different
+questions.
+
+**Method, in the order it cost the most.**
+
+- *A favourable number you cannot explain is not a pass.* brief-519's counter
+  arm was faster than base across three families with 0.0002% spreads. It was
+  an inlining artifact — the counter build inlined `evaluate_inner_unstable`
+  into its caller — and the real cost appeared only once inlining and field
+  layout were held constant. It was caught because the brief required the
+  anomaly to be explained before it was banked.
+- *Judge a panel against itself before believing it.* brief-514's timing panel
+  showed 64 of 120 labels positive and nine consistently slower. Splitting its
+  own four base runs two ways gives 69/120 and 72/120 positive, 28 and 30
+  consistently slower, and a worst outlier of +18.43% — larger than anything
+  the candidate did. The label flagged hardest against the candidate moves
+  +18.43% between two runs of the identical binary.
+- *A vertical slice cannot prove a benefit that only exists at completion.*
+  brief-522 maintained one owner and still walked the other 51, so it paid the
+  walk twice and every armed number was worse. That was the brief's design
+  fault, not the worker's.
+- *Capture to a file, then parse.* Piping a long `cargo test` into a filter
+  truncated it: 2 456 passed across 30 groups instead of 2 491 across 33. The
+  number was green and wrong, and the project's own rule already said to
+  persist raw output before parsing.
+- *`git checkout <branch> -- files` stages them*, so a following `--amend`
+  swallowed un-gated source into a docs commit and briefly put a red tree on
+  main. Recovered with `reset --soft` plus `restore --staged`.
+- *Two dispatches went out with a bare `&`*, which the project forbids because
+  the run is then untracked. Both were killed and re-dispatched. The shared
+  cause with the item above: compressing several steps into one command to
+  save a turn.
