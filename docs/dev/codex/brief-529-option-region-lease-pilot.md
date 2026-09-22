@@ -76,36 +76,63 @@ protects.
 
 ## Scope
 
-**Files you MAY modify:**
+**This section states an objective and a fence, not an enumeration.** A brief's
+MAY list has been short six times on this project, and each time a correct
+worker stopped on the director's omission. The enumeration below is guidance
+about where the work is expected to live; it is **not** the boundary.
+
+**The objective.** Inside `crates/rum-runtime/` and `crates/rum-stdlib/`,
+change what this brief's Deliverable actually requires — including files not
+named below. The admission path is a known example: the `S + W` check at
+`crates/rum-runtime/src/runtime/debug_tools/resources/constraints.rs:154`
+(`enforce_memory_limit_for_expr`) and its sibling
+`enforce_active_memory_limit_for_projected_bytes` have no `R` hook, and one is
+needed. Expect the suspension machinery, the maintained-owner accessors and
+any kernel-API re-export to need work too.
+
+**The disclosure duty, which replaces asking permission.** Every file you
+touch that is not named in the guidance list must appear in your report's
+first section with its `path:line` ranges and one line on why the objective
+required it. **An undisclosed edit is the violation; a disclosed necessary
+edit is not.** The director diffs the tree against your disclosure list.
+
+**Where the work is expected to live** (guidance, not a fence):
 
 - `crates/rum-runtime/src/runtime/accounting_mode/` — the lease and retained
-  value types, the bridge, the retained construction adapters. New modules
-  here are fine.
-- `crates/rum-runtime/src/runtime/options/core.rs` and
-  `crates/rum-runtime/src/runtime/options.rs` — C01, C02 and the public
-  wrapper.
+  value types, the bridge, the retained construction adapters.
+- `crates/rum-runtime/src/runtime/debug_tools/resources/` — the admission
+  check's `R` hook and the maintained-owner accessors it needs.
+- `crates/rum-runtime/src/runtime/options/core.rs` and `options.rs` — C01,
+  C02 and the public wrapper.
+- `crates/rum-runtime/src/runtime/suspension/` and the frame definitions, for
+  a lease that is alive across a suspension.
 - The call sites **the compiler names** when the public wrapper's signature
-  changes — today 18 of them across 7 files in `crates/rum-stdlib/src/`.
-  **Mechanical adaptation only**: make them compile and behave identically.
+  changes — today 18 across 7 files in `crates/rum-stdlib/src/`. **Mechanical
+  adaptation only**: make them compile and behave identically.
 - `crates/rum-stdlib/src/tests/retention_closure/` — the promotion, the
-  trusted records, the boundary statuses, and any checker support the
-  promotion needs.
+  trusted records, the boundary statuses.
 - Owning tests in `crates/rum-runtime/src/runtime/tests/` and
   `crates/rum-stdlib/src/tests/`.
 - `docs/guide/resource-limits-and-sandbox.md` — only if an armed session's
-  observable admission behavior changes, which it does. State it plainly.
+  observable admission behavior changes, which it does.
 
-**Files you MUST NOT touch:**
+**The fence — these are hard, and STOP applies to them:**
 
-- **`crates/rum-core/`** — in particular `expr.rs`. `Expr`, `Symbol`,
+- **`crates/rum-core/`**, in particular `expr.rs`. `Expr`, `Symbol`,
   `SharedExpr` and `SharedArgs` representation stays exactly as it is. The
-  retained adapter lives in the runtime, wraps the core construction it uses,
+  retained adapter lives in the runtime, wraps the core construction it uses
   and pins that construction's semantics in its trusted record. It does not
-  prove `rum-core` allocation-safe and must not claim to.
+  prove `rum-core` allocation-safe and must not claim to. If the only way
+  forward looks like changing `Expr::call`, STOP and report — that is a
+  different brief with a different gate.
 - All `Cargo.toml` files and `Cargo.lock`. No new dependency, no toolchain
   change; the pin is stable 1.85.0.
-- The interner, gensym, snapshot format, the `S` model and occurrence
-  counting.
+- The interner, gensym, and the snapshot format.
+- **The `S` model.** `R` never enters `S`, and `S`'s formula is not altered to
+  absorb it. `S`'s *reading* may move because the accountant's own storage is
+  charged — that is required, not a violation. Folding `R` into the maintained
+  total to avoid a new hook is exactly the shortcut this fence exists to
+  prevent.
 - `AGENTS.md`, `PROGRESS.md`, `TODO.md`, and `docs/` other than the one file
   named above.
 
@@ -251,9 +278,10 @@ and is the director's to settle — report them as skipped-by-environment and
   been ignored five times.
 - Do NOT commit, branch, push, or touch git config. The director gates and
   commits.
-- Do NOT modify any file outside Scope. In particular `crates/rum-core/` and
-  every `Cargo.toml` are untouchable. If you believe you must, STOP and
-  report.
+- Respect the fence in Scope — `crates/rum-core/`, every `Cargo.toml`, the
+  interner and snapshot, and the `S` model. Those are STOP conditions. Outside
+  the fence, the rule is the **disclosure duty**, not permission: change what
+  the objective requires and list every unnamed file you touched.
 - **No new `unsafe`.** `rum-core` and `rum-runtime` are zero-`unsafe`.
 - **No default-path cost for off-by-default machinery.** The lease operations
   erase when unarmed, on the mode seam A-E built. Name where that erasure is
