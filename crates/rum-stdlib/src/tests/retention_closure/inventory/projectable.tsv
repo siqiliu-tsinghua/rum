@@ -1,0 +1,16 @@
+# declaration	disposition	evidence (transcribed from brief-525; no coverage or trusted permission)
+$ContextPath	ProjectablePending	crates/rum-runtime/src/runtime/eval_core/symbol.rs:15; context owner rendering peak
+$MessageList	ProjectablePending	crates/rum-runtime/src/runtime/eval_core/symbol.rs:49; message owner rendering peak
+$Packages	ProjectablePending	crates/rum-runtime/src/runtime/eval_core/symbol.rs:24; package owner rendering peak
+$Path	ProjectablePending	crates/rum-runtime/src/runtime/eval_core/symbol.rs:41; path owner rendering peak
+DownValues	ProjectablePending	crates/rum-runtime/src/runtime/definitions/definition_catalog/entries.rs:125; charged definition catalog rendering
+Off	ProjectablePending	crates/rum-runtime/src/runtime/debug_tools/message_switch.rs:32,68,71; charged selector expansion
+On	ProjectablePending	crates/rum-runtime/src/runtime/debug_tools/message_switch.rs:32,68,71; charged selector expansion
+Options	ProjectablePending	crates/rum-runtime/src/runtime/options.rs:111; charged option catalog rendering
+OwnValues	ProjectablePending	crates/rum-runtime/src/runtime/definitions/definition_catalog/entries.rs:109; charged definition catalog rendering
+PackageScope	ProjectablePending	crates/rum-runtime/src/runtime/builtin_adapters.rs:437; charged argument clone and wrapper
+Print	ProjectablePending	crates/rum-runtime/src/runtime/builtins_input.rs:105,108; charged print fragment rendering
+Public	ProjectablePending	crates/rum-runtime/src/runtime/builtin_adapters.rs:428; charged argument clone and wrapper
+SubValues	ProjectablePending	crates/rum-runtime/src/runtime/definitions/definition_catalog/entries.rs:147; charged definition catalog rendering
+ToExpression	ProjectablePending	crates/rum-stdlib/src/strings/text/builtins.rs:460; crates/rum-syntax/src/parser/helpers.rs:66; charged source string projection
+UpValues	ProjectablePending	crates/rum-runtime/src/runtime/definitions/definition_catalog/entries.rs:136; charged definition catalog rendering

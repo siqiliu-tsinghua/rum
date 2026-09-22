@@ -115,3 +115,22 @@ Before adding a regression fixture, identify:
 
 If the contract is not yet documented, document it first or record it as
 explicitly unspecified — do not encode accidental behavior as a fixture.
+
+The eight `rum-stdlib` `retention_closure` tests are required in the ordinary
+crate and workspace gates, including with default features disabled. They
+reconcile the whole workspace source tree, cross-check TSV obligations against
+live memory-growth declarations and catalog routes, and check compiled Rust
+fixtures with canonical call identities and a restricted ownership/effect
+grammar. Unknown syntax, dispatch, macros and conditional bindings reject;
+negative fixtures pin the diagnostic kind, target, source span and witness.
+The gate also prevents promotion removal or redirection and checks exact,
+exercised trusted contracts and their dependency fingerprints.
+
+This gate currently certifies only the accepted fixture protocol: no production
+region is covered and the production promotion inventory is empty. Pending
+catalog rejections, option-frontier edges and proposed boundaries are explicit
+unresolved obligations, never exemptions or certificates. The accepted fixture
+demonstrates a leased accumulator across a loop, callback-result adoption and
+outgoing ownership transfer; it does not establish production lease bounds,
+callback-private allocation limits, destructor stack safety or whole-program
+Rust soundness. Those require their own contracts and validation.

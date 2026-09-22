@@ -183,6 +183,8 @@ mod preflight_memory;
 mod random;
 #[path = "tests/resumable_traversal_regression.rs"]
 mod resumable_traversal_regression;
+#[path = "tests/retention_closure/mod.rs"]
+mod retention_closure;
 #[path = "tests/scan_and_keypath_set_native_stack_guard.rs"]
 mod scan_and_keypath_set_native_stack_guard;
 #[path = "tests/schema.rs"]
