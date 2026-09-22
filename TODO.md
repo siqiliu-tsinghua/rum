@@ -8,12 +8,58 @@ Status checkpoint: 2026-09-21, committed tree through `c07cb414`. Uncommitted
 performance candidates do not count as completed until their correctness,
 timing, counter, and memory gates have all been reviewed.
 
-**Where work resumes.** The interner finding's repair line is live: A1 was
-refuted by measurement (briefs 499-503) and the user ruled on 2026-09-21 that
-`Symbol` keeps its lifetime-free public type, which excludes every surveyed
-in-process reclaiming fix. The finding therefore stays open behind a bounded,
-loud mitigation — see §The interner ruling of 2026-09-21. After it, the rest
-of the security-hardening mainline.
+**Where work resumes — the snapshot format (user ruling, 2026-09-22).**
+Session snapshots are UTF-8 source images, and that is why the interner
+leaks: a symbol's identity must be expressible as text, so every generator of
+distinguishable fresh symbols mints fresh interned text that nothing ever
+reclaims. Two repairs were designed against the symptom and both refused on
+the same evidence (`Module`, brief-507; `Enclose`, brief-509). The user ruled
+that Standing Engineering Debt's deferred **direct binary snapshot format**
+is an old debt now forced into the open and has to be paid, in preference to
+a reserved textual encoding or accepting the leak behind a cap.
+
+Start there. Read, in order: §The root constraint found by two refutations,
+§User rulings of 2026-09-22, and the Standing Engineering Debt entry on
+snapshots. The interner quota work (briefs 505-508) is **parked, not
+cancelled** — brief-508's storage-and-refusal proof is green and
+director-reproduced, and rulings D1-D7 stand if it is ever resumed.
+
+**Also open, in rough order of weight:**
+
+- The **165 per-builtin `Incremental` declarations** remain undischarged.
+  The session total is now maintained (`46126cab`), which removes the armed
+  walk, but the declarations themselves still promise per-builtin charging
+  that nothing does. Separate debt, separate line.
+- The **unarmed cost of the maintained total is +0.965% / +3.239% / +1.018%**,
+  recorded rather than tuned per the standing ruling. If it is ever revisited,
+  the curve says where to look: **2.26 of ownvalue's 3.24 points come from two
+  batches** — options and syntax information, then exceptions, scopes and
+  sealed units — and the other ten add under one point between them.
+- **`Enclose` leaks interner text per untagged call** (~117-127 proxy bytes,
+  `kernel_data/control_data/confirmation.rs:118`). It dissolves when identity
+  stops needing to be text, so it is downstream of the snapshot line rather
+  than its own repair.
+- **Termination is last-write-wins across script forms**
+  (`session/session_eval.rs:328-338`), so a later form erases an earlier
+  form's resource termination. Code shape confirmed by reading; **two director
+  probes failed to construct the erasure**, so reachability is unproven —
+  establish it before briefing a repair.
+- **A doc-versus-code conflict**: the guide promises `General::memlim` on a
+  consumed local `MemoryConstrained`
+  (`docs/guide/resource-limits-and-sandbox.md:318`) and the handler does not
+  emit it (`debug_tools/resources/constraints.rs:262`). Re-probe, then settle
+  which side is wrong.
+- **D7**: the audit's per-request-versus-per-session state-lifetime
+  criticism, still unanswered, still owed its own brief.
+- **What arming still does not guarantee**: the ceiling is a structural model,
+  not an allocator bound, and `handle_alloc_error` aborts outside the panic
+  boundary. "Guest code cannot kill the kernel" needs the host's RSS or
+  process bound too — the audit's third criticism.
+
+**Branch state.** `spike/brief-499-symbol-non-copy` holds the refuted A1
+representation and is kept as its record; nothing else is outstanding. The
+brief-514 and brief-522 spike branches were deleted after their work landed
+in `d1e5de5c` and `46126cab`.
 
 **Where the previous line ended.** The ownership branch (briefs 480-498) is closed — the
 host-payload destruction contract, the accumulator-chain family and its
