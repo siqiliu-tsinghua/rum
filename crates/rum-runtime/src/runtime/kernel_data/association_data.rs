@@ -435,7 +435,13 @@ impl Session {
     }
 
     fn flat_association_args_are_valid(&mut self, args: &SharedArgs) -> bool {
-        match self.association_lookup_cache.probe_args(args) {
+        match {
+            let result = self.association_lookup_cache.probe_args(args);
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::AssociationLookupCache,
+            );
+            result
+        } {
             AssociationLookupCacheProbe::Indexed(_) => true,
             AssociationLookupCacheProbe::Build => {
                 if !args
@@ -444,14 +450,20 @@ impl Session {
                 {
                     return false;
                 }
-                self.association_lookup_cache.insert_index(
-                    args,
-                    args.iter().map(|item| {
-                        flat_association_rule_parts(item)
-                            .expect("validated flat association rule")
-                            .0
-                    }),
-                );
+                {
+                    let result = self.association_lookup_cache.insert_index(
+                        args,
+                        args.iter().map(|item| {
+                            flat_association_rule_parts(item)
+                                .expect("validated flat association rule")
+                                .0
+                        }),
+                    );
+                    self.refresh_memory_owner(
+                        crate::runtime::debug_tools::resources::MemoryOwner::AssociationLookupCache,
+                    );
+                    result
+                };
                 true
             }
             AssociationLookupCacheProbe::Scan => args
@@ -468,7 +480,13 @@ impl Session {
             return None;
         }
 
-        match self.association_lookup_cache.probe(args, key) {
+        match {
+            let result = self.association_lookup_cache.probe(args, key);
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::AssociationLookupCache,
+            );
+            result
+        } {
             AssociationLookupCacheProbe::Indexed(position) => {
                 return match position {
                     Some(position) => {
@@ -485,17 +503,27 @@ impl Session {
                 {
                     return None;
                 }
-                self.association_lookup_cache.insert_index(
-                    args,
-                    args.iter().map(|item| {
-                        flat_association_rule_parts(item)
-                            .expect("validated flat association rule")
-                            .0
-                    }),
-                );
-                let AssociationLookupCacheProbe::Indexed(position) =
-                    self.association_lookup_cache.probe(args, key)
-                else {
+                {
+                    let result = self.association_lookup_cache.insert_index(
+                        args,
+                        args.iter().map(|item| {
+                            flat_association_rule_parts(item)
+                                .expect("validated flat association rule")
+                                .0
+                        }),
+                    );
+                    self.refresh_memory_owner(
+                        crate::runtime::debug_tools::resources::MemoryOwner::AssociationLookupCache,
+                    );
+                    result
+                };
+                let AssociationLookupCacheProbe::Indexed(position) = ({
+                    let result = self.association_lookup_cache.probe(args, key);
+                    self.refresh_memory_owner(
+                        crate::runtime::debug_tools::resources::MemoryOwner::AssociationLookupCache,
+                    );
+                    result
+                }) else {
                     unreachable!("a newly inserted association index must be reusable");
                 };
                 return match position {

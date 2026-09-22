@@ -131,33 +131,79 @@ impl Session {
         self.attributes = snapshot.attributes;
         self.bump_attribute_revision();
         self.options = snapshot.options;
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Options);
         self.syntax_information = snapshot.syntax_information;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::SyntaxInformation,
+        );
         self.declared_stubs = snapshot.declared_stubs;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::DeclaredStubs,
+        );
         self.removed_symbols = snapshot.removed_symbols;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::RemovedSymbols,
+        );
         self.symbol_generations = snapshot.symbol_generations;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::SymbolGenerations,
+        );
         self.once_values = snapshot.once_values;
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::OnceValues);
         self.restore_gc_candidate_gensyms(snapshot.gc_candidate_gensyms);
         self.current_context = snapshot.current_context;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::CurrentContext,
+        );
         self.context_path = snapshot.context_path;
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::ContextPath);
         self.context_stack = snapshot.context_stack;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::ContextStack,
+        );
         self.package_search_paths = snapshot.package_search_paths;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PackageSearchPaths,
+        );
         self.loaded_packages = snapshot.loaded_packages;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::LoadedPackages,
+        );
         self.definitions = snapshot.definitions;
         self.installed_system_own_values = snapshot.installed_system_own_values;
         self.installed_system_down_values = snapshot.installed_system_down_values;
+        self.refresh_definition_memory();
         self.has_up_value_definitions = snapshot.has_up_value_definitions;
         self.message_definitions = snapshot.message_definitions;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::MessageDefinitions,
+        );
         self.exception_types = snapshot.exception_types;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::ExceptionTypes,
+        );
         self.rebuild_message_symbol_counts();
         self.next_generated_symbol_id = snapshot.next_generated_symbol_id;
         self.sealed_units = snapshot.sealed_units;
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::SealedUnits);
         self.next_sealed_symbol_id = snapshot.next_sealed_symbol_id;
         self.next_source_unit_epoch = snapshot.next_source_unit_epoch;
         self.trace_events = snapshot.trace_events;
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::TraceEvents);
         self.trace_event_depths = snapshot.trace_event_depths;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::TraceEventDepths,
+        );
         self.disabled_message_selectors = snapshot.disabled_message_selectors;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::DisabledMessageSelectors,
+        );
         self.messages = snapshot.messages;
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Messages);
         self.last_message_list = snapshot.last_message_list;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
+        );
     }
 
     pub(in crate::runtime) fn capture_evaluation_rollback_snapshot(
@@ -193,6 +239,8 @@ impl Session {
         snapshot: EvaluationRollbackSnapshot,
     ) {
         let captured_generation = snapshot.pending_suspension_generation;
+        let rearm_accounting =
+            self.current_memory_limit.is_none() && snapshot.current_memory_limit.is_some();
         let current_generation = self.pending_suspension_generation();
         match (captured_generation, current_generation) {
             (None, Some(_trial_generation)) => {
@@ -216,24 +264,53 @@ impl Session {
 
         self.restore_loader_snapshot(snapshot.loader);
         self.option_value_scopes = snapshot.option_value_scopes;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::OptionValueScopes,
+        );
         self.module_activations = snapshot.module_activations;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::ModuleActivations,
+        );
         self.load_stack = snapshot.load_stack;
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::LoadStack);
         self.evaluation_depth = snapshot.evaluation_depth;
         self.match_depth = snapshot.match_depth;
         self.current_memory_limit = snapshot.current_memory_limit;
         self.replace_accounted_evaluation_stack(snapshot.evaluation_stack);
         self.prints = snapshot.prints;
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Prints);
         self.handled_non_loader_eval_errors = snapshot.handled_non_loader_eval_errors;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
+        );
         self.reap_scopes = snapshot.reap_scopes;
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::ReapScopes);
         self.monitor_scopes = snapshot.monitor_scopes;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::MonitorScopes,
+        );
         self.monitor_callbacks_enabled = snapshot.monitor_callbacks_enabled;
         self.current_time_deadline = snapshot.current_time_deadline;
         self.asserts_enabled = snapshot.asserts_enabled;
         self.abort_protect_depth = snapshot.abort_protect_depth;
         self.abort_protect_pending = snapshot.abort_protect_pending;
         self.queued_input_responses = snapshot.queued_input_responses;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::QueuedInputResponses,
+        );
         self.pending_input_request = snapshot.pending_input_request;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
+        );
         self.pending_eval_request = snapshot.pending_eval_request;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
+        );
+        if rearm_accounting {
+            // Loader restoration above can clear caches while unarmed. The
+            // restored limit is a cold entry, so rebuild from the actual owners.
+            self.note_accounting_arm();
+        }
     }
 
     pub(in crate::runtime) fn message_enabled(&self, symbol: &str, tag: &str) -> bool {
@@ -276,7 +353,7 @@ impl Session {
         }
 
         self.current_message_list_dirty = true;
-        self.messages.push(RuntimeMessage {
+        self.push_accounted_messages(RuntimeMessage {
             symbol: symbol.to_string(),
             tag: tag.to_string(),
             text: text.into(),
@@ -294,7 +371,7 @@ impl Session {
         }
 
         self.current_message_list_dirty = true;
-        self.messages.push(RuntimeMessage {
+        self.push_accounted_messages(RuntimeMessage {
             symbol: symbol.to_string(),
             tag: tag.to_string(),
             text: text.into(),
@@ -306,7 +383,7 @@ impl Session {
         if let Some(sink) = self.print_sink.as_mut() {
             sink.print_line(&text);
         } else {
-            self.prints.push(text);
+            self.push_accounted_prints(text);
         }
     }
 
@@ -412,9 +489,9 @@ impl Session {
             return true;
         }
 
-        self.handled_non_loader_eval_errors.push(message.clone());
+        self.push_accounted_handled_non_loader_eval_errors(message.clone());
         if self.message_enabled(&message.symbol, &message.tag) {
-            self.messages.push(message);
+            self.push_accounted_messages(message);
         }
         true
     }
@@ -599,11 +676,11 @@ impl Session {
         checkpoint: usize,
         selectors: &[MessageSelector],
     ) {
-        let trailing_messages = self.messages.split_off(checkpoint);
+        let trailing_messages = self.split_accounted_messages(checkpoint);
 
         for message in trailing_messages {
             if !selectors.iter().any(|selector| selector.matches(&message)) {
-                self.messages.push(message);
+                self.push_accounted_messages(message);
             }
         }
     }

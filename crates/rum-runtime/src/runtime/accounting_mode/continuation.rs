@@ -2,22 +2,11 @@ use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 use std::sync::Arc;
 
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct AccountedCompoundFrame {
     args: SharedArgs,
     index: usize,
     shadow: AccountingShadow,
-}
-
-impl FrameRootTrace for AccountedCompoundFrame {
-    fn trace_roots(&self, visitor: &mut dyn FrameRootVisitor) {
-        self.args.trace_roots(visitor);
-    }
-}
-
-impl FrameAbandon for AccountedCompoundFrame {
-    fn abandon(self: Arc<Self>, _context: &mut AbandonmentContext<'_>) -> FrameAbandonAction {
-        FrameAbandonAction::Discard
-    }
 }
 
 impl SuspensionFrame for AccountedCompoundFrame {
@@ -52,12 +41,11 @@ impl AccountingContext<'_> {
                 Ok(next) => value = next,
                 Err(EvalError::InputRequired { request }) => {
                     self.shadow.0.suspends.fetch_add(1, Ordering::Relaxed);
-                    self.session
-                        .insert_suspension_frame(AccountedCompoundFrame {
-                            args: args.clone(),
-                            index,
-                            shadow: self.shadow.clone(),
-                        });
+                    crate::resume_or_suspend!(insert self.session, AccountedCompoundFrame {
+                        args: args.clone(),
+                        index,
+                        shadow: self.shadow.clone(),
+                    });
                     return Err(EvalError::InputRequired { request });
                 }
                 Err(error) => return Err(error),

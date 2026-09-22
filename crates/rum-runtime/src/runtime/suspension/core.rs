@@ -324,19 +324,20 @@ impl AbandonmentContext<'_> {
             .option_value_scopes
             .pop()
             .expect("abandoned OptionValue frame should own a scope");
+        self.session.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::OptionValueScopes,
+        );
     }
 
     pub(in crate::runtime) fn pop_reap_scope(&mut self) {
         self.session
-            .reap_scopes
-            .pop()
+            .pop_accounted_reap_scope()
             .expect("abandoned Reap frame should own a scope");
     }
 
     pub(in crate::runtime) fn pop_monitor_scope(&mut self) {
         self.session
-            .monitor_scopes
-            .pop()
+            .pop_accounted_monitor_scope()
             .expect("abandoned Monitor frame should own a scope");
     }
 
@@ -367,14 +368,27 @@ impl AbandonmentContext<'_> {
     ) {
         self.session.tracing_enabled = prior_tracing;
         self.session.messages.truncate(message_checkpoint);
+        self.session
+            .refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Messages);
         self.session.prints.truncate(print_checkpoint);
+        self.session
+            .refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Prints);
         if !prior_tracing {
             self.session.trace_events.truncate(trace_checkpoint);
+            self.session.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::TraceEvents,
+            );
             self.session.trace_event_depths.truncate(trace_checkpoint);
+            self.session.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::TraceEventDepths,
+            );
         }
         self.session
             .handled_non_loader_eval_errors
             .truncate(handled_error_checkpoint);
+        self.session.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
+        );
     }
 
     pub(in crate::runtime) fn restore_message_capture(
@@ -384,8 +398,13 @@ impl AbandonmentContext<'_> {
     ) {
         self.session.messages.truncate(message_checkpoint);
         self.session
+            .refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Messages);
+        self.session
             .handled_non_loader_eval_errors
             .truncate(handled_error_checkpoint);
+        self.session.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
+        );
     }
 
     pub(in crate::runtime) fn restore_stream_capture(
@@ -395,10 +414,17 @@ impl AbandonmentContext<'_> {
         handled_error_checkpoint: usize,
     ) {
         self.session.messages.truncate(message_checkpoint);
+        self.session
+            .refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Messages);
         self.session.prints.truncate(print_checkpoint);
+        self.session
+            .refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Prints);
         self.session
             .handled_non_loader_eval_errors
             .truncate(handled_error_checkpoint);
+        self.session.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
+        );
     }
 
     pub(in crate::runtime) fn restore_abort_checkpoint(&mut self, pending_checkpoint: usize) {
@@ -433,6 +459,28 @@ impl Session {
         }
     }
 
+    fn take_accounted_pending_suspension_for_resume(&mut self) -> Option<SuspendedEvaluation> {
+        let pending = self.suspension_access().take_for_resume();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
+        );
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingSuspension,
+        );
+        pending
+    }
+
+    fn take_accounted_pending_suspension_for_abandon(&mut self) -> Option<SuspendedEvaluation> {
+        let pending = self.suspension_access().take_for_abandon();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
+        );
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingSuspension,
+        );
+        pending
+    }
+
     pub(in crate::runtime) fn begin_input_suspension(&mut self, request: RuntimeInputRequest) {
         // The current InputString call and its immediate caller are both
         // resumed from saved suspension frames rather than by restarting
@@ -449,6 +497,12 @@ impl Session {
             .collect::<Vec<_>>();
 
         self.suspension_access().install(request, active_stack);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
+        );
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingSuspension,
+        );
     }
 
     /// Inserts a named, traceable frame into the fresh pending suspension.
@@ -464,6 +518,9 @@ impl Session {
             .as_mut()
             .expect("input suspension should be initialized before frames are pushed");
         suspension.push_back(Arc::new(frame));
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingSuspension,
+        );
     }
 
     fn finish_completed_resumption(&mut self) {
@@ -472,11 +529,17 @@ impl Session {
             .resuming_suspension
             .take()
             .expect("completed resumption should retain its owner until the queue is empty");
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
+        );
         assert!(
             completed.is_empty(),
             "completed resumption must not discard queued frames"
         );
         self.pending_input_request = None;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
+        );
     }
 
     pub(in crate::runtime) fn resume_suspended_evaluation(
@@ -490,9 +553,11 @@ impl Session {
             "a Session resumes only one suspended evaluation at a time"
         );
         self.resuming_suspension = Some(
-            self.suspension_access()
-                .take_for_resume()
+            self.take_accounted_pending_suspension_for_resume()
                 .expect("resume requires a pending suspended evaluation"),
+        );
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
         );
         let active_stack = std::mem::take(
             &mut self
@@ -501,6 +566,9 @@ impl Session {
                 .expect("resuming suspension was just installed")
                 .active_stack,
         );
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
+        );
         let saved_stack = self.replace_accounted_evaluation_stack(active_stack);
         let saved_depth =
             std::mem::replace(&mut self.evaluation_depth, self.evaluation_stack.len());
@@ -508,6 +576,9 @@ impl Session {
             .evaluation_depth
             .saturating_add(NATIVE_STACK_DEPTH_POLL_STRIDE);
         self.pending_input_request = None;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
+        );
         let outcome = Ok(Expr::string(input.into()));
 
         let result = self.drive_resuming_frames(outcome);
@@ -535,13 +606,19 @@ impl Session {
         &mut self,
         reason: AbandonReason,
     ) -> AbandonReason {
-        let pending = self.suspension_access().take_for_abandon();
+        let pending = self.take_accounted_pending_suspension_for_abandon();
         self.pending_eval_request = None;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
+        );
         let Some(pending) = pending else {
             return reason;
         };
 
         self.abandonment_worklist.push(pending);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::AbandonmentWorklist,
+        );
         if self.abandonment_active {
             return reason;
         }
@@ -551,6 +628,9 @@ impl Session {
         let saved_depth = std::mem::replace(&mut self.evaluation_depth, 0);
 
         while let Some(mut suspension) = self.abandonment_worklist.pop() {
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::AbandonmentWorklist,
+            );
             debug_assert!(self.evaluation_stack.is_empty());
             self.replace_accounted_evaluation_stack(std::mem::take(&mut suspension.active_stack));
             self.evaluation_depth = self.evaluation_stack.len();
@@ -567,14 +647,19 @@ impl Session {
                         if !suspension.is_empty() {
                             suspension.active_stack = self.evaluation_stack.clone();
                             self.abandonment_worklist.push(suspension);
+                            self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::AbandonmentWorklist);
                         }
 
                         let cleanup_outcome = self.evaluate(cleanup.expr);
                         if matches!(cleanup_outcome, Err(EvalError::InputRequired { .. })) {
-                            if let Some(nested) = self.suspension_access().take_for_abandon() {
+                            if let Some(nested) =
+                                self.take_accounted_pending_suspension_for_abandon()
+                            {
                                 self.abandonment_worklist.push(nested);
+                                self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::AbandonmentWorklist);
                             }
                             self.pending_eval_request = None;
+                            self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest);
                         }
 
                         self.clear_accounted_evaluation_stack();
@@ -617,6 +702,9 @@ impl Session {
                 .as_mut()
                 .expect("the active resumption remains Session-rooted")
                 .pop_front();
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
+            );
             drop(completed_frame);
 
             outcome = match action {
@@ -626,6 +714,9 @@ impl Session {
                         .as_mut()
                         .expect("the active resumption remains Session-rooted")
                         .push_front(next_frame);
+                    self.refresh_memory_owner(
+                        crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
+                    );
                     self.evaluate(expr)
                 }
                 FrameAction::Finalize(finalizer) => finalizer.finish(),
@@ -636,13 +727,25 @@ impl Session {
                     .pending_suspension
                     .take()
                     .expect("nested input request should establish a fresh suspension");
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::PendingSuspension,
+                );
                 let mut suffix = self
                     .resuming_suspension
                     .take()
                     .expect("the still-rooted suffix should remain in Session");
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
+                );
                 nested.append(&mut suffix);
                 self.pending_input_request = Some(request.clone());
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
+                );
                 self.pending_suspension.restore_nested(nested);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::PendingSuspension,
+                );
                 return Err(EvalError::InputRequired {
                     request: request.clone(),
                 });

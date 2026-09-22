@@ -71,8 +71,8 @@ impl Session {
             self.emit_top_level_control_flow_messages(error);
         }
 
-        let messages = self.messages.split_off(checkpoint.message_checkpoint);
-        let prints = self.prints.split_off(checkpoint.print_checkpoint);
+        let messages = self.split_accounted_messages(checkpoint.message_checkpoint);
+        let prints = self.split_accounted_prints(checkpoint.print_checkpoint);
         let events = self.trace_events[checkpoint.trace_checkpoint..].to_vec();
         let depths = self.trace_event_depths[checkpoint.trace_checkpoint..].to_vec();
         let trace_root = self.structured_trace_expr_from_events(input_expr, &events, &depths);
@@ -82,6 +82,9 @@ impl Session {
         }
         self.handled_non_loader_eval_errors
             .truncate(checkpoint.handled_error_checkpoint);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
+        );
 
         let elapsed = elapsed_duration_expr(started.elapsed());
         let (result_expr, success, failure_type) = match outcome {

@@ -2,6 +2,8 @@ use super::*;
 use crate::runtime::suspension::trace::FrameRootVisitor;
 use rum_core::IntValue;
 
+mod session;
+
 impl Session {
     pub(in crate::runtime) fn eval_byte_count(
         &mut self,
@@ -48,7 +50,7 @@ impl Session {
     }
 
     pub(in crate::runtime::debug_tools::resources) fn current_memory_proxy_bytes(&self) -> usize {
-        self.memory_proxy_bytes_with_stack(self.walked_evaluation_stack_bytes())
+        self.walk_session_memory_bytes()
     }
 
     pub(super) fn walked_evaluation_stack_bytes(&self) -> usize {
@@ -57,295 +59,6 @@ impl Session {
             .map(render_evaluation_stack_entry_memory_proxy_bytes)
             .sum::<usize>()
             .saturating_add(vec_spare_capacity_bytes(&self.evaluation_stack))
-    }
-
-    pub(super) fn memory_proxy_bytes_with_stack(&self, stack_bytes: usize) -> usize {
-        let mut total = std::mem::size_of::<Session>();
-        total = total.saturating_add(
-            self.accounting_route
-                .as_ref()
-                .map_or(0, |route| route.memory_bytes()),
-        );
-
-        total = total.saturating_add(
-            self.builtins
-                .len()
-                .saturating_mul(std::mem::size_of::<(Symbol, BuiltinSpec)>()),
-        );
-        total = total.saturating_add(render_symbol_keyed_hash_map_memory_proxy_bytes(
-            &self.attribute_set_cache,
-        ));
-        total = total.saturating_add(render_symbol_keyed_hash_map_memory_proxy_bytes(
-            &self.builtin_dispatch_spec_cache,
-        ));
-        total = total.saturating_add(render_symbol_keyed_hash_map_memory_proxy_bytes(
-            &self.stable_symbol_cache,
-        ));
-        total = total.saturating_add(render_symbol_call_effect_cache_memory_proxy_bytes(
-            &self.symbol_call_effect_cache,
-        ));
-        total = total.saturating_add(render_call_stability_cache_memory_proxy_bytes(
-            &self.call_stability_cache,
-        ));
-        total = total.saturating_add(self.association_lookup_cache.memory_proxy_bytes());
-
-        total = total.saturating_add(self.current_context.capacity());
-        total = total.saturating_add(render_string_vec_memory_proxy_bytes(&self.context_path));
-        total = total.saturating_add(
-            self.context_stack
-                .iter()
-                .map(render_context_frame_memory_proxy_bytes)
-                .sum::<usize>()
-                .saturating_add(vec_spare_capacity_bytes(&self.context_stack)),
-        );
-        total = total.saturating_add(render_path_buf_vec_memory_proxy_bytes(
-            &self.package_search_paths,
-        ));
-        total = total.saturating_add(render_string_vec_memory_proxy_bytes(&self.loaded_packages));
-        total = total.saturating_add(render_path_buf_vec_memory_proxy_bytes(&self.load_stack));
-        total = total.saturating_add(
-            self.file_io
-                .as_ref()
-                .map_or(0, render_file_io_provider_memory_proxy_bytes),
-        );
-        total = total.saturating_add(
-            self.entropy_source
-                .as_ref()
-                .map_or(0, render_entropy_provider_memory_proxy_bytes),
-        );
-
-        total = total.saturating_add(stack_bytes);
-
-        total = total.saturating_add(
-            self.definitions
-                .iter()
-                .map(|(symbol, definition)| {
-                    symbol.to_string().len() + render_definition_memory_proxy_bytes(definition)
-                })
-                .sum::<usize>(),
-        );
-        total = total.saturating_add(render_symbol_hash_set_memory_proxy_bytes(
-            &self.installed_system_own_values,
-        ));
-        total = total.saturating_add(render_installed_system_down_values_memory_proxy_bytes(
-            &self.installed_system_down_values,
-        ));
-
-        total = total.saturating_add(
-            self.attributes
-                .keys()
-                .map(|symbol| symbol.to_string().len())
-                .sum::<usize>(),
-        );
-
-        total = total.saturating_add(
-            self.options
-                .iter()
-                .map(|(symbol, options)| {
-                    symbol.to_string().len() + render_symbol_options_memory_proxy_bytes(options)
-                })
-                .sum::<usize>(),
-        );
-
-        total = total.saturating_add(
-            self.syntax_information
-                .iter()
-                .map(|(symbol, expr)| symbol.to_string().len() + expr_memory_proxy_bytes(expr))
-                .sum::<usize>(),
-        );
-
-        total = total.saturating_add(
-            self.declared_stubs
-                .iter()
-                .map(render_symbol_memory_proxy_bytes)
-                .sum::<usize>(),
-        );
-
-        total = total.saturating_add(
-            self.removed_symbols
-                .iter()
-                .map(render_symbol_memory_proxy_bytes)
-                .sum::<usize>(),
-        );
-
-        total = total.saturating_add(
-            self.symbol_generations
-                .iter()
-                .map(render_symbol_generation_memory_proxy_bytes)
-                .sum::<usize>(),
-        );
-
-        total = total.saturating_add(
-            self.once_values
-                .iter()
-                .map(|(key, value)| key.capacity() + expr_memory_proxy_bytes(value))
-                .sum::<usize>(),
-        );
-        total = total.saturating_add(
-            self.option_value_scopes
-                .iter()
-                .map(render_option_value_scope_memory_proxy_bytes)
-                .sum::<usize>()
-                .saturating_add(vec_spare_capacity_bytes(&self.option_value_scopes)),
-        );
-        total = total.saturating_add(
-            self.dynamic_own_values
-                .iter()
-                .map(render_dynamic_own_value_frame_memory_proxy_bytes)
-                .sum::<usize>()
-                .saturating_add(vec_spare_capacity_bytes(&self.dynamic_own_values)),
-        );
-        total = total.saturating_add(
-            self.module_activations
-                .iter()
-                .map(render_module_activation_memory_proxy_bytes)
-                .sum::<usize>()
-                .saturating_add(vec_spare_capacity_bytes(&self.module_activations)),
-        );
-        total = total.saturating_add(render_symbol_hash_set_memory_proxy_bytes(
-            &self.gc_candidate_gensyms,
-        ));
-
-        total = total.saturating_add(
-            self.disabled_message_selectors
-                .iter()
-                .map(render_message_selector_memory_proxy_bytes)
-                .sum::<usize>()
-                .saturating_add(vec_spare_capacity_bytes(&self.disabled_message_selectors)),
-        );
-
-        total = total.saturating_add(
-            self.message_definitions
-                .iter()
-                .map(|(key, definition)| {
-                    key.symbol.to_string().len()
-                        + key.tag.len()
-                        + definition
-                            .immediate
-                            .as_ref()
-                            .map_or(0, expr_memory_proxy_bytes)
-                        + definition
-                            .delayed
-                            .as_ref()
-                            .map_or(0, expr_memory_proxy_bytes)
-                })
-                .sum::<usize>(),
-        );
-        total = total.saturating_add(render_exception_types_memory_proxy_bytes(
-            &self.exception_types,
-        ));
-        total = total.saturating_add(render_symbol_keyed_hash_map_memory_proxy_bytes(
-            &self.message_symbol_counts,
-        ));
-        total = total.saturating_add(
-            self.sealed_units
-                .iter()
-                .map(render_source_unit_memory_proxy_bytes)
-                .sum::<usize>()
-                .saturating_add(vec_spare_capacity_bytes(&self.sealed_units)),
-        );
-
-        total = total.saturating_add(
-            self.messages
-                .iter()
-                .map(render_runtime_message_memory_proxy_bytes)
-                .sum::<usize>()
-                .saturating_add(vec_spare_capacity_bytes(&self.messages)),
-        );
-
-        total = total.saturating_add(
-            self.last_message_list
-                .iter()
-                .map(render_runtime_message_memory_proxy_bytes)
-                .sum::<usize>()
-                .saturating_add(vec_spare_capacity_bytes(&self.last_message_list)),
-        );
-
-        total = total.saturating_add(render_string_vec_memory_proxy_bytes(&self.prints));
-        total = total.saturating_add(
-            self.print_sink
-                .as_ref()
-                .map_or(0, |sink| std::mem::size_of_val(sink.as_ref())),
-        );
-
-        total = total.saturating_add(
-            self.trace_events
-                .iter()
-                .map(render_trace_event_memory_proxy_bytes)
-                .sum::<usize>()
-                .saturating_add(vec_spare_capacity_bytes(&self.trace_events)),
-        );
-        total = total.saturating_add(
-            self.trace_event_depths
-                .capacity()
-                .saturating_mul(std::mem::size_of::<usize>()),
-        );
-
-        total = total.saturating_add(
-            self.handled_non_loader_eval_errors
-                .iter()
-                .map(render_runtime_message_memory_proxy_bytes)
-                .sum::<usize>()
-                .saturating_add(vec_spare_capacity_bytes(
-                    &self.handled_non_loader_eval_errors,
-                )),
-        );
-
-        total = total.saturating_add(
-            self.reap_scopes
-                .iter()
-                .map(render_reap_scope_memory_proxy_bytes)
-                .sum::<usize>()
-                .saturating_add(vec_spare_capacity_bytes(&self.reap_scopes)),
-        );
-
-        total = total.saturating_add(
-            self.monitor_scopes
-                .iter()
-                .map(render_monitor_scope_memory_proxy_bytes)
-                .sum::<usize>()
-                .saturating_add(vec_spare_capacity_bytes(&self.monitor_scopes)),
-        );
-
-        total = total.saturating_add(render_string_vecdeque_memory_proxy_bytes(
-            &self.queued_input_responses,
-        ));
-        total = total.saturating_add(
-            self.pending_input_request
-                .as_ref()
-                .map_or(0, render_input_request_memory_proxy_bytes),
-        );
-        total = total.saturating_add(
-            self.pending_eval_request
-                .as_ref()
-                .map_or(0, |_| std::mem::size_of::<PendingEvalRequest>()),
-        );
-        total = total.saturating_add(
-            self.pending_suspension
-                .as_ref()
-                .map_or(0, render_suspended_evaluation_memory_proxy_bytes),
-        );
-        total = total.saturating_add(
-            self.resuming_suspension
-                .as_ref()
-                .map_or(0, render_suspended_evaluation_memory_proxy_bytes),
-        );
-        total = total.saturating_add(
-            self.abandonment_worklist
-                .iter()
-                .map(render_suspended_evaluation_memory_proxy_bytes)
-                .sum::<usize>()
-                .saturating_add(vec_spare_capacity_bytes(&self.abandonment_worklist)),
-        );
-        let request_interrupt_control = self.request_interrupt_control.borrow();
-        total = total.saturating_add(arc_allocation_memory_proxy_bytes(
-            request_interrupt_control.as_ref(),
-        ));
-        total = total.saturating_add(std::mem::size_of::<ResourceLimits>());
-
-        let peak = self.peak_memory_proxy_bytes.get().max(total);
-        self.peak_memory_proxy_bytes.set(peak);
-        total
     }
 
     #[cfg(test)]
@@ -713,7 +426,7 @@ fn render_context_frame_memory_proxy_bytes(frame: &ContextFrame) -> usize {
         .saturating_add(frame.opened_context.capacity())
 }
 
-fn render_message_selector_memory_proxy_bytes(selector: &MessageSelector) -> usize {
+pub(super) fn render_message_selector_memory_proxy_bytes(selector: &MessageSelector) -> usize {
     std::mem::size_of::<MessageSelector>().saturating_add(
         selector
             .symbol
@@ -722,7 +435,7 @@ fn render_message_selector_memory_proxy_bytes(selector: &MessageSelector) -> usi
     )
 }
 
-fn render_runtime_message_memory_proxy_bytes(message: &RuntimeMessage) -> usize {
+pub(super) fn render_runtime_message_memory_proxy_bytes(message: &RuntimeMessage) -> usize {
     std::mem::size_of::<RuntimeMessage>().saturating_add(
         message
             .symbol
@@ -732,7 +445,7 @@ fn render_runtime_message_memory_proxy_bytes(message: &RuntimeMessage) -> usize 
     )
 }
 
-fn render_reap_scope_memory_proxy_bytes(scope: &ReapScope) -> usize {
+pub(super) fn render_reap_scope_memory_proxy_bytes(scope: &ReapScope) -> usize {
     let patterns = scope
         .patterns
         .iter()
@@ -764,7 +477,7 @@ fn render_reap_scope_memory_proxy_bytes(scope: &ReapScope) -> usize {
         .saturating_add(buckets)
 }
 
-fn render_monitor_scope_memory_proxy_bytes(scope: &MonitorScope) -> usize {
+pub(super) fn render_monitor_scope_memory_proxy_bytes(scope: &MonitorScope) -> usize {
     std::mem::size_of::<MonitorScope>()
         .saturating_add(expr_memory_proxy_bytes(&scope.display_expr))
         .saturating_add(
@@ -782,7 +495,7 @@ fn render_monitor_scope_memory_proxy_bytes(scope: &MonitorScope) -> usize {
         .saturating_add(scope.last_display.as_ref().map_or(0, String::capacity))
 }
 
-fn render_trace_event_memory_proxy_bytes(event: &TraceEvent) -> usize {
+pub(super) fn render_trace_event_memory_proxy_bytes(event: &TraceEvent) -> usize {
     match event {
         TraceEvent::EvaluationPass { before, after } => std::mem::size_of::<TraceEvent>()
             .saturating_add(expr_memory_proxy_bytes(before))

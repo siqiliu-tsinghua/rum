@@ -282,7 +282,13 @@ impl Session {
         match self.eval_file(&path) {
             Ok(outcome) => {
                 self.messages.extend(outcome.messages);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::Messages,
+                );
                 self.prints.extend(outcome.prints);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::Prints,
+                );
                 Ok(outcome.value)
             }
             Err(err) => {
@@ -347,6 +353,7 @@ impl Session {
 
         self.mark_package_loaded(&config.context);
         self.context_path = prepend_context(&config.context, &self.context_path);
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::ContextPath);
         Ok(system_expr("Null"))
     }
 
@@ -391,13 +398,23 @@ impl Session {
             .context_stack
             .pop()
             .expect("failed BeginPackage dependency should have an active frame");
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::ContextStack,
+        );
         debug_assert_eq!(frame.kind, ContextFrameKind::BeginPackage);
         debug_assert_eq!(self.context_stack.len(), previous_context_stack_len);
         self.current_context = frame.previous_context;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::CurrentContext,
+        );
         self.context_path = frame.previous_context_path;
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::ContextPath);
 
         if self.loaded_packages.len() > previous_loaded_packages_len {
             self.loaded_packages.truncate(previous_loaded_packages_len);
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::LoadedPackages,
+            );
             self.bump_evaluation_epoch();
         }
     }
@@ -441,6 +458,7 @@ impl Session {
 
         self.context_path =
             begin_package_context_path(&config.target_context, &config.dependencies);
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::ContextPath);
 
         Ok(result)
     }

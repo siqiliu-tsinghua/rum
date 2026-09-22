@@ -97,6 +97,12 @@ impl Session {
             definition.immediate = Some(value);
             definition.delayed = None;
         }
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::MessageDefinitions,
+        );
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::MessageSymbolCounts,
+        );
     }
 
     pub(in crate::runtime) fn render_message_text(

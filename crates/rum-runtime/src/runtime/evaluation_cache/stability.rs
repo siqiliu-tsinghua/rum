@@ -88,6 +88,7 @@ impl Session {
     /// Full invalidation: definition-state change without a single owning
     /// symbol (package loads, context-path mutation, attribute changes).
     pub(in crate::runtime) fn bump_evaluation_epoch(&mut self) {
+        self.refresh_definition_memory();
         record_evaluation_cache_counter(&EPOCH_BUMP_COUNT, "epoch_bumps");
         self.evaluation_epoch = self.evaluation_epoch.saturating_add(1);
         self.clear_evaluation_caches();
@@ -101,6 +102,7 @@ impl Session {
     /// generation, so unrelated stable entries can still hit.
     #[track_caller]
     pub(in crate::runtime) fn bump_evaluation_epoch_for_symbol(&mut self, symbol: &Symbol) {
+        self.refresh_definition_memory();
         record_evaluation_cache_counter(&SYMBOL_INVALIDATION_COUNT, "symbol_invalidations");
         let source = current_evaluation_profile_source_symbol();
         let location = Location::caller();
@@ -111,14 +113,23 @@ impl Session {
         self.evaluation_epoch = self.evaluation_epoch.saturating_add(1);
 
         self.stable_symbol_cache.remove(symbol);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::StableSymbolCache,
+        );
         self.symbol_call_effect_cache.remove(&SymbolCallEffectKey {
             symbol: *symbol,
             args_empty: true,
         });
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::SymbolCallEffectCache,
+        );
         self.symbol_call_effect_cache.remove(&SymbolCallEffectKey {
             symbol: *symbol,
             args_empty: false,
         });
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::SymbolCallEffectCache,
+        );
 
         self.record_symbol_stability_write(symbol, location);
 
@@ -240,8 +251,17 @@ impl Session {
         self.stability_dirty_bloom = StabilityBloom::default();
         self.stability_rewritten_dirty_bloom = StabilityBloom::default();
         self.stable_symbol_cache.clear();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::StableSymbolCache,
+        );
         self.symbol_call_effect_cache.clear();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::SymbolCallEffectCache,
+        );
         self.call_stability_cache.clear();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::CallStabilityCache,
+        );
     }
 
     pub(in crate::runtime) fn cached_expr_is_evaluation_stable(&mut self, expr: &Expr) -> bool {
@@ -351,6 +371,9 @@ impl Session {
                     dirty_snapshot,
                 },
             );
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::CallStabilityCache,
+            );
         } else if stable {
             record_evaluation_cache_counter(
                 &CALL_STABILITY_REWRITTEN_DIRTY_SKIP_COUNT,
@@ -397,6 +420,9 @@ impl Session {
         #[cfg(test)]
         record_call_stability_cache_trace(CallStabilityCacheTraceEvent::ClearForSizeCap);
         self.call_stability_cache.clear();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::CallStabilityCache,
+        );
     }
 }
 

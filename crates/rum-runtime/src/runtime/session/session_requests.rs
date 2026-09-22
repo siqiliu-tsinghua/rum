@@ -232,6 +232,9 @@ impl Session {
             Ok(finalized) => finalized,
             Err(EvalError::InputRequired { .. }) => {
                 self.pending_eval_request = Some(checkpoint.into());
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
+                );
                 return Err(self.finish_request_failure(
                     checkpoint,
                     EvalError::InputRequired {
@@ -245,13 +248,22 @@ impl Session {
             Err(err) => return Err(self.finish_request_failure(checkpoint, err)),
         };
 
-        let messages = self.messages.split_off(checkpoint.message_checkpoint);
-        let prints = self.prints.split_off(checkpoint.print_checkpoint);
+        let messages = self.split_accounted_messages(checkpoint.message_checkpoint);
+        let prints = self.split_accounted_prints(checkpoint.print_checkpoint);
         let trace = self.trace_events[checkpoint.trace_checkpoint..].to_vec();
         self.last_message_list = messages.clone();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
+        );
         self.handled_non_loader_eval_errors
             .truncate(checkpoint.handled_error_checkpoint);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
+        );
         self.pending_eval_request = None;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
+        );
 
         Ok(SessionEvalResponse {
             value,
@@ -283,6 +295,9 @@ impl Session {
                 prints: Vec::new(),
                 trace: Vec::new(),
             })?;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
+        );
         let input = input.into();
 
         let previous_message_list_checkpoint = self
@@ -297,6 +312,9 @@ impl Session {
             Err(error @ EvalError::InputRequired { .. }) => {
                 if self.active_accepted_request_is_cancelled() {
                     self.pending_eval_request = Some(checkpoint.into());
+                    self.refresh_memory_owner(
+                        crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
+                    );
                     return self
                         .finish_cancelled_pending_evaluation_request()?
                         .ok_or_else(|| SessionRequestFailure {
@@ -327,6 +345,9 @@ impl Session {
             Ok(finalized) => finalized,
             Err(EvalError::InputRequired { .. }) => {
                 self.pending_eval_request = Some(checkpoint.into());
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
+                );
                 return Err(self.finish_request_failure(
                     checkpoint,
                     EvalError::InputRequired {
@@ -343,12 +364,18 @@ impl Session {
             Err(err) => return Err(self.finish_request_failure(checkpoint, err)),
         };
 
-        let messages = self.messages.split_off(checkpoint.message_checkpoint);
-        let prints = self.prints.split_off(checkpoint.print_checkpoint);
+        let messages = self.split_accounted_messages(checkpoint.message_checkpoint);
+        let prints = self.split_accounted_prints(checkpoint.print_checkpoint);
         let trace = self.trace_events[checkpoint.trace_checkpoint..].to_vec();
         self.last_message_list = messages.clone();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
+        );
         self.handled_non_loader_eval_errors
             .truncate(checkpoint.handled_error_checkpoint);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
+        );
 
         Ok(SessionEvalResponse {
             value,
@@ -459,8 +486,14 @@ impl Session {
         let prints = self.prints[checkpoint.print_checkpoint..].to_vec();
         let trace = self.trace_events[checkpoint.trace_checkpoint..].to_vec();
         self.last_message_list = messages.clone();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
+        );
         self.handled_non_loader_eval_errors
             .truncate(checkpoint.handled_error_checkpoint);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
+        );
 
         SessionRequestFailure {
             error: session_request_error_from_eval_error(&err),
@@ -480,8 +513,14 @@ impl Session {
         let prints = self.prints[checkpoint.print_checkpoint..].to_vec();
         let trace = self.trace_events[checkpoint.trace_checkpoint..].to_vec();
         self.last_message_list = messages.clone();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
+        );
         self.handled_non_loader_eval_errors
             .truncate(checkpoint.handled_error_checkpoint);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
+        );
 
         SessionRequestFailure {
             error: session_request_error_from_eval_error_with_source(&err, source),
@@ -565,6 +604,9 @@ impl Session {
         };
         append_cancel_message(&mut messages);
         self.last_message_list = messages.clone();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
+        );
 
         Ok(SessionEvalResponse {
             value: Expr::call(
@@ -588,6 +630,9 @@ impl Session {
         };
         append_cancel_message(&mut messages);
         self.last_message_list = messages.clone();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
+        );
 
         Err(SessionRequestFailure {
             error: SessionRequestError::Cancelled,
@@ -607,13 +652,22 @@ impl Session {
                 checkpoint.handled_error_checkpoint,
             )
             .expect("host cancellation is a terminated-evaluation value");
-        let messages = self.messages.split_off(checkpoint.message_checkpoint);
-        let prints = self.prints.split_off(checkpoint.print_checkpoint);
+        let messages = self.split_accounted_messages(checkpoint.message_checkpoint);
+        let prints = self.split_accounted_prints(checkpoint.print_checkpoint);
         let trace = self.trace_events[checkpoint.trace_checkpoint..].to_vec();
         self.last_message_list = messages.clone();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
+        );
         self.handled_non_loader_eval_errors
             .truncate(checkpoint.handled_error_checkpoint);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
+        );
         self.pending_eval_request = None;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
+        );
 
         SessionEvalResponse {
             value,

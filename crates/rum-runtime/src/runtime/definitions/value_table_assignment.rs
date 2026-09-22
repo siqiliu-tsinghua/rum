@@ -284,6 +284,7 @@ impl Session {
             }
             self.bump_evaluation_epoch_for_symbol(target);
         }
+        self.refresh_definition_memory();
     }
 }
 

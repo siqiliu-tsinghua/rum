@@ -411,6 +411,7 @@ pub(in crate::runtime) const MANUAL_FRAME_ROOT_TRACE_IMPLS: &[&str] = &[
     "(A,B,C,D,E,F,G,H)",
     "Arc<T>",
     "Arc<[T]>",
+    "AtomicUsize",
     "BTreeMap<K,V>",
     "BTreeSet<T>",
     "BigInt",

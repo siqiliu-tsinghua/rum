@@ -43,11 +43,17 @@ impl Session {
         }
 
         for (scope_index, pattern_index) in matched {
-            record_sown_value(
+            let added_tag = record_sown_value(
                 &mut self.reap_scopes[scope_index].buckets_by_pattern[pattern_index],
                 tag.clone(),
                 value.clone(),
             );
+            if self.current_memory_limit.is_some() {
+                self.charge_reap_occurrence(&value);
+                if added_tag {
+                    self.charge_reap_occurrence(&tag);
+                }
+            }
         }
 
         Ok(value)
@@ -60,7 +66,7 @@ impl Session {
 
         let (patterns, pattern_list_form) = normalize_reap_patterns(args.get(1));
         let handler = args.get(2).cloned();
-        self.reap_scopes.push(ReapScope {
+        self.push_accounted_reap_scope(ReapScope {
             buckets_by_pattern: vec![ReapBucketGroup::default(); patterns.len()],
             patterns,
             pattern_list_form,
@@ -86,8 +92,7 @@ impl Session {
         outcome: Result<Expr, EvalError>,
     ) -> Result<Expr, EvalError> {
         let scope = self
-            .reap_scopes
-            .pop()
+            .pop_accounted_reap_scope()
             .expect("reap scope should exist while finishing Reap");
 
         match outcome {
@@ -333,7 +338,7 @@ fn normalize_reap_patterns(expr: Option<&Expr>) -> (Vec<Expr>, bool) {
 
 const REAP_BUCKET_INDEX_THRESHOLD: usize = 16;
 
-fn record_sown_value(group: &mut ReapBucketGroup, tag: Expr, value: Expr) {
+fn record_sown_value(group: &mut ReapBucketGroup, tag: Expr, value: Expr) -> bool {
     if group.tag_positions.is_none() && group.buckets.len() > REAP_BUCKET_INDEX_THRESHOLD {
         group.tag_positions = Some(reap_tag_positions(&group.buckets));
     }
@@ -341,11 +346,11 @@ fn record_sown_value(group: &mut ReapBucketGroup, tag: Expr, value: Expr) {
     if let Some(tag_positions) = &group.tag_positions {
         if let Some(position) = tag_positions.get(&tag).copied() {
             group.buckets[position].values.push(value);
-            return;
+            return false;
         }
     } else if let Some(bucket) = group.buckets.iter_mut().find(|bucket| bucket.tag == tag) {
         bucket.values.push(value);
-        return;
+        return false;
     }
 
     let position = group.buckets.len();
@@ -360,6 +365,7 @@ fn record_sown_value(group: &mut ReapBucketGroup, tag: Expr, value: Expr) {
     if group.tag_positions.is_none() && group.buckets.len() > REAP_BUCKET_INDEX_THRESHOLD {
         group.tag_positions = Some(reap_tag_positions(&group.buckets));
     }
+    true
 }
 
 #[inline(never)]

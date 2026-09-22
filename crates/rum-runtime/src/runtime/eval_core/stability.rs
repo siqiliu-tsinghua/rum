@@ -371,6 +371,9 @@ impl Session {
                 stable,
             },
         );
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::StableSymbolCache,
+        );
         stable
     }
 
@@ -518,6 +521,9 @@ impl Session {
                 generation: self.symbol_cache_generation,
                 has_effect,
             },
+        );
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::SymbolCallEffectCache,
         );
         has_effect
     }

@@ -39,6 +39,9 @@ impl Session {
             .call_stability_cache
             .remove(&key)
             .expect("the pointer-matched call-stability entry must still exist");
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::CallStabilityCache,
+        );
         if outcome == CallStabilityProfileOutcome::Hit && entry.stable {
             Some(CallStabilityProof { bloom: entry.bloom })
         } else {
@@ -62,6 +65,9 @@ impl Session {
             .call_stability_cache
             .remove(&key)
             .expect("the validated call-stability entry must still exist");
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::CallStabilityCache,
+        );
         if outcome == CallStabilityProfileOutcome::Hit && entry.stable {
             Some(CallStabilityProof { bloom: entry.bloom })
         } else {
@@ -92,6 +98,9 @@ impl Session {
                 dirty_snapshot: self.stability_dirty_bloom,
             },
         );
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::CallStabilityCache,
+        );
     }
 
     pub(in crate::runtime) fn evict_call_stability_path(
@@ -106,6 +115,9 @@ impl Session {
                 .is_some_and(|entry| call_stability_entry_ptr_eq(entry, head, args));
             if pointer_matches {
                 self.call_stability_cache.remove(&key);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::CallStabilityCache,
+                );
             }
         }
     }
@@ -118,6 +130,9 @@ impl Session {
                 .is_some_and(|entry| CallStabilityCacheKey::new(&entry.head, &entry.args) == *key);
             if pointer_matches {
                 self.call_stability_cache.remove(key);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::CallStabilityCache,
+                );
             }
         }
     }

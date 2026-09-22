@@ -166,6 +166,9 @@ impl Session {
         let depth = self.dynamic_own_values.len();
         self.dynamic_own_values
             .push(DynamicOwnValueFrame { symbol, value });
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::DynamicOwnValues,
+        );
         depth
     }
 
@@ -175,6 +178,9 @@ impl Session {
         }
 
         self.dynamic_own_values.truncate(depth);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::DynamicOwnValues,
+        );
     }
 
     pub(in crate::runtime) fn dynamic_own_value_binding(
@@ -217,7 +223,11 @@ impl Session {
             self.bump_attribute_revision();
         }
         self.options.remove(symbol);
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Options);
         self.syntax_information.remove(symbol);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::SyntaxInformation,
+        );
 
         if self
             .message_symbol_counts
@@ -228,6 +238,9 @@ impl Session {
         {
             self.message_definitions
                 .retain(|key, _| key.symbol != *symbol);
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::MessageDefinitions,
+            );
             self.rebuild_message_symbol_counts();
         }
     }

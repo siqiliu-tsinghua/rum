@@ -49,10 +49,13 @@ impl Session {
         if enabled {
             self.disabled_message_selectors
                 .retain(|existing| !selectors.iter().any(|selector| selector.covers(existing)));
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::DisabledMessageSelectors,
+            );
         } else {
             for selector in selectors {
                 if !self.disabled_message_selectors.contains(&selector) {
-                    self.disabled_message_selectors.push(selector);
+                    self.push_accounted_disabled_message_selectors(selector);
                 }
             }
         }

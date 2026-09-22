@@ -479,11 +479,18 @@ impl Session {
             self.bump_attribute_revision();
         }
         self.options.remove(symbol);
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Options);
         self.syntax_information.remove(symbol);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::SyntaxInformation,
+        );
 
         let messages_before = self.message_definitions.len();
         self.message_definitions
             .retain(|key, _| key.symbol != *symbol);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::MessageDefinitions,
+        );
         if self.message_definitions.len() != messages_before {
             self.rebuild_message_symbol_counts();
         }
@@ -534,28 +541,46 @@ impl Session {
         match saved_state.options {
             Some(options) => {
                 self.options.insert(symbol, options);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::Options,
+                );
             }
             None => {
                 self.options.remove(&symbol);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::Options,
+                );
             }
         }
 
         match saved_state.syntax_information {
             Some(syntax_information) => {
                 self.syntax_information.insert(symbol, syntax_information);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::SyntaxInformation,
+                );
             }
             None => {
                 self.syntax_information.remove(&symbol);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::SyntaxInformation,
+                );
             }
         }
 
         let messages_before = self.message_definitions.len();
         self.message_definitions
             .retain(|key, _| key.symbol != symbol);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::MessageDefinitions,
+        );
         let messages_changed =
             self.message_definitions.len() != messages_before || !saved_state.messages.is_empty();
         for (key, definition) in saved_state.messages {
             self.message_definitions.insert(key, definition);
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::MessageDefinitions,
+            );
         }
         if messages_changed {
             self.rebuild_message_symbol_counts();

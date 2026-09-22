@@ -35,6 +35,8 @@ impl Session {
             return;
         }
 
+        self.refresh_definition_memory();
+
         let event = TraceEvent::DefinitionStored {
             symbol: symbol.to_string(),
             kind,
@@ -91,8 +93,8 @@ impl Session {
 
     fn push_trace_with_depth(&mut self, event: TraceEvent, depth: usize) {
         if self.tracing_enabled {
-            self.trace_events.push(event.clone());
-            self.trace_event_depths.push(depth);
+            self.push_accounted_trace_events(event.clone());
+            self.push_accounted_trace_event_depths(depth);
         }
 
         self.handle_monitor_trace_event(&event);

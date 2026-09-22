@@ -141,10 +141,12 @@ impl Session {
     /// the bound for its captured state.
     pub fn set_print_sink(&mut self, sink: Box<dyn PrintSink>) {
         self.print_sink = Some(sink);
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::PrintSink);
     }
 
     pub fn clear_print_sink(&mut self) {
         self.print_sink = None;
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::PrintSink);
     }
 
     pub(in crate::runtime) fn current_side_table_stamp(&self) -> SideTableStamp {

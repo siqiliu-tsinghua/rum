@@ -18,10 +18,16 @@ impl Session {
         };
 
         self.option_value_scopes.push(scope);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::OptionValueScopes,
+        );
 
         match self.evaluate(expr) {
             Ok(value) => {
                 let _ = self.option_value_scopes.pop();
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::OptionValueScopes,
+                );
                 Ok(value)
             }
             Err(EvalError::InputRequired { request }) => {
@@ -30,6 +36,9 @@ impl Session {
             }
             Err(error) => {
                 let _ = self.option_value_scopes.pop();
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::OptionValueScopes,
+                );
                 Err(error)
             }
         }
@@ -177,6 +186,9 @@ impl crate::runtime::suspension::SuspensionFrame for EvaluateWithOptionValueScop
     ) -> crate::runtime::suspension::FrameAction {
         let resumed = (|| {
             let _ = session.option_value_scopes.pop();
+            session.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::OptionValueScopes,
+            );
             outcome
         })();
         crate::runtime::suspension::FrameAction::complete(resumed)

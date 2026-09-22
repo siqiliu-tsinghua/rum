@@ -286,11 +286,17 @@ impl Session {
     ) -> Result<EvalCapturedOutcome, EvalError> {
         match result {
             Ok(value) => {
-                let messages = self.messages.split_off(message_checkpoint);
-                let prints = self.prints.split_off(print_checkpoint);
+                let messages = self.split_accounted_messages(message_checkpoint);
+                let prints = self.split_accounted_prints(print_checkpoint);
                 self.last_message_list = messages.clone();
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
+                );
                 self.handled_non_loader_eval_errors
                     .truncate(handled_error_checkpoint);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
+                );
                 Ok(EvalCapturedOutcome {
                     value,
                     failure_type: None,
@@ -305,8 +311,14 @@ impl Session {
                 let messages = self.messages[message_checkpoint..].to_vec();
                 let prints = self.prints[print_checkpoint..].to_vec();
                 self.last_message_list = messages.clone();
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
+                );
                 self.handled_non_loader_eval_errors
                     .truncate(handled_error_checkpoint);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
+                );
 
                 let (value, failure_type) = self.render_test_outcome(Err(err))?;
                 Ok(EvalCapturedOutcome {

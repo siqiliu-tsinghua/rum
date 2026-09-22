@@ -100,8 +100,15 @@ impl Session {
         self.resource_limits = config.resource_limits;
         self.capability_policy = config.capability_policy;
         self.current_context = config.current_context;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::CurrentContext,
+        );
         self.context_path = config.context_path;
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::ContextPath);
         self.package_search_paths = config.package_search_paths;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PackageSearchPaths,
+        );
         self.tracing_enabled = config.tracing_enabled;
         self.asserts_enabled = config.asserts_enabled;
     }
@@ -236,7 +243,12 @@ impl Session {
 
     pub fn take_trace(&mut self) -> Vec<TraceEvent> {
         self.trace_event_depths.clear();
-        std::mem::take(&mut self.trace_events)
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::TraceEventDepths,
+        );
+        let taken = std::mem::take(&mut self.trace_events);
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::TraceEvents);
+        taken
     }
 
     pub fn messages(&self) -> &[RuntimeMessage] {
@@ -244,7 +256,9 @@ impl Session {
     }
 
     pub fn take_messages(&mut self) -> Vec<RuntimeMessage> {
-        std::mem::take(&mut self.messages)
+        let taken = std::mem::take(&mut self.messages);
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Messages);
+        taken
     }
 
     pub fn prints(&self) -> &[String] {
@@ -252,7 +266,9 @@ impl Session {
     }
 
     pub fn take_prints(&mut self) -> Vec<String> {
-        std::mem::take(&mut self.prints)
+        let taken = std::mem::take(&mut self.prints);
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Prints);
+        taken
     }
 
     pub fn pending_input_request(&self) -> Option<&RuntimeInputRequest> {
@@ -260,12 +276,22 @@ impl Session {
     }
 
     pub fn take_pending_input_request(&mut self) -> Option<RuntimeInputRequest> {
-        self.pending_input_request.take()
+        let request = self.pending_input_request.take();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
+        );
+        request
     }
 
     pub fn queue_input_response(&mut self, value: impl Into<String>) {
         self.queued_input_responses.push_back(value.into());
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::QueuedInputResponses,
+        );
         self.pending_input_request = None;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
+        );
     }
 
     pub fn register_builtin(&mut self, spec: BuiltinSpec) {
@@ -274,6 +300,9 @@ impl Session {
             route
                 .adapters
                 .retain(|(registered, _)| *registered != symbol);
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::AccountingRoute,
+            );
         }
         let spec = self
             .builtins
@@ -281,8 +310,21 @@ impl Session {
             .copied()
             .map(|fallback| spec.with_fallback_dispatch(fallback))
             .unwrap_or(spec);
-        self.builtins.insert(symbol, spec);
+        let replaced = self.builtins.insert(symbol, spec);
+        if replaced.is_some() {
+            self.release_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::Builtins,
+                std::mem::size_of::<(Symbol, BuiltinSpec)>(),
+            );
+        }
+        self.charge_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::Builtins,
+            std::mem::size_of::<(Symbol, BuiltinSpec)>(),
+        );
         self.builtin_dispatch_spec_cache.clear();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::BuiltinDispatchSpecCache,
+        );
 
         if !spec.attributes.is_empty() {
             self.attributes.insert(symbol, spec.attributes);
@@ -310,6 +352,9 @@ impl Session {
             .entry(symbol)
             .or_default()
             .push((installed_lhs, rhs));
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::InstalledSystemDownValues,
+        );
     }
 
     #[doc(hidden)]
@@ -556,6 +601,9 @@ impl Session {
 
     pub fn set_current_context(&mut self, context: impl Into<String>) {
         self.current_context = normalize_context_name(context.into());
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::CurrentContext,
+        );
     }
 
     pub fn set_context_path<I, S>(&mut self, contexts: I)
@@ -567,6 +615,7 @@ impl Session {
             .into_iter()
             .map(|context| normalize_context_name(context.into()))
             .collect();
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::ContextPath);
     }
 
     pub fn package_search_paths(&self) -> &[PathBuf] {
@@ -575,6 +624,7 @@ impl Session {
 
     pub fn set_file_io(&mut self, provider: Option<FileIoProvider>) {
         self.file_io = provider;
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::FileIo);
     }
 
     pub fn file_io(&self) -> Option<&dyn FileIo> {
@@ -587,6 +637,9 @@ impl Session {
 
     pub fn set_entropy_source(&mut self, provider: Option<EntropyProvider>) {
         self.entropy_source = provider;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::EntropySource,
+        );
     }
 
     pub fn entropy_source(&self) -> Option<&dyn EntropySource> {
@@ -655,10 +708,16 @@ impl Session {
         P: Into<PathBuf>,
     {
         self.package_search_paths = paths.into_iter().map(Into::into).collect();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PackageSearchPaths,
+        );
     }
 
     pub fn add_package_search_path(&mut self, path: impl Into<PathBuf>) {
         self.package_search_paths.push(path.into());
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PackageSearchPaths,
+        );
     }
 
     pub fn lower_text(&self, input: &str) -> Result<Expr, EvalError> {
@@ -726,6 +785,9 @@ impl Session {
 
         if !self.loaded_packages.iter().any(|loaded| loaded == &context) {
             self.loaded_packages.push(context);
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::LoadedPackages,
+            );
             self.bump_evaluation_epoch();
         }
     }
@@ -769,22 +831,39 @@ impl Session {
             previous_context_path,
             opened_context: context.clone(),
         });
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::ContextStack,
+        );
         self.current_context = context.clone();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::CurrentContext,
+        );
         self.context_path = prepend_context(&context, &self.context_path);
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::ContextPath);
         Expr::string(context)
     }
 
     pub(in crate::runtime) fn end_context(&mut self) -> Option<Expr> {
         let frame = self.context_stack.pop()?;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::ContextStack,
+        );
 
         if frame.kind != ContextFrameKind::Begin {
             self.context_stack.push(frame);
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::ContextStack,
+            );
             return None;
         }
 
         let current = self.current_context.clone();
         self.current_context = frame.previous_context;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::CurrentContext,
+        );
         self.context_path = frame.previous_context_path;
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::ContextPath);
         Some(Expr::string(current))
     }
 
@@ -797,22 +876,39 @@ impl Session {
             previous_context_path,
             opened_context: context.clone(),
         });
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::ContextStack,
+        );
         self.current_context = context.clone();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::CurrentContext,
+        );
         self.context_path = vec![context.clone(), SYSTEM_CONTEXT.to_string()];
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::ContextPath);
         self.mark_package_loaded(&context);
         Expr::string(context)
     }
 
     pub(in crate::runtime) fn end_package_context(&mut self) -> Option<Expr> {
         let frame = self.context_stack.pop()?;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::ContextStack,
+        );
 
         if frame.kind != ContextFrameKind::BeginPackage {
             self.context_stack.push(frame);
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::ContextStack,
+            );
             return None;
         }
 
         self.current_context = frame.previous_context;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::CurrentContext,
+        );
         self.context_path = prepend_context(&frame.opened_context, &frame.previous_context_path);
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::ContextPath);
         Some(system_expr("Null"))
     }
 }

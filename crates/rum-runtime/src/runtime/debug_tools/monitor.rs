@@ -40,7 +40,7 @@ impl Session {
             self.monitor_option_expr(explicit_options.as_ref(), "EvaluationMonitor")?;
         let step_monitor = self.monitor_option_expr(explicit_options.as_ref(), "StepMonitor")?;
 
-        self.monitor_scopes.push(MonitorScope {
+        self.push_accounted_monitor_scope(MonitorScope {
             display_expr: args[1].clone(),
             evaluation_monitor,
             step_monitor,
@@ -80,7 +80,7 @@ impl Session {
     fn finish_monitor(&mut self, outcome: Result<Expr, EvalError>) -> Result<Expr, EvalError> {
         let last_index = self.monitor_scopes.len().saturating_sub(1);
         self.refresh_monitor_scope_display(last_index);
-        let _ = self.monitor_scopes.pop();
+        let _ = self.pop_accounted_monitor_scope();
         outcome
     }
 
@@ -142,7 +142,11 @@ impl Session {
                 }
 
                 if let Some(current) = self.monitor_scopes.get_mut(index) {
+                    let before = current.last_display.as_ref().map_or(0, String::capacity);
+                    let after = rendered.capacity();
                     current.last_display = Some(rendered);
+                    self.release_memory_owner(super::resources::MemoryOwner::MonitorScopes, before);
+                    self.charge_memory_owner(super::resources::MemoryOwner::MonitorScopes, after);
                 }
             }
             Err(EvalError::InputRequired { .. }) => {

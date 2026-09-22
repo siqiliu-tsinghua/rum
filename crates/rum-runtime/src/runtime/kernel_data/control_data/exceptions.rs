@@ -78,6 +78,9 @@ impl Session {
 
         self.exception_types
             .insert(type_name.clone(), requested_parent.clone());
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::ExceptionTypes,
+        );
         Ok(exception_registration_expr(
             &type_name,
             requested_parent.as_deref(),

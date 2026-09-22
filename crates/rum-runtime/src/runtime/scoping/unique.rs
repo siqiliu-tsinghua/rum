@@ -171,6 +171,9 @@ impl Session {
         match expr {
             Expr::Atom(Atom::Symbol(symbol)) => {
                 self.definitions.entry(symbol.clone()).or_default();
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::Definitions,
+                );
                 if !attributes.is_empty() {
                     let mut current = self.attribute_set_for_symbol(symbol);
                     for attribute in attributes.attributes() {

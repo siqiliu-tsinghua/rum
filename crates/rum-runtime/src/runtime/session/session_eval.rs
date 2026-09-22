@@ -251,11 +251,17 @@ impl Session {
 
         match result {
             Ok((value, termination)) => {
-                let messages = self.messages.split_off(message_checkpoint);
-                let prints = self.prints.split_off(print_checkpoint);
+                let messages = self.split_accounted_messages(message_checkpoint);
+                let prints = self.split_accounted_prints(print_checkpoint);
                 self.last_message_list = messages.clone();
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
+                );
                 self.handled_non_loader_eval_errors
                     .truncate(handled_error_checkpoint);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
+                );
                 Ok(EvalOutcome {
                     value,
                     termination,
@@ -267,8 +273,14 @@ impl Session {
                 self.emit_non_loader_eval_message(handled_error_checkpoint, &err);
                 self.emit_top_level_control_flow_messages(&err);
                 self.last_message_list = self.messages[message_checkpoint..].to_vec();
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
+                );
                 self.handled_non_loader_eval_errors
                     .truncate(handled_error_checkpoint);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
+                );
                 Err(err)
             }
         }
@@ -341,11 +353,20 @@ impl Session {
                     if !messages.is_empty() {
                         self.messages
                             .splice(message_checkpoint..message_checkpoint, messages);
+                        self.refresh_memory_owner(
+                            crate::runtime::debug_tools::resources::MemoryOwner::Messages,
+                        );
                         self.last_message_list = self.messages[message_checkpoint..].to_vec();
+                        self.refresh_memory_owner(
+                            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
+                        );
                     }
                     if !prints.is_empty() {
                         self.prints
                             .splice(print_checkpoint..print_checkpoint, prints);
+                        self.refresh_memory_owner(
+                            crate::runtime::debug_tools::resources::MemoryOwner::Prints,
+                        );
                     }
 
                     return Err(err);
@@ -354,6 +375,9 @@ impl Session {
         }
 
         self.last_message_list = messages.clone();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
+        );
         Ok(EvalOutcome {
             value,
             termination,
@@ -375,8 +399,10 @@ impl Session {
         let snapshot = self.capture_loader_snapshot();
 
         self.load_stack.push(path);
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::LoadStack);
         let result = self.eval_script_for_loader(&source);
         self.load_stack.pop();
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::LoadStack);
 
         if result.is_err() {
             self.restore_loader_snapshot(snapshot);

@@ -93,6 +93,7 @@ impl Session {
         let snapshot = self.capture_evaluation_rollback_snapshot();
         let saved_prng_state = self.prng_state;
         let saved_print_sink = self.print_sink.take();
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::PrintSink);
         let saved_capability_policy = self.capability_policy;
         let saved_effect_suppression = self.value_q_effect_suppression_active;
 
@@ -107,6 +108,7 @@ impl Session {
 
         self.prng_state = saved_prng_state;
         self.print_sink = saved_print_sink;
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::PrintSink);
         self.capability_policy = saved_capability_policy;
         self.value_q_effect_suppression_active = saved_effect_suppression;
         self.restore_evaluation_rollback_snapshot(snapshot);

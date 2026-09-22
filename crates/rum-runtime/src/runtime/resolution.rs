@@ -94,6 +94,9 @@ impl Session {
         let spec = self.builtin_dispatch_spec_for_symbol(symbol);
         self.builtin_dispatch_spec_cache
             .insert(symbol.clone(), spec);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::BuiltinDispatchSpecCache,
+        );
         spec
     }
 
@@ -157,21 +160,36 @@ impl Session {
     }
 
     pub(super) fn discount_message_symbol(&mut self, symbol: &Symbol) {
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::MessageDefinitions,
+        );
         if let Some(count) = self.message_symbol_counts.get_mut(symbol) {
             *count -= 1;
             if *count == 0 {
                 self.message_symbol_counts.remove(symbol);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::MessageSymbolCounts,
+                );
             }
         }
     }
 
     pub(super) fn rebuild_message_symbol_counts(&mut self) {
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::MessageDefinitions,
+        );
         self.message_symbol_counts.clear();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::MessageSymbolCounts,
+        );
         let mut counts = std::mem::take(&mut self.message_symbol_counts);
         for key in self.message_definitions.keys() {
             *counts.entry(key.symbol).or_insert(0) += 1;
         }
         self.message_symbol_counts = counts;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::MessageSymbolCounts,
+        );
     }
 
     pub(super) fn attribute_set_for_symbol(&self, symbol: &Symbol) -> AttributeSet {
@@ -188,6 +206,9 @@ impl Session {
 
         let attributes = self.attribute_set_for_symbol(symbol);
         self.attribute_set_cache.insert(symbol.clone(), attributes);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::AttributeSetCache,
+        );
         attributes
     }
 
@@ -209,11 +230,16 @@ impl Session {
         } else {
             self.attributes.insert(symbol, attributes);
         }
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Attributes);
     }
 
     pub(super) fn bump_attribute_revision(&mut self) {
         self.attribute_revision = self.attribute_revision.saturating_add(1);
         self.attribute_set_cache.clear();
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Attributes);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::AttributeSetCache,
+        );
         self.bump_evaluation_epoch();
     }
 

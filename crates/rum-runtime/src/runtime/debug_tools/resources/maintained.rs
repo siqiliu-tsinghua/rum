@@ -1,9 +1,14 @@
-//! The evaluation stack is maintained only while armed. All other session
-//! owners remain walked at every checkpoint, and observation always walks.
+//! Armed mutation boundaries maintain all Session owners and their total.
+//! Cold entry seeds each owner once; explicit observation always walks.
 
 use super::memory::expr_memory_proxy_bytes;
 use super::*;
 use std::mem::size_of;
+
+mod diagnostics;
+mod owners;
+mod scopes;
+pub(in crate::runtime) use owners::MemoryOwner;
 
 fn stack_bytes(entries: &Vec<EvaluationStackEntry>) -> Option<usize> {
     entries
@@ -17,22 +22,131 @@ fn stack_bytes(entries: &Vec<EvaluationStackEntry>) -> Option<usize> {
 }
 
 impl Session {
-    /// One complete session walk per arming, including roots retained before
-    /// entry. Keep only this owner's term; never reuse a stale session total.
-    pub(in crate::runtime) fn initialize_accounted_evaluation_stack(&mut self) {
-        let bytes = stack_bytes(&self.evaluation_stack);
+    /// Seed every owner once from actual retained state, including bookkeeping.
+    /// An unarmed interval always invalidates the old total for the next entry.
+    pub(in crate::runtime) fn initialize_accounted_session_memory(&mut self) {
+        let mut total = Some(size_of::<Session>());
+        for owner in MemoryOwner::ALL {
+            let bytes = if matches!(owner, MemoryOwner::EvaluationStack) {
+                stack_bytes(&self.evaluation_stack)
+            } else {
+                Some(self.walked_memory_owner_bytes(owner))
+            };
+            let route = self.accounting_route.as_mut().expect("armed route");
+            if matches!(owner, MemoryOwner::EvaluationStack) {
+                route.evaluation_stack_bytes = bytes;
+            } else {
+                route.owner_bytes[owner as usize] = bytes;
+            }
+            total = total.and_then(|total| total.checked_add(bytes?));
+        }
         self.accounting_route
             .as_mut()
             .expect("armed route")
-            .evaluation_stack_bytes = bytes;
-        self.memory_proxy_bytes_with_stack(bytes.unwrap_or(usize::MAX));
+            .total_bytes = total;
+        if let Some(total) = total {
+            self.peak_memory_proxy_bytes
+                .set(self.peak_memory_proxy_bytes.get().max(total));
+        }
     }
 
     pub(super) fn checkpoint_memory_proxy_bytes(&self) -> Option<usize> {
         #[cfg(test)]
+        self.assert_maintained_memory_accounting();
+        let total = self.accounting_route.as_ref()?.total_bytes?;
+        self.peak_memory_proxy_bytes
+            .set(self.peak_memory_proxy_bytes.get().max(total));
+        Some(total)
+    }
+
+    pub(in crate::runtime) fn charge_memory_owner(&mut self, owner: MemoryOwner, bytes: usize) {
+        if self.current_memory_limit.is_some() {
+            let route = self.accounting_route.as_mut().expect("armed route");
+            let value = &mut route.owner_bytes[owner as usize];
+            *value = value.and_then(|total| total.checked_add(bytes));
+            route.total_bytes = route.total_bytes.and_then(|total| {
+                (*value)?;
+                total.checked_add(bytes)
+            });
+        }
+    }
+
+    pub(in crate::runtime) fn release_memory_owner(&mut self, owner: MemoryOwner, bytes: usize) {
+        if self.current_memory_limit.is_some() {
+            let route = self.accounting_route.as_mut().expect("armed route");
+            let value = &mut route.owner_bytes[owner as usize];
+            *value = value.and_then(|total| total.checked_sub(bytes));
+            route.total_bytes = route.total_bytes.and_then(|total| {
+                (*value)?;
+                total.checked_sub(bytes)
+            });
+        }
+    }
+
+    /// Reconcile a replaced owner at its mutation boundary, before guest code
+    /// can observe it. Arithmetic invalidity remains sticky until a cold arm.
+    pub(in crate::runtime) fn refresh_memory_owner(&mut self, owner: MemoryOwner) {
+        if self.current_memory_limit.is_some() && owner.maintained() {
+            let prior = self
+                .accounting_route
+                .as_ref()
+                .expect("armed route")
+                .owner_bytes[owner as usize];
+            if let Some(prior) = prior {
+                let current = self.walked_memory_owner_bytes(owner);
+                self.release_memory_owner(owner, prior);
+                self.charge_memory_owner(owner, current);
+            }
+        }
+    }
+
+    pub(in crate::runtime) fn refresh_definition_memory(&mut self) {
+        self.refresh_memory_owner(MemoryOwner::Definitions);
+        self.refresh_memory_owner(MemoryOwner::InstalledSystemOwnValues);
+        self.refresh_memory_owner(MemoryOwner::InstalledSystemDownValues);
+    }
+
+    #[cfg(test)]
+    pub(in crate::runtime) fn assert_maintained_memory_accounting(&self) {
+        use super::occurrence::{Bytes, session_breakdown};
         self.assert_evaluation_stack_accounting();
-        let bytes = self.accounting_route.as_ref()?.evaluation_stack_bytes?;
-        Some(self.memory_proxy_bytes_with_stack(bytes))
+        let oracle = session_breakdown(self);
+        for owner in MemoryOwner::ALL {
+            if owner.maintained() && !matches!(owner, MemoryOwner::EvaluationStack) {
+                assert_eq!(
+                    self.accounting_route.as_ref().unwrap().owner_bytes[owner as usize]
+                        .map_or(Bytes::Invalid, Bytes::Exact),
+                    oracle.field(owner.name()),
+                    "maintained {} contribution drifted",
+                    owner.name()
+                );
+            }
+        }
+        let route = self.accounting_route.as_ref().unwrap();
+        let total = MemoryOwner::ALL.into_iter().fold(
+            Bytes::Exact(size_of::<Session>()),
+            |total, owner| {
+                let bytes = if matches!(owner, MemoryOwner::EvaluationStack) {
+                    route.evaluation_stack_bytes
+                } else if owner.maintained() {
+                    route.owner_bytes[owner as usize]
+                } else {
+                    Some(self.walked_memory_owner_bytes(owner))
+                };
+                total.add(bytes.map_or(Bytes::Invalid, Bytes::Exact))
+            },
+        );
+        assert_eq!(
+            total,
+            oracle.total(),
+            "maintained plus remaining walked owners drifted"
+        );
+        assert_eq!(total, Bytes::Exact(self.current_memory_proxy_bytes()));
+        assert_eq!(
+            route.total_bytes.map_or(Bytes::Invalid, Bytes::Exact),
+            oracle.total(),
+            "maintained session total drifted"
+        );
     }
 
     /// Charge the retained occurrence and actual vector capacity growth. The
@@ -46,26 +160,27 @@ impl Session {
         self.evaluation_stack.push(entry);
         let capacity_bytes = (self.evaluation_stack.capacity() - old_capacity)
             .checked_mul(size_of::<EvaluationStackEntry>());
-        let bytes = &mut self
+        let bytes = self
             .accounting_route
-            .as_mut()
+            .as_ref()
             .expect("armed route")
-            .evaluation_stack_bytes;
-        *bytes = bytes
+            .evaluation_stack_bytes
             .and_then(|total| total.checked_add(payload))
             .and_then(|total| total.checked_add(capacity_bytes?));
+        self.replace_accounted_stack_bytes(bytes);
         payload
     }
 
     pub(in crate::runtime) fn pop_accounted_evaluation_entry(&mut self, payload: usize) {
         self.evaluation_stack.pop();
         if self.current_memory_limit.is_some() {
-            let bytes = &mut self
+            let bytes = self
                 .accounting_route
-                .as_mut()
+                .as_ref()
                 .expect("armed route")
-                .evaluation_stack_bytes;
-            *bytes = bytes.and_then(|total| total.checked_sub(payload));
+                .evaluation_stack_bytes
+                .and_then(|total| total.checked_sub(payload));
+            self.replace_accounted_stack_bytes(bytes);
         }
     }
 
@@ -85,10 +200,7 @@ impl Session {
         entries: Vec<EvaluationStackEntry>,
     ) -> Vec<EvaluationStackEntry> {
         if self.current_memory_limit.is_some() {
-            self.accounting_route
-                .as_mut()
-                .expect("armed route")
-                .evaluation_stack_bytes = stack_bytes(&entries);
+            self.replace_accounted_stack_bytes(stack_bytes(&entries));
         }
         std::mem::replace(&mut self.evaluation_stack, entries)
     }
@@ -96,14 +208,20 @@ impl Session {
     pub(in crate::runtime) fn clear_accounted_evaluation_stack(&mut self) {
         self.evaluation_stack.clear();
         if self.current_memory_limit.is_some() {
-            self.accounting_route
-                .as_mut()
-                .expect("armed route")
-                .evaluation_stack_bytes = self
-                .evaluation_stack
-                .capacity()
-                .checked_mul(size_of::<EvaluationStackEntry>());
+            self.replace_accounted_stack_bytes(
+                self.evaluation_stack
+                    .capacity()
+                    .checked_mul(size_of::<EvaluationStackEntry>()),
+            );
         }
+    }
+
+    fn replace_accounted_stack_bytes(&mut self, bytes: Option<usize>) {
+        let route = self.accounting_route.as_mut().expect("armed route");
+        let previous = std::mem::replace(&mut route.evaluation_stack_bytes, bytes);
+        route.total_bytes = route
+            .total_bytes
+            .and_then(|total| total.checked_sub(previous?)?.checked_add(bytes?));
     }
 
     #[cfg(test)]

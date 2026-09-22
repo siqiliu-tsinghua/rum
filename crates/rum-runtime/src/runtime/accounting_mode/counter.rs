@@ -1,3 +1,4 @@
+use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 use std::sync::Arc;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
@@ -16,7 +17,7 @@ pub struct AccountingSnapshot {
     pub arms: usize,
 }
 
-#[derive(Default)]
+#[derive(Default, rum_derive::FrameRootTrace)]
 pub(in crate::runtime) struct Counter {
     pushes: AtomicUsize,
     pops: AtomicUsize,
@@ -31,8 +32,14 @@ pub(in crate::runtime) struct Counter {
 }
 
 /// Session-owned handle, also carried explicitly by adapted callbacks/frames.
-#[derive(Clone, Default)]
+#[derive(Clone, Default, rum_derive::FrameRootTrace)]
 pub struct AccountingShadow(pub(in crate::runtime) Arc<Counter>);
+
+// Atomic integer leaves cannot retain expression or symbol roots. Keep the
+// containing records derived so adding a root there requires traversal.
+impl FrameRootTrace for AtomicUsize {
+    fn trace_roots(&self, _visitor: &mut dyn FrameRootVisitor) {}
+}
 
 impl AccountingShadow {
     pub fn snapshot(&self) -> AccountingSnapshot {

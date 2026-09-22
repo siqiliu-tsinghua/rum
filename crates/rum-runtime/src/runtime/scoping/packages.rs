@@ -466,8 +466,14 @@ impl Session {
             .position(|unit| unit.package_context == package_context)
         {
             self.sealed_units[index] = plan.source_unit;
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::SealedUnits,
+            );
         } else {
             self.sealed_units.push(plan.source_unit);
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::SealedUnits,
+            );
         }
 
         Expr::string(package_context)
@@ -498,6 +504,9 @@ impl Session {
             .position(|unit| unit.package_context == plan.source_unit.package_context)
         {
             self.sealed_units.remove(index);
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::SealedUnits,
+            );
         }
     }
 

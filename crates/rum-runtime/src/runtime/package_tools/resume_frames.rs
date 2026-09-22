@@ -19,6 +19,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalOnceBuiltinSuspensionFr
                 let value = <rum_core::Expr as crate::runtime::suspension::ContinuationValue>::from_continuation_expr(resumed_value);
                 (|| -> Result<rum_core::Expr, EvalError> {
             session.once_values.insert(cache_key.as_ref().clone(), value.clone());
+            session.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::OnceValues);
             Ok(value)
         })()
                     .map(|value| <rum_core::Expr as crate::runtime::suspension::ContinuationValue>::into_continuation_expr(value))

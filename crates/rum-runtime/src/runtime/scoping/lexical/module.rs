@@ -62,6 +62,9 @@ impl Session {
             escaped: false,
             side_table_stamp,
         });
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::ModuleActivations,
+        );
 
         let runtime_profile_total = runtime_path_timing_start("module.eval.total");
         let result = self.resume_module_initializers(
@@ -334,10 +337,16 @@ impl Session {
         for gensym in &activation.gensyms {
             if !reclaim_set.contains(gensym) {
                 self.gc_candidate_gensyms.insert(*gensym);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::GcCandidateGensyms,
+                );
             }
         }
 
         self.module_activations.truncate(activation_depth);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::ModuleActivations,
+        );
         for gensym in reclaim {
             self.clear_symbol_state(&gensym, true, true, true, true, true);
         }

@@ -111,9 +111,15 @@ impl Session {
             }
             PreparedUnsetDefinitionTarget::Options(symbol) => {
                 self.options.remove(&symbol);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::Options,
+                );
             }
             PreparedUnsetDefinitionTarget::SyntaxInformation(symbol) => {
                 self.syntax_information.remove(&symbol);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::SyntaxInformation,
+                );
             }
             PreparedUnsetDefinitionTarget::OwnValue(symbol) => {
                 let mut changed = false;
@@ -168,14 +174,21 @@ impl Session {
         if clear_messages {
             self.message_definitions
                 .retain(|key, _| key.symbol != *symbol);
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::MessageDefinitions,
+            );
         }
 
         if clear_options {
             self.options.remove(symbol);
+            self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Options);
         }
 
         if clear_syntax_information {
             self.syntax_information.remove(symbol);
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::SyntaxInformation,
+            );
         }
 
         if clear_default_values {
@@ -205,12 +218,18 @@ impl Session {
         self.mark_symbol_removed(symbol);
         self.clear_symbol_state(symbol, true, true, true, true, true);
         if self.declared_stubs.remove(symbol) {
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::DeclaredStubs,
+            );
             self.bump_evaluation_epoch_for_symbol(symbol);
         }
     }
 
     fn mark_symbol_removed(&mut self, symbol: &Symbol) {
         if self.removed_symbols.insert(*symbol) {
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::RemovedSymbols,
+            );
             self.bump_evaluation_epoch_for_symbol(symbol);
         }
 
@@ -227,6 +246,9 @@ impl Session {
         let removed_generation = symbol.identity().unwrap_or(0);
         self.symbol_generations
             .insert(key, current_generation.max(removed_generation) + 1);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::SymbolGenerations,
+        );
     }
 
     pub(in crate::runtime) fn remove_default_values_for_symbol(&mut self, symbol: &Symbol) -> bool {
@@ -246,6 +268,8 @@ impl Session {
         } else if changed {
             definition.note_down_values_rebuilt(&default_symbol);
         }
+
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Definitions);
 
         changed
     }

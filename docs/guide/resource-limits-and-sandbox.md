@@ -446,22 +446,31 @@ also loses the invalid-state distinction, so `projected > limit` can admit an
 overflow when the ceiling is `usize::MAX`. These are recorded gaps against the
 specification, not changes to runtime enforcement in this step.
 
-Any future maintained accountant is charged too: new inline bookkeeping grows
-`S(Session)` or the containing frame/index, and every added bookkeeping heap
-and spare capacity must receive a contribution. Existing omissions do not
-authorize an exemption for new accounting metadata. Armed checkpoints currently
-maintain only the live evaluation-stack contribution. Every other owner is
-walked at each existing checkpoint, with no stride or adaptive sampling; there
-is no cached session total. Stack maintenance runs only while a memory limit is
-active, counts shared expressions per occurrence, and retains vector capacity
-after a pop. Each arming performs a full walk and rebuilds the stack term from
-the actual roots, including roots retained before arming. Repeated local
-`MemoryConstrained` entries therefore pay that cold walk repeatedly. Resume,
-abandonment and rollback reconcile the actual incoming stack while armed.
-`MemoryInUse[]` always samples the complete walker, including the stack;
-`MaxMemoryUsed[]` returns the sampled high-water mark, not a continuously
-observed allocator peak. This is a partly maintained, partly walked slice,
-not a complete maintained accountant.
+Accounting metadata is charged too: inline bookkeeping grows `S(Session)` or
+its containing owner, and added heap storage and spare capacity receive a
+contribution. The accounting route includes the per-owner ledger and its total.
+Existing omissions do not authorize an exemption for new accounting metadata.
+
+Armed checkpoints read a maintained total for all modeled Session owners, with
+no session traversal, stride or adaptive sampling. Maintenance runs only while
+a memory limit is active. Each arming seeds every owner once from its actual
+retained state, including roots retained before entry. Repeated local
+`MemoryConstrained` entries therefore repeat that cold walk. Mutation hooks
+reconcile changed owners; replacements and map updates can still walk the
+affected owner. Evaluation-stack pushes, Sow appends, buffered diagnostic
+appends and Monitor display replacement charge their incoming occurrences and
+modeled capacity changes without revisiting an existing append prefix. Shared
+expressions remain charged per occurrence, and retained capacity remains
+charged after removals. Resume, abandonment and rollback reconcile actual
+ownership transfers; a queued resume frame remains charged during its callback.
+Checked ledger arithmetic stays invalid after overflow or over-release until a
+fresh cold seed. The production payload-weigher arithmetic gaps above remain.
+
+`MemoryInUse[]` always samples the complete authoritative walker.
+`MaxMemoryUsed[]` returns the high-water mark sampled by observations and armed
+checkpoints, not a continuously observed allocator peak. Maintaining Session
+owners does not close the separately documented transient-builder omissions or
+certify individual builtin `Incremental` declarations.
 
 ## Poison Recovery
 

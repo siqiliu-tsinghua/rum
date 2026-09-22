@@ -237,6 +237,9 @@ impl Session {
                 .queued_input_responses
                 .pop_front()
                 .expect("a checked queued input response should remain available");
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::QueuedInputResponses,
+            );
             return Ok(Expr::string(value));
         }
 

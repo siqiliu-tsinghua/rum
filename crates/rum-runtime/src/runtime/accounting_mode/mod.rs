@@ -1,9 +1,9 @@
-//! Explicit accounting route with one maintained owner: the evaluation stack.
-//! Observation still walks every owner; armed checkpoints walk all other owners.
+//! Explicit accounting route with maintained Session owners and total.
+//! Observation walks every owner; armed checkpoints read the maintained total.
 //!
 //! A legacy BuiltinFn cannot receive a typed mode. Only registrations through
 //! register_accounting_builtin receive AccountingContext. Every other builtin
-//! is explicitly a walker fallback, even if it declares Incremental. Recursive
+//! uses the legacy adapter, even if it declares Incremental. Recursive
 //! legacy Session entries reselect a mode from this Session's active limit;
 //! the cost of those selectors is part of the unarmed acceptance gate.
 
@@ -21,12 +21,25 @@ pub use counter::{AccountingShadow, AccountingSnapshot};
 pub type AccountingBuiltinFn =
     fn(&mut AccountingContext<'_>, &Expr, &SharedArgs) -> Result<Expr, EvalError>;
 
-#[derive(Default)]
 pub(in crate::runtime) struct AccountingRoute {
     pub(in crate::runtime) adapters: Vec<(Symbol, AccountingBuiltinFn)>,
     pub(in crate::runtime) shadow: Option<AccountingShadow>,
     // None means arithmetic invalidity, never inferred freshness. Rebuilt on arm.
     pub(in crate::runtime) evaluation_stack_bytes: Option<usize>,
+    pub(in crate::runtime) owner_bytes: [Option<usize>; 53],
+    pub(in crate::runtime) total_bytes: Option<usize>,
+}
+
+impl Default for AccountingRoute {
+    fn default() -> Self {
+        Self {
+            adapters: Vec::new(),
+            shadow: None,
+            evaluation_stack_bytes: None,
+            owner_bytes: [None; 53],
+            total_bytes: None,
+        }
+    }
 }
 
 impl AccountingRoute {
@@ -53,7 +66,7 @@ impl AccountingRoute {
 
 /// Armed extension adapter. The callback receives the mode explicitly, and its
 /// guest calls and named continuations retain the same session-owned handle.
-/// Armed limits maintain the evaluation-stack term and walk every other owner.
+/// Armed checkpoints use the maintained total; cold entry walks all owners.
 pub struct AccountingContext<'a> {
     session: &'a mut Session,
     shadow: AccountingShadow,
@@ -76,7 +89,7 @@ impl AccountingContext<'_> {
     }
 
     /// Representative host mutation. The bare Session method remains supported
-    /// and walker-accounted; only this additive adapter observes the mutation.
+    /// and maintains the same owner ledger; this adapter also records a shadow event.
     pub fn install_system_own_value(&mut self, name: &str, value: Expr) {
         self.shadow.0.host_mutations.fetch_add(1, Ordering::Relaxed);
         self.session.install_system_own_value(name, value);
@@ -92,13 +105,17 @@ impl Session {
     /// Register an explicit armed companion alongside an ordinary public spec.
     /// Unarmed evaluation calls spec.handler unchanged. Armed evaluation calls
     /// the companion. A later register_builtin for this name removes it and
-    /// deliberately returns that registration to full-walker fallback.
+    /// returns that registration to the legacy adapter. The historical shadow
+    /// counter name `walker_fallbacks` counts these calls, not session walks.
     pub fn register_accounting_builtin(&mut self, spec: BuiltinSpec, handler: AccountingBuiltinFn) {
         self.register_builtin(spec);
         self.accounting_route
             .get_or_insert_with(Default::default)
             .adapters
             .push((Symbol::system(spec.name), handler));
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::AccountingRoute,
+        );
     }
 
     /// Returns the last shadow observation, including after a local limit exits.
@@ -108,7 +125,7 @@ impl Session {
 
     /// Explicit host entry, also valid while an armed request is suspended.
     /// None means no active memory limit. Legacy host mutation remains supported
-    /// by the walker and is outside this representative shadow coverage.
+    /// by the owner ledger and is outside this representative shadow coverage.
     pub fn accounting_context(&mut self) -> Option<AccountingContext<'_>> {
         self.current_memory_limit?;
         let shadow = self.ensure_accounting_shadow();
@@ -119,11 +136,22 @@ impl Session {
     }
 
     pub(in crate::runtime) fn ensure_accounting_shadow(&mut self) -> AccountingShadow {
-        self.accounting_route
+        let absent = self
+            .accounting_route
+            .as_ref()
+            .is_none_or(|route| route.shadow.is_none());
+        let shadow = self
+            .accounting_route
             .get_or_insert_with(Default::default)
             .shadow
             .get_or_insert_with(AccountingShadow::default)
-            .clone()
+            .clone();
+        if absent {
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::AccountingRoute,
+            );
+        }
+        shadow
     }
 
     pub(in crate::runtime) fn note_accounting_arm(&mut self) {
@@ -131,7 +159,7 @@ impl Session {
             .0
             .arms
             .fetch_add(1, Ordering::Relaxed);
-        self.initialize_accounted_evaluation_stack();
+        self.initialize_accounted_session_memory();
     }
 
     #[cold]

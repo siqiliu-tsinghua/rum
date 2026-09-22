@@ -105,6 +105,9 @@ impl Session {
 
                 self.handled_non_loader_eval_errors
                     .truncate(handled_error_checkpoint);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
+                );
 
                 if matched {
                     self.evaluate(fallback)
@@ -148,11 +151,17 @@ impl Session {
             self.suppress_messages_since(message_checkpoint, selectors);
         } else {
             self.messages.truncate(message_checkpoint);
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::Messages,
+            );
         }
 
         if outcome.is_ok() {
             self.handled_non_loader_eval_errors
                 .truncate(handled_error_checkpoint);
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
+            );
         }
 
         outcome

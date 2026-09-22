@@ -36,8 +36,14 @@ impl Session {
         self.note_active_modules_escaped();
         if syntax == default_system_syntax_information(&symbol) {
             self.syntax_information.remove(&symbol);
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::SyntaxInformation,
+            );
         } else {
             self.syntax_information.insert(symbol, syntax);
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::SyntaxInformation,
+            );
         }
     }
 

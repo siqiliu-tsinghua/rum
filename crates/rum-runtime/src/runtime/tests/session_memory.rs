@@ -3,10 +3,14 @@ use crate::runtime::debug_tools::resources::occurrence::*;
 
 #[path = "session_memory_arithmetic.rs"]
 mod arithmetic;
+#[path = "session_memory_debug_owners.rs"]
+mod debug_owners;
 #[path = "session_memory_maintained.rs"]
 mod maintained;
 #[path = "session_memory_oracle.rs"]
 mod oracle;
+#[path = "session_memory_request_owners.rs"]
+mod request_owners;
 #[path = "session_memory_structures.rs"]
 mod structures;
 

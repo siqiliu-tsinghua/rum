@@ -1,4 +1,7 @@
 pub(super) const DERIVED_FRAME_ROOT_TRACE_TYPES: &[&str] = &[
+    "crates/rum-runtime/src/runtime/accounting_mode/continuation.rs:AccountedCompoundFrame",
+    "crates/rum-runtime/src/runtime/accounting_mode/counter.rs:AccountingShadow",
+    "crates/rum-runtime/src/runtime/accounting_mode/counter.rs:Counter",
     "crates/rum-runtime/src/runtime/attributes.rs:EvalUpdateAttributesSuspensionFrame",
     "crates/rum-runtime/src/runtime/builtin_adapters/resume_frames.rs:BuiltinEvaluateSuspensionFrame",
     "crates/rum-runtime/src/runtime/builtins_input.rs:EvalDialogSuspensionFrame",
@@ -928,6 +931,7 @@ pub(super) const DERIVED_FRAME_ROOT_TRACE_TYPES: &[&str] = &[
 ];
 
 pub(super) const PURE_FRAME_ABANDON_TYPES: &[&str] = &[
+    "crates/rum-runtime/src/runtime/accounting_mode/continuation.rs:AccountedCompoundFrame",
     "crates/rum-runtime/src/runtime/attributes.rs:EvalUpdateAttributesSuspensionFrame",
     "crates/rum-runtime/src/runtime/builtin_adapters/resume_frames.rs:BuiltinEvaluateSuspensionFrame",
     "crates/rum-runtime/src/runtime/builtins_input.rs:EvalDialogSuspensionFrame",

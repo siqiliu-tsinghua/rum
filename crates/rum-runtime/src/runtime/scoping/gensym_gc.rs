@@ -113,6 +113,9 @@ impl Session {
     }
 
     fn rearm_gensym_gc_watermark(&mut self) {
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::GcCandidateGensyms,
+        );
         self.gensym_gc_watermark =
             gensym_gc_watermark(self.gc_candidate_gensyms.len(), gensym_gc_threshold());
     }

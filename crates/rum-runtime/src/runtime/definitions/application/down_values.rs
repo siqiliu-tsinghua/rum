@@ -91,11 +91,32 @@ impl Session {
             self.normalize_definition_candidate_for_matching(&candidate, attributes);
         record_profile_runtime_path_timing(runtime_profile_normalize, RuntimeProfileOutcome::Ok);
 
+        let prior_dispatch_bytes = self.current_memory_limit.map(|_| {
+            self.definitions
+                .get(symbol)
+                .unwrap()
+                .down_value_dispatch_memory_proxy_bytes()
+        });
         let indexed_scan = self
             .definitions
             .get(symbol)
             .expect("DownValue definition remains present during dispatch setup")
             .start_indexed_down_value_scan(&normalized_candidate, self.evaluation_epoch);
+        if let Some(prior) = prior_dispatch_bytes {
+            let current = self
+                .definitions
+                .get(symbol)
+                .unwrap()
+                .down_value_dispatch_memory_proxy_bytes();
+            self.release_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::Definitions,
+                prior,
+            );
+            self.charge_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::Definitions,
+                current,
+            );
+        }
         if let Some(scan) = indexed_scan {
             self.try_apply_down_values_from_symbol(
                 candidate,

@@ -34,8 +34,10 @@ impl Session {
 
         if options == default {
             self.options.remove(&symbol);
+            self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Options);
         } else {
             self.options.insert(symbol, options);
+            self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Options);
         }
     }
 

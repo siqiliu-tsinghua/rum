@@ -223,7 +223,11 @@ impl Session {
 
     pub(in crate::runtime::debug_tools) fn truncate_trace_from(&mut self, trace_checkpoint: usize) {
         self.trace_events.truncate(trace_checkpoint);
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::TraceEvents);
         self.trace_event_depths.truncate(trace_checkpoint);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::TraceEventDepths,
+        );
     }
 
     pub(in crate::runtime::debug_tools) fn structured_trace_expr_from_events(

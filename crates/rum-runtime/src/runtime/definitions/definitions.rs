@@ -256,6 +256,9 @@ impl Session {
                     ));
                 };
                 self.context_path = normalize_context_list(contexts);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::ContextPath,
+                );
                 self.bump_evaluation_epoch();
                 return Ok(rhs);
             }
@@ -273,6 +276,9 @@ impl Session {
                     ));
                 };
                 self.loaded_packages = normalize_context_list(packages);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::LoadedPackages,
+                );
                 self.bump_evaluation_epoch();
                 return Ok(rhs);
             }
@@ -291,6 +297,9 @@ impl Session {
                 };
                 self.package_search_paths =
                     dedup_paths(paths.into_iter().map(PathBuf::from).collect());
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::PackageSearchPaths,
+                );
                 return Ok(rhs);
             }
 

@@ -71,8 +71,12 @@ impl Session {
                 .declared_stubs
                 .insert(Symbol::new(spec.context.clone(), name));
         }
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::DeclaredStubs,
+        );
 
         self.context_path = prepend_context(&spec.context, &self.context_path);
+        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::ContextPath);
         if inserted_stub {
             self.bump_evaluation_epoch();
         }
@@ -139,6 +143,7 @@ impl Session {
             result,
             ok(value_expr) => { let session = self; let value = <rum_core::Expr as crate::runtime::suspension::ContinuationValue>::from_continuation_expr(value_expr); (|| {
                     session.once_values.insert(cache_key, value.clone());
+                    session.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::OnceValues);
                     Ok(value)
                 })() },
             suspend => EvalOnceBuiltinSuspensionFrame {
