@@ -8,9 +8,9 @@
 2. **Performance does not regress between `rum` builds.** Optimization work is
    gated by rum-vs-rum A/B on the microbench suites.
 
-There is no external oracle. The project does not run black-box differential
-testing against other vendors' engines, does not maintain compatibility
-matrices or conformance reports, and does not commit third-party engine
+There is no external oracle for rum's language behavior. The project does not
+run black-box differential testing against other vendors' engines, does not
+maintain compatibility matrices or conformance reports, and does not commit third-party engine
 outputs. This is a permanent policy; `DISCLAIMER.md` records its history.
 
 ## Test Layers
@@ -116,7 +116,7 @@ Before adding a regression fixture, identify:
 If the contract is not yet documented, document it first or record it as
 explicitly unspecified — do not encode accidental behavior as a fixture.
 
-The eight `rum-stdlib` `retention_closure` tests are required in the ordinary
+The `rum-stdlib` `retention_closure` tests are required in the ordinary
 crate and workspace gates, including with default features disabled. They
 reconcile the whole workspace source tree, cross-check TSV obligations against
 live memory-growth declarations and catalog routes, and check compiled Rust
@@ -134,3 +134,40 @@ demonstrates a leased accumulator across a loop, callback-result adoption and
 outgoing ownership transfer; it does not establish production lease bounds,
 callback-private allocation limits, destructor stack safety or whole-program
 Rust soundness. Those require their own contracts and validation.
+
+The rejection census adds two diagnostic populations without changing those
+admission rules. `EDGE_ALL` enumerates every indexed production definition
+once, including conditional alternatives; `EDGE_N_FRONTIER` starts at every
+live N attachment and follows only the checker's exactly resolved edges.
+Unresolved attachments retain their catalog spans. Traversal stops at methods,
+closures and unexpanded macros; a source index is not a semantic call graph.
+Rows retain the full reason, canonical definition (or an explicit unresolved
+attachment), span, target, root set and witness. Counts deduplicate on
+`(definition, site, kind, target, reason)`; raw root incidence is separate.
+The reason tables group variable path/identity suffixes, while the full exact
+reasons remain in separate tables. `effects::check` first-failure results are
+reported separately: they are certification blockers, not edge frequencies.
+An independent Python TSV parser recomputes the counts and reads every source
+span. It does not supply a second Rust resolver or a coverage certificate.
+
+The required compiler oracle checks a sample of those Rust resolution claims
+and concrete scalar type claims against stable Rust 1.85.0. This is the
+2026-09-23 ruling's distinction: checking Rust facts about our own repository
+with the compiler that builds it is not the banned comparison of rum behavior
+against other vendors' WL engines. Every compiler run uses a scratch source
+copy under `target/brief-533/`, offline, with unchanged manifests and lockfile.
+Adding an argument to a claimed target must produce an `E0061` primary error
+at the claimed call's exact file and line. Mutating a different same-name
+definition must produce no error there, and must produce an error at that
+other definition's own control call. An unrelated build failure proves neither.
+
+Type probes use generic unification and reject both wrong scalar types and
+coercible mismatches. The direct `assert_type::<T>(expr)` form itself permits
+argument coercion, so an inferred invariant nominal carrier freezes the type
+before the expected type is introduced; a compiled array-reference-to-slice
+control demonstrates why this guard is necessary. The harness also challenges
+swapped resolution claims and missing negative controls. Instrument failures
+fail the gate. All sampled agreements and disagreements are saved and printed;
+a checker disagreement is a finding to investigate, never a pruned sample or
+an automatic change to admission. Neither the sample nor the census establishes
+whole-program Rust soundness or production retention coverage.

@@ -1,6 +1,8 @@
 //! Restricted retention proof on compiled fixtures; no production coverage.
 
 mod catalog;
+mod census;
+mod compiler_oracle;
 mod consumers;
 mod effects;
 mod fixtures;

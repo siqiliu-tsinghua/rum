@@ -6,12 +6,39 @@ use std::collections::{BTreeMap, BTreeSet};
 use syn::spanned::Spanned;
 use syn::visit::{self, Visit};
 
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+pub(super) struct Attachment {
+    pub site: Site,
+    pub spelling: String,
+    pub target: Result<Id, String>,
+}
+
+impl Attachment {
+    pub fn route(&self) -> String {
+        match &self.target {
+            Ok(id) => id.clone(),
+            Err(reason) => format!(
+                "REJECTED {} {}: {reason}",
+                self.site.display(),
+                self.spelling
+            ),
+        }
+    }
+}
+
 pub(super) fn catalog_routes(source: &Source) -> BTreeMap<String, BTreeSet<Id>> {
+    attachments(source)
+        .into_iter()
+        .map(|(name, roots)| (name, roots.iter().map(Attachment::route).collect()))
+        .collect()
+}
+
+pub(super) fn attachments(source: &Source) -> BTreeMap<String, BTreeSet<Attachment>> {
     struct Catalog<'a> {
         source: &'a Source,
         module: &'a str,
         file: &'a str,
-        routes: &'a mut BTreeMap<String, BTreeSet<Id>>,
+        routes: &'a mut BTreeMap<String, BTreeSet<Attachment>>,
     }
     impl<'ast> Visit<'ast> for Catalog<'_> {
         fn visit_expr_call(&mut self, call: &'ast syn::ExprCall) {
@@ -48,13 +75,10 @@ pub(super) fn catalog_routes(source: &Source) -> BTreeMap<String, BTreeSet<Id>> 
                                 }
                                 _ => Err("catalog handler is not a static function path".into()),
                             };
-                            entry.insert(match result {
-                                Ok(id) => id,
-                                Err(reason) => format!(
-                                    "REJECTED {} {}: {reason}",
-                                    Site::new(self.file, arg.span()).display(),
-                                    tokens(arg)
-                                ),
+                            entry.insert(Attachment {
+                                site: Site::new(self.file, arg.span()),
+                                spelling: tokens(arg),
+                                target: result,
                             });
                         }
                     }
@@ -79,7 +103,8 @@ pub(super) fn catalog_routes(source: &Source) -> BTreeMap<String, BTreeSet<Id>> 
     struct Companion<'a> {
         source: &'a Source,
         module: &'a str,
-        found: BTreeSet<Id>,
+        file: &'a str,
+        found: BTreeSet<Attachment>,
     }
     impl<'ast> Visit<'ast> for Companion<'_> {
         fn visit_expr_method_call(&mut self, call: &'ast syn::ExprMethodCall) {
@@ -88,7 +113,11 @@ pub(super) fn catalog_routes(source: &Source) -> BTreeMap<String, BTreeSet<Id>> 
                     let id = resolve::path(self.source, self.module, &p.path)
                         .expect("resolve installed companion");
                     resolve::function(self.source, &id).expect("companion body exists");
-                    self.found.insert(id);
+                    self.found.insert(Attachment {
+                        site: Site::new(self.file, p.span()),
+                        spelling: tokens(p),
+                        target: Ok(id),
+                    });
                 }
             }
             visit::visit_expr_method_call(self, call);
@@ -97,11 +126,16 @@ pub(super) fn catalog_routes(source: &Source) -> BTreeMap<String, BTreeSet<Id>> 
     let mut companion = Companion {
         source,
         module: &install.module,
+        file: &install.site.file,
         found: BTreeSet::new(),
     };
     companion.visit_block(&install.body);
     assert_eq!(
-        companion.found,
+        companion
+            .found
+            .iter()
+            .map(Attachment::route)
+            .collect::<BTreeSet<_>>(),
         BTreeSet::from(["rum_stdlib::control_flow::eval_accounted_compound_expression".into()])
     );
     routes

@@ -98,6 +98,30 @@ pub(super) fn verify(
 pub(super) struct Frontier {
     pub bodies: BTreeSet<Id>,
     pub rejected: BTreeSet<Diagnostic>,
+    pub resolved: BTreeSet<ResolvedEdge>,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+pub(super) struct ResolvedEdge {
+    pub definition: Id,
+    pub site: Site,
+    pub target: Id,
+}
+
+// One indexed body, including a conditional alternative. This enumerates the
+// existing visitor's claims; it does not certify the body or follow callees.
+pub(super) fn definition_edges(source: &Source, f: &Function) -> Frontier {
+    let mut report = Frontier::default();
+    Edges {
+        source,
+        function: f,
+        witness: vec![f.id.clone()],
+        report: &mut report,
+        pending: &mut Vec::new(),
+        locals: BTreeSet::new(),
+    }
+    .visit_block(&f.body);
+    report
 }
 
 // Diagnostic enumeration only. It cannot return a coverage certificate and
@@ -177,6 +201,11 @@ impl<'ast> Visit<'ast> for Edges<'_> {
         match result {
             Ok(target) => match resolve::function(self.source, &target) {
                 Ok(_) => {
+                    self.report.resolved.insert(ResolvedEdge {
+                        definition: self.function.id.clone(),
+                        site: Site::new(&self.function.site.file, call.span()),
+                        target: target.clone(),
+                    });
                     let mut witness = self.witness.clone();
                     witness.push(target.clone());
                     self.pending.push((target, witness));
