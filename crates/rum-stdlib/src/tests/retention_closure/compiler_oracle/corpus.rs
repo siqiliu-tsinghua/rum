@@ -2,6 +2,7 @@
 //! Conditional source alternatives remain visible, including unobserved ones.
 
 use super::super::{model::*, regions, source};
+use super::cache;
 use std::{collections::BTreeMap, fmt::Write, fs, process::Command};
 use syn::{
     spanned::Spanned,
@@ -48,34 +49,43 @@ fn census_constructor_resolutions_are_compiler_observed() {
     }
     assert!(!claims.is_empty());
     fs::write(directory.join("claims.tsv"), out).unwrap();
-    let output = Command::new("python3")
-        .arg(source::workspace().join("scripts/run-bounded.py"))
-        .args(["--timeout", "700", "--", "python3"])
-        .arg(
-            source::workspace()
-                .join("crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.py"),
-        )
-        .arg(source::workspace())
-        .arg(&directory)
-        .arg(if cfg!(feature = "hash") {
-            "hash"
-        } else {
-            "no-default-features"
-        })
-        .output()
-        .unwrap();
-    fs::write(
-        directory.join("harness.log"),
-        [&output.stdout[..], &output.stderr[..]].concat(),
-    )
-    .unwrap();
-    print!("{}", String::from_utf8_lossy(&output.stdout));
-    assert!(
-        output.status.success(),
-        "corpus oracle instrument failed:\n{}\n{}",
-        String::from_utf8_lossy(&output.stdout),
-        String::from_utf8_lossy(&output.stderr)
-    );
+    let features = if cfg!(feature = "hash") {
+        "hash"
+    } else {
+        "no-default-features"
+    };
+    let fingerprint = cache::fingerprint(&directory, &["claims.tsv"], features);
+    let stdout = match cache::reuse(&directory, &fingerprint) {
+        Some(recorded) => recorded,
+        None => {
+            let output = Command::new("python3")
+                .arg(source::workspace().join("scripts/run-bounded.py"))
+                .args(["--timeout", "700", "--", "python3"])
+                .arg(source::workspace().join(
+                    "crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.py",
+                ))
+                .arg(source::workspace())
+                .arg(&directory)
+                .arg(features)
+                .output()
+                .unwrap();
+            fs::write(
+                directory.join("harness.log"),
+                [&output.stdout[..], &output.stderr[..]].concat(),
+            )
+            .unwrap();
+            assert!(
+                output.status.success(),
+                "corpus oracle instrument failed:\n{}\n{}",
+                String::from_utf8_lossy(&output.stdout),
+                String::from_utf8_lossy(&output.stderr)
+            );
+            let stdout = String::from_utf8_lossy(&output.stdout).into_owned();
+            cache::record(&directory, &fingerprint, &stdout);
+            stdout
+        }
+    };
+    print!("{stdout}");
 }
 
 struct CallAt<'a> {

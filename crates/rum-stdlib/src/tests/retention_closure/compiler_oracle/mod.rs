@@ -5,6 +5,7 @@
 //! All mutation/compilation happens in copies under target/brief-534. Nothing
 //! here admits a Rust idiom, changes a retention rule, or promotes a region.
 
+mod cache;
 mod corpus;
 mod exact;
 mod sample;
@@ -28,31 +29,48 @@ fn compiler_oracle_agrees_with_resolution_claims() {
     let dir = workspace.join("target/brief-534/oracle-legacy");
     fs::create_dir_all(&dir).unwrap();
     sample::write(&source, &claims, &dir);
-    let output = Command::new("python3")
-        .arg(workspace.join("scripts/run-bounded.py"))
-        .args(["--timeout", "700", "--", "python3"])
-        .arg(workspace.join("crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/run.py"))
-        .arg(&workspace)
-        .arg(&dir)
-        .arg(if cfg!(feature = "hash") {
-            "hash"
-        } else {
-            "no-default-features"
-        })
-        .output()
-        .unwrap();
-    fs::write(
-        dir.join("harness.log"),
-        [&output.stdout[..], &output.stderr[..]].concat(),
-    )
-    .unwrap();
-    print!("{}", String::from_utf8_lossy(&output.stdout));
-    assert!(
-        output.status.success(),
-        "compiler oracle controls failed:\n{}\n{}",
-        String::from_utf8_lossy(&output.stdout),
-        String::from_utf8_lossy(&output.stderr)
+    let features = if cfg!(feature = "hash") {
+        "hash"
+    } else {
+        "no-default-features"
+    };
+    let fingerprint = cache::fingerprint(
+        &dir,
+        &["resolution-claims.tsv", "type-claims.tsv"],
+        features,
     );
+    let stdout = match cache::reuse(&dir, &fingerprint) {
+        Some(recorded) => recorded,
+        None => {
+            let output =
+                Command::new("python3")
+                    .arg(workspace.join("scripts/run-bounded.py"))
+                    .args(["--timeout", "700", "--", "python3"])
+                    .arg(workspace.join(
+                        "crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/run.py",
+                    ))
+                    .arg(&workspace)
+                    .arg(&dir)
+                    .arg(features)
+                    .output()
+                    .unwrap();
+            fs::write(
+                dir.join("harness.log"),
+                [&output.stdout[..], &output.stderr[..]].concat(),
+            )
+            .unwrap();
+            assert!(
+                output.status.success(),
+                "compiler oracle controls failed:\n{}\n{}",
+                String::from_utf8_lossy(&output.stdout),
+                String::from_utf8_lossy(&output.stderr)
+            );
+            let stdout = String::from_utf8_lossy(&output.stdout).into_owned();
+            cache::record(&dir, &fingerprint, &stdout);
+            stdout
+        }
+    };
+    print!("{stdout}");
     // Disagreements are retained findings, not permission to change admission
     // or quietly prune the sample. A missing technique/control is a gate error.
     let controls = fs::read_to_string(dir.join("controls.tsv")).unwrap();

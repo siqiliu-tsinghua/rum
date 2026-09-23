@@ -137,6 +137,14 @@ def run(workspace, directory, features):
             marked = root.read_text()
             definitions = ' '.join(f'fn {name}() {{}} fn control_{name}() {{ {name}(); }}' for name in ['Some', 'Ok', 'Err'])
             control = ' #[allow(dead_code, non_snake_case)] mod __a1_negative { ' + definitions + ' }'
+            # The control is spliced onto the last existing line on purpose:
+            # scratch.write requires a mutation to preserve the file's line
+            # count, so every span-anchored claim in the same compile stays
+            # valid. The cost is that the last line must be able to carry it —
+            # a trailing // comment would swallow the control and leave the
+            # negative control silently unexercised.
+            assert not marked.rstrip('\n').rsplit('\n', 1)[-1].lstrip().startswith('//'), \
+                f'last line of {descriptor[3]} is a line comment; it would swallow the negative control'
             base = marked[:-1] + control + '\n'
             scratch.write(label + '-negative-baseline', root, base)
             status, errors = compile_target(scratch, label + '-negative-baseline', descriptor, False)

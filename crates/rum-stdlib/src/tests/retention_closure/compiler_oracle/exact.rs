@@ -5,6 +5,7 @@ use super::super::{
     constructor_tests, contracts, effects, fixtures, leaves, model::*, regions, resolve, source,
     types,
 };
+use super::cache;
 use std::{
     collections::{BTreeMap, BTreeSet},
     fmt::Write,
@@ -148,34 +149,49 @@ fn exact_types_and_constructor_claims_match_rustc() {
         "three newly resolved constructor sites must have context claims"
     );
     fs::write(directory.join("production.tsv"), out).unwrap();
-    let output = Command::new("python3")
-        .arg(source::workspace().join("scripts/run-bounded.py"))
-        .args(["--timeout", "700", "--", "python3"])
-        .arg(
-            source::workspace()
-                .join("crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/exact.py"),
-        )
-        .arg(source::workspace())
-        .arg(&directory)
-        .arg(if cfg!(feature = "hash") {
-            "hash"
-        } else {
-            "no-default-features"
-        })
-        .output()
-        .unwrap();
-    fs::write(
-        directory.join("harness.log"),
-        [&output.stdout[..], &output.stderr[..]].concat(),
-    )
-    .unwrap();
-    print!("{}", String::from_utf8_lossy(&output.stdout));
-    assert!(
-        output.status.success(),
-        "exact oracle instrument failed:\n{}\n{}",
-        String::from_utf8_lossy(&output.stdout),
-        String::from_utf8_lossy(&output.stderr)
+    let features = if cfg!(feature = "hash") {
+        "hash"
+    } else {
+        "no-default-features"
+    };
+    let fingerprint = cache::fingerprint(
+        &directory,
+        &["types.tsv", "resolutions.tsv", "production.tsv"],
+        features,
     );
+    let stdout = match cache::reuse(&directory, &fingerprint) {
+        Some(recorded) => recorded,
+        None => {
+            let output =
+                Command::new("python3")
+                    .arg(source::workspace().join("scripts/run-bounded.py"))
+                    .args(["--timeout", "700", "--", "python3"])
+                    .arg(source::workspace().join(
+                        "crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/exact.py",
+                    ))
+                    .arg(source::workspace())
+                    .arg(&directory)
+                    .arg(features)
+                    .output()
+                    .unwrap();
+            fs::write(
+                directory.join("harness.log"),
+                [&output.stdout[..], &output.stderr[..]].concat(),
+            )
+            .unwrap();
+            print!("{}", String::from_utf8_lossy(&output.stdout));
+            assert!(
+                output.status.success(),
+                "exact oracle instrument failed:\n{}\n{}",
+                String::from_utf8_lossy(&output.stdout),
+                String::from_utf8_lossy(&output.stderr)
+            );
+            let stdout = String::from_utf8_lossy(&output.stdout).into_owned();
+            cache::record(&directory, &fingerprint, &stdout);
+            stdout
+        }
+    };
+    print!("{stdout}");
 }
 
 struct Calls<'a> {
