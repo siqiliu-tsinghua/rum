@@ -1,3 +1,4 @@
+use crate::option_consumers::OptionConsumer;
 use rum_core::SharedArgs;
 use std::str::FromStr;
 
@@ -8,6 +9,15 @@ pub(crate) fn eval_url_encode(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_url_encode_with_options(session, head, args, None)
+}
+
+pub(crate) fn eval_url_encode_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     let [text, option_args @ ..] = args else {
         return Ok(session.invalid_call_with_arg_range("UrlEncode", args, 1, usize::MAX));
@@ -15,7 +25,18 @@ pub(crate) fn eval_url_encode(
     let Some(text) = expr_as_string(text) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
-    let Some(options) = parse_url_encode_options(session, option_args)? else {
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => {
+            return session.merged_option_exprs_for_system_symbol(
+                OptionConsumer::UrlEncode,
+                head,
+                args,
+                option_args,
+            );
+        }
+    };
+    let Some(options) = parse_url_form_options(option_exprs)? else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
 
@@ -27,6 +48,15 @@ pub(crate) fn eval_url_decode(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_url_decode_with_options(session, head, args, None)
+}
+
+pub(crate) fn eval_url_decode_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     let [text, option_args @ ..] = args else {
         return Ok(session.invalid_call_with_arg_range("UrlDecode", args, 1, usize::MAX));
@@ -34,7 +64,18 @@ pub(crate) fn eval_url_decode(
     let Some(text) = expr_as_string(text) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
-    let Some(options) = parse_url_decode_options(session, option_args)? else {
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => {
+            return session.merged_option_exprs_for_system_symbol(
+                OptionConsumer::UrlDecode,
+                head,
+                args,
+                option_args,
+            );
+        }
+    };
+    let Some(options) = parse_url_form_options(option_exprs)? else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
 
@@ -49,6 +90,15 @@ pub(crate) fn eval_url_parse(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_url_parse_with_options(session, head, args, None)
+}
+
+pub(crate) fn eval_url_parse_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     let [text, option_args @ ..] = args else {
         return Ok(session.invalid_call_with_arg_range("UrlParse", args, 1, usize::MAX));
@@ -56,7 +106,18 @@ pub(crate) fn eval_url_parse(
     let Some(text) = expr_as_string(text) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
-    let Some(options) = parse_url_parse_options(session, text, option_args)? else {
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => {
+            return session.merged_option_exprs_for_system_symbol(
+                OptionConsumer::UrlParse,
+                head,
+                args,
+                option_args,
+            );
+        }
+    };
+    let Some(options) = parse_url_parse_options(session, text, option_exprs)? else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
 
@@ -118,26 +179,7 @@ struct UrlParseOptions {
     decode_query: bool,
 }
 
-fn parse_url_encode_options(
-    session: &mut Session,
-    explicit: &[Expr],
-) -> Result<Option<UrlFormOptions>, EvalError> {
-    parse_url_form_options(session, "UrlEncode", explicit)
-}
-
-fn parse_url_decode_options(
-    session: &mut Session,
-    explicit: &[Expr],
-) -> Result<Option<UrlFormOptions>, EvalError> {
-    parse_url_form_options(session, "UrlDecode", explicit)
-}
-
-fn parse_url_form_options(
-    session: &mut Session,
-    symbol: &str,
-    explicit: &[Expr],
-) -> Result<Option<UrlFormOptions>, EvalError> {
-    let option_exprs = session.merged_option_exprs_for_system_symbol(symbol, explicit)?;
+fn parse_url_form_options(option_exprs: Vec<Expr>) -> Result<Option<UrlFormOptions>, EvalError> {
     let mut options = UrlFormOptions {
         form_encoding: false,
     };
@@ -163,9 +205,8 @@ fn parse_url_form_options(
 fn parse_url_parse_options(
     session: &mut Session,
     text: &str,
-    explicit: &[Expr],
+    option_exprs: Vec<Expr>,
 ) -> Result<Option<UrlParseOptions>, EvalError> {
-    let option_exprs = session.merged_option_exprs_for_system_symbol("UrlParse", explicit)?;
     let mut default_scheme = None;
     let mut decode_query = false;
 

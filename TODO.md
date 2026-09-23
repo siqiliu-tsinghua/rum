@@ -26,8 +26,8 @@ director-reproduced, and rulings D1-D7 stand if it is ever resumed.
 
 **Also open, in rough order of weight:**
 
-- **Nine option call sites still lose their continuation, covering 22
-  builtins** (opened by brief-530, 2026-09-23). A delayed option whose
+- **CLOSED by brief-531 (2026-09-23).** Nine option call sites covering 22
+  builtins lost their continuation (opened by brief-530). A delayed option whose
   right-hand side suspends used to complete the whole builtin call with the
   option's own value; the eight string-search sites now resume correctly, and
   the rest do not. Their option loop finishes, but dispatch treats its encoded
@@ -43,13 +43,16 @@ director-reproduced, and rulings D1-D7 stand if it is ever resumed.
   `strings/scripting/url.rs:140,168` (UrlEncode, UrlDecode, UrlParse), and
   `strings/scripting/text_shape.rs:163,190,215` (StringWrap, StringIndent,
   AlignColumns). The contract they must satisfy is stated in the public
-  wrapper's rustdoc (`runtime/options/core.rs:147-150`). **Close these before
-  the lease conversion**; an escaping internal marker is not an acceptable
-  resting state.
+  wrapper's rustdoc. **Closed by construction**: the public wrapper now takes
+  a typed `OptionReentry` descriptor and returns the *consumer's* result, so a
+  caller can no longer obtain the option list at all, and omitting the
+  descriptor is `error[E0061]` with a checked-in compile-pass control. The
+  symbol-name `match` with its `unreachable!()` arm is deleted.
 
 - **The retention checker lost reach on the region it exists to convert**
-  (opened by brief-530). `OPTION_FRONTIER` fell from 17 resolved bodies / 5
-  files / 50 rejected edges to **4 / 3 / 15**, because C02's Rule construction
+  (opened by brief-530, still open after brief-531). `OPTION_FRONTIER` fell
+  from 17 resolved bodies / 5 files / 50 rejected edges to **4 / 3 / 17**,
+  because C02's Rule construction
   now sits inside `resume_or_suspend!` and the restricted checker reports an
   unexpanded macro boundary (`RET003` at `options/core.rs:219-227`). The
   visibility loss was disclosed rather than silenced, but D2b cannot convert

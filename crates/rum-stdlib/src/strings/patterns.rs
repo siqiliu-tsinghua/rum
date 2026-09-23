@@ -939,3 +939,12 @@ const _: fn() = || {
     assert_traces::<StringRuleGuard>();
     assert_traces::<StringSearchOverlaps>();
 };
+
+pub(crate) use search::{
+    eval_string_cases_with_options, eval_string_contains_q_with_options,
+    eval_string_count_with_options, eval_string_delete_with_options,
+    eval_string_ends_q_with_options, eval_string_free_q_with_options,
+    eval_string_match_q_with_options, eval_string_position_with_options,
+    eval_string_replace_with_options, eval_string_split_with_options,
+    eval_string_starts_q_with_options,
+};

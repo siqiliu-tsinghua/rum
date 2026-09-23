@@ -70,12 +70,7 @@ fn string_slot_expr() -> Expr {
     Expr::call(system_expr("Slot"), vec![Expr::integer(BigInt::from(1_u8))])
 }
 
-fn parse_strict_option(
-    session: &mut Session,
-    symbol: &str,
-    explicit: &[Expr],
-) -> Result<Option<bool>, EvalError> {
-    let option_exprs = session.merged_option_exprs_for_system_symbol(symbol, explicit)?;
+fn parse_strict_option(option_exprs: Vec<Expr>) -> Result<Option<bool>, EvalError> {
     let mut strict = false;
 
     for expr in option_exprs {
@@ -464,3 +459,28 @@ impl rum_runtime::kernel_api::SuspensionFrame
         rum_runtime::kernel_api::FrameAction::complete(resumed)
     }
 }
+
+pub(crate) use encoding::eval_uncompress_with_options;
+
+pub(crate) use scripting::eval_html_unescape_with_options;
+
+pub(crate) use template::eval_template_apply_with_options;
+
+pub(crate) use scripting::eval_parse_args_with_options;
+
+pub(crate) use scripting::{
+    eval_url_decode_with_options, eval_url_encode_with_options, eval_url_parse_with_options,
+};
+
+pub(crate) use scripting::{
+    eval_align_columns_with_options, eval_string_indent_with_options, eval_string_wrap_with_options,
+};
+
+pub(crate) use patterns::{
+    eval_string_cases_with_options, eval_string_contains_q_with_options,
+    eval_string_count_with_options, eval_string_delete_with_options,
+    eval_string_ends_q_with_options, eval_string_free_q_with_options,
+    eval_string_match_q_with_options, eval_string_position_with_options,
+    eval_string_replace_with_options, eval_string_split_with_options,
+    eval_string_starts_q_with_options,
+};

@@ -132,6 +132,7 @@ pub use super::suspension::{
 pub use crate::resume_or_suspend;
 
 // suspension/trace (stdlib-only bridge)
+pub use super::options::OptionReentry;
 #[doc(hidden)]
 pub use super::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 #[doc(hidden)]

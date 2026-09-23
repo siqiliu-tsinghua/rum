@@ -1,10 +1,20 @@
 use super::*;
+use crate::option_consumers::OptionConsumer;
 use rum_core::SharedArgs;
 
 pub(crate) fn eval_string_wrap(
     session: &mut Session,
     head: &Expr,
     args: &SharedArgs,
+) -> Result<Expr, EvalError> {
+    eval_string_wrap_with_options(session, head, args, None)
+}
+
+pub(crate) fn eval_string_wrap_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     let [text, width, option_args @ ..] = args else {
@@ -21,7 +31,18 @@ pub(crate) fn eval_string_wrap(
             "width must be a positive integer",
         ));
     }
-    let Some(options) = parse_string_wrap_options(session, option_args)? else {
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => {
+            return session.merged_option_exprs_for_system_symbol(
+                OptionConsumer::StringWrap,
+                head,
+                args,
+                option_args,
+            );
+        }
+    };
+    let Some(options) = parse_string_wrap_options(option_exprs)? else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
 
@@ -37,6 +58,15 @@ pub(crate) fn eval_string_indent(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_string_indent_with_options(session, head, args, None)
+}
+
+pub(crate) fn eval_string_indent_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     let [text, prefix, option_args @ ..] = args else {
         return Ok(session.invalid_call_with_arg_range("StringIndent", args, 2, usize::MAX));
@@ -51,7 +81,18 @@ pub(crate) fn eval_string_indent(
     } else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
-    let Some(options) = parse_string_indent_options(session, option_args)? else {
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => {
+            return session.merged_option_exprs_for_system_symbol(
+                OptionConsumer::StringIndent,
+                head,
+                args,
+                option_args,
+            );
+        }
+    };
+    let Some(options) = parse_string_indent_options(option_exprs)? else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
     let prefix = match prefix {
@@ -125,6 +166,15 @@ pub(crate) fn eval_align_columns(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_align_columns_with_options(session, head, args, None)
+}
+
+pub(crate) fn eval_align_columns_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     let [rows, option_args @ ..] = args else {
         return Ok(session.invalid_call_with_arg_range("AlignColumns", args, 1, usize::MAX));
@@ -132,7 +182,18 @@ pub(crate) fn eval_align_columns(
     let Some(rows) = nested_string_rows(rows) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
-    let Some(options) = parse_align_columns_options(session, option_args)? else {
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => {
+            return session.merged_option_exprs_for_system_symbol(
+                OptionConsumer::AlignColumns,
+                head,
+                args,
+                option_args,
+            );
+        }
+    };
+    let Some(options) = parse_align_columns_options(option_exprs)? else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
 
@@ -157,10 +218,8 @@ struct AlignColumnsOptions {
 }
 
 fn parse_string_wrap_options(
-    session: &mut Session,
-    explicit: &[Expr],
+    option_exprs: Vec<Expr>,
 ) -> Result<Option<StringWrapOptions>, EvalError> {
-    let option_exprs = session.merged_option_exprs_for_system_symbol("StringWrap", explicit)?;
     let mut options = StringWrapOptions {
         preserve_newlines: false,
     };
@@ -184,10 +243,8 @@ fn parse_string_wrap_options(
 }
 
 fn parse_string_indent_options(
-    session: &mut Session,
-    explicit: &[Expr],
+    option_exprs: Vec<Expr>,
 ) -> Result<Option<StringIndentOptions>, EvalError> {
-    let option_exprs = session.merged_option_exprs_for_system_symbol("StringIndent", explicit)?;
     let mut options = StringIndentOptions { blank_lines: false };
 
     for expr in option_exprs {
@@ -209,10 +266,8 @@ fn parse_string_indent_options(
 }
 
 fn parse_align_columns_options(
-    session: &mut Session,
-    explicit: &[Expr],
+    option_exprs: Vec<Expr>,
 ) -> Result<Option<AlignColumnsOptions>, EvalError> {
-    let option_exprs = session.merged_option_exprs_for_system_symbol("AlignColumns", explicit)?;
     let mut options = AlignColumnsOptions {
         separator: "  ".to_string(),
     };

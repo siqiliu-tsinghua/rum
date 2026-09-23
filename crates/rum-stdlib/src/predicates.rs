@@ -453,3 +453,11 @@ pub fn parse_indeterminate_expr(expr: &Expr) -> Option<Expr> {
         _ => Some(expr.clone()),
     }
 }
+
+pub(crate) use collections::{
+    eval_contains_all_with_options, eval_contains_any_with_options,
+    eval_contains_exactly_with_options, eval_contains_none_with_options,
+    eval_contains_only_with_options, eval_disjoint_q_with_options,
+    eval_duplicate_free_q_with_options, eval_intersecting_q_with_options,
+    eval_subset_q_with_options,
+};

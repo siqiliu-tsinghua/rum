@@ -84,22 +84,38 @@ impl Session {
         self.options_for_symbol(symbol).rule_exprs()
     }
 
-    pub(in crate::runtime) fn merged_option_exprs_for_symbol(
+    fn merged_option_exprs_for_symbol<R: OptionReentry>(
         &mut self,
         symbol: &Symbol,
         explicit: &[Expr],
-    ) -> Result<Vec<Expr>, EvalError> {
+        reentry: R,
+        head: &Expr,
+        args: &[Expr],
+    ) -> Result<Expr, EvalError> {
         let defaults = self.option_rule_exprs_for_symbol(symbol);
-        self.resume_merged_option_exprs(symbol, &defaults, explicit, 0, Vec::new())
+        let options = self.resume_merged_option_exprs(
+            symbol,
+            &defaults,
+            explicit,
+            0,
+            Vec::new(),
+            reentry,
+            head,
+            args,
+        )?;
+        reentry.resume(self, head, args, options)
     }
 
-    pub(super) fn resume_merged_option_exprs(
+    fn resume_merged_option_exprs<R: OptionReentry>(
         &mut self,
         symbol: &Symbol,
         defaults: &[Expr],
         explicit: &[Expr],
         mut index: usize,
         mut merged: Vec<Expr>,
+        reentry: R,
+        head: &Expr,
+        args: &[Expr],
     ) -> Result<Vec<Expr>, EvalError> {
         while index < defaults.len() + explicit.len() {
             let expr = if index < defaults.len() {
@@ -112,6 +128,9 @@ impl Session {
                 self.evaluate_runtime_option_expr(expr),
                 ok(value) => Ok(value),
                 suspend => MergedOptionsSuspensionFrame {
+                    reentry,
+                    head: head.clone(),
+                    args: args.to_vec().into(),
                     target: symbol.clone(),
                     defaults: defaults.to_vec().into(),
                     explicit: explicit.to_vec().into(),
@@ -125,35 +144,51 @@ impl Session {
         Ok(merged)
     }
 
-    pub(super) fn resume_merged_options_after_value(
+    pub(super) fn resume_merged_options_after_value<R: OptionReentry>(
         &mut self,
-        frame: &MergedOptionsSuspensionFrame,
+        frame: &MergedOptionsSuspensionFrame<R>,
         value: Expr,
-    ) -> Result<Vec<Expr>, EvalError> {
+    ) -> Result<Expr, EvalError> {
         // The driver retains the frozen frame while this mutable loop runs.
         // Clone its prefix rather than assuming the frame has a unique owner.
         let mut merged = frame.merged.to_vec();
         merged.push(value);
-        self.resume_merged_option_exprs(
+        let options = self.resume_merged_option_exprs(
             &frame.target,
             &frame.defaults,
             &frame.explicit,
             frame.next_index,
             merged,
-        )
+            frame.reentry,
+            &frame.head,
+            &frame.args,
+        )?;
+        frame
+            .reentry
+            .resume(self, &frame.head, &frame.args, options)
     }
 
-    /// Returns evaluated default and explicit options for a System` symbol.
+    /// Evaluates merged options and invokes their typed consumer for a System` symbol.
     ///
-    /// On suspension the continuation yields an encoded `Vec<Expr>` through
-    /// `ContinuationValue`. The caller must install a consumer frame to use
-    /// that list and finish its own operation.
-    pub fn merged_option_exprs_for_system_symbol(
+    /// A typed re-entry is mandatory. On suspension the option loop owns it
+    /// together with the frozen call and invokes it directly with the finished
+    /// vector. The loop never encodes that vector as an expression, so it cannot
+    /// escape as a builtin result. Both paths return the consumer's expression,
+    /// never the option vector. On the ordinary path call data stays borrowed.
+    pub fn merged_option_exprs_for_system_symbol<R: OptionReentry>(
         &mut self,
-        symbol_name: &str,
+        reentry: R,
+        head: &Expr,
+        args: &[Expr],
         explicit: &[Expr],
-    ) -> Result<Vec<Expr>, EvalError> {
-        self.merged_option_exprs_for_symbol(&Symbol::system(symbol_name), explicit)
+    ) -> Result<Expr, EvalError> {
+        self.merged_option_exprs_for_symbol(
+            &Symbol::system(reentry.symbol_name()),
+            explicit,
+            reentry,
+            head,
+            args,
+        )
     }
 
     pub(in crate::runtime) fn raw_option_value_for_symbol(

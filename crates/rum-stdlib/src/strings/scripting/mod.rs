@@ -26,3 +26,15 @@ fn failed_with_message(
     session.push_message(symbol, tag, message);
     system_expr("$Failed")
 }
+
+pub(crate) use html::eval_html_unescape_with_options;
+
+pub(crate) use args::eval_parse_args_with_options;
+
+pub(crate) use url::{
+    eval_url_decode_with_options, eval_url_encode_with_options, eval_url_parse_with_options,
+};
+
+pub(crate) use text_shape::{
+    eval_align_columns_with_options, eval_string_indent_with_options, eval_string_wrap_with_options,
+};

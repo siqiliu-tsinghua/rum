@@ -1,3 +1,4 @@
+use crate::option_consumers::OptionConsumer;
 mod resume_frames;
 use resume_frames::*;
 
@@ -216,13 +217,33 @@ pub(crate) fn eval_union(
     _head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_union_with_options(session, _head, args, None)
+}
+
+pub(crate) fn eval_union_with_options(
+    session: &mut Session,
+    _head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if args.is_empty() {
         return Ok(Expr::call(system_expr("List"), Vec::new()));
     }
 
     let (data_args, explicit_options) = split_same_test_options(args);
-    let same_test = effective_same_test(session, "Union", &explicit_options)?;
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => {
+            return session.merged_option_exprs_for_system_symbol(
+                OptionConsumer::Union,
+                _head,
+                args,
+                &explicit_options,
+            );
+        }
+    };
+    let same_test = effective_same_test(option_exprs)?;
     enforce_union_memory_constraint(session, data_args)?;
     let (expr_head, groups) = match same_head_argument_groups(session, "Union", data_args) {
         Ok(groups) => groups,
@@ -284,6 +305,15 @@ pub(crate) fn eval_intersection(
     _head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_intersection_with_options(session, _head, args, None)
+}
+
+pub(crate) fn eval_intersection_with_options(
+    session: &mut Session,
+    _head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if args.is_empty() {
         return Ok(session.invalid_call_with_message(
@@ -295,7 +325,18 @@ pub(crate) fn eval_intersection(
     }
 
     let (data_args, explicit_options) = split_same_test_options(args);
-    let same_test = effective_same_test(session, "Intersection", &explicit_options)?;
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => {
+            return session.merged_option_exprs_for_system_symbol(
+                OptionConsumer::Intersection,
+                _head,
+                args,
+                &explicit_options,
+            );
+        }
+    };
+    let same_test = effective_same_test(option_exprs)?;
     let (expr_head, mut groups) =
         match same_head_argument_groups(session, "Intersection", data_args) {
             Ok(groups) => groups,
@@ -348,6 +389,15 @@ pub(crate) fn eval_complement(
     _head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_complement_with_options(session, _head, args, None)
+}
+
+pub(crate) fn eval_complement_with_options(
+    session: &mut Session,
+    _head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if args.is_empty() {
         return Ok(session.invalid_call_with_message(
@@ -359,7 +409,18 @@ pub(crate) fn eval_complement(
     }
 
     let (data_args, explicit_options) = split_same_test_options(args);
-    let same_test = effective_same_test(session, "Complement", &explicit_options)?;
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => {
+            return session.merged_option_exprs_for_system_symbol(
+                OptionConsumer::Complement,
+                _head,
+                args,
+                &explicit_options,
+            );
+        }
+    };
+    let same_test = effective_same_test(option_exprs)?;
     let (expr_head, mut groups) = match same_head_argument_groups(session, "Complement", data_args)
     {
         Ok(groups) => groups,
@@ -520,12 +581,7 @@ fn same_test_option_name(expr: &Expr) -> Option<&str> {
     }
 }
 
-fn effective_same_test(
-    session: &mut Session,
-    symbol: &str,
-    explicit_options: &[Expr],
-) -> Result<Option<Expr>, EvalError> {
-    let option_exprs = session.merged_option_exprs_for_system_symbol(symbol, explicit_options)?;
+fn effective_same_test(option_exprs: Vec<Expr>) -> Result<Option<Expr>, EvalError> {
     let mut same_test = None;
 
     for expr in option_exprs {

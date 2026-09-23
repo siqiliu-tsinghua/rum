@@ -1,10 +1,20 @@
 use super::*;
+use crate::option_consumers::OptionConsumer;
 use rum_core::SharedArgs;
 
 pub(crate) fn eval_parse_args(
     session: &mut Session,
     head: &Expr,
     args: &SharedArgs,
+) -> Result<Expr, EvalError> {
+    eval_parse_args_with_options(session, head, args, None)
+}
+
+pub(crate) fn eval_parse_args_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     let [items, option_args @ ..] = args else {
@@ -24,7 +34,18 @@ pub(crate) fn eval_parse_args(
     {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     }
-    let Some(options) = parse_parse_args_options(session, option_args)? else {
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => {
+            return session.merged_option_exprs_for_system_symbol(
+                OptionConsumer::ParseArgs,
+                head,
+                args,
+                option_args,
+            );
+        }
+    };
+    let Some(options) = parse_parse_args_options(option_exprs)? else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
     enforce_parse_args_memory_constraint(session, item_exprs, options.short_options)?;
@@ -147,10 +168,8 @@ struct ParseArgsOptions {
 }
 
 fn parse_parse_args_options(
-    session: &mut Session,
-    explicit: &[Expr],
+    option_exprs: Vec<Expr>,
 ) -> Result<Option<ParseArgsOptions>, EvalError> {
-    let option_exprs = session.merged_option_exprs_for_system_symbol("ParseArgs", explicit)?;
     let mut options = ParseArgsOptions {
         short_options: false,
     };

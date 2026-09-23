@@ -1,4 +1,5 @@
 use super::*;
+use crate::option_consumers::OptionConsumer;
 use rum_core::SharedArgs;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -50,6 +51,15 @@ pub(crate) fn eval_template_apply(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_template_apply_with_options(session, head, args, None)
+}
+
+pub(crate) fn eval_template_apply_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     match args {
         [template] => Ok(Expr::call(
@@ -63,13 +73,21 @@ pub(crate) fn eval_template_apply(
             let Some(template) = expr_as_template_source(template) else {
                 return Ok(Expr::call(head.clone(), args.to_vec()));
             };
-            render_template_apply(session, head, args, template, data, &[])
+            render_template_apply(session, head, args, template, data, &[], resolved_options)
         }
         [template, data, option_args @ ..] => {
             let Some(template) = expr_as_template_source(template) else {
                 return Ok(Expr::call(head.clone(), args.to_vec()));
             };
-            render_template_apply(session, head, args, template, data, option_args)
+            render_template_apply(
+                session,
+                head,
+                args,
+                template,
+                data,
+                option_args,
+                resolved_options,
+            )
         }
         _ => Ok(session.invalid_call_with_arg_range("TemplateApply", args, 1, 2)),
     }
@@ -82,8 +100,20 @@ fn render_template_apply(
     template: &str,
     data: &Expr,
     option_args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
 ) -> Result<Expr, EvalError> {
-    let Some(strict) = parse_strict_option(session, "TemplateApply", option_args)? else {
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => {
+            return session.merged_option_exprs_for_system_symbol(
+                OptionConsumer::TemplateApply,
+                head,
+                args,
+                option_args,
+            );
+        }
+    };
+    let Some(strict) = parse_strict_option(option_exprs)? else {
         return Ok(session.invalid_call_with_arg_range("TemplateApply", args, 1, 2));
     };
 

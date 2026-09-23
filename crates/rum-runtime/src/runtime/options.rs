@@ -6,8 +6,13 @@ mod builtins;
 mod core;
 mod defaults;
 mod patterns;
+mod reentry;
+#[cfg(test)]
+#[path = "options/tests/compile.rs"]
+mod reentry_tests;
 mod resume_frames;
 
+pub use reentry::OptionReentry;
 use resume_frames::{MergedOptionsSuspensionFrame, RuntimeOptionSuspensionFrame};
 
 pub(super) use defaults::default_system_options;

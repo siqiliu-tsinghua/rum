@@ -1,4 +1,5 @@
 use super::*;
+use crate::option_consumers::OptionConsumer;
 use rum_core::SharedArgs;
 use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
@@ -103,6 +104,15 @@ pub(crate) fn eval_uncompress(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_uncompress_with_options(session, head, args, None)
+}
+
+pub(crate) fn eval_uncompress_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if args.is_empty() {
         return Ok(session.invalid_call_with_arg_range("Uncompress", args, 1, 2));
@@ -112,7 +122,18 @@ pub(crate) fn eval_uncompress(
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
     let (wrapper, option_args) = uncompress_wrapper_and_options(&args[1..]);
-    let Some(strict) = parse_strict_option(session, "Uncompress", option_args)? else {
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => {
+            return session.merged_option_exprs_for_system_symbol(
+                OptionConsumer::Uncompress,
+                head,
+                args,
+                option_args,
+            );
+        }
+    };
+    let Some(strict) = parse_strict_option(option_exprs)? else {
         return Ok(session.invalid_call_with_arg_range("Uncompress", args, 1, 2));
     };
     let Some((payload, original_form)) = parse_compress_envelope(source) else {

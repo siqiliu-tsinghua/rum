@@ -25,6 +25,7 @@ mod json;
 mod lazy;
 mod logic;
 mod number_theory;
+mod option_consumers;
 mod polynomials;
 mod predicates;
 mod random;

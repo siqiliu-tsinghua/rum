@@ -1,3 +1,4 @@
+use crate::option_consumers::OptionConsumer;
 mod resume_frames;
 use resume_frames::*;
 
@@ -62,12 +63,32 @@ pub(crate) fn eval_duplicate_free_q(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_duplicate_free_q_with_options(session, head, args, None)
+}
+
+pub(crate) fn eval_duplicate_free_q_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     let (data_args, explicit_options) = split_same_test_options(args, 1);
     let [expr] = data_args else {
         return Ok(session.invalid_call_with_exact_arg_count("DuplicateFreeQ", args, 1));
     };
-    let same_test = effective_same_test(session, "DuplicateFreeQ", &explicit_options)?;
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => {
+            return session.merged_option_exprs_for_system_symbol(
+                OptionConsumer::DuplicateFreeQ,
+                head,
+                args,
+                &explicit_options,
+            );
+        }
+    };
+    let same_test = effective_same_test(option_exprs)?;
 
     let Some(items) = list_items(expr) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
@@ -92,17 +113,27 @@ pub(crate) fn eval_intersecting_q(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_intersecting_q_with_options(session, head, args, None)
+}
+
+pub(crate) fn eval_intersecting_q_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_list_containment_relation(
         session,
         head,
-        "IntersectingQ",
+        OptionConsumer::IntersectingQ,
         args,
         SameTestRelationKind::Intersecting,
         |lhs, rhs| {
             let rhs_set = expr_set(rhs);
             lhs.iter().any(|item| rhs_set.contains(item))
         },
+        resolved_options,
     )
 }
 
@@ -111,17 +142,27 @@ pub(crate) fn eval_disjoint_q(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_disjoint_q_with_options(session, head, args, None)
+}
+
+pub(crate) fn eval_disjoint_q_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_list_containment_relation(
         session,
         head,
-        "DisjointQ",
+        OptionConsumer::DisjointQ,
         args,
         SameTestRelationKind::Disjoint,
         |lhs, rhs| {
             let rhs_set = expr_set(rhs);
             !lhs.iter().any(|item| rhs_set.contains(item))
         },
+        resolved_options,
     )
 }
 
@@ -130,11 +171,20 @@ pub(crate) fn eval_subset_q(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_subset_q_with_options(session, head, args, None)
+}
+
+pub(crate) fn eval_subset_q_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_list_containment_relation(
         session,
         head,
-        "SubsetQ",
+        OptionConsumer::SubsetQ,
         args,
         SameTestRelationKind::Subset,
         |lhs, rhs| {
@@ -143,6 +193,7 @@ pub(crate) fn eval_subset_q(
                 .into_iter()
                 .all(|item| lhs_set.contains(&item))
         },
+        resolved_options,
     )
 }
 
@@ -151,11 +202,20 @@ pub(crate) fn eval_contains_all(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_contains_all_with_options(session, head, args, None)
+}
+
+pub(crate) fn eval_contains_all_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_list_containment_relation(
         session,
         head,
-        "ContainsAll",
+        OptionConsumer::ContainsAll,
         args,
         SameTestRelationKind::ContainsAll,
         |lhs, rhs| {
@@ -164,6 +224,7 @@ pub(crate) fn eval_contains_all(
                 .into_iter()
                 .all(|item| lhs_set.contains(&item))
         },
+        resolved_options,
     )
 }
 
@@ -172,11 +233,20 @@ pub(crate) fn eval_contains_any(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_contains_any_with_options(session, head, args, None)
+}
+
+pub(crate) fn eval_contains_any_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_list_containment_relation(
         session,
         head,
-        "ContainsAny",
+        OptionConsumer::ContainsAny,
         args,
         SameTestRelationKind::ContainsAny,
         |lhs, rhs| {
@@ -185,6 +255,7 @@ pub(crate) fn eval_contains_any(
                 .into_iter()
                 .any(|item| lhs_set.contains(&item))
         },
+        resolved_options,
     )
 }
 
@@ -193,14 +264,24 @@ pub(crate) fn eval_contains_exactly(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_contains_exactly_with_options(session, head, args, None)
+}
+
+pub(crate) fn eval_contains_exactly_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_list_containment_relation(
         session,
         head,
-        "ContainsExactly",
+        OptionConsumer::ContainsExactly,
         args,
         SameTestRelationKind::ContainsExactly,
         |lhs, rhs| expr_counts(lhs) == expr_counts(rhs),
+        resolved_options,
     )
 }
 
@@ -209,11 +290,20 @@ pub(crate) fn eval_contains_none(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_contains_none_with_options(session, head, args, None)
+}
+
+pub(crate) fn eval_contains_none_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_list_containment_relation(
         session,
         head,
-        "ContainsNone",
+        OptionConsumer::ContainsNone,
         args,
         SameTestRelationKind::ContainsNone,
         |lhs, rhs| {
@@ -222,6 +312,7 @@ pub(crate) fn eval_contains_none(
                 .into_iter()
                 .all(|item| !lhs_set.contains(&item))
         },
+        resolved_options,
     )
 }
 
@@ -230,33 +321,56 @@ pub(crate) fn eval_contains_only(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_contains_only_with_options(session, head, args, None)
+}
+
+pub(crate) fn eval_contains_only_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_list_containment_relation(
         session,
         head,
-        "ContainsOnly",
+        OptionConsumer::ContainsOnly,
         args,
         SameTestRelationKind::ContainsOnly,
         |lhs, rhs| {
             let rhs_set = expr_set(rhs);
             lhs.iter().all(|item| rhs_set.contains(item))
         },
+        resolved_options,
     )
 }
 
 fn eval_list_containment_relation<F>(
     session: &mut Session,
     head: &Expr,
-    name: &str,
+    consumer: OptionConsumer,
     args: &[Expr],
     same_test_kind: SameTestRelationKind,
     predicate: F,
+    resolved_options: Option<Vec<Expr>>,
 ) -> Result<Expr, EvalError>
 where
     F: FnOnce(&[Expr], &[Expr]) -> bool,
 {
+    let name = consumer.symbol_name();
     let (data_args, explicit_options) = split_same_test_options(args, 2);
-    let same_test = effective_same_test(session, name, &explicit_options)?;
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => {
+            return session.merged_option_exprs_for_system_symbol(
+                consumer,
+                head,
+                args,
+                &explicit_options,
+            );
+        }
+    };
+    let same_test = effective_same_test(option_exprs)?;
     let Some((lhs, rhs)) = two_list_args(data_args) else {
         return Ok(if data_args.len() == 2 {
             Expr::call(head.clone(), args.to_vec())
@@ -345,12 +459,7 @@ fn same_test_option_name(expr: &Expr) -> Option<&str> {
     }
 }
 
-fn effective_same_test(
-    session: &mut Session,
-    symbol: &str,
-    explicit_options: &[Expr],
-) -> Result<Option<Expr>, EvalError> {
-    let option_exprs = session.merged_option_exprs_for_system_symbol(symbol, explicit_options)?;
+fn effective_same_test(option_exprs: Vec<Expr>) -> Result<Option<Expr>, EvalError> {
     let mut same_test = None;
 
     for expr in option_exprs {

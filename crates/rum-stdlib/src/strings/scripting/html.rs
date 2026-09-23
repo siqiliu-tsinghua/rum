@@ -1,4 +1,5 @@
 use super::*;
+use crate::option_consumers::OptionConsumer;
 use rum_core::SharedArgs;
 
 #[cfg(test)]
@@ -42,6 +43,15 @@ pub(crate) fn eval_html_unescape(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    eval_html_unescape_with_options(session, head, args, None)
+}
+
+pub(crate) fn eval_html_unescape_with_options(
+    session: &mut Session,
+    head: &Expr,
+    args: &[Expr],
+    resolved_options: Option<Vec<Expr>>,
+) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     let [text, option_args @ ..] = args else {
         return Ok(session.invalid_call_with_exact_arg_count("HtmlUnescape", args, 1));
@@ -49,7 +59,18 @@ pub(crate) fn eval_html_unescape(
     let Some(text) = expr_as_string(text) else {
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
-    let Some(strict) = parse_strict_option(session, "HtmlUnescape", option_args)? else {
+    let option_exprs = match resolved_options {
+        Some(options) => options,
+        None => {
+            return session.merged_option_exprs_for_system_symbol(
+                OptionConsumer::HtmlUnescape,
+                head,
+                args,
+                option_args,
+            );
+        }
+    };
+    let Some(strict) = parse_strict_option(option_exprs)? else {
         return Ok(session.invalid_call_with_exact_arg_count("HtmlUnescape", args, 1));
     };
 

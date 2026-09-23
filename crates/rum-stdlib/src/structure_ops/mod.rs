@@ -193,3 +193,7 @@ fn normalize_structural_arg_position(position: isize, len: usize) -> Option<usiz
         .contains(&normalized)
         .then_some(normalized as usize)
 }
+
+pub(crate) use ordering_sets::{
+    eval_complement_with_options, eval_intersection_with_options, eval_union_with_options,
+};
