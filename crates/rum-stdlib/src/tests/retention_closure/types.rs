@@ -2,8 +2,8 @@
 
 use std::collections::BTreeSet;
 
+use super::leaves;
 use super::model::*;
-use super::{leaves, resolve};
 
 pub(super) fn attributes(attrs: &[syn::Attribute]) -> Result<(), String> {
     for attr in attrs {
@@ -17,50 +17,46 @@ pub(super) fn attributes(attrs: &[syn::Attribute]) -> Result<(), String> {
     Ok(())
 }
 
+#[path = "types/context.rs"]
+mod context;
+#[path = "types/exact.rs"]
+mod exact;
+pub(super) use context::constructor_claims;
+pub(super) use exact::{arguments, exact, fields, substitute, variants};
+
 pub(super) fn ty(source: &Source, module: &str, syntax: &syn::Type) -> Result<Ty, String> {
-    expand(source, module, syntax, &mut BTreeSet::new())
+    let state = ownership(source, &exact(source, module, syntax)?);
+    if let Ty::Unchecked(reason) = state {
+        Err(reason)
+    } else {
+        Ok(state)
+    }
 }
 
-fn expand(
-    source: &Source,
-    module: &str,
-    syntax: &syn::Type,
-    active: &mut BTreeSet<Id>,
-) -> Result<Ty, String> {
-    match syntax {
-        syn::Type::Tuple(t) if t.elems.is_empty() => Ok(Ty::Unit),
-        syn::Type::Tuple(t) => t
-            .elems
-            .iter()
-            .map(|t| expand(source, module, t, active))
-            .collect::<Result<Vec<_>, _>>()
-            .map(Ty::Tuple),
-        syn::Type::Reference(r) if r.lifetime.is_none() => Ok(Ty::Borrow(
-            Box::new(expand(source, module, &r.elem, active)?),
-            r.mutability.is_some(),
-        )),
-        syn::Type::Paren(p) => expand(source, module, &p.elem, active),
-        syn::Type::Path(p) if p.qself.is_none() => {
-            let id = resolve::path(source, module, &p.path)?;
-            if source.drop_types.contains(&id) {
-                return Err(format!("unclassified Drop for {id}"));
+pub(super) fn ownership(source: &Source, exact: &ExactTy) -> Ty {
+    ownership_inner(source, exact, &mut BTreeSet::new())
+}
+
+fn ownership_inner(source: &Source, exact: &ExactTy, active: &mut BTreeSet<Id>) -> Ty {
+    let check = |t: &ExactTy, active: &mut BTreeSet<Id>| ownership_inner(source, t, active);
+    match exact {
+        ExactTy::Unit => Ty::Unit,
+        ExactTy::Scalar(id) => Ty::Scalar(id.clone()),
+        ExactTy::Tuple(ts) => Ty::Tuple(ts.iter().map(|t| check(t, active)).collect()),
+        // Checked provenance does not imply a receipt for a borrowed owner.
+        ExactTy::Reference(inner, mutable) => Ty::Borrow(
+            Box::new(Ty::Unchecked(format!(
+                "borrowed {}; no receipt",
+                inner.spelling()
+            ))),
+            *mutable,
+        ),
+        ExactTy::Nominal(id, args) => {
+            if source.drop_types.contains(id) {
+                return Ty::Unchecked(format!("unclassified Drop for {id}"));
             }
-            if matches!(
-                id.as_str(),
-                "bool"
-                    | "usize"
-                    | "u8"
-                    | "u16"
-                    | "u32"
-                    | "u64"
-                    | "i8"
-                    | "i16"
-                    | "i32"
-                    | "i64"
-                    | "isize"
-                    | "char"
-            ) {
-                return Ok(Ty::Scalar(id));
+            if let Some(state) = leaves::nominal(id) {
+                return state;
             }
             if matches!(
                 id.as_str(),
@@ -71,49 +67,89 @@ fn expand(
                     | "std::collections::HashMap"
                     | "std::collections::HashSet"
             ) {
-                return Ok(Ty::Raw(id));
+                return Ty::Raw(exact.spelling());
             }
-            if p.path.segments.iter().any(|s| !s.arguments.is_empty()) {
-                return Err(format!("generic substitution or projection for {id}"));
-            }
-            if let Some(class) = leaves::nominal(&id) {
-                return Ok(class);
-            }
-            let Some([definition]) = source.types.get(&id).map(Vec::as_slice) else {
-                return Err(format!("opaque or ambiguous type {id}"));
-            };
-            if definition.conditional || !definition.generics.params.is_empty() {
-                return Err(format!(
-                    "conditional or generic type {id} at {}",
-                    definition.site.display()
-                ));
-            }
-            attributes(&definition.attrs)?;
             if !active.insert(id.clone()) {
-                return Err(format!(
+                return Ty::Unchecked(format!(
                     "recursive type/alias requires an exact cleanup contract: {id}"
                 ));
             }
-            let result = if let Some(alias) = &definition.alias {
-                expand(source, &definition.module, alias, active)
-            } else {
-                let mut class = Ty::Fixed(id.clone());
-                for field in &definition.fields {
-                    match expand(source, &definition.module, field, active)? {
-                        Ty::Scalar(_) | Ty::Unit | Ty::Fixed(_) => {}
-                        _ => class = Ty::Raw(id.clone()),
-                    }
+            let result = (|| -> Result<Ty, String> {
+                if let Some([def]) = source.types.get(id).map(Vec::as_slice) {
+                    attributes(&def.attrs)?;
                 }
-                Ok(class)
-            };
-            active.remove(&id);
-            result
+                let vs = variants(source, exact)?;
+                if vs.is_empty() {
+                    Ok(Ty::Fields(
+                        fields(source, exact, None)?
+                            .into_iter()
+                            .map(|(n, t)| (n, check(&t, active)))
+                            .collect(),
+                    ))
+                } else {
+                    Ok(Ty::Variants(
+                        vs.into_iter()
+                            .map(|v| {
+                                let fs = fields(source, exact, Some(&v))?
+                                    .into_iter()
+                                    .map(|(n, t)| (n, check(&t, active)))
+                                    .collect();
+                                Ok((v, fs))
+                            })
+                            .collect::<Result<_, String>>()?,
+                    ))
+                }
+            })();
+            active.remove(id);
+            let _ = args;
+            result.unwrap_or_else(Ty::Unchecked)
         }
-        _ => Err(format!(
-            "type is outside the admitted surface: {}",
-            tokens(syntax)
-        )),
+        _ => Ty::Unchecked(format!("cleanup not modeled for {}", exact.spelling())),
     }
+}
+
+pub(super) fn exact_output(source: &Source, f: &Function) -> Result<ExactTy, String> {
+    match &f.sig.output {
+        syn::ReturnType::Default => Ok(ExactTy::Unit),
+        syn::ReturnType::Type(_, t) => exact(source, &f.module, t),
+    }
+}
+
+pub(super) fn exact_parameters(
+    source: &Source,
+    f: &Function,
+) -> Result<Vec<(String, ExactTy)>, String> {
+    f.sig
+        .inputs
+        .iter()
+        .map(|arg| match arg {
+            syn::FnArg::Typed(arg) => {
+                let syn::Pat::Ident(p) = &*arg.pat else {
+                    return Err("only explicit identifier arguments are admitted".into());
+                };
+                if p.by_ref.is_some() || p.subpat.is_some() {
+                    return Err("argument pattern has implicit ownership effects".into());
+                }
+                Ok((p.ident.to_string(), exact(source, &f.module, &arg.ty)?))
+            }
+            syn::FnArg::Receiver(r) => {
+                let id = f.owner.as_ref().ok_or("unresolved Self receiver")?;
+                let t = exact(
+                    source,
+                    &f.module,
+                    &syn::parse_str::<syn::Type>(id).map_err(|e| e.to_string())?,
+                )?;
+                Ok((
+                    "self".into(),
+                    if r.reference.is_some() {
+                        ExactTy::Reference(Box::new(t), r.mutability.is_some())
+                    } else {
+                        t
+                    },
+                ))
+            }
+        })
+        .collect()
 }
 
 pub(super) fn output(source: &Source, f: &Function) -> Result<Ty, String> {
@@ -170,6 +206,9 @@ pub(super) fn retention(ty: &Ty) -> Option<Kind> {
         Ty::Raw(_) => Some(Kind::RET001),
         Ty::Callback(_) => Some(Kind::RET004),
         Ty::Tuple(ts) => ts.iter().find_map(retention),
+        Ty::Fields(fs) => fs.values().find_map(retention),
+        Ty::Variants(vs) => vs.values().flat_map(|fs| fs.values()).find_map(retention),
+        Ty::Unchecked(_) => Some(Kind::RET002),
         _ => None,
     }
 }

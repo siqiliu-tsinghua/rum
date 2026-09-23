@@ -142,18 +142,45 @@ fn baseline(source: &Source) {
             format!("{}::evaluate_runtime_option_expr", regions::SESSION),
         ],
     );
+    // Exactly the three located baseline rows removed by A1. Payload method
+    // rejections at options/core.rs:250 and :264 remain in the frontier.
+    for (suffix, line, start, end) in [
+        ("expr_helpers.rs", 22, 45, 57),
+        ("options/core.rs", 250, 20, 36),
+        ("options/core.rs", 264, 13, 29),
+    ] {
+        assert!(
+            !options
+                .rejected
+                .iter()
+                .any(|r| r.site.file.ends_with(suffix)
+                    && r.site.start == (line, start)
+                    && r.site.end == (line, end)),
+            "constructor row remains at {suffix}:{line}:{start}-{end}"
+        );
+    }
+    for line in [250, 264] {
+        assert!(
+            options
+                .rejected
+                .iter()
+                .any(|r| r.site.file.ends_with("options/core.rs")
+                    && r.site.start.0 == line
+                    && r.reason.starts_with("method syntax"))
+        );
+    }
     let mut kinds = BTreeMap::new();
     for row in &options.rejected {
         *kinds.entry(row.kind).or_insert(0) += 1;
     }
     assert_eq!(
         options.rejected.len(),
-        17,
-        "STOP: acceptance baseline moved"
+        14,
+        "STOP: brief-534 predicted constructor delta moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 1), (Kind::RET002, 15), (Kind::RET003, 1)])
+        BTreeMap::from([(Kind::RET001, 1), (Kind::RET002, 12), (Kind::RET003, 1)])
     );
     assert_eq!(
         regions::frontier(
@@ -170,6 +197,6 @@ fn baseline(source: &Source) {
     );
     assert!(include_str!("../inventory/promoted.tsv").is_empty());
     println!(
-        "ACCEPTANCE_BASELINE OPTION_FRONTIER=17 RET001=1 RET002=15 RET003=1 PUBLIC_WRAPPER=9 PRODUCTION_COVERAGE=0"
+        "ACCEPTANCE_BASELINE OPTION_FRONTIER=14 RET001=1 RET002=12 RET003=1 PUBLIC_WRAPPER=9 PRODUCTION_COVERAGE=0"
     );
 }

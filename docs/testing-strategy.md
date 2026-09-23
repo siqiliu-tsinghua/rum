@@ -155,7 +155,7 @@ and concrete scalar type claims against stable Rust 1.85.0. This is the
 2026-09-23 ruling's distinction: checking Rust facts about our own repository
 with the compiler that builds it is not the banned comparison of rum behavior
 against other vendors' WL engines. Every compiler run uses a scratch source
-copy under `target/brief-533/`, offline, with unchanged manifests and lockfile.
+copy under `target/brief-534/`, offline, with unchanged manifests and lockfile.
 Adding an argument to a claimed target must produce an `E0061` primary error
 at the claimed call's exact file and line. Mutating a different same-name
 definition must produce no error there, and must produce an error at that
@@ -171,3 +171,38 @@ fail the gate. All sampled agreements and disagreements are saved and printed;
 a checker disagreement is a finding to investigate, never a pruned sample or
 an automatic change to admission. Neither the sample nor the census establishes
 whole-program Rust soundness or production retention coverage.
+
+The A1 constructor stage separates exact Rust identity (nominal definition and
+concrete type arguments, tuple/array/slice shapes, and reference layers) from
+retention state. Checked parameters, resolved return signatures, and named
+field/pattern projections supply provenance. An explicit local annotation is
+checked against its initializer; it is not evidence of an ownership receipt.
+The diagnostic layer can know `Result<Expr, EvalError>` at `Ok(expr.clone())`
+while the effect checker still rejects the method call. Borrowing a runtime
+owner likewise establishes no charge or mutation permission.
+
+Only the standard `Some`, `None`, `Ok`, and `Err` constructors are newly
+admitted. Namespace selection precedes their rules, including aliases and
+prelude paths. Unit variants and variant patterns have separate obligations.
+Named fields and variant payloads preserve nested raw, callback, and retained
+states; a field move leaves siblings live. Exhaustive matches, returning
+`let`-else branches, and explicit returns still require cleanup and compatible
+ownership states. Guards, shadowing, unknown cleanup, method syntax, `?`,
+closures, macros, and additional operator semantics remain outside this stage.
+The existing primitive operator rules are unchanged. Concrete type substitution
+and elided reference layers are deliberately specialized; this is not trait,
+lifetime, or general Rust inference.
+
+Trusted-use keys include the exact type instantiation. Two compiled scalar
+instances of the fixture's `keep` function challenge stale, wildcard, missing,
+and unused records independently. This adds no production exemption or
+promotion; the five persistent leaf inventory entries remain fixture-exercised.
+The A1 compiler oracle checks every recorded fixture type fact with an
+invariant carrier, and enumerates every new constructor resolution in the
+production census. Stable MIR distinguishes constructor items from ordinary
+same-named functions, while independently called same-name negative definitions
+are mutated in source copies. Test-only sites within indexed bodies are
+explicitly observed by compiling the relevant tests without executing them.
+Every agreement, disagreement, compiler diagnostic, and mutation is retained;
+an instrumentation failure fails the gate. These checks establish Rust facts,
+not retention certificates. Production coverage remains zero.

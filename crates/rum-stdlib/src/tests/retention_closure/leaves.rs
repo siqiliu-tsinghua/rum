@@ -87,6 +87,7 @@ pub(super) const AUDIT: &[(&str, &str, &str, &str, &str, &str, &str, &str, &str,
 #[derive(Clone)]
 pub(super) struct Leaf {
     pub id: Id,
+    pub instance: Vec<ExactTy>,
     pub operation: String,
     pub signature: String,
     pub record: Vec<String>,
@@ -100,8 +101,29 @@ pub(super) fn read(text: &str) -> Result<Vec<Leaf>, String> {
             if record.len() != 12 || record.iter().any(|r| r.is_empty()) {
                 return Err("leaf requires all twelve contract columns".into());
             }
-            if record[0].contains('*') {
+            if record
+                .iter()
+                .any(|r| r.contains('*') && r != "receipt=capacity(raw.bytes)*size_of(u8)")
+            {
                 return Err("wildcard trusted entry".into());
+            }
+            if let Some(arg) = record[0]
+                .strip_prefix("fixture::constructors::keep::<")
+                .and_then(|s| s.strip_suffix('>'))
+            {
+                if !matches!(arg, "u8" | "usize") {
+                    return Err("entry has no exact executable effect contract".into());
+                }
+                if record[1..11].iter().map(String::as_str).ne(INSTANCE_AUDIT) {
+                    return Err("unaudited instance contract".into());
+                }
+                return Ok(Leaf {
+                    id: "fixture::constructors::keep".into(),
+                    instance: vec![ExactTy::Scalar(arg.into())],
+                    operation: "keep".into(),
+                    signature: record[1].clone(),
+                    record,
+                });
             }
             let Some(audit) = AUDIT
                 .iter()
@@ -126,6 +148,7 @@ pub(super) fn read(text: &str) -> Result<Vec<Leaf>, String> {
             }
             Ok(Leaf {
                 id: record[0].clone(),
+                instance: Vec::new(),
                 operation: audit.0.into(),
                 signature: record[1].clone(),
                 record,
@@ -163,12 +186,12 @@ pub(super) fn fingerprint(source: &Source) -> String {
 pub(super) fn validate(
     source: &Source,
     leaves: &[Leaf],
-    used: &BTreeSet<Id>,
+    used: &BTreeSet<LeafKey>,
 ) -> Result<(), String> {
     let mut seen = BTreeSet::new();
     let fingerprint = fingerprint(source);
     for leaf in leaves {
-        if !seen.insert(leaf.id.clone()) {
+        if !seen.insert(leaf.key()) {
             return Err("duplicate trusted identity".into());
         }
         let f = resolve::function(source, &leaf.id)?;
@@ -177,15 +200,83 @@ pub(super) fn validate(
         if tokens(&f.sig) != tokens(&expected.sig) {
             return Err(format!("stale trusted signature {}", leaf.id));
         }
-        if leaf.record[11] != fingerprint {
+        let expected_fingerprint = if leaf.operation == "keep" {
+            instance_fingerprint(source)
+        } else {
+            fingerprint.clone()
+        };
+        let parsed = read(&leaf.record.join("\t"))?;
+        if parsed[0].key() != leaf.key() {
+            return Err("trusted instance differs from audited record".into());
+        }
+        if leaf.record[11] != expected_fingerprint {
             return Err(format!("stale dependency fingerprint {}", leaf.id));
         }
-        if !used.contains(&leaf.id) {
-            return Err(format!("unexercised trusted entry {}", leaf.id));
+        if !used.contains(&leaf.key()) {
+            return Err(format!(
+                "unexercised trusted entry {}",
+                leaf.key().display()
+            ));
         }
     }
     if &seen != used {
         return Err("missing exact leaf contract".into());
     }
     Ok(())
+}
+
+impl Leaf {
+    pub fn key(&self) -> LeafKey {
+        LeafKey {
+            id: self.id.clone(),
+            instance: self.instance.clone(),
+        }
+    }
+}
+
+// This is a separate compiled control, never an open generic family and never
+// an inventory promotion. Both concrete records must actually be exercised.
+const INSTANCE_AUDIT: [&str; 10] = [
+    "fn keep<T>(value: T) -> T",
+    "move-exact-instance",
+    "none",
+    "none",
+    "none",
+    "0",
+    "same-value-and-retention",
+    "none;Drop=primitive",
+    "constructors::instances;missing-instance",
+    "constructors+Cargo.lock+rust-toolchain.toml",
+];
+
+fn instance_fingerprint(source: &Source) -> String {
+    let file = source
+        .files
+        .iter()
+        .find(|(p, _)| p.ends_with("fixtures/constructors.rs"))
+        .expect("compiled instance fixture")
+        .1;
+    let mut hash = 0xcbf29ce484222325u64;
+    let mut bytes = file.as_bytes().to_vec();
+    for file in ["Cargo.lock", "rust-toolchain.toml"] {
+        bytes.extend(std::fs::read(source::workspace().join(file)).unwrap());
+    }
+    for byte in bytes {
+        hash ^= u64::from(byte);
+        hash = hash.wrapping_mul(0x100000001b3);
+    }
+    format!("fnv1a64:{hash:016x}")
+}
+
+pub(super) fn instance_contracts(source: &Source) -> Vec<Leaf> {
+    let text = ["u8", "usize"]
+        .map(|t| {
+            format!(
+                "fixture::constructors::keep::<{t}>\t{}\t{}",
+                INSTANCE_AUDIT.join("\t"),
+                instance_fingerprint(source)
+            )
+        })
+        .join("\n");
+    read(&text).unwrap()
 }

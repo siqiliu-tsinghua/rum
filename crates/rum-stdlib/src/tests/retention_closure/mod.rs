@@ -3,6 +3,7 @@
 mod catalog;
 mod census;
 mod compiler_oracle;
+mod constructor_tests;
 mod consumers;
 mod effects;
 mod fixtures;
@@ -409,7 +410,7 @@ fn trusted_items_have_exact_bounds() {
         "wildcard trusted entry"
     );
     let mut unused = proof.leaves;
-    unused.remove(&leaves[0].id);
+    unused.remove(&leaves[0].key());
     assert!(
         leaves::validate(&source, &leaves, &unused)
             .err()
@@ -424,7 +425,7 @@ fn trusted_items_have_exact_bounds() {
         .unwrap()
         .1;
     *file = file.replace("bytes: Vec<u8>", "bytes: Vec<u16>");
-    let used = leaves.iter().map(|l| l.id.clone()).collect();
+    let used = leaves.iter().map(|l| l.key()).collect();
     assert!(
         leaves::validate(&dependency, &leaves, &used)
             .err()

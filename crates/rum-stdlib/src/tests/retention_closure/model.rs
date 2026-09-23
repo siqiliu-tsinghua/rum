@@ -85,9 +85,17 @@ pub(super) struct Nominal {
     pub module: Id,
     pub site: Site,
     pub generics: syn::Generics,
-    pub fields: Vec<syn::Type>,
+    pub fields: Vec<Field>,
+    pub variants: BTreeMap<String, Vec<Field>>,
     pub alias: Option<syn::Type>,
     pub attrs: Vec<syn::Attribute>,
+    pub conditional: bool,
+}
+
+#[derive(Clone)]
+pub(super) struct Field {
+    pub name: String,
+    pub ty: syn::Type,
     pub conditional: bool,
 }
 
@@ -129,6 +137,53 @@ pub(super) struct Source {
     pub errors: Vec<String>,
 }
 
+/// Rust identity, independent of whether cleanup or retention is proved.
+/// ADT identity + arguments and lazy field substitution follow rustc's TyKind.
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+pub(super) enum ExactTy {
+    Unit,
+    Scalar(Id),
+    Nominal(Id, Vec<ExactTy>),
+    Tuple(Vec<ExactTy>),
+    Reference(Box<ExactTy>, bool),
+    Slice(Box<ExactTy>),
+    Array(Box<ExactTy>, usize),
+    Function(Id),
+}
+
+impl ExactTy {
+    pub fn spelling(&self) -> String {
+        match self {
+            Self::Unit => "()".into(),
+            Self::Scalar(id) | Self::Function(id) => id.clone(),
+            Self::Nominal(id, args) if args.is_empty() => id.clone(),
+            Self::Nominal(id, args) => format!(
+                "{id}<{}>",
+                args.iter()
+                    .map(Self::spelling)
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            ),
+            Self::Tuple(args) => format!(
+                "({},)",
+                args.iter()
+                    .map(Self::spelling)
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            ),
+            Self::Reference(inner, mutable) => format!(
+                "&{}{}",
+                if *mutable { "mut " } else { "" },
+                inner.spelling()
+            ),
+            Self::Slice(inner) => format!("[{}]", inner.spelling()),
+            Self::Array(inner, len) => format!("[{}; {len}]", inner.spelling()),
+        }
+    }
+}
+
+/// Historical name retained for the existing region contracts. This is ONLY
+/// the retention domain; equality here never establishes Rust type equality.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub(super) enum Ty {
     Unit,
@@ -140,6 +195,17 @@ pub(super) enum Ty {
     Retained(Id),
     Callback(Id),
     Outgoing(Id),
+    Fields(BTreeMap<String, Ty>),
+    Variants(BTreeMap<String, BTreeMap<String, Ty>>),
+    Unchecked(String),
+    Moved,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub(super) struct Provenance {
+    pub source: Site,
+    pub basis: String,
+    pub projections: Vec<String>,
 }
 
 impl Ty {
@@ -151,13 +217,29 @@ impl Ty {
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub(super) struct Value {
+    pub exact: ExactTy,
     pub ty: Ty,
     pub origin: Option<Id>,
+    pub provenance: Option<Provenance>,
 }
 
 impl Value {
     pub fn new(ty: Ty) -> Self {
-        Self { ty, origin: None }
+        let exact = match &ty {
+            Ty::Unit => ExactTy::Unit,
+            Ty::Scalar(id) => ExactTy::Scalar(id.clone()),
+            _ => panic!("nonprimitive value requires an independent exact type"),
+        };
+        Self::typed(exact, ty)
+    }
+
+    pub fn typed(exact: ExactTy, ty: Ty) -> Self {
+        Self {
+            exact,
+            ty,
+            origin: None,
+            provenance: None,
+        }
     }
 }
 
@@ -171,15 +253,41 @@ pub(super) struct Local {
 pub(super) struct Fact {
     pub site: Site,
     pub ty: Ty,
+    pub exact: Option<ExactTy>,
+    pub provenance: Option<Provenance>,
     pub effect: &'static str,
 }
 
 #[derive(Default)]
 pub(super) struct Proof {
     pub bodies: BTreeSet<Id>,
-    pub leaves: BTreeSet<Id>,
+    pub leaves: BTreeSet<LeafKey>,
     pub facts: Vec<Fact>,
     pub loop_invariants: usize,
     pub adoptions: usize,
     pub transfers: usize,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+pub(super) struct LeafKey {
+    pub id: Id,
+    pub instance: Vec<ExactTy>,
+}
+
+impl LeafKey {
+    pub fn display(&self) -> String {
+        if self.instance.is_empty() {
+            self.id.clone()
+        } else {
+            format!(
+                "{}::<{}>",
+                self.id,
+                self.instance
+                    .iter()
+                    .map(ExactTy::spelling)
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            )
+        }
+    }
 }

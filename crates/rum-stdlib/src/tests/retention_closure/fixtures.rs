@@ -10,6 +10,9 @@ mod aliased_collect;
 #[path = "fixtures/bare_vec_loop.rs"]
 mod bare_vec_loop;
 #[allow(dead_code)]
+#[path = "fixtures/constructors.rs"]
+mod constructors;
+#[allow(dead_code)]
 #[path = "fixtures/extracted_allocator.rs"]
 mod extracted_allocator;
 #[allow(dead_code)]
@@ -28,6 +31,11 @@ use super::{model::Source, source};
 mod imports;
 
 pub(super) const FILES: &[(&str, &str, &str)] = &[
+    (
+        "constructors",
+        "crates/rum-stdlib/src/tests/retention_closure/fixtures/constructors.rs",
+        include_str!("fixtures/constructors.rs"),
+    ),
     (
         "accepted",
         "crates/rum-stdlib/src/tests/retention_closure/fixtures/accepted.rs",

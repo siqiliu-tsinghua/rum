@@ -2,9 +2,11 @@
 //! that builds rum. This is NOT the Testing Policy's banned differential
 //! testing of rum language behavior against other vendors' WL engines.
 //!
-//! All mutation/compilation happens in copies under target/brief-533. Nothing
+//! All mutation/compilation happens in copies under target/brief-534. Nothing
 //! here admits a Rust idiom, changes a retention rule, or promotes a region.
 
+mod corpus;
+mod exact;
 mod sample;
 
 use std::fs;
@@ -23,7 +25,7 @@ fn compiler_oracle_agrees_with_resolution_claims() {
         .flat_map(|f| regions::definition_edges(&source, f).resolved)
         .collect();
     let workspace = source::workspace();
-    let dir = workspace.join("target/brief-533/oracle");
+    let dir = workspace.join("target/brief-534/oracle-legacy");
     fs::create_dir_all(&dir).unwrap();
     sample::write(&source, &claims, &dir);
     let output = Command::new("python3")

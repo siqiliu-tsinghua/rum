@@ -63,6 +63,10 @@ fn prelude(name: &str) -> Option<&str> {
         "Box" => Some("std::boxed::Box"),
         "Option" => Some("std::option::Option"),
         "Result" => Some("std::result::Result"),
+        "Some" => Some("std::option::Option::Some"),
+        "None" => Some("std::option::Option::None"),
+        "Ok" => Some("std::result::Result::Ok"),
+        "Err" => Some("std::result::Result::Err"),
         "Drop" => Some("std::ops::Drop"),
         "bool" | "usize" | "u8" | "u16" | "u32" | "u64" | "i8" | "i16" | "i32" | "i64"
         | "isize" | "char" | "str" => Some(name),
@@ -162,12 +166,23 @@ fn candidates_for(
                     // Only real inherent bindings are resolved here. An external
                     // spelling remains a rejected dependency edge, never a body.
                     let id = format!("{}::{part}", b.target);
-                    if source.functions.contains_key(&id) {
+                    if source.functions.contains_key(&id)
+                        || source.types[&b.target]
+                            .iter()
+                            .any(|d| d.variants.contains_key(part))
+                    {
                         BTreeSet::from([Binding { target: id, ..b }])
+                    } else if let Some(base) = enum_alias(source, &b.target, &mut BTreeSet::new()) {
+                        let id = format!("{base}::{part}");
+                        if standard_variant(&id).is_some() {
+                            BTreeSet::from([Binding { target: id, ..b }])
+                        } else {
+                            BTreeSet::new()
+                        }
                     } else {
                         BTreeSet::new()
                     }
-                } else if (!importing || external_anchor)
+                } else if (!importing || external_anchor || standard_namespace(&b.target))
                     && external(source, module, b.target.split("::").next().unwrap())
                 {
                     BTreeSet::from([Binding {
@@ -204,14 +219,113 @@ pub(super) fn path(source: &Source, module: &str, path: &syn::Path) -> Result<Id
         if m.imports.iter().filter(|i| i.name.is_none()).any(|i| {
             let targets = candidates(source, module, &i.path);
             targets.is_empty()
-                || targets
-                    .iter()
-                    .any(|b| !source.modules.contains_key(&b.target) || b.conditional)
+                || targets.iter().any(|b| {
+                    (!source.modules.contains_key(&b.target) && enum_exports(&b.target).is_none())
+                        || b.conditional
+                })
         }) {
             return Err("open or conditional glob import".into());
         }
     }
-    Ok(unique.into_iter().next().unwrap())
+    Ok(canonical(&unique.into_iter().next().unwrap()))
+}
+
+// Closed standard namespaces are known from their definitions. An opaque
+// external alias still cannot grow during import propagation.
+fn enum_exports(id: &str) -> Option<&'static [&'static str]> {
+    match canonical(id).as_str() {
+        "std::option::Option" => Some(&["Some", "None"]),
+        "std::result::Result" => Some(&["Ok", "Err"]),
+        _ => None,
+    }
+}
+
+fn standard_namespace(id: &str) -> bool {
+    matches!(
+        canonical(id).as_str(),
+        "std::option" | "std::result" | "std::option::Option" | "std::result::Result"
+    )
+}
+
+pub(super) fn canonical(id: &str) -> Id {
+    let id = id
+        .strip_prefix("core::")
+        .map(|s| format!("std::{s}"))
+        .unwrap_or_else(|| id.into());
+    if let Some(rest) = id.strip_prefix("std::prelude::") {
+        if let Some((edition, name)) = rest.split_once("::") {
+            if matches!(
+                edition,
+                "v1" | "rust_2015" | "rust_2018" | "rust_2021" | "rust_2024"
+            ) {
+                if let Some(canonical) = prelude(name) {
+                    return canonical.into();
+                }
+            }
+        }
+    }
+    match id.as_str() {
+        "std::option::Some" => "std::option::Option::Some".into(),
+        "std::option::None" => "std::option::Option::None".into(),
+        "std::result::Ok" => "std::result::Result::Ok".into(),
+        "std::result::Err" => "std::result::Result::Err".into(),
+        _ => id,
+    }
+}
+
+pub(super) fn standard_variant(id: &str) -> Option<(&'static str, &'static str)> {
+    Some(match canonical(id).as_str() {
+        "std::option::Option::Some" => ("std::option::Option", "Some"),
+        "std::option::Option::None" => ("std::option::Option", "None"),
+        "std::result::Result::Ok" => ("std::result::Result", "Ok"),
+        "std::result::Result::Err" => ("std::result::Result", "Err"),
+        _ => return None,
+    })
+}
+
+fn enum_alias(source: &Source, id: &str, active: &mut BTreeSet<Id>) -> Option<Id> {
+    if !active.insert(id.into()) {
+        return None;
+    }
+    let result = (|| {
+        let [def] = source.types.get(id)?.as_slice() else {
+            return None;
+        };
+        if def.conditional {
+            return None;
+        }
+        let syn::Type::Path(p) = def.alias.as_ref()? else {
+            return None;
+        };
+        if p.qself.is_some() {
+            return None;
+        }
+        // Alias expansion here is only a namespace lookup, not a type claim.
+        let parts = segments(&p.path);
+        for end in 1..parts.len() {
+            if candidates(source, &def.module, &parts[..end])
+                .iter()
+                .any(|b| source.types.contains_key(&b.target))
+            {
+                return None;
+            }
+        }
+        let found = candidates(source, &def.module, &parts);
+        let [b] = found.iter().collect::<Vec<_>>()[..] else {
+            return None;
+        };
+        if b.conditional {
+            return None;
+        }
+        let base = canonical(&b.target);
+        if matches!(base.as_str(), "std::option::Option" | "std::result::Result") {
+            Some(base)
+        } else {
+            enum_alias(source, &base, active)
+        }
+    })();
+    active.remove(id);
+    result
 }
 
 pub(super) fn function<'a>(source: &'a Source, id: &str) -> Result<&'a Function, String> {
@@ -243,6 +357,19 @@ pub(super) fn imports(source: &mut Source) {
                                 conditional: target.conditional || import.conditional,
                             },
                         ));
+                    } else if let Some(variants) = enum_exports(&target.target) {
+                        for &name in variants {
+                            additions.push((
+                                module.clone(),
+                                name.into(),
+                                Binding {
+                                    target: format!("{}::{name}", canonical(&target.target)),
+                                    boundary: import.boundary.clone(),
+                                    glob: true,
+                                    conditional: target.conditional || import.conditional,
+                                },
+                            ));
+                        }
                     } else if let Some(export) = source.modules.get(&target.target) {
                         for name in export.bindings.keys() {
                             for bound in names(source, &target.target, name, module) {

@@ -31,7 +31,7 @@ class Scratch:
         self.original = workspace.resolve()
         self.directory = directory.resolve()
         self.root = self.directory / "workspace"
-        assert self.root.is_relative_to(self.original / "target/brief-533")
+        assert self.root.is_relative_to(self.original / "target/brief-534")
         assert not self.root.is_symlink()
         self.root.mkdir(parents=True, exist_ok=True)
         self.features = features
@@ -88,7 +88,7 @@ class Scratch:
 
     def text(self, file):
         path = (self.root / file).resolve()
-        assert path.is_relative_to(self.root / "crates/rum-stdlib/src"), "mutations stay in scratch stdlib"
+        assert path.is_relative_to(self.root / "crates"), "mutations stay in scratch crate copies"
         assert not path.is_symlink()
         original = (self.original / file).read_text()
         self.originals[path] = original

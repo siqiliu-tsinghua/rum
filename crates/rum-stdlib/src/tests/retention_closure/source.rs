@@ -1,7 +1,7 @@
 //! Complete module discovery, independently of obligations and promotions.
 //! Non-test cfg alternatives are indexed, never selected using the host cfg.
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::{Component, Path, PathBuf};
 
@@ -458,7 +458,8 @@ impl Loader {
                         site,
                         &s.ident,
                         &s.generics,
-                        s.fields.iter().map(|f| f.ty.clone()).collect(),
+                        named_fields(&s.fields),
+                        BTreeMap::new(),
                         None,
                         &s.attrs,
                         uncertain,
@@ -471,9 +472,10 @@ impl Loader {
                         site,
                         &e.ident,
                         &e.generics,
+                        Vec::new(),
                         e.variants
                             .iter()
-                            .flat_map(|v| v.fields.iter().map(|f| f.ty.clone()))
+                            .map(|v| (v.ident.to_string(), named_fields(&v.fields)))
                             .collect(),
                         None,
                         &e.attrs,
@@ -488,6 +490,7 @@ impl Loader {
                         &t.ident,
                         &t.generics,
                         Vec::new(),
+                        BTreeMap::new(),
                         Some((*t.ty).clone()),
                         &t.attrs,
                         uncertain,
@@ -547,7 +550,8 @@ impl Loader {
         site: Site,
         ident: &syn::Ident,
         generics: &syn::Generics,
-        fields: Vec<syn::Type>,
+        fields: Vec<Field>,
+        variants: BTreeMap<String, Vec<Field>>,
         alias: Option<syn::Type>,
         attrs: &[syn::Attribute],
         conditional: bool,
@@ -561,6 +565,7 @@ impl Loader {
                 site,
                 generics: generics.clone(),
                 fields,
+                variants,
                 alias,
                 attrs: attrs.to_vec(),
                 conditional,
@@ -570,4 +575,20 @@ impl Loader {
 
 fn conditional_attrs(attrs: &[syn::Attribute]) -> bool {
     conditional(attrs)
+}
+
+fn named_fields(fields: &syn::Fields) -> Vec<Field> {
+    fields
+        .iter()
+        .enumerate()
+        .map(|(i, field)| Field {
+            name: field
+                .ident
+                .as_ref()
+                .map(ToString::to_string)
+                .unwrap_or_else(|| i.to_string()),
+            ty: field.ty.clone(),
+            conditional: conditional_attrs(&field.attrs),
+        })
+        .collect()
 }

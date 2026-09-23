@@ -99,6 +99,7 @@ pub(super) struct Frontier {
     pub bodies: BTreeSet<Id>,
     pub rejected: BTreeSet<Diagnostic>,
     pub resolved: BTreeSet<ResolvedEdge>,
+    pub constructors: BTreeSet<ResolvedEdge>,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
@@ -118,7 +119,7 @@ pub(super) fn definition_edges(source: &Source, f: &Function) -> Frontier {
         witness: vec![f.id.clone()],
         report: &mut report,
         pending: &mut Vec::new(),
-        locals: BTreeSet::new(),
+        locals: parameter_names(f),
     }
     .visit_block(&f.body);
     report
@@ -143,7 +144,7 @@ pub(super) fn frontier(source: &Source, roots: &[Id]) -> Frontier {
             witness,
             report: &mut report,
             pending: &mut pending,
-            locals: BTreeSet::new(),
+            locals: parameter_names(f),
         };
         visitor.visit_block(&f.body);
     }
@@ -199,6 +200,15 @@ impl<'ast> Visit<'ast> for Edges<'_> {
             Err("runtime callable expression".into())
         };
         match result {
+            // Constructor identity is known; payload effects are still visited
+            // below and effects::check alone can certify ownership.
+            Ok(target) if resolve::standard_variant(&target).is_some_and(|(_, v)| v != "None") => {
+                self.report.constructors.insert(ResolvedEdge {
+                    definition: self.function.id.clone(),
+                    site: Site::new(&self.function.site.file, call.span()),
+                    target,
+                });
+            }
             Ok(target) => match resolve::function(self.source, &target) {
                 Ok(_) => {
                     self.report.resolved.insert(ResolvedEdge {
@@ -275,4 +285,23 @@ impl<'ast> Visit<'ast> for Edges<'_> {
         }
         visit::visit_expr(self, expr);
     }
+}
+
+fn parameter_names(f: &Function) -> BTreeSet<String> {
+    struct Names(BTreeSet<String>);
+    impl<'ast> Visit<'ast> for Names {
+        fn visit_pat_ident(&mut self, pat: &'ast syn::PatIdent) {
+            self.0.insert(pat.ident.to_string());
+        }
+    }
+    let mut names = Names(BTreeSet::new());
+    for arg in &f.sig.inputs {
+        match arg {
+            syn::FnArg::Typed(arg) => names.visit_pat(&arg.pat),
+            syn::FnArg::Receiver(_) => {
+                names.0.insert("self".into());
+            }
+        }
+    }
+    names.0
 }
