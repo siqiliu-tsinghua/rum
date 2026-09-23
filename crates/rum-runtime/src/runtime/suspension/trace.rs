@@ -13,6 +13,10 @@ use crate::runtime::metadata::BuiltinFn;
 pub trait FrameRootVisitor {
     fn visit_expr(&mut self, expr: &Expr);
     fn visit_symbol(&mut self, symbol: &Symbol);
+    /// An immutable frozen vector created while unarmed has no live ledger.
+    /// Admission observes its spare slots on later arming. S/GC visitors keep
+    /// their existing root meanings and deliberately ignore this separate term.
+    fn visit_retained_capacity(&mut self, _spare_slots: usize) {}
 }
 
 /// Recursively visits expression and bare-symbol roots without taking ownership.
@@ -419,9 +423,11 @@ pub(in crate::runtime) const MANUAL_FRAME_ROOT_TRACE_IMPLS: &[&str] = &[
     "BuiltinFn",
     "Duration",
     "Expr",
+    "FrozenComplement",
     "HashMap<K,V,S>",
     "HashSet<T,S>",
     "Instant",
+    "Mutex<T>",
     "OnceLock<T>",
     "Option<T>",
     "Ordering",

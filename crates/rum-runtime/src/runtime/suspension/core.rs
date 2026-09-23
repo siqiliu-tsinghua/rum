@@ -506,6 +506,9 @@ impl Session {
     }
 
     /// Inserts a named, traceable frame into the fresh pending suspension.
+    ///
+    /// Retention scopes precheck their frame through pending_frame_allocation_bytes
+    /// before reaching this common installation boundary.
     #[doc(hidden)]
     #[cold]
     #[inline(never)]
@@ -521,6 +524,26 @@ impl Session {
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::PendingSuspension,
         );
+    }
+
+    pub(in crate::runtime) fn pending_frame_allocation_bytes<F: SuspensionFrame>(
+        &self,
+    ) -> Option<usize> {
+        let frames = &self.pending_suspension.as_ref()?.frames;
+        // Conservative VecDeque growth projection; the maintained S owner is
+        // still refreshed from the actual capacity by insertion.
+        let extra_slots = if frames.len() == frames.capacity() {
+            frames
+                .capacity()
+                .checked_mul(2)?
+                .max(8)
+                .checked_sub(frames.capacity())?
+        } else {
+            0
+        };
+        size_of::<F>()
+            .checked_add(2 * size_of::<usize>())?
+            .checked_add(extra_slots.checked_mul(size_of::<Arc<DynSuspensionFrame>>())?)
     }
 
     fn finish_completed_resumption(&mut self) {

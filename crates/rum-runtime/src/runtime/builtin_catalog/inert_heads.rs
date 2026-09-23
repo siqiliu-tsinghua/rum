@@ -40,6 +40,10 @@ pub(super) const INERT_HEAD_BUILTINS: &[BuiltinSpec] = &[
             template: "Reports an evaluation cycle or fixed-point pass-limit termination.",
         },
         BuiltinMessageSpec {
+            tag: "optreentry",
+            template: "The option reentry type is not registered.",
+        },
+        BuiltinMessageSpec {
             tag: "reclim",
             template: "Reports that evaluation exceeded the recursion limit.",
         },

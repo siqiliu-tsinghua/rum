@@ -65,7 +65,7 @@ pub(in crate::runtime) trait AccountingMode {
     fn stack_push(&self, pushed: bool) -> Self::StackGuard;
 }
 
-pub(in crate::runtime) struct Unarmed;
+pub struct Unarmed;
 
 impl AccountingMode for Unarmed {
     const ARMED: bool = false;

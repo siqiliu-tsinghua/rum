@@ -11,10 +11,25 @@ use super::*;
 use std::mem::size_of;
 use std::sync::atomic::Ordering;
 
+mod bridge;
 mod continuation;
 mod counter;
+mod frozen;
+mod lease;
+mod retained;
+#[cfg(test)]
+#[path = "tests/mod.rs"]
+mod tests;
 
-pub(in crate::runtime) use counter::{AccountingMode, Counter, Unarmed};
+pub use bridge::{CallbackFailure, CallbackValue};
+pub use frozen::{FrozenValues, RetentionContinuation};
+pub(in crate::runtime) use lease::RetentionLedger;
+pub use lease::{RetentionLease, RetentionMode, RetentionSnapshot};
+pub(in crate::runtime) use retained::ActivePrefix;
+pub use retained::{RetainedResult, RetainedValues, RetentionContext};
+
+pub use counter::Unarmed;
+pub(in crate::runtime) use counter::{AccountingMode, Counter};
 pub use counter::{AccountingShadow, AccountingSnapshot};
 
 /// Additive companion to BuiltinFn. The existing spec and handler are unchanged.
@@ -22,6 +37,9 @@ pub type AccountingBuiltinFn =
     fn(&mut AccountingContext<'_>, &Expr, &SharedArgs) -> Result<Expr, EvalError>;
 
 pub(in crate::runtime) struct AccountingRoute {
+    pub(in crate::runtime) retention: Option<std::sync::Arc<RetentionLedger>>,
+    pub(in crate::runtime) prefixes: Vec<ActivePrefix>,
+    pub(in crate::runtime) option_reentries: Vec<std::any::TypeId>,
     pub(in crate::runtime) adapters: Vec<(Symbol, AccountingBuiltinFn)>,
     pub(in crate::runtime) shadow: Option<AccountingShadow>,
     // None means arithmetic invalidity, never inferred freshness. Rebuilt on arm.
@@ -33,6 +51,9 @@ pub(in crate::runtime) struct AccountingRoute {
 impl Default for AccountingRoute {
     fn default() -> Self {
         Self {
+            retention: None,
+            prefixes: Vec::new(),
+            option_reentries: Vec::new(),
             adapters: Vec::new(),
             shadow: None,
             evaluation_stack_bytes: None,
@@ -45,6 +66,21 @@ impl Default for AccountingRoute {
 impl AccountingRoute {
     pub(in crate::runtime) fn memory_bytes(&self) -> usize {
         size_of::<Self>()
+            .saturating_add(
+                self.prefixes
+                    .capacity()
+                    .saturating_mul(size_of::<ActivePrefix>()),
+            )
+            .saturating_add(
+                self.option_reentries
+                    .capacity()
+                    .saturating_mul(size_of::<std::any::TypeId>()),
+            )
+            .saturating_add(
+                self.retention
+                    .as_ref()
+                    .map_or(0, |_| size_of::<RetentionLedger>() + 2 * size_of::<usize>()),
+            )
             .saturating_add(
                 self.adapters
                     .capacity()

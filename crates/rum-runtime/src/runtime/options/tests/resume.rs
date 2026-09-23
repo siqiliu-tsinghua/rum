@@ -74,8 +74,17 @@ fn option_loop_frame_resumes_with_another_arc_owner() {
         merged: vec![Expr::symbol("prefix")].into(),
     });
     let retained = frame.clone();
-    let FrameAction::Complete(Ok(value)) =
-        frame.resume(&mut Session::new(), Ok(Expr::symbol("resolved")))
+    let mut session = Session::new();
+    let FrameAction::Complete(Ok(refused)) = frame
+        .clone()
+        .resume(&mut session, Ok(Expr::symbol("resolved")))
+    else {
+        panic!("unregistered resume must refuse");
+    };
+    assert_eq!(refused, system_expr("$Failed"));
+    assert_eq!(session.messages().last().unwrap().tag, "optreentry");
+    session.register_option_reentry::<ListConsumer>();
+    let FrameAction::Complete(Ok(value)) = frame.resume(&mut session, Ok(Expr::symbol("resolved")))
     else {
         panic!("option loop should complete without requiring unique ownership");
     };
@@ -91,4 +100,29 @@ fn option_loop_frame_resumes_with_another_arc_owner() {
         )
     );
     assert_eq!(retained.merged.as_ref(), &[Expr::symbol("prefix")]);
+}
+
+#[test]
+fn option_reentry_refused_until_registered() {
+    let mut session = Session::new();
+    let head = system_expr("List");
+    let run = |session: &mut Session| {
+        session
+            .merged_option_exprs_for_system_symbol(
+                ListConsumer,
+                &head,
+                &[],
+                &[Expr::small_integer(17)],
+            )
+            .unwrap()
+    };
+    assert_eq!(run(&mut session), system_expr("$Failed"));
+    assert_eq!(session.messages().last().unwrap().tag, "optreentry");
+    session.register_option_reentry::<ListConsumer>();
+    session.register_option_reentry::<ListConsumer>();
+    assert_eq!(
+        run(&mut session),
+        Expr::call(head, vec![Expr::small_integer(17)])
+    );
+    println!("ListConsumer: unregistered => General::optreentry / $Failed; registered => List[17]");
 }

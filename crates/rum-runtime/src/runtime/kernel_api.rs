@@ -7,7 +7,9 @@
 
 // Explicit accounting route; only the evaluation-stack owner is maintained.
 pub use super::accounting_mode::{
-    AccountingBuiltinFn, AccountingContext, AccountingShadow, AccountingSnapshot,
+    AccountingBuiltinFn, AccountingContext, AccountingShadow, AccountingSnapshot, CallbackFailure,
+    CallbackValue, FrozenValues, RetainedResult, RetainedValues, RetentionContext,
+    RetentionContinuation, RetentionLease, RetentionMode, RetentionSnapshot, Unarmed,
 };
 
 // accumulator links (stdlib-only bridge)

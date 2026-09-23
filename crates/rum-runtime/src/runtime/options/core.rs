@@ -169,12 +169,9 @@ impl Session {
     }
 
     /// Evaluates merged options and invokes their typed consumer for a System` symbol.
-    ///
-    /// A typed re-entry is mandatory. On suspension the option loop owns it
-    /// together with the frozen call and invokes it directly with the finished
-    /// vector. The loop never encodes that vector as an expression, so it cannot
-    /// escape as a builtin result. Both paths return the consumer's expression,
-    /// never the option vector. On the ordinary path call data stays borrowed.
+    /// Only registered typed reentries can enter the loop. Suspensions own the
+    /// descriptor and frozen call; both paths return the consumer's expression,
+    /// never the option vector. Ordinary call data stays borrowed.
     pub fn merged_option_exprs_for_system_symbol<R: OptionReentry>(
         &mut self,
         reentry: R,
@@ -182,6 +179,9 @@ impl Session {
         args: &[Expr],
         explicit: &[Expr],
     ) -> Result<Expr, EvalError> {
+        if !self.check_option_reentry::<R>() {
+            return Ok(system_expr("$Failed"));
+        }
         self.merged_option_exprs_for_symbol(
             &Symbol::system(reentry.symbol_name()),
             explicit,

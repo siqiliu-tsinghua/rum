@@ -41,6 +41,7 @@ mod yaml;
 pub mod docgen;
 
 pub fn install_core(session: &mut Session) {
+    session.register_option_reentry::<option_consumers::OptionConsumer>();
     for spec in core_builtin_specs() {
         session.register_builtin(*spec);
     }

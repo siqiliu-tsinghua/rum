@@ -155,7 +155,13 @@ impl Session {
         let total = self
             .checkpoint_memory_proxy_bytes()
             .ok_or(EvalError::MemoryConstraintExceeded { limit })?;
-        let projected = total.saturating_add(expr_memory_proxy_bytes(expr));
+        let projected = total
+            .checked_add(
+                self.retained_admission_bytes()
+                    .ok_or(EvalError::MemoryConstraintExceeded { limit })?,
+            )
+            .and_then(|total| total.checked_add(expr_memory_proxy_bytes(expr)))
+            .ok_or(EvalError::MemoryConstraintExceeded { limit })?;
         if projected > limit {
             return Err(EvalError::MemoryConstraintExceeded { limit });
         }
@@ -183,7 +189,13 @@ impl Session {
             let total = self
                 .checkpoint_memory_proxy_bytes()
                 .ok_or(EvalError::MemoryConstraintExceeded { limit })?;
-            let projected = total.saturating_add(bytes);
+            let projected = total
+                .checked_add(
+                    self.retained_admission_bytes()
+                        .ok_or(EvalError::MemoryConstraintExceeded { limit })?,
+                )
+                .and_then(|total| total.checked_add(bytes))
+                .ok_or(EvalError::MemoryConstraintExceeded { limit })?;
             if projected > limit {
                 return Err(EvalError::MemoryConstraintExceeded { limit });
             }

@@ -67,7 +67,7 @@ impl Session {
     }
 }
 
-pub(in crate::runtime::debug_tools::resources) fn expr_memory_proxy_bytes(expr: &Expr) -> usize {
+pub(in crate::runtime) fn expr_memory_proxy_bytes(expr: &Expr) -> usize {
     match expr {
         Expr::Atom(Atom::Integer(value)) => {
             std::mem::size_of::<Expr>().saturating_add(match value {

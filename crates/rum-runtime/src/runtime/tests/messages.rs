@@ -216,7 +216,7 @@ fn messages_builtin_lists_defined_message_names() {
         panic!("Messages[] should return a list")
     };
     let message_names = args.iter().map(ToString::to_string).collect::<Vec<_>>();
-    assert_eq!(message_names.len(), 331);
+    assert_eq!(message_names.len(), 332);
     for expected in [
         "f::argx",
         "f::usage",
@@ -255,7 +255,7 @@ fn inert_message_carriers_list_seeded_tags_and_reject_assignment() {
             .unwrap()
             .value
             .to_string(),
-        "List[General::cancel, General::iterlim, General::matchreclim, General::memlim, General::noentropy, General::noio, General::normal, General::passlim, General::reclim, General::reslim, General::sandbox, General::timelim]"
+        "List[General::cancel, General::iterlim, General::matchreclim, General::memlim, General::noentropy, General::noio, General::normal, General::optreentry, General::passlim, General::reclim, General::reslim, General::sandbox, General::timelim]"
     );
     assert_eq!(
         session
@@ -448,7 +448,7 @@ fn message_tags_builtin_lists_global_symbol_and_exact_message_tags() {
         panic!("MessageTags[] should return a list")
     };
     let tags = args.iter().map(ToString::to_string).collect::<Vec<_>>();
-    assert_eq!(tags.len(), 61);
+    assert_eq!(tags.len(), 62);
     for expected in [
         "\"argform\"",
         "\"argx\"",

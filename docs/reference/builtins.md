@@ -2108,6 +2108,7 @@ Carries general runtime message templates.
   - General::noio — no file provider installed
   - General::normal — Nonatomic expression expected at position 1 in `1`.
   - General::passlim — Reports an evaluation cycle or fixed-point pass-limit termination.
+  - General::optreentry — The option reentry type is not registered.
   - General::reclim — Reports that evaluation exceeded the recursion limit.
   - General::reslim — Reports a native-stack or configured resource work-limit termination.
   - General::sandbox — `1` is not permitted in this sandbox.

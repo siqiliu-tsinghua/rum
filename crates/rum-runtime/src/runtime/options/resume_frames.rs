@@ -45,6 +45,9 @@ impl<R: OptionReentry> SuspensionFrame for MergedOptionsSuspensionFrame<R> {
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> FrameAction {
+        if !session.check_option_reentry::<R>() {
+            return FrameAction::complete(Ok(system_expr("$Failed")));
+        }
         let resumed = match outcome {
             Ok(value) => session.resume_merged_options_after_value(&self, value),
             Err(error) => Err(error),

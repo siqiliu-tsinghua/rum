@@ -182,21 +182,23 @@ fn baseline(source: &Source) {
         kinds,
         BTreeMap::from([(Kind::RET001, 1), (Kind::RET002, 12), (Kind::RET003, 1)])
     );
-    assert_eq!(
-        regions::frontier(
-            source,
-            &[format!(
-                "{}::merged_option_exprs_for_system_symbol",
-                regions::SESSION
-            )]
-        )
-        .rejected
-        .len(),
-        9,
-        "STOP: PUBLIC_WRAPPER moved"
+    let wrapper = regions::frontier(
+        source,
+        &[format!(
+            "{}::merged_option_exprs_for_system_symbol",
+            regions::SESSION
+        )],
+    );
+    // Brief 538 adds a runtime registration guard and its $Failed branch.
+    // Their four additional sites remain rejected; this is census maintenance,
+    // not an admission rule or a production coverage promotion.
+    assert_eq!(wrapper.rejected.len(), 13, "STOP: PUBLIC_WRAPPER moved");
+    assert!(
+        wrapper.rejected.iter().any(|row| row.target.as_deref()
+            == Some(&format!("{}::check_option_reentry", regions::SESSION)))
     );
     assert!(include_str!("../inventory/promoted.tsv").is_empty());
     println!(
-        "ACCEPTANCE_BASELINE OPTION_FRONTIER=14 RET001=1 RET002=12 RET003=1 PUBLIC_WRAPPER=9 PRODUCTION_COVERAGE=0"
+        "ACCEPTANCE_BASELINE OPTION_FRONTIER=14 RET001=1 RET002=12 RET003=1 PUBLIC_WRAPPER=13 PRODUCTION_COVERAGE=0"
     );
 }

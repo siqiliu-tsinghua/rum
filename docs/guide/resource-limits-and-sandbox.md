@@ -472,6 +472,33 @@ checkpoints, not a continuously observed allocator peak. Maintaining Session
 owners does not close the separately documented transient-builder omissions or
 certify individual builtin `Incremental` declarations.
 
+Explicit retention scopes add a separate **R** term to armed admission:
+expression checkpoints use `S + W + R`, and projected-byte checks use
+`S + projected bytes + R`. R counts leased local expression occurrences and
+their vector spare capacity. Shared children count once per occurrence.
+`MemoryInUse[]`, `MaxMemoryUsed[]` and `ByteCount` exclude R. Session accountant
+controls and registry/bridge capacity are ordinary S storage. A frozen receipt's
+separate control allocation stays in its R complement.
+
+The lease protocol currently supports one branded expression accumulator per
+scope. A callback bridge exposes the complete live prefix before guest code,
+including an unarmed prefix when a later nested constraint arms. Callback
+outcomes own the context and its leased prefix until adoption or scope exit.
+A raw callback error cannot be extracted and retained across another step.
+Only scope completion publishes the outgoing expression. Normal return,
+errors and unwinding release local receipts. A real input suspension moves the
+accumulator into a kernel-owned traced frame: its expressions become existing
+S roots, and its spare capacity stays in R. Resumption charges any working copy while the
+frozen occurrence remains owned; abandonment releases on actual destruction.
+These mechanisms are proved on a test-only builtin. No production accumulator
+has been converted and no production retention region is certified.
+
+The kernel's option loop invokes only reentry types registered on that Session
+by the host/stdlib installer. An unregistered type produces
+`General::optreentry` and `$Failed`. This enforces membership, not the behavior
+of a registered implementation. External direct calls to `OptionReentry::resume`
+are outside that guarantee.
+
 ## Poison Recovery
 
 Public `HostSession` entrypoints catch panics from guest execution.
