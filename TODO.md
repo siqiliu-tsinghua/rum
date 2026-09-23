@@ -26,6 +26,21 @@ director-reproduced, and rulings D1-D7 stand if it is ever resumed.
 
 **Also open, in rough order of weight:**
 
+- **User ruling, 2026-09-23 — the analyzer is ours.** The retention checker's
+  Rust analysis is written in this repository rather than borrowed from
+  `rustc_private`/dylint (nightly pin, unstable internals) or the `ra_ap_*`
+  crates (large, fast-moving). The reason is that **it does not need to be
+  general**: it only has to understand the subset of Rust that rum's covered
+  regions use, so it can be specialized for rum, and owning the API removes
+  version and API-churn dependencies. Two consequences are standing method:
+  **read rustc and rust-analyzer source freely** rather than re-derive solved
+  problems — both are MIT/Apache-2.0 and rum is MIT, so copied code carries
+  its notice and adapted-in-spirit carries nothing — and **differential-test
+  against the real compiler**, which is not the Testing Policy's banned shape
+  because that hard line is about other WL engines and rum's own language
+  behavior, not about Rust-language facts checked with the toolchain that
+  already builds the project.
+
 - **CLOSED by brief-531 (2026-09-23).** Nine option call sites covering 22
   builtins lost their continuation (opened by brief-530). A delayed option whose
   right-hand side suspends used to complete the whole builtin call with the
