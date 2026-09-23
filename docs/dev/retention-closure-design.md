@@ -134,6 +134,52 @@ at all, and omitting the descriptor is `error[E0061]` with a checked-in
 compile-pass control. That is the compiler enforcing a contract, not an
 analyzer proving a theorem.
 
+## What "covered" means once traversal is gone
+
+Under traversal, a region was covered when its entire call closure had been
+proved. That is the requirement that does not converge. Under composition the
+definition becomes local, and the transitive property follows by induction
+rather than by walking:
+
+A body is **covered** when both hold, and both are checkable without leaving
+the body:
+
+1. it constructs no raw owned container — the property a private lease
+   constructor can make a compile error rather than an analysis result; and
+2. every call it makes goes either to another covered body, or to a boundary
+   that carries a declared contract.
+
+Condition 2 is a check on a *mark*, not a traversal. Whether `Session::evaluate`
+is covered is not asked; it has a boundary contract, and that contract is what
+the caller assumes. The guest behaviour beyond it stays the runtime ceiling's
+problem, which is where it belonged from the start.
+
+## What the contracts we already ship actually guarantee
+
+Three shapes are in use in this repository, and they carry different strengths.
+Writing them down here so a future reader does not promote one to another:
+
+| Shape | Examples | What it actually guarantees |
+| --- | --- | --- |
+| **Runtime enforcement** | the armed memory ceiling and its maintained total, the native stack guard | The property is checked on the execution that happens. Undecidable statically, which is why it is dynamic. |
+| **Compiler-enforced local obligation** | `FrameRootTrace`, `AccumulatorChainNode`, the `Session` field schema with no `..`, `OptionReentry`'s `E0061` | Holds for every build, per type or per body, with no call closure. This is the shape the design above extends. |
+| **Honest discovery** | the `ownership_graph` inventory | That nothing changed silently. Its own module doc says it: *matching an unknown is not a waiver or proof of safety.* |
+
+**`Preflight` sits in none of them, and its real strength is weaker than it
+reads.** The contract says a conservative result-size projection can run before
+construction (`runtime/metadata.rs:344-345`). Whether a given builtin's
+projection is correct *for all inputs* is a universally quantified semantic
+property; what the validator establishes is that a projection exists and was
+not violated **on the inputs the tests ran**. That is the ordinary strength of
+a test, and it is not a proved upper bound. Do not cite a `Preflight`
+declaration as one.
+
+The same caution retired the P class from this line's scope. Its 272 rows are
+"bounded by a constant factor of an already-charged quantity", and establishing
+such a factor over all inputs is a proof obligation, not a measurement —
+brief-525 said so in its own words: measuring a few examples is not a proof of
+a bound. The user's ruling to target N only kept that out of the work.
+
 ## What this design does not solve, stated as limits
 
 - **The five `NeverAdmit` idioms do not disappear.** They become obligations
