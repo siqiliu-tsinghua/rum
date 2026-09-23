@@ -122,6 +122,21 @@ bash scripts/core-language-microbench.sh --output-dir <new-dir>    # on the chan
 Loop: edit → test → fix → rerun, until green; then rerun the gate and paste
 the before/after rows. Never claim a result without the verbatim lines.
 
+## Checkpointing — protect the scene
+
+A run can be cut short by quota, a dropped connection, or an upstream filter.
+After each milestone, write `target/brief-NNN/PROGRESS.md` stating:
+
+- what is **done and verified**, with the evidence already saved;
+- the **exact next action**, specific enough to resume without re-deriving it;
+- the **tree's state** — does it compile, which tests are green, which files
+  are half-edited and in what way;
+- anything the director needs in order to take over.
+
+Prefer to leave the tree compiling at each checkpoint. An interrupted run that
+leaves a readable checkpoint costs one dispatch; one that leaves unexplained
+edits costs the director a reconstruction.
+
 ## Hard rules
 
 - Do NOT `git commit`, branch, push, or touch git config. Leave all changes in
