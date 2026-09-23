@@ -26,8 +26,28 @@ director-reproduced, and rulings D1-D7 stand if it is ever resumed.
 
 **Also open, in rough order of weight:**
 
-- **PAUSED 2026-09-23 by user instruction, waiting on Codex quota reset — the
-  retention-closure line, resuming at A2.** Where it stands, so the resume
+- **DIRECTION CHANGED 2026-09-23: traversal is abandoned for compositional
+  verification. Read [docs/dev/retention-closure-design.md](./docs/dev/retention-closure-design.md)
+  before any further work on this line.** brief-536 measured the distance to a
+  zero-unknown option region and it does not converge: `Session::evaluate`
+  alone reaches 190 bodies and 860 rejection sites, every region in this class
+  calls it, and the projection runs to 868 bodies and 5 763 sites without
+  being an upper bound. Five of fourteen frontier rejections are structurally
+  unadmittable and four are rum's own idioms — the open `OptionReentry`
+  generic, its trait dispatch, derived `Clone` on `Expr`, and `SharedArgs`
+  reaching `Vec<Expr>` through user `Deref`. The obstacle is the whole-closure
+  requirement, not resolution quality, and it sits on known results: aliasing
+  is undecidable, context-sensitive data dependence is undecidable, and the
+  tractable IFDS framework needs the known call graph that open dispatch
+  denies. A3-A6 are cancelled as a completion plan. The replacement is
+  per-body proof against declared boundary contracts, with the obligation
+  moved into the type system wherever a private constructor can carry it —
+  the shape brief-531 already demonstrated. The design doc states what that
+  does **not** solve, and its three open decisions are the next thing to
+  settle.
+
+- **Superseded, kept for the record — the line was paused at A2 pending a
+  Codex quota reset.** Where it stands, so the resume
   costs no re-derivation:
 
   - **Landed**: the checker (`0264095b` back through `8aa3f455`), its census
