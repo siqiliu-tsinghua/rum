@@ -26,6 +26,36 @@ director-reproduced, and rulings D1-D7 stand if it is ever resumed.
 
 **Also open, in rough order of weight:**
 
+- **PAUSED 2026-09-23 by user instruction, waiting on Codex quota reset — the
+  retention-closure line, resuming at A2.** Where it stands, so the resume
+  costs no re-derivation:
+
+  - **Landed**: the checker (`0264095b` back through `8aa3f455`), its census
+    and the compiler oracle, plus the option-consumer continuation repairs
+    that came out of it. Eighteen required checker tests, production coverage
+    still **0** — nothing is promoted yet, by design.
+  - **The measured target**: `EDGE_N_FRONTIER` is 79 roots / 365 definitions /
+    **2 732 unique rejection sites**, against 774 resolved. Production-wide is
+    7 057 definitions / 57 661 sites, and every one of the 7 057 fails the
+    effects check today.
+  - **Next is A2, and it is the line's make-or-break step.** Method-call
+    syntax is **1 166 of the 2 732** N-frontier sites — and the director
+    measured it as diffuse, spread over **259 definitions in 33 files**, worst
+    case 36, so no small set of helpers collapses it. brief-532 judged only
+    **one of eight** sampled method sites initially defensible. Its draft is
+    `docs/dev/codex/brief-532-admitted-surface-design.md` §Draft A2; the
+    director rewrites it before dispatch, as always.
+  - **Decide before A2 dispatches**: the oracle compiles the crate per
+    resolution claim, so the checker group costs **115.5 s** and
+    `cargo test -p rum-stdlib` **127 s**, past brief-528's 120 s budget. The
+    candidates are to accept and restate the budget, to keep a small required
+    sample with the full sweep on demand, or to cache per source fingerprint
+    the way the trusted-leaf records already do. **Do not answer it by
+    weakening the falsifier.**
+  - Still open from this line and unchanged: the checker's frontier sits
+    behind a `resume_or_suspend!` macro boundary (the RET003 row), and the
+    four `UnresolvedConsumer` escaping copies remain D3's.
+
 - **User ruling, 2026-09-23 — the analyzer is ours.** The retention checker's
   Rust analysis is written in this repository rather than borrowed from
   `rustc_private`/dylint (nightly pin, unstable internals) or the `ra_ap_*`
