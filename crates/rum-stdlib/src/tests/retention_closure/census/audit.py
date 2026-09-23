@@ -23,6 +23,17 @@ def key(row):
 
 
 def reason_class(reason):
+    method_classes = {
+        "method syntax: opaque imported trait candidate ": "method syntax: opaque imported trait candidate <target>",
+        "method syntax: prelude trait candidate ": "method syntax: prelude trait candidate <method> at <receiver>",
+        "method syntax: earlier trait candidate ": "method syntax: earlier trait candidate <trait::method> at <receiver>",
+        "method syntax: path ": "method syntax: path <path> has <n> exact bindings",
+        "method syntax: opaque or ambiguous type ": "method syntax: opaque or ambiguous type <type>",
+        "method syntax: trait ": "method syntax: trait <trait> has unmodeled supertraits or generated candidates",
+    }
+    for prefix, group in method_classes.items():
+        if reason.startswith(prefix):
+            return group
     if reason.startswith("path ") and reason.endswith(" exact bindings"):
         return "path <path> has <n> exact bindings"
     if reason.startswith("not a resolved function definition:"):

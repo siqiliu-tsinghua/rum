@@ -139,7 +139,7 @@ The rejection census adds two diagnostic populations without changing those
 admission rules. `EDGE_ALL` enumerates every indexed production definition
 once, including conditional alternatives; `EDGE_N_FRONTIER` starts at every
 live N attachment and follows only the checker's exactly resolved edges.
-Unresolved attachments retain their catalog spans. Traversal stops at methods,
+Unresolved attachments retain their catalog spans. Traversal follows proved inherent methods and stops at unresolved dispatch,
 closures and unexpanded macros; a source index is not a semantic call graph.
 Rows retain the full reason, canonical definition (or an explicit unresolved
 attachment), span, target, root set and witness. Counts deduplicate on
@@ -155,7 +155,7 @@ and concrete scalar type claims against stable Rust 1.85.0. This is the
 2026-09-23 ruling's distinction: checking Rust facts about our own repository
 with the compiler that builds it is not the banned comparison of rum behavior
 against other vendors' WL engines. Every compiler run uses a scratch source
-copy under `target/brief-534/`, offline, with unchanged manifests and lockfile.
+copy under `target/brief-535/`, offline, with unchanged manifests and lockfile.
 Adding an argument to a claimed target must produce an `E0061` primary error
 at the claimed call's exact file and line. Mutating a different same-name
 definition must produce no error there, and must produce an error at that
@@ -206,3 +206,40 @@ explicitly observed by compiling the relevant tests without executing them.
 Every agreement, disagreement, compiler diagnostic, and mutation is retained;
 an instrumentation failure fails the gate. These checks establish Rust facts,
 not retention certificates. Production coverage remains zero.
+
+
+The A2 method stage proves a restricted inherent selection from independently
+checked nominal receiver provenance: parameters, named fields and pattern
+projections, consistent local annotations, and resolved return signatures.
+Candidate receiver order is the original type followed by shared and mutable
+autoref at each built-in reference dereference. Reference matches record a
+reborrow. The canonical impl owner, visibility, unconditional definition and
+`Self` substitution must agree. Earlier trait candidates are excluded using
+lexical scopes and the indexed trait definitions and impls; an inherent method
+wins only within its own receiver slot. Opaque imports, unknown trait bounds,
+generated candidates, user `Deref`/`DerefMut`, unsizing, arbitrary self types and
+unproved mutable or borrowed moves reject. No trait dispatch is certified.
+
+Generic instances are deliberately narrower than Rust: only reached, closed,
+unbounded scalar type substitutions are installed. Impl parameters must be
+positional; method parameters require explicit arguments. Each body is keyed
+by all substitutions, and recursion closes only on that exact key. Nominal,
+unknown and growing substitutions reject instead of using a depth limit. In
+particular the public generic `OptionReentry` wrapper remains unproved. A
+signature supplies a type fact, never a retention summary: newly selected
+method bodies and their helpers are checked automatically with full witnesses.
+
+The required A2 oracle enumerates every newly admitted method claim, including
+closed instances, without sampling. Mutated target methods carry unique
+deprecation markers and caller functions deny that lint, so stable rustc must
+identify the selected definition at the exact method token. This keeps
+upstream dependencies compilable when observing a downstream call. Direct
+self recursion suppresses that lint; those sites additionally require `E0061`
+from a signature mutation and a note at the claimed definition. Every claim
+also has a distinct same-named negative definition with an independently
+exercised control call; no error may occur at the original site in that run.
+Compile-pass controls run first, and all disagreements and raw compiler output
+are retained. Oracle fingerprints include source, harnesses, inventories,
+manifests, toolchain, feature set and claim files. Reusing an unchanged run
+replays its evidence. These are Rust selection facts only: production retention
+coverage remains zero and no production region is promoted.

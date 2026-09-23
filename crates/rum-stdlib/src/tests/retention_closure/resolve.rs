@@ -330,7 +330,7 @@ fn enum_alias(source: &Source, id: &str, active: &mut BTreeSet<Id>) -> Option<Id
 
 pub(super) fn function<'a>(source: &'a Source, id: &str) -> Result<&'a Function, String> {
     match source.functions.get(id).map(Vec::as_slice) {
-        Some([f]) if !f.conditional => Ok(f),
+        Some([f]) if !f.conditional && f.impl_generics.params.is_empty() => Ok(f),
         Some(_) => Err(format!("ambiguous or conditional function {id}")),
         None => Err(format!("not a resolved function definition: {id}")),
     }
@@ -497,6 +497,11 @@ pub(super) fn collect_imports(
 
 pub(super) fn impls(source: &mut Source) {
     for (module, item, site, conditional) in source.impls.clone() {
+        if item.trait_.is_some() {
+            source
+                .trait_impls
+                .push((module.clone(), item.clone(), site.clone(), conditional));
+        }
         let syn::Type::Path(owner) = &*item.self_ty else {
             continue;
         };
@@ -510,6 +515,17 @@ pub(super) fn impls(source: &mut Source) {
             // Trait calls are absent from the admitted surface, including
             // generics, blanket impls and default-provided methods.
             continue;
+        }
+        if item
+            .items
+            .iter()
+            .any(|i| matches!(i, syn::ImplItem::Macro(_) | syn::ImplItem::Verbatim(_)))
+        {
+            let canonical = match super::types::exact(source, &module, &item.self_ty) {
+                Ok(ExactTy::Nominal(id, _)) => id,
+                _ => owner.clone(),
+            };
+            source.opaque_inherent_owners.insert(canonical);
         }
         for member in &item.items {
             if let syn::ImplItem::Fn(f) = member {
@@ -531,9 +547,11 @@ pub(super) fn impls(source: &mut Source) {
                         body: f.block.clone(),
                         attrs,
                         owner: Some(owner.clone()),
-                        conditional: conditional
-                            || source::conditional(&f.attrs)
-                            || !item.generics.params.is_empty(),
+                        boundary: source::boundary(&f.vis, &module),
+                        impl_self: Some((*item.self_ty).clone()),
+                        impl_generics: item.generics.clone(),
+                        substitutions: Default::default(),
+                        conditional: conditional || source::conditional(&f.attrs),
                     });
             }
         }

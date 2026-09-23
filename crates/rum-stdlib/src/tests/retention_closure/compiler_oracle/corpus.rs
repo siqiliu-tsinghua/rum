@@ -12,7 +12,7 @@ use syn::{
 #[test]
 fn census_constructor_resolutions_are_compiler_observed() {
     let source = source::production();
-    let directory = source::workspace().join("target/brief-534/oracle-corpus");
+    let directory = source::workspace().join("target/brief-535/oracle-corpus");
     fs::create_dir_all(&directory).unwrap();
     let mut claims = BTreeMap::new();
     for f in source.functions.values().flatten() {

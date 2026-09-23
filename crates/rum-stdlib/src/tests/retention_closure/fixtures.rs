@@ -22,6 +22,9 @@ mod formatted_string;
 #[path = "fixtures/map_entry_callback.rs"]
 mod map_entry_callback;
 #[allow(dead_code)]
+#[path = "fixtures/methods.rs"]
+mod methods;
+#[allow(dead_code)]
 #[path = "fixtures/unleased_callback_result.rs"]
 mod unleased_callback_result;
 
@@ -31,6 +34,11 @@ use super::{model::Source, source};
 mod imports;
 
 pub(super) const FILES: &[(&str, &str, &str)] = &[
+    (
+        "methods",
+        "crates/rum-stdlib/src/tests/retention_closure/fixtures/methods.rs",
+        include_str!("fixtures/methods.rs"),
+    ),
     (
         "constructors",
         "crates/rum-stdlib/src/tests/retention_closure/fixtures/constructors.rs",

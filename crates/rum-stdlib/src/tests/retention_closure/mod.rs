@@ -8,6 +8,8 @@ mod consumers;
 mod effects;
 mod fixtures;
 mod leaves;
+mod method_tests;
+mod methods;
 mod model;
 mod mutations;
 mod obligations;

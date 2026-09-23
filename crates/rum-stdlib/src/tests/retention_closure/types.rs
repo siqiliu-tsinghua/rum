@@ -24,15 +24,6 @@ mod exact;
 pub(super) use context::constructor_claims;
 pub(super) use exact::{arguments, exact, fields, substitute, variants};
 
-pub(super) fn ty(source: &Source, module: &str, syntax: &syn::Type) -> Result<Ty, String> {
-    let state = ownership(source, &exact(source, module, syntax)?);
-    if let Ty::Unchecked(reason) = state {
-        Err(reason)
-    } else {
-        Ok(state)
-    }
-}
-
 pub(super) fn ownership(source: &Source, exact: &ExactTy) -> Ty {
     ownership_inner(source, exact, &mut BTreeSet::new())
 }
@@ -108,10 +99,22 @@ fn ownership_inner(source: &Source, exact: &ExactTy, active: &mut BTreeSet<Id>) 
     }
 }
 
+pub(super) fn in_function(source: &Source, f: &Function, t: &syn::Type) -> Result<ExactTy, String> {
+    let mut substitutions = f.substitutions.clone();
+    if !substitutions.contains_key("Self") {
+        if let Some(owner) = &f.impl_self {
+            if let Ok(ty) = substitute(source, &f.module, owner, &substitutions) {
+                substitutions.insert("Self".into(), ty);
+            }
+        }
+    }
+    substitute(source, &f.module, t, &substitutions)
+}
+
 pub(super) fn exact_output(source: &Source, f: &Function) -> Result<ExactTy, String> {
     match &f.sig.output {
         syn::ReturnType::Default => Ok(ExactTy::Unit),
-        syn::ReturnType::Type(_, t) => exact(source, &f.module, t),
+        syn::ReturnType::Type(_, t) => in_function(source, f, t),
     }
 }
 
@@ -130,15 +133,13 @@ pub(super) fn exact_parameters(
                 if p.by_ref.is_some() || p.subpat.is_some() {
                     return Err("argument pattern has implicit ownership effects".into());
                 }
-                Ok((p.ident.to_string(), exact(source, &f.module, &arg.ty)?))
+                Ok((p.ident.to_string(), in_function(source, f, &arg.ty)?))
             }
             syn::FnArg::Receiver(r) => {
-                let id = f.owner.as_ref().ok_or("unresolved Self receiver")?;
-                let t = exact(
-                    source,
-                    &f.module,
-                    &syn::parse_str::<syn::Type>(id).map_err(|e| e.to_string())?,
-                )?;
+                if r.colon_token.is_some() {
+                    return Err("arbitrary self type is not modeled".into());
+                }
+                let t = in_function(source, f, &syn::parse_str::<syn::Type>("Self").unwrap())?;
                 Ok((
                     "self".into(),
                     if r.reference.is_some() {
@@ -153,16 +154,14 @@ pub(super) fn exact_parameters(
 }
 
 pub(super) fn output(source: &Source, f: &Function) -> Result<Ty, String> {
-    match &f.sig.output {
-        syn::ReturnType::Default => Ok(Ty::Unit),
-        syn::ReturnType::Type(_, t) => ty(source, &f.module, t),
-    }
+    Ok(ownership(source, &exact_output(source, f)?))
 }
 
 pub(super) fn signature(source: &Source, f: &Function) -> Result<Vec<(String, Ty)>, String> {
     attributes(&f.attrs)?;
     if f.conditional
         || !f.sig.generics.params.is_empty()
+        || !f.impl_generics.params.is_empty()
         || f.sig.generics.where_clause.is_some()
         || f.sig.asyncness.is_some()
         || f.sig.unsafety.is_some()
@@ -171,31 +170,14 @@ pub(super) fn signature(source: &Source, f: &Function) -> Result<Vec<(String, Ty
     {
         return Err("only unconditional monomorphic safe Rust signatures are admitted".into());
     }
-    f.sig
-        .inputs
-        .iter()
-        .map(|arg| match arg {
-            syn::FnArg::Typed(arg) => {
-                let syn::Pat::Ident(name) = &*arg.pat else {
-                    return Err("only explicit identifier arguments are admitted".into());
-                };
-                if name.by_ref.is_some() || name.subpat.is_some() {
-                    return Err("argument pattern has implicit ownership effects".into());
-                }
-                Ok((name.ident.to_string(), ty(source, &f.module, &arg.ty)?))
-            }
-            syn::FnArg::Receiver(receiver) => {
-                let owner = f.owner.as_ref().ok_or("unresolved Self receiver")?;
-                let t: syn::Type = syn::parse_str(owner).map_err(|e| format!("receiver: {e}"))?;
-                let owner_ty = ty(source, &f.module, &t)?;
-                Ok((
-                    "self".into(),
-                    if receiver.reference.is_some() {
-                        Ty::Borrow(Box::new(owner_ty), receiver.mutability.is_some())
-                    } else {
-                        owner_ty
-                    },
-                ))
+    exact_parameters(source, f)?
+        .into_iter()
+        .map(|(name, exact)| {
+            let state = ownership(source, &exact);
+            if let Ty::Unchecked(reason) = state {
+                Err(reason)
+            } else {
+                Ok((name, state))
             }
         })
         .collect()

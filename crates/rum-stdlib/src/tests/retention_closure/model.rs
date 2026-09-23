@@ -77,6 +77,16 @@ pub(super) struct Function {
     pub body: syn::Block,
     pub attrs: Vec<syn::Attribute>,
     pub owner: Option<Id>,
+    pub boundary: Option<Id>,
+    pub impl_self: Option<syn::Type>,
+    pub impl_generics: syn::Generics,
+    pub substitutions: BTreeMap<String, ExactTy>,
+    pub conditional: bool,
+}
+
+#[derive(Clone)]
+pub(super) struct Trait {
+    pub item: syn::ItemTrait,
     pub conditional: bool,
 }
 
@@ -128,6 +138,9 @@ pub(super) struct Source {
     pub types: BTreeMap<Id, Vec<Nominal>>,
     pub modules: BTreeMap<Id, Module>,
     pub impls: Vec<(Id, syn::ItemImpl, Site, bool)>,
+    pub traits: BTreeMap<Id, Vec<Trait>>,
+    pub trait_impls: Vec<(Id, syn::ItemImpl, Site, bool)>,
+    pub opaque_inherent_owners: BTreeSet<Id>,
     pub constants: Vec<(Id, String, syn::Expr)>,
     pub drop_types: BTreeSet<Id>,
     pub dependencies: BTreeMap<String, BTreeSet<String>>,
@@ -261,6 +274,7 @@ pub(super) struct Fact {
 #[derive(Default)]
 pub(super) struct Proof {
     pub bodies: BTreeSet<Id>,
+    pub instances: BTreeSet<LeafKey>,
     pub leaves: BTreeSet<LeafKey>,
     pub facts: Vec<Fact>,
     pub loop_invariants: usize,

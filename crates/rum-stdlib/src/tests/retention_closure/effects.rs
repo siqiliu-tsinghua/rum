@@ -20,6 +20,8 @@ mod branches;
 mod call;
 #[path = "effects/construct.rs"]
 mod construct;
+#[path = "effects/method.rs"]
+mod method;
 #[path = "effects/places.rs"]
 mod places;
 
@@ -42,7 +44,7 @@ struct Checker<'a> {
     contracts: &'a [leaves::Leaf],
     proof: Proof,
     stack: Vec<Id>,
-    active: BTreeSet<Id>,
+    active: BTreeSet<LeafKey>,
 }
 
 impl Checker<'_> {
@@ -105,11 +107,16 @@ impl Checker<'_> {
                 reason,
             })?
             .clone();
-        if self.proof.bodies.contains(id) || self.active.contains(id) {
+        self.body_function(f)
+    }
+
+    fn body_function(&mut self, f: Function) -> Checked<()> {
+        let key = super::methods::key(&f);
+        if self.proof.instances.contains(&key) || self.active.contains(&key) {
             return Ok(());
         }
-        self.stack.push(id.into());
-        self.active.insert(id.into());
+        self.stack.push(f.id.clone());
+        self.active.insert(key.clone());
         let parameters = types::signature(self.source, &f)
             .map_err(|reason| self.unsupported(&f, f.sig.span(), reason))?;
         if !self.source.modules[&f.module].hazards.is_empty() {
@@ -147,9 +154,10 @@ impl Checker<'_> {
                 ),
             ));
         }
-        self.active.remove(id);
+        self.active.remove(&key);
         self.stack.pop();
-        self.proof.bodies.insert(id.into());
+        self.proof.bodies.insert(f.id.clone());
+        self.proof.instances.insert(key);
         Ok(())
     }
 
@@ -230,13 +238,7 @@ impl Checker<'_> {
                 self.cleanup(f, ret.span(), env)?;
                 (Value::typed(output, Ty::Moved), "explicit-return")
             }
-            syn::Expr::MethodCall(_) => {
-                return Err(self.unsupported(
-                    f,
-                    expr.span(),
-                    "method dispatch requires autoderef/autoref/trait resolution",
-                )); // MUTATION:method-dispatch
-            }
+            syn::Expr::MethodCall(call) => (self.method(f, call, env)?, "proved-inherent-method"),
             syn::Expr::Macro(m) => {
                 return Err(self.error(
                     f,

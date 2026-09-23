@@ -1,12 +1,12 @@
 //! Independent promotion baseline, installed obligations, and rejected frontier.
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 use syn::spanned::Spanned;
 use syn::visit::{self, Visit};
 
 use super::model::*;
-use super::{effects, leaves, resolve, types};
+use super::{effects, leaves, methods, resolve, types};
 
 pub(super) const DEMO: &str = "fixture::accepted::root";
 pub(super) const SESSION: &str = "rum_runtime::runtime::model::session::Session";
@@ -100,6 +100,7 @@ pub(super) struct Frontier {
     pub rejected: BTreeSet<Diagnostic>,
     pub resolved: BTreeSet<ResolvedEdge>,
     pub constructors: BTreeSet<ResolvedEdge>,
+    pub methods: BTreeMap<Site, methods::Selection>,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
@@ -120,6 +121,7 @@ pub(super) fn definition_edges(source: &Source, f: &Function) -> Frontier {
         report: &mut report,
         pending: &mut Vec::new(),
         locals: parameter_names(f),
+        methods: methods::claims(source, f),
     }
     .visit_block(&f.body);
     report
@@ -131,22 +133,31 @@ pub(super) fn frontier(source: &Source, roots: &[Id]) -> Frontier {
     let mut report = Frontier::default();
     let mut pending: Vec<_> = roots
         .iter()
-        .map(|id| (id.clone(), vec![id.clone()]))
+        .map(|id| {
+            (
+                resolve::function(source, id)
+                    .expect("exact frontier root")
+                    .clone(),
+                vec![id.clone()],
+            )
+        })
         .collect();
-    while let Some((id, witness)) = pending.pop() {
-        if !report.bodies.insert(id.clone()) {
+    let mut seen = BTreeSet::new();
+    while let Some((f, witness)) = pending.pop() {
+        if !seen.insert(methods::key(&f)) {
             continue;
         }
-        let f = resolve::function(source, &id).expect("exact frontier root/callee");
-        let mut visitor = Edges {
+        report.bodies.insert(f.id.clone());
+        Edges {
             source,
-            function: f,
+            function: &f,
             witness,
             report: &mut report,
             pending: &mut pending,
-            locals: parameter_names(f),
-        };
-        visitor.visit_block(&f.body);
+            locals: parameter_names(&f),
+            methods: methods::claims(source, &f),
+        }
+        .visit_block(&f.body);
     }
     report
 }
@@ -156,7 +167,8 @@ struct Edges<'a> {
     function: &'a Function,
     witness: Vec<Id>,
     report: &'a mut Frontier,
-    pending: &'a mut Vec<(Id, Vec<Id>)>,
+    pending: &'a mut Vec<(Function, Vec<Id>)>,
+    methods: BTreeMap<Site, Result<methods::Selection, String>>,
     locals: BTreeSet<String>,
 }
 
@@ -218,7 +230,10 @@ impl<'ast> Visit<'ast> for Edges<'_> {
                     });
                     let mut witness = self.witness.clone();
                     witness.push(target.clone());
-                    self.pending.push((target, witness));
+                    self.pending.push((
+                        resolve::function(self.source, &target).unwrap().clone(),
+                        witness,
+                    ));
                 }
                 Err(reason) => self.reject(
                     call.span(),
@@ -237,21 +252,43 @@ impl<'ast> Visit<'ast> for Edges<'_> {
     }
 
     fn visit_expr_method_call(&mut self, call: &'ast syn::ExprMethodCall) {
-        let target = if matches!(&*call.receiver, syn::Expr::Path(p) if p.path.is_ident("self")) {
-            self.function
-                .owner
-                .as_ref()
-                .map(|owner| format!("{owner}::{}", call.method))
-                .filter(|id| resolve::function(self.source, id).is_ok())
-        } else {
-            None
-        };
-        self.reject(
-            call.span(),
-            Kind::RET002,
-            target,
-            "method syntax: receiver/autoref/trait effects are outside admitted resolution",
-        );
+        let site = Site::new(&self.function.site.file, call.span());
+        match self
+            .methods
+            .remove(&site)
+            .unwrap_or_else(|| Err("method outside checked lexical scope".into()))
+        {
+            Ok(selection) => {
+                let target = selection.function.id.clone();
+                self.report.resolved.insert(ResolvedEdge {
+                    definition: self.function.id.clone(),
+                    site: site.clone(),
+                    target: target.clone(),
+                });
+                let mut witness = self.witness.clone();
+                witness.push(target);
+                self.pending.push((selection.function.clone(), witness));
+                self.report.methods.insert(site, selection);
+            }
+            Err(reason) => {
+                let target = if matches!(&*call.receiver, syn::Expr::Path(p) if p.path.is_ident("self"))
+                {
+                    self.function
+                        .owner
+                        .as_ref()
+                        .map(|owner| format!("{owner}::{}", call.method))
+                        .filter(|id| resolve::function(self.source, id).is_ok())
+                } else {
+                    None
+                };
+                self.reject(
+                    call.span(),
+                    Kind::RET002,
+                    target,
+                    format!("method syntax: {reason}"),
+                );
+            }
+        }
         visit::visit_expr_method_call(self, call);
     }
 

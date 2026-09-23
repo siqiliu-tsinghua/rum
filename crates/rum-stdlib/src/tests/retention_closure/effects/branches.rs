@@ -72,7 +72,7 @@ impl Checker<'_> {
                     };
                     let declared = declared
                         .map(|t| {
-                            types::exact(self.source, &f.module, t)
+                            types::in_function(self.source, f, t)
                                 .map_err(|r| self.unsupported(f, t.span(), r))
                         })
                         .transpose()?;

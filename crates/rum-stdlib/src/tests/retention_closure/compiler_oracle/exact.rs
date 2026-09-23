@@ -27,7 +27,7 @@ fn columns(site: &Site) -> String {
 #[test]
 fn exact_types_and_constructor_claims_match_rustc() {
     let source = fixtures::program();
-    let directory = source::workspace().join("target/brief-534/oracle-exact");
+    let directory = source::workspace().join("target/brief-535/oracle-exact");
     fs::create_dir_all(&directory).unwrap();
     let mut claims = BTreeMap::new();
     for name in constructor_tests::ACCEPTED

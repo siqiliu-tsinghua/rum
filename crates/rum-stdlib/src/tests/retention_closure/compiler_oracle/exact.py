@@ -2,7 +2,7 @@
 
 No analyzed function is executed. The standalone crate consists of verbatim
 compiled fixture copies. Production probes use the existing scratch harness.
-Every observation and mutation survives under target/brief-534/oracle-exact.
+Every observation and mutation survives under target/brief-535/oracle-exact.
 """
 import csv
 import json

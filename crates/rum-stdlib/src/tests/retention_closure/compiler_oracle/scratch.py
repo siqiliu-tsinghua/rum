@@ -31,7 +31,7 @@ class Scratch:
         self.original = workspace.resolve()
         self.directory = directory.resolve()
         self.root = self.directory / "workspace"
-        assert self.root.is_relative_to(self.original / "target/brief-534")
+        assert self.root.is_relative_to(self.original / "target/brief-535")
         assert not self.root.is_symlink()
         self.root.mkdir(parents=True, exist_ok=True)
         self.features = features

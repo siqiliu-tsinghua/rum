@@ -33,7 +33,10 @@ fn rust_sources(directory: &Path, into: &mut Vec<PathBuf>) {
     for path in entries {
         if path.is_dir() {
             rust_sources(&path, into);
-        } else if path.extension().is_some_and(|e| e == "rs") {
+        } else if path
+            .extension()
+            .is_some_and(|e| matches!(e.to_str(), Some("rs" | "py" | "tsv" | "txt" | "toml")))
+        {
             into.push(path);
         }
     }
@@ -50,6 +53,8 @@ pub(super) fn fingerprint(directory: &Path, claims: &[&str], features: &str) -> 
     let mut inputs = Vec::new();
     rust_sources(&workspace.join("crates"), &mut inputs);
     inputs.push(workspace.join("Cargo.lock"));
+    inputs.push(workspace.join("Cargo.toml"));
+    inputs.push(workspace.join("scripts/run-bounded.py"));
     inputs.push(workspace.join("rust-toolchain.toml"));
     for claim in claims {
         inputs.push(directory.join(claim));

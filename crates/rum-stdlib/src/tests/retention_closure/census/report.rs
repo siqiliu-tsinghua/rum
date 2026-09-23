@@ -11,7 +11,19 @@ use super::{Census, Definition, Key, Root, Row};
 use crate::tests::retention_closure::{model::Kind, source};
 
 pub(super) fn class(reason: &str) -> &str {
-    if reason.starts_with("path ") && reason.ends_with(" exact bindings") {
+    if reason.starts_with("method syntax: opaque imported trait candidate ") {
+        "method syntax: opaque imported trait candidate <target>"
+    } else if reason.starts_with("method syntax: prelude trait candidate ") {
+        "method syntax: prelude trait candidate <method> at <receiver>"
+    } else if reason.starts_with("method syntax: earlier trait candidate ") {
+        "method syntax: earlier trait candidate <trait::method> at <receiver>"
+    } else if reason.starts_with("method syntax: path ") {
+        "method syntax: path <path> has <n> exact bindings"
+    } else if reason.starts_with("method syntax: opaque or ambiguous type ") {
+        "method syntax: opaque or ambiguous type <type>"
+    } else if reason.starts_with("method syntax: trait ") {
+        "method syntax: trait <trait> has unmodeled supertraits or generated candidates"
+    } else if reason.starts_with("path ") && reason.ends_with(" exact bindings") {
         "path <path> has <n> exact bindings"
     } else if reason.starts_with("not a resolved function definition:") {
         "not a resolved function definition: <target>"
@@ -50,7 +62,7 @@ const HEADER: &str = "population\troots\tdefinition\tkind\tfile\tstart_line\tsta
 
 pub(super) fn write(report: &Census, expected: &BTreeSet<Definition>, roots: &[Root]) -> PathBuf {
     let dir = source::workspace()
-        .join("target/brief-533")
+        .join("target/brief-535")
         .join(report.population);
     fs::create_dir_all(&dir).unwrap();
     let mut rows = report.rows.clone();

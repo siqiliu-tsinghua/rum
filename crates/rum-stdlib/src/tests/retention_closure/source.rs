@@ -448,6 +448,10 @@ impl Loader {
                             body: (*f.block).clone(),
                             attrs: f.attrs.clone(),
                             owner: None,
+                            boundary: boundary(&f.vis, module),
+                            impl_self: None,
+                            impl_generics: syn::Generics::default(),
+                            substitutions: BTreeMap::new(),
                             conditional: uncertain,
                         });
                     (&f.sig.ident, &f.vis)
@@ -521,7 +525,17 @@ impl Loader {
                     (&c.ident, &c.vis)
                 }
                 syn::Item::Static(s) => (&s.ident, &s.vis),
-                syn::Item::Trait(t) => (&t.ident, &t.vis),
+                syn::Item::Trait(t) => {
+                    self.source
+                        .traits
+                        .entry(format!("{module}::{}", t.ident))
+                        .or_default()
+                        .push(Trait {
+                            item: t.clone(),
+                            conditional: uncertain,
+                        });
+                    (&t.ident, &t.vis)
+                }
                 _ => {
                     self.source
                         .modules

@@ -72,7 +72,13 @@ impl Census {
         }
     }
 
-    fn visit(&mut self, source: &Source, f: &Function, root: &str, witness: &[Id]) -> Vec<Id> {
+    fn visit(
+        &mut self,
+        source: &Source,
+        f: &Function,
+        root: &str,
+        witness: &[Id],
+    ) -> Vec<Function> {
         self.visited
             .entry(Definition {
                 id: f.id.clone(),
@@ -89,7 +95,17 @@ impl Census {
                 diagnostic,
             });
         }
-        let targets = edges.resolved.iter().map(|e| e.target.clone()).collect();
+        let targets = edges
+            .resolved
+            .iter()
+            .filter_map(|e| {
+                edges
+                    .methods
+                    .get(&e.site)
+                    .map(|m| m.function.clone())
+                    .or_else(|| resolve::function(source, &e.target).ok().cloned())
+            })
+            .collect();
         self.resolved.extend(edges.resolved);
         targets
     }
@@ -217,18 +233,21 @@ pub(super) fn frontier(source: &Source, roots: Vec<Root>) -> Census {
                 continue;
             }
         };
-        let mut pending = VecDeque::from([(id.clone(), vec![root.name.clone(), id.clone()])]);
+        let mut pending = VecDeque::from([(
+            resolve::function(source, id).cloned(),
+            vec![root.name.clone(), id.clone()],
+        )]);
         let mut seen = BTreeSet::new();
-        while let Some((id, witness)) = pending.pop_front() {
-            if !seen.insert(id.clone()) {
-                continue;
-            }
-            match resolve::function(source, &id) {
+        while let Some((function, witness)) = pending.pop_front() {
+            match function {
                 Ok(f) => {
-                    for target in report.visit(source, f, &root.name, &witness) {
+                    if !seen.insert(super::methods::key(&f)) {
+                        continue;
+                    }
+                    for target in report.visit(source, &f, &root.name, &witness) {
                         let mut witness = witness.clone();
-                        witness.push(target.clone());
-                        pending.push_back((target, witness));
+                        witness.push(target.id.clone());
+                        pending.push_back((Ok(target), witness));
                     }
                 }
                 Err(reason) => {
@@ -237,7 +256,7 @@ pub(super) fn frontier(source: &Source, roots: Vec<Root>) -> Census {
                     diagnostic.witness = witness;
                     report.rows.push(Row {
                         root: root.name.clone(),
-                        definition: id,
+                        definition: id.clone(),
                         diagnostic,
                     });
                 }
