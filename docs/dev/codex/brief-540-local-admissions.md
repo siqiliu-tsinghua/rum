@@ -7,7 +7,10 @@ repository.** Everything you need about the tree's state is in this brief.
 ## Where this starts
 
 **Continue the working tree exactly as brief-539 left it.** Do not restart,
-revert, stash or clean anything. brief-539 built the local lint and it works:
+revert, stash or clean anything. The first dispatch of this brief stopped with
+zero edits, so the tree is unchanged since brief-539; the director has also
+preserved it on the side ref `wip/retention-lint-539`, which you must not
+touch. brief-539 built the local lint and it works:
 nine falsifiers watched red then green, the side-door test proves the verdict
 never reads a callee's body, marks are fingerprinted, and only B03, B09 and B12
 are installed as contracts.
@@ -54,38 +57,78 @@ Which calls "can run guest code or grow retained state" is itself a
 classification. Make it explicit and fail closed: a callee not known to be
 inert is treated as able to.
 
-## The admissions — local, one at a time, each earned
+## What the 146 rejections actually are — four mechanisms, not one
 
-Each admission is a **local rule about one construct in one body**, not a
-traversal. brief-536 gave soundness arguments for most of them when they were
-still framed as stages; they carry over. For each: the rule, its soundness
-argument in a few sentences, what it refuses at its own edge, a falsifier
-watched red then green, and an oracle check of any type or resolution claim it
-makes.
+**Revised after the first dispatch stopped, correctly, on the director's
+error.** The first version of this section asked for "primitive operators —
+only on operands proved primitive, with no overloaded implementation" while
+also requiring the probe to lint clean. The probe's `args[0] ==
+Expr::small_integer(1)` is `<Expr as PartialEq>::eq` — an overloaded
+operator, as the worker confirmed with stable rustc — so the two requirements
+contradicted each other. The worker stopped with zero edits rather than
+widen. That was right, and the error was in the classification: `Expr == Expr`
+is not an operator admission at all. It is a call to a concrete trait impl,
+and those belong to **condition 2**, as contracts.
 
-- **`?` on a concrete `Result`** whose error type is identical on both sides,
-  with both exits and the cleanup of live owners modelled (brief-536 row 6).
-- **Primitive operators** — `==`, `+` and the rest the bodies use — only on
-  operands proved primitive, with no overloaded implementation (brief-536
-  rows 10 and 12).
-- **Indexing** a borrowed slice or `Vec`, including the out-of-range panic
-  path and its unwind cleanup (brief-537 I04).
-- **Iteration** over the specific borrowed iterators the bodies use, with the
-  `IntoIterator`, `next` and iterator-drop effects modelled for those exact
-  std instances.
-- **The protocol's own types** — `RetainedValues<'id, M>`, `RetainedResult`,
-  the lease and brand types. A lint that cannot read the protocol it enforces
-  is not finished.
-- **`str::repeat` and any other std method return type** the bodies need,
-  established precisely — or, if that is not possible, recorded as a trusted
-  leaf with the full record the existing leaf rules require.
+The director tallied all 146 rejections across the four bodies. They are four
+different mechanisms, and the largest is a single root cause:
 
-**Scope is set by the probe.** Admit what these four bodies need and nothing
-else. If one of them uses something on the never-admit list — `dyn` dispatch,
-an open generic, user `Deref` selection without proof, a function-pointer
-call — **stop and report it** rather than widening. A test harness closure
-*around* the builtin is not one of the four bodies; check which lines actually
-belong to them before admitting anything for a closure.
+| Mechanism | ~Count | Where it belongs |
+| --- | ---: | --- |
+| **Type inference blocked by the protocol's generics** — "exact type is unknown" (76), receiver without provenance (11), "only concrete type arguments are modeled" (9), "generic free call not admitted" (6) | ~100 | **Type machinery.** The protocol is generic over the accounting mode `M` and carries a brand lifetime `'id`. The lint models only concrete types, so everything downstream of a protocol call cascades to unknown. |
+| `<Expr as PartialEq>::eq`, `<SharedArgs as Deref>`, `<Vec<Expr> as Index<usize>>`, `Expr::string`, `Expr::small_integer`, `str::repeat` | ~10 | **Condition 2 — contracts** on exactly resolved concrete trait impls and constructors. brief-537 already listed `SharedArgs` deref (I01) and `Vec` index (I04) as test-checked contracts. |
+| `?`, primitive operators on proved primitives, `for` / range, closures | ~12 | **Condition 1 — the admitted surface.** |
+| "unadmitted cleanup" on dropping `Expr` and `EvalError` | 8 | **Cleanup classification.** Dropping releases; for retention it is not a hold. |
+
+The remaining six are the probe's own siblings (`start`, `drive`) and the
+protocol's `retained::scoped`, which carry no covered mark yet. That is
+induction working as designed: once a sibling lints clean, its mark exists.
+
+## The work, in this order
+
+### 1. The root cause first — type machinery for the protocol
+
+- **The mode parameter `M` is finite.** brief-526 §3.3 already stated the rule:
+  *"The protocol's sealed Armed/Unarmed instantiations are a finite special
+  case, not permission for general generic handlers. Enumerate both concrete
+  substitutions and their calls."* Check each body under both instantiations.
+  Any other open generic stays refused.
+- **Lifetime parameters carry no allocation.** The brand `'id` is a
+  compile-time construct that rustc's borrow checker already enforces; for
+  retention it can be treated as opaque. Say so where you rely on it.
+- **Then remeasure before doing anything else.** Predict, in `PROGRESS.md`,
+  how many of the ~100 cascade away, then measure. This is the step most
+  likely to move the count, and knowing by how much decides the rest.
+
+### 2. Contracts for the concrete calls
+
+For each exactly resolved callee the bodies use, a contract record in
+brief-537's format, installed as a mark: its effect (inert, borrowing, or
+producing an owned value), its discharge category, a fingerprint, and a
+falsifier. The resolution itself is checked by the oracle, with the negative
+control. `<Expr as PartialEq>::eq` is inert for retention — it borrows both
+sides and allocates nothing — and its contract says so; it is **not** a
+precedent for admitting overloaded operators generally.
+
+### 3. The admitted surface
+
+`?` on a concrete `Result` with an identical error type and both exits
+modelled (brief-536 row 6); primitive operators on operands **proved**
+primitive (rows 10 and 12); `for` and range over the exact std instances the
+bodies use; closures only if a closure is genuinely inside one of the four
+bodies — check which lines belong to them before admitting anything for a
+closure, since a test-harness closure around the builtin is not one of them.
+
+### 4. Cleanup
+
+Classify the drop of `Expr` and `EvalError` for retention: dropping releases
+memory and holds nothing. State plainly what that classification does **not**
+claim — the destruction of a deep `Expr` is standing debt for stack depth
+(`TODO.md`, Standing Engineering Debt), which is a different property.
+
+**Scope is still set by the probe.** Nothing beyond what these four bodies
+need. If one of them genuinely needs an unresolvable dispatch — `dyn`, an open
+generic other than the finite mode, a function-pointer call — stop and report.
 
 ## Acceptance — predict, then measure
 
@@ -168,7 +211,7 @@ skipped-by-environment. Do not set `RUM_ALLOW_NATIVE_ZEROMQ_SKIP`.
 
 ## Checkpointing — protect the scene
 
-After each admission lands, write `target/brief-540/PROGRESS.md` with what is
+After each of the four steps lands, write `target/brief-540/PROGRESS.md` with what is
 done and verified, the exact next action, the tree's state, and the running
 count of `LeaseProbe538` rejections per body. **Your acceptance predictions go
 here before the final run.**
@@ -194,8 +237,11 @@ here before the final run.**
    with why.
 2. The corrected condition 1: how retention across evaluation is decided, and
    how "can run guest code" is classified.
-3. Each admission: rule, soundness argument, edge, falsifier red then green,
-   oracle check.
+3. Each of the four steps: for the type machinery, the predicted and measured
+   cascade; for each contract, its effect, discharge category and oracle
+   check; for each admission, rule, soundness argument and edge; for cleanup,
+   what the classification claims and does not. Falsifiers red then green
+   throughout.
 4. `LeaseProbe538`: rejections per body falling to zero, and the acceptance
    assertion green, unmodified.
 5. C01/C02 predicted versus measured, and confirmation that both raw
