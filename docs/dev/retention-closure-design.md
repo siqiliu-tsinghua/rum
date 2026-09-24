@@ -144,10 +144,23 @@ rather than by walking:
 A body is **covered** when both hold, and both are checkable without leaving
 the body:
 
-1. it constructs no raw owned container — the property a private lease
-   constructor can make a compile error rather than an analysis result; and
+1. no raw owned container is **live across a call that can run guest code
+   or grow retained state** — the property a private lease constructor can
+   make a compile error rather than an analysis result; and
 2. every call it makes goes either to another covered body, or to a boundary
    that carries a declared contract.
+
+**Corrected 2026-09-24: the hazard is retention, not construction.** The
+first statement of condition 1 read "constructs no raw owned container". That
+is stricter than the hazard, and brief-539 showed it on the protocol's own
+probe: `cx.push(&mut values, Expr::string("prefix538".repeat(150_000)))` builds
+a raw `String` and moves it straight into the lease-charging call in the same
+expression, with no evaluation in between — which is exactly the correct way
+to hand a fresh payload to a lease. Under the construction rule every such push
+would fail and the lint would reject all lease-correct code. The ceiling is
+walked through only while guest code runs, so the condition is about what is
+held across such a call, and it is checkable locally with the place-and-move
+model A1 already provides.
 
 Condition 2 is a check on a *mark*, not a traversal. Whether `Session::evaluate`
 is covered is not asked; it has a boundary contract, and that contract is what
