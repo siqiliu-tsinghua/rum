@@ -26,6 +26,16 @@ director-reproduced, and rulings D1-D7 stand if it is ever resumed.
 
 **Also open, in rough order of weight:**
 
+- **User ruling 2026-09-27 — U1, the option region's generic `R`: a runtime
+  certified-registration domain.** `OptionReentry` registration accepts any
+  type, so a session's registered set is finite but open in kind, unlike the
+  sealed two-member accounting mode. Coverage of C01 therefore requires the
+  runtime itself to enforce a closed certified domain at entry and resume,
+  derived from one declaration source that also generates the lint's set, so
+  the two cannot drift; unverified host registrations stay outside the covered
+  path. This is step 544 of brief-541's plan (542 reads, 543 the delayed rule,
+  544 accumulator and handoff, 545 first certificates).
+
 - **DIRECTION CHANGED 2026-09-23: traversal is abandoned for compositional
   verification. Read [docs/dev/retention-closure-design.md](./docs/dev/retention-closure-design.md)
   before any further work on this line.** brief-536 measured the distance to a
