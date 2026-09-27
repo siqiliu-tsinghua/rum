@@ -5,7 +5,8 @@
 #
 # <brief-id> may be a number (081), "brief-081", or a slug fragment; it resolves to
 # docs/dev/codex/brief-<id>*.md. Runs the worker non-interactively (stdin from /dev/null)
-# and writes the full report to /tmp/<worker>_brief_<num>.log.
+# and writes the full report to .temp/logs/<worker>_brief_<num>.log inside the repo
+# (git-ignored; /tmp is wiped on reboot, which once lost a brief's dispatch log).
 #
 # This does NOT touch git — commit the brief separately FIRST (keep commit and dispatch as
 # two steps). Invoke this via the Bash tool with run_in_background:true so the run is
@@ -92,7 +93,8 @@ fi
 brief="${matches[0]}"
 rel="docs/dev/codex/$(basename "$brief")"
 num=$(basename "$brief" | sed -E 's/^brief-([0-9]+).*/\1/')
-log="/tmp/${log_tag}_brief_${num}.log"
+mkdir -p "$repo_root/.temp/logs"
+log="$repo_root/.temp/logs/${log_tag}_brief_${num}.log"
 task="Read $rel and execute it exactly. Follow its Hard rules."
 
 echo "brief:   $rel"

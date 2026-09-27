@@ -3,3 +3,6 @@ jupyter_home/
 .codex
 .DS_Store
 .rum_history
+
+# Local scratch: dispatch logs, worker and director probes. Survives reboots, never committed.
+/.temp/

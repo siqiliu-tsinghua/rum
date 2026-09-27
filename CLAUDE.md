@@ -52,7 +52,7 @@ rather than duplicating them.
 
   It resolves `docs/dev/codex/brief-NNN-*.md`, runs `cdx exec -s
   workspace-write` with stdin from `/dev/null`, and logs the full report to
-  `/tmp/cdx_brief_NNN.log` (`DRY_RUN=1` prints the resolution without
+  `.temp/logs/cdx_brief_NNN.log` (`DRY_RUN=1` prints the resolution without
   dispatching). **Launch it via the Bash tool's `run_in_background:true`** so
   the run is harness-tracked — do NOT hand-type `cdx exec … &`; the `&`-detach
   is not tracked. Sandbox default = `workspace-write` (user ruling

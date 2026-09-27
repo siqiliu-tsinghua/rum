@@ -6,7 +6,7 @@ and commits. Copy this file to `docs/dev/codex/brief-NNN-<slug>.md`, fill every
 section, then dispatch via `scripts/dispatch-brief.sh NNN`.
 
 The dispatcher runs `cdx exec -s workspace-write` with stdin from
-`/dev/null` and logs to `/tmp/cdx_brief_NNN.log`. `workspace-write` (default
+`/dev/null` and logs to `.temp/logs/cdx_brief_NNN.log`. `workspace-write` (default
 since 2026-07-17, least privilege) confines writes to the repo + tmp while
 still allowing `cargo` and the release `rum-cli`. A brief that truly needs
 process attach (the macOS `sample` profiler) is dispatched with
@@ -124,8 +124,13 @@ the before/after rows. Never claim a result without the verbatim lines.
 
 ## Checkpointing — protect the scene
 
+All scratch output — raw logs, probe files, tables, the PROGRESS file — goes
+under `.temp/brief-NNN/` at the repository root. `.temp/` is git-ignored and,
+unlike `/tmp`, survives a reboot; unlike `target/`, it survives `cargo clean`.
+
+
 A run can be cut short by quota, a dropped connection, or an upstream filter.
-After each milestone, write `target/brief-NNN/PROGRESS.md` stating:
+After each milestone, write `.temp/brief-NNN/PROGRESS.md` stating:
 
 - what is **done and verified**, with the evidence already saved;
 - the **exact next action**, specific enough to resume without re-deriving it;
