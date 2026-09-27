@@ -1,4 +1,4 @@
-//! Restricted retention proof on compiled fixtures; no production coverage.
+//! Local lint plus historical restricted fixture checks; no production coverage.
 
 mod catalog;
 mod census;
@@ -8,6 +8,7 @@ mod consumers;
 mod effects;
 mod fixtures;
 mod leaves;
+mod local;
 mod method_tests;
 mod methods;
 mod model;

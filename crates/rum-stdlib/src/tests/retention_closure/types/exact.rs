@@ -42,6 +42,9 @@ pub(in super::super) fn arguments(
             syn::PathArguments::None => {}
             syn::PathArguments::AngleBracketed(args) if result.is_empty() => {
                 for argument in &args.args {
+                    if matches!(argument, syn::GenericArgument::Lifetime(_)) {
+                        continue; // Opaque, rustc-checked brands carry no allocation.
+                    }
                     let syn::GenericArgument::Type(ty) = argument else {
                         return Err("only concrete type arguments are modeled".into());
                     };
@@ -58,13 +61,17 @@ pub(in super::super) fn substitutions(
     definition: &Nominal,
     args: &[ExactTy],
 ) -> Result<BTreeMap<String, ExactTy>, String> {
-    if definition.generics.params.len() != args.len() {
-        return Err("exact type argument count differs".into());
-    }
-    definition
+    let parameters = definition
         .generics
         .params
         .iter()
+        .filter(|p| !matches!(p, syn::GenericParam::Lifetime(_)))
+        .collect::<Vec<_>>();
+    if parameters.len() != args.len() {
+        return Err("exact type argument count differs".into());
+    }
+    parameters
+        .into_iter()
         .zip(args)
         .map(|(parameter, ty)| {
             let syn::GenericParam::Type(parameter) = parameter else {
@@ -90,7 +97,7 @@ fn expand(
             .map(|t| expand(source, module, t, substitutions_, active))
             .collect::<Result<_, _>>()
             .map(ExactTy::Tuple),
-        syn::Type::Reference(r) if r.lifetime.is_none() => Ok(ExactTy::Reference(
+        syn::Type::Reference(r) => Ok(ExactTy::Reference(
             Box::new(expand(source, module, &r.elem, substitutions_, active)?),
             r.mutability.is_some(),
         )),
@@ -128,6 +135,9 @@ fn expand(
                     syn::PathArguments::None => {}
                     syn::PathArguments::AngleBracketed(a) if args.is_empty() => {
                         for arg in &a.args {
+                            if matches!(arg, syn::GenericArgument::Lifetime(_)) {
+                                continue; // Lifetime opacity is not a borrow/receipt proof.
+                            }
                             let syn::GenericArgument::Type(t) = arg else {
                                 return Err("only concrete type arguments are modeled".into());
                             };
@@ -258,6 +268,41 @@ pub(in super::super) fn fields(
             ))
         })
         .collect()
+}
+
+/// Project one named field without requiring unrelated fields to have types
+/// in our finite vocabulary. This grants a type, never ownership of the base.
+pub(in super::super) fn field(
+    source: &Source,
+    ty: &ExactTy,
+    name: &str,
+) -> Result<ExactTy, String> {
+    if let ExactTy::Tuple(ts) = ty {
+        return name
+            .parse::<usize>()
+            .ok()
+            .and_then(|n| ts.get(n))
+            .cloned()
+            .ok_or("unknown tuple field".into());
+    }
+    let ExactTy::Nominal(id, args) = ty else {
+        return Err("field base must be nominal".into());
+    };
+    let Some([def]) = source.types.get(id).map(Vec::as_slice) else {
+        return Err("ambiguous field owner".into());
+    };
+    if def.conditional || !def.variants.is_empty() {
+        return Err("conditional/enum field owner".into());
+    }
+    let field = def
+        .fields
+        .iter()
+        .find(|f| f.name == name)
+        .ok_or("unknown named field")?;
+    if field.conditional {
+        return Err("conditional field".into());
+    }
+    substitute(source, &def.module, &field.ty, &substitutions(def, args)?)
 }
 
 pub(in super::super) fn variants(source: &Source, ty: &ExactTy) -> Result<Vec<String>, String> {

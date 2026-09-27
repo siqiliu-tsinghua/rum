@@ -161,6 +161,26 @@ fn finish(mut source: Source) -> Source {
     source
 }
 
+/// Explicitly index one test-only module for local linting, in its real parent
+/// scope. Production discovery still excludes tests and its census is unchanged.
+pub(super) fn test_module(mut source: Source, file: &str, module: &str) -> Source {
+    // Existing impls were resolved by production(); do not register their
+    // functions a second time when adding the explicitly selected test module.
+    let mut existing_impls = std::mem::take(&mut source.impls);
+    let mut loader = Loader {
+        source,
+        visits: BTreeSet::new(),
+        active_files: BTreeSet::new(),
+    };
+    let (parent, name) = module.rsplit_once("::").unwrap();
+    bind(&mut loader.source, parent, name, module, None, false);
+    loader.file(file, module, false, false);
+    let mut result = finish(loader.source);
+    existing_impls.append(&mut result.impls);
+    result.impls = existing_impls;
+    result
+}
+
 pub(super) fn cfg(meta: &syn::Meta) -> Option<bool> {
     match meta {
         syn::Meta::Path(path) if path.is_ident("test") => Some(false),
@@ -520,11 +540,19 @@ impl Loader {
                 }
                 syn::Item::Const(c) => {
                     self.source
+                        .value_names
+                        .insert(format!("{module}::{}", c.ident));
+                    self.source
                         .constants
                         .push((module.into(), file.into(), (*c.expr).clone()));
                     (&c.ident, &c.vis)
                 }
-                syn::Item::Static(s) => (&s.ident, &s.vis),
+                syn::Item::Static(s) => {
+                    self.source
+                        .value_names
+                        .insert(format!("{module}::{}", s.ident));
+                    (&s.ident, &s.vis)
+                }
                 syn::Item::Trait(t) => {
                     self.source
                         .traits

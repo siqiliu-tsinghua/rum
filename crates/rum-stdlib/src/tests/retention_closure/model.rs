@@ -142,6 +142,7 @@ pub(super) struct Source {
     pub trait_impls: Vec<(Id, syn::ItemImpl, Site, bool)>,
     pub opaque_inherent_owners: BTreeSet<Id>,
     pub constants: Vec<(Id, String, syn::Expr)>,
+    pub value_names: BTreeSet<Id>,
     pub drop_types: BTreeSet<Id>,
     pub dependencies: BTreeMap<String, BTreeSet<String>>,
     pub files: BTreeMap<String, String>,

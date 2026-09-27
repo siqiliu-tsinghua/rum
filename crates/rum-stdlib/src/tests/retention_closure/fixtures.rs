@@ -19,6 +19,9 @@ mod extracted_allocator;
 #[path = "fixtures/formatted_string.rs"]
 mod formatted_string;
 #[allow(dead_code)]
+#[path = "fixtures/local.rs"]
+mod local;
+#[allow(dead_code)]
 #[path = "fixtures/map_entry_callback.rs"]
 mod map_entry_callback;
 #[allow(dead_code)]

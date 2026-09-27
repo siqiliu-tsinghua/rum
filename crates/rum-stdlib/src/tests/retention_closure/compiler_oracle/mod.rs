@@ -5,7 +5,7 @@
 //! All mutation/compilation happens in copies under target/brief-535. Nothing
 //! here admits a Rust idiom, changes a retention rule, or promotes a region.
 
-mod cache;
+pub(super) mod cache;
 mod corpus;
 mod exact;
 mod methods;

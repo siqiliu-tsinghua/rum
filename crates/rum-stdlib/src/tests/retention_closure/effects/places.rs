@@ -3,7 +3,7 @@
 
 use super::*;
 
-fn place(expr: &syn::Expr) -> Option<(String, Vec<String>)> {
+pub(in super::super) fn place(expr: &syn::Expr) -> Option<(String, Vec<String>)> {
     match expr {
         syn::Expr::Path(p) if p.qself.is_none() && p.attrs.is_empty() => {
             p.path.get_ident().map(|n| (n.to_string(), Vec::new()))
@@ -21,7 +21,7 @@ fn place(expr: &syn::Expr) -> Option<(String, Vec<String>)> {
     }
 }
 
-fn moved(ty: &Ty) -> bool {
+pub(in super::super) fn moved(ty: &Ty) -> bool {
     match ty {
         Ty::Moved => true,
         Ty::Fields(fs) => fs.values().any(moved),
@@ -31,7 +31,7 @@ fn moved(ty: &Ty) -> bool {
     }
 }
 
-fn child<'a>(state: &'a mut Ty, field: &str) -> Option<&'a mut Ty> {
+pub(in super::super) fn child<'a>(state: &'a mut Ty, field: &str) -> Option<&'a mut Ty> {
     match state {
         Ty::Fields(fs) => fs.get_mut(field),
         Ty::Tuple(ts) => field.parse::<usize>().ok().and_then(|n| ts.get_mut(n)),

@@ -5,6 +5,17 @@ use std::collections::BTreeSet;
 use super::leaves;
 use super::model::*;
 
+/// Closed nominal owned-container set. The local lint's exhaustive exercise
+/// test must reject a produced value of every entry, including through aliases.
+pub(super) const OWNED_CONTAINERS: &[&str] = &[
+    "std::vec::Vec",
+    "std::boxed::Box",
+    "std::string::String",
+    "std::collections::BTreeMap",
+    "std::collections::HashMap",
+    "std::collections::HashSet",
+];
+
 pub(super) fn attributes(attrs: &[syn::Attribute]) -> Result<(), String> {
     for attr in attrs {
         if !matches!(
@@ -21,8 +32,10 @@ pub(super) fn attributes(attrs: &[syn::Attribute]) -> Result<(), String> {
 mod context;
 #[path = "types/exact.rs"]
 mod exact;
+mod modes;
 pub(super) use context::constructor_claims;
-pub(super) use exact::{arguments, exact, fields, substitute, variants};
+pub(super) use exact::{arguments, exact, field, fields, substitute, variants};
+pub(super) use modes::{MODES, domain, is_mode, mode_parameter, with_mode};
 
 pub(super) fn ownership(source: &Source, exact: &ExactTy) -> Ty {
     ownership_inner(source, exact, &mut BTreeSet::new())
@@ -49,15 +62,7 @@ fn ownership_inner(source: &Source, exact: &ExactTy, active: &mut BTreeSet<Id>) 
             if let Some(state) = leaves::nominal(id) {
                 return state;
             }
-            if matches!(
-                id.as_str(),
-                "std::vec::Vec"
-                    | "std::boxed::Box"
-                    | "std::string::String"
-                    | "std::collections::BTreeMap"
-                    | "std::collections::HashMap"
-                    | "std::collections::HashSet"
-            ) {
+            if OWNED_CONTAINERS.contains(&id.as_str()) {
                 return Ty::Raw(exact.spelling());
             }
             if !active.insert(id.clone()) {

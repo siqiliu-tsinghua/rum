@@ -23,7 +23,7 @@ mod construct;
 #[path = "effects/method.rs"]
 mod method;
 #[path = "effects/places.rs"]
-mod places;
+pub(super) mod places;
 
 type Environment = BTreeMap<String, Local>;
 
@@ -31,6 +31,7 @@ pub(super) fn check(source: &Source, root: &str, contracts: &[leaves::Leaf]) -> 
     let mut checker = Checker {
         source,
         contracts,
+        local_marks: None,
         proof: Proof::default(),
         stack: Vec::new(),
         active: BTreeSet::new(),
@@ -42,6 +43,7 @@ pub(super) fn check(source: &Source, root: &str, contracts: &[leaves::Leaf]) -> 
 struct Checker<'a> {
     source: &'a Source,
     contracts: &'a [leaves::Leaf],
+    local_marks: Option<&'a BTreeMap<Id, Result<String, String>>>,
     proof: Proof,
     stack: Vec<Id>,
     active: BTreeSet<LeafKey>,
@@ -98,6 +100,10 @@ impl Checker<'_> {
     }
 
     fn body(&mut self, id: &str) -> Checked<()> {
+        assert!(
+            self.local_marks.is_none(),
+            "local lint cannot load a callee body"
+        );
         let f = resolve::function(self.source, id)
             .map_err(|reason| Diagnostic {
                 kind: Kind::RET002,
@@ -111,6 +117,10 @@ impl Checker<'_> {
     }
 
     fn body_function(&mut self, f: Function) -> Checked<()> {
+        assert!(
+            self.local_marks.is_none() || self.stack.is_empty(),
+            "local lint cannot enter a callee body"
+        );
         let key = super::methods::key(&f);
         if self.proof.instances.contains(&key) || self.active.contains(&key) {
             return Ok(());

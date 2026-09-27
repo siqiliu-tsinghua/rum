@@ -40,6 +40,7 @@ pub(super) fn exclude(
                 } else if !source.types.contains_key(&b.target)
                     && !source.functions.contains_key(&b.target)
                     && !source.modules.contains_key(&b.target)
+                    && !source.value_names.contains(&b.target)
                 {
                     // Only import bindings can introduce opaque traits. Local
                     // const/static declarations do not inhabit that namespace.

@@ -45,7 +45,7 @@ fn rust_sources(directory: &Path, into: &mut Vec<PathBuf>) {
 /// Everything a run consumes: the crate sources it compiles, the lockfile and
 /// toolchain that decide how, the harness that drives it, the claim files the
 /// caller just wrote, and the feature set.
-pub(super) fn fingerprint(directory: &Path, claims: &[&str], features: &str) -> String {
+pub(in super::super) fn fingerprint(directory: &Path, claims: &[&str], features: &str) -> String {
     let workspace = source::workspace();
     let mut hash = 0xcbf29ce484222325u64;
     feed(&mut hash, features.as_bytes());
@@ -72,7 +72,7 @@ pub(super) fn fingerprint(directory: &Path, claims: &[&str], features: &str) -> 
 /// the harness output of the recorded run so a reused verdict still prints its
 /// evidence. A missing or unreadable record re-runs rather than passing
 /// quietly.
-pub(super) fn reuse(directory: &Path, fingerprint: &str) -> Option<String> {
+pub(in super::super) fn reuse(directory: &Path, fingerprint: &str) -> Option<String> {
     let recorded = fs::read_to_string(directory.join("fingerprint")).ok()?;
     if recorded.trim() != fingerprint {
         return None;
@@ -83,7 +83,7 @@ pub(super) fn reuse(directory: &Path, fingerprint: &str) -> Option<String> {
 }
 
 /// Recorded only after the run succeeded, so a failure is never cached.
-pub(super) fn record(directory: &Path, fingerprint: &str, output: &str) {
+pub(in super::super) fn record(directory: &Path, fingerprint: &str, output: &str) {
     fs::write(directory.join("verdict.log"), output).unwrap();
     fs::write(directory.join("fingerprint"), format!("{fingerprint}\n")).unwrap();
 }

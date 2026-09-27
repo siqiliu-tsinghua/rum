@@ -135,6 +135,40 @@ outgoing ownership transfer; it does not establish production lease bounds,
 callback-private allocation limits, destructor stack safety or whole-program
 Rust soundness. Those require their own contracts and validation.
 
+The brief-539 local lint takes one body and a signature-only index. Its call
+check reads a prepared mark table; no callee body or frontier decides a verdict.
+Only a successful local run can issue a fixture mark, pinned to its body,
+lexical/type context, checker implementation and build inputs. A separate flat
+validation pass checks stamps and direct mark dependencies. The closed owned
+container list is `types::OWNED_CONTAINERS` (Vec, Box, String, BTreeMap, HashMap,
+HashSet); a required test exercises every entry. Rejection uses produced type
+facts, including aliases and helper return signatures. Unknown expression types
+and unclassified cleanup reject. The local grammar is conservative within the
+existing A1/A2 surface: it reuses the effect interpreter with callee entry
+disabled and calls resolved only through the prepared mark table. Parameter
+cleanup and borrow/move rules remain enforced even for otherwise unused values.
+Operators, `?`, closures and macros remain rejected.
+
+`inventory/local-contracts.tsv` records all sixteen brief-537 obligations.
+Only B03 (kernel TypeId membership), B09 (armed checkpoint accounting, with its
+exclusions), and B12 (the private lease-frame transfer protocol) are discharged.
+The remaining thirteen records are Pending and cannot supply a mark. These
+contracts provide no implicit receipt, no bound on guest/host-private storage,
+and no permission for unresolved trait/generic dispatch. Their fingerprints
+pin a stated flat dependency list and executable falsifier references; updating
+a fingerprint does not replace the required runtime controls. The historical
+traversal/census tests remain measurements, separate from this local verdict.
+
+The new acceptance test preserves the prediction that `LeaseProbe538` is clean.
+The existing probe uses forbidden closures, `?`, iteration and operators, so
+that assertion currently fails. This is an unresolved acceptance conflict,
+not production coverage. C01/C02 also reject. The nested macro at C02:259 has
+both an unknown expansion-type rejection and a located diagnostic for its
+required `Vec<Expr>` argument type; that contextual diagnostic is explicitly
+not an exact expansion-type fact. No macro is admitted by examining its
+arguments. Passing scalar fixture marks do not certify the lease protocol or
+promote any production region.
+
 The rejection census adds two diagnostic populations without changing those
 admission rules. `EDGE_ALL` enumerates every indexed production definition
 once, including conditional alternatives; `EDGE_N_FRONTIER` starts at every

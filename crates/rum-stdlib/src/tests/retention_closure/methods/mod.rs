@@ -105,8 +105,18 @@ fn instantiate(
     let ExactTy::Nominal(_, args) = owner else {
         return Err("receiver is not nominal".into());
     };
+    let instantiated;
+    let f = if let Ok(Some(_)) = types::mode_parameter(source, &f.module, &f.impl_generics) {
+        let [mode] = args.as_slice() else {
+            return Err("mode owner must have exactly one type argument".into());
+        };
+        instantiated = types::with_mode(source, f, Some(mode))?;
+        &instantiated
+    } else {
+        f
+    };
     let mut result = f.clone();
-    let mut substitutions = BTreeMap::new();
+    let mut substitutions = f.substitutions.clone();
     if !f.impl_generics.params.is_empty() {
         // Direct nominal positional impl parameters only; unification is not
         // guessed from a lone candidate or from the crate compiling.

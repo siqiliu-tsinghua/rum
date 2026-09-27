@@ -32,17 +32,11 @@ impl Checker<'_> {
             let arguments: Vec<_> = call.args.iter().collect();
             return self.construct(f, &path.path, &arguments, call.span(), env, expected);
         }
-        if [
-            "std::vec::Vec::",
-            "std::boxed::Box::",
-            "std::string::String::",
-            "std::collections::BTreeMap::",
-            "std::collections::HashMap::",
-            "std::collections::HashSet::",
-        ]
-        .iter()
-        .any(|prefix| target.starts_with(prefix))
-        {
+        if types::OWNED_CONTAINERS.iter().any(|owner| {
+            target
+                .strip_prefix(owner)
+                .is_some_and(|rest| rest.starts_with("::"))
+        }) {
             return Err(self.error(
                 f,
                 call.span(),
@@ -160,7 +154,13 @@ impl Checker<'_> {
             &Value::typed(ExactTy::Function(target.clone()), Ty::Fixed(target.clone())),
             "resolved-function-item",
         );
-        if let Some(leaf) = leaf {
+        if let Some(marks) = self.local_marks {
+            marks
+                .get(&target)
+                .cloned()
+                .unwrap_or_else(|| Err(format!("callee has no local mark: {target}")))
+                .map_err(|r| self.unsupported(f, call.span(), r))?;
+        } else if let Some(leaf) = leaf {
             let used = BTreeSet::from([key.clone()]);
             leaves::validate(self.source, std::slice::from_ref(&leaf), &used)
                 .map_err(|r| self.unsupported(f, call.span(), r))?;

@@ -73,7 +73,15 @@ impl Checker<'_> {
             .map_err(|r| self.unsupported(f, call.span(), r))?;
         let mut result = Value::typed(exact.clone(), types::ownership(self.source, &exact));
         result.origin = Some(callee.id.clone());
-        self.body_function(callee)?; // MUTATION:method-body-closure
+        if let Some(marks) = self.local_marks {
+            marks
+                .get(&callee.id)
+                .cloned()
+                .unwrap_or_else(|| Err(format!("callee has no local mark: {}", callee.id)))
+                .map_err(|r| self.unsupported(f, call.span(), r))?;
+        } else {
+            self.body_function(callee)?; // MUTATION:method-body-closure
+        }
         Ok(result)
     }
 }
