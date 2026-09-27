@@ -96,8 +96,12 @@ produce; for implementation: code + tests + the before/after per-label rows).
 6. **One variable per measurement.** Change one thing, rerun the SAME label
    plus its same-tier neighbors. An optimization that helps one row and
    regresses a neighbor in the same tier is rejected.
-7. **Stop-loss is real.** If the same step fails twice for the same reason, or
-   the measured ratio does not move, STOP and report — do not keep tuning.
+7. **Stop-loss is real, and it is keyed on progress.** Report the brief's
+   progress counters after each attempt, and STOP when two consecutive
+   attempts move none of them — do not keep tuning. **Reducing compiler errors
+   is progress**: a compile error you are actively fixing is not a wall, and
+   the stop-loss is measured only once the tree compiles. Keying it on the
+   failure's reason instead fires on every converging mechanical repair.
 
 ## Verification (MANDATORY — you run it; iterate to green / to evidence)
 
