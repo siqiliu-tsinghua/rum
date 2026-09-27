@@ -89,7 +89,7 @@ pub(super) fn extra_targets() -> BTreeMap<String, String> {
 pub(super) fn effect(id: &str) -> &'static str {
     match id {
         "B04" | "P02" | "P03" | "P04" | "P05" => "produces-owned;inert",
-        "B05" | "I01" | "I04" | "P01" | "P06" => "borrows;inert",
+        "B05" | "I01" | "I02" | "I04" | "B13" | "P01" | "P06" => "borrows;inert",
         _ => "may-run-guest-or-grow",
     }
 }

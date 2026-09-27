@@ -215,8 +215,19 @@ fn local_contract_falsifiers() {
     let index = Interfaces::new(&source);
     let records = contracts::read(include_str!("../inventory/local-contracts.tsv")).unwrap();
     assert_eq!(
-        records.iter().filter(|c| c.status == "Discharged").count(),
+        records
+            .iter()
+            .filter(|c| c.status == "Discharged" && !matches!(c.id.as_str(), "I02" | "B13"))
+            .count(),
         31
+    );
+    assert_eq!(
+        records
+            .iter()
+            .filter(|c| matches!(c.id.as_str(), "I02" | "B13") && c.status == "Discharged")
+            .map(|c| c.id.as_str())
+            .collect::<BTreeSet<_>>(),
+        BTreeSet::from(["I02", "B13"])
     );
     let marks = Marks::contracts(records.clone()).unwrap();
     for record in &records {

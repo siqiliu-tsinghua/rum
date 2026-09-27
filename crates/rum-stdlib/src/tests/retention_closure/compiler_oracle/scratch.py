@@ -26,6 +26,20 @@ def offset(text, line, column):
     return sum(map(len, lines[:line - 1])) + column - 1
 
 
+def refresh_crates(workspace, root):
+    """A compiler input snapshot must not retain deleted source modules."""
+    workspace, root = workspace.resolve(), root.resolve()
+    assert (root.is_relative_to(workspace / 'target/brief-535')
+            or root.is_relative_to(workspace / 'target/brief-540')
+            or root.is_relative_to(workspace / '.temp/brief-542'))
+    destination = root / 'crates'
+    assert not destination.is_symlink()
+    if destination.exists():
+        shutil.rmtree(destination)
+    shutil.copytree(workspace / 'crates', destination,
+                    ignore=shutil.ignore_patterns('target', '.git', '__pycache__'))
+
+
 class Scratch:
     def __init__(self, workspace, directory, features):
         self.original = workspace.resolve()
@@ -39,11 +53,7 @@ class Scratch:
         # Copies, never hardlinks/symlinks: mutation cannot alias real source.
         for file in ["Cargo.toml", "Cargo.lock", "rust-toolchain.toml"]:
             shutil.copy2(self.original / file, self.root / file)
-        for crate in sorted((self.original / "crates").iterdir()):
-            if not crate.is_dir():
-                continue
-            shutil.copytree(crate, self.root / "crates" / crate.name, dirs_exist_ok=True,
-                            ignore=shutil.ignore_patterns("target", ".git", "__pycache__"))
+        refresh_crates(self.original, self.root)
         for path in (self.original / "crates").rglob("*.rs"):
             self.original_hashes[path] = hashlib.sha256(path.read_bytes()).hexdigest()
         version = self.run("toolchain", ["rustc", "+1.85.0", "--version"])

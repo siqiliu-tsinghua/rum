@@ -73,6 +73,12 @@ fn local_production_acceptance() {
     print!("{rows}{cost}");
     assert!(include_str!("../inventory/promoted.tsv").is_empty());
     for (label, line, report) in option_reports {
+        assert_eq!(
+            report.rejected.len(),
+            if label == "C01" { 17 } else { 15 },
+            "brief-542 predeclared {label} prediction; reconcile located rows, never edit the expectation\n{}",
+            report.text()
+        );
         assert!(
             report
                 .rejected

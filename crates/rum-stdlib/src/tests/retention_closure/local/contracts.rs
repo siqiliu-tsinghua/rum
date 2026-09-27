@@ -19,7 +19,7 @@ pub(super) struct Contract {
 
 pub(super) const IDS: &[&str] = &[
     "B01", "B02", "B03", "B04", "B05", "B06", "B07", "B08", "B09", "B10", "B11", "B12", "I01",
-    "I02", "I03", "I04",
+    "I02", "I03", "I04", "B13",
 ];
 
 pub(super) fn target(id: &str) -> String {
@@ -40,6 +40,7 @@ pub(super) fn target(id: &str) -> String {
         "I02" => "<rum_core::expr::SharedExpr as std::ops::Deref>::deref".into(),
         "I03" => "<std::vec::Vec<rum_core::expr::Expr> as std::ops::Deref>::deref".into(),
         "I04" => "<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index".into(),
+        "B13" => super::reads::HELPER.into(),
         _ => panic!("unknown boundary"),
     }
 }
@@ -152,7 +153,9 @@ pub(super) fn read(text: &str) -> Result<Vec<Contract>, String> {
             return Err("unknown, duplicate, wildcard or redirected contract identity".into());
         }
         let legacy = matches!(f[0], "B03" | "B09" | "B12");
-        let added = matches!(f[0], "B04" | "B05" | "I01" | "I04") || extra.contains_key(f[0]);
+        let reads = matches!(f[0], "I02" | "B13");
+        let added =
+            reads || matches!(f[0], "B04" | "B05" | "I01" | "I04") || extra.contains_key(f[0]);
         let installed = legacy || added;
         if f[17] != if installed { "Discharged" } else { "Pending" } {
             return Err(format!(
@@ -178,7 +181,8 @@ pub(super) fn read(text: &str) -> Result<Vec<Contract>, String> {
             if !contents.contains(&format!("fn {test}(")) {
                 return Err(format!("missing executable falsifier {}", f[0]));
             }
-            if !(added && test == "local_concrete_contract_controls")
+            if !(reads && test == "local_option_read_contract_controls")
+                && !(added && !reads && test == "local_concrete_contract_controls")
                 && !matches!(
                     (f[0], test),
                     ("B03", "option_reentry_refused_until_registered")

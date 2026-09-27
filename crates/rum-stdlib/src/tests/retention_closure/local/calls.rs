@@ -178,7 +178,10 @@ impl Lint<'_> {
             }
             let value = self.expr(arg, parameter.as_ref());
             self.argument_hazard = previous;
-            if parameter.is_some() && value != parameter {
+            if parameter.is_some()
+                && value != parameter
+                && !self.shared_expr_coercion(arg, value.as_ref(), parameter.as_ref())
+            {
                 self.reject(
                     arg.span(),
                     Kind::RET002,

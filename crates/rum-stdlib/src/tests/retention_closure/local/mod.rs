@@ -14,6 +14,7 @@ mod marks;
 mod oracle;
 mod production;
 mod protocol;
+mod reads;
 mod surface;
 mod syntax;
 mod tests;
@@ -287,13 +288,7 @@ impl Lint<'_> {
                     let value = local.init.as_ref().and_then(|init| {
                         let value = self.expr(&init.expr, annotated.as_ref());
                         if let Some((_, diverge)) = &init.diverge {
-                            self.reject(
-                                local.span(),
-                                Kind::RET002,
-                                None,
-                                "let-else is not admitted",
-                            );
-                            self.expr(diverge, None);
+                            self.borrowed_let_else(local, value.clone(), diverge);
                         }
                         value
                     });
@@ -305,7 +300,9 @@ impl Lint<'_> {
                             "annotation lacks matching initializer type",
                         );
                     }
-                    self.bind(&local.pat, value);
+                    if !local.init.as_ref().is_some_and(|i| i.diverge.is_some()) {
+                        self.bind(&local.pat, value);
+                    }
                     tail = Some(ExactTy::Unit);
                 }
                 syn::Stmt::Expr(expr, semi) => {

@@ -5,7 +5,7 @@ use super::super::source;
 use super::*;
 use std::{fs, process::Command};
 
-fn offset(text: &str, pos: (usize, usize)) -> usize {
+pub(super) fn offset(text: &str, pos: (usize, usize)) -> usize {
     text.lines()
         .take(pos.0 - 1)
         .map(|l| l.len() + 1)
@@ -14,7 +14,7 @@ fn offset(text: &str, pos: (usize, usize)) -> usize {
         - 1
 }
 
-fn json(text: &str) -> String {
+pub(super) fn json(text: &str) -> String {
     let mut result = String::from("\"");
     for c in text.chars() {
         match c {
@@ -40,7 +40,7 @@ fn local_probe_claims_match_stable_rustc() {
     );
     let index = Interfaces::new(&source);
     let marks = Marks::contracts(
-        contracts::read(include_str!("../inventory/local-contracts.tsv")).unwrap(),
+        contracts::read(include_str!("../../inventory/local-contracts.tsv")).unwrap(),
     )
     .unwrap()
     .with_covered(&index.earned);
@@ -163,7 +163,7 @@ fn local_probe_claims_match_stable_rustc() {
         .args(["--timeout", "900", "--", "python3"])
         .arg(
             source::workspace()
-                .join("crates/rum-stdlib/src/tests/retention_closure/local/oracle.py"),
+                .join("crates/rum-stdlib/src/tests/retention_closure/local/oracle/probe.py"),
         )
         .arg(source::workspace())
         .arg(&dir)

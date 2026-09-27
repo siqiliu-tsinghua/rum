@@ -1,262 +1,7 @@
-//! Condition 1 is temporal. A1's place/partial-move domain is reused; a raw
-//! value is legal until it crosses a call not proved inert. Previously
-//! evaluated arguments and borrowed temporaries remain live until the call.
-use super::super::effects::places::{child, moved, place};
+//! Temporal expression evaluation, including conditional calls and captures.
 use super::*;
 
-type Env = BTreeMap<String, Local>;
-
-pub(super) fn check(source: &Source, f: &Function, report: &mut Report) {
-    let mut flow = Flow {
-        source,
-        f,
-        report,
-        env: Env::new(),
-        pending: vec![],
-        terminated: false,
-    };
-    for input in &f.sig.inputs {
-        let mut one = f.clone();
-        one.sig.inputs = [input.clone()].into_iter().collect();
-        if let Ok(parameters) = types::exact_parameters(source, &one) {
-            for (name, ty) in parameters {
-                let v = flow.value(ty, input.span());
-                flow.env.insert(
-                    name,
-                    Local {
-                        value: v,
-                        live: true,
-                    },
-                );
-            }
-        }
-    }
-    flow.block(&f.body);
-}
-
-struct Flow<'a> {
-    source: &'a Source,
-    f: &'a Function,
-    report: &'a mut Report,
-    env: Env,
-    pending: Vec<Value>,
-    terminated: bool,
-}
-
 impl Flow<'_> {
-    fn value(&self, exact: ExactTy, span: proc_macro2::Span) -> Value {
-        let mut v = Value::typed(exact.clone(), cleanup::ownership(self.source, &exact));
-        v.provenance = Some(Provenance {
-            source: Site::new(&self.f.site.file, span),
-            basis: "local ownership".into(),
-            projections: vec![],
-        });
-        v
-    }
-    fn unknown(&self) -> Value {
-        Value::typed(ExactTy::Unit, Ty::Unchecked("rejected syntax/type".into()))
-    }
-    fn fact(&self, e: &syn::Expr) -> Value {
-        self.report
-            .facts
-            .get(&Site::new(&self.f.site.file, e.span()))
-            .map(|t| self.value(t.clone(), e.span()))
-            .unwrap_or_else(|| self.unknown())
-    }
-    fn error(&mut self, site: Site, kind: Kind, reason: String) {
-        self.report.rejected.insert(Diagnostic {
-            kind,
-            site,
-            target: None,
-            witness: vec![self.f.id.clone()],
-            reason,
-        });
-    }
-    fn hazard(&mut self, span: proc_macro2::Span, arguments: &[Value]) {
-        let site = Site::new(&self.f.site.file, span);
-        if self.report.calls.get(&site) == Some(&false) {
-            return;
-        }
-        let live: Vec<_> = self
-            .env
-            .values()
-            .filter(|l| l.live)
-            .map(|l| l.value.clone())
-            .chain(self.pending.iter().cloned())
-            .chain(arguments.iter().cloned())
-            .collect();
-        for v in live {
-            if types::retention(&v.ty) == Some(Kind::RET001) {
-                let origin = v
-                    .provenance
-                    .as_ref()
-                    .map(|p| p.source.clone())
-                    .unwrap_or_else(|| site.clone());
-                self.error(origin, Kind::RET001, format!("raw owned container produced: {} is live across call at {} (callee not proved inert)", v.exact.spelling(), site.display()));
-            }
-        }
-    }
-    fn read(&mut self, e: &syn::Expr, take: bool) -> Option<Value> {
-        let (name, fields) = place(e)?;
-        let local = self.env.get(&name)?;
-        if !local.live {
-            self.error(
-                Site::new(&self.f.site.file, e.span()),
-                Kind::RET002,
-                "use after ownership transfer".into(),
-            );
-            return Some(self.unknown());
-        }
-        let mut value = local.value.clone();
-        let mut borrowed = false;
-        for field in &fields {
-            while let ExactTy::Reference(t, _) = &value.exact {
-                value.exact = (**t).clone();
-                value.ty = cleanup::ownership(self.source, &value.exact);
-                borrowed = true;
-            }
-            value.exact = types::fields(self.source, &value.exact, None)
-                .ok()?
-                .remove(field)?;
-            value.ty = child(&mut value.ty, field)?.clone();
-        }
-        if moved(&value.ty) {
-            self.error(
-                Site::new(&self.f.site.file, e.span()),
-                Kind::RET002,
-                "use after partial ownership transfer".into(),
-            );
-        }
-        if take && !value.ty.copyable() {
-            if borrowed {
-                self.error(
-                    Site::new(&self.f.site.file, e.span()),
-                    Kind::RET002,
-                    "move through borrowed place".into(),
-                );
-            } else if fields.is_empty() {
-                self.env.get_mut(&name)?.live = false;
-            } else {
-                let mut state = &mut self.env.get_mut(&name)?.value.ty;
-                for field in &fields {
-                    state = child(state, field)?;
-                }
-                *state = Ty::Moved;
-            }
-        }
-        Some(value)
-    }
-    fn bind(&mut self, pat: &syn::Pat, value: Value) {
-        match pat {
-            syn::Pat::Ident(p) if p.by_ref.is_none() && p.subpat.is_none() => {
-                if self.env.contains_key(&p.ident.to_string()) {
-                    self.error(
-                        Site::new(&self.f.site.file, p.span()),
-                        Kind::RET002,
-                        "shadowed ownership place is outside the admitted surface".into(),
-                    );
-                }
-                self.env
-                    .insert(p.ident.to_string(), Local { value, live: true });
-            }
-            syn::Pat::Type(p) => self.bind(&p.pat, value),
-            syn::Pat::Tuple(p) => {
-                if let (ExactTy::Tuple(ts), Ty::Tuple(states)) = (&value.exact, &value.ty) {
-                    for ((p, t), s) in p.elems.iter().zip(ts).zip(states) {
-                        let mut v = value.clone();
-                        v.exact = t.clone();
-                        v.ty = s.clone();
-                        self.bind(p, v);
-                    }
-                }
-            }
-            syn::Pat::TupleStruct(p) => {
-                if let Ok(id) = resolve::path(self.source, &self.f.module, &p.path) {
-                    if let Some((_, v)) = resolve::standard_variant(&id) {
-                        if let Ok(fields) = types::fields(self.source, &value.exact, Some(v)) {
-                            for (i, p) in p.elems.iter().enumerate() {
-                                if let Some(t) = fields.get(&i.to_string()) {
-                                    let mut payload = self.value(t.clone(), p.span());
-                                    if let Ty::Variants(states) = &value.ty {
-                                        if let Some(state) =
-                                            states.get(v).and_then(|f| f.get(&i.to_string()))
-                                        {
-                                            payload.ty = state.clone();
-                                            payload.provenance = value.provenance.clone();
-                                        }
-                                    }
-                                    self.bind(p, payload);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            _ => {}
-        }
-    }
-    fn block(&mut self, b: &syn::Block) -> Value {
-        let names: BTreeSet<_> = self.env.keys().cloned().collect();
-        let mut result = Value::new(Ty::Unit);
-        for stmt in &b.stmts {
-            if self.terminated {
-                break;
-            }
-            let pending = self.pending.len();
-            match stmt {
-                syn::Stmt::Local(l) => {
-                    if let Some(init) = &l.init {
-                        // `_` does not move a place. Keep the whole owner for
-                        // patterns with wildcards; this is conservative for
-                        // mixed patterns, never a premature cleanup receipt.
-                        struct Wild(bool);
-                        impl<'a> Visit<'a> for Wild {
-                            fn visit_pat_wild(&mut self, _: &'a syn::PatWild) {
-                                self.0 = true;
-                            }
-                        }
-                        let mut wild = Wild(false);
-                        wild.visit_pat(&l.pat);
-                        let v = self.expr(&init.expr, !wild.0);
-                        if matches!(&*init.expr, syn::Expr::Reference(r) if place(&r.expr).is_none())
-                        {
-                            self.error(
-                                Site::new(&self.f.site.file, l.span()),
-                                Kind::RET002,
-                                "extended lifetime of a borrowed temporary is not admitted".into(),
-                            );
-                        }
-                        self.bind(&l.pat, v);
-                    }
-                }
-                syn::Stmt::Expr(e, semi) => {
-                    result = self.expr(e, true);
-                    if semi.is_some() {
-                        result = Value::new(Ty::Unit);
-                    }
-                }
-                _ => {}
-            }
-            self.pending.truncate(pending);
-        }
-        self.env.retain(|n, _| names.contains(n));
-        result
-    }
-    fn join(&mut self, span: proc_macro2::Span, branches: Vec<Env>) {
-        if let Some(first) = branches.first() {
-            if branches.iter().skip(1).any(|b| !same(first, b)) {
-                self.error(
-                    Site::new(&self.f.site.file, span),
-                    Kind::RET002,
-                    "branch ownership states differ".into(),
-                );
-            }
-            self.env = first.clone();
-            self.terminated = false;
-        } else {
-            self.terminated = true;
-        }
-    }
     fn callback(&mut self, c: &syn::ExprClosure) {
         let old = self.env.clone();
         let terminated = self.terminated;
@@ -309,7 +54,7 @@ impl Flow<'_> {
         self.env = old;
         self.terminated = terminated;
     }
-    fn expr(&mut self, e: &syn::Expr, take: bool) -> Value {
+    pub(super) fn expr(&mut self, e: &syn::Expr, take: bool) -> Value {
         if let Some(v) = self.read(e, take) {
             return v;
         }
@@ -410,6 +155,20 @@ impl Flow<'_> {
             }
             syn::Expr::Binary(b) => {
                 let a = self.expr(&b.left, false);
+                if matches!(b.op, syn::BinOp::And(_)) {
+                    if self.terminated {
+                        return self.fact(e);
+                    }
+                    let mut branches = vec![self.env.clone()]; // RHS skipped
+                    let pending = self.pending.len();
+                    self.expr(&b.right, false);
+                    self.pending.truncate(pending);
+                    if !self.terminated {
+                        branches.push(self.env.clone());
+                    }
+                    self.join(b.span(), branches);
+                    return self.fact(e);
+                }
                 let n = self.pending.len();
                 self.pending.push(a);
                 self.expr(&b.right, false);
@@ -560,13 +319,4 @@ impl Flow<'_> {
             .find(|v| types::retention(&v.ty) == Some(Kind::RET001))
             .unwrap_or_else(|| self.fact(e))
     }
-}
-
-fn same(a: &Env, b: &Env) -> bool {
-    a.len() == b.len()
-        && a.iter().all(|(n, a)| {
-            b.get(n).is_some_and(|b| {
-                a.live == b.live && a.value.ty == b.value.ty && a.value.exact == b.value.exact
-            })
-        })
 }

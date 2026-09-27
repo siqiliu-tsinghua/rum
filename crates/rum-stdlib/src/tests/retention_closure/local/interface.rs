@@ -9,6 +9,7 @@ pub(super) struct Interfaces {
     pub bodies: BTreeMap<Id, String>,
     syntax: BTreeMap<Id, String>,
     pub earned: super::marks::Marks,
+    pub read_contracts: BTreeMap<Id, Result<(), String>>,
 }
 
 pub(super) fn probe_body(f: &Function) -> bool {
@@ -147,7 +148,16 @@ impl Interfaces {
             context.push(std::fs::read_to_string(source::workspace().join(file)).unwrap());
         }
         let root = source::workspace().join("crates/rum-stdlib/src/tests/retention_closure");
-        for dir in ["", "types", "methods", "effects", "local"] {
+        for dir in [
+            "",
+            "types",
+            "methods",
+            "effects",
+            "local",
+            "local/flow",
+            "local/reads",
+            "local/oracle",
+        ] {
             let mut paths = std::fs::read_dir(root.join(dir))
                 .unwrap()
                 .map(|e| e.unwrap().path())
@@ -194,6 +204,7 @@ impl Interfaces {
             })
             .collect();
         let mut index = Self {
+            read_contracts: super::reads::contracts::validate(input),
             signatures,
             bodies,
             syntax,

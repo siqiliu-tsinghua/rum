@@ -79,12 +79,18 @@ impl Lint<'_> {
             }
             syn::Expr::If(branch) => {
                 self.expr(&branch.cond, Some(&ExactTy::Scalar("bool".into())));
+                let condition_diverges = self.diverges;
+                self.diverges = false;
                 let a = self.block(&branch.then_branch, expected);
+                let then_diverges = self.diverges;
+                self.diverges = false;
                 let b = branch
                     .else_branch
                     .as_ref()
                     .map_or(Some(ExactTy::Unit), |(_, e)| self.expr(e, expected));
-                if a == b { a } else { None }
+                let else_diverges = self.diverges;
+                self.diverges = condition_diverges || (then_diverges && else_diverges);
+                if then_diverges { b } else if else_diverges || a == b { a } else { None }
             }
             syn::Expr::Macro(m) => self.macro_expr(&m.mac, expected),
             _ => {

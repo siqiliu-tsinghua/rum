@@ -34,7 +34,16 @@ impl Lint<'_> {
 
     pub(super) fn binary(&mut self, b: &syn::ExprBinary) -> Option<ExactTy> {
         let left = self.expr(&b.left, None);
+        let left_diverges = self.diverges;
         let right = self.expr(&b.right, left.as_ref());
+        let right_diverges = self.diverges;
+        if matches!(b.op, syn::BinOp::And(_)) {
+            // The skipped RHS is a continuing path whenever the LHS is.
+            self.diverges = left_diverges;
+            if right_diverges && left == Some(protocol::scalar("bool")) {
+                return left;
+            }
+        }
         let (Some(a), Some(c)) = (left, right) else {
             return None;
         };
@@ -43,6 +52,9 @@ impl Lint<'_> {
                 b.span(),
                 "operator operands must have identical proved types",
             );
+        }
+        if a == protocol::scalar("bool") && matches!(b.op, syn::BinOp::And(_)) {
+            return Some(a);
         }
         if a == protocol::nominal(protocol::EXPR) && matches!(b.op, syn::BinOp::Eq(_)) {
             self.call_mark(

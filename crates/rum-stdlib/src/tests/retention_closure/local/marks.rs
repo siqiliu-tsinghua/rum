@@ -93,7 +93,15 @@ impl Marks {
         let mut view = self
             .contracts
             .iter()
-            .map(|(id, c)| (id.clone(), Self::contract(c)))
+            .map(|(id, c)| {
+                let verdict = Self::contract(c).and_then(|stamp| {
+                    if let Some(check) = index.read_contracts.get(id) {
+                        check.clone()?;
+                    }
+                    Ok(stamp)
+                });
+                (id.clone(), verdict)
+            })
             .collect::<BTreeMap<_, _>>();
         for (id, m) in &self.covered {
             view.insert(
