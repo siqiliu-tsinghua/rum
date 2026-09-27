@@ -25,7 +25,7 @@ fn local_concrete_contract_controls() {
     let source = source::production();
     let index = Interfaces::new(&source);
     for record in records.iter().filter(|r| r.status == "Discharged") {
-        let good = Marks::contracts(vec![record.clone()]).unwrap();
+        let good = Marks::contracts(records.clone()).unwrap();
         assert!(good.lookup(&index, &record.target).is_ok());
         let mut changed = record.clone();
         changed.fingerprint.push('0');

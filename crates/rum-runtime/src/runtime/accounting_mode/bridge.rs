@@ -125,6 +125,26 @@ impl<'session, 'id, M: Mode> RetentionContext<'session, 'id, M> {
             }
             Err(panic) => resume_unwind(panic),
         };
+        self.adopt_outcome(prefix, Ok(value))
+    }
+
+    /// Private resume boundary: errors are terminal and retain their original
+    /// payload; successful values acquire a receipt before any builder grows.
+    pub(super) fn adopt_outcome(
+        self,
+        prefix: RetainedValues<'id, M>,
+        outcome: Result<Expr, EvalError>,
+    ) -> Result<CallbackValue<'session, 'id, M>, CallbackFailure<'session, 'id, M>> {
+        let value = match outcome {
+            Ok(value) => value,
+            Err(error) => {
+                return Err(CallbackFailure {
+                    context: self,
+                    prefix,
+                    error,
+                });
+            }
+        };
         let mut receipt = M::receipt(self.session);
         M::resize(&mut receipt, || Some(expr_bytes(&value)));
         if M::ARMED {
@@ -144,6 +164,77 @@ impl<'session, 'id, M: Mode> RetentionContext<'session, 'id, M> {
             prefix,
             value,
             receipt,
+        })
+    }
+}
+
+#[allow(private_bounds)]
+impl<'id, M: Mode> CallbackValue<'_, 'id, M> {
+    /// The rule-specific adoption reserves both child slots in one allocation.
+    /// The callback receipt is live before reserve, and retires only after the
+    /// destination receipt covers its actual capacity and value occurrence.
+    pub(super) fn into_rule(self, name: &Expr) -> Result<RetainedResult<'id, M>, EvalError> {
+        let Self {
+            mut context,
+            mut prefix,
+            value,
+            receipt,
+        } = self;
+        assert!(prefix.values.is_empty(), "rule starts with an empty prefix");
+        if !M::ARMED && context.session.current_memory_limit.is_some() {
+            // A guest may leave a newly armed limit active. Re-enter with a
+            // real receipt before the formerly unarmed builder can grow.
+            return Ok(RetainedResult {
+                outcome: super::rule::finish_armed(context.session, name, value),
+                receipt: None,
+                brand: std::marker::PhantomData,
+            });
+        }
+        context.reserve(&mut prefix, 2)?;
+        prefix.values.push(value);
+        M::resize(&mut prefix.receipt, || {
+            retained::values_bytes(&prefix.values)
+        });
+        drop(receipt);
+        if M::ARMED {
+            context
+                .session
+                .enforce_active_memory_limit_for_projected_bytes(0)?;
+        }
+        super::rule::finish_rule(context, prefix, name)
+    }
+}
+
+#[allow(private_bounds)]
+impl<'id, M: Mode> CallbackFailure<'_, 'id, M> {
+    /// Preserve the macro's order: success never arrives here, ordinary errors
+    /// leave with their payload, and only initialized InputRequired captures a
+    /// name. The continuation itself contains no raw expression owner.
+    pub(super) fn suspend_rule(mut self, name: &Expr) -> RetainedResult<'id, M> {
+        assert!(
+            self.prefix.values.is_empty(),
+            "rule failure starts with an empty prefix"
+        );
+        if !matches!(self.error, EvalError::InputRequired { .. })
+            || self.context.session.pending_suspension.is_none()
+        {
+            return self.finish();
+        }
+        if !M::ARMED && self.context.session.current_memory_limit.is_some() {
+            return RetainedResult::failure(super::rule::suspend_armed(
+                self.context.session,
+                self.error,
+                name,
+            ));
+        }
+        if let Err(error) = super::rule::clone_child(&mut self.context, &mut self.prefix, name) {
+            self.context.session.abandon_pending_suspension(
+                crate::runtime::suspension::AbandonReason::HelperBestEffortDiscard,
+            );
+            return RetainedResult::failure(error);
+        }
+        self.context.suspend(self.prefix, self.error, || {
+            crate::runtime::options::RuntimeOptionSuspensionFrame
         })
     }
 }

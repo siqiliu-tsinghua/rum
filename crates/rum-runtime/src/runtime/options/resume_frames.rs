@@ -1,27 +1,22 @@
 use super::*;
+use crate::runtime::accounting_mode::{FrozenValues, RetentionContinuation, rule};
 use crate::runtime::suspension::{FrameAction, SuspensionFrame};
 use rum_core::SharedArgs;
 use std::sync::Arc;
 
-/// Rebuild the immediate option rule after its delayed value resumes.
-#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
-pub(super) struct RuntimeOptionSuspensionFrame {
-    pub(super) name: Expr,
-}
+/// The private RetentionFrame owns the charged, lazily captured name. This
+/// descriptor only borrows it, including when another Arc keeps it alive.
+#[derive(rum_derive::FrameRootTrace)]
+pub(in crate::runtime) struct RuntimeOptionSuspensionFrame;
 
-impl SuspensionFrame for RuntimeOptionSuspensionFrame {
+impl RetentionContinuation for RuntimeOptionSuspensionFrame {
     fn resume(
-        self: Arc<Self>,
-        _session: &mut Session,
+        &self,
+        session: &mut Session,
+        prefix: &FrozenValues,
         outcome: Result<Expr, EvalError>,
     ) -> FrameAction {
-        FrameAction::complete(match outcome {
-            Ok(value) => Ok(Expr::call(
-                system_expr("Rule"),
-                vec![self.name.clone(), value],
-            )),
-            Err(error) => Err(error),
-        })
+        FrameAction::complete(rule::resume_rule(session, prefix, outcome))
     }
 }
 

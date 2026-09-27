@@ -1151,7 +1151,6 @@ pub(super) const PURE_FRAME_ABANDON_TYPES: &[&str] = &[
     "crates/rum-runtime/src/runtime/options/builtins.rs:EvalOptionValueSuspensionFrame",
     "crates/rum-runtime/src/runtime/options/builtins.rs:EvalSetOptionsSuspensionFrame",
     "crates/rum-runtime/src/runtime/options/resume_frames.rs:MergedOptionsSuspensionFrame",
-    "crates/rum-runtime/src/runtime/options/resume_frames.rs:RuntimeOptionSuspensionFrame",
     "crates/rum-runtime/src/runtime/package_tools/resume_frames.rs:EvalOnceBuiltinSuspensionFrame",
     "crates/rum-runtime/src/runtime/pattern_matching/core/resume_frames.rs:ContinueCompiledAlternativeFrame",
     "crates/rum-runtime/src/runtime/pattern_matching/core/resume_frames.rs:ContinueCompiledCallFrame",

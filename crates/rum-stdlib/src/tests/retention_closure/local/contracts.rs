@@ -152,11 +152,13 @@ pub(super) fn read(text: &str) -> Result<Vec<Contract>, String> {
         if identity.as_deref() != Some(f[1]) || !seen.insert(f[0]) || f[1].contains('*') {
             return Err("unknown, duplicate, wildcard or redirected contract identity".into());
         }
+        let rule =
+            matches!(f[0], "B10" | "B11") || super::rules::extra_targets().contains_key(f[0]);
         let legacy = matches!(f[0], "B03" | "B09" | "B12");
         let reads = matches!(f[0], "I02" | "B13");
         let added =
             reads || matches!(f[0], "B04" | "B05" | "I01" | "I04") || extra.contains_key(f[0]);
-        let installed = legacy || added;
+        let installed = legacy || added || rule;
         if f[17] != if installed { "Discharged" } else { "Pending" } {
             return Err(format!(
                 "{}: only B03/B09/B12 and the explicitly installed concrete records may be discharged",
@@ -166,8 +168,19 @@ pub(super) fn read(text: &str) -> Result<Vec<Contract>, String> {
         if legacy && f[12] != "Runtime-enforced" {
             return Err("wrong discharge category".into());
         }
-        if added && (f[12] != "Test-checked" || f[6] != super::protocol::effect(f[0])) {
+        if added && !rule && (f[12] != "Test-checked" || f[6] != super::protocol::effect(f[0])) {
             return Err("added contract needs its exact effect and Test-checked discharge".into());
+        }
+        if rule
+            && (f[12]
+                != if f[0] == "B11" {
+                    "Test-checked"
+                } else {
+                    "Runtime-enforced"
+                }
+                || f[6] != super::protocol::effect(f[0]))
+        {
+            return Err("rule boundary requires its exact effect and discharge strength".into());
         }
         if f[11] != "allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt" {
             return Err("unknown exclusions".into());
@@ -181,7 +194,8 @@ pub(super) fn read(text: &str) -> Result<Vec<Contract>, String> {
             if !contents.contains(&format!("fn {test}(")) {
                 return Err(format!("missing executable falsifier {}", f[0]));
             }
-            if !(reads && test == "local_option_read_contract_controls")
+            if !(rule && test == "local_rule_contract_controls")
+                && !(reads && test == "local_option_read_contract_controls")
                 && !(added && !reads && test == "local_concrete_contract_controls")
                 && !matches!(
                     (f[0], test),

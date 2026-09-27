@@ -20,7 +20,7 @@ pub struct RetainedValues<'id, M: RetentionMode> {
 pub struct RetainedResult<'id, M: RetentionMode> {
     pub(super) outcome: Result<Expr, EvalError>,
     pub(super) receipt: Option<M::Receipt>,
-    brand: Brand<'id>,
+    pub(super) brand: Brand<'id>,
 }
 
 pub struct RetentionContext<'session, 'id, M: RetentionMode> {

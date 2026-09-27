@@ -46,6 +46,15 @@ pub struct FrozenValues {
     complement: FrozenComplement,
 }
 
+impl FrozenValues {
+    /// Only the private rule continuation uses this view. The frame remains an
+    /// immutable S owner; finish_rule charges the cloned working occurrence.
+    pub(super) fn rule_name(&self) -> &Expr {
+        assert_eq!(self.values.len(), 1, "one frozen option name");
+        &self.values[0]
+    }
+}
+
 struct FrozenComplement {
     spare_slots: usize,
     receipt: Option<Arc<Mutex<RetentionLease>>>,

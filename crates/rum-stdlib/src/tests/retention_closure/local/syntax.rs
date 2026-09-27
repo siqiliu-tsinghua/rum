@@ -53,6 +53,18 @@ impl Lint<'_> {
         mac: &syn::Macro,
         expected: Option<&ExactTy>,
     ) -> Option<ExactTy> {
+        if tokens(&mac.path) == "crate :: resume_or_suspend" {
+            let checked =
+                resume_macro::adapt(self.source(), self.f, mac, &self.index.resume_definition)
+                    .and_then(|arm| resume_macro::guarded_insert(self.index, self.f, &arm));
+            match checked {
+                Ok(()) => {
+                    self.call_mark(mac.span(), &contracts::target("B12"));
+                    return Some(ExactTy::Unit);
+                }
+                Err(reason) => self.reject(mac.span(), Kind::RET002, None, reason),
+            }
+        }
         self.reject(
             mac.span(),
             Kind::RET003,

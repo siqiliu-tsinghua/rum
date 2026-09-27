@@ -72,7 +72,27 @@ impl Flow<'_> {
                 let mut output = self.fact(e);
                 if let syn::Expr::Path(p) = &*c.func {
                     if let Ok(target) = resolve::path(self.source, &self.f.module, &p.path) {
-                        if target == format!("{}::string", protocol::EXPR) && args.len() == 1 {
+                        if rules::outgoing(&target) {
+                            // The scope's outgoing W becomes the caller's raw
+                            // Result (including Expr-bearing Err), not a lease.
+                            output.ty = Ty::Variants(BTreeMap::from([
+                                (
+                                    "Ok".into(),
+                                    BTreeMap::from([(
+                                        "0".into(),
+                                        Ty::Raw("outgoing rule result".into()),
+                                    )]),
+                                ),
+                                (
+                                    "Err".into(),
+                                    BTreeMap::from([(
+                                        "0".into(),
+                                        Ty::Raw("outgoing error payload".into()),
+                                    )]),
+                                ),
+                            ]));
+                        } else if target == format!("{}::string", protocol::EXPR) && args.len() == 1
+                        {
                             output.ty = args[0].ty.clone();
                             output.provenance = args[0].provenance.clone();
                         } else if let Some((_, variant)) = resolve::standard_variant(&target) {

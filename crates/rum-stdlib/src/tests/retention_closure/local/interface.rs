@@ -10,6 +10,7 @@ pub(super) struct Interfaces {
     syntax: BTreeMap<Id, String>,
     pub earned: super::marks::Marks,
     pub read_contracts: BTreeMap<Id, Result<(), String>>,
+    pub resume_definition: Result<(), String>,
 }
 
 pub(super) fn probe_body(f: &Function) -> bool {
@@ -204,7 +205,11 @@ impl Interfaces {
             })
             .collect();
         let mut index = Self {
-            read_contracts: super::reads::contracts::validate(input),
+            read_contracts: super::reads::contracts::validate(input)
+                .into_iter()
+                .chain(super::rules::validate(input))
+                .collect(),
+            resume_definition: super::resume_macro::definition(input),
             signatures,
             bodies,
             syntax,

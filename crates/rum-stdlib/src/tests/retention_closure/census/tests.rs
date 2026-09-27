@@ -142,8 +142,9 @@ fn baseline(source: &Source) {
             format!("{}::evaluate_runtime_option_expr", regions::SESSION),
         ],
     );
-    // Exactly the three located baseline rows removed by A1. Payload method
-    // rejections at options/core.rs:250 and :264 remain in the frontier.
+    // The A1 constructor rows remain absent. Brief 543 replaces C02's two
+    // payload clones with private adapters; the legacy frontier still rejects
+    // their unmodeled generic/closure boundaries, independently of local marks.
     for (suffix, line, start, end) in [
         ("expr_helpers.rs", 22, 45, 57),
         ("options/core.rs", 250, 20, 36),
@@ -159,15 +160,28 @@ fn baseline(source: &Source) {
             "constructor row remains at {suffix}:{line}:{start}-{end}"
         );
     }
-    for line in [250, 264] {
+    for (suffix, line, reason) in [
+        ("options/core.rs", 253, "method syntax"),
+        ("accounting_mode/rule.rs", 20, "closure capture"),
+        ("accounting_mode/rule.rs", 22, "closure capture"),
+        ("accounting_mode/rule.rs", 110, "closure capture"),
+    ] {
         assert!(
             options
                 .rejected
                 .iter()
-                .any(|r| r.site.file.ends_with("options/core.rs")
+                .any(|r| r.site.file.ends_with(suffix)
                     && r.site.start.0 == line
-                    && r.reason.starts_with("method syntax"))
+                    && r.reason.starts_with(reason))
         );
+    }
+    for (suffix, line) in [
+        ("options/core.rs", 101),
+        ("accounting_mode/retained.rs", 57),
+    ] {
+        assert!(options.rejected.iter().any(|r| r.kind == Kind::RET001
+            && r.site.file.ends_with(suffix)
+            && r.site.start.0 == line));
     }
     let mut kinds = BTreeMap::new();
     for row in &options.rejected {
@@ -175,12 +189,12 @@ fn baseline(source: &Source) {
     }
     assert_eq!(
         options.rejected.len(),
-        14,
-        "STOP: brief-534 predicted constructor delta moved"
+        23,
+        "STOP: brief-543 exact legacy frontier inventory moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 1), (Kind::RET002, 12), (Kind::RET003, 1)])
+        BTreeMap::from([(Kind::RET001, 2), (Kind::RET002, 21)])
     );
     let wrapper = regions::frontier(
         source,
@@ -199,6 +213,6 @@ fn baseline(source: &Source) {
     );
     assert!(include_str!("../inventory/promoted.tsv").is_empty());
     println!(
-        "ACCEPTANCE_BASELINE OPTION_FRONTIER=14 RET001=1 RET002=12 RET003=1 PUBLIC_WRAPPER=13 PRODUCTION_COVERAGE=0"
+        "ACCEPTANCE_BASELINE OPTION_FRONTIER=23 RET001=2 RET002=21 RET003=0 PUBLIC_WRAPPER=13 PRODUCTION_COVERAGE=0"
     );
 }

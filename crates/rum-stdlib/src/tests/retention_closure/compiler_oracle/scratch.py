@@ -31,7 +31,8 @@ def refresh_crates(workspace, root):
     workspace, root = workspace.resolve(), root.resolve()
     assert (root.is_relative_to(workspace / 'target/brief-535')
             or root.is_relative_to(workspace / 'target/brief-540')
-            or root.is_relative_to(workspace / '.temp/brief-542'))
+            or root.is_relative_to(workspace / '.temp/brief-542')
+            or root.is_relative_to(workspace / '.temp/brief-543/oracle-reads'))
     destination = root / 'crates'
     assert not destination.is_symlink()
     if destination.exists():

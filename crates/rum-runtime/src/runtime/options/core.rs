@@ -247,21 +247,17 @@ impl Session {
 
     fn evaluate_runtime_option_expr(&mut self, expr: &Expr) -> Result<Expr, EvalError> {
         let Expr::Call { head, args } = expr else {
-            return Ok(expr.clone());
+            return crate::runtime::accounting_mode::rule::clone_result(self, expr);
         };
 
         if is_system_symbol_name(head, "RuleDelayed") && args.len() == 2 {
-            crate::resume_or_suspend!(
-                self,
-                self.evaluate(args[1].clone()),
-                ok(value) => Ok(Expr::call(
-                    system_expr("Rule"),
-                    vec![args[0].clone(), value],
-                )),
-                suspend => RuntimeOptionSuspensionFrame { name: args[0].clone() },
-            )
+            crate::runtime::accounting_mode::rule::evaluate_rule(self, &args[0], &args[1])
         } else {
-            Ok(expr.clone())
+            crate::runtime::accounting_mode::rule::clone_result(self, expr)
         }
     }
 }
+
+#[cfg(test)]
+#[path = "tests/rule.rs"]
+mod rule_tests;

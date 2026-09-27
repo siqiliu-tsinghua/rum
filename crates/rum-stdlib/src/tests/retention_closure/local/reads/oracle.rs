@@ -1,5 +1,5 @@
-//! Observe claims at the actual C02 sites, including expressions in refused
-//! macro tokens. Compiler agreement supplies Rust facts, never macro admission.
+//! Observe actual C02 reads and retain the B04 read fixture after production
+//! cloning moves into the private rule builder. Rust facts grant no receipt.
 use super::super::{
     super::{regions, source},
     oracle::{json, offset},
@@ -17,8 +17,99 @@ fn local_option_read_claims_match_stable_rustc() {
         &format!("{}::evaluate_runtime_option_expr", regions::SESSION),
     )
     .unwrap();
-    let report = check(&index, f, &marks);
-    let text = &source.files[&f.site.file];
+    let (production, mut targets_seen) = claims(
+        &index,
+        &marks,
+        f,
+        &source.files[&f.site.file],
+        "option_C02",
+        "__b542_option_reads",
+    );
+    for id in ["I01", "I02", "I04", "B05", "B13"] {
+        assert!(
+            targets_seen.contains(&super::super::contracts::target(id)),
+            "missing live {id}"
+        );
+    }
+    let mut fixture = tests::function(&source, tests::READS);
+    fixture.site.file = "fixture:reads::READS".into();
+    let (fixture, fixture_targets) = claims(
+        &index,
+        &marks,
+        &fixture,
+        tests::READS,
+        "retained_clone_fixture",
+        "__b543_clone_reads",
+    );
+    assert!(fixture_targets.contains(&super::super::contracts::target("B04")));
+    targets_seen.extend(fixture_targets);
+    for id in ["I01", "I02", "I04", "B04", "B05", "B13"] {
+        assert!(
+            targets_seen.contains(&super::super::contracts::target(id)),
+            "missing {id}"
+        );
+    }
+    let dir = source::workspace()
+        .join(".temp/brief-543/oracle-reads")
+        .join(if cfg!(feature = "hash") {
+            "hash"
+        } else {
+            "no-default-features"
+        });
+    fs::create_dir_all(&dir).unwrap();
+    fs::write(
+        dir.join("claims.json"),
+        format!("[{production},{fixture}]\n"),
+    )
+    .unwrap();
+    let features = if cfg!(feature = "hash") {
+        "hash"
+    } else {
+        "no-default-features"
+    };
+    let fingerprint =
+        super::super::super::compiler_oracle::cache::fingerprint(&dir, &["claims.json"], features);
+    if let Some(output) = super::super::super::compiler_oracle::cache::reuse(&dir, &fingerprint) {
+        print!("{output}");
+        return;
+    }
+    let result = Command::new("python3")
+        .arg(source::workspace().join("scripts/run-bounded.py"))
+        .args(["--timeout", "900", "--", "python3"])
+        .arg(
+            source::workspace()
+                .join("crates/rum-stdlib/src/tests/retention_closure/local/reads/oracle.py"),
+        )
+        .arg(source::workspace())
+        .arg(&dir)
+        .arg(features)
+        .output()
+        .unwrap();
+    fs::write(
+        dir.join("harness.log"),
+        [result.stdout.as_slice(), result.stderr.as_slice()].concat(),
+    )
+    .unwrap();
+    assert!(
+        result.status.success(),
+        "{}\n{}",
+        String::from_utf8_lossy(&result.stdout),
+        String::from_utf8_lossy(&result.stderr)
+    );
+    let output = String::from_utf8_lossy(&result.stdout);
+    super::super::super::compiler_oracle::cache::record(&dir, &fingerprint, &output);
+    print!("{output}");
+}
+
+fn claims(
+    index: &Interfaces,
+    marks: &Marks,
+    f: &Function,
+    text: &str,
+    name: &str,
+    ident: &str,
+) -> (String, BTreeSet<Id>) {
+    let report = check(index, f, marks);
     let body = Site::new(&f.site.file, f.body.span());
     let start = offset(text, body.start);
     let end = offset(text, body.end);
@@ -69,67 +160,16 @@ fn local_option_read_claims_match_stable_rustc() {
             offset(text,site.start)-start, offset(text,site.end)-start, json(&site.display()), json(&ty.spelling()), place, adjustment,
             selected.iter().map(|s| json(s)).collect::<Vec<_>>().join(",")));
     }
-    for id in ["I01", "I02", "I04", "B04", "B05", "B13"] {
-        assert!(
-            targets_seen.contains(&super::super::contracts::target(id)),
-            "missing {id}"
-        );
-    }
-    let dir = source::workspace()
-        .join(".temp/brief-542/oracle")
-        .join(if cfg!(feature = "hash") {
-            "hash"
-        } else {
-            "no-default-features"
-        });
-    fs::create_dir_all(&dir).unwrap();
     let mut sig = f.sig.clone();
-    sig.ident = syn::Ident::new("__b542_option_reads", sig.ident.span());
-    fs::write(
-        dir.join("claims.json"),
+    sig.ident = syn::Ident::new(ident, sig.ident.span());
+    (
         format!(
-            "[{{\"name\":\"option_C02\",\"signature\":{},\"body\":{},\"claims\":[{}]}}]\n",
+            "{{\"name\":{},\"signature\":{},\"body\":{},\"claims\":[{}]}}",
+            json(name),
             json(&tokens(&sig)),
             json(&text[start..end]),
             claims.join(",")
         ),
+        targets_seen,
     )
-    .unwrap();
-    let features = if cfg!(feature = "hash") {
-        "hash"
-    } else {
-        "no-default-features"
-    };
-    let fingerprint =
-        super::super::super::compiler_oracle::cache::fingerprint(&dir, &["claims.json"], features);
-    if let Some(output) = super::super::super::compiler_oracle::cache::reuse(&dir, &fingerprint) {
-        print!("{output}");
-        return;
-    }
-    let result = Command::new("python3")
-        .arg(source::workspace().join("scripts/run-bounded.py"))
-        .args(["--timeout", "900", "--", "python3"])
-        .arg(
-            source::workspace()
-                .join("crates/rum-stdlib/src/tests/retention_closure/local/reads/oracle.py"),
-        )
-        .arg(source::workspace())
-        .arg(&dir)
-        .arg(features)
-        .output()
-        .unwrap();
-    fs::write(
-        dir.join("harness.log"),
-        [result.stdout.as_slice(), result.stderr.as_slice()].concat(),
-    )
-    .unwrap();
-    assert!(
-        result.status.success(),
-        "{}\n{}",
-        String::from_utf8_lossy(&result.stdout),
-        String::from_utf8_lossy(&result.stderr)
-    );
-    let output = String::from_utf8_lossy(&result.stdout);
-    super::super::super::compiler_oracle::cache::record(&dir, &fingerprint, &output);
-    print!("{output}");
 }

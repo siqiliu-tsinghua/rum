@@ -1,5 +1,6 @@
 //! Every recorded A1 fixture fact is checked, not a hand-selected sample.
-//! Production context claims check the three newly resolved legacy sites.
+//! Production context claims and preserved clone-return fixtures keep the A1
+//! constructor proof independent of C02's later conversion to a lease adapter.
 
 use super::super::{
     constructor_tests, contracts, effects, fixtures, leaves, model::*, regions, resolve, source,
@@ -104,6 +105,27 @@ fn exact_types_and_constructor_claims_match_rustc() {
     }
     fs::write(directory.join("resolutions.tsv"), out).unwrap();
 
+    // C02 no longer contains either raw Ok(expr.clone()) return. Keep both
+    // shapes in the compiled corpus, with known types and rejected effects.
+    let mut legacy_clone_claims = 0;
+    for name in [
+        "known_type_rejected_effect",
+        "return_known_type_rejected_effect",
+    ] {
+        let id = format!("fixture::constructors::{name}");
+        let f = resolve::function(&source, &id).unwrap();
+        let claims = types::constructor_claims(&source, f);
+        assert_eq!(claims.len(), 1, "one preserved clone-return constructor");
+        assert_eq!(claims[0].target, "std::result::Result::Ok");
+        assert_eq!(claims[0].exact.spelling(), "std::result::Result<usize, u8>");
+        let rejected = effects::check(&source, &id, &contracts())
+            .err()
+            .expect("a known Result type must not admit the clone effect");
+        assert_eq!(rejected.kind, Kind::RET002);
+        assert!(rejected.reason.contains("method dispatch"));
+        legacy_clone_claims += claims.len();
+    }
+
     let production = source::production();
     let frontier = regions::frontier(
         &production,
@@ -144,9 +166,11 @@ fn exact_types_and_constructor_claims_match_rustc() {
             );
         }
     }
-    assert!(
-        total >= 3,
-        "three newly resolved constructor sites must have context claims"
+    assert_eq!(total, 2, "live expr_as_symbol Some and None context claims");
+    assert_eq!(
+        total + legacy_clone_claims,
+        4,
+        "both live symbol variants and both preserved clone-return contexts"
     );
     fs::write(directory.join("production.tsv"), out).unwrap();
     let features = if cfg!(feature = "hash") {

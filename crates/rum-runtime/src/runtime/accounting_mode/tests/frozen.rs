@@ -85,3 +85,70 @@ fn retention_shared_frame_keeps_roots_and_lease_until_last_owner_drops() {
         "shared frame: root preserved on success/error, complement {complement} released at last drop"
     );
 }
+
+#[test]
+fn option_rule_shared_frame_charges_working_result_and_preserves_last_owner() {
+    let mut session = Session::new();
+    session.current_memory_limit = Some(1_000_000_000);
+    session.note_accounting_arm();
+    let name = Expr::string("shared option name".repeat(4000));
+    let mut values = Vec::with_capacity(8);
+    values.push(name.clone());
+    let spare_slots = values.capacity() - values.len();
+    let complement = spare_slots * size_of::<Expr>()
+        + size_of::<Mutex<RetentionLease>>()
+        + 2 * size_of::<usize>();
+    let mut lease = RetentionLease::new(&mut session);
+    lease.resize(Some(complement));
+    let frame = Arc::new(RetentionFrame {
+        prefix: FrozenValues {
+            values,
+            complement: FrozenComplement {
+                spare_slots,
+                receipt: Some(Arc::new(Mutex::new(lease))),
+            },
+        },
+        continuation: crate::runtime::options::RuntimeOptionSuspensionFrame,
+    });
+    let retained = frame.clone();
+    let s = session.current_memory_proxy_bytes_for_test();
+    session.current_memory_limit = Some(s + complement + 2000);
+    assert!(matches!(
+        frame
+            .clone()
+            .resume(&mut session, Ok(Expr::small_integer(9))),
+        FrameAction::Complete(Err(EvalError::MemoryConstraintExceeded { .. }))
+    ));
+    assert_eq!(
+        session.retention_snapshot().unwrap().bytes,
+        Some(complement)
+    );
+    session.current_memory_limit = Some(1_000_000_000);
+    let FrameAction::Complete(Ok(value)) = frame
+        .clone()
+        .resume(&mut session, Ok(Expr::small_integer(9)))
+    else {
+        panic!("shared rule frame must resume");
+    };
+    assert_eq!(
+        value,
+        Expr::call(
+            system_expr("Rule"),
+            vec![name.clone(), Expr::small_integer(9)]
+        )
+    );
+    let payload = Expr::string("resumed error");
+    assert!(
+        matches!(frame.resume(&mut session, Err(EvalError::Return { value: payload.clone() })),
+        FrameAction::Complete(Err(EvalError::Return { value })) if value == payload)
+    );
+    assert_eq!(retained.prefix.rule_name(), &name);
+    assert_eq!(session.retention_snapshot().unwrap().live, 1);
+    assert_eq!(
+        session.retention_snapshot().unwrap().bytes,
+        Some(complement)
+    );
+    drop(retained);
+    assert_eq!(session.retention_snapshot().unwrap().bytes, Some(0));
+    assert_eq!(session.retention_snapshot().unwrap().live, 0);
+}

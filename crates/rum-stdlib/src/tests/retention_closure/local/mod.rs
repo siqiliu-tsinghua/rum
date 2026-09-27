@@ -15,6 +15,8 @@ mod oracle;
 mod production;
 mod protocol;
 mod reads;
+mod resume_macro;
+mod rules;
 mod surface;
 mod syntax;
 mod tests;
@@ -216,6 +218,10 @@ impl Lint<'_> {
     }
 
     fn call_mark(&mut self, span: proc_macro2::Span, target: &str) {
+        if let Err(reason) = rules::caller_domain(self.index, self.f, target) {
+            self.reject(span, Kind::RET002, Some(target.into()), reason);
+            return;
+        }
         let hazard = !self.inert.contains(target);
         self.report
             .calls

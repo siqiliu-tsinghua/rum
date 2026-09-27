@@ -75,18 +75,20 @@ fn local_production_acceptance() {
     for (label, line, report) in option_reports {
         assert_eq!(
             report.rejected.len(),
-            if label == "C01" { 17 } else { 15 },
-            "brief-542 predeclared {label} prediction; reconcile located rows, never edit the expectation\n{}",
+            if label == "C01" { 17 } else { 0 },
+            "brief-543 predeclared {label} prediction; reconcile located rows, never edit the expectation\n{}",
             report.text()
         );
-        assert!(
-            report
-                .rejected
-                .iter()
-                .any(|d| d.kind == Kind::RET001 && d.site.start.0 == line),
-            "{label}: missing raw construction at {line}\n{}",
-            report.text()
-        );
+        if label == "C01" {
+            assert!(
+                report
+                    .rejected
+                    .iter()
+                    .any(|d| d.kind == Kind::RET001 && d.site.start.0 == line),
+                "{label}: missing raw construction at {line}\n{}",
+                report.text()
+            );
+        }
     }
     assert!(
         probes.iter().all(|r| r.rejected.is_empty()),

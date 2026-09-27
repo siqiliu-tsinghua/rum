@@ -17,7 +17,7 @@ from scratch import refresh_crates
 
 workspace, directory, features = Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3]
 root = directory / 'workspace'
-assert root.resolve().is_relative_to((workspace / '.temp/brief-542').resolve())
+assert root.resolve().is_relative_to((workspace / '.temp/brief-543').resolve())
 root.mkdir(parents=True, exist_ok=True)
 originals = {str(p.relative_to(workspace)): hashlib.sha256(p.read_bytes()).hexdigest()
              for p in (workspace / 'crates').rglob('*.rs')}

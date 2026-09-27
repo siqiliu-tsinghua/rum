@@ -194,3 +194,9 @@ pub mod globbed {
         }
     }
 }
+
+// Preserve the explicit-return clone shape removed from production C02. The
+// compiler oracle checks its Result type while effects must still reject it.
+pub fn return_known_type_rejected_effect(value: &usize) -> Result<usize, u8> {
+    return Ok(value.clone());
+}

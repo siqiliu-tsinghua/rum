@@ -98,6 +98,17 @@ impl Marks {
                     if let Some(check) = index.read_contracts.get(id) {
                         check.clone()?;
                     }
+                    // The fixed rule protocol's direct records are reconciled
+                    // without recursively asking another mark or body.
+                    for dependency in super::rules::dependencies(id) {
+                        let record = self.contracts.get(&dependency).ok_or_else(|| {
+                            format!("missing rule boundary dependency {dependency}")
+                        })?;
+                        Self::contract(record)?;
+                        if let Some(check) = index.read_contracts.get(&dependency) {
+                            check.clone()?;
+                        }
+                    }
                     Ok(stamp)
                 });
                 (id.clone(), verdict)

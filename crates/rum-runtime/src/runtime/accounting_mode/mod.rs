@@ -17,6 +17,7 @@ mod counter;
 mod frozen;
 mod lease;
 mod retained;
+pub(in crate::runtime) mod rule;
 #[cfg(test)]
 #[path = "tests/mod.rs"]
 mod tests;
