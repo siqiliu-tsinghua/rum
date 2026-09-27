@@ -63,7 +63,11 @@ impl Flow<'_> {
                 let begin = self.pending.len();
                 let mut args = vec![];
                 for arg in &c.args {
-                    let v = self.expr(arg, true);
+                    let reborrow = self
+                        .report
+                        .reborrows
+                        .contains(&Site::new(&self.f.site.file, arg.span()));
+                    let v = self.expr(arg, !reborrow);
                     self.pending.push(v.clone());
                     args.push(v);
                 }

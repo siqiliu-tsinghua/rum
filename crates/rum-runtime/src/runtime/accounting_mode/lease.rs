@@ -125,7 +125,7 @@ impl RetentionMode for AccountingShadow {
     type Receipt = RetentionLease;
 }
 
-pub(super) trait Mode: RetentionMode {
+pub(in crate::runtime) trait Mode: RetentionMode {
     const ARMED: bool;
     fn receipt(session: &mut Session) -> Self::Receipt;
     fn resize(receipt: &mut Self::Receipt, bytes: impl FnOnce() -> Option<usize>);
@@ -183,7 +183,7 @@ impl Session {
             .iter()
             .filter(|prefix| !prefix.charged)
             .try_fold(ledger, |sum, prefix| {
-                sum.checked_add(super::retained::values_bytes(&prefix.values)?)
+                sum.checked_add(prefix.values.bytes()?)
             })?;
         let mut capacity = FrozenCapacityVisitor(Some(bytes));
         if let Some(owner) = self.pending_suspension.as_ref() {

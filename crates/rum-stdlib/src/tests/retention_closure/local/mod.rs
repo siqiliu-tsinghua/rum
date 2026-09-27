@@ -11,6 +11,8 @@ mod expressions;
 mod flow;
 mod interface;
 mod marks;
+mod option_boundaries;
+mod option_domain;
 mod oracle;
 mod production;
 mod protocol;
@@ -39,6 +41,7 @@ pub(super) struct Report {
     pub calls: BTreeMap<Site, bool>,
     pub bindings: BTreeMap<Site, ExactTy>,
     pub targets: BTreeMap<Site, BTreeSet<Id>>,
+    pub reborrows: BTreeSet<Site>,
 }
 
 impl Report {
@@ -50,6 +53,9 @@ impl Report {
 fn check(index: &Interfaces, f: &Function, marks: &Marks) -> Report {
     let marks = marks.with_covered(&index.earned);
     let source = &index.signatures;
+    if f.id == option_boundaries::c01() {
+        return option_boundaries::check_instances(index, f, &marks);
+    }
     let generic = types::mode_parameter(source, &f.module, &f.sig.generics);
     if matches!(generic, Ok(Some(_))) {
         let mut combined = Report::default();

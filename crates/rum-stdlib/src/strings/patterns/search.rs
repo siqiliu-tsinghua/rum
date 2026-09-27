@@ -34,7 +34,7 @@ pub(crate) fn eval_string_contains_q_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_string_pattern_predicate(
@@ -59,7 +59,7 @@ pub(crate) fn eval_string_starts_q_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_string_pattern_predicate(
@@ -84,7 +84,7 @@ pub(crate) fn eval_string_ends_q_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_string_pattern_predicate(
@@ -109,7 +109,7 @@ pub(crate) fn eval_string_position_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if !(2..=4).contains(&args.len()) {
@@ -163,7 +163,7 @@ pub(crate) fn eval_string_split_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if !(1..=4).contains(&args.len()) {
@@ -292,7 +292,7 @@ pub(crate) fn eval_string_replace_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if args.len() == 1 {
@@ -384,7 +384,7 @@ pub(crate) fn eval_string_cases_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if args.len() == 1 {
@@ -507,7 +507,7 @@ pub(crate) fn eval_string_count_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if args.len() < 2 {
@@ -566,7 +566,7 @@ pub(crate) fn eval_string_delete_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if args.len() == 1 {
@@ -647,7 +647,7 @@ pub(crate) fn eval_string_match_q_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_string_patterns_predicate(
@@ -672,7 +672,7 @@ pub(crate) fn eval_string_free_q_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_string_patterns_predicate(
@@ -691,7 +691,7 @@ fn eval_string_pattern_predicate(
     args: &[Expr],
     consumer: OptionConsumer,
     predicate: fn(&[char], &StringPattern, StringPatternMatchConfig) -> bool,
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let symbol = consumer.symbol_name();
     if args.len() == 1 {
@@ -740,7 +740,7 @@ fn eval_string_patterns_predicate(
     args: &[Expr],
     consumer: OptionConsumer,
     predicate: fn(&[char], &[StringPattern], StringPatternMatchConfig) -> bool,
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let symbol = consumer.symbol_name();
     if args.len() == 1 {

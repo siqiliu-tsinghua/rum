@@ -87,6 +87,12 @@ impl<'session, 'id, M: Mode> RetentionContext<'session, 'id, M> {
         mut prefix: RetainedValues<'id, M>,
         expr: Expr,
     ) -> Result<CallbackValue<'session, 'id, M>, CallbackFailure<'session, 'id, M>> {
+        // An empty, zero-capacity owner has nothing to publish on later arm.
+        // In particular C02's rule evaluation crosses with exactly this state.
+        if prefix.values.capacity() == 0 {
+            let outcome = self.session.evaluate(expr);
+            return self.adopt_outcome(prefix, outcome);
+        }
         // The explicit ownership bridge exists in both modes. Unarmed crosses
         // without a weight walk, lease, or lock. A later arm can see the actual
         // prefix, including every outer bridge in a nested callback chain.
@@ -95,14 +101,14 @@ impl<'session, 'id, M: Mode> RetentionContext<'session, 'id, M> {
             .accounting_route
             .get_or_insert_with(Default::default);
         route.prefixes.push(ActivePrefix {
-            values: std::mem::take(&mut prefix.values),
+            values: super::retained::ActiveValues::Owned(std::mem::take(&mut prefix.values)),
             charged: M::ARMED,
         });
         self.session.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::AccountingRoute,
         );
         let outcome = catch_unwind(AssertUnwindSafe(|| self.session.evaluate(expr)));
-        prefix.values = self
+        let values = self
             .session
             .accounting_route
             .as_mut()
@@ -111,6 +117,10 @@ impl<'session, 'id, M: Mode> RetentionContext<'session, 'id, M> {
             .pop()
             .expect("live bridge prefix")
             .values;
+        let super::retained::ActiveValues::Owned(values) = values else {
+            unreachable!("bridge stack restores the same owner kind")
+        };
+        prefix.values = values;
         self.session.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::AccountingRoute,
         );

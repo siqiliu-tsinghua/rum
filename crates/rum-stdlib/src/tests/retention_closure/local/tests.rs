@@ -219,7 +219,7 @@ fn local_contract_falsifiers() {
             .iter()
             .filter(|c| c.status == "Discharged" && !matches!(c.id.as_str(), "I02" | "B13"))
             .count(),
-        56 // the original 31 plus B10/B11 and 23 explicit private rule records
+        60 // prior 56 plus the four concrete option snapshot/driver records
     );
     assert_eq!(
         records

@@ -12,8 +12,8 @@ mod reentry;
 mod reentry_tests;
 mod resume_frames;
 
-pub use reentry::OptionReentry;
-use resume_frames::MergedOptionsSuspensionFrame;
+pub use reentry::{OptionReentry, OptionReentryDeclaration};
+pub(in crate::runtime) use resume_frames::MergedOptionsSuspensionFrame;
 pub(in crate::runtime) use resume_frames::RuntimeOptionSuspensionFrame;
 
 pub(super) use defaults::default_system_options;

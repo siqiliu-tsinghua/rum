@@ -224,7 +224,7 @@ pub(crate) fn eval_union_with_options(
     session: &mut Session,
     _head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if args.is_empty() {
@@ -312,7 +312,7 @@ pub(crate) fn eval_intersection_with_options(
     session: &mut Session,
     _head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if args.is_empty() {
@@ -396,7 +396,7 @@ pub(crate) fn eval_complement_with_options(
     session: &mut Session,
     _head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if args.is_empty() {
@@ -581,7 +581,9 @@ fn same_test_option_name(expr: &Expr) -> Option<&str> {
     }
 }
 
-fn effective_same_test(option_exprs: Vec<Expr>) -> Result<Option<Expr>, EvalError> {
+fn effective_same_test(
+    option_exprs: rum_runtime::kernel_api::RetainedOptions<'_>,
+) -> Result<Option<Expr>, EvalError> {
     let mut same_test = None;
 
     for expr in option_exprs {

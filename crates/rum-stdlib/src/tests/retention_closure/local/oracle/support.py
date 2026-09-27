@@ -80,8 +80,12 @@ def matches(target, observation):
     method = re.findall(r'::([A-Za-z_]+)(?:::<|$)', target)[-1]
     modes = [m for m in ['Unarmed', 'AccountingShadow'] if '::' + m in target]
     mode = modes[0] if modes else None
-    if method in ('start', 'drive'):
-        return bool(re.match(method + r'::<counter::(Unarmed|AccountingShadow)>\(', o))
+    probe_owner = 'rum_runtime::runtime::accounting_mode::tests::'
+    if target in (probe_owner + 'start', probe_owner + 'drive'):
+        # rustc qualifies the probe path when another module also defines drive.
+        # Accept only this exact module alias, never an arbitrary suffix match.
+        return bool(re.match(r'(?:accounting_mode::tests::)?' + method +
+                             r'::<counter::(Unarmed|AccountingShadow)>\(', o))
     exact = {
         'small_integer': 'rum_core::Expr::small_integer(',
         'string': 'rum_core::Expr::string::<std::string::String>(',

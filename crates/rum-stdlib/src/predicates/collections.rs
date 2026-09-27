@@ -70,7 +70,7 @@ pub(crate) fn eval_duplicate_free_q_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     let (data_args, explicit_options) = split_same_test_options(args, 1);
@@ -120,7 +120,7 @@ pub(crate) fn eval_intersecting_q_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_list_containment_relation(
@@ -149,7 +149,7 @@ pub(crate) fn eval_disjoint_q_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_list_containment_relation(
@@ -178,7 +178,7 @@ pub(crate) fn eval_subset_q_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_list_containment_relation(
@@ -209,7 +209,7 @@ pub(crate) fn eval_contains_all_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_list_containment_relation(
@@ -240,7 +240,7 @@ pub(crate) fn eval_contains_any_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_list_containment_relation(
@@ -271,7 +271,7 @@ pub(crate) fn eval_contains_exactly_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_list_containment_relation(
@@ -297,7 +297,7 @@ pub(crate) fn eval_contains_none_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_list_containment_relation(
@@ -328,7 +328,7 @@ pub(crate) fn eval_contains_only_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     eval_list_containment_relation(
@@ -352,7 +352,7 @@ fn eval_list_containment_relation<F>(
     args: &[Expr],
     same_test_kind: SameTestRelationKind,
     predicate: F,
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError>
 where
     F: FnOnce(&[Expr], &[Expr]) -> bool,
@@ -459,7 +459,9 @@ fn same_test_option_name(expr: &Expr) -> Option<&str> {
     }
 }
 
-fn effective_same_test(option_exprs: Vec<Expr>) -> Result<Option<Expr>, EvalError> {
+fn effective_same_test(
+    option_exprs: rum_runtime::kernel_api::RetainedOptions<'_>,
+) -> Result<Option<Expr>, EvalError> {
     let mut same_test = None;
 
     for expr in option_exprs {

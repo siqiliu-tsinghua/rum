@@ -58,7 +58,7 @@ pub(crate) fn eval_template_apply_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     match args {
@@ -100,7 +100,7 @@ fn render_template_apply(
     template: &str,
     data: &Expr,
     option_args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let option_exprs = match resolved_options {
         Some(options) => options,

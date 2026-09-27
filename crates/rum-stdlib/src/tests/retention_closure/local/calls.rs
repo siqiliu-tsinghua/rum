@@ -86,6 +86,9 @@ impl Lint<'_> {
         if target == protocol::SCOPED {
             return self.scoped(c, p);
         }
+        if [option_boundaries::SNAPSHOT, option_boundaries::DRIVE].contains(&target.as_str()) {
+            return self.option_boundary(c, p, &target);
+        }
         if target == format!("{}::string", protocol::EXPR) {
             if c.args.len() != 1 || p.path.segments.iter().any(|s| !s.arguments.is_empty()) {
                 return self.no(

@@ -16,7 +16,7 @@ pub(crate) fn eval_url_encode_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     let [text, option_args @ ..] = args else {
@@ -55,7 +55,7 @@ pub(crate) fn eval_url_decode_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     let [text, option_args @ ..] = args else {
@@ -97,7 +97,7 @@ pub(crate) fn eval_url_parse_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     let [text, option_args @ ..] = args else {
@@ -179,7 +179,9 @@ struct UrlParseOptions {
     decode_query: bool,
 }
 
-fn parse_url_form_options(option_exprs: Vec<Expr>) -> Result<Option<UrlFormOptions>, EvalError> {
+fn parse_url_form_options(
+    option_exprs: rum_runtime::kernel_api::RetainedOptions<'_>,
+) -> Result<Option<UrlFormOptions>, EvalError> {
     let mut options = UrlFormOptions {
         form_encoding: false,
     };
@@ -205,12 +207,12 @@ fn parse_url_form_options(option_exprs: Vec<Expr>) -> Result<Option<UrlFormOptio
 fn parse_url_parse_options(
     session: &mut Session,
     text: &str,
-    option_exprs: Vec<Expr>,
+    option_exprs: rum_runtime::kernel_api::RetainedOptions<'_>,
 ) -> Result<Option<UrlParseOptions>, EvalError> {
     let mut default_scheme = None;
     let mut decode_query = false;
 
-    for expr in &option_exprs {
+    for expr in option_exprs {
         let Some((name, value)) = option_rule(expr) else {
             return Ok(None);
         };

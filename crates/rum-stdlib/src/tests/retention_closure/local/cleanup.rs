@@ -8,6 +8,7 @@ pub(super) fn ownership(source: &Source, t: &ExactTy) -> Ty {
         return Ty::Unchecked("unclassified custom Drop".into());
     }
     match t {
+        _ if option_domain::copy_member(source, t) => Ty::Scalar(t.spelling()),
         ExactTy::Nominal(id, args)
             if [protocol::EXPR, protocol::ERROR, protocol::ARGS].contains(&id.as_str())
                 && args.is_empty() =>
@@ -21,6 +22,7 @@ pub(super) fn ownership(source: &Source, t: &ExactTy) -> Ty {
                 protocol::RESULT,
                 protocol::CALLBACK,
                 protocol::FAILURE,
+                option_boundaries::OWNER,
             ]
             .contains(&id.as_str())
                 && args.len() == 1

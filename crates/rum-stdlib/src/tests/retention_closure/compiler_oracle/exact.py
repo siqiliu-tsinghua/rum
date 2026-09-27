@@ -223,7 +223,9 @@ def run(workspace, directory, features):
                     status, errors = scratch.compile(row['name'] + '-' + mode)
                     scratch.restore()
                     if mode == 'wrong':
-                        assert status != 0 and scratch.at(errors, row['file'], row['start_line'], 'E0308'), f'production wrong-type control missed {row}'
+                        # freeze appends the invariant check after the original
+                        # expression, so its primary error is on the end line.
+                        assert status != 0 and scratch.at(errors, row['file'], row['end_line'], 'E0308'), f'production wrong-type control missed {row}'
                     else:
                         exact_ok = status == 0
                 result = 'AGREEMENT' if exact_ok else 'DISAGREEMENT'

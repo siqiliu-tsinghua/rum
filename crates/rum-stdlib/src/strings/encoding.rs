@@ -111,7 +111,7 @@ pub(crate) fn eval_uncompress_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if args.is_empty() {

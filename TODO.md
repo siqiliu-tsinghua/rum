@@ -26,6 +26,18 @@ director-reproduced, and rulings D1-D7 stand if it is ever resumed.
 
 **Also open, in rough order of weight:**
 
+- **Open unarmed cost from the option-region conversion (brief-544, 2026-09-28).**
+  Correctness is complete — C01 and C02 lint clean for both declared M x R
+  instances — but the accounting does not erase when unarmed. Director-measured
+  per-iteration instructions against the pre-conversion base: every
+  option-consuming builtin **+1.69%** (`stringreplace-single-literal-unguarded`),
+  and delayed (`:>`) options **+4.91% / +6.05% / +6.32%** against pre-543 with one
+  extra 40-byte allocation per iteration (an `Arc<Vec<Expr>>` the unarmed owner
+  still builds). The armed cost is linear, about 2 300 instructions per option
+  plus 5 600 fixed — the director's two-point fit predicts the worker's 8- and
+  32-option rows within 0.12 points — so it is the security model's own path,
+  not a superlinear defect. Must be dispositioned before step 545 promotes.
+
 - **User ruling 2026-09-27 — U1, the option region's generic `R`: a runtime
   certified-registration domain.** `OptionReentry` registration accepts any
   type, so a session's registered set is finite but open in kind, unlike the

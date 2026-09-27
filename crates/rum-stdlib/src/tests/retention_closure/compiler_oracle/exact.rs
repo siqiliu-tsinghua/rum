@@ -166,11 +166,14 @@ fn exact_types_and_constructor_claims_match_rustc() {
             );
         }
     }
-    assert_eq!(total, 2, "live expr_as_symbol Some and None context claims");
+    assert_eq!(
+        total, 5,
+        "two symbol variants and three option-driver Result contexts"
+    );
     assert_eq!(
         total + legacy_clone_claims,
-        4,
-        "both live symbol variants and both preserved clone-return contexts"
+        7,
+        "all live contexts and both preserved clone-return contexts"
     );
     fs::write(directory.join("production.tsv"), out).unwrap();
     let features = if cfg!(feature = "hash") {

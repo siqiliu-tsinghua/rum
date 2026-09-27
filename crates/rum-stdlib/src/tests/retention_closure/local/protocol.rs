@@ -84,6 +84,7 @@ pub(super) fn extra_targets() -> BTreeMap<String, String> {
         }
     }
     rows.extend(super::rules::extra_targets());
+    rows.extend(super::option_boundaries::extra_targets());
     rows
 }
 

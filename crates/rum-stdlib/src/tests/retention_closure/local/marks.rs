@@ -100,7 +100,10 @@ impl Marks {
                     }
                     // The fixed rule protocol's direct records are reconciled
                     // without recursively asking another mark or body.
-                    for dependency in super::rules::dependencies(id) {
+                    for dependency in super::rules::dependencies(id)
+                        .into_iter()
+                        .chain(super::option_boundaries::dependencies(id))
+                    {
                         let record = self.contracts.get(&dependency).ok_or_else(|| {
                             format!("missing rule boundary dependency {dependency}")
                         })?;

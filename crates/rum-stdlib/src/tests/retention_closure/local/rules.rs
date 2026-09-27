@@ -72,8 +72,8 @@ const FILES: &[(&str, &str, &str)] = &[
     ),
 ];
 
-fn declarations(source: &Source) -> Result<(), String> {
-    for (path, module, text) in FILES {
+pub(super) fn declarations(source: &Source, files: &[(&str, &str, &str)]) -> Result<(), String> {
+    for (path, module, text) in files {
         if source.files.get(*path).map(String::as_str) != Some(*text) {
             return Err(format!("rule boundary source changed: {path}"));
         }
@@ -134,6 +134,25 @@ fn declarations(source: &Source) -> Result<(), String> {
                         }
                     }
                 }
+                syn::Item::Enum(item) => {
+                    let id = format!("{module}::{}", item.ident);
+                    let Some([ty]) = source.types.get(&id).map(Vec::as_slice) else {
+                        return Err(format!("boundary enum schema missing: {id}"));
+                    };
+                    // The concrete option descriptors are fieldless enums.
+                    // Keep every variant and derive in the audited schema.
+                    if ty.conditional
+                        || tokens(&ty.generics) != tokens(&item.generics)
+                        || ty.attrs.iter().map(tokens).collect::<Vec<_>>()
+                            != item.attrs.iter().map(tokens).collect::<Vec<_>>()
+                        || ty.variants.keys().cloned().collect::<BTreeSet<_>>()
+                            != item.variants.iter().map(|v| v.ident.to_string()).collect()
+                        || item.variants.iter().any(|v| !v.fields.is_empty())
+                        || ty.variants.values().any(|fields| !fields.is_empty())
+                    {
+                        return Err(format!("boundary enum schema changed: {id}"));
+                    }
+                }
                 syn::Item::Struct(item) => {
                     let id = format!("{module}::{}", item.ident);
                     let Some([ty]) = source.types.get(&id).map(Vec::as_slice) else {
@@ -178,7 +197,8 @@ fn declarations(source: &Source) -> Result<(), String> {
 
 pub(super) fn validate(source: &Source) -> BTreeMap<Id, Result<(), String>> {
     // Fixture-only indexes cannot use production rule contracts accidentally.
-    let verdict = declarations(source).and_then(|()| super::resume_macro::definition(source));
+    let verdict =
+        declarations(source, FILES).and_then(|()| super::resume_macro::definition(source));
     extra_targets()
         .into_values()
         .chain(["B10", "B11", "B12"].map(contracts::target))

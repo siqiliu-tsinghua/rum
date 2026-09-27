@@ -152,8 +152,10 @@ pub(super) fn read(text: &str) -> Result<Vec<Contract>, String> {
         if identity.as_deref() != Some(f[1]) || !seen.insert(f[0]) || f[1].contains('*') {
             return Err("unknown, duplicate, wildcard or redirected contract identity".into());
         }
-        let rule =
-            matches!(f[0], "B10" | "B11") || super::rules::extra_targets().contains_key(f[0]);
+        let option = super::option_boundaries::extra_targets().contains_key(f[0]);
+        let rule = option
+            || matches!(f[0], "B10" | "B11")
+            || super::rules::extra_targets().contains_key(f[0]);
         let legacy = matches!(f[0], "B03" | "B09" | "B12");
         let reads = matches!(f[0], "I02" | "B13");
         let added =
@@ -194,20 +196,22 @@ pub(super) fn read(text: &str) -> Result<Vec<Contract>, String> {
             if !contents.contains(&format!("fn {test}(")) {
                 return Err(format!("missing executable falsifier {}", f[0]));
             }
-            if !(rule && test == "local_rule_contract_controls")
+            if !(option && test == "local_option_contract_controls")
+                && !(rule && test == "local_rule_contract_controls")
                 && !(reads && test == "local_option_read_contract_controls")
                 && !(added && !reads && test == "local_concrete_contract_controls")
                 && !matches!(
                     (f[0], test),
-                    ("B03", "option_reentry_refused_until_registered")
-                        | (
-                            "B09",
-                            "retention_r_is_separate_from_s_and_both_admission_entries_see_it"
-                        )
-                        | (
-                            "B12",
-                            "retention_suspension_transfers_once_resumes_twice_and_abandons"
-                        )
+                    (
+                        "B03",
+                        "option_reentry_registration_does_not_mint_certification"
+                    ) | (
+                        "B09",
+                        "retention_r_is_separate_from_s_and_both_admission_entries_see_it"
+                    ) | (
+                        "B12",
+                        "retention_suspension_transfers_once_resumes_twice_and_abandons"
+                    )
                 )
             {
                 return Err("wrong falsifier domain".into());

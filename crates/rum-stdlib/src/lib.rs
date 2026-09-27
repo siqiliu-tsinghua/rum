@@ -26,6 +26,7 @@ mod lazy;
 mod logic;
 mod number_theory;
 mod option_consumers;
+mod option_domain;
 mod polynomials;
 mod predicates;
 mod random;
@@ -41,7 +42,7 @@ mod yaml;
 pub mod docgen;
 
 pub fn install_core(session: &mut Session) {
-    session.register_option_reentry::<option_consumers::OptionConsumer>();
+    session.install_option_reentry_domain(option_domain::DECLARATION);
     for spec in core_builtin_specs() {
         session.register_builtin(*spec);
     }

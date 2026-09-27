@@ -70,7 +70,9 @@ fn string_slot_expr() -> Expr {
     Expr::call(system_expr("Slot"), vec![Expr::integer(BigInt::from(1_u8))])
 }
 
-fn parse_strict_option(option_exprs: Vec<Expr>) -> Result<Option<bool>, EvalError> {
+fn parse_strict_option(
+    option_exprs: rum_runtime::kernel_api::RetainedOptions<'_>,
+) -> Result<Option<bool>, EvalError> {
     let mut strict = false;
 
     for expr in option_exprs {

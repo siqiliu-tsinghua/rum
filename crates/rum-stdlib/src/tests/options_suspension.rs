@@ -185,5 +185,25 @@ fn option_error_after_resume_propagates_without_running_the_consumer() {
 #[path = "options_suspension/remaining.rs"]
 mod remaining;
 
+#[test]
+fn default_snapshot_survives_guest_options_mutation_and_resume() {
+    assert_queued_and_resumed(
+        r#"
+        seen = 0;
+        Unprotect[StringReplace];
+        SetOptions[StringReplace, IgnoreCase :> (
+            seen = seen + 1;
+            SetOptions[StringReplace, IgnoreCase -> False];
+            InputString["snapshot: "];
+            True
+        )];
+        first = StringReplace["A", "a" -> "b"];
+        {first, StringReplace["A", "a" -> "b"], seen}
+        "#,
+        &[("snapshot: ", "continue")],
+        r#"List["b", "A", 1]"#,
+    );
+}
+
 #[path = "options_suspension/inventory.rs"]
 mod inventory;

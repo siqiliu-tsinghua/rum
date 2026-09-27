@@ -18,6 +18,14 @@ from support import instrument, observed, matches
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'compiler_oracle'))
 from scratch import refresh_crates
 
+probe_drive = 'rum_runtime::runtime::accounting_mode::tests::drive'
+for mode in ['Unarmed', 'AccountingShadow']:
+    call = f'drive::<counter::{mode}>('
+    assert matches(probe_drive, call)
+    assert matches(probe_drive, 'accounting_mode::tests::' + call)
+    assert not matches(probe_drive, 'accounting_mode::options::driver::' + call)
+    assert not matches('outside::drive', call)
+
 workspace, directory, features = Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3]
 root = directory / 'workspace'
 assert root.resolve().is_relative_to((workspace / 'target/brief-540').resolve())

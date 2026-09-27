@@ -142,14 +142,11 @@ fn baseline(source: &Source) {
             format!("{}::evaluate_runtime_option_expr", regions::SESSION),
         ],
     );
-    // The A1 constructor rows remain absent. Brief 543 replaces C02's two
-    // payload clones with private adapters; the legacy frontier still rejects
-    // their unmodeled generic/closure boundaries, independently of local marks.
-    for (suffix, line, start, end) in [
-        ("expr_helpers.rs", 22, 45, 57),
-        ("options/core.rs", 250, 20, 36),
-        ("options/core.rs", 264, 13, 29),
-    ] {
+    // The symbol constructors remain absent. The removed raw C01 vector is
+    // protected by local_option_contract_controls; C02 clone-return rejection
+    // remains in compiler_oracle::exact. This historical frontier still rejects
+    // unmodeled adapter internals independently of the concrete local marks.
+    for (suffix, line, start, end) in [("expr_helpers.rs", 22, 45, 57)] {
         assert!(
             !options
                 .rejected
@@ -161,7 +158,7 @@ fn baseline(source: &Source) {
         );
     }
     for (suffix, line, reason) in [
-        ("options/core.rs", 253, "method syntax"),
+        ("options/core.rs", 197, "method syntax"),
         ("accounting_mode/rule.rs", 20, "closure capture"),
         ("accounting_mode/rule.rs", 22, "closure capture"),
         ("accounting_mode/rule.rs", 110, "closure capture"),
@@ -175,10 +172,7 @@ fn baseline(source: &Source) {
                     && r.reason.starts_with(reason))
         );
     }
-    for (suffix, line) in [
-        ("options/core.rs", 101),
-        ("accounting_mode/retained.rs", 57),
-    ] {
+    for (suffix, line) in [("accounting_mode/retained.rs", 73)] {
         assert!(options.rejected.iter().any(|r| r.kind == Kind::RET001
             && r.site.file.ends_with(suffix)
             && r.site.start.0 == line));
@@ -189,12 +183,12 @@ fn baseline(source: &Source) {
     }
     assert_eq!(
         options.rejected.len(),
-        23,
-        "STOP: brief-543 exact legacy frontier inventory moved"
+        60,
+        "STOP: brief-544 exact legacy frontier inventory moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 2), (Kind::RET002, 21)])
+        BTreeMap::from([(Kind::RET001, 1), (Kind::RET002, 59)])
     );
     let wrapper = regions::frontier(
         source,
@@ -203,16 +197,15 @@ fn baseline(source: &Source) {
             regions::SESSION
         )],
     );
-    // Brief 538 adds a runtime registration guard and its $Failed branch.
-    // Their four additional sites remain rejected; this is census maintenance,
-    // not an admission rule or a production coverage promotion.
-    assert_eq!(wrapper.rejected.len(), 13, "STOP: PUBLIC_WRAPPER moved");
+    // The registration guard and mode selection add public wrapper boundaries.
+    // All 16 remain rejected here; this census does not grant local coverage.
+    assert_eq!(wrapper.rejected.len(), 16, "STOP: PUBLIC_WRAPPER moved");
     assert!(
         wrapper.rejected.iter().any(|row| row.target.as_deref()
             == Some(&format!("{}::check_option_reentry", regions::SESSION)))
     );
     assert!(include_str!("../inventory/promoted.tsv").is_empty());
     println!(
-        "ACCEPTANCE_BASELINE OPTION_FRONTIER=23 RET001=2 RET002=21 RET003=0 PUBLIC_WRAPPER=13 PRODUCTION_COVERAGE=0"
+        "ACCEPTANCE_BASELINE OPTION_FRONTIER=60 RET001=1 RET002=59 RET003=0 PUBLIC_WRAPPER=16 PRODUCTION_COVERAGE=0"
     );
 }

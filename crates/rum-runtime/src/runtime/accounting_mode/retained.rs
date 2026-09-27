@@ -30,8 +30,24 @@ pub struct RetentionContext<'session, 'id, M: RetentionMode> {
 }
 
 pub(in crate::runtime) struct ActivePrefix {
-    pub(in crate::runtime) values: Vec<Expr>,
+    pub(in crate::runtime) values: ActiveValues,
     pub(in crate::runtime) charged: bool,
+}
+
+pub(in crate::runtime) enum ActiveValues {
+    Owned(Vec<Expr>),
+    Shared(std::sync::Arc<Vec<Expr>>),
+}
+
+impl ActiveValues {
+    pub(super) fn bytes(&self) -> Option<usize> {
+        match self {
+            Self::Owned(values) => values_bytes(values),
+            Self::Shared(values) => {
+                values_bytes(values)?.checked_add(size_of::<Vec<Expr>>() + 2 * size_of::<usize>())
+            }
+        }
+    }
 }
 
 pub(super) fn values_bytes(values: &Vec<Expr>) -> Option<usize> {

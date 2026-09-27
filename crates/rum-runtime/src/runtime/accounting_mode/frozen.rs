@@ -8,6 +8,10 @@ use std::sync::{Arc, Mutex};
 #[path = "tests/frozen.rs"]
 mod tests;
 
+#[cfg(test)]
+#[path = "../options/tests/resume.rs"]
+mod option_tests;
+
 /// Pure continuation data for a retained accumulator. The kernel-owned frame
 /// always owns and traces the frozen values; a continuation only borrows them.
 /// Abandonment drops this data without running guest code.

@@ -92,7 +92,7 @@ impl OptionReentry for OptionConsumer {
         session: &mut Session,
         head: &Expr,
         args: &[Expr],
-        options: Vec<Expr>,
+        options: rum_runtime::kernel_api::RetainedOptions<'_>,
     ) -> Result<Expr, EvalError> {
         match self {
             Self::AlignColumns => {

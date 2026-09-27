@@ -11,6 +11,7 @@ pub(super) struct Interfaces {
     pub earned: super::marks::Marks,
     pub read_contracts: BTreeMap<Id, Result<(), String>>,
     pub resume_definition: Result<(), String>,
+    pub option_domain: Result<Vec<ExactTy>, String>,
 }
 
 pub(super) fn probe_body(f: &Function) -> bool {
@@ -205,9 +206,11 @@ impl Interfaces {
             })
             .collect();
         let mut index = Self {
+            option_domain: super::option_domain::members(input),
             read_contracts: super::reads::contracts::validate(input)
                 .into_iter()
                 .chain(super::rules::validate(input))
+                .chain(super::option_boundaries::validate(input))
                 .collect(),
             resume_definition: super::resume_macro::definition(input),
             signatures,

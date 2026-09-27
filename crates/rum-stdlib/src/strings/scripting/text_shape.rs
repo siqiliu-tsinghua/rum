@@ -14,7 +14,7 @@ pub(crate) fn eval_string_wrap_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     let [text, width, option_args @ ..] = args else {
@@ -65,7 +65,7 @@ pub(crate) fn eval_string_indent_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     let [text, prefix, option_args @ ..] = args else {
@@ -173,7 +173,7 @@ pub(crate) fn eval_align_columns_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     let [rows, option_args @ ..] = args else {
@@ -218,7 +218,7 @@ struct AlignColumnsOptions {
 }
 
 fn parse_string_wrap_options(
-    option_exprs: Vec<Expr>,
+    option_exprs: rum_runtime::kernel_api::RetainedOptions<'_>,
 ) -> Result<Option<StringWrapOptions>, EvalError> {
     let mut options = StringWrapOptions {
         preserve_newlines: false,
@@ -243,7 +243,7 @@ fn parse_string_wrap_options(
 }
 
 fn parse_string_indent_options(
-    option_exprs: Vec<Expr>,
+    option_exprs: rum_runtime::kernel_api::RetainedOptions<'_>,
 ) -> Result<Option<StringIndentOptions>, EvalError> {
     let mut options = StringIndentOptions { blank_lines: false };
 
@@ -266,7 +266,7 @@ fn parse_string_indent_options(
 }
 
 fn parse_align_columns_options(
-    option_exprs: Vec<Expr>,
+    option_exprs: rum_runtime::kernel_api::RetainedOptions<'_>,
 ) -> Result<Option<AlignColumnsOptions>, EvalError> {
     let mut options = AlignColumnsOptions {
         separator: "  ".to_string(),

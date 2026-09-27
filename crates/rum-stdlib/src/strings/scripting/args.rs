@@ -14,7 +14,7 @@ pub(crate) fn eval_parse_args_with_options(
     session: &mut Session,
     head: &Expr,
     args: &[Expr],
-    resolved_options: Option<Vec<Expr>>,
+    resolved_options: Option<rum_runtime::kernel_api::RetainedOptions<'_>>,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     let [items, option_args @ ..] = args else {
@@ -168,7 +168,7 @@ struct ParseArgsOptions {
 }
 
 fn parse_parse_args_options(
-    option_exprs: Vec<Expr>,
+    option_exprs: rum_runtime::kernel_api::RetainedOptions<'_>,
 ) -> Result<Option<ParseArgsOptions>, EvalError> {
     let mut options = ParseArgsOptions {
         short_options: false,

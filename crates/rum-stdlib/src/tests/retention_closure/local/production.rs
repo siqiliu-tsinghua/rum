@@ -25,9 +25,9 @@ fn local_production_acceptance() {
     let started = Instant::now();
     let mut option_reports = Vec::new();
     let mut rows = String::from("body\tpredicted\tmeasured\n");
-    for (label, name, line) in [
-        ("C01", "merged_option_exprs_for_symbol", 101),
-        ("C02", "evaluate_runtime_option_expr", 259),
+    for (label, name) in [
+        ("C01", "merged_option_exprs_for_symbol"),
+        ("C02", "evaluate_runtime_option_expr"),
     ] {
         let f = resolve::function(&source, &format!("{}::{name}", regions::SESSION)).unwrap();
         let report = check(&index, f, &marks);
@@ -37,10 +37,32 @@ fn local_production_acceptance() {
         )
         .unwrap();
         rows.push_str(&format!(
-            "{label}\treject\t{} rejections\n",
+            "{label}\tclean within reconciled domain\t{} rejections\n",
             report.rejected.len()
         ));
-        option_reports.push((label, line, report));
+        if label == "C01" {
+            let domain = index.option_domain.as_ref().unwrap();
+            for mode in types::MODES {
+                for descriptor in domain {
+                    let instance = option_domain::specialize(
+                        &index.signatures,
+                        f,
+                        &[protocol::nominal(mode), descriptor.clone()],
+                        domain,
+                    )
+                    .unwrap();
+                    let concrete = check_instance(&index, &instance, &marks);
+                    rows.push_str(&format!(
+                        "C01 M={mode} R={} hash={}\tclean\t{} rejections\n",
+                        descriptor.spelling(),
+                        cfg!(feature = "hash"),
+                        concrete.rejected.len()
+                    ));
+                    assert!(concrete.rejected.is_empty(), "{}", concrete.text());
+                }
+            }
+        }
+        option_reports.push((label, report));
     }
     let mut probes = Vec::new();
     for name in ["probe", "start", "drive", "resume"] {
@@ -72,23 +94,13 @@ fn local_production_acceptance() {
     fs::write(directory.join("local-cost.txt"), &cost).unwrap();
     print!("{rows}{cost}");
     assert!(include_str!("../inventory/promoted.tsv").is_empty());
-    for (label, line, report) in option_reports {
+    for (label, report) in option_reports {
         assert_eq!(
             report.rejected.len(),
-            if label == "C01" { 17 } else { 0 },
-            "brief-543 predeclared {label} prediction; reconcile located rows, never edit the expectation\n{}",
+            0,
+            "brief-544 predeclared {label} prediction; raw-container negative fixtures remain required\n{}",
             report.text()
         );
-        if label == "C01" {
-            assert!(
-                report
-                    .rejected
-                    .iter()
-                    .any(|d| d.kind == Kind::RET001 && d.site.start.0 == line),
-                "{label}: missing raw construction at {line}\n{}",
-                report.text()
-            );
-        }
     }
     assert!(
         probes.iter().all(|r| r.rejected.is_empty()),

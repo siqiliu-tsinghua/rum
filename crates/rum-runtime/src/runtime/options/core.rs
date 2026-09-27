@@ -84,7 +84,10 @@ impl Session {
         self.options_for_symbol(symbol).rule_exprs()
     }
 
-    fn merged_option_exprs_for_symbol<R: OptionReentry>(
+    fn merged_option_exprs_for_symbol<
+        M: crate::runtime::accounting_mode::Mode,
+        R: OptionReentry,
+    >(
         &mut self,
         symbol: &Symbol,
         explicit: &[Expr],
@@ -92,84 +95,16 @@ impl Session {
         head: &Expr,
         args: &[Expr],
     ) -> Result<Expr, EvalError> {
-        let defaults = self.option_rule_exprs_for_symbol(symbol);
-        let options = self.resume_merged_option_exprs(
-            symbol,
-            &defaults,
-            explicit,
-            0,
-            Vec::new(),
-            reentry,
-            head,
-            args,
-        )?;
-        reentry.resume(self, head, args, options)
-    }
-
-    fn resume_merged_option_exprs<R: OptionReentry>(
-        &mut self,
-        symbol: &Symbol,
-        defaults: &[Expr],
-        explicit: &[Expr],
-        mut index: usize,
-        mut merged: Vec<Expr>,
-        reentry: R,
-        head: &Expr,
-        args: &[Expr],
-    ) -> Result<Vec<Expr>, EvalError> {
-        while index < defaults.len() + explicit.len() {
-            let expr = if index < defaults.len() {
-                &defaults[index]
-            } else {
-                &explicit[index - defaults.len()]
-            };
-            let value = crate::resume_or_suspend!(
-                self,
-                self.evaluate_runtime_option_expr(expr),
-                ok(value) => Ok(value),
-                suspend => MergedOptionsSuspensionFrame {
-                    reentry,
-                    head: head.clone(),
-                    args: args.to_vec().into(),
-                    target: symbol.clone(),
-                    defaults: defaults.to_vec().into(),
-                    explicit: explicit.to_vec().into(),
-                    next_index: index + 1,
-                    merged: std::mem::take(&mut merged).into(),
-                },
-            )?;
-            merged.push(value);
-            index += 1;
-        }
-        Ok(merged)
-    }
-
-    pub(super) fn resume_merged_options_after_value<R: OptionReentry>(
-        &mut self,
-        frame: &MergedOptionsSuspensionFrame<R>,
-        value: Expr,
-    ) -> Result<Expr, EvalError> {
-        // The driver retains the frozen frame while this mutable loop runs.
-        // Clone its prefix rather than assuming the frame has a unique owner.
-        let mut merged = frame.merged.to_vec();
-        merged.push(value);
-        let options = self.resume_merged_option_exprs(
-            &frame.target,
-            &frame.defaults,
-            &frame.explicit,
-            frame.next_index,
-            merged,
-            frame.reentry,
-            &frame.head,
-            &frame.args,
-        )?;
-        frame
-            .reentry
-            .resume(self, &frame.head, &frame.args, options)
+        let state = crate::runtime::accounting_mode::options::snapshot::<M>(self, symbol)?;
+        crate::runtime::accounting_mode::options::drive::<M, R>(
+            self, state, symbol, explicit, 0, reentry, head, args,
+        )
     }
 
     /// Evaluates merged options and invokes their typed consumer for a System` symbol.
-    /// Only registered typed reentries can enter the loop. Suspensions own the
+    /// Only registered types in the installed certified domain enter the loop.
+    /// The public domain installer is a trust seam; repository lint certificates
+    /// cover the repository declaration. Suspensions own the
     /// descriptor and frozen call; both paths return the consumer's expression,
     /// never the option vector. Ordinary call data stays borrowed.
     pub fn merged_option_exprs_for_system_symbol<R: OptionReentry>(
@@ -182,13 +117,19 @@ impl Session {
         if !self.check_option_reentry::<R>() {
             return Ok(system_expr("$Failed"));
         }
-        self.merged_option_exprs_for_symbol(
-            &Symbol::system(reentry.symbol_name()),
-            explicit,
-            reentry,
-            head,
-            args,
-        )
+        if self.current_memory_limit.is_some() {
+            self.merged_option_exprs_for_symbol::<crate::runtime::accounting_mode::AccountingShadow, R>(
+                &Symbol::system(reentry.symbol_name()), explicit, reentry, head, args,
+            )
+        } else {
+            self.merged_option_exprs_for_symbol::<crate::runtime::accounting_mode::Unarmed, R>(
+                &Symbol::system(reentry.symbol_name()),
+                explicit,
+                reentry,
+                head,
+                args,
+            )
+        }
     }
 
     pub(in crate::runtime) fn raw_option_value_for_symbol(
@@ -245,7 +186,10 @@ impl Session {
         }
     }
 
-    fn evaluate_runtime_option_expr(&mut self, expr: &Expr) -> Result<Expr, EvalError> {
+    pub(in crate::runtime) fn evaluate_runtime_option_expr(
+        &mut self,
+        expr: &Expr,
+    ) -> Result<Expr, EvalError> {
         let Expr::Call { head, args } = expr else {
             return crate::runtime::accounting_mode::rule::clone_result(self, expr);
         };

@@ -16,6 +16,7 @@ mod continuation;
 mod counter;
 mod frozen;
 mod lease;
+pub(in crate::runtime) mod options;
 mod retained;
 pub(in crate::runtime) mod rule;
 #[cfg(test)]
@@ -24,8 +25,10 @@ mod tests;
 
 pub use bridge::{CallbackFailure, CallbackValue};
 pub use frozen::{FrozenValues, RetentionContinuation};
+pub(in crate::runtime) use lease::Mode;
 pub(in crate::runtime) use lease::RetentionLedger;
 pub use lease::{RetentionLease, RetentionMode, RetentionSnapshot};
+pub use options::RetainedOptions;
 pub(in crate::runtime) use retained::ActivePrefix;
 pub use retained::{RetainedResult, RetainedValues, RetentionContext};
 
@@ -41,6 +44,9 @@ pub(in crate::runtime) struct AccountingRoute {
     pub(in crate::runtime) retention: Option<std::sync::Arc<RetentionLedger>>,
     pub(in crate::runtime) prefixes: Vec<ActivePrefix>,
     pub(in crate::runtime) option_reentries: Vec<std::any::TypeId>,
+    pub(in crate::runtime) option_domain:
+        &'static [crate::runtime::options::OptionReentryDeclaration],
+    pub(in crate::runtime) option_domain_generation: u64,
     pub(in crate::runtime) adapters: Vec<(Symbol, AccountingBuiltinFn)>,
     pub(in crate::runtime) shadow: Option<AccountingShadow>,
     // None means arithmetic invalidity, never inferred freshness. Rebuilt on arm.
@@ -55,6 +61,8 @@ impl Default for AccountingRoute {
             retention: None,
             prefixes: Vec::new(),
             option_reentries: Vec::new(),
+            option_domain: &[],
+            option_domain_generation: 0,
             adapters: Vec::new(),
             shadow: None,
             evaluation_stack_bytes: None,
