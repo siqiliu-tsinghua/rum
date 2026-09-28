@@ -3285,3 +3285,79 @@ questions.
   the run is then untracked. Both were killed and re-dispatched. The shared
   cause with the item above: compressing several steps into one command to
   save a turn.
+
+## 2026-09-22 → 09-28 — the retention line: a defect class, a failed route, and the first certified region (briefs 524-546)
+
+The line opened on 165 `Incremental` declarations that nothing enforced — the
+validator's `Incremental` arm was empty and the validator itself is an
+off-by-default diagnostic. It ended with the option region's two bodies
+certified by a local retention lint, and the reasons it took the shape it did
+are worth more than the certificates.
+
+**The declaration was not the defect.** brief-524 found 162 of the 165 need a
+local builder, zero discharged by the maintained session total — the
+director's premise that A-E had covered 35-40 was wrong, and `Print` was the
+counter-example. brief-525 then censused all 643 declarations under one
+criterion and found at least 497 in the class, with only 56 outside it, 55 of
+them handlers-free registrations. Essentially every builtin that runs code
+builds its result before it becomes session state or the in-flight
+expression. The class split in two: **N**, where guest code drives unbounded
+growth (the hole), and **P**, bounded by a constant factor of already-charged
+input (a precision debt). The user ruled N only, P a documented bound.
+
+**Whole-closure traversal was built, measured, and abandoned.** A restricted
+Rust type-and-effect checker, a rejection census (57 661 sites over 7 057
+definitions) and a compiler oracle — rustc used as an oracle for Rust facts
+about rum's own source, which is not the Testing Policy's banned shape — all
+worked. Then brief-536 measured the option region's closure: 868 bodies and
+5 763 sites and still not an upper bound, because every N region calls
+`Session::evaluate`. That is the evaluator, and proving it means proving guest
+behaviour, which is the runtime ceiling's job. The theory says the same thing:
+aliasing is undecidable (Landi 1992, Ramalingam 1994), context-sensitive data
+dependence is undecidable (Reps 2000), and IFDS needs the known call graph that
+open trait dispatch denies (Reps, Horwitz, Sagiv 1995). Rice's theorem, often
+cited for this, does not apply to a sound and deliberately incomplete checker.
+`docs/dev/retention-closure-design.md` records all of it.
+
+**Composition replaced it.** A body is covered when no raw owned container is
+live across a call that can run guest code, and every call reaches a mark — a
+covered body, an installed contract, or an admitted construct. The second
+condition is a lookup, not a walk. The first was stated wrongly at first as
+"constructs no raw container"; the protocol's own probe, moving a fresh
+`String` straight into a lease, showed the hazard is retention across
+evaluation, not construction. Contracts were defined before anything relied on
+them (brief-537: sixteen boundaries for the option region, one assumed), then
+the lease protocol and activation bridge (538), then the lint (539-540).
+
+**The option region, in six steps.** Local reads (542), the leased
+delayed-option rule and its continuation (543), the leased snapshot,
+accumulator and handoff under a runtime certified domain (544), erasing the
+unarmed cost (545), and two `LocalCovered` rows in `promoted.tsv` (546). The
+compile-time seal on `OptionReentry` could not be expressed — its implementor
+lives in another crate and Rust visibility is crate-granular — so the user
+ruled a runtime-enforced domain generated from one declaration shared with the
+lint. Its public installer lets a host assert its own trust; that is recorded
+in every certificate's exclusions rather than hidden.
+
+**Method, in the order it cost the most.**
+
+- *A misclassification costs whole dispatches.* brief-540 stopped twice, once
+  because the director called `Expr == Expr` an operator admission when it is a
+  call to a trait impl, and brief-541 was made design-only for that reason.
+- *Stop-loss keyed on progress must count compile errors and failing tests.*
+  brief-544 stopped twice on repair work — compile errors, then stale
+  fingerprints — because the brief counted only rejections and falsifiers. The
+  template now carries the rule so a brief inherits it.
+- *Instruction counts decide; timing on this host does not.* Timing reported
+  +7-12%, +145% and +110% regressions that per-iteration instruction slopes
+  refuted, and once reported a real regression as a 50% speedup. The armed
+  option cost looked superlinear in percentage terms; a two-point linear fit
+  predicted the intermediate rows within 0.12 points.
+- *The director's instruments were wrong three times and each was caught:* a
+  turbofish type assertion that still coerces (the oracle caught it), an oracle
+  cache key that omitted the harness scripts (the worker caught it), and two
+  instruction panels that hung because `rum-cli` reads stdin after a script and
+  the director's shell never closes it.
+- *Protect the scene.* A reboot wiped a dispatch log mid-line; logs and scratch
+  now live in the git-ignored `.temp/`, and red trees are preserved on side refs
+  built with a temporary index, never by moving HEAD.

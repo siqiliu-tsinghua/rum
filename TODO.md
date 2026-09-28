@@ -4,25 +4,52 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-21, committed tree through `c07cb414`. Uncommitted
+Status checkpoint: 2026-09-28, committed tree through `85e0013f`. Uncommitted
 performance candidates do not count as completed until their correctness,
 timing, counter, and memory gates have all been reviewed.
 
-**Where work resumes — the snapshot format (user ruling, 2026-09-22).**
-Session snapshots are UTF-8 source images, and that is why the interner
-leaks: a symbol's identity must be expressible as text, so every generator of
-distinguishable fresh symbols mints fresh interned text that nothing ever
-reclaims. Two repairs were designed against the symptom and both refused on
-the same evidence (`Module`, brief-507; `Enclose`, brief-509). The user ruled
-that Standing Engineering Debt's deferred **direct binary snapshot format**
-is an old debt now forced into the open and has to be paid, in preference to
-a reserved textual encoding or accepting the leak behind a cap.
+**Where work resumes — the retention line, after its first certified region
+(handoff 2026-09-28).** The line exists because an armed memory ceiling can be
+walked through by a builtin's Rust-local accumulator, which is in neither the
+session total `S` nor the in-flight expression `W`. Read
+[docs/dev/retention-closure-design.md](./docs/dev/retention-closure-design.md)
+first; it records why whole-closure traversal was abandoned (the option
+region's closure reached 868 bodies; aliasing and data dependence are
+undecidable, and IFDS needs the call graph open dispatch denies) and the local
+design that replaced it.
 
-Start there. Read, in order: §The root constraint found by two refutations,
-§User rulings of 2026-09-22, and the Standing Engineering Debt entry on
-snapshots. The interner quota work (briefs 505-508) is **parked, not
-cancelled** — brief-508's storage-and-refusal proof is green and
-director-reproduced, and rulings D1-D7 stand if it is ever resumed.
+Where it stands:
+
+- **Built and enforced**: the lease protocol, activation bridge and runtime
+  certified reentry domain (`rum-runtime/src/runtime/accounting_mode/`,
+  `options/reentry.rs`); the local retention lint with its contract records,
+  covered marks and compiler oracle
+  (`rum-stdlib/src/tests/retention_closure/`, 49 required tests).
+- **First production coverage**: `inventory/promoted.tsv` holds two
+  `LocalCovered` bodies, C01 `merged_option_exprs_for_symbol` and C02
+  `evaluate_runtime_option_expr` (`ee81758a`), each with its exclusions in the
+  row. Unarmed they cost nothing over the pre-conversion build (`cae6f550`).
+- **Still open, in order**:
+  1. **Census the remaining N class by leverage.** brief-525 found 78 new
+     `InClass-NoProjection` witnesses plus 147 carried rows never split into
+     N and P (a 15-row sample all fell in P). Split the 147, then rank regions
+     by how many declarations share a path — the option region covered a path
+     31 declarations share — and convert them one at a time with the
+     option-region pattern: design brief, local reads, leased construction,
+     accumulator and handoff, erase unarmed cost, certificate.
+  2. **The four `UnresolvedConsumer` escaping copies** in
+     `inventory/consumer-obligations.tsv`.
+  3. P is a documented bound (`docs/guide/resource-limits-and-sandbox.md`,
+     "What the ceiling does not see"), not work.
+
+**Queued behind it — the snapshot format (user ruling, 2026-09-22).** Session
+snapshots are UTF-8 source images, and that is why the interner leaks: a
+symbol's identity must be expressible as text, so every generator of
+distinguishable fresh symbols mints fresh interned text. The user ruled the
+deferred **direct binary snapshot format** must be paid. Read §The root
+constraint found by two refutations, §User rulings of 2026-09-22, and the
+Standing Engineering Debt entry on snapshots. The interner quota work (briefs
+505-508) is parked, not cancelled.
 
 **Also open, in rough order of weight:**
 
