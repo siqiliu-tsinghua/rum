@@ -206,6 +206,31 @@ Consequences for how I present and pick work:
 
 ## Current direction (read these for state)
 
+- **ACTIVE: THE RETENTION LINE (2026-09-22 → 28, briefs 524-546, through
+  `70aa0b5e`).** Handoff is `TODO.md`'s top section; the design and its
+  theoretical basis are `docs/dev/retention-closure-design.md`; the 2026-09-28
+  `PROGRESS.md` entry has the narrative; memory `retention-closure-line.md`.
+  The option region's two bodies are the first certified production coverage
+  (`ee81758a`). **Next: split the 147 carried rows into N and P, rank the
+  remaining N regions by shared-path leverage, and convert them one at a time
+  with the option-region pattern.** The snapshot format is queued behind it.
+
+  **Four things from this line are method, not history.**
+
+  - *Traversal was the wrong shape, and the theory says why.* A region that
+    runs guest code has the evaluator in its call closure. Prove each body
+    locally against contracts at its boundaries; the second condition of
+    coverage is a mark lookup, never a walk. Do not revive A3-A6.
+  - *Define the contract before building what relies on it*, and classify every
+    rejection before drafting — a single misclassification cost brief-540 two
+    dispatches.
+  - *Stop-loss counts compile errors and failing tests as progress.* It is in
+    `TEMPLATE.md` now; brief-544 lost two dispatches when it was missing.
+  - *Instruction slopes decide, timing does not* — on this host timing has
+    reported +145% where instructions showed +0.04%. Pin with `taskset -c 2`,
+    take the `cpu_core` row, feed `rum-cli` `< /dev/null`, and keep all scratch
+    in the git-ignored `.temp/`.
+
 - **THE PREVIOUS LINE IS CLOSED (2026-09-08/21, briefs 459-498, through
   `c07cb414`): association depth, the ownership graph it exposed, and that
   branch's own leftovers.** `TODO.md` is authoritative; the 2026-09-21
