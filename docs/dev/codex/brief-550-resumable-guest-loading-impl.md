@@ -281,3 +281,47 @@ the progress counters. Prefer to leave the tree compiling at each checkpoint.
    per label, with every unavailable lane disclosed.
 4. The progress counter sequence, the disclosure list, and any unresolved risk
    or question.
+
+---
+
+## Resume — the first run was stopped by the host, not by the work
+
+The first dispatch (2026-09-28) was killed by the director's harness when the
+machine ran critically low on memory; nothing in the run caused it. **The
+working tree is exactly as that run left it**, and it compiles. Nothing was
+reverted. The director also preserved it, without moving HEAD, as
+`refs/wip/brief-550-interrupted` (`5e3cea9f`) and as
+`.temp/brief-550/wip-backup/` (`tracked.patch`, `untracked.tar`). You do not
+need either; they exist in case the tree is damaged.
+
+**Read `.temp/brief-550/PROGRESS.md` first.** Where it stopped:
+
+- Done and verified: all 45 permanent reds red before the change
+  (`red/final.txt`) and green after (`raw/guest-01.txt`, 47 passed including
+  the two controls); 4/4 caller paths; 8/8 white-box invariants
+  (`raw/whitebox-03.txt`); 4/4 host tests (`raw/host-01.txt`); guide and
+  catalog text, with the reference regenerated (`raw/reference-generation.txt`);
+  `cargo fmt --check` green (`raw/gate-fmt.txt`); base binaries preserved in
+  `.temp/brief-550/base/`; instruction-panel sources written under
+  `.temp/brief-550/perf/`.
+- Last state: `cargo test -p rum-runtime` run 02 had 1076 passed, 1 failed,
+  3 ignored (`raw/gate-runtime-02.txt`); the failure was the explanation string
+  of the new scalar `Session` field's exemption, which was then corrected. Run
+  03 had not been recorded.
+
+**Do not redo what is done.** Continue with:
+
+1. `cargo test -p rum-runtime` (run 03), then `-p rum-stdlib`, `-p rum-host`,
+   `--workspace`, then `cargo fmt --check` again if anything changed.
+2. The performance gate exactly as specified above: allocations, then
+   per-iteration instructions on every named label at N and 2N against the
+   preserved base binaries, then timing.
+
+**Keep memory pressure down.** Run every `cargo` command with
+`env CARGO_BUILD_JOBS=4` inside `scripts/run-bounded.py`. Before the timing
+lane, check that no other CPU-heavy process is running (for example a `lean`
+job); if one is, run the allocation and instruction lanes, and report the
+timing lane deferred rather than measured under load.
+
+The fence, the rulings and the stop-loss are unchanged. Append your report to
+this file as specified above, covering both runs.
