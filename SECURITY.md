@@ -81,6 +81,16 @@ Without them, a single script can consume unbounded CPU time or memory (for
 example, by producing a very large exact integer). With them, such a request is
 terminated in-band.
 
+The memory ceiling is a structural model, not an allocator bound. It charges
+session state and the expression under evaluation; memory a builtin holds in a
+Rust-local buffer before publishing is visible only where that builtin has been
+converted to the lease protocol and certified, which today is the option
+region. Elsewhere, bounded local construction can exceed the ceiling by a
+constant factor of already-charged input, and unconverted builtins that
+accumulate across guest evaluation remain open work. Pair the ceiling with an
+OS-level process memory limit; see
+`docs/guide/resource-limits-and-sandbox.md` ("What the ceiling does not see").
+
 ### Isolation
 
 Evaluation is crash-only and per-request isolated: a panic during evaluation is

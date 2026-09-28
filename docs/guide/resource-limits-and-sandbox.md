@@ -490,14 +490,52 @@ errors and unwinding release local receipts. A real input suspension moves the
 accumulator into a kernel-owned traced frame: its expressions become existing
 S roots, and its spare capacity stays in R. Resumption charges any working copy while the
 frozen occurrence remains owned; abandonment releases on actual destruction.
-These mechanisms are proved on a test-only builtin. No production accumulator
-has been converted and no production retention region is certified.
+These mechanisms were first proved on a test-only builtin and now carry the
+option region: the snapshot of default options, the merge loop over delayed
+(`:>`) options, its suspension frames, and the handoff to the consuming
+builtin. The two bodies of that region —
+`Session::merged_option_exprs_for_symbol` and
+`Session::evaluate_runtime_option_expr` — are the first production bodies
+certified by the local retention lint. The certificate is local: it covers
+those two bodies for the declared instances, not their callers, not the whole
+consuming builtin, and not four recorded places where a consumer copies an
+option-derived value out of the collection. Unarmed, the region costs nothing
+measurable over the pre-conversion build.
 
-The kernel's option loop invokes only reentry types registered on that Session
-by the host/stdlib installer. An unregistered type produces
-`General::optreentry` and `$Failed`. This enforces membership, not the behavior
-of a registered implementation. External direct calls to `OptionReentry::resume`
-are outside that guarantee.
+The kernel's option loop invokes only reentry types in the **certified domain**:
+a declaration in `rum-stdlib` drives both the installer and the lint's checked
+set, and the loop checks membership and the domain's generation on entry and
+on resume. A plain registration outside that domain produces
+`General::optreentry` and `$Failed`. The domain installer is itself public, so
+a host can install its own declaration and so assert its own trust; that host's
+reentry types are outside this repository's certificates. External direct
+calls to `OptionReentry::resume` are outside the guarantee as well.
+
+### What the ceiling does not see
+
+The ceiling charges session state and the expression being evaluated. A
+builtin that builds its result in a Rust-local buffer holds that buffer outside
+both until it publishes. Two cases differ, and only one is closed:
+
+- **Unbounded local growth driven by guest code** — a builtin accumulating the
+  results of evaluation while more evaluation runs. This is the class the local
+  retention lint and the lease protocol close, region by region. The option
+  region is closed; the rest of the class is open work, recorded in `TODO.md`.
+- **Bounded local construction.** Many builtins build a result whose size is a
+  constant factor of inputs that are already charged — copying arguments into
+  a new call, rendering an expression to text, a seen-set beside the output.
+  The ceiling can therefore admit up to that factor more than it would if every
+  local were charged. This is a **documented bound, not closed work**: a guest
+  cannot drive it without first paying for the input it multiplies.
+
+### What a `Preflight` declaration means
+
+A builtin declared `Preflight` projects its result size before constructing it.
+The growth validator (off by default, enabled for tests and by
+`RUM_TEST_BUILTIN_MEMORY_GROWTH`) checks that a projection ran and was not
+exceeded **on the inputs the tests exercise**. That is a test's strength. It is
+not a proof that the projection bounds the result for every input, and a
+`Preflight` declaration should not be read as one.
 
 ## Poison Recovery
 
