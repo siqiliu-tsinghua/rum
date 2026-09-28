@@ -17,7 +17,9 @@ UnknownConstruct	crates/rum-runtime/src/runtime/accounting_mode/counter.rs	30	32
 UnknownConstruct	crates/rum-runtime/src/runtime/accounting_mode/counter.rs	31	22	rum_runtime::runtime::accounting_mode::counter::Counter.arms: foreign representation std::sync::atomic::AtomicUsize: AtomicUsize
 UnknownConstruct	crates/rum-runtime/src/runtime/accounting_mode/frozen.rs	11	1	module option_tests has 0 source candidates
 UnknownConstruct	crates/rum-runtime/src/runtime/accounting_mode/mod.rs	46	46	rum_runtime::runtime::accounting_mode::AccountingRoute.option_reentries/std::vec::Vec[Own]/arg0: foreign representation std::any::TypeId: std :: any :: TypeId
-UnknownConstruct	crates/rum-runtime/src/runtime/accounting_mode/options.rs	59	14	rum_runtime::runtime::accounting_mode::options::OptionState.receipt: unresolved/ambiguous type (): M :: Receipt
+UnknownConstruct	crates/rum-runtime/src/runtime/accounting_mode/options.rs	61	13	rum_runtime::runtime::accounting_mode::options::OptionState.values: unresolved/ambiguous type (): M :: Options
+UnknownConstruct	crates/rum-runtime/src/runtime/accounting_mode/options.rs	62	14	rum_runtime::runtime::accounting_mode::options::OptionState.receipt: unresolved/ambiguous type (): M :: Receipt
+UnknownConstruct	crates/rum-runtime/src/runtime/accounting_mode/options.rs	65	13	rum_runtime::runtime::accounting_mode::options::OptionState.domain: unresolved/ambiguous type (): M :: OptionDomain
 UnknownConstruct	crates/rum-runtime/src/runtime/accounting_mode/retained.rs	15	25	rum_runtime::runtime::accounting_mode::retained::RetainedValues.receipt: unresolved/ambiguous type (): M :: Receipt
 UnknownConstruct	crates/rum-runtime/src/runtime/accounting_mode/retained.rs	22	25	rum_runtime::runtime::accounting_mode::retained::RetainedResult.receipt/std::option::Option[Own]/arg0: unresolved/ambiguous type (): M :: Receipt
 UnknownConstruct	crates/rum-runtime/src/runtime/builtins_context_loader/file_names_glob.rs	7	22	rum_runtime::runtime::builtins_context_loader::file_names_glob::FileNamesConfig.dirs/std::vec::Vec[Own]/arg0: foreign representation std::path::PathBuf: PathBuf

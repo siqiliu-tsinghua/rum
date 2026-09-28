@@ -13,6 +13,12 @@ fn bool_option(value: bool) -> Expr {
 }
 
 pub(in crate::runtime) fn default_system_options(symbol: &Symbol) -> SymbolOptions {
+    SymbolOptions::from_entries(default_system_option_snapshot(symbol).entries)
+}
+
+/// The declared defaults already have distinct names. An unarmed snapshot can
+/// consume them directly; ordinary callers retain the normalizing constructor.
+pub(in crate::runtime) fn default_system_option_snapshot(symbol: &Symbol) -> SymbolOptions {
     if symbol.context() != SYSTEM_CONTEXT {
         return SymbolOptions::default();
     }
@@ -134,5 +140,10 @@ pub(in crate::runtime) fn default_system_options(symbol: &Symbol) -> SymbolOptio
         _ => Vec::new(),
     };
 
-    SymbolOptions::from_entries(entries)
+    debug_assert!(entries.iter().enumerate().all(|(index, entry)| {
+        entries[..index]
+            .iter()
+            .all(|previous| previous.name != entry.name)
+    }));
+    SymbolOptions { entries }
 }

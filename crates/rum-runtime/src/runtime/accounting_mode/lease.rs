@@ -126,16 +126,49 @@ impl RetentionMode for AccountingShadow {
 }
 
 pub(in crate::runtime) trait Mode: RetentionMode {
+    type Options: super::options::buffer::Buffer;
+    type OptionDomain: Copy;
     const ARMED: bool;
+    fn option_domain(session: &Session) -> Self::OptionDomain;
+    fn option_handoff<R: crate::runtime::options::OptionReentry>(
+        session: &mut Session,
+        generation: u64,
+        domain: Self::OptionDomain,
+    ) -> bool;
     fn receipt(session: &mut Session) -> Self::Receipt;
+    fn bytes(receipt: &Self::Receipt) -> Option<usize>;
     fn resize(receipt: &mut Self::Receipt, bytes: impl FnOnce() -> Option<usize>);
     fn freeze(receipt: Self::Receipt, session: &mut Session) -> Option<RetentionLease>;
 }
 
 impl Mode for Unarmed {
+    type Options = super::options::buffer::FlatBuffer;
+    type OptionDomain = &'static [crate::runtime::options::OptionReentryDeclaration];
     const ARMED: bool = false;
     #[inline(always)]
+    fn option_domain(session: &Session) -> Self::OptionDomain {
+        session.certified_option_reentry_domain()
+    }
+    #[inline(always)]
+    fn option_handoff<R: crate::runtime::options::OptionReentry>(
+        session: &mut Session,
+        generation: u64,
+        domain: Self::OptionDomain,
+    ) -> bool {
+        // Entry/resume already checked R. The only domain installer registers
+        // all members of this immutable slice, and registration only adds.
+        // Identity as well as generation is needed: a replacement Session can
+        // have the same generation but another installed domain.
+        (generation == session.option_domain_generation()
+            && std::ptr::eq(domain, session.certified_option_reentry_domain()))
+            || session.check_option_resume::<R>(generation)
+    }
+    #[inline(always)]
     fn receipt(_: &mut Session) {}
+    #[inline(always)]
+    fn bytes(_: &()) -> Option<usize> {
+        Some(0)
+    }
     #[inline(always)]
     fn resize(_: &mut (), _: impl FnOnce() -> Option<usize>) {}
     fn freeze(_: (), session: &mut Session) -> Option<RetentionLease> {
@@ -146,9 +179,24 @@ impl Mode for Unarmed {
 }
 
 impl Mode for AccountingShadow {
+    type Options = super::options::buffer::OptionBuffer;
+    type OptionDomain = ();
     const ARMED: bool = true;
+    #[inline(always)]
+    fn option_domain(_: &Session) {}
+    fn option_handoff<R: crate::runtime::options::OptionReentry>(
+        session: &mut Session,
+        generation: u64,
+        _: (),
+    ) -> bool {
+        session.check_option_resume::<R>(generation)
+    }
     fn receipt(session: &mut Session) -> RetentionLease {
         RetentionLease::new(session)
+    }
+    #[inline]
+    fn bytes(receipt: &RetentionLease) -> Option<usize> {
+        receipt.bytes
     }
     fn resize(receipt: &mut RetentionLease, bytes: impl FnOnce() -> Option<usize>) {
         receipt.resize(bytes());

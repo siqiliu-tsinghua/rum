@@ -95,7 +95,8 @@ impl Session {
         head: &Expr,
         args: &[Expr],
     ) -> Result<Expr, EvalError> {
-        let state = crate::runtime::accounting_mode::options::snapshot::<M>(self, symbol)?;
+        let state =
+            crate::runtime::accounting_mode::options::snapshot::<M>(self, symbol, explicit)?;
         crate::runtime::accounting_mode::options::drive::<M, R>(
             self, state, symbol, explicit, 0, reentry, head, args,
         )
@@ -186,6 +187,7 @@ impl Session {
         }
     }
 
+    #[inline]
     pub(in crate::runtime) fn evaluate_runtime_option_expr(
         &mut self,
         expr: &Expr,

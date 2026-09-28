@@ -139,16 +139,50 @@ pub(super) fn declarations(source: &Source, files: &[(&str, &str, &str)]) -> Res
                     let Some([ty]) = source.types.get(&id).map(Vec::as_slice) else {
                         return Err(format!("boundary enum schema missing: {id}"));
                     };
-                    // The concrete option descriptors are fieldless enums.
-                    // Keep every variant and derive in the audited schema.
+                    // Compare every variant field as well as the fieldless
+                    // option descriptors; neither admits a schema mutation.
+                    let expected = item
+                        .variants
+                        .iter()
+                        .map(|variant| {
+                            (
+                                variant.ident.to_string(),
+                                variant
+                                    .fields
+                                    .iter()
+                                    .enumerate()
+                                    .map(|(i, f)| {
+                                        (
+                                            f.ident
+                                                .as_ref()
+                                                .map(ToString::to_string)
+                                                .unwrap_or_else(|| i.to_string()),
+                                            tokens(&f.ty),
+                                        )
+                                    })
+                                    .collect::<Vec<_>>(),
+                            )
+                        })
+                        .collect::<BTreeMap<_, _>>();
+                    let actual = ty
+                        .variants
+                        .iter()
+                        .map(|(name, fields)| {
+                            (
+                                name.clone(),
+                                fields
+                                    .iter()
+                                    .map(|f| (f.name.clone(), tokens(&f.ty)))
+                                    .collect::<Vec<_>>(),
+                            )
+                        })
+                        .collect::<BTreeMap<_, _>>();
                     if ty.conditional
                         || tokens(&ty.generics) != tokens(&item.generics)
                         || ty.attrs.iter().map(tokens).collect::<Vec<_>>()
                             != item.attrs.iter().map(tokens).collect::<Vec<_>>()
-                        || ty.variants.keys().cloned().collect::<BTreeSet<_>>()
-                            != item.variants.iter().map(|v| v.ident.to_string()).collect()
-                        || item.variants.iter().any(|v| !v.fields.is_empty())
-                        || ty.variants.values().any(|fields| !fields.is_empty())
+                        || actual != expected
+                        || ty.variants.values().flatten().any(|f| f.conditional)
                     {
                         return Err(format!("boundary enum schema changed: {id}"));
                     }

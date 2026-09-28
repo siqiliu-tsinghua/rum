@@ -26,7 +26,12 @@ director-reproduced, and rulings D1-D7 stand if it is ever resumed.
 
 **Also open, in rough order of weight:**
 
-- **Open unarmed cost from the option-region conversion (brief-544, 2026-09-28).**
+- **CLOSED by brief-545 (2026-09-28): the unarmed cost is erased.** The
+  unarmed option rows are back at or below the pre-543 base — director-measured
+  instructions StringReplace -0.79%, explicit-delayed -0.75%,
+  default-plus-delayed +0.21%, 128 options +0.49%; allocations per iteration
+  37 against 39 and 29 against 32. Originally opened as:
+  **Open unarmed cost from the option-region conversion (brief-544, 2026-09-28).**
   Correctness is complete — C01 and C02 lint clean for both declared M x R
   instances — but the accounting does not erase when unarmed. Director-measured
   per-iteration instructions against the pre-conversion base: every

@@ -198,39 +198,80 @@ def run(workspace, directory, features):
         try:
             status, _ = scratch.compile('baseline')
             assert status == 0, 'production scratch baseline must compile'
-            for row in read_tsv(directory / 'production.tsv'):
-                # Mutate a real different same-name definition in this source
-                # copy, with a live witness on the appended final source line.
-                path, original = scratch.text(row['file'])
-                name = row['target'].split('::')[-1]
-                control = f' mod __a1_negative {{ fn {name}() {{}} fn control() {{ {name}(); }} }}'
-                base = original[:-1] + control + '\n'
-                scratch.write(row['name'] + '-negative-baseline', path, base)
-                status, errors = scratch.compile(row['name'] + '-negative-baseline')
-                assert status == 0, 'production negative control must first compile'
+            # Batch only disjoint expressions with distinct diagnostic lines.
+            # A file's claims share one target spelling, so one independent live
+            # same-name witness tests noninterference for every claim in that file.
+            # Every exact/wrong-type claim is still checked; none is sampled.
+            originals, spans = {}, {}
+            batches = []
+            production_rows = read_tsv(directory / 'production.tsv')
+            for row in production_rows:
+                text = originals.setdefault(row['file'], (workspace / row['file']).read_text())
+                spans[row['name']] = (offset(text, row['start_line'], row['start_column']),
+                                      offset(text, row['end_line'], row['end_column']))
+                start, end = spans[row['name']]
+                def compatible(other):
+                    if other['file'] != row['file']:
+                        return True
+                    a, b = spans[other['name']]
+                    return (other['target'] == row['target']
+                            and other['end_line'] != row['end_line']
+                            and (end <= a or b <= start))
+                batch = next((b for b in batches if len(b) < 8 and all(map(compatible, b))), None)
+                if batch is None:
+                    batch = []
+                    batches.append(batch)
+                batch.append(row)
+            for index, batch in enumerate(batches):
+                label = f'production-batch-{index}'
+                controls = []
+                for row in {r['file']: r for r in batch}.values():
+                    path, original = scratch.text(row['file'])
+                    name = row['target'].split('::')[-1]
+                    control = f' mod __a1_negative {{ fn {name}() {{}} fn control() {{ {name}(); }} }}'
+                    base = original[:-1] + control + '\n'
+                    controls.append((row, base, name, original.count('\n')))
+                    scratch.write(label + '-negative-baseline', path, base)
+                status, errors = scratch.compile(label + '-negative-baseline')
+                assert status == 0, 'every production negative control must first compile'
                 scratch.restore()
-                path, _ = scratch.text(row['file'])
-                scratch.write(row['name'] + '-negative', path, base.replace(f'fn {name}()', f'fn {name}(__probe: ())'))
-                status, errors = scratch.compile(row['name'] + '-negative')
+                for row, base, name, _ in controls:
+                    path, _ = scratch.text(row['file'])
+                    scratch.write(label + '-negative', path,
+                                  base.replace(f'fn {name}()', f'fn {name}(__probe: ())'))
+                status, errors = scratch.compile(label + '-negative')
                 scratch.restore()
-                control_line = original.count('\n')
-                assert status != 0 and scratch.at(errors, row['file'], control_line, 'E0061'), 'production negative has no live witness'
-                negative = bool(scratch.at(errors, row['file'], row['start_line']))
-                assert not negative, 'same-name production negative changed the claimed site'
+                for row, _, _, control_line in controls:
+                    assert status != 0 and scratch.at(errors, row['file'], control_line, 'E0061'), f'production negative has no live witness: {row}'
+                for row in batch:
+                    assert not scratch.at(errors, row['file'], row['start_line']), f'same-name production negative changed claimed site: {row}'
                 exact_ok = False
-                for mode, expected in [('exact', row['exact_type']), ('wrong', 'std::convert::Infallible')]:
-                    scratch.expression(row['name'] + '-' + mode, row, lambda e: freeze(e, expected))
-                    status, errors = scratch.compile(row['name'] + '-' + mode)
+                for mode in ['exact', 'wrong']:
+                    edits = {}
+                    for row in batch:
+                        start, end = spans[row['name']]
+                        expected = row['exact_type'] if mode == 'exact' else 'std::convert::Infallible'
+                        edits.setdefault(row['file'], []).append((start, end, expected))
+                    for file, changes in edits.items():
+                        path, text = scratch.text(file)
+                        for start, end, expected in sorted(changes, reverse=True):
+                            text = text[:start] + freeze(text[start:end], expected) + text[end:]
+                        scratch.write(label + '-' + mode, path, text)
+                    status, errors = scratch.compile(label + '-' + mode)
                     scratch.restore()
                     if mode == 'wrong':
-                        # freeze appends the invariant check after the original
-                        # expression, so its primary error is on the end line.
-                        assert status != 0 and scratch.at(errors, row['file'], row['end_line'], 'E0308'), f'production wrong-type control missed {row}'
+                        for row in batch:
+                            # freeze appends its invariant check after the original
+                            # expression. Diagnostic end lines are unique within a file.
+                            assert status != 0 and scratch.at(errors, row['file'], row['end_line'], 'E0308'), f'production wrong-type control missed {row}'
                     else:
                         exact_ok = status == 0
                 result = 'AGREEMENT' if exact_ok else 'DISAGREEMENT'
-                results.append(('production-type', row['name'], result, row['file'], row['start_line'], row['exact_type']))
-                print(f"A1_ORACLE_PRODUCTION {row['name']} {result} site={row['file']}:{row['start_line']} target={row['target']} exact={row['exact_type']} wrong=E0308 negative_site_error={negative}", flush=True)
+                for row in batch:
+                    results.append(('production-type', row['name'], result, row['file'], row['start_line'], row['exact_type']))
+                    print(f"A1_ORACLE_PRODUCTION {row['name']} {result} site={row['file']}:{row['start_line']} target={row['target']} exact={row['exact_type']} wrong=E0308 negative_site_error=False", flush=True)
+            observed = [row[1] for row in results if row[0] == 'production-type']
+            assert sorted(observed) == sorted(row['name'] for row in production_rows), 'batched oracle lost or duplicated a production claim'
         finally:
             scratch.restore()
             scratch.verify_originals()
@@ -242,6 +283,7 @@ def run(workspace, directory, features):
             writer.writerows(results)
     disagreements = sum(r[2] == 'DISAGREEMENT' for r in results)
     print(f'A1_ORACLE_TOTAL agreements={len(results)-disagreements} disagreements={disagreements}', flush=True)
+    assert disagreements == 0, 'exact-type or resolution oracle disagreed; inspect located evidence'
 
 
 if __name__ == '__main__':

@@ -37,6 +37,7 @@ pub(in crate::runtime) struct ActivePrefix {
 pub(in crate::runtime) enum ActiveValues {
     Owned(Vec<Expr>),
     Shared(std::sync::Arc<Vec<Expr>>),
+    Flat(std::sync::Arc<[Expr]>),
 }
 
 impl ActiveValues {
@@ -46,12 +47,22 @@ impl ActiveValues {
             Self::Shared(values) => {
                 values_bytes(values)?.checked_add(size_of::<Vec<Expr>>() + 2 * size_of::<usize>())
             }
+            Self::Flat(values) => {
+                // Unused slots are resource-free small zeros. Their existing
+                // occurrence weight is exactly the slot size, so this view
+                // needs no used-length word in the activation stack.
+                slice_bytes(values, values.len())?.checked_add(2 * size_of::<usize>())
+            }
         }
     }
 }
 
 pub(super) fn values_bytes(values: &Vec<Expr>) -> Option<usize> {
-    let spare = (values.capacity() - values.len()).checked_mul(size_of::<Expr>())?;
+    slice_bytes(values, values.capacity())
+}
+
+pub(super) fn slice_bytes(values: &[Expr], capacity: usize) -> Option<usize> {
+    let spare = (capacity - values.len()).checked_mul(size_of::<Expr>())?;
     values
         .iter()
         .try_fold(spare, |total, value| total.checked_add(expr_bytes(value)))

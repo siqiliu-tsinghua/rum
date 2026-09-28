@@ -167,12 +167,12 @@ fn exact_types_and_constructor_claims_match_rustc() {
         }
     }
     assert_eq!(
-        total, 5,
-        "two symbol variants and three option-driver Result contexts"
+        total, 172,
+        "all live constructor contexts, including the direct unarmed guest entry"
     );
     assert_eq!(
         total + legacy_clone_claims,
-        7,
+        174,
         "all live contexts and both preserved clone-return contexts"
     );
     fs::write(directory.join("production.tsv"), out).unwrap();

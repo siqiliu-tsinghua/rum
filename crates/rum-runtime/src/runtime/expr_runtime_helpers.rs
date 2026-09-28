@@ -20,7 +20,7 @@ pub(super) fn sequence_items(expr: &Expr) -> Option<&[Expr]> {
 
 pub fn call_items_with_head<'a>(expr: &'a Expr, expected_head: &Expr) -> Option<&'a [Expr]> {
     match expr {
-        Expr::Call { head, args } if head.as_ref() == expected_head => Some(args),
+        Expr::Call { head, args } if head.as_ref() == expected_head => Some(&args[..]),
         _ => None,
     }
 }

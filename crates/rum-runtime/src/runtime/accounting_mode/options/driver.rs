@@ -17,9 +17,35 @@ pub(in crate::runtime) fn drive<M: Mode, R: OptionReentry>(
         } else {
             &explicit[index - state.defaults]
         };
-        let outcome = state.guest(session, |session| {
-            session.evaluate_runtime_option_expr(expr)
-        });
+        let outcome = match expr {
+            Expr::Call { head, args }
+                if args.len() == 2 && is_system_symbol_name(head, "RuleDelayed") =>
+            {
+                state.guest(session, |session| {
+                    if M::ARMED {
+                        session.evaluate_runtime_option_expr(expr)
+                    } else {
+                        // The driver reselects immediately after a guest leaves
+                        // a limit active. Carry its existing unarmed proof into
+                        // C02; adoption still checks for a newly armed result.
+                        super::super::rule::evaluate_unarmed(
+                            session,
+                            &args[0],
+                            &args[1],
+                            state.values.get(state.defaults),
+                        )
+                    }
+                })
+            }
+            _ => {
+                // These C02 branches cannot run guest code or arm a limit.
+                if M::ARMED {
+                    session.evaluate_runtime_option_expr(expr)
+                } else {
+                    Ok(expr.clone())
+                }
+            }
+        };
         if !M::ARMED && session.current_memory_limit.is_some() {
             let mut state = state.arm(session)?;
             match outcome {
@@ -86,7 +112,7 @@ fn handoff<M: Mode, R: OptionReentry>(
     head: &Expr,
     args: &[Expr],
 ) -> Result<Expr, EvalError> {
-    if !session.check_option_resume::<R>(state.generation) {
+    if !M::option_handoff::<R>(session, state.generation, state.domain) {
         return Ok(system_expr("$Failed"));
     }
     state.guest(session, |session| {
@@ -126,11 +152,11 @@ pub(in crate::runtime) fn resume<M: Mode, R: OptionReentry>(
     };
     let working = cx.resume_values(empty, frozen)?;
     let mut state = OptionState::<M> {
-        values: Arc::new(working.values),
+        values: M::Options::working(working.values, frame.defaults * 2 + frame.explicit.len()),
         receipt: working.receipt,
-        bytes: None,
         defaults: frame.defaults,
         generation: frame.domain_generation,
+        domain: M::option_domain(cx.session),
     }
     .charge(cx.session)?;
     state.adopt(cx.session, value)?;

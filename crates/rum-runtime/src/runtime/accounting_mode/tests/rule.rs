@@ -27,6 +27,28 @@ fn released(s: &Session) {
 }
 
 #[test]
+fn option_rule_unarmed_shared_head_keeps_canonical_rule() {
+    let mut s = session(false);
+    let name = system_expr("Heads");
+    let value = system_expr("True");
+    let expected = Expr::call(system_expr("Rule"), vec![name.clone(), value.clone()]);
+    let candidates = [
+        expected.clone(),
+        Expr::call(system_expr("RuleDelayed"), Vec::new()),
+        Expr::call(Expr::contextual_symbol("Global`", "Rule"), Vec::new()),
+        Expr::call(Expr::call(system_expr("List"), Vec::new()), Vec::new()),
+        Expr::small_integer(0),
+    ];
+    for previous in std::iter::once(None).chain(candidates.iter().map(Some)) {
+        assert_eq!(
+            evaluate_unarmed(&mut s, &name, &value, previous).unwrap(),
+            expected
+        );
+        released(&s);
+    }
+}
+
+#[test]
 fn option_rule_clone_and_shell_contract() {
     let mut text = String::with_capacity(8000);
     text.push_str("spare text");

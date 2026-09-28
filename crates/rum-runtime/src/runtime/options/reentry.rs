@@ -84,12 +84,14 @@ impl Session {
     }
 
     /// The installed trust declaration, distinct from plain registrations.
+    #[inline]
     pub fn certified_option_reentry_domain(&self) -> &'static [OptionReentryDeclaration] {
         self.accounting_route
             .as_ref()
             .map_or(&[], |route| route.option_domain)
     }
 
+    #[inline]
     pub(in crate::runtime) fn option_domain_generation(&self) -> u64 {
         self.accounting_route
             .as_ref()

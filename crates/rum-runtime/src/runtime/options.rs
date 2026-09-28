@@ -16,7 +16,7 @@ pub use reentry::{OptionReentry, OptionReentryDeclaration};
 pub(in crate::runtime) use resume_frames::MergedOptionsSuspensionFrame;
 pub(in crate::runtime) use resume_frames::RuntimeOptionSuspensionFrame;
 
-pub(super) use defaults::default_system_options;
+pub(super) use defaults::{default_system_option_snapshot, default_system_options};
 pub(super) use patterns::{is_options_pattern_expr, options_pattern_sequence_matcher};
 
 #[derive(Clone, Debug, PartialEq, Eq, FrameRootTrace)]
@@ -36,6 +36,7 @@ impl SymbolOptions {
         self.entries.is_empty()
     }
 
+    #[inline]
     pub(super) fn len(&self) -> usize {
         self.entries.len()
     }
@@ -129,6 +130,41 @@ impl SymbolOptions {
                     ],
                 )
             })
+            .collect()
+    }
+
+    /// Consume the private snapshot into its final shared slots. The original
+    /// session options stay untouched; no temporary rule Vec or second clone
+    /// of the snapshot's values is needed before the option loop starts.
+    pub(super) fn into_shared_rule_exprs(self, spare: usize) -> std::sync::Arc<[Expr]> {
+        self.entries
+            .into_iter()
+            .map(|entry| {
+                Expr::call(
+                    system_expr(if entry.delayed { "RuleDelayed" } else { "Rule" }),
+                    vec![Expr::Atom(Atom::Symbol(entry.name)), entry.value],
+                )
+            })
+            .chain(std::iter::repeat_with(|| Expr::small_integer(0)).take(spare))
+            .collect()
+    }
+
+    /// A stored option table stays borrowed until the independent snapshot is
+    /// complete. No guest runs while this borrow is live.
+    #[inline(always)]
+    pub(super) fn shared_rule_exprs(&self, spare: usize) -> std::sync::Arc<[Expr]> {
+        self.entries
+            .iter()
+            .map(|entry| {
+                Expr::call(
+                    system_expr(if entry.delayed { "RuleDelayed" } else { "Rule" }),
+                    vec![
+                        Expr::Atom(Atom::Symbol(entry.name.clone())),
+                        entry.value.clone(),
+                    ],
+                )
+            })
+            .chain(std::iter::repeat_with(|| Expr::small_integer(0)).take(spare))
             .collect()
     }
 

@@ -200,6 +200,17 @@ impl<'id, M: Mode> CallbackValue<'_, 'id, M> {
                 brand: std::marker::PhantomData,
             });
         }
+        if !M::ARMED {
+            // No guest entry occurs between this check and publication. The
+            // unit receipt needs neither a retained builder nor a slot swap.
+            // A callback that leaves a limit active took finish_armed above.
+            let value = Expr::call(system_expr("Rule"), vec![name.clone(), value]);
+            return Ok(RetainedResult {
+                outcome: Ok(value),
+                receipt: Some(receipt),
+                brand: std::marker::PhantomData,
+            });
+        }
         context.reserve(&mut prefix, 2)?;
         prefix.values.push(value);
         M::resize(&mut prefix.receipt, || {

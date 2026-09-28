@@ -44,11 +44,44 @@ fn local_option_contract_controls() {
         .variants
         .pop_first();
     assert!(validate(&descriptor).values().all(Result::is_err));
+    let buffer = "rum_runtime::runtime::accounting_mode::options::buffer::OptionBuffer";
+    for mutation in 0..3 {
+        let mut changed = source.clone();
+        let variants = &mut changed.types.get_mut(buffer).unwrap()[0].variants;
+        match mutation {
+            0 => {
+                variants.remove("Flat");
+            }
+            1 => variants.get_mut("Flat").unwrap()[0].ty = syn::parse_quote!(usize),
+            _ => variants.get_mut("Flat").unwrap()[0].conditional = true,
+        }
+        assert!(validate(&changed).values().all(Result::is_err));
+    }
+    let mut changed = source.clone();
+    let (_, mode, _, _) = changed
+        .trait_impls
+        .iter_mut()
+        .find(|(module, item, _, _)| {
+            module == "rum_runtime::runtime::accounting_mode::lease"
+                && tokens(&item.self_ty) == "Unarmed"
+                && item.items.iter().any(
+                    |item| matches!(item, syn::ImplItem::Fn(f) if f.sig.ident == "option_handoff"),
+                )
+        })
+        .unwrap();
+    for item in &mut mode.items {
+        if let syn::ImplItem::Fn(f) = item {
+            if f.sig.ident == "option_handoff" {
+                f.block = syn::parse_quote!({ true });
+            }
+        }
+    }
+    assert!(validate(&changed).values().all(Result::is_err));
     // Persistent replacements for the former raw Vec at a shifting source line.
     let mut raw = body.clone();
     raw.body = syn::parse_str(r#"{
         let raw = std::vec::Vec::<rum_core::Expr>::new();
-        let state = crate::runtime::accounting_mode::options::snapshot::<M>(self, symbol)?;
+        let state = crate::runtime::accounting_mode::options::snapshot::<M>(self, symbol, explicit)?;
         crate::runtime::accounting_mode::options::drive::<M, R>(self, state, symbol, explicit, 0, reentry, head, args)
     }"#).unwrap();
     let raw_report = check(&index, &raw, &marks);
@@ -93,7 +126,7 @@ fn local_option_contract_controls() {
     // No implicit unsizing or extra reference layer is admitted at the adapter.
     let mut wrong = body.clone();
     wrong.body = syn::parse_quote!({
-        crate::runtime::accounting_mode::options::snapshot::<M>(&self, symbol)
+        crate::runtime::accounting_mode::options::snapshot::<M>(&self, symbol, explicit)
     });
     assert!(!check(&index, &wrong, &marks).rejected.is_empty());
     println!(

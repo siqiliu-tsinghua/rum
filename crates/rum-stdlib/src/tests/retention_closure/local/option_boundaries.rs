@@ -7,6 +7,31 @@ mod tests;
 
 const FILES: &[(&str, &str, &str)] = &[
     (
+        "crates/rum-runtime/src/runtime/accounting_mode/lease.rs",
+        "rum_runtime::runtime::accounting_mode::lease",
+        include_str!("../../../../../rum-runtime/src/runtime/accounting_mode/lease.rs"),
+    ),
+    (
+        "crates/rum-runtime/src/runtime/accounting_mode/retained.rs",
+        "rum_runtime::runtime::accounting_mode::retained",
+        include_str!("../../../../../rum-runtime/src/runtime/accounting_mode/retained.rs"),
+    ),
+    (
+        "crates/rum-runtime/src/runtime/options.rs",
+        "rum_runtime::runtime::options",
+        include_str!("../../../../../rum-runtime/src/runtime/options.rs"),
+    ),
+    (
+        "crates/rum-runtime/src/runtime/options/defaults.rs",
+        "rum_runtime::runtime::options::defaults",
+        include_str!("../../../../../rum-runtime/src/runtime/options/defaults.rs"),
+    ),
+    (
+        "crates/rum-runtime/src/runtime/accounting_mode/options/buffer.rs",
+        "rum_runtime::runtime::accounting_mode::options::buffer",
+        include_str!("../../../../../rum-runtime/src/runtime/accounting_mode/options/buffer.rs"),
+    ),
+    (
         "crates/rum-runtime/src/runtime/accounting_mode/options.rs",
         "rum_runtime::runtime::accounting_mode::options",
         include_str!("../../../../../rum-runtime/src/runtime/accounting_mode/options.rs"),

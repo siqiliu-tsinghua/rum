@@ -51,7 +51,7 @@ fn released(session: &Session) {
 fn option_owner_snapshot_charges_defaults_and_copies() {
     let mut session = session(true);
     let symbol = defaults(&mut session);
-    let state = snapshot::<AccountingShadow>(&mut session, &symbol).unwrap();
+    let state = snapshot::<AccountingShadow>(&mut session, &symbol, &[]).unwrap();
     assert_eq!(state.defaults, 1);
     let payload = expression(&state.values[0]).ceiling_bytes();
     let expected = payload
@@ -82,7 +82,7 @@ fn option_owner_snapshot_charges_defaults_and_copies() {
 fn option_owner_capacity_and_callback_adoption() {
     let mut session = session(true);
     let mut state =
-        snapshot::<AccountingShadow>(&mut session, &Symbol::system("NoDefaults544")).unwrap();
+        snapshot::<AccountingShadow>(&mut session, &Symbol::system("NoDefaults544"), &[]).unwrap();
     let base = session.current_memory_proxy_bytes_for_test();
     session.current_memory_limit = Some(base + SHARED_BYTES + 1000);
     assert!(matches!(
@@ -161,22 +161,54 @@ fn option_owner_handoff_and_late_arm_keep_original_visible() {
 }
 
 #[test]
+fn option_handoff_checks_domain_identity_when_generations_collide() {
+    let mut source = session(false);
+    let symbol = defaults(&mut source);
+    let state = snapshot::<Unarmed>(&mut source, &symbol, &[]).unwrap();
+    let mut destination = Session::new();
+    destination.install_option_reentry_domain(&[]);
+    destination.register_option_reentry::<CheckHandoff>();
+    assert_eq!(
+        source.option_domain_generation(),
+        destination.option_domain_generation()
+    );
+    let result = drive(
+        &mut destination,
+        state,
+        &symbol,
+        &[],
+        0,
+        CheckHandoff,
+        &system_expr("List"),
+        &[],
+    )
+    .unwrap();
+    assert_eq!(
+        result,
+        system_expr("$Failed"),
+        "equal generations cannot authorize a different domain"
+    );
+    released(&source);
+    released(&destination);
+}
+
+#[test]
 fn option_owner_guest_error_and_unwind_release() {
     for armed in [false, true] {
         let mut session = session(armed);
         let symbol = defaults(&mut session);
         let run = |session: &mut Session| {
             if armed {
-                let state = snapshot::<AccountingShadow>(session, &symbol).unwrap();
+                let state = snapshot::<AccountingShadow>(session, &symbol, &[]).unwrap();
                 state.guest(session, |_| panic!("option owner unwind544"));
             } else {
-                let state = snapshot::<Unarmed>(session, &symbol).unwrap();
+                let state = snapshot::<Unarmed>(session, &symbol, &[]).unwrap();
                 state.guest(session, |_| panic!("option owner unwind544"));
             }
         };
         assert!(catch_unwind(AssertUnwindSafe(|| run(&mut session))).is_err());
         released(&session);
-        let state = snapshot::<Unarmed>(&mut session, &symbol).unwrap();
+        let state = snapshot::<Unarmed>(&mut session, &symbol, &[]).unwrap();
         let error = state.guest(&mut session, |_| {
             Err::<(), _>(EvalError::Return {
                 value: Expr::string("error544"),
@@ -188,4 +220,41 @@ fn option_owner_guest_error_and_unwind_release() {
         drop(state);
         released(&session);
     }
+}
+
+#[test]
+fn option_flat_late_arm_accounts_slots_and_preflights_freeze() {
+    let mut session = session(false);
+    let explicit = vec![Expr::small_integer(1); 6];
+    let mut state =
+        snapshot::<Unarmed>(&mut session, &Symbol::system("NoDefaults545"), &explicit).unwrap();
+    for _ in 0..5 {
+        state.adopt(&mut session, Expr::small_integer(7)).unwrap();
+    }
+    assert!(session.retention_snapshot().is_none());
+    let expected = state
+        .values
+        .iter()
+        .map(|v| expression(v).ceiling_bytes())
+        .sum::<usize>()
+        + (state.values.capacity() - state.values.len()) * size_of::<Expr>()
+        + 2 * size_of::<usize>();
+    state.guest(&mut session, |session| {
+        session.current_memory_limit = Some(1_000_000_000);
+        session.note_accounting_arm();
+        assert_eq!(session.retained_admission_bytes(), Some(expected));
+    });
+    let state = state.arm(&mut session).unwrap();
+    assert_eq!(session.retention_snapshot().unwrap().bytes, Some(expected));
+    let base = session.current_memory_proxy_bytes_for_test();
+    session.current_memory_limit = Some(base + expected);
+    assert!(
+        matches!(
+            state.values.into_vec(&mut session),
+            Err(EvalError::MemoryConstraintExceeded { .. })
+        ),
+        "flat freeze must admit its destination slots before allocating"
+    );
+    drop(state.receipt);
+    released(&session);
 }

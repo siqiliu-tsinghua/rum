@@ -5,10 +5,13 @@ use super::lease::Mode;
 use super::retained::{ActivePrefix, ActiveValues, expr_bytes, values_bytes};
 use super::*;
 use std::marker::PhantomData;
-use std::panic::{AssertUnwindSafe, catch_unwind, resume_unwind};
+#[cfg(test)]
+use std::panic::{AssertUnwindSafe, catch_unwind};
 use std::sync::Arc;
 
+pub(super) mod buffer;
 mod driver;
+use buffer::Buffer;
 pub(in crate::runtime) use driver::{drive, resume};
 
 #[cfg(test)]
@@ -54,30 +57,59 @@ impl<'a> IntoIterator for RetainedOptions<'a> {
     }
 }
 
-pub(in crate::runtime) struct OptionState<M: RetentionMode> {
-    values: Arc<Vec<Expr>>,
+pub(in crate::runtime) struct OptionState<M: Mode> {
+    values: M::Options,
     receipt: M::Receipt,
-    bytes: Option<usize>,
     defaults: usize,
     generation: u64,
+    domain: M::OptionDomain,
 }
 
 const SHARED_BYTES: usize = size_of::<Vec<Expr>>() + 2 * size_of::<usize>();
 
+/// A scoped mutable borrow makes cleanup unconditional, including unwinding,
+/// without catching and rethrowing each callback's panic.
+struct OptionBridge<'a, M: Mode> {
+    session: &'a mut Session,
+    mode: PhantomData<M>,
+}
+
+impl<M: Mode> Drop for OptionBridge<'_, M> {
+    #[inline(always)]
+    fn drop(&mut self) {
+        self.session
+            .accounting_route
+            .as_mut()
+            .expect("option bridge route")
+            .prefixes
+            .pop()
+            .expect("live option bridge");
+        // Popping changes neither allocated capacity nor any S root. A late
+        // arm has already observed the route's capacity during initialization.
+        if M::ARMED {
+            self.session.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::AccountingRoute,
+            );
+        }
+    }
+}
+
+#[inline(always)]
 pub(in crate::runtime) fn snapshot<M: Mode>(
     session: &mut Session,
     symbol: &Symbol,
+    explicit: &[Expr],
 ) -> Result<OptionState<M>, EvalError> {
     // The SymbolOptions intermediate is destroyed before this boundary admits
     // any guest work. It is never kept alive over a callback.
-    let values = session.option_rule_exprs_for_symbol(symbol);
+    let values = M::Options::snapshot(session, symbol, explicit);
     let defaults = values.len();
     let state = OptionState {
-        values: Arc::new(values),
+        values,
         receipt: M::receipt(session),
-        bytes: None,
         defaults,
         generation: session.option_domain_generation(),
+        domain: M::option_domain(session),
     };
     state.charge(session)
 }
@@ -85,17 +117,21 @@ pub(in crate::runtime) fn snapshot<M: Mode>(
 impl<M: Mode> OptionState<M> {
     fn charge(mut self, session: &mut Session) -> Result<Self, EvalError> {
         if M::ARMED {
-            self.bytes = values_bytes(&self.values).and_then(|n| n.checked_add(SHARED_BYTES));
-            M::resize(&mut self.receipt, || self.bytes);
+            M::resize(&mut self.receipt, || self.values.bytes());
             session.enforce_active_memory_limit_for_projected_bytes(0)?;
         }
         Ok(self)
     }
 
     fn adopt(&mut self, session: &mut Session, value: Expr) -> Result<(), EvalError> {
+        if !M::ARMED {
+            self.values.push(value);
+            return Ok(());
+        }
         let mut incoming = M::receipt(session);
         M::resize(&mut incoming, || Some(expr_bytes(&value)));
-        let values = Arc::get_mut(&mut self.values).expect("no view survives a guest bridge");
+        let mut bytes = M::bytes(&self.receipt);
+        let values = &mut self.values;
         if values.len() == values.capacity() {
             let capacity = values.capacity();
             if M::ARMED {
@@ -109,22 +145,21 @@ impl<M: Mode> OptionState<M> {
                     },
                 )?)?;
             }
-            values.reserve(1);
+            values.reserve();
             if M::ARMED {
-                self.bytes = self.bytes.and_then(|n| {
+                bytes = bytes.and_then(|n| {
                     n.checked_add((values.capacity() - capacity).checked_mul(size_of::<Expr>())?)
                 });
-                M::resize(&mut self.receipt, || self.bytes);
+                M::resize(&mut self.receipt, || bytes);
             }
         }
         if M::ARMED {
-            self.bytes = self
-                .bytes
+            bytes = bytes
                 .and_then(|n| n.checked_sub(size_of::<Expr>()))
                 .and_then(|n| n.checked_add(expr_bytes(&value)));
         }
         values.push(value);
-        M::resize(&mut self.receipt, || self.bytes);
+        M::resize(&mut self.receipt, || bytes);
         drop(incoming);
         if M::ARMED {
             session.enforce_active_memory_limit_for_projected_bytes(0)?;
@@ -134,43 +169,36 @@ impl<M: Mode> OptionState<M> {
 
     /// The shared owner stays on the session's explicit activation stack while
     /// borrowed views are used. Cleanup runs on ordinary errors and unwinding.
+    #[inline(always)]
     fn guest<T>(&self, session: &mut Session, body: impl FnOnce(&mut Session) -> T) -> T {
         session
             .accounting_route
             .get_or_insert_with(Default::default)
             .prefixes
             .push(ActivePrefix {
-                values: ActiveValues::Shared(self.values.clone()),
+                values: self.values.active(),
                 charged: M::ARMED,
             });
-        session.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::AccountingRoute,
-        );
-        let outcome = catch_unwind(AssertUnwindSafe(|| body(session)));
-        session
-            .accounting_route
-            .as_mut()
-            .expect("option bridge route")
-            .prefixes
-            .pop()
-            .expect("live option bridge");
-        session.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::AccountingRoute,
-        );
-        match outcome {
-            Ok(value) => value,
-            Err(panic) => resume_unwind(panic),
+        let bridge = OptionBridge::<M> {
+            session,
+            mode: PhantomData,
+        };
+        if M::ARMED {
+            bridge.session.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::AccountingRoute,
+            );
         }
+        body(bridge.session)
     }
 
     fn arm(self, session: &mut Session) -> Result<OptionState<AccountingShadow>, EvalError> {
         assert!(!M::ARMED, "only the unarmed owner changes specialization");
         OptionState {
-            values: self.values,
+            values: self.values.arm(),
             receipt: AccountingShadow::receipt(session),
-            bytes: None,
             defaults: self.defaults,
             generation: self.generation,
+            domain: AccountingShadow::option_domain(session),
         }
         .charge(session)
     }
@@ -181,8 +209,19 @@ impl<M: Mode> OptionState<M> {
         error: EvalError,
         continuation: impl FnOnce() -> C,
     ) -> EvalError {
-        let values =
-            Arc::try_unwrap(self.values).expect("the option bridge retired its shared view");
+        if !matches!(error, EvalError::InputRequired { .. }) || session.pending_suspension.is_none()
+        {
+            return error;
+        }
+        let values = match self.values.into_vec(session) {
+            Ok(values) => values,
+            Err(error) => {
+                session.abandon_pending_suspension(
+                    crate::runtime::suspension::AbandonReason::HelperBestEffortDiscard,
+                );
+                return error;
+            }
+        };
         let cx = RetentionContext::<M> {
             session,
             brand: PhantomData,

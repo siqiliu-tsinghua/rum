@@ -158,10 +158,11 @@ fn baseline(source: &Source) {
         );
     }
     for (suffix, line, reason) in [
-        ("options/core.rs", 197, "method syntax"),
+        ("options/core.rs", 199, "method syntax"),
         ("accounting_mode/rule.rs", 20, "closure capture"),
         ("accounting_mode/rule.rs", 22, "closure capture"),
-        ("accounting_mode/rule.rs", 110, "closure capture"),
+        ("accounting_mode/rule.rs", 111, "closure capture"),
+        ("expr_runtime_helpers.rs", 23, "implicit Index/Deref/bounds"),
     ] {
         assert!(
             options
@@ -172,7 +173,7 @@ fn baseline(source: &Source) {
                     && r.reason.starts_with(reason))
         );
     }
-    for (suffix, line) in [("accounting_mode/retained.rs", 73)] {
+    for (suffix, line) in [("accounting_mode/retained.rs", 84)] {
         assert!(options.rejected.iter().any(|r| r.kind == Kind::RET001
             && r.site.file.ends_with(suffix)
             && r.site.start.0 == line));
@@ -181,14 +182,16 @@ fn baseline(source: &Source) {
     for row in &options.rejected {
         *kinds.entry(row.kind).or_insert(0) += 1;
     }
+    // The direct unarmed guest entry reaches the evaluator in this historical
+    // frontier. Keep its expanded rejection inventory exact; it grants no mark.
     assert_eq!(
         options.rejected.len(),
-        60,
-        "STOP: brief-544 exact legacy frontier inventory moved"
+        924,
+        "STOP: brief-545 exact legacy frontier inventory moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 1), (Kind::RET002, 59)])
+        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 887), (Kind::RET003, 27)])
     );
     let wrapper = regions::frontier(
         source,
@@ -206,6 +209,6 @@ fn baseline(source: &Source) {
     );
     assert!(include_str!("../inventory/promoted.tsv").is_empty());
     println!(
-        "ACCEPTANCE_BASELINE OPTION_FRONTIER=60 RET001=1 RET002=59 RET003=0 PUBLIC_WRAPPER=16 PRODUCTION_COVERAGE=0"
+        "ACCEPTANCE_BASELINE OPTION_FRONTIER=924 RET001=10 RET002=887 RET003=27 PUBLIC_WRAPPER=16 PRODUCTION_COVERAGE=0"
     );
 }

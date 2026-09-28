@@ -94,6 +94,7 @@ pub(super) fn finish_rule<'id, M: Mode>(
     })
 }
 
+#[inline]
 pub(in crate::runtime) fn evaluate_rule(
     session: &mut Session,
     name: &Expr,
@@ -102,7 +103,7 @@ pub(in crate::runtime) fn evaluate_rule(
     if session.current_memory_limit.is_some() {
         evaluate_in::<AccountingShadow>(session, name, rhs)
     } else {
-        evaluate_in::<Unarmed>(session, name, rhs)
+        evaluate_unarmed(session, name, rhs, None)
     }
 }
 
@@ -110,6 +111,48 @@ fn evaluate_in<M: Mode>(session: &mut Session, name: &Expr, rhs: &Expr) -> Resul
     scoped::<M, _>(session, |cx, empty| match cx.evaluate(empty, rhs.clone()) {
         Ok(value) => value.into_rule(name),
         Err(failure) => Ok(failure.suspend_rule(name)),
+    })
+}
+
+/// The callback starts with an empty owner. Materialize receipts/builders only
+/// if it leaves a limit armed or suspends; a terminal unarmed success has no
+/// intervening guest entry and can construct its two children directly.
+#[inline(always)]
+pub(super) fn evaluate_unarmed(
+    session: &mut Session,
+    name: &Expr,
+    rhs: &Expr,
+    previous: Option<&Expr>,
+) -> Result<Expr, EvalError> {
+    match session.evaluate(rhs.clone()) {
+        Ok(value) if session.current_memory_limit.is_none() => {
+            let rule = system_expr("Rule");
+            let children = vec![name.clone(), value];
+            // Borrowing the first completed option adds no owner over the
+            // callback. Only after the unarmed check may its exact canonical
+            // head be shared by this new occurrence; arbitrary heads decline.
+            if let Some(Expr::Call { head, .. }) = previous {
+                if **head == rule {
+                    return Ok(Expr::call_shared(head.clone(), SharedArgs::new(children)));
+                }
+            }
+            Ok(Expr::call(rule, children))
+        }
+        Ok(value) => finish_armed(session, name, value),
+        Err(error) => fail_unarmed(session, name, error),
+    }
+}
+
+#[cold]
+fn fail_unarmed(session: &mut Session, name: &Expr, error: EvalError) -> Result<Expr, EvalError> {
+    if session.current_memory_limit.is_some() {
+        return Err(suspend_armed(session, error, name));
+    }
+    scoped::<Unarmed, _>(session, |cx, empty| {
+        match cx.adopt_outcome(empty, Err(error)) {
+            Err(failure) => Ok(failure.suspend_rule(name)),
+            Ok(_) => unreachable!("exceptional outcome stays exceptional"),
+        }
     })
 }
 
