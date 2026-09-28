@@ -74,6 +74,12 @@ Where it stands:
   function or in a caller that pushes no frame of its own. Two spot checks
   (`Mean`, `AveragePair`) are tail positions. **The class has not been
   swept.** R01 converts Scan, so this must be settled before R01.
+  **Inserted as a branch (user, 2026-09-28): brief-548 sweeps the class and
+  runs to completion before E0 resumes.** The director's calibration probe
+  found a second instance of the other shape — `LazyMap`'s pull stepper
+  propagates with a plain `?` (`lazy.rs:163-179`) and resumes to `"two"`
+  where the queued path gives `{1, "two", 3}` — while `Do`, `Select`,
+  `NestList` and `Table` resume correctly.
 
 **Queued behind it — the snapshot format (user ruling, 2026-09-22).** Session
 snapshots are UTF-8 source images, and that is why the interner leaks: a
