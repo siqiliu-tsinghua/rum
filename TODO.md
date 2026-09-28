@@ -4,7 +4,7 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-28, committed tree through brief-547's report. Uncommitted
+Status checkpoint: 2026-09-28, committed tree through brief-548's report. Uncommitted
 performance candidates do not count as completed until their correctness,
 timing, counter, and memory gates have all been reviewed.
 
@@ -59,27 +59,43 @@ Where it stands:
      unarmed cost, certificate.
   5. P is a documented bound (`docs/guide/resource-limits-and-sandbox.md`,
      "What the ceiling does not see"), not work.
-- **Scan loses its continuation on suspension — a correctness defect, found
-  by brief-547 and reproduced by the director (2026-09-28).**
-  `evaluate_scan_parts` (`functional_ops/apply_map/normalize.rs:446`)
-  suspends inside its loop with the fieldless
-  `EvaluateScanPartsSuspensionFrame`, whose resume completes the whole call
-  with the callback's value. `log = {}; Scan[Function[x, AppendTo[log,
-  If[SameQ[x, 2], InputString["s: "], x]]], {1, 2, 3}]`, resumed with
-  `"two"`, returns `List[1, "two"]` instead of `Null` and never runs the
-  third element; the same shape through `Do` returns `Null` with
-  `log == {1, "two", 3}`. It is the brief-530 shape. There are 85 fieldless
-  frames outside tests (`.temp/director/unit-frames.txt`); a fieldless frame
-  is correct only where no work remains after the suspension point, in the
-  function or in a caller that pushes no frame of its own. Two spot checks
-  (`Mean`, `AveragePair`) are tail positions. **The class has not been
-  swept.** R01 converts Scan, so this must be settled before R01.
-  **Inserted as a branch (user, 2026-09-28): brief-548 sweeps the class and
-  runs to completion before E0 resumes.** The director's calibration probe
-  found a second instance of the other shape — `LazyMap`'s pull stepper
-  propagates with a plain `?` (`lazy.rs:163-179`) and resumes to `"two"`
-  where the queued path gives `{1, "two", 3}` — while `Do`, `Select`,
-  `NestList` and `Table` resume correctly.
+- **ACTIVE BRANCH, inserted 2026-09-28 (user): suspension continuations —
+  runs to completion before the retention line resumes at E0.** A builtin
+  that suspends mid-work (`InputString`, `Input`, `Dialog`) must resume into
+  that work; many resume past it and complete with the suspending call's
+  value. Found as Scan by brief-547; brief-548 swept the class
+  (report appended to `docs/dev/codex/brief-548-suspension-continuation-sweep.md`,
+  evidence in `.temp/brief-548/`). The oracle: the resumed path must equal
+  the queued-input path (`Session::queue_input_response`) in value and side
+  effects. **Director re-ran all 195 probes: identical — 104 equal, 91
+  divergent.**
+  - **86 confirmed `Lost` sites** (83 reachable from source, 3 in unused
+    private wrappers) in eight groups: G1 Scan (1), G2 the lazy pull machine
+    and its consumers (14 — every `Lazy*` adapter plus `Normal`, `Take`,
+    `First`, `Part`), G3 `ConformSchema`/`SchemaErrors` (7), G4 `Rule`,
+    `RuleDelayed` and held-pattern normalization in `MatchQ` and kin (16), G5
+    option readers and their callers (29 — `Heads` on `Cases`, `DeleteCases`,
+    `Count`, `MemberQ`, `FreeQ`, `Position`, `Level`, `Depth`, `Replace`,
+    `Trace`, plus `Monitor`, `Names`, `TestReport`, `DumpSave`,
+    `ArrayFilter`, `CheckAbort`), G6 multi-name `OptionValue` (1), G7 `Sow`
+    matching and trace filtering (14), G8 `Differences`, three-operand `Dot`,
+    `ReplaceRepeated` (4). Drafts for each in `.temp/brief-548/draft-G*.md`.
+  - **38 `Transformed`**: guest `Get`/`Needs`/`BeginPackage` swallow the
+    suspension into `$Failed` with `Get::load` "input required"; host
+    script/file APIs document non-resumable batch suspension.
+  - **A kernel panic reachable from guest source**:
+    `DeclarePackage["Dep548`", {"foo"}]; Dep548`foo`, where the autoloaded
+    file requests input, fails the assertion "a new suspension must not
+    replace a live continuation owner" (`suspension/core.rs:228`).
+    Director-reproduced. Needs `FileRead`, so not reachable under the
+    sandboxed profile.
+  - **495 pairs `Unsettled`** of 2 399. The enforcement design (drafts E1,
+    E2) is what settles them: E2 gives may-suspend calls a result type with
+    no `Try` impl, so a bare `?` fails to compile and every site must choose a
+    frame, a tail declaration or an audited boundary; E1 is a required
+    catalog-wide oracle that falsifies a false tail declaration.
+    `Session::evaluate` is the hottest function, so E2 is prototyped and
+    measured before it is chosen over the Result-preserving static gate.
 
 **Queued behind it — the snapshot format (user ruling, 2026-09-22).** Session
 snapshots are UTF-8 source images, and that is why the interner leaks: a
