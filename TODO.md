@@ -4,7 +4,7 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-28, committed tree through brief-548's report. Uncommitted
+Status checkpoint: 2026-09-28, committed tree through brief-549's report. Uncommitted
 performance candidates do not count as completed until their correctness,
 timing, counter, and memory gates have all been reviewed.
 
@@ -100,6 +100,34 @@ Where it stands:
     mechanism, the owner-leak class over all 38 `Transformed` pairs, and the
     resumable design for `Get`, `Needs`, `BeginPackage` and the
     `DeclarePackage` stub. Then G1-G8, then E1, then E2.
+  - **brief-549 (design) is in** — report appended to its brief; 44 red
+    tests archived in `.temp/brief-549/probe.rs`, director re-run identical.
+    It confirmed the leak (`Get` converts the suspension to `$Failed` while
+    `eval_file`'s snapshot restore cannot remove the owner) and audited all 38
+    `Transformed` pairs: the loader rows leak, `ValueQ` and `Monitor` abandon
+    correctly, and the front ends (`rum-repl`, synchronous `rum-jupyter`
+    execute, `rum-cli` helpers) leave their session blocked after reporting
+    input.
+  - **Two resource-limit bypasses, director-confirmed**
+    (`.temp/director/budget-probe*.txt`): every form of a guest-loaded file
+    calls `begin_top_level_interrupt_budget`, so
+    `MemoryConstrained[Get[...], 100000]` over a 50 000-element file returns
+    `50000` where the inline form aborts, and a `Get` of three ~465 ms forms
+    runs 1414 ms under an 800 ms request timeout that stops the inline forms at
+    801 ms. Needs `FileRead`. Fixed for the guest path in brief-550. **Open for
+    the host batch path**: public `eval_script`/`eval_file` renew the deadline
+    per form too — whether a host request timeout is per request or per form
+    is a contract question, related to "termination is last-write-wins across
+    script forms" below.
+  - **Queue**: brief-550 implements guest loading atomically across `Get`,
+    `Needs`, `BeginPackage` and the stub, with the inherited budget and
+    `BeginPackage` restoring on `Exit`. Next, the batch boundary: the batch
+    path keeps its documented non-resumability but gets an explicit
+    abandonment-only owner, with rollback deferred to cancellation (director
+    decision: the same model as the resumable path — reset runs no guest
+    cleanup, cancellation does); snapshot restore abandons its failed input
+    work. Then a front-end input disposition brief (REPL, synchronous Jupyter,
+    CLI helpers), then G1-G8, E1, E2.
   - **495 pairs `Unsettled`** of 2 399. The enforcement design (drafts E1,
     E2) is what settles them: E2 gives may-suspend calls a result type with
     no `Try` impl, so a bare `?` fails to compile and every site must choose a
