@@ -88,7 +88,18 @@ Where it stands:
     file requests input, fails the assertion "a new suspension must not
     replace a live continuation owner" (`suspension/core.rs:228`).
     Director-reproduced. Needs `FileRead`, so not reachable under the
-    sandboxed profile.
+    sandboxed profile. **The cause is a leaked owner, and it is wider than
+    the stub** (director probe, `.temp/director/leak-probe.txt`): a lone
+    `Get` of a file that requests input returns `$Failed` while the input
+    request stays installed, so every later request is refused;
+    `Get[...]; InputString[...]` and `Needs[...]; InputString[...]` fail the
+    same assertion. `ValueQ` and `Monitor` swallow correctly.
+  - **User ruling, 2026-09-28: guest package loading becomes resumable**
+    (option A). The host batch APIs' documented non-resumability is not
+    changed by it. Step 1 of the branch is brief-549 (design): the leak's
+    mechanism, the owner-leak class over all 38 `Transformed` pairs, and the
+    resumable design for `Get`, `Needs`, `BeginPackage` and the
+    `DeclarePackage` stub. Then G1-G8, then E1, then E2.
   - **495 pairs `Unsettled`** of 2 399. The enforcement design (drafts E1,
     E2) is what settles them: E2 gives may-suspend calls a result type with
     no `Try` impl, so a bare `?` fails to compile and every site must choose a
