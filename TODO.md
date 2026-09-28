@@ -4,7 +4,7 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-28, committed tree through `85e0013f`. Uncommitted
+Status checkpoint: 2026-09-28, committed tree through brief-547's report. Uncommitted
 performance candidates do not count as completed until their correctness,
 timing, counter, and memory gates have all been reviewed.
 
@@ -29,18 +29,51 @@ Where it stands:
   `LocalCovered` bodies, C01 `merged_option_exprs_for_symbol` and C02
   `evaluate_runtime_option_expr` (`ee81758a`), each with its exclusions in the
   row. Unarmed they cost nothing over the pre-conversion build (`cae6f550`).
+- **The map, from brief-547 (2026-09-28).** All 643 declarations re-read
+  against the current tree: **N 195, P 291, OutOfClass 56, Unsettled 101**.
+  The 147 carried rows split 90 N / 19 P / 38 unsettled, and the P screen
+  moved 12 rows to N. The N class is cut into 13 regions by conversion
+  mechanism (R01-R12, R14), which need seven new protocol surfaces (PF forest
+  and prefix, PS value and outcome slots, PD typed records, PX numeric
+  workspaces, PB text writer, PH host-result transfer, PT detached-owner
+  restore). Ranked by declarations fully closed: R01 29, R02 22, R04 23,
+  R03 23, R14 15, R09 14, R05 13, R07 14, R10 10, R08 8, R06 6, R12 13,
+  R11 5 — 195 in all, conditional on the 101. **The control-family
+  single-slot hypothesis was refuted**: it splits into R04 (end a
+  semantically unused value's lifetime before the next boundary — no lease
+  at all), R05 (needed slots) and R06 (payload-bearing outcomes). Tables and
+  both drafts are in `.temp/brief-547/`; the report is appended to the brief.
 - **Still open, in order**:
-  1. **Census the remaining N class by leverage.** brief-525 found 78 new
-     `InClass-NoProjection` witnesses plus 147 carried rows never split into
-     N and P (a 15-row sample all fell in P). Split the 147, then rank regions
-     by how many declarations share a path — the option region covered a path
-     31 declarations share — and convert them one at a time with the
-     option-region pattern: design brief, local reads, leased construction,
-     accumulator and handoff, erase unarmed cost, certificate.
-  2. **The four `UnresolvedConsumer` escaping copies** in
-     `inventory/consumer-obligations.tsv`.
-  3. P is a documented bound (`docs/guide/resource-limits-and-sandbox.md`,
+  1. **The four `UnresolvedConsumer` escaping copies** in
+     `inventory/consumer-obligations.tsv` (step E0; brief-547 §6 drafts it:
+     two borrow, two keep a live-source P proof with a runtime falsifier).
+  2. **H — a test-only exporter that runs the local lint on named production
+     bodies.** Nothing today points the lint at a body outside C01/C02, so no
+     new region can get real rejection rows.
+  3. **Settle the 101 unsettled rows with H**, then recompute the ranking.
+     The N class is not known until they are settled.
+  4. **K and A** — exact contracts and narrow admissions, split per record
+     from H's real output; then each protocol surface ahead of its users, and
+     the regions by leverage, each with the option-region pattern: design
+     brief, local reads, leased construction, accumulator and handoff, erase
+     unarmed cost, certificate.
+  5. P is a documented bound (`docs/guide/resource-limits-and-sandbox.md`,
      "What the ceiling does not see"), not work.
+- **Scan loses its continuation on suspension — a correctness defect, found
+  by brief-547 and reproduced by the director (2026-09-28).**
+  `evaluate_scan_parts` (`functional_ops/apply_map/normalize.rs:446`)
+  suspends inside its loop with the fieldless
+  `EvaluateScanPartsSuspensionFrame`, whose resume completes the whole call
+  with the callback's value. `log = {}; Scan[Function[x, AppendTo[log,
+  If[SameQ[x, 2], InputString["s: "], x]]], {1, 2, 3}]`, resumed with
+  `"two"`, returns `List[1, "two"]` instead of `Null` and never runs the
+  third element; the same shape through `Do` returns `Null` with
+  `log == {1, "two", 3}`. It is the brief-530 shape. There are 85 fieldless
+  frames outside tests (`.temp/director/unit-frames.txt`); a fieldless frame
+  is correct only where no work remains after the suspension point, in the
+  function or in a caller that pushes no frame of its own. Two spot checks
+  (`Mean`, `AveragePair`) are tail positions. **The class has not been
+  swept.** R01 converts Scan, so this must be settled before R01.
 
 **Queued behind it — the snapshot format (user ruling, 2026-09-22).** Session
 snapshots are UTF-8 source images, and that is why the interner leaks: a
