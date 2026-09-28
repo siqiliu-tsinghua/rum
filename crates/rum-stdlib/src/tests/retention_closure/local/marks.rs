@@ -9,6 +9,7 @@ use std::collections::BTreeMap;
 struct Covered {
     fingerprint: String,
     dependencies: BTreeMap<Id, String>,
+    instance: Option<super::certificates::Instance>,
 }
 
 #[derive(Clone, Default)]
@@ -55,10 +56,20 @@ impl Marks {
         // No body access here. Stamps were computed at indexing, before lint.
         // Validate the complete mark set, without following any call edges.
         for (name, mark) in &self.covered {
-            if index.bodies.get(name) != Some(&mark.fingerprint) {
+            if let Some(instance) = &mark.instance {
+                instance.current(index)?;
+                if instance.fingerprint() != mark.fingerprint {
+                    return Err(format!("stale production instance {name}"));
+                }
+            } else if index.bodies.get(name) != Some(&mark.fingerprint) {
                 return Err(format!("stale covered mark {name}; re-lint its own body"));
             } // FALSIFIER:covered-fingerprint
             for (dependency, stamp) in &mark.dependencies {
+                if let Some(contract) = self.contracts.get(dependency) {
+                    // A matching stamp is insufficient after a dependency's
+                    // status or indexed declaration evidence was withdrawn.
+                    self.contract_view(index, contract)?;
+                }
                 if self.fingerprint(dependency) != Some(stamp.as_str()) {
                     return Err(format!(
                         "changed direct mark dependency {name} -> {dependency}"
@@ -88,34 +99,37 @@ impl Marks {
         return Ok(record.fingerprint.clone());
     }
 
+    fn contract_view(&self, index: &Interfaces, c: &Contract) -> Result<String, String> {
+        let id = &c.target;
+        Self::contract(c).and_then(|stamp| {
+            if let Some(check) = index.read_contracts.get(id) {
+                check.clone()?;
+            }
+            // The fixed rule protocol's direct records are reconciled
+            // without recursively asking another mark or body.
+            for dependency in super::rules::dependencies(id)
+                .into_iter()
+                .chain(super::option_boundaries::dependencies(id))
+            {
+                let record = self
+                    .contracts
+                    .get(&dependency)
+                    .ok_or_else(|| format!("missing rule boundary dependency {dependency}"))?;
+                Self::contract(record)?;
+                if let Some(check) = index.read_contracts.get(&dependency) {
+                    check.clone()?;
+                }
+            }
+            Ok(stamp)
+        })
+    }
+
     pub fn view(&self, index: &Interfaces) -> BTreeMap<Id, Result<String, String>> {
         let validation = self.validate_covered(index);
         let mut view = self
             .contracts
             .iter()
-            .map(|(id, c)| {
-                let verdict = Self::contract(c).and_then(|stamp| {
-                    if let Some(check) = index.read_contracts.get(id) {
-                        check.clone()?;
-                    }
-                    // The fixed rule protocol's direct records are reconciled
-                    // without recursively asking another mark or body.
-                    for dependency in super::rules::dependencies(id)
-                        .into_iter()
-                        .chain(super::option_boundaries::dependencies(id))
-                    {
-                        let record = self.contracts.get(&dependency).ok_or_else(|| {
-                            format!("missing rule boundary dependency {dependency}")
-                        })?;
-                        Self::contract(record)?;
-                        if let Some(check) = index.read_contracts.get(&dependency) {
-                            check.clone()?;
-                        }
-                    }
-                    Ok(stamp)
-                });
-                (id.clone(), verdict)
-            })
+            .map(|(id, c)| (id.clone(), self.contract_view(index, c)))
             .collect::<BTreeMap<_, _>>();
         for (id, m) in &self.covered {
             view.insert(
@@ -143,7 +157,39 @@ impl Marks {
         let Some(fingerprint) = index.bodies.get(&f.id) else {
             return Err(report);
         };
-        // A production body is report-only in this brief, even if it passes.
+        if super::certificates::production(f) {
+            let instances = match super::certificates::instances(index, f) {
+                Ok(instances) => instances,
+                Err(reason) => {
+                    report.rejected.insert(Diagnostic {
+                        kind: Kind::RET002,
+                        site: f.site.clone(),
+                        target: Some(f.id.clone()),
+                        witness: vec![f.id.clone()],
+                        reason,
+                    });
+                    return Err(report);
+                }
+            };
+            let mut earned = Vec::new();
+            for (instance, body) in instances {
+                let own = super::check_instance(index, &body, &self.with_covered(&index.earned));
+                if !own.rejected.is_empty() {
+                    return Err(own);
+                }
+                earned.push((
+                    instance.key.clone(),
+                    Covered {
+                        fingerprint: instance.fingerprint(),
+                        dependencies: own.marks,
+                        instance: Some(instance),
+                    },
+                ));
+            }
+            // Atomic publication: an omitted or rejected instance earns nothing.
+            self.covered.extend(earned);
+            return Ok(report);
+        }
         if !f.id.starts_with("fixture::") && !super::interface::probe_body(f) {
             return Err(report);
         }
@@ -152,9 +198,22 @@ impl Marks {
             Covered {
                 fingerprint: fingerprint.clone(),
                 dependencies: report.marks.clone(),
+                instance: None,
             },
         );
         Ok(report)
+    }
+
+    pub fn production_records(
+        &self,
+        index: &Interfaces,
+    ) -> Result<Vec<(&super::certificates::Instance, &BTreeMap<Id, String>)>, String> {
+        self.validate_covered(index)?;
+        Ok(self
+            .covered
+            .values()
+            .filter_map(|m| m.instance.as_ref().map(|i| (i, &m.dependencies)))
+            .collect())
     }
 
     pub fn count(&self) -> usize {

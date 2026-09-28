@@ -126,48 +126,87 @@ negative fixtures pin the diagnostic kind, target, source span and witness.
 The gate also prevents promotion removal or redirection and checks exact,
 exercised trusted contracts and their dependency fingerprints.
 
-This gate currently certifies only the accepted fixture protocol: no production
-region is covered and the production promotion inventory is empty. Pending
-catalog rejections, option-frontier edges and proposed boundaries are explicit
-unresolved obligations, never exemptions or certificates. The accepted fixture
-demonstrates a leased accumulator across a loop, callback-result adoption and
-outgoing ownership transfer; it does not establish production lease bounds,
-callback-private allocation limits, destructor stack safety or whole-program
-Rust soundness. Those require their own contracts and validation.
+The first production certificates cover exactly two local bodies:
+`Session::merged_option_exprs_for_symbol` (C01) and
+`Session::evaluate_runtime_option_expr` (C02). `inventory/promoted.tsv` has
+exactly two `LocalCovered` body rows. Each row embeds separate certificates
+for the default (`hash=true`) and no-default-features (`hash=false`) builds.
+C01 has two instances per build: the sealed `Unarmed` and `AccountingShadow`
+modes, each with `rum_stdlib::option_consumers::OptionConsumer` as `R`.
+C02 is nongeneric: its mode dispatch is supplied by the existing concrete rule
+contracts, and it has no `R` parameter. Thus there are three instance marks per
+build, six recorded across both builds, under two production body rows. No
+helper body is promoted; the snapshot, driver, read and rule helpers retain
+their separately discharged contract status. Fixture marks and the four
+`LeaseProbe538` body marks are counted separately.
 
-The brief-539 local lint takes one body and a signature-only index. Its call
-check reads a prepared mark table; no callee body or frontier decides a verdict.
-Only a successful local run can issue a fixture mark, pinned to its body,
-lexical/type context, checker implementation and build inputs. A separate flat
-validation pass checks stamps and direct mark dependencies. The closed owned
-container list is `types::OWNED_CONTAINERS` (Vec, Box, String, BTreeMap, HashMap,
-HashSet); a required test exercises every entry. Rejection uses produced type
-facts, including aliases and helper return signatures. Unknown expression types
-and unclassified cleanup reject. The local grammar is conservative within the
-existing A1/A2 surface: it reuses the effect interpreter with callee entry
-disabled and calls resolved only through the prepared mark table. Parameter
-cleanup and borrow/move rules remain enforced even for otherwise unused values.
-Operators, `?`, closures and macros remain rejected.
+Each certificate establishes, for its recorded build, instance and admitted
+syntax, that no raw owned container remains live across a call that may run
+guest code or grow accounted storage. Every call needs exact resolution and a
+current covered mark or discharged contract, with caller preconditions checked.
+This includes local branch/error cleanup and lease/frame transfers only within
+the named bodies and their stated boundary contracts. A type fact, signature or
+returned `Expr` never creates an ownership receipt.
 
-`inventory/local-contracts.tsv` records all sixteen brief-537 obligations.
-Only B03 (kernel TypeId membership), B09 (armed checkpoint accounting, with its
-exclusions), and B12 (the private lease-frame transfer protocol) are discharged.
-The remaining thirteen records are Pending and cannot supply a mark. These
-contracts provide no implicit receipt, no bound on guest/host-private storage,
-and no permission for unresolved trait/generic dispatch. Their fingerprints
-pin a stated flat dependency list and executable falsifier references; updating
-a fingerprint does not replace the required runtime controls. The historical
-traversal/census tests remain measurements, separate from this local verdict.
+The local lint takes one body and a signature-only index. Its call check reads
+a prepared mark table; no callee body or frontier decides the verdict. Marks
+are minted only after the current body's own lint succeeds, including every
+recorded concrete instance. There is no generic C01 mark: the finite checks do
+not establish an all-`R` claim. A flat pass validates body/context, checker and
+build fingerprints and direct covered-mark/contract dependencies. Production
+certificates also pin the declaration/installer/implementation domain and
+reconcile it with the actual compiled and installed runtime set and registered
+TypeIds. The build field records compiler identity, target architecture/OS,
+pointer width, debug configuration, feature selection and build-input stamps.
+An unrecorded build needs its own successful evidence; it is not silently
+covered by another build's row.
 
-The new acceptance test preserves the prediction that `LeaseProbe538` is clean.
-The existing probe uses forbidden closures, `?`, iteration and operators, so
-that assertion currently fails. This is an unresolved acceptance conflict,
-not production coverage. C01/C02 also reject. The nested macro at C02:259 has
-both an unknown expansion-type rejection and a located diagnostic for its
-required `Vec<Expr>` argument type; that contextual diagnostic is explicitly
-not an exact expansion-type fact. No macro is admitted by examining its
-arguments. Passing scalar fixture marks do not certify the lease protocol or
-promote any production region.
+Inventory text supplies no mark. Both feature gates replay their active
+certificate cells against freshly earned marks, require both build cells to
+exist, and require exactly the two named body rows and matching obligations.
+Removal, redirection, stale fingerprints, absent marks, omitted instances and
+changed preconditions, strengths or exclusions reject. Required falsifiers
+exercise raw locals across guest calls, missing/stale/Pending direct marks,
+expired bodies/domains/builds, runtime declaration drift, caller promotion and
+each falsely covered escaping-copy row, followed by restored controls.
+`LeaseProbe538::{probe,start,drive,resume}` must continue to lint clean and earn
+their own marks. The historical traversal and census remain measurements,
+separate from this local verdict.
+
+Every production row states its preconditions, contract strengths and
+exclusions, and each instance records its direct covered-mark and contract
+dependencies with their fingerprints and contract preconditions/guarantees.
+The claim excludes callers and the whole option consumer, arbitrary external
+`R`, guest- and host-private allocation, process RSS and allocator overhead,
+interner storage, stack-safe destruction of deep `Expr`s, between-checkpoint
+peaks and universal allocation bounds inferred from tests. In particular, the
+certified-domain installer is public: a host can install its own declaration
+and assert its own trust. Such declarations are outside these repository
+certificates. The rest of the N class remains open and P's documented bound is
+unchanged.
+
+All four `inventory/consumer-obligations.tsv` rows remain
+`UnresolvedConsumer`: the predicate and set `SameTest` clones, the
+`AlignColumns` separator `String`, and the URL default-scheme `String`. Their
+escaping copies are excluded in each production row. Promoting C01/C02 cannot
+discharge those copies or promote a caller; a clean callee supplies no evidence
+about raw storage retained by its caller.
+
+`inventory/local-contracts.tsv` contains 68 explicitly named records: 62 are
+Discharged with their existing Runtime-enforced or Test-checked strengths;
+B01, B02, B06, B07, B08 and I03 remain Pending and cannot supply marks. The
+concrete snapshot/driver instances replace B01/B02 only at their exact recorded
+identities. This certificate step adds no contract or admission. Fingerprints
+pin flat source dependencies and executable falsifier references; refreshing a
+fingerprint does not replace the required controls or strengthen a contract.
+
+The closed owned-container list remains `types::OWNED_CONTAINERS` (Vec, Box,
+String, BTreeMap, HashMap, HashSet), with every entry exercised. Rejection uses
+produced type facts, including aliases and helper return signatures. Unknown
+expression types and unclassified cleanup reject. Parameter cleanup and
+borrow/move rules remain enforced even for unused values. The narrow existing
+lease, option-read, rule and finite-domain admissions are unchanged; they do
+not admit arbitrary operators, `?`, closures, macros or open generic dispatch.
 
 The rejection census adds two diagnostic populations without changing those
 admission rules. `EDGE_ALL` enumerates every indexed production definition
@@ -239,7 +278,8 @@ are mutated in source copies. Test-only sites within indexed bodies are
 explicitly observed by compiling the relevant tests without executing them.
 Every agreement, disagreement, compiler diagnostic, and mutation is retained;
 an instrumentation failure fails the gate. These checks establish Rust facts,
-not retention certificates. Production coverage remains zero.
+not retention certificates; production coverage comes only from the separate
+local certificates described above.
 
 
 The A2 method stage proves a restricted inherent selection from independently
@@ -275,5 +315,6 @@ exercised control call; no error may occur at the original site in that run.
 Compile-pass controls run first, and all disagreements and raw compiler output
 are retained. Oracle fingerprints include source, harnesses, inventories,
 manifests, toolchain, feature set and claim files. Reusing an unchanged run
-replays its evidence. These are Rust selection facts only: production retention
-coverage remains zero and no production region is promoted.
+replays its evidence. These are Rust selection facts only; they do not themselves promote a
+production body. The separate local certificates above require their own lint
+and current boundary evidence.

@@ -12,6 +12,8 @@ pub(super) struct Interfaces {
     pub read_contracts: BTreeMap<Id, Result<(), String>>,
     pub resume_definition: Result<(), String>,
     pub option_domain: Result<Vec<ExactTy>, String>,
+    pub certificate_domain: Result<String, String>,
+    pub build: String,
 }
 
 pub(super) fn probe_body(f: &Function) -> bool {
@@ -167,7 +169,12 @@ impl Interfaces {
                 .collect::<Vec<_>>();
             paths.sort();
             for path in paths {
-                context.push(path.to_string_lossy().into_owned());
+                context.push(
+                    path.strip_prefix(source::workspace())
+                        .unwrap()
+                        .to_string_lossy()
+                        .into_owned(),
+                );
                 context.push(std::fs::read_to_string(path).unwrap());
             }
         }
@@ -206,6 +213,8 @@ impl Interfaces {
             })
             .collect();
         let mut index = Self {
+            certificate_domain: super::certificates::domain(input),
+            build: super::certificates::build(),
             option_domain: super::option_domain::members(input),
             read_contracts: super::reads::contracts::validate(input)
                 .into_iter()

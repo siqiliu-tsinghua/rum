@@ -1,4 +1,4 @@
-//! Local lint plus historical restricted fixture checks; no production coverage.
+//! Local instance certificates plus historical restricted fixture measurements.
 
 mod catalog;
 mod census;
@@ -120,7 +120,15 @@ fn production_obligations_are_exact() {
     {
         let fields: Vec<_> = line.split('\t').collect();
         assert_eq!(fields.len(), 8, "complete witness record: {line}");
-        assert_eq!(fields[3], "Pending", "D1 promotes no production region");
+        assert_eq!(
+            fields[3],
+            if ["C01", "C02"].contains(&fields[0]) {
+                "LocalCovered"
+            } else {
+                "Pending"
+            },
+            "only the two exact local production bodies are promoted"
+        );
         assert!(
             recorded.insert(fields[1], fields.clone()).is_none(),
             "duplicate obligation"
@@ -144,8 +152,10 @@ fn production_obligations_are_exact() {
     for (name, root) in ["C01", "C02"].into_iter().zip(roots) {
         assert_eq!(recorded[name][7], root);
     }
-    assert!(include_str!("inventory/promoted.tsv").is_empty());
-    println!("PRODUCTION_COVERAGE=0 N=78 UNSPLIT=147 UNSETTLED=90 CANDIDATE_REGIONS=2 PENDING=317");
+    local::verify_promotions(&source);
+    println!(
+        "PRODUCTION_BODY_ROWS=2 N=78 UNSPLIT=147 UNSETTLED=90 LOCAL_OPTION_BODIES=2 PENDING=315"
+    );
     println!(
         "PRODUCTION_WALL_SECONDS={:.3}",
         started.elapsed().as_secs_f64()

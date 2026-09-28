@@ -207,8 +207,8 @@ fn baseline(source: &Source) {
         wrapper.rejected.iter().any(|row| row.target.as_deref()
             == Some(&format!("{}::check_option_reentry", regions::SESSION)))
     );
-    assert!(include_str!("../inventory/promoted.tsv").is_empty());
+    super::super::local::verify_promotions(source);
     println!(
-        "ACCEPTANCE_BASELINE OPTION_FRONTIER=924 RET001=10 RET002=887 RET003=27 PUBLIC_WRAPPER=16 PRODUCTION_COVERAGE=0"
+        "ACCEPTANCE_BASELINE OPTION_FRONTIER=924 RET001=10 RET002=887 RET003=27 PUBLIC_WRAPPER=16 LOCAL_PRODUCTION_BODY_ROWS=2"
     );
 }

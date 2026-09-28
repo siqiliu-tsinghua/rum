@@ -46,7 +46,7 @@ impl<'ast> Visit<'ast> for Copies<'_> {
     }
 }
 
-fn reconcile(source: &Source, inventory: &str) -> Result<Vec<String>, String> {
+pub(super) fn reconcile(source: &Source, inventory: &str) -> Result<Vec<String>, String> {
     let mut seen = BTreeSet::new();
     let mut records = Vec::new();
     for line in inventory
@@ -100,12 +100,15 @@ pub(super) fn verify(source: &Source) {
         reconcile(source, "").unwrap_err(),
         "escaping consumer obligation removed"
     );
-    assert!(
-        reconcile(
-            source,
-            &inventory.replacen("UnresolvedConsumer", "Covered", 1)
-        )
-        .unwrap_err()
-        .contains("claimed covered")
-    );
+    for (id, _, _) in EXPECTED {
+        let bad = inventory.replace(
+            &format!("{id}\tUnresolvedConsumer"),
+            &format!("{id}\tCovered"),
+        );
+        assert_ne!(bad, inventory);
+        let red = reconcile(source, &bad).unwrap_err();
+        assert!(red.contains("claimed covered"));
+        reconcile(source, inventory).unwrap();
+        println!("CONSUMER_FALSIFIER {id}: RED {red}; GREEN UnresolvedConsumer");
+    }
 }

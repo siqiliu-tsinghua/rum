@@ -4,6 +4,7 @@
 mod admission_tests;
 mod callbacks;
 mod calls;
+mod certificates;
 mod cleanup;
 mod contract_tests;
 mod contracts;
@@ -15,6 +16,8 @@ mod option_boundaries;
 mod option_domain;
 mod oracle;
 mod production;
+mod promotion;
+mod promotion_tests;
 mod protocol;
 mod reads;
 mod resume_macro;
@@ -27,6 +30,7 @@ mod type_tests;
 use super::{methods, model::*, resolve, types};
 use interface::Interfaces;
 use marks::Marks;
+pub(super) use promotion::verify as verify_promotions;
 use std::collections::{BTreeMap, BTreeSet};
 use syn::{
     spanned::Spanned,

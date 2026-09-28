@@ -239,7 +239,7 @@ pub(super) fn keys(members: &[ExactTy]) -> Vec<String> {
         .collect()
 }
 
-fn reconcile(
+pub(super) fn reconcile(
     source: &Source,
     session: &rum_runtime::Session,
     certificate_keys: &[String],
