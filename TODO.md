@@ -4,14 +4,35 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-28, committed tree through brief-549's report. Uncommitted
-performance candidates do not count as completed until their correctness,
-timing, counter, and memory gates have all been reviewed.
+Status checkpoint: 2026-09-28 (end of day), committed tree through the
+end-of-day handoff commit.
+**The working tree is NOT clean on purpose**: it holds brief-550's uncommitted,
+un-gated implementation (19 modified files, 12 new), preserved without moving
+HEAD at `refs/wip/brief-550-interrupted` (`5e3cea9f`) and in
+`.temp/brief-550/wip-backup/`. Do not commit it, stash it, or check anything
+out over it before the gate. Uncommitted performance candidates do not count as
+completed until their correctness, timing, counter, and memory gates have all
+been reviewed.
 
-**Where work resumes — the retention line, after its first certified region
-(handoff 2026-09-28).** The line exists because an armed memory ceiling can be
-walked through by a builtin's Rust-local accumulator, which is in neither the
-session total `S` nor the in-flight expression `W`. Read
+**Where work resumes (handoff 2026-09-28, end of day) — resume brief-550.**
+Its first dispatch was killed by the harness under host memory pressure (a
+long-running `lean` job on the same machine), not by the work. By its
+checkpoint (`.temp/brief-550/PROGRESS.md`) all 45 permanent reds are green,
+all four loader callers are connected, 8/8 white-box and 4/4 host tests pass,
+docs and the generated reference are updated, and `cargo fmt --check` is
+green; the crate and workspace gates and the performance gate remain. The
+brief carries a resume note (`6a8a3dba`): it continues from the checkpoint,
+runs cargo with `CARGO_BUILD_JOBS=4`, and defers the timing lane if another
+CPU-heavy job is running. **Wait for the `lean` job to finish** (user,
+2026-09-28), then `scripts/dispatch-brief.sh 550` in the background, then gate
+it: scope against the fence, the 45 reds, the workspace, and the instruction
+panel against `.temp/brief-550/base/`. After it, the branch continues at the
+batch boundary (see "ACTIVE BRANCH" below).
+
+**The retention line — paused at E0 for the suspension-continuation branch
+below, after its first certified region.** The line exists because an armed
+memory ceiling can be walked through by a builtin's Rust-local accumulator,
+which is in neither the session total `S` nor the in-flight expression `W`. Read
 [docs/dev/retention-closure-design.md](./docs/dev/retention-closure-design.md)
 first; it records why whole-closure traversal was abandoned (the option
 region's closure reached 868 bodies; aliasing and data dependence are
@@ -119,15 +140,19 @@ Where it stands:
     per form too — whether a host request timeout is per request or per form
     is a contract question, related to "termination is last-write-wins across
     script forms" below.
-  - **Queue**: brief-550 implements guest loading atomically across `Get`,
-    `Needs`, `BeginPackage` and the stub, with the inherited budget and
-    `BeginPackage` restoring on `Exit`. Next, the batch boundary: the batch
+  - **Queue**: brief-550 (in flight, interrupted — see the top of this file)
+    implements guest loading atomically across `Get`, `Needs`,
+    `BeginPackage` and the stub, with the inherited budget and `BeginPackage`
+    restoring on `Exit`. Next, the batch boundary, drafted in brief-549
+    (`.temp/brief-549/draft-batch-ownership.md`, to be rewritten): the batch
     path keeps its documented non-resumability but gets an explicit
     abandonment-only owner, with rollback deferred to cancellation (director
     decision: the same model as the resumable path — reset runs no guest
     cleanup, cancellation does); snapshot restore abandons its failed input
     work. Then a front-end input disposition brief (REPL, synchronous Jupyter,
-    CLI helpers), then G1-G8, E1, E2.
+    CLI helpers — commission adapter red tests first), then G1-G8 (drafts in
+    `.temp/brief-548/draft-G*.md`), E1, E2. Every draft is raw material; the
+    director rewrites before dispatch.
   - **495 pairs `Unsettled`** of 2 399. The enforcement design (drafts E1,
     E2) is what settles them: E2 gives may-suspend calls a result type with
     no `Try` impl, so a bare `?` fails to compile and every site must choose a

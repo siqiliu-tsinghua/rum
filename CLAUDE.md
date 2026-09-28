@@ -206,14 +206,49 @@ Consequences for how I present and pick work:
 
 ## Current direction (read these for state)
 
-- **ACTIVE: THE RETENTION LINE (2026-09-22 → 28, briefs 524-546, through
-  `70aa0b5e`).** Handoff is `TODO.md`'s top section; the design and its
-  theoretical basis are `docs/dev/retention-closure-design.md`; the 2026-09-28
-  `PROGRESS.md` entry has the narrative; memory `retention-closure-line.md`.
-  The option region's two bodies are the first certified production coverage
-  (`ee81758a`). **Next: split the 147 carried rows into N and P, rank the
-  remaining N regions by shared-path leverage, and convert them one at a time
-  with the option-region pattern.** The snapshot format is queued behind it.
+- **ACTIVE BRANCH: SUSPENSION CONTINUATIONS (inserted 2026-09-28 by user
+  ruling, briefs 548-550; runs to completion before the retention line resumes
+  at E0).** Handoff is `TODO.md`'s top section — it starts with resuming
+  brief-550, whose uncommitted tree is deliberately left in the working copy
+  (also on `refs/wip/brief-550-interrupted`). A builtin that suspends for input
+  mid-work must resume *into* that work; brief-548 found 86 sites in eight
+  groups that resume past it, plus a loader that swallows the suspension while
+  leaking its owner (a lone `Get` wedges the session; a second input fails a
+  kernel `assert!`). User ruling: guest loading becomes resumable; the host
+  batch APIs stay non-resumable as documented. Order: brief-550 (guest
+  loading, in flight) → batch boundary → front-end input disposition → G1-G8 →
+  E1 (catalog-wide oracle) → E2 (a may-suspend result type with no `Try`, so a
+  bare `?` does not compile). Memory `suspension-continuation-branch.md`.
+
+  **Three things from it are method, not history.**
+
+  - *A repair that closes the instances seen recurs as the class.* brief-530
+    fixed one lost continuation on the option path; the sweep found 86 more of
+    the same mechanism. The class-wide falsifier is rum against rum: the
+    resumed path must equal the queued-input path in value and side effects,
+    with the suspension asserted, suspending mid-loop and twice.
+  - *A swallowed suspension must retire its owner.* Converting
+    `InputRequired` into a value without abandoning the pending owner leaves a
+    session that looks idle and refuses every request. A cleared prompt is not
+    a retired owner.
+  - *A limit probe's control must fire before its treatment is read.* Three of
+    the director's budget probes measured another limit first — the element
+    limit, the iteration limit, a loop body that never polls — before the
+    fourth showed `Get` renewing the request deadline per form.
+
+- **THE RETENTION LINE (2026-09-22 → 28, briefs 524-547) — PAUSED at E0 for
+  the branch above.** The design and its theoretical basis are
+  `docs/dev/retention-closure-design.md`; the 2026-09-28 `PROGRESS.md`
+  entries have the narrative; memory `retention-closure-line.md`. The option
+  region's two bodies are the first certified production coverage
+  (`ee81758a`). brief-547 settled the map: of 643 declarations, N 195, P 291,
+  OutOfClass 56, Unsettled 101, in 13 regions by conversion mechanism needing
+  seven new protocol surfaces. **Resume order: E0 (the four escaping consumer
+  copies) → H (a lint exporter for named production bodies) → settle the 101
+  with H → K/A → each surface before its users → regions by leverage**, each
+  with the option-region pattern. Grouping by named helper hid this — after
+  the option path the leverage looked flat. The snapshot format is queued
+  behind the line.
 
   **Four things from this line are method, not history.**
 
@@ -239,9 +274,6 @@ Consequences for how I present and pick work:
   **NEXT: the security-hardening mainline resumes** — the 2026-09-02 audit's
   open findings, headed by the process-global symbol interner that the memory
   ceiling cannot see, plus the two items that work opened and never briefed.
-  depth, then the ownership graph it exposed.** `TODO.md` is authoritative; the
-  2026-09-18/19 `PROGRESS.md` entry has the narrative; memories
-  `stability-walk-and-rebuild-class.md` and `ownership-graph-line.md`.
 
   The class-wide **fail-open** direction is closed for associations: a guard
   substrate (`runtime/native_stack_guard.rs`, two `#[doc(hidden)]` `kernel_api`

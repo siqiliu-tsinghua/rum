@@ -317,6 +317,11 @@ need either; they exist in case the tree is damaged.
    per-iteration instructions on every named label at N and 2N against the
    preserved base binaries, then timing.
 
+**Reading the instruction counts.** This host has performance and efficiency
+cores, so `perf stat` prints a `cpu_core/instructions:u/` row and a
+`cpu_atom/instructions:u/` row. Pinned with `taskset -c 2`, take the
+`cpu_core` row, and say so.
+
 **Keep memory pressure down.** Run every `cargo` command with
 `env CARGO_BUILD_JOBS=4` inside `scripts/run-bounded.py`. Before the timing
 lane, check that no other CPU-heavy process is running (for example a `lean`

@@ -3361,3 +3361,68 @@ in every certificate's exclusions rather than hidden.
 - *Protect the scene.* A reboot wiped a dispatch log mid-line; logs and scratch
   now live in the git-ignored `.temp/`, and red trees are preserved on side refs
   built with a temporary index, never by moving HEAD.
+
+## 2026-09-28 — the N map, and a branch: 86 builtins resume past their own work (briefs 547-550)
+
+**brief-547 settled the retention line's map.** All 643 declarations re-read
+against the current tree: N 195, P 291, OutOfClass 56, Unsettled 101. The 147
+rows carried from brief-524 split 90/19/0/38, and a screen of the P rows moved
+12 to N. Grouping by named helper had made the leverage look flat after the
+option path (31, then 5, 4, 3, …, 23 singletons); grouping by the mechanism a
+conversion needs gave 13 regions and seven new protocol surfaces, and refuted
+the director's own hypothesis that the control family was one single-slot
+shape — it is three (end an unused value's lifetime with no lease at all, a
+needed value slot, a payload-bearing outcome). The retention line's order is now
+E0 → a lint exporter for named bodies → settle the 101 → contracts and
+admissions → surfaces before users → regions by leverage.
+
+**It also found Scan resuming past its loop,** and that became a branch (user
+ruling). When guest code requests input mid-builtin, frames are pushed as the
+suspension propagates and driven inner-to-outer on resume; a Rust function with
+work left that pushes no frame, or an identity frame, hands the inner value
+outward as its own result. brief-530 had repaired one instance on the option
+path; nobody had swept the class. **brief-548 swept it** with a rum-against-rum
+oracle — the resumed path must equal the queued-input path in value and side
+effects, with the suspension asserted — and found 86 `Lost` sites in eight
+groups (option readers 29, rule and held-pattern normalization 16, the lazy
+pull machine 14, trace filtering and `Sow` 14, the schema validator 7, and
+smaller groups), 38 `Transformed` boundaries, and 495 unsettled pairs. The
+director re-ran all 195 probes with identical results.
+
+**The loader was worse than a lost continuation.** Guest `Get` converted a
+suspension into `$Failed` while the input request stayed installed: a lone
+`Get` of a file that asks for input wedges the session, and a second input in
+the same evaluation fails the kernel's `assert!` that a new suspension must not
+replace a live owner. `ValueQ` and `Monitor` swallow correctly. The user ruled
+guest loading resumable (the host batch APIs keep their documented
+non-resumability). brief-549 designed it and audited all 38 boundaries; the
+front ends (REPL, synchronous Jupyter execute, CLI helpers) also leave their
+session blocked after reporting input.
+
+**Two resource-limit bypasses on the same path, director-confirmed.** Each form
+of a guest-loaded file renewed the request budget:
+`MemoryConstrained[Get[...], 100000]` over a 50 000-element file returned
+`50000` where the inline form aborts, and three ~465 ms forms loaded by `Get`
+ran 1414 ms under an 800 ms request timeout that stops them inline at 801 ms.
+Both need `FileRead`. brief-550 makes a guest load inherit the enclosing
+budget.
+
+**brief-550 was stopped by the host, not the work.** Its dispatch was killed
+under host memory pressure after every permanent red went green (45), the
+white-box (8/8) and host (4/4) tests passed and the docs were regenerated. The
+un-gated tree is left in the working copy on purpose and preserved on
+`refs/wip/brief-550-interrupted`; the brief carries a resume note.
+
+Method, in the order it cost the most:
+
+- *The director's budget probes measured the wrong limit three times* — the
+  generated-element limit, the per-`Do` iteration limit, and a `Do[Null, …]`
+  body that never reaches an interrupt poll — before the fourth, with a
+  calibrated per-form cost that scaled linearly, showed the deadline renewal.
+  Each control has to fire before its treatment is read.
+- *A cleared prompt is not a retired owner.* Every conversion of a suspension
+  into a value must abandon the pending owner exactly once; the loader's own
+  snapshot restore could never do it, because the owner is not in the snapshot.
+- *The worker ran `git status` at bootstrap twice despite the brief's first
+  line forbidding it* (548, 550; 549 ran `pwd`). Harmless and disclosed each
+  time, but the prohibition is not self-enforcing.
