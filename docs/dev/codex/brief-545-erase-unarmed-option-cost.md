@@ -72,8 +72,11 @@ promotion, no change to the certified domain's semantics.
 1. **Pin before editing:** the five rows above plus the armed 1/8/32/128
    option-count rows, the late-arm and resume shapes, and the untouched
    neighbours brief-544 measured. Reuse its probes under
-   `.temp/brief-544/probes/`; the pre-543 base binary and the pre-544 base are
-   preserved there. Copy each binary to the same path in turn.
+   `.temp/brief-544/probes/`. The builds, verified by the director before
+   dispatch: **pre-543** `.temp/brief-543/base-fresh-target/release/rum-cli`,
+   **pre-544** `.temp/brief-544/base-target/release/rum-cli`, and the current
+   tree's candidate, which you build. Copy each binary to the same path in
+   turn.
 2. **Allocation counts first.** The delayed rows' extra allocation must be gone.
 3. **Per-iteration instructions**, N and 2N, two pairs, `cpu_core` row only
    (the `cpu_atom` row is `<not counted>` on this hybrid CPU), `rum-cli` always
