@@ -95,7 +95,7 @@ rel="docs/dev/codex/$(basename "$brief")"
 num=$(basename "$brief" | sed -E 's/^brief-([0-9]+).*/\1/')
 mkdir -p "$repo_root/.temp/logs"
 log="$repo_root/.temp/logs/${log_tag}_brief_${num}.log"
-task="Read $rel and execute it exactly. Follow its Hard rules."
+task="Do not run git in any form, not even git status: the director owns git. Read $rel first and execute it exactly. Follow its Hard rules."
 
 echo "brief:   $rel"
 echo "worker:  $worker"
