@@ -386,26 +386,29 @@ impl Session {
         })
     }
 
+    /// Evaluates a non-resumable file batch. On input suspension, its file
+    /// transaction stays live until abandonment; read-only inspection sees the
+    /// partial state. Cancellation rolls back inner loads before this file.
     pub fn eval_file(&mut self, path: impl AsRef<Path>) -> Result<EvalOutcome, EvalError> {
-        let path = path.as_ref().to_path_buf();
+        let path = path.as_ref();
         let source = self
             .file_io()
             .ok_or(EvalError::NoFileIoProvider)?
-            .read_to_string(&path)
+            .read_to_string(path)
             .map_err(|source| EvalError::Io {
                 path: path.display().to_string(),
                 source,
             })?;
         let snapshot = self.capture_loader_snapshot();
+        let depth = self.load_stack.len();
 
-        self.load_stack.push(path);
+        self.load_stack.push(path.to_owned());
         self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::LoadStack);
         let result = self.eval_script_for_loader(&source);
-        self.load_stack.pop();
-        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::LoadStack);
-
-        if result.is_err() {
-            self.restore_loader_snapshot(snapshot);
+        if matches!(result, Err(EvalError::InputRequired { .. })) {
+            self.defer_public_file_rollback(path, depth, snapshot);
+        } else {
+            self.close_public_file(path, depth, result.is_err().then_some(snapshot));
         }
 
         result

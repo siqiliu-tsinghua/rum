@@ -10,9 +10,9 @@ use crate::config::HostConfig;
 use crate::cursor::{completion_prefix, symbol_at_cursor};
 use crate::model::{
     HostCompletionRequest, HostCompletionResponse, HostDefinitionSummary, HostEvalOutcome,
-    HostEvalRequest, HostFailure, HostFailureCode, HostInputSuspension, HostInspectRequest,
-    HostInspectResponse, HostIsCompleteRequest, HostIsCompleteResponse, HostMessageTemplate,
-    HostParseRequest, HostParseResponse, HostTyped, completeness_status, eval_failure_from_runtime,
+    HostEvalRequest, HostFailure, HostFailureCode, HostInspectRequest, HostInspectResponse,
+    HostIsCompleteRequest, HostIsCompleteResponse, HostMessageTemplate, HostParseRequest,
+    HostParseResponse, HostTyped, completeness_status, eval_failure_from_runtime,
     eval_success_from_runtime, host_failure_from_runtime, inspect_response_from_runtime,
     synthesized_host_failure,
 };
@@ -172,6 +172,7 @@ impl HostSession {
     /// [`HostCancelHandle`], because the rebuilt session retires the old request
     /// generations; obtain a new handle after reset. If the session was
     /// poisoned by a caught panic, reset clears the poisoned flag.
+    /// Dropping a suspended request during reset runs no guest cleanup.
     pub fn reset(&mut self) {
         self.session = Self::build_inner_session(&self.config);
         self.poisoned = false;
@@ -210,6 +211,11 @@ impl HostSession {
     /// partially populated. The prior state is not recovered and partial state
     /// is not cleared. Invalid UTF-8 is rejected before reset, leaving the
     /// session unchanged.
+    ///
+    /// If the snapshot requests input, restore returns an `Other` failure
+    /// after abandoning that restore's suspension, running its cleanup and
+    /// nested file rollbacks from inner to outer. The prompt and request owner
+    /// are retired; the partial state remains usable without a second reset.
     pub fn restore_from_bytes(&mut self, bytes: &[u8]) -> Result<(), HostFailure> {
         let source = std::str::from_utf8(bytes).map_err(snapshot_decode_failure)?;
         self.reset();
@@ -218,7 +224,7 @@ impl HostSession {
         }
 
         self.guard(
-            |session| match session.session.eval_snapshot_restore_request(source) {
+            |session| match session.session.restore_snapshot_request(source) {
                 Ok(response) => match response.termination {
                     Some(reason) => Err(synthesized_host_failure(
                         HostFailureCode::Other,
@@ -226,13 +232,7 @@ impl HostSession {
                     )),
                     None => Ok(()),
                 },
-                Err(failure) => match eval_failure_from_runtime(failure) {
-                    HostEvalOutcome::Failure(failure) => Err(failure),
-                    HostEvalOutcome::InputRequired(suspension) => {
-                        Err(snapshot_input_failure(suspension))
-                    }
-                    HostEvalOutcome::Success(_) => unreachable!("request failure cannot succeed"),
-                },
+                Err(failure) => Err(host_failure_from_runtime(failure)),
             },
             |message| Err(panic_failure(message)),
         )
@@ -389,6 +389,8 @@ impl HostSession {
     /// forms are not evaluated. Once a script suspends, other evaluation
     /// entrypoints are rejected; use [`Self::reset`], [`Self::restore_from_bytes`]
     /// (which resets first), or replace the whole session.
+    /// Alternatively, cancel the batch's request handle and re-enter to report
+    /// cancellation and abandon it before starting a fresh request.
     pub fn eval_script(&mut self, source: &str) -> HostEvalOutcome {
         if self.poisoned {
             return poisoned_eval_outcome();
@@ -410,6 +412,12 @@ impl HostSession {
     /// A session without a provider, including one built from
     /// [`HostConfig::sandboxed`], returns a [`HostFailureCode::Other`] failure.
     /// A pending input suspension is rejected before the file is read.
+    ///
+    /// A suspended file retains its transaction until abandonment. Read-only
+    /// inspection while blocked sees the partial state, and so does a
+    /// [`Self::snapshot_to_bytes`] image taken then. Cancellation rolls
+    /// back nested loads first, then this file; successful completion and
+    /// ordinary errors still commit or roll back immediately.
     pub fn eval_file(&mut self, path: impl AsRef<Path>) -> HostEvalOutcome {
         if self.poisoned {
             return poisoned_eval_outcome();
@@ -766,19 +774,6 @@ fn snapshot_decode_failure(error: std::str::Utf8Error) -> HostFailure {
 
 fn snapshot_encode_failure(message: String) -> HostFailure {
     synthesized_host_failure(HostFailureCode::Other, message)
-}
-
-fn snapshot_input_failure(suspension: HostInputSuspension) -> HostFailure {
-    HostFailure {
-        code: HostFailureCode::Other,
-        exit_status: None,
-        message: "snapshot restore unexpectedly requested input".to_string(),
-        syntax_rendered: None,
-        messages: suspension.messages,
-        prints: suspension.prints,
-        trace: suspension.trace,
-        outputs: suspension.outputs,
-    }
 }
 
 fn panic_eval_outcome(message: String) -> HostEvalOutcome {

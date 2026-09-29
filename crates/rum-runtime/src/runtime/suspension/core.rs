@@ -35,6 +35,7 @@ pub(in crate::runtime) struct SuspensionSlot {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(in crate::runtime) enum AbandonReason {
     CancelledRequest,
+    FailedSnapshotRestore,
     HelperBestEffortDiscard,
     CheckpointRollbackDiscard,
     SupersededOrQueuedInputDiscard,
@@ -286,6 +287,16 @@ impl AbandonmentContext<'_> {
 
     pub(in crate::runtime) fn rollback_guest_file(&mut self, transaction: &GuestFileTransaction) {
         self.session.close_guest_file(transaction, true);
+    }
+
+    pub(in crate::runtime) fn rollback_public_file(
+        &mut self,
+        path: &Path,
+        depth: usize,
+        snapshot: &LoaderSnapshot,
+    ) {
+        self.session
+            .close_public_file(path, depth, Some(snapshot.clone()));
     }
 
     pub(in crate::runtime) fn rollback_begin_package_dependency(

@@ -186,7 +186,7 @@ fn baseline(source: &Source) {
     // frontier. Guest-form abandonment adds exactly three rejected method sites:
     // taking/installing the paused environment and capturing it for cleanup.
     // These remain unresolved boundaries; the loader earns no retention mark.
-    for line in [698, 699, 714] {
+    for line in [709, 710, 725] {
         assert!(options.rejected.iter().any(|row| row.kind == Kind::RET002
             && row.site.file.ends_with("suspension/core.rs")
             && row.site.start.0 == line));

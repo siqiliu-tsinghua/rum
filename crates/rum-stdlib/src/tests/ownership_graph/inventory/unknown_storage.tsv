@@ -56,6 +56,7 @@ UnknownConstruct	crates/rum-runtime/src/runtime/model/session.rs	126	43	rum_runt
 UnknownConstruct	crates/rum-runtime/src/runtime/options/tests/resume.rs	1	1	source file is not reachable from a production or test module declaration
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	465	12	rum_runtime::runtime::profiling::BuiltinTimingToken.start: foreign representation std::time::Instant: Instant
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	470	12	rum_runtime::runtime::profiling::RuntimePathTimingToken.start: foreign representation std::time::Instant: Instant
+UnknownConstruct	crates/rum-runtime/src/runtime/session/batch_file.rs	9	11	rum_runtime::runtime::session::batch_file::PublicFileRollbackFrame.path: foreign representation std::path::PathBuf: PathBuf
 UnknownConstruct	crates/rum-runtime/src/runtime/session/guest_loading/file.rs	5	22	rum_runtime::runtime::session::guest_loading::file::GuestFileSource.path: foreign representation std::path::PathBuf: PathBuf
 UnknownConstruct	crates/rum-runtime/src/runtime/session/guest_loading/scope.rs	42	20	rum_runtime::runtime::session::guest_loading::scope::GuestFormEnvironment.eval_deadline/std::option::Option[Own]/arg0: foreign representation std::time::Instant: Instant
 UnknownConstruct	crates/rum-runtime/src/runtime/session/guest_loading/scope.rs	43	20	rum_runtime::runtime::session::guest_loading::scope::GuestFormEnvironment.time_deadline/std::option::Option[Own]/arg0: foreign representation std::time::Instant: Instant

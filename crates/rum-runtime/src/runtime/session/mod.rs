@@ -1,3 +1,4 @@
+mod batch_file;
 pub(in crate::runtime) mod guest_loading;
 mod session_api;
 mod session_eval;

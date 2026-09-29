@@ -83,6 +83,33 @@ impl Session {
         result
     }
 
+    /// Restores source for a host that reports input as a terminal restore
+    /// failure. Already installed state is preserved, while any suspension
+    /// created by this restore is abandoned before the failure is returned.
+    ///
+    /// Unlike the batch `eval_snapshot_restore_request` entry, this leaves no
+    /// blocked input operation after an input failure. Rejected admission
+    /// leaves a pre-existing request untouched.
+    pub fn restore_snapshot_request(
+        &mut self,
+        source: &str,
+    ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        let mut result = self.eval_snapshot_restore_request(source);
+        if let Err(failure) = &mut result {
+            if matches!(failure.error, SessionRequestError::InputRequired { .. }) {
+                // Only an admitted restore can return InputRequired. Admission
+                // rejection is Other and must not retire an unrelated owner.
+                self.abandon_pending_suspension(AbandonReason::FailedSnapshotRestore);
+                self.finish_active_accepted_request();
+                failure.error = SessionRequestError::Other {
+                    message: "snapshot restore unexpectedly requested input".to_string(),
+                };
+                return self.package_eval_request_outcome(result);
+            }
+        }
+        result
+    }
+
     pub fn configuration(&self) -> SessionConfig {
         SessionConfig {
             resource_limits: self.resource_limits,

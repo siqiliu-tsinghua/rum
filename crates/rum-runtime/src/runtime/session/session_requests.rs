@@ -64,7 +64,8 @@ impl Session {
         let cancellation_won = accepted.finish();
         debug_assert!(cancellation_won);
 
-        Ok(Some(self.finish_cancelled_eval_response(checkpoint)))
+        let response = self.finish_cancelled_eval_response(checkpoint);
+        self.package_eval_request_outcome(Ok(response)).map(Some)
     }
 
     #[doc(hidden)]
@@ -158,7 +159,7 @@ impl Session {
         self.begin_top_level_interrupt_budget();
         let checkpoint = RequestCheckpoint::new(self);
         if self.active_accepted_request_is_cancelled() {
-            return Ok(self.finish_cancelled_active_request(checkpoint));
+            return self.finish_cancelled_active_request(checkpoint);
         }
         let result = (|| {
             let parsed = parse_with_diagnostics(input).map_err(request_syntax_failure)?;
@@ -186,7 +187,7 @@ impl Session {
         self.begin_top_level_interrupt_budget();
         let checkpoint = RequestCheckpoint::new(self);
         if self.active_accepted_request_is_cancelled() {
-            return Ok(self.finish_cancelled_active_request(checkpoint));
+            return self.finish_cancelled_active_request(checkpoint);
         }
 
         let result = self.eval_expr_request_from_checkpoint(expr, checkpoint);
@@ -298,8 +299,15 @@ impl Session {
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
         );
-        let input = input.into();
+        let result = self.resume_eval_request_from_checkpoint(input.into(), checkpoint);
+        self.package_eval_request_outcome(result)
+    }
 
+    fn resume_eval_request_from_checkpoint(
+        &mut self,
+        input: String,
+        checkpoint: RequestCheckpoint,
+    ) -> Result<SessionEvalResponse, SessionRequestFailure> {
         let previous_message_list_checkpoint = self
             .current_message_list_checkpoint
             .replace(checkpoint.message_checkpoint);
@@ -555,14 +563,16 @@ impl Session {
             self.abandon_pending_suspension(AbandonReason::CancelledRequest);
             let cancellation_won = accepted.finish();
             debug_assert!(cancellation_won);
-            return Ok(self.finish_cancelled_eval_response(checkpoint));
+            let response = self.finish_cancelled_eval_response(checkpoint);
+            return self.package_eval_request_outcome(Ok(response));
         }
 
-        if self.finish_active_accepted_request() {
+        let result = if self.finish_active_accepted_request() {
             self.force_cancelled_eval_result(result)
         } else {
             result
-        }
+        };
+        self.package_eval_request_outcome(result)
     }
 
     fn finish_accepted_file_request(
@@ -578,20 +588,49 @@ impl Session {
         ) {
             return self.finish_accepted_value_request(result);
         }
-        if self.finish_active_accepted_request() {
+        let result = if self.finish_active_accepted_request() {
             self.force_cancelled_file_result(result)
         } else {
             result
-        }
+        };
+        self.package_eval_request_outcome(result)
+    }
+
+    /// One terminal packaging boundary for evaluation, batch, restore and
+    /// cancellation outcomes. Admission rejections never reach this boundary:
+    /// they must leave the unrelated, already pending request installed.
+    #[inline]
+    pub(super) fn package_eval_request_outcome(
+        &self,
+        result: Result<SessionEvalResponse, SessionRequestFailure>,
+    ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        #[cfg(any(debug_assertions, test))]
+        assert!(
+            matches!(
+                &result,
+                Err(SessionRequestFailure {
+                    error: SessionRequestError::InputRequired { .. },
+                    ..
+                })
+            ) || (self.pending_suspension.is_none()
+                && self.resuming_suspension.is_none()
+                && self.abandonment_worklist.is_empty()
+                && !self.abandonment_active
+                && self.pending_input_request.is_none()
+                && self.pending_eval_request.is_none()),
+            "terminal request outcome retained a suspension owner"
+        );
+        result
     }
 
     fn finish_cancelled_active_request(
         &mut self,
         checkpoint: RequestCheckpoint,
-    ) -> SessionEvalResponse {
+    ) -> Result<SessionEvalResponse, SessionRequestFailure> {
         let cancellation_won = self.finish_active_accepted_request();
         debug_assert!(cancellation_won);
-        self.finish_cancelled_eval_response(checkpoint)
+        let response = self.finish_cancelled_eval_response(checkpoint);
+        self.package_eval_request_outcome(Ok(response))
     }
 
     fn force_cancelled_eval_result(

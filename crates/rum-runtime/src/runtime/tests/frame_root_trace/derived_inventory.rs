@@ -565,6 +565,7 @@ pub(super) const DERIVED_FRAME_ROOT_TRACE_TYPES: &[&str] = &[
     "crates/rum-runtime/src/runtime/scoping/packages/resume_frames.rs:ContinuePackageInstallFrame",
     "crates/rum-runtime/src/runtime/scoping/packages/resume_frames.rs:EvalRestoreSealedReferencesSuspensionFrame",
     "crates/rum-runtime/src/runtime/scoping/packages/resume_frames.rs:ResumePackageInstallSuspensionFrame",
+    "crates/rum-runtime/src/runtime/session/batch_file.rs:PublicFileRollbackFrame",
     "crates/rum-runtime/src/runtime/session/guest_loading/file.rs:GetCompleteFrame",
     "crates/rum-runtime/src/runtime/session/guest_loading/file.rs:GuestFileCloseFrame",
     "crates/rum-runtime/src/runtime/session/guest_loading/file.rs:GuestFileTransaction",

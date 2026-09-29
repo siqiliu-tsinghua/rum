@@ -385,6 +385,16 @@ forms in order and report the final form's value while aggregating messages and
 buffered prints. `eval_file` reads through the configured file I/O provider; a
 sandboxed session has no provider and therefore fails the file request.
 
+A public file that suspends retains its file transaction until abandonment.
+Read-only inspection while blocked sees its partial, unrolled-back state; that
+includes `snapshot_to_bytes()`, whose image then carries the partial state into
+any session that restores it.
+On cancellation, cleanup and nested file rollbacks run from inner to outer,
+then the public file restores its snapshot and removes its own load-stack
+entry. Success still commits immediately, and an ordinary error still rolls
+back immediately. A script has no enclosing file transaction, so its earlier
+forms remain installed when a nested file rolls back.
+
 ## Reset
 
 `HostSession::reset()` rebuilds the session from its original configuration.
@@ -396,6 +406,8 @@ It also clears queued input responses and an installed print sink, clears a
 poisoned session, and invalidates old cancel handles.
 
 Obtain a new `cancel_handle()` and reinstall any print sink after reset.
+Reset drops suspended work without running guest cleanup, including cleanup
+inside a suspended public file.
 
 ## Per-Request Isolation
 
@@ -431,6 +443,12 @@ Restore is not transactional: a failure after reset leaves any snapshot state
 installed before the failure in place, so the session may be partially
 populated. The prior state is not recovered and partial state is not cleared.
 Invalid UTF-8 is rejected before reset, leaving the session unchanged.
+
+If snapshot evaluation requests input, `restore_from_bytes` returns an `Other`
+failure after abandoning that restore's suspension exactly once. Cleanup and
+nested file rollbacks run from inner to outer; the prompt, continuation and
+request identity are retired. Definitions installed before the failed load
+remain, and the session accepts a fresh evaluation without a second reset.
 
 This is an in-memory text image, not a binary snapshot.
 
