@@ -1,3 +1,4 @@
+pub(in crate::runtime) mod guest_loading;
 mod session_api;
 mod session_eval;
 mod session_helpers;

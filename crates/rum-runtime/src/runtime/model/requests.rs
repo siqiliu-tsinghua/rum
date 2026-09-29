@@ -1,4 +1,5 @@
 use super::*;
+use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
 impl fmt::Display for SessionRequestError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -54,7 +55,7 @@ impl fmt::Display for SessionRequestError {
 }
 
 /// Structured reason for a runtime-synthesized terminated evaluation value.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, rum_derive::FrameRootTrace)]
 pub enum EvalTerminationReason {
     Cancelled,
     TimeConstraint,

@@ -166,7 +166,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
     .with_capability(Capability::FileRead),
     BuiltinSpec::ordinary(
         "Get",
-        "Reads a file or package and evaluates the expressions it contains.",
+        "Reads a file or package and evaluates its forms in order. In a resumable evaluation request, host input suspends the load and resumes the current form without replaying earlier forms; the load shares the enclosing resource budget.",
         builtin_get,
         MemoryGrowthContract::Delegated,
     )
@@ -197,7 +197,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
     .with_capability(Capability::FileRead),
     BuiltinSpec::ordinary(
         "Needs",
-        "Loads a package only if its context has not already been loaded.",
+        "Loads a package only if its context has not already been loaded. In a resumable evaluation request, host input suspends the load; resumption finishes the file before registering the context and returning Null.",
         builtin_needs,
         MemoryGrowthContract::Delegated,
     )
@@ -247,7 +247,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
     .protected(),
     BuiltinSpec::ordinary(
         "BeginPackage",
-        "Starts a package context with a package-oriented context path.",
+        "Starts a package context with a package-oriented context path before loading its dependencies. Dependency input can suspend a resumable evaluation request; resumption finishes that dependency and the remaining dependencies. A failed dependency or propagated Exit restores this package frame without undoing earlier successful dependency definitions.",
         builtin_begin_package,
         MemoryGrowthContract::NonAmplifying,
     )
@@ -278,7 +278,7 @@ pub(in super::super) const NAMESPACE_CONTEXT_BUILTINS: &[BuiltinSpec] = &[
     .protected(),
     BuiltinSpec::ordinary(
         "DeclarePackage",
-        "Declares stub names for a package context and prepends that context to the search path.",
+        "Declares stub names for a package context and prepends that context to the search path. Reading a stub autoloads its package; input during that load can suspend a resumable evaluation request, which resumes into the symbol read after loading.",
         builtin_declare_package,
         MemoryGrowthContract::NonAmplifying,
     )

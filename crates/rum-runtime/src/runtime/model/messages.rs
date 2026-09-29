@@ -1,7 +1,7 @@
 use super::*;
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, FrameRootTrace)]
 pub enum DefinitionKind {
     OwnValue,
     DelayedOwnValue,
@@ -23,7 +23,7 @@ pub enum RuleApplicationSource {
     ReplaceRepeated,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, FrameRootTrace)]
 pub enum TraceEvent {
     EvaluationPass {
         before: Expr,

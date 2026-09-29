@@ -286,6 +286,12 @@ Host-driven input is part of the evaluator model.
 `Input` and `InputString` can suspend a request. The host then resumes the same
 request with input instead of replaying the whole source string.
 
+This includes guest files reached through `Get`, `Needs`, `BeginPackage`
+dependencies, and `DeclarePackage` autoloads within a resumable evaluation
+request. The paused form resumes before the rest of the file and its caller
+complete. File forms and resumes keep the enclosing resource budget and
+absolute deadline; they do not start a fresh timeout.
+
 The embedding chapter shows the `HostEvalOutcome::InputRequired` path.
 
 ## Structured Exceptions

@@ -243,7 +243,7 @@ pub(super) const SCOPING_BUILTINS: &[BuiltinSpec] = &[
     .with_capability(Capability::Interactive),
     BuiltinSpec::ordinary(
         "InputString",
-        "Requests one line of host-provided text and returns it as a string; requires Capability::Interactive.",
+        "Requests one line of host-provided text and returns it as a string; requires Capability::Interactive. In a resumable evaluation request this also suspends guest package loading, which continues at the current form after input arrives.",
         builtin_input_string,
         MemoryGrowthContract::Delegated,
     )

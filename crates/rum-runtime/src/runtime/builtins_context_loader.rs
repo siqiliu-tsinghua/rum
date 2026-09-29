@@ -1,4 +1,9 @@
 use super::*;
+use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
+use std::sync::Arc;
+mod resume;
+use resume::{BeginPackageDependencyFrame, NeedsCompleteFrame};
+pub(in crate::runtime) use resume::{BeginPackageRollback, DeclaredStubLoadFrame};
 
 mod file_names;
 mod file_names_glob;
@@ -14,13 +19,13 @@ pub(in crate::runtime) fn builtin_file_names(
     session.eval_file_names(args)
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, rum_derive::FrameRootTrace)]
 struct NeedsLoadConfig {
     context: String,
     load_spec: String,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, rum_derive::FrameRootTrace)]
 struct BeginPackageConfig {
     target_context: String,
     dependencies: Vec<String>,
@@ -279,26 +284,7 @@ impl Session {
             }
         };
 
-        match self.eval_file(&path) {
-            Ok(outcome) => {
-                self.messages.extend(outcome.messages);
-                self.refresh_memory_owner(
-                    crate::runtime::debug_tools::resources::MemoryOwner::Messages,
-                );
-                self.prints.extend(outcome.prints);
-                self.refresh_memory_owner(
-                    crate::runtime::debug_tools::resources::MemoryOwner::Prints,
-                );
-                Ok(outcome.value)
-            }
-            Err(err) => {
-                if matches!(err, EvalError::Exit { .. }) {
-                    return Err(err);
-                }
-                self.emit_loader_message_for_path("Get", &err, &path);
-                Ok(system_expr("$Failed"))
-            }
-        }
+        self.start_guest_get(path)
     }
 
     pub(super) fn eval_needs(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {
@@ -340,21 +326,13 @@ impl Session {
             return Ok(system_expr("$Failed"));
         }
 
-        let result = self.eval_get(&[Expr::string(config.load_spec.clone())])?;
-
-        if is_system_symbol_name(&result, "$Failed") {
-            self.push_message(
-                "Needs",
-                "load",
-                format!("context `{}` could not be loaded", config.context),
-            );
-            return Ok(system_expr("$Failed"));
+        let outcome = self.eval_get(&[Expr::string(config.load_spec.clone())]);
+        if matches!(outcome, Err(EvalError::InputRequired { .. })) {
+            crate::resume_or_suspend!(insert self, NeedsCompleteFrame { config });
+            outcome
+        } else {
+            self.finish_guest_needs(&config, outcome)
         }
-
-        self.mark_package_loaded(&config.context);
-        self.context_path = prepend_context(&config.context, &self.context_path);
-        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::ContextPath);
-        Ok(system_expr("Null"))
     }
 
     pub(super) fn eval_begin(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {
@@ -389,36 +367,6 @@ impl Session {
         }))
     }
 
-    fn rollback_failed_begin_package_dependency(
-        &mut self,
-        previous_context_stack_len: usize,
-        previous_loaded_packages_len: usize,
-    ) {
-        let frame = self
-            .context_stack
-            .pop()
-            .expect("failed BeginPackage dependency should have an active frame");
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::ContextStack,
-        );
-        debug_assert_eq!(frame.kind, ContextFrameKind::BeginPackage);
-        debug_assert_eq!(self.context_stack.len(), previous_context_stack_len);
-        self.current_context = frame.previous_context;
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::CurrentContext,
-        );
-        self.context_path = frame.previous_context_path;
-        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::ContextPath);
-
-        if self.loaded_packages.len() > previous_loaded_packages_len {
-            self.loaded_packages.truncate(previous_loaded_packages_len);
-            self.refresh_memory_owner(
-                crate::runtime::debug_tools::resources::MemoryOwner::LoadedPackages,
-            );
-            self.bump_evaluation_epoch();
-        }
-    }
-
     pub(super) fn eval_begin_package(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {
         let config = match self.compile_begin_package_call_from_resolved_args(args) {
             Ok(config) => config,
@@ -441,26 +389,20 @@ impl Session {
             }
         };
 
-        let previous_context_stack_len = self.context_stack.len();
-        let previous_loaded_packages_len = self.loaded_packages.len();
-        let result = self.begin_package_context(config.target_context.clone());
-
-        for context in &config.dependencies {
-            let dependency_result = self.eval_needs(&[Expr::string(context.clone())])?;
-            if is_system_symbol_name(&dependency_result, "$Failed") {
-                self.rollback_failed_begin_package_dependency(
-                    previous_context_stack_len,
-                    previous_loaded_packages_len,
-                );
-                return Ok(dependency_result);
-            }
-        }
-
-        self.context_path =
-            begin_package_context_path(&config.target_context, &config.dependencies);
-        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::ContextPath);
-
-        Ok(result)
+        let context_depth = self.context_stack.len();
+        let package_count = self.loaded_packages.len();
+        let begin_result = self.begin_package_context(config.target_context.clone());
+        let rollback = BeginPackageRollback {
+            frame: self.context_stack[context_depth].clone(),
+            context_depth,
+            package_count,
+        };
+        self.drive_begin_package_dependencies(BeginPackageDependencyFrame {
+            config: Arc::new(config),
+            dependency: 0,
+            begin_result,
+            rollback,
+        })
     }
 
     pub(super) fn eval_end_package(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {

@@ -8,6 +8,7 @@ mod root_visitation;
 use derived_inventory::{DERIVED_FRAME_ROOT_TRACE_TYPES, PURE_FRAME_ABANDON_TYPES};
 
 const STATEFUL_FRAME_ABANDON_TYPES: &[&str] = &[
+    "crates/rum-runtime/src/runtime/builtins_context_loader/resume.rs:BeginPackageDependencyFrame",
     "crates/rum-runtime/src/runtime/debug_tools/evaluation_data.rs:EvalEvaluationDataSuspensionFrame",
     "crates/rum-runtime/src/runtime/debug_tools/monitor.rs:EvalMonitorSuspensionFrame",
     "crates/rum-runtime/src/runtime/debug_tools/reap.rs:EvalReapSuspensionFrame",
@@ -36,6 +37,8 @@ const STATEFUL_FRAME_ABANDON_TYPES: &[&str] = &[
     "crates/rum-runtime/src/runtime/scoping/lexical/module.rs:ResumeSuspendedModuleInitializersSuspensionFrame1",
     "crates/rum-runtime/src/runtime/scoping/lexical/module.rs:ResumeSuspendedModuleInitializersSuspensionFrame2",
     "crates/rum-runtime/src/runtime/scoping/packages/resume_frames.rs:ResumePackageInstallSuspensionFrame",
+    "crates/rum-runtime/src/runtime/session/guest_loading/file.rs:GuestFileCloseFrame",
+    "crates/rum-runtime/src/runtime/session/guest_loading/script.rs:GuestScriptFormFrame",
     "crates/rum-runtime/src/runtime/session/session_api/resume_frames.rs:EvaluateWithRandomStateRestoredSuspensionFrame",
 ];
 
@@ -476,7 +479,7 @@ fn suspension_protocol_repository_invariants_hold() {
     println!("legacy_api_hits=0 direct_queue_mutation_hits=0 ownership_hits=0");
     // The option loop is now continuation data inside the existing retained
     // frame; its roots remain in the derived inventory above.
-    assert_eq!(frame_count, 538);
+    assert_eq!(frame_count, 544);
     assert_eq!(
         frame_count,
         PURE_FRAME_ABANDON_TYPES.len() + STATEFUL_FRAME_ABANDON_TYPES.len()

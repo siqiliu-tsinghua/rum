@@ -356,6 +356,11 @@ impl FrameRootTrace for f64 {
     fn trace_roots(&self, _visitor: &mut dyn FrameRootVisitor) {}
 }
 
+// Filesystem paths contain no runtime expression or symbol roots.
+impl FrameRootTrace for std::path::PathBuf {
+    fn trace_roots(&self, _visitor: &mut dyn FrameRootVisitor) {}
+}
+
 impl FrameRootTrace for String {
     fn trace_roots(&self, _visitor: &mut dyn FrameRootVisitor) {}
 }
@@ -424,6 +429,8 @@ pub(in crate::runtime) const MANUAL_FRAME_ROOT_TRACE_IMPLS: &[&str] = &[
     "Duration",
     "Expr",
     "FrozenComplement",
+    "GuestFileSource",
+    "GuestScriptPlan",
     "HashMap<K,V,S>",
     "HashSet<T,S>",
     "Instant",
@@ -456,6 +463,7 @@ pub(in crate::runtime) const MANUAL_FRAME_ROOT_TRACE_IMPLS: &[&str] = &[
     "i64",
     "i8",
     "isize",
+    "std::path::PathBuf",
     "std::vec::IntoIter<T>",
     "str",
     "u128",

@@ -104,6 +104,23 @@ These forms are useful for implementation sections inside package files.
 Both `Get` and `Needs` have `FileRead` capability, so a sandboxed host can
 deny them at dispatch.
 
+From a resumable evaluation request, input in a file loaded by `Get` or
+`Needs`, a `BeginPackage` dependency, or a `DeclarePackage` stub suspends the
+same request. Resuming continues the current form, then the remaining forms
+and the caller's completion work. Earlier forms and their output are not
+replayed; nested loads retain the correct `$InputFileName`. Each form is
+lowered when reached, using the context established by earlier forms.
+
+Guest loads share the enclosing request's timeout and memory budget across
+forms and input responses. An input request is not a load failure.
+Cancellation rolls back active file transactions without running their
+remaining forms or registering a successful package load. Ordinary load
+errors restore the file's definitions, contexts, packages, and messages;
+printed output remains. `BeginPackage` restores its own context frame on a
+failed dependency or propagated `Exit`, preserving definitions from earlier
+successful dependencies. Public host script/file batch APIs retain their
+separate, non-resumable contract described in the embedding chapter.
+
 ```text
 $ mkdir -p /tmp/rum-guide-pkg
 $ cat > /tmp/rum-guide-pkg/GuidePkg.rum <<'EOF'

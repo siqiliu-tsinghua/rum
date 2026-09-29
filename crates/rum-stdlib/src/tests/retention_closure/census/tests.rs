@@ -183,15 +183,22 @@ fn baseline(source: &Source) {
         *kinds.entry(row.kind).or_insert(0) += 1;
     }
     // The direct unarmed guest entry reaches the evaluator in this historical
-    // frontier. Keep its expanded rejection inventory exact; it grants no mark.
+    // frontier. Guest-form abandonment adds exactly three rejected method sites:
+    // taking/installing the paused environment and capturing it for cleanup.
+    // These remain unresolved boundaries; the loader earns no retention mark.
+    for line in [698, 699, 714] {
+        assert!(options.rejected.iter().any(|row| row.kind == Kind::RET002
+            && row.site.file.ends_with("suspension/core.rs")
+            && row.site.start.0 == line));
+    }
     assert_eq!(
         options.rejected.len(),
-        924,
+        927,
         "STOP: brief-545 exact legacy frontier inventory moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 887), (Kind::RET003, 27)])
+        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 890), (Kind::RET003, 27)])
     );
     let wrapper = regions::frontier(
         source,
@@ -209,6 +216,6 @@ fn baseline(source: &Source) {
     );
     super::super::local::verify_promotions(source);
     println!(
-        "ACCEPTANCE_BASELINE OPTION_FRONTIER=924 RET001=10 RET002=887 RET003=27 PUBLIC_WRAPPER=16 LOCAL_PRODUCTION_BODY_ROWS=2"
+        "ACCEPTANCE_BASELINE OPTION_FRONTIER=927 RET001=10 RET002=890 RET003=27 PUBLIC_WRAPPER=16 LOCAL_PRODUCTION_BODY_ROWS=2"
     );
 }

@@ -5,6 +5,9 @@ use std::time::Instant;
 
 use super::trace::{FrameRootTrace, FrameRootVisitor};
 use super::*;
+use crate::runtime::session::guest_loading::{
+    GuestFileTransaction, GuestFormEnvironment, GuestFormScope,
+};
 
 type DynSuspensionFrame = dyn SuspensionFrame;
 
@@ -14,6 +17,7 @@ pub(in crate::runtime) struct SuspensionGeneration(u64);
 pub(in crate::runtime) struct SuspendedEvaluation {
     pub(in crate::runtime) active_stack: Vec<EvaluationStackEntry>,
     generation: SuspensionGeneration,
+    guest_form_environment: Option<Box<GuestFormEnvironment>>,
     frames: VecDeque<Arc<DynSuspensionFrame>>,
 }
 
@@ -135,6 +139,7 @@ impl SuspendedEvaluation {
         Self {
             active_stack,
             generation,
+            guest_form_environment: None,
             frames: VecDeque::new(),
         }
     }
@@ -171,6 +176,7 @@ impl SuspendedEvaluation {
     }
 
     pub(in crate::runtime) fn trace_frame_roots(&self, visitor: &mut dyn FrameRootVisitor) {
+        self.guest_form_environment.trace_roots(visitor);
         for frame in &self.frames {
             frame.trace_roots(visitor);
         }
@@ -274,6 +280,21 @@ impl SuspensionAccess<'_> {
 }
 
 impl AbandonmentContext<'_> {
+    pub(in crate::runtime) fn restore_guest_form_scope(&mut self, scope: &GuestFormScope) {
+        scope.restore(self.session, true);
+    }
+
+    pub(in crate::runtime) fn rollback_guest_file(&mut self, transaction: &GuestFileTransaction) {
+        self.session.close_guest_file(transaction, true);
+    }
+
+    pub(in crate::runtime) fn rollback_begin_package_dependency(
+        &mut self,
+        rollback: &crate::runtime::builtins_context_loader::BeginPackageRollback,
+    ) {
+        self.session.restore_begin_package_dependency(rollback);
+    }
+
     #[allow(dead_code)]
     pub(in crate::runtime) fn reason(&self) -> AbandonReason {
         self.reason
@@ -496,7 +517,12 @@ impl Session {
             .cloned()
             .collect::<Vec<_>>();
 
+        let guest_form_environment = self.capture_guest_form_environment();
         self.suspension_access().install(request, active_stack);
+        self.pending_suspension
+            .as_mut()
+            .expect("just installed input owner")
+            .guest_form_environment = guest_form_environment;
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
         );
@@ -602,9 +628,20 @@ impl Session {
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
         );
+        let previous_guest_form = self.guest_form;
+        if let Some(environment) = self
+            .resuming_suspension
+            .as_mut()
+            .expect("resuming owner is installed")
+            .guest_form_environment
+            .take()
+        {
+            environment.install(self);
+        }
         let outcome = Ok(Expr::string(input.into()));
 
         let result = self.drive_resuming_frames(outcome);
+        self.guest_form = previous_guest_form;
 
         self.replace_accounted_evaluation_stack(saved_stack);
         self.evaluation_depth = saved_depth;
@@ -647,6 +684,7 @@ impl Session {
         }
 
         self.abandonment_active = true;
+        let previous_guest_form = self.guest_form;
         let saved_stack = self.replace_accounted_evaluation_stack(Vec::new());
         let saved_depth = std::mem::replace(&mut self.evaluation_depth, 0);
 
@@ -657,6 +695,9 @@ impl Session {
             debug_assert!(self.evaluation_stack.is_empty());
             self.replace_accounted_evaluation_stack(std::mem::take(&mut suspension.active_stack));
             self.evaluation_depth = self.evaluation_stack.len();
+            if let Some(environment) = suspension.guest_form_environment.take() {
+                environment.install(self);
+            }
 
             while let Some(frame) = suspension.take_front() {
                 let action = frame.abandon(&mut AbandonmentContext {
@@ -669,6 +710,8 @@ impl Session {
                     FrameAbandonAction::EvaluateCleanup(cleanup) => {
                         if !suspension.is_empty() {
                             suspension.active_stack = self.evaluation_stack.clone();
+                            suspension.guest_form_environment =
+                                self.capture_guest_form_environment();
                             self.abandonment_worklist.push(suspension);
                             self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::AbandonmentWorklist);
                         }
@@ -699,6 +742,7 @@ impl Session {
         self.replace_accounted_evaluation_stack(saved_stack);
         self.evaluation_depth = saved_depth;
         self.abandonment_active = false;
+        self.guest_form = previous_guest_form;
         reason
     }
 

@@ -1,5 +1,6 @@
 use super::*;
 use crate::runtime::scoping::packages::SourceUnit;
+use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
 use std::cell::{Cell, RefCell};
 use std::hash::BuildHasherDefault;
@@ -27,6 +28,8 @@ pub(in crate::runtime) struct SideTableStamp {
 }
 
 pub struct Session {
+    pub(in crate::runtime) guest_form:
+        Option<crate::runtime::session::guest_loading::GuestFormIdentity>,
     pub(in crate::runtime) accounting_route:
         Option<Box<crate::runtime::accounting_mode::AccountingRoute>>,
     pub(in crate::runtime) builtins: BuiltinSpecMap,
@@ -176,7 +179,7 @@ impl Session {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, rum_derive::FrameRootTrace)]
 pub(in crate::runtime) struct EvaluationStackEntry {
     pub(in crate::runtime) expr: Expr,
     pub(in crate::runtime) epoch: u64,

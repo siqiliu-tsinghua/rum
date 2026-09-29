@@ -7,13 +7,13 @@ use thiserror::Error;
 pub(in crate::runtime) type SymbolMap<T> =
     HashMap<Symbol, T, BuildHasherDefault<RuntimeCacheHasher>>;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, FrameRootTrace)]
 pub(in crate::runtime) enum ContextFrameKind {
     Begin,
     BeginPackage,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, FrameRootTrace)]
 pub(in crate::runtime) struct ContextFrame {
     pub(in crate::runtime) kind: ContextFrameKind,
     pub(in crate::runtime) previous_context: String,
@@ -286,7 +286,7 @@ pub(in crate::runtime) struct DynamicOwnValueFrame {
     pub(in crate::runtime) value: Option<Expr>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, FrameRootTrace)]
 pub(in crate::runtime) struct LoaderSnapshot {
     pub(in crate::runtime) attributes: AttributeMap,
     pub(in crate::runtime) options: BTreeMap<Symbol, SymbolOptions>,
@@ -659,6 +659,7 @@ impl Session {
             queued_input_responses: VecDeque::new(),
             pending_input_request: None,
             pending_eval_request: None,
+            guest_form: None,
             pending_suspension: SuspensionSlot::empty(),
             resuming_suspension: None,
             abandonment_active: false,

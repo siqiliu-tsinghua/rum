@@ -112,6 +112,7 @@ session_memory_field_decisions! {
         symbol_set(gc_candidate_gensyms),
     gensym_gc_sweep_count => Exempt("fixed-size test-only value already covered by size_of::<Session>()"),
     gensym_gc_watermark => Exempt("fixed-size value already covered by size_of::<Session>()"),
+    guest_form => Exempt("fixed-size scalar guest-form identity already covered by size_of::<Session>()"),
     handled_non_loader_eval_errors => Accounted("RuntimeMessage strings and Vec spare capacity") =
         sequence(handled_non_loader_eval_errors, message),
     has_up_value_definitions => Exempt("fixed-size value already covered by size_of::<Session>()"),

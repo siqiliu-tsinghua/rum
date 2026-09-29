@@ -128,6 +128,8 @@ impl Session {
     }
 
     pub(in crate::runtime) fn restore_loader_snapshot(&mut self, snapshot: LoaderSnapshot) {
+        #[cfg(test)]
+        crate::runtime::session::guest_loading::tests::record_restore();
         self.attributes = snapshot.attributes;
         self.bump_attribute_revision();
         self.options = snapshot.options;
@@ -545,19 +547,7 @@ impl Session {
         self.emit_loader_message_with_source(symbol, error, None);
     }
 
-    pub(in crate::runtime) fn emit_loader_message_for_path(
-        &mut self,
-        symbol: &str,
-        error: &EvalError,
-        path: &Path,
-    ) {
-        let source = self
-            .file_io()
-            .and_then(|file_io| file_io.read_to_string(path).ok());
-        self.emit_loader_message_with_source(symbol, error, source.as_deref());
-    }
-
-    fn emit_loader_message_with_source(
+    pub(in crate::runtime) fn emit_loader_message_with_source(
         &mut self,
         symbol: &str,
         error: &EvalError,

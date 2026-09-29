@@ -59,15 +59,33 @@ impl Session {
                 .iter()
                 .any(|loaded| loaded == symbol.context())
         {
-            let load_result = self.eval_needs(&[Expr::string(symbol.context().to_string())])?;
-            if !self.capability_policy.is_unrestricted()
-                && !self.capability_policy.allows(Capability::FileRead)
-            {
-                debug_assert!(is_system_symbol_name(&load_result, "$Failed"));
-                return Ok(load_result);
-            }
+            let outcome = self.eval_needs(&[Expr::string(symbol.context().to_string())]);
+            return crate::resume_or_suspend!(
+                self, outcome,
+                ok(value) => self.finish_declared_stub_load(symbol, value),
+                suspend => crate::runtime::builtins_context_loader::DeclaredStubLoadFrame { symbol },
+            );
         }
 
+        self.evaluate_symbol_after_autoload(symbol)
+    }
+
+    pub(in crate::runtime) fn finish_declared_stub_load(
+        &mut self,
+        symbol: Symbol,
+        load_result: Expr,
+    ) -> Result<Expr, EvalError> {
+        if !self.capability_policy.is_unrestricted()
+            && !self.capability_policy.allows(Capability::FileRead)
+        {
+            debug_assert!(is_system_symbol_name(&load_result, "$Failed"));
+            return Ok(load_result);
+        }
+        self.evaluate_symbol_after_autoload(symbol)
+    }
+
+    #[inline(always)]
+    fn evaluate_symbol_after_autoload(&mut self, symbol: Symbol) -> Result<Expr, EvalError> {
         if let Some(value) = self.definitions.get(&symbol).and_then(|definition| {
             own_value_read(&definition.own_value, &definition.own_value_guards)
         }) {
