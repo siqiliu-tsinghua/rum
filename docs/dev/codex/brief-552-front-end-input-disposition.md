@@ -135,7 +135,9 @@ Stop-loss keyed on progress (`TEMPLATE.md` pitfall 7). These crates are
   - create scratch integration tests named `zz_brief552_*.rs` in the `tests/`
     directory of `rum-repl`, `rum-cli` or `rum-jupyter` as needed, and **delete
     every one of them before appending the report**, copying their final
-    content to `.temp/brief-552/`. Say in the report that you did.
+    content to `.temp/brief-552/`. `rum-repl` and `rum-jupyter` have no
+    `tests/` directory today; delete any directory you create, too. Say in the
+    report that you did.
 - Everything else is read-only. No manifest change.
 
 ## rum / Rust pitfalls (read twice)
