@@ -4,30 +4,29 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-28 (end of day), committed tree through the
-end-of-day handoff commit.
-**The working tree is NOT clean on purpose**: it holds brief-550's uncommitted,
-un-gated implementation (19 modified files, 12 new), preserved without moving
-HEAD at `refs/wip/brief-550-interrupted` (`5e3cea9f`) and in
-`.temp/brief-550/wip-backup/`. Do not commit it, stash it, or check anything
-out over it before the gate. Uncommitted performance candidates do not count as
-completed until their correctness, timing, counter, and memory gates have all
-been reviewed.
+Status checkpoint: 2026-09-30, committed tree through brief-551's dispatch
+commit. Uncommitted performance candidates do not count as completed until
+their correctness, timing, counter, and memory gates have all been reviewed.
 
-**Where work resumes (handoff 2026-09-28, end of day) — resume brief-550.**
-Its first dispatch was killed by the harness under host memory pressure (a
-long-running `lean` job on the same machine), not by the work. By its
-checkpoint (`.temp/brief-550/PROGRESS.md`) all 45 permanent reds are green,
-all four loader callers are connected, 8/8 white-box and 4/4 host tests pass,
-docs and the generated reference are updated, and `cargo fmt --check` is
-green; the crate and workspace gates and the performance gate remain. The
-brief carries a resume note (`6a8a3dba`): it continues from the checkpoint,
-runs cargo with `CARGO_BUILD_JOBS=4`, and defers the timing lane if another
-CPU-heavy job is running. **Wait for the `lean` job to finish** (user,
-2026-09-28), then `scripts/dispatch-brief.sh 550` in the background, then gate
-it: scope against the fence, the 45 reds, the workspace, and the instruction
-panel against `.temp/brief-550/base/`. After it, the branch continues at the
-batch boundary (see "ACTIVE BRANCH" below).
+**Where work resumes (2026-09-30) — the suspension-continuation branch, step
+2: brief-551, the batch boundary.** Step 1 is done: brief-550 (`c6e95dd1`)
+made guest `Get`, `Needs`, `BeginPackage` dependencies and `DeclarePackage`
+stubs suspend and resume, with an inherited request budget. Director gate:
+workspace 2734/0/58 on the host with native ZeroMQ run for real; the new tests
+fail on the pre-change tree (stdlib 45 of 47, host 4 of 4); instructions
+re-measured at N=40 000/80 000 within +/-0.04%; retention certificates and
+contract records changed only fingerprints; the ownership ledger's 63 host
+payload dispositions unchanged. **Gate miss, found by the next re-probe:** a
+public batch `eval_file` that suspends inside a nested guest `Get` panics on
+cancellation (`guest_loading/file.rs:122`) — the batch path pops the inner
+file's `load_stack` entry and restores its snapshot eagerly, which brief-550's
+correct propagation exposed. And `HostSession::restore_from_bytes` that hits
+an input request returns its failure but leaves the session wedged, against
+its rustdoc. brief-551 fixes both, defers a suspended public file's rollback to
+abandonment (inner to outer), and adds a request-boundary invariant — no
+suspension owner may survive a completed request — with a watched falsifier.
+Probes: `.temp/director/gate-550/`. After it: the front-end input
+disposition brief, then G1-G8, E1, E2.
 
 **The retention line — paused at E0 for the suspension-continuation branch
 below, after its first certified region.** The line exists because an armed
@@ -140,8 +139,8 @@ Where it stands:
     per form too — whether a host request timeout is per request or per form
     is a contract question, related to "termination is last-write-wins across
     script forms" below.
-  - **Queue**: brief-550 (in flight, interrupted — see the top of this file)
-    implements guest loading atomically across `Get`, `Needs`,
+  - **Queue**: brief-550 (done, `c6e95dd1`) implemented guest loading
+    atomically across `Get`, `Needs`,
     `BeginPackage` and the stub, with the inherited budget and `BeginPackage`
     restoring on `Exit`. Next, the batch boundary, drafted in brief-549
     (`.temp/brief-549/draft-batch-ownership.md`, to be rewritten): the batch
