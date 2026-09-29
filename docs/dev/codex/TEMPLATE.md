@@ -62,6 +62,20 @@ a reviewable plan plus the drafted follow-up briefs, still not a code change.
     `docs/dev/codex/` except appending to your own report — unless the brief
     explicitly lists a doc file as in-scope;
   - `.git`, git config, `Cargo.lock` (unless the Goal is a dependency change).
+- **Every source change carries a standing maintenance duty — always in scope,
+  whatever the fence says.** The retention contract fingerprints hash every
+  `.rs`, `.py` and `.toml` under `crates/`
+  (`crates/rum-stdlib/src/tests/retention_closure/local/contracts.rs`), so any
+  edit anywhere expires `inventory/local-contracts.tsv` and the certificate
+  cells in `inventory/promoted.tsv`; and the ownership-graph inventories under
+  `crates/rum-stdlib/src/tests/ownership_graph/inventory/` record source
+  positions and unknown constructs exactly. Refresh them by replaying, never by
+  hand: recompute the contract fingerprints, run `local_production_acceptance`
+  in both the default and `--no-default-features` builds and copy the cells it
+  writes to `.temp/brief-546/certificates/`, and reconcile the ownership rows
+  against the discovery the tests print. Disclose every changed row; an
+  identity, status, disposition or exclusion that changes is a STOP, and only
+  fingerprints, hashes and positions may move.
 - Do NOT add unconditional cost to the default evaluation path. Any profiling
   counter or instrumentation MUST be behind an env-gated cold path (the
   existing `RUM_PROFILE_*` `AtomicU8` pattern); never a `Mutex`/allocation/

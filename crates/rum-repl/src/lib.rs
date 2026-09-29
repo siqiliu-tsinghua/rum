@@ -5,21 +5,40 @@
 //! rest) and resumable input. Like the other front ends, it is a pure
 //! `rum-host` consumer with no direct dependency on the kernel or standard
 //! library.
+//!
+//! A source line or trace command owns its evaluation until completion. When
+//! the guest requests input, the same reader supplies one answer at a time:
+//! the guest prompt is shown verbatim (or `input> ` when empty) and flushed
+//! after pending output. Answers bypass source completeness, shell commands
+//! and history; only the line terminator is removed. `InputString` receives
+//! literal text, while `Input` parsing belongs to `rum-host`.
+//!
+//! EOF during an answer cancels the request and exits; a reader's
+//! [`io::ErrorKind::Interrupted`] cancels and returns to the primary prompt.
+//! Other I/O errors retire the request before returning the error. Cancellation
+//! runs guest cleanup once and preserves earlier definitions. A borrowed
+//! session never retains input work started here; a rejected overlap leaves
+//! the caller's existing request alone.
+//!
+//! Plain [`BufRead`] readers cannot guarantee hidden entry. Masked requests
+//! report "password input unavailable" and are abandoned without reading an
+//! answer. Terminal echo suppression and signal handling require a terminal
+//! reader; this crate's plain reader does not implement those mechanisms.
 
 use std::env;
 use std::fs;
 use std::io::{self, BufRead, Write};
 use std::path::PathBuf;
 
-use rum_host::{
-    HostCompletenessStatus, HostEvalOutcome, HostFailure, HostInputSuspension, HostSession,
-};
-use rum_terminal::{render_host_eval_response, render_host_failure, render_host_messages};
+use rum_host::{HostCompletenessStatus, HostSession};
+use rum_terminal::render_host_eval_response;
 
 mod commands;
 mod completeness;
+mod request;
 use self::commands::*;
 use self::completeness::{CompletenessHint, IncrementalCompleteness};
+use self::request::{PlainInput, RequestExit};
 
 const HISTORY_ENTRY_PREFIX: &str = ":rum-history-v1:";
 
@@ -103,7 +122,7 @@ where
 
             if buffer.trim().is_empty() {
                 if let Some(execution) = self.try_handle_command(session, trimmed)? {
-                    if matches!(execution, CommandExecution::Exit) {
+                    if matches!(execution, RequestExit::Eof) {
                         self.record_history(trimmed);
                         return Ok(());
                     }
@@ -131,23 +150,27 @@ where
                     buffer.clear();
                     completeness.reset();
                     self.record_history(&input);
-                    self.evaluate_input(session, &input)?;
+                    if self.evaluate_input(session, &input)? == RequestExit::Eof {
+                        return Ok(());
+                    }
                 }
                 HostCompletenessStatus::Incomplete => continue,
             }
         }
     }
 
-    fn evaluate_input(&mut self, session: &mut HostSession, input: &str) -> io::Result<()> {
-        match session.eval(input) {
-            HostEvalOutcome::Success(response) => {
-                writeln!(self.output, "{}", render_host_eval_response(&response))
-            }
-            HostEvalOutcome::Failure(failure) => write_host_failure(&mut self.output, &failure),
-            HostEvalOutcome::InputRequired(suspension) => {
-                writeln!(self.output, "{}", render_input_suspension(&suspension))
-            }
-        }
+    fn evaluate_input(
+        &mut self,
+        session: &mut HostSession,
+        input: &str,
+    ) -> io::Result<RequestExit> {
+        request::drive(
+            session,
+            &mut PlainInput(&mut self.input),
+            &mut self.output,
+            input,
+            render_host_eval_response,
+        )
     }
 
     fn load_history(&mut self) {
@@ -205,12 +228,12 @@ where
         &mut self,
         session: &mut HostSession,
         line: &str,
-    ) -> io::Result<Option<CommandExecution>> {
+    ) -> io::Result<Option<RequestExit>> {
         let Some(command) = (match parse_repl_command(line) {
             Ok(command) => command,
             Err(message) => {
                 writeln!(self.output, "! {message}")?;
-                return Ok(Some(CommandExecution::Output(String::new())));
+                return Ok(Some(RequestExit::Continue));
             }
         }) else {
             return Ok(None);
@@ -219,14 +242,28 @@ where
         let execution = execute_repl_command(session, &self.history, command);
 
         match &execution {
-            CommandExecution::Exit => {}
+            CommandExecution::Exit => return Ok(Some(RequestExit::Eof)),
             CommandExecution::Output(rendered) if rendered.is_empty() => {}
             CommandExecution::Output(rendered) => {
                 writeln!(self.output, "{rendered}")?;
             }
+            CommandExecution::Trace {
+                source,
+                full,
+                form_notice,
+            } => {
+                return request::drive(
+                    session,
+                    &mut PlainInput(&mut self.input),
+                    &mut self.output,
+                    source,
+                    |response| render_trace_response(response, *full, form_notice.as_deref()),
+                )
+                .map(Some);
+            }
         }
 
-        Ok(Some(execution))
+        Ok(Some(RequestExit::Continue))
     }
 }
 
@@ -298,23 +335,6 @@ fn decode_history_line(line: &str) -> String {
     }
 
     decoded
-}
-
-fn render_input_suspension(suspension: &HostInputSuspension) -> String {
-    let mut output = render_host_messages(&suspension.messages);
-    if !output.is_empty() {
-        output.push('\n');
-    }
-    output.push_str("! input required");
-    if !suspension.request.prompt.is_empty() {
-        output.push_str(": ");
-        output.push_str(&suspension.request.prompt);
-    }
-    output
-}
-
-fn write_host_failure<W: Write>(output: &mut W, failure: &HostFailure) -> io::Result<()> {
-    writeln!(output, "{}", render_host_failure(failure))
 }
 
 #[cfg(test)]

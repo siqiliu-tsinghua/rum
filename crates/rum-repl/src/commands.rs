@@ -1,12 +1,9 @@
-use rum_host::{HostCompletionRequest, HostEvalOutcome, HostSession, HostTyped};
+use rum_host::{HostCompletionRequest, HostEvalSuccess, HostSession, HostTyped};
 use rum_syntax::{
     FormatterOptions, SyntaxExprKind, format_parsed_source, parse_format_command,
     parse_with_diagnostics,
 };
-use rum_terminal::{
-    render_host_eval_response, render_host_failure, render_host_inspect,
-    render_host_message_catalog,
-};
+use rum_terminal::{render_host_failure, render_host_inspect, render_host_message_catalog};
 
 const DEFAULT_TRACE_LINE_LIMIT: usize = 40;
 
@@ -50,6 +47,11 @@ pub(super) enum ReplCommand {
 pub(super) enum CommandExecution {
     Exit,
     Output(String),
+    Trace {
+        source: String,
+        full: bool,
+        form_notice: Option<String>,
+    },
 }
 
 pub(super) fn parse_repl_command(line: &str) -> Result<Option<ReplCommand>, String> {
@@ -148,15 +150,11 @@ pub(super) fn execute_repl_command(
             rules,
             full,
             form_was_rewritten,
-        } => CommandExecution::Output(execute_trace(
-            session,
-            &expr,
-            form.as_deref(),
-            depth,
-            rules,
+        } => CommandExecution::Trace {
+            source: trace_source(&expr, form.as_deref(), depth, rules),
             full,
-            form_was_rewritten,
-        )),
+            form_notice: form.filter(|_| form_was_rewritten),
+        },
         ReplCommand::History { limit } => CommandExecution::Output(render_history(history, limit)),
         ReplCommand::Complete { prefix: None } => {
             CommandExecution::Output("! :complete expects a prefix".to_string())
@@ -340,36 +338,16 @@ fn split_first_token(input: &str) -> Option<(&str, &str)> {
     }
 }
 
-fn execute_trace(
-    session: &mut HostSession,
-    expr: &str,
-    form: Option<&str>,
-    depth: Option<usize>,
-    rules: bool,
+pub(super) fn render_trace_response(
+    response: &HostEvalSuccess,
     full: bool,
-    form_was_rewritten: bool,
+    form_notice: Option<&str>,
 ) -> String {
-    let source = trace_source(expr, form, depth, rules);
-
-    match session.eval(source.as_str()) {
-        HostEvalOutcome::Success(mut response) => {
-            let mut trace = render_trace_tree(&response.value.typed, full);
-            if form_was_rewritten {
-                let notice = format!(
-                    "filtering on {}",
-                    form.expect("a rewritten trace form is present")
-                );
-                trace = if trace.is_empty() {
-                    notice
-                } else {
-                    format!("{notice}\n{trace}")
-                };
-            }
-            response.value.text = trace;
-            render_host_eval_response(&response)
-        }
-        HostEvalOutcome::Failure(failure) => render_host_failure(&failure),
-        HostEvalOutcome::InputRequired(suspension) => super::render_input_suspension(&suspension),
+    let trace = render_trace_tree(&response.value.typed, full);
+    match form_notice {
+        Some(form) if trace.is_empty() => format!("filtering on {form}"),
+        Some(form) => format!("filtering on {form}\n{trace}"),
+        None => trace,
     }
 }
 

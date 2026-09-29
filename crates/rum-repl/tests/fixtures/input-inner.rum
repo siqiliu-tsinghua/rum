@@ -1,0 +1,4 @@
+before = before + 1
+answer = InputString["nested: "]
+after = after + 1
+answer

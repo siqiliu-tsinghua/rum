@@ -4,13 +4,13 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-30, committed tree through brief-552's dispatch
-commit. Uncommitted performance candidates do not count as completed until
-their correctness, timing, counter, and memory gates have all been reviewed.
+Status checkpoint: 2026-09-30, committed tree through brief-553's gate commit.
+Uncommitted performance candidates do not count as completed until their
+correctness, timing, counter, and memory gates have all been reviewed.
 
 **Where work resumes (2026-09-30) — the suspension-continuation branch, step
-3: brief-552, front-end input disposition (design).** Steps 1-2 are done.
-brief-550 (`c6e95dd1`) made guest `Get`, `Needs`, `BeginPackage` dependencies
+3B: the terminal reader (draft B), after brief-553 made the REPL resume.**
+Steps 1-2 are done. brief-550 (`c6e95dd1`) made guest `Get`, `Needs`, `BeginPackage` dependencies
 and `DeclarePackage` stubs suspend and resume with an inherited request budget.
 brief-551 (`34e57a8d`) fixed what the re-probe of the batch boundary found: a
 public `eval_file` suspended inside a nested guest load panicked on cancel
@@ -38,7 +38,27 @@ marks the adapter Idle and erases the original reply's routing ids; and each
 suspension re-renders the whole buffered print prefix (queued `prefix, middle`
 shows as `prefix, prefix, middle, prefix, middle`). Six drafts (A REPL driver,
 B terminal masking and interrupt, C CLI helpers, D Jupyter abandonment, E
-Jupyter lifecycle, F Jupyter output once) wait on the user's U1-U10. Also
+Jupyter lifecycle, F Jupyter output once).
+**User rulings, 2026-09-30: all ten recommendations accepted (U1-U10, text in
+brief-552 §3), and two new dependencies authorized for draft B: `rustix`
+(echo suppression) and `signal-hook` (Ctrl-C).** In short: the REPL answers
+from its next line and resumes (`:trace` too), answers are literal and never
+history; empty prompt `input> `; EOF cancels and exits, Ctrl-C cancels to the
+primary prompt; password input never echoes and is refused rather than shown
+where masking is unavailable; CLI script modes stay non-interactive; Jupyter
+keeps both APIs, the immediate one abandoning; automatic abandonment reports
+only the original input reason; notebook interrupt during a prompt finishes
+with Cancelled; each print is emitted once; shutdown documents disposal.
+**A is done (brief-553):** the REPL answers from its next line and resumes;
+password requests are refused until B. Director gate: workspace 2778/0/58 with
+native ZeroMQ real; retention no-default 49/0; the new REPL tests fail on the
+pre-change tree (21 of 22; the pass is the overlap-preservation control); a
+real `rum-cli` REPL driven through a pseudo-terminal answers `alice` and a
+whitespace-padded answer, cancels on EOF with cleanup once, and keeps answers
+out of `.rum_history`. The worker stopped at the fence because any source
+change expires the retention fingerprints and certificates (they hash every
+file under `crates/`); the director replayed them, and `TEMPLATE.md` now makes
+that refresh a standing duty of every brief. Next: B, then C, D, E, F.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

@@ -52,6 +52,39 @@ The second line calls it.
 
 `SetDelayed` returns `Null` when it stores the definition.
 
+When an evaluation calls `InputString` or `Input`, the REPL displays the guest's
+prompt and reads the next line as its answer. An empty prompt displays `input> `.
+Output produced before the request appears before that prompt. The REPL resumes
+the same evaluation, including nested file loads and repeated input requests.
+The `:trace` command also resumes, retaining its trace renderer and all options.
+
+```text
+rum> answer = InputString["name: "]
+name: Ada
+"Ada"
+rum> answer
+"Ada"
+```
+
+Answers do not enter history or go through shell-command handling: even `:quit`
+is literal text for `InputString`. Empty answers and whitespace are preserved;
+only the line ending is removed. `Input` sends the answer to the host's source
+parser without adding a REPL reprompt on a parse error. During an input wait,
+the REPL uses the input request's prompt; `...> ` is for unfinished source.
+
+EOF at an input prompt cancels the waiting evaluation, runs guest cleanup once,
+and exits. A reader that reports an interrupted read cancels and returns to
+`rum> `. Earlier definitions survive, and the abandoned remainder does not run.
+An I/O error also retires the request before it is returned to the caller.
+Cancellation is reported once; automatic abandonment retains the input-required
+reason. A borrowed host session is reusable after the REPL's request ends.
+
+The current plain buffered reader cannot hide password entry. Requests with
+`FieldMasked -> True` report `password input unavailable` and are abandoned
+without reading an answer. Terminal echo suppression and terminal interrupt
+handling are separate reader features; an interrupted-read result does not
+itself promise physical Ctrl-C handling.
+
 ## Script Files
 
 Use `--file` to evaluate a source file.
