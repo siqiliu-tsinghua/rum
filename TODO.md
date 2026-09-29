@@ -4,29 +4,27 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-30, committed tree through brief-551's dispatch
+Status checkpoint: 2026-09-30, committed tree through brief-552's dispatch
 commit. Uncommitted performance candidates do not count as completed until
 their correctness, timing, counter, and memory gates have all been reviewed.
 
 **Where work resumes (2026-09-30) — the suspension-continuation branch, step
-2: brief-551, the batch boundary.** Step 1 is done: brief-550 (`c6e95dd1`)
-made guest `Get`, `Needs`, `BeginPackage` dependencies and `DeclarePackage`
-stubs suspend and resume, with an inherited request budget. Director gate:
-workspace 2734/0/58 on the host with native ZeroMQ run for real; the new tests
-fail on the pre-change tree (stdlib 45 of 47, host 4 of 4); instructions
-re-measured at N=40 000/80 000 within +/-0.04%; retention certificates and
-contract records changed only fingerprints; the ownership ledger's 63 host
-payload dispositions unchanged. **Gate miss, found by the next re-probe:** a
-public batch `eval_file` that suspends inside a nested guest `Get` panics on
-cancellation (`guest_loading/file.rs:122`) — the batch path pops the inner
-file's `load_stack` entry and restores its snapshot eagerly, which brief-550's
-correct propagation exposed. And `HostSession::restore_from_bytes` that hits
-an input request returns its failure but leaves the session wedged, against
-its rustdoc. brief-551 fixes both, defers a suspended public file's rollback to
-abandonment (inner to outer), and adds a request-boundary invariant — no
-suspension owner may survive a completed request — with a watched falsifier.
-Probes: `.temp/director/gate-550/`. After it: the front-end input
-disposition brief, then G1-G8, E1, E2.
+3: brief-552, front-end input disposition (design).** Steps 1-2 are done.
+brief-550 (`c6e95dd1`) made guest `Get`, `Needs`, `BeginPackage` dependencies
+and `DeclarePackage` stubs suspend and resume with an inherited request budget.
+brief-551 (`34e57a8d`) fixed what the re-probe of the batch boundary found: a
+public `eval_file` suspended inside a nested guest load panicked on cancel
+(its eager pop took the inner file's `load_stack` entry — a director gate miss
+on 550), and a failed `restore_from_bytes` on input wedged the session; a
+suspended public file now rolls back inner to outer at abandonment, a failed
+restore retires its suspension, and a request-boundary check (test and debug
+builds) fails when a completed request leaves a suspension owner, with five
+watched falsifiers. Both gates reproduced on the host (workspace 2734 then
+2756 passed, 0 failed, native ZeroMQ real; the new tests fail on the pre-change
+trees). brief-552 establishes by execution what `rum-repl`, `rum-cli` and
+`rum-jupyter` do when guest code asks for input — brief-549 found from source
+that several leave the session blocked — and proposes a disposition per entry
+point, with the user's decisions marked. After it: G1-G8, E1, E2.
 
 **The retention line — paused at E0 for the suspension-continuation branch
 below, after its first certified region.** The line exists because an armed
