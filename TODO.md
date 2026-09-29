@@ -25,6 +25,24 @@ trees). brief-552 establishes by execution what `rum-repl`, `rum-cli` and
 `rum-jupyter` do when guest code asks for input — brief-549 found from source
 that several leave the session blocked — and proposes a disposition per entry
 point, with the user's decisions marked. After it: G1-G8, E1, E2.
+**brief-552 is in (design; director re-ran its 37 probes: 15 pass, 22 red,
+identical).** Executed findings: the REPL never resumes — after any input
+request the next line is refused (its crate rustdoc already claims "resumable
+input"); `:trace` likewise; CLI non-interactive modes exit 1 cleanly but four
+borrowed helpers leave the session blocked for a caller that reuses it;
+Jupyter's immediate `execute` and every `allow_stdin=false` surface return a
+terminal error while leaving the owner installed. Three Jupyter defects beyond
+the brief: an interrupt while waiting for input leaves `awaiting_stdin` true
+and the next execute rejected; an overlapping execute during an input wait
+marks the adapter Idle and erases the original reply's routing ids; and each
+suspension re-renders the whole buffered print prefix (queued `prefix, middle`
+shows as `prefix, prefix, middle, prefix, middle`). Six drafts (A REPL driver,
+B terminal masking and interrupt, C CLI helpers, D Jupyter abandonment, E
+Jupyter lifecycle, F Jupyter output once) wait on the user's U1-U10. Also
+recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
+**dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
+dependencies" statement of dogfood stance A does not mention — audit it after
+the branch.
 
 **The retention line — paused at E0 for the suspension-continuation branch
 below, after its first certified region.** The line exists because an armed
