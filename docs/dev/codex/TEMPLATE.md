@@ -73,9 +73,15 @@ a reviewable plan plus the drafted follow-up briefs, still not a code change.
   hand: recompute the contract fingerprints, run `local_production_acceptance`
   in both the default and `--no-default-features` builds and copy the cells it
   writes to `.temp/brief-546/certificates/`, and reconcile the ownership rows
-  against the discovery the tests print. Disclose every changed row; an
-  identity, status, disposition or exclusion that changes is a STOP, and only
-  fingerprints, hashes and positions may move.
+  against the discovery the tests print. Disclose every changed row.
+  Fingerprints, hashes and positions may move. **New `UnknownConstruct` rows
+  for code this brief added or changed are expected** — a derive on a new
+  frame, a new closure, a new macro call — and are added with each row's file
+  and line disclosed; unknowns stay unknown. **STOP instead** if an existing
+  row's identity, status, disposition or exclusion would change or a row would
+  disappear, if a new `UnknownHostPayload` row appears (that needs a
+  disposition decision), or if a new row points at code the brief did not
+  touch.
 - Do NOT add unconditional cost to the default evaluation path. Any profiling
   counter or instrumentation MUST be behind an env-gated cold path (the
   existing `RUM_PROFILE_*` `AtomicU8` pattern); never a `Mutex`/allocation/
