@@ -126,6 +126,7 @@ impl KernelAdapter {
             cancel,
             routing_ids,
             interrupted: false,
+            emitted: render::EmissionProgress::default(),
         };
 
         let session = self.take_idle_session();
@@ -145,14 +146,14 @@ impl KernelAdapter {
 
     fn finish_execute_outcome(
         &mut self,
-        context: ExecuteContext,
+        mut context: ExecuteContext,
         outcome: KernelExecuteOutcome,
     ) -> KernelDispatchResult {
         if let Some(input) = input_request_from_outcome(&outcome) {
             if context.request.allow_stdin {
                 let mut iopub = Vec::new();
                 iopub.extend(
-                    build_suspended_outputs(&outcome)
+                    build_suspended_outputs(&outcome, &mut context.emitted)
                         .iter()
                         .map(|output| self.output_iopub(&context.parent_header, output)),
                 );
@@ -173,13 +174,7 @@ impl KernelAdapter {
             }
         }
 
-        self.finish_execute_request(
-            &context.parent_header,
-            &context.request.code,
-            context.execution_count,
-            outcome,
-            false,
-        )
+        self.finish_execute_request(context, outcome)
     }
 
     pub(super) fn resume_pending_execute(
@@ -210,18 +205,13 @@ impl KernelAdapter {
 
     fn finish_execute_request(
         &mut self,
-        parent_header: &KernelMessageHeader,
-        code: &str,
-        execution_count: Option<u64>,
+        mut context: ExecuteContext,
         outcome: KernelExecuteOutcome,
-        emit_prologue: bool,
     ) -> KernelDispatchResult {
-        let response = build_execute_response(execution_count, outcome);
-        let mut iopub = if emit_prologue {
-            self.execute_prologue_iopub(parent_header, execution_count, code)
-        } else {
-            Vec::new()
-        };
+        let response =
+            build_execute_response_since(context.execution_count, outcome, &mut context.emitted);
+        let parent_header = &context.parent_header;
+        let mut iopub = Vec::new();
 
         iopub.extend(
             response

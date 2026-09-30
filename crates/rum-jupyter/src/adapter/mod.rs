@@ -26,9 +26,9 @@ mod render;
 mod worker;
 
 use self::render::{
-    build_execute_response, build_suspended_outputs, complete_metadata, input_request_from_outcome,
-    input_request_metadata, inspect_metadata, inspect_mime_bundle, kernel_input_request,
-    response_metadata, response_msg_type,
+    build_execute_response, build_execute_response_since, build_suspended_outputs,
+    complete_metadata, input_request_from_outcome, input_request_metadata, inspect_metadata,
+    inspect_mime_bundle, kernel_input_request, response_metadata, response_msg_type,
 };
 #[cfg(test)]
 pub(crate) use self::worker::ExecuteWorkerGate;
@@ -47,6 +47,20 @@ use self::worker::{ExecuteWorkerGateWait, execute_worker_gate};
 /// cancellation cleanup on a worker before the original Cancelled reply and idle.
 /// Late input cannot resume retired work; a following execute reuses the session.
 /// Shutdown remains disposal, with no promise to run guest cleanup.
+///
+/// Buffered stdout prints, stderr messages and trace events are emitted exactly
+/// once by position over the execute's lifetime, including equal occurrences.
+/// Each suspension's new output precedes its input request; only the terminal
+/// segment emits a result or error. Trace displays contain just that segment's
+/// new events. A completion response's rendered outputs describe its segment;
+/// its host outcome still carries the cumulative buffers.
+///
+/// The host groups output by family and supplies no cross-family chronology.
+/// Each segment preserves the renderer's order: stdout, stderr, trace, then
+/// result/error. Per-family order and multiplicity match queued-input execution;
+/// cross-family interleaving and trace display boundaries can differ. Synthesized
+/// panic/poison failures carry no buffered checkpoint: already published prefixes
+/// remain visible, and only the terminal error can be emitted for that segment.
 pub struct KernelAdapter {
     session: Option<HostSession>,
     execute_state: ExecuteState,

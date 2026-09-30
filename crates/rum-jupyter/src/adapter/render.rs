@@ -21,11 +21,64 @@ pub(super) fn kernel_input_request(request: &HostInputRequest) -> KernelInputReq
     input
 }
 
+/// Positions in the host's cumulative per-family buffers, owned by one execute.
+#[derive(Debug, Default)]
+pub(super) struct EmissionProgress {
+    prints: usize,
+    messages: usize,
+    trace: usize,
+}
+
+impl EmissionProgress {
+    fn buffered_outputs(&mut self, outcome: &KernelExecuteOutcome) -> Vec<KernelOutput> {
+        let (prints, messages, trace) = match outcome {
+            KernelExecuteOutcome::Success(s) => (&s.prints, &s.messages, &s.trace),
+            KernelExecuteOutcome::InputRequired(s) => (&s.prints, &s.messages, &s.trace),
+            KernelExecuteOutcome::Failure(f) => {
+                // A synthesized panic/poison failure carries no checkpoint.
+                // Earlier published output survives; there is nothing to replay.
+                if f.code.requires_reset()
+                    && f.prints.is_empty()
+                    && f.messages.is_empty()
+                    && f.trace.is_empty()
+                {
+                    return Vec::new();
+                }
+                (&f.prints, &f.messages, &f.trace)
+            }
+            KernelExecuteOutcome::WireDecoded => return Vec::new(),
+        };
+        // Runtime outcomes preserve these prefixes, including failure and cancel.
+        // Do not use the rebuilt, family-grouped HostStructuredOutput collection.
+        let mut outputs = stdout_streams(&prints[self.prints..]);
+        outputs.extend(runtime_message_streams(&messages[self.messages..]));
+        let unseen_trace = &trace[self.trace..];
+        if !unseen_trace.is_empty() {
+            outputs.push(KernelOutput::DisplayData(KernelDisplayOutput {
+                data: trace_mime_bundle(unseen_trace),
+                metadata: trace_metadata(),
+            }));
+        }
+        self.prints = prints.len();
+        self.messages = messages.len();
+        self.trace = trace.len();
+        outputs
+    }
+}
+
 pub(super) fn build_execute_response(
     execution_count: Option<u64>,
     outcome: KernelExecuteOutcome,
 ) -> KernelExecuteResponse {
-    let outputs = build_execute_outputs(execution_count, &outcome);
+    build_execute_response_since(execution_count, outcome, &mut EmissionProgress::default())
+}
+
+pub(super) fn build_execute_response_since(
+    execution_count: Option<u64>,
+    outcome: KernelExecuteOutcome,
+    emitted: &mut EmissionProgress,
+) -> KernelExecuteResponse {
+    let outputs = build_execute_outputs(execution_count, &outcome, emitted);
     let error = match &outcome {
         KernelExecuteOutcome::Success(_) => None,
         KernelExecuteOutcome::InputRequired(suspension) => {
@@ -53,62 +106,33 @@ pub(super) fn build_execute_response(
 fn build_execute_outputs(
     execution_count: Option<u64>,
     outcome: &KernelExecuteOutcome,
+    emitted: &mut EmissionProgress,
 ) -> Vec<KernelOutput> {
+    let mut outputs = emitted.buffered_outputs(outcome);
     match outcome {
         KernelExecuteOutcome::Success(response) => {
-            let mut outputs = stdout_streams(&response.prints);
-            outputs.extend(runtime_message_streams(&response.messages));
-            if !response.trace.is_empty() {
-                outputs.push(KernelOutput::DisplayData(KernelDisplayOutput {
-                    data: trace_mime_bundle(&response.trace),
-                    metadata: trace_metadata(),
-                }));
-            }
             outputs.push(KernelOutput::ExecuteResult(KernelExecuteResult {
                 execution_count,
                 data: execute_result_mime_bundle(&response.value.text, &response.value.typed),
                 metadata: execute_result_metadata(execution_count),
             }));
-            outputs
         }
         KernelExecuteOutcome::InputRequired(suspension) => {
-            let mut outputs = suspended_outputs(suspension);
             outputs.push(KernelOutput::Error(input_required_error_output(suspension)));
-            outputs
         }
         KernelExecuteOutcome::Failure(failure) => {
-            let mut outputs = stdout_streams(&failure.prints);
-            outputs.extend(runtime_message_streams(&failure.messages));
-            if !failure.trace.is_empty() {
-                outputs.push(KernelOutput::DisplayData(KernelDisplayOutput {
-                    data: trace_mime_bundle(&failure.trace),
-                    metadata: trace_metadata(),
-                }));
-            }
             outputs.push(KernelOutput::Error(error_output(failure)));
-            outputs
         }
-        KernelExecuteOutcome::WireDecoded => Vec::new(),
-    }
-}
-
-pub(super) fn build_suspended_outputs(outcome: &KernelExecuteOutcome) -> Vec<KernelOutput> {
-    match outcome {
-        KernelExecuteOutcome::InputRequired(suspension) => suspended_outputs(suspension),
-        _ => Vec::new(),
-    }
-}
-
-fn suspended_outputs(suspension: &HostInputSuspension) -> Vec<KernelOutput> {
-    let mut outputs = stdout_streams(&suspension.prints);
-    outputs.extend(runtime_message_streams(&suspension.messages));
-    if !suspension.trace.is_empty() {
-        outputs.push(KernelOutput::DisplayData(KernelDisplayOutput {
-            data: trace_mime_bundle(&suspension.trace),
-            metadata: trace_metadata(),
-        }));
+        KernelExecuteOutcome::WireDecoded => {}
     }
     outputs
+}
+
+pub(super) fn build_suspended_outputs(
+    outcome: &KernelExecuteOutcome,
+    emitted: &mut EmissionProgress,
+) -> Vec<KernelOutput> {
+    emitted.buffered_outputs(outcome)
 }
 
 fn stdout_streams(prints: &[String]) -> Vec<KernelOutput> {

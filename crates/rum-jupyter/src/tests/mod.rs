@@ -90,6 +90,7 @@ mod adapter;
 mod bootstrap;
 mod execute_lifecycle;
 mod input_abandonment;
+mod output_once;
 mod pump;
 mod stdin;
 mod transport_coverage;

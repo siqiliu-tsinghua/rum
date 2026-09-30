@@ -22,6 +22,7 @@ pub(super) struct ExecuteContext {
     pub(super) cancel: HostCancelHandle,
     pub(super) routing_ids: Vec<Vec<u8>>,
     pub(super) interrupted: bool,
+    pub(super) emitted: super::render::EmissionProgress,
 }
 
 impl ExecuteContext {

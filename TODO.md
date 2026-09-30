@@ -4,12 +4,12 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-30, committed tree through brief-557's gate commit.
+Status checkpoint: 2026-09-30, committed tree through brief-558's gate commit.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
 **Where work resumes (2026-09-30) — the suspension-continuation branch, step
-3F: Jupyter emits each output once (draft F), after briefs 553-557.**
+4: G1-G8, the 86 lost continuations, after the front ends (briefs 553-558).**
 Steps 1-2 are done. brief-550 (`c6e95dd1`) made guest `Get`, `Needs`, `BeginPackage` dependencies
 and `DeclarePackage` stubs suspend and resume with an inherited request budget.
 brief-551 (`34e57a8d`) fixed what the re-probe of the batch boundary found: a
@@ -95,7 +95,22 @@ the pass is the mismatched-parent control). The worker had loosened brief-556's
 `start` helper to accept an immediate reply for the now-immediate refusal; the
 director restored its assertion and gave refusals their own helper that asserts
 the immediate reply, then replayed the retention fingerprints the edit expired.
-Next: F (each output once), the last front-end step.
+**F is done (brief-558), and with it the front-end step:** a resumed
+Jupyter execute emits each output exactly once — per-family positions (prints,
+messages, trace) kept in the execute's owned lifecycle, equal prints kept as two
+outputs, output reported at a suspension emitted before its `input_request`.
+The first run stopped on a requirement the director had written wrong: the
+host's outcomes carry no chronology between families (swapping a `Print` and a
+`Message` yields an identical queued result), so parity is per family and the
+renderer's cross-family order is documented as a host-contract limitation.
+Director gate: workspace 2856/0/58 with native ZeroMQ real; the new tests fail on
+the pre-change tree (10 of 12; the two passes measure the unchanged host
+buffers). **Found, not in this branch — the user decides whether to queue it:**
+every front end loses the relative order of prints and messages within one
+request, with or without suspension, because the kernel keeps them in separate
+buffers and the host returns them grouped; fixing it means one ordered output
+sequence from the kernel through the host. Next: G1-G8 (drafts in
+`.temp/brief-548/draft-G*.md`, re-probe before each), then E1, E2.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
