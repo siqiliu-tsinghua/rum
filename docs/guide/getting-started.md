@@ -32,7 +32,8 @@ The output is the final expression after evaluation.
 
 ## REPL
 
-Running `cargo run -p rum-cli` with no arguments starts the prompt.
+Running `cargo run -p rum-cli` with no arguments and terminal stdin starts the
+prompt.
 
 The REPL keeps one session alive, so definitions entered on one line are
 available on later lines.
@@ -136,20 +137,54 @@ $ printf '2 + 3\n' | cargo run -q -p rum-cli -
 5
 ```
 
-When a program is supplied and stdin is piped, the piped bytes are available as
-the string ``Global`$ScriptInput``.
+With `--eval`, `--file`, or a positional file and non-terminal stdin, the CLI
+reads all of stdin into the literal string ``Global`$ScriptInput`` before
+evaluation. With terminal stdin, this binding is left unset. In stdin-as-program
+mode (`-` or the non-terminal filter), stdin supplies source code and
+`$ScriptInput` is left unset.
 
 ```text
 $ printf 'a\nb\nc\n' | cargo run -q -p rum-cli -- --eval 'Length[StringLines[$ScriptInput]]'
 3
 ```
 
-Arguments after `--` are available as ``Global`$ScriptArgs``.
+Arguments after `--` are available as the list of literal strings
+``Global`$ScriptArgs`` in every script mode. An explicit `--` with no following
+arguments binds an empty list; without `--`, the binding is left unset.
 
 ```text
 $ cargo run -q -p rum-cli -- --eval '$ScriptArgs' -- alpha beta
 List["alpha", "beta"]
 ```
+
+### Input Requests And Exit Status
+
+All script modes (`--eval`, `--file`, a positional file, `-`, and the
+non-terminal filter) are non-interactive, even when stdin is a terminal.
+`$ScriptInput` and `$ScriptArgs` are data: setting these bindings consumes
+exactly the responses queued for them, leaving no answers for later `Input` or
+`InputString` calls. Text such as `InputString[]` in a binding stays literal.
+
+If evaluation needs input, the CLI reports the original input requirement on
+stderr, cancels that request, runs its `WithCleanup` cleanup once, and exits 1.
+This also applies to input requested inside nested `Get` calls and to scripts
+that ask more than once: evaluation stops at the first unanswered request, and
+the abandoned remainder never runs. Output printed before the request is kept
+without replay; cleanup `Print` output goes to stdout exactly once. Retirement
+does not add a second cancellation error.
+
+A public file (`--file` or a positional file) rolls back on cancellation;
+nested file loads roll back from inner to outer. Messages produced during
+cleanup are rolled back with their file. Messages already reported with the
+input requirement remain visible. A stdin script has no enclosing file
+transaction: earlier forms remain, and its own cleanup messages reach stderr
+once. The same is true of `--eval` outside a nested file transaction. `Print`
+output is not transactional in either case.
+
+The CLI exits 0 on success, uses the requested status for `Exit[n]`, and exits
+1 on syntax, file-load, evaluation, or input-required failure. A closed stdout
+pipe retains the filter convention of exiting successfully; any request the
+helper started is still retired before it returns.
 
 ## First Definitions
 

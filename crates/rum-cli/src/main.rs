@@ -5,6 +5,9 @@
 //! [`rum_host`] session. It is a pure `rum-host` consumer with no direct
 //! dependency on the kernel or standard library.
 
+mod input_retirement;
+
+use input_retirement::{CancellationOutput, retire_input_request};
 use std::env;
 use std::io::{self, IsTerminal, Read, Write};
 use std::process::ExitCode;
@@ -225,32 +228,45 @@ fn eval_source(
     session: &mut HostSession,
     input: &str,
 ) -> Result<ExitCode, Box<dyn std::error::Error>> {
-    eval_request(session, "evaluation failed", |session| session.eval(input))
+    eval_request(
+        session,
+        "evaluation failed",
+        CancellationOutput::Cumulative,
+        |session| session.eval(input),
+    )
 }
 
 fn eval_script_source(
     session: &mut HostSession,
     input: &str,
 ) -> Result<ExitCode, Box<dyn std::error::Error>> {
-    eval_request(session, "evaluation failed", |session| {
-        session.eval_script(input)
-    })
+    eval_request(
+        session,
+        "evaluation failed",
+        CancellationOutput::CleanupOnly,
+        |session| session.eval_script(input),
+    )
 }
 
 fn eval_file(
     session: &mut HostSession,
     path: &str,
 ) -> Result<ExitCode, Box<dyn std::error::Error>> {
-    eval_request(session, "file evaluation failed", |session| {
-        session.eval_file(path)
-    })
+    eval_request(
+        session,
+        "file evaluation failed",
+        CancellationOutput::CleanupOnly,
+        |session| session.eval_file(path),
+    )
 }
 
 fn eval_request(
     session: &mut HostSession,
     error_context: &str,
+    cancellation_output: CancellationOutput,
     request: impl FnOnce(&mut HostSession) -> HostEvalOutcome,
 ) -> Result<ExitCode, Box<dyn std::error::Error>> {
+    let cancel = session.cancel_handle();
     let broken_pipe = install_stdout_print_sink(session);
 
     match request(session) {
@@ -272,7 +288,10 @@ fn eval_request(
 
             Err(host_failure_to_cli_error(failure, error_context))
         }
-        HostEvalOutcome::InputRequired(suspension) => {
+        HostEvalOutcome::InputRequired(mut suspension) => {
+            // Only an admitted request can suspend. Retire before any output
+            // error or broken-pipe return; a rejected admission owns nothing.
+            retire_input_request(session, &cancel, &mut suspension, cancellation_output);
             if broken_pipe.load(Ordering::Relaxed) {
                 return Ok(ExitCode::SUCCESS);
             }
@@ -312,10 +331,19 @@ fn eval_setup_binding(
     session: &mut HostSession,
     source: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
+    let cancel = session.cancel_handle();
     let rendered = match session.eval(source) {
         HostEvalOutcome::Success(_) => return Ok(()),
         HostEvalOutcome::Failure(failure) => render_host_failure(&failure),
-        HostEvalOutcome::InputRequired(suspension) => render_input_suspension(&suspension),
+        HostEvalOutcome::InputRequired(mut suspension) => {
+            retire_input_request(
+                session,
+                &cancel,
+                &mut suspension,
+                CancellationOutput::Cumulative,
+            );
+            render_input_suspension(&suspension)
+        }
     };
 
     Err(io::Error::other(format!("failed to bind script variable: {rendered}")).into())
@@ -457,3 +485,6 @@ Arguments after -- are bound as Global`$ScriptArgs.\n\
 Exit codes: 0 on success, requested Exit[n] status for Exit, 1 on syntax/load/evaluation failure.\n",
     )
 }
+
+#[cfg(test)]
+mod eval_tests;
