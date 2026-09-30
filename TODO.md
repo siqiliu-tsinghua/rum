@@ -107,7 +107,7 @@ host's outcomes carry no chronology between families (swapping a `Print` and a
 renderer's cross-family order is documented as a host-contract limitation.
 Director gate: workspace 2856/0/58 with native ZeroMQ real; the new tests fail on
 the pre-change tree (10 of 12; the two passes measure the unchanged host
-buffers). **Found, not in this branch — the user decides whether to queue it:**
+buffers). **Found, not in this branch — QUEUED by user ruling 2026-09-30:**
 every front end loses the relative order of prints and messages within one
 request, with or without suspension, because the kernel keeps them in separate
 buffers and the host returns them grouped; fixing it means one ordered output
@@ -153,9 +153,16 @@ includes making the machine depth-safe**, and brief-562 revises the design
 first; the director's preferred direction is to linearize the unary chain into
 a source plus a stage vector driven by an explicit cursor, which makes every
 walk iterative and is the pending-pull program counter brief-548 asked for.
-Also found, outside the branch: an empty lazy `First` emits `First::nofirst`
-twice where `First[{}]` emits it once (the residual `First[List[]]` it returns
-is evaluated again).
+Also found, outside the branch — QUEUED by user ruling 2026-09-30: an empty
+lazy `First` emits `First::nofirst` twice where `First[{}]` emits it once (the
+residual `First[List[]]` it returns is evaluated again).
+**Queue after this branch (user ruling 2026-09-30):** (Q1) one ordered output
+sequence from the kernel through the host, so prints and messages keep their
+relative order in every front end; (Q2) the duplicated `First::nofirst` on an
+empty lazy list. Both wait for the branch to close; the retention line, paused
+mid-line at E0, resumes first under the "a line once opened is finished"
+ruling unless the user places them earlier. Also behind the branch: the
+`rum-cli`/`rum-repl` `rum-runtime` dev-dependency audit.
 **brief-562 is in (design only) — the flat machine is chosen.** The unary-chain
 premise holds (every adapter has one lazy child; `LazyTable` lowers to one
 chain). One `PullSource` plus a `Vec<PullStage>`, outermost first, driven by an
