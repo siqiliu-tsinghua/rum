@@ -138,3 +138,104 @@ action, the tree's state, the counters.
 2. Verification — every command's verbatim result; red before and green after
    for every permanent test.
 3. Progress counters, disclosures, and anything unresolved.
+
+1. **What changed — stopped at the scope fence.**
+
+The mandatory host-buffer measurement exposed an ordering conflict before production implementation. The brief requires both complete ordered IOPub parity with queued input and visibility of all prefix output before the prompt. Current host outcomes do not carry the cross-family chronology needed to satisfy both generally.
+
+Concrete source:
+
+```rum
+notice::before="before"; Message[notice::before];
+InputString["prompt: "]; Print["tail"]; 42
+```
+
+Queued execution renders stdout `tail` followed by stderr `notice::before`. Resumed execution has already published that stderr message before the prompt, so subsequent stdout necessarily follows it. Removing the replayed stderr by its exact position still fails the complete IOPub comparison. A separate passing control shows that reversing the source's print/message order produces an identical queued `HostEvalSuccess`, including `outputs`.
+
+A chronological host-output contract would cross the fence. Weakening parity to comparison within each output family would change the brief's requirement. Neither was done.
+
+Changed repository file: `docs/dev/codex/brief-558-jupyter-output-once.md`, lines 142–202, appends this report only. All 77 saved source/inventory/brief files were unchanged before this append; no new Jupyter source files exist. No emission state was added, and notebook behavior is unchanged.
+
+Scratch evidence under `.temp/brief-558/`: `host-probe/main.rs:1–37` measures host buffers; `host-probe/output_order.rs:1–85` contains the socket-free order falsifiers; `host-probe/Cargo.toml:1–15` builds these probes against existing repository crates; `run.py:1–24` records bounded commands; `PROGRESS.md:1–17` records the STOP and next action. Raw logs, command records, before-images and `scope-audit.json` remain there. No production dependency was added.
+
+Collection findings are limited to the measured single-source requests: prints, messages and trace preserve their prefixes across both input waits and success, `Exit[7]`, and cancellation after resume. The final buffers equal the queued counterparts. The combined `outputs` collection is rebuilt in print/message/trace/result order and is **not append-only** across these boundaries. No cursor was selected from an unverified assumption.
+
+2. **Verification — verbatim commands and results.**
+
+Both recorder invocations had an outer 120-second bound. Their inner 110-second bounds used the prior measured Jupyter build/run envelope (26.353 seconds). Cargo ran offline with four jobs and repository-local temporary storage.
+
+```text
+$ python3 scripts/run-bounded.py --timeout 110 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-558/tmp cargo run --manifest-path .temp/brief-558/host-probe/Cargo.toml --target-dir target
+BOUNDARY 42/suspend-suspend: prints 1->2 prefix=true messages 1->2 prefix=true trace 5->8 prefix=true outputs 7->12 prefix=false
+BOUNDARY 42/suspend-terminal: prints 2->4 prefix=true messages 2->3 prefix=true trace 8->15 prefix=true outputs 12->23 prefix=false
+QUEUED_EQ 42: prints=true messages=true trace=true outputs=true
+BOUNDARY Exit[7]/suspend-suspend: prints 1->2 prefix=true messages 1->2 prefix=true trace 5->8 prefix=true outputs 7->12 prefix=false
+BOUNDARY Exit[7]/suspend-terminal: prints 2->4 prefix=true messages 2->3 prefix=true trace 8->12 prefix=true outputs 12->19 prefix=false
+QUEUED_EQ Exit[7]: prints=true messages=true trace=true outputs=true
+BOUNDARY cancel/suspend-suspend: prints 1->2 prefix=true messages 1->2 prefix=true trace 5->8 prefix=true outputs 7->12 prefix=false
+BOUNDARY cancel/suspend-terminal: prints 2->3 prefix=true messages 2->3 prefix=true trace 8->9 prefix=true outputs 12->16 prefix=false
+QUEUED_EQ cancel: prints=true messages=true trace=true outputs=true
+```
+
+Exit **0**, elapsed **22.334s**; full output: `.temp/brief-558/measure/host-buffers.log`.
+
+```text
+$ python3 scripts/run-bounded.py --timeout 110 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-558/tmp cargo test --manifest-path .temp/brief-558/host-probe/Cargo.toml --target-dir target --test output-order -- --nocapture --test-threads=1
+test red_complete_iopub_order_matches_queued_input ... BEFORE_PROMPT [Stream(KernelStreamOutput { name: Stderr, text: "notice::before: before\n" })]
+failures:
+    red_complete_iopub_order_matches_queued_input
+    red_order_still_differs_after_positional_replay_removal
+
+test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+```
+
+Exit **101**, elapsed **23.497s**; full ordered payloads and assertion output: `.temp/brief-558/red/output-order.log`. The second red removes only the known replay position in the probe; production rendering is untouched.
+
+**Did not run:** `cargo fmt --check`, `cargo test -p rum-jupyter`, `cargo test --workspace`, retention/certificate replay in either feature build, ownership discovery, or native ZeroMQ tests. No native skip was observed. The hard scope STOP was reached during measurement, before moving the archived red into the permanent harness or adding the requested permanent matrix. There is no green-after result and no claim of completed implementation. No microbench ran.
+
+3. **Counters, disclosures and unresolved work.**
+
+Production implementation attempts: **0**. Probe compiler errors: **0**. Measured host boundaries: **6**. Passing host information-loss control: **1**. Full IOPub parity reds: **2**. Lifecycle controls: **not run**. No-progress implementation attempts: **0**. This is the explicit scope STOP, not stop-loss exhaustion.
+
+No git commands, network access, production-source edits, inventory changes, test weakening, or new unsafe code. Retention fingerprints were not expired by these scratch-only probes; their replay was not performed.
+
+The director must settle the contract/fence conflict before implementation: authorize upstream chronological output delivery, or revise parity to specify ordering within each family and the treatment of trace bundles. The exact next action and unchanged tree state are recorded in `.temp/brief-558/PROGRESS.md`.
+
+---
+
+## Resume — the director revises the parity requirement
+
+You stopped correctly, and the conflict is in the brief, not in the code: the
+host's outcomes carry **no cross-family chronology** at all — your control
+showed that swapping a `Print` and a `Message` in the source yields an identical
+queued `HostEvalSuccess`. Demanding cross-family order equal to the queued path
+would demand that the resumed path be made *less* faithful than it is. This
+brief's problem is duplication; chronology across families is a separate,
+pre-existing property of the host contract that exists without any suspension.
+It is not in this brief's scope and must not be changed here.
+
+**Revised requirement — implement exactly this:**
+
+1. **Per family, exactly once.** For each output family the adapter renders —
+   prints (stdout stream), messages (stderr stream), trace, and the single
+   result — the sequence emitted across all segments of a resumed execute
+   equals the queued execution's sequence for that family: same items, same
+   multiplicity, same order. Track progress **by position per family** (you
+   measured prints, messages and trace as append-only across all six
+   boundaries); do not use the combined `outputs` list, which you measured as
+   rebuilt and not append-only.
+2. **Before the prompt.** Output the host reports at a suspension is emitted
+   before that suspension's `input_request`.
+3. **Across families within one segment**, keep the renderer's existing order
+   and document it in the adapter rustdoc as a limitation of the host
+   contract, which groups output by family.
+4. Equal strings printed twice remain two outputs.
+
+Rewrite the parity tests to assert (1)-(4); keep your
+`red_complete_iopub_order_matches_queued_input` evidence in the report, not as
+a permanent test. Then do the rest of the brief as written: the permanent
+matrix (one prompt, two prompts, nested `Get`, repeated equal prints, messages
+before and after a prompt, failure after resume, interrupt after resume), red
+first; the emission state in brief-557's owned lifecycle; the standing
+retention replay; every gate in Verification. Append your report covering both
+runs.
