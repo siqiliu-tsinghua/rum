@@ -4,7 +4,7 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-30, committed tree through brief-558's gate commit.
+Status checkpoint: 2026-09-30, committed tree through brief-559's gate commit.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -111,6 +111,18 @@ request, with or without suspension, because the kernel keeps them in separate
 buffers and the host returns them grouped; fixing it means one ordered output
 sequence from the kernel through the host. Next: G1-G8 (drafts in
 `.temp/brief-548/draft-G*.md`, re-probe before each), then E1, E2.
+**G1, G6 and G8 are done for correctness (brief-559):** `Scan`, multi-name
+`OptionValue`, `ReplaceRepeated`, three-operand `Dot` and `Differences` resume
+into their own loops; lost continuations 86 -> 80. The director re-ran brief-548's
+195 probes first (all 91 divergences unchanged). Gate: serial workspace
+2877/0/58 with native ZeroMQ real; the new tests fail on the pre-change tree (19
+of 21; the passes are the Dot and ReplaceRepeated cancellation controls).
+Two host kills under memory pressure along the way; the user ruled serial runs
+(`CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1`), which exposed and fixed a latent
+defect in brief-555's CLI test harness (`--quiet`, no inherited thread count).
+**Open, and next: the ordinary path got dearer** — per-iteration instructions
+`Differences` +1.86% (director reproduced +1.92%), `ReplaceRepeated` +0.4%,
+`OptionValue` +0.38%, allocations unchanged. brief-560 erases it before G2.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

@@ -448,32 +448,48 @@ pub(super) fn evaluate_scan_parts(
     operator: &Expr,
     parts: Vec<Expr>,
 ) -> Result<Expr, EvalError> {
-    for part in parts {
+    scan_parts_from_cursor(session, operator, parts.into_iter())
+}
+
+fn scan_parts_from_cursor(
+    session: &mut Session,
+    operator: &Expr,
+    mut remaining_parts: std::vec::IntoIter<Expr>,
+) -> Result<Expr, EvalError> {
+    while let Some(part) = remaining_parts.next() {
         let result = session.evaluate(Expr::call(operator.clone(), vec![part]));
-        rum_runtime::resume_or_suspend!(
-            session,
-            result,
-            ok(value) => Ok(value),
-            suspend => EvaluateScanPartsSuspensionFrame,
-        )?;
+        if let Err(error) = result {
+            return rum_runtime::resume_or_suspend!(
+                session,
+                Err(error),
+                ok(value) => Ok(value),
+                suspend => EvaluateScanPartsSuspensionFrame {
+                    operator: operator.clone(),
+                    remaining_parts,
+                },
+            );
+        }
     }
 
     Ok(system_expr("Null"))
 }
 
 #[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
-struct EvaluateScanPartsSuspensionFrame;
+struct EvaluateScanPartsSuspensionFrame {
+    operator: Expr,
+    // The iterator owns the unvisited parts and the next-part cursor (R01).
+    remaining_parts: std::vec::IntoIter<Expr>,
+}
 
 impl rum_runtime::kernel_api::SuspensionFrame for EvaluateScanPartsSuspensionFrame {
     fn resume(
         self: std::sync::Arc<Self>,
-        _session: &mut Session,
+        session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> rum_runtime::kernel_api::FrameAction {
-        let resumed = match outcome {
-            Ok(value) => Ok(value),
-            Err(error) => Err(error),
-        };
+        let resumed = outcome.and_then(|_| {
+            scan_parts_from_cursor(session, &self.operator, self.remaining_parts.clone())
+        });
         rum_runtime::kernel_api::FrameAction::complete(resumed)
     }
 }

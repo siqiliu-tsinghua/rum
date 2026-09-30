@@ -146,11 +146,34 @@ impl Session {
             });
         }
 
-        let replaced = self.apply_replace_all_with_plan(
+        let replaced_result = self.apply_replace_all_with_plan(
             current.clone(),
             rules.clone(),
             RuleApplicationSource::ReplaceRepeated,
-        )?;
+        );
+        crate::resume_or_suspend!(
+            self,
+            replaced_result,
+            ok(replaced) => self.resume_replace_repeated_after_replace(
+                current, rules, iteration, effective_limit, replaced
+            ),
+            suspend => ResumeReplaceRepeatedAfterReplaceSuspensionFrame {
+                current,
+                rules,
+                iteration,
+                effective_limit,
+            },
+        )
+    }
+
+    fn resume_replace_repeated_after_replace(
+        &mut self,
+        current: Expr,
+        rules: RewriteRulePlan,
+        iteration: usize,
+        effective_limit: usize,
+        replaced: Expr,
+    ) -> Result<Expr, EvalError> {
         let next_result = self.evaluate(replaced);
         let next = crate::resume_or_suspend!(
             self,
@@ -415,6 +438,35 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeReplaceRepeatedLoopSu
             })(),
             Err(error) => Err(error),
         };
+        crate::runtime::suspension::FrameAction::complete(resumed)
+    }
+}
+
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
+struct ResumeReplaceRepeatedAfterReplaceSuspensionFrame {
+    current: Expr,
+    rules: RewriteRulePlan,
+    iteration: usize,
+    effective_limit: usize,
+}
+
+impl crate::runtime::suspension::SuspensionFrame
+    for ResumeReplaceRepeatedAfterReplaceSuspensionFrame
+{
+    fn resume(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+    ) -> crate::runtime::suspension::FrameAction {
+        let resumed = outcome.and_then(|replaced| {
+            session.resume_replace_repeated_after_replace(
+                self.current.clone(),
+                self.rules.clone(),
+                self.iteration,
+                self.effective_limit,
+                replaced,
+            )
+        });
         crate::runtime::suspension::FrameAction::complete(resumed)
     }
 }

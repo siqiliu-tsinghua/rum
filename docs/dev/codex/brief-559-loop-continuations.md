@@ -1784,3 +1784,1673 @@ certificates this edit expires, and finish the serial workspace gate, the
 `env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1` for every cargo command except the
 one default-thread `rum-cli` check above. Append one report covering all four
 runs.
+
+---
+
+## Four-run execution report — correctness green; performance gate fails
+
+This report covers all four executions. The six scoped continuation sites are repaired, all 21 permanent tests pass, and formatting, runtime, stdlib, the full serial workspace, both certificate builds and the full no-default-features retention gate have passing evidence. **The candidate is not an accepted performance gate:** OptionValue, ReplaceRepeated and Differences have repeatable ordinary-path instruction increases. Allocation counts and peaks are unchanged. Two scoped performance experiments were measured and rejected because they regressed other required labels; their source changes were fully reverted. The final source is byte-identical to the version that passed the broad gates.
+
+No git command, network operation, user-configuration edit, new dependency, lease, unsafe block, existing-assertion weakening or unrelated retained source edit occurred. The only retained fourth-run Rust source edit is the director-authorized CLI child invocation.
+
+### 1. What changed, frames and roots
+
+| File | Final changed lines | Reason |
+| --- | --- | --- |
+| [crates/rum-cli/src/eval_tests.rs](../../../crates/rum-cli/src/eval_tests.rs) | 116–122 | In child(), add --quiet and remove RUST_TEST_THREADS from the child environment. Preserve every assertion. Both parent thread configurations pass. |
+| [crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/repeated.rs](../../../crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/repeated.rs) | 149, 153–176, 444–472 | Carry the completed rewrite pass into evaluation/fixed-point comparison, preserving consumed iteration count and effective limit. |
+| [crates/rum-runtime/src/runtime/options/builtins.rs](../../../crates/rum-runtime/src/runtime/options/builtins.rs) | 262–297, 299–300, 302–316, 522–550 | Share an indexed scalar driver; freeze names and completed values only on suspension; append the resumed scalar once and finish the List. |
+| [crates/rum-runtime/src/runtime/tests/frame_root_trace.rs](../../../crates/rum-runtime/src/runtime/tests/frame_root_trace.rs) | 483 | Reconcile the exact frame count, 545 to 550; all 33 stateful identities and checker assertions remain. |
+| [crates/rum-runtime/src/runtime/tests/frame_root_trace/derived_inventory.rs](../../../crates/rum-runtime/src/runtime/tests/frame_root_trace/derived_inventory.rs) | 343, 432, 721, 932–933, 1159, 1184, 1362, 1476–1477 | Add the five new frame identities to both exact derived-root and pure-abandonment data arrays. |
+| [crates/rum-stdlib/src/functional_ops/apply_map/normalize.rs](../../../crates/rum-stdlib/src/functional_ops/apply_map/normalize.rs) | 451–459, 461–471, 478–482, 487, 490–492 | Replace Scan’s identity continuation with operator and remaining-parts state; continue the suffix and return Null. |
+| [crates/rum-stdlib/src/functional_ops/arrays/mod.rs](../../../crates/rum-stdlib/src/functional_ops/arrays/mod.rs) | 3–5, after 40 (deletion), 48–57, 60–72, 79–99 | Continue Dot’s operand chain from the completed inner contraction, preserving head/arguments for suffix work and invalid-call reconstruction. |
+| [crates/rum-stdlib/src/structure_ops/list_plumbing.rs](../../../crates/rum-stdlib/src/structure_ops/list_plumbing.rs) | 3–5, 28–45, 53–75, 119–145, 148–187 | Carry Differences row/prefix cursor and remaining order in separate frames; preserve final element-limit check and List wrapping. |
+| [crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv](../../../crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv) | 436–441, 600–602, 1021, 1033, 1330–1332 | Five authorized derive additions and nine existing source-position updates; unknown classifications unchanged. |
+| [crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv](../../../crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv) | 888–898, 1176–1180, 2050, 2072, 2691–2702 | Six authorized closure additions and 24 existing source-position updates; unknown classifications unchanged. |
+| [crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv](../../../crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv) | 743–748, 1118–1121, 2170–2171, 2203, 2787–2795 | Five authorized macro additions and 17 existing source-position updates; unknown classifications unchanged. |
+| [crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv](../../../crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv) | 2–69 | Regenerate all 68 fingerprint fields; the other 18 fields, 62 Discharged and six Pending, remain unchanged. |
+| [crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv](../../../crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv) | 2–3 | Re-earn C01/C02 default/no-default certificate cells; identities, statuses, preconditions, strengths and exclusions remain unchanged. |
+| [crates/rum-stdlib/tests/loop_continuations.rs](../../../crates/rum-stdlib/tests/loop_continuations.rs) | 1–373 | Add 21 permanent tests: 11 equality witnesses, five later errors and five cancellation cases covering ten suspended positions; every expected prompt and reusable session asserted. |
+
+This brief has appended reports only. Scratch, raw logs, Python capture/reduction scripts, source snapshots, binaries, exact file/range audit and comparison patch are under `.temp/brief-559/`. See [final file audit](../../../.temp/brief-559/fourth/final-file-audit.json) and [final patch made from saved bytes](../../../.temp/brief-559/fourth/final-review.patch). No git was used.
+
+| Frame | Root-bearing fields | Cursor and resume work |
+| --- | --- | --- |
+| EvaluateScanPartsSuspensionFrame (replaces the identity Scan frame) | operator: Expr; remaining_parts: IntoIter<Expr> | Iterator is the next-part cursor; discard completed callback result, finish suffix, return Null. |
+| OptionValuesSuspensionFrame | target: Symbol; explicit: Option<SymbolOptions>; items: Arc<[(Expr, Symbol)]>; values: SharedArgs | next_index; reconstruct prefix only after suspension, append resumed scalar once, finish names and List wrapping. |
+| ResumeReplaceRepeatedAfterReplaceSuspensionFrame | current: Expr; rules: RewriteRulePlan | iteration and effective_limit; evaluate completed rewrite, compare fixed point and enforce preserved limit. |
+| DotSuspensionFrame | head: Expr; args: SharedArgs | next_index; resumed inner contraction is current tensor; finish remaining operands. |
+| DifferencesRowSuspensionFrame | items: SharedArgs; differences: SharedArgs | next_pair; append resumed difference once, finish row and encode continuation value. |
+| DifferencesOrderSuspensionFrame | None; completed row arrives as outcome | remaining_order; decode row, finish orders, check generated-element limit and wrap List. |
+
+All six frames derive FrameRootTrace and PureFrameAbandon; existing custom abandonment is untouched. Scan is a replaced existing frame; the other five are new. Root inventories remain 965 derived types and 550 frames (517 pure, 33 stateful). Storage capture occurs only on InputRequired; the measured instruction regressions below mean that this is not a zero ordinary-path cost acceptance claim.
+
+File-size assessment: implementation files remain under 20k chars (options 19,277; repeated rewrite 17,251; Scan 15,477; list plumbing 14,441; arrays 6,023). These coherent, fenced repairs retain their existing boundaries; future splits can separate OptionValue driving from parsing, Scan driving from normalization, repeated-loop frames from entry normalization, and Differences from broader list plumbing. CLI tests are 14,747 chars and the new integration tests 11,586. The pre-existing 30,342-char frame test changed only its count, and the pre-existing 167,818-char derived inventory changed only ten data entries; a future split can partition exact inventory lists by crate. No unrelated split or TODO edit was made.
+
+**Ownership records:** all sixteen authorized additions are below, copied verbatim from discovery. The fifty existing source-position moves were fully disclosed in the preceding three-run report and remain identical; [the full before/after row proof](../../../.temp/brief-559/fourth/ownership-reconciliation.json) includes every move. No existing identity disappeared or changed classification. Host payloads remain 63, unknown constructs 7,562 and self-reaching types 60. The CLI test-only edit adds no discovery row.
+
+```text
+UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/repeated.rs	445	1	unresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: PureFrameAbandon)
+UnknownConstruct	crates/rum-runtime/src/runtime/options/builtins.rs	523	1	unresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: PureFrameAbandon)
+UnknownConstruct	crates/rum-stdlib/src/functional_ops/arrays/mod.rs	81	1	unresolved attribute/expansion derive (rum_runtime :: kernel_api :: FrameRootTrace , rum_runtime :: kernel_api :: PureFrameAbandon)
+UnknownConstruct	crates/rum-stdlib/src/structure_ops/list_plumbing.rs	55	1	unresolved attribute/expansion derive (rum_runtime :: kernel_api :: FrameRootTrace , rum_runtime :: kernel_api :: PureFrameAbandon)
+UnknownConstruct	crates/rum-stdlib/src/structure_ops/list_plumbing.rs	150	1	unresolved attribute/expansion derive (rum_runtime :: kernel_api :: FrameRootTrace , rum_runtime :: kernel_api :: PureFrameAbandon)
+UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/repeated.rs	461	40	closure captures: |replaced| (capture types/modes unresolved)
+UnknownConstruct	crates/rum-runtime/src/runtime/options/builtins.rs	538	40	closure captures: |value| (capture types/modes unresolved)
+UnknownConstruct	crates/rum-stdlib/src/functional_ops/apply_map/normalize.rs	490	40	closure captures: |_| (capture types/modes unresolved)
+UnknownConstruct	crates/rum-stdlib/src/functional_ops/arrays/mod.rs	95	40	closure captures: |current| (capture types/modes unresolved)
+UnknownConstruct	crates/rum-stdlib/src/structure_ops/list_plumbing.rs	67	40	closure captures: |row| (capture types/modes unresolved)
+UnknownConstruct	crates/rum-stdlib/src/structure_ops/list_plumbing.rs	164	40	closure captures: |value| (capture types/modes unresolved)
+UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/repeated.rs	154	9	unexpanded macro crate :: resume_or_suspend! (ends at 166:10)
+UnknownConstruct	crates/rum-runtime/src/runtime/options/builtins.rs	286	28	unexpanded macro crate :: resume_or_suspend! (ends at 297:22)
+UnknownConstruct	crates/rum-stdlib/src/functional_ops/arrays/mod.rs	62	22	unexpanded macro rum_runtime :: resume_or_suspend! (ends at 71:10)
+UnknownConstruct	crates/rum-stdlib/src/structure_ops/list_plumbing.rs	38	19	unexpanded macro rum_runtime :: resume_or_suspend! (ends at 45:10)
+UnknownConstruct	crates/rum-stdlib/src/structure_ops/list_plumbing.rs	133	24	unexpanded macro rum_runtime :: resume_or_suspend! (ends at 142:18)
+```
+**Contract rows:** the following 68 rows changed only their fingerprint column during run 4; final regeneration found zero further differences. Earlier run-2 fingerprint transitions are recorded above and in [.temp/brief-559/resume/contract-reconciliation.json](../../../.temp/brief-559/resume/contract-reconciliation.json).
+
+```text
+line	id	status	previous	final
+2	B01	Pending	fnv1a64:9b9b39b0fc5a90f6	fnv1a64:b60825c0d4ad8bb0
+3	B02	Pending	fnv1a64:eb9407372bfc8db3	fnv1a64:f5bcf9719ba2a659
+4	B03	Discharged	fnv1a64:f0681df4dd546fac	fnv1a64:10c54100af192a32
+5	B04	Discharged	fnv1a64:d39f3b872237fa8e	fnv1a64:68790df1ee24c998
+6	B05	Discharged	fnv1a64:d92d6fdfe68460f7	fnv1a64:60cf814c9e09266d
+7	B06	Pending	fnv1a64:9b486b6d442c4542	fnv1a64:502664c9643cddac
+8	B07	Pending	fnv1a64:2b69ceebbd2ec3a7	fnv1a64:accea6345595dcdd
+9	B08	Pending	fnv1a64:2277ee2559205ba0	fnv1a64:c52accb1ffe9f126
+10	B09	Discharged	fnv1a64:c8cb5c6d9d8ec1da	fnv1a64:3caa0f57160242d4
+11	B10	Discharged	fnv1a64:32610982f50c5ac1	fnv1a64:16bd817dac78d233
+12	B11	Discharged	fnv1a64:94f6ece43c2c208e	fnv1a64:29d0bf4f0818ef98
+13	B12	Discharged	fnv1a64:87d7dc69799756da	fnv1a64:fbb68f52f20ad7d4
+14	I01	Discharged	fnv1a64:797d24ae69128776	fnv1a64:93ea10be41658230
+15	I02	Discharged	fnv1a64:306eed73debae8f7	fnv1a64:b810fee0963fae6d
+16	I03	Pending	fnv1a64:6ae51703c4f8091a	fnv1a64:1477771138785614
+17	I04	Discharged	fnv1a64:a7de9df1cab446d3	fnv1a64:de717acf3e818479
+18	P01	Discharged	fnv1a64:34976f8fb0dc7ae2	fnv1a64:543932c211c8b64c
+19	P02	Discharged	fnv1a64:aa3cf53d7745ef51	fnv1a64:26509d0eb1f48903
+20	P03	Discharged	fnv1a64:18f26a672b2f11b4	fnv1a64:db55c84b16a504ca
+21	P04	Discharged	fnv1a64:e06f254cb0a5a9b3	fnv1a64:ea981787204bc259
+22	P05	Discharged	fnv1a64:944385f4a8561c86	fnv1a64:f8e5e9953ea90780
+23	P06	Discharged	fnv1a64:d857013a05c6f05a	fnv1a64:4c35b4237e3a7154
+24	P070	Discharged	fnv1a64:12a49d7be43c6a5a	fnv1a64:868350655cafeb54
+25	P080	Discharged	fnv1a64:e64455b814cb9a01	fnv1a64:e716469d350f3373
+26	P090	Discharged	fnv1a64:160f6f43fc20f3f3	fnv1a64:5f8713163d3c2199
+27	P100	Discharged	fnv1a64:2c05ed441298c23e	fnv1a64:33a6591bc0a94fc8
+28	P110	Discharged	fnv1a64:20bb0d6ab5896c29	fnv1a64:e40035d81e844a0b
+29	P120	Discharged	fnv1a64:fa306e7538996340	fnv1a64:b831a042d5e6b246
+30	P130	Discharged	fnv1a64:cf372848ebe29da7	fnv1a64:509bff918449b6dd
+31	P140	Discharged	fnv1a64:19a1c172830caebb	fnv1a64:ad6e233c098427d1
+32	P150	Discharged	fnv1a64:a0abf62d619cec13	fnv1a64:028ef385cd365ab9
+33	P071	Discharged	fnv1a64:7aa212fe6619d1c7	fnv1a64:95fe7ac5cb05a2fd
+34	P081	Discharged	fnv1a64:bd652f37ac72dafa	fnv1a64:c2ed9de989bb35f4
+35	P091	Discharged	fnv1a64:546373a346877f22	fnv1a64:51550d4fc342448c
+36	P101	Discharged	fnv1a64:18bdfe37eaed0929	fnv1a64:dc0326a553e7e70b
+37	P111	Discharged	fnv1a64:5b80b026459f93ca	fnv1a64:bc05703a2ddb1d04
+38	P121	Discharged	fnv1a64:b24717e19fc9443d	fnv1a64:cd1e18f2aeb116af
+39	P131	Discharged	fnv1a64:71495ded588c1c0e	fnv1a64:062330582478eb18
+40	P141	Discharged	fnv1a64:375131455eb3d782	fnv1a64:ac035c0150b6e2ec
+41	P151	Discharged	fnv1a64:3a5eb7de231da100	fnv1a64:d04795ad74cdc206
+42	B13	Discharged	fnv1a64:2958fef674c90142	fnv1a64:de36f85294d999ac
+43	R01	Discharged	fnv1a64:891c0e27a74f0123	fnv1a64:72be7a3f134dc549
+44	R02	Discharged	fnv1a64:a30bb913c87598f4	fnv1a64:ed2fc76368f2ff0a
+45	R03	Discharged	fnv1a64:fecc75a41a617fbf	fnv1a64:76f9a30d6acc5f65
+46	R040	Discharged	fnv1a64:df83db7a4778db43	fnv1a64:1975f06c44768769
+47	R050	Discharged	fnv1a64:26e0a8e5220e2be6	fnv1a64:2f062694b1a79a60
+48	R060	Discharged	fnv1a64:dd61e9df8bfaf66b	fnv1a64:77f5ae7226b7f601
+49	R070	Discharged	fnv1a64:25d2f7518e1499fa	fnv1a64:2b5b66036b5cf4f4
+50	R080	Discharged	fnv1a64:6ee306e49a390fd3	fnv1a64:a575e3c20e064d79
+51	R090	Discharged	fnv1a64:6c392a884156837e	fnv1a64:37e2c5b8fd68c708
+52	R100	Discharged	fnv1a64:b58dc247872a1a2c	fnv1a64:d5eae55358eed4b2
+53	R110	Discharged	fnv1a64:ff879e6952834399	fnv1a64:3c3829018af8b53b
+54	R041	Discharged	fnv1a64:0f9262208bf0c042	fnv1a64:c4705b7cac0158ac
+55	R051	Discharged	fnv1a64:a4319d59894f0073	fnv1a64:eda9412bca6a2e19
+56	R061	Discharged	fnv1a64:482d2734f22d6230	fnv1a64:2a0b1773c7ea3936
+57	R071	Discharged	fnv1a64:13402060306ca8f5	fnv1a64:6ff9a7a982bb1857
+58	R081	Discharged	fnv1a64:e7f05698ae44973e	fnv1a64:ef90c2705c5524c8
+59	R091	Discharged	fnv1a64:f4ac6a113041817b	fnv1a64:57221ca13cda9491
+60	R101	Discharged	fnv1a64:4ac135d5271d95ab	fnv1a64:01b520b0f5aea341
+61	R111	Discharged	fnv1a64:bdd58a05aa4d0558	fnv1a64:f002ab64924cb82e
+62	R12	Discharged	fnv1a64:b42eb7a498caab18	fnv1a64:0412c4569639a2ee
+63	R13	Discharged	fnv1a64:848fb80a388addfc	fnv1a64:5704808f7388b402
+64	R14	Discharged	fnv1a64:465dfbb9ef49823e	fnv1a64:4dfe67919d5a0fc8
+65	R15	Discharged	fnv1a64:6fb2e98209ebd512	fnv1a64:4937bf2b4cb21cbc
+66	O010	Discharged	fnv1a64:727c325480eaa290	fnv1a64:aac3291ab3077816
+67	O0200	Discharged	fnv1a64:14696346d1c3d4bb	fnv1a64:a835c510583b4dd1
+68	O011	Discharged	fnv1a64:1feaa667998cbaeb	fnv1a64:ba7e6afa3449ba81
+69	O0210	Discharged	fnv1a64:e270bc39c7c94e78	fnv1a64:c93ff2d9ca20354e
+```
+**Certificate rows:** C01 is TSV line 2 and C02 line 3; columns 5 and 6 are default and no-default. Every non-fingerprint component and all other columns were checked unchanged. Final passing replays reproduce all four inventory cells exactly. SHA-256 identifies each complete serialized cell below; full earned TSVs are saved in fourth/.
+
+| Row | TSV line / column | Feature hash | Before cell SHA-256 | After cell SHA-256 |
+| --- | --- | --- | --- | --- |
+| C01 | 2 / 5 | true | 74ad96653405e82d3fa579858a21098ce4f6f2b010fb8f4c4bbc837ac6150197 | b1dba4b4ec444b2c256198256ce8acc524f0da122d808b9dcb6f6f7c261b801a |
+| C01 | 2 / 6 | false | e2dc9eb3d7d6a6273f51d7ddb7f2367bf55ebe9b1fe0ad75020f5ce9886605b1 | e07cb5f71d9e8bf2de3698fae2b5d50ec26fcafc313b2d4da7f5d588501b7583 |
+| C02 | 3 / 5 | true | 90b8aab5d4244dd5fad40eb833b5db9b1074f8d79d45ee1f25b500c58b65da94 | 5fe6e16d3ae3284d206448232fdc3342f90c0a7797dd354f3ad88746ca391d99 |
+| C02 | 3 / 6 | false | 1b472c16efb54dfd28032ccaba75589760fd89cf4aaf4f6edbfc8f89cae2f630 | b57f28a9d803497905de408a71fd6286ced7e98aab9b0d66005fcdccc239d898 |
+
+### 2. Verification across all four runs
+
+1. Run 1 saved immutable base binaries and source, recorded 19 failing and two passing controls before production edits, repaired six sites, and passed all 21 focused tests; it stopped at the original ownership fence.
+2. Run 2 applied the authorized sixteen UnknownConstruct additions, corrected only the new frame storage and exact frame inventories required by existing gates, and passed runtime (1116) and focused tests (21); the host interrupted its broad test run.
+3. Run 3 ran serial discovery, fingerprints and certificate replays, then passed full stdlib (1093); workspace stopped at three CLI output-framing failures.
+4. Run 4 changed exactly the director-authorized child invocation, passed CLI tests both serially and with default threads, refreshed fingerprints and certificate cells, and completed the remaining gates recorded below.
+
+Every fourth-run cargo command uses CARGO_BUILD_JOBS=1, CARGO_NET_OFFLINE=true and repo-local TMPDIR; RUST_TEST_THREADS=1 except the single explicitly authorized default-thread CLI check. No two cargo commands ran together. All commands used the bounded runner directly or through the capture/benchmark wrappers. Raw output was retained before reduction. Compile-fail diagnostics inside passing host, retention and rustdoc tests are deliberate rejection controls.
+
+Timeout provenance: full workspace 2,200s used measured serial stdlib 1,046.98s plus the observed serial workspace compilation 185.48s; no-default retention used measured default stdlib 905.38s within this run, with the same 2,200s bound. The first serial CLI 240s bound used the 185.48s serial workspace compilation; the default-thread CLI 110s bound used the measured serial CLI 37.16s. Certificate bounds 120/130s came from the preceding serial 32.43/32.18s replays. The first isolated serial release used 400s from more than twice the measured serial workspace compilation; **this is a cross-profile bootstrap bound, not a prior same-profile serial release measurement**. It measured 108.35s; subsequent release bounds used that and the measured 87.91s rebuild. Alloc-feature rebuilds measured 2.32s. Microbench bounds used brief-550’s sequential full-suite 1.81s and newly measured same-shape panels (about 2.9s). The third-run initial serial-stdlib bootstrap caveat recorded above still applies.
+
+**Final correctness:** workspace exit 0 with 2,877 reported passed / 0 failed / 58 ignored; nine native early-return skips are included in that reported pass total. Runtime is 1,094 unit + 22 rustdoc = 1,116 passed, three ignored. Stdlib is 1,025 unit + 47 guest-loading + 21 loop = 1,093 passed, 53 ignored. No-default retention: 49 passed, one ignored, 1,022 filtered. CLI: 58 passed in each required parent-thread configuration. Final focused tests: 21 passed; final fmt emitted no output and exited 0. Both certificate builds pass.
+
+**Every permanent test, red before production edits and final green after:**
+
+| Test | Pre-edit result | Final result |
+| --- | --- | --- |
+| differences | FAILED | ok |
+| differences_cancel | FAILED | ok |
+| differences_error_after_resume | FAILED | ok |
+| differences_order_two | FAILED | ok |
+| differences_twice | FAILED | ok |
+| dot_cancel | ok (control) | ok |
+| dot_chain | FAILED | ok |
+| dot_error_after_resume | FAILED | ok |
+| dot_twice | FAILED | ok |
+| option_value_cancel | FAILED | ok |
+| option_value_error_after_resume | FAILED | ok |
+| optionvalue_many | FAILED | ok |
+| optionvalue_twice | FAILED | ok |
+| replace_repeated_cancel | ok (control) | ok |
+| replace_repeated_error_after_resume | FAILED | ok |
+| replacerepeated_predicate | FAILED | ok |
+| replacerepeated_twice | FAILED | ok |
+| scan | FAILED | ok |
+| scan_cancel | FAILED | ok |
+| scan_error_after_resume | FAILED | ok |
+| scan_twice | FAILED | ok |
+
+The full final pre-edit witness output and first green output remain verbatim in the initial report above. Final full witness output: [.temp/brief-559/fourth/final-loops.txt](../../../.temp/brief-559/fourth/final-loops.txt). No guest-loading helper was extracted or weakened.
+
+**Native ZeroMQ skips, verbatim:**
+
+```text
+test zeromq::tests::native::basic::native_zeromq_backend_echoes_heartbeat_over_loopback_req_socket ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::basic::native_zeromq_backend_round_trips_execute_over_loopback_sockets ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::control::native_zeromq_backend_frontend_style_control_interrupt_round_trip ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::control::native_zeromq_backend_shutdown_stops_shell_work_and_reports_pending_shell_messages ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::execute::native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_metadata ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::session_flow::native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts_and_shutdown ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::stdin::native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_reply ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::signed::native_zeromq_backend_rejects_tampered_signed_requests_end_to_end ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::signed::native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+```
+**Every captured build, test and maintenance command:** the ledger preserves earlier four-job invocations as historical evidence; those are not the policy of runs 3/4. Each excerpt below is copied from its linked raw output. Routine bounded read-only inspections and scratch/report edits are not verification gates. The host-interrupted second-run broad stdlib command has no terminal status and is not invented as a completed run. Nested benchmark executions and every raw counter are separately rendered in [the benchmark ledger](../../../.temp/brief-559/fourth/benchmark-ledger.md).
+
+**1. [.temp/brief-559/base/default-build.txt](../../../.temp/brief-559/base/default-build.txt) — bound 300.0s; exit 0; elapsed 34.21219451801153s**
+
+```text
+python3 scripts/run-bounded.py --timeout 300 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo build --release --target-dir .temp/brief-559/base/target -p rum-cli
+```
+```text
+    Finished `release` profile [optimized] target(s) in 34.13s
+```
+**2. [.temp/brief-559/base/alloc-build.txt](../../../.temp/brief-559/base/alloc-build.txt) — bound 30.0s; exit 0; elapsed 1.206638256990118s**
+
+```text
+python3 scripts/run-bounded.py --timeout 30 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo build --release --target-dir .temp/brief-559/base/target -p rum-cli --features alloc-count
+```
+```text
+    Finished `release` profile [optimized] target(s) in 1.10s
+```
+**3. [.temp/brief-559/red/loops-01.txt](../../../.temp/brief-559/red/loops-01.txt) — bound 80.0s; exit 101; elapsed 7.124798158009071s**
+
+```text
+python3 scripts/run-bounded.py --timeout 80 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo test -p rum-stdlib --test loop_continuations -- --nocapture --test-threads=1
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.89s
+test result: FAILED. 2 passed; 19 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+error: test failed, to rerun pass `-p rum-stdlib --test loop_continuations`
+```
+**4. [.temp/brief-559/red/loops-final.txt](../../../.temp/brief-559/red/loops-final.txt) — bound 80.0s; exit 101; elapsed 6.815307882992784s**
+
+```text
+python3 scripts/run-bounded.py --timeout 80 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo test -p rum-stdlib --test loop_continuations -- --nocapture --test-threads=1
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.62s
+test result: FAILED. 2 passed; 19 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+error: test failed, to rerun pass `-p rum-stdlib --test loop_continuations`
+```
+**5. [.temp/brief-559/raw/loops-green-01.txt](../../../.temp/brief-559/raw/loops-green-01.txt) — bound 90.0s; exit 101; elapsed 2.2530312520102598s**
+
+```text
+python3 scripts/run-bounded.py --timeout 90 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo test -p rum-stdlib --test loop_continuations -- --nocapture --test-threads=1
+```
+```text
+error[E0382]: use of moved value: `current`
+error[E0382]: use of moved value: `rules`
+error[E0382]: borrow of moved value: `explicit`
+error[E0382]: use of moved value: `values`
+error: could not compile `rum-runtime` (lib) due to 4 previous errors
+```
+**6. [.temp/brief-559/raw/loops-green-02.txt](../../../.temp/brief-559/raw/loops-green-02.txt) — bound 90.0s; exit 101; elapsed 5.163689056993462s**
+
+```text
+python3 scripts/run-bounded.py --timeout 90 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo test -p rum-stdlib --test loop_continuations -- --nocapture --test-threads=1
+```
+```text
+error[E0405]: cannot find trait `FrameAbandon` in this scope
+error[E0412]: cannot find type `AbandonmentContext` in this scope
+error[E0412]: cannot find type `FrameAbandonAction` in this scope
+error[E0433]: failed to resolve: use of undeclared type `FrameAbandonAction`
+error[E0405]: cannot find trait `FrameRootTrace` in this scope
+error[E0405]: cannot find trait `FrameRootVisitor` in this scope
+error[E0433]: failed to resolve: use of undeclared type `FrameRootTrace`
+error[E0405]: cannot find trait `FrameAbandon` in this scope
+error[E0412]: cannot find type `AbandonmentContext` in this scope
+error[E0412]: cannot find type `FrameAbandonAction` in this scope
+error[E0433]: failed to resolve: use of undeclared type `FrameAbandonAction`
+error[E0405]: cannot find trait `FrameRootTrace` in this scope
+error[E0405]: cannot find trait `FrameRootVisitor` in this scope
+error[E0433]: failed to resolve: use of undeclared type `FrameRootTrace`
+error[E0405]: cannot find trait `FrameAbandon` in this scope
+error[E0412]: cannot find type `AbandonmentContext` in this scope
+error[E0412]: cannot find type `FrameAbandonAction` in this scope
+error[E0433]: failed to resolve: use of undeclared type `FrameAbandonAction`
+error[E0277]: the trait bound `DotSuspensionFrame: FrameAbandon` is not satisfied
+error[E0277]: the trait bound `DifferencesOrderSuspensionFrame: FrameAbandon` is not satisfied
+error[E0277]: the trait bound `DifferencesOrderSuspensionFrame: rum_runtime::kernel_api::FrameRootTrace` is not satisfied
+error[E0277]: the trait bound `DifferencesRowSuspensionFrame: FrameAbandon` is not satisfied
+error[E0277]: the trait bound `DifferencesRowSuspensionFrame: rum_runtime::kernel_api::FrameRootTrace` is not satisfied
+error: could not compile `rum-stdlib` (lib) due to 23 previous errors
+```
+**7. [.temp/brief-559/raw/loops-green-03.txt](../../../.temp/brief-559/raw/loops-green-03.txt) — bound 90.0s; exit 0; elapsed 11.58199571998557s**
+
+```text
+python3 scripts/run-bounded.py --timeout 90 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo test -p rum-stdlib --test loop_continuations -- --nocapture --test-threads=1
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.34s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+```
+**8. [.temp/brief-559/raw/fmt-check-01.txt](../../../.temp/brief-559/raw/fmt-check-01.txt) — bound 30.0s; exit 1; elapsed 1.8078709569817875s**
+
+```text
+python3 scripts/run-bounded.py --timeout 30 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo fmt --check
+```
+```text
+Diff in /home/remi/dev/rum/crates/rum-runtime/src/runtime/options/builtins.rs:278:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/src/structure_ops/list_plumbing.rs:129:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:3:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:10:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:33:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:41:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:48:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:63:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:83:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:91:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:99:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:106:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:113:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:119:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:125:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:131:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:137:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:143:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:155:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:167:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:172:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:177:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:182:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:187:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:192:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:197:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:202:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:210:
+Diff in /home/remi/dev/rum/crates/rum-stdlib/tests/loop_continuations.rs:217:
+```
+**9. [.temp/brief-559/raw/ownership-discovery.txt](../../../.temp/brief-559/raw/ownership-discovery.txt) — bound 80.0s; exit 0; elapsed 28.40170797999599s**
+
+```text
+python3 scripts/run-bounded.py --timeout 80 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo test -p rum-stdlib tests::ownership_graph::discovery_report_without_inventory_input -- --exact --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 22.99s
+UnknownHostPayload count: 63
+UnknownConstruct count: 7562
+Self-reaching type count: 60
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1077 filtered out; finished in 5.28s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 47 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 21 filtered out; finished in 0.00s
+```
+**10. [.temp/brief-559/resume/fmt-apply.txt](../../../.temp/brief-559/resume/fmt-apply.txt) — bound 30.0s; exit 0; elapsed 1.6975786330003757s**
+
+```text
+python3 scripts/run-bounded.py --timeout 30 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo fmt --all
+```
+No stdout/stderr was emitted.
+
+**11. [.temp/brief-559/resume/ownership-discovery.txt](../../../.temp/brief-559/resume/ownership-discovery.txt) — bound 80.0s; exit 0; elapsed 23.37731687197811s**
+
+```text
+python3 scripts/run-bounded.py --timeout 80 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo test -p rum-stdlib tests::ownership_graph::discovery_report_without_inventory_input -- --exact --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 18.01s
+UnknownHostPayload count: 63
+UnknownConstruct count: 7562
+Self-reaching type count: 60
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1077 filtered out; finished in 5.27s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 47 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 21 filtered out; finished in 0.00s
+```
+**12. [.temp/brief-559/resume/regenerate-fingerprints.txt](../../../.temp/brief-559/resume/regenerate-fingerprints.txt) — bound 80.0s; exit 0; elapsed 0.24266052400344051s**
+
+```text
+python3 scripts/run-bounded.py --timeout 80 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo test -p rum-stdlib --lib tests::retention_closure::local::contract_tests::regenerate_local_contract_fingerprints -- --exact --ignored --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.06s
+Regenerated 68 fingerprints at /home/remi/dev/rum/target/brief-544/local-contracts.tsv
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1077 filtered out; finished in 0.12s
+```
+**13. [.temp/brief-559/resume/reconcile.txt](../../../.temp/brief-559/resume/reconcile.txt) — bound 30.0s; exit 0; elapsed 0.14695972501067445s**
+
+```text
+python3 scripts/run-bounded.py --timeout 30 -- python3 .temp/brief-559/reconcile.py
+```
+```text
+host_payloads.tsv: 63 -> 63; added=0; positions=0; removed=0
+unknown_attributes.tsv: 1429 -> 1434; added=5; positions=9; removed=0
+unknown_captures.tsv: 2932 -> 2938; added=6; positions=24; removed=0
+unknown_macros.tsv: 3097 -> 3102; added=5; positions=17; removed=0
+unknown_storage.tsv: 88 -> 88; added=0; positions=0; removed=0
+Contract fingerprints: 68 refreshed; first 18 fields identical; 62 Discharged, 6 Pending unchanged.
+```
+**14. [.temp/brief-559/resume/cert-default-generate.txt](../../../.temp/brief-559/resume/cert-default-generate.txt) — bound 180.0s; exit 101; elapsed 30.988130510988412s**
+
+```text
+python3 scripts/run-bounded.py --timeout 180 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo test -p rum-stdlib --lib tests::retention_closure::local::production::local_production_acceptance -- --exact --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.83s
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1077 filtered out; finished in 17.08s
+called `Result::unwrap()` on an `Err` value: "stale or omitted instance certificate C01 hash=true"
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+**15. [.temp/brief-559/resume/cert-nodefault-generate.txt](../../../.temp/brief-559/resume/cert-nodefault-generate.txt) — bound 180.0s; exit 101; elapsed 40.34671167001943s**
+
+```text
+python3 scripts/run-bounded.py --timeout 180 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo test -p rum-stdlib --no-default-features --lib tests::retention_closure::local::production::local_production_acceptance -- --exact --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 23.01s
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1071 filtered out; finished in 17.17s
+called `Result::unwrap()` on an `Err` value: "stale or omitted instance certificate C01 hash=false"
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+**16. [.temp/brief-559/resume/runtime.txt](../../../.temp/brief-559/resume/runtime.txt) — bound 100.0s; exit 101; elapsed 14.884440253983485s**
+
+```text
+python3 scripts/run-bounded.py --timeout 100 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo test -p rum-runtime
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.54s
+test result: FAILED. 1092 passed; 2 failed; 3 ignored; 0 measured; 0 filtered out; finished in 4.22s
+error: test failed, to rerun pass `-p rum-runtime --lib`
+```
+**17. [.temp/brief-559/resume/fmt-check.txt](../../../.temp/brief-559/resume/fmt-check.txt) — bound 30.0s; exit 0; elapsed 1.599503386998549s**
+
+```text
+python3 scripts/run-bounded.py --timeout 30 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo fmt --check
+```
+No stdout/stderr was emitted.
+
+**18. [.temp/brief-559/resume/runtime-green.txt](../../../.temp/brief-559/resume/runtime-green.txt) — bound 100.0s; exit 101; elapsed 9.175220600998728s**
+
+```text
+python3 scripts/run-bounded.py --timeout 100 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo test -p rum-runtime
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.91s
+test result: FAILED. 1093 passed; 1 failed; 3 ignored; 0 measured; 0 filtered out; finished in 4.19s
+error: test failed, to rerun pass `-p rum-runtime --lib`
+```
+**19. [.temp/brief-559/resume/fmt-apply-02.txt](../../../.temp/brief-559/resume/fmt-apply-02.txt) — bound 30.0s; exit 0; elapsed 1.5482341310125776s**
+
+```text
+python3 scripts/run-bounded.py --timeout 30 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo fmt --all
+```
+No stdout/stderr was emitted.
+
+**20. [.temp/brief-559/resume/loops-green.txt](../../../.temp/brief-559/resume/loops-green.txt) — bound 90.0s; exit 101; elapsed 1.7476375599799212s**
+
+```text
+python3 scripts/run-bounded.py --timeout 90 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo test -p rum-stdlib --test loop_continuations -- --nocapture --test-threads=1
+```
+```text
+error[E0308]: mismatched types
+error[E0308]: mismatched types
+error: could not compile `rum-runtime` (lib) due to 2 previous errors
+```
+**21. [.temp/brief-559/resume/runtime-final.txt](../../../.temp/brief-559/resume/runtime-final.txt) — bound 100.0s; exit 101; elapsed 2.5561358660052065s**
+
+```text
+python3 scripts/run-bounded.py --timeout 100 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo test -p rum-runtime
+```
+```text
+error[E0308]: mismatched types
+error[E0308]: mismatched types
+error: could not compile `rum-runtime` (lib) due to 2 previous errors
+error: could not compile `rum-runtime` (lib test) due to 2 previous errors
+```
+**22. [.temp/brief-559/resume/loops-final.txt](../../../.temp/brief-559/resume/loops-final.txt) — bound 90.0s; exit 0; elapsed 12.193048207001993s**
+
+```text
+python3 scripts/run-bounded.py --timeout 90 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo test -p rum-stdlib --test loop_continuations -- --nocapture --test-threads=1
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.95s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+```
+**23. [.temp/brief-559/resume/fmt-final.txt](../../../.temp/brief-559/resume/fmt-final.txt) — bound 30.0s; exit 0; elapsed 1.748869603005005s**
+
+```text
+python3 scripts/run-bounded.py --timeout 30 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo fmt --check
+```
+No stdout/stderr was emitted.
+
+**24. [.temp/brief-559/resume/runtime-pass.txt](../../../.temp/brief-559/resume/runtime-pass.txt) — bound 100.0s; exit 0; elapsed 15.253260474011768s**
+
+```text
+python3 scripts/run-bounded.py --timeout 100 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo test -p rum-runtime
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.76s
+test result: ok. 1094 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 4.06s
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.50s
+```
+**25. [.temp/brief-559/resume/ownership-discovery-final.txt](../../../.temp/brief-559/resume/ownership-discovery-final.txt) — bound 80.0s; exit 0; elapsed 26.04711617997964s**
+
+```text
+python3 scripts/run-bounded.py --timeout 80 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo test -p rum-stdlib tests::ownership_graph::discovery_report_without_inventory_input -- --exact --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 20.64s
+UnknownHostPayload count: 63
+UnknownConstruct count: 7562
+Self-reaching type count: 60
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1077 filtered out; finished in 5.29s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 47 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 21 filtered out; finished in 0.00s
+```
+**26. [.temp/brief-559/resume/regenerate-fingerprints-final.txt](../../../.temp/brief-559/resume/regenerate-fingerprints-final.txt) — bound 80.0s; exit 0; elapsed 0.2487913949880749s**
+
+```text
+python3 scripts/run-bounded.py --timeout 80 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo test -p rum-stdlib --lib tests::retention_closure::local::contract_tests::regenerate_local_contract_fingerprints -- --exact --ignored --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+Regenerated 68 fingerprints at /home/remi/dev/rum/target/brief-544/local-contracts.tsv
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1077 filtered out; finished in 0.12s
+```
+**27. [.temp/brief-559/resume/reconcile-final.txt](../../../.temp/brief-559/resume/reconcile-final.txt) — bound 30.0s; exit 0; elapsed 0.14902800699928775s**
+
+```text
+python3 scripts/run-bounded.py --timeout 30 -- python3 .temp/brief-559/reconcile.py
+```
+```text
+host_payloads.tsv: 63 -> 63; added=0; positions=0; removed=0
+unknown_attributes.tsv: 1429 -> 1434; added=5; positions=9; removed=0
+unknown_captures.tsv: 2932 -> 2938; added=6; positions=24; removed=0
+unknown_macros.tsv: 3097 -> 3102; added=5; positions=17; removed=0
+unknown_storage.tsv: 88 -> 88; added=0; positions=0; removed=0
+Contract fingerprints: 68 refreshed; first 18 fields identical; 62 Discharged, 6 Pending unchanged.
+```
+**28. [.temp/brief-559/resume/cert-default-final-generate.txt](../../../.temp/brief-559/resume/cert-default-final-generate.txt) — bound 180.0s; exit 101; elapsed 30.556782308005495s**
+
+```text
+python3 scripts/run-bounded.py --timeout 180 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo test -p rum-stdlib --lib tests::retention_closure::local::production::local_production_acceptance -- --exact --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.44s
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1077 filtered out; finished in 17.00s
+called `Result::unwrap()` on an `Err` value: "stale or omitted instance certificate C01 hash=true"
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+**29. [.temp/brief-559/resume/cert-nodefault-final-generate.txt](../../../.temp/brief-559/resume/cert-nodefault-final-generate.txt) — bound 180.0s; exit 101; elapsed 36.94216039200546s**
+
+```text
+python3 scripts/run-bounded.py --timeout 180 -- env CARGO_BUILD_JOBS=4 CARGO_NET_OFFLINE=true cargo test -p rum-stdlib --no-default-features --lib tests::retention_closure::local::production::local_production_acceptance -- --exact --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 19.57s
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1071 filtered out; finished in 17.24s
+called `Result::unwrap()` on an `Err` value: "stale or omitted instance certificate C01 hash=false"
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+**30. [.temp/brief-559/resume/install-certificates-final.txt](../../../.temp/brief-559/resume/install-certificates-final.txt) — bound 30.0s; exit 0; elapsed 0.05919916299171746s**
+
+```text
+python3 scripts/run-bounded.py --timeout 30 -- python3 .temp/brief-559/install-certificates.py
+```
+```text
+Replayed four certificate cells; C01/C02 identities/status/source/preconditions/strength/exclusions unchanged.
+```
+**31. [.temp/brief-559/resume/scope-audit.txt](../../../.temp/brief-559/resume/scope-audit.txt) — bound 30.0s; exit 0; elapsed 0.2906373940058984s**
+
+```text
+python3 scripts/run-bounded.py --timeout 30 -- python3 .temp/brief-559/audit-final.py
+```
+```text
+Scope audit: 12 original crate files changed; one new integration test; no unrelated Rust/config/dependency change.
+```
+**32. [.temp/brief-559/serial/ownership-discovery.txt](../../../.temp/brief-559/serial/ownership-discovery.txt) — bound 80.0s; exit 0; elapsed 5.513440890994389s**
+
+```text
+python3 scripts/run-bounded.py --timeout 80 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo test -p rum-stdlib --lib tests::ownership_graph::discovery_report_without_inventory_input -- --exact --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+test tests::ownership_graph::discovery_report_without_inventory_input ... UnknownHostPayload count: 63
+UnknownConstruct count: 7562
+Self-reaching type count: 60
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1077 filtered out; finished in 5.37s
+```
+**33. [.temp/brief-559/serial/regenerate-fingerprints.txt](../../../.temp/brief-559/serial/regenerate-fingerprints.txt) — bound 24.0s; exit 0; elapsed 0.20054453201009892s**
+
+```text
+python3 scripts/run-bounded.py --timeout 24 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo test -p rum-stdlib --lib tests::retention_closure::local::contract_tests::regenerate_local_contract_fingerprints -- --exact --ignored --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+test tests::retention_closure::local::contract_tests::regenerate_local_contract_fingerprints ... Regenerated 68 fingerprints at /home/remi/dev/rum/target/brief-544/local-contracts.tsv
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1077 filtered out; finished in 0.11s
+```
+**34. [.temp/brief-559/serial/reconcile.txt](../../../.temp/brief-559/serial/reconcile.txt) — bound 24.0s; exit 0; elapsed 0.14206662998185493s**
+
+```text
+python3 scripts/run-bounded.py --timeout 24 -- python3 .temp/brief-559/serial/reconcile.py
+```
+```text
+host_payloads.tsv: 63 -> 63; added=0; positions=0; removed=0
+unknown_attributes.tsv: 1429 -> 1434; added=5; positions=9; removed=0
+unknown_captures.tsv: 2932 -> 2938; added=6; positions=24; removed=0
+unknown_macros.tsv: 3097 -> 3102; added=5; positions=17; removed=0
+unknown_storage.tsv: 88 -> 88; added=0; positions=0; removed=0
+Contract fingerprints: 0 refreshed; 68 regenerated; first 18 fields identical; 62 Discharged, 6 Pending unchanged.
+```
+**35. [.temp/brief-559/serial/cert-default.txt](../../../.temp/brief-559/serial/cert-default.txt) — bound 120.0s; exit 0; elapsed 32.43057072200463s**
+
+```text
+python3 scripts/run-bounded.py --timeout 120 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo test -p rum-stdlib --lib tests::retention_closure::local::production::local_production_acceptance -- --exact --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.07s
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1077 filtered out; finished in 17.20s
+```
+**36. [.temp/brief-559/serial/cert-nodefault.txt](../../../.temp/brief-559/serial/cert-nodefault.txt) — bound 130.0s; exit 0; elapsed 32.17727358700358s**
+
+```text
+python3 scripts/run-bounded.py --timeout 130 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo test -p rum-stdlib --no-default-features --lib tests::retention_closure::local::production::local_production_acceptance -- --exact --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.09s
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1071 filtered out; finished in 16.96s
+```
+**37. [.temp/brief-559/serial/stdlib.txt](../../../.temp/brief-559/serial/stdlib.txt) — bound 1800.0s; exit 0; elapsed 1046.980531830981s**
+
+```text
+python3 scripts/run-bounded.py --timeout 1800 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo test -p rum-stdlib
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+test result: ok. 1025 passed; 0 failed; 53 ignored; 0 measured; 0 filtered out; finished in 1045.23s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 47 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.80s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+**38. [.temp/brief-559/serial/workspace.txt](../../../.temp/brief-559/serial/workspace.txt) — bound 2200.0s; exit 101; elapsed 185.48040424397914s**
+
+```text
+python3 scripts/run-bounded.py --timeout 2200 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1 cargo test --workspace -- --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3m 05s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.00s
+test result: FAILED. 12 passed; 3 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+error: test failed, to rerun pass `-p rum-cli --bin rum-cli`
+```
+**39. [.temp/brief-559/fourth/cli-serial.txt](../../../.temp/brief-559/fourth/cli-serial.txt) — bound 240.0s; exit 0; elapsed 37.16123390299617s**
+
+```text
+python3 scripts/run-bounded.py --timeout 240 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo test -p rum-cli
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 35.93s
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.67s
+```
+**40. [.temp/brief-559/fourth/cli-default-threads.txt](../../../.temp/brief-559/fourth/cli-default-threads.txt) — bound 110.0s; exit 0; elapsed 0.41530501598026603s**
+
+```text
+python3 scripts/run-bounded.py --timeout 110 -- env -u RUST_TEST_THREADS CARGO_BUILD_JOBS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo test -p rum-cli
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.07s
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+```
+**41. [.temp/brief-559/fourth/fmt-check.txt](../../../.temp/brief-559/fourth/fmt-check.txt) — bound 30.0s; exit 0; elapsed 1.870673027005978s**
+
+```text
+python3 scripts/run-bounded.py --timeout 30 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo fmt --check
+```
+No stdout/stderr was emitted.
+
+**42. [.temp/brief-559/fourth/ownership-discovery.txt](../../../.temp/brief-559/fourth/ownership-discovery.txt) — bound 80.0s; exit 0; elapsed 5.479600405000383s**
+
+```text
+python3 scripts/run-bounded.py --timeout 80 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo test -p rum-stdlib --lib tests::ownership_graph::discovery_report_without_inventory_input -- --exact --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+test tests::ownership_graph::discovery_report_without_inventory_input ... UnknownHostPayload count: 63
+UnknownConstruct count: 7562
+Self-reaching type count: 60
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1077 filtered out; finished in 5.36s
+```
+**43. [.temp/brief-559/fourth/regenerate-fingerprints.txt](../../../.temp/brief-559/fourth/regenerate-fingerprints.txt) — bound 24.0s; exit 0; elapsed 0.2647349509934429s**
+
+```text
+python3 scripts/run-bounded.py --timeout 24 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo test -p rum-stdlib --lib tests::retention_closure::local::contract_tests::regenerate_local_contract_fingerprints -- --exact --ignored --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+test tests::retention_closure::local::contract_tests::regenerate_local_contract_fingerprints ... Regenerated 68 fingerprints at /home/remi/dev/rum/target/brief-544/local-contracts.tsv
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1077 filtered out; finished in 0.14s
+```
+**44. [.temp/brief-559/fourth/reconcile.txt](../../../.temp/brief-559/fourth/reconcile.txt) — bound 24.0s; exit 0; elapsed 0.16520874699926935s**
+
+```text
+python3 scripts/run-bounded.py --timeout 24 -- python3 .temp/brief-559/fourth/reconcile.py
+```
+```text
+host_payloads.tsv: 63 -> 63; added=0; positions=0; removed=0
+unknown_attributes.tsv: 1429 -> 1434; added=5; positions=9; removed=0
+unknown_captures.tsv: 2932 -> 2938; added=6; positions=24; removed=0
+unknown_macros.tsv: 3097 -> 3102; added=5; positions=17; removed=0
+unknown_storage.tsv: 88 -> 88; added=0; positions=0; removed=0
+Contract fingerprints: 68 refreshed; 68 regenerated; first 18 fields identical; 62 Discharged, 6 Pending unchanged.
+```
+**45. [.temp/brief-559/fourth/cert-default-generate.txt](../../../.temp/brief-559/fourth/cert-default-generate.txt) — bound 120.0s; exit 101; elapsed 31.034172851999756s**
+
+```text
+python3 scripts/run-bounded.py --timeout 120 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo test -p rum-stdlib --lib tests::retention_closure::local::production::local_production_acceptance -- --exact --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 14.04s
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1077 filtered out; finished in 16.88s
+called `Result::unwrap()` on an `Err` value: "stale or omitted instance certificate C01 hash=true"
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+**46. [.temp/brief-559/fourth/cert-nodefault-generate.txt](../../../.temp/brief-559/fourth/cert-nodefault-generate.txt) — bound 130.0s; exit 101; elapsed 32.2428607030015s**
+
+```text
+python3 scripts/run-bounded.py --timeout 130 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo test -p rum-stdlib --no-default-features --lib tests::retention_closure::local::production::local_production_acceptance -- --exact --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.05s
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1071 filtered out; finished in 17.04s
+called `Result::unwrap()` on an `Err` value: "stale or omitted instance certificate C01 hash=false"
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+**47. [.temp/brief-559/fourth/install-certificates.txt](../../../.temp/brief-559/fourth/install-certificates.txt) — bound 24.0s; exit 0; elapsed 0.06452120101312175s**
+
+```text
+python3 scripts/run-bounded.py --timeout 24 -- python3 .temp/brief-559/fourth/install-certificates.py
+```
+```text
+Replayed four certificate cells; C01/C02 identities/status/source/preconditions/strength/exclusions unchanged.
+```
+**48. [.temp/brief-559/fourth/workspace.txt](../../../.temp/brief-559/fourth/workspace.txt) — bound 2200.0s; exit 0; elapsed 1011.8540624229936s**
+
+```text
+python3 scripts/run-bounded.py --timeout 2200 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1 cargo test --workspace -- --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 22.95s
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.67s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.49s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.25s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.19s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.18s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.11s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.72s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.73s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 44.06s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.23s
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.81s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.25s
+test result: ok. 151 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.52s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.25s
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+test result: ok. 1094 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 19.01s
+test tests::ownership_graph::discovery_report_without_inventory_input ... UnknownHostPayload count: 63
+UnknownConstruct count: 7562
+Self-reaching type count: 60
+EXACT INVENTORY UnknownHostPayload: 63 rows
+EXACT INVENTORY UnknownConstruct: 7562 rows
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+PRODUCTION_BODY_ROWS=2 N=78 UNSPLIT=147 UNSETTLED=90 LOCAL_OPTION_BODIES=2 PENDING=315
+test result: ok. 1025 passed; 0 failed; 53 ignored; 0 measured; 0 filtered out; finished in 905.38s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 47 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.79s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+test result: ok. 193 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.33s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.31s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.19s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+**49. [.temp/brief-559/fourth/retention-nodefault.txt](../../../.temp/brief-559/fourth/retention-nodefault.txt) — bound 2200.0s; exit 0; elapsed 896.8441565249814s**
+
+```text
+python3 scripts/run-bounded.py --timeout 2200 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo test -p rum-stdlib --no-default-features --lib tests::retention_closure -- --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 14.71s
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+PRODUCTION_BODY_ROWS=2 N=78 UNSPLIT=147 UNSETTLED=90 LOCAL_OPTION_BODIES=2 PENDING=315
+test result: ok. 49 passed; 0 failed; 1 ignored; 0 measured; 1022 filtered out; finished in 881.97s
+```
+**50. [.temp/brief-559/fourth/scope-audit.txt](../../../.temp/brief-559/fourth/scope-audit.txt) — bound 24.0s; exit 0; elapsed 0.16441969899460673s**
+
+```text
+python3 scripts/run-bounded.py --timeout 24 -- python3 .temp/brief-559/fourth/audit.py
+```
+```text
+Scope audit: 13 original crate files changed; one new integration test; no unrelated Rust/config/dependency change.
+Fourth run changed exactly CLI child invocation and two retention inventories; assertions and brief prefix preserved.
+```
+**51. [.temp/brief-559/fourth/candidate-default-build.txt](../../../.temp/brief-559/fourth/candidate-default-build.txt) — bound 400.0s; exit 0; elapsed 108.35064043701277s**
+
+```text
+python3 scripts/run-bounded.py --timeout 400 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo build --release --target-dir .temp/brief-559/candidate/target -p rum-cli
+```
+```text
+    Finished `release` profile [optimized] target(s) in 1m 48s
+```
+**52. [.temp/brief-559/fourth/candidate-alloc-build.txt](../../../.temp/brief-559/fourth/candidate-alloc-build.txt) — bound 240.0s; exit 0; elapsed 2.321019573020749s**
+
+```text
+python3 scripts/run-bounded.py --timeout 240 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo build --release --target-dir .temp/brief-559/candidate/target -p rum-cli --features alloc-count
+```
+```text
+    Finished `release` profile [optimized] target(s) in 2.23s
+```
+**53. [.temp/brief-559/fourth/alloc-base.txt](../../../.temp/brief-559/fourth/alloc-base.txt) — bound 200.0s; exit 0; elapsed 2.8758903830021154s**
+
+```text
+python3 scripts/run-bounded.py --timeout 200 -- python3 .temp/brief-559/fourth/perf-panel.py alloc base 1
+```
+Panel rows below are a reduction of the saved JSON records; the individual commands, bounds, statuses and literal stdout/stderr/perf rows are copied in the benchmark ledger.
+
+```text
+scan-no-input	N=20000	build=base	sample=1	exit=0
+scan-no-input	N=40000	build=base	sample=1	exit=0
+optionvalue-three-no-input	N=20000	build=base	sample=1	exit=0
+optionvalue-three-no-input	N=40000	build=base	sample=1	exit=0
+replacerepeated-no-input	N=20000	build=base	sample=1	exit=0
+replacerepeated-no-input	N=40000	build=base	sample=1	exit=0
+dot-three-no-input	N=20000	build=base	sample=1	exit=0
+dot-three-no-input	N=40000	build=base	sample=1	exit=0
+differences-no-input	N=20000	build=base	sample=1	exit=0
+differences-no-input	N=40000	build=base	sample=1	exit=0
+do-count-null	N=20000	build=base	sample=1	exit=0
+do-count-null	N=40000	build=base	sample=1	exit=0
+do-iterator-null	N=20000	build=base	sample=1	exit=0
+do-iterator-null	N=40000	build=base	sample=1	exit=0
+table-iterator-null	N=20000	build=base	sample=1	exit=0
+table-iterator-null	N=40000	build=base	sample=1	exit=0
+replaceall-simple	N=20000	build=base	sample=1	exit=0
+replaceall-simple	N=40000	build=base	sample=1	exit=0
+```
+**54. [.temp/brief-559/fourth/alloc-candidate.txt](../../../.temp/brief-559/fourth/alloc-candidate.txt) — bound 20.0s; exit 0; elapsed 2.875351091992343s**
+
+```text
+python3 scripts/run-bounded.py --timeout 20 -- python3 .temp/brief-559/fourth/perf-panel.py alloc candidate 1
+```
+Panel rows below are a reduction of the saved JSON records; the individual commands, bounds, statuses and literal stdout/stderr/perf rows are copied in the benchmark ledger.
+
+```text
+scan-no-input	N=20000	build=candidate	sample=1	exit=0
+scan-no-input	N=40000	build=candidate	sample=1	exit=0
+optionvalue-three-no-input	N=20000	build=candidate	sample=1	exit=0
+optionvalue-three-no-input	N=40000	build=candidate	sample=1	exit=0
+replacerepeated-no-input	N=20000	build=candidate	sample=1	exit=0
+replacerepeated-no-input	N=40000	build=candidate	sample=1	exit=0
+dot-three-no-input	N=20000	build=candidate	sample=1	exit=0
+dot-three-no-input	N=40000	build=candidate	sample=1	exit=0
+differences-no-input	N=20000	build=candidate	sample=1	exit=0
+differences-no-input	N=40000	build=candidate	sample=1	exit=0
+do-count-null	N=20000	build=candidate	sample=1	exit=0
+do-count-null	N=40000	build=candidate	sample=1	exit=0
+do-iterator-null	N=20000	build=candidate	sample=1	exit=0
+do-iterator-null	N=40000	build=candidate	sample=1	exit=0
+table-iterator-null	N=20000	build=candidate	sample=1	exit=0
+table-iterator-null	N=40000	build=candidate	sample=1	exit=0
+replaceall-simple	N=20000	build=candidate	sample=1	exit=0
+replaceall-simple	N=40000	build=candidate	sample=1	exit=0
+```
+**55. [.temp/brief-559/fourth/instructions-base-1.txt](../../../.temp/brief-559/fourth/instructions-base-1.txt) — bound 40.0s; exit 0; elapsed 2.921211287000915s**
+
+```text
+python3 scripts/run-bounded.py --timeout 40 -- python3 .temp/brief-559/fourth/perf-panel.py instructions base 1
+```
+Panel rows below are a reduction of the saved JSON records; the individual commands, bounds, statuses and literal stdout/stderr/perf rows are copied in the benchmark ledger.
+
+```text
+scan-no-input	N=20000	build=base	sample=1	exit=0
+scan-no-input	N=40000	build=base	sample=1	exit=0
+optionvalue-three-no-input	N=20000	build=base	sample=1	exit=0
+optionvalue-three-no-input	N=40000	build=base	sample=1	exit=0
+replacerepeated-no-input	N=20000	build=base	sample=1	exit=0
+replacerepeated-no-input	N=40000	build=base	sample=1	exit=0
+dot-three-no-input	N=20000	build=base	sample=1	exit=0
+dot-three-no-input	N=40000	build=base	sample=1	exit=0
+differences-no-input	N=20000	build=base	sample=1	exit=0
+differences-no-input	N=40000	build=base	sample=1	exit=0
+do-count-null	N=20000	build=base	sample=1	exit=0
+do-count-null	N=40000	build=base	sample=1	exit=0
+do-iterator-null	N=20000	build=base	sample=1	exit=0
+do-iterator-null	N=40000	build=base	sample=1	exit=0
+table-iterator-null	N=20000	build=base	sample=1	exit=0
+table-iterator-null	N=40000	build=base	sample=1	exit=0
+replaceall-simple	N=20000	build=base	sample=1	exit=0
+replaceall-simple	N=40000	build=base	sample=1	exit=0
+```
+**56. [.temp/brief-559/fourth/instructions-candidate-1.txt](../../../.temp/brief-559/fourth/instructions-candidate-1.txt) — bound 40.0s; exit 0; elapsed 2.9228999399929307s**
+
+```text
+python3 scripts/run-bounded.py --timeout 40 -- python3 .temp/brief-559/fourth/perf-panel.py instructions candidate 1
+```
+Panel rows below are a reduction of the saved JSON records; the individual commands, bounds, statuses and literal stdout/stderr/perf rows are copied in the benchmark ledger.
+
+```text
+scan-no-input	N=20000	build=candidate	sample=1	exit=0
+scan-no-input	N=40000	build=candidate	sample=1	exit=0
+optionvalue-three-no-input	N=20000	build=candidate	sample=1	exit=0
+optionvalue-three-no-input	N=40000	build=candidate	sample=1	exit=0
+replacerepeated-no-input	N=20000	build=candidate	sample=1	exit=0
+replacerepeated-no-input	N=40000	build=candidate	sample=1	exit=0
+dot-three-no-input	N=20000	build=candidate	sample=1	exit=0
+dot-three-no-input	N=40000	build=candidate	sample=1	exit=0
+differences-no-input	N=20000	build=candidate	sample=1	exit=0
+differences-no-input	N=40000	build=candidate	sample=1	exit=0
+do-count-null	N=20000	build=candidate	sample=1	exit=0
+do-count-null	N=40000	build=candidate	sample=1	exit=0
+do-iterator-null	N=20000	build=candidate	sample=1	exit=0
+do-iterator-null	N=40000	build=candidate	sample=1	exit=0
+table-iterator-null	N=20000	build=candidate	sample=1	exit=0
+table-iterator-null	N=40000	build=candidate	sample=1	exit=0
+replaceall-simple	N=20000	build=candidate	sample=1	exit=0
+replaceall-simple	N=40000	build=candidate	sample=1	exit=0
+```
+**57. [.temp/brief-559/fourth/instructions-base-2.txt](../../../.temp/brief-559/fourth/instructions-base-2.txt) — bound 40.0s; exit 0; elapsed 2.875528206001036s**
+
+```text
+python3 scripts/run-bounded.py --timeout 40 -- python3 .temp/brief-559/fourth/perf-panel.py instructions base 2
+```
+Panel rows below are a reduction of the saved JSON records; the individual commands, bounds, statuses and literal stdout/stderr/perf rows are copied in the benchmark ledger.
+
+```text
+scan-no-input	N=20000	build=base	sample=2	exit=0
+scan-no-input	N=40000	build=base	sample=2	exit=0
+optionvalue-three-no-input	N=20000	build=base	sample=2	exit=0
+optionvalue-three-no-input	N=40000	build=base	sample=2	exit=0
+replacerepeated-no-input	N=20000	build=base	sample=2	exit=0
+replacerepeated-no-input	N=40000	build=base	sample=2	exit=0
+dot-three-no-input	N=20000	build=base	sample=2	exit=0
+dot-three-no-input	N=40000	build=base	sample=2	exit=0
+differences-no-input	N=20000	build=base	sample=2	exit=0
+differences-no-input	N=40000	build=base	sample=2	exit=0
+do-count-null	N=20000	build=base	sample=2	exit=0
+do-count-null	N=40000	build=base	sample=2	exit=0
+do-iterator-null	N=20000	build=base	sample=2	exit=0
+do-iterator-null	N=40000	build=base	sample=2	exit=0
+table-iterator-null	N=20000	build=base	sample=2	exit=0
+table-iterator-null	N=40000	build=base	sample=2	exit=0
+replaceall-simple	N=20000	build=base	sample=2	exit=0
+replaceall-simple	N=40000	build=base	sample=2	exit=0
+```
+**58. [.temp/brief-559/fourth/instructions-candidate-2.txt](../../../.temp/brief-559/fourth/instructions-candidate-2.txt) — bound 40.0s; exit 0; elapsed 2.9719649410108104s**
+
+```text
+python3 scripts/run-bounded.py --timeout 40 -- python3 .temp/brief-559/fourth/perf-panel.py instructions candidate 2
+```
+Panel rows below are a reduction of the saved JSON records; the individual commands, bounds, statuses and literal stdout/stderr/perf rows are copied in the benchmark ledger.
+
+```text
+scan-no-input	N=20000	build=candidate	sample=2	exit=0
+scan-no-input	N=40000	build=candidate	sample=2	exit=0
+optionvalue-three-no-input	N=20000	build=candidate	sample=2	exit=0
+optionvalue-three-no-input	N=40000	build=candidate	sample=2	exit=0
+replacerepeated-no-input	N=20000	build=candidate	sample=2	exit=0
+replacerepeated-no-input	N=40000	build=candidate	sample=2	exit=0
+dot-three-no-input	N=20000	build=candidate	sample=2	exit=0
+dot-three-no-input	N=40000	build=candidate	sample=2	exit=0
+differences-no-input	N=20000	build=candidate	sample=2	exit=0
+differences-no-input	N=40000	build=candidate	sample=2	exit=0
+do-count-null	N=20000	build=candidate	sample=2	exit=0
+do-count-null	N=40000	build=candidate	sample=2	exit=0
+do-iterator-null	N=20000	build=candidate	sample=2	exit=0
+do-iterator-null	N=40000	build=candidate	sample=2	exit=0
+table-iterator-null	N=20000	build=candidate	sample=2	exit=0
+table-iterator-null	N=40000	build=candidate	sample=2	exit=0
+replaceall-simple	N=20000	build=candidate	sample=2	exit=0
+replaceall-simple	N=40000	build=candidate	sample=2	exit=0
+```
+**59. [.temp/brief-559/fourth/inline-loops.txt](../../../.temp/brief-559/fourth/inline-loops.txt) — bound 80.0s; exit 0; elapsed 17.12255647900747s**
+
+```text
+python3 scripts/run-bounded.py --timeout 80 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo test -p rum-stdlib --test loop_continuations -- --nocapture --test-threads=1
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 16.91s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+```
+**60. [.temp/brief-559/fourth/inline-default-build.txt](../../../.temp/brief-559/fourth/inline-default-build.txt) — bound 240.0s; exit 0; elapsed 87.91308905699407s**
+
+```text
+python3 scripts/run-bounded.py --timeout 240 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo build --release --target-dir .temp/brief-559/candidate/target -p rum-cli
+```
+```text
+    Finished `release` profile [optimized] target(s) in 1m 27s
+```
+**61. [.temp/brief-559/fourth/inline-alloc-build.txt](../../../.temp/brief-559/fourth/inline-alloc-build.txt) — bound 20.0s; exit 0; elapsed 2.3199244209972676s**
+
+```text
+python3 scripts/run-bounded.py --timeout 20 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo build --release --target-dir .temp/brief-559/candidate/target -p rum-cli --features alloc-count
+```
+```text
+    Finished `release` profile [optimized] target(s) in 2.25s
+```
+**62. [.temp/brief-559/fourth/alloc-inline.txt](../../../.temp/brief-559/fourth/alloc-inline.txt) — bound 20.0s; exit 0; elapsed 2.9271197720081545s**
+
+```text
+python3 scripts/run-bounded.py --timeout 20 -- python3 .temp/brief-559/fourth/perf-panel.py alloc candidate-inline 1
+```
+Panel rows below are a reduction of the saved JSON records; the individual commands, bounds, statuses and literal stdout/stderr/perf rows are copied in the benchmark ledger.
+
+```text
+scan-no-input	N=20000	build=candidate-inline	sample=1	exit=0
+scan-no-input	N=40000	build=candidate-inline	sample=1	exit=0
+optionvalue-three-no-input	N=20000	build=candidate-inline	sample=1	exit=0
+optionvalue-three-no-input	N=40000	build=candidate-inline	sample=1	exit=0
+replacerepeated-no-input	N=20000	build=candidate-inline	sample=1	exit=0
+replacerepeated-no-input	N=40000	build=candidate-inline	sample=1	exit=0
+dot-three-no-input	N=20000	build=candidate-inline	sample=1	exit=0
+dot-three-no-input	N=40000	build=candidate-inline	sample=1	exit=0
+differences-no-input	N=20000	build=candidate-inline	sample=1	exit=0
+differences-no-input	N=40000	build=candidate-inline	sample=1	exit=0
+do-count-null	N=20000	build=candidate-inline	sample=1	exit=0
+do-count-null	N=40000	build=candidate-inline	sample=1	exit=0
+do-iterator-null	N=20000	build=candidate-inline	sample=1	exit=0
+do-iterator-null	N=40000	build=candidate-inline	sample=1	exit=0
+table-iterator-null	N=20000	build=candidate-inline	sample=1	exit=0
+table-iterator-null	N=40000	build=candidate-inline	sample=1	exit=0
+replaceall-simple	N=20000	build=candidate-inline	sample=1	exit=0
+replaceall-simple	N=40000	build=candidate-inline	sample=1	exit=0
+```
+**63. [.temp/brief-559/fourth/instructions-inline-1.txt](../../../.temp/brief-559/fourth/instructions-inline-1.txt) — bound 20.0s; exit 0; elapsed 3.023626897018403s**
+
+```text
+python3 scripts/run-bounded.py --timeout 20 -- python3 .temp/brief-559/fourth/perf-panel.py instructions candidate-inline 1
+```
+Panel rows below are a reduction of the saved JSON records; the individual commands, bounds, statuses and literal stdout/stderr/perf rows are copied in the benchmark ledger.
+
+```text
+scan-no-input	N=20000	build=candidate-inline	sample=1	exit=0
+scan-no-input	N=40000	build=candidate-inline	sample=1	exit=0
+optionvalue-three-no-input	N=20000	build=candidate-inline	sample=1	exit=0
+optionvalue-three-no-input	N=40000	build=candidate-inline	sample=1	exit=0
+replacerepeated-no-input	N=20000	build=candidate-inline	sample=1	exit=0
+replacerepeated-no-input	N=40000	build=candidate-inline	sample=1	exit=0
+dot-three-no-input	N=20000	build=candidate-inline	sample=1	exit=0
+dot-three-no-input	N=40000	build=candidate-inline	sample=1	exit=0
+differences-no-input	N=20000	build=candidate-inline	sample=1	exit=0
+differences-no-input	N=40000	build=candidate-inline	sample=1	exit=0
+do-count-null	N=20000	build=candidate-inline	sample=1	exit=0
+do-count-null	N=40000	build=candidate-inline	sample=1	exit=0
+do-iterator-null	N=20000	build=candidate-inline	sample=1	exit=0
+do-iterator-null	N=40000	build=candidate-inline	sample=1	exit=0
+table-iterator-null	N=20000	build=candidate-inline	sample=1	exit=0
+table-iterator-null	N=40000	build=candidate-inline	sample=1	exit=0
+replaceall-simple	N=20000	build=candidate-inline	sample=1	exit=0
+replaceall-simple	N=40000	build=candidate-inline	sample=1	exit=0
+```
+**64. [.temp/brief-559/fourth/instructions-inline-2.txt](../../../.temp/brief-559/fourth/instructions-inline-2.txt) — bound 20.0s; exit 0; elapsed 2.9230357479827944s**
+
+```text
+python3 scripts/run-bounded.py --timeout 20 -- python3 .temp/brief-559/fourth/perf-panel.py instructions candidate-inline 2
+```
+Panel rows below are a reduction of the saved JSON records; the individual commands, bounds, statuses and literal stdout/stderr/perf rows are copied in the benchmark ledger.
+
+```text
+scan-no-input	N=20000	build=candidate-inline	sample=2	exit=0
+scan-no-input	N=40000	build=candidate-inline	sample=2	exit=0
+optionvalue-three-no-input	N=20000	build=candidate-inline	sample=2	exit=0
+optionvalue-three-no-input	N=40000	build=candidate-inline	sample=2	exit=0
+replacerepeated-no-input	N=20000	build=candidate-inline	sample=2	exit=0
+replacerepeated-no-input	N=40000	build=candidate-inline	sample=2	exit=0
+dot-three-no-input	N=20000	build=candidate-inline	sample=2	exit=0
+dot-three-no-input	N=40000	build=candidate-inline	sample=2	exit=0
+differences-no-input	N=20000	build=candidate-inline	sample=2	exit=0
+differences-no-input	N=40000	build=candidate-inline	sample=2	exit=0
+do-count-null	N=20000	build=candidate-inline	sample=2	exit=0
+do-count-null	N=40000	build=candidate-inline	sample=2	exit=0
+do-iterator-null	N=20000	build=candidate-inline	sample=2	exit=0
+do-iterator-null	N=40000	build=candidate-inline	sample=2	exit=0
+table-iterator-null	N=20000	build=candidate-inline	sample=2	exit=0
+table-iterator-null	N=40000	build=candidate-inline	sample=2	exit=0
+replaceall-simple	N=20000	build=candidate-inline	sample=2	exit=0
+replaceall-simple	N=40000	build=candidate-inline	sample=2	exit=0
+```
+**65. [.temp/brief-559/fourth/cold-loops.txt](../../../.temp/brief-559/fourth/cold-loops.txt) — bound 80.0s; exit 0; elapsed 16.225860025995644s**
+
+```text
+python3 scripts/run-bounded.py --timeout 80 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo test -p rum-stdlib --test loop_continuations -- --nocapture --test-threads=1
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.97s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+```
+**66. [.temp/brief-559/fourth/perf-fmt-check.txt](../../../.temp/brief-559/fourth/perf-fmt-check.txt) — bound 30.0s; exit 1; elapsed 1.8700956930115353s**
+
+```text
+python3 scripts/run-bounded.py --timeout 30 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo fmt --check
+```
+```text
+Diff in /home/remi/dev/rum/crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/repeated.rs:155:
+Diff in /home/remi/dev/rum/crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/repeated.rs:162:
+```
+**67. [.temp/brief-559/fourth/cold-default-build.txt](../../../.temp/brief-559/fourth/cold-default-build.txt) — bound 180.0s; exit 0; elapsed 88.16959619001136s**
+
+```text
+python3 scripts/run-bounded.py --timeout 180 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo build --release --target-dir .temp/brief-559/candidate/target -p rum-cli
+```
+```text
+    Finished `release` profile [optimized] target(s) in 1m 28s
+```
+**68. [.temp/brief-559/fourth/cold-alloc-build.txt](../../../.temp/brief-559/fourth/cold-alloc-build.txt) — bound 20.0s; exit 0; elapsed 2.3209038139902987s**
+
+```text
+python3 scripts/run-bounded.py --timeout 20 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo build --release --target-dir .temp/brief-559/candidate/target -p rum-cli --features alloc-count
+```
+```text
+    Finished `release` profile [optimized] target(s) in 2.24s
+```
+**69. [.temp/brief-559/fourth/alloc-cold.txt](../../../.temp/brief-559/fourth/alloc-cold.txt) — bound 20.0s; exit 0; elapsed 2.9252826960000675s**
+
+```text
+python3 scripts/run-bounded.py --timeout 20 -- python3 .temp/brief-559/fourth/perf-panel.py alloc candidate-cold 1
+```
+Panel rows below are a reduction of the saved JSON records; the individual commands, bounds, statuses and literal stdout/stderr/perf rows are copied in the benchmark ledger.
+
+```text
+scan-no-input	N=20000	build=candidate-cold	sample=1	exit=0
+scan-no-input	N=40000	build=candidate-cold	sample=1	exit=0
+optionvalue-three-no-input	N=20000	build=candidate-cold	sample=1	exit=0
+optionvalue-three-no-input	N=40000	build=candidate-cold	sample=1	exit=0
+replacerepeated-no-input	N=20000	build=candidate-cold	sample=1	exit=0
+replacerepeated-no-input	N=40000	build=candidate-cold	sample=1	exit=0
+dot-three-no-input	N=20000	build=candidate-cold	sample=1	exit=0
+dot-three-no-input	N=40000	build=candidate-cold	sample=1	exit=0
+differences-no-input	N=20000	build=candidate-cold	sample=1	exit=0
+differences-no-input	N=40000	build=candidate-cold	sample=1	exit=0
+do-count-null	N=20000	build=candidate-cold	sample=1	exit=0
+do-count-null	N=40000	build=candidate-cold	sample=1	exit=0
+do-iterator-null	N=20000	build=candidate-cold	sample=1	exit=0
+do-iterator-null	N=40000	build=candidate-cold	sample=1	exit=0
+table-iterator-null	N=20000	build=candidate-cold	sample=1	exit=0
+table-iterator-null	N=40000	build=candidate-cold	sample=1	exit=0
+replaceall-simple	N=20000	build=candidate-cold	sample=1	exit=0
+replaceall-simple	N=40000	build=candidate-cold	sample=1	exit=0
+```
+**70. [.temp/brief-559/fourth/instructions-cold-1.txt](../../../.temp/brief-559/fourth/instructions-cold-1.txt) — bound 20.0s; exit 0; elapsed 2.9223971929750405s**
+
+```text
+python3 scripts/run-bounded.py --timeout 20 -- python3 .temp/brief-559/fourth/perf-panel.py instructions candidate-cold 1
+```
+Panel rows below are a reduction of the saved JSON records; the individual commands, bounds, statuses and literal stdout/stderr/perf rows are copied in the benchmark ledger.
+
+```text
+scan-no-input	N=20000	build=candidate-cold	sample=1	exit=0
+scan-no-input	N=40000	build=candidate-cold	sample=1	exit=0
+optionvalue-three-no-input	N=20000	build=candidate-cold	sample=1	exit=0
+optionvalue-three-no-input	N=40000	build=candidate-cold	sample=1	exit=0
+replacerepeated-no-input	N=20000	build=candidate-cold	sample=1	exit=0
+replacerepeated-no-input	N=40000	build=candidate-cold	sample=1	exit=0
+dot-three-no-input	N=20000	build=candidate-cold	sample=1	exit=0
+dot-three-no-input	N=40000	build=candidate-cold	sample=1	exit=0
+differences-no-input	N=20000	build=candidate-cold	sample=1	exit=0
+differences-no-input	N=40000	build=candidate-cold	sample=1	exit=0
+do-count-null	N=20000	build=candidate-cold	sample=1	exit=0
+do-count-null	N=40000	build=candidate-cold	sample=1	exit=0
+do-iterator-null	N=20000	build=candidate-cold	sample=1	exit=0
+do-iterator-null	N=40000	build=candidate-cold	sample=1	exit=0
+table-iterator-null	N=20000	build=candidate-cold	sample=1	exit=0
+table-iterator-null	N=40000	build=candidate-cold	sample=1	exit=0
+replaceall-simple	N=20000	build=candidate-cold	sample=1	exit=0
+replaceall-simple	N=40000	build=candidate-cold	sample=1	exit=0
+```
+**71. [.temp/brief-559/fourth/instructions-cold-2.txt](../../../.temp/brief-559/fourth/instructions-cold-2.txt) — bound 20.0s; exit 0; elapsed 2.9708847900037654s**
+
+```text
+python3 scripts/run-bounded.py --timeout 20 -- python3 .temp/brief-559/fourth/perf-panel.py instructions candidate-cold 2
+```
+Panel rows below are a reduction of the saved JSON records; the individual commands, bounds, statuses and literal stdout/stderr/perf rows are copied in the benchmark ledger.
+
+```text
+scan-no-input	N=20000	build=candidate-cold	sample=2	exit=0
+scan-no-input	N=40000	build=candidate-cold	sample=2	exit=0
+optionvalue-three-no-input	N=20000	build=candidate-cold	sample=2	exit=0
+optionvalue-three-no-input	N=40000	build=candidate-cold	sample=2	exit=0
+replacerepeated-no-input	N=20000	build=candidate-cold	sample=2	exit=0
+replacerepeated-no-input	N=40000	build=candidate-cold	sample=2	exit=0
+dot-three-no-input	N=20000	build=candidate-cold	sample=2	exit=0
+dot-three-no-input	N=40000	build=candidate-cold	sample=2	exit=0
+differences-no-input	N=20000	build=candidate-cold	sample=2	exit=0
+differences-no-input	N=40000	build=candidate-cold	sample=2	exit=0
+do-count-null	N=20000	build=candidate-cold	sample=2	exit=0
+do-count-null	N=40000	build=candidate-cold	sample=2	exit=0
+do-iterator-null	N=20000	build=candidate-cold	sample=2	exit=0
+do-iterator-null	N=40000	build=candidate-cold	sample=2	exit=0
+table-iterator-null	N=20000	build=candidate-cold	sample=2	exit=0
+table-iterator-null	N=40000	build=candidate-cold	sample=2	exit=0
+replaceall-simple	N=20000	build=candidate-cold	sample=2	exit=0
+replaceall-simple	N=40000	build=candidate-cold	sample=2	exit=0
+```
+**72. [.temp/brief-559/fourth/restored-scope-audit.txt](../../../.temp/brief-559/fourth/restored-scope-audit.txt) — bound 24.0s; exit 0; elapsed 0.16454199599684216s**
+
+```text
+python3 scripts/run-bounded.py --timeout 24 -- python3 .temp/brief-559/fourth/audit.py
+```
+```text
+Scope audit: 13 original crate files changed; one new integration test; no unrelated Rust/config/dependency change.
+Fourth run changed exactly CLI child invocation and two retention inventories; assertions and brief prefix preserved.
+```
+**73. [.temp/brief-559/fourth/timing-base-1.txt](../../../.temp/brief-559/fourth/timing-base-1.txt) — bound 14.0s; exit 0; elapsed 1.6703780730022117s**
+
+```text
+python3 scripts/run-bounded.py --timeout 14 -- python3 .temp/brief-559/fourth/timing-run.py base 1
+```
+```text
+python3 scripts/run-bounded.py --timeout 14 -- taskset -c 2 scripts/core-language-microbench.sh --output-dir /home/remi/dev/rum/.temp/brief-559/fourth/perf/timing/base/1 --timeout 10 --build-timeout 300 --scale 1 --reps 7 --rum-cli /home/remi/dev/rum/.temp/brief-559/base/rum-cli < /dev/null
+core microbench output: /home/remi/dev/rum/.temp/brief-559/fourth/perf/timing/base/1
+```
+**74. [.temp/brief-559/fourth/timing-candidate-1.txt](../../../.temp/brief-559/fourth/timing-candidate-1.txt) — bound 14.0s; exit 0; elapsed 1.568512441997882s**
+
+```text
+python3 scripts/run-bounded.py --timeout 14 -- python3 .temp/brief-559/fourth/timing-run.py candidate 1
+```
+```text
+python3 scripts/run-bounded.py --timeout 14 -- taskset -c 2 scripts/core-language-microbench.sh --output-dir /home/remi/dev/rum/.temp/brief-559/fourth/perf/timing/candidate/1 --timeout 10 --build-timeout 300 --scale 1 --reps 7 --rum-cli /home/remi/dev/rum/.temp/brief-559/candidate/rum-cli < /dev/null
+core microbench output: /home/remi/dev/rum/.temp/brief-559/fourth/perf/timing/candidate/1
+```
+**75. [.temp/brief-559/fourth/timing-candidate-2.txt](../../../.temp/brief-559/fourth/timing-candidate-2.txt) — bound 14.0s; exit 0; elapsed 1.570156253001187s**
+
+```text
+python3 scripts/run-bounded.py --timeout 14 -- python3 .temp/brief-559/fourth/timing-run.py candidate 2
+```
+```text
+python3 scripts/run-bounded.py --timeout 14 -- taskset -c 2 scripts/core-language-microbench.sh --output-dir /home/remi/dev/rum/.temp/brief-559/fourth/perf/timing/candidate/2 --timeout 10 --build-timeout 300 --scale 1 --reps 7 --rum-cli /home/remi/dev/rum/.temp/brief-559/candidate/rum-cli < /dev/null
+core microbench output: /home/remi/dev/rum/.temp/brief-559/fourth/perf/timing/candidate/2
+```
+**76. [.temp/brief-559/fourth/timing-base-2.txt](../../../.temp/brief-559/fourth/timing-base-2.txt) — bound 14.0s; exit 0; elapsed 1.5700311709952075s**
+
+```text
+python3 scripts/run-bounded.py --timeout 14 -- python3 .temp/brief-559/fourth/timing-run.py base 2
+```
+```text
+python3 scripts/run-bounded.py --timeout 14 -- taskset -c 2 scripts/core-language-microbench.sh --output-dir /home/remi/dev/rum/.temp/brief-559/fourth/perf/timing/base/2 --timeout 10 --build-timeout 300 --scale 1 --reps 7 --rum-cli /home/remi/dev/rum/.temp/brief-559/base/rum-cli < /dev/null
+core microbench output: /home/remi/dev/rum/.temp/brief-559/fourth/perf/timing/base/2
+```
+**77. [.temp/brief-559/fourth/scratch-timing-base.txt](../../../.temp/brief-559/fourth/scratch-timing-base.txt) — bound 40.0s; exit 0; elapsed 2.321660462010186s**
+
+```text
+python3 scripts/run-bounded.py --timeout 40 -- python3 .temp/brief-559/fourth/perf-panel.py scratch-timing base 1
+```
+Panel rows below are a reduction of the saved JSON records; the individual commands, bounds, statuses and literal stdout/stderr/perf rows are copied in the benchmark ledger.
+
+```text
+scan-no-input	N=20000	build=base	sample=1	exit=0
+optionvalue-three-no-input	N=20000	build=base	sample=1	exit=0
+replacerepeated-no-input	N=20000	build=base	sample=1	exit=0
+dot-three-no-input	N=20000	build=base	sample=1	exit=0
+differences-no-input	N=20000	build=base	sample=1	exit=0
+do-count-null	N=20000	build=base	sample=1	exit=0
+do-iterator-null	N=20000	build=base	sample=1	exit=0
+table-iterator-null	N=20000	build=base	sample=1	exit=0
+replaceall-simple	N=20000	build=base	sample=1	exit=0
+```
+**78. [.temp/brief-559/fourth/scratch-timing-candidate.txt](../../../.temp/brief-559/fourth/scratch-timing-candidate.txt) — bound 40.0s; exit 0; elapsed 2.3247420150146354s**
+
+```text
+python3 scripts/run-bounded.py --timeout 40 -- python3 .temp/brief-559/fourth/perf-panel.py scratch-timing candidate 1
+```
+Panel rows below are a reduction of the saved JSON records; the individual commands, bounds, statuses and literal stdout/stderr/perf rows are copied in the benchmark ledger.
+
+```text
+scan-no-input	N=20000	build=candidate	sample=1	exit=0
+optionvalue-three-no-input	N=20000	build=candidate	sample=1	exit=0
+replacerepeated-no-input	N=20000	build=candidate	sample=1	exit=0
+dot-three-no-input	N=20000	build=candidate	sample=1	exit=0
+differences-no-input	N=20000	build=candidate	sample=1	exit=0
+do-count-null	N=20000	build=candidate	sample=1	exit=0
+do-iterator-null	N=20000	build=candidate	sample=1	exit=0
+table-iterator-null	N=20000	build=candidate	sample=1	exit=0
+replaceall-simple	N=20000	build=candidate	sample=1	exit=0
+```
+**79. [.temp/brief-559/fourth/perf-reduction.txt](../../../.temp/brief-559/fourth/perf-reduction.txt) — bound 24.0s; exit 0; elapsed 0.11425142601365224s**
+
+```text
+python3 scripts/run-bounded.py --timeout 24 -- python3 .temp/brief-559/fourth/reduce-perf.py
+```
+Verbatim allocation, instruction and timing rows from this successful reduction are pasted in section 3.
+
+**80. [.temp/brief-559/fourth/final-loops.txt](../../../.temp/brief-559/fourth/final-loops.txt) — bound 80.0s; exit 0; elapsed 17.372343945025932s**
+
+```text
+python3 scripts/run-bounded.py --timeout 80 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo test -p rum-stdlib --test loop_continuations -- --nocapture --test-threads=1
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 17.14s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+```
+**81. [.temp/brief-559/fourth/final-fmt.txt](../../../.temp/brief-559/fourth/final-fmt.txt) — bound 30.0s; exit 0; elapsed 1.6677135610079858s**
+
+```text
+python3 scripts/run-bounded.py --timeout 30 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo fmt --check
+```
+No stdout/stderr was emitted.
+
+**82. [.temp/brief-559/fourth/final-ownership-discovery.txt](../../../.temp/brief-559/fourth/final-ownership-discovery.txt) — bound 80.0s; exit 0; elapsed 19.64340223700856s**
+
+```text
+python3 scripts/run-bounded.py --timeout 80 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo test -p rum-stdlib --lib tests::ownership_graph::discovery_report_without_inventory_input -- --exact --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 14.33s
+test tests::ownership_graph::discovery_report_without_inventory_input ... UnknownHostPayload count: 63
+UnknownConstruct count: 7562
+Self-reaching type count: 60
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1077 filtered out; finished in 5.23s
+```
+**83. [.temp/brief-559/fourth/final-regenerate-fingerprints.txt](../../../.temp/brief-559/fourth/final-regenerate-fingerprints.txt) — bound 24.0s; exit 0; elapsed 0.21511846501380205s**
+
+```text
+python3 scripts/run-bounded.py --timeout 24 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo test -p rum-stdlib --lib tests::retention_closure::local::contract_tests::regenerate_local_contract_fingerprints -- --exact --ignored --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+test tests::retention_closure::local::contract_tests::regenerate_local_contract_fingerprints ... Regenerated 68 fingerprints at /home/remi/dev/rum/target/brief-544/local-contracts.tsv
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1077 filtered out; finished in 0.12s
+```
+**84. [.temp/brief-559/fourth/final-cert-default.txt](../../../.temp/brief-559/fourth/final-cert-default.txt) — bound 120.0s; exit 0; elapsed 17.030421290983213s**
+
+```text
+python3 scripts/run-bounded.py --timeout 120 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo test -p rum-stdlib --lib tests::retention_closure::local::production::local_production_acceptance -- --exact --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1077 filtered out; finished in 16.88s
+```
+**85. [.temp/brief-559/fourth/final-cert-nodefault.txt](../../../.temp/brief-559/fourth/final-cert-nodefault.txt) — bound 130.0s; exit 0; elapsed 31.03739890299039s**
+
+```text
+python3 scripts/run-bounded.py --timeout 130 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-559/tmp cargo test -p rum-stdlib --no-default-features --lib tests::retention_closure::local::production::local_production_acceptance -- --exact --nocapture
+```
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.93s
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1071 filtered out; finished in 17.00s
+```
+### 3. Allocation, instruction and timing evidence
+
+Final executable paths are `.temp/brief-559/base/rum-cli` and `.temp/brief-559/candidate/rum-cli` (and the corresponding `rum-cli-alloc` files). Their separate binaries were saved before the rejected experiments. **Do not use candidate/target/release/rum-cli as the final measured executable:** that scratch target last built the rejected cold variant. Both final saved binaries and both original bases remain unchanged, and their hashes differ as follows. Saved base source lacks the five new frame types and Scan remaining-parts state.
+
+```text
+rum-cli
+base sha256:f40c5b1f206d9a0f5771ccd71990227b13aa2d470a91eb6a49ec7596cfbfab5c
+candidate sha256:6656e7f00b50eab546079550d261a3669f7e17a749a87722c46b2fea1b2a66bb
+```
+```text
+rum-cli-alloc
+base sha256:046be5b3e9b64e9a0ecb2fac12d5f5e829c18433b7f846097c73de19138fc716
+candidate sha256:68ece5f5e8744bdd8866becb7973d21486ce758eed3b8530d7f8dbcc6a2e8910
+```
+All instruction runs pin CPU 2, use only cpu_core/instructions/u, and close stdin with /dev/null. N=20,000 and 2N=40,000 for all nine labels. Each individual label/N/build has two instruction samples, never more; per-iteration cost is (count(2N) - count(N)) / N. Counters report 100% event running time. Alloc-count builds and RUM_PROFILE_ALLOC=1 ran first; profiling was disabled for default-binary instructions and all timings.
+
+**Final allocation rows, verbatim:** counts and peaks are identical for every label at both N and 2N. bytes_total is five bytes greater at both sizes, consistent with the five-character-longer candidate path; its per-iteration difference is zero.
+
+```text
+label	N	base_N	base_2N	candidate_N	candidate_2N	base_per_iteration	candidate_per_iteration	delta_N	delta_2N	base_bytes_N	candidate_bytes_N	base_peak_N	candidate_peak_N
+scan-no-input	20000	661661	1321661	661661	1321661	33.0	33.0	0	0	51204971	51204976	942414	942414
+optionvalue-three-no-input	20000	181794	361794	181794	361794	9.0	9.0	0	0	30460125	30460130	9134068	9134068
+replacerepeated-no-input	20000	1221717	2441717	1221717	2441717	61.0	61.0	0	0	154311068	154311073	948049	948049
+dot-three-no-input	20000	11921740	23841740	11921740	23841740	596.0	596.0	0	0	477979704	477979709	8678236	8678236
+differences-no-input	20000	261670	521670	261670	521670	13.0	13.0	0	0	21969680	21969685	9591399	9591399
+do-count-null	20000	1588	1588	1588	1588	0.0	0.0	0	0	478931	478936	299668	299668
+do-iterator-null	20000	1612	1612	1612	1612	0.0	0.0	0	0	1119811	1119816	940146	940146
+table-iterator-null	20000	1614	1614	1614	1614	0.0	0.0	0	0	1119731	1119736	940025	940025
+replaceall-simple	20000	101746	201746	101746	201746	5.0	5.0	0	0	27530285	27530290	943388	943388
+```
+**Final instruction rows, both samples, verbatim:**
+
+```text
+label	sample	N	base_N	base_2N	candidate_N	candidate_2N	base_per_iteration	candidate_per_iteration	delta_pct
+scan-no-input	1	20000	605154680	1206811073	603869550	1204151083	30082.8197	30014.0766	-0.228512
+optionvalue-three-no-input	1	20000	201078978	396376501	201869365	397916401	9764.8762	9802.3518	0.383780
+replacerepeated-no-input	1	20000	808716955	1613831005	811875409	1620150993	40255.7025	40413.7792	0.392682
+dot-three-no-input	1	20000	5137813246	10268851555	5136460542	10266123276	256551.9155	256483.1367	-0.026809
+differences-no-input	1	20000	203807811	401931290	207465769	409265047	9906.1740	10089.9639	1.855307
+do-count-null	1	20000	13473308	23433172	13454862	23392119	497.9932	496.8628	-0.226981
+do-iterator-null	1	20000	26288479	49047598	26268631	49010767	1137.9560	1137.1068	-0.074621
+table-iterator-null	1	20000	10511430	17492511	10511852	17492098	349.0541	349.0123	-0.011961
+replaceall-simple	1	20000	232676689	461743818	231679427	459745539	11453.3564	11403.3056	-0.436997
+scan-no-input	2	20000	605167545	1206753594	603853232	1204181839	30079.3024	30016.4303	-0.209021
+optionvalue-three-no-input	2	20000	201104970	396401026	201851896	397902561	9764.8028	9802.5333	0.386392
+replacerepeated-no-input	2	20000	808714055	1613830552	812095032	1620592033	40255.8248	40424.8501	0.419878
+dot-three-no-input	2	20000	5137821001	10268871142	5136457918	10266147363	256552.5070	256484.4722	-0.026519
+differences-no-input	2	20000	203807223	401942644	207463045	409290278	9906.7710	10091.3617	1.863277
+do-count-null	2	20000	13472746	23435838	13453953	23391918	498.1546	496.8983	-0.252201
+do-iterator-null	2	20000	26289345	49049527	26266363	49010819	1138.0091	1137.2228	-0.069094
+table-iterator-null	2	20000	10510267	17494168	10514304	17492184	349.1950	348.8940	-0.086213
+replaceall-simple	2	20000	232679115	461745288	231680414	459744874	11453.3087	11403.2230	-0.437303
+```
+The three repeated increases are OptionValue **+0.383780% / +0.386392%**, ReplaceRepeated **+0.392682% / +0.419878%**, and Differences **+1.855307% / +1.863277%**. These are reported defects under the brief’s fix-or-report rule; no zero-cost or accepted performance claim is made. Other required instruction labels improve in both samples.
+
+**Rejected experiments:** four inline(always) attributes on newly shared helpers removed OptionValue’s increase and reduced ReplaceRepeated’s, but worsened Differences to about +2.19%. A second variant placed repeated-pass and Differences error handling in cold helpers and computed the Differences resume cursor only on error; it reduced Differences to about +1.10% but introduced a repeatable Dot increase of +0.114% and increased OptionValue again. Both pass the 21 focused semantic tests and keep allocation counts/peaks equal, but neither satisfies the neighbor rule. All experiment source edits were reverted. Distinct binaries, source snapshots and both samples remain saved; no third sample was taken for any existing binary/N/label. These observations do not establish the final regressions’ exact machine-code cause.
+
+Experiment candidate-inline, instruction rows, verbatim:
+
+```text
+label	sample	N	base_N	base_2N	candidate_N	candidate_2N	base_per_iteration	candidate_per_iteration	delta_pct
+scan-no-input	1	20000	605154680	1206811073	603852498	1204153855	30082.8197	30015.0678	-0.225218
+optionvalue-three-no-input	1	20000	201078978	396376501	201094986	396392391	9764.8762	9764.8702	-0.000060
+replacerepeated-no-input	1	20000	808716955	1613831005	810417378	1616790519	40255.7025	40318.6571	0.156387
+dot-three-no-input	1	20000	5137813246	10268851555	5136456655	10266141727	256551.9155	256484.2536	-0.026374
+differences-no-input	1	20000	203807811	401931290	208144911	410616665	9906.1740	10123.5877	2.194730
+do-count-null	1	20000	13473308	23433172	13453466	23394765	497.9932	497.0650	-0.186398
+do-iterator-null	1	20000	26288479	49047598	26269765	49011736	1137.9560	1137.0985	-0.075346
+table-iterator-null	1	20000	10511430	17492511	10514337	17492278	349.0541	348.8970	-0.044979
+replaceall-simple	1	20000	232676689	461743818	232121607	460625315	11453.3564	11425.1854	-0.245963
+scan-no-input	2	20000	605167545	1206753594	603868717	1204211576	30079.3024	30017.1430	-0.206652
+optionvalue-three-no-input	2	20000	201104970	396401026	201093001	396383687	9764.8028	9764.5343	-0.002750
+replacerepeated-no-input	2	20000	808714055	1613830552	810194937	1616790656	40255.8248	40329.7859	0.183728
+dot-three-no-input	2	20000	5137821001	10268871142	5136458658	10266131626	256552.5070	256483.6484	-0.026840
+differences-no-input	2	20000	203807223	401942644	208148191	410617798	9906.7710	10123.4803	2.187487
+do-count-null	2	20000	13472746	23435838	13452935	23392161	498.1546	496.9613	-0.239544
+do-iterator-null	2	20000	26289345	49049527	26268235	49011991	1138.0091	1137.1878	-0.072170
+table-iterator-null	2	20000	10510267	17494168	10513219	17494727	349.1950	349.0754	-0.034265
+replaceall-simple	2	20000	232679115	461745288	231678195	459746648	11453.3087	11403.4227	-0.435560
+```
+Experiment candidate-cold, instruction rows, verbatim:
+
+```text
+label	sample	N	base_N	base_2N	candidate_N	candidate_2N	base_per_iteration	candidate_per_iteration	delta_pct
+scan-no-input	1	20000	605154680	1206811073	603855267	1204153512	30082.8197	30014.9123	-0.225735
+optionvalue-three-no-input	1	20000	201078978	396376501	201264980	396714172	9764.8762	9772.4596	0.077660
+replacerepeated-no-input	1	20000	808716955	1613831005	810175303	1617190785	40255.7025	40350.7741	0.236169
+dot-three-no-input	1	20000	5137813246	10268851555	5143675764	10280579560	256551.9155	256845.1898	0.114314
+differences-no-input	1	20000	203807811	401931290	205967246	406257996	9906.1740	10014.5375	1.093899
+do-count-null	1	20000	13473308	23433172	13453519	23396306	497.9932	497.1393	-0.171458
+do-iterator-null	1	20000	26288479	49047598	26269978	49010224	1137.9560	1137.0123	-0.082925
+table-iterator-null	1	20000	10511430	17492511	10512664	17496439	349.0541	349.1888	0.038590
+replaceall-simple	1	20000	232676689	461743818	231678603	459745484	11453.3564	11403.3440	-0.436662
+scan-no-input	2	20000	605167545	1206753594	603856495	1204212757	30079.3024	30017.8131	-0.204424
+optionvalue-three-no-input	2	20000	201104970	396401026	201266629	396704550	9764.8028	9771.8960	0.072641
+replacerepeated-no-input	2	20000	808714055	1613830552	810175232	1616749766	40255.8248	40328.7267	0.181096
+dot-three-no-input	2	20000	5137821001	10268871142	5143679185	10280585913	256552.5070	256845.3364	0.114140
+differences-no-input	2	20000	203807223	401942644	205972475	406292373	9906.7710	10015.9949	1.102517
+do-count-null	2	20000	13472746	23435838	13454351	23394259	498.1546	496.9954	-0.232699
+do-iterator-null	2	20000	26289345	49049527	26268574	49008181	1138.0091	1136.9804	-0.090399
+table-iterator-null	2	20000	10510267	17494168	10511851	17493952	349.1950	349.1051	-0.025774
+replaceall-simple	2	20000	232679115	461745288	231680075	460626676	11453.3087	11447.3301	-0.052200
+```
+**Timing:** five one-second /proc CPU samples before instruction/timing phases found no competing process at or above 20% of one CPU; CPU 2 was allowed. No cargo/test workload overlapped measurements. Timings use in-kernel AbsoluteTiming (monotonic Instant), never civil-clock differences. The stock suite ran twice per build in A/B/B/A order, seven in-kernel repetitions, with best-of-two per-label comparison. Scratch labels ran once per label/build with three in-kernel repetitions. These timing samples do not override the repeated instruction defects.
+
+Scratch timing rows, verbatim:
+
+```text
+label	N	base_seconds	candidate_seconds	delta_pct
+scan-no-input	20000	0.038573608	0.038511552	-0.1609
+optionvalue-three-no-input	20000	0.012404508	0.012371574	-0.2655
+replacerepeated-no-input	20000	0.053433540	0.054453530	1.9089
+dot-three-no-input	20000	0.322943249	0.322744168	-0.0616
+differences-no-input	20000	0.012109251	0.012795431	5.6666
+do-count-null	20000	0.000467448	0.000477798	2.2142
+do-iterator-null	20000	0.001025451	0.001052938	2.6805
+table-iterator-null	20000	0.000372701	0.000366921	-1.5508
+replaceall-simple	20000	0.014124792	0.014415036	2.0549
+```
+Full stock-suite comparison, all 120 labels, verbatim (56 positive deltas are disclosed, with no post hoc pruning or extra samples):
+
+```text
+label	iterations	base_seconds	candidate_seconds	delta_pct
+association-part-key-read-width4000	40	0.001252220	0.001165950	-6.8894
+association-part-key-read-width32000	40	0.009660700	0.008916570	-7.7027
+association-part-positional-read-width4000	40	0.000030871	0.000030833	-0.1231
+association-part-positional-read-width32000	40	0.000030758	0.000031151	1.2777
+loop-empty	5000	0.000258069	0.000263530	2.1161
+do-count-null	10000	0.000235058	0.000237345	0.9730
+do-iterator-null	1000	0.000057032	0.000056489	-0.9521
+table-count-null	5000	0.000088761	0.000084042	-5.3165
+table-iterator-null	1000	0.000020134	0.000019456	-3.3674
+table-iterator-symbol	1000	0.000006629	0.000006321	-4.6463
+literal-integer	2000	0.000090243	0.000088685	-1.7264
+literal-string	2000	0.000098128	0.000098169	0.0418
+symbol-ownvalue-read	2000	0.000216748	0.000223209	2.9809
+symbol-ownvalue-guarded-read	1000	0.000184728	0.000184854	0.0682
+set-ownvalue	1000	0.000265380	0.000267841	0.9273
+list-literal-small	1000	0.000059606	0.000060390	1.3153
+head-list	2000	0.000925176	0.000927091	0.2070
+length-list	2000	0.000929072	0.000927152	-0.2067
+part-list	2000	0.001092810	0.001096920	0.3761
+sameq-integer	2000	0.000630204	0.000640224	1.5900
+sameq-list	1000	0.000622045	0.000621144	-0.1448
+if-true	2000	0.000728605	0.000740807	1.6747
+module-local	500	0.000733384	0.000734816	0.1953
+module-chain-escape-small	96	0.000046979	0.000049233	4.7979
+module-chain-escape-large	192	0.000093527	0.000093039	-0.5218
+block-local	500	0.000470808	0.000461570	-1.9622
+block-symbol-only-repeat	1000	0.000305406	0.000306335	0.3042
+block-init-null-repeat	1000	0.000345815	0.000348362	0.7365
+block-init-read-repeat	1000	0.000399940	0.000404961	1.2554
+with-local	500	0.000478329	0.000480963	0.5507
+with-deep-body-small	500	0.001742750	0.001727220	-0.8911
+table-small	200	0.000187228	0.000188214	0.5266
+table-iterator-plus	1000	0.000030764	0.000030906	0.4616
+table-iterator-pair-list	1000	0.000073373	0.000072863	-0.6951
+do-small	200	0.000888091	0.000897911	1.1057
+d-nested-sin-small	200	0.005262030	0.005315660	1.0192
+downvalue-exact-hit	2000	0.000791562	0.000795145	0.4526
+downvalue-exact-miss	2000	0.000565580	0.000564660	-0.1627
+downvalue-pattern-hit	1000	0.000951161	0.000961127	1.0478
+downvalue-pattern-miss	1000	0.000292919	0.000289496	-1.1686
+downvalue-exact-miss-repeat	5000	0.001287150	0.001280340	-0.5291
+downvalue-pattern-miss-repeat	5000	0.001319550	0.001307240	-0.9329
+downvalue-guarded-hit	1000	0.001898930	0.001917470	0.9763
+downvalue-guarded-decline-fallback	1000	0.001423020	0.001428080	0.3556
+upvalue-guarded-hit	1000	0.002349390	0.002346070	-0.1413
+subvalue-unguarded-hit	1000	0.001392920	0.001408930	1.1494
+subvalue-unguarded-miss	1000	0.000773352	0.000792480	2.4734
+subvalue-guarded-hit	1000	0.002463200	0.002488320	1.0198
+default-unguarded-hit	1000	0.001292480	0.001288480	-0.3095
+default-unguarded-miss	1000	0.001091360	0.001072400	-1.7373
+default-guarded-hit	1000	0.001637220	0.001653710	1.0072
+matchq-integer-success	1000	0.000312278	0.000308934	-1.0708
+matchq-integer-fail	1000	0.000317136	0.000314884	-0.7101
+matcher-single-tiny	1000	0.000669555	0.000692048	3.3594
+matcher-single-wide-small	800	0.000038298	0.000038104	-0.5066
+matcher-single-wide-large	1600	0.000075393	0.000075489	0.1273
+replaceall-simple	500	0.000352505	0.000360537	2.2785
+rule-rhs-deep-small	500	0.002987200	0.002974480	-0.4258
+rewrite-guarded-hit	500	0.001772170	0.001775840	0.2071
+rewrite-guarded-decline-fallback	500	0.002526500	0.002522240	-0.1686
+cases-wide-no-match	1600	0.000163142	0.000159499	-2.2330
+count-wide-no-match	1600	0.000154231	0.000149077	-3.3417
+position-wide-no-match	1600	0.000184306	0.000183923	-0.2078
+deletecases-wide-no-match	1600	0.000171076	0.000166082	-2.9192
+deletecases-wide-association-no-match	1600	0.000431029	0.000423967	-1.6384
+deletecases-leaf-delete-small	500	0.002179180	0.002175640	-0.1624
+replace-wide-no-match	1600	0.000084191	0.000084562	0.4407
+replace-leaf-rebuild-small	500	0.002690370	0.002639110	-1.9053
+take-multispec-small	500	0.001712950	0.001682790	-1.7607
+replacepart-deep-path-small	500	0.001336160	0.001303820	-2.4204
+replacepart-wide-rule-list	1600	0.000291415	0.000288638	-0.9529
+replacepart-guarded-hit	500	0.000538234	0.000534935	-0.6129
+replacepart-guarded-decline-fallback	500	0.000599282	0.000598013	-0.2118
+string-repeat-small	500	0.000188897	0.000187112	-0.9450
+character-range-small	200	0.000130804	0.000132515	1.3081
+stringtrim-literal-list-4000	100	0.000442640	0.000425849	-3.7934
+stringtrim-literal-list-32000	100	0.003210790	0.003164930	-1.4283
+stringtrim-single-literal-4000	100	0.000416595	0.000406886	-2.3306
+stringtrim-single-literal-32000	100	0.003217690	0.003149290	-2.1257
+stringtrim-whitespace-4000	100	0.000416261	0.000396250	-4.8073
+stringtrim-whitespace-32000	100	0.003220100	0.003135370	-2.6313
+stringreplace-single-literal-unguarded	200	0.000341471	0.000353162	3.4237
+stringreplace-pattern-unguarded	500	0.001172460	0.001170260	-0.1876
+stringreplace-guarded-hit	500	0.000689451	0.000687604	-0.2679
+stringreplace-guarded-decline-fallback	500	0.000829712	0.000820933	-1.0581
+appendto-list-incremental-small	250	0.000404116	0.000404202	0.0213
+appendto-list-incremental-large	500	0.001350160	0.001338140	-0.8903
+appendto-part-outer1000-small	100	0.001763970	0.001766510	0.1440
+appendto-part-outer1000-large	200	0.003568340	0.003566130	-0.0619
+association-set-key-incremental-small	100	0.001490560	0.001516510	1.7410
+association-set-key-incremental-large	200	0.005546170	0.005605830	1.0757
+association-small-literal-repeat	500	0.000718193	0.000719127	0.1300
+merge-nested-small	200	0.001164420	0.001153250	-0.9593
+set-part-fixed100-len100	100	0.000130715	0.000130679	-0.0275
+set-part-fixed100-len800	100	0.000478020	0.000478329	0.0646
+set-part-fill-small	200	0.000373343	0.000375094	0.4690
+set-part-fill-large	400	0.001144120	0.001144680	0.0489
+upvalue-candidates-tiny	1000	0.001945530	0.001928140	-0.8938
+upvalue-candidates-wide-small	1600	0.000155090	0.000152234	-1.8415
+upvalue-candidates-wide-large	3200	0.000310400	0.000299609	-3.4765
+sort-callback-small	100	0.000165900	0.000165996	0.0579
+sort-callback-large	200	0.000379837	0.000382013	0.5729
+sortby-callback-small	100	0.000196829	0.000197172	0.1743
+sortby-callback-large	200	0.000443333	0.000442498	-0.1883
+reversesort-callback-small	100	0.000157219	0.000158318	0.6990
+reversesort-callback-large	200	0.000354705	0.000353518	-0.3346
+keysort-callback-small	50	0.000083202	0.000083715	0.6166
+keysort-callback-large	100	0.000183569	0.000184837	0.6907
+keysortby-callback-small	25	0.000045043	0.000045212	0.3752
+keysortby-callback-large	50	0.000096945	0.000098022	1.1109
+sort-default-wide	1600	0.000016429	0.000016143	-1.7408
+sort-symbol-default-width4000	4000	0.000287480	0.000272994	-5.0390
+sort-symbol-default-width16000	16000	0.001186700	0.001168590	-1.5261
+sortby-default-wide	1600	0.000505176	0.000494431	-2.1270
+reversesort-default-wide	1600	0.000016388	0.000016735	2.1174
+keysort-default-wide	1600	0.000371094	0.000368803	-0.6174
+keysortby-default-wide	1600	0.000874862	0.000862603	-1.4012
+valueq-undefined-symbol-definitions-2000	20	0.000007861	0.000007929	0.8650
+valueq-undefined-symbol-definitions-8000	20	0.000007837	0.000007917	1.0208
+module-retained-gensym-gc-batch	40	0.000061000	0.000060707	-0.4803
+```
+Required stock-neighbor timing rows, copied verbatim from each timings.tsv:
+
+[.temp/brief-559/fourth/perf/timing/base/1/timings.tsv](../../../.temp/brief-559/fourth/perf/timing/base/1/timings.tsv):
+
+```text
+label	iterations	rum_seconds
+do-count-null	10000	0.000235058
+do-iterator-null	1000	5.7086e-05
+table-iterator-null	1000	2.0508e-05
+replaceall-simple	500	0.000353179
+```
+[.temp/brief-559/fourth/perf/timing/base/2/timings.tsv](../../../.temp/brief-559/fourth/perf/timing/base/2/timings.tsv):
+
+```text
+label	iterations	rum_seconds
+do-count-null	10000	0.000241001
+do-iterator-null	1000	5.7032e-05
+table-iterator-null	1000	2.0134e-05
+replaceall-simple	500	0.000352505
+```
+[.temp/brief-559/fourth/perf/timing/candidate/1/timings.tsv](../../../.temp/brief-559/fourth/perf/timing/candidate/1/timings.tsv):
+
+```text
+label	iterations	rum_seconds
+do-count-null	10000	0.000240842
+do-iterator-null	1000	5.6489e-05
+table-iterator-null	1000	1.9662e-05
+replaceall-simple	500	0.000360537
+```
+[.temp/brief-559/fourth/perf/timing/candidate/2/timings.tsv](../../../.temp/brief-559/fourth/perf/timing/candidate/2/timings.tsv):
+
+```text
+label	iterations	rum_seconds
+do-count-null	10000	0.000237345
+do-iterator-null	1000	5.7403e-05
+table-iterator-null	1000	1.9456e-05
+replaceall-simple	500	0.000365893
+```
+The required stock neighbors include do-count-null +0.9730% and replaceall-simple +2.2785% in this best-of-two timing panel. All other positive rows are retained above. No timing non-regression acceptance is claimed.
+
+Final sample ledger: 72 allocation executions, 144 instruction executions, 18 scratch-timing executions and four stock-suite executions = **238**, including both rejected binary identities. The original 130-run cap was explicitly expanded by 54 for each correction attempt before running it. Each instruction (label, N, binary identity) remains capped at two; no immutable base sample was rerun. [.temp/brief-559/fourth/performance-sample-proof.json](../../../.temp/brief-559/fourth/performance-sample-proof.json) verifies counts.
+
+### 4. Counters, disclosures and remaining work
+
+- Six of six scoped sites repaired; eleven of eleven equality witnesses pass. Five later-error tests and five cancellation tests pass, covering ten suspended positions and reusable sessions.
+- Frozen brief-548 lost count: **86 → 80**, supported by the scoped tests. The historical 195-probe census was not rerun.
+- All mandatory correctness commands have successful final-source evidence. The final focused, fmt, discovery, 68-fingerprint and both certificate confirmations pass after restoring source. Full workspace and full no-default retention passed before the experiments. The restored final source is byte-identical to those passing versions; hashes and the replay confirmations establish that identity.
+- The candidate remains **not accepted** because three primary instruction regressions and positive timing rows remain. No regressing experiment is retained. The explicit fix-or-report rule is used here; there is no claim that the progress-based stop-loss fired, since each experiment improved some target costs. No further samples or speculative tuning were run after the bounded experiments.
+- No additional lost-continuation site or consumer was repaired or added. The only outside-fence source change is the director’s explicitly authorized CLI helper invocation; assertions are unchanged. No new dependency, lease, unsafe, custom-abandonment change, helper extraction or admission/status/disposition/exclusion change is retained.
+- Rejected experimental source was not promoted into ownership or retention inventories and was not claimed to pass broad gates. Its binaries and logs are preserved solely as rejected diagnostic evidence.
+
+The next director action is a performance diagnosis/ruling for the three reproducible instruction increases (and the disclosed timing rows), using the preserved base and final candidate. The implementation, all current correctness evidence and the complete performance findings are concrete and reviewable; no further authorization is requested or inferred here. The checkpoint is [.temp/brief-559/PROGRESS.md](../../../.temp/brief-559/PROGRESS.md).
+

@@ -113,7 +113,13 @@ fn shared_request_helper_abandons() {
 
 fn child(test: &str, case: &str, closed_stdout: bool) -> std::process::Output {
     let mut child = Command::new(env::current_exe().unwrap())
-        .args(["--exact", &format!("eval_tests::{test}"), "--nocapture"])
+        .args([
+            "--exact",
+            &format!("eval_tests::{test}"),
+            "--nocapture",
+            "--quiet",
+        ])
+        .env_remove("RUST_TEST_THREADS")
         .env(CHILD_CASE, case)
         .stdin(if closed_stdout {
             Stdio::piped()

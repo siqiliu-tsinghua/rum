@@ -259,19 +259,61 @@ impl Session {
             OptionValueQuery::Single { original, name } => {
                 self.resolve_option_value_scalar(target, explicit, original.clone(), *name)
             }
-            OptionValueQuery::Many(items) => {
-                let mut values = Vec::with_capacity(items.len());
-                for (original, name) in items {
-                    values.push(self.resolve_option_value_scalar(
-                        target.clone(),
-                        explicit.clone(),
-                        original.clone(),
-                        *name,
-                    )?);
-                }
-                Ok(Expr::call(system_expr("List"), values))
-            }
+            OptionValueQuery::Many(items) => self.resolve_option_values_from_index(
+                target,
+                explicit,
+                items,
+                0,
+                Vec::with_capacity(items.len()),
+            ),
         }
+    }
+
+    fn resolve_option_values_from_index(
+        &mut self,
+        target: Symbol,
+        explicit: Option<SymbolOptions>,
+        items: &[(Expr, Symbol)],
+        next_index: usize,
+        mut values: Vec<Expr>,
+    ) -> Result<Expr, EvalError> {
+        for (index, (original, name)) in items.iter().enumerate().skip(next_index) {
+            let result =
+                self.resolve_option_value_scalar(target, explicit.clone(), original.clone(), *name);
+            let value = match result {
+                Ok(value) => value,
+                Err(error) => {
+                    return crate::resume_or_suspend!(
+                        self,
+                        Err(error),
+                        ok(value) => Ok(value),
+                        suspend => OptionValuesSuspensionFrame {
+                            target,
+                            explicit,
+                            items: Arc::from(items),
+                            next_index: index + 1,
+                            values: values.into(),
+                        },
+                    );
+                }
+            };
+            values.push(value);
+        }
+        Ok(Expr::call(system_expr("List"), values))
+    }
+
+    fn resume_option_values_after_scalar(
+        &mut self,
+        target: Symbol,
+        explicit: Option<SymbolOptions>,
+        items: &[(Expr, Symbol)],
+        next_index: usize,
+        prefix: &[Expr],
+        value: Expr,
+    ) -> Result<Expr, EvalError> {
+        let mut values = prefix.to_vec();
+        values.push(value);
+        self.resolve_option_values_from_index(target, explicit, items, next_index, values)
     }
 
     fn resolve_option_value_scalar(
@@ -474,6 +516,35 @@ impl crate::runtime::suspension::SuspensionFrame for EvalOptionValueSuspensionFr
             })(),
             Err(error) => Err(error),
         };
+        crate::runtime::suspension::FrameAction::complete(resumed)
+    }
+}
+
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
+struct OptionValuesSuspensionFrame {
+    target: Symbol,
+    explicit: Option<SymbolOptions>,
+    items: Arc<[(Expr, Symbol)]>,
+    next_index: usize,
+    values: rum_core::SharedArgs,
+}
+
+impl crate::runtime::suspension::SuspensionFrame for OptionValuesSuspensionFrame {
+    fn resume(
+        self: Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+    ) -> crate::runtime::suspension::FrameAction {
+        let resumed = outcome.and_then(|value| {
+            session.resume_option_values_after_scalar(
+                self.target,
+                self.explicit.clone(),
+                &self.items,
+                self.next_index,
+                &self.values,
+                value,
+            )
+        });
         crate::runtime::suspension::FrameAction::complete(resumed)
     }
 }

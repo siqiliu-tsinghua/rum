@@ -1,5 +1,8 @@
 use super::*;
 use rum_core::SharedArgs;
+use rum_runtime::kernel_api::{
+    AbandonmentContext, FrameAbandon, FrameAbandonAction, FrameRootTrace, FrameRootVisitor,
+};
 
 pub(crate) fn eval_differences(
     session: &mut Session,
@@ -22,9 +25,24 @@ pub(crate) fn eval_differences(
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
 
-    let mut current = items.to_vec();
-    for _ in 0..order {
-        current = successive_differences(session, &current)?;
+    differences_from_order(session, items.to_vec(), order)
+}
+
+fn differences_from_order(
+    session: &mut Session,
+    mut current: Vec<Expr>,
+    order: usize,
+) -> Result<Expr, EvalError> {
+    for iteration in 0..order {
+        let result = successive_differences(session, &current);
+        current = rum_runtime::resume_or_suspend!(
+            session,
+            result,
+            ok(value) => Ok(value),
+            suspend => DifferencesOrderSuspensionFrame {
+                remaining_order: order - iteration - 1,
+            },
+        )?;
         if current.is_empty() {
             break;
         }
@@ -32,6 +50,29 @@ pub(crate) fn eval_differences(
 
     session.enforce_generated_element_limit_for_count(current.len())?;
     Ok(Expr::call(system_expr(heads::structure::LIST), current))
+}
+
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
+struct DifferencesOrderSuspensionFrame {
+    remaining_order: usize,
+}
+
+impl rum_runtime::kernel_api::SuspensionFrame for DifferencesOrderSuspensionFrame {
+    fn resume(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+    ) -> rum_runtime::kernel_api::FrameAction {
+        use rum_runtime::kernel_api::ContinuationValue;
+        let resumed = outcome.and_then(|row| {
+            differences_from_order(
+                session,
+                Vec::<Expr>::from_continuation_expr(row),
+                self.remaining_order,
+            )
+        });
+        rum_runtime::kernel_api::FrameAction::complete(resumed)
+    }
 }
 
 pub(crate) fn eval_constant_array(
@@ -75,11 +116,75 @@ fn successive_differences(session: &mut Session, items: &[Expr]) -> Result<Vec<E
         return Ok(Vec::new());
     }
 
-    let mut differences = Vec::with_capacity(items.len() - 1);
-    for pair in items.windows(2) {
-        differences.push(difference_expr(session, &pair[0], &pair[1])?);
+    differences_from_pair(session, items, 0, Vec::with_capacity(items.len() - 1))
+}
+
+fn differences_from_pair(
+    session: &mut Session,
+    items: &[Expr],
+    next_pair: usize,
+    mut differences: Vec<Expr>,
+) -> Result<Vec<Expr>, EvalError> {
+    for (index, pair) in items.windows(2).enumerate().skip(next_pair) {
+        let result = difference_expr(session, &pair[0], &pair[1]);
+        let value = match result {
+            Ok(value) => value,
+            Err(error) => {
+                return rum_runtime::resume_or_suspend!(
+                    session,
+                    Err(error),
+                    ok(value) => Ok(value),
+                    suspend => DifferencesRowSuspensionFrame {
+                        items: items.to_vec().into(),
+                        next_pair: index + 1,
+                        differences: differences.into(),
+                    },
+                );
+            }
+        };
+        differences.push(value);
     }
     Ok(differences)
+}
+
+#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
+struct DifferencesRowSuspensionFrame {
+    items: SharedArgs,
+    next_pair: usize,
+    differences: SharedArgs,
+}
+
+impl rum_runtime::kernel_api::SuspensionFrame for DifferencesRowSuspensionFrame {
+    fn resume(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+    ) -> rum_runtime::kernel_api::FrameAction {
+        use rum_runtime::kernel_api::ContinuationValue;
+        let resumed = outcome.and_then(|value| {
+            differences_after_pair(
+                session,
+                &self.items,
+                self.next_pair,
+                &self.differences,
+                value,
+            )
+            .map(ContinuationValue::into_continuation_expr)
+        });
+        rum_runtime::kernel_api::FrameAction::complete(resumed)
+    }
+}
+
+fn differences_after_pair(
+    session: &mut Session,
+    items: &[Expr],
+    next_pair: usize,
+    prefix: &[Expr],
+    value: Expr,
+) -> Result<Vec<Expr>, EvalError> {
+    let mut differences = prefix.to_vec();
+    differences.push(value);
+    differences_from_pair(session, items, next_pair, differences)
 }
 
 fn difference_expr(session: &mut Session, left: &Expr, right: &Expr) -> Result<Expr, EvalError> {
