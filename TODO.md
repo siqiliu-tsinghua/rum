@@ -132,6 +132,28 @@ losing its inlining, and ten measured candidates — including a single call sit
 experiment, +1.17%) — could not recover it; carrying the loop's state in the
 error arm is what changes the hot loop's shape. Next: G2 (the lazy pull
 machine, 14 sites).
+**G2 design is in (brief-561, design only):** one frame owning the whole pull
+machine, state moved into it only on `InputRequired`, a cold working copy on an
+actual resume (frames are immutable and stay Session-rooted while they run),
+completion frames for `Normal`, `Take` and `First` (`Part` inherits `First`),
+and a separate frame for `LazyTable`'s eager bounds; 20 brief-548 witnesses plus
+19 lifecycle cases, 37 red and 2 controls before any change; two steps, lost
+80 -> 69 -> 66. **The director's adjacent-boundary probe found a pre-existing
+process abort in the same machine:** a `LazyMap` chain built by a loop
+(`Do[x = LazyMap[Identity, x], {n}]`) overflows the native stack on the first
+realization — `Take[x, 0]` is enough, so construction or destruction of the
+`Box`-chained `PullStepper`, not the pull — between 2 000 and 5 000 levels on
+the ruled 2 MiB stack (5 000-10 000 on 8 MiB); the descriptor itself builds and
+drops at 20 000. Nothing guards it (`lazy.rs` never enters the native stack
+guard, and the accumulator gate covers `Option<Arc<_>>` chains, not `Box`).
+brief-561's design would add four more walks of the same shape, so **G2 now
+includes making the machine depth-safe**, and brief-562 revises the design
+first; the director's preferred direction is to linearize the unary chain into
+a source plus a stage vector driven by an explicit cursor, which makes every
+walk iterative and is the pending-pull program counter brief-548 asked for.
+Also found, outside the branch: an empty lazy `First` emits `First::nofirst`
+twice where `First[{}]` emits it once (the residual `First[List[]]` it returns
+is evaluated again).
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
