@@ -9,7 +9,7 @@ use std::sync::mpsc::{self, Receiver, Sender};
 
 use rum_host::{
     HostCancelHandle, HostEvalOutcome, HostEvalRequest, HostEvalSuccess, HostFailure,
-    HostFailureCode, HostSession, HostTerminationReason,
+    HostFailureCode, HostInputSuspension, HostSession, HostTerminationReason,
 };
 
 use crate::{KernelExecuteOutcome, KernelExecuteRequest, KernelMessageHeader};
@@ -51,8 +51,9 @@ struct ExecuteWorkerSignals {
 }
 
 enum ExecuteSegment {
-    Eval { code: String },
+    Eval { code: String, allow_stdin: bool },
     Resume { input: String },
+    RetireInput { suspension: HostInputSuspension },
 }
 
 impl ExecuteState {
@@ -154,7 +155,11 @@ impl ExecuteWorker {
         Self {
             handle: spawn_worker(
                 session,
-                ExecuteSegment::Eval { code },
+                ExecuteSegment::Eval {
+                    code,
+                    allow_stdin: context.request.allow_stdin,
+                },
+                cancel.clone(),
                 #[cfg(test)]
                 signals,
             ),
@@ -181,6 +186,7 @@ impl ExecuteWorker {
             handle: spawn_worker(
                 session,
                 ExecuteSegment::Resume { input },
+                cancel.clone(),
                 #[cfg(test)]
                 signals,
             ),
@@ -312,6 +318,7 @@ pub(super) fn force_cancelled_success(outcome: KernelExecuteOutcome) -> KernelEx
 fn spawn_worker(
     mut session: HostSession,
     segment: ExecuteSegment,
+    cancel: HostCancelHandle,
     #[cfg(test)] mut signals: ExecuteWorkerSignals,
 ) -> JoinHandle<(HostSession, KernelExecuteOutcome)> {
     thread::spawn(move || {
@@ -331,7 +338,9 @@ fn spawn_worker(
             return (session, outcome);
         }
 
-        let outcome = match catch_unwind(AssertUnwindSafe(|| run_segment(&mut session, segment))) {
+        let outcome = match catch_unwind(AssertUnwindSafe(|| {
+            run_segment(&mut session, segment, &cancel)
+        })) {
             Ok(outcome) => outcome,
             Err(payload) => KernelExecuteOutcome::Failure(worker_panic_failure(&*payload)),
         };
@@ -341,12 +350,32 @@ fn spawn_worker(
     })
 }
 
-fn run_segment(session: &mut HostSession, segment: ExecuteSegment) -> KernelExecuteOutcome {
-    let outcome = match segment {
-        ExecuteSegment::Eval { code } => session.eval(HostEvalRequest::new(code)),
-        ExecuteSegment::Resume { input } => session.resume_with_input(input),
-    };
-    host_outcome_to_kernel(outcome)
+fn run_segment(
+    session: &mut HostSession,
+    mut segment: ExecuteSegment,
+    cancel: &HostCancelHandle,
+) -> KernelExecuteOutcome {
+    loop {
+        let outcome = match segment {
+            ExecuteSegment::Eval { code, allow_stdin } => {
+                let outcome = session.eval(HostEvalRequest::new(code));
+                if !allow_stdin {
+                    if let HostEvalOutcome::InputRequired(suspension) = outcome {
+                        // Continue on this worker: retirement can run guest cleanup.
+                        // Nothing from the suspension has been emitted yet.
+                        segment = ExecuteSegment::RetireInput { suspension };
+                        continue;
+                    }
+                }
+                outcome
+            }
+            ExecuteSegment::Resume { input } => session.resume_with_input(input),
+            ExecuteSegment::RetireInput { suspension } => {
+                super::input_retirement::retire_input_request(session, cancel, suspension)
+            }
+        };
+        return host_outcome_to_kernel(outcome);
+    }
 }
 
 fn worker_panic_failure(payload: &(dyn Any + Send)) -> HostFailure {

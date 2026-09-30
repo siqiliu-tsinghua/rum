@@ -4,12 +4,12 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-30, committed tree through brief-555's gate commit.
+Status checkpoint: 2026-09-30, committed tree through brief-556's gate commit.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
 **Where work resumes (2026-09-30) — the suspension-continuation branch, step
-3D: Jupyter abandonment (draft D), after briefs 553-555 fixed the REPL and CLI.**
+3E: the Jupyter execute lifecycle (draft E), after briefs 553-556.**
 Steps 1-2 are done. brief-550 (`c6e95dd1`) made guest `Get`, `Needs`, `BeginPackage` dependencies
 and `DeclarePackage` stubs suspend and resume with an inherited request budget.
 brief-551 (`34e57a8d`) fixed what the re-probe of the batch boundary found: a
@@ -77,7 +77,14 @@ file, as the file-load rule already says, and a script delivers it once.
 Director gate: workspace 2811/0/58 with native ZeroMQ real; the new binary
 cleanup test fails on the pre-change tree (1 of 6; the rest are controls);
 `rum-cli --file` with a `WithCleanup` prints the prefix and the cleanup once,
-skips the tail, reports input required and exits 1. Next: D, then E, F.
+skips the tail, reports input required and exits 1. **D is done
+(brief-556):** every Jupyter surface that returns a terminal input-required
+error — immediate `execute`, the no-stdin worker, the reply-only shell wrapper,
+the event pump, the local driver — now retires the request it admitted first
+(the worker on its own thread) and keeps the original error; the next execute
+runs. Director gate: workspace 2831/0/58 with native ZeroMQ real; the new tests
+fail on the pre-change tree (14 of 20; the six passes are controls). Next: E
+(interrupt while waiting, overlap routing), then F (each output once).
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

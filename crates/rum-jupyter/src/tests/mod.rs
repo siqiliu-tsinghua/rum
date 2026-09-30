@@ -88,6 +88,7 @@ fn crate_manifest_keeps_jupyter_on_host_facade() {
 
 mod adapter;
 mod bootstrap;
+mod input_abandonment;
 mod pump;
 mod stdin;
 mod transport_coverage;

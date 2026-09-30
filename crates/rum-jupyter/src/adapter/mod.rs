@@ -19,6 +19,7 @@ use crate::{
     KernelStatusOutput, KernelStdinError, KernelStreamName, KernelStreamOutput,
 };
 
+mod input_retirement;
 mod iopub;
 mod render;
 mod worker;
@@ -134,6 +135,15 @@ impl KernelAdapter {
         self.last_input_reply.take()
     }
 
+    /// Evaluates immediately and returns a terminal response.
+    ///
+    /// This API cannot supply input, even when `request.allow_stdin` is true.
+    /// An admitted input request is cancelled and retired, running guest cleanup,
+    /// before returning the original `InputRequired` error. Its outputs include
+    /// the prefix and cleanup once; the abandoned remainder is not evaluated.
+    /// A request refused at admission leaves the existing request untouched.
+    /// Use [`Self::dispatch_request`] or [`crate::KernelEventPump`] for notebook
+    /// transport with asynchronous stdin and completion handling.
     pub fn execute(&mut self, request: KernelExecuteRequest) -> KernelExecuteResponse {
         let execution_count = self.next_execution_count(request.store_history);
         let outcome = run_execute_request(self.session_mut(), &request);
@@ -405,6 +415,13 @@ impl KernelAdapter {
         }
     }
 
+    /// Returns only the reply portion of [`Self::dispatch_request`].
+    ///
+    /// For `Execute`, this starts asynchronous work and returns `None` while
+    /// pending. The caller must poll [`Self::poll_execute_completion`], service
+    /// stdin through [`Self::handle_input_reply`], and deliver completion output.
+    /// This wrapper drops the initial IOPub prologue (busy and execute input).
+    /// Prefer full dispatch or [`crate::KernelEventPump`] for notebook transport.
     pub fn handle_shell_request(
         &mut self,
         envelope: KernelRequestEnvelope,
@@ -633,5 +650,12 @@ fn run_execute_request(
     session: &mut HostSession,
     request: &KernelExecuteRequest,
 ) -> KernelExecuteOutcome {
-    host_outcome_to_kernel(session.eval(HostEvalRequest::new(request.code.clone())))
+    let cancel = session.cancel_handle();
+    let outcome = session.eval(HostEvalRequest::new(request.code.clone()));
+    host_outcome_to_kernel(match outcome {
+        rum_host::HostEvalOutcome::InputRequired(suspension) => {
+            input_retirement::retire_input_request(session, &cancel, suspension)
+        }
+        other => other,
+    })
 }
