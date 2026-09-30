@@ -14,11 +14,21 @@ use rum_host::{
 
 use crate::{KernelExecuteOutcome, KernelExecuteRequest, KernelMessageHeader};
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub(super) struct ExecuteContext {
     pub(super) parent_header: KernelMessageHeader,
     pub(super) request: KernelExecuteRequest,
     pub(super) execution_count: Option<u64>,
+    pub(super) cancel: HostCancelHandle,
+    pub(super) routing_ids: Vec<Vec<u8>>,
+    pub(super) interrupted: bool,
+}
+
+impl ExecuteContext {
+    pub(super) fn interrupt(&mut self) {
+        self.interrupted = true;
+        self.cancel.cancel();
+    }
 }
 
 pub(super) enum ExecuteState {
@@ -28,9 +38,7 @@ pub(super) enum ExecuteState {
 
 pub(super) struct ExecuteWorker {
     handle: JoinHandle<(HostSession, KernelExecuteOutcome)>,
-    cancel: HostCancelHandle,
     context: ExecuteContext,
-    interrupted: bool,
     #[cfg(test)]
     started: Option<Receiver<()>>,
     #[cfg(test)]
@@ -54,6 +62,7 @@ enum ExecuteSegment {
     Eval { code: String, allow_stdin: bool },
     Resume { input: String },
     RetireInput { suspension: HostInputSuspension },
+    CancelInput,
 }
 
 impl ExecuteState {
@@ -69,8 +78,7 @@ impl ExecuteState {
         let Self::Running(worker) = self else {
             return false;
         };
-        worker.interrupted = true;
-        worker.cancel.cancel();
+        worker.context.interrupt();
         true
     }
 
@@ -81,9 +89,14 @@ impl ExecuteState {
         #[cfg(test)] gate: Option<ExecuteWorkerGateWait>,
     ) {
         debug_assert!(!self.is_running());
-        *self = Self::Running(ExecuteWorker::spawn_eval(
+        let segment = ExecuteSegment::Eval {
+            code: context.request.code.clone(),
+            allow_stdin: context.request.allow_stdin,
+        };
+        *self = Self::Running(ExecuteWorker::spawn(
             session,
             context,
+            segment,
             #[cfg(test)]
             gate,
         ));
@@ -97,10 +110,26 @@ impl ExecuteState {
         #[cfg(test)] gate: Option<ExecuteWorkerGateWait>,
     ) {
         debug_assert!(!self.is_running());
-        *self = Self::Running(ExecuteWorker::spawn_resume(
+        *self = Self::Running(ExecuteWorker::spawn(
             session,
             context,
-            input,
+            ExecuteSegment::Resume { input },
+            #[cfg(test)]
+            gate,
+        ));
+    }
+
+    pub(super) fn start_retirement(
+        &mut self,
+        session: HostSession,
+        context: ExecuteContext,
+        #[cfg(test)] gate: Option<ExecuteWorkerGateWait>,
+    ) {
+        debug_assert!(!self.is_running());
+        *self = Self::Running(ExecuteWorker::spawn(
+            session,
+            context,
+            ExecuteSegment::CancelInput,
             #[cfg(test)]
             gate,
         ));
@@ -143,56 +172,23 @@ impl ExecuteState {
 }
 
 impl ExecuteWorker {
-    fn spawn_eval(
+    fn spawn(
         session: HostSession,
         context: ExecuteContext,
+        segment: ExecuteSegment,
         #[cfg(test)] gate: Option<ExecuteWorkerGateWait>,
     ) -> Self {
-        let cancel = session.cancel_handle();
-        let code = context.request.code.clone();
         #[cfg(test)]
         let (signals, started, finished) = worker_signals(gate);
         Self {
             handle: spawn_worker(
                 session,
-                ExecuteSegment::Eval {
-                    code,
-                    allow_stdin: context.request.allow_stdin,
-                },
-                cancel.clone(),
+                segment,
+                context.cancel.clone(),
                 #[cfg(test)]
                 signals,
             ),
-            cancel,
             context,
-            interrupted: false,
-            #[cfg(test)]
-            started: Some(started),
-            #[cfg(test)]
-            finished: Some(finished),
-        }
-    }
-
-    fn spawn_resume(
-        session: HostSession,
-        context: ExecuteContext,
-        input: String,
-        #[cfg(test)] gate: Option<ExecuteWorkerGateWait>,
-    ) -> Self {
-        let cancel = session.cancel_handle();
-        #[cfg(test)]
-        let (signals, started, finished) = worker_signals(gate);
-        Self {
-            handle: spawn_worker(
-                session,
-                ExecuteSegment::Resume { input },
-                cancel.clone(),
-                #[cfg(test)]
-                signals,
-            ),
-            cancel,
-            context,
-            interrupted: false,
             #[cfg(test)]
             started: Some(started),
             #[cfg(test)]
@@ -223,12 +219,12 @@ impl ExecuteWorker {
         }
     }
 
-    pub(super) fn join(self) -> (ExecuteContext, HostSession, KernelExecuteOutcome, bool) {
+    pub(super) fn join(self) -> (ExecuteContext, HostSession, KernelExecuteOutcome) {
         let (session, outcome) = self
             .handle
             .join()
             .expect("execute worker catches eval/resume panics and returns its session");
-        (self.context, session, outcome, self.interrupted)
+        (self.context, session, outcome)
     }
 }
 
@@ -370,6 +366,22 @@ fn run_segment(
                 outcome
             }
             ExecuteSegment::Resume { input } => session.resume_with_input(input),
+            ExecuteSegment::CancelInput => {
+                // Cancellation consumes the suspended request before new source.
+                // Re-enter once here because retirement can run guest cleanup.
+                cancel.cancel();
+                let outcome = session.eval("");
+                assert!(
+                    matches!(&outcome,
+                        HostEvalOutcome::Success(response)
+                            if response.termination == Some(HostTerminationReason::Cancelled))
+                        || matches!(&outcome,
+                        HostEvalOutcome::Failure(failure)
+                            if failure.code == HostFailureCode::Cancelled),
+                    "host input cancellation did not retire its request: {outcome:?}"
+                );
+                outcome
+            }
             ExecuteSegment::RetireInput { suspension } => {
                 super::input_retirement::retire_input_request(session, cancel, suspension)
             }

@@ -24,6 +24,12 @@ fn start(adapter: &mut KernelAdapter, source: &str, allow: bool) -> KernelDispat
     finish_adapter_execute(adapter, initial)
 }
 
+/// An overlapping execute is refused at admission, before any worker starts.
+fn refused(adapter: &mut KernelAdapter, source: &str) -> KernelExecuteResponse {
+    let initial = adapter.dispatch_request(request("execute", source, false));
+    response(&initial).clone()
+}
+
 fn response(dispatch: &KernelDispatchResult) -> &KernelExecuteResponse {
     match &dispatch.reply.as_ref().expect("terminal reply").response {
         KernelResponse::Execute(response) => response,

@@ -1,6 +1,6 @@
 use super::{
-    KernelAdapter, KernelChannel, KernelQueuedTransport, KernelRequest, KernelTransport,
-    KernelWireCodec, KernelWireError, KernelWireMessage,
+    KernelAdapter, KernelChannel, KernelQueuedTransport, KernelTransport, KernelWireCodec,
+    KernelWireError, KernelWireMessage,
 };
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -12,7 +12,6 @@ pub enum KernelPumpEvent {
 pub struct KernelEventPump {
     adapter: KernelAdapter,
     codec: KernelWireCodec,
-    pending_execute_routing_ids: Option<Vec<Vec<u8>>>,
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -32,11 +31,7 @@ impl KernelTransportLoopReport {
 
 impl KernelEventPump {
     pub fn new(adapter: KernelAdapter, codec: KernelWireCodec) -> Self {
-        Self {
-            adapter,
-            codec,
-            pending_execute_routing_ids: None,
-        }
+        Self { adapter, codec }
     }
 
     pub fn adapter(&self) -> &KernelAdapter {
@@ -58,14 +53,9 @@ impl KernelEventPump {
     ) -> Result<(), KernelWireError> {
         let routing_ids = request.routing_ids.clone();
         let envelope = self.codec.decode_request_message(&request)?;
-        let is_execute = matches!(envelope.request, KernelRequest::Execute(_));
-        let dispatch = self.adapter.dispatch_request(envelope);
-        if is_execute && dispatch.reply.is_none() {
-            self.pending_execute_routing_ids = Some(routing_ids.clone());
-        }
-        if is_execute && dispatch.reply.is_some() {
-            self.pending_execute_routing_ids = None;
-        }
+        let dispatch = self
+            .adapter
+            .dispatch_request_with_routing(envelope, routing_ids.clone());
         self.codec
             .send_dispatch_with_routing(transport, &dispatch, routing_ids)
     }
@@ -76,15 +66,11 @@ impl KernelEventPump {
         reply: KernelWireMessage,
     ) -> Result<(), KernelWireError> {
         let envelope = self.codec.decode_input_reply_message(&reply)?;
-        if let Some(dispatch) = self
+        if let Some((dispatch, routing_ids)) = self
             .adapter
-            .handle_input_reply(envelope)
+            .handle_input_reply_with_routing(envelope)
             .map_err(KernelWireError::from)?
         {
-            let routing_ids = self.pending_execute_routing_ids.clone().unwrap_or_default();
-            if dispatch.reply.is_some() {
-                self.pending_execute_routing_ids = None;
-            }
             self.codec
                 .send_dispatch_with_routing(transport, &dispatch, routing_ids)?;
         }
@@ -95,14 +81,11 @@ impl KernelEventPump {
         &mut self,
         transport: &mut T,
     ) -> Result<bool, KernelWireError> {
-        let Some(dispatch) = self.adapter.poll_execute_completion() else {
+        let Some((dispatch, routing_ids)) = self.adapter.poll_execute_completion_with_routing()
+        else {
             return Ok(false);
         };
 
-        let routing_ids = self.pending_execute_routing_ids.clone().unwrap_or_default();
-        if dispatch.reply.is_some() {
-            self.pending_execute_routing_ids = None;
-        }
         self.codec
             .send_dispatch_with_routing(transport, &dispatch, routing_ids)?;
         Ok(true)

@@ -4,12 +4,12 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-30, committed tree through brief-556's gate commit.
+Status checkpoint: 2026-09-30, committed tree through brief-557's gate commit.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
 **Where work resumes (2026-09-30) — the suspension-continuation branch, step
-3E: the Jupyter execute lifecycle (draft E), after briefs 553-556.**
+3F: Jupyter emits each output once (draft F), after briefs 553-557.**
 Steps 1-2 are done. brief-550 (`c6e95dd1`) made guest `Get`, `Needs`, `BeginPackage` dependencies
 and `DeclarePackage` stubs suspend and resume with an inherited request budget.
 brief-551 (`34e57a8d`) fixed what the re-probe of the batch boundary found: a
@@ -83,8 +83,19 @@ error — immediate `execute`, the no-stdin worker, the reply-only shell wrapper
 the event pump, the local driver — now retires the request it admitted first
 (the worker on its own thread) and keeps the original error; the next execute
 runs. Director gate: workspace 2831/0/58 with native ZeroMQ real; the new tests
-fail on the pre-change tree (14 of 20; the six passes are controls). Next: E
-(interrupt while waiting, overlap routing), then F (each output once).
+fail on the pre-change tree (14 of 20; the six passes are controls). **E is
+done (brief-557):** an admitted asynchronous execute owns its cancel handle,
+parent, count and route from admission to its one terminal reply; an interrupt
+while it waits withdraws the input request, retires the request on the worker
+and replies Cancelled on the original route, then idle; an overlapping execute
+is refused at admission without touching the original's state or route.
+Director gate: workspace 2844/0/58 with native ZeroMQ real; retention
+no-default 49/0; the new lifecycle tests fail on the pre-change tree (12 of 13;
+the pass is the mismatched-parent control). The worker had loosened brief-556's
+`start` helper to accept an immediate reply for the now-immediate refusal; the
+director restored its assertion and gave refusals their own helper that asserts
+the immediate reply, then replayed the retention fingerprints the edit expired.
+Next: F (each output once), the last front-end step.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

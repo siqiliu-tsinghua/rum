@@ -76,7 +76,11 @@ fn refused_worker_admission_keeps_original_request() {
 fn refused_admission(immediate: bool) {
     let mut adapter = KernelAdapter::new(Session::new());
     let paused = start(&mut adapter, "InputString[\"owner: \"]", true);
-    let rejected = invoke(&mut adapter, "InputString[\"other: \"]", immediate);
+    let rejected = if immediate {
+        invoke(&mut adapter, "InputString[\"other: \"]", true)
+    } else {
+        refused(&mut adapter, "InputString[\"other: \"]")
+    };
     assert!(
         matches!(rejected.outcome, KernelExecuteOutcome::Failure(ref failure) if failure.code == rum_host::HostFailureCode::Other)
     );
