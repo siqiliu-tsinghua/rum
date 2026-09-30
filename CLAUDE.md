@@ -208,19 +208,23 @@ Consequences for how I present and pick work:
 
 - **ACTIVE BRANCH: SUSPENSION CONTINUATIONS (inserted 2026-09-28 by user
   ruling, briefs 548-550; runs to completion before the retention line resumes
-  at E0).** Handoff is `TODO.md`'s top section — it starts with resuming
-  brief-550, whose uncommitted tree is deliberately left in the working copy
-  (also on `refs/wip/brief-550-interrupted`). A builtin that suspends for input
-  mid-work must resume *into* that work; brief-548 found 86 sites in eight
-  groups that resume past it, plus a loader that swallows the suspension while
-  leaking its owner (a lone `Get` wedges the session; a second input fails a
-  kernel `assert!`). User ruling: guest loading becomes resumable; the host
-  batch APIs stay non-resumable as documented. Order: brief-550 (guest
-  loading, in flight) → batch boundary → front-end input disposition → G1-G8 →
-  E1 (catalog-wide oracle) → E2 (a may-suspend result type with no `Try`, so a
-  bare `?` does not compile). Memory `suspension-continuation-branch.md`.
+  at E0).** Handoff is `TODO.md`'s top section. A builtin that suspends for
+  input mid-work must resume *into* that work; brief-548 found 86 sites in
+  eight groups that resume past it, plus a loader that swallows the suspension
+  while leaking its owner. User ruling: guest loading becomes resumable; the
+  host batch APIs stay non-resumable as documented. Done (2026-09-28 → 30):
+  guest loading (550), batch boundary (551), all front ends (553-558, user
+  rulings U1-U10), G1/G6/G8 loops (559-560; lost 86 → 80, `Differences` keeps
+  a recorded +0.82%). **Now: G2, the lazy pull machine** — designed by 561,
+  revised by 562 into a flat, depth-safe machine after the director's probe
+  found a pre-existing native-stack abort in it; next is writing step A from
+  `.temp/brief-562/draft-A-pull-machine.md` under the rulings in `TODO.md`.
+  Then G3, G4, G5, G7 → E1 (catalog-wide oracle) → E2 (a may-suspend result
+  type with no `Try`, so a bare `?` does not compile). Runs are serial by user
+  ruling (`CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1`). Memory
+  `suspension-continuation-branch.md`.
 
-  **Three things from it are method, not history.**
+  **Four things from it are method, not history.**
 
   - *A repair that closes the instances seen recurs as the class.* brief-530
     fixed one lost continuation on the option path; the sweep found 86 more of
@@ -235,6 +239,13 @@ Consequences for how I present and pick work:
     the director's budget probes measured another limit first — the element
     limit, the iteration limit, a loop body that never polls — before the
     fourth showed `Get` renewing the request deadline per form.
+  - *Probe the structure a design keeps, not only the defect it fixes.*
+    brief-561 designed G2 on the recursive `PullStepper`; one depth probe
+    showed that structure already aborts the process at ~2.2k stages on the
+    ruled 2 MiB stack, and the design would have added four more walks of that
+    shape. The fix was a representation in which deep recursion cannot be
+    written (a flat stage vector under a cursor), not a guard each walk must
+    remember — `Clone`, tracing and `Drop` cannot even return the guard's error.
 
 - **THE RETENTION LINE (2026-09-22 → 28, briefs 524-547) — PAUSED at E0 for
   the branch above.** The design and its theoretical basis are

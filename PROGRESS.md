@@ -3426,3 +3426,53 @@ Method, in the order it cost the most:
 - *The worker ran `git status` at bootstrap twice despite the brief's first
   line forbidding it* (548, 550; 549 ran `pwd`). Harmless and disclosed each
   time, but the prohibition is not self-enforcing.
+
+## 2026-09-29 → 30 — the suspension branch: batch boundary, every front end, the first loops, and a machine that aborts (briefs 551-562)
+
+brief-551 closed what the re-probe of brief-550 found at the batch boundary: a
+public `eval_file` suspended inside a nested guest load panicked on cancel,
+and a failed `restore_from_bytes` on input wedged the session; a request that
+completes while leaving a suspension owner now fails a test/debug-build check.
+brief-552 established by execution what each front end does when guest code
+asks for input, and the user accepted all ten recommendations (U1-U10) and two
+dependencies (`rustix`, `signal-hook`). Briefs 553-558 carried them out: the
+REPL answers from its next line and resumes (masked input with echo off,
+Ctrl-C cancels to the prompt), the CLI's helpers retire the request they
+admitted, and Jupyter abandons, cancels and emits each output once. Found and
+not queued: every front end loses the relative order of prints and messages
+within a request, because the kernel keeps them in separate buffers.
+
+brief-559 gave `Scan`, `OptionValue`, `ReplaceRepeated`, `Dot` and
+`Differences` frames that resume into their own loops (lost continuations
+86 -> 80); brief-560 moved every capture into cold helpers and restored the
+ordinary loops, leaving `Differences` +0.82% instructions after ten measured
+candidates — recorded, attributed by callgrind to `difference_expr` losing
+its inlining. Two host kills under memory pressure led to the user's ruling
+that all runs are serial, which exposed a latent defect in brief-555's CLI
+test harness.
+
+G2, the lazy pull machine, opened with a design (brief-561): one frame owns
+the machine, state moves into it only on `InputRequired`, three completion
+frames finish `Normal`, `Take` and `First`. Probing the adjacent boundary
+before writing the implementation brief, the director found the machine
+already aborts the process: a `LazyMap` chain built by a loop overflows the
+native stack on its first realization at ~2.2k stages on the ruled 2 MiB stack
+(944 bytes per recursive constructor activation), with no guard anywhere and
+only an inventory row to record the self-reaching `Box` chain. brief-562
+revised the design into a flat source plus stage vector under an explicit
+cursor — every walk iterative, the suspension state the cursor itself — and
+the director ruled on its three open questions (a cancellation boundary at
+every lazy callback, the 256-transition poll rejected, the inventory map
+authorized as written).
+
+Method:
+
+- *Probe the structure a design keeps, not only the defect it fixes.* The
+  abort predates the branch; the design would have added four more walks of
+  the shape that causes it.
+- *Prefer the representation in which the hazard cannot be written.* A guard
+  on every recursive walk fails where the walk is `Clone`, tracing or `Drop`,
+  which cannot return its error.
+- *An adjacent finding is not the branch's scope unless the branch rewrites
+  it.* The duplicated `First::nofirst` on an empty lazy list is recorded, not
+  fixed here; the stack abort is in G2 because G2 rewrites that machine.

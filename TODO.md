@@ -4,7 +4,9 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-30, committed tree through brief-560's gate commit.
+Status checkpoint: 2026-09-30, committed tree through brief-562's design
+report; the next action is writing step A of G2 from `.temp/brief-562/draft-A-pull-machine.md`
+under the director rulings recorded below.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -154,6 +156,46 @@ walk iterative and is the pending-pull program counter brief-548 asked for.
 Also found, outside the branch: an empty lazy `First` emits `First::nofirst`
 twice where `First[{}]` emits it once (the residual `First[List[]]` it returns
 is evaluated again).
+**brief-562 is in (design only) — the flat machine is chosen.** The unary-chain
+premise holds (every adapter has one lazy child; `LazyTable` lowers to one
+chain). One `PullSource` plus a `Vec<PullStage>`, outermost first, driven by an
+indexed Down/Up cursor: construction, pull, clone, trace, drop and abandonment
+all iterate, no self-reaching type remains, and the suspension state is the
+cursor (Map/Fold stage index, Select index plus candidate, or NestList's saved
+yield) — brief-561's waiter records and cold path reconstruction are gone. The
+guarded-tree alternative lost on enforceability: `Clone`, `FrameRootTrace` and
+`Drop` are infallible and cannot return `StackLimitExceeded`. Everything else
+of brief-561 stands (single machine frame, cold copy on an actual resume,
+observer re-acquired, `Option<Expr>` codec, the three completion frames, the
+separate bounds frame). Measured pre-fix ceiling on 2 MiB: ~2.17k stages (pass
+2 156, abort 2 187; 944 bytes per constructor activation in the release
+binary, 656 for `next`, 48 for drop). Scratch run: the 39 brief-561 records
+reproduce exactly; nine 2 MiB shallow companions (n = 32) are 5 red / 4
+controls; their nine 10 000-stage counterparts abort the release CLI (exit 134)
+and ship as ignored tests that step A must enable. Drafts A (flat machine and
+consumers, 80 -> 69) and B (bounds, 69 -> 66) are in `.temp/brief-562/`, with
+the inventory map `inventory-plan.md` and a 54-label panel
+(`performance-panel.json`: brief-561's 30 plus 24 depth labels at 8/64/256).
+brief-561's census note was wrong: `First` and `Take` are already N.
+**Director rulings for the next brief (step A, to write from draft A):**
+(1) the callback-completion cancellation checkpoint is accepted — every lazy
+guest callback becomes a cancellation boundary, as every source pull already
+is (one observer load against a guest evaluation; it is what makes the
+cancel-at-inner-callback oracle agree, queued log 32 vs resumed log 1 today);
+the extra poll every 256 stage transitions is **rejected** — between source
+polls the work is O(depth), and depth is bounded by charged, cancellable
+construction work, so the countdown and its shallow specialization buy the
+hot loop complexity with no termination need. (2) Performance: allocations
+first, then paired per-iteration instruction slopes on all 54 labels for
+every candidate, +0.05% per sample as in brief-560; the full timing suite
+runs for the final candidate only and informs, it does not decide. (3) The
+inventory map is authorized as written — remove the `PullStepper`
+self-reaching row, re-identify the `PullBudget` derive, relocate the ten named
+constructs, add the named new rows; any other row change still STOPs.
+Serial bounds from measured history (briefs 559-560): `cargo test -p
+rum-stdlib` 990-1 047 s, `--workspace` 651-1 012 s, no-default retention ~900 s
+(560's 900.1 s may have met its bound) — set 1 500 s for each; release
+`rum-cli` build 89-108 s (300 s).
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
