@@ -99,7 +99,7 @@ impl Session {
                     let effective_limit = expr_as_non_negative_usize(&effective_limit_expr)
                         .expect("replace-repeated limit should be non-negative");
 
-                    session.resume_replace_repeated_loop(current, rules, 0, effective_limit)
+                    session.replace_repeated_from_start(current, rules, effective_limit)
                 })() },
             suspend => ResumeReplaceRepeatedAfterRuleExprsSuspensionFrame {
                 call_args: SharedArgs::new(call_args),
@@ -130,6 +130,97 @@ impl Session {
                         .map(|limit| Expr::integer(BigInt::from(limit))))
                 })() },
             suspend => ResolveReplaceRepeatedLimitOwnedSuspensionFrame { ceiling },
+        )
+    }
+
+    fn replace_repeated_from_start(
+        &mut self,
+        mut current: Expr,
+        rules: RewriteRulePlan,
+        effective_limit: usize,
+    ) -> Result<Expr, EvalError> {
+        for iteration in 0..effective_limit {
+            let replaced = match self.apply_replace_all_with_plan(
+                current.clone(),
+                rules.clone(),
+                RuleApplicationSource::ReplaceRepeated,
+            ) {
+                Ok(replaced) => replaced,
+                Err(error) => {
+                    return self.suspend_replace_repeated_pass(
+                        current,
+                        rules,
+                        iteration,
+                        effective_limit,
+                        error,
+                    );
+                }
+            };
+            let next = match self.evaluate(replaced) {
+                Ok(next) => next,
+                Err(error) => {
+                    return self.suspend_replace_repeated_evaluation(
+                        current,
+                        rules,
+                        iteration,
+                        effective_limit,
+                        error,
+                    );
+                }
+            };
+            if next == current {
+                return Ok(next);
+            }
+            current = next;
+        }
+        Err(EvalError::IterationLimitExceeded {
+            limit: effective_limit,
+        })
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn suspend_replace_repeated_pass(
+        &mut self,
+        current: Expr,
+        rules: RewriteRulePlan,
+        iteration: usize,
+        effective_limit: usize,
+        error: EvalError,
+    ) -> Result<Expr, EvalError> {
+        crate::resume_or_suspend!(
+            self,
+            Err(error),
+            ok(value) => Ok(value),
+            suspend => ResumeReplaceRepeatedAfterReplaceSuspensionFrame {
+                current,
+                rules,
+                iteration,
+                effective_limit,
+            },
+        )
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn suspend_replace_repeated_evaluation(
+        &mut self,
+        current: Expr,
+        rules: RewriteRulePlan,
+        iteration: usize,
+        effective_limit: usize,
+        error: EvalError,
+    ) -> Result<Expr, EvalError> {
+        crate::resume_or_suspend!(
+            self,
+            Err(error),
+            ok(value) => Ok(value),
+            suspend => ResumeReplaceRepeatedLoopSuspensionFrame {
+                current,
+                rules,
+                iteration,
+                effective_limit,
+            },
         )
     }
 

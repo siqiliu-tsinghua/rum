@@ -45,7 +45,45 @@ pub(crate) fn eval_dot(
         return Ok(first.clone());
     }
 
-    dot_from_operand(session, head, args, first.clone(), 1)
+    let times = system_expr("Times");
+    let plus = system_expr("Plus");
+    let mut current = first.clone();
+    let mut remaining = rest.iter();
+    while let Some(next) = remaining.next() {
+        let result = match compute_inner(session, "Dot", &times, &current, next, &plus) {
+            Ok(result) => result,
+            Err(error) => {
+                return suspend_dot(session, head, args, args.len() - remaining.len(), error);
+            }
+        };
+        let Some(result) = result else {
+            return Ok(Expr::call(head.clone(), args.to_vec()));
+        };
+        current = result;
+    }
+
+    Ok(current)
+}
+
+#[cold]
+#[inline(never)]
+fn suspend_dot(
+    session: &mut Session,
+    head: &Expr,
+    args: &SharedArgs,
+    next_index: usize,
+    error: EvalError,
+) -> Result<Expr, EvalError> {
+    rum_runtime::resume_or_suspend!(
+        session,
+        Err(error),
+        ok(value) => Ok(value),
+        suspend => DotSuspensionFrame {
+            head: head.clone(),
+            args: args.clone(),
+            next_index,
+        },
+    )
 }
 
 fn dot_from_operand(

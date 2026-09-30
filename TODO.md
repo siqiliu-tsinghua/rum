@@ -4,7 +4,7 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-30, committed tree through brief-559's gate commit.
+Status checkpoint: 2026-09-30, committed tree through brief-560's gate commit.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -120,9 +120,18 @@ of 21; the passes are the Dot and ReplaceRepeated cancellation controls).
 Two host kills under memory pressure along the way; the user ruled serial runs
 (`CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1`), which exposed and fixed a latent
 defect in brief-555's CLI test harness (`--quiet`, no inherited thread count).
-**Open, and next: the ordinary path got dearer** — per-iteration instructions
-`Differences` +1.86% (director reproduced +1.92%), `ReplaceRepeated` +0.4%,
-`OptionValue` +0.38%, allocations unchanged. brief-560 erases it before G2.
+The ordinary path got dearer — per-iteration instructions `Differences` +1.86%,
+`ReplaceRepeated` +0.4%, `OptionValue` +0.38%. **brief-560 erased all but one
+residual:** every ordinary loop is restored and frames are captured in cold
+helpers; eight of nine labels now sit at or below the base (most 0.1-0.6%
+below). `Differences` keeps **+0.82%** (director-measured; ~80 instructions
+per call of `Differences[{1,4,9,16,25}]`), **recorded, not tuned further**:
+callgrind (calibrated against `perf stat`) attributes it to `difference_expr`
+losing its inlining, and ten measured candidates — including a single call site
+(candidate 09) and a single call site with `#[inline(always)]` (director
+experiment, +1.17%) — could not recover it; carrying the loop's state in the
+error arm is what changes the hot loop's shape. Next: G2 (the lazy pull
+machine, 14 sites).
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

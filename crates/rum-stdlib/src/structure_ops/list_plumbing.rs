@@ -25,7 +25,36 @@ pub(crate) fn eval_differences(
         return Ok(Expr::call(head.clone(), args.to_vec()));
     };
 
-    differences_from_order(session, items.to_vec(), order)
+    let mut current = items.to_vec();
+    for iteration in 0..order {
+        current = match successive_differences(session, &current) {
+            Ok(row) => row,
+            Err(error) => {
+                return suspend_differences_order(session, order - iteration - 1, error);
+            }
+        };
+        if current.is_empty() {
+            break;
+        }
+    }
+
+    session.enforce_generated_element_limit_for_count(current.len())?;
+    Ok(Expr::call(system_expr(heads::structure::LIST), current))
+}
+
+#[cold]
+#[inline(never)]
+fn suspend_differences_order(
+    session: &mut Session,
+    remaining_order: usize,
+    error: EvalError,
+) -> Result<Expr, EvalError> {
+    rum_runtime::resume_or_suspend!(
+        session,
+        Err(error),
+        ok(value) => Ok(value),
+        suspend => DifferencesOrderSuspensionFrame { remaining_order },
+    )
 }
 
 fn differences_from_order(
@@ -111,12 +140,43 @@ pub(crate) fn eval_pad_right(
     eval_pad(session, args, PadSide::Right)
 }
 
+#[inline(always)]
 fn successive_differences(session: &mut Session, items: &[Expr]) -> Result<Vec<Expr>, EvalError> {
     if items.len() < 2 {
         return Ok(Vec::new());
     }
 
-    differences_from_pair(session, items, 0, Vec::with_capacity(items.len() - 1))
+    let mut differences = Vec::with_capacity(items.len() - 1);
+    for pair in items.windows(2) {
+        let value = match difference_expr(session, &pair[0], &pair[1]) {
+            Ok(value) => value,
+            Err(error) => {
+                return suspend_differences_row(session, items, differences, error);
+            }
+        };
+        differences.push(value);
+    }
+    Ok(differences)
+}
+
+#[cold]
+#[inline(never)]
+fn suspend_differences_row(
+    session: &mut Session,
+    items: &[Expr],
+    differences: Vec<Expr>,
+    error: EvalError,
+) -> Result<Vec<Expr>, EvalError> {
+    rum_runtime::resume_or_suspend!(
+        session,
+        Err(error),
+        ok(value) => Ok(value),
+        suspend => DifferencesRowSuspensionFrame {
+            items: items.to_vec().into(),
+            next_pair: differences.len() + 1,
+            differences: differences.into(),
+        },
+    )
 }
 
 fn differences_from_pair(
