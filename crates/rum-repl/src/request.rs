@@ -21,20 +21,49 @@ pub(super) enum InputEvent {
 }
 
 /// An answer reader must own (or borrow) the source reader's buffering.
-/// A future terminal reader may advertise password entry only when it can
+/// A terminal reader may advertise password entry only when it can
 /// suppress all echo, including placeholders, and restore terminal state.
 pub(super) trait RequestInput {
     fn password_available(&self) -> bool;
-    fn read_answer(&mut self, password: bool) -> io::Result<InputEvent>;
+    fn read_answer(
+        &mut self,
+        password: bool,
+        prompt: impl FnOnce() -> io::Result<()>,
+    ) -> io::Result<InputEvent>;
+}
+
+pub(super) struct AnswerInput<'a, R> {
+    pub reader: &'a mut R,
+    #[cfg(unix)]
+    pub terminal: Option<&'a super::terminal::Terminal>,
+}
+
+impl<R: BufRead> RequestInput for AnswerInput<'_, R> {
+    fn password_available(&self) -> bool {
+        #[cfg(unix)]
+        if self.terminal.is_some() {
+            return true;
+        }
+        false
+    }
+
+    fn read_answer(
+        &mut self,
+        password: bool,
+        prompt: impl FnOnce() -> io::Result<()>,
+    ) -> io::Result<InputEvent> {
+        #[cfg(unix)]
+        if let Some(terminal) = self.terminal {
+            return terminal.read_answer(self.reader, password, prompt);
+        }
+        prompt()?;
+        PlainInput(self.reader).read_answer(password)
+    }
 }
 
 pub(super) struct PlainInput<'a, R>(pub(super) &'a mut R);
 
-impl<R: BufRead> RequestInput for PlainInput<'_, R> {
-    fn password_available(&self) -> bool {
-        false
-    }
-
+impl<R: BufRead> PlainInput<'_, R> {
     fn read_answer(&mut self, password: bool) -> io::Result<InputEvent> {
         if password {
             return Err(io::Error::new(
@@ -135,9 +164,16 @@ pub(super) fn drive(
                     } else {
                         &request.prompt
                     };
-                    output.write_all(prompt.as_bytes())?;
-                    output.flush()?;
-                    input.read_answer(request.password).map(Some)
+                    let answer = input.read_answer(request.password, || {
+                        output.write_all(prompt.as_bytes())?;
+                        output.flush()
+                    })?;
+                    if request.password && matches!(answer, InputEvent::Answer(_)) {
+                        // Hidden entry suppresses Enter's echo too. Start the
+                        // guest result on its own line, inside the I/O boundary.
+                        writeln!(output)?;
+                    }
+                    Ok(Some(answer))
                 })();
 
                 match wait {

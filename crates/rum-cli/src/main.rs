@@ -214,7 +214,10 @@ fn build_host_session() -> HostSession {
 fn run_repl(session: &mut HostSession) -> io::Result<()> {
     let stdin = io::stdin();
     let stdout = io::stdout();
-    let mut repl = Repl::new(stdin.lock(), stdout.lock()).with_default_history();
+    let repl = Repl::new(stdin.lock(), stdout.lock()).with_default_history();
+    #[cfg(unix)]
+    let repl = repl.with_terminal_input()?;
+    let mut repl = repl;
     repl.run(session)
 }
 

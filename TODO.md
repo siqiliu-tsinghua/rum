@@ -4,12 +4,12 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-30, committed tree through brief-553's gate commit.
+Status checkpoint: 2026-09-30, committed tree through brief-554's gate commit.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
 **Where work resumes (2026-09-30) — the suspension-continuation branch, step
-3B: the terminal reader (draft B), after brief-553 made the REPL resume.**
+3C: the CLI helpers (draft C), after briefs 553-554 made the REPL resume.**
 Steps 1-2 are done. brief-550 (`c6e95dd1`) made guest `Get`, `Needs`, `BeginPackage` dependencies
 and `DeclarePackage` stubs suspend and resume with an inherited request budget.
 brief-551 (`34e57a8d`) fixed what the re-probe of the batch boundary found: a
@@ -58,7 +58,16 @@ whitespace-padded answer, cancels on EOF with cleanup once, and keeps answers
 out of `.rum_history`. The worker stopped at the fence because any source
 change expires the retention fingerprints and certificates (they hash every
 file under `crates/`); the director replayed them, and `TEMPLATE.md` now makes
-that refresh a standing duty of every brief. Next: B, then C, D, E, F.
+that refresh a standing duty of every brief. **B is done (brief-554):** on a
+terminal the REPL answers masked requests with echo off and restores the
+terminal on every exit, and Ctrl-C while waiting cancels to the prompt through a
+wait-scoped self-pipe (`rustix` 1.1.4 and `signal-hook` 0.3.18, Unix only,
+`rum-repl`); Ctrl-C elsewhere still terminates. Director gate: workspace
+2790/0/58 with native ZeroMQ and the pty tests run for real; the new pty tests
+fail on the pre-change tree (5 of 9; the passes are the four unchanged-behaviour
+controls); a real `rum-cli` on a pseudo-terminal hid a typed secret, kept it out
+of history, cancelled on Ctrl-C with cleanup once, and still exited 130 on
+Ctrl-C at an idle prompt. Next: C, then D, E, F.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

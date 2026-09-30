@@ -20,10 +20,16 @@
 //! session never retains input work started here; a rejected overlap leaves
 //! the caller's existing request alone.
 //!
+//! On Unix, [`Repl::with_terminal_input`] enables hidden password entry and
+//! Ctrl-C cancellation during answers, using the same buffered input. Echo and
+//! descriptor flags are restored on return, EOF, interruption, I/O error and
+//! panic unwinding. Answers never enter history or reader diagnostics. Masking
+//! protects entry only; guest output may print the answer afterwards.
+//!
 //! Plain [`BufRead`] readers cannot guarantee hidden entry. Masked requests
 //! report "password input unavailable" and are abandoned without reading an
-//! answer. Terminal echo suppression and signal handling require a terminal
-//! reader; this crate's plain reader does not implement those mechanisms.
+//! answer. Terminal input is an explicit opt-in to the CLI's SIGINT policy;
+//! plain readers do not change the embedding process's signal handlers.
 
 use std::env;
 use std::fs;
@@ -38,7 +44,9 @@ mod completeness;
 mod request;
 use self::commands::*;
 use self::completeness::{CompletenessHint, IncrementalCompleteness};
-use self::request::{PlainInput, RequestExit};
+use self::request::{AnswerInput, RequestExit};
+#[cfg(unix)]
+mod terminal;
 
 const HISTORY_ENTRY_PREFIX: &str = ":rum-history-v1:";
 
@@ -49,6 +57,8 @@ pub struct Repl<R, W> {
     continuation_prompt: String,
     history: Vec<String>,
     history_path: Option<PathBuf>,
+    #[cfg(unix)]
+    terminal: Option<terminal::Terminal>,
 }
 
 impl<R, W> Repl<R, W>
@@ -64,7 +74,25 @@ where
             continuation_prompt: "...> ".to_string(),
             history: Vec::new(),
             history_path: None,
+            #[cfg(unix)]
+            terminal: None,
         }
+    }
+
+    /// Enable Unix terminal answers on the same buffered input.
+    ///
+    /// This opts into the CLI's process-wide SIGINT policy: cancel during an
+    /// answer wait, default SIGINT termination otherwise. Use only in a process
+    /// that owns its SIGINT policy, without other SIGINT handlers or readers of
+    /// this terminal. Plain `new` leaves the embedding process's policy alone.
+    /// Non-terminal input retains the plain reader's password refusal.
+    #[cfg(unix)]
+    pub fn with_terminal_input(mut self) -> io::Result<Self>
+    where
+        R: std::os::fd::AsFd,
+    {
+        self.terminal = terminal::Terminal::new(&self.input)?;
+        Ok(self)
     }
 
     pub fn with_default_history(mut self) -> Self {
@@ -166,7 +194,11 @@ where
     ) -> io::Result<RequestExit> {
         request::drive(
             session,
-            &mut PlainInput(&mut self.input),
+            &mut AnswerInput {
+                reader: &mut self.input,
+                #[cfg(unix)]
+                terminal: self.terminal.as_ref(),
+            },
             &mut self.output,
             input,
             render_host_eval_response,
@@ -254,7 +286,11 @@ where
             } => {
                 return request::drive(
                     session,
-                    &mut PlainInput(&mut self.input),
+                    &mut AnswerInput {
+                        reader: &mut self.input,
+                        #[cfg(unix)]
+                        terminal: self.terminal.as_ref(),
+                    },
                     &mut self.output,
                     source,
                     |response| render_trace_response(response, *full, form_notice.as_deref()),

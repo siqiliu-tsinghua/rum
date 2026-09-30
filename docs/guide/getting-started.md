@@ -73,17 +73,22 @@ parser without adding a REPL reprompt on a parse error. During an input wait,
 the REPL uses the input request's prompt; `...> ` is for unfinished source.
 
 EOF at an input prompt cancels the waiting evaluation, runs guest cleanup once,
-and exits. A reader that reports an interrupted read cancels and returns to
-`rum> `. Earlier definitions survive, and the abandoned remainder does not run.
+and exits. On a Unix terminal, Ctrl-C while waiting for an answer cancels and
+returns to `rum> `. Earlier definitions survive, and the abandoned remainder
+does not run. Ctrl-C at the primary prompt or during an ordinary evaluation
+keeps its existing behavior. Plain readers can also report an interrupted read
+to cancel an answer.
 An I/O error also retires the request before it is returned to the caller.
 Cancellation is reported once; automatic abandonment retains the input-required
 reason. A borrowed host session is reusable after the REPL's request ends.
 
-The current plain buffered reader cannot hide password entry. Requests with
-`FieldMasked -> True` report `password input unavailable` and are abandoned
-without reading an answer. Terminal echo suppression and terminal interrupt
-handling are separate reader features; an interrupted-read result does not
-itself promise physical Ctrl-C handling.
+The CLI's Unix terminal reader hides answers requested with `FieldMasked -> True`:
+there is no character echo or placeholder, and answers never enter history or
+reader diagnostics. Terminal settings are restored on normal return, EOF,
+Ctrl-C, I/O error and panic unwinding. Masking protects entry only; guest code
+can still print the answer afterwards. Plain buffered readers and platforms
+without this terminal reader report `password input unavailable` and abandon
+masked requests without reading an answer or falling back to visible entry.
 
 ## Script Files
 
