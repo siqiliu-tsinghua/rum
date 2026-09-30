@@ -706,3 +706,18 @@ the changed files, reconcile the ownership inventories with those additions,
 replay the retention fingerprints and certificates, run every gate in
 Verification, and finish the performance gate against the base you preserved.
 Append your report covering both runs.
+
+## Second resume — the host stopped the run, not the work
+
+The resumed run was killed by the director's harness when the machine ran
+critically low on memory; nothing in the run caused it. The working tree is as
+that run left it and is also preserved, without moving HEAD, on
+`refs/wip/brief-559-interrupted` and in `.temp/brief-559/wip-backup/`.
+
+Read `.temp/brief-559/PROGRESS.md` and continue from its last line: runtime is
+green (1116), focused 21/21, fmt clean; what remains is the final ownership
+discovery and the contract fingerprint and certificate replay (the frame
+changes after your last replay expired them again), `rum-stdlib`, the
+workspace, the `--no-default-features` retention gate, and the performance
+gate. **Run every cargo command with `env CARGO_BUILD_JOBS=2`** from here on,
+to keep memory down. Append one report covering all three runs.
