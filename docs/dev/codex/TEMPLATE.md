@@ -128,6 +128,16 @@ produce; for implementation: code + tests + the before/after per-label rows).
    is progress**: a compile error you are actively fixing is not a wall, and
    the stop-loss is measured only once the tree compiles. Keying it on the
    failure's reason instead fires on every converging mechanical repair.
+8. **An instruction gate builds both arms with one codegen unit.** Per-iteration
+   instruction slopes (`taskset -c 2 perf stat -x, -e cpu_core/instructions/u`,
+   `(count(2N) - count(N)) / N`, stdin `/dev/null`) decide; timing does not. But
+   the default release profile has 16 codegen units, and adding code anywhere in
+   a crate repartitions them and moves inlining in code the change never
+   touched: brief-565's ordinary `Take` read +0.6% from that alone and 0.00%
+   with one unit, while untouched controls sat within ±0.02%. Build base and
+   candidate with `CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1` (from the same
+   source paths' exports, each into its own target directory) whenever the
+   gate's threshold is finer than about 1%.
 
 ## Verification (MANDATORY — you run it; iterate to green / to evidence)
 

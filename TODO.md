@@ -4,8 +4,9 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-05, committed tree through brief-564's gate
-(`fd542ab3`); brief-565 (erase G2's ordinary-path cost) is dispatched.
+Status checkpoint: 2026-10-05, committed tree through brief-565's report
+(no source change); brief-566 (the lazy ordinary-path cost, measured with one
+codegen unit) is dispatched.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -239,6 +240,20 @@ oracle compares cancellation at the actual suspension. B adds +0.67% to
 `LazyTable` construction (each bound cloned on the success path for the error
 edge). **Next: brief-565** erases G2's ordinary-path cost against the pre-G2
 binary, all 54 labels to the base, attribution first; then G3.
+**brief-565 stopped at its stop-loss with the tree restored, and the
+measurement was the director's error.** The release profile has 16 codegen
+units; adding code anywhere in `rum-stdlib` repartitions them and moves
+inlining in untouched code. Rebuilt with one unit
+(`CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1`), ordinary `Take` reads -0.003% /
+-0.004% (it read +0.6%) and four controls sit within ±0.02%: **G2 costs the
+non-lazy path nothing**. Brief-565's candidate 02 (bound recovery moved to the
+suspension edge) was rejected on neighbour moves of that size. The shallow lazy
+labels still cost +0.17% to +2.06% with one unit — real. Brief-560's
+`Differences` residual is real too: +0.92% with one unit (pre-559 against
+post-560). `TEMPLATE.md` pitfall 8 now requires one-unit builds for an
+instruction gate finer than about 1%. **Next: brief-566** — erase the shallow
+lazy cost, one-unit base `.temp/brief-566/base/`, starting from 565's
+candidate 02 and a one-unit attribution; then G3.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
