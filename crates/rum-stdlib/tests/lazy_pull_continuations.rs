@@ -466,3 +466,6 @@ fn cancel_second_suspension() {
 mod depth;
 #[path = "lazy_pull_continuations/structural.rs"]
 mod structural;
+
+#[path = "lazy_pull_continuations/bounds.rs"]
+mod bounds;

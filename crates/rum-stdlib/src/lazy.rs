@@ -12,6 +12,7 @@ mod machine;
 mod realization;
 mod source;
 mod state;
+mod table_continuation;
 
 #[derive(Clone, Copy, FrameRootTrace)]
 enum PullBudget {
@@ -215,6 +216,9 @@ pub(crate) fn eval_lazy_table(
     _head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    use table_continuation::{BoundSlot, suspend_bounds};
+
+    let held_args = args;
     let args = args.as_ref();
     let [body, spec] = args else {
         return Ok(session.invalid_call_with_exact_arg_count("LazyTable", args, 2));
@@ -241,9 +245,57 @@ pub(crate) fn eval_lazy_table(
         return Ok(invalid_lazy_table_spec(session, args));
     }
 
-    let imin = session.evaluate(imin)?;
-    let imax = session.evaluate(imax)?;
-    let step = session.evaluate(step)?;
+    let imin = match session.evaluate(imin.clone()) {
+        Ok(value) => value,
+        Err(error) => {
+            return Err(suspend_bounds(
+                session,
+                held_args,
+                iterator,
+                [imin, imax, step],
+                BoundSlot::Lower,
+                error,
+            ));
+        }
+    };
+    let imax = match session.evaluate(imax.clone()) {
+        Ok(value) => value,
+        Err(error) => {
+            return Err(suspend_bounds(
+                session,
+                held_args,
+                iterator,
+                [imin, imax, step],
+                BoundSlot::Upper,
+                error,
+            ));
+        }
+    };
+    let step = match session.evaluate(step.clone()) {
+        Ok(value) => value,
+        Err(error) => {
+            return Err(suspend_bounds(
+                session,
+                held_args,
+                iterator,
+                [imin, imax, step],
+                BoundSlot::Step,
+                error,
+            ));
+        }
+    };
+    finish_lazy_table(session, args, iterator, body, imin, imax, step)
+}
+
+fn finish_lazy_table(
+    session: &mut Session,
+    args: &[Expr],
+    iterator: &Expr,
+    body: &Expr,
+    imin: Expr,
+    imax: Expr,
+    step: Expr,
+) -> Result<Expr, EvalError> {
     let (Some(imin_value), Some(imax_value), Some(step_value)) = (
         expr_as_exact_rational(&imin),
         expr_as_exact_rational(&imax),
