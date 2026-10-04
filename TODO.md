@@ -4,8 +4,8 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-05, committed tree through brief-563's gate
-(`79b42d54`); brief-564 (G2 step B) is dispatched.
+Status checkpoint: 2026-10-05, committed tree through brief-564's gate
+(`fd542ab3`); brief-565 (erase G2's ordinary-path cost) is dispatched.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -226,6 +226,19 @@ brief-564 (step B, `LazyTable`'s bounds, 69 -> 66, measures but does not
 tune), then brief-565 erases G2's ordinary-path cost as a whole against the
 pre-G2 binary `.temp/brief-563/base/rum-cli` (callgrind attribution first, as
 in brief-560; the flat representation and its depth contract are fixed).
+**G2 step B is done and G2 is closed (brief-564, `fd542ab3`):** a bound that
+asks for input resumes into the remaining bounds, then the unchanged
+all-three validation and the inert plan; nonnumeric and zero-step input still
+fall back after every bound's effects. Lost 69 -> 66. Director gate:
+workspace 2955/0/58 with native ZeroMQ real; on an unchanged export nine of
+the ten new cases fail (the pass is a cancellation control). The worker's
+"adjacent" note — cancellation triggered synchronously by a `Print` during a
+bound is observed later than cancellation at a suspension — is not a defect:
+eager bound evaluations have only the evaluator's own poll points, and the
+oracle compares cancellation at the actual suspension. B adds +0.67% to
+`LazyTable` construction (each bound cloned on the success path for the error
+edge). **Next: brief-565** erases G2's ordinary-path cost against the pre-G2
+binary, all 54 labels to the base, attribution first; then G3.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
