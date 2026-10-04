@@ -436,9 +436,12 @@ $ cargo run -q -p rum-cli -- --eval 'Take[LazyPermutations[Range[20]], 2]'
 List[List[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], List[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 19]]
 ```
 
-Lazy sequences are pure. A realizer runs under the same iteration ceiling and
-cancellation as `Do` and `Table`, so no lazy realization can hang the host —
-an unbounded pull fails closed. A lazy value is an ordinary immutable
+Lazy sequences are pure. A realizer runs under the iteration work ceiling and
+observes cancellation at each source pull and after each callback returns,
+before applying its value. An unbounded pull fails closed. If a callback asks
+for input, the suspended realization resumes into its remaining work and then
+completes its `Normal`, `Take`, `First`, or `Part` consumer; completed callbacks
+and source pulls are not repeated. A lazy value is an ordinary immutable
 expression, so it is captured and restored with the session snapshot and
 re-derives identically. There is no mutable cursor: `Rest` returns a new lazy
 tail, and realizing the same value twice recomputes it.

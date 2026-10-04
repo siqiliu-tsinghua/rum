@@ -193,7 +193,7 @@ fn reaches(graph: &BTreeMap<String, BTreeSet<String>>, start: &str, target: &str
     false
 }
 
-fn recursive_edges_from_source(path: &str, source: &str) -> Vec<RecursiveEdge> {
+pub(super) fn recursive_edges_from_source(path: &str, source: &str) -> Vec<RecursiveEdge> {
     let syntax = syn::parse_file(source)
         .unwrap_or_else(|error| panic!("recursion inventory should parse {path}: {error}"));
     let mut definitions = CallableCollector::default();

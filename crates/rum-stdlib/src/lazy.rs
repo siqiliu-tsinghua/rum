@@ -2,14 +2,18 @@ use rum_core::SharedArgs;
 
 use rum_core::{BigInt, Expr, Rational};
 use rum_runtime::kernel_api::{
-    CancellationObserver, EvalError, Session, compare_expr_canonical, expr_as_exact_rational,
+    EvalError, FrameRootTrace, FrameRootVisitor, Session, expr_as_exact_rational,
     expr_as_non_negative_usize, expr_as_symbol, is_system_symbol_name, list_items, system_expr,
-    truthiness_symbol,
 };
 
-use crate::structure_ops::next_permutation;
+mod continuation;
+mod descriptor;
+mod machine;
+mod realization;
+mod source;
+mod state;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, FrameRootTrace)]
 enum PullBudget {
     AtMost(usize),
     UntilExhausted,
@@ -20,203 +24,6 @@ impl PullBudget {
         match self {
             Self::AtMost(limit) => pulled >= limit,
             Self::UntilExhausted => false,
-        }
-    }
-}
-
-struct PullContext {
-    iteration_limit: usize,
-    source_pulls: usize,
-    cancellation: CancellationObserver,
-}
-
-impl PullContext {
-    fn new(session: &Session) -> Self {
-        Self {
-            iteration_limit: session.resource_limits().iteration_work_limit,
-            source_pulls: 0,
-            cancellation: session.cancellation_observer(),
-        }
-    }
-
-    fn charge_source_pull(&mut self) -> Result<(), EvalError> {
-        if self.cancellation.is_cancelled() {
-            return Err(EvalError::Cancelled);
-        }
-        if self.source_pulls >= self.iteration_limit {
-            return Err(EvalError::IterationWorkLimitExceeded {
-                limit: self.iteration_limit,
-            });
-        }
-
-        self.source_pulls += 1;
-        Ok(())
-    }
-}
-
-enum PullStepper {
-    Range {
-        current: Rational,
-        step: Rational,
-    },
-    Permutations {
-        current: Vec<Expr>,
-        exhausted: bool,
-    },
-    Subsets {
-        elements: Vec<Expr>,
-        k: usize,
-        combo: Vec<usize>,
-    },
-    Tuples {
-        inner_lists: Vec<Expr>,
-        digits: Vec<usize>,
-        exhausted: bool,
-    },
-    NestList {
-        function: Expr,
-        current: Expr,
-    },
-    Map {
-        function: Expr,
-        inner: Box<PullStepper>,
-    },
-    Select {
-        predicate: Expr,
-        inner: Box<PullStepper>,
-    },
-    Take {
-        inner: Box<PullStepper>,
-        remaining: usize,
-    },
-    Drop {
-        inner: Box<PullStepper>,
-        remaining: usize,
-    },
-    FoldList {
-        function: Expr,
-        accumulator: Expr,
-        emitted_init: bool,
-        inner: Box<PullStepper>,
-    },
-}
-
-impl PullStepper {
-    fn next(
-        &mut self,
-        session: &mut Session,
-        ctx: &mut PullContext,
-    ) -> Result<Option<Expr>, EvalError> {
-        match self {
-            Self::Range { current, step } => {
-                ctx.charge_source_pull()?;
-                let value = Expr::rational(current.clone());
-                *current = current.add(step);
-                Ok(Some(value))
-            }
-            Self::Permutations { current, exhausted } => {
-                if *exhausted {
-                    return Ok(None);
-                }
-                ctx.charge_source_pull()?;
-                let permutation = Expr::call(system_expr("List"), current.clone());
-                *exhausted = !next_permutation(current);
-                Ok(Some(permutation))
-            }
-            Self::Subsets { elements, k, combo } => {
-                if *k > elements.len() {
-                    return Ok(None);
-                }
-                ctx.charge_source_pull()?;
-                let subset = Expr::call(
-                    system_expr("List"),
-                    combo.iter().map(|index| elements[*index].clone()).collect(),
-                );
-                advance_subset_cursor(elements.len(), k, combo);
-                Ok(Some(subset))
-            }
-            Self::Tuples {
-                inner_lists,
-                digits,
-                exhausted,
-            } => {
-                if *exhausted {
-                    return Ok(None);
-                }
-                ctx.charge_source_pull()?;
-                let tuple = Expr::call(
-                    system_expr("List"),
-                    inner_lists
-                        .iter()
-                        .zip(digits.iter())
-                        .map(|(list, digit)| {
-                            list_items(list).expect("tuple factors were validated")[*digit].clone()
-                        })
-                        .collect(),
-                );
-                *exhausted = advance_tuple_cursor(inner_lists, digits);
-                Ok(Some(tuple))
-            }
-            Self::NestList { function, current } => {
-                ctx.charge_source_pull()?;
-                let value = current.clone();
-                *current = session.evaluate(Expr::call(function.clone(), vec![value.clone()]))?;
-                Ok(Some(value))
-            }
-            Self::Map { function, inner } => {
-                let Some(value) = inner.next(session, ctx)? else {
-                    return Ok(None);
-                };
-                Ok(Some(
-                    session.evaluate(Expr::call(function.clone(), vec![value]))?,
-                ))
-            }
-            Self::Select { predicate, inner } => loop {
-                let Some(value) = inner.next(session, ctx)? else {
-                    return Ok(None);
-                };
-                let selected =
-                    session.evaluate(Expr::call(predicate.clone(), vec![value.clone()]))?;
-                if truthiness_symbol(&selected) == Some(true) {
-                    return Ok(Some(value));
-                }
-            },
-            Self::Take { inner, remaining } => {
-                if *remaining == 0 {
-                    return Ok(None);
-                }
-                *remaining -= 1;
-                inner.next(session, ctx)
-            }
-            Self::Drop { inner, remaining } => {
-                while *remaining > 0 {
-                    let Some(_) = inner.next(session, ctx)? else {
-                        *remaining = 0;
-                        return Ok(None);
-                    };
-                    *remaining -= 1;
-                }
-                inner.next(session, ctx)
-            }
-            Self::FoldList {
-                function,
-                accumulator,
-                emitted_init,
-                inner,
-            } => {
-                if !*emitted_init {
-                    *emitted_init = true;
-                    return Ok(Some(accumulator.clone()));
-                }
-                let Some(value) = inner.next(session, ctx)? else {
-                    return Ok(None);
-                };
-                *accumulator = session.evaluate(Expr::call(
-                    function.clone(),
-                    vec![accumulator.clone(), value],
-                ))?;
-                Ok(Some(accumulator.clone()))
-            }
         }
     }
 }
@@ -571,20 +378,23 @@ fn realize(
     let Some(descriptor) = lazy_list_descriptor(lazy_list) else {
         return Ok(None);
     };
-    let Some(mut stepper) = stepper_from_descriptor(descriptor) else {
+    let Some(mut machine) = descriptor::machine_from_descriptor(descriptor) else {
         return Ok(None);
     };
-    let mut ctx = PullContext::new(session);
+    let mut ctx = state::PullContext::new(session);
     let mut items = Vec::new();
-
-    loop {
-        if budget.reached(items.len()) {
-            return Ok(Some(Expr::call(system_expr("List"), items)));
-        }
-        let Some(item) = stepper.next(session, &mut ctx)? else {
-            return Ok(Some(Expr::call(system_expr("List"), items)));
-        };
-        items.push(item);
+    match realization::drive_items(
+        &mut machine,
+        session,
+        &mut ctx,
+        &mut items,
+        budget,
+        state::DriveCursor::Down { at: 0 },
+    ) {
+        Ok(()) => Ok(Some(Expr::call(system_expr("List"), items))),
+        Err(error) => Err(continuation::suspend_realization(
+            session, machine, items, budget, ctx, error,
+        )),
     }
 }
 
@@ -646,154 +456,9 @@ fn lazy_table_count(imin: &Rational, imax: &Rational, step: &Rational) -> Option
     expr_as_non_negative_usize(&Expr::integer(count))
 }
 
-fn advance_subset_cursor(item_count: usize, k: &mut usize, combo: &mut Vec<usize>) {
-    if *k == item_count {
-        *k += 1;
-        combo.clear();
-        return;
-    }
-
-    if let Some(index) = (0..combo.len())
-        .rev()
-        .find(|index| combo[*index] < item_count - *k + *index)
-    {
-        combo[index] += 1;
-        for next in index + 1..combo.len() {
-            combo[next] = combo[next - 1] + 1;
-        }
-    } else {
-        *k += 1;
-        *combo = (0..*k).collect();
-    }
-}
-
-fn advance_tuple_cursor(inner_lists: &[Expr], digits: &mut [usize]) -> bool {
-    for index in (0..digits.len()).rev() {
-        digits[index] += 1;
-        if digits[index]
-            < list_items(&inner_lists[index])
-                .expect("tuple factors were validated")
-                .len()
-        {
-            return false;
-        }
-        digits[index] = 0;
-    }
-    true
-}
-
-fn stepper_from_descriptor(descriptor: &Expr) -> Option<PullStepper> {
-    let Expr::Call { head, args } = descriptor else {
-        return None;
-    };
-
-    if is_system_symbol_name(head, "LazyRange") {
-        let [start, step] = args.as_slice() else {
-            return None;
-        };
-        return Some(PullStepper::Range {
-            current: expr_as_exact_rational(start)?,
-            step: expr_as_exact_rational(step)?,
-        });
-    }
-    if is_system_symbol_name(head, "LazyPermutations") {
-        let [list] = args.as_slice() else {
-            return None;
-        };
-        let mut current = list_items(list)?.to_vec();
-        current.sort_by(compare_expr_canonical);
-        return Some(PullStepper::Permutations {
-            current,
-            exhausted: false,
-        });
-    }
-    if is_system_symbol_name(head, "LazySubsets") {
-        let [list] = args.as_slice() else {
-            return None;
-        };
-        return Some(PullStepper::Subsets {
-            elements: list_items(list)?.to_vec(),
-            k: 0,
-            combo: Vec::new(),
-        });
-    }
-    if is_system_symbol_name(head, "LazyTuples") {
-        let [list_of_lists] = args.as_slice() else {
-            return None;
-        };
-        let inner_lists = list_items(list_of_lists)?;
-        if !inner_lists.iter().all(|list| list_items(list).is_some()) {
-            return None;
-        }
-        let exhausted = inner_lists
-            .iter()
-            .any(|list| list_items(list).is_some_and(<[Expr]>::is_empty));
-        return Some(PullStepper::Tuples {
-            digits: vec![0; inner_lists.len()],
-            inner_lists: inner_lists.to_vec(),
-            exhausted,
-        });
-    }
-    if is_system_symbol_name(head, "LazyNestList") {
-        let [function, init] = args.as_slice() else {
-            return None;
-        };
-        return Some(PullStepper::NestList {
-            function: function.clone(),
-            current: init.clone(),
-        });
-    }
-    if is_system_symbol_name(head, "LazyMap") {
-        let [function, inner] = args.as_slice() else {
-            return None;
-        };
-        return Some(PullStepper::Map {
-            function: function.clone(),
-            inner: Box::new(stepper_from_descriptor(inner)?),
-        });
-    }
-    if is_system_symbol_name(head, "LazySelect") {
-        let [predicate, inner] = args.as_slice() else {
-            return None;
-        };
-        return Some(PullStepper::Select {
-            predicate: predicate.clone(),
-            inner: Box::new(stepper_from_descriptor(inner)?),
-        });
-    }
-    if is_system_symbol_name(head, "LazyTake") {
-        let [inner, count] = args.as_slice() else {
-            return None;
-        };
-        return Some(PullStepper::Take {
-            inner: Box::new(stepper_from_descriptor(inner)?),
-            remaining: expr_as_non_negative_usize(count)?,
-        });
-    }
-    if is_system_symbol_name(head, "LazyDrop") {
-        let [inner, count] = args.as_slice() else {
-            return None;
-        };
-        return Some(PullStepper::Drop {
-            inner: Box::new(stepper_from_descriptor(inner)?),
-            remaining: expr_as_non_negative_usize(count)?,
-        });
-    }
-    if is_system_symbol_name(head, "LazyFoldList") {
-        let [function, init, inner] = args.as_slice() else {
-            return None;
-        };
-        return Some(PullStepper::FoldList {
-            function: function.clone(),
-            accumulator: init.clone(),
-            emitted_init: false,
-            inner: Box::new(stepper_from_descriptor(inner)?),
-        });
-    }
-
-    None
-}
-
 fn wrap_descriptor(descriptor: Expr) -> Expr {
     Expr::call(system_expr("LazyList"), vec![descriptor])
 }
+
+#[cfg(test)]
+mod tests;

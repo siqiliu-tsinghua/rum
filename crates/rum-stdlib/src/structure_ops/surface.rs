@@ -1,3 +1,5 @@
+mod lazy_completion;
+
 use super::*;
 use rum_core::{IntValue, SharedArgs};
 
@@ -96,7 +98,11 @@ pub(crate) fn eval_first(
     let args = args.as_ref();
     if matches!(args.len(), 1 | 2) && args.first().is_some_and(crate::lazy::is_lazy_list) {
         let expr = &args[0];
-        let Some(realized) = crate::lazy::realize_at_most(session, expr, 1)? else {
+        let realized = match crate::lazy::realize_at_most(session, expr, 1) {
+            Ok(value) => value,
+            Err(error) => lazy_completion::capture(session, error, args)?,
+        };
+        let Some(realized) = realized else {
             return Ok(Expr::call(system_expr("First"), args.to_vec()));
         };
         return Ok(resolve_first_like(

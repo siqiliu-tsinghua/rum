@@ -58,12 +58,15 @@ LazyList[<descriptor>]
 - `<descriptor>` is a **pull-based descriptor tree** of inert internal
   nodes: a source at the leaf, transformers wrapping it. Example value:
   `LazyList[LTake[LMap[f, LRange[1, 1]], 5]]`.
-- Realization is a **Rust pull interpreter** over the descriptor: to
-  pull the next element from `LTake[inner, n]` pull from `inner` up to
-  `n`; from `LMap[f, inner]` pull from `inner` and evaluate `f[x]`; from
-  `LRange[start, step]` yield `start`, advance. Each lazy operation is
-  **one descriptor node + one interpreter arm** — this is what makes the
-  broad set cheap to extend.
+- Each realization validates the descriptor iteratively into a **flat Rust
+  pull machine**: one source and a vector of stages, outermost first. An
+  indexed down/up cursor requests children and applies results without native
+  recursion along the descriptor. Sources advance their own cursors; stages
+  implement Map, Select, Take, Drop and FoldList. Take consumes its allowance
+  before descending, Select retries its own child on rejection, and FoldList
+  emits its init without pulling. NestList computes its lookahead before
+  yielding the saved previous value. Construction, pull, clone, root tracing,
+  drop and abandonment iterate over the flat state.
 
 Chosen over the alternative "unfold coalgebra" (`LazyList[stepFn, seed]`
 with symbolic function composition) because transformer composition
@@ -74,9 +77,11 @@ tree keeps composition in Rust and stays serializable.
 descriptor (pure, deterministic, snapshot-trivial). Shared memoization
 (a side cache keyed off descriptor identity, never part of the value,
 never serialized) is a possible later optimization, not v1. Because
-realization is pull-based we never retain realized elements, so the
-Haskell "retained-thunk space leak" does not apply — memory is bounded
-by descriptor size, not stream length.
+each realization builds fresh finite descriptor state, there is no shared
+memoized history. Its realizer does retain a growing output prefix until the
+resulting List is complete. Source buffers, stage values and that prefix are
+separate memory obligations; total realization memory is not bounded by the
+descriptor alone.
 
 ## 3. Surface
 
@@ -127,12 +132,21 @@ n]` *forces* to a `List`; `LazyTake[lz, n]` *stays lazy*. Same for
 
 - Every lazy builtin is **`Capability::Pure`** — deterministic,
   re-runnable, no side effects. **No new capability.**
-- **Safety property (the reason the pure half is sandbox-safe):** the
-  realize loop runs under the same iteration ceiling and the same
-  `cancel`/`timeout` checks as `Do`/`Table`. An infinite stream realized
-  in full hits the ceiling and returns a `TerminatedEvaluation`; it
-  cannot hang the host. Cancellation interrupts the realize loop cleanly
-  (no torn state — there is no state).
+- **Safety property:** only source pulls charge the realization's iteration
+  work ceiling; finite exhaustion is checked before charging. Cancellation is
+  observed at each source pull and after each successful guest callback, before
+  applying its value. There are no extra per-stage or construction polls.
+  An infinite stream realized in full hits the ceiling and returns a
+  `TerminatedEvaluation`.
+- **Suspension:** an input request freezes the flat machine, output prefix,
+  output budget, source count and ceiling, and the pending callback cursor.
+  Resume reacquires the cancellation observer, makes a cold working copy of the
+  immutable Session-rooted frame, applies the callback answer once, and
+  continues the same loop and consumer. Pending Select candidates and NestList
+  yields are traced roots. Abandonment drops state without running callbacks.
+  Frozen and working copies overlap during resume; tracing establishes root
+  visibility, not retention coverage or an allocation bound. LazyTable's eager
+  bound evaluations remain a separate continuation task.
 - **Snapshot/restore**: a `LazyList` is an ordinary inert `Expr`, so it
   round-trips with the session image and re-derives identically. No
   cursor to serialize, no position to lose. (Round-trip test required in

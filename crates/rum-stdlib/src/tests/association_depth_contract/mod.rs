@@ -14,3 +14,5 @@ struct DeclaredRecursiveEdge {
     edge: RecursiveEdge,
     declaration: &'static str,
 }
+
+mod lazy_depth_contract;

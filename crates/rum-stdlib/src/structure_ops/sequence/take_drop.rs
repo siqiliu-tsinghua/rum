@@ -1,3 +1,5 @@
+mod lazy_completion;
+
 use super::*;
 use rum_core::SharedArgs;
 
@@ -76,8 +78,11 @@ fn eval_take_lazy_list(
         ));
     };
 
-    Ok(crate::lazy::realize_at_most(session, lazy_list, limit)?
-        .unwrap_or_else(|| Expr::call(head.clone(), args.to_vec())))
+    let realized = match crate::lazy::realize_at_most(session, lazy_list, limit) {
+        Ok(value) => value,
+        Err(error) => lazy_completion::capture(session, error, head, args)?,
+    };
+    Ok(realized.unwrap_or_else(|| Expr::call(head.clone(), args.to_vec())))
 }
 
 pub(crate) fn eval_drop(
