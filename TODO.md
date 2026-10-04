@@ -4,9 +4,8 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-09-30, committed tree through brief-562's design
-report; the next action is writing step A of G2 from `.temp/brief-562/draft-A-pull-machine.md`
-under the director rulings recorded below.
+Status checkpoint: 2026-10-05, committed tree through brief-563's gate
+(`79b42d54`); brief-564 (G2 step B) is dispatched.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -203,6 +202,30 @@ Serial bounds from measured history (briefs 559-560): `cargo test -p
 rum-stdlib` 990-1 047 s, `--workspace` 651-1 012 s, no-default retention ~900 s
 (560's 900.1 s may have met its bound) — set 1 500 s for each; release
 `rum-cli` build 89-108 s (300 s).
+**G2 step A is done (brief-563, `79b42d54`):** the pull machine is flat — one
+source plus a stage vector under an indexed down/up cursor, every walk
+iterative — and a suspended lazy callback resumes into its realization and its
+`Normal`/`Take`/`First` consumer (`Part` through its seam); cancellation is
+also observed after each callback. Lost 80 -> 69. Depth safety is enforced by
+structure: no recursive call edge in the lazy sources (per file and, added at
+the gate, as one unit so a cross-module cycle is seen) and no self-reaching
+lazy type, each with a falsifier. Director gate: workspace 2945/0/58 with
+native ZeroMQ real; on an unchanged export the new suite is 42 of 49 red (the
+passes are controls) and both structural checks fail; release `rum-cli` on
+2 MiB at 20 000 stages aborts (134) before and returns exact values after, five
+shapes. Two of the worker's three blockers were mine: the fence excluded
+rum-runtime, whose closed frame lists every new frame must enter (the director
+applied the 14 entries and the count 550 -> 554; `TEMPLATE.md`'s standing duty
+now names those lists), and the brief asked the CLI to answer input in script
+mode, which by ruling it never does (the in-process 2 000-stage tests cover
+resume). The third is real and open: instruction slopes are **+0.66% on
+ordinary `Take`** (`take-multispec-small`, ~330 instructions per call) and
++0.75-2.5% on shallow lazy labels; deep chains are faster (-7.6% at 256) and
+allocations fell everywhere; director-reproduced on seven labels. **Next:**
+brief-564 (step B, `LazyTable`'s bounds, 69 -> 66, measures but does not
+tune), then brief-565 erases G2's ordinary-path cost as a whole against the
+pre-G2 binary `.temp/brief-563/base/rum-cli` (callgrind attribution first, as
+in brief-560; the flat representation and its depth contract are fixed).
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

@@ -81,7 +81,13 @@ a reviewable plan plus the drafted follow-up briefs, still not a code change.
   row's identity, status, disposition or exclusion would change or a row would
   disappear, if a new `UnknownHostPayload` row appears (that needs a
   disposition decision), or if a new row points at code the brief did not
-  touch.
+  touch. **A new suspension frame or `FrameRootTrace`/`PureFrameAbandon`
+  type, in any crate, also enters rum-runtime's closed lists** —
+  `crates/rum-runtime/src/runtime/tests/frame_root_trace/derived_inventory.rs`
+  (one entry per derive) and the named-frame count asserted in
+  `crates/rum-runtime/src/runtime/tests/frame_root_trace.rs` — and that edit
+  is in scope wherever the fence puts rum-runtime; add exactly the new types,
+  nothing else.
 - Do NOT add unconditional cost to the default evaluation path. Any profiling
   counter or instrumentation MUST be behind an env-gated cold path (the
   existing `RUM_PROFILE_*` `AtomicU8` pattern); never a `Mutex`/allocation/
