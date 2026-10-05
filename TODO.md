@@ -4,8 +4,8 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-05, committed tree through brief-567's design;
-brief-568 (G3 implementation) is dispatched.
+Status checkpoint: 2026-10-05, committed tree through brief-568's gate;
+brief-569 (G3's ordinary-path cost) is next.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -305,6 +305,25 @@ release depth tests at list 6 000 / association 5 000 (construction passes,
 the validator aborts today), in-process at 1 000 / 500; the inventory plan is
 authorized as written (frame count 555 -> 556); performance with one codegen
 unit on both arms. **Next: brief-568**, G3's implementation, 66 -> 59.
+**G3 is done for correctness (brief-568):** one flat work stack, one mutable
+path buffer and one suspension frame replace the validator's recursion; a
+predicate or default that asks for input resumes into the walk and the right
+finisher. Lost 66 -> 59. The first run stopped correctly twice — the owned
+association index adds one `RandomState` `UnknownConstruct` storage row, which
+the plan's wording forbade although the standing duty expects it (admitted,
+with precedent), and a freshly rebuilt 1 000-level `ConformSchema` result
+fails closed in the **evaluator's** result walk while the validator's walk
+succeeds (depth is now judged by `SchemaErrors`' exact result at every depth
+and by `ConformSchema` against a same-depth fresh-result control). Director
+gate: workspace 3005/0/58 with native ZeroMQ real; on an unchanged export the
+20 semantic cases fail (the six passes are cancellation, controls and shallow
+depth); release one-unit `rum-cli` on 2 MiB: `SchemaErrors` at list 6 000 and
+association 5 000 aborts (134) before and returns `{}` after. **Not free:**
+small schemas cost +0.5% to +3.3% instructions (worst: a small association
+with a default, +3.27% reproduced), deep ones are faster (list depth 128
+-5.2%); non-schema labels unchanged. The worker measured one candidate and
+handed the residual over untuned. **Next: brief-569** erases it, one-unit
+base `.temp/brief-568/base/`, as brief-566 did for G2.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

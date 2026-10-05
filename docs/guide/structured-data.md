@@ -564,6 +564,11 @@ validation. Pattern leaves are held until the matcher resolves them. Defaults in
 `Optional[spec, default]` are evaluated only when the key is absent, then
 validated against `spec`.
 
+If a schema predicate or missing-key default asks for input, supplying that
+input resumes validation from the suspended operation. Completed predicates
+and defaults are not repeated; remaining fields are validated before
+`ConformSchema` or `SchemaErrors` returns its final result.
+
 Required keys are strict by default: absent keys, extra keys, malformed schema
 shapes, and values that fail their leaf patterns all fail closed. `Optional`
 marks an Association key as absent-ok, and the two-argument form fills a default
