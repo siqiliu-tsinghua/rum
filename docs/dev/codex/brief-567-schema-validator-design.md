@@ -47,6 +47,32 @@ This is the same situation G2 was in (briefs 561-563): the structure the
 repair must make resumable is a native recursion that already aborts the
 process. **G3 includes making the validator depth-safe.** Design both together.
 
+## Amendment — read first (second dispatch, 2026-10-05)
+
+The first run was cut off by the upstream content filter while it was running
+pre-fix depth probes that abort the process. Its work so far stays: the
+scratch in `.temp/brief-567/` and the scratch test
+`crates/rum-stdlib/tests/zz_brief567_probe.rs` — continue from them.
+
+**It also corrected the director's premise, and it was right.**
+`ConformSchema` holds its schema argument, so `ConformSchema[v, v]` validates
+against the *symbol* `v` through the `MatchQ` leaf: the 1 500-level abort above
+is the pattern matcher's, not the validator's (`MatchQ[v, v]` alone aborts at
+1 500; the director reproduces it between 800 and 1 200). That matcher defect
+is **outside G3** — the director records it for the hardening line. The
+validator's own container recursion, reached with a literal schema
+(`Apply[ConformSchema, {v, v}]`), passes at 1 500 and **aborts at 6 000 (list)
+and 5 000 (association)** in the release build on 2 MiB
+(`.temp/brief-567/depth-runs.jsonl`, `depth/`). So G3 still includes depth
+safety, for the validator's walk; a leaf's `MatchQ` on a deep literal belongs
+to the matcher.
+
+**The pre-fix depth evidence is complete. Do not build or run any further
+probe that overflows a stack** — not in-process, not through the CLI. Write the
+deep tests for the implementation step (they will run after the fix), measure
+only controls and shallow cases now, and take any per-level cost you need from
+the existing runs or from `callgrind` on a passing depth.
+
 ## The director's preferred direction — evaluate it, do not assume it
 
 G2 settled it for a unary chain: a flat representation under an explicit

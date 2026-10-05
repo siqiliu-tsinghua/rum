@@ -278,6 +278,20 @@ in the evaluator's guard, but a literal schema does not, and
 G3, like G2, includes depth safety; **brief-567** designs both (director's
 preferred direction: an explicit heap work stack that is also the suspension
 state, enforced by the recursion scanner as for the lazy module).
+**Correction (brief-567's first run):** `ConformSchema` holds its schema, so
+the director's `ConformSchema[v, v]` validated against the symbol `v` through
+the `MatchQ` leaf — that 1 500-level abort was the **pattern matcher's**. The
+validator's own walk (a literal schema via `Apply[ConformSchema, {v, v}]`)
+passes at 1 500 and aborts at 6 000 (list) / 5 000 (association), so G3's depth
+work stands for the walk. The first run was cut by Codex's content filter while
+running abort probes; the brief was amended (evidence complete, no further
+abort probes) and redispatched.
+**Found, outside the branch — the matcher aborts on deep literals:**
+`MatchQ[v, w]` with two `ConstantArray[1, Table[1, {n}]]` values passes at
+n = 800 and overflows the ruled 2 MiB stack at 1 200 (exit 134; director
+reproduced, `.temp/director/gate-g3/matchq-*.rum`). A guest-reachable
+fail-open in rum-runtime's matcher; queued for the hardening line behind the
+branch, unless the user places it earlier.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
