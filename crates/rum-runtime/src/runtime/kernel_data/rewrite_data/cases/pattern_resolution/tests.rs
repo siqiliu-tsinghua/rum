@@ -363,3 +363,5 @@ fn matcher_pattern_error_resume_runs_no_work() {
         crate::runtime::suspension::FrameAction::Complete(Err(EvalError::Abort))
     ));
 }
+
+mod base_cases;

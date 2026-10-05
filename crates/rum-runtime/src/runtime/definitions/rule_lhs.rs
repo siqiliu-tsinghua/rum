@@ -28,15 +28,32 @@ enum RuleLhsStep {
 
 impl Session {
     pub(super) fn evaluate_rule_lhs(&mut self, lhs: Expr) -> Result<Expr, EvalError> {
-        if !definition_lhs_contains_pattern_syntax(&lhs) {
+        let Expr::Call { head, args } = &lhs else {
+            return self.evaluate(lhs);
+        };
+        let pattern_head = matcher_pattern_head(head);
+        if rule_lhs_inert_pattern(pattern_head, args)
+            || (args.is_empty()
+                && matches!(
+                    rule_lhs_policy(pattern_head, 0),
+                    RuleLhsPolicy::WrapperArguments
+                ))
+        {
+            return Ok(lhs);
+        }
+        if pattern_head.is_none() && !definition_lhs_contains_pattern_syntax(&lhs) {
             return self.evaluate(lhs);
         }
+        // Every remaining root must descend to a head or an argument.
         self.drive_rule_lhs(
-            RuleLhsState { stack: Vec::new() },
+            RuleLhsState {
+                stack: Vec::with_capacity(4),
+            },
             RuleLhsStep::Visit(lhs, RuleLhsVisit::Structural),
         )
     }
 
+    #[inline(never)]
     fn drive_rule_lhs(
         &mut self,
         mut state: RuleLhsState,
@@ -112,6 +129,10 @@ impl Session {
         state: RuleLhsState,
         error: EvalError,
     ) -> Result<Expr, EvalError> {
+        // A direct root evaluation already owns its evaluator continuation.
+        if state.stack.is_empty() {
+            return Err(error);
+        }
         let destination = state.destination();
         let pending_expr = state.pending_expr(destination).clone();
         crate::resume_or_suspend!(insert self, RulePatternSuspensionFrame {

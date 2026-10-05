@@ -107,6 +107,7 @@ impl Session {
         )
     }
 
+    #[inline(always)]
     pub(super) fn finish_rule_lhs(
         &mut self,
         lhs: Expr,

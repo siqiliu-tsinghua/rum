@@ -4,8 +4,9 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-06, committed tree through brief-574's gate; G4
-is closed for correctness; brief-575, G4's second tuning round, is dispatched.
+Status checkpoint: 2026-10-06, committed tree through brief-575's gate; G4
+is closed; next is group G5 (option readers, 29 sites), re-probed before its
+brief.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -413,6 +414,19 @@ of entering a large driver, not of work. Workspace 3113/0/58. **Next:
 brief-575** — a small entry per walker settles the classification's own base
 cases before the out-of-line driver, with a falsifier proving entry and driver
 agree (the director's earlier "no second algorithm" rule had blocked this).
+**brief-575 is in, and G4 is closed:** a small entry per walker settles the
+classification's own base cases (an opaque pattern-head root, a pattern-free
+root, the rule classifier's root cases) before the out-of-line flat driver,
+with private falsifiers driving every base case through both entry and driver;
+work storage is reserved only on a proved descent; rule completion is inlined.
+Director reproduced against the pre-G4 one-unit base: `MatchQ[5, _Integer]`
+**-3.3%** (faster than before G4), `Rule` wrapper -11.1%; recorded residuals,
+**not tuned further** after twenty candidates across two rounds — short
+`Blank` rule +4.0%, rule skew depth 8 +2.3%, `Cases` pattern child +1.4%, held
+`MatchQ` child +2.6%, held skew depth 8 +4.3%. Callgrind puts every residual in
+populated structural walks: the explicit work records and transitions that
+replaced native recursion, the price of depth safety and resumability.
+Workspace 3115/0/58.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

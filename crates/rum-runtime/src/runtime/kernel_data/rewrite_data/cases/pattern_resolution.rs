@@ -13,6 +13,7 @@ use state::*;
 // Local transitions never own another transition or survive a guest call.
 enum MatcherPatternStep {
     Visit(Expr),
+    Structural { expr: Expr },
     PreparedCall { head: Expr, args: Vec<Expr> },
     Done(Expr),
 }
@@ -20,13 +21,34 @@ enum MatcherPatternStep {
 impl Session {
     pub(super) fn resolve_held_matcher_pattern(&mut self, expr: Expr) -> Result<Expr, EvalError> {
         let root = strip_hold_pattern(&expr);
+        if let Expr::Call { head, .. } = root {
+            if matches_pattern_head(head) {
+                return Ok(self.normalize_match_expr(root));
+            }
+        }
+        if !contains_pattern_syntax(root) {
+            return match self.evaluate(root.clone()) {
+                Ok(value) => Ok(self.normalize_match_expr(&value)),
+                Err(error @ EvalError::InputRequired { .. }) => self.suspend_matcher_pattern(
+                    MatcherPatternState { stack: Vec::new() },
+                    None,
+                    Some(root),
+                    error,
+                ),
+                Err(error) => Err(error),
+            };
+        }
+        // Both root base cases returned above: the driver will push a child.
         self.drive_matcher_pattern(
-            MatcherPatternState { stack: Vec::new() },
-            MatcherPatternStep::Visit(root.clone()),
+            MatcherPatternState {
+                stack: Vec::with_capacity(4),
+            },
+            MatcherPatternStep::Structural { expr: root.clone() },
             Some(root),
         )
     }
 
+    #[inline(never)]
     fn drive_matcher_pattern(
         &mut self,
         mut state: MatcherPatternState,
@@ -53,32 +75,31 @@ impl Session {
                         Err(error) => return Err(error),
                     }
                 }
-                MatcherPatternStep::Visit(expr) => {
-                    if !contains_pattern_syntax(&expr) {
-                        match self.evaluate(expr) {
-                            Ok(value) => value,
-                            Err(error @ EvalError::InputRequired { .. }) => {
-                                return self.suspend_matcher_pattern(state, None, root, error);
-                            }
-                            Err(error) => return Err(error),
+                MatcherPatternStep::Visit(expr) if !contains_pattern_syntax(&expr) => {
+                    match self.evaluate(expr) {
+                        Ok(value) => value,
+                        Err(error @ EvalError::InputRequired { .. }) => {
+                            return self.suspend_matcher_pattern(state, None, root, error);
                         }
-                    } else {
-                        match expr {
-                            Expr::Call { head, args } if !matches_pattern_head(&head) => {
-                                step = MatcherPatternStep::Visit(head.as_ref().clone());
-                                state.stack.push(MatcherPatternWork {
-                                    original_head: head.as_ref().clone(),
-                                    prefix: Vec::with_capacity(args.len()),
-                                    original_args: args,
-                                    resolved_head: None,
-                                    next: 0,
-                                });
-                                continue;
-                            }
-                            // The policy is selected from raw syntax. Recognized
-                            // pattern calls, including their operands, stay opaque.
-                            value => value,
+                        Err(error) => return Err(error),
+                    }
+                }
+                MatcherPatternStep::Visit(expr) | MatcherPatternStep::Structural { expr } => {
+                    match expr {
+                        Expr::Call { head, args } if !matches_pattern_head(&head) => {
+                            step = MatcherPatternStep::Visit(head.as_ref().clone());
+                            state.stack.push(MatcherPatternWork {
+                                original_head: head.as_ref().clone(),
+                                prefix: Vec::with_capacity(args.len()),
+                                original_args: args,
+                                resolved_head: None,
+                                next: 0,
+                            });
+                            continue;
                         }
+                        // The policy is selected from raw syntax. Recognized
+                        // pattern calls, including their operands, stay opaque.
+                        value => value,
                     }
                 }
             };
@@ -160,6 +181,7 @@ fn accept_matcher_pattern_value(
     }
 }
 
+#[inline(always)]
 fn contains_pattern_syntax(expr: &Expr) -> bool {
     let Expr::Call { head, args } = strip_hold_pattern(expr) else {
         return false;

@@ -304,3 +304,5 @@ fn rule_lhs_error_resume_propagates_without_running_work() {
         crate::runtime::suspension::FrameAction::Complete(Err(EvalError::Abort))
     ));
 }
+
+mod base_cases;
