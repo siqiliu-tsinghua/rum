@@ -4,8 +4,8 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-05, committed tree through brief-569's gate; G3
-is closed; brief-570 (G4 design) is dispatched.
+Status checkpoint: 2026-10-05, committed tree through brief-570's design;
+brief-571 (G4 step A) is dispatched.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -347,6 +347,21 @@ compilation or matching). Two G4 sites (`match_expr`, `match_expr_interpreted`)
 sit in `#[allow(dead_code)]` wrappers. **brief-570** designs G4 and draws the
 depth boundary between G4's own walkers and the matcher proper (no abort
 probes by the worker).
+**brief-570 is in (design, no abort probes).** G4 is thirteen live repairs and
+three retirements: `match_expr` and `match_expr_interpreted` are used only by
+one parity test, and `normalize_cases_spec` has no caller. The two G4-owned
+walkers — the rule left-hand-side walk and the held-pattern resolver — are
+guest-capable unguarded recursions; the design makes each an explicit work
+stack with its own suspension frame (12 traced types, 3 frames; frame count
+556 -> 558 -> 559). From source, the director's deep-literal aborts are the
+**matcher's** (unguarded compilation of a deep literal call is the leading
+candidate; `Rule[v, 1]` passes because a pattern-free `v` is evaluated, not
+walked); matcher compile/match/codecs and `Expr` depth stay with the hardening
+line. Red suite: 56 comparisons, 47 divergent. **Rulings:** the A/B/C split is
+accepted — A retires the three adapters (59 -> 56), B the rule walk
+(-> 46), C the held resolver (-> 43); the depth boundary is accepted; each
+step gets a one-unit base and instruction gate (no timing suite); A has no
+performance gate because it changes no release code.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
