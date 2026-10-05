@@ -4,9 +4,8 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-05, committed tree through brief-565's report
-(no source change); brief-566 (the lazy ordinary-path cost, measured with one
-codegen unit) is dispatched.
+Status checkpoint: 2026-10-05, committed tree through brief-566's gate; next
+is group G3 (schema, 7 sites), re-probed before its brief.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -254,6 +253,20 @@ post-560). `TEMPLATE.md` pitfall 8 now requires one-unit builds for an
 instruction gate finer than about 1%. **Next: brief-566** — erase the shallow
 lazy cost, one-unit base `.temp/brief-566/base/`, starting from 565's
 candidate 02 and a one-unit attribution; then G3.
+**brief-566 is in: G2's ordinary-path cost is down to a recorded residual.**
+Ten one-unit candidates; four kept (descriptor symbols classified once,
+`LazyTable` bounds held as borrows until evaluated, the cursor decoded only on
+the resumed entry). Against the one-unit pre-G2 base the regressing labels fell
+from 26 to 6, worst +2.05% -> +0.40%; `lazy-depth-drop-all-one-8` went from
++2.05% to -4.26%. The six residuals (+0.07% to +0.40%, all shallow lazy:
+range Take/Normal, Select realize/scan, Permutations, Subsets) are **recorded,
+not tuned further**: callgrind attributes them to the flat loop's indexed
+descent and ascent, stage dispatch and context cleanup that the recursive
+`next` did not do — the price of depth safety. Ordinary non-lazy labels and
+controls are at the base. Director gate: workspace 2955/0/58 with native
+ZeroMQ real; one-unit slopes reproduced on nine labels; the source is
+byte-identical to candidate 06 and the descriptor rewrite is semantically the
+old `is_system_symbol_name` chain with the symbol test hoisted.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

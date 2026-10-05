@@ -236,49 +236,57 @@ pub(crate) fn eval_lazy_table(
 
     let one = || Expr::small_integer(1);
     let (iterator, [imin, imax, step]) = match spec_args.as_slice() {
-        [iterator, imax] => (iterator, [one(), imax.clone(), one()]),
-        [iterator, imin, imax] => (iterator, [imin.clone(), imax.clone(), one()]),
-        [iterator, imin, imax, step] => (iterator, [imin.clone(), imax.clone(), step.clone()]),
+        [iterator, imax] => (iterator, [None, Some(imax), None]),
+        [iterator, imin, imax] => (iterator, [Some(imin), Some(imax), None]),
+        [iterator, imin, imax, step] => (iterator, [Some(imin), Some(imax), Some(step)]),
         _ => return Ok(invalid_lazy_table_spec(session, args)),
     };
     if expr_as_symbol(iterator).is_none() {
         return Ok(invalid_lazy_table_spec(session, args));
     }
 
-    let imin = match session.evaluate(imin.clone()) {
+    let imin = match session.evaluate(imin.cloned().unwrap_or_else(one)) {
         Ok(value) => value,
         Err(error) => {
             return Err(suspend_bounds(
                 session,
                 held_args,
                 iterator,
-                [imin, imax, step],
+                [
+                    imin.cloned().unwrap_or_else(one),
+                    imax.cloned().unwrap_or_else(one),
+                    step.cloned().unwrap_or_else(one),
+                ],
                 BoundSlot::Lower,
                 error,
             ));
         }
     };
-    let imax = match session.evaluate(imax.clone()) {
+    let imax = match session.evaluate(imax.cloned().unwrap_or_else(one)) {
         Ok(value) => value,
         Err(error) => {
             return Err(suspend_bounds(
                 session,
                 held_args,
                 iterator,
-                [imin, imax, step],
+                [
+                    imin,
+                    imax.cloned().unwrap_or_else(one),
+                    step.cloned().unwrap_or_else(one),
+                ],
                 BoundSlot::Upper,
                 error,
             ));
         }
     };
-    let step = match session.evaluate(step.clone()) {
+    let step = match session.evaluate(step.cloned().unwrap_or_else(one)) {
         Ok(value) => value,
         Err(error) => {
             return Err(suspend_bounds(
                 session,
                 held_args,
                 iterator,
-                [imin, imax, step],
+                [imin, imax, step.cloned().unwrap_or_else(one)],
                 BoundSlot::Step,
                 error,
             ));
@@ -435,14 +443,7 @@ fn realize(
     };
     let mut ctx = state::PullContext::new(session);
     let mut items = Vec::new();
-    match realization::drive_items(
-        &mut machine,
-        session,
-        &mut ctx,
-        &mut items,
-        budget,
-        state::DriveCursor::Down { at: 0 },
-    ) {
+    match machine::drive_machine(&mut machine, session, &mut ctx, &mut items, budget, 0, None) {
         Ok(()) => Ok(Some(Expr::call(system_expr("List"), items))),
         Err(error) => Err(continuation::suspend_realization(
             session, machine, items, budget, ctx, error,

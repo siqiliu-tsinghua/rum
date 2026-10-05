@@ -1,22 +1,22 @@
-//! Indexed descent and ascent, shared by ordinary and resumed pulls.
+//! Indexed pulls and output filling, shared by ordinary and resumed realizations.
+use super::PullBudget;
 use super::source::pull_source;
-use super::state::{AwaitCursor, DriveCursor, PullContext, PullMachine, PullStage};
+use super::state::{AwaitCursor, PullContext, PullMachine, PullStage};
 use rum_core::Expr;
 use rum_runtime::kernel_api::{EvalError, Session, truthiness_symbol};
 
-pub(super) fn drive_pull(
+pub(super) fn drive_machine(
     machine: &mut PullMachine,
     session: &mut Session,
     ctx: &mut PullContext,
-    cursor: DriveCursor,
-) -> Result<Option<Expr>, EvalError> {
-    let (mut boundary, mut carried) = match cursor {
-        DriveCursor::Down { at } => (at, None),
-        DriveCursor::Up { boundary, result } => match result {
-            Some(value) => (boundary, Some(value)),
-            None => return exhausted(machine, boundary),
-        },
-    };
+    items: &mut Vec<Expr>,
+    budget: PullBudget,
+    mut boundary: usize,
+    mut carried: Option<Expr>,
+) -> Result<(), EvalError> {
+    if budget.reached(items.len()) {
+        return Ok(());
+    }
     'pull: loop {
         // Keep the value in one local during ascent, rather than moving a
         // value-bearing cursor for every callback-free stage transition.
@@ -121,15 +121,19 @@ pub(super) fn drive_pull(
                 }
             }
         }
-        return Ok(Some(value));
+        items.push(value);
+        if budget.reached(items.len()) {
+            return Ok(());
+        }
+        boundary = 0;
     }
 }
 
-fn exhausted(machine: &mut PullMachine, boundary: usize) -> Result<Option<Expr>, EvalError> {
+pub(super) fn exhausted(machine: &mut PullMachine, boundary: usize) -> Result<(), EvalError> {
     for stage in machine.stages[..boundary].iter_mut().rev() {
         if let PullStage::Drop { remaining } = stage {
             *remaining = 0;
         }
     }
-    Ok(None)
+    Ok(())
 }

@@ -1,7 +1,7 @@
-//! Output-prefix and output-budget driver. Only sources charge source work.
+//! Decode resumed cursors before the shared indexed output loop.
 use super::{
     PullBudget,
-    machine::drive_pull,
+    machine::{drive_machine, exhausted},
     state::{DriveCursor, PullContext, PullMachine},
 };
 use rum_core::Expr;
@@ -13,16 +13,17 @@ pub(super) fn drive_items(
     ctx: &mut PullContext,
     items: &mut Vec<Expr>,
     budget: PullBudget,
-    mut cursor: DriveCursor,
+    cursor: DriveCursor,
 ) -> Result<(), EvalError> {
-    loop {
-        if budget.reached(items.len()) {
-            return Ok(());
-        }
-        let Some(item) = drive_pull(machine, session, ctx, cursor)? else {
-            return Ok(());
-        };
-        items.push(item);
-        cursor = DriveCursor::Down { at: 0 };
+    if budget.reached(items.len()) {
+        return Ok(());
     }
+    let (boundary, carried) = match cursor {
+        DriveCursor::Down { at } => (at, None),
+        DriveCursor::Up { boundary, result } => match result {
+            Some(value) => (boundary, Some(value)),
+            None => return exhausted(machine, boundary),
+        },
+    };
+    drive_machine(machine, session, ctx, items, budget, boundary, carried)
 }
