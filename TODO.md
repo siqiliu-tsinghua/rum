@@ -5,8 +5,7 @@ operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
 Status checkpoint: 2026-10-06, committed tree through brief-575's gate; G4
-is closed; next is group G5 (option readers, 29 sites), re-probed before its
-brief.
+is closed; brief-576 (G5 design, option readers) is dispatched.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -427,6 +426,14 @@ Director reproduced against the pre-G4 one-unit base: `MatchQ[5, _Integer]`
 populated structural walks: the explicit work records and transitions that
 replaced native recursion, the price of depth safety and resumability.
 Workspace 3115/0/58.
+**G5 re-probed (`5cec7b67`):** brief-548's probes diverge in 37 cases (all
+fourteen G4 witnesses flipped, nothing else moved); every G5 witness still
+diverges. G5 is 29 call sites of the shared option readers across sixteen
+builtins; option lists are flat, so no depth probe. **brief-576** designs it:
+per-site frames against one mechanism (option reads resolved in a resumable
+phase), observable read order, and the retention line's certified option
+region (C01/C02), whose bodies must still pass acceptance on their merits if
+touched.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
