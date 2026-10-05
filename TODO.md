@@ -5,8 +5,7 @@ operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
 Status checkpoint: 2026-10-05, committed tree through brief-569's gate; G3
-is closed; next is group G4 (rule/held-pattern, 16 sites), re-probed before its
-brief.
+is closed; brief-570 (G4 design) is dispatched.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -336,6 +335,18 @@ the small association with a default: `ConformSchema` +0.37% / -0.13% (noise)
 and `SchemaErrors` +0.43% / +0.70% — **recorded, not tuned further**.
 Director gate: workspace 3005/0/58 with native ZeroMQ real; source identical
 to the measured candidate; tests unchanged.
+**G4 re-probed (`f127e786`):** brief-548's probes diverge in 51 cases (the nine
+G3 witnesses flipped, nothing else moved); every G4 witness still diverges.
+Adjacent boundary, release one-unit on 2 MiB with `v` built by
+`Do[v = {v}, {n}]`: `Rule[v, 1]` passes at 6 000; `MatchQ[1, v]` and
+`Cases[{1, 2}, v]` pass at 1 500 and **abort at 6 000**; `ReplaceAll[v, 1 -> 2]`
+fails closed at 6 000. `v` has no pattern syntax, so G4's
+`resolve_match_pattern_subexprs` returns at once — the abort is elsewhere in
+the matcher pipeline (`contains_pattern_syntax`, `normalize_match_expr`,
+compilation or matching). Two G4 sites (`match_expr`, `match_expr_interpreted`)
+sit in `#[allow(dead_code)]` wrappers. **brief-570** designs G4 and draws the
+depth boundary between G4's own walkers and the matcher proper (no abort
+probes by the worker).
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
