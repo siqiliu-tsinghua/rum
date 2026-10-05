@@ -6,7 +6,7 @@ and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
 Status checkpoint: 2026-10-05, committed tree through brief-572's gate;
 G4 is closed for correctness (brief-573); brief-574, one G4 tuning brief, is
-next.
+dispatched.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
