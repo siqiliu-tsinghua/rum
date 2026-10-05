@@ -1,10 +1,13 @@
 //! Heap-held depth-first validation. Both descent and ascent stay in this loop.
 use super::association::{enter_association, finish_association, next_association};
-use super::format::{finish_leaf, push_error, render};
+use super::format::{
+    error_at_path, finish_leaf, pending_path, prefix_entry_abort, prefix_entry_errors, push_error,
+    render,
+};
 use super::parse::parse_list_schema;
 use super::state::{
-    ListWork, SchemaAbort, SchemaAwait, SchemaContainer, SchemaDestination, SchemaDriveError,
-    SchemaState, SchemaTask,
+    ListWork, LiveSchemaContainer as SchemaContainer, LiveSchemaState as SchemaState, SchemaAbort,
+    SchemaAwait, SchemaDestination, SchemaDriveError, SchemaTask,
 };
 use rum_core::Expr;
 use rum_runtime::kernel_api::{EvalError, Session, is_system_symbol_name, system_expr};
@@ -25,11 +28,12 @@ pub(super) fn schema_drive(
                         SchemaTask::ChildDone { value }
                     }
                 } else if is_list_call(&schema) {
-                    let item_schema = parse_list_schema(&schema, &state.path)?;
+                    let item_schema = parse_list_schema(&schema, &state.path)
+                        .map_err(|abort| error_at_path(abort, pending_path(&state.stack)))?;
                     if !is_list_call(&value) {
                         push_error(
                             &mut state.errors,
-                            &state.path,
+                            &pending_path(&state.stack),
                             format!("expected List, got {}", render(&value)),
                         );
                         SchemaTask::ChildDone { value }
@@ -72,7 +76,6 @@ pub(super) fn schema_drive(
                     SchemaContainer::List(work) => {
                         if let Some(item) = work.items.get(work.next) {
                             work.next += 1;
-                            state.path.append_index(work.next);
                             work.waiting = Some(SchemaDestination::ListItem);
                             Some(SchemaTask::Visit {
                                 value: item.clone(),
@@ -83,7 +86,13 @@ pub(super) fn schema_drive(
                         }
                     }
                     SchemaContainer::Association(work) => {
-                        next_association(work, &mut state.path, &mut state.errors)?
+                        let first_error = state.errors.len();
+                        let next = next_association(work, &mut state.path, &mut state.errors);
+                        let parents = &state.stack[..state.stack.len() - 1];
+                        if state.errors.len() != first_error {
+                            prefix_entry_errors(&mut state.errors[first_error..], parents);
+                        }
+                        next.map_err(|abort| prefix_entry_abort(abort, parents))?
                     }
                 };
                 if let Some(next) = next {
@@ -91,12 +100,19 @@ pub(super) fn schema_drive(
                 } else {
                     let value = match state.stack.pop().expect("the completed schema container") {
                         SchemaContainer::List(work) => Expr::call(system_expr("List"), work.output),
-                        SchemaContainer::Association(work) => finish_association(
-                            work,
-                            state.options,
-                            &mut state.path,
-                            &mut state.errors,
-                        ),
+                        SchemaContainer::Association(work) => {
+                            let first_error = state.errors.len();
+                            let value = finish_association(
+                                work,
+                                state.options,
+                                &mut state.path,
+                                &mut state.errors,
+                            );
+                            if state.errors.len() != first_error {
+                                prefix_entry_errors(&mut state.errors[first_error..], &state.stack);
+                            }
+                            value
+                        }
                     };
                     SchemaTask::ChildDone { value }
                 }

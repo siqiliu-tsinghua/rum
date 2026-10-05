@@ -1,5 +1,8 @@
-//! One mutable UTF-8 path, error presentation, and shared completion.
-use super::state::{SchemaAbort, SchemaError, SchemaMode, SchemaPath, SchemaState};
+//! Render pending cursor paths only for errors; share error presentation and completion.
+use super::state::{
+    LiveSchemaContainer as SchemaContainer, LiveSchemaState as SchemaState, SchemaAbort,
+    SchemaError, SchemaMode, SchemaPath,
+};
 use rum_core::Expr;
 use rum_runtime::kernel_api::{
     EvalError, Session, expr_as_string, is_system_symbol_name, render_association,
@@ -32,6 +35,59 @@ impl SchemaPath {
     }
 }
 
+#[cold]
+pub(super) fn pending_path(stack: &[SchemaContainer]) -> SchemaPath {
+    let mut path = SchemaPath::root();
+    for container in stack {
+        match container {
+            SchemaContainer::List(work) if work.waiting.is_some() => {
+                path.append_index(work.next);
+            }
+            SchemaContainer::Association(work) if work.waiting.is_some() => {
+                path.append_key(&work.schema_entries[work.next_schema - 1].key);
+            }
+            _ => {}
+        }
+    }
+    path
+}
+
+#[cold]
+pub(super) fn error_at_path(abort: SchemaAbort, path: SchemaPath) -> SchemaAbort {
+    match abort {
+        SchemaAbort::Malformed { message, .. } => SchemaAbort::Malformed {
+            path: path.rendered,
+            message,
+        },
+        abort => abort,
+    }
+}
+
+#[cold]
+pub(super) fn prefix_entry_abort(abort: SchemaAbort, parents: &[SchemaContainer]) -> SchemaAbort {
+    match abort {
+        SchemaAbort::Malformed { path, message } => {
+            let mut prefix = pending_path(parents);
+            prefix.append_key(&path);
+            SchemaAbort::Malformed {
+                path: prefix.rendered,
+                message,
+            }
+        }
+        abort => abort,
+    }
+}
+
+#[cold]
+pub(super) fn prefix_entry_errors(errors: &mut [SchemaError], parents: &[SchemaContainer]) {
+    let prefix = pending_path(parents);
+    for error in errors {
+        let mut path = prefix.clone();
+        path.append_key(&error.path);
+        error.path = path.rendered;
+    }
+}
+
 pub(super) fn push_error(
     errors: &mut Vec<SchemaError>,
     path: &SchemaPath,
@@ -47,7 +103,7 @@ pub(super) fn finish_leaf(state: &mut SchemaState, value: &Expr, schema: &Expr, 
     if !is_system_symbol_name(result, "True") {
         push_error(
             &mut state.errors,
-            &state.path,
+            &pending_path(&state.stack),
             format!(
                 "expected to match {}, got {}",
                 render(schema),

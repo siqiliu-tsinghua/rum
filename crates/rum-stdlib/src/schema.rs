@@ -13,7 +13,7 @@ use parse::parse_schema_call;
 use rum_core::{Expr, SharedArgs};
 use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{EvalError, FrameRootTrace, FrameRootVisitor, Session};
-use state::{SchemaMode, SchemaPath, SchemaState, SchemaTask};
+use state::{LiveSchemaState as SchemaState, SchemaMode, SchemaPath, SchemaTask};
 
 pub(crate) fn eval_schema_errors(
     session: &mut Session,
@@ -38,7 +38,7 @@ pub(crate) fn eval_schema_errors(
         return eval_schema_errors_with_value(session, value, &args_slice[1..]);
     }
 
-    finish_schema_errors(session, args_slice)
+    finish_schema_errors(session, None, args_slice)
 }
 
 fn eval_schema_errors_with_value(
@@ -46,14 +46,15 @@ fn eval_schema_errors_with_value(
     value: Expr,
     tail: &[Expr],
 ) -> Result<Expr, EvalError> {
-    let mut args = Vec::with_capacity(tail.len() + 1);
-    args.push(value);
-    args.extend_from_slice(tail);
-    finish_schema_errors(session, &args)
+    finish_schema_errors(session, Some(&value), tail)
 }
 
-fn finish_schema_errors(session: &mut Session, args: &[Expr]) -> Result<Expr, EvalError> {
-    let (value, schema, options) = match parse_schema_call("SchemaErrors", args) {
+fn finish_schema_errors(
+    session: &mut Session,
+    value: Option<&Expr>,
+    tail: &[Expr],
+) -> Result<Expr, EvalError> {
+    let (value, schema, options) = match parse_schema_call("SchemaErrors", value, tail) {
         Ok(parsed) => parsed,
         Err(message) => return Ok(fail_schema(session, "SchemaErrors", message)),
     };
@@ -84,7 +85,7 @@ pub(crate) fn eval_conform_schema(
         return eval_conform_schema_with_value(session, value, &args_slice[1..]);
     }
 
-    finish_conform_schema(session, args_slice)
+    finish_conform_schema(session, None, args_slice)
 }
 
 fn eval_conform_schema_with_value(
@@ -92,14 +93,15 @@ fn eval_conform_schema_with_value(
     value: Expr,
     tail: &[Expr],
 ) -> Result<Expr, EvalError> {
-    let mut args = Vec::with_capacity(tail.len() + 1);
-    args.push(value);
-    args.extend_from_slice(tail);
-    finish_conform_schema(session, &args)
+    finish_conform_schema(session, Some(&value), tail)
 }
 
-fn finish_conform_schema(session: &mut Session, args: &[Expr]) -> Result<Expr, EvalError> {
-    let (value, schema, options) = match parse_schema_call("ConformSchema", args) {
+fn finish_conform_schema(
+    session: &mut Session,
+    value: Option<&Expr>,
+    tail: &[Expr],
+) -> Result<Expr, EvalError> {
+    let (value, schema, options) = match parse_schema_call("ConformSchema", value, tail) {
         Ok(parsed) => parsed,
         Err(message) => return Ok(fail_schema(session, "ConformSchema", message)),
     };

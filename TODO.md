@@ -4,8 +4,9 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-05, committed tree through brief-568's gate;
-brief-569 (G3's ordinary-path cost) is dispatched.
+Status checkpoint: 2026-10-05, committed tree through brief-569's gate; G3
+is closed; next is group G4 (rule/held-pattern, 16 sites), re-probed before its
+brief.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -324,6 +325,17 @@ with a default, +3.27% reproduced), deep ones are faster (list depth 128
 -5.2%); non-schema labels unchanged. The worker measured one candidate and
 handed the residual over untuned. **Next: brief-569** erases it, one-unit
 base `.temp/brief-568/base/`, as brief-566 did for G2.
+**brief-569 is in, and G3 is closed:** ten one-unit candidates, four kept —
+the association index as sorted indices with borrowed key comparisons (no
+owned `String` keys; the admitted `RandomState` row is removed, by ruling),
+paths built only when an error is reported, borrowed input and argument tail,
+output collected from the owned entry buffer. 25 of 27 labels at or below the
+base; small lists are now *faster* than before G3 (-3.7% / -4.2%, director
+reproduced), list depth 8 -3.6%, 33-key associations -0.3%. The residual is
+the small association with a default: `ConformSchema` +0.37% / -0.13% (noise)
+and `SchemaErrors` +0.43% / +0.70% — **recorded, not tuned further**.
+Director gate: workspace 3005/0/58 with native ZeroMQ real; source identical
+to the measured candidate; tests unchanged.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

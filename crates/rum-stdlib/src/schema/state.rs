@@ -21,9 +21,12 @@ pub(crate) struct SchemaEntry {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub(crate) enum EntrySpec {
-    Required(Expr),
-    Optional { spec: Expr, default: Option<Expr> },
+pub(crate) enum EntrySpec<'a> {
+    Required(&'a Expr),
+    Optional {
+        spec: &'a Expr,
+        default: Option<&'a Expr>,
+    },
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, FrameRootTrace)]
@@ -53,18 +56,18 @@ impl SchemaMode {
 }
 
 #[derive(Clone, FrameRootTrace)]
-pub(crate) struct SchemaState {
+pub(crate) struct SchemaState<Index = HashMap<String, usize>> {
     pub(crate) mode: SchemaMode,
     pub(crate) options: SchemaOptions,
-    pub(crate) stack: Vec<SchemaContainer>,
+    pub(crate) stack: Vec<SchemaContainer<Index>>,
     pub(crate) path: SchemaPath,
     pub(crate) errors: Vec<SchemaError>,
 }
 
 #[derive(Clone, FrameRootTrace)]
-pub(crate) enum SchemaContainer {
+pub(crate) enum SchemaContainer<Index = HashMap<String, usize>> {
     List(ListWork),
-    Association(AssociationWork),
+    Association(AssociationWork<Index>),
 }
 
 #[derive(Clone, FrameRootTrace)]
@@ -78,14 +81,14 @@ pub(crate) struct ListWork {
 }
 
 #[derive(Clone, FrameRootTrace)]
-pub(crate) struct AssociationWork {
+pub(crate) struct AssociationWork<Index = HashMap<String, usize>> {
     pub(crate) schema_entries: Vec<SchemaEntry>,
     pub(crate) value_entries: Vec<(Expr, Expr)>,
     pub(crate) next_schema: usize,
     pub(crate) matched: Vec<bool>,
     pub(crate) conformed_by_index: Vec<Option<Expr>>,
     pub(crate) default_entries: Vec<(Expr, Expr)>,
-    pub(crate) positions: Option<HashMap<String, usize>>,
+    pub(crate) positions: Option<Index>,
     pub(crate) path_len: usize,
     pub(crate) waiting: Option<SchemaDestination>,
 }
@@ -131,3 +134,10 @@ impl From<EvalError> for SchemaAbort {
         Self::Eval(error)
     }
 }
+
+// The running and suspended validator both use indices into value_entries. The
+// default index parameter preserves the existing root-contract fixture shape;
+// both index representations contain only root-neutral keys/indices.
+pub(super) type LiveSchemaState = SchemaState<Vec<usize>>;
+pub(super) type LiveSchemaContainer = SchemaContainer<Vec<usize>>;
+pub(super) type LiveAssociationWork = AssociationWork<Vec<usize>>;

@@ -1,13 +1,13 @@
 //! Parse only the current container/entry, preserving malformed-schema precedence.
 use super::format::{malformed, render};
 use super::state::{EntrySpec, SchemaAbort, SchemaEntry, SchemaOptions, SchemaPath};
-use rum_core::Expr;
+use rum_core::{Atom, Expr};
 use rum_runtime::kernel_api::{
     association_entries_from_expr, expr_as_string, expr_as_symbol, is_system_symbol_name,
     list_items,
 };
 
-impl EntrySpec {
+impl EntrySpec<'_> {
     pub(super) fn validation_spec(&self) -> &Expr {
         match self {
             Self::Required(spec) | Self::Optional { spec, .. } => spec,
@@ -17,9 +17,10 @@ impl EntrySpec {
 
 pub(super) fn parse_schema_call<'a>(
     symbol: &str,
-    args: &'a [Expr],
+    value: Option<&'a Expr>,
+    tail: &'a [Expr],
 ) -> Result<(&'a Expr, &'a Expr, SchemaOptions), String> {
-    let [value, schema, option_exprs @ ..] = args else {
+    let (Some(value), [schema, option_exprs @ ..]) = (value, tail) else {
         return Err(format!(
             "{symbol} expects a value, a schema, and optional option rules."
         ));
@@ -75,7 +76,7 @@ pub(super) fn parse_association_schema(
     entries
         .into_iter()
         .map(|(key, spec)| {
-            let Some(key) = expr_as_string(&key) else {
+            let Expr::Atom(Atom::String(key)) = key else {
                 return Err(malformed(
                     path,
                     format!(
@@ -84,10 +85,7 @@ pub(super) fn parse_association_schema(
                     ),
                 ));
             };
-            Ok(SchemaEntry {
-                key: key.to_string(),
-                spec,
-            })
+            Ok(SchemaEntry { key, spec })
         })
         .collect()
 }
@@ -111,22 +109,25 @@ pub(super) fn parse_list_schema<'a>(
     }
 }
 
-pub(super) fn parse_entry_spec(spec: &Expr, path: &SchemaPath) -> Result<EntrySpec, SchemaAbort> {
+pub(super) fn parse_entry_spec<'a>(
+    spec: &'a Expr,
+    path: &SchemaPath,
+) -> Result<EntrySpec<'a>, SchemaAbort> {
     let Expr::Call { head, args } = spec else {
-        return Ok(EntrySpec::Required(spec.clone()));
+        return Ok(EntrySpec::Required(spec));
     };
     if !is_system_symbol_name(head, "Optional") {
-        return Ok(EntrySpec::Required(spec.clone()));
+        return Ok(EntrySpec::Required(spec));
     }
 
     match args.as_slice() {
         [inner] => Ok(EntrySpec::Optional {
-            spec: inner.clone(),
+            spec: inner,
             default: None,
         }),
         [inner, default] => Ok(EntrySpec::Optional {
-            spec: inner.clone(),
-            default: Some(default.clone()),
+            spec: inner,
+            default: Some(default),
         }),
         _ => Err(malformed(
             path,

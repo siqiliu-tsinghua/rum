@@ -2,7 +2,9 @@
 //! a cold, flat working copy runs; abandonment evaluates no skipped work.
 use super::format::{finish_abort, finish_leaf, finish_validation};
 use super::machine::schema_drive;
-use super::state::{SchemaAbort, SchemaAwait, SchemaDriveError, SchemaState, SchemaTask};
+use super::state::{
+    LiveSchemaState, SchemaAbort, SchemaAwait, SchemaDriveError, SchemaState, SchemaTask,
+};
 use rum_core::Expr;
 use rum_runtime::kernel_api::{
     AbandonmentContext, EvalError, FrameAbandon, FrameAbandonAction, FrameAction, FrameRootTrace,
@@ -11,8 +13,9 @@ use rum_runtime::kernel_api::{
 use std::sync::Arc;
 
 #[derive(FrameRootTrace, PureFrameAbandon)]
-pub(crate) struct SchemaValidationSuspensionFrame {
-    pub(crate) state: SchemaState,
+pub(crate) struct SchemaValidationSuspensionFrame<Index = std::collections::HashMap<String, usize>>
+{
+    pub(crate) state: SchemaState<Index>,
     pub(crate) pending: SchemaAwait,
 }
 
@@ -20,7 +23,7 @@ pub(crate) struct SchemaValidationSuspensionFrame {
 #[inline(never)]
 pub(super) fn suspend_validation(
     session: &mut Session,
-    state: SchemaState,
+    state: LiveSchemaState,
     error: SchemaDriveError,
 ) -> Result<Expr, EvalError> {
     let mode = state.mode;
@@ -32,7 +35,7 @@ pub(super) fn suspend_validation(
     finish_abort(session, mode.symbol(), abort)
 }
 
-impl SuspensionFrame for SchemaValidationSuspensionFrame {
+impl SuspensionFrame for SchemaValidationSuspensionFrame<Vec<usize>> {
     fn resume(
         self: Arc<Self>,
         session: &mut Session,
@@ -48,7 +51,7 @@ impl SuspensionFrame for SchemaValidationSuspensionFrame {
 #[cold]
 #[inline(never)]
 fn resume_validation(
-    frame: &SchemaValidationSuspensionFrame,
+    frame: &SchemaValidationSuspensionFrame<Vec<usize>>,
     session: &mut Session,
     answer: Expr,
 ) -> Result<Expr, EvalError> {
