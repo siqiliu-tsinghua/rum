@@ -5,7 +5,7 @@ operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
 Status checkpoint: 2026-10-05, committed tree through brief-568's gate;
-brief-569 (G3's ordinary-path cost) is next.
+brief-569 (G3's ordinary-path cost) is dispatched.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
