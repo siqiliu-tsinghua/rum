@@ -8,18 +8,6 @@ use super::{outcome::*, *};
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
 impl Session {
-    #[allow(dead_code)]
-    pub(in crate::runtime) fn match_expr(
-        &mut self,
-        pattern: &Expr,
-        value: &Expr,
-        bindings: &mut SymbolExprMap,
-    ) -> Result<bool, EvalError> {
-        let outcome = self.match_expr_owned(pattern.clone(), value.clone(), bindings.clone())?;
-        *bindings = outcome.bindings;
-        Ok(outcome.matched)
-    }
-
     pub(in crate::runtime) fn match_expr_owned(
         &mut self,
         pattern: Expr,

@@ -4,8 +4,8 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-05, committed tree through brief-570's design;
-brief-571 (G4 step A) is dispatched.
+Status checkpoint: 2026-10-05, committed tree through brief-571's gate;
+brief-572 (G4 step B, the rule left-hand-side walk) is next.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -362,6 +362,12 @@ accepted — A retires the three adapters (59 -> 56), B the rule walk
 (-> 46), C the held resolver (-> 43); the depth boundary is accepted; each
 step gets a one-unit base and instruction gate (no timing suite); A has no
 performance gate because it changes no release code.
+**G4 step A is done (brief-571):** the parity test compares owned outcomes
+(`.matched` for both matchers, `.bindings` equal), and `match_expr`,
+`match_expr_interpreted` and `normalize_cases_spec` are deleted — three
+retirements, lost 59 -> 56. Director gate: workspace 3005/0/58 with native
+ZeroMQ real; no inventory row disappeared; remaining `match_expr` names are
+unrelated AST visitors.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

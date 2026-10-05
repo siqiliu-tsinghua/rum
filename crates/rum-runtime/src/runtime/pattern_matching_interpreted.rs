@@ -310,19 +310,6 @@ impl Session {
     }
 
     #[allow(dead_code)]
-    pub(super) fn match_expr_interpreted(
-        &mut self,
-        pattern: &Expr,
-        value: &Expr,
-        bindings: &mut SymbolExprMap,
-    ) -> Result<bool, EvalError> {
-        let outcome =
-            self.match_expr_interpreted_owned(pattern.clone(), value.clone(), bindings.clone())?;
-        *bindings = outcome.bindings;
-        Ok(outcome.matched)
-    }
-
-    #[allow(dead_code)]
     pub(super) fn match_expr_interpreted_owned(
         &mut self,
         pattern: Expr,

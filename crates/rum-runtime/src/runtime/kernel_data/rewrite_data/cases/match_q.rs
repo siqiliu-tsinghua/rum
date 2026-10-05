@@ -75,15 +75,6 @@ impl Session {
         }
     }
 
-    #[allow(dead_code)]
-    pub(in crate::runtime) fn normalize_cases_spec(
-        &mut self,
-        expr: &Expr,
-    ) -> Result<CasesSpec, EvalError> {
-        let resolved = self.resolve_cases_spec_expr_for_matching_owned(expr.clone())?;
-        Ok(self.compile_cases_spec_from_resolved_expr(resolved))
-    }
-
     fn resume_match_q_after_value(
         &mut self,
         pattern_expr: Expr,

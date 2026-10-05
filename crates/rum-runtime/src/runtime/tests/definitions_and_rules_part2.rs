@@ -40,23 +40,24 @@ fn compiled_matcher_matches_interpreted_matcher_on_supported_subset() {
             .lower_syntax_expr(&parse_expr(value_src).unwrap())
             .unwrap();
         let value = session.evaluate(value).unwrap();
-        let mut interpreted_bindings = SymbolExprMap::default();
-        let mut compiled_bindings = SymbolExprMap::default();
 
         let interpreted = session
-            .match_expr_interpreted(&pattern, &value, &mut interpreted_bindings)
+            .match_expr_interpreted_owned(pattern.clone(), value.clone(), SymbolExprMap::default())
             .unwrap();
         let compiled = session
-            .match_expr(&pattern, &value, &mut compiled_bindings)
+            .match_expr_owned(pattern, value, SymbolExprMap::default())
             .unwrap();
 
         assert_eq!(
-            interpreted, expected,
+            interpreted.matched, expected,
             "interpreted mismatch for {pattern_src}"
         );
-        assert_eq!(compiled, expected, "compiled mismatch for {pattern_src}");
         assert_eq!(
-            compiled_bindings, interpreted_bindings,
+            compiled.matched, expected,
+            "compiled mismatch for {pattern_src}"
+        );
+        assert_eq!(
+            compiled.bindings, interpreted.bindings,
             "binding mismatch for {pattern_src}"
         );
     }
