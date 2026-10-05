@@ -6,12 +6,17 @@ mod builtins;
 mod core;
 mod defaults;
 mod patterns;
+mod read_phase;
+#[cfg(test)]
+#[path = "options/tests/read_phase.rs"]
+mod read_phase_tests;
 mod reentry;
 #[cfg(test)]
 #[path = "options/tests/compile.rs"]
 mod reentry_tests;
 mod resume_frames;
 
+pub use read_phase::{FrozenOptionReadContinuation, OptionReadContinuation};
 pub use reentry::{OptionReentry, OptionReentryDeclaration};
 pub(in crate::runtime) use resume_frames::MergedOptionsSuspensionFrame;
 pub(in crate::runtime) use resume_frames::RuntimeOptionSuspensionFrame;

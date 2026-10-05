@@ -1,3 +1,4 @@
+mod options;
 mod resume_frames;
 use resume_frames::*;
 
@@ -129,17 +130,16 @@ impl Session {
         pattern: Expr,
         args: &SharedArgs,
     ) -> Result<Expr, EvalError> {
-        let include_heads = self.system_option_bool("Count", "Heads", false)?;
-        self.finish_count_like_after_pattern(
+        self.system_option_bool(
             "Count",
-            target,
-            pattern,
-            args,
-            CasesTraversalConfig {
-                include_heads,
-                ..CasesTraversalConfig::default_cases()
+            "Heads",
+            false,
+            options::CountLikeOptionWorking {
+                target,
+                pattern,
+                args,
+                finish: CountLikeFinish::Count,
             },
-            CountLikeFinish::Count,
         )
     }
 
@@ -169,17 +169,16 @@ impl Session {
         pattern: Expr,
         args: &SharedArgs,
     ) -> Result<Expr, EvalError> {
-        let include_heads = self.system_option_bool("MemberQ", "Heads", false)?;
-        self.finish_count_like_after_pattern(
+        self.system_option_bool(
             "MemberQ",
-            target,
-            pattern,
-            args,
-            CasesTraversalConfig {
-                include_heads,
-                ..CasesTraversalConfig::default_member_q()
+            "Heads",
+            false,
+            options::CountLikeOptionWorking {
+                target,
+                pattern,
+                args,
+                finish: CountLikeFinish::MemberQ,
             },
-            CountLikeFinish::MemberQ,
         )
     }
 
@@ -209,17 +208,16 @@ impl Session {
         pattern: Expr,
         args: &SharedArgs,
     ) -> Result<Expr, EvalError> {
-        let include_heads = self.system_option_bool("FreeQ", "Heads", true)?;
-        self.finish_count_like_after_pattern(
+        self.system_option_bool(
             "FreeQ",
-            target,
-            pattern,
-            args,
-            CasesTraversalConfig {
-                include_heads,
-                ..CasesTraversalConfig::default_free_q()
+            "Heads",
+            true,
+            options::CountLikeOptionWorking {
+                target,
+                pattern,
+                args,
+                finish: CountLikeFinish::FreeQ,
             },
-            CountLikeFinish::FreeQ,
         )
     }
 

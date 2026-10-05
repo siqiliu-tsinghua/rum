@@ -4,8 +4,8 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-06, committed tree through brief-576's design;
-brief-577 (G5 step A) is dispatched.
+Status checkpoint: 2026-10-06, committed tree through brief-577's gate;
+brief-578 (G5 step B, the phased readers) is next.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -448,6 +448,20 @@ with no legacy getter; I04's new public generic inputs enter as
 STOPs; cold pure reparse and the A/B/C split accepted (43 -> 31 -> 17 -> 14);
 instruction gate on one-unit builds, no timing suite. **Next: brief-577**
 (step A, the protocol and the boolean readers).
+**G5 step A is done (brief-577):** the typed read-and-complete protocol
+(`options/read_phase.rs`: `OptionReadContinuation`, one generic
+`OptionReadSuspensionFrame`, a cold capture helper) and all twelve boolean
+reader sites — Trace, Cases (both setup entries), DeleteCases, Replace, Count,
+MemberQ, FreeQ, Level, Position, Depth — migrated; `system_option_bool` now
+requires `next` and returns the builtin's `Expr`, enforced by compile-fail
+controls and a source tail-use gate. Lost 43 -> 31. One `PublicInput` host-payload
+row added (`system_option_bool(next)`), as ruled. C01/C02 earn their marks
+unchanged. Director gate: workspace 3171/0/58 with native ZeroMQ real; one-unit
+slopes reproduced: the small single-call labels vary by up to ±1% between
+samples of the same binaries (per-process `RandomState` hashing in interning),
+and the residual sits in that band — small `Cases` default +1.08% / +0.65% the
+largest — while `cases-wide-no-match` is -0.46% and controls are at the base;
+recorded. Seven of eight candidates, stopped by stop-loss.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

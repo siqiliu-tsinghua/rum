@@ -1,4 +1,5 @@
 mod depth;
+mod options;
 mod resume_frames;
 mod traversal;
 use depth::{replace_expr_depth, replace_expr_depth_for_heads, replace_expr_depth_with_heads};
@@ -135,28 +136,18 @@ impl Session {
             .expect("normalized rewrite rule expressions should recompile");
         let rule_plan = Self::shared_rewrite_rule_plan(rules);
 
-        let default_include_heads = self.system_option_bool("Replace", "Heads", false)?;
-        let heads_result =
-            self.resolve_replace_heads_options_owned(heads_option_exprs, default_include_heads);
-        match heads_result {
-            Ok(include_heads) => self.finish_replace_heads_resolution(
+        self.system_option_bool(
+            "Replace",
+            "Heads",
+            false,
+            options::ReplaceOptionWorking {
                 target,
                 rule_plan,
                 levels_expr,
+                heads_option_exprs,
                 call_args,
-                include_heads,
-            ),
-            Err(EvalError::InputRequired { request }) => {
-                let call_args = SharedArgs::new(call_args);
-                let next = ContinueReplaceSetupFrame {
-                    rule_plan: Some(rule_plan.clone()),
-                };
-                crate::resume_or_suspend!(insert self, ResumeReplaceAfterRuleExprsSuspensionFrame { target, rule_plan, levels_expr, call_args });
-                crate::resume_or_suspend!(insert self, next);
-                Err(EvalError::InputRequired { request })
-            }
-            Err(error) => Err(error),
-        }
+            },
+        )
     }
 
     fn finish_replace_heads_resolution(

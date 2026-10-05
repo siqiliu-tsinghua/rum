@@ -1,3 +1,4 @@
+mod options;
 mod resume_frames;
 use resume_frames::*;
 
@@ -143,20 +144,16 @@ impl Session {
         pattern: Expr,
         args: &SharedArgs,
     ) -> Result<Expr, EvalError> {
-        let mut defaults = CasesTraversalConfig::default_position();
-        defaults.include_heads = self.system_option_bool("Position", "Heads", true)?;
-        let traversal_result = self.resolve_position_traversal_owned(args[2..].to_vec(), defaults);
-        match traversal_result {
-            Ok(traversal) => {
-                self.finish_position_after_resolved_traversal(target, pattern, traversal, args)
-            }
-            Err(EvalError::InputRequired { request }) => {
-                let args = args.clone();
-                crate::resume_or_suspend!(insert self, ResumePositionAfterPatternSuspensionFrame { target, pattern, args });
-                Err(EvalError::InputRequired { request })
-            }
-            Err(error) => Err(error),
-        }
+        self.system_option_bool(
+            "Position",
+            "Heads",
+            true,
+            options::PositionOptionWorking {
+                target,
+                pattern,
+                args,
+            },
+        )
     }
 
     fn finish_position_after_resolved_traversal(

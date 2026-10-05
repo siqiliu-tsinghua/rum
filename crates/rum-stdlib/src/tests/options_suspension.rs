@@ -207,3 +207,6 @@ fn default_snapshot_survives_guest_options_mutation_and_resume() {
 
 #[path = "options_suspension/inventory.rs"]
 mod inventory;
+
+#[path = "options_suspension/read_inventory.rs"]
+mod read_inventory;

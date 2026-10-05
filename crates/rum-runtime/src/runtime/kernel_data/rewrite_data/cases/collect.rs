@@ -1,3 +1,4 @@
+mod options;
 mod resume_frames;
 use resume_frames::*;
 
@@ -104,20 +105,16 @@ impl Session {
     ) -> Result<Expr, EvalError> {
         let spec =
             FrozenRewriteValue::freeze(self.compile_cases_spec_from_resolved_expr(resolved_spec));
-        let mut defaults = CasesTraversalConfig::default_cases();
-        defaults.include_heads = self.system_option_bool("Cases", "Heads", false)?;
-        let traversal_result =
-            self.resolve_cases_traversal_shared_from(call_args.clone(), 2, defaults);
-        match traversal_result {
-            Ok(traversal) => self.finish_cases_after_resolved_traversal_suspended(
-                target, spec, traversal, call_args,
-            ),
-            Err(EvalError::InputRequired { request }) => {
-                crate::resume_or_suspend!(insert self, ResumeCasesAfterResolvedSpecSuspensionFrame { target, spec, call_args });
-                Err(EvalError::InputRequired { request })
-            }
-            Err(error) => Err(error),
-        }
+        self.system_option_bool(
+            "Cases",
+            "Heads",
+            false,
+            options::CasesOptionWorking::Suspended {
+                target,
+                spec,
+                call_args,
+            },
+        )
     }
 
     fn resume_cases_after_resolved_spec(
@@ -128,23 +125,20 @@ impl Session {
         call_args: Vec<Expr>,
     ) -> Result<Expr, EvalError> {
         let spec = self.compile_cases_spec_from_resolved_expr(resolved_spec);
-        let mut defaults = CasesTraversalConfig::default_cases();
-        defaults.include_heads = self.system_option_bool("Cases", "Heads", false)?;
-        let traversal_result = self.resolve_cases_traversal_owned(option_exprs, defaults);
-        match traversal_result {
-            Ok(traversal) => {
-                self.finish_cases_after_resolved_traversal(target, spec, traversal, call_args)
-            }
-            Err(EvalError::InputRequired { request }) => {
-                let spec = FrozenRewriteValue::freeze(spec);
-                let call_args = SharedArgs::new(call_args);
-                crate::resume_or_suspend!(insert self, ResumeCasesAfterResolvedSpecSuspensionFrame { target, spec, call_args });
-                Err(EvalError::InputRequired { request })
-            }
-            Err(error) => Err(error),
-        }
+        self.system_option_bool(
+            "Cases",
+            "Heads",
+            false,
+            options::CasesOptionWorking::Owned {
+                target,
+                spec,
+                option_exprs,
+                call_args,
+            },
+        )
     }
 
+    #[inline(always)]
     fn finish_cases_after_resolved_traversal(
         &mut self,
         target: Expr,

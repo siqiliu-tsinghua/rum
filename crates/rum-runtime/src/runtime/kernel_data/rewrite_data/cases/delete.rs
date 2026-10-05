@@ -1,3 +1,4 @@
+mod options;
 mod resume_frames;
 use resume_frames::*;
 
@@ -98,21 +99,16 @@ impl Session {
         pattern: Expr,
         call_args: SharedArgs,
     ) -> Result<Expr, EvalError> {
-        let mut defaults = CasesTraversalConfig::default_cases();
-        defaults.include_heads = self.system_option_bool("DeleteCases", "Heads", false)?;
-        let traversal_result =
-            self.resolve_cases_traversal_shared_from(call_args.clone(), 2, defaults);
-        match traversal_result {
-            Ok(traversal) => self.finish_delete_cases_after_resolved_traversal_suspended(
-                target, pattern, traversal, call_args,
-            ),
-            Err(EvalError::InputRequired { request }) => {
-                crate::resume_or_suspend!(insert self, ResumeDeleteCasesAfterPatternSuspensionFrame { target, pattern, call_args });
-                crate::resume_or_suspend!(insert self, ContinueDeleteCasesFrame);
-                Err(EvalError::InputRequired { request })
-            }
-            Err(error) => Err(error),
-        }
+        self.system_option_bool(
+            "DeleteCases",
+            "Heads",
+            false,
+            options::DeleteCasesOptionWorking::Suspended {
+                target,
+                pattern,
+                call_args,
+            },
+        )
     }
 
     fn resume_delete_cases_after_pattern(
@@ -122,21 +118,17 @@ impl Session {
         option_exprs: Vec<Expr>,
         call_args: Vec<Expr>,
     ) -> Result<Expr, EvalError> {
-        let mut defaults = CasesTraversalConfig::default_cases();
-        defaults.include_heads = self.system_option_bool("DeleteCases", "Heads", false)?;
-        let traversal_result = self.resolve_cases_traversal_owned(option_exprs, defaults);
-        match traversal_result {
-            Ok(traversal) => self.finish_delete_cases_after_resolved_traversal(
-                target, pattern, traversal, call_args,
-            ),
-            Err(EvalError::InputRequired { request }) => {
-                let call_args = SharedArgs::new(call_args);
-                crate::resume_or_suspend!(insert self, ResumeDeleteCasesAfterPatternSuspensionFrame { target, pattern, call_args });
-                crate::resume_or_suspend!(insert self, ContinueDeleteCasesFrame);
-                Err(EvalError::InputRequired { request })
-            }
-            Err(error) => Err(error),
-        }
+        self.system_option_bool(
+            "DeleteCases",
+            "Heads",
+            false,
+            options::DeleteCasesOptionWorking::Owned {
+                target,
+                pattern,
+                option_exprs,
+                call_args,
+            },
+        )
     }
 
     fn finish_delete_cases_after_resolved_traversal(

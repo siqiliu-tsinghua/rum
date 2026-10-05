@@ -1,4 +1,5 @@
 mod lazy_completion;
+mod options;
 
 use super::*;
 use rum_core::{IntValue, SharedArgs};
@@ -37,31 +38,12 @@ pub(crate) fn eval_depth(
     _head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
-    let args = args.as_ref();
-    let default_include_heads = session.system_option_bool("Depth", "Heads", false)?;
-    let (expr, include_heads) = match args {
-        [expr] => (expr, default_include_heads),
-        [expr, option] => {
-            let classification = classify_heads_option_expr(option);
-            let HeadsOptionClassification::Value(include_heads) = classification else {
-                return Ok(session.invalid_heads_option_call(
-                    "Depth",
-                    args,
-                    option,
-                    1,
-                    classification,
-                    "expected a Heads -> True/False option as the second argument",
-                ));
-            };
-            (expr, include_heads.unwrap_or(default_include_heads))
-        }
-        _ => return Ok(session.invalid_call_with_arg_range("Depth", args, 1, 2)),
-    };
-
-    Ok(Expr::integer(BigInt::from(structural_depth(
-        expr,
-        include_heads,
-    ))))
+    session.system_option_bool(
+        "Depth",
+        "Heads",
+        false,
+        options::DepthOptionWorking { args },
+    )
 }
 
 pub(crate) fn eval_leaf_count(

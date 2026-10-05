@@ -1,20 +1,29 @@
 use super::*;
 
 impl Session {
-    /// Resolves a boolean system option for builtin families.
-    pub fn system_option_bool(
+    /// Reads a boolean system option and completes its builtin through `next`.
+    ///
+    /// Delayed values run at this read position. A suspended read freezes only
+    /// its continuation; ordinary success and errors do not freeze call data.
+    /// Callers must return this result as their tail, so later guest work belongs
+    /// in the continuation rather than after an unframed `?`.
+    #[inline(always)]
+    pub fn system_option_bool<C: OptionReadContinuation<bool>>(
         &mut self,
         symbol_name: &str,
         option_name: &str,
         fallback: bool,
-    ) -> Result<bool, EvalError> {
-        let Some(value) = self
-            .option_value_for_symbol(&Symbol::system(symbol_name), &Symbol::system(option_name))?
-        else {
-            return Ok(fallback);
-        };
-
-        Ok(is_system_symbol_name(&value, "True"))
+        next: C,
+    ) -> Result<Expr, EvalError> {
+        match self
+            .option_value_for_symbol(&Symbol::system(symbol_name), &Symbol::system(option_name))
+        {
+            Ok(Some(value)) => next.finish(self, is_system_symbol_name(&value, "True")),
+            Ok(None) => next.finish(self, fallback),
+            Err(error) => {
+                read_phase::suspend_option_read(self, error, read_phase::BoolOptionDecode, next)
+            }
+        }
     }
 
     pub(in crate::runtime) fn options_for_symbol(&self, symbol: &Symbol) -> SymbolOptions {
@@ -41,7 +50,8 @@ impl Session {
         }
     }
 
-    pub(in crate::runtime) fn option_value_for_symbol(
+    #[inline(always)]
+    pub(in crate::runtime::options) fn option_value_for_symbol(
         &mut self,
         symbol: &Symbol,
         option: &Symbol,
