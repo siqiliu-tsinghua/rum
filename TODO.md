@@ -4,8 +4,8 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-05, committed tree through brief-566's gate; next
-is group G3 (schema, 7 sites), re-probed before its brief.
+Status checkpoint: 2026-10-05, committed tree through brief-566's gate;
+brief-567 (G3 design) is dispatched.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -267,6 +267,17 @@ controls are at the base. Director gate: workspace 2955/0/58 with native
 ZeroMQ real; one-unit slopes reproduced on nine labels; the source is
 byte-identical to candidate 06 and the descriptor rewrite is semantically the
 old `is_system_symbol_name` chain with the symbol test hoisted.
+**G3 re-probed (2026-10-05, `2df7681b`):** brief-548's probes now diverge in 60
+cases (91 at 548; every flip is in a repaired group), and all nine G3 witnesses
+still diverge. **The adjacent-boundary probe found the schema validator aborts
+the process too:** `v = ConstantArray[1, Table[1, {n}]]; ConformSchema[v, v]`
+on 2 MiB — n = 600 passes, n = 1 500 and 3 000 overflow (exit 134), n = 6 000
+fails closed in construction. Pattern-bearing schemas stop at ~150-200 levels
+in the evaluator's guard, but a literal schema does not, and
+`conform_value` / `conform_association` / `conform_list` recurse unguarded. So
+G3, like G2, includes depth safety; **brief-567** designs both (director's
+preferred direction: an explicit heap work stack that is also the suspension
+state, enforced by the recursion scanner as for the lazy module).
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
