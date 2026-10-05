@@ -4,8 +4,8 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-06, committed tree through brief-575's gate; G4
-is closed; brief-576 (G5 design, option readers) is dispatched.
+Status checkpoint: 2026-10-06, committed tree through brief-576's design;
+brief-577 (G5 step A) is dispatched.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -434,6 +434,20 @@ per-site frames against one mechanism (option reads resolved in a resumable
 phase), observable read order, and the retention line's certified option
 region (C01/C02), whose bodies must still pass acceptance on their merits if
 touched.
+**brief-576 is in (design):** a typed **read-and-complete** boundary — each
+reader takes the caller's continuation and returns the completed builtin's
+`Expr`, so a read without its continuation does not compile — entered at every
+existing read position (read order is observable: after-target reads,
+Names' reversed order, reads before arity checks), one generic option-read
+frame with per-family frozen data, and C01/C02's certified bodies left
+verbatim. Rejected: per-site frames (29 obligations to remember) and resolving
+all options at dispatch (moves reads, evaluates held callbacks, disturbs the
+certified region). Red: 70 cases, 62 red. **Rulings:** CPS surface approved
+with no legacy getter; I04's new public generic inputs enter as
+`UnknownHostPayload` / `PublicInput` rows by name, any other new host payload
+STOPs; cold pure reparse and the A/B/C split accepted (43 -> 31 -> 17 -> 14);
+instruction gate on one-unit builds, no timing suite. **Next: brief-577**
+(step A, the protocol and the boolean readers).
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
