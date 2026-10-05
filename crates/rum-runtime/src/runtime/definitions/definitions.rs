@@ -1,11 +1,10 @@
 mod resume_frames;
+use super::rule_lhs::continuation::RuleLhsCompletionFrame;
 use resume_frames::*;
 
 use super::super::*;
 use super::definition_lhs_preparation::{
     DefinitionLhsPreparationContinuation, PreparedDefinitionAssignment, PreparedDefinitionLhs,
-    definition_lhs_blank_head, definition_lhs_contains_pattern_syntax,
-    definition_lhs_pattern_wrapper_head,
 };
 
 impl Session {
@@ -82,19 +81,13 @@ impl Session {
             return Ok(self.invalid_call_with_exact_arg_count("Rule", args, 2));
         }
 
-        let lhs = self.evaluate_rule_lhs(args[0].clone())?;
-        let rhs_result = self.evaluate(args[1].clone());
-        let rhs = crate::resume_or_suspend!(
+        let lhs_result = self.evaluate_rule_lhs(args[0].clone());
+        crate::resume_or_suspend!(
             self,
-            rhs_result,
-            ok(value) => Ok(value),
-            suspend => {
-        let lhs = lhs.clone();
-        EvalRuleSuspensionFrame { lhs }
-        },
-        )?;
-
-        self.resume_rule_with_rhs(lhs, rhs)
+            lhs_result,
+            ok(lhs) => self.finish_rule_lhs(lhs, args[1].clone(), false),
+            suspend => RuleLhsCompletionFrame { rhs: args[1].clone(), delayed: false },
+        )
     }
 
     pub(in crate::runtime) fn eval_rule_delayed(
@@ -105,11 +98,35 @@ impl Session {
             return Ok(self.invalid_call_with_exact_arg_count("RuleDelayed", args, 2));
         }
 
-        let lhs = self.evaluate_rule_lhs(args[0].clone())?;
-        Ok(Expr::call(
-            system_expr("RuleDelayed"),
-            vec![lhs, args[1].clone()],
-        ))
+        let lhs_result = self.evaluate_rule_lhs(args[0].clone());
+        crate::resume_or_suspend!(
+            self,
+            lhs_result,
+            ok(lhs) => self.finish_rule_lhs(lhs, args[1].clone(), true),
+            suspend => RuleLhsCompletionFrame { rhs: args[1].clone(), delayed: true },
+        )
+    }
+
+    pub(super) fn finish_rule_lhs(
+        &mut self,
+        lhs: Expr,
+        rhs: Expr,
+        delayed: bool,
+    ) -> Result<Expr, EvalError> {
+        if delayed {
+            return Ok(Expr::call(system_expr("RuleDelayed"), vec![lhs, rhs]));
+        }
+        let rhs_result = self.evaluate(rhs);
+        let rhs = crate::resume_or_suspend!(
+            self,
+            rhs_result,
+            ok(value) => Ok(value),
+            suspend => {
+        let lhs = lhs.clone();
+        EvalRuleSuspensionFrame { lhs }
+        },
+        )?;
+        self.resume_rule_with_rhs(lhs, rhs)
     }
 
     fn resume_normalize_rules(&mut self, original: Expr) -> Result<Expr, EvalError> {
@@ -158,81 +175,6 @@ impl Session {
 
     fn resume_rule_with_rhs(&mut self, lhs: Expr, rhs: Expr) -> Result<Expr, EvalError> {
         Ok(Expr::call(system_expr("Rule"), vec![lhs, rhs]))
-    }
-
-    fn evaluate_rule_lhs(&mut self, lhs: Expr) -> Result<Expr, EvalError> {
-        if definition_lhs_contains_pattern_syntax(&lhs) {
-            self.evaluate_pattern_rule_lhs(lhs)
-        } else {
-            self.evaluate(lhs)
-        }
-    }
-
-    fn evaluate_pattern_rule_lhs(&mut self, expr: Expr) -> Result<Expr, EvalError> {
-        match expr {
-            Expr::Atom(_) => self.evaluate(expr),
-            Expr::Call { head, args }
-                if is_system_symbol_name(&head, heads::patterns::PATTERN) && args.len() == 2 =>
-            {
-                let pattern = self.evaluate_pattern_rule_lhs(args[1].clone())?;
-                Ok(Expr::call(
-                    head.as_ref().clone(),
-                    vec![args[0].clone(), pattern],
-                ))
-            }
-            Expr::Call { head, args } if definition_lhs_blank_head(&head) => {
-                let evaluated_args = args
-                    .iter()
-                    .cloned()
-                    .map(|arg| self.evaluate(arg))
-                    .collect::<Result<Vec<_>, _>>()?;
-                Ok(Expr::call(head.as_ref().clone(), evaluated_args))
-            }
-            Expr::Call { head, args }
-                if is_system_symbol_name(&head, heads::patterns::PATTERN_TEST)
-                    && args.len() == 2 =>
-            {
-                let pattern = self.evaluate_pattern_rule_lhs(args[0].clone())?;
-                Ok(Expr::call(
-                    head.as_ref().clone(),
-                    vec![pattern, args[1].clone()],
-                ))
-            }
-            Expr::Call { head, args }
-                if is_system_symbol_name(&head, heads::patterns::CONDITION) && args.len() == 2 =>
-            {
-                let pattern = self.evaluate_pattern_rule_lhs(args[0].clone())?;
-                Ok(Expr::call(
-                    head.as_ref().clone(),
-                    vec![pattern, args[1].clone()],
-                ))
-            }
-            Expr::Call { head, args } if is_system_symbol_name(&head, "HoldPattern") => {
-                Ok(Expr::call_with_shared_args(head.as_ref().clone(), args))
-            }
-            Expr::Call { head, args } if definition_lhs_pattern_wrapper_head(&head) => {
-                let evaluated_args = args
-                    .iter()
-                    .cloned()
-                    .map(|arg| self.evaluate_pattern_rule_lhs(arg))
-                    .collect::<Result<Vec<_>, _>>()?;
-                Ok(Expr::call(head.as_ref().clone(), evaluated_args))
-            }
-            Expr::Call { head, args } => {
-                let evaluated_head = self.evaluate_rule_lhs(head.as_ref().clone())?;
-                let mut evaluated_args = Vec::with_capacity(args.len());
-
-                for arg in args.iter() {
-                    evaluated_args.push(if definition_lhs_contains_pattern_syntax(arg) {
-                        self.evaluate_pattern_rule_lhs(arg.clone())?
-                    } else {
-                        self.evaluate(arg.clone())?
-                    });
-                }
-
-                Ok(Expr::call(evaluated_head, evaluated_args))
-            }
-        }
     }
 
     fn finish_definition_assignment(

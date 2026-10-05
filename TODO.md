@@ -4,8 +4,9 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-05, committed tree through brief-571's gate;
-brief-572 (G4 step B, the rule left-hand-side walk) is dispatched.
+Status checkpoint: 2026-10-05, committed tree through brief-572's gate;
+brief-573 (G4 step C, the held-pattern resolver) is next, then one G4 tuning
+brief.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -368,6 +369,23 @@ performance gate because it changes no release code.
 retirements, lost 59 -> 56. Director gate: workspace 3005/0/58 with native
 ZeroMQ real; no inventory row disappeared; remaining `match_expr` names are
 unrelated AST visitors.
+**G4 step B is done for correctness (brief-572):** the rule left-hand-side walk
+and its classifier are an explicit work stack with two completion frames
+(frame count 556 -> 558); a part that asks for input resumes into the walk and
+the rule, the immediate right-hand side evaluated once afterwards, the
+delayed one held. Lost 56 -> 46. Director gate: workspace 3061/0/58 with
+native ZeroMQ real; on an unchanged export 31 of 36 new cases fail (the passes
+are first-prompt cancellations, abandonment, the 2 000-level construction
+control and the structural-rebuild control). **Not free:** with one unit on
+both arms, a short rule with a `Blank` constraint costs +6.2% and an
+eight-level skewed rule +4.8% (work-stack transitions and vector growth;
+bytes 1 112 -> 1 816 and 3 256 -> 9 048), and two neighbours that never run
+the new walk read +0.15% (`matchq-integer-fail`) and +0.08%
+(`cases-pattern-child`), not reproduced by callgrind. The worker stopped after
+four of eight candidates while still progressing. Recorded for the G4 tuning
+brief after step C, against the same pre-G4 base `.temp/brief-572/base/`.
+Pre-existing and unrelated: three dead test helpers in
+`runtime/test_builtins.rs` warn in every test build since at least brief-569.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

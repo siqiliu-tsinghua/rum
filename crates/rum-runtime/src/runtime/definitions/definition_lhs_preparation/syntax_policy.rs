@@ -109,12 +109,30 @@ fn recursive_pattern_region(region: DefinitionLhsRegion) -> DefinitionLhsRegion 
 }
 
 pub(in crate::runtime::definitions) fn definition_lhs_contains_pattern_syntax(expr: &Expr) -> bool {
-    match expr {
-        Expr::Atom(_) => false,
-        Expr::Call { head, args } => {
-            matcher_pattern_head(head).is_some()
-                || definition_lhs_contains_pattern_syntax(head)
-                || args.iter().any(definition_lhs_contains_pattern_syntax)
+    let mut pending = Vec::new();
+    let mut current = std::slice::from_ref(expr).iter();
+    loop {
+        match current.next() {
+            Some(Expr::Call { head, args }) => {
+                if matcher_pattern_head(head).is_some() {
+                    return true;
+                }
+                if !current.as_slice().is_empty() {
+                    pending.push(current);
+                }
+                current = args.iter();
+                if matches!(head.as_ref(), Expr::Call { .. }) {
+                    if !current.as_slice().is_empty() {
+                        pending.push(current);
+                    }
+                    current = std::slice::from_ref(head.as_ref()).iter();
+                }
+            }
+            Some(Expr::Atom(_)) => {}
+            None => match pending.pop() {
+                Some(next) => current = next,
+                None => return false,
+            },
         }
     }
 }

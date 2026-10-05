@@ -141,6 +141,11 @@ the rule or definition fires:
 
 Use delayed forms when the right side depends on pattern bindings.
 
+When `Rule` or `RuleDelayed` prepares its left-hand side, ordinary
+subexpressions can request input. Resuming continues that preparation and
+then completes the rule. Pattern binders, the test operands of `Condition` and `PatternTest`,
+and a delayed right-hand side stay held during this preparation.
+
 ## Right-Hand-Side Guards
 
 A `Condition` on the right-hand side guards the stored result rather than

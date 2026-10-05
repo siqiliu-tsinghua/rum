@@ -862,3 +862,120 @@ fn synthetic_unregistered_recursion_is_reported_exactly() {
         ]
     );
 }
+
+// Strict flat-walk audit, opt-in so the standing association census keeps its
+// original boundary. Resolves unique callable names and function-item references;
+// this is a source contract, not arbitrary Rust type/trait resolution.
+pub(super) fn flat_walk_call_graph(source: &str) -> BTreeMap<String, BTreeSet<String>> {
+    let syntax = syn::parse_file(source).expect("flat-walk source must parse");
+    let mut definitions = CallableCollector::default();
+    definitions.visit_file(&syntax);
+    let names = definitions
+        .callables
+        .iter()
+        .map(|c| c.name.clone())
+        .collect::<BTreeSet<_>>();
+    assert_eq!(
+        names.len(),
+        definitions.callables.len(),
+        "ambiguous flat-walk functions"
+    );
+    definitions
+        .callables
+        .iter()
+        .map(|caller| {
+            let mut visitor = FlatCalls {
+                caller,
+                names: &names,
+                calls: BTreeSet::new(),
+            };
+            visitor.visit_block(caller.block);
+            (caller.name.clone(), visitor.calls)
+        })
+        .collect()
+}
+
+struct FlatCalls<'a> {
+    caller: &'a Callable<'a>,
+    names: &'a BTreeSet<String>,
+    calls: BTreeSet<String>,
+}
+impl FlatCalls<'_> {
+    fn resolve(&self, name: &str) -> String {
+        if let Some(method) = name.strip_prefix("Self::") {
+            if let CallableKind::Method { owner } = &self.caller.kind {
+                return format!("{owner}::{method}");
+            }
+        }
+        if self.names.contains(name) {
+            return name.to_string();
+        }
+        let tail = name.rsplit("::").next().unwrap();
+        let candidates = self
+            .names
+            .iter()
+            .filter(|n| n.rsplit("::").next() == Some(tail))
+            .collect::<Vec<_>>();
+        if candidates.len() == 1 {
+            candidates[0].clone()
+        } else {
+            name.to_string()
+        }
+    }
+}
+impl<'ast> Visit<'ast> for FlatCalls<'_> {
+    fn visit_expr_call(&mut self, call: &'ast ExprCall) {
+        match call.func.as_ref() {
+            Expr::Path(path) => {
+                let name = path
+                    .path
+                    .segments
+                    .iter()
+                    .map(|s| s.ident.to_string())
+                    .collect::<Vec<_>>()
+                    .join("::");
+                self.calls.insert(self.resolve(&name));
+            }
+            _ => {
+                self.calls.insert("<indirect-call>".into());
+            }
+        }
+        visit::visit_expr_call(self, call);
+    }
+    fn visit_expr_method_call(&mut self, call: &'ast ExprMethodCall) {
+        self.calls.insert(self.resolve(&call.method.to_string()));
+        visit::visit_expr_method_call(self, call);
+    }
+    fn visit_expr_path(&mut self, path: &'ast syn::ExprPath) {
+        let name = path
+            .path
+            .segments
+            .iter()
+            .map(|s| s.ident.to_string())
+            .collect::<Vec<_>>()
+            .join("::");
+        let resolved = self.resolve(&name);
+        // Also sees `let callback = drive; ... map(callback)` and closures.
+        if self.names.contains(&resolved) {
+            self.calls.insert(resolved);
+        }
+        visit::visit_expr_path(self, path);
+    }
+    fn visit_macro(&mut self, mac: &'ast syn::Macro) {
+        self.calls
+            .insert(format!("{}!", mac.path.segments.last().unwrap().ident));
+    }
+}
+
+pub(super) fn flat_walk_recursive_edges(source: &str) -> Vec<(String, String)> {
+    let graph = flat_walk_call_graph(source);
+    let mut edges = Vec::new();
+    for (caller, callees) in &graph {
+        for callee in callees {
+            if reaches(&graph, callee, caller) {
+                edges.push((caller.clone(), callee.clone()));
+            }
+        }
+    }
+    edges
+}
