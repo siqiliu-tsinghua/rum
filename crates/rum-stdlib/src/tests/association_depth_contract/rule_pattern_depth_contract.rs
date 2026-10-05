@@ -1,13 +1,13 @@
-//! Rule-LHS owned source boundary. Evaluator reentry and shared Expr operations
+//! Rule-LHS and held-pattern owned source boundaries. Evaluator reentry and shared Expr operations
 //! are explicit outbound boundaries; this does not certify arbitrary Rust calls.
 use super::recursion_inventory::{flat_walk_call_graph, flat_walk_recursive_edges};
 use quote::ToTokens;
 use std::collections::{BTreeMap, BTreeSet};
 
-const OWNER: &str = "crates/rum-runtime/src/runtime/definitions/";
+const OWNER: &str = "crates/rum-runtime/src/runtime/";
 const FILES: &[(&str, &[&str])] = &[
     (
-        "rule_lhs.rs",
+        "definitions/rule_lhs.rs",
         &[
             "Session::evaluate_rule_lhs",
             "Session::drive_rule_lhs",
@@ -19,11 +19,11 @@ const FILES: &[(&str, &[&str])] = &[
         ],
     ),
     (
-        "rule_lhs/state.rs",
+        "definitions/rule_lhs/state.rs",
         &["RuleLhsState::destination", "RuleLhsState::pending_expr"],
     ),
     (
-        "rule_lhs/continuation.rs",
+        "definitions/rule_lhs/continuation.rs",
         &[
             "RulePatternSuspensionFrame::resume",
             "resume_rule_pattern",
@@ -32,18 +32,48 @@ const FILES: &[(&str, &[&str])] = &[
         ],
     ),
     (
-        "definition_lhs_preparation/syntax_policy.rs",
+        "definitions/definition_lhs_preparation/syntax_policy.rs",
         &["definition_lhs_contains_pattern_syntax"],
+    ),
+    (
+        "kernel_data/rewrite_data/cases/pattern_resolution.rs",
+        &[
+            "Session::resolve_held_matcher_pattern",
+            "Session::drive_matcher_pattern",
+            "Session::suspend_matcher_pattern",
+            "accept_matcher_pattern_value",
+            "contains_pattern_syntax",
+            "matches_pattern_head",
+        ],
+    ),
+    (
+        "kernel_data/rewrite_data/cases/pattern_resolution/state.rs",
+        &["MatcherPatternState::destination"],
+    ),
+    (
+        "kernel_data/rewrite_data/cases/pattern_resolution/continuation.rs",
+        &[
+            "MatcherPatternSuspensionFrame::resume",
+            "resume_matcher_pattern",
+            "matcher_pattern_working_copy",
+        ],
+    ),
+    (
+        "substitution/function_and_subst_helpers.rs",
+        &["strip_hold_pattern"],
     ),
 ];
 
 fn sources() -> BTreeMap<String, String> {
     let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
     FILES.iter().map(|(file, _)| {
-        let raw = std::fs::read_to_string(root.join(OWNER).join(file)).expect("required rule-LHS file");
+        let raw = std::fs::read_to_string(root.join(OWNER).join(file)).expect("required G4 file");
         let mut ast = syn::parse_file(&raw).unwrap();
         if file.ends_with("syntax_policy.rs") {
             ast.items.retain(|i| matches!(i, syn::Item::Fn(f) if f.sig.ident == "definition_lhs_contains_pattern_syntax"));
+        }
+        if file.ends_with("function_and_subst_helpers.rs") {
+            ast.items.retain(|i| matches!(i, syn::Item::Fn(f) if f.sig.ident == "strip_hold_pattern"));
         }
         // Concatenation uses item tokens; inner module doc attributes stay local.
         (file.to_string(), ast.items.iter().map(ToTokens::to_token_stream).map(|s| s.to_string()).collect::<Vec<_>>().join("\n"))
@@ -54,7 +84,7 @@ fn assert_files_and_functions(sources: &BTreeMap<String, String>) {
     assert_eq!(
         sources.keys().map(String::as_str).collect::<BTreeSet<_>>(),
         FILES.iter().map(|(f, _)| *f).collect(),
-        "required rule-LHS files"
+        "required G4 files"
     );
     for (file, expected) in FILES {
         let actual = flat_walk_call_graph(&sources[*file])
@@ -63,7 +93,7 @@ fn assert_files_and_functions(sources: &BTreeMap<String, String>) {
         assert_eq!(
             actual,
             expected.iter().map(|s| s.to_string()).collect(),
-            "required rule-LHS functions in {file}"
+            "required G4 functions in {file}"
         );
     }
 }
@@ -72,6 +102,13 @@ fn assert_files_and_functions(sources: &BTreeMap<String, String>) {
 // completion, syntax registry, shared constructors, scalar and Vec operations.
 const OUTBOUND: &[&str] = &[
     "Session::evaluate",
+    "resume_call_from_prepared_args",
+    "normalize_match_expr",
+    "MatcherPatternStep::Visit",
+    "MatcherPatternStep::Done",
+    "MatcherPatternDestination::Argument",
+    "is_some_and",
+    "matches",
     "evaluate",
     "finish_rule_lhs",
     "matcher_pattern_head",
@@ -124,7 +161,7 @@ fn assert_outbound(source: &str) {
     }
     assert!(
         unexpected.is_empty(),
-        "unaudited rule-LHS outbound calls: {unexpected:?}"
+        "unaudited G4 outbound calls: {unexpected:?}"
     );
 }
 
@@ -134,19 +171,29 @@ fn structural_rule_pattern_depth_contract() {
     assert_files_and_functions(&sources);
     for (file, source) in &sources {
         let edges = flat_walk_recursive_edges(source);
+        assert!(edges.is_empty(), "recursive G4 edge in {file}: {edges:?}");
+    }
+    for owner in ["definitions/", "kernel_data/rewrite_data/cases/"] {
+        let tree = sources
+            .iter()
+            .filter(|(file, _)| file.starts_with(owner))
+            .map(|(_, source)| source.as_str())
+            .collect::<Vec<_>>()
+            .join("\n");
+        assert!(!tree.is_empty());
         assert!(
-            edges.is_empty(),
-            "recursive rule-LHS edge in {file}: {edges:?}"
+            flat_walk_recursive_edges(&tree).is_empty(),
+            "recursive owner tree {owner}"
         );
     }
     let combined = sources.values().cloned().collect::<Vec<_>>().join("\n");
     assert!(
         flat_walk_recursive_edges(&combined).is_empty(),
-        "cross-module rule-LHS recursion"
+        "cross-module G4 recursion"
     );
     assert_outbound(&combined);
     println!(
-        "RULE_SOURCE_CONTRACT 4 files, exact function sets, per-file/combined recursion and outbound audit passed"
+        "G4_SOURCE_CONTRACT 8 files, exact function sets, per-file/combined recursion and outbound audit passed"
     );
 }
 
@@ -173,37 +220,40 @@ fn direct_cross_module_and_callback_recursion_falsifiers() {
         );
     }
     println!(
-        "RULE_RECURSION_FALSIFIERS direct, cross-module, function-item, callback alias, closure, Self method fired"
+        "G4_RECURSION_FALSIFIERS direct, cross-module, function-item, callback alias, closure, Self method fired"
     );
 }
 #[test]
-#[should_panic(expected = "unaudited rule-LHS outbound calls")]
+#[should_panic(expected = "unaudited G4 outbound calls")]
 fn unscanned_helper_falsifier() {
     assert_outbound("fn drive() { moved_to_unscanned_helper(); }");
 }
 #[test]
-#[should_panic(expected = "required rule-LHS files")]
+#[should_panic(expected = "required G4 files")]
 fn missing_file_falsifier() {
     let mut sources = sources();
-    sources.remove("rule_lhs/state.rs");
+    sources.remove("definitions/rule_lhs/state.rs");
     assert_files_and_functions(&sources);
 }
 #[test]
-#[should_panic(expected = "required rule-LHS functions")]
+#[should_panic(expected = "required G4 functions")]
 fn missing_function_falsifier() {
     let mut sources = sources();
     sources.insert(
-        "definition_lhs_preparation/syntax_policy.rs".into(),
+        "definitions/definition_lhs_preparation/syntax_policy.rs".into(),
         String::new(),
     );
     assert_files_and_functions(&sources);
 }
 fn assert_no_self_reaching(text: &str) {
     assert!(
-        !text
-            .lines()
-            .any(|line| line.contains("rum_runtime::runtime::definitions::rule_lhs::")),
-        "self-reaching rule-LHS state"
+        !text.lines().any(
+            |line| line.contains("rum_runtime::runtime::definitions::rule_lhs::")
+                || line.contains(
+                    "rum_runtime::runtime::kernel_data::rewrite_data::cases::pattern_resolution::"
+                )
+        ),
+        "self-reaching G4 state"
     );
 }
 #[test]
@@ -217,38 +267,59 @@ fn rule_lhs_ownership_is_not_self_reaching() {
     );
 }
 #[test]
-#[should_panic(expected = "self-reaching rule-LHS state")]
+#[should_panic(expected = "self-reaching G4 state")]
 fn self_reaching_state_falsifier() {
     assert_no_self_reaching(
         "rum_runtime::runtime::definitions::rule_lhs::state::RuleLhsWork\tRuleLhsWork",
     );
 }
 
+fn root_fields(fields: &syn::Fields) -> BTreeSet<String> {
+    fields
+        .iter()
+        .filter(|f| {
+            let ty = f.ty.to_token_stream().to_string();
+            ty.contains("Expr")
+                || ty.contains("SharedArgs")
+                || ty.contains("RuleLhs")
+                || ty.contains("MatcherPattern")
+        })
+        .map(|f| {
+            assert!(f.attrs.is_empty(), "root field cannot skip tracing");
+            f.ident.as_ref().unwrap().to_string()
+        })
+        .collect()
+}
 fn assert_root_fields(sources: &BTreeMap<String, String>) {
     let mut actual = BTreeMap::new();
     for source in sources.values() {
         for item in syn::parse_file(source).unwrap().items {
-            if let syn::Item::Struct(item) = item {
-                let fields = item
-                    .fields
+            let (attrs, name) = match &item {
+                syn::Item::Struct(item) => {
+                    actual.insert(item.ident.to_string(), root_fields(&item.fields));
+                    (&item.attrs, item.ident.to_string())
+                }
+                syn::Item::Enum(item) if item.ident == "MatcherPatternAwait" => {
+                    for variant in &item.variants {
+                        assert!(
+                            variant.attrs.is_empty(),
+                            "await variant cannot skip tracing"
+                        );
+                        actual.insert(
+                            format!("{}::{}", item.ident, variant.ident),
+                            root_fields(&variant.fields),
+                        );
+                    }
+                    (&item.attrs, item.ident.to_string())
+                }
+                _ => continue,
+            };
+            assert!(
+                attrs
                     .iter()
-                    .filter(|f| {
-                        let ty = f.ty.to_token_stream().to_string();
-                        ty.contains("Expr") || ty.contains("SharedArgs") || ty.contains("RuleLhs")
-                    })
-                    .map(|f| {
-                        assert!(f.attrs.is_empty(), "rule root field cannot skip tracing");
-                        f.ident.as_ref().unwrap().to_string()
-                    })
-                    .collect::<BTreeSet<_>>();
-                assert!(
-                    item.attrs
-                        .iter()
-                        .any(|a| a.to_token_stream().to_string().contains("FrameRootTrace")),
-                    "rule state must derive root tracing"
-                );
-                actual.insert(item.ident.to_string(), fields);
-            }
+                    .any(|a| a.to_token_stream().to_string().contains("FrameRootTrace")),
+                "{name} must derive root tracing"
+            );
         }
     }
     let expected = [
@@ -266,6 +337,17 @@ fn assert_root_fields(sources: &BTreeMap<String, String>) {
         ("RuleLhsAwait", &["destination", "pending_expr"][..]),
         ("RulePatternSuspensionFrame", &["state", "pending"][..]),
         ("RuleLhsCompletionFrame", &["rhs"][..]),
+        ("MatcherPatternState", &["stack"][..]),
+        (
+            "MatcherPatternWork",
+            &["original_head", "original_args", "resolved_head", "prefix"][..],
+        ),
+        (
+            "MatcherPatternAwait::Evaluate",
+            &["destination", "pending_expr"][..],
+        ),
+        ("MatcherPatternAwait::PreparedCall", &["destination"][..]),
+        ("MatcherPatternSuspensionFrame", &["state", "pending"][..]),
     ]
     .into_iter()
     .map(|(name, fields)| {
@@ -278,17 +360,17 @@ fn assert_root_fields(sources: &BTreeMap<String, String>) {
         )
     })
     .collect::<BTreeMap<_, _>>();
-    assert_eq!(actual, expected, "required rule-LHS root fields");
+    assert_eq!(actual, expected, "required G4 root fields");
 }
 #[test]
 fn rule_lhs_source_root_fields_are_complete() {
     assert_root_fields(&sources());
 }
 #[test]
-#[should_panic(expected = "required rule-LHS root fields")]
+#[should_panic(expected = "required G4 root fields")]
 fn missing_root_field_falsifier() {
     let mut sources = sources();
-    let source = sources.get_mut("rule_lhs/state.rs").unwrap();
+    let source = sources.get_mut("definitions/rule_lhs/state.rs").unwrap();
     let mut ast = syn::parse_file(source).unwrap();
     for item in &mut ast.items {
         if let syn::Item::Struct(item) = item {
@@ -306,4 +388,67 @@ fn missing_root_field_falsifier() {
     }
     *source = ast.to_token_stream().to_string();
     assert_root_fields(&sources);
+}
+
+#[test]
+#[should_panic(expected = "self-reaching G4 state")]
+fn matcher_self_reaching_state_falsifier() {
+    assert_no_self_reaching(
+        "rum_runtime::runtime::kernel_data::rewrite_data::cases::pattern_resolution::state::MatcherPatternWork\tMatcherPatternWork",
+    );
+}
+#[test]
+#[should_panic(expected = "required G4 root fields")]
+fn matcher_missing_await_root_falsifier() {
+    let mut sources = sources();
+    let source = sources
+        .get_mut("kernel_data/rewrite_data/cases/pattern_resolution/state.rs")
+        .unwrap();
+    let mut ast = syn::parse_file(source).unwrap();
+    for item in &mut ast.items {
+        if let syn::Item::Enum(item) = item {
+            if item.ident == "MatcherPatternAwait" {
+                for variant in &mut item.variants {
+                    if let syn::Fields::Named(fields) = &mut variant.fields {
+                        fields.named = fields
+                            .named
+                            .clone()
+                            .into_iter()
+                            .filter(|f| f.ident.as_ref().unwrap() != "pending_expr")
+                            .collect();
+                    }
+                }
+            }
+        }
+    }
+    *source = ast.to_token_stream().to_string();
+    assert_root_fields(&sources);
+}
+#[test]
+#[should_panic(expected = "required G4 root fields")]
+fn matcher_missing_prepared_await_falsifier() {
+    let mut sources = sources();
+    let source = sources
+        .get_mut("kernel_data/rewrite_data/cases/pattern_resolution/state.rs")
+        .unwrap();
+    let mut ast = syn::parse_file(source).unwrap();
+    for item in &mut ast.items {
+        if let syn::Item::Enum(item) = item {
+            if item.ident == "MatcherPatternAwait" {
+                item.variants = item
+                    .variants
+                    .clone()
+                    .into_iter()
+                    .filter(|v| v.ident != "PreparedCall")
+                    .collect();
+            }
+        }
+    }
+    *source = ast.to_token_stream().to_string();
+    assert_root_fields(&sources);
+}
+#[test]
+fn ambiguous_method_recursion_cannot_escape_combined_scan() {
+    let source = "impl A { fn drive(&self) { other.drive(); } } impl B { fn drive(&self) {} }";
+    assert!(!flat_walk_recursive_edges(source).is_empty());
 }

@@ -943,7 +943,20 @@ impl<'ast> Visit<'ast> for FlatCalls<'_> {
         visit::visit_expr_call(self, call);
     }
     fn visit_expr_method_call(&mut self, call: &'ast ExprMethodCall) {
-        self.calls.insert(self.resolve(&call.method.to_string()));
+        let name = call.method.to_string();
+        let candidates = self
+            .names
+            .iter()
+            .filter(|candidate| candidate.rsplit("::").next() == Some(name.as_str()))
+            .cloned()
+            .collect::<Vec<_>>();
+        if candidates.is_empty() {
+            self.calls.insert(self.resolve(&name));
+        } else {
+            // A combined scan can contain several state types with the same
+            // method name. Conservatively retain all owned edges, not an escape.
+            self.calls.extend(candidates);
+        }
         visit::visit_expr_method_call(self, call);
     }
     fn visit_expr_path(&mut self, path: &'ast syn::ExprPath) {

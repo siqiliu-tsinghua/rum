@@ -4,7 +4,10 @@ fn cancel_case(kind: &str, stop: usize) {
     let pattern = r#"h[x_,(AppendTo[log,1];Print["first"];Input["first: "];AppendTo[log,2];2),(AppendTo[log,3];Print["second"];Input["second: "];AppendTo[log,4];4)]"#;
     let source = match kind {
         "Rule" => format!("Rule[{pattern},9]"),
-        _ => format!("RuleDelayed[{pattern},9]"),
+        "RuleDelayed" => format!("RuleDelayed[{pattern},9]"),
+        "MatchQ" => format!("MatchQ[h[1,2,4],{pattern}]"),
+        "Cases" => format!("Cases[{{h[1,2,4]}},{pattern}]"),
+        _ => unreachable!(),
     };
     let mut s = session(None);
     let cancel = s.request_cancel_handle();
@@ -83,4 +86,58 @@ fn abandon_without_answer() {
     assert_eq!(result.0.termination, "Some(Cancelled)");
     assert_eq!(result.1, "List[1]");
     assert_eq!(result.0.prints, vec!["prefix"]);
+}
+
+#[test]
+fn cancel_matchq_first() {
+    cancel_case("MatchQ", 0);
+}
+#[test]
+fn cancel_matchq_second() {
+    cancel_case("MatchQ", 1);
+}
+#[test]
+fn cancel_cases_first() {
+    cancel_case("Cases", 0);
+}
+#[test]
+fn cancel_cases_second() {
+    cancel_case("Cases", 1);
+}
+
+fn abandon_matcher_without_answer(kind: &str) {
+    let mut s = session(None);
+    let cancel = s.request_cancel_handle();
+    let pattern = r#"h[x_,(AppendTo[log,1];Print["prefix"];Input["first: "];AppendTo[log,2]),(AppendTo[log,3];3)]"#;
+    let source = if kind == "MatchQ" {
+        format!("MatchQ[h[1,2,3],{pattern}]")
+    } else {
+        format!("Cases[{{h[1,2,3]}},{pattern}]")
+    };
+    let Err(f) = s.eval_request(&source) else {
+        panic!("must suspend");
+    };
+    let SessionRequestError::InputRequired { request } = f.error else {
+        panic!("must ask");
+    };
+    assert_eq!(request.prompt, "first: ");
+    assert_eq!(s.pending_input_request(), Some(&request));
+    cancel.cancel();
+    let out = s
+        .finish_cancelled_pending_evaluation_request()
+        .unwrap()
+        .expect("must abandon");
+    let result = finish(&mut s, Ok(out), vec![request.prompt]);
+    println!("ABANDON_WITHOUT_ANSWER\t{kind}\t{result:?}");
+    assert_eq!(result.0.termination, "Some(Cancelled)");
+    assert_eq!(result.1, "List[1]");
+    assert_eq!(result.0.prints, vec!["prefix"]);
+}
+#[test]
+fn abandon_matchq_without_answer() {
+    abandon_matcher_without_answer("MatchQ");
+}
+#[test]
+fn abandon_cases_without_answer() {
+    abandon_matcher_without_answer("Cases");
 }

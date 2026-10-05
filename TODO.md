@@ -5,8 +5,8 @@ operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
 Status checkpoint: 2026-10-05, committed tree through brief-572's gate;
-brief-573 (G4 step C, the held-pattern resolver) is dispatched, then one G4
-tuning brief.
+G4 is closed for correctness (brief-573); brief-574, one G4 tuning brief, is
+next.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -386,6 +386,21 @@ four of eight candidates while still progressing. Recorded for the G4 tuning
 brief after step C, against the same pre-G4 base `.temp/brief-572/base/`.
 Pre-existing and unrelated: three dead test helpers in
 `runtime/test_builtins.rs` warn in every test build since at least brief-569.
+**G4 step C is done and G4 is closed for correctness (brief-573):** the held
+matcher-pattern resolver is an explicit work stack with one frame (frame count
+558 -> 559); a prepared call's arguments are moved into the call and its
+completed value inserted once; the root is normalized exactly once before the
+existing consumer frames. Lost 46 -> 43 — G4 is thirteen repairs and three
+retirements. Director gate: workspace 3113/0/58 with native ZeroMQ real; on an
+unchanged export the 20 red matcher cases fail and the nine controls pass.
+**Not free:** against the post-B one-unit base, the hot `matchq-integer-success`
+/ `-fail` read +2.76% / +2.85% (~140 instructions per `MatchQ[5, _Integer]`),
+`cases-pattern-child` +2.4%, the new held-pattern labels +4% to +6%; step B's
+residuals stand against the pre-G4 base. Suspects from source: the evaluate
+branch clones the expression on the success path only so the error edge can
+capture it, and the now-iterative `contains_pattern_syntax` runs its loop even
+for a bare `Blank`. **Next: brief-574** erases G4's ordinary-path cost (steps
+B and C) against the pre-G4 base `.temp/brief-572/base/`.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

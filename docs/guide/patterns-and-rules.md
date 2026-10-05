@@ -146,6 +146,10 @@ subexpressions can request input. Resuming continues that preparation and
 then completes the rule. Pattern binders, the test operands of `Condition` and `PatternTest`,
 and a delayed right-hand side stay held during this preparation.
 
+When resolving a held matcher pattern, ordinary subexpressions and prepared
+calls resume in order after input. Recognized pattern constructs remain held
+during this resolution.
+
 ## Right-Hand-Side Guards
 
 A `Condition` on the right-hand side guards the stored result rather than

@@ -1,3 +1,4 @@
+use super::pattern_resolution::matches_pattern_head;
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
@@ -47,32 +48,7 @@ impl Session {
         &mut self,
         expr: Expr,
     ) -> Result<Expr, EvalError> {
-        let resolved = self.resolve_match_pattern_subexprs(strip_hold_pattern(&expr))?;
-        Ok(self.normalize_match_expr(&resolved))
-    }
-
-    /// Evaluate the ordinary subexpressions of a held matcher pattern while keeping
-    /// genuine pattern constructs held.
-    fn resolve_match_pattern_subexprs(&mut self, expr: &Expr) -> Result<Expr, EvalError> {
-        if !contains_pattern_syntax(expr) {
-            return self.evaluate(expr.clone());
-        }
-
-        match expr {
-            Expr::Atom(_) => Ok(expr.clone()),
-            Expr::Call { head, args } => {
-                if matches_pattern_head(head) {
-                    return Ok(expr.clone());
-                }
-
-                let resolved_head = self.resolve_match_pattern_subexprs(head)?;
-                let mut resolved_args = Vec::with_capacity(args.len());
-                for arg in args.iter() {
-                    resolved_args.push(self.resolve_match_pattern_subexprs(arg)?);
-                }
-                self.resume_call_from_prepared_args(resolved_head, resolved_args)
-            }
-        }
+        self.resolve_held_matcher_pattern(expr)
     }
 
     fn resume_match_q_after_value(
@@ -163,29 +139,6 @@ fn fixed_head_blank_args_fast_path_needs_general_matcher(attributes: AttributeSe
     attributes.contains(Attribute::Flat)
         || attributes.contains(Attribute::Orderless)
         || attributes.contains(Attribute::OneIdentity)
-}
-
-fn contains_pattern_syntax(expr: &Expr) -> bool {
-    let expr = strip_hold_pattern(expr);
-
-    match expr {
-        Expr::Atom(_) => false,
-        Expr::Call { head, args } => {
-            if matches_pattern_head(head) {
-                true
-            } else {
-                contains_pattern_syntax(head) || args.iter().any(contains_pattern_syntax)
-            }
-        }
-    }
-}
-
-fn matches_pattern_head(head: &Expr) -> bool {
-    // OptionsPattern is recognized by the sequence matcher, but the existing
-    // MatchQ resolution policy does not treat it as an opaque whole-pattern
-    // wrapper. Keep that matcher behavior unchanged while sharing the registry.
-    matcher_pattern_head(head)
-        .is_some_and(|pattern_head| pattern_head != MatcherPatternHead::OptionsPattern)
 }
 
 #[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]

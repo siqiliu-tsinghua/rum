@@ -20,15 +20,14 @@ pub(in crate::runtime) fn unevaluated_wrapper_arg(expr: &Expr) -> Option<&Expr> 
     }
 }
 
-pub(in crate::runtime) fn strip_hold_pattern<'a>(expr: &'a Expr) -> &'a Expr {
-    match expr {
-        Expr::Call { head, args }
-            if MatcherPatternHead::HoldPattern.matches(head) && args.len() == 1 =>
-        {
-            strip_hold_pattern(&args[0])
+pub(in crate::runtime) fn strip_hold_pattern(mut expr: &Expr) -> &Expr {
+    while let Expr::Call { head, args } = expr {
+        if !MatcherPatternHead::HoldPattern.matches(head) || args.len() != 1 {
+            break;
         }
-        _ => expr,
+        expr = &args[0];
     }
+    expr
 }
 
 pub(in crate::runtime) fn release_hold_once(expr: &Expr) -> Option<Expr> {
