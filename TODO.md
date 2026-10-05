@@ -5,7 +5,7 @@ operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
 Status checkpoint: 2026-10-05, committed tree through brief-571's gate;
-brief-572 (G4 step B, the rule left-hand-side walk) is next.
+brief-572 (G4 step B, the rule left-hand-side walk) is dispatched.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
