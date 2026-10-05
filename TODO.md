@@ -5,8 +5,8 @@ operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
 Status checkpoint: 2026-10-05, committed tree through brief-572's gate;
-brief-573 (G4 step C, the held-pattern resolver) is next, then one G4 tuning
-brief.
+brief-573 (G4 step C, the held-pattern resolver) is dispatched, then one G4
+tuning brief.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
