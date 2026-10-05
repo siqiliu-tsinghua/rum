@@ -33,7 +33,7 @@ fn resume_matcher_pattern(
         | MatcherPatternAwait::PreparedCall { destination } => destination,
     };
     let step = accept_matcher_pattern_value(&mut state, destination, value);
-    session.drive_matcher_pattern(state, step)
+    session.drive_matcher_pattern(state, step, None)
 }
 
 #[cold]

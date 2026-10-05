@@ -19,9 +19,11 @@ enum MatcherPatternStep {
 
 impl Session {
     pub(super) fn resolve_held_matcher_pattern(&mut self, expr: Expr) -> Result<Expr, EvalError> {
+        let root = strip_hold_pattern(&expr);
         self.drive_matcher_pattern(
             MatcherPatternState { stack: Vec::new() },
-            MatcherPatternStep::Visit(strip_hold_pattern(&expr).clone()),
+            MatcherPatternStep::Visit(root.clone()),
+            Some(root),
         )
     }
 
@@ -29,12 +31,11 @@ impl Session {
         &mut self,
         mut state: MatcherPatternState,
         mut step: MatcherPatternStep,
+        root: Option<&Expr>,
     ) -> Result<Expr, EvalError> {
         loop {
             let value = match step {
-                // Every path, including an ordinary root evaluation that suspended,
-                // reaches this single normalization point after the root completes.
-                MatcherPatternStep::Done(value) => return Ok(self.normalize_match_expr(&value)),
+                MatcherPatternStep::Done(value) => value,
                 MatcherPatternStep::PreparedCall { head, args } => {
                     // The call's work record is already popped. The callee owns the
                     // moved arguments; only the parent and destination survive input.
@@ -44,7 +45,8 @@ impl Session {
                             let destination = state.destination();
                             return self.suspend_matcher_pattern(
                                 state,
-                                MatcherPatternAwait::PreparedCall { destination },
+                                Some(MatcherPatternAwait::PreparedCall { destination }),
+                                None,
                                 error,
                             );
                         }
@@ -53,18 +55,10 @@ impl Session {
                 }
                 MatcherPatternStep::Visit(expr) => {
                     if !contains_pattern_syntax(&expr) {
-                        match self.evaluate(expr.clone()) {
+                        match self.evaluate(expr) {
                             Ok(value) => value,
                             Err(error @ EvalError::InputRequired { .. }) => {
-                                let destination = state.destination();
-                                return self.suspend_matcher_pattern(
-                                    state,
-                                    MatcherPatternAwait::Evaluate {
-                                        destination,
-                                        pending_expr: expr,
-                                    },
-                                    error,
-                                );
+                                return self.suspend_matcher_pattern(state, None, root, error);
                             }
                             Err(error) => return Err(error),
                         }
@@ -89,6 +83,11 @@ impl Session {
                 }
             };
             let destination = state.destination();
+            // Every path, including a resumed root, normalizes here once. An
+            // ordinary root need not make an acceptance/Done round trip first.
+            if matches!(destination, MatcherPatternDestination::Root) {
+                return Ok(self.normalize_match_expr(&value));
+            }
             step = accept_matcher_pattern_value(&mut state, destination, value);
         }
     }
@@ -97,9 +96,32 @@ impl Session {
     fn suspend_matcher_pattern(
         &mut self,
         state: MatcherPatternState,
-        pending: MatcherPatternAwait,
+        pending: Option<MatcherPatternAwait>,
+        root: Option<&Expr>,
         error: EvalError,
     ) -> Result<Expr, EvalError> {
+        let pending = match pending {
+            Some(pending) => pending,
+            None => {
+                let destination = state.destination();
+                // Parents retain raw children until acceptance. The entry borrow
+                // supplies an ordinary root only; it never escapes this capture.
+                let pending_expr = match destination {
+                    MatcherPatternDestination::Root => root.expect("root entry retains its source"),
+                    MatcherPatternDestination::Head => {
+                        &state.stack.last().expect("parent").original_head
+                    }
+                    MatcherPatternDestination::Argument(index) => {
+                        &state.stack.last().expect("parent").original_args[index]
+                    }
+                }
+                .clone();
+                MatcherPatternAwait::Evaluate {
+                    destination,
+                    pending_expr,
+                }
+            }
+        };
         crate::resume_or_suspend!(insert self, MatcherPatternSuspensionFrame { state, pending });
         Err(error)
     }
@@ -139,8 +161,20 @@ fn accept_matcher_pattern_value(
 }
 
 fn contains_pattern_syntax(expr: &Expr) -> bool {
+    let Expr::Call { head, args } = strip_hold_pattern(expr) else {
+        return false;
+    };
+    if matches_pattern_head(head) {
+        return true;
+    }
     let mut pending = Vec::new();
-    let mut current = std::slice::from_ref(expr).iter();
+    let mut current = args.iter();
+    if matches!(head.as_ref(), Expr::Call { .. }) {
+        if !current.as_slice().is_empty() {
+            pending.push(current);
+        }
+        current = std::slice::from_ref(head.as_ref()).iter();
+    }
     loop {
         match current.next() {
             Some(expr) => {

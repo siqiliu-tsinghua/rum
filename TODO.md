@@ -4,9 +4,8 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-05, committed tree through brief-572's gate;
-G4 is closed for correctness (brief-573); brief-574, one G4 tuning brief, is
-dispatched.
+Status checkpoint: 2026-10-06, committed tree through brief-574's gate; G4
+is closed for correctness; brief-575, G4's second tuning round, is dispatched.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -401,6 +400,19 @@ branch clones the expression on the success path only so the error edge can
 capture it, and the now-iterative `contains_pattern_syntax` runs its loop even
 for a bare `Blank`. **Next: brief-574** erases G4's ordinary-path cost (steps
 B and C) against the pre-G4 base `.temp/brief-572/base/`.
+**brief-574 is in — G4's first tuning round, ten candidates, four kept:**
+evaluate-only expressions are moved and recovered in the cold capture, the
+classifier roots are peeled, the rule policy dispatch reuses the computed
+pattern head, ordinary held roots complete without a round trip. Director
+reproduced against the pre-G4 one-unit base: `MatchQ[5, _Integer]` +1.11%
+(was +2.8%), short `Blank` rule +5.09% (was +6.2%), held skew depth 8 +4.53%,
+`Rule` wrapper -10.5%; controls at the base; 10 of 23 labels still regress.
+Attribution: for a bare `Blank` root the driver alone costs 226 self
+instructions against 57 + 55 for the old resolver and classifier — the price
+of entering a large driver, not of work. Workspace 3113/0/58. **Next:
+brief-575** — a small entry per walker settles the classification's own base
+cases before the out-of-line driver, with a falsifier proving entry and driver
+agree (the director's earlier "no second algorithm" rule had blocked this).
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

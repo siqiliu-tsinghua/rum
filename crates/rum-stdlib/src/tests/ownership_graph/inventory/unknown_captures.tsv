@@ -851,7 +851,7 @@ UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/cases/m
 UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/cases/match_q.rs	179	30	closure captures: || (capture types/modes unresolved)
 UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/cases/match_q.rs	198	18	closure captures: || (capture types/modes unresolved)
 UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/cases/match_q.rs	201	26	closure captures: |value| (capture types/modes unresolved)
-UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/cases/pattern_resolution.rs	176	22	closure captures: |pattern_head| (capture types/modes unresolved)
+UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/cases/pattern_resolution.rs	210	22	closure captures: |pattern_head| (capture types/modes unresolved)
 UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all.rs	155	28	closure captures: || (capture types/modes unresolved)
 UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all.rs	193	28	closure captures: || (capture types/modes unresolved)
 UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/list.rs	183	40	closure captures: |limit| (capture types/modes unresolved)

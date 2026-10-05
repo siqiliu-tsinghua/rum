@@ -73,7 +73,12 @@ impl Session {
                 step = accept_rule_lhs_value(&mut state, destination, value);
                 continue;
             }
-            let policy = rule_lhs_policy(&head, args.len());
+            let policy = rule_lhs_policy(pattern_head, args.len());
+            // Keep the cached dispatch consistent with the canonical wrapper set.
+            debug_assert_eq!(
+                matches!(policy, RuleLhsPolicy::WrapperArguments),
+                definition_lhs_pattern_wrapper_head(&head),
+            );
             let mut work = RuleLhsWork {
                 original_head: head.as_ref().clone(),
                 original_args: args,
@@ -138,20 +143,25 @@ fn rule_lhs_inert_pattern(head: Option<MatcherPatternHead>, args: &SharedArgs) -
     }
 }
 
-fn rule_lhs_policy(head: &Expr, arity: usize) -> RuleLhsPolicy {
-    if is_system_symbol_name(head, heads::patterns::PATTERN) && arity == 2 {
-        RuleLhsPolicy::NamedInner
-    } else if definition_lhs_blank_head(head) {
-        RuleLhsPolicy::BlankArguments
-    } else if arity == 2
-        && (is_system_symbol_name(head, heads::patterns::PATTERN_TEST)
-            || is_system_symbol_name(head, heads::patterns::CONDITION))
-    {
-        RuleLhsPolicy::FirstOperand
-    } else if definition_lhs_pattern_wrapper_head(head) {
-        RuleLhsPolicy::WrapperArguments
-    } else {
-        RuleLhsPolicy::OrdinaryCall
+fn rule_lhs_policy(head: Option<MatcherPatternHead>, arity: usize) -> RuleLhsPolicy {
+    match head {
+        Some(MatcherPatternHead::Pattern) if arity == 2 => RuleLhsPolicy::NamedInner,
+        Some(
+            MatcherPatternHead::Blank
+            | MatcherPatternHead::BlankSequence
+            | MatcherPatternHead::BlankNullSequence,
+        ) => RuleLhsPolicy::BlankArguments,
+        Some(MatcherPatternHead::PatternTest | MatcherPatternHead::Condition) if arity == 2 => {
+            RuleLhsPolicy::FirstOperand
+        }
+        Some(
+            MatcherPatternHead::Alternatives
+            | MatcherPatternHead::Optional
+            | MatcherPatternHead::Except
+            | MatcherPatternHead::Repeated
+            | MatcherPatternHead::RepeatedNull,
+        ) => RuleLhsPolicy::WrapperArguments,
+        _ => RuleLhsPolicy::OrdinaryCall,
     }
 }
 
