@@ -1,5 +1,5 @@
 use crate::oracle::{View, finish, session};
-use rum_runtime::{RuntimeInputKind, SessionRequestError};
+use rum_runtime::RuntimeInputKind;
 
 pub(super) struct Case {
     pub label: &'static str,
@@ -14,33 +14,21 @@ fn run(case: &Case, queued: bool) -> (View, String, Vec<String>) {
     let answers: Vec<_> = (0..case.prompts.len())
         .map(|i| format!("answer-{i}"))
         .collect();
-    if queued {
-        for answer in &answers {
-            s.queue_input_response(answer.clone());
-        }
-    }
-    let mut out = s.eval_request(case.source);
-    let mut prompts = Vec::new();
-    while let Err(failure) = &out {
-        let SessionRequestError::InputRequired { request } = &failure.error else {
-            break;
-        };
-        assert!(!queued, "queued control exhausted answers: {}", case.label);
-        assert_eq!(request.kind, RuntimeInputKind::InputString);
-        assert_eq!(s.pending_input_request(), Some(request));
-        assert!(s.reject_overlapping_evaluation_request().is_err());
-        prompts.push(request.prompt.clone());
-        println!(
-            "PAUSE\t{}\t{prompts:?}\t{:?}\t{:?}",
-            case.label, failure.messages, failure.prints
-        );
-        out = s.resume_eval_request_with_input(
-            answers
-                .get(prompts.len() - 1)
-                .expect("unexpected extra prompt")
-                .clone(),
-        );
-    }
+    let run = crate::suspension_support::drive::execute(
+        &mut s,
+        case.source,
+        &answers.iter().map(String::as_str).collect::<Vec<_>>(),
+        queued,
+    )
+    .unwrap();
+    assert!(
+        run.requests
+            .iter()
+            .all(|r| r.kind == RuntimeInputKind::InputString)
+    );
+    let out = run.output;
+    let prompts = run.requests.into_iter().map(|r| r.prompt).collect();
+    crate::suspension_support::session::empty_queue(&mut s).unwrap();
     let result = finish(&mut s, out, prompts);
     assert!(s.reject_overlapping_evaluation_request().is_ok());
     result

@@ -4,10 +4,9 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-06, committed tree through brief-585's gate (G9 and
-G10 closed; lost 0 by the re-census); brief-586 (E1 step A: the oracle, its
-manifest, owed ledger and falsifiers) is dispatched; later E1 steps drain the
-ledger, then E2's design.
+Status checkpoint: 2026-10-07, committed tree through brief-586's gate (E1 step
+A); the owed ledger (500 entries) drains in eight family batches, briefs
+587-594, the last deleting the ledger; then E2's design.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -592,6 +591,34 @@ is deleted**. The test-only mutation frame gets its own fixture population and
 count in the runtime frame tests. **No source-drift effect discovery in E1**:
 that is the census again (raw 0 Lost where review found 4); E2 binds every
 compiler-forced disposition to E1's entry IDs instead.
+**E1 step A is in (brief-586).** `crates/rum-stdlib/tests/suspension_oracle/`:
+a reviewed manifest of every installed spec — **643 default, 637 no-default**
+(not the inferred 638: `Hash` is feature-gated too) — 240 with guest entries
+(506 entries, 4 of them `Boundary` sinks that must retire the suspension), 403
+`NoLocalGuestEffect` with a per-row rationale; exact set equality both ways in
+both builds; owning functions checked to exist. The shared two-session runner
+and lifecycle support carry 6 complete descriptors (19 variants, 12 lifecycle
+obligations) and the 209 historical/probe labels as equality fixtures. Six
+falsifiers watched to fail (omitted registration, non-suspending fixture, false
+tail, missing prefix through a test-only `OracleFoldFrame` in its own fixture
+population, and the ledger's two). The nine continuation suites plus
+`guest_loading_resume.rs` share the runner; the director's `--list` diff shows
+no test name lost, ten added. `scripts/check-suspension-oracle.sh` is the
+two-feature gate (scratch moved to `.temp/suspension-oracle/` at the gate).
+Director gate: workspace 3361/0/58 with native ZeroMQ real; oracle 18/0 in
+each build. Spot check of dispositions (Map, Select, Sort, Cases, Catch, If,
+While …; `Echo`, `Apply`, `BinarySearch` read in source) found none wrong.
+**Owed: 500** — rules 73, rewrite 55, control 50, predicates 45, functional 43,
+debug 41, strings_match 38, strings 24, structure_ordering 21,
+associations_transform 19, scoping 15, associations 13, contexts 12, lazy 12,
+strings_text 10, symbols 9, structure 6, logic 5, schema 4, arithmetic 3,
+random 1, evaluator 1. Drafts in `.temp/brief-586/followups/`. Batches:
+587 rules; 588 rewrite; 589 control + logic + arithmetic + random; 590
+predicates + structure + structure_ordering; 591 functional + lazy; 592 debug +
+symbols + contexts + scoping; 593 strings + strings_match + strings_text; 594
+associations + associations_transform + schema + evaluator, deleting the
+ledger. A descriptor that fails is a **defect**, reported with its witness and
+kept owed — it becomes a repair group of this branch.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

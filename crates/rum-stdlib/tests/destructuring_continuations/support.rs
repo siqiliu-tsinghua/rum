@@ -1,6 +1,6 @@
 use crate::oracle::{View, finish, session};
 use rum_core::Expr;
-use rum_runtime::{RuntimeInputKind, SessionRequestError};
+use rum_runtime::RuntimeInputKind;
 
 #[derive(Debug, PartialEq, Eq)]
 pub(super) struct Observation {
@@ -12,32 +12,15 @@ pub(super) struct Observation {
 
 fn run(source: &str, inputs: &[&str], queued: bool, inspect: &str) -> Observation {
     let mut s = session(None);
-    if queued {
-        for answer in inputs {
-            s.queue_input_response(*answer);
-        }
-    }
-    let mut out = s.eval_request(source);
-    let mut prompts = Vec::new();
-    while let Err(failure) = &out {
-        let SessionRequestError::InputRequired { request } = &failure.error else {
-            break;
-        };
-        assert!(!queued, "queued control exhausted answers");
-        assert_eq!(request.kind, RuntimeInputKind::InputString);
-        assert_eq!(s.pending_input_request(), Some(request));
-        assert!(s.reject_overlapping_evaluation_request().is_err());
-        prompts.push(request.prompt.clone());
-        println!(
-            "PAUSE\t{prompts:?}\t{:?}\t{:?}",
-            failure.messages, failure.prints
-        );
-        out = s.resume_eval_request_with_input(
-            *inputs
-                .get(prompts.len() - 1)
-                .expect("unexpected extra prompt"),
-        );
-    }
+    let run = crate::suspension_support::drive::execute(&mut s, source, inputs, queued).unwrap();
+    assert!(
+        run.requests
+            .iter()
+            .all(|r| r.kind == RuntimeInputKind::InputString)
+    );
+    let out = run.output;
+    let prompts = run.requests.into_iter().map(|r| r.prompt).collect();
+    crate::suspension_support::session::empty_queue(&mut s).unwrap();
     let (view, log, prompts) = finish(&mut s, out, prompts);
     assert!(s.reject_overlapping_evaluation_request().is_ok());
     let stored = s.eval_request(inspect).unwrap().value;

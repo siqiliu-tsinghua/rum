@@ -1,6 +1,10 @@
 //! rum's queued versus resumed same-request lazy realization contract.
 //! Contracts: docs/guide/evaluation.md (input and lazy sequences),
 //! generated lazy/Normal/Take/First/Part references, iteration/cancel contract.
+#[allow(dead_code)]
+#[path = "suspension_oracle/support/mod.rs"]
+mod suspension_support;
+
 use rum_core::Expr;
 use rum_runtime::{
     ClosurePrintSink, RuntimeMessage, Session, SessionEvalResponse, SessionRequestError,
@@ -23,6 +27,7 @@ fn session(limit: Option<usize>) -> Session {
 }
 #[derive(PartialEq, Eq)]
 struct View {
+    typed: crate::suspension_support::observe::Observation,
     status: String,
     value: Option<Expr>,
     termination: String,
@@ -41,8 +46,10 @@ impl std::fmt::Debug for View {
     }
 }
 fn view(out: Result<SessionEvalResponse, SessionRequestFailure>) -> View {
+    let typed = crate::suspension_support::observe::Observation::from_output(&out);
     match out {
         Ok(r) => View {
+            typed,
             status: "OK".into(),
             value: Some(r.value),
             termination: format!("{:?}", r.termination),
@@ -50,6 +57,7 @@ fn view(out: Result<SessionEvalResponse, SessionRequestFailure>) -> View {
             prints: r.prints,
         },
         Err(f) => View {
+            typed,
             status: format!("{:?}", f.error),
             value: None,
             termination: "None".into(),
@@ -79,24 +87,10 @@ fn run(
     limit: Option<usize>,
 ) -> (View, String, Vec<String>) {
     let mut s = session(limit);
-    if queued {
-        for input in inputs {
-            s.queue_input_response(*input);
-        }
-    }
-    let mut out = s.eval_request(source);
-    let mut prompts = Vec::new();
-    while let Err(f) = &out {
-        let SessionRequestError::InputRequired { request } = &f.error else {
-            break;
-        };
-        assert!(!queued, "queued control exhausted answers");
-        prompts.push(request.prompt.clone());
-        let input = inputs
-            .get(prompts.len() - 1)
-            .expect("unexpected extra suspension");
-        out = s.resume_eval_request_with_input(*input);
-    }
+    let run = crate::suspension_support::drive::execute(&mut s, source, inputs, queued).unwrap();
+    let out = run.output;
+    let prompts = run.requests.into_iter().map(|r| r.prompt).collect();
+    crate::suspension_support::session::empty_queue(&mut s).unwrap();
     finish(&mut s, out, prompts)
 }
 fn record(

@@ -2,6 +2,10 @@
 //! Values follow the generated Scan, OptionValue, Differences, Dot and
 //! ReplaceRepeated reference entries; queued rum is the oracle.
 
+#[allow(dead_code)]
+#[path = "suspension_oracle/support/mod.rs"]
+mod suspension_support;
+
 use rum_core::Expr;
 use rum_runtime::{
     RuntimeMessage, Session, SessionEvalResponse, SessionRequestError, SessionRequestFailure,
@@ -17,6 +21,7 @@ fn session() -> Session {
 
 #[derive(PartialEq, Eq)]
 struct View {
+    typed: crate::suspension_support::observe::Observation,
     status: String,
     value: Option<Expr>,
     termination: String,
@@ -35,8 +40,10 @@ impl std::fmt::Debug for View {
     }
 }
 fn view(out: Result<SessionEvalResponse, SessionRequestFailure>) -> View {
+    let typed = crate::suspension_support::observe::Observation::from_output(&out);
     match out {
         Ok(r) => View {
+            typed,
             status: "OK".into(),
             value: Some(r.value),
             termination: format!("{:?}", r.termination),
@@ -44,6 +51,7 @@ fn view(out: Result<SessionEvalResponse, SessionRequestFailure>) -> View {
             prints: r.prints,
         },
         Err(f) => View {
+            typed,
             status: format!("{:?}", f.error),
             value: None,
             termination: "None".into(),
@@ -55,24 +63,10 @@ fn view(out: Result<SessionEvalResponse, SessionRequestFailure>) -> View {
 
 fn run(source: &str, inputs: &[&str], queued: bool) -> (View, String, Vec<String>) {
     let mut s = session();
-    if queued {
-        for input in inputs {
-            s.queue_input_response(*input);
-        }
-    }
-    let mut out = s.eval_request(source);
-    let mut prompts = Vec::new();
-    while let Err(f) = &out {
-        let SessionRequestError::InputRequired { request } = &f.error else {
-            break;
-        };
-        assert!(!queued, "queued control must finish");
-        prompts.push(request.prompt.clone());
-        let input = inputs
-            .get(prompts.len() - 1)
-            .expect("unexpected extra suspension");
-        out = s.resume_eval_request_with_input(*input);
-    }
+    let run = crate::suspension_support::drive::execute(&mut s, source, inputs, queued).unwrap();
+    let out = run.output;
+    let prompts = run.requests.into_iter().map(|r| r.prompt).collect();
+    crate::suspension_support::session::empty_queue(&mut s).unwrap();
     let final_view = view(out);
     assert!(s.pending_input_request().is_none());
     let log = s.eval_request("log").unwrap().value.to_string();

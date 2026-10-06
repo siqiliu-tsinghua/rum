@@ -1,0 +1,3 @@
+# entry	builtin	role	owner file	owner function	policy	descriptors	variants	lifecycle owner	family	feature
+Evaluator.callPreparation	@evaluator	callPreparation	crates/rum-runtime/src/runtime/eval_call_prepare.rs	prepare_arguments_for_call_with_unevaluated_restore	Frame	primary.preparation	Middle,Twice,Decline,Error,AlreadyResumed,Nested	PreparedCallArguments	evaluator	always
+Evaluator.defaultFallback	@evaluator	directDefaultFallback	crates/rum-runtime/src/runtime/definitions/application/default_values.rs	try_apply_direct_default_value	Frame	-	Middle,Twice,Decline,Error,AlreadyResumed,Nested	DirectDefaultFallback	evaluator	always

@@ -1,6 +1,10 @@
 //! Guest loading follows the same-request input contract in guide/evaluation.md
 //! and the package-loading contract in guide/scoping-and-contexts.md.
 
+#[allow(dead_code)]
+#[path = "suspension_oracle/support/mod.rs"]
+mod suspension_support;
+
 use rum_core::Expr;
 use rum_runtime::kernel_api::{
     BoundedDestruction, FileIo, FileIoError, FileIoProvider, FileProbe, FileWriteMode,
@@ -122,41 +126,44 @@ fn inspect(s: &mut Session) -> String {
     }
 }
 fn run(label: &str, source: &str, inputs: &[&str], files: &[(&str, &str)]) -> (usize, bool) {
+    let expected = match label {
+        "red_get_then_q" | "red_needs_then_q" | "red_begin_package_then_q" | "red_stub_then_q" => {
+            vec!["p: ", "q: "]
+        }
+        "red_get_twice" => vec!["p: ", "r: "],
+        "red_begin_two_dependencies_suspend" => vec!["p: ", "second-dep: "],
+        "red_nested_twice_filename" => vec!["inner: ", "outer: "],
+        "red_stub_error_after_resume" => vec!["p: ", "p: "],
+        "red_get_input_expression" | "red_get_input_syntax_error" => vec!["expr: "],
+        "red_repeat_form_stack" => vec!["same: ", "same: "],
+        _ if label.starts_with("green_") => vec![],
+        _ => vec!["p: "],
+    };
+    let planned = if label.starts_with("green_") {
+        inputs
+    } else {
+        &inputs[..expected.len()]
+    };
     let mut finals = Vec::new();
     println!("SOURCE\t{label}\t{source:?}\tinputs={inputs:?}\tfiles={files:?}");
     for queued in [false, true] {
         let mode = if queued { "queued" } else { "resumed" };
         let (mut s, reads) = session(files);
-        if queued {
-            for input in inputs {
-                s.queue_input_response(*input);
-            }
+        let run =
+            crate::suspension_support::drive::execute(&mut s, source, planned, queued).unwrap();
+        // Historical sink controls intentionally offer a response pool. The
+        // catalog Boundary descriptors separately require exact retirement and
+        // empty queues; keep these controls' original policy assertions.
+        if !label.starts_with("green_") {
+            crate::suspension_support::session::empty_queue(&mut s).unwrap();
         }
-        let mut result = catch_unwind(AssertUnwindSafe(|| s.eval_request(source)));
-        let mut prompts = Vec::new();
-        let mut steps = Vec::new();
-        let mut n = 0;
-        loop {
-            match &result {
-                Ok(out) => {
-                    steps.push(format!("{:?}", view(out)));
-                    if let Err(f) = out {
-                        if let SessionRequestError::InputRequired { request } = &f.error {
-                            prompts.push(request.prompt.clone());
-                            if !queued && n < inputs.len() {
-                                result = catch_unwind(AssertUnwindSafe(|| {
-                                    s.resume_eval_request_with_input(inputs[n])
-                                }));
-                                n += 1;
-                                continue;
-                            }
-                        }
-                    }
-                }
-                Err(_) => steps.push("PANIC".into()),
-            }
-            break;
-        }
+        let prompts = run
+            .requests
+            .into_iter()
+            .map(|r| r.prompt)
+            .collect::<Vec<_>>();
+        let steps = vec![format!("{:?}", view(&run.output))];
+        let result: Result<_, ()> = Ok(run.output);
         let final_view = result.as_ref().ok().map(view);
         let pend = pending(&s);
         let next = plain(&mut s, "1+1");
@@ -175,19 +182,6 @@ fn run(label: &str, source: &str, inputs: &[&str], files: &[(&str, &str)]) -> (u
     );
     assert!(finals[1].3.is_empty(), "queued control must finish");
     let prompts = &finals[0].3;
-    let expected = match label {
-        "red_get_then_q" | "red_needs_then_q" | "red_begin_package_then_q" | "red_stub_then_q" => {
-            vec!["p: ", "q: "]
-        }
-        "red_get_twice" => vec!["p: ", "r: "],
-        "red_begin_two_dependencies_suspend" => vec!["p: ", "second-dep: "],
-        "red_nested_twice_filename" => vec!["inner: ", "outer: "],
-        "red_stub_error_after_resume" => vec!["p: ", "p: "],
-        "red_get_input_expression" | "red_get_input_syntax_error" => vec!["expr: "],
-        "red_repeat_form_stack" => vec!["same: ", "same: "],
-        _ if label.starts_with("green_") => vec![],
-        _ => vec!["p: "],
-    };
     assert_eq!(*prompts, expected, "must expose each prompt in order");
     if label.starts_with("green_") {
         let expected_value = match label {

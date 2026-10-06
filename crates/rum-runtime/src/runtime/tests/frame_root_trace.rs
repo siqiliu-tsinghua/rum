@@ -737,3 +737,42 @@ fn declared_type_name(declaration: &str) -> Option<&str> {
         .sum::<usize>();
     (name_len > 0).then_some(&name[..name_len])
 }
+
+// Reviewed mutation fixtures have their own population, never part of the
+// production source scan or its counts/exclusions.
+const FIXTURE_SUSPENSION_SOURCES: &[&str] =
+    &["crates/rum-stdlib/tests/suspension_oracle/mutations/driver.rs"];
+const FIXTURE_SUSPENSION_FRAMES: &[&str] = &["OracleFoldFrame"];
+
+#[test]
+fn suspension_oracle_fixture_population_is_exact() {
+    let workspace = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap();
+    let mut derived = Vec::new();
+    let mut pure = Vec::new();
+    let mut frames = Vec::new();
+    for relative in FIXTURE_SUSPENSION_SOURCES {
+        let path = workspace.join(relative);
+        let source = fs::read_to_string(&path).unwrap();
+        derived.extend(derived_frame_root_trace_types(workspace, &path));
+        for block in trait_impl_blocks(&source, "SuspensionFrame") {
+            let name = implemented_type_name(block.header, "SuspensionFrame");
+            let declaration = source.find(&format!("struct {name}")).unwrap();
+            let derive_start = source[..declaration].rfind("#[derive(").unwrap();
+            assert!(source[derive_start..declaration].contains("PureFrameAbandon"));
+            pure.push(format!("{relative}:{name}"));
+            frames.push(name);
+        }
+        assert!(manual_frame_root_trace_impls(&path).is_empty());
+    }
+    derived.sort();
+    pure.sort();
+    frames.sort();
+    assert_eq!(frames.len(), 1, "separate fixture frame count");
+    assert_eq!(frames, FIXTURE_SUSPENSION_FRAMES);
+    assert_eq!(derived, derived_inventory::FIXTURE_FRAME_ROOT_TRACE_TYPES);
+    assert_eq!(pure, derived_inventory::FIXTURE_PURE_FRAME_ABANDON_TYPES);
+}

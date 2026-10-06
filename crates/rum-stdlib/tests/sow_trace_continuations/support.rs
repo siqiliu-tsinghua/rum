@@ -1,6 +1,4 @@
-use rum_runtime::{
-    RuntimeMessage, Session, SessionEvalResponse, SessionRequestError, SessionRequestFailure,
-};
+use rum_runtime::{RuntimeMessage, Session, SessionEvalResponse, SessionRequestFailure};
 pub(super) fn session() -> Session {
     let mut s = Session::new();
     rum_stdlib::install_core(&mut s);
@@ -9,6 +7,7 @@ pub(super) fn session() -> Session {
 }
 #[derive(Debug, PartialEq, Eq)]
 pub(super) struct View {
+    typed: crate::suspension_support::observe::Observation,
     pub(super) status: String,
     pub(super) value: String,
     pub(super) termination: String,
@@ -16,8 +15,10 @@ pub(super) struct View {
     pub(super) prints: Vec<String>,
 }
 fn view(out: Result<SessionEvalResponse, SessionRequestFailure>) -> View {
+    let typed = crate::suspension_support::observe::Observation::from_output(&out);
     match out {
         Ok(r) => View {
+            typed,
             status: "OK".into(),
             value: r.value.to_string(),
             termination: format!("{:?}", r.termination),
@@ -25,6 +26,7 @@ fn view(out: Result<SessionEvalResponse, SessionRequestFailure>) -> View {
             prints: r.prints,
         },
         Err(f) => View {
+            typed,
             status: format!("{:?}", f.error),
             value: "<error>".into(),
             termination: "None".into(),
@@ -53,45 +55,12 @@ pub(super) fn finish(
     assert_eq!(s.eval_request("1+1").unwrap().value.to_string(), "2");
     (v, log)
 }
-fn run(label: &str, source: &str, inputs: &[&str], queued: bool) -> (View, String, Vec<String>) {
+fn run(_label: &str, source: &str, inputs: &[&str], queued: bool) -> (View, String, Vec<String>) {
     let mut s = session();
-    if queued {
-        for input in inputs {
-            s.queue_input_response(*input);
-        }
-    }
-    let mut out = s.eval_request(source);
-    let mut prompts = Vec::new();
-    while let Err(f) = &out {
-        let SessionRequestError::InputRequired { request } = &f.error else {
-            break;
-        };
-        assert!(!queued, "{label}: queued control exhausted responses");
-        assert_eq!(
-            s.pending_input_request(),
-            Some(request),
-            "exact pending request"
-        );
-        assert!(
-            s.reject_overlapping_evaluation_request().is_err(),
-            "live suspension owner"
-        );
-        prompts.push(request.prompt.clone());
-        record(
-            "suspensions.tsv",
-            &format!(
-                "{label}\t{}\t{:?}\t{:?}\t{:?}",
-                prompts.len(),
-                request.prompt,
-                f.messages,
-                f.prints
-            ),
-        );
-        let input = inputs
-            .get(prompts.len() - 1)
-            .expect("unexpected extra prompt");
-        out = s.resume_eval_request_with_input(*input);
-    }
+    let run = crate::suspension_support::drive::execute(&mut s, source, inputs, queued).unwrap();
+    let out = run.output;
+    let prompts = run.requests.into_iter().map(|r| r.prompt).collect();
+    crate::suspension_support::session::empty_queue(&mut s).unwrap();
     let (v, log) = finish(&mut s, out);
     (v, log, prompts)
 }

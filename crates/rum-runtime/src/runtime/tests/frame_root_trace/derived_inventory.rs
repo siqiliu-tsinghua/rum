@@ -1570,3 +1570,9 @@ pub(super) const PURE_FRAME_ABANDON_TYPES: &[&str] = &[
     "crates/rum-stdlib/src/structure_ops/sequence/take_drop/lazy_completion.rs:TakeLazyCompletionFrame",
     "crates/rum-stdlib/src/structure_ops/surface/lazy_completion.rs:FirstLazyCompletionFrame",
 ];
+
+// Explicit integration-test population; production inventories stay unchanged.
+pub(super) const FIXTURE_FRAME_ROOT_TRACE_TYPES: &[&str] =
+    &["crates/rum-stdlib/tests/suspension_oracle/mutations/driver.rs:OracleFoldFrame"];
+pub(super) const FIXTURE_PURE_FRAME_ABANDON_TYPES: &[&str] =
+    &["crates/rum-stdlib/tests/suspension_oracle/mutations/driver.rs:OracleFoldFrame"];

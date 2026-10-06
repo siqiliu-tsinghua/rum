@@ -1,0 +1,38 @@
+use super::super::descriptors::Fixture;
+use super::make;
+pub fn fixtures() -> Vec<Fixture> {
+    let mut rows = Vec::new();
+    rows.push(make(r####"brief-548.OptionValue-many"####, r####"Options[f]={a:>(AppendTo[Global`log,1];1),b:>(AppendTo[Global`log,2];InputString["p: "]),c:>(AppendTo[Global`log,3];3)};OptionValue[f,{a,b,c}]"####, &[(r####"InputString"####, r####"p: "####, r####"two"####)], Some(r####"List[1, "two", 3]"####), r####"List[1, 2, 3]"####));
+    rows.push(make(r####"brief-548.Cases-Heads-option"####, r####"Unprotect[Cases];SetOptions[Cases,Heads:>(AppendTo[Global`log,2];InputString["p: "];False)];Cases[{1,2,3},_Integer]"####, &[(r####"InputString"####, r####"p: "####, r####"two"####)], Some(r####"List[1, 2, 3]"####), r####"List[2]"####));
+    rows.push(make(r####"brief-548.DeleteCases-Heads-option"####, r####"Unprotect[DeleteCases];SetOptions[DeleteCases,Heads:>(AppendTo[Global`log,2];InputString["p: "];False)];DeleteCases[{1,2,3},2]"####, &[(r####"InputString"####, r####"p: "####, r####"two"####)], Some(r####"List[1, 3]"####), r####"List[2]"####));
+    rows.push(make(r####"brief-548.Count-Heads-option"####, r####"Unprotect[Count];SetOptions[Count,Heads:>(AppendTo[Global`log,2];InputString["p: "];False)];Count[{1,2,3},_Integer]"####, &[(r####"InputString"####, r####"p: "####, r####"two"####)], Some(r####"3"####), r####"List[2]"####));
+    rows.push(make(r####"brief-548.MemberQ-Heads-option"####, r####"Unprotect[MemberQ];SetOptions[MemberQ,Heads:>(AppendTo[Global`log,2];InputString["p: "];False)];MemberQ[{1,2,3},2]"####, &[(r####"InputString"####, r####"p: "####, r####"two"####)], Some(r####"True"####), r####"List[2]"####));
+    rows.push(make(r####"brief-548.FreeQ-Heads-option"####, r####"Unprotect[FreeQ];SetOptions[FreeQ,Heads:>(AppendTo[Global`log,2];InputString["p: "];True)];FreeQ[{1,2,3},2]"####, &[(r####"InputString"####, r####"p: "####, r####"two"####)], Some(r####"False"####), r####"List[2]"####));
+    rows.push(make(r####"brief-548.Position-Heads-option"####, r####"Unprotect[Position];SetOptions[Position,Heads:>(AppendTo[Global`log,2];InputString["p: "];True)];Position[{1,2,3},2]"####, &[(r####"InputString"####, r####"p: "####, r####"two"####)], Some(r####"List[List[2]]"####), r####"List[2]"####));
+    rows.push(make(r####"brief-548.Level-Heads-option"####, r####"Unprotect[Level];SetOptions[Level,Heads:>(AppendTo[Global`log,2];InputString["p: "];False)];Level[{1,2,3},{1}]"####, &[(r####"InputString"####, r####"p: "####, r####"two"####)], Some(r####"List[1, 2, 3]"####), r####"List[2]"####));
+    rows.push(make(r####"brief-548.Depth-Heads-option"####, r####"Unprotect[Depth];SetOptions[Depth,Heads:>(AppendTo[Global`log,2];InputString["p: "];False)];Depth[{1,{2},3}]"####, &[(r####"InputString"####, r####"p: "####, r####"two"####)], Some(r####"3"####), r####"List[2]"####));
+    rows.push(make(r####"brief-548.Replace-Heads-option"####, r####"Unprotect[Replace];SetOptions[Replace,Heads:>(AppendTo[Global`log,2];InputString["p: "];False)];Replace[{1,2,3},2->x,{1}]"####, &[(r####"InputString"####, r####"p: "####, r####"two"####)], Some(r####"List[1, x, 3]"####), r####"List[2]"####));
+    rows.push(make(r####"brief-548.ArrayFilter-option"####, r####"Unprotect[ArrayFilter];SetOptions[ArrayFilter,Padding:>(AppendTo[Global`log,2];InputString["p: "];0)];ArrayFilter[Total,{1,2,3},1]"####, &[(r####"InputString"####, r####"p: "####, r####"two"####)], Some(r####"List[3, 6, 5]"####), r####"List[2]"####));
+    rows.push(make(r####"brief-548.CheckAbort-option"####, r####"Unprotect[CheckAbort];SetOptions[CheckAbort,PropagateAborts:>(AppendTo[Global`log,2];InputString["p: "];True)];CheckAbort[(AppendTo[Global`log,3];7),9]"####, &[(r####"InputString"####, r####"p: "####, r####"two"####)], Some(r####"7"####), r####"List[2, 3]"####));
+    rows.push(make(r####"brief-548.Names-SpellingCorrection"####, r####"Unprotect[Names];SetOptions[Names,SpellingCorrection->v];v:=(AppendTo[Global`log,2];InputString["p: "];False);Names["Global`never548"]"####, &[(r####"InputString"####, r####"p: "####, r####"two"####)], Some(r####"List[]"####), r####"List[2]"####));
+    rows.push(make(r####"brief-548.Names-ResolveContextAliases"####, r####"Unprotect[Names];SetOptions[Names,ResolveContextAliases->v];v:=(AppendTo[Global`log,2];InputString["p: "];True);Names["Global`never548"]"####, &[(r####"InputString"####, r####"p: "####, r####"two"####)], Some(r####"List[]"####), r####"List[2]"####));
+    rows.push(make(r####"brief-548.Names-IgnoreCase"####, r####"Unprotect[Names];SetOptions[Names,IgnoreCase->v];v:=(AppendTo[Global`log,2];InputString["p: "];False);Names["Global`never548"]"####, &[(r####"InputString"####, r####"p: "####, r####"two"####)], Some(r####"List[]"####), r####"List[2]"####));
+    rows.push(make(r####"brief-548.DumpSave-option"####, r####"Unprotect[DumpSave];SetOptions[DumpSave,CompressionLevel->v];v:=(AppendTo[Global`log,2];InputString["p: "];1);DumpSave[".temp/brief-586/mock.rum",{}]"####, &[(r####"InputString"####, r####"p: "####, r####"two"####)], Some(r####"$Failed"####), r####"List[2]"####));
+    rows.push(make(r####"brief-548.OptionValue-twice"####, r####"Options[f]={a:>(AppendTo[Global`log,1];1),b:>(AppendTo[Global`log,2];InputString["p: "]),c:>(AppendTo[Global`log,3];3),d:>(AppendTo[Global`log,4];InputString["p: "]),e:>(AppendTo[Global`log,5];5)};OptionValue[f,{a,b,c,d,e}]"####, &[(r####"InputString"####, r####"p: "####, r####"two"####), (r####"InputString"####, r####"p: "####, r####"four"####)], Some(r####"List[1, "two", 3, "four", 5]"####), r####"List[1, 2, 3, 4, 5]"####));
+    rows.push(make(r####"brief-548.Option-scope"####, r####"Options[f]={a->9};f[x_,OptionsPattern[]]:=(AppendTo[Global`log,x];InputString["p: "];OptionValue[a]);{f[2],OptionValue[f,a]}"####, &[(r####"InputString"####, r####"p: "####, r####"two"####)], Some(r####"List[9, 9]"####), r####"List[2]"####));
+    rows.push(make(r####"brief-548.Cases-Heads-after-target"####, r####"Unprotect[Cases];SetOptions[Cases,Heads:>(AppendTo[Global`log,2];InputString["option: "];False)];Cases[(AppendTo[Global`log,1];InputString["target: "];{1,2,3}),2]"####, &[(r####"InputString"####, r####"target: "####, r####"target"####), (r####"InputString"####, r####"option: "####, r####"two"####)], Some(r####"List[2]"####), r####"List[1, 2]"####));
+    rows.push(make(r####"brief-548.DeleteCases-Heads-after-target"####, r####"Unprotect[DeleteCases];SetOptions[DeleteCases,Heads:>(AppendTo[Global`log,2];InputString["option: "];False)];DeleteCases[(AppendTo[Global`log,1];InputString["target: "];{1,2,3}),2]"####, &[(r####"InputString"####, r####"target: "####, r####"target"####), (r####"InputString"####, r####"option: "####, r####"two"####)], Some(r####"List[1, 3]"####), r####"List[1, 2]"####));
+    rows.push(make(r####"brief-548.StringReplace-option"####, r####"StringReplace["A","a"->"b",IgnoreCase:>(AppendTo[Global`log,2];SameQ[InputString["p: "],"two"]) ]"####, &[(r####"InputString"####, r####"p: "####, r####"two"####)], Some(r####""b""####), r####"List[2]"####));
+    rows.push(make(r####"brief-548.StringCases-option"####, r####"StringCases["A","a",IgnoreCase:>(AppendTo[Global`log,2];SameQ[InputString["p: "],"two"]) ]"####, &[(r####"InputString"####, r####"p: "####, r####"two"####)], Some(r####"List["A"]"####), r####"List[2]"####));
+    rows.push(make(
+        r####"brief-583.default-optional-decline"####,
+        r####"Default[d]:=7/;(AppendTo[Global`log,1];InputString["p: "];False);d[x_.]:=x;d[]"####,
+        &[
+            (r####"InputString"####, r####"p: "####, r####"x"####),
+            (r####"InputString"####, r####"p: "####, r####"y"####),
+        ],
+        Some(r####"d[]"####),
+        r####"List[1, 1]"####,
+    ));
+    rows
+}
