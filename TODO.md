@@ -5,7 +5,7 @@ operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
 Status checkpoint: 2026-10-07, committed tree through brief-586's gate (E1 step
-A); the owed ledger (500 entries) drains in eight family batches, briefs
+A); brief-587 (drain 1, rules) is dispatched; the owed ledger (500) drains in eight batches, briefs
 587-594, the last deleting the ledger; then E2's design.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
