@@ -4,7 +4,7 @@ use super::support::{
     session,
 };
 use rum_core::Expr;
-use rum_runtime::{RuntimeInputKind, Session};
+use rum_runtime::{RuntimeInputKind, Session, SessionRequestError};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Variant {
@@ -31,6 +31,8 @@ pub struct Fixture {
     pub expected_projections: Vec<String>,
     pub expected_value: Option<String>,
     pub expected_log: Option<String>,
+    pub expected_error: Option<SessionRequestError>,
+    pub expected_prints: Option<Vec<String>>,
     pub configure: fn(&mut Session),
 }
 impl Fixture {
@@ -44,6 +46,8 @@ impl Fixture {
             expected_projections: vec![],
             expected_value: None,
             expected_log: None,
+            expected_error: None,
+            expected_prints: None,
             configure: |_| {},
         }
     }
@@ -80,7 +84,7 @@ impl Checks {
     };
 }
 
-fn run(f: &Fixture, queued: bool, checks: Checks) -> Result<ResultView, Rejection> {
+pub fn run(f: &Fixture, queued: bool, checks: Checks) -> Result<ResultView, Rejection> {
     let mut s = f.session();
     let answers: Vec<_> = f.pauses.iter().map(|p| p.answer.as_str()).collect();
     let expected: Vec<_> = f
@@ -146,6 +150,16 @@ pub fn accept(f: &Fixture, checks: Checks) -> Result<ResultView, Rejection> {
     }
     if checks.expectations {
         for v in [&r, &q] {
+            if let Some(expected) = &f.expected_error {
+                if v.observation.error.as_ref() != Some(expected) {
+                    return Err(Rejection::Error);
+                }
+            }
+            if let Some(expected) = &f.expected_prints {
+                if &v.observation.prints != expected {
+                    return Err(Rejection::Prints);
+                }
+            }
             for (i, expected) in f.expected_projections.iter().enumerate() {
                 if v.projections.get(i).map(ToString::to_string).as_ref() != Some(expected) {
                     return Err(Rejection::Projection(i));

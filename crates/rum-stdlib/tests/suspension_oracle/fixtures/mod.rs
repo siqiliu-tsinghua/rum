@@ -11,6 +11,7 @@ mod options;
 mod patterns;
 mod rewrite;
 mod rule_construction;
+mod rules;
 mod schema;
 mod scoping;
 mod strings;

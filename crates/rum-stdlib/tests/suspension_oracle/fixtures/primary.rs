@@ -64,8 +64,9 @@ pub struct Descriptor {
     pub id: &'static str,
     pub entry: &'static str,
     pub variants: &'static [Variant],
-    pub factory: fn(Variant) -> Fixture,
+    pub factory: fn(&str, Variant) -> Fixture,
     pub boundary: bool,
+    pub lifecycle: fn(&Fixture) -> usize,
 }
 const SCAN_VARIANTS: &[Variant] = &[
     Variant::Middle,
@@ -91,7 +92,7 @@ fn retired(entry: &str, v: Variant) -> Fixture {
     super::boundaries::fixture(entry, v)
 }
 pub fn descriptors() -> Vec<Descriptor> {
-    vec![
+    let mut rows = vec![
         Descriptor {
             id: "primary.preparation",
             entry: "Evaluator.callPreparation",
@@ -103,60 +104,75 @@ pub fn descriptors() -> Vec<Descriptor> {
                 Variant::AlreadyResumed,
                 Variant::Nested,
             ],
-            factory: super::preparation::fixture,
+            factory: |_, v| super::preparation::fixture(v),
             boundary: false,
+            lifecycle: exercise_lifecycle,
         },
         Descriptor {
             id: "primary.scan",
             entry: "Scan.callback",
             variants: SCAN_VARIANTS,
-            factory: scan,
+            factory: |_, v| scan(v),
             boundary: false,
+            lifecycle: exercise_lifecycle,
         },
         Descriptor {
             id: "primary.valueq",
             entry: "ValueQ.trial",
             variants: RETIRED_VARIANTS,
-            factory: valueq,
+            factory: |_, v| valueq(v),
             boundary: true,
+            lifecycle: exercise_lifecycle,
         },
         Descriptor {
             id: "primary.monitor-display",
             entry: "Monitor.display",
             variants: RETIRED_VARIANTS,
-            factory: monitor,
+            factory: |_, v| monitor(v),
             boundary: true,
+            lifecycle: exercise_lifecycle,
         },
         Descriptor {
             id: "primary.monitor-evaluation",
             entry: "Monitor.evaluationMonitor",
             variants: RETIRED_VARIANTS,
-            factory: monitor_eval,
+            factory: |_, v| monitor_eval(v),
             boundary: true,
+            lifecycle: exercise_lifecycle,
         },
         Descriptor {
             id: "primary.monitor-step",
             entry: "Monitor.stepMonitor",
             variants: RETIRED_VARIANTS,
-            factory: monitor_step,
+            factory: |_, v| monitor_step(v),
             boundary: true,
+            lifecycle: exercise_lifecycle,
         },
-    ]
+    ];
+    rows.extend(super::rules::descriptors());
+    rows
 }
 pub fn execute(descriptor: &Descriptor) -> usize {
-    use super::super::{
-        descriptors::{Checks, accept},
-        support::lifecycle,
-    };
+    use super::super::descriptors::{Checks, accept};
     for &variant in descriptor.variants {
-        let f = (descriptor.factory)(variant);
+        let f = (descriptor.factory)(descriptor.entry, variant);
         assert_eq!(f.id, descriptor.entry);
         accept(&f, Checks::ALL).unwrap_or_else(|e| panic!("{} {variant:?}: {e:?}", descriptor.id));
+        println!("VARIANT {} {variant:?} PASS", descriptor.entry);
     }
     if descriptor.boundary {
         return 0;
     }
-    let f = (descriptor.factory)(Variant::Twice);
+    let f = (descriptor.factory)(descriptor.entry, Variant::Twice);
+    let obligations = (descriptor.lifecycle)(&f);
+    println!(
+        "LIFECYCLE {} first=PASS second=PASS completion/cancel/reset/pending",
+        descriptor.entry
+    );
+    obligations
+}
+
+fn exercise_lifecycle(f: &Fixture) -> usize {
     let plans = f
         .pauses
         .iter()
@@ -171,10 +187,5 @@ pub fn execute(descriptor: &Descriptor) -> usize {
             )
         })
         .collect::<Vec<_>>();
-    let obligations = lifecycle::exercise(|| f.session(), &f.source, &plans);
-    println!(
-        "LIFECYCLE {} first=PASS second=PASS completion/cancel/reset/pending",
-        descriptor.entry
-    );
-    obligations
+    super::super::support::lifecycle::exercise(|| f.session(), &f.source, &plans)
 }

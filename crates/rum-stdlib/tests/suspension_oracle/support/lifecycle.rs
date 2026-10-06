@@ -11,6 +11,15 @@ pub fn exercise(
     source: &str,
     plans: &[(RuntimeInputRequest, String)],
 ) -> usize {
+    exercise_observed(make, source, plans, |_, _, _| {})
+}
+
+pub fn exercise_observed(
+    make: impl Fn() -> Session,
+    source: &str,
+    plans: &[(RuntimeInputRequest, String)],
+    verify: impl Fn(&mut Session, usize, bool),
+) -> usize {
     assert!(
         plans.len() >= 2,
         "lifecycle requires first and second pauses"
@@ -86,6 +95,7 @@ pub fn exercise(
             }
             assert!(s.pending_input_request().is_none());
             assert!(s.reject_overlapping_evaluation_request().is_ok());
+            verify(&mut s, stop, reset);
             session::fresh(&mut s).unwrap();
             session::empty_queue(&mut s).unwrap();
         }

@@ -4,9 +4,9 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-07, committed tree through brief-586's gate (E1 step
-A); brief-587 (drain 1, rules) is dispatched; the owed ledger (500) drains in eight batches, briefs
-587-594, the last deleting the ledger; then E2's design.
+Status checkpoint: 2026-10-07, committed tree through brief-587's gate (drain
+1, rules; owed 428); brief-588 (drain 2, rewrite) is dispatched; drains 589-594
+follow, the last deleting the ledger; then E2's design.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -619,6 +619,17 @@ symbols + contexts + scoping; 593 strings + strings_match + strings_text; 594
 associations + associations_transform + schema + evaluator, deleting the
 ledger. A descriptor that fails is a **defect**, reported with its witness and
 kept owed — it becomes a repair group of this branch.
+**Drain 1 is in (brief-587, rules):** 70 entries drained with complete
+descriptors, 432 lifecycle obligations passing in both builds, no production
+defect. Three **manifest findings**, verified by the director in source and
+corrected at the gate: `Level` is `Ordinary`, so its explicit `Heads` option is
+evaluated by shared preparation and only classified syntactically
+(`tree_walkers/level/options.rs`) — `Level.explicitOption` and
+`Level.optionSyntax` are removed, not owed; `Part.lazyConsumer` is a direct
+tail handoff to `First[LazyDrop[…]]` — its policy is `Tail`, still owed, and
+the lazy batch (591) attaches its descriptor. Entries 506 -> 504, owed 500 ->
+428. Director gate: workspace 3362/0/58 with native ZeroMQ real; oracle 20/0
+in each build; fingerprints and certificates replayed after the corrections.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
