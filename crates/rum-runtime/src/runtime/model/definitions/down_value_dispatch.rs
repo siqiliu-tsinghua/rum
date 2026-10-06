@@ -232,6 +232,7 @@ impl SymbolDefinition {
             .equivalent_rule_index(&self.down_values, lhs, guards, lhs_is_ground)
     }
 
+    #[inline(always)]
     pub(in crate::runtime) fn start_indexed_down_value_scan(
         &self,
         candidate: &Expr,

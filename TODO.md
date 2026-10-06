@@ -4,9 +4,9 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-06, committed tree through brief-584's gate (G9
-closed); brief-585 (G10, Default fallback) is dispatched, then brief-586 (E1), then
-E2's design.
+Status checkpoint: 2026-10-06, committed tree through brief-585's gate (G9 and
+G10 closed; lost 0 by the re-census); brief-586 (E1, the catalog-wide oracle) is
+next, then E2's design.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -560,6 +560,25 @@ recursive, and that is bounded rather than owed: the right-hand side must be
 a list at every level the check descends, and evaluating a list deeper than
 about 256 levels already fails closed at the fixed-point pass limit (`Nest[List,
 1, 260]` is refused; depth 250 destructures correctly).
+**G10 is done (brief-585, completed at the gate):** a call headed by `Default`
+holds its *`Some` returns, `None` continues* decision in one frame, and the
+eager and resumed paths share one ordinary-fallback helper, so a resumed
+decline continues into the live down-value scan exactly once (frame count +1).
+Lost 1 -> 0 by the re-census: **every Lost site the census knows of is
+repaired.** The worker stopped on its performance gate — the ordinary
+down-value hit +0.26%, guarded hit +0.08% — and attributed it by callgrind to
+`start_indexed_down_value_scan` no longer being inlined. The cause: the
+shared helper is `#[inline(always)]`, so its body exists at two call sites, and
+the indexed-scan helper lost LLVM's single-call-site inlining bonus. The
+director's one-attribute repair (`#[inline(always)]` on that helper) turns the
+panel to: ordinary hit -0.15%, guarded hit -0.04%, optional default consumer
+-0.03%, direct `Default` miss -0.10%, direct hit +0.03% (inside the +0.05%
+threshold), controls flat. Director gate: workspace 3351/0/58 with native
+ZeroMQ real; the 21 new cases are 7 red / 14 control on the pre-fix tree;
+ownership rows below the inserted line shifted by one, fingerprints and both
+certificates replayed. **Method:** when a split shares a helper between a hot
+path and a cold resume, the helper's callees change call-site count; look for
+the inlining decision that flipped before tuning anything else.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

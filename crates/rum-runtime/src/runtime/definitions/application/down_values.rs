@@ -1,3 +1,5 @@
+mod default_fallback;
+
 use super::*;
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
@@ -73,11 +75,41 @@ impl Session {
                 runtime_profile_default,
                 runtime_profile_outcome_for_option_result(&direct_default),
             );
-            if let Some(value) = direct_default? {
-                return Ok(Some(value));
+            match direct_default {
+                Ok(Some(value)) => return Ok(Some(value)),
+                Ok(None) => {}
+                Err(error) => {
+                    if matches!(error, EvalError::InputRequired { .. }) {
+                        default_fallback::suspend(
+                            self,
+                            &identity,
+                            symbol,
+                            down_values_cannot_match,
+                        );
+                    }
+                    return Err(error);
+                }
             }
         }
 
+        self.try_apply_down_values_fallback(
+            head,
+            args,
+            attributes,
+            symbol,
+            down_values_cannot_match,
+        )
+    }
+
+    #[inline(always)]
+    fn try_apply_down_values_fallback(
+        &mut self,
+        head: &Expr,
+        args: &SharedArgs,
+        attributes: AttributeSet,
+        symbol: &Symbol,
+        down_values_cannot_match: bool,
+    ) -> Result<Option<Expr>, EvalError> {
         if down_values_cannot_match {
             return Ok(None);
         }

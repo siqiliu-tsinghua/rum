@@ -182,6 +182,10 @@ Candidate ordering depends on the lane:
   in list order.
 - If a `Default` guard declines, the optional argument has no default from that
   candidate.
+  A direct `Default[...]` call first tries the direct default lookup. If that
+  lookup declines, the call continues into the ordinary down-value scan using
+  the live definitions, including when a guard resumes after host input. The
+  caller continues after the direct lookup; it does not restart that lookup.
 
 An ownvalue has one immediate or delayed storage slot. Consequently, multiple
 guarded ownvalues for one symbol are not retained as candidates: a later

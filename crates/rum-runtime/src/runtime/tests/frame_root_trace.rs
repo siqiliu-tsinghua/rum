@@ -480,7 +480,7 @@ fn suspension_protocol_repository_invariants_hold() {
     println!("legacy_api_hits=0 direct_queue_mutation_hits=0 ownership_hits=0");
     // The option loop is now continuation data inside the existing retained
     // frame; its roots remain in the derived inventory above.
-    assert_eq!(frame_count, 563);
+    assert_eq!(frame_count, 564);
     assert_eq!(
         frame_count,
         PURE_FRAME_ABANDON_TYPES.len() + STATEFUL_FRAME_ABANDON_TYPES.len()
