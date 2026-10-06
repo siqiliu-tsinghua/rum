@@ -130,6 +130,13 @@ nested typed constraints are still prepared. `Verbatim` contents and
 `OptionsPattern` targets are entirely raw. Opaque assignment forms such as
 `HoldPattern`, `MessageName`, and `Default` are not user-evaluated.
 
+List-destructuring `Set` validates the complete left/right list shape before
+storing anything. It then stores leaves from left to right, descending into
+nested lists in that order, and returns the complete evaluated right-hand side.
+If a target asks for input, its pending store resumes once before the remaining
+stores continue. Completed stores remain committed if a later target fails or
+the request is cancelled or abandoned; pending stores do not run on abandonment.
+
 The resulting definition identity is a snapshot. Later own-value or attribute
 changes affect identities prepared by later assignments and lookups, but do
 not rewrite definitions that are already stored.

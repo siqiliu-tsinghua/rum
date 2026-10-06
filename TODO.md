@@ -4,9 +4,9 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-06, committed tree through brief-583's design;
-two new groups found — brief-584 (G9, list destructuring) is dispatched, then
-brief-585 (G10, Default fallback), then brief-586 (E1), then E2's design.
+Status checkpoint: 2026-10-06, committed tree through brief-584's gate (G9
+closed); brief-585 (G10, Default fallback) is next, then brief-586 (E1), then
+E2's design.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -549,6 +549,17 @@ the branch (a line once opened is finished); E1's layout, its test-only
 mutation-frame fixture population and `scripts/check-suspension-oracle.sh` are
 approved; G9 = brief-584, G10 = brief-585, E1 = brief-586; base binaries are
 brief-582's selected one-unit candidate (the current production source).
+**G9 is done (brief-584):** list-destructuring `Set` stores through an owned
+cursor with one inline parent and a spill stack, keeps the original right-hand
+side as its result, and freezes the remaining stores in one frame (count +1).
+Lost 4 -> 1 by the re-census. Director gate: workspace 3330/0/58 with native
+ZeroMQ real; the 16 new cases are 13 red / 3 control on the pre-fix tree;
+one-unit instruction slopes reproduced — destructuring and part assignment
+0.04-0.39% *faster*, controls flat. The pre-store shape check stays
+recursive, and that is bounded rather than owed: the right-hand side must be
+a list at every level the check descends, and evaluating a list deeper than
+about 256 levels already fails closed at the fixed-point pass limit (`Nest[List,
+1, 260]` is refused; depth 250 destructures correctly).
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

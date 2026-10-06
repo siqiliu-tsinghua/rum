@@ -1,3 +1,4 @@
+mod destructuring;
 mod resume_frames;
 use super::rule_lhs::continuation::RuleLhsCompletionFrame;
 use resume_frames::*;
@@ -464,26 +465,8 @@ impl Session {
             return Ok(Some(rhs));
         }
 
-        self.store_list_destructuring_assignments(symbol, &lhs, &rhs)?;
-        Ok(Some(rhs))
-    }
-
-    fn store_list_destructuring_assignments(
-        &mut self,
-        symbol: &str,
-        lhs: &Expr,
-        rhs: &Expr,
-    ) -> Result<(), EvalError> {
-        if let Some(lhs_items) = list_expr_args(lhs) {
-            let rhs_items = list_expr_args(rhs).expect("destructuring shape checked before store");
-            for (lhs_item, rhs_item) in lhs_items.iter().zip(rhs_items) {
-                self.store_list_destructuring_assignments(symbol, lhs_item, rhs_item)?;
-            }
-            return Ok(());
-        }
-
-        self.finish_definition_assignment(symbol, lhs.clone(), rhs.clone(), false)?;
-        Ok(())
+        self.store_list_destructuring_assignments(symbol, lhs, rhs)
+            .map(Some)
     }
 }
 
