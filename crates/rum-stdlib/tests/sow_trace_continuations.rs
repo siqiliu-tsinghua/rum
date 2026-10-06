@@ -6,3 +6,5 @@ mod lifecycle;
 mod sow;
 #[path = "sow_trace_continuations/support.rs"]
 mod support;
+#[path = "sow_trace_continuations/trace.rs"]
+mod trace;

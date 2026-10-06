@@ -41,3 +41,21 @@ impl crate::runtime::suspension::FrameAbandon for EvalStructuredTraceCaptureExpr
         crate::runtime::suspension::FrameAbandonAction::Discard
     }
 }
+
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
+pub(super) struct TraceFilterSuspensionFrame {
+    pub(super) state: filter::TraceFilterState,
+}
+
+impl crate::runtime::suspension::SuspensionFrame for TraceFilterSuspensionFrame {
+    fn resume(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+    ) -> crate::runtime::suspension::FrameAction {
+        crate::runtime::suspension::FrameAction::complete(match outcome {
+            Ok(value) => filter::resume_trace_filter(session, &self.state, value),
+            Err(error) => Err(error),
+        })
+    }
+}

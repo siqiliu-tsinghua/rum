@@ -4,8 +4,9 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-06, committed tree through brief-581's gate;
-brief-582 (G7 step B, the trace filters) is dispatched.
+Status checkpoint: 2026-10-06, committed tree through brief-582's gate; all
+eight groups G1-G8 are closed; next is E1 (the catalog-wide suspension oracle),
+designed first, then E2.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -514,6 +515,15 @@ P0125, lost 14 -> 13. The first run stopped on an upstream "model at capacity"
 error and was resumed from its checkpoint. Director gate: workspace 3255/0/58
 with native ZeroMQ real; one-unit residuals +0.09% (default tag) and +0.21%
 (no scope), recorded; controls at the base.
+**G7 step B is done, and with it every brief-548 group (brief-582):** the
+structured `Trace`, `TraceDetail` and `TracePrint` filters walk one flat work
+stack with one frame (count 561 -> 562), keep structure, search order, `Hold`
+and association reconstruction and deduplication, and print `TracePrint`'s
+lines once at root completion. Lost 13 -> 0 by the frozen census. The old
+recursive walkers' constructs retire as authorized (two closures, six `vec!`).
+Director gate: workspace 3306/0/58 with native ZeroMQ real; one-unit
+residual on nested filtered `TraceDetail` (+0.05% / +0.28%, worker +0.35%
+against a 0.14% floor), recorded; a pattern-filtered `Trace` is 5.3% faster.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
