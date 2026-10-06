@@ -5,7 +5,7 @@ operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
 Status checkpoint: 2026-10-06, committed tree through brief-579's gate; G5
-is closed; next is group G7 (Sow/trace, 14 sites), re-probed before its brief.
+is closed; brief-580 (G7 design, Sow and trace filters) is dispatched.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -485,6 +485,18 @@ seventy design fixtures are permanent tests. Lost 17 -> 14. The second
 against noise floors, recorded: delayed `Count` +0.67% / +0.36%, ArrayFilter
 +0.10% to +0.22% (director: +0.20% / +0.25%), `CheckAbort` -0.3%. Director gate:
 workspace 3223/0/58 with native ZeroMQ real.
+**G7 re-probed (`be3ad44f`):** eleven of brief-548's probes diverge, all G7
+(Sow tag matching, the structured trace filters); every G5 witness flipped.
+Depth: a trace tree follows the evaluation's nesting, which the evaluator's
+guard stops early — so **brief-580** designs G7 without a depth line, asking
+the design to show otherwise if anything can be deep regardless.
+**Found, outside the branch — guest recursion stops at 60-80 levels:**
+`f[0] = 0; f[k_] := f[k - 1] + 1; f[80]` fails closed with "evaluation exceeded
+native stack limit (1048576 bytes)" in the release one-unit build, on 2 MiB and
+on 8 MiB alike, identically on the pre-G2 binary (`.temp/director/gate-g7/`).
+The guard is fixed at 1 MiB and one guest recursion level costs roughly
+13-15 KB of native stack, so ordinary recursive guest code is capped near 70
+levels. Not a regression of this branch; recorded for the user to queue.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
