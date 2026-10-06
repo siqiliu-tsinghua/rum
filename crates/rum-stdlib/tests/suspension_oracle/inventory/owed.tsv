@@ -4,15 +4,11 @@ Accumulate.arithmetic	functional	Role-specific variants and lifecycle remain owe
 AlignColumns.defaultOption	strings	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 AlignColumns.explicitOption	strings	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 AlignColumns.optionSyntax	strings	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-AllTrue.predicate	predicates	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-AnyTrue.predicate	predicates	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Array.callback	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 ArrayFilter.callback	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 ArrayFilter.defaultOption	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 ArrayFilter.explicitOption	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 ArrayFilter.optionSyntax	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-ArrayQ.predicate	predicates	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-ArrayQ.rankPattern	predicates	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 ArrayReduce.callback	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 AssociateTo.target	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Association.keyValue	associations	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
@@ -23,71 +19,30 @@ BeginPackage.fileForms	contexts	Role-specific variants and lifecycle remain owed
 Block.body	scoping	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Block.initializers	scoping	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 BlockMap.callback	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Catch.handler	control	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Catenate.delayedValue	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Check.body	symbols	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 ClearAttributes.attributes	symbols	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Comap.callback	functional	Full role variants and both-pause lifecycle remain owed.
 ComapApply.callback	functional	Full role variants and both-pause lifecycle remain owed.
-Complement.defaultOption	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Complement.explicitOption	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Complement.optionSyntax	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Complement.sameTest	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 ConformSchema.default	schema	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 ConformSchema.predicate	schema	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-ContainsAll.defaultOption	predicates	Full role variants and both-pause lifecycle remain owed.
-ContainsAll.explicitOption	predicates	Full role variants and both-pause lifecycle remain owed.
-ContainsAll.optionSyntax	predicates	Full role variants and both-pause lifecycle remain owed.
-ContainsAll.sameTest	predicates	Full role variants and both-pause lifecycle remain owed.
-ContainsAny.defaultOption	predicates	Full role variants and both-pause lifecycle remain owed.
-ContainsAny.explicitOption	predicates	Full role variants and both-pause lifecycle remain owed.
-ContainsAny.optionSyntax	predicates	Full role variants and both-pause lifecycle remain owed.
-ContainsAny.sameTest	predicates	Full role variants and both-pause lifecycle remain owed.
-ContainsExactly.defaultOption	predicates	Full role variants and both-pause lifecycle remain owed.
-ContainsExactly.explicitOption	predicates	Full role variants and both-pause lifecycle remain owed.
-ContainsExactly.optionSyntax	predicates	Full role variants and both-pause lifecycle remain owed.
-ContainsExactly.sameTest	predicates	Full role variants and both-pause lifecycle remain owed.
-ContainsNone.defaultOption	predicates	Full role variants and both-pause lifecycle remain owed.
-ContainsNone.explicitOption	predicates	Full role variants and both-pause lifecycle remain owed.
-ContainsNone.optionSyntax	predicates	Full role variants and both-pause lifecycle remain owed.
-ContainsNone.sameTest	predicates	Full role variants and both-pause lifecycle remain owed.
-ContainsOnly.defaultOption	predicates	Full role variants and both-pause lifecycle remain owed.
-ContainsOnly.explicitOption	predicates	Full role variants and both-pause lifecycle remain owed.
-ContainsOnly.optionSyntax	predicates	Full role variants and both-pause lifecycle remain owed.
-ContainsOnly.sameTest	predicates	Full role variants and both-pause lifecycle remain owed.
 Counts.delayedValue	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 CountsBy.keyFunction	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 DeclarePackage.fileForms	contexts	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 DefinePackage.bindings	scoping	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 DefinePackage.body	scoping	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-DeleteDuplicates.sameTest	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-DeleteDuplicatesBy.keyFunction	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 DeleteMissing.defaultOption	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 DeleteMissing.explicitOption	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 DeleteMissing.optionSyntax	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Depth.defaultOption	structure	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Depth.explicitOption	structure	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Depth.optionSyntax	structure	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Dialog.body	scoping	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Differences.arithmetic	structure	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-DisjointQ.defaultOption	predicates	Full role variants and both-pause lifecycle remain owed.
-DisjointQ.explicitOption	predicates	Full role variants and both-pause lifecycle remain owed.
-DisjointQ.optionSyntax	predicates	Full role variants and both-pause lifecycle remain owed.
-DisjointQ.sameTest	predicates	Full role variants and both-pause lifecycle remain owed.
 Dot.arithmetic	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 DumpSave.defaultOption	contexts	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 DumpSave.explicitOption	contexts	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 DumpSave.optionSyntax	contexts	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-DuplicateFreeQ.defaultOption	predicates	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-DuplicateFreeQ.explicitOption	predicates	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-DuplicateFreeQ.optionSyntax	predicates	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-DuplicateFreeQ.sameTest	predicates	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 EchoFunction.callback	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Enclose.handler	control	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Evaluate.body	scoping	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 EvaluationData.body	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Evaluator.defaultFallback	evaluator	The direct Default dispatcher is not an installed BuiltinSpec; the historical G10 witnesses remain supplemental until a complete role descriptor owns its variants and lifecycle.
-First.lazyConsumer	structure	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 FixedPoint.callback	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 FixedPoint.predicate	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 FixedPointList.callback	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
@@ -98,23 +53,16 @@ FoldPair.callback	functional	Role-specific variants and lifecycle remain owed; h
 FoldPair.combiner	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 FoldWhile.callback	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 FoldWhile.predicate	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-GatherBy.keyFunction	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Get.fileForms	contexts	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 GroupBy.callback	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 GroupBy.reducer	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 HtmlUnescape.defaultOption	strings	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 HtmlUnescape.explicitOption	strings	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 HtmlUnescape.optionSyntax	strings	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-If.branch	control	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Inner.arithmetic	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Input.parsedAnswer	scoping	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Input.request	scoping	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 InputString.request	scoping	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-IntersectingQ.defaultOption	predicates	Full role variants and both-pause lifecycle remain owed.
-IntersectingQ.explicitOption	predicates	Full role variants and both-pause lifecycle remain owed.
-IntersectingQ.optionSyntax	predicates	Full role variants and both-pause lifecycle remain owed.
-IntersectingQ.sameTest	predicates	Full role variants and both-pause lifecycle remain owed.
-Intersection.sameTest	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 KeyDropFrom.target	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 KeyGroupBy.callback	associations	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 KeyMap.callback	associations	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
@@ -136,7 +84,6 @@ LazyTable.body	lazy	Role-specific variants and lifecycle remain owed; historical
 LazyTable.bounds	lazy	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 LazyTake.source	lazy	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 LengthWhile.predicate	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-LexicographicOrder.comparator	predicates	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Lookup.default	associations	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Lookup.delayedValue	associations	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Lookup.heldTarget	associations	Full role variants and both-pause lifecycle remain owed.
@@ -147,9 +94,6 @@ MapAll.callback	functional	Role-specific variants and lifecycle remain owed; his
 MapAt.callback	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 MapIndexed.callback	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 MapThread.callback	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-MatrixQ.predicate	predicates	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-MaxBy.keyFunction	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-MaximalBy.keyFunction	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 MemoryConstrained.body	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 MemoryConstrained.fallback	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Merge.delayedValue	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
@@ -157,8 +101,6 @@ Merge.reducer	associations_transform	Role-specific variants and lifecycle remain
 MergeNested.delayedValue	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 MergeNested.reducer	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Message.template	symbols	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-MinBy.keyFunction	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-MinimalBy.keyFunction	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Module.body	scoping	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Module.initializers	scoping	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Monitor.body	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
@@ -175,19 +117,16 @@ NestWhile.callback	functional	Role-specific variants and lifecycle remain owed; 
 NestWhile.predicate	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 NestWhileList.callback	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 NestWhileList.predicate	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-NoneTrue.predicate	predicates	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Normal.delayedValue	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Normal.lazyConsumer	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Once.body	contexts	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Operate.callback	functional	Full role variants and both-pause lifecycle remain owed.
 OptionValue.delayedValue	symbols	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 OptionValue.scopedDefault	symbols	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-OrderedQ.comparator	predicates	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Outer.callback	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 ParseArgs.defaultOption	strings	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 ParseArgs.explicitOption	strings	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 ParseArgs.optionSyntax	strings	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Part.lazyConsumer	rules	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Quiet.body	symbols	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Reap.body	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Reap.combiner	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
@@ -195,19 +134,14 @@ Reap.pattern	debug	Role-specific variants and lifecycle remain owed; historical 
 ReleaseHold.body	scoping	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 RepeatedTiming.body	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 RestoreSealedReferences.body	scoping	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-ReverseSort.comparator	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-ReverseSortBy.keyFunction	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 SchemaErrors.default	schema	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 SchemaErrors.predicate	schema	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Select.predicate	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 SelectFirst.predicate	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-SelectPositions.predicate	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 SequenceFold.callback	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 SequenceFoldList.callback	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 SetAttributes.attributes	symbols	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 SetOptions.optionSyntax	symbols	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Sort.comparator	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-SortBy.keyFunction	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Sow.recipientPattern	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 StringApply.callback	strings_match	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 StringCases.defaultOption	strings_match	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
@@ -254,16 +188,7 @@ StringWrap.defaultOption	strings	Role-specific variants and lifecycle remain owe
 StringWrap.explicitOption	strings	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 StringWrap.optionSyntax	strings	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 SubsetMap.callback	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-SubsetQ.defaultOption	predicates	Full role variants and both-pause lifecycle remain owed.
-SubsetQ.explicitOption	predicates	Full role variants and both-pause lifecycle remain owed.
-SubsetQ.optionSyntax	predicates	Full role variants and both-pause lifecycle remain owed.
-SubsetQ.sameTest	predicates	Full role variants and both-pause lifecycle remain owed.
-Switch.branch	control	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Take.lazyConsumer	structure	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-TakeLargestBy.keyFunction	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-TakeSmallestBy.keyFunction	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 TakeWhile.predicate	functional	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Tally.sameTest	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 TemplateApply.defaultOption	strings_text	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 TemplateApply.explicitOption	strings_text	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 TemplateApply.optionSyntax	strings_text	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
@@ -302,7 +227,6 @@ Uncompress.defaultOption	strings_text	Role-specific variants and lifecycle remai
 Uncompress.explicitOption	strings_text	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Uncompress.optionSyntax	strings_text	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Uncompress.parsedSource	strings_text	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Union.sameTest	structure_ordering	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Unset.target	symbols	No full role descriptor yet; tracked for the family drain, including both pauses and lifecycle.
 UrlDecode.defaultOption	strings	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 UrlDecode.explicitOption	strings	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
@@ -314,7 +238,5 @@ UrlParse.defaultOption	strings	Role-specific variants and lifecycle remain owed;
 UrlParse.explicitOption	strings	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 UrlParse.optionSyntax	strings	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Values.delayedValue	associations	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-VectorQ.predicate	predicates	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Which.branch	control	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 With.body	scoping	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 With.initializers	scoping	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.

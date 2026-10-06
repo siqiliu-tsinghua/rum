@@ -4,11 +4,10 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-07, committed tree through brief-589's gate (drain
-3, control + logic + arithmetic + random; owed 319); brief-590 (drain 4,
-predicates + structure + structure_ordering + six carried tails) is
-dispatched; drains 591-594 follow, the last deleting the ledger; then E2's
-design.
+Status checkpoint: 2026-10-07, committed tree through brief-590's gate (drain
+4, predicates + structure + structure_ordering; owed 241); brief-591 (drain 5,
+functional + lazy) is dispatched; drains 592-594 follow, the last deleting the
+ledger; then E2's design.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -654,6 +653,15 @@ keeps an entry owed (the equality does not depend on it); the worker attaches
 the descriptor and reports the policy. Entries 498 -> 495, owed 373 -> 319,
 lifecycle obligations 1 098. Director gate: workspace 3364/0/58 with native
 ZeroMQ real; oracle 24/0 in each build.
+**Drain 4 is in (brief-590, predicates + structure + structure_ordering + six
+carried):** 66 entries drained (the six carried tails included), no production
+defect. Twelve roles that do not exist were removed: `optionSyntax` on nine
+`Ordinary` containment predicates and on `Complement` (a computed option
+expression is evaluated by shared preparation; a delayed rule's rhs is read
+locally, which is `explicitOption` and stays), and `Depth`'s two explicit-option
+rows (`Ordinary`, `Heads` only classified, as with `Level`). Entries 495 ->
+483, owed 319 -> 241, lifecycle obligations 1 554. Director gate: workspace
+3365/0/58 with native ZeroMQ real; oracle 26/0 in each build.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
