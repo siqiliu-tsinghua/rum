@@ -146,45 +146,6 @@ impl Session {
         Ok(Some(normalized))
     }
 
-    pub(in crate::runtime::debug_tools::test_report) fn parse_test_report_options(
-        &mut self,
-        expr: &Expr,
-    ) -> Result<Option<TestReportOptions>, EvalError> {
-        let options = match self.compile_assigned_options_from_resolved(expr) {
-            Ok(options) => options,
-            Err(_) => return Ok(None),
-        };
-
-        for (name, _, _) in options.iter() {
-            if !matches!(
-                name.name(),
-                "SameTest" | "TimeConstraint" | "MemoryConstraint"
-            ) {
-                return Ok(None);
-            }
-        }
-
-        let same_test = if let Some(value) = self.runtime_option_expr_for_symbol(
-            Some(&options),
-            &Symbol::system("TestReport"),
-            "SameTest",
-        )? {
-            value
-        } else {
-            system_expr("SameQ")
-        };
-
-        let time_constraint = self.test_report_constraint_expr(Some(&options), "TimeConstraint")?;
-        let memory_constraint =
-            self.test_report_constraint_expr(Some(&options), "MemoryConstraint")?;
-
-        Ok(Some(TestReportOptions {
-            same_test: Some(same_test),
-            time_constraint,
-            memory_constraint,
-        }))
-    }
-
     pub(in crate::runtime::debug_tools::test_report) fn evaluate_test_case_input(
         &mut self,
         input: Expr,
@@ -231,23 +192,6 @@ impl Session {
             Err(EvalError::Exit { code }) => Err(EvalError::Exit { code }),
             Err(_) => Ok((system_expr("$Failed"), Some("Error"))),
         }
-    }
-
-    fn test_report_constraint_expr(
-        &mut self,
-        explicit: Option<&SymbolOptions>,
-        option_name: &str,
-    ) -> Result<Option<Expr>, EvalError> {
-        let Some(resolved) = self.runtime_option_expr_for_symbol(
-            explicit,
-            &Symbol::system("TestReport"),
-            option_name,
-        )?
-        else {
-            return Ok(None);
-        };
-
-        Ok((!is_system_symbol_name(&resolved, "Infinity")).then_some(resolved))
     }
 
     fn eval_expr_with_stream_capture(

@@ -4,8 +4,8 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-06, committed tree through brief-577's gate;
-brief-578 (G5 step B, the phased readers) is dispatched.
+Status checkpoint: 2026-10-06, committed tree through brief-578's gate;
+brief-579 (G5 step C, the rule readers) is next.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -462,6 +462,18 @@ samples of the same binaries (per-process `RandomState` hashing in interning),
 and the residual sits in that band — small `Cases` default +1.08% / +0.65% the
 largest — while `cases-wide-no-match` is -0.46% and controls are at the base;
 recorded. Seven of eight candidates, stopped by stop-loss.
+**G5 step B is done (brief-578):** Monitor, TestReport, Names and DumpSave read
+their options in ordered phases on the typed protocol — one current default
+per phase, validation before the next read, held runtime callbacks still held,
+DumpSave's expanded context filters frozen and never re-expanded, Names'
+pattern rebuilt by a pure reparse on resume. Lost 31 -> 17. No new host
+payload; only position moves in the inventories. The gate measured each
+label's base-against-base noise floor first; four labels stay above it, all
+in debugging and testing tools: TestReport with latent SameTest /
+TimeConstraint (director reproduced +0.72% / +0.44%; worker ~+1.0-1.4%),
+TestReport's unread form +0.2%, TraceDetail +0.15-0.25% — **recorded**. Director
+gate: workspace 3212/0/58 with native ZeroMQ real; source identical to the
+selected candidate; Names and the controls at the base.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

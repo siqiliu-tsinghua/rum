@@ -31,7 +31,7 @@ pub trait FrozenOptionReadContinuation<V>: FrameRootTrace + Send + Sync + 'stati
 
 // Private decoders seal the value/frame pairing. No evaluating raw getter is
 // exported by this protocol.
-trait OptionDecode: FrameRootTrace + Send + Sync + 'static {
+pub(super) trait OptionDecode: FrameRootTrace + Send + Sync + 'static {
     type Value;
     fn decode(&self, value: Expr) -> Self::Value;
 }
@@ -43,6 +43,41 @@ impl OptionDecode for BoolOptionDecode {
     type Value = bool;
     fn decode(&self, value: Expr) -> bool {
         is_system_symbol_name(&value, "True")
+    }
+}
+
+#[derive(FrameRootTrace)]
+pub(super) struct RuntimeOptionDecode;
+
+impl OptionDecode for RuntimeOptionDecode {
+    type Value = Option<Expr>;
+    fn decode(&self, value: Expr) -> Option<Expr> {
+        Some(value)
+    }
+}
+
+#[derive(FrameRootTrace)]
+pub(super) struct OptionSyntaxDecode;
+
+impl OptionDecode for OptionSyntaxDecode {
+    type Value = Expr;
+    fn decode(&self, value: Expr) -> Expr {
+        value
+    }
+}
+
+impl Session {
+    /// Evaluates option syntax and completes its consumer without replaying it.
+    #[inline(always)]
+    pub(in crate::runtime) fn eval_option_syntax<C: OptionReadContinuation<Expr>>(
+        &mut self,
+        syntax: Expr,
+        next: C,
+    ) -> Result<Expr, EvalError> {
+        match self.evaluate(syntax) {
+            Ok(value) => next.finish(self, value),
+            Err(error) => suspend_option_read(self, error, OptionSyntaxDecode, next),
+        }
     }
 }
 
@@ -72,10 +107,10 @@ where
 
 #[cold]
 #[inline(never)]
-pub(super) fn suspend_option_read<C: OptionReadContinuation<bool>>(
+pub(super) fn suspend_option_read<D: OptionDecode, C: OptionReadContinuation<D::Value>>(
     session: &mut Session,
     error: EvalError,
-    decoder: BoolOptionDecode,
+    decoder: D,
     next: C,
 ) -> Result<Expr, EvalError> {
     match error {

@@ -1,7 +1,9 @@
+mod persist_options;
 mod resume_frames;
 use resume_frames::*;
 
 use super::*;
+use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct DeclarePackageSpec {
@@ -9,7 +11,7 @@ struct DeclarePackageSpec {
     names: Vec<String>,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, FrameRootTrace)]
 enum PersistContextSelection {
     All,
     None,
@@ -17,7 +19,7 @@ enum PersistContextSelection {
     Explicit(BTreeSet<String>),
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, FrameRootTrace)]
 struct PersistContextFilters {
     included: PersistContextSelection,
     excluded: PersistContextSelection,
@@ -169,11 +171,11 @@ impl Session {
 
     fn eval_persist_package_state(
         &mut self,
-        operator: &str,
+        operator: &'static str,
         args: &[Expr],
         overwrite: bool,
     ) -> Result<Expr, EvalError> {
-        let (path_expr, objects_expr, explicit_options) = match args {
+        let (path_expr, _objects_expr, explicit_options) = match args {
             [path_expr, objects_expr] => (path_expr, objects_expr, None),
             [path_expr, objects_expr, options_expr] => {
                 let options = match self.compile_assigned_options_from_resolved(options_expr) {
@@ -217,96 +219,23 @@ impl Session {
             );
             return Ok(self.invalid_call(operator, args));
         }
+        let next = persist_options::PersistOptionWorking {
+            args,
+            operator,
+            overwrite,
+            path_spec,
+            explicit: explicit_options.as_ref(),
+            context_filters,
+        };
         if overwrite {
-            let compression_level = self.runtime_option_expr_for_symbol(
+            return self.runtime_option_expr_for_symbol(
                 explicit_options.as_ref(),
                 &Symbol::system("DumpSave"),
                 "CompressionLevel",
-            )?;
-            if let Some(value) = compression_level {
-                let supported = matches!(
-                    &value,
-                    Expr::Atom(Atom::Integer(level)) if level.as_i64() == Some(1)
-                );
-                if !supported {
-                    self.push_message(
-                        "DumpSave",
-                        "optval",
-                        format!(
-                            "Unsupported value {value} for option CompressionLevel in DumpSave; only 1 is currently supported."
-                        ),
-                    );
-                    return Ok(Expr::call(system_expr("DumpSave"), args.to_vec()));
-                }
-            }
-        }
-
-        let path = self.resolve_output_path(&path_spec);
-        if !self.has_file_io() {
-            self.emit_no_file_io_message();
-            return Ok(system_expr("$Failed"));
-        }
-
-        let symbols = match self.compile_save_symbols_from_expr(objects_expr) {
-            Ok(symbols) => symbols,
-            Err(error) => {
-                return Ok(self.invalid_call_with_arg_form(operator, args, error.message()));
-            }
-        };
-        let mut symbols = self.filter_persist_symbols_by_contexts(symbols, &context_filters);
-        if !self.sealed_symbols_visible() {
-            symbols.retain(|symbol| {
-                !crate::runtime::scoping::packages::symbol_is_sealed_private(symbol)
-            });
-        }
-
-        let include_attributes = if overwrite {
-            self.dump_save_include_attributes(explicit_options.as_ref())
-        } else {
-            true
-        };
-        let sealed_reference = symbols.iter().find_map(|symbol| {
-            self.saved_symbol_statements(symbol, include_attributes)
-                .iter()
-                .find_map(|statement| {
-                    crate::runtime::scoping::packages::sealed_symbols_in_expr(statement)
-                        .into_iter()
-                        .next()
-                })
-        });
-        if let Some(sealed) = sealed_reference {
-            self.push_message(
-                operator,
-                "sealedref",
-                format!(
-                    "Cannot save a definition containing sealed reference {}.",
-                    sealed.fully_qualified_name()
-                ),
+                next,
             );
-            return Ok(system_expr("$Failed"));
         }
-
-        let rendered = self.render_saved_symbols(&symbols, overwrite, include_attributes);
-        if let Err(source) = self.write_saved_content(&path, &rendered, overwrite) {
-            self.push_message(
-                operator,
-                "io",
-                format!("could not write `{}`: {source}", path.display()),
-            );
-            return Ok(system_expr("$Failed"));
-        }
-
-        if overwrite {
-            Ok(Expr::call(
-                system_expr("List"),
-                symbols
-                    .into_iter()
-                    .map(|symbol| Expr::string(symbol.fully_qualified_name()))
-                    .collect(),
-            ))
-        } else {
-            Ok(system_expr("Null"))
-        }
+        next.persist(self)
     }
 
     fn compile_save_symbols_from_expr(

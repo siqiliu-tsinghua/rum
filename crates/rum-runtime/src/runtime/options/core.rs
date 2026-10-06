@@ -159,22 +159,37 @@ impl Session {
             .map(|entry| (entry.value, entry.delayed))
     }
 
-    pub(in crate::runtime) fn runtime_option_expr_for_symbol(
+    /// Reads one runtime option at its current phase, then completes `next`.
+    /// Runtime RuleDelayed values stay held; ordinary values are evaluated.
+    /// Explicit options are the caller's snapshot; defaults are looked up now.
+    #[inline(always)]
+    pub(in crate::runtime) fn runtime_option_expr_for_symbol<
+        C: OptionReadContinuation<Option<Expr>>,
+    >(
         &mut self,
         explicit: Option<&SymbolOptions>,
         target: &Symbol,
         option_name: &str,
-    ) -> Result<Option<Expr>, EvalError> {
+        next: C,
+    ) -> Result<Expr, EvalError> {
         let Some((value, delayed)) =
             self.raw_option_value_for_symbol(explicit, target, option_name)
         else {
-            return Ok(None);
+            return next.finish(self, None);
         };
 
         if delayed {
-            Ok(Some(value))
+            next.finish(self, Some(value))
         } else {
-            self.evaluate(value).map(Some)
+            match self.evaluate(value) {
+                Ok(value) => next.finish(self, Some(value)),
+                Err(error) => read_phase::suspend_option_read(
+                    self,
+                    error,
+                    read_phase::RuntimeOptionDecode,
+                    next,
+                ),
+            }
         }
     }
 

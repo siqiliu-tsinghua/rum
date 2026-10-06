@@ -158,7 +158,7 @@ fn baseline(source: &Source) {
         );
     }
     for (suffix, line, reason) in [
-        ("options/core.rs", 209, "method syntax"),
+        ("options/core.rs", 224, "method syntax"),
         ("accounting_mode/rule.rs", 20, "closure capture"),
         ("accounting_mode/rule.rs", 22, "closure capture"),
         ("accounting_mode/rule.rs", 111, "closure capture"),

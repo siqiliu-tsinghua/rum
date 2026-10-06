@@ -188,24 +188,40 @@ impl Session {
         head: &Expr,
         args: &SharedArgs,
     ) -> Result<Expr, EvalError> {
-        let (tests_expr, properties, options) = match args.as_ref() {
-            [tests_expr] => (tests_expr, None, None),
-            [tests_expr, second] => {
-                if let Some(options) = self.parse_test_report_options(second)? {
-                    (tests_expr, None, Some(options))
+        let (properties, explicit) = match args.as_ref() {
+            [_] => (None, None),
+            [_, second] => {
+                if let Some(options) = self.parse_test_report_options(second) {
+                    (None, Some(options))
                 } else {
-                    (tests_expr, Some(second.clone()), None)
+                    (Some(second.clone()), None)
                 }
             }
-            [tests_expr, properties, options_expr] => {
-                let Some(options) = self.parse_test_report_options(options_expr)? else {
+            [_, properties, options_expr] => {
+                let Some(options) = self.parse_test_report_options(options_expr) else {
                     return Ok(Expr::call(head.clone(), args.to_vec()));
                 };
-                (tests_expr, Some(properties.clone()), Some(options))
+                (Some(properties.clone()), Some(options))
             }
             _ => return Ok(Expr::call(head.clone(), args.to_vec())),
         };
+        if let Some(explicit) = explicit {
+            return super::options::read_test_report_options(
+                self, head, args, properties, &explicit,
+            );
+        }
+        self.start_test_report(head, args, properties, TestReportOptions::default())
+    }
 
+    #[inline(always)]
+    pub(super) fn start_test_report(
+        &mut self,
+        head: &Expr,
+        args: &SharedArgs,
+        properties: Option<Expr>,
+        options: TestReportOptions,
+    ) -> Result<Expr, EvalError> {
+        let tests_expr = &args[0];
         if let Some(report) = self.merge_test_report_objects(tests_expr) {
             return self.project_association_properties(
                 "TestReport",
@@ -219,7 +235,6 @@ impl Session {
             Some(tests) => tests,
             None => return Ok(Expr::call(head.clone(), args.to_vec())),
         };
-        let options = options.unwrap_or_default();
 
         self.resume_test_report_from_index(
             TestReportEvalState {

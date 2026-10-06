@@ -169,45 +169,8 @@ impl<'ast> Visit<'ast> for Calls {
     }
 }
 
-// Exactly the step-B/C readers remain legacy. Counts distinguish multiple reads
-// in a single phase. Extending this list requires a reviewed migration decision.
+// Exactly the step-C rule readers remain legacy.
 const LEGACY: &[(&str, &str, &str, usize)] = &[
-    (
-        "rum-runtime/src/runtime/debug_tools/monitor.rs",
-        "monitor_option_expr",
-        "runtime_option_expr_for_symbol",
-        1,
-    ),
-    (
-        "rum-runtime/src/runtime/debug_tools/test_report/evaluation.rs",
-        "parse_test_report_options",
-        "runtime_option_expr_for_symbol",
-        1,
-    ),
-    (
-        "rum-runtime/src/runtime/debug_tools/test_report/evaluation.rs",
-        "test_report_constraint_expr",
-        "runtime_option_expr_for_symbol",
-        1,
-    ),
-    (
-        "rum-runtime/src/runtime/namespace_tools/names.rs",
-        "eval_names",
-        "runtime_option_expr_for_symbol",
-        2,
-    ),
-    (
-        "rum-runtime/src/runtime/namespace_tools/names.rs",
-        "names_ignore_case",
-        "runtime_option_expr_for_symbol",
-        1,
-    ),
-    (
-        "rum-runtime/src/runtime/package_tools.rs",
-        "eval_persist_package_state",
-        "runtime_option_expr_for_symbol",
-        1,
-    ),
     (
         "rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup.rs",
         "eval_check_abort",
@@ -218,6 +181,44 @@ const LEGACY: &[(&str, &str, &str, usize)] = &[
         "rum-stdlib/src/functional_ops/arrays/mod.rs",
         "eval_array_filter",
         "option_rule_expr_for_symbol",
+        1,
+    ),
+];
+const PHASES: &[(&str, &str, &str, usize)] = &[
+    (
+        "rum-runtime/src/runtime/debug_tools/monitor.rs",
+        "eval_monitor",
+        "eval_option_syntax",
+        1,
+    ),
+    (
+        "rum-runtime/src/runtime/debug_tools/monitor/options.rs",
+        "read_evaluation_monitor",
+        "runtime_option_expr_for_symbol",
+        1,
+    ),
+    (
+        "rum-runtime/src/runtime/debug_tools/monitor/options.rs",
+        "finish",
+        "runtime_option_expr_for_symbol",
+        1,
+    ),
+    (
+        "rum-runtime/src/runtime/debug_tools/test_report/options.rs",
+        "read",
+        "runtime_option_expr_for_symbol",
+        1,
+    ),
+    (
+        "rum-runtime/src/runtime/namespace_tools/names/options.rs",
+        "read",
+        "runtime_option_expr_for_symbol",
+        1,
+    ),
+    (
+        "rum-runtime/src/runtime/package_tools.rs",
+        "eval_persist_package_state",
+        "runtime_option_expr_for_symbol",
         1,
     ),
 ];
@@ -322,6 +323,7 @@ fn expected() -> BTreeMap<String, usize> {
     LEGACY
         .iter()
         .chain(RAW_SITES)
+        .chain(PHASES)
         .map(|(path, function, reader, count)| (format!("{path}:{function}:{reader}"), *count))
         .chain(
             BOOLEAN
@@ -337,11 +339,7 @@ fn discover(path: &str, source: &str, found: &mut BTreeMap<String, usize>) -> Re
         return Err(name);
     }
     for (function, reader, tail, line) in calls.calls {
-        if READERS.contains(&reader.as_str())
-            && reader != "runtime_option_expr_for_symbol"
-            && reader != "option_rule_expr_for_symbol"
-            && !tail
-        {
+        if READERS.contains(&reader.as_str()) && reader != "option_rule_expr_for_symbol" && !tail {
             return Err(format!("non-tail reader {path}:{line}:{function}:{reader}"));
         }
         println!("READ {path}:{line}:{function}:{reader} tail={tail}");
@@ -369,7 +367,7 @@ fn scan(root: &Path, directory: &Path, found: &mut BTreeMap<String, usize>) {
     }
 }
 #[test]
-fn read_inventory_is_closed_and_boolean_calls_are_tails() {
+fn read_inventory_is_closed_and_migrated_calls_are_tails() {
     let root = Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap();
     let mut found = BTreeMap::new();
     for entry in fs::read_dir(root).unwrap() {
@@ -397,7 +395,9 @@ fn read_inventory_is_closed_and_boolean_calls_are_tails() {
                             "pub (in crate :: runtime :: options)"
                         );
                     }
-                    if item.sig.ident == "system_option_bool" {
+                    if item.sig.ident == "system_option_bool"
+                        || item.sig.ident == "runtime_option_expr_for_symbol"
+                    {
                         assert_eq!(item.sig.inputs.len(), 5, "continuation required");
                         assert_eq!(
                             item.sig.output.to_token_stream().to_string(),
@@ -448,4 +448,64 @@ fn read_inventory_falsifies_new_callers_and_non_tail_use() {
     ] {
         discover("new.rs", good, &mut BTreeMap::new()).unwrap();
     }
+}
+
+#[test]
+fn phase_read_inventory_falsifies_non_tail_and_missing_continuation() {
+    for (reader, args) in [
+        (
+            "runtime_option_expr_for_symbol",
+            "explicit, target, name, next",
+        ),
+        ("eval_option_syntax", "syntax, next"),
+    ] {
+        let call = format!("s.{reader}({args})");
+        discover(
+            "new.rs",
+            &format!("fn phase() {{ {call} }}"),
+            &mut BTreeMap::new(),
+        )
+        .unwrap();
+        for body in [
+            format!("let value = {call}?; Ok(value)"),
+            format!("{call}?; Ok(())"),
+        ] {
+            assert!(
+                discover(
+                    "new.rs",
+                    &format!("fn phase() {{ {body} }}"),
+                    &mut BTreeMap::new()
+                )
+                .unwrap_err()
+                .contains("non-tail reader")
+            );
+        }
+    }
+    let root = Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap();
+    let file = syn::parse_file(
+        &fs::read_to_string(root.join("rum-runtime/src/runtime/options/read_phase.rs")).unwrap(),
+    )
+    .unwrap();
+    let mut found = false;
+    for item in file.items {
+        if let syn::Item::Impl(item) = item {
+            for item in item.items {
+                if let syn::ImplItem::Fn(item) = item {
+                    if item.sig.ident == "eval_option_syntax" {
+                        found = true;
+                        assert_eq!(item.sig.inputs.len(), 3);
+                        assert_eq!(
+                            item.vis.to_token_stream().to_string(),
+                            "pub (in crate :: runtime)"
+                        );
+                        assert_eq!(
+                            item.sig.output.to_token_stream().to_string(),
+                            "-> Result < Expr , EvalError >"
+                        );
+                    }
+                }
+            }
+        }
+    }
+    assert!(found);
 }

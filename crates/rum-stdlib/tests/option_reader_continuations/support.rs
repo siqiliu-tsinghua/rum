@@ -4,6 +4,9 @@ use rum_runtime::{
 pub(super) fn session() -> Session {
     let mut s = Session::new();
     rum_stdlib::install_core(&mut s);
+    s.set_file_io(Some(rum_runtime::kernel_api::FileIoProvider::new(
+        ProbeFiles,
+    )));
     s.eval_request("log={};probe::tag=\"G5 message\"").unwrap();
     s
 }
@@ -129,4 +132,31 @@ pub(super) fn compare(label: &str, source: &str, inputs: &[&str], expected_promp
         (&q.0, &q.1),
         "rum value/error/termination/messages/prints/log equality"
     );
+}
+
+// Persistence exercises the provider boundary without touching the filesystem.
+struct ProbeFiles;
+impl rum_runtime::kernel_api::BoundedDestruction for ProbeFiles {}
+impl rum_runtime::kernel_api::FileIo for ProbeFiles {
+    fn read_to_string(
+        &self,
+        _: &std::path::Path,
+    ) -> Result<String, rum_runtime::kernel_api::FileIoError> {
+        Err(rum_runtime::kernel_api::FileIoError::new(
+            "probe file absent",
+        ))
+    }
+    fn probe(&self, _: &std::path::Path) -> rum_runtime::kernel_api::FileProbe {
+        rum_runtime::kernel_api::FileProbe::missing()
+    }
+    fn write_string(
+        &self,
+        _: &std::path::Path,
+        _: &str,
+        _: rum_runtime::kernel_api::FileWriteMode,
+    ) -> Result<(), rum_runtime::kernel_api::FileIoError> {
+        Err(rum_runtime::kernel_api::FileIoError::new(
+            "probe provider is read-only",
+        ))
+    }
 }

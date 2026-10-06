@@ -1,8 +1,10 @@
+mod options;
 use super::regex::{RegexPattern, compile_names_regex_pattern, regex_pattern_matches};
 use super::*;
 
 struct NamesInvocation {
     patterns: Vec<NamesPattern>,
+    pattern_index: Option<usize>,
     explicit_context: bool,
     explicit_options: Option<SymbolOptions>,
 }
@@ -70,47 +72,7 @@ impl Session {
             Ok(invocation) => invocation,
             Err(error) => return Ok(self.invalid_call_with_arg_form("Names", args, error)),
         };
-        let spelling_correction = self.runtime_option_expr_for_symbol(
-            invocation.explicit_options.as_ref(),
-            &Symbol::system("Names"),
-            "SpellingCorrection",
-        )?;
-        if let Some(value) = spelling_correction {
-            if !is_system_symbol_name(&value, "False") {
-                self.push_message(
-                    "Names",
-                    "optval",
-                    format!(
-                        "Unsupported value {value} for option SpellingCorrection in Names; only False is currently supported."
-                    ),
-                );
-                return Ok(Expr::call(system_expr("Names"), args.to_vec()));
-            }
-        }
-        let resolve_context_aliases = self.runtime_option_expr_for_symbol(
-            invocation.explicit_options.as_ref(),
-            &Symbol::system("Names"),
-            "ResolveContextAliases",
-        )?;
-        if let Some(value) = resolve_context_aliases {
-            if !is_system_symbol_name(&value, "True") {
-                self.push_message(
-                    "Names",
-                    "optval",
-                    format!(
-                        "Unsupported value {value} for option ResolveContextAliases in Names; only True is currently supported."
-                    ),
-                );
-                return Ok(Expr::call(system_expr("Names"), args.to_vec()));
-            }
-        }
-        let ignore_case = self.names_ignore_case(invocation.explicit_options.as_ref())?;
-
-        Ok(string_list_expr(self.names_matching_patterns(
-            &invocation.patterns,
-            invocation.explicit_context,
-            ignore_case,
-        )))
+        options::read_names_options(self, args, &invocation)
     }
 
     pub(in crate::runtime) fn eval_symbol_name(
@@ -255,6 +217,7 @@ impl Session {
 
         Ok(NamesInvocation {
             patterns,
+            pattern_index: pattern_expr.map(|_| 0),
             explicit_context,
             explicit_options,
         })
@@ -263,13 +226,6 @@ impl Session {
     fn compile_names_options(&self, args: &[Expr]) -> Result<SymbolOptions, String> {
         self.compile_assigned_options_from_resolved(&Expr::call(system_expr("List"), args.to_vec()))
             .map_err(|error| error.message().to_string())
-    }
-
-    fn names_ignore_case(&mut self, explicit: Option<&SymbolOptions>) -> Result<bool, EvalError> {
-        Ok(self
-            .runtime_option_expr_for_symbol(explicit, &Symbol::system("Names"), "IgnoreCase")?
-            .map(|value| is_system_symbol_name(&value, "True"))
-            .unwrap_or(false))
     }
 
     fn enumerated_names_symbols(&self) -> BTreeSet<Symbol> {

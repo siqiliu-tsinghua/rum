@@ -1,3 +1,4 @@
+mod options;
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
@@ -7,39 +8,21 @@ impl Session {
             return Ok(self.invalid_call_with_arg_range("Monitor", args, 2, usize::MAX));
         }
 
-        let explicit_options = if args.len() > 2 {
-            let resolved = self.evaluate(Expr::call(system_expr("List"), args[2..].to_vec()))?;
-            let options = match self.compile_assigned_options_from_resolved(&resolved) {
-                Ok(options) => options,
-                Err(_) => {
-                    return Ok(self.invalid_call_with_arg_form(
-                        "Monitor",
-                        args,
-                        "expected the optional third argument to be a rule or list of rules in the current first-pass subset",
-                    ));
-                }
-            };
-            Some(options)
-        } else {
-            None
-        };
-
-        if let Some(options) = explicit_options.as_ref() {
-            for (name, _, _) in options.iter() {
-                if !matches!(name.name(), "EvaluationMonitor" | "StepMonitor") {
-                    return Ok(self.invalid_call_with_arg_form(
-                        "Monitor",
-                        args,
-                        "expected only EvaluationMonitor and StepMonitor option rules in the current first-pass subset",
-                    ));
-                }
-            }
+        if args.len() > 2 {
+            return self.eval_option_syntax(
+                Expr::call(system_expr("List"), args[2..].to_vec()),
+                options::MonitorOptionWorking::syntax(args),
+            );
         }
+        options::read_evaluation_monitor(self, args, None)
+    }
 
-        let evaluation_monitor =
-            self.monitor_option_expr(explicit_options.as_ref(), "EvaluationMonitor")?;
-        let step_monitor = self.monitor_option_expr(explicit_options.as_ref(), "StepMonitor")?;
-
+    fn start_monitor(
+        &mut self,
+        args: &[Expr],
+        evaluation_monitor: Option<Expr>,
+        step_monitor: Option<Expr>,
+    ) -> Result<Expr, EvalError> {
         self.push_accounted_monitor_scope(MonitorScope {
             display_expr: args[1].clone(),
             evaluation_monitor,
@@ -61,20 +44,6 @@ impl Session {
             Err(EvalError::InputRequired { request }) => Err(EvalError::InputRequired { request }),
             outcome => self.finish_monitor(outcome),
         }
-    }
-
-    fn monitor_option_expr(
-        &mut self,
-        explicit: Option<&SymbolOptions>,
-        name: &str,
-    ) -> Result<Option<Expr>, EvalError> {
-        let resolved =
-            self.runtime_option_expr_for_symbol(explicit, &Symbol::system("Monitor"), name)?;
-
-        Ok(match resolved {
-            Some(expr) if is_system_symbol_name(&expr, "None") => None,
-            other => other,
-        })
     }
 
     fn finish_monitor(&mut self, outcome: Result<Expr, EvalError>) -> Result<Expr, EvalError> {
