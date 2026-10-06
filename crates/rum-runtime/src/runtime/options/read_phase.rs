@@ -47,6 +47,21 @@ impl OptionDecode for BoolOptionDecode {
 }
 
 #[derive(FrameRootTrace)]
+pub(super) struct RuleOptionDecode {
+    pub(super) option: Symbol,
+}
+
+impl OptionDecode for RuleOptionDecode {
+    type Value = Option<Expr>;
+    fn decode(&self, value: Expr) -> Option<Expr> {
+        Some(Expr::call(
+            system_expr("Rule"),
+            vec![Expr::Atom(Atom::Symbol(self.option.clone())), value],
+        ))
+    }
+}
+
+#[derive(FrameRootTrace)]
 pub(super) struct RuntimeOptionDecode;
 
 impl OptionDecode for RuntimeOptionDecode {

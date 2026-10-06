@@ -1,4 +1,5 @@
 use super::*;
+use read_phase::OptionDecode;
 
 impl Session {
     /// Reads a boolean system option and completes its builtin through `next`.
@@ -68,12 +69,18 @@ impl Session {
         }
     }
 
-    /// Returns the resolved option value as an option rule expression for a symbol.
-    pub fn option_rule_expr_for_symbol(
+    /// Reads a rule-valued option and completes its builtin through `next`.
+    ///
+    /// The requested symbol is retained for the Rule's left-hand side, including
+    /// when lookup matches an entry by name. Absence completes with `None`.
+    /// Return this reader as the calling phase's tail; delayed values can suspend.
+    #[inline(never)]
+    pub fn option_rule_expr_for_symbol<C: OptionReadContinuation<Option<Expr>>>(
         &mut self,
         symbol: &Symbol,
         option: &Symbol,
-    ) -> Result<Option<Expr>, EvalError> {
+        next: C,
+    ) -> Result<Expr, EvalError> {
         let options = self.options_for_symbol(symbol);
         let entry = options
             .entry(option)
@@ -81,13 +88,15 @@ impl Session {
             .cloned();
 
         let Some(entry) = entry else {
-            return Ok(None);
+            return next.finish(self, None);
         };
-        let value = self.resolve_option_entry_value(&entry)?;
-        Ok(Some(Expr::call(
-            system_expr("Rule"),
-            vec![Expr::Atom(Atom::Symbol(option.clone())), value],
-        )))
+        let decoder = read_phase::RuleOptionDecode {
+            option: option.clone(),
+        };
+        match self.resolve_option_entry_value(&entry) {
+            Ok(value) => next.finish(self, decoder.decode(value)),
+            Err(error) => read_phase::suspend_option_read(self, error, decoder, next),
+        }
     }
 
     pub(in crate::runtime) fn option_rule_exprs_for_symbol(&self, symbol: &Symbol) -> Vec<Expr> {

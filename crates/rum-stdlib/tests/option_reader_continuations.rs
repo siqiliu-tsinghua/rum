@@ -4,5 +4,6 @@ mod option_reader_continuations {
     mod boolean;
     mod lifecycle;
     mod phases;
+    mod rule;
     mod support;
 }

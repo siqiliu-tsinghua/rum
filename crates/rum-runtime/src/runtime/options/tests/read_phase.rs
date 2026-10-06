@@ -72,7 +72,7 @@ fn read_phase_compile_controls_pin_missing_private_and_unrooted_errors() {
         .unwrap()
         .parent()
         .unwrap();
-    let scratch = workspace.join(".temp/brief-578/compile-controls");
+    let scratch = workspace.join(".temp/brief-579/compile-controls");
     fs::create_dir_all(&scratch).unwrap();
     fs::write(scratch.join("Cargo.toml"), format!(
         "[package]\nname = \"option-read-proof\"\nversion = \"0.0.0\"\nedition = \"2024\"\n[workspace]\n[dependencies]\nrum-runtime = {{ path = {:?} }}\nrum-core = {{ path = {:?} }}\n[[bin]]\nname = \"option-read-proof\"\npath = \"fixture.rs\"\n",
@@ -105,7 +105,21 @@ fn consume(s: &mut Session) {
 }
 fn main() {}
 "#;
+    let rule = r#"
+use rum_runtime::kernel_api::{Session, OptionReadContinuation};
+use rum_core::{Expr, Symbol};
+fn consume<C: OptionReadContinuation<Option<Expr>>>(s: &mut Session, next: C) {
+    let _ = s.option_rule_expr_for_symbol(&Symbol::system("ArrayFilter"), &Symbol::system("Padding"), next);
+}
+fn main() {}
+"#;
     for (name, source, error) in [
+        ("rule-missing-pass", rule.to_string(), None),
+        ("rule-missing-fail", rule.replace("Padding\"), next", "Padding\")"), Some("E0061")),
+        ("resolver-private-pass", rule.to_string(), None),
+        ("resolver-private-fail", private.replace("option_value_for_symbol(&Symbol::system(\"Depth\"), &Symbol::system(\"Heads\"))", "resolve_option_entry_value(todo!())"), Some("E0624")),
+        ("rule-root-pass", rooted.replace("<bool>", "<Option<Expr>>").replace("_: bool", "_: Option<Expr>"), None),
+        ("rule-root-fail", rooted.replace("<bool>", "<Option<Expr>>").replace("_: bool", "_: Option<Expr>").replacen("#[derive(FrameRootTrace)]", "", 1), Some("E0277")),
         ("missing-pass", generic.to_string(), None),
         (
             "missing-fail",
@@ -258,6 +272,62 @@ fn runtime_and_syntax_reads_complete_without_ordinary_capture() {
         assert!(matches!(result, Err(EvalError::Return { .. })));
     }
     assert_eq!(finished.get(), 4);
+    assert_eq!(frozen.get(), 0);
+    assert!(session.pending_input_request().is_none());
+}
+
+#[test]
+fn rule_read_preserves_requested_symbol_and_absence_without_ordinary_capture() {
+    use read_phase::OptionDecode;
+    let mut session = Session::new();
+    let finished = Cell::new(0);
+    let frozen = Cell::new(0);
+    let next = || Working {
+        finished: &finished,
+        frozen: &frozen,
+    };
+    let target = Symbol::system("Reader579");
+    let requested = Symbol::new("Requested`", "Padding");
+    assert_eq!(
+        session
+            .option_rule_expr_for_symbol(&target, &requested, next())
+            .unwrap(),
+        system_expr("Absent578")
+    );
+    let value = Expr::small_integer(23);
+    let expected = Expr::call(
+        system_expr("Rule"),
+        vec![Expr::Atom(Atom::Symbol(requested)), value.clone()],
+    );
+    for delayed in [false, true] {
+        session.set_options_for_symbol(
+            target,
+            SymbolOptions::from_entries(vec![SymbolOptionEntry {
+                name: Symbol::system("Padding"),
+                value: value.clone(),
+                delayed,
+            }]),
+        );
+        assert_eq!(
+            session
+                .option_rule_expr_for_symbol(&target, &requested, next())
+                .unwrap(),
+            expected
+        );
+    }
+    let decoder = read_phase::RuleOptionDecode { option: requested };
+    assert_eq!(decoder.decode(value), Some(expected));
+    assert_eq!(finished.get(), 3);
+    let result = read_phase::suspend_option_read(
+        &mut session,
+        EvalError::Return {
+            value: Expr::small_integer(41),
+        },
+        decoder,
+        next(),
+    );
+    assert!(matches!(result, Err(EvalError::Return { .. })));
+    assert_eq!(finished.get(), 3);
     assert_eq!(frozen.get(), 0);
     assert!(session.pending_input_request().is_none());
 }

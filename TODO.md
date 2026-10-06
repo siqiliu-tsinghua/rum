@@ -4,8 +4,8 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-06, committed tree through brief-578's gate;
-brief-579 (G5 step C, the rule readers) is dispatched.
+Status checkpoint: 2026-10-06, committed tree through brief-579's gate; G5
+is closed; next is group G7 (Sow/trace, 14 sites), re-probed before its brief.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -474,6 +474,17 @@ TimeConstraint (director reproduced +0.72% / +0.44%; worker ~+1.0-1.4%),
 TestReport's unread form +0.2%, TraceDetail +0.15-0.25% — **recorded**. Director
 gate: workspace 3212/0/58 with native ZeroMQ real; source identical to the
 selected candidate; Names and the controls at the base.
+**G5 step C is done, and G5 is closed (brief-579):** `option_rule_expr_for_symbol`
+takes its continuation and a rule decoder keeps the requested symbol, so
+CheckAbort (default read even under an override) and ArrayFilter (default read
+only without explicit padding) complete on resume; the legacy surface is
+closed — no evaluating option reader outside the protocol but the private
+scalar `OptionValue` path and the certified merged machinery — and all
+seventy design fixtures are permanent tests. Lost 17 -> 14. The second
+`PublicInput` host-payload row was added as ruled; C01/C02 unchanged. Residuals
+against noise floors, recorded: delayed `Count` +0.67% / +0.36%, ArrayFilter
++0.10% to +0.22% (director: +0.20% / +0.25%), `CheckAbort` -0.3%. Director gate:
+workspace 3223/0/58 with native ZeroMQ real.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

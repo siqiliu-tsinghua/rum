@@ -21,6 +21,7 @@ const RAW: &[&str] = &[
     "option_value_for_symbol",
     "resolve_option_entry_value",
     "raw_option_value_for_symbol",
+    "evaluate_runtime_option_expr",
 ];
 
 #[derive(Default)]
@@ -169,8 +170,8 @@ impl<'ast> Visit<'ast> for Calls {
     }
 }
 
-// Exactly the step-C rule readers remain legacy.
-const LEGACY: &[(&str, &str, &str, usize)] = &[
+// Rule consumers use the same tail-only protocol; no legacy allowance remains.
+const RULES: &[(&str, &str, &str, usize)] = &[
     (
         "rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup.rs",
         "eval_check_abort",
@@ -270,6 +271,13 @@ const BOOLEAN: &[(&str, &str)] = &[
     ("rum-stdlib/src/structure_ops/surface.rs", "eval_depth"),
 ];
 const RAW_SITES: &[(&str, &str, &str, usize)] = &[
+    // Certified merged machinery is separate from this typed protocol.
+    (
+        "rum-runtime/src/runtime/accounting_mode/options/driver.rs",
+        "drive",
+        "evaluate_runtime_option_expr",
+        2,
+    ),
     (
         "rum-runtime/src/runtime/options/core.rs",
         "system_option_bool",
@@ -320,7 +328,7 @@ const RAW_SITES: &[(&str, &str, &str, usize)] = &[
     ),
 ];
 fn expected() -> BTreeMap<String, usize> {
-    LEGACY
+    RULES
         .iter()
         .chain(RAW_SITES)
         .chain(PHASES)
@@ -339,7 +347,7 @@ fn discover(path: &str, source: &str, found: &mut BTreeMap<String, usize>) -> Re
         return Err(name);
     }
     for (function, reader, tail, line) in calls.calls {
-        if READERS.contains(&reader.as_str()) && reader != "option_rule_expr_for_symbol" && !tail {
+        if READERS.contains(&reader.as_str()) && !tail {
             return Err(format!("non-tail reader {path}:{line}:{function}:{reader}"));
         }
         println!("READ {path}:{line}:{function}:{reader} tail={tail}");
@@ -379,7 +387,7 @@ fn read_inventory_is_closed_and_migrated_calls_are_tails() {
     assert_eq!(
         found,
         expected(),
-        "new readers/raw bypasses cannot enter the legacy list silently"
+        "new readers/raw bypasses cannot enter the closed inventory silently"
     );
     let source = fs::read_to_string(root.join("rum-runtime/src/runtime/options/core.rs")).unwrap();
     let file = syn::parse_file(&source).unwrap();
@@ -397,8 +405,14 @@ fn read_inventory_is_closed_and_migrated_calls_are_tails() {
                     }
                     if item.sig.ident == "system_option_bool"
                         || item.sig.ident == "runtime_option_expr_for_symbol"
+                        || item.sig.ident == "option_rule_expr_for_symbol"
                     {
-                        assert_eq!(item.sig.inputs.len(), 5, "continuation required");
+                        let arity = if item.sig.ident == "option_rule_expr_for_symbol" {
+                            4
+                        } else {
+                            5
+                        };
+                        assert_eq!(item.sig.inputs.len(), arity, "continuation required");
                         assert_eq!(
                             item.sig.output.to_token_stream().to_string(),
                             "-> Result < Expr , EvalError >"
@@ -458,6 +472,7 @@ fn phase_read_inventory_falsifies_non_tail_and_missing_continuation() {
             "explicit, target, name, next",
         ),
         ("eval_option_syntax", "syntax, next"),
+        ("option_rule_expr_for_symbol", "target, option, next"),
     ] {
         let call = format!("s.{reader}({args})");
         discover(
@@ -508,4 +523,43 @@ fn phase_read_inventory_falsifies_non_tail_and_missing_continuation() {
         }
     }
     assert!(found);
+}
+
+#[test]
+fn legacy_evaluating_reader_surface_is_closed() {
+    let root = Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap();
+    let file = syn::parse_file(
+        &fs::read_to_string(root.join("rum-runtime/src/runtime/options/builtins.rs")).unwrap(),
+    )
+    .unwrap();
+    let mut private_scalar = false;
+    for item in file.items {
+        if let syn::Item::Impl(item) = item {
+            for item in item.items {
+                if let syn::ImplItem::Fn(item) = item {
+                    if item.sig.ident == "resolve_option_value_scalar" {
+                        assert!(matches!(item.vis, syn::Visibility::Inherited));
+                        private_scalar = true;
+                    }
+                }
+            }
+        }
+    }
+    assert!(private_scalar);
+    for raw in RAW {
+        let mut found = BTreeMap::new();
+        discover(
+            "bypass.rs",
+            &format!("fn bypass() {{ s.{raw}(value) }}"),
+            &mut found,
+        )
+        .unwrap();
+        assert!(
+            found.keys().all(|key| !expected().contains_key(key)),
+            "new raw bypass rejected"
+        );
+    }
+    println!(
+        "LEGACY_READER_ALLOWANCES=0; private OptionValue, certified merged and raw Input/Dialog/Once sites recorded"
+    );
 }

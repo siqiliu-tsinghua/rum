@@ -2,10 +2,12 @@ use super::*;
 use rum_core::SharedArgs;
 use rum_runtime::kernel_api::{
     AbandonmentContext, FrameAbandon, FrameAbandonAction, FrameRootTrace, FrameRootVisitor,
+    OptionReadContinuation,
 };
 
 mod filter;
 mod generators;
+mod options;
 mod spec;
 mod tensor;
 
@@ -142,51 +144,44 @@ pub(crate) fn eval_array_filter(
     _head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
-    let args = args.as_ref();
-    let (operator, array, radius_spec, padding_expr) = match args {
+    let args_slice = args.as_ref();
+    let (operator, array, radius_spec, padding_expr) = match args_slice {
         [operator, array, radius_spec] => (operator, array, radius_spec, None),
         [operator, array, radius_spec, padding_expr] => {
             (operator, array, radius_spec, Some(padding_expr))
         }
-        _ => return Ok(session.invalid_call_with_arg_range("ArrayFilter", args, 3, 4)),
+        _ => return Ok(session.invalid_call_with_arg_range("ArrayFilter", args_slice, 3, 4)),
     };
 
     let Some((shape, flat)) = parse_rectangular_list_array(array) else {
         return Ok(session.invalid_call_with_arg_form(
             "ArrayFilter",
-            args,
+            args_slice,
             "expected a rectangular List array as the second argument",
         ));
     };
     let Some(spec) = parse_array_filter_spec(radius_spec, shape.len()) else {
         return Ok(session.invalid_call_with_arg_form(
             "ArrayFilter",
-            args,
+            args_slice,
             "expected a non-negative integer radius, a matching list of non-negative integer radii, or a matching rectangular 0/1 template array as the third argument",
         ));
     };
-    let effective_padding_expr = match padding_expr.cloned() {
-        Some(expr) => Some(expr),
+    let next = options::ArrayFilterOptionWorking {
+        args,
+        operator,
+        shape,
+        flat,
+        spec,
+    };
+    match padding_expr.cloned() {
+        Some(expr) => next.finish(session, Some(expr)),
         None => session.option_rule_expr_for_symbol(
             &Symbol::system("ArrayFilter"),
             &Symbol::system("Padding"),
-        )?,
-    };
-    let padding = match effective_padding_expr.as_ref() {
-        None => ArrayFilterPadding::Uniform(ArrayFilterPaddingLeaf::Fixed),
-        Some(padding_expr) => {
-            let Some(parsed) = parse_array_filter_padding(padding_expr, shape.len()) else {
-                return Ok(session.invalid_call_with_arg_form(
-                    "ArrayFilter",
-                    args,
-                    "expected Padding -> value, Padding -> None, Padding -> \"Fixed\", Padding -> \"Periodic\", a cyclic padding list, or matching per-axis padding pairs as the fourth argument",
-                ));
-            };
-            parsed
-        }
-    };
-
-    apply_array_filter(session, operator, &shape, &flat, &spec, &padding)
+            next,
+        ),
+    }
 }
 
 pub(crate) fn eval_array_reduce(

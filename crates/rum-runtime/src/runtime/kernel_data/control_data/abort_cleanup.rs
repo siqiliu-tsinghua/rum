@@ -1,4 +1,5 @@
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
+mod options;
 mod resume_frames;
 use resume_frames::*;
 
@@ -98,47 +99,10 @@ impl Session {
             ));
         }
 
-        let default_option = self.option_rule_expr_for_symbol(
+        self.option_rule_expr_for_symbol(
             &Symbol::system("CheckAbort"),
             &Symbol::system("PropagateAborts"),
-        )?;
-        let default_option_exprs: Vec<Expr> = default_option.into_iter().collect();
-        let default_propagation =
-            match parse_check_abort_propagation_source(&default_option_exprs, false) {
-                Ok(Some(source)) => check_abort_propagation_from_value(source.value),
-                Ok(None) => default_check_abort_propagation(),
-                Err(error) => return Ok(self.invalid_check_abort_option_call(args_slice, error)),
-            };
-
-        let propagation_source = match parse_check_abort_propagation_source(&args_slice[2..], true)
-        {
-            Ok(source) => source,
-            Err(error) => return Ok(self.invalid_check_abort_option_call(args_slice, error)),
-        };
-        let Some(source) = propagation_source else {
-            return self.resume_check_abort_with_propagation(args, default_propagation);
-        };
-        if source.evaluate_rhs {
-            let value_result = self.evaluate(source.value.clone());
-            let value = crate::resume_or_suspend!(
-                self,
-                value_result,
-                ok(value) => Ok(value),
-                suspend => {
-            let args = args.clone();
-            EvalCheckAbortSuspensionFrame { args }
-            },
-            )?;
-
-            return self.resume_check_abort_with_propagation(
-                args,
-                check_abort_propagation_from_value(value),
-            );
-        }
-
-        self.resume_check_abort_with_propagation(
-            args,
-            check_abort_propagation_from_value(source.value),
+            options::CheckAbortOptionWorking { args },
         )
     }
 
