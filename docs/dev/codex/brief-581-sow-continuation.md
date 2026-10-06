@@ -166,3 +166,15 @@ compiling candidate and each gate.
 4. Stop-loss counters, residuals, open questions.
 
 ---
+
+## Director resume note (2026-10-06) — read this first
+
+The first run was cut by an upstream "selected model is at capacity" error
+while building candidate 02's alloc-count binary; nothing in the brief
+changes. Resume from `.temp/brief-581/PROGRESS.md`: the thirteen Sow cases are
+green, candidate 01 is measured (two labels above their floors), candidate 02
+(the one `#[inline(always)]` on `drive_sow_matches`) has its default build.
+Build its alloc-count variant (`--features` and `rum-cli/alloc-count` as two
+arguments), measure it, continue within the same candidate cap and stop-loss,
+then run the standing duty and every verification command. The working tree
+holds the run's uncommitted edits; keep them.
