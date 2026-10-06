@@ -18,3 +18,5 @@ struct DeclaredRecursiveEdge {
 mod lazy_depth_contract;
 mod rule_pattern_depth_contract;
 mod schema_depth_contract;
+
+mod g7_continuation_contract;

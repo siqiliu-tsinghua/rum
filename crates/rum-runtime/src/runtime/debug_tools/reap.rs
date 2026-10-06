@@ -1,3 +1,5 @@
+mod sow;
+
 use super::reap_state::{
     ReapRenderAccumulator, SuspendedReapBucketRender, SuspendedReapScopeRender,
 };
@@ -18,47 +20,6 @@ pub(super) struct ReapBucketRenderState {
 }
 
 impl Session {
-    pub(in crate::runtime) fn eval_sow(
-        &mut self,
-        head: &Expr,
-        args: &SharedArgs,
-    ) -> Result<Expr, EvalError> {
-        let (value, tag) = match args.as_ref() {
-            [value] => (value.clone(), system_expr("None")),
-            [value, tag] => (value.clone(), tag.clone()),
-            _ => return Ok(Expr::call(head.clone(), args.to_vec())),
-        };
-
-        let mut matched = Vec::new();
-        for scope_index in 0..self.reap_scopes.len() {
-            let pattern_count = self.reap_scopes[scope_index].patterns.len();
-            for pattern_index in 0..pattern_count {
-                let pattern = self.reap_scopes[scope_index].patterns[pattern_index].clone();
-                let outcome =
-                    self.match_expr_owned(pattern, tag.clone(), SymbolExprMap::default())?;
-                if outcome.matched {
-                    matched.push((scope_index, pattern_index));
-                }
-            }
-        }
-
-        for (scope_index, pattern_index) in matched {
-            let added_tag = record_sown_value(
-                &mut self.reap_scopes[scope_index].buckets_by_pattern[pattern_index],
-                tag.clone(),
-                value.clone(),
-            );
-            if self.current_memory_limit.is_some() {
-                self.charge_reap_occurrence(&value);
-                if added_tag {
-                    self.charge_reap_occurrence(&tag);
-                }
-            }
-        }
-
-        Ok(value)
-    }
-
     pub(in crate::runtime) fn eval_reap(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {
         if !(1..=3).contains(&args.len()) {
             return Ok(self.invalid_call_with_arg_range("Reap", args, 1, 3));

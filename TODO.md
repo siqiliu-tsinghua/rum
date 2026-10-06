@@ -4,8 +4,8 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-06, committed tree through brief-580's design;
-brief-581 (G7 step A, Sow) is dispatched.
+Status checkpoint: 2026-10-06, committed tree through brief-581's gate;
+brief-582 (G7 step B, the trace filters) is next.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -507,6 +507,13 @@ stay with the hardening line. Red: 51 cases, 25 red. **Rulings:** two steps —
 A Sow (14 -> 13), B trace (13 -> 0); I01-I07 authorized by name except the
 microbench-script edit (labels stay scratch workloads); per-step one-unit
 bases from the director; the 96/32 case a regression control in B.
+**G7 step A is done (brief-581):** Sow finishes every enclosing Reap tag match
+— resumed, accepted or declined — before committing the value once to each
+accepted bucket; a frozen match state and one frame (count 560 -> 561).
+P0125, lost 14 -> 13. The first run stopped on an upstream "model at capacity"
+error and was resumed from its checkpoint. Director gate: workspace 3255/0/58
+with native ZeroMQ real; one-unit residuals +0.09% (default tag) and +0.21%
+(no scope), recorded; controls at the base.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
