@@ -5,7 +5,7 @@ operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
 Status checkpoint: 2026-10-06, committed tree through brief-578's gate;
-brief-579 (G5 step C, the rule readers) is next.
+brief-579 (G5 step C, the rule readers) is dispatched.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
