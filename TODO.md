@@ -5,8 +5,9 @@ operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
 Status checkpoint: 2026-10-06, committed tree through brief-585's gate (G9 and
-G10 closed; lost 0 by the re-census); brief-586 (E1, the catalog-wide oracle) is
-next, then E2's design.
+G10 closed; lost 0 by the re-census); brief-586 (E1 step A: the oracle, its
+manifest, owed ledger and falsifiers) is dispatched; later E1 steps drain the
+ledger, then E2's design.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -579,6 +580,18 @@ ownership rows below the inserted line shifted by one, fingerprints and both
 certificates replayed. **Method:** when a split shares a helper between a hot
 path and a cold resume, the helper's callees change call-site count; look for
 the inlining decision that flipped before tuning anything else.
+**E1 runs in steps (rulings on brief-583's open questions).** Step A
+(brief-586) builds the whole mechanism and settles the whole catalog: a reviewed
+manifest row per installed spec in both builds, entry IDs per guest-effect
+role, the two-session runner and lifecycle support, the four falsifiers plus
+two for the ledger, the nine existing suites folded onto the shared runner with
+their test names preserved, the 195 historical labels as descriptors, and an
+exact **owed ledger** of entries still without a descriptor. Later steps drain
+it family by family; E1 closes only when it is empty **and the ledger mechanism
+is deleted**. The test-only mutation frame gets its own fixture population and
+count in the runtime frame tests. **No source-drift effect discovery in E1**:
+that is the census again (raw 0 Lost where review found 4); E2 binds every
+compiler-forced disposition to E1's entry IDs instead.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
