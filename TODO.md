@@ -4,9 +4,9 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-07, committed tree through brief-590's gate (drain
-4, predicates + structure + structure_ordering; owed 241); brief-591 (drain 5,
-functional + lazy) is dispatched; drains 592-594 follow, the last deleting the
+Status checkpoint: 2026-10-07, committed tree through brief-591's gate (drain
+5, functional + lazy; owed 186); brief-592 (drain 6, debug + symbols +
+contexts + scoping) is dispatched; drains 593-594 follow, the last deleting the
 ledger; then E2's design.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
@@ -662,6 +662,15 @@ locally, which is `explicitOption` and stays), and `Depth`'s two explicit-option
 rows (`Ordinary`, `Heads` only classified, as with `Level`). Entries 495 ->
 483, owed 319 -> 241, lifecycle obligations 1 554. Director gate: workspace
 3365/0/58 with native ZeroMQ real; oracle 26/0 in each build.
+**Drain 5 is in (brief-591, functional + lazy):** 51 entries drained, no
+production defect. Four roles that do not exist were removed (`FixedPoint` and
+`FixedPointList` have no predicate or `SameTest` — termination compares values
+directly; `LazyNestList` has no child source; `ArrayFilter`'s option syntax on
+an `Ordinary` head), and four policies corrected `Frame -> Tail` (`Map`,
+`MapIndexed`, `MapAll`, `MapThread` return constructed applications for tail
+evaluation; their descriptors are attached). Entries 483 -> 479, owed 241 ->
+186, lifecycle obligations 1 944. Director gate: workspace 3366/0/58 with
+native ZeroMQ real; oracle 28/0 in each build.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
