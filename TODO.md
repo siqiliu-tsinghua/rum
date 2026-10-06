@@ -5,7 +5,7 @@ operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
 Status checkpoint: 2026-10-06, committed tree through brief-583's design;
-two new groups found — brief-584 (G9, list destructuring) is next, then
+two new groups found — brief-584 (G9, list destructuring) is dispatched, then
 brief-585 (G10, Default fallback), then brief-586 (E1), then E2's design.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
