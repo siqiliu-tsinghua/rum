@@ -4,9 +4,9 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-06, committed tree through brief-582's gate; all
-eight groups G1-G8 are closed; brief-583 (re-census, the Unsettled edges, the E1
-oracle design) is dispatched.
+Status checkpoint: 2026-10-06, committed tree through brief-583's design;
+two new groups found — brief-584 (G9, list destructuring) is next, then
+brief-585 (G10, Default fallback), then brief-586 (E1), then E2's design.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -531,6 +531,24 @@ and the tree has grown since. **brief-583** re-runs the census on the current
 tree, resolves every Unsettled edge (any new Lost sites become new groups in
 this branch — a line once opened is finished), designs the E1 catalog-wide
 oracle, and outlines E2's relation to it.
+**brief-583 is in (design):** the re-census on the current tree has 2 443
+candidate edges (plus 25 supplemental) — after source review 1 650 tail-correct,
+743 carried by a frame, 46 documented boundaries, **4 Lost**; all 86 former
+Lost sites are repaired or removed; every one of the 597 current and 495
+historical Unsettled rows has a target, verdict and evidence; all 195 probes
+agree. The four Lost sites are two **new groups**, both long-standing and
+hidden in the old Unsettled set: **G9** — list-destructuring assignment
+(`definitions.rs:467, 480, 485`; a suspended `Part` target resumes to `7`
+instead of `List[7, 9]` and skips the later store), **G10** — a suspended direct
+`Default` lookup returns `None` without continuing the ordinary down-value scan
+(`application/down_values.rs:67`; `Default[d]` instead of `7`). E1: 643
+installed specs, descriptor fixtures in two fresh sessions, mutation
+falsifiers, a two-feature gate script; test-only, no performance gate. E2
+follows E1 with a measured return-shape prototype. **Rulings:** G9 and G10 join
+the branch (a line once opened is finished); E1's layout, its test-only
+mutation-frame fixture population and `scripts/check-suspension-oracle.sh` are
+approved; G9 = brief-584, G10 = brief-585, E1 = brief-586; base binaries are
+brief-582's selected one-unit candidate (the current production source).
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

@@ -212,16 +212,19 @@ Consequences for how I present and pick work:
   input mid-work must resume *into* that work; brief-548 found 86 sites in
   eight groups that resume past it, plus a loader that swallows the suspension
   while leaking its owner. User ruling: guest loading becomes resumable; the
-  host batch APIs stay non-resumable as documented. Done (2026-09-28 → 30):
-  guest loading (550), batch boundary (551), all front ends (553-558, user
-  rulings U1-U10), G1/G6/G8 loops (559-560; lost 86 → 80, `Differences` keeps
-  a recorded +0.82%). **Now: G2, the lazy pull machine** — designed by 561,
-  revised by 562 into a flat, depth-safe machine after the director's probe
-  found a pre-existing native-stack abort in it; next is writing step A from
-  `.temp/brief-562/draft-A-pull-machine.md` under the rulings in `TODO.md`.
-  Then G3, G4, G5, G7 → E1 (catalog-wide oracle) → E2 (a may-suspend result
-  type with no `Try`, so a bare `?` does not compile). Runs are serial by user
-  ruling (`CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1`). Memory
+  host batch APIs stay non-resumable as documented. Done (2026-09-28 →
+  10-06): guest loading (550), batch boundary (551), all front ends (553-558),
+  and **all eight groups G1-G8 (559-582; lost 86 → 0 by the frozen census;
+  all 195 brief-548 probes agree on `033711f9`)**. G2 (lazy machine), G3
+  (schema validator) and G4 (rule left-hand sides, held patterns) were also
+  guest-reachable native-stack aborts, fixed together as flat work stacks
+  with structural depth checks; G5 is a typed read-and-complete option
+  protocol (a read without its continuation does not compile); each group's
+  ordinary-path cost was then tuned with one-codegen-unit instruction gates
+  and the residual recorded. **Now: brief-583** re-runs the census, resolves
+  brief-548's 495 Unsettled edges (new Lost sites become new groups) and
+  designs E1 (catalog-wide oracle); then E2 (a may-suspend result type with
+  no `Try`). Runs are serial by user ruling. Memory
   `suspension-continuation-branch.md`.
 
   **Four things from it are method, not history.**
