@@ -5,7 +5,7 @@ operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
 Status checkpoint: 2026-10-06, committed tree through brief-581's gate;
-brief-582 (G7 step B, the trace filters) is next.
+brief-582 (G7 step B, the trace filters) is dispatched.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
