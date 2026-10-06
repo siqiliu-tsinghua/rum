@@ -10,6 +10,7 @@ mod loops;
 mod options;
 mod patterns;
 mod rewrite;
+mod rewrite_roles;
 mod rule_construction;
 mod rules;
 mod schema;

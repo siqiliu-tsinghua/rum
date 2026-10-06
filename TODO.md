@@ -4,9 +4,10 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-07, committed tree through brief-587's gate (drain
-1, rules; owed 428); brief-588 (drain 2, rewrite) is dispatched; drains 589-594
-follow, the last deleting the ledger; then E2's design.
+Status checkpoint: 2026-10-07, committed tree through brief-588's gate (drain
+2, rewrite; owed 373); brief-589 (drain 3, control + logic + arithmetic +
+random) is dispatched; drains 590-594 follow, the last deleting the ledger;
+then E2's design.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -630,6 +631,17 @@ tail handoff to `First[LazyDrop[…]]` — its policy is `Tail`, still owed, and
 the lazy batch (591) attaches its descriptor. Entries 506 -> 504, owed 500 ->
 428. Director gate: workspace 3362/0/58 with native ZeroMQ real; oracle 20/0
 in each build; fingerprints and certificates replayed after the corrections.
+**Drain 2 is in (brief-588, rewrite):** 49 entries drained, no production
+defect; six roles that do not exist were reported and removed at the gate after
+the director read the source — `ReplaceList` has no options (its third argument
+is a positional result limit, `heldSpec`), `ReplaceRepeated` reads no stored
+default and admits only a literal `MaxIterations` rule, and `Replace`
+partitions its trailing arguments syntactically, so a computed option is never
+admitted. Entries 504 -> 498, owed 428 -> 373; lifecycle obligations 726.
+Director gate: workspace 3363/0/58 with native ZeroMQ real; oracle 22/0 in each
+build. brief-586's manifest over-declares option roles as a pattern
+(`StringReplace` is `Ordinary` with the same two option rows); each drain
+verifies before it writes.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
