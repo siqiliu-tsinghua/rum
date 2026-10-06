@@ -4,10 +4,11 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-07, committed tree through brief-588's gate (drain
-2, rewrite; owed 373); brief-589 (drain 3, control + logic + arithmetic +
-random) is dispatched; drains 590-594 follow, the last deleting the ledger;
-then E2's design.
+Status checkpoint: 2026-10-07, committed tree through brief-589's gate (drain
+3, control + logic + arithmetic + random; owed 319); brief-590 (drain 4,
+predicates + structure + structure_ordering + six carried tails) is
+dispatched; drains 591-594 follow, the last deleting the ledger; then E2's
+design.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -642,6 +643,17 @@ Director gate: workspace 3363/0/58 with native ZeroMQ real; oracle 22/0 in each
 build. brief-586's manifest over-declares option roles as a pattern
 (`StringReplace` is `Ordinary` with the same two option rows); each drain
 verifies before it writes.
+**Drain 3 is in (brief-589, control + logic + arithmetic + random):** 51
+entries drained, no production defect. Three roles that do not exist were
+removed (`Implies` and `Failsafe` are `Ordinary`, so both rows become
+`NoLocalGuestEffect`; `CheckAbort` parses trailing options literally), and five
+policies corrected `Frame -> Tail` (`If`, `Which`, `Switch` branches; `Catch`,
+`Enclose` handlers) — those five stay owed and are carried with
+`Part.lazyConsumer` into brief-590. From brief-590 on a wrong policy no longer
+keeps an entry owed (the equality does not depend on it); the worker attaches
+the descriptor and reports the policy. Entries 498 -> 495, owed 373 -> 319,
+lifecycle obligations 1 098. Director gate: workspace 3364/0/58 with native
+ZeroMQ real; oracle 24/0 in each build.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

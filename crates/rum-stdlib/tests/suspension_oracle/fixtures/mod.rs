@@ -1,4 +1,5 @@
 mod boundaries;
+mod control_roles;
 pub mod preparation;
 pub mod primary;
 use super::descriptors::{Fixture, Pause};
