@@ -5,8 +5,8 @@ operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
 Status checkpoint: 2026-10-06, committed tree through brief-582's gate; all
-eight groups G1-G8 are closed; next is E1 (the catalog-wide suspension oracle),
-designed first, then E2.
+eight groups G1-G8 are closed; brief-583 (re-census, the Unsettled edges, the E1
+oracle design) is dispatched.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -524,6 +524,13 @@ recursive walkers' constructs retire as authorized (two closures, six `vec!`).
 Director gate: workspace 3306/0/58 with native ZeroMQ real; one-unit
 residual on nested filtered `TraceDetail` (+0.05% / +0.28%, worker +0.35%
 against a 0.14% floor), recorded; a pattern-filtered `Trace` is 5.3% faster.
+**All 195 of brief-548's probes agree on `033711f9`** (resumed equals queued;
+`.temp/director/brief548-probe-rerun-033711f9.txt`). brief-548's census is
+stale, though: of its 2 399 edges, **495 were Unsettled** and never resolved,
+and the tree has grown since. **brief-583** re-runs the census on the current
+tree, resolves every Unsettled edge (any new Lost sites become new groups in
+this branch — a line once opened is finished), designs the E1 catalog-wide
+oracle, and outlines E2's relation to it.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
