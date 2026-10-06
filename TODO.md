@@ -4,8 +4,8 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-06, committed tree through brief-579's gate; G5
-is closed; brief-580 (G7 design, Sow and trace filters) is dispatched.
+Status checkpoint: 2026-10-06, committed tree through brief-580's design;
+brief-581 (G7 step A, Sow) is dispatched.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -497,6 +497,16 @@ on 8 MiB alike, identically on the pre-G2 binary (`.temp/director/gate-g7/`).
 The guard is fixed at 1 MiB and one guest recursion level costs roughly
 13-15 KB of native stack, so ordinary recursive guest code is capped near 70
 levels. Not a regression of this branch; recorded for the user to queue.
+**brief-580 is in (design):** one flat trace-filter work stack with one frame,
+and one Sow match frame (frame count 560 -> 561 -> 562). It corrected the
+director's depth premise: the trace *list* is shallow, but a captured
+expression can be deeper than the evaluation that produced it (96 held calls
+under `$RecursionLimit = 32`, level 97 selected) — so the flat walk is chosen
+for enforceability, not on an empirical bound; matcher and shared-`Expr` depth
+stay with the hardening line. Red: 51 cases, 25 red. **Rulings:** two steps —
+A Sow (14 -> 13), B trace (13 -> 0); I01-I07 authorized by name except the
+microbench-script edit (labels stay scratch workloads); per-step one-unit
+bases from the director; the 96/32 case a regression control in B.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
