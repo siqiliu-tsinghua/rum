@@ -4,11 +4,10 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-07, committed tree through brief-592's gate (drain
-6; owed 114, four of them **defects**); brief-593 (design: capture builtins
-under suspension, G11, and the `Arc::try_unwrap` uniqueness class) is
-dispatched; then its repairs, then the strings drain and the final drain that
-deletes the ledger; then E2's design.
+Status checkpoint: 2026-10-07, committed tree through brief-593's design;
+brief-594 (G11 step A: shared accumulator completion, three kernel panics) is
+dispatched; then step B (capture output at a pause, the four G11 entries), the
+strings drain and the final drain; then E2's design.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -693,6 +692,25 @@ sweep of all 32 production `Arc::try_unwrap` sites. Entries 479 -> 465, owed
 with native ZeroMQ real; oracle 34/0 in each build. Revised order: 593 design
 -> G11 repairs -> strings drain -> final drain (associations, schema,
 evaluator, `RestoreSealedReferences`, ledger deleted).
+**brief-593 is in (design).** All 32 production `Arc::try_unwrap` sites
+classified: 25 unique by construction (two dormant matcher-tail loops), 4 safe
+fallbacks, and **3 guest-reachable kernel panics** — `TestReport` (two cases
+suspending), an association `Set` with two selectors, and `DeleteCases`
+rejecting across two siblings — each a consumer finalizing an
+`AccumulatorChain` inside `resume` while the still-rooted frame shares an older
+node. Repair (step A, brief-594): one private completion cursor that moves a
+unique node and shallow-clones a shared one, used by all three and by `Table`.
+Captured output (step B): output inside an unsettled capture is *provisional*
+— kept in the kernel buffer, absent from the pause's response, settled once by
+the capture — via one declarative output boundary on suspension frames and one
+pause-response builder, also used for abandonment rollback. The design also
+found **`Quiet` leaking messages at a pause** (the oracle compared only final
+messages; its fixtures emitted after the pauses). **Rulings:** failed
+`TestReport` cases keep their current copy-and-release policy; `PrintSink`
+stays exclusive streaming; the raw trace array joins the same boundary as a
+third channel and the oracle observes it; Check/Quiet/ConfirmQuiet messages are
+provisional while their body is unsettled (documented in the guide); the
+inventory rows of the three removed panic closures are authorized by name.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
