@@ -1396,3 +1396,590 @@ Resume from `.temp/brief-595/PROGRESS.md` with candidate 1 in the tree.
    candidate under the instruction gate; item 2 alone does not need a new
    measurement if the generated code is unchanged — say how you established
    that.
+
+## Amendment 2 execution report — brief-595 (2026-10-07; stopped at guest-form pause restoration)
+
+### 1. Changed files, functions and types; boundary and scope witness
+
+**Incomplete; not ready for admission.** The two authorized amendment edits are retained. The trait invariant now passes. The exact new guest-loading assertion fails at the **first** pause: the handled-error tail has zero entries, where the ruling requires one. Repairing that lifetime requires guest-loader production code outside the authorized edit surface. Candidate 2 also has one measured instruction regression. No G11 entry was attached; owed remains **114**.
+
+Correction to the previous report: its original `runtime.log` failed at `guest_loading/tests.rs:361`, which was the **second** pause assertion. The original first-pause empty-tail assertion at lines 356–359 passed. The previous report misidentified the failing location and attributed both pauses to request packaging. The preserved source and raw log establish this correction; no source or result was reconstructed with version control.
+
+The unchanged production path is `Session::drive_guest_script` in `session/guest_loading/script.rs:89-92`: on `InputRequired`, it calls `scope.restore(self, false)` before installing the guest-form frame. `GuestFormScope::restore` in `session/guest_loading/scope.rs:127-139` truncates `handled_non_loader_eval_errors` at lines 131–133. Thus the first-pause tail is already empty when the new pause builder runs. `GuestFormEnvironment::install`, called before resumed child work in `suspension/core.rs:596-603`, restores the saved tail, explaining the old second-pause failure.
+
+The required repair is a guest-form pause restoration path that preserves the tail while completion/abandonment still settle it. Both implicated production files are outside this brief and its amendments. The template's rule applies: “Do NOT modify files outside Scope. If you believe you must, STOP and write that in the report instead.” No production fix, test weakening, or late reconstitution in the pause builder was attempted after this witness. The continuation finished only validation and standing maintenance for the retained authorized edits.
+
+All continuation paths below are relative to the repository:
+
+| File | Every changed function/type or cell; reason |
+| --- | --- |
+| `crates/rum-runtime/src/runtime/suspension/core.rs:81-95` | `SuspensionFrame`: moved the existing `output_boundary` default method after `resume`, verbatim, preserving the source invariant. No signature or body changed. |
+| `crates/rum-runtime/src/runtime/session/guest_loading/tests.rs:335-365` | `guest_environment_restores_handled_error_tail_and_memory_limit_before_child`: each pause now requires length 1 and text `"saved tail"`. Completion still requires an empty tail and cleared memory limit. The current run fails at the first length assertion, so its later assertions are retained but not reached. |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv` | Replayed all 68 fingerprint cells for the retained source. |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv` | Installed the real replay's C01/C02 certificate cells in both feature builds, four cells total. |
+| `docs/dev/codex/brief-595-capture-output-at-a-pause.md` | Appended this report. |
+
+The prior implementation and its changed-function/type list above remain in place. The declarative three-channel boundary still lives in `runtime/suspension/output.rs`; both pause paths use `finish_input_required_request`; abandonment applies the same rollback rule inner to outer. No new frame or derive type was added by this continuation, so no frame-list changes are due. A repository-wide search of handled-error uses found no additional test that needed the amendment's pause-expectation update.
+
+Organization assessment: `suspension/core.rs` remains 28,352 characters; this patch only reorders a trait member, and the earlier protocol/driver versus restoration split assessment still applies. The guest-loading test file changes 13,124 → 13,191 characters, below the preferred 15k test-file ceiling; keeping its existing guest-loading behavior group together is appropriate.
+
+All scratch evidence is under `.temp/brief-595/`, chiefly `resume-2/`; only the existing certificate writer uses the expressly authorized `.temp/brief-546/certificates/`. Prior source, binaries, logs and reports are preserved. No git command, network access, new unsafe code, external-engine test, timing suite or process-abort probe was used.
+
+### 2. Verbatim tests and standing maintenance; every inventory change
+
+The continuation used the required bounded serial commands with `CARGO_BUILD_JOBS=1`, `RUST_TEST_THREADS=1`, `CARGO_NET_OFFLINE=true`, and `TMPDIR=/home/remi/dev/rum/.temp/brief-595/tmp`. Cargo test artifacts remain in `.temp/brief-595/target-tests`. Every gate has its exact command JSON and complete raw log under `resume-2/`.
+
+`cargo test -p rum-runtime` (300-second bound), verbatim relevant green line and failure:
+
+```text
+test runtime::tests::frame_root_trace::suspension_protocol_repository_invariants_hold ... ok
+```
+
+```text
+---- runtime::session::guest_loading::tests::guest_environment_restores_handled_error_tail_and_memory_limit_before_child stdout ----
+
+thread 'runtime::session::guest_loading::tests::guest_environment_restores_handled_error_tail_and_memory_limit_before_child' panicked at crates/rum-runtime/src/runtime/session/guest_loading/tests.rs:356:5:
+assertion `left == right` failed
+  left: 0
+ right: 1
+
+
+failures:
+    runtime::session::guest_loading::tests::guest_environment_restores_handled_error_tail_and_memory_limit_before_child
+
+test result: FAILED. 1148 passed; 1 failed; 3 ignored; 0 measured; 0 filtered out; finished in 30.46s
+
+error: test failed, to rerun pass `-p rum-runtime --lib`
+```
+
+For comparison, this is the **historical candidate-1** failure, verbatim; it identifies the second-pause assertion:
+
+```text
+---- runtime::session::guest_loading::tests::guest_environment_restores_handled_error_tail_and_memory_limit_before_child stdout ----
+
+thread 'runtime::session::guest_loading::tests::guest_environment_restores_handled_error_tail_and_memory_limit_before_child' panicked at crates/rum-runtime/src/runtime/session/guest_loading/tests.rs:361:5:
+assertion failed: s.handled_non_loader_eval_errors.is_empty()
+```
+
+Original red-first evidence remains preserved from before any production edit. These are historical receipts, not new candidate-2 test runs:
+
+```text
+red-old.log
+test oracle::fixtures::capture_output::quiet_message_prefix ... ok
+test result: FAILED. 1 passed; 4 failed; 0 ignored; 0 measured; 19 filtered out; finished in 0.04s
+red-strict.log
+called `Result::unwrap()` on an `Err` value: TracePrefix
+called `Result::unwrap()` on an `Err` value: Value
+called `Result::unwrap()` on an `Err` value: OutputPrefix
+called `Result::unwrap()` on an `Err` value: Value
+called `Result::unwrap()` on an `Err` value: MessagePrefix
+called `Result::unwrap()` on an `Err` value: OutputPrefix
+test result: FAILED. 0 passed; 6 failed; 0 ignored; 0 measured; 19 filtered out; finished in 0.04s
+candidate-1-reds.log
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 19 filtered out; finished in 0.05s
+```
+
+`cargo fmt --check` passed with no formatter output; the runner printed:
+
+```text
+fmt: exit=0
+```
+
+Ownership discovery/reconciliation and `cargo test -p rum-stdlib --lib ownership_graph` (300-second bounds), verbatim:
+
+```text
+host_payloads.tsv before 65 after 65 changed 9 removed 0 added 0
+unknown_attributes.tsv before 1498 after 1499 changed 18 removed 0 added 1
+unknown_captures.tsv before 2946 after 2946 changed 49 removed 0 added 0
+unknown_macros.tsv before 3144 after 3144 changed 38 removed 0 added 0
+unknown_storage.tsv before 89 after 89 changed 4 removed 0 added 0
+self_reaching.tsv before 59 after 59 changed 0 removed 0 added 0
+host_payload_ledger.tsv before None after None changed 9 removed 0 added 0
+```
+
+```text
+checks 1/2/3: complete, no stale entries, field-specific expression attribution verified
+external_implementation_coverage: unresolved for every Unbounded entry
+test tests::ownership_graph::production_inventory_is_exact ... EXACT INVENTORY self-reaching types: 59 rows
+EXACT INVENTORY UnknownHostPayload: 65 rows
+EXACT INVENTORY UnknownConstruct: 7678 rows
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 1120 filtered out; finished in 62.63s
+```
+
+Ownership inventory bytes are identical to this continuation’s start. Relative to the original pre-implementation tree, the previously disclosed 127 coordinate-only transitions and one added `UnknownConstruct` derive row remain exactly the same. No existing identity, status, disposition, exclusion or row population changed in this continuation. There is no new host-payload or self-reaching row. Both the full prior and freshly replayed row disclosures remain saved as `ownership-row-changes.json` in their respective evidence directories.
+
+Fingerprint replay, verbatim:
+
+```text
+Replayed and installed 68 fingerprint cells; initial replay exact; all nonfingerprint fields preserved.
+```
+
+Every fingerprint-cell transition in this continuation is listed below; all other fields are byte-identical. The initial pre-implementation values are also retained in `resume-2/fingerprint-continuation-row-changes.json`, alongside these before/after values.
+
+| Row / ID | Candidate 1 fingerprint | Retained fingerprint |
+| --- | --- | --- |
+| 2 / B01 | `fnv1a64:60a2c851b4146fc6` | `fnv1a64:585b5036cabb3435` |
+| 3 / B02 | `fnv1a64:19220e6f74f00a53` | `fnv1a64:3f3ca736323fe77c` |
+| 4 / B03 | `fnv1a64:f0e904645c1f9778` | `fnv1a64:4e199060634010bb` |
+| 5 / B04 | `fnv1a64:cdeaa381cc8bb63e` | `fnv1a64:1947f9ea4bd5d04d` |
+| 6 / B05 | `fnv1a64:15bcb47f15dac497` | `fnv1a64:b331851f154510f0` |
+| 7 / B06 | `fnv1a64:67cb60bd0b0ec3c2` | `fnv1a64:b7ea60af404b0fb1` |
+| 8 / B07 | `fnv1a64:e51dc01bfc37fc47` | `fnv1a64:b3cd361d41b0e1c0` |
+| 9 / B08 | `fnv1a64:4016a3fbea5aa5cc` | `fnv1a64:2ccaa75a186cf7ff` |
+| 10 / B09 | `fnv1a64:62f254d02412d49a` | `fnv1a64:c34fb4ab0d048e89` |
+| 11 / B10 | `fnv1a64:093e75d54e59f0d5` | `fnv1a64:a65505c0f93b1fc2` |
+| 12 / B11 | `fnv1a64:8f4254dee67fdc3e` | `fnv1a64:da9fab4765c9f64d` |
+| 13 / B12 | `fnv1a64:21fed4cc001b699a` | `fnv1a64:825c34a6e90d2389` |
+| 14 / I01 | `fnv1a64:3e84b34f20cc6646` | `fnv1a64:363d3b3437732ab5` |
+| 15 / I02 | `fnv1a64:6cfe32130e114c97` | `fnv1a64:0a7302b30d7b98f0` |
+| 16 / I03 | `fnv1a64:d0797e47b0baa4da` | `fnv1a64:9953b2e1c7064449` |
+| 17 / I04 | `fnv1a64:48812eb4abdcaff3` | `fnv1a64:5ee80da6cf3bf51c` |
+| 18 / P01 | `fnv1a64:dadcaa6024c68a62` | `fnv1a64:c6cbc6b04372edd1` |
+| 19 / P02 | `fnv1a64:09c47c03c64242e5` | `fnv1a64:e6d0c69177484532` |
+| 20 / P03 | `fnv1a64:317d42f81df73ea0` | `fnv1a64:73d3285a929dd763` |
+| 21 / P04 | `fnv1a64:0dfd2c84f9992653` | `fnv1a64:3417c54bb6e9037c` |
+| 22 / P05 | `fnv1a64:60add00d1ca64c16` | `fnv1a64:927e526fe0992aa5` |
+| 23 / P06 | `fnv1a64:727df99c8c4b031a` | `fnv1a64:d2db5977753cbd09` |
+| 24 / P070 | `fnv1a64:accb95de6ac07d1a` | `fnv1a64:0d28f5b953b23709` |
+| 25 / P080 | `fnv1a64:a936749b6bde1215` | `fnv1a64:8ca8c39b50ac0782` |
+| 26 / P090 | `fnv1a64:92aa021576ce8093` | `fnv1a64:b9b97abb87be523c` |
+| 27 / P100 | `fnv1a64:696014e28f4cae6e` | `fnv1a64:ba0ef331cf003a1d` |
+| 28 / P110 | `fnv1a64:c908087e353186fd` | `fnv1a64:f9cec13ea8a1c50a` |
+| 29 / P120 | `fnv1a64:264f9c523bad1aec` | `fnv1a64:d029c1d91019bc1f` |
+| 30 / P130 | `fnv1a64:88eb19792aebd647` | `fnv1a64:579a8f7a7064bbc0` |
+| 31 / P140 | `fnv1a64:c7469c70df3375fb` | `fnv1a64:50f741e46bfa73c4` |
+| 32 / P150 | `fnv1a64:2ea4abe9ed225a33` | `fnv1a64:01ee21d9fc961edc` |
+| 33 / P071 | `fnv1a64:90c82c7e304edc67` | `fnv1a64:7046fa4afd7ce2e0` |
+| 34 / P081 | `fnv1a64:7d15278f250c5fba` | `fnv1a64:0cc8d61ac9e91829` |
+| 35 / P091 | `fnv1a64:03f419caae8b89a2` | `fnv1a64:60df12855184df91` |
+| 36 / P101 | `fnv1a64:c10af94b6a9523fd` | `fnv1a64:f1d1b20bde05620a` |
+| 37 / P111 | `fnv1a64:f03aa00dfedf32ca` | `fnv1a64:0209b26841810459` |
+| 38 / P121 | `fnv1a64:c8a6d5f3ac9e72f1` | `fnv1a64:7cc52cc13dac52ae` |
+| 39 / P131 | `fnv1a64:6b94c5e802dfd7be` | `fnv1a64:b6f21c508229f1cd` |
+| 40 / P141 | `fnv1a64:2f295c7892184802` | `fnv1a64:78c82152f30fd371` |
+| 41 / P151 | `fnv1a64:b981f5e0bc0924ac` | `fnv1a64:c684f87cf38c3c5f` |
+| 42 / B13 | `fnv1a64:f5dbf4463bab7fc2` | `fnv1a64:45faf43870e7cbb1` |
+| 43 / R01 | `fnv1a64:313e6fc725fdd403` | `fnv1a64:9ba21edd710acb4c` |
+| 44 / R02 | `fnv1a64:c0cf79a66e61bce0` | `fnv1a64:50adf90141b9bf23` |
+| 45 / R03 | `fnv1a64:6a0ce9f70e3307ff` | `fnv1a64:ba1715502f99d4f8` |
+| 46 / R040 | `fnv1a64:470c525b95cb4d23` | `fnv1a64:550111f055db49ec` |
+| 47 / R050 | `fnv1a64:60cb2c557e0b5876` | `fnv1a64:6eb6fdb335ae7605` |
+| 48 / R060 | `fnv1a64:ef200d8c5823d16b` | `fnv1a64:38cf2ac360eea994` |
+| 49 / R070 | `fnv1a64:e582efa906ae1eba` | `fnv1a64:75369e34ab8ad729` |
+| 50 / R080 | `fnv1a64:0f8597a77b6178f3` | `fnv1a64:25ec76999ec0be1c` |
+| 51 / R090 | `fnv1a64:9ef221c5e856f0ae` | `fnv1a64:b20b4becf1db02dd` |
+| 52 / R100 | `fnv1a64:b60ea8b705f541f8` | `fnv1a64:133f34b30d15bb3b` |
+| 53 / R110 | `fnv1a64:149771640564fead` | `fnv1a64:443a7d8b9bf5b69a` |
+| 54 / R041 | `fnv1a64:dc15577052d33ec2` | `fnv1a64:2c345762880f8ab1` |
+| 55 / R051 | `fnv1a64:20cc302b03fc8d13` | `fnv1a64:47dba8d114ec5ebc` |
+| 56 / R061 | `fnv1a64:e9c2f31aeae135dc` | `fnv1a64:e9791c862282032f` |
+| 57 / R071 | `fnv1a64:75322fbffaa099e9` | `fnv1a64:162658a9fc2889c6` |
+| 58 / R081 | `fnv1a64:254a7e372af8836e` | `fnv1a64:75f95c866aac0f1d` |
+| 59 / R091 | `fnv1a64:49d82ab7d5b8dabb` | `fnv1a64:3df9020880dfcf04` |
+| 60 / R101 | `fnv1a64:5a7d2016312bf9ab` | `fnv1a64:253ee3bcb9d2cd54` |
+| 61 / R111 | `fnv1a64:06ba9ab3feec91c4` | `fnv1a64:ec649cafc21eadb7` |
+| 62 / R12 | `fnv1a64:8b45f65c6c2cdf84` | `fnv1a64:ece77eded6ee00f7` |
+| 63 / R13 | `fnv1a64:4f3a7c99f11e9488` | `fnv1a64:1df2f08c66f41d6b` |
+| 64 / R14 | `fnv1a64:83b823586bfd6e6e` | `fnv1a64:d46701a7abb0fa1d` |
+| 65 / R15 | `fnv1a64:d9c932524f829192` | `fnv1a64:1f95c221388a2aa1` |
+| 66 / O010 | `fnv1a64:ba6640f779d767bc` | `fnv1a64:168b7cf6e129688f` |
+| 67 / O0200 | `fnv1a64:c20e3e452dea9bfb` | `fnv1a64:4bbee3b8bab199c4` |
+| 68 / O011 | `fnv1a64:31a8ca1465b595eb` | `fnv1a64:7b57e74b6e806e14` |
+| 69 / O0210 | `fnv1a64:5f22cfe4b6978ee4` | `fnv1a64:55e0a47e32694157` |
+
+Both actual local-production replays first produced zero body rejections and then rejected their stale stored certificate. The generated cells were copied, never hand-authored; subsequent gates passed. Initial stale-certificate results, verbatim:
+
+```text
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+called `Result::unwrap()` on an `Err` value: "stale or omitted instance certificate C01 hash=true"
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1139 filtered out; finished in 18.93s
+```
+
+```text
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+called `Result::unwrap()` on an `Err` value: "stale or omitted instance certificate C01 hash=false"
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1133 filtered out; finished in 18.99s
+```
+
+`cargo test -p rum-stdlib --lib local_production_acceptance`, then the `--no-default-features` build, verbatim green results (300-second bounds):
+
+```text
+test tests::retention_closure::local::production::local_production_acceptance ... body	instance	rejections
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::Unarmed;R=rum_stdlib::option_consumers::OptionConsumer;hash=true	0
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=rum_stdlib::option_consumers::OptionConsumer;hash=true	0
+C02	rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr;M=runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=none (nongeneric C02);hash=true	0
+LeaseProbe538::probe	sealed modes	0
+LeaseProbe538::start	sealed modes	0
+LeaseProbe538::drive	sealed modes	0
+LeaseProbe538::resume	sealed modes	0
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1139 filtered out; finished in 18.87s
+```
+
+```text
+test tests::retention_closure::local::production::local_production_acceptance ... body	instance	rejections
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::Unarmed;R=rum_stdlib::option_consumers::OptionConsumer;hash=false	0
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=rum_stdlib::option_consumers::OptionConsumer;hash=false	0
+C02	rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr;M=runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=none (nongeneric C02);hash=false	0
+LeaseProbe538::probe	sealed modes	0
+LeaseProbe538::start	sealed modes	0
+LeaseProbe538::drive	sealed modes	0
+LeaseProbe538::resume	sealed modes	0
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1133 filtered out; finished in 19.22s
+```
+
+Every changed certificate cell is disclosed by row/build and full-cell SHA-256. Full exact before/after cells are in `resume-2/certificate-cell-changes-{true,false}.json`; all identities, dispositions, strengths and exclusions are unchanged.
+
+| Row / ID / build / zero-based column | Before cell SHA-256 | After cell SHA-256 |
+| --- | --- | --- |
+| 2 / C01 / hash=true / 4 | `9779a7819ebb7d36a374a6e51558fb9e35a78684999659de495f945c57d41b31` | `5a67ea70799e3f4f2380ce33920defac4d1c3e5e22e8096d1b88abe76a103966` |
+| 3 / C02 / hash=true / 4 | `d5689940f98807a5883f7389bfa8de88c313b9dcc8e4a3385e3caa1d1103129f` | `a6b63d1950ec3b65a7b06afe58a070bf41f7437cf92cc76a27935cd58b4b8001` |
+| 2 / C01 / hash=false / 5 | `0cf642b93e9bbfabf7b44528175e6e7e4a2a275ae60081b43fafe6f1d4b3d27a` | `a6b565c24533c244a81c51e505aa9cb9b1f6e0136667437b1af765519f876ef9` |
+| 3 / C02 / hash=false / 5 | `e7086bd1abb2bba8ec3b4a9deb80485198c96d4e0ef174d347cada45fcb18c21` | `5dbe2ffde2e6e8f40ca44a41a501e88c3d5ea4c86a0b5b5d7725ff58e4a4bcf7` |
+
+**Not run after the scope stop:** the full host suite, the two-feature suspension-oracle gate, and `cargo test --workspace --no-fail-fast`. They are not claimed green for candidate 2. Native ZeroMQ tests did not run, so there is no observed skip or pass to report. The historical pre-admission candidate-1 oracle receipts below remain valid evidence of that earlier tree only:
+
+```text
+CATALOG hash=true installed=643 manifest=643 GuestEntries=237 NoLocalGuestEffect=406 Boundary=5 entries=465 descriptors=415 historical=209 owed=114
+test result: ok. 33 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 21.37s
+```
+
+```text
+CATALOG hash=false installed=637 manifest=637 GuestEntries=237 NoLocalGuestEffect=400 Boundary=5 entries=465 descriptors=415 historical=209 owed=114
+test result: ok. 33 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 21.40s
+```
+
+Oracle `effects.tsv`, `owed.tsv` and `fixtures/primary.rs` are still byte-identical to the initial snapshot. **Oracle inventory row changes: none.** The saved attempted registration was not applied in this continuation.
+
+Pre-report scoped byte audit, verbatim:
+
+```text
+Initial manifest files verified: 1943
+Continuation-start files verified: 1951
+Retained changed/new files: 37
+Continuation changed files: 4
+Unexpected/missing files within inherited manifest and its suffixes: 0
+Added unsafe: 0
+All ownership inventory bytes unchanged in this continuation
+Oracle primary/effects/owed byte-identical to initial; owed=114
+Only authorized continuation edits:
+crates/rum-runtime/src/runtime/session/guest_loading/tests.rs
+crates/rum-runtime/src/runtime/suspension/core.rs
+crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv
+crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv
+```
+
+The byte audit follows the inherited snapshot’s `.lock`, `.md`, `.py`, `.rs`, `.sh`, `.toml` and `.tsv` coverage. The first scratch audit incorrectly treated two existing `.rum` fixtures and `prelude-methods.txt`, absent from that manifest, as new files. The helper was corrected to use the inherited suffix coverage; it did not edit those files. Their current hashes are saved separately in `resume-2/unmanifested-file-hashes.json`; no before/after byte claim is made for those unmanifested files.
+
+### 3. Entries, generated-code check, noise floors and every measured row
+
+Attached entries: **0/4**; owed **114 → 114**. The required 114 → 110 admission remains blocked. Exact retained owed rows:
+
+```text
+EvaluationData.body	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
+TestReport.expectedOutput	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
+TestReport.input	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
+TestReport.sameTest	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
+```
+
+Before editing, the preserved base and candidate-1 binary SHA-256 values were verified. The only production revision is the verbatim trait reorder. Candidate 2 was built from the same repository source paths in fresh `candidate-2/target-default` and `candidate-2/target-alloc` directories, with one codegen unit, one build job and 900 seconds per build. The allocation feature used the two arguments `--features rum-cli/alloc-count`. Verbatim completions and copied-binary hashes:
+
+```text
+    Finished `release` profile [optimized] target(s) in 1m 44s
+```
+
+```text
+    Finished `release` profile [optimized] target(s) in 1m 39s
+```
+
+```json
+{
+  "rum-cli": "ca081759490d92b88bd1f21cd99c8cc35044fc2b7cfa8cc603bc0077f5b4b0ff",
+  "rum-cli-alloc": "df9543bbfd12fa1068862cd1ff7c004dcc572ae24b138ddcbc4c339d528a111a"
+}
+```
+
+The exemption for unchanged generated code was **not** used. A Python ELF64 reader compared every executable section against candidate 1. `.init`, `.plt`, `.plt.got` and `.fini` matched; `.text` did not. Verbatim stored `.text` comparisons:
+
+```json
+[
+  {
+    "binary": "rum-cli",
+    "section": ".text",
+    "before_size": 7971312,
+    "after_size": 7971312,
+    "before_sha256": "ae5f4a2f6f5cf30da56f43c0ee56299c36c7cd125900b0f4bc2b8e1d28d20f6d",
+    "after_sha256": "1eec7d943c550deb4e1d8e567a893d86b5a11727ee0a01fc998de5836e58d5f5",
+    "equal": false,
+    "different_bytes": 10464
+  },
+  {
+    "binary": "rum-cli-alloc",
+    "section": ".text",
+    "before_size": 7976048,
+    "after_size": 7976048,
+    "before_sha256": "0cee9d8cee13e738bb2674dc16d91c68b3a7c14a510c0f05b83a5fcefcc1440b",
+    "after_sha256": "9fffa31bf072c83257ca133329b97ae252e6eb68a87b8c604057b1b8ceaeaba2",
+    "equal": false,
+    "different_bytes": 10461
+  }
+]
+```
+
+Therefore candidate 2 received the full instruction gate. The original two base/base pairs established these floors before any production edit; no floor was recomputed or loosened:
+
+```text
+label	base_1a	base_1b	base_2a	base_2b	floor_percent	threshold_percent
+ordinary-arithmetic	17798.518500	17798.677800	17798.506150	17798.698500	0.001081	0.050000
+check-no-output	10526.326700	10526.408050	10526.405200	10526.408350	0.000773	0.050000
+quiet-no-output	10245.314950	10245.432400	10245.326000	10245.232800	0.001146	0.050000
+evaluation-data-no-output	55878.534500	55746.653000	55831.264000	55815.317000	0.236015	0.236015
+test-report-no-output	94481.435000	94341.369000	94405.837000	94373.772500	0.148247	0.148247
+trace-no-output	24510.064000	24515.564500	24482.357500	24826.211000	1.404495	1.404495
+buffered-message	10362.583450	10362.579000	10362.399200	10362.538250	0.001342	0.050000
+evaluation-data-message	65149.647000	65214.146000	65305.153500	65243.278000	0.099001	0.099001
+check-message	14358.095950	14358.002750	14358.113650	14358.190750	0.000649	0.050000
+dot-three-no-input	254200.329800	254199.224400	254200.426750	254199.660450	0.000435	0.050000
+differences-no-input	10037.767350	10044.851450	10052.202400	10044.916850	0.072477	0.072477
+take-multispec-small	49939.920700	49923.313050	49923.074100	49923.231850	0.033255	0.050000
+```
+
+All 12 candidate program-result checks passed before measurement. Two allocation samples preceded two serial paired base/candidate instruction samples, one label per process, `taskset -c 2 perf stat -x, -e cpu_core/instructions/u`, stdin `/dev/null`, `(count(2N)-count(N))/N`. Every metric process had a 150-second bound and wrote raw output before parsing. No Cargo, test or other CPU-heavy task ran concurrently with the panel. No timing suite was used. Verbatim per-label slopes, allocation comparisons and acceptance flags:
+
+```text
+label	base1	candidate1	delta1_percent	base2	candidate2	delta2_percent	floor_percent	regresses	alloc_base1	alloc_base2	alloc_candidate1	alloc_candidate2
+ordinary-arithmetic	17798.546900	17798.703100	0.000878	17798.729550	17798.817300	0.000493	0.001081	False	38.000000	38.000000	38.000000	38.000000
+check-no-output	10526.203550	10526.371900	0.001599	10526.380500	10526.381450	0.000009	0.000773	False	6.000000	6.000000	6.000000	6.000000
+quiet-no-output	10245.296350	10245.419250	0.001200	10245.172900	10245.540250	0.003586	0.001146	False	6.000000	6.000000	6.000000	6.000000
+evaluation-data-no-output	55962.361500	55953.685000	-0.015504	55948.547500	55926.548500	-0.039320	0.236015	False	159.155000	159.454000	159.237000	159.523000
+test-report-no-output	94147.384000	94313.988500	0.176961	94447.274500	94250.969500	-0.207846	0.148247	False	230.096500	229.206500	228.980500	230.575500
+trace-no-output	24545.296000	24580.107000	0.141824	24674.809000	24515.369500	-0.646163	1.404495	False	25.000500	25.000500	25.000500	25.000500
+buffered-message	10362.505450	10362.378650	-0.001224	10362.339350	10362.471700	0.001277	0.001342	False	24.000050	24.000050	24.000050	24.000050
+evaluation-data-message	65150.899500	65242.522500	0.140632	65265.030500	65350.848000	0.131491	0.099001	True	194.266500	195.103500	194.966500	193.863500
+check-message	14358.234000	14358.171750	-0.000434	14358.259800	14358.058900	-0.001399	0.000649	False	25.000050	25.000050	25.000050	25.000050
+dot-three-no-input	254198.898050	254198.349000	-0.000216	254198.993300	254198.765850	-0.000089	0.000435	False	596.000000	596.000000	596.000000	596.000000
+differences-no-input	10037.818750	10035.749000	-0.020620	10030.590300	10033.510150	0.029109	0.072477	False	13.000000	13.000000	13.000000	13.000000
+take-multispec-small	49915.304300	49922.431600	0.014279	49931.511150	49921.806350	-0.019436	0.033255	False	109.000000	109.000000	109.000000	109.000000
+```
+
+**The instruction gate fails:** `evaluation-data-message` rises **+0.140632%** and **+0.131491%**, exceeding both +0.05% and its **0.099001%** floor in both samples. The other eleven labels pass the stated two-sample rule. This result is reported as a regression, not dismissed as noise; no remeasurement or tuning followed the scope stop.
+
+The deterministic allocation slopes match the base on all fixed-result labels. Timing-valued rows vary: EvaluationData without output changes 159.155/159.454 → 159.237/159.523 allocations per iteration; TestReport changes 230.0965/229.2065 → 228.9805/230.5755; EvaluationData with messages changes 194.2665/195.1035 → 194.9665/193.8635. The TestReport candidate range extends below and above the two-sample base range, so no blanket allocation-equivalence claim is made. The exact rows above and raw values below preserve the evidence.
+
+Every new raw/check row follows (156 rows). `resume-2/all-measurements-including-prior.tsv` also retains all 312 earlier rows; the preceding report already reproduces those unchanged samples. A raw row’s `pass=True` means its program result/counter was valid, not that it passed the regression threshold.
+
+```text
+mode	build	sample	label	count	exit	pass	value	expected	instructions	allocations	bytes	peak
+check	candidate-2	1	ordinary-arithmetic	check	0	True	23	23				
+check	candidate-2	1	check-no-output	check	0	True	5	5				
+check	candidate-2	1	quiet-no-output	check	0	True	5	5				
+check	candidate-2	1	evaluation-data-no-output	check	0	True	5	5				
+check	candidate-2	1	test-report-no-output	check	0	True	1	1				
+check	candidate-2	1	trace-no-output	check	0	True	List[Hold[Plus[2, 3]], Hold[5]]	List[Hold[Plus[2, 3]], Hold[5]]				
+check	candidate-2	1	buffered-message	check	0	True	Null	Null				
+check	candidate-2	1	evaluation-data-message	check	0	True	"List[""probe message""]"	"List[""probe message""]"				
+check	candidate-2	1	check-message	check	0	True	-1	-1				
+check	candidate-2	1	dot-three-no-input	check	0	True	List[List[6, 12], List[18, 24]]	List[List[6, 12], List[18, 24]]				
+check	candidate-2	1	differences-no-input	check	0	True	List[3, 5, 7, 9]	List[3, 5, 7, 9]				
+check	candidate-2	1	take-multispec-small	check	0	True	List[List[List[List[List[List[List[List[1]]]]]]]]	List[List[List[List[List[List[List[List[1]]]]]]]]				
+alloc	candidate-2	1	ordinary-arithmetic	20000	0	True				761640	26403026	941598
+alloc	candidate-2	1	ordinary-arithmetic	40000	0	True				1521640	52323026	1581598
+alloc	candidate-2	1	check-no-output	20000	0	True				121645	9123588	941851
+alloc	candidate-2	1	check-no-output	40000	0	True				241645	17763588	1581851
+alloc	candidate-2	1	quiet-no-output	20000	0	True				121638	9123468	941780
+alloc	candidate-2	1	quiet-no-output	40000	0	True				241638	17763468	1581780
+alloc	candidate-2	1	evaluation-data-no-output	2000	0	True				321053	23558211	372583
+alloc	candidate-2	1	evaluation-data-no-output	4000	0	True				639527	46613691	436583
+alloc	candidate-2	1	test-report-no-output	2000	0	True				462065	33375584	4429191
+alloc	candidate-2	1	test-report-no-output	4000	0	True				920026	66215584	8554890
+alloc	candidate-2	1	trace-no-output	2000	0	True				51614	5706925	2233562
+alloc	candidate-2	1	trace-no-output	4000	0	True				101615	10934333	4167026
+alloc	candidate-2	1	buffered-message	20000	0	True				481721	21745381	8261969
+alloc	candidate-2	1	buffered-message	40000	0	True				961722	43003973	16261265
+alloc	candidate-2	1	evaluation-data-message	2000	0	True				390748	25982201	1300314
+alloc	candidate-2	1	evaluation-data-message	4000	0	True				780681	51494553	2296922
+alloc	candidate-2	1	check-message	20000	0	True				501737	22546262	8261966
+alloc	candidate-2	1	check-message	40000	0	True				1001738	44604854	16261262
+alloc	candidate-2	1	dot-three-no-input	20000	0	True				11921740	477979711	8678236
+alloc	candidate-2	1	dot-three-no-input	40000	0	True				23841740	948059711	9318236
+alloc	candidate-2	1	differences-no-input	20000	0	True				261670	21969687	9591399
+alloc	candidate-2	1	differences-no-input	40000	0	True				521670	36049687	10231399
+alloc	candidate-2	1	take-multispec-small	20000	0	True				2181802	125022553	9594023
+alloc	candidate-2	1	take-multispec-small	40000	0	True				4361802	242142553	10234023
+alloc	candidate-2	2	ordinary-arithmetic	20000	0	True				761640	26403026	941598
+alloc	candidate-2	2	ordinary-arithmetic	40000	0	True				1521640	52323026	1581598
+alloc	candidate-2	2	check-no-output	20000	0	True				121645	9123588	941851
+alloc	candidate-2	2	check-no-output	40000	0	True				241645	17763588	1581851
+alloc	candidate-2	2	quiet-no-output	20000	0	True				121638	9123468	941780
+alloc	candidate-2	2	quiet-no-output	40000	0	True				241638	17763468	1581780
+alloc	candidate-2	2	evaluation-data-no-output	2000	0	True				320971	23556571	372583
+alloc	candidate-2	2	evaluation-data-no-output	4000	0	True				640017	46623491	436583
+alloc	candidate-2	2	test-report-no-output	2000	0	True				462277	33379824	4429191
+alloc	candidate-2	2	test-report-no-output	4000	0	True				923428	66283624	8554890
+alloc	candidate-2	2	trace-no-output	2000	0	True				51614	5706925	2233562
+alloc	candidate-2	2	trace-no-output	4000	0	True				101615	10934333	4167026
+alloc	candidate-2	2	buffered-message	20000	0	True				481721	21745381	8261969
+alloc	candidate-2	2	buffered-message	40000	0	True				961722	43003973	16261265
+alloc	candidate-2	2	evaluation-data-message	2000	0	True				391684	26000921	1300314
+alloc	candidate-2	2	evaluation-data-message	4000	0	True				779411	51469153	2296922
+alloc	candidate-2	2	check-message	20000	0	True				501737	22546262	8261966
+alloc	candidate-2	2	check-message	40000	0	True				1001738	44604854	16261262
+alloc	candidate-2	2	dot-three-no-input	20000	0	True				11921740	477979711	8678236
+alloc	candidate-2	2	dot-three-no-input	40000	0	True				23841740	948059711	9318236
+alloc	candidate-2	2	differences-no-input	20000	0	True				261670	21969687	9591399
+alloc	candidate-2	2	differences-no-input	40000	0	True				521670	36049687	10231399
+alloc	candidate-2	2	take-multispec-small	20000	0	True				2181802	125022553	9594023
+alloc	candidate-2	2	take-multispec-small	40000	0	True				4361802	242142553	10234023
+instructions	candidate-2	1	ordinary-arithmetic	20000	0	True			359489874			
+instructions	candidate-2	1	ordinary-arithmetic	40000	0	True			715463936			
+instructions	candidate-2	1	check-no-output	20000	0	True			214048793			
+instructions	candidate-2	1	check-no-output	40000	0	True			424576231			
+instructions	candidate-2	1	quiet-no-output	20000	0	True			208426323			
+instructions	candidate-2	1	quiet-no-output	40000	0	True			413334708			
+instructions	candidate-2	1	evaluation-data-no-output	2000	0	True			115429680			
+instructions	candidate-2	1	evaluation-data-no-output	4000	0	True			227337050			
+instructions	candidate-2	1	test-report-no-output	2000	0	True			193142193			
+instructions	candidate-2	1	test-report-no-output	4000	0	True			381770170			
+instructions	candidate-2	1	trace-no-output	2000	0	True			52300651			
+instructions	candidate-2	1	trace-no-output	4000	0	True			101460865			
+instructions	candidate-2	1	buffered-message	20000	0	True			210260212			
+instructions	candidate-2	1	buffered-message	40000	0	True			417507785			
+instructions	candidate-2	1	evaluation-data-message	2000	0	True			133795843			
+instructions	candidate-2	1	evaluation-data-message	4000	0	True			264280888			
+instructions	candidate-2	1	check-message	20000	0	True			290186598			
+instructions	candidate-2	1	check-message	40000	0	True			577350033			
+instructions	candidate-2	1	dot-three-no-input	20000	0	True			5090667467			
+instructions	candidate-2	1	dot-three-no-input	40000	0	True			10174634447			
+instructions	candidate-2	1	differences-no-input	20000	0	True			206297883			
+instructions	candidate-2	1	differences-no-input	40000	0	True			407012863			
+instructions	candidate-2	1	take-multispec-small	20000	0	True			1003787601			
+instructions	candidate-2	1	take-multispec-small	40000	0	True			2002236233			
+instructions	candidate-2	2	ordinary-arithmetic	20000	0	True			359490793			
+instructions	candidate-2	2	ordinary-arithmetic	40000	0	True			715467139			
+instructions	candidate-2	2	check-no-output	20000	0	True			214048776			
+instructions	candidate-2	2	check-no-output	40000	0	True			424576405			
+instructions	candidate-2	2	quiet-no-output	20000	0	True			208424588			
+instructions	candidate-2	2	quiet-no-output	40000	0	True			413335393			
+instructions	candidate-2	2	evaluation-data-no-output	2000	0	True			115438052			
+instructions	candidate-2	2	evaluation-data-no-output	4000	0	True			227291149			
+instructions	candidate-2	2	test-report-no-output	2000	0	True			193092165			
+instructions	candidate-2	2	test-report-no-output	4000	0	True			381594104			
+instructions	candidate-2	2	trace-no-output	2000	0	True			52413595			
+instructions	candidate-2	2	trace-no-output	4000	0	True			101444334			
+instructions	candidate-2	2	buffered-message	20000	0	True			210260115			
+instructions	candidate-2	2	buffered-message	40000	0	True			417509549			
+instructions	candidate-2	2	evaluation-data-message	2000	0	True			133759781			
+instructions	candidate-2	2	evaluation-data-message	4000	0	True			264461477			
+instructions	candidate-2	2	check-message	20000	0	True			290190100			
+instructions	candidate-2	2	check-message	40000	0	True			577351278			
+instructions	candidate-2	2	dot-three-no-input	20000	0	True			5090668956			
+instructions	candidate-2	2	dot-three-no-input	40000	0	True			10174644273			
+instructions	candidate-2	2	differences-no-input	20000	0	True			206306889			
+instructions	candidate-2	2	differences-no-input	40000	0	True			406977092			
+instructions	candidate-2	2	take-multispec-small	20000	0	True			1003792242			
+instructions	candidate-2	2	take-multispec-small	40000	0	True			2002228369			
+instructions	base	candidate-2-pair-1	ordinary-arithmetic	20000	0	True			359484513			
+instructions	base	candidate-2-pair-1	ordinary-arithmetic	40000	0	True			715455451			
+instructions	base	candidate-2-pair-1	check-no-output	20000	0	True			214043992			
+instructions	base	candidate-2-pair-1	check-no-output	40000	0	True			424568063			
+instructions	base	candidate-2-pair-1	quiet-no-output	20000	0	True			208420150			
+instructions	base	candidate-2-pair-1	quiet-no-output	40000	0	True			413326077			
+instructions	base	candidate-2-pair-1	evaluation-data-no-output	2000	0	True			115395686			
+instructions	base	candidate-2-pair-1	evaluation-data-no-output	4000	0	True			227320409			
+instructions	base	candidate-2-pair-1	test-report-no-output	2000	0	True			193135492			
+instructions	base	candidate-2-pair-1	test-report-no-output	4000	0	True			381430260			
+instructions	base	candidate-2-pair-1	trace-no-output	2000	0	True			52247117			
+instructions	base	candidate-2-pair-1	trace-no-output	4000	0	True			101337709			
+instructions	base	candidate-2-pair-1	buffered-message	20000	0	True			210255390			
+instructions	base	candidate-2-pair-1	buffered-message	40000	0	True			417505499			
+instructions	base	candidate-2-pair-1	evaluation-data-message	2000	0	True			133876878			
+instructions	base	candidate-2-pair-1	evaluation-data-message	4000	0	True			264178677			
+instructions	base	candidate-2-pair-1	check-message	20000	0	True			290180391			
+instructions	base	candidate-2-pair-1	check-message	40000	0	True			577345071			
+instructions	base	candidate-2-pair-1	dot-three-no-input	20000	0	True			5090689747			
+instructions	base	candidate-2-pair-1	dot-three-no-input	40000	0	True			10174667708			
+instructions	base	candidate-2-pair-1	differences-no-input	20000	0	True			206395904			
+instructions	base	candidate-2-pair-1	differences-no-input	40000	0	True			407152279			
+instructions	base	candidate-2-pair-1	take-multispec-small	20000	0	True			1003952900			
+instructions	base	candidate-2-pair-1	take-multispec-small	40000	0	True			2002258986			
+instructions	base	candidate-2-pair-2	ordinary-arithmetic	20000	0	True			359479613			
+instructions	base	candidate-2-pair-2	ordinary-arithmetic	40000	0	True			715454204			
+instructions	base	candidate-2-pair-2	check-no-output	20000	0	True			214041338			
+instructions	base	candidate-2-pair-2	check-no-output	40000	0	True			424568948			
+instructions	base	candidate-2-pair-2	quiet-no-output	20000	0	True			208422073			
+instructions	base	candidate-2-pair-2	quiet-no-output	40000	0	True			413325531			
+instructions	base	candidate-2-pair-2	evaluation-data-no-output	2000	0	True			115371772			
+instructions	base	candidate-2-pair-2	evaluation-data-no-output	4000	0	True			227268867			
+instructions	base	candidate-2-pair-2	test-report-no-output	2000	0	True			193156818			
+instructions	base	candidate-2-pair-2	test-report-no-output	4000	0	True			382051367			
+instructions	base	candidate-2-pair-2	trace-no-output	2000	0	True			52301799			
+instructions	base	candidate-2-pair-2	trace-no-output	4000	0	True			101651417			
+instructions	base	candidate-2-pair-2	buffered-message	20000	0	True			210254091			
+instructions	base	candidate-2-pair-2	buffered-message	40000	0	True			417500878			
+instructions	base	candidate-2-pair-2	evaluation-data-message	2000	0	True			133814974			
+instructions	base	candidate-2-pair-2	evaluation-data-message	4000	0	True			264345035			
+instructions	base	candidate-2-pair-2	check-message	20000	0	True			290179934			
+instructions	base	candidate-2-pair-2	check-message	40000	0	True			577345130			
+instructions	base	candidate-2-pair-2	dot-three-no-input	20000	0	True			5090688059			
+instructions	base	candidate-2-pair-2	dot-three-no-input	40000	0	True			10174667925			
+instructions	base	candidate-2-pair-2	differences-no-input	20000	0	True			206539202			
+instructions	base	candidate-2-pair-2	differences-no-input	40000	0	True			407151008			
+instructions	base	candidate-2-pair-2	take-multispec-small	20000	0	True			1003953460			
+instructions	base	candidate-2-pair-2	take-multispec-small	40000	0	True			2002583683
+```
+
+### 4. Stop-loss counters, residuals and handoff
+
+- Compiling production candidates: **2**; measured candidates: **2/8**. Six measured-candidate slots remain.
+- Original strict reds: **6/6 green in candidate 1**; not rerun as oracle tests for candidate 2. Previous watched prefix falsifiers: **2/2**. No new admission or falsifier completion is claimed.
+- Current runtime result: **1148 passed, 1 failed, 3 ignored**, improving the previous two failures to one. The trait source invariant is green; the new exact first-pause requirement remains red.
+- Attached entries **0/4**; owed **114**. Measured regressing labels **1/12**; worst increase on the regressing label **+0.140632%**. No-progress streak **0** because the invariant red turned green. This is an explicit scope stop, not the two-candidate stop-loss.
+- Standing maintenance is complete for the retained source: 68 fingerprints, four certificate cells, both certificate gates green, ownership 20/20 green. No ownership inventory byte changed in this continuation.
+
+The director must authorize the guest-form pause-versus-terminal restoration repair in `session/guest_loading/{script,scope}.rs` before implementation can proceed, and address the recorded instruction regression under the existing measured-candidate rules. Preserve the exact new test; do not restore its old first-pause empty assertion. After a permitted repair, rerun runtime/host/oracle checks, attach exactly the four entries only after both feature-build obligations pass, refresh maintenance, and run the broad workspace gate.
+
+`.temp/brief-595/PROGRESS.md` is the takeover checkpoint. `resume-2/start/` and `start-sha256.json` preserve the inherited 1,951-file continuation-start manifest and bytes; `amendment-edits.patch`, `scope-witness.md`, raw gate logs/commands, `retained-source/`, its hashes and patch, and the measurement artifacts make every retained change reviewable. No production edit was made after the scope witness; the only subsequent source-dependent writes were standing inventory maintenance and this report.
+
+## Director amendment 3 — amendment 2's test ruling was wrong; the defect is in the resume driver (2026-10-07)
+
+Resume from `.temp/brief-595/PROGRESS.md`. Amendment 2 item 1 is **retracted**:
+the old test was right about the first pause, and your stop exposed why.
+
+1. **The semantics.** At *every* pause the session's live dynamic state is the
+   enclosing request's state; a guest form's environment is captured by value
+   at the input boundary (`capture_guest_form_environment`) and reinstalled
+   only while its continuation runs. The first pause gets this by unwinding
+   through `GuestFormScope::restore` (`guest_loading/script.rs:89-92`). A pause
+   *during a resumed segment* does not: the resume driver
+   (`suspension/core.rs` ≈`:595-615`) installs the captured
+   `GuestFormEnvironment` — replacing the handled-error tail, message-list
+   checkpoint and dirty flag, last message list, deadlines, memory limit and
+   interrupt state — and on a new pause restores only `guest_form`. The old
+   terminal packaging truncated the tail and hid the asymmetry; the new pause
+   builder rightly no longer does.
+2. **The repair (authorized).** In the resume driver, keep what `install`
+   displaces and restore it whenever the resumed segment ends in a new pause
+   (the boundary still re-captures the guest environment for the next resume,
+   as today). Completion and abandonment paths are unchanged. **Added to the
+   edit surface:** `session/guest_loading/scope.rs`, only for a displaced-state
+   type or helper beside `GuestFormEnvironment` if one is needed; the driver
+   change stays in `suspension/core.rs`.
+3. **The test.** In `guest_environment_restores_handled_error_tail_and_memory_limit_before_child`,
+   restore the original empty-tail assertions at both pauses, and add a
+   symmetry assertion: a snapshot of the live dynamic state (tail, message-list
+   checkpoint and dirty flag, `guest_form`, memory limit, deadlines) taken at
+   the second pause equals the one taken at the first. `RequireGuestEnvironment`
+   still sees the full guest environment inside; completion still ends empty
+   with no memory limit. The candidate-1 tree fails the symmetry assertion —
+   record that red before the driver change.
+4. **The instruction regression** (`evaluation-data-message` +0.14% / +0.13%
+   against a 0.10% floor on candidate 2, a trait-member reorder): measure the
+   final candidate; if it persists, attribute it with callgrind before
+   changing anything, and report.
+5. Then attach the four G11 entries (owed 114 -> 110) and run every remaining
+   gate.
