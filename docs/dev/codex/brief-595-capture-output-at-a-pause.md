@@ -215,3 +215,266 @@ compiling candidate and each gate.
 4. Stop-loss counters, residuals, open questions.
 
 ---
+
+## Execution report — brief-595 (stopped at the scope fence)
+
+### 1. Changed files, functions and types; boundary location
+
+**Implementation is incomplete. No production source edit was made.** The required strengthened raw-trace prefix check exposes an adjacent defect in the existing `Trace` capture. Fixing it under the required declarative-frame design needs a boundary declaration on `EvalStructuredTraceCaptureExprSuspensionFrame` in `crates/rum-runtime/src/runtime/debug_tools/trace/resume_frames.rs`, which is outside this brief's edit surface. Its completion and abandonment trace restoration in `debug_tools/trace.rs` also need review against the common rollback rule. The template's hard rule says: “Do NOT modify files outside Scope. If you believe you must, STOP and write that in the report instead.” I stopped before production implementation, rather than exempting Trace from the stronger checker or changing unauthorized files.
+
+The exact witness is:
+
+```rum
+Trace[(1+2;InputString["capture"];4+5)]
+```
+
+At the pause, the response contains the raw `EvaluationPass` from `Plus[1,2]` to `3`. After resuming with `answer`, its final raw trace array is empty. `finish_trace_event_capture` truncates the captured suffix when tracing was previously disabled. The same mandatory prefix checker that detects EvaluationData's provisional trace leak therefore rejects this existing capture with `TracePrefix`. The shared trace capture frame currently has the checkpoint needed for a declaration, but this brief does not authorize editing its implementation. This is a concrete adjacent defect, not a speculative scope expansion.
+
+Only this execution report is retained outside `.temp/brief-595/`. The temporary red harness and stronger oracle were saved, with exact source, hashes and a unified review patch, then **only this turn's five test edits** were restored to their initial bytes. No user's pre-existing edits were reverted. The source comparison uses saved bytes and SHA-256, without version-control commands.
+
+Saved artifacts:
+
+- `.temp/brief-595/red-harness/`: exact five test files used for the strict red.
+- `.temp/brief-595/red-harness.patch`, `red-harness-sha256.json`: review patch and hashes.
+- `.temp/brief-595/red-old.log`, `red-strict.log`: complete original output, with command JSON beside each.
+- `.temp/brief-595/base/`: both one-unit binaries, their build commands/logs, and SHA-256 hashes.
+- `.temp/brief-595/initial/`, `initial-sha256.json`, `pre-report-audit.log`: initial state and restoration audit.
+- `.temp/brief-595/PROGRESS.md`: takeover checkpoint.
+
+The temporary changes, all now saved in scratch rather than retained in crate source, were:
+
+| File under `crates/rum-stdlib/tests/suspension_oracle/` | Changed functions/types |
+| --- | --- |
+| `fixtures/capture_output.rs` | New `witness`; tests `evaluation_data_scalar_selector`, `evaluation_data_list_selector`, `evaluation_data_print_prefix`, `test_report_input_print_prefix`, `quiet_message_prefix`, `adjacent_trace_capture_prefix`. |
+| `fixtures/mod.rs` | Temporary `capture_output` module declaration. |
+| `descriptors.rs` | `Fixture` gained final message and exact per-pause print/message/trace expectations; `Fixture::new`, new `Fixture::check_pause`, `run`, `accept`. |
+| `support/observe.rs` | `Observation` gained the unmodified raw trace array; `Observation::from_output`, `Rejection`, `compare`, new per-channel `prefix`. |
+| `support/drive.rs` | `Run` retained pause observations; `execute_planned` checked cumulative prefixes on all three channels using `observe::prefix`. |
+
+No output-boundary type, production completion helper, abandonment change, lifecycle extension, synthetic falsifier, or new production frame was implemented. There is no retained source split or frame-inventory change to assess. Scratch helpers `build.py`, `run.py`, `strengthen-oracle.py`, `measure.py` and `floor.py` are local evidence/workflow aids, not repository scripts; the last two were prepared but never run.
+
+### 2. Verbatim red output, builds, and standing/broad gate status
+
+Both red runs used `python3 scripts/run-bounded.py`, a 300-second focused Cargo bound, `CARGO_BUILD_JOBS=1`, `RUST_TEST_THREADS=1`, `CARGO_NET_OFFLINE=true`, and `TMPDIR=/home/remi/dev/rum/.temp/brief-595/tmp`. Cargo's test target was isolated under the same scratch directory. Cargo ran serially, after both base builds had finished. No production edit preceded either red run. The failures below are test assertions identifying incorrect observations; no kernel-panic or process-abort probe was run.
+
+Old-checker command:
+
+```text
+cargo test -p rum-stdlib --test suspension_oracle fixtures::capture_output -- --nocapture
+```
+
+Verbatim output:
+
+```text
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.45
+   Compiling proc-macro2 v1.0.106
+   Compiling syn v2.0.117
+   Compiling version_check v0.9.5
+   Compiling generic-array v0.14.7
+   Compiling typenum v1.20.1
+   Compiling autocfg v1.5.0
+   Compiling num-traits v0.2.19
+   Compiling serde_core v1.0.228
+   Compiling serde v1.0.228
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.7
+   Compiling serde_derive v1.0.228
+   Compiling thiserror v2.0.18
+   Compiling cfg-if v1.0.4
+   Compiling digest v0.10.7
+   Compiling num-integer v0.1.46
+   Compiling thiserror-impl v2.0.18
+   Compiling num-bigint v0.4.6
+   Compiling cpufeatures v0.2.17
+   Compiling crc32fast v1.5.0
+   Compiling rum-core v0.2.0 (/home/remi/dev/rum/crates/rum-core)
+   Compiling rum-syntax v0.2.0 (/home/remi/dev/rum/crates/rum-syntax)
+   Compiling rum-derive v0.2.0 (/home/remi/dev/rum/crates/rum-derive)
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling sha1 v0.10.6
+   Compiling sha2 v0.10.9
+   Compiling md-5 v0.10.6
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+warning: function `execute` is never used
+  --> crates/rum-stdlib/tests/suspension_oracle/support/drive.rs:12:8
+   |
+12 | pub fn execute(
+   |        ^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `rum-stdlib` (test "suspension_oracle") generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 08s
+     Running tests/suspension_oracle.rs (.temp/brief-595/target-tests/debug/deps/suspension_oracle-08d116f9343550b3)
+
+running 5 tests
+test oracle::fixtures::capture_output::evaluation_data_list_selector ... 
+thread 'oracle::fixtures::capture_output::evaluation_data_list_selector' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/capture_output.rs:25:165:
+called `Result::unwrap()` on an `Err` value: Value
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::capture_output::evaluation_data_print_prefix ... 
+thread 'oracle::fixtures::capture_output::evaluation_data_print_prefix' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/capture_output.rs:30:219:
+called `Result::unwrap()` on an `Err` value: OutputPrefix
+FAILED
+test oracle::fixtures::capture_output::evaluation_data_scalar_selector ... 
+thread 'oracle::fixtures::capture_output::evaluation_data_scalar_selector' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/capture_output.rs:20:104:
+called `Result::unwrap()` on an `Err` value: Value
+FAILED
+test oracle::fixtures::capture_output::quiet_message_prefix ... ok
+test oracle::fixtures::capture_output::test_report_input_print_prefix ... 
+thread 'oracle::fixtures::capture_output::test_report_input_print_prefix' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/capture_output.rs:35:154:
+called `Result::unwrap()` on an `Err` value: OutputPrefix
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::capture_output::evaluation_data_list_selector
+    oracle::fixtures::capture_output::evaluation_data_print_prefix
+    oracle::fixtures::capture_output::evaluation_data_scalar_selector
+    oracle::fixtures::capture_output::test_report_input_print_prefix
+
+test result: FAILED. 1 passed; 4 failed; 0 ignored; 0 measured; 19 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+The identical Quiet witness passes that old checker. After adding the message and raw-trace prefix checks, the strict run used the same command and also included the adjacent Trace witness. Verbatim output:
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+warning: function `execute` is never used
+  --> crates/rum-stdlib/tests/suspension_oracle/support/drive.rs:13:8
+   |
+13 | pub fn execute(
+   |        ^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `rum-stdlib` (test "suspension_oracle") generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.10s
+     Running tests/suspension_oracle.rs (.temp/brief-595/target-tests/debug/deps/suspension_oracle-08d116f9343550b3)
+
+running 6 tests
+test oracle::fixtures::capture_output::adjacent_trace_capture_prefix ... TRACE_CONTROL paused_trace=[EvaluationPass { before: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 19, identity: None, text: SymbolText { id: 19, context: "System`", name: "Plus" } }))), args: SharedArgs([Atom(Integer(Small(1))), Atom(Integer(Small(2)))]) }, after: Atom(Integer(Small(3))) }] completed_trace=[]
+
+thread 'oracle::fixtures::capture_output::adjacent_trace_capture_prefix' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/capture_output.rs:51:29:
+called `Result::unwrap()` on an `Err` value: TracePrefix
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::capture_output::evaluation_data_list_selector ... 
+thread 'oracle::fixtures::capture_output::evaluation_data_list_selector' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/capture_output.rs:25:165:
+called `Result::unwrap()` on an `Err` value: Value
+FAILED
+test oracle::fixtures::capture_output::evaluation_data_print_prefix ... 
+thread 'oracle::fixtures::capture_output::evaluation_data_print_prefix' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/capture_output.rs:30:219:
+called `Result::unwrap()` on an `Err` value: OutputPrefix
+FAILED
+test oracle::fixtures::capture_output::evaluation_data_scalar_selector ... 
+thread 'oracle::fixtures::capture_output::evaluation_data_scalar_selector' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/capture_output.rs:20:104:
+called `Result::unwrap()` on an `Err` value: Value
+FAILED
+test oracle::fixtures::capture_output::quiet_message_prefix ... 
+thread 'oracle::fixtures::capture_output::quiet_message_prefix' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/capture_output.rs:40:134:
+called `Result::unwrap()` on an `Err` value: MessagePrefix
+FAILED
+test oracle::fixtures::capture_output::test_report_input_print_prefix ... 
+thread 'oracle::fixtures::capture_output::test_report_input_print_prefix' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/capture_output.rs:35:154:
+called `Result::unwrap()` on an `Err` value: OutputPrefix
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::capture_output::adjacent_trace_capture_prefix
+    oracle::fixtures::capture_output::evaluation_data_list_selector
+    oracle::fixtures::capture_output::evaluation_data_print_prefix
+    oracle::fixtures::capture_output::evaluation_data_scalar_selector
+    oracle::fixtures::capture_output::quiet_message_prefix
+    oracle::fixtures::capture_output::test_report_input_print_prefix
+
+test result: FAILED. 0 passed; 6 failed; 0 ignored; 0 measured; 19 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+Before these tests, both base builds completed from the untouched production tree with `CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1`, offline, one build job, a 900-second bound each, and fresh `.temp/brief-595/base/target-default` and `target-alloc` directories. The allocation feature used the two arguments `--features rum-cli/alloc-count`. The binaries were copied and hashed. Verbatim build completion lines:
+
+```text
+default:     Finished `release` profile [optimized] target(s) in 1m 39s
+alloc:     Finished `release` profile [optimized] target(s) in 1m 39s
+```
+
+```text
+rum-cli  bf4ea66f76406dee9ea6143e65698db83fb78e125a15de4cad291c73ba845058
+rum-cli-alloc  d7eed5cea6fea9130c89f33a4320439bb514046cc52223dee44af67e28a55a29
+```
+
+No green production test is claimed. Following the scope stop, these gates **did not run**: `cargo fmt --check`, the runtime and host suites, `scripts/check-suspension-oracle.sh 900` in either build, ownership discovery/reconciliation, either local-production certificate replay, and `cargo test --workspace --no-fail-fast`. The strict red was run in the default build only; no no-default test result is claimed. Native ZeroMQ tests did not run, so there were no observed native skips to report.
+
+Every source edit was temporary and restored after preserving its evidence. Thus no changed-source fingerprint or certificate update is left pending. Ownership inventories, local-contract fingerprints, certificate cells, frame lists, and every oracle inventory file remain byte-identical to their initial state. **Every inventory row change: none.** The four owed entries remain attached to no new descriptors. No output emission path, response/serde shape, adapter, lockfile, repository script, unsafe code, AGENTS.md, TODO.md, root PROGRESS.md, or earlier brief changed. No version-control command or network access was used.
+
+Verbatim restoration audit:
+
+```text
+PASS: all initial source, docs, scripts, inventories, fingerprints, certificates, root Cargo files, toolchain, AGENTS.md, TODO.md and root PROGRESS.md byte-identical after preserving/restoring temporary red harness. No extra source files.
+```
+
+### 3. Four G11 entries, floors and measured rows
+
+Entries attached: **0/4**. Owed ledger: **114 before, 114 after**; the required reduction of four was not performed because the admission gates have not passed. No `CATALOG` output from a new gate run is claimed. The unchanged rows are:
+
+```text
+EvaluationData.body	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
+TestReport.expectedOutput	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
+TestReport.input	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
+TestReport.sameTest	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
+```
+
+Instruction and allocation samples: **none**. Noise floors: **not measured**. Measured candidate rows: **none**, and no performance verdict is claimed. The base binaries are preserved for the resumed task. Eleven workload definitions, including the three copied controls, were prepared under `.temp/brief-595/perf/`; none was executed or declared passing. No timing suite was run.
+
+There is a second concrete gate limitation: `crates/rum-cli/src/main.rs:270` unconditionally installs the stdout `PrintSink` before each evaluation request. That sink routes Print exclusively, as required by the embedding contract. Therefore this unmodified CLI cannot execute the panel's **buffered Print**, **EvaluationData captured buffered Print**, and **Check buffered Print** paths. Streaming labels cannot honestly stand in for them. The brief forbids CLI changes. An explicitly authorized scratch Rust measurement driver or other specified buffered-output harness is needed for those rows. This finding is based on source inspection; no substitute metric was measured. Details are in `.temp/brief-595/perf/print-gate-limitation.md`.
+
+### 4. Stop-loss counters, residuals and next action
+
+- Production compiling candidates: 0; measured candidates: 0/8. The two completed builds after the bases were red-test harness builds, not production candidates.
+- Required red shapes recorded: scalar selector, list selector, EvaluationData print prefix, TestReport input print prefix, and Quiet passing old/failing strict checker.
+- Additional red: standalone Trace loses its exposed raw-trace prefix.
+- Reds turned green: 0. Entries attached: 0/4. New synthetic falsifiers watched: 0. Regressing labels/worst regression: unmeasured. The two-candidate no-progress stop-loss was not reached; the scope fence caused this stop.
+- Selector repair, common output boundary/pause builder, abandonment rollback, the complete descriptor/lifecycle matrix, host coverage, documentation contract changes, standing gates and performance gates remain undone.
+
+The next director action is to resolve the scope conflict for the shared Trace capture frame (including its rollback policy), and specify an authorized buffered-Print measurement harness. With those rulings, restore the saved test-only patch by applying its source files, complete the required base panel/floors, then implement the selector and common boundary. The exact initial sources, reusable base binaries, red-test sources and raw logs are preserved; no partial production implementation or stale source certificate is left in the tree.
+
+## Director amendment — resume from the scope stop (2026-10-07)
+
+The stop was correct; the scope was mine and under-enumerated. Resume from
+`.temp/brief-595/PROGRESS.md`: restore the saved test-only patch
+(`.temp/brief-595/red-harness/`), reuse the preserved base binaries, and
+continue. This amendment governs where the sections above differ.
+
+1. **`Trace` is a capture of the trace channel.** `Trace[(1+2;InputString["capture"];4+5)]`
+   exposes the raw `EvaluationPass` at the pause and then truncates it
+   (`finish_trace_event_capture`, `debug_tools/trace.rs:117`). It joins the
+   same contract: the trace events a `Trace`, `TraceDetail` or `TracePrint`
+   capture owns are provisional at a pause and settled once by that capture.
+   **Added to the edit surface:** `runtime/debug_tools/trace/resume_frames.rs`
+   (the boundary declaration on `EvalStructuredTraceCaptureExprSuspensionFrame`
+   and any sibling capture frame) and `runtime/debug_tools/trace.rs` (its
+   completion and abandonment rollback through the common rule). Its
+   strengthened descriptors are supplemental to the already drained
+   `Trace.body`, `TraceDetail.body` and `TracePrint.body` entries;
+   `TracePrint`'s rendered print output follows the print channel rule.
+   Any *other* capture the strengthened checker exposes is reported with its
+   witness and a STOP, not exempted.
+2. **Buffered `Print` cannot be measured through `rum-cli`**, which installs an
+   exclusive stdout `PrintSink` per request (`crates/rum-cli/src/main.rs:270`).
+   No new measurement harness: `push_print` and emission are fenced and
+   unchanged, and the buffered-print behaviour is covered by the `rum-host`
+   tests. Drop the buffered-`Print` and captured-buffered-`Print` labels; keep
+   ordinary arithmetic, no-output `Check`/`Quiet`/`EvaluationData`/`TestReport`
+   (and `Trace`), buffered and captured `Message` (messages are buffered under
+   the CLI — check it on the base first), and the three controls.
+3. Everything else stands: the four G11 entries are attached only after all
+   their gates pass in both builds; owed 114 -> 110.
