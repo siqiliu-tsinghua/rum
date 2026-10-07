@@ -20,13 +20,26 @@ pub fn exercise_observed(
     plans: &[(RuntimeInputRequest, String)],
     verify: impl Fn(&mut Session, usize, bool),
 ) -> usize {
+    exercise_observed_at(make, source, plans, [0, 1], verify)
+}
+
+/// Select the first and second pause owned by a phase reached after an earlier
+/// request (for example Input's parsed-answer evaluation).
+pub fn exercise_observed_at(
+    make: impl Fn() -> Session,
+    source: &str,
+    plans: &[(RuntimeInputRequest, String)],
+    stops: [usize; 2],
+    verify: impl Fn(&mut Session, usize, bool),
+) -> usize {
     assert!(
         plans.len() >= 2,
         "lifecycle requires first and second pauses"
     );
     let source =
         format!("WithCleanup[({source});Print[\"oracle suffix\"],Print[\"oracle cleanup\"]]");
-    for stop in 0..2 {
+    assert!(stops[0] < stops[1] && stops[1] < plans.len());
+    for (owner_pause, stop) in stops.into_iter().enumerate() {
         for reset in [false, true] {
             let mut s = make();
             let delivered = Arc::new(Mutex::new(Vec::<String>::new()));
@@ -95,7 +108,7 @@ pub fn exercise_observed(
             }
             assert!(s.pending_input_request().is_none());
             assert!(s.reject_overlapping_evaluation_request().is_ok());
-            verify(&mut s, stop, reset);
+            verify(&mut s, owner_pause, reset);
             session::fresh(&mut s).unwrap();
             session::empty_queue(&mut s).unwrap();
         }

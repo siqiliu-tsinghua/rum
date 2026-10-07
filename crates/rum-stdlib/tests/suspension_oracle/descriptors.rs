@@ -33,6 +33,10 @@ pub struct Fixture {
     pub expected_log: Option<String>,
     pub expected_error: Option<SessionRequestError>,
     pub expected_prints: Option<Vec<String>>,
+    /// Zero-based argument paths of monotonic timing leaves, and nothing else.
+    pub duration_paths: Vec<Vec<usize>>,
+    pub files: Option<Vec<(String, String)>>,
+    pub lifecycle_pauses: [usize; 2],
     pub configure: fn(&mut Session),
 }
 impl Fixture {
@@ -48,12 +52,18 @@ impl Fixture {
             expected_log: None,
             expected_error: None,
             expected_prints: None,
+            duration_paths: vec![],
+            files: None,
+            lifecycle_pauses: [0, 1],
             configure: |_| {},
         }
     }
     pub fn session(&self) -> Session {
         let mut s = session::new();
         (self.configure)(&mut s);
+        if let Some(files) = &self.files {
+            super::support::files::configure_memory(&mut s, files);
+        }
         if !self.setup.is_empty() {
             s.eval_request(&self.setup).unwrap();
         }
@@ -115,7 +125,12 @@ pub fn run(f: &Fixture, queued: bool, checks: Checks) -> Result<ResultView, Reje
             }
         }
     }
-    let observation = Observation::from_output(&r.output);
+    let mut observation = Observation::from_output(&r.output);
+    if let Some(value) = &mut observation.value {
+        for path in &f.duration_paths {
+            *value = super::support::normalize::duration(value, path);
+        }
+    }
     // Check before any guest-state projection could consume a spare answer.
     if checks.queue {
         session::empty_queue(&mut s)?;

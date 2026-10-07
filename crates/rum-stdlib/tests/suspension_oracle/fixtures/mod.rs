@@ -1,5 +1,6 @@
 mod boundaries;
 mod control_roles;
+mod debug_roles;
 mod functional_roles;
 mod predicate_roles;
 pub mod preparation;

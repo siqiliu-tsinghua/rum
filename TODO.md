@@ -4,10 +4,11 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-07, committed tree through brief-591's gate (drain
-5, functional + lazy; owed 186); brief-592 (drain 6, debug + symbols +
-contexts + scoping) is dispatched; drains 593-594 follow, the last deleting the
-ledger; then E2's design.
+Status checkpoint: 2026-10-07, committed tree through brief-592's gate (drain
+6; owed 114, four of them **defects**); brief-593 (design: capture builtins
+under suspension, G11, and the `Arc::try_unwrap` uniqueness class) is
+dispatched; then its repairs, then the strings drain and the final drain that
+deletes the ledger; then E2's design.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -671,6 +672,27 @@ an `Ordinary` head), and four policies corrected `Frame -> Tail` (`Map`,
 evaluation; their descriptors are attached). Entries 483 -> 479, owed 241 ->
 186, lifecycle obligations 1 944. Director gate: workspace 3366/0/58 with
 native ZeroMQ real; oracle 28/0 in each build.
+**Drain 6 is in (brief-592, debug + symbols + contexts + scoping) and the oracle
+found its first defects.** 58 entries drained; fourteen roles that do not exist
+removed (`Trace`/`TraceDetail`/`TracePrint` explicit options are parsed
+literally; `TestCreate` only builds data and becomes `NoLocalGuestEffect`;
+`Reap.pattern`, `DefinePackage.bindings`, option syntax on `DumpSave`, `Names`,
+`TestReport`); `RestoreSealedReferences.body` is a `Boundary` — it runs only
+under host snapshot restore, which is non-resumable by ruling — owed until the
+final drain attaches its retirement witness. **Four entries are defects (G11),
+missed by the census because their frames exist but are incomplete:**
+`EvaluationData[expr, props]` resumes to the whole capture association (its
+frame lacks the selector) and surfaces captured prints at the pause that then
+vanish from the final output; `TestReport` loses a case's print prefix and,
+when a second case suspends, **panics the kernel** —
+`TestReportResultState::into_vec` demands `Arc::try_unwrap` uniqueness of an
+accumulator node a frame still shares (the class of the resumed-`Table` panic).
+brief-593 designs the repair, the captured-output contract at a pause, and a
+sweep of all 32 production `Arc::try_unwrap` sites. Entries 479 -> 465, owed
+186 -> 114, lifecycle obligations 2 394. Director gate: workspace 3369/0/58
+with native ZeroMQ real; oracle 34/0 in each build. Revised order: 593 design
+-> G11 repairs -> strings drain -> final drain (associations, schema,
+evaluator, `RestoreSealedReferences`, ledger deleted).
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
