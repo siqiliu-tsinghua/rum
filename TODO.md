@@ -4,10 +4,10 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-07, committed tree through brief-593's design;
-brief-594 (G11 step A: shared accumulator completion, three kernel panics) is
-dispatched; then step B (capture output at a pause, the four G11 entries), the
-strings drain and the final drain; then E2's design.
+Status checkpoint: 2026-10-07, committed tree through brief-594's gate (G11
+step A, the three panics); brief-595 (G11 step B: provisional captured output
+at a pause, the four G11 entries) is dispatched; then the strings drain and the
+final drain; then E2's design.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -711,6 +711,18 @@ stays exclusive streaming; the raw trace array joins the same boundary as a
 third channel and the oracle observes it; Check/Quiet/ConfirmQuiet messages are
 provisional while their body is unsettled (documented in the guide); the
 inventory rows of the three removed panic closures are authorized by name.
+**G11 step A is done (brief-594):** one private completion cursor
+(`runtime/accumulator_chain/completion.rs`) moves a unique node or
+shallow-clones a shared one and detaches its link into a wrapper-owned
+remaining spine; `TestReport`, association `Set` selectors, `DeleteCases` and
+`Table` all complete through it. The three panics are retired (3/3); the
+removed panic closures' six inventory rows went as authorized, three node
+derives gained `Clone`. Director gate: workspace 3376/0/58 with native ZeroMQ
+real; oracle 38/0 in each build; the new `rum-host` contract test panics at
+`report.rs:116` on the pre-fix tree and passes now. Instruction gate 0/12
+regressions; the worker's `TestReport` +2.4 allocations/iteration is noise —
+the same base binary run three times spans 794 128-795 100 allocations,
+because elapsed durations become big-integer rationals of varying size.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

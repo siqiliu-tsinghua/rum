@@ -36,7 +36,7 @@ struct TestReportResultAccumulator {
     len: usize,
 }
 
-#[derive(FrameRootTrace, AccumulatorChainNode)]
+#[derive(Clone, FrameRootTrace, AccumulatorChainNode)]
 struct TestReportResultNode {
     #[accumulator_link]
     previous: AccumulatorChain<TestReportResultNode>,
@@ -110,12 +110,8 @@ impl TestReportResultAccumulator {
 
     fn into_vec(self) -> Vec<Expr> {
         let mut suffix = Vec::with_capacity(self.len.saturating_sub(self.prefix.len()));
-        let mut node = self.tail.into_inner();
-        while let Some(current) = node {
-            let current = Arc::try_unwrap(current)
-                .unwrap_or_else(|_| panic!("completed TestReport result state must be unique"));
+        for current in self.tail.into_completion() {
             suffix.push(current.value);
-            node = current.previous.into_inner();
         }
         suffix.reverse();
 

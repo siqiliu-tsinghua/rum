@@ -93,14 +93,8 @@ impl PersistentExprAccumulator {
 
     pub(super) fn into_vec(self) -> Vec<Expr> {
         let mut suffix = Vec::with_capacity(self.len.saturating_sub(self.prefix.len()));
-        let mut node = self.tail.into_inner();
-        while let Some(current) = node {
-            let current = match Arc::try_unwrap(current) {
-                Ok(current) => current,
-                Err(current) => current.as_ref().clone(),
-            };
+        for current in self.tail.into_completion() {
             suffix.push(current.value);
-            node = current.previous.into_inner();
         }
         suffix.reverse();
 

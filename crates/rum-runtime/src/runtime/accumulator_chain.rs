@@ -1,5 +1,10 @@
 //! Constant-space destruction of persistent accumulator links.
 
+mod completion;
+
+#[cfg(test)]
+mod completion_tests;
+
 use std::sync::Arc;
 
 use super::suspension::trace::{FrameRootTrace, FrameRootVisitor};

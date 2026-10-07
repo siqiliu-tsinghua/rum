@@ -107,7 +107,7 @@ pub(super) struct PersistentRewriteExprs {
     len: usize,
 }
 
-#[derive(FrameRootTrace, AccumulatorChainNode)]
+#[derive(Clone, FrameRootTrace, AccumulatorChainNode)]
 struct PersistentRewriteExprNode {
     #[accumulator_link]
     previous: AccumulatorChain<PersistentRewriteExprNode>,
@@ -149,12 +149,8 @@ impl PersistentRewriteExprs {
 
     pub(super) fn into_vec(self) -> Vec<Expr> {
         let mut suffix = Vec::new();
-        let mut node = self.tail.into_inner();
-        while let Some(current) = node {
-            let current = Arc::try_unwrap(current)
-                .unwrap_or_else(|_| panic!("completed rewrite output must be uniquely owned"));
+        for current in self.tail.into_completion() {
             suffix.push(current.values.into_vec());
-            node = current.previous.into_inner();
         }
         suffix.reverse();
 

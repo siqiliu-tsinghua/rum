@@ -19,6 +19,7 @@ mod rule_construction;
 mod rules;
 mod schema;
 mod scoping;
+mod shared_completion;
 mod strings;
 
 fn make(

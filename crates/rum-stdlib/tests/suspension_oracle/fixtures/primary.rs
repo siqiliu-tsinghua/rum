@@ -155,6 +155,7 @@ pub fn descriptors() -> Vec<Descriptor> {
     rows.extend(super::predicate_roles::descriptors());
     rows.extend(super::functional_roles::descriptors());
     rows.extend(super::debug_roles::descriptors());
+    rows.extend(super::shared_completion::descriptors());
     rows
 }
 pub fn execute(descriptor: &Descriptor) -> usize {
