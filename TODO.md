@@ -4,10 +4,12 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-13, committed tree through brief-595's gate (G11
-closed; owed 110); brief-596 (the strings drain) is next, then the final drain
-that deletes the ledger; then E2's design. Workers run `gpt-6.1-sol` max from
-2026-10-13 (the dispatcher pins no model; `~/.codex/config.toml` decides).
+Status checkpoint: 2026-10-13, committed tree through brief-596's gate (drain
+7, strings; owed 39); brief-597 (G12, `ToExpression`'s result head, and the
+fieldless-frame sweep) is dispatched; then the final drain that deletes the
+ledger; then E2's design. Long-running briefs use `gpt-6-astra` max by user
+ruling (2026-10-13: `gpt-6.1-sol` hit capacity errors mid-run); the
+dispatcher pins no model, `~/.codex/config.toml` decides.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -750,6 +752,18 @@ with native ZeroMQ real; oracle 33/0 in each build; 6 strict reds and the
 symmetry red recorded before the production edits. Residual:
 `evaluation-data-message` +0.36% / +0.08% (floor 0.10%, one sample inside),
 recorded.
+**Drain 7 is in (brief-596, strings + strings_match + strings_text):** 49
+entries drained; twenty-two roles that do not exist removed (21
+`optionSyntax` on `Ordinary` string heads; `TemplateApply.slot`, which renders
+through pure functions). **One defect, G12:** `ToExpression[str, form, head]`
+suspending inside the parsed source resumes through the fieldless
+`EvalToExpressionSuspensionFrame1` and never applies `head` (`7` where the
+queued path gives `107`) — a frame with no fields over a function that still
+has work after the `?`, which the census called a tail. brief-597 repairs it
+and sweeps the repository for the shape. Entries 465 -> 443, owed 110 -> 39.
+Director gate: workspace 3400/0/58 with native ZeroMQ real; oracle 34/0 in
+each build. The first 596 run died on an upstream capacity error ~50k tokens
+in and was redispatched from its checkpoint.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

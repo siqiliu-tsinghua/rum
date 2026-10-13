@@ -22,6 +22,7 @@ mod schema;
 mod scoping;
 mod shared_completion;
 mod strings;
+mod strings_roles;
 
 fn make(
     id: &str,
