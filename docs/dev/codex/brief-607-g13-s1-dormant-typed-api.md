@@ -167,11 +167,16 @@ and why. Do not route around the fence.
    because an API is missing is not a valid control.
 6. **The census.** Build `typed_slot_census` per `census-spec.md`: a source
    gate with module-qualified identities and an explicit unresolved list, not
-   a spelling count. It must report the baseline: 623 frame/finalizer
-   implementations and 600 production macro sites, all untyped, and the 23
-   legacy types with their live decoder uses. Show it can fail: run it once
-   against a scratch copy with one frame implementation removed and paste the
-   red output.
+   a spelling count. It must report the baseline, all untyped, as two
+   cohorts asserted separately (corrected at redispatch 4): production, 553
+   frames + 54 finalizers = 607 implementations and 345 + 244 = 589 macro
+   sites; and the test-only interpreted matcher behind
+   `runtime/mod.rs:48-49`, 11 + 5 = 16 implementations and 11 macro sites
+   (3 + 8). Their sum, 623/600, is the partition's population. It also
+   reports the 23 legacy types with their live decoder uses. Show it can
+   fail: run it against a scratch copy with one production frame
+   implementation removed, and against one with the `#[cfg(test)]` on
+   `mod.rs:48` removed, and paste both red outputs.
 7. **Inventories.** Replay source fingerprints, both builds' earned
    certificates and ownership discovery; update the frame derive/named-frame
    inventories for the new types. Disclose every changed row. Planned
@@ -981,3 +986,492 @@ the rule on the implementation's bounds, add its three falsifiers, then finish
 Steps 5-7 and every gate. Append a new `## Execution report` after this
 section.
 
+
+
+## Execution report — redispatch 3: production/test baseline conflict
+
+S1 is **incomplete**. The amended ownership verifier is implemented and its
+falsifiers passed. The dormant runtime tests and all 22 compiler pairs passed
+in both requested compiler-control builds. Source discovery then exposed a
+baseline population conflict. No row was reclassified to force acceptance.
+
+The brief requires 623 implementations and **600 production macro sites**.
+The actual module tree has **607 production implementations and 589
+production macro sites**. The other 16 implementations and 11 macro sites
+are precisely S33's interpreted-matcher family, guarded by `#[cfg(test)]`
+at `crates/rum-runtime/src/runtime/mod.rs:48-49`. That owner file is
+byte-identical to the pre-edit redispatch-1 baseline. The previous design's
+623/600 totals combine the production and test-only cohorts.
+
+The new census retains its required-count assertion and fails. Calling the
+S33 cohort production, dropping it from the planned partition, or changing
+its population/receipt status requires a director decision under Step 7's
+rule against unapproved identity/status/disposition changes. No cfg was
+removed, no implementation was converted, and no test was weakened.
+
+### 1. Files changed and dormant audit
+
+All paths below are relative to the repository root. This includes inherited
+S1 scaffold edits and this redispatch's work. The scope/hash audit records
+**47 changed or new files under crates, 0 removals, 0 out-of-scope paths**.
+This report and scratch evidence are the other writes. The seven Rust files
+under ownership_graph are listed explicitly; each change serves the amended
+adapter rule or its falsifiers.
+
+| File | Semantic change |
+| --- | --- |
+| `crates/rum-runtime/src/runtime/debug_tools/mod.rs` | Runtime-visible test_report module path only (line 14). |
+| `crates/rum-runtime/src/runtime/debug_tools/test_report.rs` | Runtime-visible EvalCapturedOutcome re-export only (line 10). |
+| `crates/rum-runtime/src/runtime/debug_tools/test_report/model.rs` | Runtime-visible EvalCapturedOutcome declaration only (line 29); fields unchanged. |
+| `crates/rum-runtime/src/runtime/definitions/application/mod.rs` | Runtime-visible ReplaceAllTraversalOutcome re-export (line 8); formatter reflow. |
+| `crates/rum-runtime/src/runtime/definitions/application/replace_all.rs` | Runtime-visible ReplaceAllTraversalOutcome declaration only (line 13). |
+| `crates/rum-runtime/src/runtime/eval_call_prepare.rs` | Dormant PreparedCallArguments wire delegation; cfg(test) old-finalizer fixture helper. |
+| `crates/rum-runtime/src/runtime/kernel_api.rs` | Re-export the nine S1 public items. |
+| `crates/rum-runtime/src/runtime/kernel_data/rewrite_data.rs` | Runtime-visible DeleteCasesOutcome declaration only (line 23). |
+| `crates/rum-runtime/src/runtime/kernel_data/structure_data/mod.rs` | Runtime-visible replace module only (line 5). |
+| `crates/rum-runtime/src/runtime/kernel_data/structure_data/replace.rs` | Runtime-visible ReplacePartTarget declaration only (line 51); fields unchanged. |
+| `crates/rum-runtime/src/runtime/suspension.rs` | Private typed module and nine-item public re-export. |
+| `crates/rum-runtime/src/runtime/suspension/typed.rs` | Public sealed slot/frame/finalizer traits and cfg(test) unit-module wiring. |
+| `crates/rum-runtime/src/runtime/suspension/typed/action.rs` | Opaque actions, checked constructors, finish_work and ResumeStop. |
+| `crates/rum-runtime/src/runtime/suspension/typed/adapter.rs` | Private generic erasure; decode rejection before resume; trace/abandon/boundary delegation; token mint. |
+| `crates/rum-runtime/src/runtime/suspension/typed/chain.rs` | Private nonempty chain start and typed adjacency. |
+| `crates/rum-runtime/src/runtime/suspension/typed/channel.rs` | Private key/channel and Value/Legacy/State strategies; associated mode only. |
+| `crates/rum-runtime/src/runtime/suspension/typed/legacy.rs` | 21 pure delegations to existing wire codecs, including approved fallible prepared decoder. |
+| `crates/rum-runtime/src/runtime/suspension/typed/registry.rs` | Expr=Value; 21 existing types=Legacy; dormant exact state variants/providers. |
+| `crates/rum-runtime/src/runtime/suspension/typed/resume_token.rs` | Invariant lifetime/type token with no Arc, constructor, Clone or Copy. |
+| `crates/rum-runtime/src/runtime/suspension/typed/witness.rs` | Invariant ZST witness from actual Result and checked chain start. |
+| `crates/rum-runtime/src/runtime/tests/frame_root_trace/derived_inventory.rs` | Add only suspension/typed/adapter.rs:TypedAdapter to the closed derive array. |
+| `crates/rum-runtime/src/runtime/tests/typed_slots.rs` | Test-only frame/finalizer support and unit modules. |
+| `crates/rum-runtime/src/runtime/tests/typed_slots/accounting.rs` | Root/capture-boundary delegation without executing a frame. |
+| `crates/rum-runtime/src/runtime/tests/typed_slots/composition.rs` | Dormant composition, typed finalization and stopped deferred work. |
+| `crates/rum-runtime/src/runtime/tests/typed_slots/faults.rs` | Wrong channel/variant rejection and error forwarding before user resume. |
+| `crates/rum-runtime/src/runtime/tests/typed_slots/registry.rs` | Mode equality for all 22 registrations; actual prepared-state roundtrips/finalizer equality; leniency. |
+| `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger.rs` | Wire the new adapter witness module. |
+| `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/adapters.rs` | Computed private-trait/single-bound/owned-parameter rule; concrete paths supersede interim witnesses. |
+| `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/ownership.rs` | Try the new rule after existing concrete attribution; share the existing expression-path proof. |
+| `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/tests.rs` | Three required falsifiers, additional-impl-bound rejection, and computed production witnesses. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payload_ledger.tsv` | Append seven approved PublicInput and three computed Unbounded entries; preserve all 65 old rows byte-for-byte. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payloads.tsv` | Replay discovered positions and new scaffold constructs; exact changes in ownership-discovery-diff.tsv. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/self_reaching.tsv` | Replay discovered positions and new scaffold constructs; exact changes in ownership-discovery-diff.tsv. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv` | Replay discovered positions and new scaffold constructs; exact changes in ownership-discovery-diff.tsv. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv` | Replay discovered positions and new scaffold constructs; exact changes in ownership-discovery-diff.tsv. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv` | Replay discovered positions and new scaffold constructs; exact changes in ownership-discovery-diff.tsv. |
+| `crates/rum-stdlib/src/tests/ownership_graph/model.rs` | Retain impl generics, polarity and conditionality for the narrow adapter proof. |
+| `crates/rum-stdlib/src/tests/ownership_graph/source.rs` | Fixture loader accepting explicit crate roots, used by the concrete-Expr falsifier. |
+| `crates/rum-stdlib/src/tests/ownership_graph/source_items.rs` | Collect those implementation facts from the actual impl AST. |
+| `crates/rum-stdlib/tests/suspension_oracle/fixtures/mod.rs` | Declare the static typed_slots stage-selection module. |
+| `crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs` | S1/no-flip selection in source; no environment-selected gate. |
+| `crates/rum-stdlib/tests/suspension_oracle/inventory/typed-slot-shapes.tsv` | 67 planned slot rows copied from the immutable mode plan; no new carrier registered. |
+| `crates/rum-stdlib/tests/suspension_oracle/inventory/typed-slot-stages.tsv` | Unfinished S1 stage header only; no F/M/D transition receipt earned or invented. |
+| `crates/rum-stdlib/tests/typed_slot_census.rs` | Unfinished source gate, exact-receipt checks, output artifacts and unexecuted scratch-red driver. |
+| `crates/rum-stdlib/tests/typed_slot_census/classify.rs` | Canonical trait/type resolution and separate definitions/calls/provider-closure records; incomplete gate integration. |
+| `crates/rum-stdlib/tests/typed_slot_census/scan.rs` | AST module/function/site census, macro-token parsing, separate test population, explicit unresolved sites. |
+| `crates/rum-stdlib/tests/typed_slot_compile_controls.rs` | All 22 paired controls; scratch-only runtime mutations; raw Cargo JSON/code/primary-span checks. |
+
+The eight registered-type visibility changes are the exact lines recorded
+above. No field visibility was widened. The other production changes are
+imports/exports, new dormant API bodies, and test-module wiring. The new
+prepared finalizer comparison helper is `#[cfg(test)]`.
+
+A fresh read-only syn audit compared every old function body in every changed
+production file against the original snapshot. Actual output:
+
+```text
+DORMANT AUDIT: 58 old production function bodies byte-identical; 109 new dormant bodies. cfg(test) bodies excluded. TypedAdapter's generated trace implementation is additionally dormant.
+```
+
+The full list, with current source positions, is
+[function-body-audit.tsv](../../../.temp/brief-607/redispatch-3/function-body-audit.tsv).
+Every new body is off the live evaluation path: no queue installs a typed
+adapter, no production TypedFrame/SlotFinalizer implementation was added,
+and no existing evaluator calls the new prepared encoder. The adapter's
+new derived trace implementation is likewise dormant. No old evaluator,
+matcher, traversal, block or selector function body changed, so no performance
+measurement was run under S1's stated exemption.
+
+For completeness, these are the 25 bodies outside the repeated providers:
+
+| File | Body line | Function |
+| --- | --- | --- |
+| `crates/rum-runtime/src/runtime/eval_call_prepare.rs` | 17 | `::<PreparedCallArguments as >::into_continuation_expr` |
+| `crates/rum-runtime/src/runtime/suspension/typed.rs` | 45 | `::TypedFrame::output_boundary` |
+| `crates/rum-runtime/src/runtime/suspension/typed/action.rs` | 70 | `::<ResumeStop < O > as >::failure` |
+| `crates/rum-runtime/src/runtime/suspension/typed/action.rs` | 29 | `::<TypedAction < O > as >::complete` |
+| `crates/rum-runtime/src/runtime/suspension/typed/action.rs` | 36 | `::<TypedAction < O > as >::evaluate` |
+| `crates/rum-runtime/src/runtime/suspension/typed/action.rs` | 46 | `::<TypedAction < O > as >::finalize` |
+| `crates/rum-runtime/src/runtime/suspension/typed/action.rs` | 56 | `::<TypedAction < O > as >::finish_work` |
+| `crates/rum-runtime/src/runtime/suspension/typed/adapter.rs` | 70 | `::<FinalizerAdapter < F > as ErasedFinalizer>::finish` |
+| `crates/rum-runtime/src/runtime/suspension/typed/adapter.rs` | 56 | `::<TypedAdapter < F > as ErasedFrame>::output_boundary` |
+| `crates/rum-runtime/src/runtime/suspension/typed/adapter.rs` | 38 | `::<TypedAdapter < F > as ErasedFrame>::resume` |
+| `crates/rum-runtime/src/runtime/suspension/typed/adapter.rs` | 28 | `::<TypedAdapter < F > as FrameAbandon>::abandon` |
+| `crates/rum-runtime/src/runtime/suspension/typed/adapter.rs` | 61 | `::erase` |
+| `crates/rum-runtime/src/runtime/suspension/typed/chain.rs` | 20 | `::<FrameChain < I , O > as >::then` |
+| `crates/rum-runtime/src/runtime/suspension/typed/chain.rs` | 12 | `::start` |
+| `crates/rum-runtime/src/runtime/suspension/typed/channel.rs` | 9 | `::<CodecKey as >::new` |
+| `crates/rum-runtime/src/runtime/suspension/typed/channel.rs` | 91 | `::<LegacyMode as Transport < T >>::decode` |
+| `crates/rum-runtime/src/runtime/suspension/typed/channel.rs` | 88 | `::<LegacyMode as Transport < T >>::encode` |
+| `crates/rum-runtime/src/runtime/suspension/typed/channel.rs` | 103 | `::<StateMode as Transport < T >>::decode` |
+| `crates/rum-runtime/src/runtime/suspension/typed/channel.rs` | 100 | `::<StateMode as Transport < T >>::encode` |
+| `crates/rum-runtime/src/runtime/suspension/typed/channel.rs` | 79 | `::<ValueMode as Transport < Expr >>::decode` |
+| `crates/rum-runtime/src/runtime/suspension/typed/channel.rs` | 76 | `::<ValueMode as Transport < Expr >>::encode` |
+| `crates/rum-runtime/src/runtime/suspension/typed/channel.rs` | 52 | `::decode` |
+| `crates/rum-runtime/src/runtime/suspension/typed/channel.rs` | 48 | `::encode` |
+| `crates/rum-runtime/src/runtime/suspension/typed/witness.rs` | 15 | `::<SlotWitness < I > as >::chain` |
+| `crates/rum-runtime/src/runtime/suspension/typed/witness.rs` | 10 | `::slot_witness` |
+
+The other 84 bodies are exactly `LegacyCodec::{old_encode,old_decode}` in
+`typed/legacy.rs` and `StateCodec::{pack,unpack}` in `typed/registry.rs` for
+**each of the 21 types listed in part 2**. They only delegate old wire codecs
+or construct/match the corresponding dormant state variant. This enumerates
+all 109 new handwritten production bodies without omitting trait methods.
+
+Size notes: registry.rs is 11,307 characters (one closed registration table);
+the existing eval_call_prepare.rs is 22,759, extended by the dormant owner
+helper and test helper only. The new census files are unfinished at 14,442,
+10,839 and 12,911 characters; compile controls are 15,613. No unrelated split
+was made. Formatting was applied to the first 27 changed Rust files before
+the ownership replay; later runtime tests/census/control additions still need
+the final formatting pass and mandatory `cargo fmt --check`.
+
+### 2. Public API, transport and registrations
+
+The public S1 list is exactly `SlotValue`, `TypedFrame`, `SlotFinalizer`,
+`TypedAction`, `SlotWitness`, `slot_witness`, `FrameChain`, `ContinueToken`
+and `ResumeStop`. Constructors enforce input/output equalities; witness and
+chain endpoints are invariant. The token is invariant, non-Clone/non-Copy,
+contains no Arc, and is minted only by the private adapter. S1 exposes no
+suspend method or typed suspension macro and installs nothing in the driver.
+
+`Codec` declares only associated `Mode`; keyed free channel functions select
+Value, Legacy or State. Expr is Value only. Legacy receives Value/Expr only;
+State receives State and the exact variant only. Providers do not receive
+Slot. The approved prepared decoder rejection retains `Err(Slot::Value)`.
+
+All 21 S1 registrations are Legacy:
+
+```text
+Option<Expr>
+Vec<Expr>
+Vec<SymbolExprMap>
+Option<Vec<Expr>>
+Option<Vec<RewriteRuleInfo>>
+Option<CasesLevelSpec>
+bool
+String
+CompiledMatchOutcome
+CasesTraversalResolution
+TraversalWithoutLimitResolution
+CasesCollectionOutcome
+PositionCollectionOutcome
+DeleteCasesOutcome
+TraversalCountOutcome
+ReplaceOutcome
+ReplaceAllTraversalOutcome
+Vec<ReplacePartTarget>
+EvalCapturedOutcome
+PreparedCallArguments
+EvaluatedPartSelectors
+```
+
+No PreparedInterpreted type or new carrier was registered. The runtime mode
+unit compiles all 22 equality witnesses (Expr plus 21 Legacy types). Its
+prepared-state test obtains states through actual argument preparation:
+empty call, ordinary arguments, Unevaluated restore, spliced Sequence, and
+empty/spliced Sequences combined with a restore. It compares all decoded
+fields to the original state and exact old_encode Expr equality with the
+existing suspended-finalizer encoder. Wrong prepared tags remain rejected.
+All eight dormant unit tests passed; the workspace gate has not run.
+
+### 3. Compiler controls
+
+Every S1 ID from the immutable table is present exactly once: **22/22**.
+The positive fixture for every pair compiled before the negative mutation.
+The external positives share a compiled crate; private positives share a
+scratch runtime test crate. Each negative changes one intended property,
+checks the primary code/category and exact file/line/column, and preserves raw
+Cargo JSON. No failed missing-support-item fixture is counted as a control.
+
+Both feature runs produced the same checked codes/spans:
+
+| Pair | Positive default / no-default | Rejection | Primary span |
+| --- | --- | --- | --- |
+| first-chain-input | PASS / PASS | E0271 | `src/lib.rs:26:35` |
+| chain-adjacency | PASS / PASS | E0271 | `src/lib.rs:33:70` |
+| unbound-chain-constructor | PASS / PASS | E0599 | `src/lib.rs:39:41` |
+| evaluate-input | PASS / PASS | E0271 | `src/lib.rs:45:66` |
+| evaluate-output | PASS / PASS | E0271 | `src/lib.rs:51:66` |
+| finalizer-output | PASS / PASS | E0271 | `src/lib.rs:57:48` |
+| opaque-action | PASS / PASS | E0599 | `src/lib.rs:62:39` |
+| token-no-clone | PASS / PASS | E0599 | `src/lib.rs:68:18` |
+| token-no-mint | PASS / PASS | E0599 | `src/lib.rs:74:27` |
+| token-no-escape | PASS / PASS | lifetime category | `src/lib.rs:80:1` |
+| sealed-extension | PASS / PASS | E0277 | `src/lib.rs:86:20` |
+| codec-key-private | PASS / PASS | E0603 | `src/lib.rs:92:18` |
+| opaque-selector-pass | PASS / PASS | E0271 | `src/lib.rs:99:35` |
+| mode-not-frame-chosen | PASS / PASS | E0599 | `src/lib.rs:105:65` |
+| mode-private-selection | PASS / PASS | E0603 | `src/lib.rs:111:18` |
+| sibling-erased-private | PASS / PASS | E0603 | `crates/rum-runtime/src/runtime/mod.rs:131:47` |
+| mode-expr-fixed | PASS / PASS | E0277 | `crates/rum-runtime/src/runtime/suspension/typed/registry.rs:21:17` |
+| mode-new-state-only | PASS / PASS | E0277 | `crates/rum-runtime/src/runtime/suspension/typed.rs:61:40` |
+| mode-one-associated-type | PASS / PASS | E0201 | `crates/rum-runtime/src/runtime/suspension/typed/registry.rs:27:5` |
+| mode-no-codec-override | PASS / PASS | E0407 | `crates/rum-runtime/src/runtime/suspension/typed/registry.rs:27:5` |
+| mode-legacy-provider-narrow | PASS / PASS | E0053 | `crates/rum-runtime/src/runtime/suspension/typed.rs:69:19` |
+| mode-state-provider-narrow | PASS / PASS | E0053 | `crates/rum-runtime/src/runtime/suspension/typed.rs:74:15` |
+
+Token escape pins the `lifetime may not live long enough` category (no error
+code). The Expr-mode mutation also trips the actual runtime unit's ValueMode
+equality witness (E0271); that related diagnostic is retained and checked at
+its real test source. The required primary remains E0277 at the mutated mode.
+
+First default attempt caught an unsupported fixture import (E0412 for
+StateMode), not an API failure. The import was supplied in both positive and
+negative scratch sources. The next attempt found the related E0271 from the
+real unit witness; it was explicitly classified rather than removing that
+witness. The third default run and first no-default run passed all pairs.
+
+Sources, command arrays, raw diagnostics and full primary-span records:
+[default results](../../../.temp/brief-607/compile-controls/default/results.json),
+[no-default results](../../../.temp/brief-607/compile-controls/no-default/results.json).
+The records refer to each group's successful positive Cargo JSON and every
+individual negative Cargo JSON. Runtime-private mutations stayed in scratch.
+
+### 4. Census output, conflict and forced red
+
+The census now walks AST module declarations, records qualified identities,
+associated types, macro tokens, definitions separately from calls, raw insert
+sites, action constructions, legacy heads and function references. It uses
+the existing lexical resolver for nominal/trait identity and keeps unknown
+receiver/alias/pointer targets explicit. Current output is under
+[the default census directory](../../../.temp/brief-607/census/default/):
+frames, definitions, macro-sites, live-calls, unresolved, wire-provider-closure,
+typed-registry, heads, legacy-test-users and transition-receipt TSVs. Source
+rows include SHA256 and spans. This is unfinished source-gate work, **not a
+completed live-use proof or preflip acceptance**.
+
+The actual failed source-baseline gate says:
+
+```text
+test source_baseline_matches_earned_receipt ... S1 CENSUS frames=553 finalizers=54 implementations=607 typed=0 macros=589 result=345 insert=244
+S1 baseline requires 564 frames + 59 finalizers = 623 untyped implementations and 600 macros
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 4 filtered out; finished in 12.61s
+```
+
+The read-only reconciliation against the immutable baseline tables found:
+
+```text
+PRODUCTION: 553 SuspensionFrame + 54 PureFrameFinalizer = 607; typed=0.
+PRODUCTION MACROS: 345 result + 244 insert = 589.
+S33 CFG(TEST) BASELINE: 11 SuspensionFrame + 5 PureFrameFinalizer = 16; macros=11 (3 result + 8 insert).
+TOTAL PLANNED BASELINE: 607 + 16 = 623; macros 589 + 11 = 600.
+SOURCE GUARD: crates/rum-runtime/src/runtime/mod.rs:48 #[cfg(test)], :49 mod pattern_matching_interpreted;
+Guard owner is byte-identical to the redispatch-1 baseline.
+No unrelated baseline implementation is missing; every missing production row belongs to S33's cfg(test) module.
+No frame or macro row was reclassified to make the gate pass.
+
+```
+
+The exact affected IDs/coordinates are
+[census-population-conflict.tsv](../../../.temp/brief-607/redispatch-3/census-population-conflict.tsv):
+F0515–F0525, F0614–F0618, and the 11 S33 macro rows. Normalizing generic
+parameter spellings during this comparison accounts for the generic frame
+names; there are no other missing planned frame implementations.
+
+The 67-row shape plan has been copied, but the stage TSV intentionally has
+only the unfinished S1 stage header: no F/M/D transition receipt has been
+earned or invented. Thus the required 23-type live-decoder report and all
+exact baseline receipts remain unfinished. The code includes a scratch-copy
+forced-red driver and a deliberately ignored child probe that it would invoke
+explicitly; **neither ran**, because the original baseline is already red.
+No 622-implementation forced-red output is claimed. The static preflip
+selection remains S1/no flip; S54's receipt is mandatory before a flip.
+
+The director needs to decide whether to authorize **623/600 as a combined
+baseline with an explicit 16/11 cfg(test) S33 cohort**, while recording
+607/589 as production, or correct the required production counts and state
+how the S33 cohort participates in receipts. Its rows must remain accounted
+for. The current assertion and source guard were left intact.
+
+### 5. Executed gates, inventory rows and certificates
+
+All Cargo/compiler runs were serial through the required bounded wrapper:
+
+```text
+python3 scripts/run-bounded.py --timeout 900 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-607/tmp <command>
+```
+
+The compiler harness additionally bounds its complete child process group
+and each nested Cargo command. Read-only Python audits used the same wrapper.
+The body-audit Cargo package and its lockfile are scratch-only; repository
+manifests, lockfile and toolchain were not edited.
+
+Executed command families were the adapter falsifier filter, ownership_graph
+(with --nocapture discovery followed by exact replay), rum-runtime's
+`--lib typed_slots`, both mandatory compiler-control commands, and a focused
+`typed_slot_census source_baseline_matches_earned_receipt -- --nocapture`.
+Every complete log is in
+[redispatch-3](../../../.temp/brief-607/redispatch-3/).
+Verbatim result lines from every attempt:
+
+```text
+adapter-falsifiers.log
+test result: FAILED. 4 passed; 1 failed; 0 ignored; 0 measured; 1140 filtered out; finished in 5.80s
+
+adapter-falsifiers-2.log
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 1140 filtered out; finished in 5.82s
+
+ownership-discovery.log
+test result: FAILED. 22 passed; 3 failed; 0 ignored; 0 measured; 1120 filtered out; finished in 65.65s
+
+ownership-replayed.log
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 1120 filtered out; finished in 67.79s
+
+typed-slots.log
+error[E0583]: file not found for module `accounting`
+error[E0583]: file not found for module `composition`
+error[E0583]: file not found for module `faults`
+error[E0583]: file not found for module `registry`
+
+typed-slots-2.log
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 0.00s
+
+typed-slots-3.log
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 1152 filtered out; finished in 0.01s
+
+compile-controls-default-1.log
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 68.71s
+
+compile-controls-default-2.log
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 14.78s
+
+compile-controls-default-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 23.32s
+
+compile-controls-no-default.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 22.75s
+
+census-initial.log
+error[E0432]: unresolved imports `super::model`, `super::resolve`
+
+census-discovery.log
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 4 filtered out; finished in 11.36s
+
+census-discovery-2.log
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 4 filtered out; finished in 12.61s
+```
+
+The zero-test runtime run above was a filter mistake, not unit evidence; the
+module name was corrected and the following run executed all eight tests.
+The first census attempt had E0432 imports; the second reached a missing
+lexical-scope lookup; the third collected the actual population and exposed
+the contract conflict. None was reported as a pass.
+
+The mandatory verification state at this stop is:
+
+```text
+cargo fmt --check — NOT RUN
+cargo test -p rum-stdlib --test typed_slot_compile_controls — PASS (22 pairs)
+cargo test -p rum-stdlib --no-default-features --test typed_slot_compile_controls — PASS (22 pairs)
+cargo test -p rum-stdlib --test typed_slot_census — full target NOT RUN; focused baseline FAILED as above
+cargo test -p rum-stdlib --no-default-features --test typed_slot_census — NOT RUN
+scripts/check-suspension-oracle.sh 1500 — NOT RUN
+cargo test -p rum-stdlib --lib ownership_graph — 25 passed at replay checkpoint; final rerun still owed after later test/census wiring
+cargo test -p rum-stdlib --lib local_production_acceptance — NOT RUN
+cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance — NOT RUN
+cargo test --workspace --no-fail-fast — NOT RUN
+```
+
+No native ZeroMQ test ran; no executed native skip is claimed. The whole
+oracle, final derive/named-frame gate, both certificate gates and workspace
+remain unverified. **No complete current-tree green claim is made.**
+
+Ownership replay at its recorded checkpoint passed all 25 tests. The three
+required falsifiers printed the actual rejected proof results: PhantomData
+has no verified owned path; each direct/Box/Arc adapter with a private bound
+has no interim witness; adding the concrete Expr owner invalidates the
+recorded interim witness and computes the adapter/concrete/Expr path.
+The extra `+ Clone` impl-bound falsifier also rejects. The verifier checks
+all erased-trait implementations before selecting an adapter witness.
+
+Every changed ownership discovery row is disclosed in
+[ownership-discovery-diff.tsv](../../../.temp/brief-607/redispatch-3/ownership-discovery-diff.tsv).
+The replay changed these exact populations:
+
+| Partition | Before | Replayed | Removed rows | Added rows |
+| --- | ---: | ---: | ---: | ---: |
+| host_payloads | 65 | 75 | 0 | 10 |
+| unknown_attributes | 1499 | 1500 | 4 | 5 |
+| unknown_captures | 2946 | 2949 | 11 | 14 |
+| unknown_macros | 3144 | 3145 | 14 | 15 |
+| unknown_storage | 91 | 91 | 0 | 0 |
+| self_reaching | 59 | 59 | 1 | 1 |
+
+Removed/added pairs are source-position refreshes; new constructs belong to
+the scaffold and its prepared encoder. No unrelated normalized identity
+vanished. UnevaluatedRestoreNode moved 29→43. The host ledger appended seven
+PublicInput and three Unbounded entries from the director's decisions; all
+65 prior entries, including the old rows 56–58, remain byte-identical. The
+three Unbounded witnesses were copied from actual verifier output, retain
+TODO.md#standing-engineering-debt and unresolved external coverage, and do
+not claim bounded destruction. Full new ledger rows:
+[ledger-added.tsv](../../../.temp/brief-607/redispatch-3/ledger-added.tsv).
+
+The derive inventory adds only TypedAdapter; old named-frame/finalizer counts
+were not changed. Later test-module wiring still needs a fresh ownership
+replay, so the table above is a checkpoint result, not a final assertion that
+all current discovery rows are accounted for. Contract fingerprints and
+promoted certificate cells were not refreshed: certificate transitions in
+this redispatch are **none**, and both stale sets remain owed.
+
+### 6. Stop-loss, deviations and exact next action
+
+This is a population/status decision stop, not the two-attempt stop-loss.
+Each implementation iteration reduced compile errors, corrected fixture
+plumbing, reached new checked control pairs, or exposed the next real gate.
+Consecutive no-progress attempts: **0**. After the population conflict was
+identified, no implementation or receipt classification was changed; only
+read-only evidence/audits, the checkpoint, and this report were added.
+
+The sequencing brought ownership replay and dormant units ahead of the
+compiler/census work so the amended proof rule could be exercised first.
+No git command, network access, sub-agent, new unsafe, production frame
+conversion, live-driver change, or out-of-scope source edit occurred. The
+original baseline and all prior reports remain intact; the tree is uncommitted.
+
+Next: the director resolves the production versus cfg(test) baseline receipt.
+Then finish the exact F/M/D/I/C/T receipts and 23-type decoder-use census,
+exercise the scratch forced red, review the census's unresolved/module cases,
+format the unfinished new tests, replay current ownership/derive inventories
+and both earned certificate sets, and run every mandatory gate to completion.
+The correct checkpoint is `.temp/brief-607/PROGRESS.md`; the original baseline
+remains `.temp/brief-607/redispatch-1/baseline/`.
+
+## Director amendment — redispatch 4
+
+The stop was correct and the error was the director's. "600 production macro
+sites" came from a director scan that counted `pattern_matching_interpreted`
+as production. It is not: the module has been `#[cfg(test)]` since
+`9d1954ed` (2026-03-18). It is rum's own reference matcher for
+`compiled_matcher_matches_interpreted_matcher_on_supported_subset` and the
+interpreted resume test (`tests/definitions_and_rules_part2.rs:4,67`). Your
+counts reproduce: 11 `SuspensionFrame` + 5 `PureFrameFinalizer` impls and
+11 macro sites in that file. Step 6 is corrected above. The ruling:
+
+1. **Two cohorts, one partition.** The census asserts production (607
+   implementations, 589 macro sites) and the test-only S33 cohort (16, 11)
+   separately, and their sum against the partition (623, 600). Every one of
+   the 1 399 rows keeps its owner; F0515-F0525, F0614-F0618 and the 11 S33
+   macro rows stay S33's and carry a `test-only` population mark in the
+   receipts. They are still typed in S33: they compile in every test build,
+   and R deletes the old traits.
+2. **The cohort comes from the cfg, not from a list.** Classify a module as
+   test-only by the `#[cfg(test)]` on its declaration while walking the
+   module tree; do not name the file. If the guard changes, the cohort moves
+   and the census turns red, which is the second forced red in Step 6.
+3. **In-crate test support stays outside the 623.** Frames and macro sites
+   in `#[cfg(test)] mod tests`, `tests.rs` and `tests/` directories form the
+   separate test population your scanner already keeps. Report its counts;
+   do not fold it into either cohort.
+4. Nothing else changes. Finish the receipts and the 23-type decoder-use
+   census, both forced reds, the ownership/derive replay on the final tree,
+   both certificate sets, fingerprints, `cargo fmt`, and every gate in the
+   Verification list. Append a new `## Execution report` after this section.
