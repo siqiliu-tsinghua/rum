@@ -876,7 +876,7 @@ Director rulings: the two interpreted enums stay Legacy (existing identities);
 the sequence is ratified; measurement in every step follows TEMPLATE pitfall 8
 (counters, then one-codegen-unit instruction slopes; timing is indication).
 
-**S1 (brief-607, `<S1>`): the dormant typed API.** Five dispatches, every
+**S1 (brief-607, `777c61cc`): the dormant typed API.** Five dispatches, every
 stop a correct one at the fence, four of them the director's omissions (two
 module-path owner files, the ledger verifier's need for impl bounds, a test
 location that forced a `..` module path the ownership loader does not follow)
