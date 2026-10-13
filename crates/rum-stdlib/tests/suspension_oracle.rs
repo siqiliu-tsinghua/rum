@@ -1,3 +1,9 @@
+// The host implementation uses crate-root paths; these aliases preserve those
+// paths while compiling its unchanged source for the restore boundary witness.
+#[path = "suspension_oracle/host_facade.rs"]
+mod host_facade;
+pub use host_facade::*;
+
 #[path = "suspension_oracle/mod.rs"]
 mod oracle;
 

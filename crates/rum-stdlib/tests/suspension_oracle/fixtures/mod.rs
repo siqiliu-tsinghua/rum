@@ -1,3 +1,4 @@
+mod associations_roles;
 mod boundaries;
 mod capture_output;
 mod control_roles;
@@ -6,6 +7,7 @@ mod functional_roles;
 mod predicate_roles;
 pub mod preparation;
 pub mod primary;
+mod restore_boundary;
 use super::descriptors::{Fixture, Pause};
 use rum_runtime::RuntimeInputKind;
 mod debug;

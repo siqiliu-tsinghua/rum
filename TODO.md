@@ -4,10 +4,10 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-13, committed tree through brief-597's gate (G12
-repaired, owed 38; the sweep found G13); brief-598 (drain 8 of 8: associations,
-associations_transform, schema, evaluator, the snapshot-restore boundary) is
-next; then the ledger closure; then G13's design; then E2's design. Long-running
+Status checkpoint: 2026-10-13, committed tree through brief-598's gate (E1's
+last drain; owed 38 -> 5, and the five are declared roles that do not exist);
+brief-599 (retire those five and delete the owed ledger, closing E1) is next;
+then G13's design (brief-600); then E2's design. Long-running
 briefs use `gpt-6-astra` max by user ruling (2026-10-13: `gpt-6.1-sol` hit
 capacity errors mid-run); the dispatcher pins no model, `~/.codex/config.toml`
 decides.
@@ -791,6 +791,25 @@ to E2 (whose outline already asks for explicit output codecs) is part of that
 design. Director draft: `.temp/director/g13-design-draft.md`.
 Director gate: workspace 3408/0/58 with native ZeroMQ real; oracle 42/0 in
 each build.
+**E1 drain 8 of 8 (brief-598).** Every real entry of the last 38 has its
+descriptor: associations 13, associations_transform 14, schema 4,
+`Evaluator.defaultFallback` (its own descriptor over the direct-guard, body and
+post-decline phases), and `RestoreSealedReferences.body` as a declared
+boundary. That boundary is driven through the real
+`HostSession::restore_from_bytes` (the host's source compiled into the oracle
+crate, since `rum-stdlib` cannot depend on `rum-host`) and observes the child's
+actual `InputRequired`, the documented `Other` failure with the prefix kept and
+the suffix absent, cleanup inner to outer, no pending owner, a rejected resume
+and a fresh request; its `RetiredTwice` never reaches the second request. No
+continuation defect. The five left — `AssociationThread.delayedValue`,
+`DeleteMissing.{defaultOption,explicitOption,optionSyntax}`,
+`Normal.delayedValue` — are not roles (verified from source); they stay owed
+only because the manifest refuses an empty ledger, and brief-599 retires them in
+the change that deletes it. `KeyMap.callback`, `KeyValueMap.callback`,
+`Lookup.delayedValue` and `Values.delayedValue` are `Tail` (set at the gate).
+Entries 443, descriptors 546, lifecycle obligations 4 026. Director gate:
+workspace 3415/0/58 with native ZeroMQ real; oracle 49/0 in each build;
+fingerprints and both certificates replayed.
 
 **Recorded, not in this branch:** `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime

@@ -149,6 +149,8 @@ pub fn descriptors() -> Vec<Descriptor> {
             lifecycle: exercise_lifecycle,
         },
     ];
+    rows.extend(super::associations_roles::descriptors());
+    rows.push(super::restore_boundary::descriptor());
     rows.extend(super::rules::descriptors());
     rows.extend(super::rewrite_roles::descriptors());
     rows.extend(super::control_roles::descriptors());

@@ -1,39 +1,6 @@
 # entry	family	obligation
-AssociateTo.target	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Association.keyValue	associations	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-AssociationMap.callback	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 AssociationThread.delayedValue	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Catenate.delayedValue	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-ConformSchema.default	schema	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-ConformSchema.predicate	schema	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Counts.delayedValue	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-CountsBy.keyFunction	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 DeleteMissing.defaultOption	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 DeleteMissing.explicitOption	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 DeleteMissing.optionSyntax	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Evaluator.defaultFallback	evaluator	The direct Default dispatcher is not an installed BuiltinSpec; the historical G10 witnesses remain supplemental until a complete role descriptor owns its variants and lifecycle.
-GroupBy.callback	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-GroupBy.reducer	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-KeyDropFrom.target	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-KeyGroupBy.callback	associations	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-KeyMap.callback	associations	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-KeySelect.predicate	associations	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-KeySort.comparator	associations	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-KeySortBy.keyFunction	associations	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-KeyUnion.missingValue	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-KeyValueMap.callback	associations	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Lookup.default	associations	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Lookup.delayedValue	associations	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Lookup.heldTarget	associations	Full role variants and both-pause lifecycle remain owed.
-Lookup.key	associations	Full role variants and both-pause lifecycle remain owed.
-Lookup.wrapper	associations	Full role variants and both-pause lifecycle remain owed.
-Merge.delayedValue	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Merge.reducer	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-MergeNested.delayedValue	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-MergeNested.reducer	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Normal.delayedValue	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Normal.lazyConsumer	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-RestoreSealedReferences.body	scoping	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-SchemaErrors.default	schema	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-SchemaErrors.predicate	schema	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-Values.delayedValue	associations	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
