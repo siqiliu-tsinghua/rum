@@ -38,7 +38,9 @@ Only these files may change, and only for this step's work. A listed file is
 not permission to convert a frame, change evaluation or tidy. New files are
 marked.
 
+- `crates/rum-runtime/src/runtime/debug_tools/mod.rs` (added at redispatch 1)
 - `crates/rum-runtime/src/runtime/debug_tools/test_report.rs`
+- `crates/rum-runtime/src/runtime/debug_tools/test_report/model.rs` (added at redispatch 1)
 - `crates/rum-runtime/src/runtime/debug_tools/test_report/evaluation.rs`
 - `crates/rum-runtime/src/runtime/definitions/application/mod.rs`
 - `crates/rum-runtime/src/runtime/definitions/application/replace_all.rs`
@@ -49,6 +51,7 @@ marked.
 - `crates/rum-runtime/src/runtime/kernel_data/evaluated_part_selectors.rs`
 - `crates/rum-runtime/src/runtime/kernel_data/mod.rs`
 - `crates/rum-runtime/src/runtime/kernel_data/rewrite_data.rs`
+- `crates/rum-runtime/src/runtime/kernel_data/structure_data/mod.rs` (added at redispatch 1)
 - `crates/rum-runtime/src/runtime/kernel_data/structure_data/replace.rs`
 - `crates/rum-runtime/src/runtime/kernel_data/structure_data/replace/plan.rs`
 - `crates/rum-runtime/src/runtime/mod.rs`
@@ -103,6 +106,14 @@ core `Expr`/`Symbol` representation stay unchanged; S2 owns the two feature
 edits. Scratch, compiler fixtures and logs go under `.temp/brief-607/`, and the
 certificate replay may write its usual output under
 `.temp/brief-546/certificates/`. Append your report to this file.
+
+**Visibility on a registered type's path (added at redispatch 1).** For the
+21 types registered here and the codec functions they delegate to, you may
+make *visibility-only* edits in any module file on the path from
+`crate::runtime` to the declaration: raise the item or a `mod` declaration to
+`pub(in crate::runtime)`, or add a `pub(in crate::runtime) use` re-export.
+Nothing wider than `pub(in crate::runtime)`, no field visibility, no other
+change in such a file. List every one in the report with file and line.
 
 **Disclosure duty instead of a longer list.** If a necessary change falls
 outside the list (a module root that must re-export, a visibility change in an
@@ -238,3 +249,126 @@ verified state, compile/test counters and the exact next action.
 6. Stop-loss counters, deviations and open questions.
 
 ---
+
+## Execution report — stopped at the scope fence
+
+### 1. Files changed and dormant audit
+
+No production or test source was changed. This brief received this appended
+report. Scratch files are `.temp/brief-607/PROGRESS.md`,
+`scope-stop-evidence.txt`, and `source-snapshot.json`; the requested scratch
+`tmp/` directory was created. The snapshot hashes the `.rs`, `.py`, and `.toml`
+files under `crates/` for the unchanged-source check.
+
+Production function bodies touched: **none**. Trait implementations and
+production visibility declarations changed: **none**. Evaluation remains
+unchanged by this dispatch. No performance measurement ran.
+
+The required `EvalCapturedOutcome` registration encounters two out-of-scope
+visibility sites:
+
+- `crates/rum-runtime/src/runtime/debug_tools/test_report/model.rs:29`: the
+  existing type is visible only inside `test_report`. The accepted central
+  registration needs the existing type to be `pub(in crate::runtime)`; its
+  fields can retain their current visibility. A re-export in the permitted
+  `test_report.rs` cannot widen this declaration's visibility.
+- `crates/rum-runtime/src/runtime/debug_tools/mod.rs:14`: `mod test_report;`
+  leaves the module path private to `debug_tools`. The central registry also
+  needs runtime-visible access through this module declaration or a re-export
+  in this same out-of-scope owner file.
+
+The accepted visibility design is `.temp/brief-605/design.md` section 1,
+lines 27–29; round 5 retains that boundary. The slot is explicitly assigned
+`Legacy` at `S1` in `.temp/brief-606/slot-modes.tsv:21`. Moving its declaration,
+relocating registration to evade the central private boundary, or omitting
+the required slot would route around the fence. None was done.
+
+### 2. Public items, mode and registrations
+
+Not implemented. No new public items, modes, adapters, suspension methods,
+macros, or registrations were added. Required S1 registrations completed: 0/21.
+
+### 3. Compile controls
+
+Not implemented or run: 0/22 positive/negative pairs. No compiler diagnostic
+is claimed, and no missing-API failure is counted as a control.
+
+### 4. Census and forced red
+
+Not implemented or run. The planned 623-implementation / 600-macro baseline
+was not remeasured, and the required scratch-copy forced red was not run.
+
+### 5. Verification, evidence and inventories
+
+The bounded source-evidence check succeeded with exit code 0. Its actual
+output is in `.temp/brief-607/scope-stop-evidence.txt`:
+
+```text
+crates/rum-runtime/src/runtime/debug_tools/test_report/model.rs:29:pub(in crate::runtime::debug_tools::test_report) struct EvalCapturedOutcome {
+crates/rum-runtime/src/runtime/debug_tools/mod.rs:14:mod test_report;
+crates/rum-runtime/src/runtime/debug_tools/test_report/evaluation.rs:5:impl ContinuationValue for EvalCapturedOutcome {
+.temp/brief-605/design.md:28:become `pub(in crate::runtime)`; their fields need not become public. Their
+docs/dev/codex/brief-607-g13-s1-dormant-typed-api.md:109:owner file not listed), make no edit there: STOP and report the file, the line
+OUTSIDE_SCOPE crates/rum-runtime/src/runtime/debug_tools/test_report/model.rs
+OUTSIDE_SCOPE crates/rum-runtime/src/runtime/debug_tools/mod.rs
+REQUIRED_REGISTRATION slot=EvalCapturedOutcome initial_mode=Legacy introducing_step=S1
+STOP: required owner-type and module visibility changes are outside brief-607 Scope.
+```
+
+The bounded check used the required serial environment:
+
+```text
+python3 scripts/run-bounded.py --timeout 900 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-607/tmp python3 -
+```
+
+The mandatory implementation gates did **not run**, because the explicit
+scope STOP was reached before implementation:
+
+```text
+cargo fmt --check — NOT RUN
+cargo test -p rum-stdlib --test typed_slot_compile_controls — NOT RUN
+cargo test -p rum-stdlib --no-default-features --test typed_slot_compile_controls — NOT RUN
+cargo test -p rum-stdlib --test typed_slot_census — NOT RUN
+cargo test -p rum-stdlib --no-default-features --test typed_slot_census — NOT RUN
+scripts/check-suspension-oracle.sh 1500 — NOT RUN
+cargo test -p rum-stdlib --lib ownership_graph — NOT RUN
+cargo test -p rum-stdlib --lib local_production_acceptance — NOT RUN
+cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance — NOT RUN
+cargo test --workspace --no-fail-fast — NOT RUN
+```
+
+There are no `test result:` totals from this dispatch. Native ZeroMQ tests
+were not run; no executed skip is claimed. Source fingerprints, ownership
+inventories, derive/named-frame lists and certificate cells were not edited
+or replayed. Inventory row transitions: none. Certificate transitions: none.
+
+### 6. Stop-loss, deviations and next action
+
+Implementation attempts: 0. Consecutive no-progress gate attempts: 0.
+Implementation steps completed: 0/7. Compile-control pairs executed: 0/22.
+Mandatory verification commands executed: 0/10. The explicit Scope rule
+triggered this STOP; the two-attempt stop-loss did not trigger.
+
+No git command, network operation, out-of-scope edit, or production workaround
+was performed. No new unsafe code or dependency change was introduced.
+
+Next action belongs to the director: authorize the two exact owner paths above
+in a revised scope, or revise the accepted registration/visibility design.
+This dispatch does not claim S1 is complete.
+
+Final bounded source-snapshot verification (exit code 0):
+
+```text
+SOURCE_UNCHANGED files=1408 changed=0 added=0 removed=0
+```
+
+## Director amendment — redispatch 1
+
+The stop above was correct: round 5's scope omitted the owner files of
+`EvalCapturedOutcome`. The director checked all 21 registrations' paths and
+added the three files that block them (`debug_tools/mod.rs`,
+`debug_tools/test_report/model.rs`, and `kernel_data/structure_data/mod.rs`,
+which keeps `ReplacePartTarget`'s module private), plus the visibility rule in
+Scope for anything else on those paths. Proceed with Steps 1-7; append a new
+`## Execution report` after this section.
+
