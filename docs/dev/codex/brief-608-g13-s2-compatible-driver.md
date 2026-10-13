@@ -228,10 +228,8 @@ Bases: `rum-cli` and `rum-cli-alloc` built **before your first edit** with
 `--features rum-cli/alloc-count` (two arguments), each in its own target
 directory under `.temp/brief-608/`; candidates the same, from the same source
 path. The release builds never enable `test-continuation-slots`; record the
-feature tree. Panel, each result checked before it is measured: one
-suspend-and-resume workload per route (macro, chain, `Evaluate` successor,
-finalizer, repeat helper) driven through `rum-cli` with queued input, plus
-the ordinary labels `literal-integer`, `downvalue-pattern-hit`,
+feature tree. Panel, each result checked before it is measured: the
+ordinary labels `literal-integer`, `downvalue-pattern-hit`,
 `table-iterator-plus`, `matcher-single-wide-small`, `replaceall-simple`,
 `module-local`, `block-local`, `take-multispec-small`, and the controls
 `.temp/brief-563/perf/` names. **Noise floor first** (base against itself, two
@@ -292,3 +290,275 @@ verified state, compile/test counters and the exact next action.
 6. All gates verbatim; error sizes; allocation, instruction and timing rows;
    inventory and certificate transitions.
 7. Stop-loss counters, deviations and open questions.
+
+
+## Execution report — STOP before implementation
+
+The mandatory suspend-and-resume performance panel cannot be executed through
+this CLI with queued input and stdin `/dev/null`. The untouched CLI cancels
+an input suspension. Prequeued runtime input returns synchronously before
+creating a suspension. Implementing or measuring different behavior would
+require a scope/measurement decision.
+
+This report follows this brief's Disclosure duty: “make no edit there; STOP
+and report the file, the line and why.” No implementation change was made.
+
+### 1. Files changed
+
+Only this brief receives this appended report. No crate source, manifest,
+lockfile, toolchain, maintenance inventory or other documentation was changed.
+All scratch evidence is under `.temp/brief-608/`; the release binaries are in
+`base/` and their build directories are `target-base/` and `target-base-alloc/`.
+There are no exhaustiveness-ripple edits.
+
+The necessary CLI behavior change would be at
+`crates/rum-cli/src/main.rs:291`: its `InputRequired` arm calls
+`retire_input_request` at line 294 and returns an error at line 299. A measured
+suspend/resume loop would instead need an answer source and a call to the host
+resume API. That file is outside Scope; this is not a compiler-required match
+arm for either new public error variant. The permitted `eval_tests.rs` change
+is observe-only and cannot supply that behavior.
+
+Supporting current-source evidence:
+
+- `crates/rum-cli/src/input_retirement.rs:21` cancels the request;
+  `session.eval("")` at line 24 retires it through the cancellation route.
+- `crates/rum-cli/src/main.rs:308` queues stdin for the setup call at line 309,
+  which consumes it into `$ScriptInput`.
+- `crates/rum-cli/src/main.rs:320` queues script arguments for the setup call
+  at line 327, which consumes them into `$ScriptArgs`.
+- `crates/rum-runtime/src/runtime/builtins_input.rs:232` takes the queued-input
+  branch, returning `Ok(Expr::string(value))` at line 243. Only the empty-queue
+  branch calls `begin_input_suspension` at line 246.
+
+### 2. Driver, routes and fault path
+
+S2 implementation was not started. The compatible queue, routes I0001/I0002/
+I0003/I0007/I0008/I0009, fault unwind, request latch and FaultProbe were not
+added. No production frame was typed. Existing S1 code remains unchanged.
+No transit record, mode override, dual-arm decoder or raw public adapter was
+introduced. I0004/I0005/I0006/I0010 remain with their assigned family steps.
+
+### 3. Fault-injection matrix
+
+Not run: no fault injection or S2 test frames were added. No fault-occurrence,
+consumer-not-run, suffix-abandonment, scope-restoration, rollback or fresh-
+request assertion is claimed. The three CLI controls below establish only
+the measurement blocker; they are not substitutes for the required matrix.
+
+### 4. Accounting
+
+No accounting change. Two-Arc admission, maintained totals, independent
+occurrence enumeration and memory-boundary tests were not implemented or run.
+
+### 5. Compile controls and census
+
+The seven S2 compiler pairs were not added. The 22 S1 pairs and both census
+builds were not rerun. There is no newly earned census or route receipt.
+
+### 6. Commands, output and measurement evidence
+
+Both requested baseline builds completed before any source edit, serially,
+from `/home/remi/dev/rum`, with separate target directories. Commands:
+
+```sh
+python3 scripts/run-bounded.py --timeout 900 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-608/tmp CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1 CARGO_TARGET_DIR=/home/remi/dev/rum/.temp/brief-608/target-base cargo build --release -p rum-cli
+python3 scripts/run-bounded.py --timeout 900 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-608/tmp CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1 CARGO_TARGET_DIR=/home/remi/dev/rum/.temp/brief-608/target-base-alloc cargo build --release -p rum-cli --features rum-cli/alloc-count
+```
+
+Verbatim final build output (each exit 0):
+
+```text
+    Finished `release` profile [optimized] target(s) in 1m 41s
+    Finished `release` profile [optimized] target(s) in 1m 37s
+```
+
+Full logs: `.temp/brief-608/base/build-default.log` and `build-alloc.log`.
+The build durations above are provenance, not benchmark measurements.
+
+| Binary | Bytes | SHA-256 |
+| --- | ---: | --- |
+| `.temp/brief-608/base/rum-cli` | 12376160 | `76efb7c611f510a4b46c8d181d77ec37c5fe7ef057c2572ce05978e7a795ecf5` |
+| `.temp/brief-608/base/rum-cli-alloc` | 12390248 | `0e9c806bab777893c83e4e7cf1411d977ac63bb77c64374af0164e40a51e56a4` |
+
+Manifest: `.temp/brief-608/base/binary-sha256.json`.
+Both normal-dependency feature trees were recorded using the corresponding
+build environment and target directory, with `cargo tree -p rum-cli -e
+features,no-dev` (allocation build additionally uses `--features
+rum-cli/alloc-count`). Both commands exited 0. Outputs:
+`base/features-default.txt` and `base/features-alloc.txt`; neither contains
+`test-continuation-slots`.
+
+A bounded scratch Rust compiler fixture linked the actual untouched base
+`rum-runtime` and `rum-core` rlibs. Compile and execution both exited 0.
+Exact compiler command: `base/error-sizes.command`; source:
+`base/error-sizes.rs`; compiler output: `base/error-sizes-compile.log`.
+Verbatim output from `base/error-sizes.txt`:
+
+```text
+size_of::<EvalError>() = 136
+size_of::<Result<Expr, EvalError>>() = 136
+
+```
+
+No candidate exists, so candidate error sizes and a no-growth verdict are
+not available.
+
+The three feasibility controls used the untouched default release CLI, with
+profiling variables removed and stdin `/dev/null`. Each child was bounded to
+30 seconds under the 900-second serial wrapper and the required Cargo/test/
+TMPDIR environment. The control-run cap was three; all three ran once.
+Per-case `.command`, `.stdout`, `.stderr` and combined `cli-controls.json`
+are in `.temp/brief-608/base/`. These were result checks, with no allocation,
+instruction or timing sampling.
+
+**script-args-control** — exact saved command:
+
+```sh
+python3 /home/remi/dev/rum/scripts/run-bounded.py --timeout 30 -- /home/remi/dev/rum/.temp/brief-608/target-base/release/rum-cli --eval '$ScriptArgs' -- answer < /dev/null
+```
+
+Exit: `0`. stdout:
+
+```text
+List["answer"]
+```
+
+stderr:
+
+```text
+```
+
+**input-with-script-arg** — exact saved command:
+
+```sh
+python3 /home/remi/dev/rum/scripts/run-bounded.py --timeout 30 -- /home/remi/dev/rum/.temp/brief-608/target-base/release/rum-cli --eval 'InputString["608: "]' -- answer < /dev/null
+```
+
+Exit: `1`. stdout:
+
+```text
+```
+
+stderr:
+
+```text
+! input required: 608: 
+error: input required: 608: 
+```
+
+**cleanup-on-input** — exact saved command:
+
+```sh
+python3 /home/remi/dev/rum/scripts/run-bounded.py --timeout 30 -- /home/remi/dev/rum/.temp/brief-608/target-base/release/rum-cli --eval 'WithCleanup[InputString["608: "], Print["cleanup"]]; Print["resumed"]' -- answer < /dev/null
+```
+
+Exit: `1`. stdout:
+
+```text
+cleanup
+```
+
+stderr:
+
+```text
+! input required: 608: 
+error: input required: 608: 
+```
+
+The setup control returns `List["answer"]`. Supplying that same argument to
+an actual `InputString` request still exits 1. `WithCleanup` prints `cleanup`
+and never prints `resumed`, consistent with the source cancellation path.
+All three exact-output checks passed. They do not exercise successful driver
+resumption and cannot be reported as the five required route workloads.
+
+Mandatory gates not run after the scope STOP:
+
+| Gate | Result |
+| --- | --- |
+| `cargo fmt --check` | Not run |
+| `cargo test -p rum-runtime --lib suspension::typed::tests` | Not run |
+| `cargo test -p rum-stdlib --test typed_slot_compile_controls` | Not run |
+| `cargo test -p rum-stdlib --no-default-features --test typed_slot_compile_controls` | Not run |
+| `cargo test -p rum-stdlib --test typed_slot_census` | Not run |
+| `cargo test -p rum-stdlib --no-default-features --test typed_slot_census` | Not run |
+| `scripts/check-suspension-oracle.sh 1500` | Not run |
+| `cargo test -p rum-stdlib --lib ownership_graph` | Not run |
+| `cargo test -p rum-stdlib --lib local_production_acceptance` | Not run |
+| `cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance` | Not run |
+| `cargo test --workspace --no-fail-fast` | Not run |
+
+There are no `test result:` totals for this execution. The oracle's per-build
+fault-occurrence deltas are **not measured**, not zero. Native ZeroMQ tests
+were not run; no passes or skips are claimed.
+
+The five route workloads, ordinary-label panel, brief-563 controls, base/base
+noise-floor pairs, allocation counts/bytes, instruction slopes and full
+microbench A/B were not measured. No performance gate passed, and no
+regression/no-regression verdict is claimed.
+
+Inventory and certificate transitions: none. No source edits expired their
+fingerprints, and no replay was performed. The 1,461 files recorded in
+`base/source-sha256.json` were checked byte-identical before this report.
+
+### 7. Stop-loss, deviations and decision needed
+
+- Scope STOP: `main.rs:291` needs different behavior to meet the specified CLI
+  suspend/resume panel; that change is not authorized.
+- Implementation attempts: 0. Compile failures: 0. Consecutive attempts moving
+  no failing gate: 0. The progress-based stop-loss was not reached.
+- Baseline builds: 2/2 succeeded. Feature-tree commands: 2/2 succeeded.
+  Base size fixture: compile/run succeeded. CLI feasibility controls: 3/3
+  exact expected outputs confirmed; two intentional CLI exits were 1.
+- The required implementation and gates remain unfinished. No alternative
+  measurement harness was substituted, and synchronous queued-input results
+  were not labelled suspension/resumption evidence.
+- Director decision needed: authorize a release Rust host harness that drives
+  actual `InputRequired`/`resume_with_input` transitions for the five routes,
+  or revise Scope to provide such a driver in the CLI. Merely prequeuing
+  answers does not exercise suspension. The preserved binaries are available
+  for the resumed A/B work.
+- No git command, network access, unsafe addition, dependency change, lockfile
+  change, production frame conversion or out-of-scope source edit occurred.
+  The tree is left uncommitted.
+
+Checkpoint: `.temp/brief-608/PROGRESS.md`. The brief is not completed.
+
+## Director amendment — redispatch 1
+
+The stop was correct and the panel was the director's error: `rum-cli`
+retires every input suspension (`main.rs:291-299`) and pre-queued input
+returns before a suspension exists (`builtins_input.rs:232-246`), so the CLI
+cannot drive a resume. The CLI does not change. The panel is corrected above
+(the ordinary panel is unchanged and remains the primary gate), and the
+suspension path gets its own instrument:
+
+1. **A resume harness in scratch.** Under `.temp/brief-608/resume-harness/`,
+   a standalone Cargo package (its own manifest and a copy of the workspace
+   lockfile, offline, not a workspace member, no repository file changed)
+   depending on `rum-host` by path. It drives real cycles through the public
+   `HostSession`: evaluate, receive `InputRequired`, `resume_with_input`,
+   repeat, and checks the final result. It may include
+   `crates/rum-cli/src/alloc_count.rs` by `#[path]` for an allocation-count
+   build. Build it release with `CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1`
+   **against the current tree before your first source edit** (base, default
+   and allocation-count, hashed), and again after (candidate).
+2. **What it measures.** No production frame is typed in S2, so the path that
+   changes for real programs is the legacy resume through the new queue.
+   Five workloads, each suspending N and 2N times: an `InputString` in a
+   `Table` body, in a `Do` body (the iterator scope chain), in call-argument
+   preparation (`f[InputString[...], InputString[...], ...]`, the repeat
+   helper), inside `WithCleanup` (cleanup path), and in a `Fold` step.
+   Per-resume slopes `(count(2N) - count(N)) / N` for allocations, bytes and
+   `cpu_core/instructions/u` (`taskset -c 2`, stdin `/dev/null`), base
+   against itself first for the floor.
+3. **The gate.** Allocations and bytes per resume must not change for legacy
+   entries; they keep their one-allocation layout. Instructions per resume:
+   report the delta for each workload. Any increase above the floor is
+   attributed to a named mechanism (the entry match, the mode-free legacy
+   path) with its per-resume size; an unexplained one is a defect. Keep the
+   harness: later family steps reuse it for their typed routes.
+
+Everything else in the brief stands. Your base `rum-cli` binaries are still
+valid (no source has changed). Append a new `## Execution report` after this
+section.
