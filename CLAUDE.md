@@ -221,11 +221,14 @@ Consequences for how I present and pick work:
   with structural depth checks; G5 is a typed read-and-complete option
   protocol (a read without its continuation does not compile); each group's
   ordinary-path cost was then tuned with one-codegen-unit instruction gates
-  and the residual recorded. **Now: brief-583** re-runs the census, resolves
-  brief-548's 495 Unsettled edges (new Lost sites become new groups) and
-  designs E1 (catalog-wide oracle); then E2 (a may-suspend result type with
-  no `Try`). Runs are serial by user ruling. Memory
-  `suspension-continuation-branch.md`.
+  and the residual recorded. Since then (583-597): the re-census found G9 and
+  G10; E1 built the catalog-wide oracle (586) and drained it family by family,
+  finding G11 (output a suspended capture owns, 593-595) and G12 (597); 597's
+  sweep found **G13 — typed continuation state crosses frames in-band as
+  `Expr` under `System`Internal*` heads guest source can write**, decoded
+  leniently or by panic. **Now: brief-598**, the last drain; then the ledger
+  closure, G13's design, and E2 (a may-suspend result type with no `Try`).
+  Runs are serial by user ruling. Memory `suspension-continuation-branch.md`.
 
   **Four things from it are method, not history.**
 
