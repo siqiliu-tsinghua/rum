@@ -226,10 +226,10 @@ Consequences for how I present and pick work:
   finding G11 (output a suspended capture owns, 593-595) and G12 (597); 597's
   sweep found **G13 — typed continuation state crosses frames in-band as
   `Expr` under `System`Internal*` heads guest source can write**, decoded
-  leniently or by panic. 598 drained every real entry (owed 38 -> 5, the five
-  are declared roles that do not exist). **Now: brief-599**, the ledger
-  closure that ends E1; then G13's design (brief-600), and E2 (a may-suspend
-  result type with no `Try`).
+  leniently or by panic. 598-599 closed E1: all 438 declared entries have an
+  executed descriptor in both builds and the owed ledger is gone. **Now:
+  brief-600, G13's design**; then its repair, and E2 (a may-suspend result
+  type with no `Try`).
   Runs are serial by user ruling. Memory `suspension-continuation-branch.md`.
 
   **Four things from it are method, not history.**
