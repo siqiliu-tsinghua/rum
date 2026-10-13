@@ -1983,3 +1983,1108 @@ the old test was right about the first pause, and your stop exposed why.
    changing anything, and report.
 5. Then attach the four G11 entries (owed 114 -> 110) and run every remaining
    gate.
+
+
+## Amendment 3 execution report — brief-595 (2026-10-07; stopped at closed Trace/census source invariants)
+
+### 1. Changed files, functions and types; boundary and remaining scope conflict
+
+**Incomplete; not admitted.** Candidate 3 implements the authorized resume-driver repair. The new live-state symmetry test was recorded red before the driver change and is now green. Host, both pre-admission oracle builds, ownership, both certificates and the instruction panel pass. The completed workspace gate reports a runtime deadline-test failure, two stdlib source-invariant failures, and nine native ZeroMQ permission failures. The native-only environment control subsequently reports explicit skips. Entries attached remain **0/4**; owed stays **114**.
+
+The actual scope stop is in two structural test files outside the brief's edit surface:
+
+1. `crates/rum-stdlib/src/tests/association_depth_contract/g7_continuation_contract.rs:367`: the closed Trace function inventory omits the inherited `EvalStructuredTraceCaptureExprSuspensionFrame::output_boundary` method. Its outbound-call whitelist at line 372 also needs review once the function inventory is updated. This is not one of the specifically authorized rum-runtime frame/derive lists.
+2. `crates/rum-stdlib/src/tests/retention_closure/census/tests.rs:190`: the historical rejection frontier hard-codes guest-form abandonment take/install/capture sites 709/710/725 in `suspension/core.rs`; the corresponding statements now occur at 667/668/684. The first assertion fails before the later exact 927-row and rejection-kind counts are checked. Those later counts are **unverified**, not assumed unchanged. The census must be replayed and reconciled, not relaxed.
+
+The template says: “Do NOT modify files outside Scope. If you believe you must, STOP and write that in the report instead.” Neither file was edited, and no production workaround was made to hide the new boundary method or preserve obsolete line positions. `resume-3/scope-witness.md` preserves the exact failures and source locations. No source edits followed their discovery.
+
+**Correction to the earlier provisional diagnosis:** the deadline test is in the already authorized guest-loading test file, and amendment 3 itself determines the right behavior. Its old assertion expects the saved guest deadline to remain live at pause two despite deliberately perturbing the enclosing deadline. It should instead assert the original deadline inside resumed guest code and the displaced enclosing deadline at the pause, retaining the existing original-deadline completion check. That stronger test is prepared under `resume-3/admission/deadline-{before,after}.txt`; it was not applied before the two actual out-of-scope failures were discovered. No new semantic ruling on deadlines is needed. The former deadline-only scope diagnosis and report drafts are superseded.
+
+Verification also exposed an **in-scope test-harness defect**: inherited `support/lifecycle.rs` imported oracle-only `descriptors::Fixture`, although historical integration targets include that shared module without `descriptors`. The first workspace attempt failed to compile `rule_pattern_continuations` with E0432. The fixture-specific lifecycle helper was moved to `descriptors.rs`, preserving its assertions and updating its caller. The historical target then passed 71/71 and both oracle builds passed again. This test-only repair does not create another production candidate. All 697 default and 698 allocation-build dependency paths still match the measured binaries' source bytes. Standing maintenance was replayed after the move.
+
+The inherited three-channel boundary remains in `runtime/suspension/output.rs`; both pause paths still use `finish_input_required_request`. Capture completion and abandonment, raw buffers, emission, response shapes, adapters, and the prepared EvaluationData selector implementation remain as described in the earlier changed-function tables. This continuation changes exactly:
+
+| File | Functions/types and reason |
+| --- | --- |
+| `crates/rum-runtime/src/runtime/session/guest_loading/scope.rs` | New `DisplacedGuestFormEnvironment`, its `restore`, and `GuestFormEnvironment::install_for_resume`: move the enclosing handled-error tail and last-message vector, and copy the message checkpoint/dirty flag, guest identity, deadlines, memory limit and interrupt state before installation. Restore all of them, including both memory-owner refreshes, only on another pause. The existing `install` body is unchanged for abandonment. |
+| `crates/rum-runtime/src/runtime/suspension/core.rs` | `Session::resume_suspended_evaluation` retains displaced state on its own stack and restores it in the `InputRequired` arm. Completion and abandonment paths are unchanged. |
+| `crates/rum-runtime/src/runtime/session/guest_loading/tests.rs` | Only `guest_environment_restores_handled_error_tail_and_memory_limit_before_child`, including local `live_state`, changes. Both pause tails must be empty; snapshots compare the tail, checkpoint, dirty flag, last-message list, guest identity, memory limit and both deadlines. Existing `RequireGuestEnvironment` checks and terminal empty-tail/cleared-memory assertions remain. |
+| `crates/rum-stdlib/tests/suspension_oracle/support/lifecycle.rs` | Move `exercise_fixture` out of this shared module; generic lifecycle behavior and all prefix assertions remain. |
+| `crates/rum-stdlib/tests/suspension_oracle/descriptors.rs` | Own the moved `exercise_fixture` beside its `Fixture` dependency; qualify its unchanged generic lifecycle delegation. |
+| `crates/rum-stdlib/tests/suspension_oracle/fixtures/capture_output/roles.rs` | `exercise` calls the helper at its new descriptor-module location. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/{unknown_attributes,unknown_macros,unknown_storage}.tsv` | Replay five coordinate transitions and add two unknown foreign-storage rows for the new displaced state's `Instant` fields. Other ownership inventory bytes stay unchanged in this continuation. |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/{local-contracts,promoted}.tsv` | Replay all 68 fingerprints and four C01/C02 certificate cells after the driver change, then again after the test-only move. Every intermediate/final cell is disclosed below. |
+| `docs/dev/codex/brief-595-capture-output-at-a-pause.md` | Append this report. |
+
+The new displaced value is not a suspension frame and has no `FrameRootTrace` or `PureFrameAbandon` derive; no closed frame-list entry is due. It stores no Session borrow, cancellation observer, or NativeStackDepth. No new unsafe code, git command, network access, external-engine comparison, timing suite or aborting probe was introduced or run. Agent-created scratch remains under `.temp/brief-595/`, except the permitted legacy certificate writer under `.temp/brief-546/certificates/`. The mandatory workspace compiler-oracle tests also use their existing harness-selected build/output directories under repository `target/` and `.temp/`; their scripts and source were not edited or those test-generated artifacts checked in.
+
+Organization: `scope.rs` is 7,979 characters and keeps installation/restoration state together. `core.rs` is 28,571 characters; this small driver repair belongs beside its pause/completion arms. The inherited future split remains protocol/driver versus scope-restoration helpers. The guest-loading tests are 13,572 characters, under the preferred 15k test threshold. Moving the fixture-dependent helper follows a real dependency boundary; final sizes for the three oracle files are recorded with the audit below.
+
+### 2. Verbatim red/green evidence, broad gates and every inventory change
+
+Cargo ran serially through `scripts/run-bounded.py`, with `CARGO_BUILD_JOBS=1`, `RUST_TEST_THREADS=1`, `CARGO_NET_OFFLINE=true`, and scratch TMPDIR/target paths under brief-595. Exact command JSON accompanies each log. The two-feature oracle used the byte-identical scratch copy of the repository runner to keep its own logs/TMPDIR inside brief-595; repository scripts are unchanged. The workspace command adds `-- --nocapture` to the required `cargo test --workspace --no-fail-fast` to expose native ZeroMQ skips. Test-only follow-up logs and the second maintenance replay are under `resume-3/post-harness/`.
+
+The required red ran against inherited candidate-2 production, whose guest resume driver is unchanged from candidate 1. Both preserved base binary hashes were verified before production edits. The red's exact test source is saved as `resume-3/guest-symmetry-red.rs`.
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+warning: function `register_test_if_builtin` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:320:27
+    |
+320 | pub(in crate::runtime) fn register_test_if_builtin(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` on by default
+
+warning: function `register_test_return_builtin` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:330:27
+    |
+330 | pub(in crate::runtime) fn register_test_return_builtin(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `register_test_vm_template_builtins` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:358:27
+    |
+358 | pub(in crate::runtime) fn register_test_vm_template_builtins(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `rum-runtime` (lib test) generated 3 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.83s
+     Running unittests src/lib.rs (.temp/brief-595/target-tests/debug/deps/rum_runtime-95cd5fbb46da4f1c)
+
+running 1 test
+test runtime::session::guest_loading::tests::guest_environment_restores_handled_error_tail_and_memory_limit_before_child ... 
+thread 'runtime::session::guest_loading::tests::guest_environment_restores_handled_error_tail_and_memory_limit_before_child' panicked at crates/rum-runtime/src/runtime/session/guest_loading/tests.rs:371:5:
+assertion `left == right` failed: pauses restore the enclosing state
+  left: ([RuntimeMessage { symbol: "GuestProbe", tag: "handled", text: "saved tail" }], None, false, [], None, Some(100000000), None, None)
+ right: ([], None, false, [], None, Some(100000000), None, None)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    runtime::session::guest_loading::tests::guest_environment_restores_handled_error_tail_and_memory_limit_before_child
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `-p rum-runtime --lib`
+```
+
+After the driver repair, the required test is green and the deadline-test conflict is recorded:
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+warning: function `register_test_if_builtin` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:320:27
+    |
+320 | pub(in crate::runtime) fn register_test_if_builtin(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` on by default
+
+warning: function `register_test_return_builtin` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:330:27
+    |
+330 | pub(in crate::runtime) fn register_test_return_builtin(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `register_test_vm_template_builtins` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:358:27
+    |
+358 | pub(in crate::runtime) fn register_test_vm_template_builtins(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `rum-runtime` (lib test) generated 3 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 21.45s
+     Running unittests src/lib.rs (.temp/brief-595/target-tests/debug/deps/rum_runtime-95cd5fbb46da4f1c)
+
+running 8 tests
+test runtime::session::guest_loading::tests::abandonment_cleanup_loading_file_drains_nested_worklist ... ok
+test runtime::session::guest_loading::tests::cancellation_restores_nested_snapshots_inner_to_outer_at_each_input ... ok
+test runtime::session::guest_loading::tests::dependency_exit_restores_package_frame_and_preserves_earlier_definitions ... ok
+test runtime::session::guest_loading::tests::guest_environment_restores_handled_error_tail_and_memory_limit_before_child ... ok
+test runtime::session::guest_loading::tests::message_scope_and_print_sink_are_not_replayed_across_inputs ... ok
+test runtime::session::guest_loading::tests::nested_files_close_once_and_all_owner_queues_empty ... ok
+test runtime::session::guest_loading::tests::paused_guest_form_reinstalls_original_deadline_before_child_frames ... 
+thread 'runtime::session::guest_loading::tests::paused_guest_form_reinstalls_original_deadline_before_child_frames' panicked at crates/rum-runtime/src/runtime/session/guest_loading/tests.rs:270:5:
+assertion `left == right` failed
+  left: Some(Instant { tv_sec: 264429, tv_nsec: 33706115 })
+ right: Some(Instant { tv_sec: 264369, tv_nsec: 33376786 })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test runtime::session::guest_loading::tests::pending_frames_trace_snapshot_definitions_and_previous_form_values ... ok
+
+failures:
+
+failures:
+    runtime::session::guest_loading::tests::paused_guest_form_reinstalls_original_deadline_before_child_frames
+
+test result: FAILED. 7 passed; 1 failed; 0 ignored; 0 measured; 1144 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `-p rum-runtime --lib`
+```
+
+Full runtime failure evidence:
+
+```text
+failures:
+
+---- runtime::session::guest_loading::tests::paused_guest_form_reinstalls_original_deadline_before_child_frames stdout ----
+
+thread 'runtime::session::guest_loading::tests::paused_guest_form_reinstalls_original_deadline_before_child_frames' panicked at crates/rum-runtime/src/runtime/session/guest_loading/tests.rs:270:5:
+assertion `left == right` failed
+  left: Some(Instant { tv_sec: 264546, tv_nsec: 124159085 })
+ right: Some(Instant { tv_sec: 264486, tv_nsec: 123909226 })
+
+
+failures:
+    runtime::session::guest_loading::tests::paused_guest_form_reinstalls_original_deadline_before_child_frames
+
+test result: FAILED. 1148 passed; 1 failed; 3 ignored; 0 measured; 0 filtered out; finished in 30.19s
+
+error: test failed, to rerun pass `-p rum-runtime --lib`
+```
+
+Full host gate: exit 0, **170 passed, 0 failed, 2 ignored**, including doc tests. Verbatim target/result lines:
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 22s
+     Running unittests src/lib.rs (.temp/brief-595/target-tests/debug/deps/rum_host-c8e679ba191fc485)
+test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.63s
+     Running tests/adapter_contract.rs (.temp/brief-595/target-tests/debug/deps/adapter_contract-113db5fecd979061)
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+     Running tests/batch_boundary_ownership.rs (.temp/brief-595/target-tests/debug/deps/batch_boundary_ownership-ada39e42563d5836)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+     Running tests/capture_output_lifecycle.rs (.temp/brief-595/target-tests/debug/deps/capture_output_lifecycle-2d14d533959ab532)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+     Running tests/guest_loading_resume.rs (.temp/brief-595/target-tests/debug/deps/guest_loading_resume-e0d489c185a50b11)
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+     Running tests/host_payload_destruction_contract.rs (.temp/brief-595/target-tests/debug/deps/host_payload_destruction_contract-a4ed0b92a55b22f2)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 68.75s
+     Running tests/installer.rs (.temp/brief-595/target-tests/debug/deps/installer-f802fc46bf4b660b)
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+     Running tests/lifecycle_buildout.rs (.temp/brief-595/target-tests/debug/deps/lifecycle_buildout-29164436cf43ed97)
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+     Running tests/lifecycle_contract.rs (.temp/brief-595/target-tests/debug/deps/lifecycle_contract-001d372c09259c6a)
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+     Running tests/random_password_policy.rs (.temp/brief-595/target-tests/debug/deps/random_password_policy-238ca71f730e71f7)
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+     Running tests/shared_accumulator_completion.rs (.temp/brief-595/target-tests/debug/deps/shared_accumulator_completion-0359e833e1624bcc)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+     Running tests/stress.rs (.temp/brief-595/target-tests/debug/deps/stress-bbc8db54c6acb28f)
+test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.27s
+     Running tests/suspended_timeout_contract.rs (.temp/brief-595/target-tests/debug/deps/suspended_timeout_contract-2bccfddd6f089f4a)
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.01s
+     Running tests/suspension_abandonment_contract.rs (.temp/brief-595/target-tests/debug/deps/suspension_abandonment_contract-8f5779f2b3fc6ed4)
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.25s
+   Doc-tests rum_host
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.95s
+```
+
+First workspace attempt: compilation failed before suites ran. Verbatim error:
+
+```text
+   Compiling hmac v0.12.1
+   Compiling rum-jupyter v0.2.0 (/home/remi/dev/rum/crates/rum-jupyter)
+   Compiling rum-cli v0.2.0 (/home/remi/dev/rum/crates/rum-cli)
+error[E0432]: unresolved import `super::super::descriptors`
+ --> crates/rum-stdlib/tests/suspension_oracle/support/lifecycle.rs:1:19
+  |
+1 | use super::super::descriptors::Fixture;
+  |                   ^^^^^^^^^^^ could not find `descriptors` in the crate root
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `rum-stdlib` (test "rule_pattern_continuations") due to 1 previous error
+```
+
+After moving the fixture-specific helper, its body remains byte-identical except for its required module qualification; the historical target passes:
+
+```text
+Moved exercise_fixture body byte-identical after removing the required lifecycle:: qualification.
+support/lifecycle.rs: 8779 -> 5287 chars
+descriptors.rs: 8216 -> 11741 chars
+fixtures/capture_output/roles.rs: 10558 -> 10520 chars
+```
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.37s
+     Running tests/rule_pattern_continuations.rs (.temp/brief-595/target-tests/debug/deps/rule_pattern_continuations-7084ce392f17d58c)
+test result: ok. 71 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.51s
+```
+
+Format checks are green after formatting the new assertion/import. The final `cargo fmt --check` exits 0 with no output (`post-harness/fmt.log`).
+
+Current pre-admission oracle, default: exit 0. Standalone G11 variants/lifecycle, original reds and watched falsifiers follow verbatim:
+
+```text
+test oracle::fixtures::capture_output::adjacent_trace_capture_prefix ... TRACE_CONTROL paused_trace=[] completed_trace=[]
+test oracle::fixtures::capture_output::evaluation_data_list_selector ... ok
+test oracle::fixtures::capture_output::evaluation_data_print_prefix ... ok
+test oracle::fixtures::capture_output::evaluation_data_scalar_selector ... ok
+test oracle::fixtures::capture_output::messages::body_errors_settle_matching_and_nonmatching_message_policies ... ok
+test oracle::fixtures::capture_output::messages::message_and_trace_supplemental_matrix ... VARIANT Check.body Middle PASS
+test oracle::fixtures::capture_output::messages::nonmatching_messages_and_settled_fallback_and_info_are_public ... ok
+test oracle::fixtures::capture_output::quiet_message_prefix ... ok
+test oracle::fixtures::capture_output::roles::g11_admission_matrix ... G11 capture.evaluation-data Middle PASS
+G11 capture.evaluation-data Twice PASS
+G11 capture.evaluation-data Error PASS
+G11 capture.evaluation-data AlreadyResumed PASS
+G11 capture.evaluation-data Nested PASS
+G11 capture.evaluation-data lifecycle first=PASS second=PASS
+G11 capture.report-input-within Middle PASS
+G11 capture.report-input-within Twice PASS
+G11 capture.report-input-within Error PASS
+G11 capture.report-input-within AlreadyResumed PASS
+G11 capture.report-input-within Nested PASS
+G11 capture.report-input-within lifecycle first=PASS second=PASS
+G11 capture.report-input-cases Middle PASS
+G11 capture.report-input-cases Twice PASS
+G11 capture.report-input-cases Error PASS
+G11 capture.report-input-cases AlreadyResumed PASS
+G11 capture.report-input-cases Nested PASS
+G11 capture.report-input-cases lifecycle first=PASS second=PASS
+G11 capture.report-expected-within Middle PASS
+G11 capture.report-expected-within Twice PASS
+G11 capture.report-expected-within Error PASS
+G11 capture.report-expected-within AlreadyResumed PASS
+G11 capture.report-expected-within Nested PASS
+G11 capture.report-expected-within lifecycle first=PASS second=PASS
+G11 capture.report-expected-cases Middle PASS
+G11 capture.report-expected-cases Twice PASS
+G11 capture.report-expected-cases Error PASS
+G11 capture.report-expected-cases AlreadyResumed PASS
+G11 capture.report-expected-cases Nested PASS
+G11 capture.report-expected-cases lifecycle first=PASS second=PASS
+G11 capture.report-same-within Middle PASS
+G11 capture.report-same-within Twice PASS
+G11 capture.report-same-within Error PASS
+G11 capture.report-same-within AlreadyResumed PASS
+G11 capture.report-same-within Nested PASS
+G11 capture.report-same-within Decline PASS
+G11 capture.report-same-within lifecycle first=PASS second=PASS
+G11 capture.report-same-cases Middle PASS
+G11 capture.report-same-cases Twice PASS
+G11 capture.report-same-cases Error PASS
+G11 capture.report-same-cases AlreadyResumed PASS
+G11 capture.report-same-cases Nested PASS
+G11 capture.report-same-cases Decline PASS
+G11 capture.report-same-cases lifecycle first=PASS second=PASS
+test oracle::fixtures::capture_output::selectors::evaluation_data_selectors_and_preparation_run_once ... ok
+test oracle::fixtures::capture_output::selectors::report_failed_input_copy_and_release_wrong_output_and_empty_report ... ok
+test oracle::fixtures::capture_output::test_report_input_print_prefix ... ok
+CATALOG hash=true installed=643 manifest=643 GuestEntries=237 NoLocalGuestEffect=406 Boundary=5 entries=465 descriptors=415 historical=209 owed=114
+OWED families={"associations": 13, "associations_transform": 19, "debug": 4, "evaluator": 1, "schema": 4, "scoping": 1, "strings": 24, "strings_match": 38, "strings_text": 10}
+test oracle::mutations::capture_output::lost_message_prefix_is_rejected_when_old_print_only_check_passes ... WEAK message_prefix: PASS
+STRICT message_prefix: Err(MessagePrefix)
+CONTROL message_prefix: PASS
+STRICT message_pause: PauseMessages(0)
+test oracle::mutations::capture_output::lost_trace_prefix_is_rejected_when_old_print_only_check_passes ... WEAK trace_prefix: PASS
+STRICT trace_prefix: Err(TracePrefix)
+CONTROL trace_prefix: PASS
+STRICT trace_pause: PauseTrace(0)
+test result: ok. 33 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 21.00s
+```
+
+Current pre-admission oracle, no-default: exit 0. Standalone G11 variants/lifecycle, original reds and watched falsifiers follow verbatim:
+
+```text
+test oracle::fixtures::capture_output::adjacent_trace_capture_prefix ... TRACE_CONTROL paused_trace=[] completed_trace=[]
+test oracle::fixtures::capture_output::evaluation_data_list_selector ... ok
+test oracle::fixtures::capture_output::evaluation_data_print_prefix ... ok
+test oracle::fixtures::capture_output::evaluation_data_scalar_selector ... ok
+test oracle::fixtures::capture_output::messages::body_errors_settle_matching_and_nonmatching_message_policies ... ok
+test oracle::fixtures::capture_output::messages::message_and_trace_supplemental_matrix ... VARIANT Check.body Middle PASS
+test oracle::fixtures::capture_output::messages::nonmatching_messages_and_settled_fallback_and_info_are_public ... ok
+test oracle::fixtures::capture_output::quiet_message_prefix ... ok
+test oracle::fixtures::capture_output::roles::g11_admission_matrix ... G11 capture.evaluation-data Middle PASS
+G11 capture.evaluation-data Twice PASS
+G11 capture.evaluation-data Error PASS
+G11 capture.evaluation-data AlreadyResumed PASS
+G11 capture.evaluation-data Nested PASS
+G11 capture.evaluation-data lifecycle first=PASS second=PASS
+G11 capture.report-input-within Middle PASS
+G11 capture.report-input-within Twice PASS
+G11 capture.report-input-within Error PASS
+G11 capture.report-input-within AlreadyResumed PASS
+G11 capture.report-input-within Nested PASS
+G11 capture.report-input-within lifecycle first=PASS second=PASS
+G11 capture.report-input-cases Middle PASS
+G11 capture.report-input-cases Twice PASS
+G11 capture.report-input-cases Error PASS
+G11 capture.report-input-cases AlreadyResumed PASS
+G11 capture.report-input-cases Nested PASS
+G11 capture.report-input-cases lifecycle first=PASS second=PASS
+G11 capture.report-expected-within Middle PASS
+G11 capture.report-expected-within Twice PASS
+G11 capture.report-expected-within Error PASS
+G11 capture.report-expected-within AlreadyResumed PASS
+G11 capture.report-expected-within Nested PASS
+G11 capture.report-expected-within lifecycle first=PASS second=PASS
+G11 capture.report-expected-cases Middle PASS
+G11 capture.report-expected-cases Twice PASS
+G11 capture.report-expected-cases Error PASS
+G11 capture.report-expected-cases AlreadyResumed PASS
+G11 capture.report-expected-cases Nested PASS
+G11 capture.report-expected-cases lifecycle first=PASS second=PASS
+G11 capture.report-same-within Middle PASS
+G11 capture.report-same-within Twice PASS
+G11 capture.report-same-within Error PASS
+G11 capture.report-same-within AlreadyResumed PASS
+G11 capture.report-same-within Nested PASS
+G11 capture.report-same-within Decline PASS
+G11 capture.report-same-within lifecycle first=PASS second=PASS
+G11 capture.report-same-cases Middle PASS
+G11 capture.report-same-cases Twice PASS
+G11 capture.report-same-cases Error PASS
+G11 capture.report-same-cases AlreadyResumed PASS
+G11 capture.report-same-cases Nested PASS
+G11 capture.report-same-cases Decline PASS
+G11 capture.report-same-cases lifecycle first=PASS second=PASS
+test oracle::fixtures::capture_output::selectors::evaluation_data_selectors_and_preparation_run_once ... ok
+test oracle::fixtures::capture_output::selectors::report_failed_input_copy_and_release_wrong_output_and_empty_report ... ok
+test oracle::fixtures::capture_output::test_report_input_print_prefix ... ok
+CATALOG hash=false installed=637 manifest=637 GuestEntries=237 NoLocalGuestEffect=400 Boundary=5 entries=465 descriptors=415 historical=209 owed=114
+OWED families={"associations": 13, "associations_transform": 19, "debug": 4, "evaluator": 1, "schema": 4, "scoping": 1, "strings": 24, "strings_match": 38, "strings_text": 10}
+test oracle::mutations::capture_output::lost_message_prefix_is_rejected_when_old_print_only_check_passes ... WEAK message_prefix: PASS
+STRICT message_prefix: Err(MessagePrefix)
+CONTROL message_prefix: PASS
+STRICT message_pause: PauseMessages(0)
+test oracle::mutations::capture_output::lost_trace_prefix_is_rejected_when_old_print_only_check_passes ... WEAK trace_prefix: PASS
+STRICT trace_prefix: Err(TracePrefix)
+CONTROL trace_prefix: PASS
+STRICT trace_pause: PauseTrace(0)
+test result: ok. 33 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 21.34s
+```
+
+Final ownership gate:
+
+```text
+test tests::ownership_graph::host_payload_ledger::production_host_payload_ledger_is_complete_and_attributed ... HOST PAYLOAD LEDGER: 65 rows; 6 storage edges (3 Declared, 3 Unbounded); 59 PublicInput
+checks 1/2/3: complete, no stale entries, field-specific expression attribution verified
+external_implementation_coverage: unresolved for every Unbounded entry
+test tests::ownership_graph::production_inventory_is_exact ... EXACT INVENTORY self-reaching types: 59 rows
+EXACT INVENTORY UnknownHostPayload: 65 rows
+EXACT INVENTORY UnknownConstruct: 7680 rows
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 1120 filtered out; finished in 60.96s
+```
+
+Both maintenance rounds replayed both certificates and then verified the installed cells. First-round green result lines (full logs remain in resume-3):
+
+```text
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1139 filtered out; finished in 18.06s
+```
+
+```text
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1133 filtered out; finished in 18.13s
+```
+
+Final replay rejection lines and complete green output. Initial stale-cell failures are expected evidence; no failure was relabeled a pass:
+
+```text
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+called `Result::unwrap()` on an `Err` value: "stale or omitted instance certificate C01 hash=true"
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1139 filtered out; finished in 18.51s
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.88s
+     Running unittests src/lib.rs (.temp/brief-595/target-tests/debug/deps/rum_stdlib-3a556b9db7fd59ac)
+
+running 1 test
+test tests::retention_closure::local::production::local_production_acceptance ... body	instance	rejections
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::Unarmed;R=rum_stdlib::option_consumers::OptionConsumer;hash=true	0
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=rum_stdlib::option_consumers::OptionConsumer;hash=true	0
+C02	rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr;M=runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=none (nongeneric C02);hash=true	0
+LeaseProbe538::probe	sealed modes	0
+LeaseProbe538::start	sealed modes	0
+LeaseProbe538::drive	sealed modes	0
+LeaseProbe538::resume	sealed modes	0
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1139 filtered out; finished in 18.16s
+```
+
+```text
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+called `Result::unwrap()` on an `Err` value: "stale or omitted instance certificate C01 hash=false"
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1133 filtered out; finished in 18.33s
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 14.27s
+     Running unittests src/lib.rs (.temp/brief-595/target-tests/debug/deps/rum_stdlib-5d6fedc676d25fda)
+
+running 1 test
+test tests::retention_closure::local::production::local_production_acceptance ... body	instance	rejections
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::Unarmed;R=rum_stdlib::option_consumers::OptionConsumer;hash=false	0
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=rum_stdlib::option_consumers::OptionConsumer;hash=false	0
+C02	rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr;M=runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=none (nongeneric C02);hash=false	0
+LeaseProbe538::probe	sealed modes	0
+LeaseProbe538::start	sealed modes	0
+LeaseProbe538::drive	sealed modes	0
+LeaseProbe538::resume	sealed modes	0
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1133 filtered out; finished in 18.56s
+```
+
+Workspace retry: complete target/result and native-skip lines:
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3m 38s
+     Running unittests src/main.rs (.temp/brief-595/target-tests/debug/deps/rum_cli-675a9b7fb4c09027)
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+     Running tests/cli.rs (.temp/brief-595/target-tests/debug/deps/cli-417da8e232f3f31f)
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+     Running tests/input_requests.rs (.temp/brief-595/target-tests/debug/deps/input_requests-79d242612dc5614e)
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+     Running tests/terminal.rs (.temp/brief-595/target-tests/debug/deps/terminal-cd41974a9dfe37a5)
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.89s
+     Running unittests src/lib.rs (.temp/brief-595/target-tests/debug/deps/rum_core-49fc2a810a19f202)
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/lib.rs (.temp/brief-595/target-tests/debug/deps/rum_derive-b50628eb478e3209)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/accumulator_chain.rs (.temp/brief-595/target-tests/debug/deps/accumulator_chain-f4b1762065518378)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/derive.rs (.temp/brief-595/target-tests/debug/deps/derive-b38e62f915ec5c7d)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/lib.rs (.temp/brief-595/target-tests/debug/deps/rum_host-a119f062096badf7)
+test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.61s
+     Running tests/adapter_contract.rs (.temp/brief-595/target-tests/debug/deps/adapter_contract-36e2ac93dcf516de)
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+     Running tests/batch_boundary_ownership.rs (.temp/brief-595/target-tests/debug/deps/batch_boundary_ownership-62cec20e1429084a)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+     Running tests/capture_output_lifecycle.rs (.temp/brief-595/target-tests/debug/deps/capture_output_lifecycle-c541c492bd454062)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+     Running tests/guest_loading_resume.rs (.temp/brief-595/target-tests/debug/deps/guest_loading_resume-4d8893fc9e0cdd96)
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+     Running tests/host_payload_destruction_contract.rs (.temp/brief-595/target-tests/debug/deps/host_payload_destruction_contract-1be17d3af592a343)
+error: could not compile `host-payload-legacy-impl` (lib) due to 1 previous error
+error: could not compile `host-payload-legacy-new` (lib) due to 1 previous error
+error: could not compile `host-payload-legacy-from-arc` (lib) due to 1 previous error
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+error: could not compile `host-payload-legacy-file-io-impl` (lib) due to 1 previous error
+error: could not compile `host-payload-legacy-file-io-new` (lib) due to 1 previous error
+error: could not compile `host-payload-legacy-file-io-from-arc` (lib) due to 1 previous error
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+error: could not compile `host-payload-legacy-raw-closure-sink` (lib) due to 1 previous error
+error: could not compile `host-payload-legacy-boxed-fnmut-sink` (lib) due to 1 previous error
+error: could not compile `host-payload-named-sink-without-marker` (lib) due to 1 previous error
+error: could not compile `host-payload-adapter-private-field-bypass` (lib) due to 1 previous error
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.06s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.06s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.89s
+     Running tests/installer.rs (.temp/brief-595/target-tests/debug/deps/installer-8ebb99c00d41e78e)
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+     Running tests/lifecycle_buildout.rs (.temp/brief-595/target-tests/debug/deps/lifecycle_buildout-5e85c48ede3e9593)
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+     Running tests/lifecycle_contract.rs (.temp/brief-595/target-tests/debug/deps/lifecycle_contract-a2c563982853655a)
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+     Running tests/random_password_policy.rs (.temp/brief-595/target-tests/debug/deps/random_password_policy-ddd2fec076417963)
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+     Running tests/shared_accumulator_completion.rs (.temp/brief-595/target-tests/debug/deps/shared_accumulator_completion-067001aa2ecf9629)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+     Running tests/stress.rs (.temp/brief-595/target-tests/debug/deps/stress-5ec2a75152f1305e)
+test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.27s
+     Running tests/suspended_timeout_contract.rs (.temp/brief-595/target-tests/debug/deps/suspended_timeout_contract-258c488f1b37cde7)
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.05s
+     Running tests/suspension_abandonment_contract.rs (.temp/brief-595/target-tests/debug/deps/suspension_abandonment_contract-ac93b53b9ae0d1d1)
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+     Running unittests src/lib.rs (.temp/brief-595/target-tests/debug/deps/rum_jupyter-edb9ee3aea58135e)
+native ZeroMQ test cannot bind loopback: Operation not permitted (os error 1); set RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1 to explicitly allow this test to skip
+native ZeroMQ test cannot bind loopback: Operation not permitted (os error 1); set RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1 to explicitly allow this test to skip
+native ZeroMQ test cannot bind loopback: Operation not permitted (os error 1); set RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1 to explicitly allow this test to skip
+native ZeroMQ test cannot bind loopback: Operation not permitted (os error 1); set RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1 to explicitly allow this test to skip
+native ZeroMQ test cannot bind loopback: Operation not permitted (os error 1); set RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1 to explicitly allow this test to skip
+native ZeroMQ test cannot bind loopback: Operation not permitted (os error 1); set RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1 to explicitly allow this test to skip
+native ZeroMQ test cannot bind loopback: Operation not permitted (os error 1); set RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1 to explicitly allow this test to skip
+native ZeroMQ test cannot bind loopback: Operation not permitted (os error 1); set RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1 to explicitly allow this test to skip
+native ZeroMQ test cannot bind loopback: Operation not permitted (os error 1); set RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1 to explicitly allow this test to skip
+    zeromq::tests::native::basic::native_zeromq_backend_echoes_heartbeat_over_loopback_req_socket
+    zeromq::tests::native::basic::native_zeromq_backend_round_trips_execute_over_loopback_sockets
+    zeromq::tests::native::frontend::control::native_zeromq_backend_frontend_style_control_interrupt_round_trip
+    zeromq::tests::native::frontend::control::native_zeromq_backend_shutdown_stops_shell_work_and_reports_pending_shell_messages
+    zeromq::tests::native::frontend::execute::native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_metadata
+    zeromq::tests::native::frontend::session_flow::native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts_and_shutdown
+    zeromq::tests::native::frontend::stdin::native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_reply
+    zeromq::tests::native::signed::native_zeromq_backend_rejects_tampered_signed_requests_end_to_end
+    zeromq::tests::native::signed::native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages
+test result: FAILED. 142 passed; 9 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.72s
+error: test failed, to rerun pass `-p rum-jupyter --lib`
+     Running unittests src/bin/rum-jupyter-kernel.rs (.temp/brief-595/target-tests/debug/deps/rum_jupyter_kernel-965588c9ac9ffa23)
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/lib.rs (.temp/brief-595/target-tests/debug/deps/rum_repl-edcfd3382d4bfc76)
+test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.35s
+     Running tests/input_abandonment.rs (.temp/brief-595/target-tests/debug/deps/input_abandonment-144216c549618286)
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+     Running tests/input_continuation.rs (.temp/brief-595/target-tests/debug/deps/input_continuation-ebdbc4f7476ef252)
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+     Running unittests src/lib.rs (.temp/brief-595/target-tests/debug/deps/rum_runtime-562b258c6eef9b02)
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+error: could not compile `option-read-proof` (bin "option-read-proof") due to 1 previous error
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+error: could not compile `option-read-proof` (bin "option-read-proof") due to 1 previous error; 2 warnings emitted
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.07s
+error: could not compile `option-read-proof` (bin "option-read-proof") due to 1 previous error
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.06s
+error: could not compile `option-read-proof` (bin "option-read-proof") due to 1 previous error
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+error: could not compile `option-read-proof` (bin "option-read-proof") due to 1 previous error
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.07s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.06s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.06s
+error: could not compile `option-read-proof` (bin "option-read-proof") due to 1 previous error
+error: could not compile `option-read-proof` (bin "option-read-proof") due to 1 previous error
+error: could not compile `option-read-proof` (bin "option-read-proof") due to 1 previous error
+error: could not compile `option-read-proof` (bin "option-read-proof") due to 1 previous error; 1 warning emitted
+error: could not compile `option-read-proof` (bin "option-read-proof") due to 1 previous error
+error: aborting due to 1 previous error
+    runtime::session::guest_loading::tests::paused_guest_form_reinstalls_original_deadline_before_child_frames
+test result: FAILED. 1148 passed; 1 failed; 3 ignored; 0 measured; 0 filtered out; finished in 27.84s
+error: test failed, to rerun pass `-p rum-runtime --lib`
+     Running unittests src/lib.rs (.temp/brief-595/target-tests/debug/deps/rum_stdlib-c8c5a89643371dc7)
+error: could not compile `rum-runtime` (lib test) due to 84 previous errors; 47 warnings emitted
+test result: FAILED. 1085 passed; 2 failed; 53 ignored; 0 measured; 0 filtered out; finished in 1202.77s
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+     Running unittests src/bin/generate-builtin-reference.rs (.temp/brief-595/target-tests/debug/deps/generate_builtin_reference-7e0be655aec7b381)
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/default_fallback_continuations.rs (.temp/brief-595/target-tests/debug/deps/default_fallback_continuations-c846b88aba46e50a)
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+     Running tests/destructuring_continuations.rs (.temp/brief-595/target-tests/debug/deps/destructuring_continuations-dfe1523f84cb69ee)
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+     Running tests/guest_loading_resume.rs (.temp/brief-595/target-tests/debug/deps/guest_loading_resume-0992a185a5c665db)
+test result: ok. 47 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.05s
+     Running tests/lazy_pull_continuations.rs (.temp/brief-595/target-tests/debug/deps/lazy_pull_continuations-4b49946100b6004b)
+test result: ok. 69 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 22.92s
+     Running tests/loop_continuations.rs (.temp/brief-595/target-tests/debug/deps/loop_continuations-d0d938f953da2f0b)
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.30s
+     Running tests/option_reader_continuations.rs (.temp/brief-595/target-tests/debug/deps/option_reader_continuations-5a0cec5f31c0a5b0)
+test result: ok. 100 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.97s
+     Running tests/rule_pattern_continuations.rs (.temp/brief-595/target-tests/debug/deps/rule_pattern_continuations-c61abf30d2dd2405)
+test result: ok. 71 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.56s
+     Running tests/schema_continuations.rs (.temp/brief-595/target-tests/debug/deps/schema_continuations-65e2f27929ed24fb)
+test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.09s
+     Running tests/sow_trace_continuations.rs (.temp/brief-595/target-tests/debug/deps/sow_trace_continuations-93367493ef68b082)
+test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.45s
+     Running tests/suspension_oracle.rs (.temp/brief-595/target-tests/debug/deps/suspension_oracle-1756073e73a214f6)
+test result: ok. 33 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 21.60s
+     Running unittests src/lib.rs (.temp/brief-595/target-tests/debug/deps/rum_syntax-e24f301251f42f42)
+test result: ok. 193 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.52s
+     Running unittests src/lib.rs (.temp/brief-595/target-tests/debug/deps/rum_terminal-bae91ae0a1529dd6)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_core
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_derive
+error: aborting due to 2 previous errors
+error: aborting due to 2 previous errors
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.36s
+   Doc-tests rum_host
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.20s
+   Doc-tests rum_jupyter
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_repl
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_runtime
+error: aborting due to 1 previous error
+error: aborting due to 2 previous errors
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.62s
+   Doc-tests rum_stdlib
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_syntax
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_terminal
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+error: 3 targets failed:
+```
+
+Verbatim out-of-scope structural failures (later census population assertions were not reached):
+
+```text
+thread 'tests::association_depth_contract::g7_continuation_contract::trace_flat_call_graph_and_outbound_boundaries' panicked at crates/rum-stdlib/src/tests/association_depth_contract/g7_continuation_contract.rs:367:5:
+assertion `left == right` failed: closed trace functions
+  left: {"CandidateWork::current", "CandidateWork::take_candidate", "EvalStructuredTraceCaptureExprSuspensionFrame::abandon", "EvalStructuredTraceCaptureExprSuspensionFrame::output_boundary", "EvalStructuredTraceCaptureExprSuspensionFrame::resume", "FilterWork::freeze_filter", "LeafWork::apply_match", "LeafWork::next_field", "LevelWork::freeze_level", "LevelWork::from_items", "PatternWork::pattern_at", "PatternWork::pattern_count", "Session::drive_trace_filter", "Session::filter_trace_result", "Session::finish_trace_filter_root", "Session::match_trace_leaf", "TraceFilterLevel::thaw_level", "TraceFilterState::thaw_filter", "TraceFilterSuspensionFrame::resume", "append_child", "finish_leaf", "resume_trace_filter", "select_candidates", "start_leaf", "suspend_trace_filter"}
+ right: {"CandidateWork::current", "CandidateWork::take_candidate", "EvalStructuredTraceCaptureExprSuspensionFrame::abandon", "EvalStructuredTraceCaptureExprSuspensionFrame::resume", "FilterWork::freeze_filter", "LeafWork::apply_match", "LeafWork::next_field", "LevelWork::freeze_level", "LevelWork::from_items", "PatternWork::pattern_at", "PatternWork::pattern_count", "Session::drive_trace_filter", "Session::filter_trace_result", "Session::finish_trace_filter_root", "Session::match_trace_leaf", "TraceFilterLevel::thaw_level", "TraceFilterState::thaw_filter", "TraceFilterSuspensionFrame::resume", "append_child", "finish_leaf", "resume_trace_filter", "select_candidates", "start_leaf", "suspend_trace_filter"}
+FAILED
+
+thread 'tests::retention_closure::census::tests::production_rejection_census_is_complete' panicked at crates/rum-stdlib/src/tests/retention_closure/census/tests.rs:190:9:
+assertion failed: options.rejected.iter().any(|row|
+        row.kind == Kind::RET002 &&
+                row.site.file.ends_with("suspension/core.rs") &&
+            row.site.start.0 == line)
+FAILED
+```
+
+The workspace retry reports nine native ZeroMQ failures because loopback binding is denied and the harness requires an explicit skip flag. After that run, the native-only target was rerun with `RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1`. The original failures remain in the workspace evidence above. Verbatim native-only output:
+
+```text
+   Compiling syn v2.0.117
+   Compiling serde_derive v1.0.228
+   Compiling serde v1.0.228
+   Compiling thiserror-impl v2.0.18
+   Compiling futures-macro v0.3.32
+   Compiling futures-util v0.3.32
+   Compiling thiserror v2.0.18
+   Compiling num-bigint v0.4.6
+   Compiling rum-core v0.2.0 (/home/remi/dev/rum/crates/rum-core)
+   Compiling rum-syntax v0.2.0 (/home/remi/dev/rum/crates/rum-syntax)
+   Compiling tokio-macros v2.6.1
+   Compiling rum-derive v0.2.0 (/home/remi/dev/rum/crates/rum-derive)
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling tokio v1.50.0
+   Compiling futures-executor v0.3.32
+   Compiling thiserror-impl v1.0.69
+   Compiling thiserror v1.0.69
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling futures v0.3.32
+   Compiling tokio-util v0.7.18
+   Compiling asynchronous-codec v0.7.0
+   Compiling async-trait v0.1.89
+   Compiling zeromq v0.5.0
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling rum-jupyter v0.2.0 (/home/remi/dev/rum/crates/rum-jupyter)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 09s
+     Running unittests src/lib.rs (.temp/brief-595/target-tests/debug/deps/rum_jupyter-dd24b36d3edaa47a)
+
+running 9 tests
+test zeromq::tests::native::basic::native_zeromq_backend_echoes_heartbeat_over_loopback_req_socket ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+ok
+test zeromq::tests::native::basic::native_zeromq_backend_round_trips_execute_over_loopback_sockets ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+ok
+test zeromq::tests::native::frontend::control::native_zeromq_backend_frontend_style_control_interrupt_round_trip ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+ok
+test zeromq::tests::native::frontend::control::native_zeromq_backend_shutdown_stops_shell_work_and_reports_pending_shell_messages ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+ok
+test zeromq::tests::native::frontend::execute::native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_metadata ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+ok
+test zeromq::tests::native::frontend::session_flow::native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts_and_shutdown ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+ok
+test zeromq::tests::native::frontend::stdin::native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_reply ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+ok
+test zeromq::tests::native::signed::native_zeromq_backend_rejects_tampered_signed_requests_end_to_end ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+ok
+test zeromq::tests::native::signed::native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 142 filtered out; finished in 0.00s
+```
+
+Native ZeroMQ: **9 skipped**, not transport passes. Rust counts these early returns as `ok`; every test prints the explicit skip. No adapter source or policy was changed. The initial workspace outcome is not relabeled green.
+
+Every ownership inventory transition in this continuation follows. `-` is inherited; `+` is current discovery. Five existing rows move coordinates only; the two new foreign `Instant` storage rows remain `UnknownConstruct`. No new `UnknownHostPayload`, self-reaching row change, existing identity/disposition/exclusion change, disappearance, or new row in untouched code occurred. The second maintenance round made no additional ownership-row change. Cumulative initial-to-current rows remain in `post-harness/ownership-row-changes.json`, including inherited changes disclosed in earlier reports.
+
+```text
+crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv
+-	UnknownConstruct	crates/rum-runtime/src/runtime/session/guest_loading/scope.rs	90	1	unresolved attribute/expansion derive (Clone , rum_derive :: FrameRootTrace)
++	UnknownConstruct	crates/rum-runtime/src/runtime/session/guest_loading/scope.rs	146	1	unresolved attribute/expansion derive (Clone , rum_derive :: FrameRootTrace)
+crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv
+-	UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	619	17	unexpanded macro debug_assert! (ends at 619:66)
+-	UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	659	13	unexpanded macro debug_assert! (ends at 659:60)
+-	UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	685	28	unexpanded macro matches! (ends at 685:91)
+-	UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	793	1	unexpanded macro macro_rules! (ends at 810:2)
++	UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	621	17	unexpanded macro debug_assert! (ends at 621:66)
++	UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	664	13	unexpanded macro debug_assert! (ends at 664:60)
++	UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	690	28	unexpanded macro matches! (ends at 690:91)
++	UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	798	1	unexpanded macro macro_rules! (ends at 815:2)
+crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_storage.tsv
++	UnknownConstruct	crates/rum-runtime/src/runtime/session/guest_loading/scope.rs	77	20	rum_runtime::runtime::session::guest_loading::scope::DisplacedGuestFormEnvironment.eval_deadline/std::option::Option[Own]/arg0: foreign representation std::time::Instant: Instant
++	UnknownConstruct	crates/rum-runtime/src/runtime/session/guest_loading/scope.rs	78	20	rum_runtime::runtime::session::guest_loading::scope::DisplacedGuestFormEnvironment.time_deadline/std::option::Option[Own]/arg0: foreign representation std::time::Instant: Instant
+```
+
+Every fingerprint cell: inherited candidate 2, first candidate-3 replay, and final replay after the test-only helper move. All nonfingerprint fields remain unchanged.
+
+```text
+row	id	inherited	driver-replay	final
+2	B01	fnv1a64:585b5036cabb3435	fnv1a64:3a7422df32921df2	fnv1a64:775c036ebf12e0f9
+3	B02	fnv1a64:3f3ca736323fe77c	fnv1a64:26ee88384071ac6f	fnv1a64:11512e9ae8b6ace4
+4	B03	fnv1a64:4e199060634010bb	fnv1a64:6a6dd1a3b9897de4	fnv1a64:433253f8cebe4073
+5	B04	fnv1a64:1947f9ea4bd5d04d	fnv1a64:ec6f709ca096cc6a	fnv1a64:2c6f1b0eacd13431
+6	B05	fnv1a64:b331851f154510f0	fnv1a64:7bbaf8807e83a62b	fnv1a64:5fc25d7a29d50bc0
+7	B06	fnv1a64:b7ea60af404b0fb1	fnv1a64:4e7f12f23f5afe26	fnv1a64:29891f592199bced
+8	B07	fnv1a64:b3cd361d41b0e1c0	fnv1a64:7941110a67981c5b	fnv1a64:f88bb859ca505c50
+9	B08	fnv1a64:2ccaa75a186cf7ff	fnv1a64:c549534918fea220	fnv1a64:f62ff698c119d01f
+10	B09	fnv1a64:c34fb4ab0d048e89	fnv1a64:0b8ae7c45b78da7e	fnv1a64:e63fe94a5a3c3505
+11	B10	fnv1a64:a65505c0f93b1fc2	fnv1a64:55da0613dff0ed51	fnv1a64:f9d6a471d360fb1e
+12	B11	fnv1a64:da9fab4765c9f64d	fnv1a64:adc721f9ba8af26a	fnv1a64:edc6cc6bc6c55a31
+13	B12	fnv1a64:825c34a6e90d2389	fnv1a64:ca9767c037816f7e	fnv1a64:a54c69463644ca05
+14	I01	fnv1a64:363d3b3437732ab5	fnv1a64:18560ddc9f4a1472	fnv1a64:553dee6c2bcad779
+15	I02	fnv1a64:0a7302b30d7b98f0	fnv1a64:d2fc761476ba2e2b	fnv1a64:b703db0e220b93c0
+16	I03	fnv1a64:9953b2e1c7064449	fnv1a64:c9622ca44c1843be	fnv1a64:50927d3efeeca7c5
+17	I04	fnv1a64:5ee80da6cf3bf51c	fnv1a64:c4cc43d02a0ae28f	fnv1a64:509a54c3b0830184
+18	P01	fnv1a64:c6cbc6b04372edd1	fnv1a64:891d7b03a733c0c6	fnv1a64:7f7cc607d8439b0d
+19	P02	fnv1a64:e6d0c69177484532	fnv1a64:bb875c6f3a321ba1	fnv1a64:3d91de7a4e48660e
+20	P03	fnv1a64:73d3285a929dd763	fnv1a64:8388edbad901302c	fnv1a64:fcdc189ebc75f77b
+21	P04	fnv1a64:3417c54bb6e9037c	fnv1a64:1bc9a64dc51ac86f	fnv1a64:062c4cb06d5fc8e4
+22	P05	fnv1a64:927e526fe0992aa5	fnv1a64:5dd9b9a776cf9e42	fnv1a64:55a1141f0360c969
+23	P06	fnv1a64:d2db5977753cbd09	fnv1a64:1b168c90c3b108fe	fnv1a64:f5cb8e16c2746385
+24	P070	fnv1a64:0d28f5b953b23709	fnv1a64:556428d2a22682fe	fnv1a64:30192a58a0e9dd85
+25	P080	fnv1a64:8ca8c39b50ac0782	fnv1a64:b0777dd6fc62ba91	fnv1a64:478d732879a1c6de
+26	P090	fnv1a64:b9b97abb87be523c	fnv1a64:b2e7b71a02db91af	fnv1a64:3de82a1e611cb5a4
+27	P100	fnv1a64:ba0ef331cf003a1d	fnv1a64:ae5bf82c0512801a	fnv1a64:9646252f27805841
+28	P110	fnv1a64:f9cec13ea8a1c50a	fnv1a64:37afff8d9446d259	fnv1a64:1476d6d4303f0e06
+29	P120	fnv1a64:d029c1d91019bc1f	fnv1a64:527663c9f4c10240	fnv1a64:6b6c16d18517143f
+30	P130	fnv1a64:579a8f7a7064bbc0	fnv1a64:1d0e6a67964bf65b	fnv1a64:9c5911b6f9043650
+31	P140	fnv1a64:50f741e46bfa73c4	fnv1a64:09a74fa2bccc3cf7	fnv1a64:1e8a72f463e837ac
+32	P150	fnv1a64:01ee21d9fc961edc	fnv1a64:b9fafc4128f8d2cf	fnv1a64:55569e923dea4b44
+33	P071	fnv1a64:7046fa4afd7ce2e0	fnv1a64:12aee064b86c657b	fnv1a64:ab3a1f7bb9b68cf0
+34	P081	fnv1a64:0cc8d61ac9e91829	fnv1a64:5bde8cdbba9e579e	fnv1a64:b7c7a4b052fc8d25
+35	P091	fnv1a64:60df12855184df91	fnv1a64:5cabd810bc4b4806	fnv1a64:4ab6dc5b570554cd
+36	P101	fnv1a64:f1d1b20bde05620a	fnv1a64:2fb2f05ac9aa6f59	fnv1a64:0c79c7a165a2ab06
+37	P111	fnv1a64:0209b26841810459	fnv1a64:05097b1f17c9b72e	fnv1a64:04f74ff7cd669755
+38	P121	fnv1a64:7cc52cc13dac52ae	fnv1a64:dc00183d8e16dbb5	fnv1a64:44f89eb184efbdb2
+39	P131	fnv1a64:b6f21c508229f1cd	fnv1a64:8a199302d6eaedea	fnv1a64:ca193d74e32555b1
+40	P141	fnv1a64:78c82152f30fd371	fnv1a64:cbb09547d93d4a66	fnv1a64:9c8107faf7461ead
+41	P151	fnv1a64:c684f87cf38c3c5f	fnv1a64:ea523e344cabd600	fnv1a64:13d42a58624fc27f
+42	B13	fnv1a64:45faf43870e7cbb1	fnv1a64:dc8fa67b6ff7ba26	fnv1a64:b799b2e2523678ed
+43	R01	fnv1a64:9ba21edd710acb4c	fnv1a64:9061fca8dd48f8df	fnv1a64:f3be7c414ef8f9f4
+44	R02	fnv1a64:50adf90141b9bf23	fnv1a64:fcf572bf820ca96c	fnv1a64:51d47e81184acc3b
+45	R03	fnv1a64:ba1715502f99d4f8	fnv1a64:67e9eeb882adf8b3	fnv1a64:9c5fda31a4da0868
+46	R040	fnv1a64:550111f055db49ec	fnv1a64:b93e062e29c56f7f	fnv1a64:76e05afac6cd2914
+47	R050	fnv1a64:6eb6fdb335ae7605	fnv1a64:87b992ea524f3722	fnv1a64:cf95a65f6d2bd0c9
+48	R060	fnv1a64:38cf2ac360eea994	fnv1a64:85a880db7167fea7	fnv1a64:2e3fe51fcabdd1bc
+49	R070	fnv1a64:75369e34ab8ad729	fnv1a64:c44c54f59c40169e	fnv1a64:20356cca349e4c25
+50	R080	fnv1a64:25ec76999ec0be1c	fnv1a64:8bd0acc2f98fab8f	fnv1a64:179ebdb68007ca84
+51	R090	fnv1a64:b20b4becf1db02dd	fnv1a64:3e3bcc3bf8eaa15a	fnv1a64:c6c3c5e0d1549d01
+52	R100	fnv1a64:133f34b30d15bb3b	fnv1a64:2f9375f6635f2864	fnv1a64:0857f84b7893eaf3
+53	R110	fnv1a64:443a7d8b9bf5b69a	fnv1a64:62aa43035ed10809	fnv1a64:6e4cee116506e116
+54	R041	fnv1a64:2c345762880f8ab1	fnv1a64:c2c909a5871f7926	fnv1a64:9dd3160c695e37ed
+55	R051	fnv1a64:47dba8d114ec5ebc	fnv1a64:4109e52f90099e2f	fnv1a64:cc0a5833ee4ac224
+56	R061	fnv1a64:e9791c862282032f	fnv1a64:0ad495cfa79d6730	fnv1a64:08544d6056694ccf
+57	R071	fnv1a64:162658a9fc2889c6	fnv1a64:33930198e5e2e56d	fnv1a64:e1dc884aedbb6e4a
+58	R081	fnv1a64:75f95c866aac0f1d	fnv1a64:6a466180a0be551a	fnv1a64:52308e83c32c2d41
+59	R091	fnv1a64:3df9020880dfcf04	fnv1a64:1883f8bbf23d3bb7	fnv1a64:063d9da89457faec
+60	R101	fnv1a64:253ee3bcb9d2cd54	fnv1a64:1221dafd42f385e7	fnv1a64:9b44b5c7cb8c9f7c
+61	R111	fnv1a64:ec649cafc21eadb7	fnv1a64:767e0bd35d0eefd8	fnv1a64:5994898a0f01b897
+62	R12	fnv1a64:ece77eded6ee00f7	fnv1a64:dafde22b11417598	fnv1a64:7ba21134b9fbb2d7
+63	R13	fnv1a64:1df2f08c66f41d6b	fnv1a64:142e577649ed44f4	fnv1a64:83734662205d6ca3
+64	R14	fnv1a64:d46701a7abb0fa1d	fnv1a64:c8b406a1e1c3401a	fnv1a64:b09e33a504311841
+65	R15	fnv1a64:1f95c221388a2aa1	fnv1a64:be6a8973215fe136	fnv1a64:6160da307422b55d
+66	O010	fnv1a64:168b7cf6e129688f	fnv1a64:64111ce861395910	fnv1a64:a5990b1ad15ae5af
+67	O0200	fnv1a64:4bbee3b8bab199c4	fnv1a64:046ef1770b8362f7	fnv1a64:195214c8b29f5dac
+68	O011	fnv1a64:7b57e74b6e806e14	fnv1a64:c8313d637ef9c327	fnv1a64:70c8a1a7d84f963c
+69	O0210	fnv1a64:55e0a47e32694157	fnv1a64:f28bbd0714bdc8f8	fnv1a64:330127d9b106bb37
+```
+
+Every certificate cell, including both replay transitions. No other field changes:
+
+```text
+row	body	build	inherited	driver-replay	final
+2	C01	hash=true	instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:0bb558ca76e00284;rustflags=None", body_fingerprint: "fnv1a64:ed7a4ceac491a859", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:09f655b49583d816;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>": "O0210@fnv1a64:55e0a47e32694157;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>": "O011@fnv1a64:7b57e74b6e806e14;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"} || instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::Unarmed", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:0bb558ca76e00284;rustflags=None", body_fingerprint: "fnv1a64:ed7a4ceac491a859", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:4dc49ac1a97b4878;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>": "O0200@fnv1a64:4bbee3b8bab199c4;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>": "O010@fnv1a64:168b7cf6e129688f;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}	instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:0bb558ca76e00284;rustflags=None", body_fingerprint: "fnv1a64:60187171984596aa", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:2f2645c4f5e35196;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>": "O0210@fnv1a64:f28bbd0714bdc8f8;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>": "O011@fnv1a64:c8313d637ef9c327;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"} || instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::Unarmed", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:0bb558ca76e00284;rustflags=None", body_fingerprint: "fnv1a64:60187171984596aa", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:d4343c41be5d2b84;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>": "O0200@fnv1a64:046ef1770b8362f7;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>": "O010@fnv1a64:64111ce861395910;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}	instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:0bb558ca76e00284;rustflags=None", body_fingerprint: "fnv1a64:60187171984596aa", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:2f2645c4f5e35196;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>": "O0210@fnv1a64:330127d9b106bb37;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>": "O011@fnv1a64:70c8a1a7d84f963c;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"} || instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::Unarmed", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:0bb558ca76e00284;rustflags=None", body_fingerprint: "fnv1a64:60187171984596aa", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:d4343c41be5d2b84;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>": "O0200@fnv1a64:195214c8b29f5dac;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>": "O010@fnv1a64:a5990b1ad15ae5af;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}
+3	C02	hash=true	instance=Instance { body: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", key: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", mode: "runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "none (nongeneric C02)", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:0bb558ca76e00284;rustflags=None", body_fingerprint: "fnv1a64:fd61557ed829fa57", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:5ebb8425557c4d82;direct-covered={};direct-contracts={"<rum_core::expr::SharedArgs as std::ops::Deref>::deref": "I01@fnv1a64:363d3b3437732ab5;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=SharedArgs deref borrows the same Vec with pointer identity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<rum_core::expr::SharedExpr as std::ops::Deref>::deref": "I02@fnv1a64:0a7302b30d7b98f0;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=borrows same Expr with pointer identity; no owner or capacity receipt;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index": "I04@fnv1a64:5ee80da6cf3bf51c;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec<Expr> indexing by usize borrows one element; bounds panic unwinds;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::clone_result": "R01@fnv1a64:9ba21edd710acb4c;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::evaluate_rule": "R02@fnv1a64:50adf90141b9bf23;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::expr_runtime_helpers::is_system_symbol_name": "B13@fnv1a64:45faf43870e7cbb1;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=None=false; System matching name=true; different name or context=false; scalar result;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "std::vec::Vec<rum_core::expr::Expr>::len": "B05@fnv1a64:b331851f154510f0;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec length reads initialized length even with spare capacity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}	instance=Instance { body: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", key: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", mode: "runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "none (nongeneric C02)", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:0bb558ca76e00284;rustflags=None", body_fingerprint: "fnv1a64:daa73370861fcd84", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:7efe0f9aef94dc99;direct-covered={};direct-contracts={"<rum_core::expr::SharedArgs as std::ops::Deref>::deref": "I01@fnv1a64:18560ddc9f4a1472;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=SharedArgs deref borrows the same Vec with pointer identity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<rum_core::expr::SharedExpr as std::ops::Deref>::deref": "I02@fnv1a64:d2fc761476ba2e2b;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=borrows same Expr with pointer identity; no owner or capacity receipt;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index": "I04@fnv1a64:c4cc43d02a0ae28f;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec<Expr> indexing by usize borrows one element; bounds panic unwinds;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::clone_result": "R01@fnv1a64:9061fca8dd48f8df;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::evaluate_rule": "R02@fnv1a64:fcf572bf820ca96c;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::expr_runtime_helpers::is_system_symbol_name": "B13@fnv1a64:dc8fa67b6ff7ba26;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=None=false; System matching name=true; different name or context=false; scalar result;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "std::vec::Vec<rum_core::expr::Expr>::len": "B05@fnv1a64:7bbaf8807e83a62b;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec length reads initialized length even with spare capacity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}	instance=Instance { body: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", key: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", mode: "runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "none (nongeneric C02)", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:0bb558ca76e00284;rustflags=None", body_fingerprint: "fnv1a64:daa73370861fcd84", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:7efe0f9aef94dc99;direct-covered={};direct-contracts={"<rum_core::expr::SharedArgs as std::ops::Deref>::deref": "I01@fnv1a64:553dee6c2bcad779;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=SharedArgs deref borrows the same Vec with pointer identity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<rum_core::expr::SharedExpr as std::ops::Deref>::deref": "I02@fnv1a64:b703db0e220b93c0;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=borrows same Expr with pointer identity; no owner or capacity receipt;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index": "I04@fnv1a64:509a54c3b0830184;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec<Expr> indexing by usize borrows one element; bounds panic unwinds;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::clone_result": "R01@fnv1a64:f3be7c414ef8f9f4;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::evaluate_rule": "R02@fnv1a64:51d47e81184acc3b;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::expr_runtime_helpers::is_system_symbol_name": "B13@fnv1a64:b799b2e2523678ed;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=None=false; System matching name=true; different name or context=false; scalar result;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "std::vec::Vec<rum_core::expr::Expr>::len": "B05@fnv1a64:5fc25d7a29d50bc0;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec length reads initialized length even with spare capacity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}
+2	C01	hash=false	instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:0bb558ca76e00284;rustflags=None", body_fingerprint: "fnv1a64:a59c64bfa6a2c88b", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:7d7002ebea748947;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>": "O0210@fnv1a64:55e0a47e32694157;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>": "O011@fnv1a64:7b57e74b6e806e14;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"} || instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::Unarmed", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:0bb558ca76e00284;rustflags=None", body_fingerprint: "fnv1a64:a59c64bfa6a2c88b", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:fa1202e2a3701d3d;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>": "O0200@fnv1a64:4bbee3b8bab199c4;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>": "O010@fnv1a64:168b7cf6e129688f;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}	instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:0bb558ca76e00284;rustflags=None", body_fingerprint: "fnv1a64:cc7cb093460fadaf", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:afcfd659f0e90d40;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>": "O0210@fnv1a64:f28bbd0714bdc8f8;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>": "O011@fnv1a64:c8313d637ef9c327;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"} || instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::Unarmed", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:0bb558ca76e00284;rustflags=None", body_fingerprint: "fnv1a64:cc7cb093460fadaf", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:9938592c91c1c75a;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>": "O0200@fnv1a64:046ef1770b8362f7;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>": "O010@fnv1a64:64111ce861395910;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}	instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:0bb558ca76e00284;rustflags=None", body_fingerprint: "fnv1a64:cc7cb093460fadaf", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:afcfd659f0e90d40;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>": "O0210@fnv1a64:330127d9b106bb37;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>": "O011@fnv1a64:70c8a1a7d84f963c;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"} || instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::Unarmed", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:0bb558ca76e00284;rustflags=None", body_fingerprint: "fnv1a64:cc7cb093460fadaf", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:9938592c91c1c75a;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>": "O0200@fnv1a64:195214c8b29f5dac;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>": "O010@fnv1a64:a5990b1ad15ae5af;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}
+3	C02	hash=false	instance=Instance { body: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", key: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", mode: "runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "none (nongeneric C02)", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:0bb558ca76e00284;rustflags=None", body_fingerprint: "fnv1a64:11a2e136820039c9", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:8199f0653b35befd;direct-covered={};direct-contracts={"<rum_core::expr::SharedArgs as std::ops::Deref>::deref": "I01@fnv1a64:363d3b3437732ab5;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=SharedArgs deref borrows the same Vec with pointer identity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<rum_core::expr::SharedExpr as std::ops::Deref>::deref": "I02@fnv1a64:0a7302b30d7b98f0;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=borrows same Expr with pointer identity; no owner or capacity receipt;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index": "I04@fnv1a64:5ee80da6cf3bf51c;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec<Expr> indexing by usize borrows one element; bounds panic unwinds;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::clone_result": "R01@fnv1a64:9ba21edd710acb4c;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::evaluate_rule": "R02@fnv1a64:50adf90141b9bf23;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::expr_runtime_helpers::is_system_symbol_name": "B13@fnv1a64:45faf43870e7cbb1;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=None=false; System matching name=true; different name or context=false; scalar result;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "std::vec::Vec<rum_core::expr::Expr>::len": "B05@fnv1a64:b331851f154510f0;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec length reads initialized length even with spare capacity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}	instance=Instance { body: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", key: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", mode: "runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "none (nongeneric C02)", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:0bb558ca76e00284;rustflags=None", body_fingerprint: "fnv1a64:ecaca7a744a00225", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:ab4d0acb90d99eff;direct-covered={};direct-contracts={"<rum_core::expr::SharedArgs as std::ops::Deref>::deref": "I01@fnv1a64:18560ddc9f4a1472;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=SharedArgs deref borrows the same Vec with pointer identity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<rum_core::expr::SharedExpr as std::ops::Deref>::deref": "I02@fnv1a64:d2fc761476ba2e2b;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=borrows same Expr with pointer identity; no owner or capacity receipt;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index": "I04@fnv1a64:c4cc43d02a0ae28f;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec<Expr> indexing by usize borrows one element; bounds panic unwinds;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::clone_result": "R01@fnv1a64:9061fca8dd48f8df;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::evaluate_rule": "R02@fnv1a64:fcf572bf820ca96c;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::expr_runtime_helpers::is_system_symbol_name": "B13@fnv1a64:dc8fa67b6ff7ba26;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=None=false; System matching name=true; different name or context=false; scalar result;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "std::vec::Vec<rum_core::expr::Expr>::len": "B05@fnv1a64:7bbaf8807e83a62b;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec length reads initialized length even with spare capacity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}	instance=Instance { body: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", key: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", mode: "runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "none (nongeneric C02)", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:0bb558ca76e00284;rustflags=None", body_fingerprint: "fnv1a64:ecaca7a744a00225", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:ab4d0acb90d99eff;direct-covered={};direct-contracts={"<rum_core::expr::SharedArgs as std::ops::Deref>::deref": "I01@fnv1a64:553dee6c2bcad779;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=SharedArgs deref borrows the same Vec with pointer identity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<rum_core::expr::SharedExpr as std::ops::Deref>::deref": "I02@fnv1a64:b703db0e220b93c0;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=borrows same Expr with pointer identity; no owner or capacity receipt;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index": "I04@fnv1a64:509a54c3b0830184;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec<Expr> indexing by usize borrows one element; bounds panic unwinds;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::clone_result": "R01@fnv1a64:f3be7c414ef8f9f4;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::evaluate_rule": "R02@fnv1a64:51d47e81184acc3b;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::expr_runtime_helpers::is_system_symbol_name": "B13@fnv1a64:b799b2e2523678ed;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=None=false; System matching name=true; different name or context=false; scalar result;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "std::vec::Vec<rum_core::expr::Expr>::len": "B05@fnv1a64:5fc25d7a29d50bc0;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec length reads initialized length even with spare capacity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}
+```
+
+Effect/owed rows and descriptor registration remain unchanged. No other owed entry changed.
+
+### 3. Entries, noise floors, release builds and every measured row
+
+Entries attached **0/4**: `EvaluationData.body`, `TestReport.input`, `TestReport.expectedOutput` and `TestReport.sameTest` remain owed. Both current `CATALOG` lines show **114**; the required 114 → 110 admission is **not achieved**. All four roles' variants and first/second-pause lifecycle checks ran in both builds as standalone witnesses.
+
+Candidate 3 used fresh `target-default` and `target-alloc` directories, both with `CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1`; the allocation build passed `--features` and `rum-cli/alloc-count` as two arguments. Both bounded builds passed and binaries were copied/hashed. The later lifecycle-helper move affects only test code; the complete release dependency audit below verifies the measured source is unchanged.
+
+All 12 workload result checks passed before measurement. Two allocation samples and two paired instruction samples ran serially, one label per process, stdin `/dev/null`, raw output written before parsing. The instruction event and slope are exactly `taskset -c 2 perf stat -x, -e cpu_core/instructions/u` and `(count(2N) - count(N)) / N`. No CPU-heavy build or test overlapped them. The preserved base-against-itself noise floor (two pairs, recorded before production edits) was reused without remeasurement.
+
+**Instruction gate passes its declared two-sample rule: 0/12 regressing labels.** `evaluation-data-message` is +0.364729% and +0.084931% against its 0.099001% floor: the first sample exceeds the floor and is disclosed; the second does not. Candidate 2's two-sample regression therefore does not persist under the brief's criterion. Callgrind was not run because the amendment's conditional attribution gate was not triggered. No remeasurement or tuning followed.
+
+Fixed-result allocation slopes match the base on all nine fixed-result labels. Timing-valued rows vary: EvaluationData without output is 159.741/159.370 versus base 159.155/159.454 (candidate mean +0.251, base spread 0.299); TestReport is 229.1095/228.8345 versus 230.0965/229.2065; EvaluationData with messages is 194.3815/194.3375 versus 194.2665/195.1035. The no-output EvaluationData maximum exceeds the observed base range, and TestReport falls below it; no blanket allocation-equivalence claim is made. `resume-3/allocation-spread.tsv` retains the comparison.
+
+Verbatim build tails and copied binary hashes:
+
+```text
+   Compiling rum-terminal v0.2.0 (/home/remi/dev/rum/crates/rum-terminal)
+   Compiling mimalloc v0.1.52
+   Compiling rum-repl v0.2.0 (/home/remi/dev/rum/crates/rum-repl)
+   Compiling rum-cli v0.2.0 (/home/remi/dev/rum/crates/rum-cli)
+    Finished `release` profile [optimized] target(s) in 1m 38s
+```
+
+```text
+   Compiling rum-terminal v0.2.0 (/home/remi/dev/rum/crates/rum-terminal)
+   Compiling mimalloc v0.1.52
+   Compiling rum-repl v0.2.0 (/home/remi/dev/rum/crates/rum-repl)
+   Compiling rum-cli v0.2.0 (/home/remi/dev/rum/crates/rum-cli)
+    Finished `release` profile [optimized] target(s) in 1m 38s
+```
+
+```text
+{
+  "rum-cli": "716ff7795af0aae5a8682dc774ae95dba39adb7bf588bb2d1e84f32fbced1aeb",
+  "rum-cli-alloc": "54d24ba40e4420cf90e8276126f164848f33898892e436d80e789e184f0b0ce8"
+}
+```
+
+Complete release-source verification after the test-only move:
+
+```text
+default: 697 release dependency paths match their pre-harness-fix bytes; changed=0; unverified=0
+alloc: 698 release dependency paths match their pre-harness-fix bytes; changed=0; unverified=0
+```
+
+Noise floors:
+
+```text
+label	base_1a	base_1b	base_2a	base_2b	floor_percent	threshold_percent
+ordinary-arithmetic	17798.518500	17798.677800	17798.506150	17798.698500	0.001081	0.050000
+check-no-output	10526.326700	10526.408050	10526.405200	10526.408350	0.000773	0.050000
+quiet-no-output	10245.314950	10245.432400	10245.326000	10245.232800	0.001146	0.050000
+evaluation-data-no-output	55878.534500	55746.653000	55831.264000	55815.317000	0.236015	0.236015
+test-report-no-output	94481.435000	94341.369000	94405.837000	94373.772500	0.148247	0.148247
+trace-no-output	24510.064000	24515.564500	24482.357500	24826.211000	1.404495	1.404495
+buffered-message	10362.583450	10362.579000	10362.399200	10362.538250	0.001342	0.050000
+evaluation-data-message	65149.647000	65214.146000	65305.153500	65243.278000	0.099001	0.099001
+check-message	14358.095950	14358.002750	14358.113650	14358.190750	0.000649	0.050000
+dot-three-no-input	254200.329800	254199.224400	254200.426750	254199.660450	0.000435	0.050000
+differences-no-input	10037.767350	10044.851450	10052.202400	10044.916850	0.072477	0.072477
+take-multispec-small	49939.920700	49923.313050	49923.074100	49923.231850	0.033255	0.050000
+```
+
+Every measured label:
+
+```text
+label	base1	candidate1	delta1_percent	base2	candidate2	delta2_percent	floor_percent	regresses	alloc_base1	alloc_base2	alloc_candidate1	alloc_candidate2
+ordinary-arithmetic	17798.593700	17798.577250	-0.000092	17798.706750	17798.690700	-0.000090	0.001081	False	38.000000	38.000000	38.000000	38.000000
+check-no-output	10526.358150	10526.333900	-0.000230	10526.490700	10526.300700	-0.001805	0.000773	False	6.000000	6.000000	6.000000	6.000000
+quiet-no-output	10245.410750	10245.453600	0.000418	10245.517150	10245.313650	-0.001986	0.001146	False	6.000000	6.000000	6.000000	6.000000
+evaluation-data-no-output	55896.806500	55842.790000	-0.096636	55871.663000	55875.690000	0.007208	0.236015	False	159.155000	159.454000	159.741000	159.370000
+test-report-no-output	94451.698000	94470.117000	0.019501	94425.238500	94482.677000	0.060830	0.148247	False	230.096500	229.206500	229.109500	228.834500
+trace-no-output	24547.544500	24574.863500	0.111290	24521.922000	24670.846500	0.607312	1.404495	False	25.000500	25.000500	25.000500	25.000500
+buffered-message	10362.421800	10362.602150	0.001740	10362.445550	10362.544450	0.000954	0.001342	False	24.000050	24.000050	24.000050	24.000050
+evaluation-data-message	65187.285500	65425.042500	0.364729	65196.194500	65251.566000	0.084931	0.099001	False	194.266500	195.103500	194.381500	194.337500
+check-message	14358.455450	14358.115850	-0.002365	14358.218400	14358.151700	-0.000465	0.000649	False	25.000050	25.000050	25.000050	25.000050
+dot-three-no-input	254199.818050	254199.491050	-0.000129	254199.331100	254197.885150	-0.000569	0.000435	False	596.000000	596.000000	596.000000	596.000000
+differences-no-input	10045.013850	10033.452900	-0.115091	10037.834600	10033.816350	-0.040031	0.072477	False	13.000000	13.000000	13.000000	13.000000
+take-multispec-small	49923.848900	49922.332350	-0.003038	49922.778250	49921.972900	-0.001613	0.033255	False	109.000000	109.000000	109.000000	109.000000
+```
+
+Every new raw/check row follows (156). `resume-3/all-measurements-including-prior.tsv` preserves all 624 rows; prior reports reproduce the earlier 468. `pass=True` on a raw row validates its workload result/counter, not the regression threshold.
+
+```text
+mode	build	sample	label	count	exit	pass	value	expected	instructions	allocations	bytes	peak
+check	candidate-3	1	ordinary-arithmetic	check	0	True	23	23				
+check	candidate-3	1	check-no-output	check	0	True	5	5				
+check	candidate-3	1	quiet-no-output	check	0	True	5	5				
+check	candidate-3	1	evaluation-data-no-output	check	0	True	5	5				
+check	candidate-3	1	test-report-no-output	check	0	True	1	1				
+check	candidate-3	1	trace-no-output	check	0	True	List[Hold[Plus[2, 3]], Hold[5]]	List[Hold[Plus[2, 3]], Hold[5]]				
+check	candidate-3	1	buffered-message	check	0	True	Null	Null				
+check	candidate-3	1	evaluation-data-message	check	0	True	"List[""probe message""]"	"List[""probe message""]"				
+check	candidate-3	1	check-message	check	0	True	-1	-1				
+check	candidate-3	1	dot-three-no-input	check	0	True	List[List[6, 12], List[18, 24]]	List[List[6, 12], List[18, 24]]				
+check	candidate-3	1	differences-no-input	check	0	True	List[3, 5, 7, 9]	List[3, 5, 7, 9]				
+check	candidate-3	1	take-multispec-small	check	0	True	List[List[List[List[List[List[List[List[1]]]]]]]]	List[List[List[List[List[List[List[List[1]]]]]]]]				
+alloc	candidate-3	1	ordinary-arithmetic	20000	0	True				761640	26403026	941598
+alloc	candidate-3	1	ordinary-arithmetic	40000	0	True				1521640	52323026	1581598
+alloc	candidate-3	1	check-no-output	20000	0	True				121645	9123588	941851
+alloc	candidate-3	1	check-no-output	40000	0	True				241645	17763588	1581851
+alloc	candidate-3	1	quiet-no-output	20000	0	True				121638	9123468	941780
+alloc	candidate-3	1	quiet-no-output	40000	0	True				241638	17763468	1581780
+alloc	candidate-3	1	evaluation-data-no-output	2000	0	True				320815	23553451	372583
+alloc	candidate-3	1	evaluation-data-no-output	4000	0	True				640297	46629091	436583
+alloc	candidate-3	1	test-report-no-output	2000	0	True				461747	33369224	4429191
+alloc	candidate-3	1	test-report-no-output	4000	0	True				919966	66214384	8554890
+alloc	candidate-3	1	trace-no-output	2000	0	True				51614	5706925	2233562
+alloc	candidate-3	1	trace-no-output	4000	0	True				101615	10934333	4167026
+alloc	candidate-3	1	buffered-message	20000	0	True				481721	21745381	8261969
+alloc	candidate-3	1	buffered-message	40000	0	True				961722	43003973	16261265
+alloc	candidate-3	1	evaluation-data-message	2000	0	True				391316	25993561	1300314
+alloc	candidate-3	1	evaluation-data-message	4000	0	True				780079	51482513	2296922
+alloc	candidate-3	1	check-message	20000	0	True				501737	22546262	8261966
+alloc	candidate-3	1	check-message	40000	0	True				1001738	44604854	16261262
+alloc	candidate-3	1	dot-three-no-input	20000	0	True				11921740	477979711	8678236
+alloc	candidate-3	1	dot-three-no-input	40000	0	True				23841740	948059711	9318236
+alloc	candidate-3	1	differences-no-input	20000	0	True				261670	21969687	9591399
+alloc	candidate-3	1	differences-no-input	40000	0	True				521670	36049687	10231399
+alloc	candidate-3	1	take-multispec-small	20000	0	True				2181802	125022553	9594023
+alloc	candidate-3	1	take-multispec-small	40000	0	True				4361802	242142553	10234023
+alloc	candidate-3	2	ordinary-arithmetic	20000	0	True				761640	26403026	941598
+alloc	candidate-3	2	ordinary-arithmetic	40000	0	True				1521640	52323026	1581598
+alloc	candidate-3	2	check-no-output	20000	0	True				121645	9123588	941851
+alloc	candidate-3	2	check-no-output	40000	0	True				241645	17763588	1581851
+alloc	candidate-3	2	quiet-no-output	20000	0	True				121638	9123468	941780
+alloc	candidate-3	2	quiet-no-output	40000	0	True				241638	17763468	1581780
+alloc	candidate-3	2	evaluation-data-no-output	2000	0	True				320855	23554251	372583
+alloc	candidate-3	2	evaluation-data-no-output	4000	0	True				639595	46615051	436583
+alloc	candidate-3	2	test-report-no-output	2000	0	True				460983	33353944	4429191
+alloc	candidate-3	2	test-report-no-output	4000	0	True				918652	66188104	8554890
+alloc	candidate-3	2	trace-no-output	2000	0	True				51614	5706925	2233562
+alloc	candidate-3	2	trace-no-output	4000	0	True				101615	10934333	4167026
+alloc	candidate-3	2	buffered-message	20000	0	True				481721	21745381	8261969
+alloc	candidate-3	2	buffered-message	40000	0	True				961722	43003973	16261265
+alloc	candidate-3	2	evaluation-data-message	2000	0	True				391114	25989521	1300314
+alloc	candidate-3	2	evaluation-data-message	4000	0	True				779789	51476713	2296922
+alloc	candidate-3	2	check-message	20000	0	True				501737	22546262	8261966
+alloc	candidate-3	2	check-message	40000	0	True				1001738	44604854	16261262
+alloc	candidate-3	2	dot-three-no-input	20000	0	True				11921740	477979711	8678236
+alloc	candidate-3	2	dot-three-no-input	40000	0	True				23841740	948059711	9318236
+alloc	candidate-3	2	differences-no-input	20000	0	True				261670	21969687	9591399
+alloc	candidate-3	2	differences-no-input	40000	0	True				521670	36049687	10231399
+alloc	candidate-3	2	take-multispec-small	20000	0	True				2181802	125022553	9594023
+alloc	candidate-3	2	take-multispec-small	40000	0	True				4361802	242142553	10234023
+instructions	base	candidate-3-pair-1	ordinary-arithmetic	20000	0	True			359483101			
+instructions	base	candidate-3-pair-1	ordinary-arithmetic	40000	0	True			715454975			
+instructions	base	candidate-3-pair-1	check-no-output	20000	0	True			214043702			
+instructions	base	candidate-3-pair-1	check-no-output	40000	0	True			424570865			
+instructions	base	candidate-3-pair-1	quiet-no-output	20000	0	True			208418099			
+instructions	base	candidate-3-pair-1	quiet-no-output	40000	0	True			413326314			
+instructions	base	candidate-3-pair-1	evaluation-data-no-output	2000	0	True			115414899			
+instructions	base	candidate-3-pair-1	evaluation-data-no-output	4000	0	True			227208512			
+instructions	base	candidate-3-pair-1	test-report-no-output	2000	0	True			193057501			
+instructions	base	candidate-3-pair-1	test-report-no-output	4000	0	True			381960897			
+instructions	base	candidate-3-pair-1	trace-no-output	2000	0	True			52243027			
+instructions	base	candidate-3-pair-1	trace-no-output	4000	0	True			101338116			
+instructions	base	candidate-3-pair-1	buffered-message	20000	0	True			210254286			
+instructions	base	candidate-3-pair-1	buffered-message	40000	0	True			417502722			
+instructions	base	candidate-3-pair-1	evaluation-data-message	2000	0	True			133762564			
+instructions	base	candidate-3-pair-1	evaluation-data-message	4000	0	True			264137135			
+instructions	base	candidate-3-pair-1	check-message	20000	0	True			290177881			
+instructions	base	candidate-3-pair-1	check-message	40000	0	True			577346990			
+instructions	base	candidate-3-pair-1	dot-three-no-input	20000	0	True			5090688982			
+instructions	base	candidate-3-pair-1	dot-three-no-input	40000	0	True			10174685343			
+instructions	base	candidate-3-pair-1	differences-no-input	20000	0	True			206536421			
+instructions	base	candidate-3-pair-1	differences-no-input	40000	0	True			407436698			
+instructions	base	candidate-3-pair-1	take-multispec-small	20000	0	True			1003797236			
+instructions	base	candidate-3-pair-1	take-multispec-small	40000	0	True			2002274214			
+instructions	candidate-3	1	ordinary-arithmetic	20000	0	True			359489519			
+instructions	candidate-3	1	ordinary-arithmetic	40000	0	True			715461064			
+instructions	candidate-3	1	check-no-output	20000	0	True			214048635			
+instructions	candidate-3	1	check-no-output	40000	0	True			424575313			
+instructions	candidate-3	1	quiet-no-output	20000	0	True			208426197			
+instructions	candidate-3	1	quiet-no-output	40000	0	True			413335269			
+instructions	candidate-3	1	evaluation-data-no-output	2000	0	True			115511388			
+instructions	candidate-3	1	evaluation-data-no-output	4000	0	True			227196968			
+instructions	candidate-3	1	test-report-no-output	2000	0	True			193098381			
+instructions	candidate-3	1	test-report-no-output	4000	0	True			382038615			
+instructions	candidate-3	1	trace-no-output	2000	0	True			52310547			
+instructions	candidate-3	1	trace-no-output	4000	0	True			101460274			
+instructions	candidate-3	1	buffered-message	20000	0	True			210259679			
+instructions	candidate-3	1	buffered-message	40000	0	True			417511722			
+instructions	candidate-3	1	evaluation-data-message	2000	0	True			133733184			
+instructions	candidate-3	1	evaluation-data-message	4000	0	True			264583269			
+instructions	candidate-3	1	check-message	20000	0	True			290188294			
+instructions	candidate-3	1	check-message	40000	0	True			577350611			
+instructions	candidate-3	1	dot-three-no-input	20000	0	True			5090656438			
+instructions	candidate-3	1	dot-three-no-input	40000	0	True			10174646259			
+instructions	candidate-3	1	differences-no-input	20000	0	True			206307195			
+instructions	candidate-3	1	differences-no-input	40000	0	True			406976253			
+instructions	candidate-3	1	take-multispec-small	20000	0	True			1003784158			
+instructions	candidate-3	1	take-multispec-small	40000	0	True			2002230805			
+instructions	base	candidate-3-pair-2	ordinary-arithmetic	20000	0	True			359479709			
+instructions	base	candidate-3-pair-2	ordinary-arithmetic	40000	0	True			715453844			
+instructions	base	candidate-3-pair-2	check-no-output	20000	0	True			214040754			
+instructions	base	candidate-3-pair-2	check-no-output	40000	0	True			424570568			
+instructions	base	candidate-3-pair-2	quiet-no-output	20000	0	True			208417662			
+instructions	base	candidate-3-pair-2	quiet-no-output	40000	0	True			413328005			
+instructions	base	candidate-3-pair-2	evaluation-data-no-output	2000	0	True			115380975			
+instructions	base	candidate-3-pair-2	evaluation-data-no-output	4000	0	True			227124301			
+instructions	base	candidate-3-pair-2	test-report-no-output	2000	0	True			193044846			
+instructions	base	candidate-3-pair-2	test-report-no-output	4000	0	True			381895323			
+instructions	base	candidate-3-pair-2	trace-no-output	2000	0	True			52295265			
+instructions	base	candidate-3-pair-2	trace-no-output	4000	0	True			101339109			
+instructions	base	candidate-3-pair-2	buffered-message	20000	0	True			210254894			
+instructions	base	candidate-3-pair-2	buffered-message	40000	0	True			417503805			
+instructions	base	candidate-3-pair-2	evaluation-data-message	2000	0	True			133753020			
+instructions	base	candidate-3-pair-2	evaluation-data-message	4000	0	True			264145409			
+instructions	base	candidate-3-pair-2	check-message	20000	0	True			290178422			
+instructions	base	candidate-3-pair-2	check-message	40000	0	True			577342790			
+instructions	base	candidate-3-pair-2	dot-three-no-input	20000	0	True			5090692267			
+instructions	base	candidate-3-pair-2	dot-three-no-input	40000	0	True			10174678889			
+instructions	base	candidate-3-pair-2	differences-no-input	20000	0	True			206397011			
+instructions	base	candidate-3-pair-2	differences-no-input	40000	0	True			407153703			
+instructions	base	candidate-3-pair-2	take-multispec-small	20000	0	True			1003801012			
+instructions	base	candidate-3-pair-2	take-multispec-small	40000	0	True			2002256577			
+instructions	candidate-3	2	ordinary-arithmetic	20000	0	True			359489046			
+instructions	candidate-3	2	ordinary-arithmetic	40000	0	True			715462860			
+instructions	candidate-3	2	check-no-output	20000	0	True			214050341			
+instructions	candidate-3	2	check-no-output	40000	0	True			424576355			
+instructions	candidate-3	2	quiet-no-output	20000	0	True			208426395			
+instructions	candidate-3	2	quiet-no-output	40000	0	True			413332668			
+instructions	candidate-3	2	evaluation-data-no-output	2000	0	True			115552714			
+instructions	candidate-3	2	evaluation-data-no-output	4000	0	True			227304094			
+instructions	candidate-3	2	test-report-no-output	2000	0	True			193131042			
+instructions	candidate-3	2	test-report-no-output	4000	0	True			382096396			
+instructions	candidate-3	2	trace-no-output	2000	0	True			52310693			
+instructions	candidate-3	2	trace-no-output	4000	0	True			101652386			
+instructions	candidate-3	2	buffered-message	20000	0	True			210260351			
+instructions	candidate-3	2	buffered-message	40000	0	True			417511240			
+instructions	candidate-3	2	evaluation-data-message	2000	0	True			133693735			
+instructions	candidate-3	2	evaluation-data-message	4000	0	True			264196867			
+instructions	candidate-3	2	check-message	20000	0	True			290186458			
+instructions	candidate-3	2	check-message	40000	0	True			577349492			
+instructions	candidate-3	2	dot-three-no-input	20000	0	True			5090674868			
+instructions	candidate-3	2	dot-three-no-input	40000	0	True			10174632571			
+instructions	candidate-3	2	differences-no-input	20000	0	True			206307393			
+instructions	candidate-3	2	differences-no-input	40000	0	True			406983720			
+instructions	candidate-3	2	take-multispec-small	20000	0	True			1003793467			
+instructions	candidate-3	2	take-multispec-small	40000	0	True			2002232925
+```
+
+### 4. Stop-loss counters, residuals and handoff
+
+- Compiling production candidates **3**; measured candidates **3/8**, five slots remain. The test-only helper move introduces no new production candidate; its complete release dependency audit is above.
+- Original capture reds remain **6/6 green**; the required amendment-3 symmetry red is newly green. Both new prefix falsifiers were watched again in both builds. The additional shared-harness compile red is green (historical target 71/71).
+- Attached entries **0/4**; owed **114**. The runtime deadline assertion remains unresolved. All other observed outcomes, including the workspace attempt/retry and native skips, are reported above without a blanket green claim.
+- Regressing labels **0/12**; worst regression under the two-sample rule: none. Largest positive single sample is Trace +0.607312% against a 1.404495% floor. EvaluationData-message's +0.364729% sample is explicitly disclosed.
+- No-progress streak **0**: the symmetry red turned green, regressing labels fell from one to zero, and the shared test-harness compile error was repaired. This is a scope stop at the two structural test files, not the two-candidate stop-loss. No production edit followed the driver repair, and no source edit followed the structural witnesses.
+- No final post-admission oracle ran because no entries were admitted. Callgrind was not triggered; no timing suite was run. Native ZeroMQ results are explicitly classified above.
+
+The director must authorize reconciliation of the closed Trace function/outbound-call contract and the historical rejection-census assertions in the two named stdlib test files. The exact census population must be earned from discovery; its later count assertions were not reached. Preserve the strict boundary oracle and the new live-state symmetry test. The guest deadline test can be aligned within its existing authorized file using the prepared stronger test; no extra production repair is currently indicated by that witness.
+
+After the scope amendment: apply that authorized test alignment, reconcile the two structural contracts without weakening them, rerun affected gates, then use the guarded four-entry admission script only when its prerequisites are green. Verify owed 114 -> 110 in both builds, refresh standing evidence after the final source edits, and rerun the workspace gate with `RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1` in this environment. The prepared admission/deadline scripts are **unapplied**; their existence is not an admission claim.
+
+Takeover evidence: `.temp/brief-595/PROGRESS.md`; `resume-3/start/`, `start-sha256.json`, `previous-progress.md`; red source/log/command; corrected `scope-witness.md`; both sets of gate logs/commands and certificate replays; `candidate-3/` binaries/hashes/measurements; `resume-3/retained-source/`, hashes and unified patches. Earlier evidence is preserved. Changes remain uncommitted for the director.
+
+Final retained-source audit (the report is append-only against the continuation-start brief):
+
+```text
+Continuation-start paths verified: 1954
+Retained changed/new paths versus initial manifest: 38
+Continuation changed paths: 12
+Unexpected or missing source/document/script paths: 0
+Added unsafe: 0
+Only the authorized guest-loading test changed; the deadline test is unchanged
+Oracle primary/effects/owed unchanged; entries 0/4, owed=114
+Only authorized source, standing-maintenance, and report changes:
+crates/rum-runtime/src/runtime/session/guest_loading/scope.rs
+crates/rum-runtime/src/runtime/session/guest_loading/tests.rs
+crates/rum-runtime/src/runtime/suspension/core.rs
+crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv
+crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv
+crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_storage.tsv
+crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv
+crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv
+crates/rum-stdlib/tests/suspension_oracle/descriptors.rs
+crates/rum-stdlib/tests/suspension_oracle/fixtures/capture_output/roles.rs
+crates/rum-stdlib/tests/suspension_oracle/support/lifecycle.rs
+docs/dev/codex/brief-595-capture-output-at-a-pause.md
+```

@@ -66,7 +66,63 @@ impl Session {
     }
 }
 
+/// Enclosing dynamic state displaced only while a saved guest segment runs.
+/// Kept on the resume driver's stack, never in a suspension frame.
+pub(in crate::runtime) struct DisplacedGuestFormEnvironment {
+    identity: Option<GuestFormIdentity>,
+    message_checkpoint: Option<usize>,
+    message_dirty: bool,
+    last_message_list: Vec<RuntimeMessage>,
+    handled_errors: Vec<RuntimeMessage>,
+    eval_deadline: Option<Instant>,
+    time_deadline: Option<Instant>,
+    memory_limit: Option<usize>,
+    interrupt_poll_counter: u64,
+    interrupt_armed: bool,
+}
+
+impl DisplacedGuestFormEnvironment {
+    pub(in crate::runtime) fn restore(self, session: &mut Session) {
+        session.guest_form = self.identity;
+        session.current_message_list_checkpoint = self.message_checkpoint;
+        session.current_message_list_dirty = self.message_dirty;
+        session.last_message_list = self.last_message_list;
+        session.handled_non_loader_eval_errors = self.handled_errors;
+        session.eval_deadline = self.eval_deadline;
+        session.current_time_deadline = self.time_deadline;
+        session.current_memory_limit = self.memory_limit;
+        session.interrupt_poll_counter = self.interrupt_poll_counter;
+        session.interrupt_armed = self.interrupt_armed;
+        session.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
+        );
+        session.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
+        );
+    }
+}
+
 impl GuestFormEnvironment {
+    pub(in crate::runtime) fn install_for_resume(
+        self,
+        session: &mut Session,
+    ) -> DisplacedGuestFormEnvironment {
+        let displaced = DisplacedGuestFormEnvironment {
+            identity: session.guest_form,
+            message_checkpoint: session.current_message_list_checkpoint,
+            message_dirty: session.current_message_list_dirty,
+            last_message_list: std::mem::take(&mut session.last_message_list),
+            handled_errors: std::mem::take(&mut session.handled_non_loader_eval_errors),
+            eval_deadline: session.eval_deadline,
+            time_deadline: session.current_time_deadline,
+            memory_limit: session.current_memory_limit,
+            interrupt_poll_counter: session.interrupt_poll_counter,
+            interrupt_armed: session.interrupt_armed,
+        };
+        self.install(session);
+        displaced
+    }
+
     pub(in crate::runtime) fn install(self, session: &mut Session) {
         session.guest_form = Some(self.identity);
         session.current_message_list_checkpoint = self.message_checkpoint;

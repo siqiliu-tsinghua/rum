@@ -1,3 +1,4 @@
+mod capture_output;
 mod driver;
 use super::{
     catalog::{self, CatalogError},

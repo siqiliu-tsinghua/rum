@@ -9,6 +9,11 @@ pub(super) struct EvalStructuredTraceCaptureExprSuspensionFrame {
 }
 
 impl crate::runtime::suspension::SuspensionFrame for EvalStructuredTraceCaptureExprSuspensionFrame {
+    fn output_boundary(&self) -> crate::runtime::suspension::OutputBoundary {
+        use crate::runtime::suspension::OutputBoundary;
+        OutputBoundary::trace(self.trace_checkpoint)
+    }
+
     fn resume(
         self: std::sync::Arc<Self>,
         session: &mut Session,
@@ -37,7 +42,7 @@ impl crate::runtime::suspension::FrameAbandon for EvalStructuredTraceCaptureExpr
         self: std::sync::Arc<Self>,
         context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
     ) -> crate::runtime::suspension::FrameAbandonAction {
-        context.restore_trace_capture(self.trace_checkpoint, self.prior_enabled);
+        context.restore_trace_capture(self.prior_enabled);
         crate::runtime::suspension::FrameAbandonAction::Discard
     }
 }

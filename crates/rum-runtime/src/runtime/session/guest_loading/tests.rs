@@ -256,20 +256,42 @@ InputString["roots: "]
 
 #[test]
 fn paused_guest_form_reinstalls_original_deadline_before_child_frames() {
+    thread_local! {
+        static DEADLINE_CHECKS: Cell<(Option<Instant>, usize)> = const { Cell::new((None, 0)) };
+    }
+    fn require_deadline(s: &mut Session, _: &Expr, _: &SharedArgs) -> Result<Expr, EvalError> {
+        DEADLINE_CHECKS.with(|state| {
+            let (deadline, checks) = state.get();
+            assert_eq!(s.eval_deadline, deadline);
+            state.set((deadline, checks + 1));
+        });
+        Ok(system_expr("Null"))
+    }
     let mut s = session(&[(
         "Deadline.rum",
-        r#"InputString["first: "];InputString["second: "]
+        r#"InputString["first: "];RequireOriginalDeadline[];InputString["second: "];RequireOriginalDeadline[]
 77"#,
     )]);
+    s.register_builtin(BuiltinSpec::ordinary(
+        "RequireOriginalDeadline",
+        "Test the guest deadline inside each resumed segment.",
+        require_deadline,
+        MemoryGrowthContract::NonAmplifying,
+    ));
     s.set_eval_timeout(Some(Duration::from_secs(60)));
     suspended(s.eval_request(r#"Get["Deadline`"]"#), "first: ");
     let deadline = s.eval_deadline;
-    // Perturbation proves restoration instead of checking an unchanged field.
-    s.eval_deadline = Some(Instant::now() + Duration::from_secs(120));
+    assert!(deadline.is_some());
+    DEADLINE_CHECKS.with(|state| state.set((deadline, 0)));
+    // Guest work uses the captured deadline; each pause restores the enclosing state.
+    let enclosing_deadline = Some(Instant::now() + Duration::from_secs(120));
+    s.eval_deadline = enclosing_deadline;
     suspended(s.resume_eval_request_with_input("one"), "second: ");
-    assert_eq!(s.eval_deadline, deadline);
+    assert_eq!(s.eval_deadline, enclosing_deadline);
+    DEADLINE_CHECKS.with(|state| assert_eq!(state.get().1, 1));
     s.resume_eval_request_with_input("two").unwrap();
     assert_eq!(s.eval_deadline, deadline);
+    DEADLINE_CHECKS.with(|state| assert_eq!(state.get().1, 2));
     idle(&mut s);
 }
 
@@ -353,11 +375,26 @@ fn guest_environment_restores_handled_error_tail_and_memory_limit_before_child()
         s.eval_request(r#"MemoryConstrained[Get["Environment`"],100000000]"#),
         "first: ",
     );
-    assert!(
-        s.handled_non_loader_eval_errors.is_empty(),
-        "request packaging should have truncated the live tail"
-    );
+    let live_state = |s: &Session| {
+        (
+            s.handled_non_loader_eval_errors.clone(),
+            s.current_message_list_checkpoint,
+            s.current_message_list_dirty,
+            s.last_message_list.clone(),
+            s.guest_form,
+            s.current_memory_limit,
+            s.eval_deadline,
+            s.current_time_deadline,
+        )
+    };
+    assert!(s.handled_non_loader_eval_errors.is_empty());
+    let first_pause = live_state(&s);
     suspended(s.resume_eval_request_with_input("one"), "second: ");
+    assert_eq!(
+        live_state(&s),
+        first_pause,
+        "pauses restore the enclosing state"
+    );
     assert!(s.handled_non_loader_eval_errors.is_empty());
     s.resume_eval_request_with_input("two").unwrap();
     assert!(s.current_memory_limit.is_none());

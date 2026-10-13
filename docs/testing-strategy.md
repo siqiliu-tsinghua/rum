@@ -83,9 +83,14 @@ exist; this is not source-edge discovery or a compiler effect proof.
 
 The shared runner compares rum with prequeued input against rum with actual
 suspension: typed outcomes, exact planned input kinds/prompts, ordered messages,
-cumulative output prefixes, callback logs and declared state, exhausted queues
-and fresh requests. Catalog, no-pause, false-tail, lost-prefix and owed-ledger
-falsifiers exercise the acceptance functions. Historical continuation suites
+the raw trace array, cumulative prefixes in each of the print/message/trace
+channels, callback logs and declared state, exhausted queues and fresh requests.
+Capture descriptors also declare exact output at every pause, including messages
+and raw traces; a final-only comparison cannot detect provisional output leaking
+and later disappearing. Lifecycle checks at both pauses cover buffered output
+and exclusive print sinks. Catalog, no-pause, false-tail, lost-prefix,
+message-prefix, trace-prefix and owed-ledger falsifiers exercise the acceptance
+functions. Historical continuation suites
 retain their specialized assertions. Declared boundary sinks must retire input.
 
 Step A keeps an exact owed-entry ledger for role descriptors still to be added;

@@ -1,14 +1,15 @@
-use super::observe::{Observation, Output, Rejection};
+use super::observe::{self, Observation, Output, Rejection};
 use super::session;
 use rum_runtime::{RuntimeInputRequest, Session, SessionRequestError};
 
 pub struct Run {
     pub output: Output,
     pub requests: Vec<RuntimeInputRequest>,
+    pub pauses: Vec<Observation>,
 }
 
 // Shared by catalog descriptors and the historical suites. The final output is
-// cumulative. Intermediate prints must be prefixes, never concatenated again.
+// cumulative. Each intermediate output channel must remain an ordered prefix.
 pub fn execute(
     s: &mut Session,
     source: &str,
@@ -32,14 +33,17 @@ pub fn execute_planned(
     }
     let mut output = s.eval_request(source);
     let mut requests = Vec::new();
-    let mut prefix = Vec::<String>::new();
+    let mut previous = None;
+    let mut pauses = Vec::new();
     loop {
         let observation = Observation::from_output(&output);
-        if !observation.prints.starts_with(&prefix) {
-            session::retire(s);
-            return Err(Rejection::OutputPrefix);
+        if let Some(previous) = &previous {
+            if let Err(error) = observe::prefix(previous, &observation) {
+                session::retire(s);
+                return Err(error);
+            }
         }
-        prefix = observation.prints;
+        previous = Some(observation.clone());
         let Err(failure) = &output else {
             break;
         };
@@ -65,6 +69,7 @@ pub fn execute_planned(
                 return Err(Rejection::Prompt(index));
             }
         }
+        pauses.push(observation);
         let request = request.clone();
         if s.pending_input_request() != Some(&request)
             || s.reject_overlapping_evaluation_request().is_ok()
@@ -86,5 +91,9 @@ pub fn execute_planned(
         session::retire(s);
         return Err(Rejection::PendingOwner);
     }
-    Ok(Run { output, requests })
+    Ok(Run {
+        output,
+        requests,
+        pauses,
+    })
 }

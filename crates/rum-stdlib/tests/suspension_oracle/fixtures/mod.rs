@@ -1,4 +1,5 @@
 mod boundaries;
+mod capture_output;
 mod control_roles;
 mod debug_roles;
 mod functional_roles;

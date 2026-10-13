@@ -1,10 +1,12 @@
 use super::support::{
-    drive,
+    drive, lifecycle,
     observe::{self, Observation, Rejection},
     session,
 };
 use rum_core::Expr;
-use rum_runtime::{RuntimeInputKind, Session, SessionRequestError};
+use rum_runtime::{
+    EvalTerminationReason, RuntimeInputKind, RuntimeInputRequest, Session, SessionRequestError,
+};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Variant {
@@ -33,6 +35,10 @@ pub struct Fixture {
     pub expected_log: Option<String>,
     pub expected_error: Option<SessionRequestError>,
     pub expected_prints: Option<Vec<String>>,
+    pub expected_messages: Option<Vec<rum_runtime::RuntimeMessage>>,
+    pub pause_prints: Option<Vec<Vec<String>>>,
+    pub pause_messages: Option<Vec<Vec<rum_runtime::RuntimeMessage>>>,
+    pub pause_trace: Option<Vec<Vec<rum_runtime::TraceEvent>>>,
     /// Zero-based argument paths of monotonic timing leaves, and nothing else.
     pub duration_paths: Vec<Vec<usize>>,
     pub files: Option<Vec<(String, String)>>,
@@ -52,11 +58,39 @@ impl Fixture {
             expected_log: None,
             expected_error: None,
             expected_prints: None,
+            expected_messages: None,
+            pause_prints: None,
+            pause_messages: None,
+            pause_trace: None,
             duration_paths: vec![],
             files: None,
             lifecycle_pauses: [0, 1],
             configure: |_| {},
         }
+    }
+    pub fn check_pause(&self, i: usize, observation: &Observation) -> Result<(), Rejection> {
+        if self
+            .pause_prints
+            .as_ref()
+            .is_some_and(|p| p.get(i) != Some(&observation.prints))
+        {
+            return Err(Rejection::PausePrints(i));
+        }
+        if self
+            .pause_messages
+            .as_ref()
+            .is_some_and(|p| p.get(i) != Some(&observation.messages))
+        {
+            return Err(Rejection::PauseMessages(i));
+        }
+        if self
+            .pause_trace
+            .as_ref()
+            .is_some_and(|p| p.get(i) != Some(&observation.trace))
+        {
+            return Err(Rejection::PauseTrace(i));
+        }
+        Ok(())
     }
     pub fn session(&self) -> Session {
         let mut s = session::new();
@@ -125,6 +159,11 @@ pub fn run(f: &Fixture, queued: bool, checks: Checks) -> Result<ResultView, Reje
             }
         }
     }
+    if !queued && checks.expectations {
+        for (i, observation) in r.pauses.iter().enumerate() {
+            f.check_pause(i, observation)?;
+        }
+    }
     let mut observation = Observation::from_output(&r.output);
     if let Some(value) = &mut observation.value {
         for path in &f.duration_paths {
@@ -170,6 +209,15 @@ pub fn accept(f: &Fixture, checks: Checks) -> Result<ResultView, Rejection> {
                     return Err(Rejection::Error);
                 }
             }
+            if let Some(expected) = &f.expected_messages {
+                if &v.observation.messages != expected {
+                    eprintln!(
+                        "{} expected messages={expected:?} actual={:?}",
+                        f.id, v.observation.messages
+                    );
+                    return Err(Rejection::Messages);
+                }
+            }
             if let Some(expected) = &f.expected_prints {
                 if &v.observation.prints != expected {
                     return Err(Rejection::Prints);
@@ -177,6 +225,12 @@ pub fn accept(f: &Fixture, checks: Checks) -> Result<ResultView, Rejection> {
             }
             for (i, expected) in f.expected_projections.iter().enumerate() {
                 if v.projections.get(i).map(ToString::to_string).as_ref() != Some(expected) {
+                    eprintln!(
+                        "{} projection {i}: expected={expected} actual={:?}; observation={:?}",
+                        f.id,
+                        v.projections.get(i),
+                        v.observation
+                    );
                     return Err(Rejection::Projection(i));
                 }
             }
@@ -208,4 +262,86 @@ pub fn accept(f: &Fixture, checks: Checks) -> Result<ResultView, Rejection> {
         }
     }
     Ok(r)
+}
+
+/// Buffered lifecycle coverage checks the same exact pause observations as
+/// completion; the streaming counterpart separately verifies sink exclusivity.
+pub fn exercise_fixture(f: &Fixture, verify: impl Fn(&mut Session, usize, bool)) -> usize {
+    let source = format!(
+        "WithCleanup[({});Print[\"oracle suffix\"],Print[\"oracle cleanup\"]]",
+        f.source
+    );
+    for (owner_pause, stop) in f.lifecycle_pauses.into_iter().enumerate() {
+        for reset in [false, true] {
+            let mut s = f.session();
+            let cancel = s.request_cancel_handle();
+            let mut out = s.eval_request(&source);
+            let mut previous = None;
+            for (i, pause) in f.pauses.iter().enumerate().take(stop + 1) {
+                let current = Observation::from_output(&out);
+                if let Some(previous) = &previous {
+                    observe::prefix(previous, &current).unwrap();
+                }
+                f.check_pause(i, &current).unwrap();
+                let Some(SessionRequestError::InputRequired { request }) = &current.error else {
+                    panic!("{} lifecycle pause {i}: {out:?}", f.id);
+                };
+                assert_eq!(request.prompt, pause.prompt);
+                assert_eq!(request.kind, pause.kind);
+                assert_eq!(s.pending_input_request(), Some(request));
+                assert!(s.eval_request("Global`oracleOverlap=1").is_err());
+                assert_eq!(s.pending_input_request(), Some(request));
+                previous = Some(current);
+                if i < stop {
+                    out = s.resume_eval_request_with_input(&pause.answer);
+                }
+            }
+            if reset {
+                s.queue_input_response("discarded with reset");
+                s = f.session();
+                cancel.cancel();
+            } else {
+                cancel.cancel();
+                let result = s
+                    .finish_cancelled_pending_evaluation_request()
+                    .unwrap()
+                    .unwrap();
+                assert_eq!(result.termination, Some(EvalTerminationReason::Cancelled));
+                let current = Observation::from_output(&Ok(result));
+                let previous = previous.unwrap();
+                observe::prefix(&previous, &current).unwrap();
+                let mut prints = previous.prints;
+                prints.push("oracle cleanup".into());
+                assert_eq!(current.prints, prints, "{} cancelled buffered output", f.id);
+                assert_eq!(current.messages.len(), previous.messages.len() + 1);
+                assert_eq!(current.messages.last().unwrap().tag, "cancel");
+                assert_eq!(current.trace, previous.trace);
+            }
+            assert!(s.pending_input_request().is_none());
+            verify(&mut s, owner_pause, reset);
+            session::fresh(&mut s).unwrap();
+            session::empty_queue(&mut s).unwrap();
+        }
+    }
+    let plans = f
+        .pauses
+        .iter()
+        .map(|p| {
+            (
+                RuntimeInputRequest {
+                    kind: p.kind,
+                    prompt: p.prompt.clone(),
+                    password: false,
+                },
+                p.answer.clone(),
+            )
+        })
+        .collect::<Vec<_>>();
+    6 + lifecycle::exercise_observed_at(
+        || f.session(),
+        &f.source,
+        &plans,
+        f.lifecycle_pauses,
+        verify,
+    )
 }

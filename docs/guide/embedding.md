@@ -291,9 +291,27 @@ The suspension contains:
 - `request.kind`
 - `request.prompt`
 - `request.password`
-- outputs collected before the suspension
+- public output collected before the suspension
 
 Resume with `HostSession::resume_with_input(input)`.
+
+The `prints`, `messages`, and raw `trace` arrays are cumulative for the request.
+Consume only the new suffix of each response; do not concatenate whole arrays.
+Within each channel, output already exposed stays an ordered prefix of later
+responses. There is no combined print/message ordering guarantee.
+
+An active capture's output is provisional at a pause: the kernel retains it
+for that capture and nested observers while excluding it from the response.
+`EvaluationData` and `TestReport` input captures cover all three channels;
+`Check`, `Quiet`, and `ConfirmQuiet` cover messages; the `Trace` family covers
+raw tracing. Completion consumes, filters, or releases that output once under
+the builtin's existing policy. An input evaluation that fails inside
+`TestReport` copies and releases its captured output on completion. Expected
+output and `SameTest` callbacks produce output for the surrounding request.
+Nested captures retain their outer boundary after an inner capture completes.
+Cancellation discards provisional output while preserving the public prefix;
+reset drops the entire pending request without running its continuation.
+
 
 For single-source `eval`, the session keeps the continuation. The host should
 not replay the original source to answer input.
@@ -345,7 +363,10 @@ sink as it is produced on the evaluating thread. Routing is exclusive: while the
 sink is installed, the `prints` field on both successful and failed outcomes is
 empty. `clear_print_sink()` restores per-request buffering. A sink must not
 panic, because its panic is caught at the host boundary and poisons the session.
-The sink does not survive `reset()`; reinstall it after reset.
+The sink does not survive `reset()`; reinstall it after reset. Captures do not
+intercept streamed lines: a sink receives them immediately, and those lines do
+not also enter `EvaluationData` or `TestReport` output logs. Queued-input and
+resumed-input evaluations deliver the same ordered sink transcript.
 
 For batch input, queue raw host strings in consumption order before evaluating
 the script:

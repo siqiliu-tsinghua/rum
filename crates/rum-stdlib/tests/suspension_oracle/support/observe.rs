@@ -1,7 +1,7 @@
 use rum_core::Expr;
 use rum_runtime::{
     EvalTerminationReason, RuntimeMessage, SessionEvalResponse, SessionRequestError,
-    SessionRequestFailure,
+    SessionRequestFailure, TraceEvent,
 };
 
 pub type Output = Result<SessionEvalResponse, SessionRequestFailure>;
@@ -13,6 +13,7 @@ pub struct Observation {
     pub termination: Option<EvalTerminationReason>,
     pub messages: Vec<RuntimeMessage>,
     pub prints: Vec<String>,
+    pub trace: Vec<TraceEvent>,
 }
 impl Observation {
     pub fn from_output(out: &Output) -> Self {
@@ -23,6 +24,7 @@ impl Observation {
                 termination: r.termination,
                 messages: r.messages.clone(),
                 prints: r.prints.clone(),
+                trace: r.trace.clone(),
             },
             Err(f) => Self {
                 value: None,
@@ -30,6 +32,7 @@ impl Observation {
                 termination: None,
                 messages: f.messages.clone(),
                 prints: f.prints.clone(),
+                trace: f.trace.clone(),
             },
         }
     }
@@ -44,6 +47,11 @@ pub enum Rejection {
     PendingOwner,
     OverlapAccepted,
     OutputPrefix,
+    MessagePrefix,
+    TracePrefix,
+    PauseMessages(usize),
+    PausePrints(usize),
+    PauseTrace(usize),
     QueueNotEmpty,
     FreshRequest,
     Value,
@@ -51,6 +59,7 @@ pub enum Rejection {
     Termination,
     Messages,
     Prints,
+    Trace,
     Log,
     Projection(usize),
     ExpectedValue,
@@ -72,6 +81,23 @@ pub fn compare(a: &Observation, b: &Observation) -> Result<(), Rejection> {
     }
     if a.prints != b.prints {
         return Err(Rejection::Prints);
+    }
+    if a.trace != b.trace {
+        return Err(Rejection::Trace);
+    }
+    Ok(())
+}
+
+/// Every already public element must remain an ordered prefix at the next response.
+pub fn prefix(previous: &Observation, next: &Observation) -> Result<(), Rejection> {
+    if !next.prints.starts_with(&previous.prints) {
+        return Err(Rejection::OutputPrefix);
+    }
+    if !next.messages.starts_with(&previous.messages) {
+        return Err(Rejection::MessagePrefix);
+    }
+    if !next.trace.starts_with(&previous.trace) {
+        return Err(Rejection::TracePrefix);
     }
     Ok(())
 }

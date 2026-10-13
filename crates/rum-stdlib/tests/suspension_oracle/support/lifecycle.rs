@@ -1,4 +1,7 @@
-use super::session;
+use super::{
+    observe::{self, Observation},
+    session,
+};
 use rum_runtime::{
     ClosurePrintSink, EvalTerminationReason, RuntimeInputRequest, Session, SessionRequestError,
 };
@@ -49,7 +52,13 @@ pub fn exercise_observed_at(
             )));
             let handle = s.request_cancel_handle();
             let mut out = s.eval_request(&source);
+            let mut previous = None;
             for (i, (planned, answer)) in plans.iter().enumerate().take(stop + 1) {
+                let observed = Observation::from_output(&out);
+                if let Some(previous) = &previous {
+                    observe::prefix(previous, &observed).unwrap();
+                }
+                previous = Some(observed);
                 let Err(f) = &out else {
                     panic!("lifecycle did not pause at {i}: {out:?}")
                 };
@@ -87,6 +96,11 @@ pub fn exercise_observed_at(
                     .finish_cancelled_pending_evaluation_request()
                     .unwrap()
                     .unwrap();
+                observe::prefix(
+                    previous.as_ref().unwrap(),
+                    &Observation::from_output(&Ok(cancelled.clone())),
+                )
+                .unwrap();
                 assert_eq!(
                     cancelled.termination,
                     Some(EvalTerminationReason::Cancelled)

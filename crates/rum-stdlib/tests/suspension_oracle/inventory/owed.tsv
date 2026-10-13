@@ -14,7 +14,6 @@ CountsBy.keyFunction	associations_transform	Role-specific variants and lifecycle
 DeleteMissing.defaultOption	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 DeleteMissing.explicitOption	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 DeleteMissing.optionSyntax	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-EvaluationData.body	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Evaluator.defaultFallback	evaluator	The direct Default dispatcher is not an installed BuiltinSpec; the historical G10 witnesses remain supplemental until a complete role descriptor owns its variants and lifecycle.
 GroupBy.callback	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 GroupBy.reducer	associations_transform	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
@@ -94,9 +93,6 @@ TemplateApply.defaultOption	strings_text	Role-specific variants and lifecycle re
 TemplateApply.explicitOption	strings_text	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 TemplateApply.optionSyntax	strings_text	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 TemplateApply.slot	strings_text	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-TestReport.expectedOutput	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-TestReport.input	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
-TestReport.sameTest	debug	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 ToExpression.parsedSource	strings_text	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 ToExpression.resultHead	strings_text	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.
 Uncompress.defaultOption	strings_text	Role-specific variants and lifecycle remain owed; historical descriptors are supplemental witnesses, not automatic admission.

@@ -177,6 +177,11 @@ struct EvalCheckSuspensionFrame {
 }
 
 impl crate::runtime::suspension::SuspensionFrame for EvalCheckSuspensionFrame {
+    fn output_boundary(&self) -> crate::runtime::suspension::OutputBoundary {
+        use crate::runtime::suspension::OutputBoundary;
+        OutputBoundary::messages(self.message_checkpoint)
+    }
+
     fn resume(
         self: std::sync::Arc<Self>,
         session: &mut Session,
@@ -208,7 +213,7 @@ impl crate::runtime::suspension::FrameAbandon for EvalCheckSuspensionFrame {
         self: std::sync::Arc<Self>,
         context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
     ) -> crate::runtime::suspension::FrameAbandonAction {
-        context.restore_message_capture(self.message_checkpoint, self.handled_error_checkpoint);
+        context.restore_message_capture(self.handled_error_checkpoint);
         crate::runtime::suspension::FrameAbandonAction::Discard
     }
 }
@@ -221,6 +226,11 @@ struct EvalQuietSuspensionFrame {
 }
 
 impl crate::runtime::suspension::SuspensionFrame for EvalQuietSuspensionFrame {
+    fn output_boundary(&self) -> crate::runtime::suspension::OutputBoundary {
+        use crate::runtime::suspension::OutputBoundary;
+        OutputBoundary::messages(self.message_checkpoint)
+    }
+
     fn resume(
         self: std::sync::Arc<Self>,
         session: &mut Session,
@@ -249,7 +259,7 @@ impl crate::runtime::suspension::FrameAbandon for EvalQuietSuspensionFrame {
         self: std::sync::Arc<Self>,
         context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
     ) -> crate::runtime::suspension::FrameAbandonAction {
-        context.restore_message_capture(self.message_checkpoint, self.handled_error_checkpoint);
+        context.restore_message_capture(self.handled_error_checkpoint);
         crate::runtime::suspension::FrameAbandonAction::Discard
     }
 }

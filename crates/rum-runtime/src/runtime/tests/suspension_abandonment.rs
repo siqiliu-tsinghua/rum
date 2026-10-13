@@ -547,3 +547,6 @@ fn abandonment_restores_an_existing_time_deadline_exactly() {
     abandon(&mut session, AbandonReason::CancelledRequest);
     assert_eq!(session.current_time_deadline, Some(prior));
 }
+
+#[path = "capture_output.rs"]
+mod capture_output;

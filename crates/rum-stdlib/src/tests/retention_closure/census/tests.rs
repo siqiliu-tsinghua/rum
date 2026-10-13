@@ -186,19 +186,23 @@ fn baseline(source: &Source) {
     // frontier. Guest-form abandonment adds exactly three rejected method sites:
     // taking/installing the paused environment and capturing it for cleanup.
     // These remain unresolved boundaries; the loader earns no retention mark.
-    for line in [709, 710, 725] {
+    for line in [667, 668, 684] {
         assert!(options.rejected.iter().any(|row| row.kind == Kind::RET002
             && row.site.file.ends_with("suspension/core.rs")
             && row.site.start.0 == line));
     }
+    // brief-595: abandonment settles a frame's provisional capture output
+    // before abandoning it (`frame.output_boundary()` in suspension/core.rs and
+    // four receiver calls in suspension/output.rs). All five are unresolved
+    // method-receiver boundaries; no retention mark is earned.
     assert_eq!(
         options.rejected.len(),
-        927,
+        932,
         "STOP: brief-545 exact legacy frontier inventory moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 890), (Kind::RET003, 27)])
+        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 895), (Kind::RET003, 27)])
     );
     let wrapper = regions::frontier(
         source,

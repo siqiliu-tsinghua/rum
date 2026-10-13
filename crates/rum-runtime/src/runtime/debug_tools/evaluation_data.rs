@@ -29,6 +29,7 @@ impl Session {
                     let input_expr = input_expr.clone();
         EvalEvaluationDataSuspensionFrame {
             checkpoint,
+            properties: properties.cloned(),
             prior_tracing,
             started,
             input_expr,
@@ -39,17 +40,15 @@ impl Session {
 
         match outcome {
             Err(EvalError::InputRequired { request }) => Err(EvalError::InputRequired { request }),
-            outcome => {
-                let data = self.finish_evaluation_data_capture(
-                    checkpoint,
-                    prior_tracing,
-                    started,
-                    &input_expr,
-                    &input_string,
-                    outcome,
-                )?;
-                self.project_evaluation_data_properties(data, properties.cloned())
-            }
+            outcome => self.finish_evaluation_data_capture(
+                checkpoint,
+                prior_tracing,
+                started,
+                &input_expr,
+                &input_string,
+                outcome,
+                properties.cloned(),
+            ),
         }
     }
 
@@ -61,6 +60,7 @@ impl Session {
         input_expr: &Expr,
         input_string: &str,
         outcome: Result<Expr, EvalError>,
+        properties: Option<Expr>,
     ) -> Result<Expr, EvalError> {
         self.tracing_enabled = prior_tracing;
 
@@ -127,7 +127,7 @@ impl Session {
             Err(_) => (system_expr("$Failed"), false, Expr::string("Error")),
         };
 
-        Ok(render_association(vec![
+        let data = render_association(vec![
             (
                 Expr::string("Input"),
                 Expr::call(system_expr("Hold"), vec![input_expr.clone()]),
@@ -181,7 +181,8 @@ impl Session {
                 Expr::string("InputString"),
                 Expr::string(input_string.to_string()),
             ),
-        ]))
+        ]);
+        self.project_evaluation_data_properties(data, properties)
     }
 }
 
@@ -206,6 +207,7 @@ impl DebugCaptureCheckpoint {
 
 #[derive(rum_derive::FrameRootTrace)]
 struct EvalEvaluationDataSuspensionFrame {
+    properties: Option<Expr>,
     pub(super) checkpoint: crate::runtime::debug_tools::evaluation_data::DebugCaptureCheckpoint,
     pub(super) prior_tracing: bool,
     pub(super) started: std::time::Instant,
@@ -214,6 +216,15 @@ struct EvalEvaluationDataSuspensionFrame {
 }
 
 impl crate::runtime::suspension::SuspensionFrame for EvalEvaluationDataSuspensionFrame {
+    fn output_boundary(&self) -> crate::runtime::suspension::OutputBoundary {
+        use crate::runtime::suspension::OutputBoundary;
+        OutputBoundary::all(
+            self.checkpoint.print_checkpoint,
+            self.checkpoint.message_checkpoint,
+            self.checkpoint.trace_checkpoint,
+        )
+    }
+
     fn resume(
         self: std::sync::Arc<Self>,
         session: &mut Session,
@@ -237,6 +248,7 @@ impl crate::runtime::suspension::SuspensionFrame for EvalEvaluationDataSuspensio
                 &input_expr,
                 input_string.as_str(),
                 outcome,
+                self.properties.clone(),
             )
         })();
         crate::runtime::suspension::FrameAction::complete(resumed)
@@ -249,9 +261,6 @@ impl crate::runtime::suspension::FrameAbandon for EvalEvaluationDataSuspensionFr
         context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
     ) -> crate::runtime::suspension::FrameAbandonAction {
         context.restore_evaluation_data_capture(
-            self.checkpoint.message_checkpoint,
-            self.checkpoint.print_checkpoint,
-            self.checkpoint.trace_checkpoint,
             self.checkpoint.handled_error_checkpoint,
             self.prior_tracing,
         );

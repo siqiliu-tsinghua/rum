@@ -97,6 +97,11 @@ pub(super) struct EvalConfirmQuietSuspensionFrame {
 }
 
 impl crate::runtime::suspension::SuspensionFrame for EvalConfirmQuietSuspensionFrame {
+    fn output_boundary(&self) -> crate::runtime::suspension::OutputBoundary {
+        use crate::runtime::suspension::OutputBoundary;
+        OutputBoundary::messages(self.message_checkpoint)
+    }
+
     fn resume(
         self: std::sync::Arc<Self>,
         session: &mut Session,

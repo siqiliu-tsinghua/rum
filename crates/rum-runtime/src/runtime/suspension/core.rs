@@ -18,7 +18,7 @@ pub(in crate::runtime) struct SuspendedEvaluation {
     pub(in crate::runtime) active_stack: Vec<EvaluationStackEntry>,
     generation: SuspensionGeneration,
     guest_form_environment: Option<Box<GuestFormEnvironment>>,
-    frames: VecDeque<Arc<DynSuspensionFrame>>,
+    pub(super) frames: VecDeque<Arc<DynSuspensionFrame>>,
 }
 
 /// Opaque owner slot for the one pending continuation.
@@ -84,6 +84,11 @@ pub trait SuspensionFrame: FrameRootTrace + FrameAbandon + Send + Sync + 'static
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> FrameAction;
+
+    /// Buffered output owned until this frame's capture settles. Metadata only.
+    fn output_boundary(&self) -> OutputBoundary {
+        OutputBoundary::default()
+    }
 }
 
 /// A Session-free completion step run after its originating frame is dropped.
@@ -381,40 +386,20 @@ impl AbandonmentContext<'_> {
         self.session.current_memory_limit = prior;
     }
 
-    pub(in crate::runtime) fn restore_trace_capture(
-        &mut self,
-        trace_checkpoint: usize,
-        prior_enabled: bool,
-    ) {
-        self.session
-            .abandon_trace_capture(trace_checkpoint, prior_enabled);
+    pub(in crate::runtime) fn restore_trace_capture(&mut self, prior_enabled: bool) {
+        self.session.abandon_trace_capture(prior_enabled);
     }
 
     pub(in crate::runtime) fn restore_evaluation_data_capture(
         &mut self,
-        message_checkpoint: usize,
-        print_checkpoint: usize,
-        trace_checkpoint: usize,
         handled_error_checkpoint: usize,
         prior_tracing: bool,
     ) {
         self.session.tracing_enabled = prior_tracing;
-        self.session.messages.truncate(message_checkpoint);
-        self.session
-            .refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Messages);
-        self.session.prints.truncate(print_checkpoint);
-        self.session
-            .refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Prints);
-        if !prior_tracing {
-            self.session.trace_events.truncate(trace_checkpoint);
-            self.session.refresh_memory_owner(
-                crate::runtime::debug_tools::resources::MemoryOwner::TraceEvents,
-            );
-            self.session.trace_event_depths.truncate(trace_checkpoint);
-            self.session.refresh_memory_owner(
-                crate::runtime::debug_tools::resources::MemoryOwner::TraceEventDepths,
-            );
-        }
+        self.restore_message_capture(handled_error_checkpoint);
+    }
+
+    pub(in crate::runtime) fn restore_message_capture(&mut self, handled_error_checkpoint: usize) {
         self.session
             .handled_non_loader_eval_errors
             .truncate(handled_error_checkpoint);
@@ -423,40 +408,8 @@ impl AbandonmentContext<'_> {
         );
     }
 
-    pub(in crate::runtime) fn restore_message_capture(
-        &mut self,
-        message_checkpoint: usize,
-        handled_error_checkpoint: usize,
-    ) {
-        self.session.messages.truncate(message_checkpoint);
-        self.session
-            .refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Messages);
-        self.session
-            .handled_non_loader_eval_errors
-            .truncate(handled_error_checkpoint);
-        self.session.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
-        );
-    }
-
-    pub(in crate::runtime) fn restore_stream_capture(
-        &mut self,
-        message_checkpoint: usize,
-        print_checkpoint: usize,
-        handled_error_checkpoint: usize,
-    ) {
-        self.session.messages.truncate(message_checkpoint);
-        self.session
-            .refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Messages);
-        self.session.prints.truncate(print_checkpoint);
-        self.session
-            .refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Prints);
-        self.session
-            .handled_non_loader_eval_errors
-            .truncate(handled_error_checkpoint);
-        self.session.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
-        );
+    pub(in crate::runtime) fn restore_stream_capture(&mut self, handled_error_checkpoint: usize) {
+        self.restore_message_capture(handled_error_checkpoint);
     }
 
     pub(in crate::runtime) fn restore_abort_checkpoint(&mut self, pending_checkpoint: usize) {
@@ -640,15 +593,17 @@ impl Session {
             crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
         );
         let previous_guest_form = self.guest_form;
-        if let Some(environment) = self
+        let displaced_guest_environment = if let Some(environment) = self
             .resuming_suspension
             .as_mut()
             .expect("resuming owner is installed")
             .guest_form_environment
             .take()
         {
-            environment.install(self);
-        }
+            Some(environment.install_for_resume(self))
+        } else {
+            None
+        };
         let outcome = Ok(Expr::string(input.into()));
 
         let result = self.drive_resuming_frames(outcome);
@@ -664,6 +619,9 @@ impl Session {
             }
             Err(EvalError::InputRequired { request }) => {
                 debug_assert!(self.resuming_suspension.is_none());
+                if let Some(displaced) = displaced_guest_environment {
+                    displaced.restore(self);
+                }
                 Err(EvalError::InputRequired { request })
             }
             Err(error) => {
@@ -711,6 +669,7 @@ impl Session {
             }
 
             while let Some(frame) = suspension.take_front() {
+                self.rollback_capture_output(frame.output_boundary());
                 let action = frame.abandon(&mut AbandonmentContext {
                     session: self,
                     reason,

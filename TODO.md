@@ -4,10 +4,10 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-07, committed tree through brief-594's gate (G11
-step A, the three panics); brief-595 (G11 step B: provisional captured output
-at a pause, the four G11 entries) is dispatched; then the strings drain and the
-final drain; then E2's design.
+Status checkpoint: 2026-10-13, committed tree through brief-595's gate (G11
+closed; owed 110); brief-596 (the strings drain) is next, then the final drain
+that deletes the ledger; then E2's design. Workers run `gpt-6.1-sol` max from
+2026-10-13 (the dispatcher pins no model; `~/.codex/config.toml` decides).
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -723,6 +723,33 @@ real; oracle 38/0 in each build; the new `rum-host` contract test panics at
 regressions; the worker's `TestReport` +2.4 allocations/iteration is noise —
 the same base binary run three times spans 794 128-795 100 allocations,
 because elapsed durations become big-integer rationals of varying size.
+**G11 is closed (brief-595, three amendments, completed at the gate).** Output
+inside an unsettled capture is provisional: `suspension/output.rs` holds one
+declarative `OutputBoundary` (prints, messages, raw trace) that frames report
+by a default trait method; one pause builder (`finish_input_required_request`)
+clips each channel at the earliest boundary and no longer runs terminal
+cleanup at a pause; abandonment rolls back through the same boundary, inner to
+outer. `EvaluationData` carries its prepared selector into resume; `Quiet`,
+`Check` and `ConfirmQuiet` messages are provisional while their body is
+unsettled; `Trace`/`TraceDetail`/`TracePrint` are trace-channel captures
+(amendment 1). Amendment 2 was **my error** (I ruled the handled-error tail
+should survive a pause; the first pause swaps the guest environment out by
+design); amendment 3 found the real defect — the resume driver installed the
+guest-form environment and on a re-pause restored only `guest_form`, leaving
+the guest's tail, checkpoints, deadlines and memory limit live; the terminal
+truncation hid it. It now restores what it displaced, and the test asserts the
+two pauses' live state is identical. At the gate the director updated two
+structural tests the change legitimately moves: G7's closed trace call graph
+gains `output_boundary` and `OutputBoundary::trace`; the retention census
+frontier grows 927 -> 932 (RET002 890 -> 895) — exactly one new
+`frame.output_boundary()` receiver in `suspension/core.rs` and four in
+`suspension/output.rs`, verified by a position-free diff of the rejected rows
+against the pre-change tree. The four G11 entries plus six supplemental
+descriptors are attached (owed 114 -> 110). Director gate: workspace 3399/0/58
+with native ZeroMQ real; oracle 33/0 in each build; 6 strict reds and the
+symmetry red recorded before the production edits. Residual:
+`evaluation-data-message` +0.36% / +0.08% (floor 0.10%, one sample inside),
+recorded.
 recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after

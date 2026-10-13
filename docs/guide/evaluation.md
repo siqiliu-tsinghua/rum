@@ -299,6 +299,36 @@ request. The paused form resumes before the rest of the file and its caller
 complete. File forms and resumes keep the enclosing resource budget and
 absolute deadline; they do not start a fresh timeout.
 
+Buffered output inside an unsettled capture is provisional. At an input pause
+it remains available to the capture and nested observers, but is absent from
+the host response. Completion settles it once using that capture's normal
+consume, filter, or release policy; abandonment discards the provisional
+suffix. An inner capture completing cannot expose output still owned by an
+outer capture.
+
+`EvaluationData` and a `TestReport` input capture own buffered prints, messages,
+and raw trace events while their bodies are unsettled. `EvaluationData[expr,
+properties]` applies the prepared property selector once after capture completion,
+including after resume. A successful `TestReport` input consumes its prints and
+messages into the case result. An input evaluation that fails keeps the existing
+copy-and-release policy: its output is copied into the case result and remains
+public after the capture settles. A wrong expected value or false `SameTest`
+alone does not release a successfully evaluated input's captured output.
+Expected-output and `SameTest` evaluations belong to the surrounding request.
+
+`Check`, `Quiet`, and `ConfirmQuiet` hold messages provisionally while their
+bodies are unsettled; their prints pass through. Their normal message matching,
+suppression, and release rules run on completion. A `Check` fallback or
+confirmation information expression runs after that body capture has settled.
+Abandonment runs neither callback. `Trace`, `TraceDetail`, and `TracePrint` own
+the raw trace channel until their capture settles; `TracePrint`'s rendered
+lines follow the print channel's rules. `Reap`, timing, constraints, and
+`Monitor` own no buffered output.
+
+Output outside every active capture becomes public at the next response, in
+order within each channel. Pause and terminal responses are cumulative:
+already exposed output remains a prefix, with no duplicated elements in the
+cumulative arrays. Prints, messages, and raw traces remain separate channels.
 The embedding chapter shows the `HostEvalOutcome::InputRequired` path.
 
 ## Structured Exceptions

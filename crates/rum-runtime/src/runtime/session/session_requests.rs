@@ -232,19 +232,7 @@ impl Session {
         let (value, termination) = match finalized {
             Ok(finalized) => finalized,
             Err(EvalError::InputRequired { .. }) => {
-                self.pending_eval_request = Some(checkpoint.into());
-                self.refresh_memory_owner(
-                    crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
-                );
-                return Err(self.finish_request_failure(
-                    checkpoint,
-                    EvalError::InputRequired {
-                        request: self
-                            .pending_input_request()
-                            .cloned()
-                            .expect("input suspension should record the pending request"),
-                    },
-                ));
+                return Err(self.finish_input_required_request(checkpoint));
             }
             Err(err) => return Err(self.finish_request_failure(checkpoint, err)),
         };
@@ -352,19 +340,7 @@ impl Session {
         let (value, termination) = match finalized {
             Ok(finalized) => finalized,
             Err(EvalError::InputRequired { .. }) => {
-                self.pending_eval_request = Some(checkpoint.into());
-                self.refresh_memory_owner(
-                    crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
-                );
-                return Err(self.finish_request_failure(
-                    checkpoint,
-                    EvalError::InputRequired {
-                        request: self
-                            .pending_input_request()
-                            .cloned()
-                            .expect("nested input suspension should record the pending request"),
-                    },
-                ));
+                return Err(self.finish_input_required_request(checkpoint));
             }
             Err(err @ EvalError::Syntax(_)) => {
                 return Err(self.finish_completed_request_failure(checkpoint, Some(&input), err));
@@ -480,6 +456,42 @@ impl Session {
             definitions,
             message_catalog,
         })
+    }
+
+    /// A pause exposes only settled prefixes and preserves all capture state.
+    fn finish_input_required_request(
+        &mut self,
+        checkpoint: RequestCheckpoint,
+    ) -> SessionRequestFailure {
+        self.pending_eval_request = Some(checkpoint.into());
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
+        );
+        let boundary = self.pending_output_boundary();
+        let messages = self.messages
+            [checkpoint.message_checkpoint..boundary.messages.unwrap_or(self.messages.len())]
+            .to_vec();
+        let prints = self.prints
+            [checkpoint.print_checkpoint..boundary.prints.unwrap_or(self.prints.len())]
+            .to_vec();
+        let trace = self.trace_events
+            [checkpoint.trace_checkpoint..boundary.trace.unwrap_or(self.trace_events.len())]
+            .to_vec();
+        self.last_message_list = messages.clone();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
+        );
+        SessionRequestFailure {
+            error: SessionRequestError::InputRequired {
+                request: self
+                    .pending_input_request()
+                    .cloned()
+                    .expect("input suspension should record the pending request"),
+            },
+            messages,
+            prints,
+            trace,
+        }
     }
 
     fn finish_request_failure(
