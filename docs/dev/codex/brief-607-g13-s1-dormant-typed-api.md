@@ -118,6 +118,14 @@ make *visibility-only* edits in any module file on the path from
 Nothing wider than `pub(in crate::runtime)`, no field visibility, no other
 change in such a file. List every one in the report with file and line.
 
+**The ownership-graph test module (added at redispatch 3).** To implement
+the verifier rule of redispatch 2 you may edit any Rust file under
+`crates/rum-stdlib/src/tests/ownership_graph/` (test code: discovery model,
+collectors, resolution, the ledger verifier, fixtures), for that rule and its
+falsifiers only. Discovery must keep producing the same rows for everything
+else: a changed or vanished unrelated row is still a STOP. List every edited
+file in the report.
+
 **Disclosure duty instead of a longer list.** If a necessary change falls
 outside the list (a module root that must re-export, a visibility change in an
 owner file not listed), make no edit there: STOP and report the file, the line
@@ -794,4 +802,182 @@ The stop above was correct. Decisions, in order:
 
 Then finish Steps 5-7 and every gate. Append a new `## Execution report`
 after this section.
+
+
+## Execution report — redispatch 2: implementation bounds are missing from discovery
+
+### 1. Files changed and dormant audit
+
+**No production, test source or inventory file changed in this redispatch.**
+The previous compiling scaffold and its outstanding maintenance work remain
+as recorded in redispatch 1. Only scratch evidence under
+`.temp/brief-607/redispatch-2/`, the checkpoint, and this appended report
+changed. No production function body or visibility declaration was touched;
+no performance measurement was applicable.
+
+The amendment's seven PublicInput and three Unbounded decisions, and its
+fallible PreparedCallArguments approval, were read and accepted. The new
+verifier rule was checked against its actual available source facts before
+implementation. This exposed a necessary change outside the amended scope:
+
+- `crates/rum-stdlib/src/tests/ownership_graph/model.rs:99`: `DropImpl`
+  retains scope, self type, trait path and location, but **no implementation
+  generics, bounds or where-clause**. It must retain `syn::Generics` so the
+  verifier can enforce the new rule's single-trait-bound requirement and
+  determine whether a concrete bound implementor satisfies the adapter impl.
+- `crates/rum-stdlib/src/tests/ownership_graph/source_items.rs:409`: the
+  Collector constructs that record without `item.generics`. It must populate
+  the new field from the actual impl AST, including its where-clause.
+
+Neither file is listed in Scope; the registered-runtime-type visibility
+exception does not apply to ownership-test metadata. No edit was made there.
+The explicit disclosure STOP was followed; no secondary source scanner or
+other workaround was introduced to bypass these owner files.
+
+`Definition::generics` is insufficient: it describes the adapter **type
+declaration**, whose bound can be weaker than the bound on a particular
+trait implementation. In the concrete probe, the declaration is unchanged:
+
+```rust
+struct Adapter<F: Bound> { inner: F }
+```
+
+The first implementation is `impl<F: Bound> Erased for Adapter<F> {}`; the
+second adds only `+ Clone`. `Concrete` implements Bound and owns an Expr,
+but does not implement Clone. These are different instantiation obligations.
+The current collector discards that difference.
+
+### 2. Public items, mode and registrations
+
+Unchanged from redispatch 1: dormant API, Expr=Value, 21 existing Legacy
+registrations, no live-driver integration or production frame conversion.
+The director-approved fallible provider remains intact. Its newly required
+prepared-state roundtrip/finalizer-equivalence unit test has not yet been
+implemented because this scope preflight stopped first.
+
+### 3. Compile controls and the scope evidence
+
+The required 22 S1 control pairs remain **0/22**. The additional scope probe
+below is not counted as one of those pairs or as one of the three requested
+ledger falsifiers.
+
+The scratch probe imports the real ownership `model`, `source`, `resolve`,
+`effects`, `graph` and `evidence` modules read-only. It runs both fixture
+versions through `source::fixture` and `graph::discover`, and compares **all
+Source and Discovery fields** (including declarations, generics, bindings,
+locations, implementations, boundaries, unknowns and ownership edges).
+Padding keeps unchanged source coordinates identical. The test confirms that
+the two snapshots are identical despite the extra implementation bound.
+
+Separate bounded rustc fixtures compile the positive first, then introduce
+only that extra `Clone` constraint. The negative checks one primary error,
+E0277, its `Concrete: Clone` message, and its exact source line; the emitted
+primary span starts at `negative.rs:11:37`. No production crate was mutated.
+
+Actual results:
+
+```text
+     Locking 4 packages to latest Rust 1.85.0 compatible versions
+      Adding syn v2.0.119 (available: v3.0.4)
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.47
+   Compiling syn v2.0.119
+   Compiling brief-607-bounds-probe v0.0.0 (/home/remi/dev/rum/.temp/brief-607/redispatch-2/bounds-probe)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.01s
+     Running unittests src/lib.rs (.temp/brief-607/redispatch-2/bounds-probe/target/debug/deps/brief_607_bounds_probe-3544d042759d699e)
+
+running 1 test
+test tests::ownership_graph::implementation_bound_metadata_is_lost ... IDENTICAL_DISCOVERY facts=18 despite additional impl Clone bound
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+```
+
+```text
+RUST_POSITIVE exit=0: Adapter<Concrete> implements Erased under F: Bound
+RUST_NEGATIVE exit=1: E0277 at negative.rs:11:37: the trait bound `Concrete: Clone` is not satisfied
+```
+
+Raw rustc JSON diagnostics, exact command arrays and both fixture sources are
+saved under `.temp/brief-607/redispatch-2/`. The fixture cargo manifest and
+lockfile are scratch-only; no repository manifest or lockfile changed.
+
+### 4. Census and forced red
+
+Still not implemented or run. No new census, 623/600 baseline verification,
+23-type live-decoder report or forced-red result is claimed.
+
+### 5. Gates, inventories and certificate transitions
+
+The bounded scratch discovery probe ran with exit code 0:
+
+```text
+python3 scripts/run-bounded.py --timeout 900 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-607/tmp CARGO_TARGET_DIR=/home/remi/dev/rum/.temp/brief-607/redispatch-2/bounds-probe/target cargo test --manifest-path .temp/brief-607/redispatch-2/bounds-probe/Cargo.toml implementation_bound_metadata_is_lost -- --nocapture
+```
+
+The positive and negative rustc fixtures were serial, each inside the same
+required environment and `python3 scripts/run-bounded.py --timeout 900 --`,
+using `rustc --edition=2024 --crate-name bounds_control --emit=metadata
+--error-format=json --out-dir <scratch> <positive.rs|negative.rs>`. Their exact
+expanded arrays are `bounds-positive.command.json` and
+`bounds-negative.command.json`. Positive exit: 0; expected negative exit: 1.
+
+No mandatory implementation gate was rerun in this redispatch:
+
+```text
+cargo fmt --check — NOT RUN
+cargo test -p rum-stdlib --test typed_slot_compile_controls — NOT RUN
+cargo test -p rum-stdlib --no-default-features --test typed_slot_compile_controls — NOT RUN
+cargo test -p rum-stdlib --test typed_slot_census — NOT RUN
+cargo test -p rum-stdlib --no-default-features --test typed_slot_census — NOT RUN
+scripts/check-suspension-oracle.sh 1500 — NOT RUN
+cargo test -p rum-stdlib --lib ownership_graph — NOT RUN
+cargo test -p rum-stdlib --lib local_production_acceptance — NOT RUN
+cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance — NOT RUN
+cargo test --workspace --no-fail-fast — NOT RUN
+```
+
+The 17-pass/3-fail ownership result belongs to redispatch 1, not a new run.
+The only executed test total this redispatch is the scratch probe's
+`1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out`. No native ZeroMQ
+test ran, so no executed skip is claimed. Inventory/certificate transitions
+this redispatch: **none**. No discovery rejection, oracle Checks flag or debt
+entry was weakened.
+
+Bounded source verification:
+
+```text
+SOURCE_UNCHANGED files=1436 changed=0 added=0 removed=0
+```
+
+### 6. Stop-loss, deviations and next action
+
+Implementation attempts this redispatch: 0. One scratch characterization
+test passed; one additional positive/negative compiler pair produced the
+expected result. Neither is counted toward the required S1 controls.
+Consecutive no-progress implementation-gate attempts: 0. The explicit Scope
+STOP triggered; the two-attempt stop-loss did not.
+
+The necessary next action is to add the two exact discovery-owner files above
+to Scope so implementation generics can be retained. Then enforce the single
+bound using the actual impl constraints, implement and watch all three ledger
+falsifiers reject, replay the computed witnesses and approved rows, add the
+PreparedCallArguments unit cases, and finish the outstanding S1 controls,
+census, inventories, certificates and mandatory gates.
+
+No git command, network access, unsafe code, production rollback, manifest
+change or out-of-scope source edit was performed. S1 remains incomplete.
+
+## Director amendment — redispatch 3
+
+The stop above was correct, and the gap was the director's: the verifier rule
+needs the implementation's own generics and where-clause, which discovery
+discards (`ownership_graph/model.rs:99`, `source_items.rs:409`), and your
+fixture shows why the type declaration's generics are not a substitute. Scope
+now covers the ownership-graph test module as a class (see Scope). Implement
+the rule on the implementation's bounds, add its three falsifiers, then finish
+Steps 5-7 and every gate. Append a new `## Execution report` after this
+section.
 
