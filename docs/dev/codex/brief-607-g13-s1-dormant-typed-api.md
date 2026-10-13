@@ -79,6 +79,9 @@ marked.
 - `crates/rum-runtime/src/runtime/tests/typed_slots/composition.rs` (new)
 - `crates/rum-runtime/src/runtime/tests/typed_slots/faults.rs` (new)
 - `crates/rum-runtime/src/runtime/tests/typed_slots/registry.rs` (new)
+- `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger.rs` (added at redispatch 2)
+- `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/ownership.rs` (added at redispatch 2)
+- `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/tests.rs` (added at redispatch 2)
 - `crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payload_ledger.tsv`
 - `crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payloads.tsv`
 - `crates/rum-stdlib/src/tests/ownership_graph/inventory/self_reaching.tsv`
@@ -371,4 +374,424 @@ added the three files that block them (`debug_tools/mod.rs`,
 which keeps `ReplacePartTarget`'s module private), plus the visibility rule in
 Scope for anything else on those paths. Proceed with Steps 1-7; append a new
 `## Execution report` after this section.
+
+
+## Execution report — redispatch 1: stopped on unapproved host-payload rows
+
+### 1. Files changed and dormant audit
+
+The amended visibility scope unblocked implementation. The dormant API now
+compiles, but **S1 is incomplete**: the early ownership replay found new
+`UnknownHostPayload` rows without approved dispositions. Per Step 7, work
+stopped at that evidence. No production edits followed that STOP.
+
+Exactly 20 production files changed (11 existing, 9 new). No test source,
+manifest, lockfile, core representation, or inventory was changed. The
+bounded baseline comparison found no out-of-scope source changes or removed
+files. All paths below are under `crates/rum-runtime/src/runtime/`.
+
+| File | Change |
+| --- | --- |
+| `debug_tools/mod.rs` | Make the test_report module runtime-visible (line 14). |
+| `debug_tools/test_report.rs` | Re-export EvalCapturedOutcome within runtime (line 10). |
+| `debug_tools/test_report/model.rs` | Widen only the EvalCapturedOutcome type item to runtime visibility (line 29). |
+| `definitions/application/mod.rs` | Re-export ReplaceAllTraversalOutcome within runtime (line 8). |
+| `definitions/application/replace_all.rs` | Widen only the ReplaceAllTraversalOutcome type item (line 13). |
+| `eval_call_prepare.rs` | Add a dormant PreparedCallArguments::into_continuation_expr method reusing the existing suspended wire encoder (line 18); existing bodies unchanged. |
+| `kernel_api.rs` | Export the requested S1 public typed API (line 9). |
+| `kernel_data/rewrite_data.rs` | Widen only DeleteCasesOutcome to runtime visibility (line 23). |
+| `kernel_data/structure_data/mod.rs` | Make the replace module runtime-visible (line 5). |
+| `kernel_data/structure_data/replace.rs` | Widen only ReplacePartTarget to runtime visibility (line 51). |
+| `suspension.rs` | Declare the private typed module and re-export only its public API. |
+| `suspension/typed.rs` | Declare the sealed SlotValue trait, TypedFrame and SlotFinalizer; no old SuspensionFrame supertrait. |
+| `suspension/typed/action.rs` | Implement opaque actions and ResumeStop with typed completion/evaluation/finalizer bounds. |
+| `suspension/typed/adapter.rs` | Implement private, dormant frame/finalizer erasure, decode rejection, trace/abandon/boundary delegation and the sole token mint; no queue installation. |
+| `suspension/typed/chain.rs` | Implement witnessed, nonempty invariant chains and checked adjacency; no public unbound constructor or suspension method. |
+| `suspension/typed/channel.rs` | Implement keyed central transport with one associated mode and one accepted channel arm per mode. |
+| `suspension/typed/legacy.rs` | Delegate the 21 registered payloads to their existing wire codecs. |
+| `suspension/typed/registry.rs` | Select Expr=Value and 21 existing payloads=Legacy; provide their closed state variants for later flips. |
+| `suspension/typed/resume_token.rs` | Define a non-Clone, invariant lifetime-scoped ZST token without Arc storage or a public constructor. |
+| `suspension/typed/witness.rs` | Bind a ZST invariant witness to an actual borrowed Result and build the first checked chain link. |
+
+The eight item/module visibility edits are identified above with exact current
+lines. They stop at `pub(in crate::runtime)`; no field visibility changed.
+
+All **pre-existing function bodies remain byte-identical** to the redispatch
+baseline. The audit replayed the exact permitted item/import/export changes
+and the one added PreparedCallArguments method against the saved originals.
+There are **109 new production function bodies**, plus the generated
+`TypedAdapter<F>::trace_roots` derive. The complete file/line/function inventory
+is `.temp/brief-607/redispatch-1/function-body-audit.tsv`; the exact old-body
+check is `existing-body-audit.txt`.
+
+For each type in the 21-registration table below, the four new bodies are
+`LegacyCodec::old_encode`, `LegacyCodec::old_decode`, `StateCodec::pack`, and
+`StateCodec::unpack` (84 bodies). Every one is used only by the dormant typed
+transport; the live driver still calls the old codecs directly. The other
+25 new bodies are listed here, with the same dormant-only disposition:
+
+| File | Line | Owner | Function |
+| --- | ---: | --- | --- |
+| `suspension/typed.rs` | 41 | `pub trait TypedFrame: FrameRootTrace + FrameAbandon + Send + Sync + Sized + 'static` | `output_boundary` |
+| `suspension/typed/action.rs` | 29 | `impl<O: SlotValue> TypedAction<O>` | `complete` |
+| `suspension/typed/action.rs` | 36 | `impl<O: SlotValue> TypedAction<O>` | `evaluate` |
+| `suspension/typed/action.rs` | 46 | `impl<O: SlotValue> TypedAction<O>` | `finalize` |
+| `suspension/typed/action.rs` | 53 | `impl<O: SlotValue> TypedAction<O>` | `finish_work` |
+| `suspension/typed/action.rs` | 70 | `impl<O: SlotValue> ResumeStop<O>` | `failure` |
+| `suspension/typed/adapter.rs` | 28 | `impl<F: TypedFrame> FrameAbandon for TypedAdapter<F>` | `abandon` |
+| `suspension/typed/adapter.rs` | 34 | `impl<F: TypedFrame> ErasedFrame for TypedAdapter<F>` | `resume` |
+| `suspension/typed/adapter.rs` | 56 | `impl<F: TypedFrame> ErasedFrame for TypedAdapter<F>` | `output_boundary` |
+| `suspension/typed/adapter.rs` | 61 | `<module>` | `erase` |
+| `suspension/typed/adapter.rs` | 70 | `impl<F: SlotFinalizer> ErasedFinalizer for FinalizerAdapter<F>` | `finish` |
+| `suspension/typed/chain.rs` | 12 | `<module>` | `start` |
+| `suspension/typed/chain.rs` | 22 | `impl<I: SlotValue, O: SlotValue> FrameChain<I, O>` | `then` |
+| `suspension/typed/channel.rs` | 9 | `impl CodecKey` | `new` |
+| `suspension/typed/channel.rs` | 48 | `<module>` | `encode` |
+| `suspension/typed/channel.rs` | 52 | `<module>` | `decode` |
+| `suspension/typed/channel.rs` | 76 | `impl Transport<Expr> for ValueMode` | `encode` |
+| `suspension/typed/channel.rs` | 79 | `impl Transport<Expr> for ValueMode` | `decode` |
+| `suspension/typed/channel.rs` | 88 | `impl<T: LegacyCodec> Transport<T> for LegacyMode` | `encode` |
+| `suspension/typed/channel.rs` | 91 | `impl<T: LegacyCodec> Transport<T> for LegacyMode` | `decode` |
+| `suspension/typed/channel.rs` | 100 | `impl<T: StateCodec> Transport<T> for StateMode` | `encode` |
+| `suspension/typed/channel.rs` | 103 | `impl<T: StateCodec> Transport<T> for StateMode` | `decode` |
+| `suspension/typed/witness.rs` | 10 | `<module>` | `slot_witness` |
+| `suspension/typed/witness.rs` | 15 | `impl<I: SlotValue> SlotWitness<I>` | `chain` |
+| `eval_call_prepare.rs` | 17 | `impl PreparedCallArguments` | `into_continuation_expr` |
+
+The derive delegates borrowed tracing to the inner Arc<F>. It cannot reach
+a live queue in S1. The PreparedCallArguments adapter method calls the old
+encoder from the dormant provider only; no old caller was redirected. No
+evaluator, matcher, traversal, block or selector function body changed.
+Performance measurement therefore did not run under the S1 exemption.
+
+Size assessment: `eval_call_prepare.rs` is 22,259 characters; the only added
+body is its 14-line owner-local wire adapter, which needs private accumulator
+types. A later cohesive split can separate wire encoding from the preparation
+driver; this dispatch did not rewrite live code to split it.
+`typed/registry.rs` is 11,289 characters (warning range): it keeps the explicit
+closed registration/state-provider table together. Split registration from
+state providers when that table grows. Every other new module is below 10k.
+`files-changed.tsv` records all measured sizes.
+
+### 2. Public items, transport and registrations
+
+Built and exported through `kernel_api`: `SlotValue`, `TypedFrame`,
+`SlotFinalizer`, `TypedAction::{complete,evaluate,finalize,finish_work}`,
+`SlotWitness`, `slot_witness`, `SlotWitness::chain`, `FrameChain`,
+`FrameChain::then`, `ContinueToken`, `ResumeStop`, and `ResumeStop::failure`.
+The two traits retain their required associated types and methods;
+TypedFrame retains `output_boundary`. No suspension methods, macro export,
+queue adapter, raw constructor, public mode, key or codec was added.
+
+The hidden Codec contains only its associated Mode. Central free encode/decode
+functions dispatch to ValueMode, LegacyMode or StateMode; legacy providers
+receive Expr and state providers receive ContinuationState. Expr has ValueMode
+and no StateCodec. Every existing registered non-Expr payload remains Legacy;
+the closed state providers match their exact variant. There is no runtime
+switch, frame override, dual-arm fallback or transit record.
+
+The production providers exposed one difference from the compiled model:
+`PreparedCallArguments` has a fallible free-function decoder and an encoder
+accepting `SuspendedPreparedCallArguments`, rather than a ContinuationValue
+implementation. The first compile rejected the assumed trait implementation
+with two E0277 errors. The fix preserves the old decoder unchanged:
+LegacyCodec::old_decode returns `Result<Self, Expr>`; the ordinary codecs
+wrap their old result in Ok, while PreparedCallArguments returns the existing
+decoder's Result directly. LegacyMode preserves rejection as Err(Slot::Value)
+without trying State. The added owner-local encode method consumes the
+prepared fields into the existing suspended accumulator representation and
+calls `finish_suspended_prepared_call`. This has compiled, but its layout and
+error behavior still need the planned controls; no runtime equivalence claim
+is made from compilation alone. The director should review this necessary
+fallibility adaptation before S2 connects the driver.
+
+| Registered slot | Associated mode |
+| --- | --- |
+| `Expr` | `ValueMode` |
+| `Option<Expr>` | `LegacyMode` |
+| `Vec<Expr>` | `LegacyMode` |
+| `Vec<SymbolExprMap>` | `LegacyMode` |
+| `Option<Vec<Expr>>` | `LegacyMode` |
+| `Option<Vec<RewriteRuleInfo>>` | `LegacyMode` |
+| `Option<CasesLevelSpec>` | `LegacyMode` |
+| `bool` | `LegacyMode` |
+| `String` | `LegacyMode` |
+| `CompiledMatchOutcome` | `LegacyMode` |
+| `CasesTraversalResolution` | `LegacyMode` |
+| `TraversalWithoutLimitResolution` | `LegacyMode` |
+| `CasesCollectionOutcome` | `LegacyMode` |
+| `PositionCollectionOutcome` | `LegacyMode` |
+| `DeleteCasesOutcome` | `LegacyMode` |
+| `TraversalCountOutcome` | `LegacyMode` |
+| `ReplaceOutcome` | `LegacyMode` |
+| `ReplaceAllTraversalOutcome` | `LegacyMode` |
+| `Vec<ReplacePartTarget>` | `LegacyMode` |
+| `EvalCapturedOutcome` | `LegacyMode` |
+| `PreparedCallArguments` | `LegacyMode` |
+| `EvaluatedPartSelectors` | `LegacyMode` |
+
+The two PreparedInterpreted enums and all new nominal carriers remain
+unregistered. No production frame or finalizer was converted.
+
+### 3. Compile controls
+
+The 22 required S1 pairs were read and selected, but **0/22 were implemented
+or executed** before the ownership STOP. There is no paired-control evidence
+and no negative diagnostic is claimed as a successful control. Runtime unit
+tests for the new API are also still outstanding.
+
+### 4. Census and forced red
+
+Not implemented or run. The 623-implementation, 600-macro and 23-legacy-type
+baseline has not been freshly measured by the required source gate. The
+scratch-copy forced red remains outstanding.
+
+### 5. Verification and inventory transitions
+
+Two serial invocations ran, with exit code 101 each:
+
+```text
+python3 scripts/run-bounded.py --timeout 900 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-607/tmp cargo test -p rum-stdlib --lib ownership_graph
+```
+
+First invocation, verbatim (`ownership-initial.log`):
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+error[E0277]: the trait bound `eval_call_prepare::PreparedCallArguments: suspension::core::ContinuationValue` is not satisfied
+   --> crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:179:10
+    |
+179 |         <Self as ContinuationValue>::into_continuation_expr(self)
+    |          ^^^^ the trait `suspension::core::ContinuationValue` is not implemented for `eval_call_prepare::PreparedCallArguments`
+    |
+    = help: the following other types implement trait `suspension::core::ContinuationValue`:
+              Option<Vec<rum_core::Expr>>
+              Option<Vec<runtime::model::definitions::RewriteRuleInfo>>
+              Option<rum_core::Expr>
+              Option<runtime::model::traversal::CasesLevelSpec>
+              TraversalWithoutLimitNormalizationError
+              Vec<rum_core::Expr>
+              Vec<std::collections::HashMap<rum_core::Symbol, rum_core::Expr, BuildHasherDefault<cache::RuntimeCacheHasher>>>
+              Vec<structure_data::replace::ReplacePartTarget>
+            and 17 others
+
+error[E0277]: the trait bound `eval_call_prepare::PreparedCallArguments: suspension::core::ContinuationValue` is not satisfied
+   --> crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:182:10
+    |
+182 |         <Self as ContinuationValue>::from_continuation_expr(expr)
+    |          ^^^^ the trait `suspension::core::ContinuationValue` is not implemented for `eval_call_prepare::PreparedCallArguments`
+    |
+    = help: the following other types implement trait `suspension::core::ContinuationValue`:
+              Option<Vec<rum_core::Expr>>
+              Option<Vec<runtime::model::definitions::RewriteRuleInfo>>
+              Option<rum_core::Expr>
+              Option<runtime::model::traversal::CasesLevelSpec>
+              TraversalWithoutLimitNormalizationError
+              Vec<rum_core::Expr>
+              Vec<std::collections::HashMap<rum_core::Symbol, rum_core::Expr, BuildHasherDefault<cache::RuntimeCacheHasher>>>
+              Vec<structure_data::replace::ReplacePartTarget>
+            and 17 others
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `rum-runtime` (lib) due to 2 previous errors
+```
+
+Second invocation, verbatim (`ownership-compiled.log`):
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 45.22s
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-3a556b9db7fd59ac)
+
+running 20 tests
+test tests::ownership_graph::accumulator_coverage::every_self_reaching_arc_chain_participates ... ok
+test tests::ownership_graph::accumulator_coverage::fresh_names_and_additional_self_edges_are_checked ... ok
+test tests::ownership_graph::discovery_report_without_inventory_input ... ok
+test tests::ownership_graph::fixtures::coverage_is_not_inferred_from_test_like_filenames ... ok
+test tests::ownership_graph::fixtures::fresh_names_cross_module_pair_and_recursion_after_comma ... ok
+test tests::ownership_graph::fixtures::inline_module_path_attribute_and_super_imports_resolve ... ok
+test tests::ownership_graph::fixtures::manually_checked_definition_counts ... ok
+test tests::ownership_graph::fixtures::named_generic_public_inputs_are_opaque_but_borrowed_inputs_are_not ... ok
+test tests::ownership_graph::fixtures::opaque_constructs_are_located_and_inventory_removal_fails ... ok
+test tests::ownership_graph::fixtures::owning_ports_and_nonowning_storage_do_not_mix_instantiations ... ok
+test tests::ownership_graph::fixtures::rediscovery_and_each_missing_mutual_member ... ok
+test tests::ownership_graph::fixtures::resolution_uses_declarations_not_container_spellings ... ok
+test tests::ownership_graph::fixtures::unknown_configuration_cannot_invent_an_unconditional_cycle ... ok
+test tests::ownership_graph::fixtures::unmodeled_lexical_modules_and_async_captures_are_explicit_unknowns ... ok
+test tests::ownership_graph::host_payload_ledger::ownership::attribution_resolves_alias_scopes_and_excludes_nonowning_paths ... ok
+test tests::ownership_graph::host_payload_ledger::production_host_payload_ledger_is_complete_and_attributed ... FAILED
+test tests::ownership_graph::host_payload_ledger::tests::metadata_duplicates_and_witnesses_are_enforced ... ok
+test tests::ownership_graph::host_payload_ledger::tests::missing_stale_and_unrelated_expression_debt_are_rejected ... FAILED
+test tests::ownership_graph::production_inventory_is_exact ... FAILED
+test tests::ownership_graph::source::root_set::syntax_root_discovers_added_recursive_type_and_restores_source ... ok
+
+failures:
+
+---- tests::ownership_graph::host_payload_ledger::production_host_payload_ledger_is_complete_and_attributed stdout ----
+
+thread 'tests::ownership_graph::host_payload_ledger::production_host_payload_ledger_is_complete_and_attributed' panicked at crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger.rs:145:57:
+check 1: missing ledger entry: UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/action.rs	17	15	rum_runtime::runtime::suspension::typed::action::Action.Evaluate.next/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame
+check 1: missing ledger entry: UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/action.rs	19	14	rum_runtime::runtime::suspension::typed::action::Action.Finalize.0/std::boxed::Box[Own]/arg0: opaque owned payload dyn ErasedFinalizer
+check 1: missing ledger entry: UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/action.rs	29	29	public input rum_runtime::runtime::suspension::typed::action::impl(TypedAction < O >)@28::complete(result)/std::result::Result[Own]/arg0: opaque owned generic parameter O : SlotValue
+check 1: missing ledger entry: UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/action.rs	36	80	public input rum_runtime::runtime::suspension::typed::action::impl(TypedAction < O >)@28::evaluate(next): opaque owned generic parameter F : TypedFrame < Input = Expr , Output = O >
+check 1: missing ledger entry: UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/action.rs	46	62	public input rum_runtime::runtime::suspension::typed::action::impl(TypedAction < O >)@28::finalize(finalizer): opaque owned generic parameter F : SlotFinalizer < Output = O >
+check 1: missing ledger entry: UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/action.rs	54	15	public input rum_runtime::runtime::suspension::typed::action::impl(TypedAction < O >)@28::finish_work(work)/std::result::Result[Own]/arg0: opaque owned generic parameter T
+check 1: missing ledger entry: UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/action.rs	55	17	public input rum_runtime::runtime::suspension::typed::action::impl(TypedAction < O >)@28::finish_work(finish): opaque owned payload impl FnOnce (T) -> F
+check 1: missing ledger entry: UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/chain.rs	22	59	public input rum_runtime::runtime::suspension::typed::chain::impl(FrameChain < I , O >)@21::then(next): opaque owned generic parameter F : TypedFrame < Input = O >
+check 1: missing ledger entry: UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/chain.rs	8	13	rum_runtime::runtime::suspension::typed::chain::FrameChain.frames/std::vec::Vec[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame
+check 1: missing ledger entry: UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/witness.rs	15	57	public input rum_runtime::runtime::suspension::typed::witness::impl(SlotWitness < I >)@14::chain(first): opaque owned generic parameter F : TypedFrame < Input = I >
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- tests::ownership_graph::host_payload_ledger::tests::missing_stale_and_unrelated_expression_debt_are_rejected stdout ----
+
+thread 'tests::ownership_graph::host_payload_ledger::tests::missing_stale_and_unrelated_expression_debt_are_rejected' panicked at crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/tests.rs:70:5:
+assertion `left == right` failed
+  left: "check 1: missing ledger entry: UnknownHostPayload\tcrates/rum-runtime/src/runtime/suspension/typed/action.rs\t17\t15\trum_runtime::runtime::suspension::typed::action::Action.Evaluate.next/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame\ncheck 1: missing ledger entry: UnknownHostPayload\tcrates/rum-runtime/src/runtime/suspension/typed/action.rs\t19\t14\trum_runtime::runtime::suspension::typed::action::Action.Finalize.0/std::boxed::Box[Own]/arg0: opaque owned payload dyn ErasedFinalizer\ncheck 1: missing ledger entry: UnknownHostPayload\tcrates/rum-runtime/src/runtime/suspension/typed/action.rs\t29\t29\tpublic input rum_runtime::runtime::suspension::typed::action::impl(TypedAction < O >)@28::complete(result)/std::result::Result[Own]/arg0: opaque owned generic parameter O : SlotValue\ncheck 1: missing ledger entry: UnknownHostPayload\tcrates/rum-runtime/src/runtime/suspension/typed/action.rs\t36\t80\tpublic input rum_runtime::runtime::suspension::typed::action::impl(TypedAction < O >)@28::evaluate(next): opaque owned generic parameter F : TypedFrame < Input = Expr , Output = O >\ncheck 1: missing ledger entry: UnknownHostPayload\tcrates/rum-runtime/src/runtime/suspension/typed/action.rs\t46\t62\tpublic input rum_runtime::runtime::suspension::typed::action::impl(TypedAction < O >)@28::finalize(finalizer): opaque owned generic parameter F : SlotFinalizer < Output = O >\ncheck 1: missing ledger entry: UnknownHostPayload\tcrates/rum-runtime/src/runtime/suspension/typed/action.rs\t54\t15\tpublic input rum_runtime::runtime::suspension::typed::action::impl(TypedAction < O >)@28::finish_work(work)/std::result::Result[Own]/arg0: opaque owned generic parameter T\ncheck 1: missing ledger entry: UnknownHostPayload\tcrates/rum-runtime/src/runtime/suspension/typed/action.rs\t55\t17\tpublic input rum_runtime::runtime::suspension::typed::action::impl(TypedAction < O >)@28::finish_work(finish): opaque owned payload impl FnOnce (T) -> F\ncheck 1: missing ledger entry: UnknownHostPayload\tcrates/rum-runtime/src/runtime/suspension/typed/chain.rs\t22\t59\tpublic input rum_runtime::runtime::suspension::typed::chain::impl(FrameChain < I , O >)@21::then(next): opaque owned generic parameter F : TypedFrame < Input = O >\ncheck 1: missing ledger entry: UnknownHostPayload\tcrates/rum-runtime/src/runtime/suspension/typed/chain.rs\t8\t13\trum_runtime::runtime::suspension::typed::chain::FrameChain.frames/std::vec::Vec[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame\ncheck 1: missing ledger entry: UnknownHostPayload\tcrates/rum-runtime/src/runtime/suspension/typed/witness.rs\t15\t57\tpublic input rum_runtime::runtime::suspension::typed::witness::impl(SlotWitness < I >)@14::chain(first): opaque owned generic parameter F : TypedFrame < Input = I >\ncheck 1: missing ledger entry: UnknownHostPayload\ttest-side-suspension-copy.rs\t1\t1\trum_runtime::runtime::suspension::core::SuspendedEvaluation.unrelated_payload/fixture::OtherChain<arg0> via payload/std::boxed::Box[Own]/arg0: opaque owned payload dyn fixture :: OtherPayload"
+ right: "check 1: missing ledger entry: UnknownHostPayload\ttest-side-suspension-copy.rs\t1\t1\trum_runtime::runtime::suspension::core::SuspendedEvaluation.unrelated_payload/fixture::OtherChain<arg0> via payload/std::boxed::Box[Own]/arg0: opaque owned payload dyn fixture :: OtherPayload"
+
+---- tests::ownership_graph::production_inventory_is_exact stdout ----
+
+thread 'tests::ownership_graph::production_inventory_is_exact' panicked at crates/rum-stdlib/src/tests/ownership_graph/mod.rs:73:37:
+self-reaching types inventory mismatch:
+missing inventory row: rum_runtime::runtime::eval_call_prepare::UnevaluatedRestoreNode	crates/rum-runtime/src/runtime/eval_call_prepare.rs	43	rum_runtime::runtime::eval_call_prepare::UnevaluatedRestoreNode.previous/rum_runtime::runtime::accumulator_chain::AccumulatorChain<arg0> via 0/std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0 -> rum_runtime::runtime::eval_call_prepare::UnevaluatedRestoreNode
+stale inventory row: rum_runtime::runtime::eval_call_prepare::UnevaluatedRestoreNode	crates/rum-runtime/src/runtime/eval_call_prepare.rs	29	rum_runtime::runtime::eval_call_prepare::UnevaluatedRestoreNode.previous/rum_runtime::runtime::accumulator_chain::AccumulatorChain<arg0> via 0/std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0 -> rum_runtime::runtime::eval_call_prepare::UnevaluatedRestoreNode
+
+
+failures:
+    tests::ownership_graph::host_payload_ledger::production_host_payload_ledger_is_complete_and_attributed
+    tests::ownership_graph::host_payload_ledger::tests::missing_stale_and_unrelated_expression_debt_are_rejected
+    tests::ownership_graph::production_inventory_is_exact
+
+test result: FAILED. 17 passed; 3 failed; 0 ignored; 0 measured; 1120 filtered out; finished in 59.40s
+
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+
+The second run compiled the runtime and stdlib test binary and executed the
+ownership gate: **17 passed, 3 failed**. The failures are the missing host
+ledger entries, a ledger falsifier affected by those missing entries, and
+the expected source-position drift of UnevaluatedRestoreNode from line 29
+to 43. No documented contract or rejection was weakened.
+
+There are ten newly discovered host-payload rows: three storage sites and
+seven public inputs. Full rows are saved in `new-host-payloads.tsv`; the
+comparison with the approved transitions is `host-payload-review.tsv`.
+
+- `action.rs:36:80` evaluate(next) and `action.rs:46:62` finalize(finalizer)
+  correspond to the planned S1/R public-input transitions, rows 56 and 57.
+  The old API remains present, so its old ledger rows must also remain.
+- Five public inputs have no explicit approved disposition in that table:
+  `action.rs:29:29` complete(result), `action.rs:54:15` finish_work(work),
+  `action.rs:55:17` finish_work(finish), `chain.rs:22:59` then(next), and
+  `witness.rs:15:57` chain(first). These are the concrete STOP trigger.
+- The storage rows are `action.rs:17:15` Action.Evaluate.next,
+  `action.rs:19:14` Action.Finalize.0, and `chain.rs:8:13` FrameChain.frames.
+  The table discusses S2/R erased storage migration, but no S1 disposition
+  receipt was assigned here. The director should specify their treatment
+  while the old storage remains and no production TypedFrame exists.
+
+Inventory rows edited: **0**. No identity, disposition, exclusion or debt
+entry was removed or reclassified. Source-position and new UnknownConstruct
+rows have not yet been replayed. Contract fingerprints and both certificate
+sets remain stale and were not edited or replayed. The new TypedAdapter trace
+derive has **not yet been added** to the closed derive inventory; no old
+named-frame count was changed. These are unfinished maintenance obligations.
+
+The remaining mandatory gates did not run after the explicit STOP:
+
+```text
+cargo fmt --check — NOT RUN
+cargo test -p rum-stdlib --test typed_slot_compile_controls — NOT RUN
+cargo test -p rum-stdlib --no-default-features --test typed_slot_compile_controls — NOT RUN
+cargo test -p rum-stdlib --test typed_slot_census — NOT RUN
+cargo test -p rum-stdlib --no-default-features --test typed_slot_census — NOT RUN
+scripts/check-suspension-oracle.sh 1500 — NOT RUN
+cargo test -p rum-stdlib --lib local_production_acceptance — NOT RUN
+cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance — NOT RUN
+cargo test --workspace --no-fail-fast — NOT RUN
+```
+
+No native ZeroMQ test ran; no executed skip is claimed. Formatting has not
+been checked or applied. No complete workspace or no-default-features result
+is claimed. The source-scope and unchanged-old-body audits ran as bounded
+Python checks and passed.
+
+### 6. Stop-loss, deviations and exact next action
+
+Compiler errors moved from **2 to 0** across the two attempts, followed by
+17 passing ownership tests and the new inventory evidence. Consecutive
+no-progress attempts: **0**. The stop-loss did not trigger; the explicit
+new-UnknownHostPayload rule did. Mandatory commands attempted: **1/10**,
+executed twice; mandatory commands green: **0/10**. Controls: **0/22**.
+Census and forced red: **0**. Steps 1–4 have a compiling scaffold; none is
+claimed fully verified, and Steps 5–7 are unfinished.
+
+The ownership replay was deliberately brought forward after compilation so
+that an explicit inventory STOP could be surfaced before more implementation.
+That is the only sequencing change. The fallible legacy-provider adaptation
+is described above. No git, network, unsafe, dependency or toolchain change
+was used, and all production edits are on the exact Scope list.
+
+The director's next action is to decide the dispositions for the five
+unlisted public-input rows and the three dormant erased-storage rows,
+preserving recorded destruction debt. No such decision was invented here.
+After authorization, review the PreparedCallArguments provider adaptation;
+finish the paired controls, unit evidence and census; add the exact trace
+inventory entry; replay all maintenance inventories and both earned
+certificates; format and run every required gate. The unchanged-source
+baseline, both real logs and exact row/function audits are under
+`.temp/brief-607/redispatch-1/`.
+
+## Director amendment — redispatch 2
+
+The stop above was correct. Decisions, in order:
+
+1. **The seven new public inputs are `PublicInput`**, with the standard
+   witness `public by-value input; owning storage sites are separate rows`:
+   `TypedAction::complete(result)`, `evaluate(next)`, `finalize(finalizer)`,
+   `finish_work(work)`, `finish_work(finish)`, `FrameChain::then(next)` and
+   `SlotWitness::chain(first)`. Ledger rows 56-58 (the old
+   `FrameAction::evaluate`/`finalize` and `insert_suspension_frame`) stay
+   exactly as they are: the old API still exists, and those transitions
+   happen in step R, not here.
+2. **The three erased-storage rows are `Unbounded`** (`Action.Evaluate.next`,
+   `Action.Finalize.0`, `FrameChain.frames`), owed to the expression debt
+   (`TODO.md#standing-engineering-debt`), external implementation coverage
+   `unresolved` — the same truth as rows 53-55: destroying a stored frame can
+   destroy an `Expr`. Their witness cannot be written by hand, and today's
+   verifier (`host_payload_ledger/ownership.rs:121`) skips generic
+   implementations, while the only implementors of `ErasedFrame` and
+   `ErasedFinalizer` are the generic `TypedAdapter<F>` and
+   `FinalizerAdapter<F>`. **Extend the verifier** with one rule, computed, not
+   written:
+   - It applies only when the payload trait is crate-private and every
+     implementor is a generic adapter that owns its parameter by value
+     (`Arc<F>`, `Box<F>`, or `F` directly) under a single trait bound.
+   - Witness = an existing-style existential path from a **concrete, non-
+     generic in-tree implementor of the bound** to `Expr`/`SharedExpr`/
+     `SharedArgs`, with the adapter hop shown in the text, whenever one
+     exists.
+   - Only while no such implementor exists (true in S1 and S2; from S3 on the
+     first typed frame supplies one, and the replayed witness must change to
+     it), and only when the bound trait is **public**, the witness names the
+     adapter, its owning field and the public bound, and says that no in-tree
+     instantiation exists yet. A crate-private bound with no implementor
+     yields no witness.
+   - Three falsifiers in `host_payload_ledger/tests.rs`, each watched failing:
+     an adapter holding `PhantomData<F>` (not owned) yields no witness; a
+     private bound with no implementor yields no witness; a fixture that adds
+     a concrete `Expr`-owning implementor of the bound makes the interim text
+     a witness mismatch.
+3. **The fallible `PreparedCallArguments` provider is approved**
+   (`old_decode` returning `Result<Self, Expr>`; rejection stays
+   `Err(Slot::Value)`, which S2 turns into a fault). Add a runtime unit test
+   for it now: for representative prepared states (with and without
+   `Unevaluated` restore, an empty prefix, a spliced `Sequence`),
+   `old_decode(old_encode(x)) == x`, and `old_encode` produces exactly the
+   `Expr` the existing finalizer path produces for the same state.
+4. The `UnevaluatedRestoreNode` line drift is a position refresh: replay it.
+
+Then finish Steps 5-7 and every gate. Append a new `## Execution report`
+after this section.
 
