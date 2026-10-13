@@ -4,12 +4,12 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-14, committed tree through brief-606's dispatch.
-Round 4 (605) is reviewed: accepted except its atomic 528-file conversion and
-its transit record. **brief-606 (round 5, Codex forked from 605's session)**
-re-plans the sequence as type-then-flip and drafts every step; then the
-implementation briefs (Codex first, by user ruling; GLM only if the content
-filter fires); then E2's design. Long-running
+Status checkpoint: 2026-10-14, committed tree through brief-606's report
+(G13 design round 5, gated and ratified). **Next: G13's implementation, 78
+gated steps** — S1 dormant API, S2 compatible driver, S3-S54 family typing,
+F1-F23 one flip per legacy type, R removal — each a director-rewritten brief
+from `.temp/brief-606/draft-*.md`, dispatched to Codex (user ruling; GLM only
+if the content filter fires); then E2's design. Long-running
 briefs use `gpt-6-astra` max by user ruling (2026-10-13: `gpt-6.1-sol` hit
 capacity errors mid-run); the dispatcher pins no model, `~/.codex/config.toml`
 decides. `CDX_FORK=<session id>` continues an earlier Codex session (round 4
@@ -856,10 +856,26 @@ missed frameless edge is caught at run time in either plan, so atomicity
 bought no detection and cost the per-step gate. (2) No transit record: a
 consumer's input was a Rust local before G13 too, and that is one instance of
 the gensym-roots class below. brief-606 re-plans on that basis.
+**Round 5 (brief-606, Codex forked from 605, no filter at 1.51M tokens).**
+Modes: `Expr` Value, 23 existing types Legacy (21 registered in S1, the two
+existing `PreparedInterpreted*` enums in S33), 43 new carriers State from
+birth. 1 399 obligation rows (623 frame rows, 600 macro sites, 62 chains, 14
+deferred families, 10 routes, 90 transform rows) each owned by exactly one of
+52 family steps, largest 26 implementations / 24 macros. The 21 historical
+divergences promote to strict equality in their owning steps (S3 Fold/Nest,
+S7 Part/association, S10 Failure Message, S13 Function, S19 Cases); no
+waiver. No transport cycle, so 23 singleton flips, each after every frame is
+typed, under a source census and that type's internal-encoding corpus. 35
+compile-control pairs (26 + 9 for the mode). Director gate: the partition
+checker and the four model tests reproduce; the 623 frame rows and 600 macro
+sites match the director's own scan one-to-one with a single owner each.
+Director rulings: the two interpreted enums stay Legacy (existing identities);
+the sequence is ratified; measurement in every step follows TEMPLATE pitfall 8
+(counters, then one-codegen-unit instruction slopes; timing is indication).
 
 **Recorded, not in this branch — the gensym sweep does not see Rust-local
-values (found 2026-10-14 reviewing brief-605; queued behind the branch as Q3
-unless the user rules otherwise).** The sweep's roots
+values (found 2026-10-14 reviewing brief-605; Q3, queued behind the branch by
+user ruling 2026-10-14).** The sweep's roots
 (`scoping/gensym_gc.rs:9`, `:136`) are Session fields, module activations, the
 sweeping Module's own outcome and suspension frames. A value a builtin holds
 only in a Rust accumulator across guest evaluation is not a root, so a sweep
@@ -873,9 +889,16 @@ iteration limit first, so default-threshold reachability is not demonstrated.
 A suspension frame's input during its guest evaluation is one instance. This
 is the retention line's shape (a Rust local invisible to the Session) on the
 roots side; design it as a class, not per site.
-Also observed: `ReleaseHold` is `HoldAll` here (documented), so
-`s = Hold[1 + 1]; ReleaseHold[s]` returns `Hold[1 + 1]`, unlike the
-WL-inherited behaviour; ask the user whether that divergence is intended.
+**Q4 — `ReleaseHold` follows WL (user ruling 2026-10-14; queued behind the
+branch).** It is `HoldAll` here, so `s = Hold[1 + 1]; ReleaseHold[s]` returns
+`Hold[1 + 1]`, and it releases only the top position, so
+`ReleaseHold[f[Hold[1 + 2]]]` stays held where WL gives `f[3]`. Neither has a
+recorded reason: `HoldAll` arrived with the first implementation (`ec083897`,
+2026-03-18, no commit body, set beside `HoldPattern`); brief-215 (`02ce0a8f`)
+pinned the one-layer contract and added `HoldForm` without examining the
+attribute; `docs/dev/usability-pass.md:361` parks the deep-position boundary
+without a reason. Ruling: no reason found, so follow WL — `Protected` only,
+and one layer released at every position.
 
 **Recorded, not in this branch:** `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime

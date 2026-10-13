@@ -164,3 +164,239 @@ and independent accounting of transit unchanged.
 5. Open questions for the director.
 
 ---
+
+## Round 5 report
+
+### 1. What changed
+
+**Design only.** All artifacts are under `.temp/brief-606/`; production code
+is unchanged. The one optional integration test compiled the revised mode/API
+model, was copied to `probe.rs`, and was **deleted before this report was
+appended**. The scope check confirms all 1,427 baseline crate files unchanged
+and no added crate source/inventory files. No git, network, internal-shape
+probe, gensym-GC reproduction, whole-workspace/oracle test or benchmark command was run.
+
+The first model compile reported E0507 in a test guard; that move was fixed.
+The final model also removes per-slot channel-method overrides. Its actual
+authorized test output was:
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.69s
+     Running tests/zz_brief606_probe.rs (target/debug/deps/zz_brief606_probe-6ad92f58638fdaeb)
+
+running 4 tests
+test after_flip::downstream::public_surface_and_zst_witness_compile ... ok
+test after_flip::kernel::sealed::mode_is_single_arm_with_ordinary_values ... ok
+test before_flip::downstream::public_surface_and_zst_witness_compile ... ok
+test before_flip::kernel::sealed::mode_is_single_arm_with_ordinary_values ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+```
+
+This is positive model evidence in the authorized default build. It is not
+production driver/accounting evidence, a negative-compiler run, a whole-oracle
+run or an A/B result. The implementation drafts require those later gates.
+
+### 2. Transport mode and slot table
+
+The sealed keyed Codec declares only one associated Mode. Central functions
+perform channel encode/decode, so an individual slot implementation cannot
+override them. ValueMode accepts only Value for Expr; LegacyMode accepts only
+Value and delegates to the existing wire codec; StateMode accepts only State
+and then the exact variant. Legacy providers receive Expr, state providers
+receive ContinuationState, and neither can inspect both channel arms. There
+is no runtime switch, per-frame choice or dual-arm fallback. R deletes the
+temporary mode layer with the legacy codecs.
+
+[slot-modes.tsv](../../../.temp/brief-606/slot-modes.tsv) enumerates all 67:
+**1 Value, 23 initially Legacy, 43 State from birth**. The two existing
+PreparedInterpreted enums at `pattern_matching_interpreted.rs:732,850` have
+existing decoders at `:741,860` and finalizer encoder branches at `:713,829`;
+they are treated as Legacy, registered in S33. The other 21 legacy types
+register in S1. Each new carrier registers only in its introducing family.
+
+State-birth ownership includes 148 direct frame/finalizer links, 156 producer/
+definition site links, and all 47 slot-to-decoder-use links (44 distinct use
+rows) from **both** whole-slot and nested-use tables. The introducing family
+also owns its adjacent/helper frames; those are a conservative closure, not
+an assertion that each frame has the carrier as its actual input/output.
+
+The [design](../../../.temp/brief-606/design.md) states D2's synchronous Rust
+local transit contract. It introduces no transit record or accounting change.
+The accepted two-Arc queued adapter accounting remains required. There are
+35 paired compile controls: the accepted 26 plus nine mode/deletion controls,
+with phase-only pairs retired explicitly when R removes their positive API.
+
+### 3. Partition, reconciliation and flips
+
+S1 is dormant API; S2 is the compatible driver; S3–S54 are **52 family typing
+steps**. Every one of the 1,399 required table rows has exactly one typing
+owner. S2 owns the umbrella insertion mechanisms; individual occurrences stay
+in their family steps. M0284 at `eval_core/symbol.rs:63` migrates in S14 with
+DeclaredStubLoadFrame. All 600 macro constructor expressions are source-linked,
+including six local-variable expressions resolved from their bodies/signatures.
+
+The independent checker compares complete row payloads to the immutable
+round-4 copies, not just counts. Its verbatim result is:
+
+```text
+PASS immutable input copies: 40
+PASS partition all-frame-migrations: 623 rows, exactly one typing owner each
+PASS partition macro-dataflow: 600 rows, exactly one typing owner each
+PASS partition chained-inserts: 62 rows, exactly one typing owner each
+PASS partition deferred-obligations: 14 rows, exactly one typing owner each
+PASS partition insertion-routes: 10 rows, exactly one typing owner each
+PASS partition transformation-dispositions: 90 rows, exactly one typing owner each
+PASS total partition rows: 1399
+PASS frame kinds: {'frame': 564, 'finalizer': 59}
+PASS macro arms: {'result': 348, 'insert': 252}
+PASS macro constructors: 600 rows; unresolved/generic factories: 0
+PASS modes: {'Value': 1, 'Legacy': 23, 'State': 43} ; State-birth frame links: 148 ; decoder-use links: 47 ; unique decoder-use rows: 44
+PASS gates: 35 compile pairs; 21 divergence promotions; 28 ordinary controls; 23 singleton flips
+PASS corpus plan: 438 descriptors; 86724 position rows; 546 shape rows; no shapes executed
+PASS standalone drafts: 78 ; exact scope rows: 3359
+PASS family maxima: impls 26 ; macros 24 ; impl-body chars 19822
+PASS all reconciliation checks
+```
+
+The bounded family maxima are **26 implementations, 24 macros and 19,822
+implementation-body characters**. Separate producer-body sizes, transformations,
+deferred obligations, carrier closures and file counts are recorded in
+[step-sizes.tsv](../../../.temp/brief-606/step-sizes.tsv). S2's change scope is
+the actual driver/storage/error-boundary population; the much larger catchall
+tables remain a read-only review population. R is dead-code deletion and
+macro spelling replacement, with no postponed family typing.
+
+All six raw completers get their fixed typed Option return binding during
+typing. The 21 historical comparisons promote from divergent to equal in
+S3 (six Fold/Nest), S7 (six Part/association), S10 (three Failure Message),
+S13 (three Function), and S19 (three Cases). The 28 ordinary controls remain
+PASS throughout, with per-step source attribution. No oracle Checks are
+weakened and no expected-divergence waiver is introduced.
+
+F1–F23 flip **one legacy type each**. There is no required transport cycle:
+nested private wire codecs retain their field grammar independently of the
+whole-slot mode. The gate rejects a wire provider that calls channel transport.
+Before every flip, the source census must find no production legacy frame/raw
+insertion and no live decoder boundary for the target type; exact pure codec
+definitions/dependencies are distinguished from live calls. The
+[census specification](../../../.temp/brief-606/census-spec.md) defines the
+gate outputs and unresolved-use rejection.
+
+The corpus plan enumerates 438 descriptor roles and each declared Middle
+pause / first Twice pause / second Twice pause separately for every non-Expr
+slot: 86,724 position rows joined with 546 per-head shape rows. These are
+**planned cells**, not executed fixtures. Each actual fixture must preserve
+role grammar, prove its pause attribution and pass strict queued/resumed
+equality plus unconditional FaultProbe absence in both builds; exclusions
+require exact source evidence. Each hot-function step also runs the complete
+119-label A/B; the family label mapping does not reduce that gate.
+
+### 4. Drafts and scope table
+
+There are **78 full TEMPLATE-shaped drafts**: S1–S54, F1–F23 and R. Each
+contains its exact file fence, owned row IDs and names, changes, applicable
+controls, both-build gates, full A/B instructions, maintenance duty, progress
+checkpoint and hard rules. File counts include shared verification and
+maintenance files, not a claim that every scoped file must change. The
+director rewrites these drafts before dispatch under the usual workflow.
+
+[Artifact index](../../../.temp/brief-606/INDEX.md) ·
+[Exact file scopes](../../../.temp/brief-606/implementation-file-scopes.tsv)
+
+| Draft | Family/type | Impls | Macros | Exact files |
+|---|---|---:|---:|---:|
+| [S1](../../../.temp/brief-606/draft-S1.md) | Dormant typed API and sealed transport strategies | 0 | 0 | 59 |
+| [S2](../../../.temp/brief-606/draft-S2.md) | Compatible driver, faults and accounting | 0 | 0 | 80 |
+| [S3](../../../.temp/brief-606/draft-S3.md) | Evaluation, argument preparation and dispatch | 12 | 13 | 46 |
+| [S4](../../../.temp/brief-606/draft-S4.md) | Argument and traversal specification resolution | 11 | 12 | 39 |
+| [S5](../../../.temp/brief-606/draft-S5.md) | Definitions, defaults and fallback | 14 | 17 | 58 |
+| [S6](../../../.temp/brief-606/draft-S6.md) | Guards and binding completion | 5 | 5 | 35 |
+| [S7](../../../.temp/brief-606/draft-S7.md) | Part selectors and held assignment | 11 | 11 | 44 |
+| [S8](../../../.temp/brief-606/draft-S8.md) | ReplaceAll and traversal collectors | 18 | 20 | 46 |
+| [S9](../../../.temp/brief-606/draft-S9.md) | General control and cleanup | 25 | 24 | 43 |
+| [S10](../../../.temp/brief-606/draft-S10.md) | Confirmation and status properties | 18 | 19 | 38 |
+| [S11](../../../.temp/brief-606/draft-S11.md) | Loops and iterator scope | 23 | 22 | 45 |
+| [S12](../../../.temp/brief-606/draft-S12.md) | Lexical block scope | 12 | 8 | 39 |
+| [S13](../../../.temp/brief-606/draft-S13.md) | Other lexical and callable scope | 7 | 7 | 39 |
+| [S14](../../../.temp/brief-606/draft-S14.md) | Packages, loading and structural rollback | 13 | 12 | 55 |
+| [S15](../../../.temp/brief-606/draft-S15.md) | Reap and Sow deferred rendering | 9 | 7 | 35 |
+| [S16](../../../.temp/brief-606/draft-S16.md) | Captured tests and reports | 7 | 7 | 41 |
+| [S17](../../../.temp/brief-606/draft-S17.md) | Debugging, resource wrappers and tracing | 12 | 12 | 66 |
+| [S18](../../../.temp/brief-606/draft-S18.md) | Retention, attributes, options, input and messages | 13 | 14 | 62 |
+| [S19](../../../.temp/brief-606/draft-S19.md) | Cases collection and preparation | 15 | 19 | 44 |
+| [S20](../../../.temp/brief-606/draft-S20.md) | DeleteCases traversal and preparation | 16 | 20 | 42 |
+| [S21](../../../.temp/brief-606/draft-S21.md) | Replace traversal and setup | 18 | 19 | 41 |
+| [S22](../../../.temp/brief-606/draft-S22.md) | ReplaceList setup and scanning | 8 | 7 | 37 |
+| [S23](../../../.temp/brief-606/draft-S23.md) | ReplaceList matching and guard collection | 13 | 9 | 38 |
+| [S24](../../../.temp/brief-606/draft-S24.md) | Replace repeated and rule resolution | 11 | 12 | 43 |
+| [S25](../../../.temp/brief-606/draft-S25.md) | ReplacePart targets and structure replacement | 20 | 19 | 59 |
+| [S26](../../../.temp/brief-606/draft-S26.md) | Compiled matcher core preparation | 26 | 18 | 39 |
+| [S27](../../../.temp/brief-606/draft-S27.md) | Sequence alternatives and collection | 10 | 8 | 38 |
+| [S28](../../../.temp/brief-606/draft-S28.md) | Optional sequence defaults | 14 | 9 | 38 |
+| [S29](../../../.temp/brief-606/draft-S29.md) | Sequence pattern and ordered preparation | 11 | 8 | 40 |
+| [S30](../../../.temp/brief-606/draft-S30.md) | Flat sequence argument and rest | 17 | 12 | 39 |
+| [S31](../../../.temp/brief-606/draft-S31.md) | Orderless matching and collection | 10 | 8 | 42 |
+| [S32](../../../.temp/brief-606/draft-S32.md) | Orderless optional match and collect split | 10 | 13 | 38 |
+| [S33](../../../.temp/brief-606/draft-S33.md) | Interpreted matcher preparation | 16 | 11 | 40 |
+| [S34](../../../.temp/brief-606/draft-S34.md) | Association basic and missing | 15 | 9 | 50 |
+| [S35](../../../.temp/brief-606/draft-S35.md) | Association grouping lists | 9 | 9 | 35 |
+| [S36](../../../.temp/brief-606/draft-S36.md) | Association grouping entries | 9 | 9 | 36 |
+| [S37](../../../.temp/brief-606/draft-S37.md) | Association aggregates and transforms | 18 | 18 | 45 |
+| [S38](../../../.temp/brief-606/draft-S38.md) | Association callback phases | 8 | 10 | 37 |
+| [S39](../../../.temp/brief-606/draft-S39.md) | Arrays, tensor operations and argument threading | 11 | 12 | 42 |
+| [S40](../../../.temp/brief-606/draft-S40.md) | Apply, map and targeted updates | 6 | 6 | 46 |
+| [S41](../../../.temp/brief-606/draft-S41.md) | Iterated function application | 8 | 8 | 35 |
+| [S42](../../../.temp/brief-606/draft-S42.md) | Fold and while folds | 16 | 16 | 38 |
+| [S43](../../../.temp/brief-606/draft-S43.md) | Select, window and sequence operations | 10 | 10 | 38 |
+| [S44](../../../.temp/brief-606/draft-S44.md) | Lazy realization and outer captures | 5 | 5 | 49 |
+| [S45](../../../.temp/brief-606/draft-S45.md) | Schema callback machine | 3 | 3 | 39 |
+| [S46](../../../.temp/brief-606/draft-S46.md) | Truth, array and collection predicates | 17 | 17 | 46 |
+| [S47](../../../.temp/brief-606/draft-S47.md) | Predicate ordering callbacks | 9 | 9 | 35 |
+| [S48](../../../.temp/brief-606/draft-S48.md) | Guarded string Cases | 6 | 6 | 35 |
+| [S49](../../../.temp/brief-606/draft-S49.md) | Guarded string replacement | 6 | 6 | 35 |
+| [S50](../../../.temp/brief-606/draft-S50.md) | String search, rules and encoding | 16 | 16 | 72 |
+| [S51](../../../.temp/brief-606/draft-S51.md) | Collection statistics and deduplication | 10 | 10 | 36 |
+| [S52](../../../.temp/brief-606/draft-S52.md) | Ordering, sets and merge sorting | 10 | 11 | 37 |
+| [S53](../../../.temp/brief-606/draft-S53.md) | Differences, lookups and remaining structure operations | 4 | 6 | 50 |
+| [S54](../../../.temp/brief-606/draft-S54.md) | Arithmetic and remaining builtin wrappers | 2 | 2 | 35 |
+| [F1](../../../.temp/brief-606/draft-F1.md) | Flip Option<Expr> | 0 | 0 | 30 |
+| [F2](../../../.temp/brief-606/draft-F2.md) | Flip Vec<Expr> | 0 | 0 | 30 |
+| [F3](../../../.temp/brief-606/draft-F3.md) | Flip Vec<SymbolExprMap> | 0 | 0 | 30 |
+| [F4](../../../.temp/brief-606/draft-F4.md) | Flip Option<Vec<Expr>> | 0 | 0 | 30 |
+| [F5](../../../.temp/brief-606/draft-F5.md) | Flip Option<Vec<RewriteRuleInfo>> | 0 | 0 | 30 |
+| [F6](../../../.temp/brief-606/draft-F6.md) | Flip Option<CasesLevelSpec> | 0 | 0 | 30 |
+| [F7](../../../.temp/brief-606/draft-F7.md) | Flip bool | 0 | 0 | 30 |
+| [F8](../../../.temp/brief-606/draft-F8.md) | Flip String | 0 | 0 | 30 |
+| [F9](../../../.temp/brief-606/draft-F9.md) | Flip CompiledMatchOutcome | 0 | 0 | 30 |
+| [F10](../../../.temp/brief-606/draft-F10.md) | Flip CasesTraversalResolution | 0 | 0 | 30 |
+| [F11](../../../.temp/brief-606/draft-F11.md) | Flip TraversalWithoutLimitResolution | 0 | 0 | 30 |
+| [F12](../../../.temp/brief-606/draft-F12.md) | Flip CasesCollectionOutcome | 0 | 0 | 30 |
+| [F13](../../../.temp/brief-606/draft-F13.md) | Flip PositionCollectionOutcome | 0 | 0 | 30 |
+| [F14](../../../.temp/brief-606/draft-F14.md) | Flip DeleteCasesOutcome | 0 | 0 | 30 |
+| [F15](../../../.temp/brief-606/draft-F15.md) | Flip TraversalCountOutcome | 0 | 0 | 30 |
+| [F16](../../../.temp/brief-606/draft-F16.md) | Flip ReplaceOutcome | 0 | 0 | 30 |
+| [F17](../../../.temp/brief-606/draft-F17.md) | Flip ReplaceAllTraversalOutcome | 0 | 0 | 30 |
+| [F18](../../../.temp/brief-606/draft-F18.md) | Flip Vec<ReplacePartTarget> | 0 | 0 | 30 |
+| [F19](../../../.temp/brief-606/draft-F19.md) | Flip EvalCapturedOutcome | 0 | 0 | 30 |
+| [F20](../../../.temp/brief-606/draft-F20.md) | Flip PreparedCallArguments | 0 | 0 | 30 |
+| [F21](../../../.temp/brief-606/draft-F21.md) | Flip EvaluatedPartSelectors | 0 | 0 | 30 |
+| [F22](../../../.temp/brief-606/draft-F22.md) | Flip PreparedInterpretedCall | 0 | 0 | 30 |
+| [F23](../../../.temp/brief-606/draft-F23.md) | Flip PreparedInterpretedAlternative | 0 | 0 | 30 |
+| [R](../../../.temp/brief-606/draft-R.md) | Remove legacy transport/mode and rename macro | 0 | 600 spelling-only renames | 310 |
+
+### 5. Open questions for the director
+
+Does the intended slot registry retain the existing Rust identities of
+PreparedInterpretedCall and PreparedInterpretedAlternative? This plan does,
+and therefore starts both in Legacy under D1. If the intended carriers are
+instead distinct new nominal identities, both must be State from birth in
+S33; the counts become 21 Legacy / 45 new State and F22/F23 disappear. The
+source evidence and existing logical sum shapes favor retaining the identities.
+No counterexample to D1 was found in the audited populations.
+
+Draft timeout ceilings carry forward the prior drafts; the dispatching
+director must check them against recent equivalent gate logs as the drafts
+require. This design round did not authorize new workspace or benchmark runs.

@@ -232,8 +232,10 @@ Consequences for how I present and pick work:
   Codex designing against its own review in a forked session). Round 4 is
   accepted except its atomic 528-file conversion, replaced by type-then-flip
   (a per-type transport mode, so typing steps stay `Value`-compatible and
-  each lands green). **Now: brief-606, round 5 re-plans the sequence**; then
-  the repair, and E2 (a may-suspend result type with no `Try`).
+  each lands green). Round 5 (606) partitioned it into 78 gated steps — S1
+  dormant API, S2 driver, S3-S54 family typing, F1-F23 one flip per legacy
+  type, R removal. **Now: the implementation, one step per brief from 607**;
+  then E2 (a may-suspend result type with no `Try`).
   Runs are serial by user ruling. Memory `suspension-continuation-branch.md`.
 
   **Four things from it are method, not history.**
