@@ -464,10 +464,19 @@ pub(crate) fn eval_to_expression(
         session,
         evaluated,
         ok(value) => Ok(value),
-        suspend => EvalToExpressionSuspensionFrame1,
+        suspend => EvalToExpressionSuspensionFrame1 { result_head: args.get(2).cloned() },
     )?;
 
-    if let Some(wrapper) = args.get(2) {
+    finish_to_expression(session, value, args.get(2))
+}
+
+#[inline(always)]
+fn finish_to_expression(
+    session: &mut Session,
+    value: Expr,
+    result_head: Option<&Expr>,
+) -> Result<Expr, EvalError> {
+    if let Some(wrapper) = result_head {
         let wrapped = Expr::call(wrapper.clone(), vec![value]);
         let wrapped_result = session.evaluate(wrapped);
         return rum_runtime::resume_or_suspend!(

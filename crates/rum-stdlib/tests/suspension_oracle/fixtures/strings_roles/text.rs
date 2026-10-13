@@ -13,6 +13,10 @@ fn parsed(entry: &str, v: Variant, wrapped_uncompress: bool) -> Fixture {
     let wrapper = "Function[Global`x,(Global`suffix++;Global`x+100)]";
     let mut suffix = "1";
     match entry {
+        "ToExpression.parsedSource" => {
+            let source = body.replace('\\', "\\\\").replace('"', "\\\"");
+            f.source = format!("ToExpression[\"{source}\",InputForm,{wrapper}]");
+        }
         "ToExpression.resultHead" => {
             let body = sequence(&f, v, "Global`x+100");
             f.source = format!(

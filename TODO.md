@@ -4,12 +4,13 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-13, committed tree through brief-596's gate (drain
-7, strings; owed 39); brief-597 (G12, `ToExpression`'s result head, and the
-fieldless-frame sweep) is dispatched; then the final drain that deletes the
-ledger; then E2's design. Long-running briefs use `gpt-6-astra` max by user
-ruling (2026-10-13: `gpt-6.1-sol` hit capacity errors mid-run); the
-dispatcher pins no model, `~/.codex/config.toml` decides.
+Status checkpoint: 2026-10-13, committed tree through brief-597's gate (G12
+repaired, owed 38; the sweep found G13); brief-598 (drain 8 of 8: associations,
+associations_transform, schema, evaluator, the snapshot-restore boundary) is
+next; then the ledger closure; then G13's design; then E2's design. Long-running
+briefs use `gpt-6-astra` max by user ruling (2026-10-13: `gpt-6.1-sol` hit
+capacity errors mid-run); the dispatcher pins no model, `~/.codex/config.toml`
+decides.
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -764,7 +765,34 @@ and sweeps the repository for the shape. Entries 465 -> 443, owed 110 -> 39.
 Director gate: workspace 3400/0/58 with native ZeroMQ real; oracle 34/0 in
 each build. The first 596 run died on an upstream capacity error ~50k tokens
 in and was redispatched from its checkpoint.
-recorded, not in this branch: `rum-cli` and `rum-repl` carry a `rum-runtime`
+**G12 is closed (brief-597).** `EvalToExpressionSuspensionFrame1` carries the
+result head, captured only on suspension, and both paths enter one completion
+helper that applies it exactly once (owed 39 -> 38). The sweep of every frame
+carrying less state than the work after it (600 sites, 90 unit frame types,
+182 rows) found no other lost suffix of G12's shape and **one new group, G13:
+the frame value channel carries typed continuation state in-band.** A function
+returning `Result<T, _>` that suspends hands its caller an `Expr` the caller
+decodes with `T::from_continuation_expr` (25 codecs, 206 ``System`Internal*``
+heads). The heads are matched by text, so guest source can write them; the
+decoders are lenient (`Option<Expr>` reads any unmarked value as `Some`) or
+panic on an unexpected shape; and nothing checks that a slot is filled by its
+own type's encoder. Three frames complete an `Option<Expr>` slot raw
+(`FinishCasesRuleMatchSuspensionFrame`, `TryApplyFunctionSuspensionFrame`,
+`FinishPositionalPartSelectorEvaluationSuspensionFrame`). Director-reproduced
+witnesses, resumed against queued: a guest ``System`InternalContinuationNone[]``
+is read as `None` and the call asks for input a second time;
+``Function[(InputString[..];System`InternalContinuationSome[5])][0]`` resumes to
+`5` instead of `InternalContinuationSome[5]`; with `InternalContinuationSome[1,2]`
+the kernel **panics** in a debug build (`suspension/primitive.rs:51`); the
+assertion is debug-only, so release would return `1` (inferred, not run). G13 is designed after E1 closes, so the full oracle is
+the net under its migration; the repair must make a wrongly typed completion a
+compile error and typed state unconstructible by guest code, and its relation
+to E2 (whose outline already asks for explicit output codecs) is part of that
+design. Director draft: `.temp/director/g13-design-draft.md`.
+Director gate: workspace 3408/0/58 with native ZeroMQ real; oracle 42/0 in
+each build.
+
+**Recorded, not in this branch:** `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
 the branch.

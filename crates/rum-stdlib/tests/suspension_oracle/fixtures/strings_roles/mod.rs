@@ -4,6 +4,7 @@ mod falsifiers;
 mod lifecycle;
 mod matching;
 mod options;
+mod parsed_source;
 mod support;
 mod text;
 use super::super::descriptors::{Fixture, Variant};
@@ -49,6 +50,7 @@ pub const ENTRIES: &[&str] = &[
     "StringWrap.explicitOption",
     "TemplateApply.defaultOption",
     "TemplateApply.explicitOption",
+    "ToExpression.parsedSource",
     "ToExpression.resultHead",
     "Uncompress.defaultOption",
     "Uncompress.explicitOption",
