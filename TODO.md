@@ -4,10 +4,10 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-13, committed tree through brief-598's gate (E1's
-last drain; owed 38 -> 5, and the five are declared roles that do not exist);
-brief-599 (retire those five and delete the owed ledger, closing E1) is next;
-then G13's design (brief-600); then E2's design. Long-running
+Status checkpoint: 2026-10-13, committed tree through brief-599's gate (E1
+closed: all 438 declared entries have an executed descriptor in both builds,
+and the owed ledger is gone); brief-600 (G13's design) is next; then G13's
+repair; then E2's design. Long-running
 briefs use `gpt-6-astra` max by user ruling (2026-10-13: `gpt-6.1-sol` hit
 capacity errors mid-run); the dispatcher pins no model, `~/.codex/config.toml`
 decides.
@@ -810,6 +810,17 @@ the change that deletes it. `KeyMap.callback`, `KeyValueMap.callback`,
 Entries 443, descriptors 546, lifecycle obligations 4 026. Director gate:
 workspace 3415/0/58 with native ZeroMQ real; oracle 49/0 in each build;
 fingerprints and both certificates replayed.
+**E1 is closed (brief-599).** The five nonexistent roles are retired
+(`AssociationThread` and `DeleteMissing` become `NoLocalGuestEffect`, `Normal`
+keeps `lazyConsumer`), and the owed ledger is deleted with its reconciliation,
+its error variants and its two falsifiers. In its place, an exact equality:
+every declared entry has an executed descriptor and no descriptor names an
+undeclared entry (`UncoveredEntry` / `UnknownDescriptorEntry`), with WEAK /
+STRICT / CONTROL falsifiers; the worker also forced the real manifest test red
+by detaching one descriptor. `docs/testing-strategy.md` states the final
+guarantee. Entries 438 = covered 438, descriptors 546, in both builds.
+Director gate: workspace 3415/0/58 with native ZeroMQ real; oracle 49/0 in
+each build.
 
 **Recorded, not in this branch:** `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime

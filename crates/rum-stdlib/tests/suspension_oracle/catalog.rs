@@ -5,8 +5,7 @@ pub enum CatalogError {
     Duplicate(String),
     MissingInstalled(String),
     UndeclaredInstalled(String),
-    StaleOwed(String),
-    MissingOwed(String),
+    UncoveredEntry(String),
     UnknownDescriptorEntry(String),
 }
 
@@ -38,24 +37,19 @@ pub fn reconcile(
     Ok(())
 }
 
-pub fn reconcile_owed(
+pub fn reconcile_coverage(
     declared: &BTreeSet<String>,
     covered: &BTreeSet<String>,
-    owed: &BTreeSet<String>,
     exact: bool,
 ) -> Result<(), CatalogError> {
     if !exact {
         return Ok(());
-    }
+    } // Deliberately weakened checker, only used by falsifiers.
     if let Some(id) = covered.difference(declared).next() {
         return Err(CatalogError::UnknownDescriptorEntry(id.clone()));
     }
-    let missing: BTreeSet<_> = declared.difference(covered).cloned().collect();
-    if let Some(id) = owed.difference(&missing).next() {
-        return Err(CatalogError::StaleOwed(id.clone()));
-    }
-    if let Some(id) = missing.difference(owed).next() {
-        return Err(CatalogError::MissingOwed(id.clone()));
+    if let Some(id) = declared.difference(covered).next() {
+        return Err(CatalogError::UncoveredEntry(id.clone()));
     }
     Ok(())
 }

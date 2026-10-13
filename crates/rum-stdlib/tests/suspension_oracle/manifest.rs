@@ -30,7 +30,7 @@ pub fn entries() -> Vec<Vec<&'static str>> {
 }
 
 #[test]
-fn installed_catalog_and_owed_ledger_are_exact() {
+fn installed_catalog_and_descriptor_coverage_are_exact() {
     let mut session = rum_runtime::Session::new();
     let preinstalled: BTreeSet<_> = session
         .registered_builtin_specs()
@@ -132,26 +132,15 @@ fn installed_catalog_and_owed_ledger_are_exact() {
             }
         }
     }
+    catalog::reconcile_coverage(&declared, &covered, true).unwrap();
     assert_eq!(
         descriptors,
         registry.iter().map(|d| d.id).collect(),
         "unattached executable descriptor"
     );
     println!("LIFECYCLE obligations={lifecycle} (plus completion for every variant)");
-    let owed = rows(include_str!("inventory/owed.tsv"), 3);
-    let debt: BTreeSet<String> = owed.iter().map(|r| r[0].into()).collect();
-    assert_eq!(debt.len(), owed.len(), "duplicate owed entry");
-    catalog::reconcile_owed(&declared, &covered, &debt, true).unwrap();
-    assert!(
-        !debt.is_empty(),
-        "E1 closes by deleting the ledger mechanism, not preserving an empty escape hatch"
-    );
-    let mut families = BTreeMap::<&str, usize>::new();
-    for row in &owed {
-        *families.entry(row[1]).or_default() += 1;
-    }
     println!(
-        "CATALOG hash={} installed={} manifest={} GuestEntries={} NoLocalGuestEffect={} Boundary={} entries={} descriptors={} historical=209 owed={}",
+        "CATALOG hash={} installed={} manifest={} GuestEntries={} NoLocalGuestEffect={} Boundary={} entries={} descriptors={} historical=209 covered={}",
         cfg!(feature = "hash"),
         installed.len(),
         names.len(),
@@ -160,7 +149,6 @@ fn installed_catalog_and_owed_ledger_are_exact() {
         boundary,
         entries.len(),
         descriptors.len(),
-        debt.len()
+        covered.len()
     );
-    println!("OWED families={families:?}");
 }

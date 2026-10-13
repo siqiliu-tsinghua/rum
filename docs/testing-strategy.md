@@ -89,15 +89,19 @@ Capture descriptors also declare exact output at every pause, including messages
 and raw traces; a final-only comparison cannot detect provisional output leaking
 and later disappearing. Lifecycle checks at both pauses cover buffered output
 and exclusive print sinks. Catalog, no-pause, false-tail, lost-prefix,
-message-prefix, trace-prefix and owed-ledger falsifiers exercise the acceptance
+message-prefix, trace-prefix and coverage falsifiers exercise the acceptance
 functions. Historical continuation suites
 retain their specialized assertions. Declared boundary sinks must retire input.
 
-Step A keeps an exact owed-entry ledger for role descriptors still to be added;
-a descriptor cannot silently discharge an owed entry, and an undeclared gap
-fails. Passing this gate does not claim that owed roles have been exercised or
-that arbitrary guest programs/external Rust handlers are proven safe. E1 closes
-only when all owed entries are covered and the ledger mechanism is deleted.
+Coverage is exact and keeps no list of debt. Every declared guest-effect
+entry, in `inventory/effects.tsv` and `inventory/shared-effects.tsv` after
+feature filtering, carries at least one executable descriptor that runs its
+full declared variant set and, unless it is a declared boundary, its
+lifecycle obligations at both pauses. An entry without a descriptor, or a
+descriptor attached to an undeclared entry, fails the gate in either build.
+Entries are declared by source review of each owner, not by source-edge
+discovery, and passing the gate does not claim that arbitrary guest
+programs or external Rust handlers are proven safe.
 A default-only workspace run does not satisfy the two-feature obligation.
 
 ## Performance Gates

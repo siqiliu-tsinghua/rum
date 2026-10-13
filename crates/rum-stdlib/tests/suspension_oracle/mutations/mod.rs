@@ -149,44 +149,53 @@ fn missing_prefix() {
 }
 
 #[test]
-fn owed_entry_gains_descriptor() {
+fn declared_entry_without_descriptor() {
     let declared: std::collections::BTreeSet<String> =
         ["Scan.callback".to_string()].into_iter().collect();
-    let covered = declared.clone();
-    let owed = declared.clone();
+    let mut covered = declared.clone();
+    covered.remove("Scan.callback");
     assert_eq!(
-        catalog::reconcile_owed(&declared, &covered, &owed, false),
+        catalog::reconcile_coverage(&declared, &covered, false),
         Ok(())
     );
-    println!("WEAK stale_owed: PASS");
-    let actual = catalog::reconcile_owed(&declared, &covered, &owed, true);
-    assert_eq!(actual, Err(CatalogError::StaleOwed("Scan.callback".into())));
-    println!("STRICT stale_owed: {actual:?}");
+    println!("WEAK declared_entry_without_descriptor: PASS");
+    let actual = catalog::reconcile_coverage(&declared, &covered, true);
     assert_eq!(
-        catalog::reconcile_owed(&declared, &covered, &Default::default(), true),
+        actual,
+        Err(CatalogError::UncoveredEntry("Scan.callback".into()))
+    );
+    println!("STRICT declared_entry_without_descriptor: {actual:?}");
+    covered.insert("Scan.callback".into());
+    assert_eq!(
+        catalog::reconcile_coverage(&declared, &covered, true),
         Ok(())
     );
-    println!("CONTROL stale_owed: PASS");
+    println!("CONTROL declared_entry_without_descriptor: PASS");
 }
 
 #[test]
-fn entry_missing_from_both() {
+fn descriptor_for_undeclared_entry() {
     let declared: std::collections::BTreeSet<String> =
         ["Scan.callback".to_string()].into_iter().collect();
+    let mut covered = declared.clone();
+    covered.insert("OracleUndeclared.callback".into());
     assert_eq!(
-        catalog::reconcile_owed(&declared, &Default::default(), &Default::default(), false),
+        catalog::reconcile_coverage(&declared, &covered, false),
         Ok(())
     );
-    println!("WEAK missing_owed: PASS");
-    let actual = catalog::reconcile_owed(&declared, &Default::default(), &Default::default(), true);
+    println!("WEAK descriptor_for_undeclared_entry: PASS");
+    let actual = catalog::reconcile_coverage(&declared, &covered, true);
     assert_eq!(
         actual,
-        Err(CatalogError::MissingOwed("Scan.callback".into()))
+        Err(CatalogError::UnknownDescriptorEntry(
+            "OracleUndeclared.callback".into()
+        ))
     );
-    println!("STRICT missing_owed: {actual:?}");
+    println!("STRICT descriptor_for_undeclared_entry: {actual:?}");
+    covered.remove("OracleUndeclared.callback");
     assert_eq!(
-        catalog::reconcile_owed(&declared, &Default::default(), &declared, true),
+        catalog::reconcile_coverage(&declared, &covered, true),
         Ok(())
     );
-    println!("CONTROL missing_owed: PASS");
+    println!("CONTROL descriptor_for_undeclared_entry: PASS");
 }
