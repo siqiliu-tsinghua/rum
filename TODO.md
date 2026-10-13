@@ -4,11 +4,12 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-14, committed tree through brief-605's report (G13
-design round 4, evidence reproduced by the director). **Next: the director's
-review of round 4** (`.temp/brief-605/design.md` and drafts 606-609), deciding
-its two open questions, then the implementation briefs (Codex first, by user
-ruling; GLM only if the content filter fires); then E2's design. Long-running
+Status checkpoint: 2026-10-14, committed tree through brief-606's dispatch.
+Round 4 (605) is reviewed: accepted except its atomic 528-file conversion and
+its transit record. **brief-606 (round 5, Codex forked from 605's session)**
+re-plans the sequence as type-then-flip and drafts every step; then the
+implementation briefs (Codex first, by user ruling; GLM only if the content
+filter fires); then E2's design. Long-running
 briefs use `gpt-6-astra` max by user ruling (2026-10-13: `gpt-6.1-sol` hit
 capacity errors mid-run); the dispatcher pins no model, `~/.codex/config.toml`
 decides. `CDX_FORK=<session id>` continues an earlier Codex session (round 4
@@ -845,8 +846,36 @@ dormant declarations (28 files), 607 the compatible Legacy/Typed driver (470),
 Director gate: the 28 ordinary-value witnesses and all 16 raw AST/flow tables
 reproduce byte-identically; frame implementations 623 and production macro
 sites 600 reconcile exactly against an independent scan (the two extra hits
-are in-crate `tests.rs`). Open for the review: 608's atomic width against
-decomposition with named bridges, and the transit record and test observer.
+are in-crate `tests.rs`). **Director review:** accepted except two points.
+(1) The atomic conversion is replaced by *type-then-flip*: a per-type
+transport mode on the sealed codec (existing encoded types stay `Value` until
+flipped, new carriers are `State` from birth, never both arms), so typing
+steps exchange only `Value` with legacy neighbours and need no edge proof;
+each lands green with its own A/B, then each type flips under its corpus. A
+missed frameless edge is caught at run time in either plan, so atomicity
+bought no detection and cost the per-step gate. (2) No transit record: a
+consumer's input was a Rust local before G13 too, and that is one instance of
+the gensym-roots class below. brief-606 re-plans on that basis.
+
+**Recorded, not in this branch — the gensym sweep does not see Rust-local
+values (found 2026-10-14 reviewing brief-605; queued behind the branch as Q3
+unless the user rules otherwise).** The sweep's roots
+(`scoping/gensym_gc.rs:9`, `:136`) are Session fields, module activations, the
+sweeping Module's own outcome and suspension frames. A value a builtin holds
+only in a Rust accumulator across guest evaluation is not a root, so a sweep
+triggered inside that evaluation clears the definitions of gensyms the value
+still references. Director probe (debug `rum-cli`, ordinary path, no
+suspension): `Map[ReleaseHold, Table[Module[{x}, x = i; Hold[x]], {i, 4}]]`
+gives `{1, 2, 3, 4}` by default and `{x$1, x$2, x$3, 4}` with
+`RUM_GENSYM_GC_THRESHOLD=1`. At the default threshold (200 000 candidates) it
+needs a long-lived session; a single CLI request stops at the 100 000
+iteration limit first, so default-threshold reachability is not demonstrated.
+A suspension frame's input during its guest evaluation is one instance. This
+is the retention line's shape (a Rust local invisible to the Session) on the
+roots side; design it as a class, not per site.
+Also observed: `ReleaseHold` is `HoldAll` here (documented), so
+`s = Hold[1 + 1]; ReleaseHold[s]` returns `Hold[1 + 1]`, unlike the
+WL-inherited behaviour; ask the user whether that divergence is intended.
 
 **Recorded, not in this branch:** `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime

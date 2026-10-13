@@ -229,10 +229,11 @@ Consequences for how I present and pick work:
   leniently or by panic. 598-599 closed E1: all 438 declared entries have an
   executed descriptor in both builds and the owed ledger is gone. G13's design
   took four rounds (600-605: two by GLM, each rejected by a Codex review, then
-  Codex designing against its own review in a forked session). **Now: my
-  review of round 4** (four drafts 606-609, the widest an atomic 528-file
-  conversion); then its repair, and E2 (a may-suspend result type with no
-  `Try`).
+  Codex designing against its own review in a forked session). Round 4 is
+  accepted except its atomic 528-file conversion, replaced by type-then-flip
+  (a per-type transport mode, so typing steps stay `Value`-compatible and
+  each lands green). **Now: brief-606, round 5 re-plans the sequence**; then
+  the repair, and E2 (a may-suspend result type with no `Try`).
   Runs are serial by user ruling. Memory `suspension-continuation-branch.md`.
 
   **Four things from it are method, not history.**
