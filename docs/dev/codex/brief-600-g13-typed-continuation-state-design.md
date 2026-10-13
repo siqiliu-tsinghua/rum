@@ -55,6 +55,33 @@ type with no `Try`) is part of the design.
   `suspension/primitive.rs:51` (a `debug_assert`; release would return `1` —
   inferred, not run).
 
+## Resume — a previous run's checkpoint exists
+
+The first run (Codex) was stopped by an upstream content filter at ~298k
+tokens, mid-way through section 1; its log is
+`.temp/logs/cdx_brief_600.filter-1.log`. This run continues it. What it left:
+
+- `.temp/brief-600/PROGRESS.md` — counters and the exact next action.
+- Inventory drafts under `.temp/brief-600/` (`counts.json`, `decoders.tsv`,
+  `decode-sites.tsv`, `encoders.tsv`, `completion-sites.tsv`,
+  `slot-producers.tsv`, `verified-slot-edges.tsv`, `reachability.tsv`,
+  `internal-heads.tsv`, `marker-corpus.tsv`, `falsifier-descriptors.tsv`,
+  `queue-producer-edges.tsv`, …) and the scripts that built them
+  (`inventory_base.py`, `inventory_tables.py`, `producer_tables.py`,
+  `queue_edges.py`, `behavior.py`, and raw `ast-*.tsv` exports, some of them
+  megabytes — query them with scripts, do not read them whole).
+- `witnesses.tsv`: 15 executed observations, 6 equal controls and 9
+  divergences, none panicking. The scratch test
+  `crates/rum-stdlib/tests/zz_brief600_probe.rs` is still in place (a copy is
+  at `.temp/brief-600/probe-run1-snapshot.rs`); keep using it and delete it
+  before appending the report, as Scope says.
+
+These are drafts from an interrupted run: **verify before relying on them**
+(spot-check counts and verdicts against source), then finish sections 1-7.
+Its census counted 564 `SuspensionFrame` and 59 `PureFrameFinalizer`
+implementors, 25 `ContinuationValue` impls, 134 decoder bodies, 643 decode
+sites and 206 internal heads (203 continuation markers).
+
 ## What the design must settle
 
 1. **Inventory.** Every encoder/decoder pair and every decode site, with its
