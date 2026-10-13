@@ -74,11 +74,10 @@ marked.
 - `crates/rum-runtime/src/runtime/tests/frame_root_trace.rs`
 - `crates/rum-runtime/src/runtime/tests/frame_root_trace/derived_inventory.rs`
 - `crates/rum-runtime/src/runtime/tests/mod.rs`
-- `crates/rum-runtime/src/runtime/tests/typed_slots.rs` (new)
-- `crates/rum-runtime/src/runtime/tests/typed_slots/accounting.rs` (new)
-- `crates/rum-runtime/src/runtime/tests/typed_slots/composition.rs` (new)
-- `crates/rum-runtime/src/runtime/tests/typed_slots/faults.rs` (new)
-- `crates/rum-runtime/src/runtime/tests/typed_slots/registry.rs` (new)
+- `crates/rum-runtime/src/runtime/suspension/typed/tests.rs` and any new
+  file under `crates/rum-runtime/src/runtime/suspension/typed/tests/`
+  (redispatch 5: the typed unit tests live here; the earlier
+  `runtime/tests/typed_slots*` paths must not remain)
 - `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger.rs` (added at redispatch 2)
 - `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/ownership.rs` (added at redispatch 2)
 - `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/tests.rs` (added at redispatch 2)
@@ -101,7 +100,8 @@ marked.
 - `crates/rum-stdlib/tests/suspension_oracle/inventory/typed-slot-stages.tsv` (new)
 - `crates/rum-stdlib/tests/typed_slot_census.rs` (new)
 - `crates/rum-stdlib/tests/typed_slot_census/classify.rs` (new)
-- `crates/rum-stdlib/tests/typed_slot_census/scan.rs` (new)
+- `crates/rum-stdlib/tests/typed_slot_census/scan.rs` (new), and any new file
+  under `crates/rum-stdlib/tests/typed_slot_census/` (added at redispatch 5)
 - `crates/rum-stdlib/tests/typed_slot_compile_controls.rs` (new)
 
 Manifests, `Cargo.lock`, the toolchain, docs, `AGENTS.md`, `TODO.md` and the
@@ -1475,3 +1475,603 @@ counts reproduce: 11 `SuspensionFrame` + 5 `PureFrameFinalizer` impls and
    census, both forced reds, the ownership/derive replay on the final tree,
    both certificate sets, fingerprints, `cargo fmt`, and every gate in the
    Verification list. Append a new `## Execution report` after this section.
+
+
+## Execution report — redispatch 4: census earned; ownership module-path scope stop
+
+The amended census is green in both configurations, with both required forced
+reds observed. **S1 remains incomplete:** the final ownership replay fails on
+six source-loader rows, and the necessary general module-path fix is outside
+the purpose restriction of the redispatch-3 scope amendment. No loader fix or
+inventory admission was made. This is not an all-gates-green handoff.
+
+The precise required edit is
+`crates/rum-stdlib/src/tests/ownership_graph/source.rs:243`: normalize joined
+module paths before comparing them with canonical file keys. Currently
+`runtime/suspension/../tests/typed_slots.rs` is compared literally with
+`runtime/tests/typed_slots.rs`. Rust resolves that path; the ownership loader
+does not. A regression fixture belongs next to the existing path-resolution
+fixture at `crates/rum-stdlib/src/tests/ownership_graph/fixtures.rs:299`.
+
+The scope amendment authorizes ownership-module Rust edits **“for that rule
+and its falsifiers only”**, meaning the computed generic adapter witness rule.
+General module-path normalization and its discovery fixture need an explicit
+scope extension. Six new unresolved-source rows would conceal a known loader
+gap rather than repair it; they were not added to an inventory. The proposed
+fix is concrete but **unapplied and untested**:
+[proposed-module-normalization.patch](../../../.temp/brief-607/redispatch-4/proposed-module-normalization.patch).
+The production loader and fixture source files have not changed in this
+redispatch. Its existing adapter-rule changes from prior dispatches remain.
+
+### 1. Files changed and dormant audit
+
+The final hash/scope audit reports 47 changed/new crate files against the
+original redispatch-1 baseline, no removals and no out-of-scope edits. Eleven
+files changed during this redispatch: the three census files and its receipt
+inventory; formatting in the five typed unit files, the compiler-control
+harness and the cfg(test) prepared-state helper in eval_call_prepare.rs.
+This brief and scratch evidence are the other writes. Prior baseline and
+reports remain intact.
+
+| File | Change |
+| --- | --- |
+| `crates/rum-runtime/src/runtime/debug_tools/mod.rs` | Runtime-visible test_report module path only (line 14). |
+| `crates/rum-runtime/src/runtime/debug_tools/test_report.rs` | Runtime-visible EvalCapturedOutcome re-export only (line 10). |
+| `crates/rum-runtime/src/runtime/debug_tools/test_report/model.rs` | Runtime-visible EvalCapturedOutcome declaration only (line 29); fields unchanged. |
+| `crates/rum-runtime/src/runtime/definitions/application/mod.rs` | Runtime-visible ReplaceAllTraversalOutcome re-export (line 8); formatter reflow. |
+| `crates/rum-runtime/src/runtime/definitions/application/replace_all.rs` | Runtime-visible ReplaceAllTraversalOutcome declaration only (line 13). |
+| `crates/rum-runtime/src/runtime/eval_call_prepare.rs` | 17 | `::<PreparedCallArguments as >::into_continuation_expr` |
+| `crates/rum-runtime/src/runtime/kernel_api.rs` | Re-export the nine S1 public items. |
+| `crates/rum-runtime/src/runtime/kernel_data/rewrite_data.rs` | Runtime-visible DeleteCasesOutcome declaration only (line 23). |
+| `crates/rum-runtime/src/runtime/kernel_data/structure_data/mod.rs` | Runtime-visible replace module only (line 5). |
+| `crates/rum-runtime/src/runtime/kernel_data/structure_data/replace.rs` | Runtime-visible ReplacePartTarget declaration only (line 51); fields unchanged. |
+| `crates/rum-runtime/src/runtime/suspension.rs` | Private typed module and nine-item public re-export. |
+| `crates/rum-runtime/src/runtime/suspension/typed.rs` | 45 | `::TypedFrame::output_boundary` |
+| `crates/rum-runtime/src/runtime/suspension/typed/action.rs` | 56 | `::<TypedAction < O > as >::finish_work` |
+| `crates/rum-runtime/src/runtime/suspension/typed/adapter.rs` | 61 | `::erase` |
+| `crates/rum-runtime/src/runtime/suspension/typed/chain.rs` | 12 | `::start` |
+| `crates/rum-runtime/src/runtime/suspension/typed/channel.rs` | 48 | `::encode` |
+| `crates/rum-runtime/src/runtime/suspension/typed/legacy.rs` | 21 pure delegations to existing wire codecs, including approved fallible prepared decoder. |
+| `crates/rum-runtime/src/runtime/suspension/typed/registry.rs` | Expr=Value; 21 existing types=Legacy; dormant exact state variants/providers. |
+| `crates/rum-runtime/src/runtime/suspension/typed/resume_token.rs` | Invariant lifetime/type token with no Arc, constructor, Clone or Copy. |
+| `crates/rum-runtime/src/runtime/suspension/typed/witness.rs` | 10 | `::slot_witness` |
+| `crates/rum-runtime/src/runtime/tests/frame_root_trace/derived_inventory.rs` | Add only suspension/typed/adapter.rs:TypedAdapter to the closed derive array. |
+| `crates/rum-runtime/src/runtime/tests/typed_slots.rs` | Test-only frame/finalizer support and unit modules. |
+| `crates/rum-runtime/src/runtime/tests/typed_slots/accounting.rs` | Root/capture-boundary delegation without executing a frame. |
+| `crates/rum-runtime/src/runtime/tests/typed_slots/composition.rs` | Dormant composition, typed finalization and stopped deferred work. |
+| `crates/rum-runtime/src/runtime/tests/typed_slots/faults.rs` | Wrong channel/variant rejection and error forwarding before user resume. |
+| `crates/rum-runtime/src/runtime/tests/typed_slots/registry.rs` | Mode equality for all 22 registrations; actual prepared-state roundtrips/finalizer equality; leniency. |
+| `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger.rs` | Wire the new adapter witness module. |
+| `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/adapters.rs` | Computed private-trait/single-bound/owned-parameter rule; concrete paths supersede interim witnesses. |
+| `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/ownership.rs` | Try the new rule after existing concrete attribution; share the existing expression-path proof. |
+| `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/tests.rs` | Three required falsifiers, additional-impl-bound rejection, and computed production witnesses. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payload_ledger.tsv` | Append seven approved PublicInput and three computed Unbounded entries; preserve all 65 old rows byte-for-byte. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payloads.tsv` | Replay discovered positions and new scaffold constructs; exact changes in ownership-discovery-diff.tsv. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/self_reaching.tsv` | Replay discovered positions and new scaffold constructs; exact changes in ownership-discovery-diff.tsv. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv` | Replay discovered positions and new scaffold constructs; exact changes in ownership-discovery-diff.tsv. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv` | Replay discovered positions and new scaffold constructs; exact changes in ownership-discovery-diff.tsv. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv` | Replay discovered positions and new scaffold constructs; exact changes in ownership-discovery-diff.tsv. |
+| `crates/rum-stdlib/src/tests/ownership_graph/model.rs` | Retain impl generics, polarity and conditionality for the narrow adapter proof. |
+| `crates/rum-stdlib/src/tests/ownership_graph/source.rs` | Fixture loader accepting explicit crate roots, used by the concrete-Expr falsifier. |
+| `crates/rum-stdlib/src/tests/ownership_graph/source_items.rs` | Collect those implementation facts from the actual impl AST. |
+| `crates/rum-stdlib/tests/suspension_oracle/fixtures/mod.rs` | Declare the static typed_slots stage-selection module. |
+| `crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs` | S1/no-flip selection in source; no environment-selected gate. |
+| `crates/rum-stdlib/tests/suspension_oracle/inventory/typed-slot-shapes.tsv` | 67 planned slot rows copied from the immutable mode plan; no new carrier registered. |
+| `crates/rum-stdlib/tests/suspension_oracle/inventory/typed-slot-stages.tsv` | Earned S1 source receipts for all 1,399 partition rows with unchanged owners; cfg-derived populations; 134 decoders, explicit test users and whole/nested decoder-use anchors. |
+| `crates/rum-stdlib/tests/typed_slot_census.rs` | Two-cohort baseline gate, exact source/owner/population reconciliation, indexed receipt lookup, source evidence outputs, S54 prerequisite, and both exercised scratch-copy falsifiers. |
+| `crates/rum-stdlib/tests/typed_slot_census/classify.rs` | Canonical trait/type and free-function visibility resolution; associated inputs/outputs/modes; call edges and conservative wire-provider closure with unresolved calls retained. |
+| `crates/rum-stdlib/tests/typed_slot_census/scan.rs` | Actual module/cfg walk with separate ordinary tests; AST definitions, default bodies, paths, calls, references, patterns, macro arguments and heads; explicit opaque/unreachable cases. Resolver projection is private census input, not an ownership collector change. |
+| `crates/rum-stdlib/tests/typed_slot_compile_controls.rs` | All 22 paired controls; scratch-only runtime mutations; raw Cargo JSON/code/primary-span checks. |
+
+Formatting passed. The new census test modules are 28,330 characters for the
+gate/report driver, 29,083 for the module/AST walker, and 14,228 for resolution;
+the compiler-control harness is 15,825. The two larger test modules need a
+future split between report emission and receipt verification, and between
+module discovery/projection and AST site visitation. They stay within the
+three named census files for this scoped step; no additional module was
+created outside Scope. The inherited 11,307-character production registry
+keeps its explicit 21-type strategy/variant registrations together. Existing
+large production owners have only visibility changes or the dormant prepared
+helper; moving their evaluation bodies was not part of S1.
+
+The bounded AST body audit succeeded:
+
+```text
+DORMANT AUDIT: 58 old production function bodies byte-identical; 109 new dormant bodies. cfg(test) bodies excluded. TypedAdapter's generated trace implementation is additionally dormant.
+```
+
+Every previously existing production function in the changed files retains
+its exact body bytes; other production files retain their baseline hashes.
+The only new production bodies are listed below. **Each is off the live
+path:** no existing evaluator/matcher/traversal/block/selector caller invokes
+the typed API or its providers, and no typed frame enters the queue in S1.
+The prepared encoder is reached only by the dormant provider. Generated
+`TypedAdapter::trace_roots` likewise has no production adapter instance.
+There is no live driver change, frame conversion, typed insertion method,
+exported typed suspension macro, or placeholder suspension stub. No
+performance measurement ran under the brief's unchanged-body exemption.
+
+The eight visibility-only sites are unchanged from the prior report:
+`debug_tools/mod.rs:14`, `debug_tools/test_report.rs:10`,
+`debug_tools/test_report/model.rs:29`, `definitions/application/mod.rs:8`,
+`definitions/application/replace_all.rs:13`, `kernel_data/rewrite_data.rs:23`,
+`kernel_data/structure_data/mod.rs:5`, and
+`kernel_data/structure_data/replace.rs:51` (all under runtime/). These raise
+only the registered type/re-export/module to pub(in crate::runtime); no field
+visibility changed.
+
+All 109 handwritten new production bodies, with exact current locations:
+
+```text
+crates/rum-runtime/src/runtime/eval_call_prepare.rs:17	::<PreparedCallArguments as >::into_continuation_expr
+crates/rum-runtime/src/runtime/suspension/typed.rs:45	::TypedFrame::output_boundary
+crates/rum-runtime/src/runtime/suspension/typed/action.rs:70	::<ResumeStop < O > as >::failure
+crates/rum-runtime/src/runtime/suspension/typed/action.rs:29	::<TypedAction < O > as >::complete
+crates/rum-runtime/src/runtime/suspension/typed/action.rs:36	::<TypedAction < O > as >::evaluate
+crates/rum-runtime/src/runtime/suspension/typed/action.rs:46	::<TypedAction < O > as >::finalize
+crates/rum-runtime/src/runtime/suspension/typed/action.rs:56	::<TypedAction < O > as >::finish_work
+crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:70	::<FinalizerAdapter < F > as ErasedFinalizer>::finish
+crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:56	::<TypedAdapter < F > as ErasedFrame>::output_boundary
+crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:38	::<TypedAdapter < F > as ErasedFrame>::resume
+crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:28	::<TypedAdapter < F > as FrameAbandon>::abandon
+crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:61	::erase
+crates/rum-runtime/src/runtime/suspension/typed/chain.rs:20	::<FrameChain < I , O > as >::then
+crates/rum-runtime/src/runtime/suspension/typed/chain.rs:12	::start
+crates/rum-runtime/src/runtime/suspension/typed/channel.rs:9	::<CodecKey as >::new
+crates/rum-runtime/src/runtime/suspension/typed/channel.rs:91	::<LegacyMode as Transport < T >>::decode
+crates/rum-runtime/src/runtime/suspension/typed/channel.rs:88	::<LegacyMode as Transport < T >>::encode
+crates/rum-runtime/src/runtime/suspension/typed/channel.rs:103	::<StateMode as Transport < T >>::decode
+crates/rum-runtime/src/runtime/suspension/typed/channel.rs:100	::<StateMode as Transport < T >>::encode
+crates/rum-runtime/src/runtime/suspension/typed/channel.rs:79	::<ValueMode as Transport < Expr >>::decode
+crates/rum-runtime/src/runtime/suspension/typed/channel.rs:76	::<ValueMode as Transport < Expr >>::encode
+crates/rum-runtime/src/runtime/suspension/typed/channel.rs:52	::decode
+crates/rum-runtime/src/runtime/suspension/typed/channel.rs:48	::encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:109	::<CasesCollectionOutcome as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:106	::<CasesCollectionOutcome as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:91	::<CasesTraversalResolution as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:88	::<CasesTraversalResolution as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:82	::<CompiledMatchOutcome as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:79	::<CompiledMatchOutcome as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:127	::<DeleteCasesOutcome as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:124	::<DeleteCasesOutcome as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:172	::<EvalCapturedOutcome as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:169	::<EvalCapturedOutcome as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:190	::<EvaluatedPartSelectors as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:187	::<EvaluatedPartSelectors as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:55	::<Option < CasesLevelSpec > as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:52	::<Option < CasesLevelSpec > as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:10	::<Option < Expr > as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:7	::<Option < Expr > as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:37	::<Option < Vec < Expr > > as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:34	::<Option < Vec < Expr > > as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:46	::<Option < Vec < RewriteRuleInfo > > as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:43	::<Option < Vec < RewriteRuleInfo > > as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:118	::<PositionCollectionOutcome as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:115	::<PositionCollectionOutcome as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:181	::<PreparedCallArguments as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:178	::<PreparedCallArguments as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:154	::<ReplaceAllTraversalOutcome as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:151	::<ReplaceAllTraversalOutcome as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:145	::<ReplaceOutcome as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:142	::<ReplaceOutcome as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:73	::<String as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:70	::<String as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:136	::<TraversalCountOutcome as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:133	::<TraversalCountOutcome as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:100	::<TraversalWithoutLimitResolution as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:97	::<TraversalWithoutLimitResolution as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:19	::<Vec < Expr > as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:16	::<Vec < Expr > as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:163	::<Vec < ReplacePartTarget > as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:160	::<Vec < ReplacePartTarget > as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:28	::<Vec < SymbolExprMap > as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:25	::<Vec < SymbolExprMap > as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:64	::<bool as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:61	::<bool as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:205	::<CasesCollectionOutcome as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:208	::<CasesCollectionOutcome as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:173	::<CasesTraversalResolution as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:176	::<CasesTraversalResolution as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:157	::<CompiledMatchOutcome as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:160	::<CompiledMatchOutcome as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:237	::<DeleteCasesOutcome as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:240	::<DeleteCasesOutcome as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:317	::<EvalCapturedOutcome as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:320	::<EvalCapturedOutcome as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:349	::<EvaluatedPartSelectors as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:352	::<EvaluatedPartSelectors as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:109	::<Option < CasesLevelSpec > as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:112	::<Option < CasesLevelSpec > as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:29	::<Option < Expr > as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:32	::<Option < Expr > as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:77	::<Option < Vec < Expr > > as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:80	::<Option < Vec < Expr > > as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:93	::<Option < Vec < RewriteRuleInfo > > as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:96	::<Option < Vec < RewriteRuleInfo > > as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:221	::<PositionCollectionOutcome as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:224	::<PositionCollectionOutcome as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:333	::<PreparedCallArguments as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:336	::<PreparedCallArguments as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:285	::<ReplaceAllTraversalOutcome as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:288	::<ReplaceAllTraversalOutcome as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:269	::<ReplaceOutcome as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:272	::<ReplaceOutcome as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:141	::<String as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:144	::<String as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:253	::<TraversalCountOutcome as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:256	::<TraversalCountOutcome as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:189	::<TraversalWithoutLimitResolution as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:192	::<TraversalWithoutLimitResolution as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:45	::<Vec < Expr > as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:48	::<Vec < Expr > as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:301	::<Vec < ReplacePartTarget > as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:304	::<Vec < ReplacePartTarget > as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:61	::<Vec < SymbolExprMap > as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:64	::<Vec < SymbolExprMap > as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:125	::<bool as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:128	::<bool as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/witness.rs:15	::<SlotWitness < I > as >::chain
+crates/rum-runtime/src/runtime/suspension/typed/witness.rs:10	::slot_witness
+```
+
+Full audit artifacts: [scope](../../../.temp/brief-607/redispatch-4/scope-audit.txt),
+[files](../../../.temp/brief-607/redispatch-4/files-changed.tsv),
+[body audit](../../../.temp/brief-607/redispatch-4/function-body-audit.tsv).
+
+### 2. Public API, modes and registrations
+
+The public S1 list remains exactly `SlotValue`, `TypedFrame`, `SlotFinalizer`,
+`TypedAction`, `SlotWitness`, `slot_witness`, `FrameChain`, `ContinueToken`, and
+`ResumeStop`, re-exported through suspension and kernel_api. TypedAction has
+complete/evaluate/finalize/finish_work; the witness comes from an actual
+Result, chains require an initial witness and typed adjacency, and the
+adapter-minted token is invariant, lifetime-scoped, non-Clone/non-Copy and
+contains no Arc. The erased channel/actions/adapters/key stay private.
+
+Expr alone uses ValueMode. Each sealed Codec declares one associated mode;
+central keyed free functions choose the channel arm. LegacyMode accepts only
+Value and gives the old provider an Expr. StateMode accepts only State and
+the exact variant. State providers receive ContinuationState, never Slot.
+The approved prepared decoder rejection remains Err(Slot::Value). No frame
+can select a mode and no codec can override central encode/decode.
+
+The 21 S1 Legacy registrations remain Option<Expr>, Vec<Expr>,
+Vec<SymbolExprMap>, Option<Vec<Expr>>, Option<Vec<RewriteRuleInfo>>,
+Option<CasesLevelSpec>, bool, String, CompiledMatchOutcome,
+CasesTraversalResolution, TraversalWithoutLimitResolution,
+CasesCollectionOutcome, PositionCollectionOutcome, DeleteCasesOutcome,
+TraversalCountOutcome, ReplaceOutcome, ReplaceAllTraversalOutcome,
+Vec<ReplacePartTarget>, EvalCapturedOutcome, PreparedCallArguments, and
+EvaluatedPartSelectors. The two PreparedInterpreted enums remain unregistered
+until S33; no new carrier was registered. Prior eight runtime units passed,
+including actual prepared states and exact existing-finalizer wire equality;
+no new unit rerun or workspace pass is claimed after this formatting pass.
+
+### 3. Compiler-control evidence and its limits
+
+The 22 pairs passed in both builds in redispatch 3. Those results and raw
+Cargo JSON remain available. **They were not rerun in redispatch 4 before the
+scope stop**, so the table is explicitly earlier checkpoint evidence, not
+current-tree verification. Formatting affected unit/harness source; a fresh
+mandatory run remains owed. Runtime-private negative edits stayed in scratch.
+
+| Pair | Earlier default / no-default positive | Rejection | Primary span at that checkpoint |
+| --- | --- | --- | --- |
+| first-chain-input | PASS / PASS | E0271 | `src/lib.rs:26:35` |
+| chain-adjacency | PASS / PASS | E0271 | `src/lib.rs:33:70` |
+| unbound-chain-constructor | PASS / PASS | E0599 | `src/lib.rs:39:41` |
+| evaluate-input | PASS / PASS | E0271 | `src/lib.rs:45:66` |
+| evaluate-output | PASS / PASS | E0271 | `src/lib.rs:51:66` |
+| finalizer-output | PASS / PASS | E0271 | `src/lib.rs:57:48` |
+| opaque-action | PASS / PASS | E0599 | `src/lib.rs:62:39` |
+| token-no-clone | PASS / PASS | E0599 | `src/lib.rs:68:18` |
+| token-no-mint | PASS / PASS | E0599 | `src/lib.rs:74:27` |
+| token-no-escape | PASS / PASS | lifetime category | `src/lib.rs:80:1` |
+| sealed-extension | PASS / PASS | E0277 | `src/lib.rs:86:20` |
+| codec-key-private | PASS / PASS | E0603 | `src/lib.rs:92:18` |
+| opaque-selector-pass | PASS / PASS | E0271 | `src/lib.rs:99:35` |
+| mode-not-frame-chosen | PASS / PASS | E0599 | `src/lib.rs:105:65` |
+| mode-private-selection | PASS / PASS | E0603 | `src/lib.rs:111:18` |
+| sibling-erased-private | PASS / PASS | E0603 | `crates/rum-runtime/src/runtime/mod.rs:131:47` |
+| mode-expr-fixed | PASS / PASS | E0277 | `crates/rum-runtime/src/runtime/suspension/typed/registry.rs:21:17` |
+| mode-new-state-only | PASS / PASS | E0277 | `crates/rum-runtime/src/runtime/suspension/typed.rs:61:40` |
+| mode-one-associated-type | PASS / PASS | E0201 | `crates/rum-runtime/src/runtime/suspension/typed/registry.rs:27:5` |
+| mode-no-codec-override | PASS / PASS | E0407 | `crates/rum-runtime/src/runtime/suspension/typed/registry.rs:27:5` |
+| mode-legacy-provider-narrow | PASS / PASS | E0053 | `crates/rum-runtime/src/runtime/suspension/typed.rs:69:19` |
+| mode-state-provider-narrow | PASS / PASS | E0053 | `crates/rum-runtime/src/runtime/suspension/typed.rs:74:15` |
+
+
+Token escape uses the compiler's lifetime category rather than an error code.
+The Expr-mode mutation also checks the related E0271 from the actual runtime
+mode-equality unit; the primary required diagnostic is E0277 at the mutated
+associated mode. All positive groups compiled before individual negatives.
+
+### 4. Census, exact receipts and both forced reds
+
+Both mandatory census configurations passed on the formatted tree. Their
+baseline output is:
+
+```text
+S1 CENSUS production frames=553 finalizers=54 implementations=607 typed=0 macros=589 result=345 insert=244
+S1 CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+S1 CENSUS test-support frames=4 finalizers=0 implementations=6 typed=2 macros=7 result=2 insert=5
+S1 PARTITION implementations=623 macros=600
+S1 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; production evaluation remains untyped
+```
+
+Every original partition owner was independently compared with all six
+immutable input tables: 623 F, 600 M, 62 C chains, 14 D deferred obligations,
+10 I routes, and 90 T transformations, totalling 1,399. The 16 F and 11 M
+rows in the test-only cohort all retain S33. Their population comes from the
+actual cfg module walk, not a file allowlist. The checked receipt adds 134
+separate decoder definition identities, 35 explicitly enumerated ordinary
+legacy test sites, 209 whole-slot records expanded to 321 actual pattern/helper
+sites, and all 434 nested decoder-use sites. No guessed Input/Output type was
+written for an old frame. Source positions, SHA256 and associated types/modes
+are emitted separately from the stable identities.
+
+The shared ownership resolver is reused as a lexical index. The census opens
+only frame-bearing test-module ancestry in a private in-memory projection;
+populations and locations always come from the original AST walk. Its path
+aliases do not edit or fix the ownership loader. The first broad projection
+timed out at 900 seconds; the narrowed discovery takes roughly 15–19 seconds.
+Decoder replay exposed and fixed hidden references inside immediate closures,
+inline Expr destructuring/helper decoding, and calls inside expression-list
+macros such as vec![decode(value)]. Opaque macro expansion, unknown receivers,
+aliases and function-pointer candidates remain explicit. S1 refuses preflip
+at the S54 prerequisite; **this is no zero-legacy or completed preflip proof**.
+The closure report retains unresolved calls and forbids evaluator/channel
+operations rather than declaring them pure from their directory.
+
+The final 23-type decoder-use report (same-name unresolved candidates are
+explicit candidates, not additional proved calls):
+
+```text
+slot	decoder_id	definition	population	registered_mode	resolved_uses	unresolved_same_name_candidates
+CasesCollectionOutcome	D110	rum_runtime::runtime::suspension::collections::<CasesCollectionOutcome as ContinuationValue>::from_continuation_expr	production	LegacyMode	1	31
+CasesTraversalResolution	D134	rum_runtime::runtime::suspension::traversal::<CasesTraversalResolution as ContinuationValue>::from_continuation_expr	production	LegacyMode	3	31
+CompiledMatchOutcome	D049	rum_runtime::runtime::pattern_matching::outcome::<CompiledMatchOutcome as ContinuationValue>::from_continuation_expr	production	LegacyMode	90	31
+DeleteCasesOutcome	D012	rum_runtime::runtime::kernel_data::rewrite_data::<DeleteCasesOutcome as ContinuationValue>::from_continuation_expr	production	LegacyMode	10	31
+EvalCapturedOutcome	D001	rum_runtime::runtime::debug_tools::test_report::evaluation::<EvalCapturedOutcome as ContinuationValue>::from_continuation_expr	production	LegacyMode	3	31
+EvaluatedPartSelectors	D011	rum_runtime::runtime::kernel_data::evaluated_part_selectors::<EvaluatedPartSelectors as inherent>::from_continuation_expr	production	LegacyMode	4	31
+Option<CasesLevelSpec>	D132	rum_runtime::runtime::suspension::traversal::<Option < CasesLevelSpec > as ContinuationValue>::from_continuation_expr	production	LegacyMode	1	31
+Option<Expr>	D125	rum_runtime::runtime::suspension::primitive::<Option < Expr > as ContinuationValue>::from_continuation_expr	production	LegacyMode	57	31
+Option<Vec<Expr>>	D128	rum_runtime::runtime::suspension::primitive::<Option < Vec < Expr > > as ContinuationValue>::from_continuation_expr	production	LegacyMode	13	31
+Option<Vec<RewriteRuleInfo>>	D130	rum_runtime::runtime::suspension::rewrite_rules::<Option < Vec < RewriteRuleInfo > > as ContinuationValue>::from_continuation_expr	production	LegacyMode	1	31
+PositionCollectionOutcome	D111	rum_runtime::runtime::suspension::collections::<PositionCollectionOutcome as ContinuationValue>::from_continuation_expr	production	LegacyMode	1	31
+PreparedCallArguments	D009	rum_runtime::runtime::eval_call_prepare::prepared_call_arguments_from_continuation_expr	production	LegacyMode	2	0
+PreparedInterpretedAlternative	D086	rum_runtime::runtime::pattern_matching_interpreted::decode_prepared_interpreted_alternative	test-only	unregistered until S33	1	0
+PreparedInterpretedCall	D085	rum_runtime::runtime::pattern_matching_interpreted::decode_prepared_interpreted_call	test-only	unregistered until S33	1	0
+ReplaceAllTraversalOutcome	D005	rum_runtime::runtime::definitions::application::replace_all::<ReplaceAllTraversalOutcome as ContinuationValue>::from_continuation_expr	production	LegacyMode	2	31
+ReplaceOutcome	D013	rum_runtime::runtime::kernel_data::rewrite_data::<ReplaceOutcome as ContinuationValue>::from_continuation_expr	production	LegacyMode	7	31
+String	D124	rum_runtime::runtime::suspension::primitive::<String as ContinuationValue>::from_continuation_expr	production	LegacyMode	7	31
+TraversalCountOutcome	D112	rum_runtime::runtime::suspension::collections::<TraversalCountOutcome as ContinuationValue>::from_continuation_expr	production	LegacyMode	1	31
+TraversalWithoutLimitResolution	D006	rum_runtime::runtime::definitions::definition_catalog::traversal_continuation::<TraversalWithoutLimitResolution as ContinuationValue>::from_continuation_expr	production	LegacyMode	1	31
+Vec<Expr>	D126	rum_runtime::runtime::suspension::primitive::<Vec < Expr > as ContinuationValue>::from_continuation_expr	production	LegacyMode	47	31
+Vec<ReplacePartTarget>	D026	rum_runtime::runtime::kernel_data::structure_data::replace::plan::<Vec < ReplacePartTarget > as ContinuationValue>::from_continuation_expr	production	LegacyMode	4	31
+Vec<SymbolExprMap>	D127	rum_runtime::runtime::suspension::primitive::<Vec < SymbolExprMap > as ContinuationValue>::from_continuation_expr	production	LegacyMode	17	31
+bool	D123	rum_runtime::runtime::suspension::primitive::<bool as ContinuationValue>::from_continuation_expr	production	LegacyMode	35	31
+```
+
+Both forced-red children ran in each configuration. The production deletion
+reduces the combined population to 622. Removing the actual cfg(test) guard
+moves S33 into production (623/600) and leaves the test-only cohort at 0/0;
+its combined population remains 623/600, so a sum-only gate would miss it.
+The parent requires each child's nonzero exit and the specific population
+failure. The deliberately ignored child test is explicitly invoked by these
+parents, never counted as an unexecuted falsifier.
+
+### Removed production implementation (default)
+
+```text
+
+running 1 test
+test forced_red_probe ... S1 CENSUS production frames=552 finalizers=54 implementations=606 typed=0 macros=589 result=345 insert=244
+S1 CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+S1 CENSUS test-support frames=4 finalizers=0 implementations=6 typed=2 macros=7 result=2 insert=5
+S1 PARTITION implementations=622 macros=600
+FAILED
+
+failures:
+
+failures:
+    forced_red_probe
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 18.82s
+
+census walk: 14783 functions, 297609 uses, 1472 module visits
+census resolver: 34615 scopes
+
+thread 'forced_red_probe' panicked at crates/rum-stdlib/tests/typed_slot_census.rs:864:31:
+called `Result::unwrap()` on an `Err` value: "S1 baseline requires production 607/589 and test-only 16/11; combined 623/600"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+```
+
+### Removed cfg(test) guard (default)
+
+```text
+
+running 1 test
+test forced_red_probe ... S1 CENSUS production frames=564 finalizers=59 implementations=623 typed=0 macros=600 result=348 insert=252
+S1 CENSUS test-only frames=0 finalizers=0 implementations=0 typed=0 macros=0 result=0 insert=0
+S1 CENSUS test-support frames=4 finalizers=0 implementations=6 typed=2 macros=7 result=2 insert=5
+S1 PARTITION implementations=623 macros=600
+FAILED
+
+failures:
+
+failures:
+    forced_red_probe
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 18.86s
+
+census walk: 14784 functions, 297628 uses, 1472 module visits
+census resolver: 34618 scopes
+
+thread 'forced_red_probe' panicked at crates/rum-stdlib/tests/typed_slot_census.rs:864:31:
+called `Result::unwrap()` on an `Err` value: "S1 baseline requires production 607/589 and test-only 16/11; combined 623/600"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+```
+
+
+No-default counterparts are in
+[no-default frame red](../../../.temp/brief-607/census/forced-red/no-default-frame.log)
+and [no-default guard red](../../../.temp/brief-607/census/forced-red/no-default-guard.log).
+Full source outputs, including whole/nested tables and unresolved sites, are
+under `.temp/brief-607/census/default/` and `no-default/`.
+
+### 5. Gates, inventory rows and certificates
+
+All Cargo/compiler commands ran serially with the mandatory bounded wrapper,
+offline environment, one Cargo job, one test thread and brief-607 TMPDIR.
+The read-only scratch AST audit used the same wrapper. No network, git,
+sub-agent, new unsafe, or production manifest/lockfile/toolchain edit occurred.
+The scratch audit has its own allowed manifest/lockfile.
+
+Verbatim result lines for every census/ownership attempt in this redispatch
+(the child failures inside passing full-target logs are the required reds):
+
+```text
+census-1.log
+
+
+census-2.log
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 14.85s
+
+census-3.log
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 14.83s
+
+census-4.log
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 15.00s
+
+census-5.log
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 15.75s
+
+census-default-1.log
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 14.73s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 14.62s
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 272.23s
+
+census-default-2.log
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 18.82s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 18.86s
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 133.51s
+
+census-no-default.log
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 18.72s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 18.91s
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 133.63s
+
+ownership-discovery.log
+test result: FAILED. 24 passed; 1 failed; 0 ignored; 0 measured; 1120 filtered out; finished in 67.54s
+```
+
+`cargo fmt --check` exited 0 with empty output. The mandatory gate state is:
+
+```text
+cargo fmt --check — PASS
+cargo test -p rum-stdlib --test typed_slot_compile_controls — NOT RERUN; prior default 22 pairs passed
+cargo test -p rum-stdlib --no-default-features --test typed_slot_compile_controls — NOT RERUN; prior no-default 22 pairs passed
+cargo test -p rum-stdlib --test typed_slot_census — PASS: 5 passed, 0 failed, 1 deliberately ignored child (explicitly executed by both falsifiers)
+cargo test -p rum-stdlib --no-default-features --test typed_slot_census — PASS: 5 passed, 0 failed, 1 deliberately ignored child (explicitly executed by both falsifiers)
+scripts/check-suspension-oracle.sh 1500 — NOT RUN
+cargo test -p rum-stdlib --lib ownership_graph — FAILED: 24 passed, 1 failed
+cargo test -p rum-stdlib --lib local_production_acceptance — NOT RUN
+cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance — NOT RUN
+cargo test --workspace --no-fail-fast — NOT RUN
+```
+
+The final derive/named-frame gate was not run. No native ZeroMQ test ran;
+there is no executed native skip or native pass to claim.
+
+The ownership ledger, its computed witnesses and all required adapter
+falsifiers passed. The exact self-reaching and host inventories passed:
+
+```text
+EXACT INVENTORY self-reaching types: 59 rows
+EXACT INVENTORY UnknownHostPayload: 75 rows
+```
+
+The only failing ownership check is the six unadmitted UnknownConstruct rows:
+
+```text
+UnknownConstruct	crates/rum-runtime/src/runtime/suspension/typed.rs	20	1	module typed_slots has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/tests/typed_slots.rs	1	1	source file is not reachable from a production or test module declaration
+UnknownConstruct	crates/rum-runtime/src/runtime/tests/typed_slots/accounting.rs	1	1	source file is not reachable from a production or test module declaration
+UnknownConstruct	crates/rum-runtime/src/runtime/tests/typed_slots/composition.rs	1	1	source file is not reachable from a production or test module declaration
+UnknownConstruct	crates/rum-runtime/src/runtime/tests/typed_slots/faults.rs	1	1	source file is not reachable from a production or test module declaration
+UnknownConstruct	crates/rum-runtime/src/runtime/tests/typed_slots/registry.rs	1	1	source file is not reachable from a production or test module declaration
+```
+
+All ownership inventory bytes are unchanged from redispatch 3. The earlier
+seven approved PublicInput and three computed Unbounded additions remain;
+all 65 original ledger rows, including 56–58, remain byte-identical. No debt
+was discharged or disposition strengthened. The six rows above were saved
+for review only. No contract fingerprint or certificate cell changed in this
+redispatch. Both retention TSVs are still byte-identical to the original
+baseline and stale relative to the source changes; both earned replays remain
+owed. The scratch fingerprint script was prepared but **not executed**.
+
+The sole new inventory change here is the census receipt TSV. Exact owner and
+population audit:
+[receipt-and-inventory-audit.txt](../../../.temp/brief-607/redispatch-4/receipt-and-inventory-audit.txt).
+Historical ownership row differences and added ledger text remain at the
+redispatch-3 links in the preceding report.
+
+### 6. Stop-loss, deviations and exact next action
+
+This is the explicit scope-purpose stop, not the two-attempt stop-loss.
+Consecutive no-progress attempts: 0. Discovery progressed from the initial
+timeout to both correct cohorts; receipt replay then identified missing
+closure references, inline uses and macro arguments (Whole4 → Whole52 →
+Whole75 → Whole127 → Nested26 → Nested417 → complete). The final census
+passes and both observed reds are concrete gate progress. The later ownership
+failure is a newly exposed module-path defect; it was not retried unchanged.
+
+After identifying this fence, no production/test source or inventory was
+edited. Only read-only source/body/receipt audits, the unapplied scratch
+proposal, checkpoint and this report were written. Formatting and the two
+cohort gates completed before the stop. No API/driver work was added in this
+redispatch. There was no rollback of the original baseline or unrelated user
+edits; the task changes remain uncommitted.
+
+The director's next decision is narrowly specified: authorize normalization
+of parent components in ownership_graph/source.rs and the corresponding
+module-discovery fixture in fixtures.rs, preserving cfg classification and
+all unrelated discovery rows. Then apply/review that fix, rerun ownership and
+derive checks, refresh all source fingerprints and both actually earned
+certificate sets, rerun both compiler-control configurations, the whole oracle
+and workspace, and append the final complete gate report. Current checkpoint:
+`.temp/brief-607/PROGRESS.md`; original baseline:
+`.temp/brief-607/redispatch-1/baseline/`.
+
+## Director amendment — redispatch 5
+
+The stop was correct, and the cause was the director's Scope: it placed the
+typed unit tests under `runtime/tests/typed_slots*`, while they need
+`suspension::typed`'s private items and so must be a child of that module.
+`#[path = "../tests/typed_slots.rs"]` reconciled the two, and the ownership
+loader does not follow `..`. The loader is not changed. It failed closed: it
+reported the six files instead of skipping them. And the layout it rejected is
+not one this project uses. `docs/code-organization-guidelines.md` puts a
+module's tests in a sibling `tests.rs`, and no `src/` tree in the workspace
+declares a module through a parent-directory path.
+
+1. **Move the typed unit tests** to `suspension/typed/tests.rs` (declared
+   `#[cfg(test)] mod tests;` in `suspension/typed.rs`, no `#[path]`) with its
+   behaviour-family children under `suspension/typed/tests/`. Delete the
+   `runtime/tests/typed_slots*` files. Prove identity: the test-name set
+   before and after is equal modulo the module-path prefix (`cargo test -p
+   rum-runtime --lib -- --list` both sides, diffed). The census must still
+   class these files as test support.
+2. **Split the census now, not later.** `typed_slot_census.rs` (28 k) and
+   `typed_slot_census/scan.rs` (29 k) are past the test-file warning range,
+   and the census grows at every later step. Split them along the lines your
+   report names: report emission vs receipt verification, and module
+   discovery/projection vs AST site visitation. New files under
+   `typed_slot_census/` are in Scope. Same test-name identity proof.
+3. Then finish: ownership and derive replay on the final tree (the six rows
+   must vanish, not be admitted), fingerprints, both earned certificate
+   sets, both compile-control configurations rerun, both census
+   configurations with both forced reds, the oracle, and the workspace.
+   Append a new `## Execution report` after this section.
