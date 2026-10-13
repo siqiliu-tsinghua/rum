@@ -12,6 +12,20 @@ pub(super) struct PreparedCallArguments {
     pub(super) unevaluated_restore: Option<Box<UnevaluatedRestorePlan>>,
 }
 
+impl PreparedCallArguments {
+    // Dormant typed-slot provider. Reuse the existing suspended wire encoder.
+    pub(in crate::runtime) fn into_continuation_expr(self) -> Expr {
+        finish_suspended_prepared_call(SuspendedPreparedCallArguments {
+            evaluated_args: PreparedArgumentAccumulator::freeze(
+                self.evaluated_args.into_iter().collect(),
+            ),
+            unevaluated_restores: self
+                .unevaluated_restore
+                .map(|restore| UnevaluatedRestoreAccumulator::freeze(restore.wrappers)),
+        })
+    }
+}
+
 #[derive(FrameRootTrace)]
 pub(super) struct UnevaluatedRestorePlan {
     pub(super) prepared_args: SharedArgs,
@@ -546,3 +560,18 @@ const _: fn() = || {
     assert_traces::<SuspendedCallArgumentPreparation>();
     assert_traces::<UnevaluatedRestorePlan>();
 };
+
+#[cfg(test)]
+pub(in crate::runtime) fn prepared_slot_finalizer_fixture(
+    prepared: &PreparedCallArguments,
+) -> Expr {
+    finish_suspended_prepared_call(SuspendedPreparedCallArguments {
+        evaluated_args: PreparedArgumentAccumulator::freeze(
+            prepared.evaluated_args.iter().cloned().collect(),
+        ),
+        unevaluated_restores: prepared
+            .unevaluated_restore
+            .as_ref()
+            .map(|restore| UnevaluatedRestoreAccumulator::freeze(restore.wrappers.clone())),
+    })
+}

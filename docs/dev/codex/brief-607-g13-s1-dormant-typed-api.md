@@ -2075,3 +2075,713 @@ declares a module through a parent-directory path.
    sets, both compile-control configurations rerun, both census
    configurations with both forced reds, the oracle, and the workspace.
    Append a new `## Execution report` after this section.
+
+## Execution report — S1 complete (redispatch 5)
+
+All mandatory gates passed on the final tree. The API remains dormant: no production frame, macro or live driver was converted. No git command, network access, sub-agent, unsafe addition, dependency/manifest/lockfile/toolchain edit or unrelated rollback occurred. Work remains uncommitted for the director.
+
+### 1. Files changed, layout identity and dormant audit
+
+The final baseline audit has 56 changed/new crate files, plus this report. No original baseline file was deleted. The five interim runtime/tests/typed_slots* files were removed as directed; the sibling suspension/typed/tests tree now owns that code. The ownership loader has no change from this redispatch, and the old normalization proposal remains unapplied.
+
+| File | Semantic or organizational change |
+| --- | --- |
+| `crates/rum-runtime/src/runtime/debug_tools/mod.rs` | Runtime-visible test_report module path only (line 14). |
+| `crates/rum-runtime/src/runtime/debug_tools/test_report/model.rs` | Runtime-visible EvalCapturedOutcome declaration only (line 29); fields unchanged. |
+| `crates/rum-runtime/src/runtime/debug_tools/test_report.rs` | Runtime-visible EvalCapturedOutcome re-export only (line 10). |
+| `crates/rum-runtime/src/runtime/definitions/application/mod.rs` | Runtime-visible ReplaceAllTraversalOutcome re-export (line 8); formatter reflow. |
+| `crates/rum-runtime/src/runtime/definitions/application/replace_all.rs` | Runtime-visible ReplaceAllTraversalOutcome declaration only (line 13). |
+| `crates/rum-runtime/src/runtime/eval_call_prepare.rs` | Dormant move-based prepared encoder using the existing wire finalizer; cfg(test) wire/state comparison helper. Existing evaluator bodies unchanged. |
+| `crates/rum-runtime/src/runtime/kernel_api.rs` | Re-export the nine S1 public items. |
+| `crates/rum-runtime/src/runtime/kernel_data/rewrite_data.rs` | Runtime-visible DeleteCasesOutcome declaration only (line 23). |
+| `crates/rum-runtime/src/runtime/kernel_data/structure_data/mod.rs` | Runtime-visible replace module only (line 5). |
+| `crates/rum-runtime/src/runtime/kernel_data/structure_data/replace.rs` | Runtime-visible ReplacePartTarget declaration only (line 51); fields unchanged. |
+| `crates/rum-runtime/src/runtime/suspension/typed/action.rs` | Opaque output-typed complete/evaluate/finalize/finish_work actions and ResumeStop::failure. |
+| `crates/rum-runtime/src/runtime/suspension/typed/adapter.rs` | Private erasure, root/abandon/boundary delegation, decode-before-resume and sole token mint. |
+| `crates/rum-runtime/src/runtime/suspension/typed/chain.rs` | Witnessed nonempty chain start, invariant typed adjacency and private erased storage. |
+| `crates/rum-runtime/src/runtime/suspension/typed/channel.rs` | Private keyed associated-mode strategies and central encode/decode; wrong-arm and exact-variant checks. |
+| `crates/rum-runtime/src/runtime/suspension/typed/legacy.rs` | 21 pure delegations to existing wire codecs, including approved fallible prepared decoder. |
+| `crates/rum-runtime/src/runtime/suspension/typed/registry.rs` | Expr=Value; 21 existing types=Legacy; dormant exact state variants/providers. |
+| `crates/rum-runtime/src/runtime/suspension/typed/resume_token.rs` | Invariant lifetime/type token with no Arc, constructor, Clone or Copy. |
+| `crates/rum-runtime/src/runtime/suspension/typed/tests/accounting.rs` | Root/capture-boundary delegation without executing a frame. Moved byte-for-byte. |
+| `crates/rum-runtime/src/runtime/suspension/typed/tests/composition.rs` | Dormant composition, typed finalization and stopped deferred work. Moved byte-for-byte. |
+| `crates/rum-runtime/src/runtime/suspension/typed/tests/faults.rs` | Wrong channel/variant rejection and error forwarding before user resume. Moved byte-for-byte. |
+| `crates/rum-runtime/src/runtime/suspension/typed/tests/registry.rs` | Mode equality for all 22 registrations; actual prepared-state roundtrips/finalizer equality; leniency. Moved byte-for-byte. |
+| `crates/rum-runtime/src/runtime/suspension/typed/tests/support.rs` | Shared Echo/Finish/echo fixtures moved into support; bodies unchanged, minimal test-only visibility. |
+| `crates/rum-runtime/src/runtime/suspension/typed/tests.rs` | Sibling test facade, behavior-family declarations and shared support imports. |
+| `crates/rum-runtime/src/runtime/suspension/typed/witness.rs` | Invariant zero-sized witness from an actual Result and bound chain start. |
+| `crates/rum-runtime/src/runtime/suspension/typed.rs` | SlotValue, TypedFrame and SlotFinalizer contracts; private modules and conventional cfg(test) mod tests. No driver integration. |
+| `crates/rum-runtime/src/runtime/suspension.rs` | Private typed module and nine-item public re-export. |
+| `crates/rum-runtime/src/runtime/tests/frame_root_trace/derived_inventory.rs` | Add only suspension/typed/adapter.rs:TypedAdapter to the closed derive array. |
+| `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/adapters.rs` | Computed private-trait/single-bound/owned-parameter rule; concrete paths supersede interim witnesses. |
+| `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/ownership.rs` | Try the new rule after existing concrete attribution; share the existing expression-path proof. |
+| `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/tests.rs` | Three required falsifiers, additional-impl-bound rejection, and computed production witnesses. |
+| `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger.rs` | Wire the new adapter witness module. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payload_ledger.tsv` | Append seven approved PublicInput and three computed Unbounded entries; preserve all 65 old rows byte-for-byte. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payloads.tsv` | Exact discovered rows/positions replayed; all row differences are in inventory-row-diff.patch. Unchanged during redispatch 5. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/self_reaching.tsv` | Exact discovered rows/positions replayed; all row differences are in inventory-row-diff.patch. Unchanged during redispatch 5. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv` | Exact discovered rows/positions replayed; all row differences are in inventory-row-diff.patch. Unchanged during redispatch 5. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv` | Exact discovered rows/positions replayed; all row differences are in inventory-row-diff.patch. Unchanged during redispatch 5. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv` | Exact discovered rows/positions replayed; all row differences are in inventory-row-diff.patch. Unchanged during redispatch 5. |
+| `crates/rum-stdlib/src/tests/ownership_graph/model.rs` | Retain impl generics, polarity and conditionality for the narrow adapter proof. |
+| `crates/rum-stdlib/src/tests/ownership_graph/source.rs` | Fixture loader accepting explicit crate roots, used by the concrete-Expr falsifier. |
+| `crates/rum-stdlib/src/tests/ownership_graph/source_items.rs` | Collect those implementation facts from the actual impl AST. |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv` | Refresh only 68 fingerprint cells; all first 18 fields unchanged. |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv` | Copy only four actually earned cells: C01/C02 in default/no-default builds. |
+| `crates/rum-stdlib/tests/suspension_oracle/fixtures/mod.rs` | Declare the static typed_slots stage-selection module. |
+| `crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs` | S1/no-flip selection in source; no environment-selected gate. |
+| `crates/rum-stdlib/tests/suspension_oracle/inventory/typed-slot-shapes.tsv` | 67 planned slot rows copied from the immutable mode plan; no new carrier registered. |
+| `crates/rum-stdlib/tests/suspension_oracle/inventory/typed-slot-stages.tsv` | S1 receipts retain all 1,399 partition owners; redispatch 5 only relocates X0023/X0024 test prefixes/paths. |
+| `crates/rum-stdlib/tests/typed_slot_census/classify.rs` | Canonical trait/type and free-function visibility resolution; associated inputs/outputs/modes; call edges and conservative wire-provider closure with unresolved calls retained. |
+| `crates/rum-stdlib/tests/typed_slot_census/discovery.rs` | Workspace/build selection and source resolution orchestration. |
+| `crates/rum-stdlib/tests/typed_slot_census/receipts.rs` | Receipt indexing, exact cohorts/owners/anchors and preflip acceptance/refusal. |
+| `crates/rum-stdlib/tests/typed_slot_census/reporting.rs` | Source hashes and deterministic census/decoder-use report emission. |
+| `crates/rum-stdlib/tests/typed_slot_census/scan/discovery.rs` | File/module discovery, cfg/test-support classification and Walker state. |
+| `crates/rum-stdlib/tests/typed_slot_census/scan/projection.rs` | Private resolver projection; original populations and source spans stay authoritative. |
+| `crates/rum-stdlib/tests/typed_slot_census/scan/sites.rs` | AST site visitation; one forwarding method calls the moved module-discovery body. |
+| `crates/rum-stdlib/tests/typed_slot_census/scan.rs` | Shared AST facts and scanner facade. |
+| `crates/rum-stdlib/tests/typed_slot_census.rs` | Test facade and bounded forced-red orchestration. |
+| `crates/rum-stdlib/tests/typed_slot_compile_controls.rs` | 22 compiler-control pairs with primary diagnostic code/category/span checks; companion diagnostic path follows the moved unit tests. |
+
+
+The eight visibility-only sites below runtime/ are debug_tools/mod.rs:14, debug_tools/test_report.rs:10, debug_tools/test_report/model.rs:29, definitions/application/mod.rs:8, definitions/application/replace_all.rs:13, kernel_data/rewrite_data.rs:23, kernel_data/structure_data/mod.rs:5 and kernel_data/structure_data/replace.rs:51. Visibility goes only to crate::runtime; no production field visibility changed. The seven ownership Rust files above implement the previously authorized adapter proof and falsifiers; all are byte-identical to this redispatch's entry.
+
+
+```text
+runtime: 1160 tests before = 1160 after; normalized diff empty
+typed cohort: 8 tests
+census: 6 tests before = 6 after; normalized diff empty
+All four moved behavior-family files byte-identical; old paths absent.
+Final runtime list after support extraction: 1160 tests; normalized diff empty.
+```
+
+
+```text
+SPLIT AUDIT: 77 pre-split function bodies byte-identical; one new Visit::visit_item_mod forwarding body. Runtime family files also byte-identical.
+```
+
+The identity evidence uses actual bounded cargo test -- --list runs on both sides. Only the typed::typed_slots to typed::tests prefix is normalized. The four behavior-family files are byte-identical. Shared fixtures moved to tests/support.rs to follow the documented support boundary and keep test tracing outside the unchanged production inventory scanner.
+
+The split map preceded edits. The census facade is 5,326 characters; scanner facade 2,713; module discovery 9,139; projection 5,284; AST visitation 13,023; report emission 10,195; receipt checks 12,205; classification 14,228; orchestration 1,656. All census modules are below the 15k preferred test threshold. The 15,830-character compiler harness retains its cohesive paired-fixture/diagnostic driver in the warning range; its next growth boundary is fixture construction versus runner/diagnostics. The 11,307-character registry retains the explicit 21-type mode/variant mappings together. Existing large production owners have visibility-only edits or the dormant prepared helper; their evaluation bodies were not split in S1.
+
+
+```text
+DORMANT AUDIT: 58 old production function bodies byte-identical; 109 new dormant bodies. cfg(test) bodies excluded. TypedAdapter's generated trace implementation is additionally dormant.
+```
+
+Every existing production body in touched files is byte-identical; other production files retain baseline hashes. All 109 new production bodies are listed below. Each belongs only to the dormant typed API, keyed strategies, legacy/state providers, or the new prepared wire encoder reached through its dormant provider. None is on a live evaluator/matcher/traversal/block/selector/queue path. Empty marker/Codec impls select the fixed mode; TypedAdapter's generated root-trace impl is also dormant. The brief's performance exemption applies: no allocation, instruction-slope or microbench measurement ran.
+
+
+```text
+crates/rum-runtime/src/runtime/eval_call_prepare.rs:17	::<PreparedCallArguments as >::into_continuation_expr
+crates/rum-runtime/src/runtime/suspension/typed/action.rs:70	::<ResumeStop < O > as >::failure
+crates/rum-runtime/src/runtime/suspension/typed/action.rs:29	::<TypedAction < O > as >::complete
+crates/rum-runtime/src/runtime/suspension/typed/action.rs:36	::<TypedAction < O > as >::evaluate
+crates/rum-runtime/src/runtime/suspension/typed/action.rs:46	::<TypedAction < O > as >::finalize
+crates/rum-runtime/src/runtime/suspension/typed/action.rs:56	::<TypedAction < O > as >::finish_work
+crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:70	::<FinalizerAdapter < F > as ErasedFinalizer>::finish
+crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:56	::<TypedAdapter < F > as ErasedFrame>::output_boundary
+crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:38	::<TypedAdapter < F > as ErasedFrame>::resume
+crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:28	::<TypedAdapter < F > as FrameAbandon>::abandon
+crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:61	::erase
+crates/rum-runtime/src/runtime/suspension/typed/chain.rs:20	::<FrameChain < I , O > as >::then
+crates/rum-runtime/src/runtime/suspension/typed/chain.rs:12	::start
+crates/rum-runtime/src/runtime/suspension/typed/channel.rs:9	::<CodecKey as >::new
+crates/rum-runtime/src/runtime/suspension/typed/channel.rs:91	::<LegacyMode as Transport < T >>::decode
+crates/rum-runtime/src/runtime/suspension/typed/channel.rs:88	::<LegacyMode as Transport < T >>::encode
+crates/rum-runtime/src/runtime/suspension/typed/channel.rs:103	::<StateMode as Transport < T >>::decode
+crates/rum-runtime/src/runtime/suspension/typed/channel.rs:100	::<StateMode as Transport < T >>::encode
+crates/rum-runtime/src/runtime/suspension/typed/channel.rs:79	::<ValueMode as Transport < Expr >>::decode
+crates/rum-runtime/src/runtime/suspension/typed/channel.rs:76	::<ValueMode as Transport < Expr >>::encode
+crates/rum-runtime/src/runtime/suspension/typed/channel.rs:52	::decode
+crates/rum-runtime/src/runtime/suspension/typed/channel.rs:48	::encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:109	::<CasesCollectionOutcome as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:106	::<CasesCollectionOutcome as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:91	::<CasesTraversalResolution as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:88	::<CasesTraversalResolution as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:82	::<CompiledMatchOutcome as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:79	::<CompiledMatchOutcome as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:127	::<DeleteCasesOutcome as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:124	::<DeleteCasesOutcome as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:172	::<EvalCapturedOutcome as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:169	::<EvalCapturedOutcome as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:190	::<EvaluatedPartSelectors as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:187	::<EvaluatedPartSelectors as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:55	::<Option < CasesLevelSpec > as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:52	::<Option < CasesLevelSpec > as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:10	::<Option < Expr > as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:7	::<Option < Expr > as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:37	::<Option < Vec < Expr > > as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:34	::<Option < Vec < Expr > > as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:46	::<Option < Vec < RewriteRuleInfo > > as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:43	::<Option < Vec < RewriteRuleInfo > > as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:118	::<PositionCollectionOutcome as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:115	::<PositionCollectionOutcome as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:181	::<PreparedCallArguments as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:178	::<PreparedCallArguments as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:154	::<ReplaceAllTraversalOutcome as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:151	::<ReplaceAllTraversalOutcome as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:145	::<ReplaceOutcome as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:142	::<ReplaceOutcome as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:73	::<String as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:70	::<String as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:136	::<TraversalCountOutcome as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:133	::<TraversalCountOutcome as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:100	::<TraversalWithoutLimitResolution as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:97	::<TraversalWithoutLimitResolution as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:19	::<Vec < Expr > as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:16	::<Vec < Expr > as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:163	::<Vec < ReplacePartTarget > as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:160	::<Vec < ReplacePartTarget > as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:28	::<Vec < SymbolExprMap > as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:25	::<Vec < SymbolExprMap > as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:64	::<bool as LegacyCodec>::old_decode
+crates/rum-runtime/src/runtime/suspension/typed/legacy.rs:61	::<bool as LegacyCodec>::old_encode
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:205	::<CasesCollectionOutcome as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:208	::<CasesCollectionOutcome as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:173	::<CasesTraversalResolution as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:176	::<CasesTraversalResolution as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:157	::<CompiledMatchOutcome as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:160	::<CompiledMatchOutcome as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:237	::<DeleteCasesOutcome as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:240	::<DeleteCasesOutcome as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:317	::<EvalCapturedOutcome as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:320	::<EvalCapturedOutcome as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:349	::<EvaluatedPartSelectors as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:352	::<EvaluatedPartSelectors as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:109	::<Option < CasesLevelSpec > as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:112	::<Option < CasesLevelSpec > as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:29	::<Option < Expr > as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:32	::<Option < Expr > as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:77	::<Option < Vec < Expr > > as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:80	::<Option < Vec < Expr > > as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:93	::<Option < Vec < RewriteRuleInfo > > as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:96	::<Option < Vec < RewriteRuleInfo > > as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:221	::<PositionCollectionOutcome as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:224	::<PositionCollectionOutcome as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:333	::<PreparedCallArguments as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:336	::<PreparedCallArguments as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:285	::<ReplaceAllTraversalOutcome as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:288	::<ReplaceAllTraversalOutcome as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:269	::<ReplaceOutcome as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:272	::<ReplaceOutcome as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:141	::<String as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:144	::<String as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:253	::<TraversalCountOutcome as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:256	::<TraversalCountOutcome as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:189	::<TraversalWithoutLimitResolution as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:192	::<TraversalWithoutLimitResolution as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:45	::<Vec < Expr > as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:48	::<Vec < Expr > as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:301	::<Vec < ReplacePartTarget > as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:304	::<Vec < ReplacePartTarget > as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:61	::<Vec < SymbolExprMap > as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:64	::<Vec < SymbolExprMap > as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:125	::<bool as StateCodec>::pack
+crates/rum-runtime/src/runtime/suspension/typed/registry.rs:128	::<bool as StateCodec>::unpack
+crates/rum-runtime/src/runtime/suspension/typed/witness.rs:15	::<SlotWitness < I > as >::chain
+crates/rum-runtime/src/runtime/suspension/typed/witness.rs:10	::slot_witness
+crates/rum-runtime/src/runtime/suspension/typed.rs:44	::TypedFrame::output_boundary
+```
+
+Final verification left all 1,456 source/inventory files byte-identical to the pre-workspace checkpoint: [final-source-audit.txt](../../../.temp/brief-607/redispatch-5/final-source-audit.txt).
+
+Full audits: [scope-audit.txt](../../../.temp/brief-607/redispatch-5/scope-audit.txt), [split-map.md](../../../.temp/brief-607/redispatch-5/split-map.md), [function-body-audit.tsv](../../../.temp/brief-607/redispatch-5/function-body-audit.tsv), [file-sizes.tsv](../../../.temp/brief-607/redispatch-5/file-sizes.tsv).
+
+### 2. Public API, modes and registrations
+
+The public S1 items are exactly SlotValue, TypedFrame, SlotFinalizer, TypedAction, SlotWitness, slot_witness, FrameChain, ContinueToken and ResumeStop, re-exported through suspension and kernel_api. TypedFrame does not inherit SuspensionFrame. TypedAction exposes complete/evaluate/finalize/finish_work; SlotWitness::chain requires a witness from an actual &Result; FrameChain::then checks adjacency. ResumeStop::failure preserves stopped work. ContinueToken is invariant, lifetime-scoped, non-Clone/non-Copy, holds no Arc and is minted only by the adapter. There is no insertion method, suspension stub, new macro or driver activation.
+
+Hidden Codec has one associated Mode; central keyed free encode/decode functions cannot be overridden. Expr alone uses ValueMode. LegacyMode accepts only Value and gives the old codec an Expr, retaining wire shape and leniency; the approved fallible prepared decoder preserves rejection as the original Value slot. StateMode accepts only State and the exact variant; providers receive ContinuationState, never Slot. Neither frames nor public callers choose modes.
+
+The 21 S1 Legacy registrations are:
+
+
+```text
+CasesCollectionOutcome
+CasesTraversalResolution
+CompiledMatchOutcome
+DeleteCasesOutcome
+EvalCapturedOutcome
+EvaluatedPartSelectors
+Option<CasesLevelSpec>
+Option<Expr>
+Option<Vec<Expr>>
+Option<Vec<RewriteRuleInfo>>
+PositionCollectionOutcome
+PreparedCallArguments
+ReplaceAllTraversalOutcome
+ReplaceOutcome
+String
+TraversalCountOutcome
+TraversalWithoutLimitResolution
+Vec<Expr>
+Vec<ReplacePartTarget>
+Vec<SymbolExprMap>
+bool
+```
+
+The two PreparedInterpreted enums remain unregistered until S33. No new carrier is registered. All eight typed units passed in the final workspace run, covering rejection before resume, channel/variant faults, root/output-boundary delegation, witnessed composition, deferred stopping, modes, prepared-state wire equality and leniency.
+
+### 3. Compiler controls
+
+All 22 pairs ran again on the final source in both configurations. Positive fixtures compile first; each negative introduces one intended invalidity. The harness requires the primary diagnostic code/category and exact file/line/column and rejects unrelated errors. Runtime-private mutations are scratch-only. The Expr-mode control also explicitly classifies the intended companion mode-equality diagnostic in the moved unit fixture.
+
+| Pair | Positive default / no-default | Rejection in both | Primary span in both |
+| --- | --- | --- | --- |
+| first-chain-input | PASS / PASS | E0271 | `src/lib.rs:26:35` |
+| chain-adjacency | PASS / PASS | E0271 | `src/lib.rs:33:70` |
+| unbound-chain-constructor | PASS / PASS | E0599 | `src/lib.rs:39:41` |
+| evaluate-input | PASS / PASS | E0271 | `src/lib.rs:45:66` |
+| evaluate-output | PASS / PASS | E0271 | `src/lib.rs:51:66` |
+| finalizer-output | PASS / PASS | E0271 | `src/lib.rs:57:48` |
+| opaque-action | PASS / PASS | E0599 | `src/lib.rs:62:39` |
+| token-no-clone | PASS / PASS | E0599 | `src/lib.rs:68:18` |
+| token-no-mint | PASS / PASS | E0599 | `src/lib.rs:74:27` |
+| token-no-escape | PASS / PASS | lifetime may not live long enough | `src/lib.rs:80:1` |
+| sealed-extension | PASS / PASS | E0277 | `src/lib.rs:86:20` |
+| codec-key-private | PASS / PASS | E0603 | `src/lib.rs:92:18` |
+| opaque-selector-pass | PASS / PASS | E0271 | `src/lib.rs:99:35` |
+| mode-not-frame-chosen | PASS / PASS | E0599 | `src/lib.rs:105:65` |
+| mode-private-selection | PASS / PASS | E0603 | `src/lib.rs:111:18` |
+| sibling-erased-private | PASS / PASS | E0603 | `crates/rum-runtime/src/runtime/mod.rs:131:47` |
+| mode-expr-fixed | PASS / PASS | E0277 | `crates/rum-runtime/src/runtime/suspension/typed/registry.rs:21:17` |
+| mode-new-state-only | PASS / PASS | E0277 | `crates/rum-runtime/src/runtime/suspension/typed.rs:60:40` |
+| mode-one-associated-type | PASS / PASS | E0201 | `crates/rum-runtime/src/runtime/suspension/typed/registry.rs:27:5` |
+| mode-no-codec-override | PASS / PASS | E0407 | `crates/rum-runtime/src/runtime/suspension/typed/registry.rs:27:5` |
+| mode-legacy-provider-narrow | PASS / PASS | E0053 | `crates/rum-runtime/src/runtime/suspension/typed.rs:68:19` |
+| mode-state-provider-narrow | PASS / PASS | E0053 | `crates/rum-runtime/src/runtime/suspension/typed.rs:73:15` |
+
+
+Full positive/negative sources and Cargo JSON remain under .temp/brief-607/compile-controls/{default,no-default}/. Snapshots: [controls-default-results.json](../../../.temp/brief-607/redispatch-5/controls-default-results.json) and [controls-no-default-results.json](../../../.temp/brief-607/redispatch-5/controls-no-default-results.json).
+
+### 4. Census and all four forced failures
+
+The separate production/test-only cohorts are asserted independently:
+
+
+```text
+S1 CENSUS production frames=553 finalizers=54 implementations=607 typed=0 macros=589 result=345 insert=244
+S1 CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+S1 CENSUS test-support frames=4 finalizers=0 implementations=6 typed=2 macros=7 result=2 insert=5
+S1 PARTITION implementations=623 macros=600
+S1 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; production evaluation remains untyped
+```
+
+
+```text
+Moved test cohort: 18 function definitions across all five family/support files, all test-support; 2 typed implementations, both test-support. tests.rs is the cfg(test) mod tests facade. Stage receipt bytes differ from entry only by the two authorized X0023/X0024 path/prefix relocations; all 1399 partition owners unchanged.
+```
+
+All 623 F, 600 M, 62 chain, 14 deferred-obligation, 10 route and 90 transformation owners remain from the immutable partition (1,399 total). All 16 test-only implementations and 11 macro sites remain S33, discovered through the actual cfg(test) declaration. Other receipts cover 134 decoder definitions, 35 ordinary legacy test sites, 209 whole-slot records expanded to 321 pattern/helper sites and all 434 nested decoder uses. Only X0023/X0024 moved with their unit module. No old Input/Output type was guessed.
+
+The census preserves module-qualified identities, source spans/hashes and explicit unresolved calls, macros and references. Its resolver projection is private census input; original AST populations stay authoritative. S1 refuses preflip at the required S54 receipt: this is no zero-legacy or completed preflip proof. The provider closure retains forbidden/unresolved calls. The 23-type decoder-use report is:
+
+
+```text
+slot	decoder_id	definition	population	registered_mode	resolved_uses	unresolved_same_name_candidates
+CasesCollectionOutcome	D110	rum_runtime::runtime::suspension::collections::<CasesCollectionOutcome as ContinuationValue>::from_continuation_expr	production	LegacyMode	1	31
+CasesTraversalResolution	D134	rum_runtime::runtime::suspension::traversal::<CasesTraversalResolution as ContinuationValue>::from_continuation_expr	production	LegacyMode	3	31
+CompiledMatchOutcome	D049	rum_runtime::runtime::pattern_matching::outcome::<CompiledMatchOutcome as ContinuationValue>::from_continuation_expr	production	LegacyMode	90	31
+DeleteCasesOutcome	D012	rum_runtime::runtime::kernel_data::rewrite_data::<DeleteCasesOutcome as ContinuationValue>::from_continuation_expr	production	LegacyMode	10	31
+EvalCapturedOutcome	D001	rum_runtime::runtime::debug_tools::test_report::evaluation::<EvalCapturedOutcome as ContinuationValue>::from_continuation_expr	production	LegacyMode	3	31
+EvaluatedPartSelectors	D011	rum_runtime::runtime::kernel_data::evaluated_part_selectors::<EvaluatedPartSelectors as inherent>::from_continuation_expr	production	LegacyMode	4	31
+Option<CasesLevelSpec>	D132	rum_runtime::runtime::suspension::traversal::<Option < CasesLevelSpec > as ContinuationValue>::from_continuation_expr	production	LegacyMode	1	31
+Option<Expr>	D125	rum_runtime::runtime::suspension::primitive::<Option < Expr > as ContinuationValue>::from_continuation_expr	production	LegacyMode	57	31
+Option<Vec<Expr>>	D128	rum_runtime::runtime::suspension::primitive::<Option < Vec < Expr > > as ContinuationValue>::from_continuation_expr	production	LegacyMode	13	31
+Option<Vec<RewriteRuleInfo>>	D130	rum_runtime::runtime::suspension::rewrite_rules::<Option < Vec < RewriteRuleInfo > > as ContinuationValue>::from_continuation_expr	production	LegacyMode	1	31
+PositionCollectionOutcome	D111	rum_runtime::runtime::suspension::collections::<PositionCollectionOutcome as ContinuationValue>::from_continuation_expr	production	LegacyMode	1	31
+PreparedCallArguments	D009	rum_runtime::runtime::eval_call_prepare::prepared_call_arguments_from_continuation_expr	production	LegacyMode	2	0
+PreparedInterpretedAlternative	D086	rum_runtime::runtime::pattern_matching_interpreted::decode_prepared_interpreted_alternative	test-only	unregistered until S33	1	0
+PreparedInterpretedCall	D085	rum_runtime::runtime::pattern_matching_interpreted::decode_prepared_interpreted_call	test-only	unregistered until S33	1	0
+ReplaceAllTraversalOutcome	D005	rum_runtime::runtime::definitions::application::replace_all::<ReplaceAllTraversalOutcome as ContinuationValue>::from_continuation_expr	production	LegacyMode	2	31
+ReplaceOutcome	D013	rum_runtime::runtime::kernel_data::rewrite_data::<ReplaceOutcome as ContinuationValue>::from_continuation_expr	production	LegacyMode	7	31
+String	D124	rum_runtime::runtime::suspension::primitive::<String as ContinuationValue>::from_continuation_expr	production	LegacyMode	7	31
+TraversalCountOutcome	D112	rum_runtime::runtime::suspension::collections::<TraversalCountOutcome as ContinuationValue>::from_continuation_expr	production	LegacyMode	1	31
+TraversalWithoutLimitResolution	D006	rum_runtime::runtime::definitions::definition_catalog::traversal_continuation::<TraversalWithoutLimitResolution as ContinuationValue>::from_continuation_expr	production	LegacyMode	1	31
+Vec<Expr>	D126	rum_runtime::runtime::suspension::primitive::<Vec < Expr > as ContinuationValue>::from_continuation_expr	production	LegacyMode	47	31
+Vec<ReplacePartTarget>	D026	rum_runtime::runtime::kernel_data::structure_data::replace::plan::<Vec < ReplacePartTarget > as ContinuationValue>::from_continuation_expr	production	LegacyMode	4	31
+Vec<SymbolExprMap>	D127	rum_runtime::runtime::suspension::primitive::<Vec < SymbolExprMap > as ContinuationValue>::from_continuation_expr	production	LegacyMode	17	31
+bool	D123	rum_runtime::runtime::suspension::primitive::<bool as ContinuationValue>::from_continuation_expr	production	LegacyMode	35	31
+```
+
+Each forced-red parent explicitly invokes the ignored child with --exact and --ignored, requiring a nonzero exit plus the specific population error. The single ignored entry in the parent totals is an exercised child, not an unrun falsifier. Real red output in both builds:
+
+
+default: removed frame
+
+
+```text
+
+running 1 test
+test forced_red_probe ... S1 CENSUS production frames=552 finalizers=54 implementations=606 typed=0 macros=589 result=345 insert=244
+S1 CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+S1 CENSUS test-support frames=4 finalizers=0 implementations=6 typed=2 macros=7 result=2 insert=5
+S1 PARTITION implementations=622 macros=600
+FAILED
+
+failures:
+
+failures:
+    forced_red_probe
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 18.65s
+
+census walk: 14784 functions, 297612 uses, 1479 module visits
+census resolver: 34616 scopes
+
+thread 'forced_red_probe' panicked at crates/rum-stdlib/tests/typed_slot_census.rs:171:31:
+called `Result::unwrap()` on an `Err` value: "S1 baseline requires production 607/589 and test-only 16/11; combined 623/600"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+```
+
+
+default: removed guard
+
+
+```text
+
+running 1 test
+test forced_red_probe ... S1 CENSUS production frames=564 finalizers=59 implementations=623 typed=0 macros=600 result=348 insert=252
+S1 CENSUS test-only frames=0 finalizers=0 implementations=0 typed=0 macros=0 result=0 insert=0
+S1 CENSUS test-support frames=4 finalizers=0 implementations=6 typed=2 macros=7 result=2 insert=5
+S1 PARTITION implementations=623 macros=600
+FAILED
+
+failures:
+
+failures:
+    forced_red_probe
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 18.70s
+
+census walk: 14785 functions, 297631 uses, 1479 module visits
+census resolver: 34619 scopes
+
+thread 'forced_red_probe' panicked at crates/rum-stdlib/tests/typed_slot_census.rs:171:31:
+called `Result::unwrap()` on an `Err` value: "S1 baseline requires production 607/589 and test-only 16/11; combined 623/600"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+```
+
+
+no-default: removed frame
+
+
+```text
+
+running 1 test
+test forced_red_probe ... S1 CENSUS production frames=552 finalizers=54 implementations=606 typed=0 macros=589 result=345 insert=244
+S1 CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+S1 CENSUS test-support frames=4 finalizers=0 implementations=6 typed=2 macros=7 result=2 insert=5
+S1 PARTITION implementations=622 macros=600
+FAILED
+
+failures:
+
+failures:
+    forced_red_probe
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 18.88s
+
+census walk: 14784 functions, 297612 uses, 1479 module visits
+census resolver: 34616 scopes
+
+thread 'forced_red_probe' panicked at crates/rum-stdlib/tests/typed_slot_census.rs:171:31:
+called `Result::unwrap()` on an `Err` value: "S1 baseline requires production 607/589 and test-only 16/11; combined 623/600"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+```
+
+
+no-default: removed guard
+
+
+```text
+
+running 1 test
+test forced_red_probe ... S1 CENSUS production frames=564 finalizers=59 implementations=623 typed=0 macros=600 result=348 insert=252
+S1 CENSUS test-only frames=0 finalizers=0 implementations=0 typed=0 macros=0 result=0 insert=0
+S1 CENSUS test-support frames=4 finalizers=0 implementations=6 typed=2 macros=7 result=2 insert=5
+S1 PARTITION implementations=623 macros=600
+FAILED
+
+failures:
+
+failures:
+    forced_red_probe
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 18.97s
+
+census walk: 14785 functions, 297631 uses, 1479 module visits
+census resolver: 34619 scopes
+
+thread 'forced_red_probe' panicked at crates/rum-stdlib/tests/typed_slot_census.rs:171:31:
+called `Result::unwrap()` on an `Err` value: "S1 baseline requires production 607/589 and test-only 16/11; combined 623/600"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+```
+
+
+Full source tables are under .temp/brief-607/census/{default,no-default}/.
+
+### 5. Gates, inventories and earned certificates
+
+Gates ran serially through bounded process-group cleanup with one Cargo job, one test thread, offline mode and brief-607 TMPDIR. Focused bounds were 900 seconds; workspace 3,600. The required unmodified oracle script used 1,500 seconds per build (3,100 outer bound), retaining its own usual .temp/suspension-oracle logs/tmp; both logs were copied into brief-607. Expected failed compiler fixtures and census children are acceptance evidence, not failed final gates.
+
+Final gate result lines, verbatim:
+
+
+```text
+cargo fmt --check: exit 0; empty output
+controls-default.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 27.50s
+controls-no-default.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 23.12s
+census-default.log
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 18.65s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 18.70s
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 133.96s
+census-no-default.log
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 18.88s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 18.97s
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 134.83s
+oracle-default.log
+test result: ok. 49 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 27.49s
+oracle-no-default.log
+test result: ok. 49 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 27.78s
+ownership-final.log
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 1120 filtered out; finished in 68.39s
+derive-final.log
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1145 filtered out; finished in 1.26s
+cert-default-final.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1144 filtered out; finished in 18.19s
+cert-no-default-final.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1138 filtered out; finished in 18.06s
+```
+
+
+Workspace: cargo test --workspace --no-fail-fast -- --nocapture, exit 0. The 53 passing target summaries total 3,434 harness passes and 59 ignored entries; nine of those counted-as-ok entries are the native skips disclosed below. The only two failed summaries are the required census-child reds. Verbatim target/result sequence (including intentional forced-red child summaries):
+
+
+```text
+     Running unittests src/main.rs (target/debug/deps/rum_cli-675a9b7fb4c09027)
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+     Running tests/cli.rs (target/debug/deps/cli-417da8e232f3f31f)
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+     Running tests/input_requests.rs (target/debug/deps/input_requests-79d242612dc5614e)
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+     Running tests/terminal.rs (target/debug/deps/terminal-cd41974a9dfe37a5)
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.90s
+     Running unittests src/lib.rs (target/debug/deps/rum_core-49fc2a810a19f202)
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/lib.rs (target/debug/deps/rum_derive-b50628eb478e3209)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/accumulator_chain.rs (target/debug/deps/accumulator_chain-f4b1762065518378)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/derive.rs (target/debug/deps/derive-b38e62f915ec5c7d)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/lib.rs (target/debug/deps/rum_host-a119f062096badf7)
+test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.64s
+     Running tests/adapter_contract.rs (target/debug/deps/adapter_contract-36e2ac93dcf516de)
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+     Running tests/batch_boundary_ownership.rs (target/debug/deps/batch_boundary_ownership-62cec20e1429084a)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+     Running tests/capture_output_lifecycle.rs (target/debug/deps/capture_output_lifecycle-c541c492bd454062)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+     Running tests/guest_loading_resume.rs (target/debug/deps/guest_loading_resume-4d8893fc9e0cdd96)
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+     Running tests/host_payload_destruction_contract.rs (target/debug/deps/host_payload_destruction_contract-1be17d3af592a343)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 50.13s
+     Running tests/installer.rs (target/debug/deps/installer-8ebb99c00d41e78e)
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+     Running tests/lifecycle_buildout.rs (target/debug/deps/lifecycle_buildout-5e85c48ede3e9593)
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+     Running tests/lifecycle_contract.rs (target/debug/deps/lifecycle_contract-a2c563982853655a)
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+     Running tests/random_password_policy.rs (target/debug/deps/random_password_policy-ddd2fec076417963)
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+     Running tests/shared_accumulator_completion.rs (target/debug/deps/shared_accumulator_completion-067001aa2ecf9629)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+     Running tests/stress.rs (target/debug/deps/stress-5ec2a75152f1305e)
+test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.28s
+     Running tests/suspended_timeout_contract.rs (target/debug/deps/suspended_timeout_contract-258c488f1b37cde7)
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.07s
+     Running tests/suspension_abandonment_contract.rs (target/debug/deps/suspension_abandonment_contract-ac93b53b9ae0d1d1)
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+     Running unittests src/lib.rs (target/debug/deps/rum_jupyter-edb9ee3aea58135e)
+test result: ok. 151 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.71s
+     Running unittests src/bin/rum-jupyter-kernel.rs (target/debug/deps/rum_jupyter_kernel-965588c9ac9ffa23)
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/lib.rs (target/debug/deps/rum_repl-edcfd3382d4bfc76)
+test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.39s
+     Running tests/input_abandonment.rs (target/debug/deps/input_abandonment-144216c549618286)
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+     Running tests/input_continuation.rs (target/debug/deps/input_continuation-ebdbc4f7476ef252)
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+     Running unittests src/lib.rs (target/debug/deps/rum_runtime-562b258c6eef9b02)
+test result: ok. 1157 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 43.67s
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-c8c5a89643371dc7)
+test result: ok. 1092 passed; 0 failed; 53 ignored; 0 measured; 0 filtered out; finished in 1142.90s
+     Running unittests src/bin/generate-builtin-reference.rs (target/debug/deps/generate_builtin_reference-7e0be655aec7b381)
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/default_fallback_continuations.rs (target/debug/deps/default_fallback_continuations-c846b88aba46e50a)
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+     Running tests/destructuring_continuations.rs (target/debug/deps/destructuring_continuations-dfe1523f84cb69ee)
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+     Running tests/guest_loading_resume.rs (target/debug/deps/guest_loading_resume-0992a185a5c665db)
+test result: ok. 47 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.06s
+     Running tests/lazy_pull_continuations.rs (target/debug/deps/lazy_pull_continuations-4b49946100b6004b)
+test result: ok. 69 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 22.87s
+     Running tests/loop_continuations.rs (target/debug/deps/loop_continuations-d0d938f953da2f0b)
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+     Running tests/option_reader_continuations.rs (target/debug/deps/option_reader_continuations-5a0cec5f31c0a5b0)
+test result: ok. 100 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.97s
+     Running tests/rule_pattern_continuations.rs (target/debug/deps/rule_pattern_continuations-c61abf30d2dd2405)
+test result: ok. 71 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.51s
+     Running tests/schema_continuations.rs (target/debug/deps/schema_continuations-65e2f27929ed24fb)
+test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.01s
+     Running tests/sow_trace_continuations.rs (target/debug/deps/sow_trace_continuations-93367493ef68b082)
+test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.41s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-1756073e73a214f6)
+test result: ok. 49 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 27.68s
+     Running tests/typed_slot_census.rs (target/debug/deps/typed_slot_census-acdff08e82b67d6e)
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 18.73s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 18.88s
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 132.87s
+     Running tests/typed_slot_compile_controls.rs (target/debug/deps/typed_slot_compile_controls-a27c323074551308)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 23.72s
+     Running unittests src/lib.rs (target/debug/deps/rum_syntax-e24f301251f42f42)
+test result: ok. 193 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.52s
+     Running unittests src/lib.rs (target/debug/deps/rum_terminal-bae91ae0a1529dd6)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_core
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_derive
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+   Doc-tests rum_host
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.74s
+   Doc-tests rum_jupyter
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_repl
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_runtime
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.45s
+   Doc-tests rum_stdlib
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_syntax
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_terminal
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+
+
+Native ZeroMQ: **9 executed skips**, explicitly allowed by RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1 when loopback binding was denied. Rust counts these early returns as ok; they are reported here as skips, not native transport passes.
+
+
+```text
+test zeromq::tests::native::basic::native_zeromq_backend_echoes_heartbeat_over_loopback_req_socket ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::basic::native_zeromq_backend_round_trips_execute_over_loopback_sockets ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::control::native_zeromq_backend_frontend_style_control_interrupt_round_trip ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::control::native_zeromq_backend_shutdown_stops_shell_work_and_reports_pending_shell_messages ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::execute::native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_metadata ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::session_flow::native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts_and_shutdown ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::stdin::native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_reply ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::signed::native_zeromq_backend_rejects_tampered_signed_requests_end_to_end ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::signed::native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+```
+
+
+The unchanged compiler-oracle gates also reported:
+
+```text
+ORACLE_TOTAL agreements=8 disagreements=0 techniques=3/3
+A1_CORPUS_TOTAL agreements=7308 disagreements=0 claims=7308
+METHOD_TOTAL agreements=3500 disagreements=0 coverage=3500/3500
+METHOD_TOTAL agreements=3500 disagreements=0 coverage=3500/3500
+```
+
+Final exact ownership inventory:
+
+
+```text
+EXACT INVENTORY self-reaching types: 59 rows
+EXACT INVENTORY UnknownHostPayload: 75 rows
+EXACT INVENTORY UnknownConstruct: 7685 rows
+```
+
+The six prior module-discovery rows vanished through the layout correction; none was admitted. The derive inventory adds only TypedAdapter. Named frames/finalizers in the combined population, including S33, remain 564/59, with 531 pure abandonment derives and 33 manual stateful implementations.
+
+
+```text
+host_payload_ledger.tsv: 65 -> 75 data rows (header excluded); 0 removed or replaced, 10 added or replacement rows
+host_payloads.tsv: 65 -> 75 rows; 0 removed or replaced, 10 added or replacement rows
+self_reaching.tsv: 59 -> 59 rows; 1 removed or replaced, 1 added or replacement rows
+unknown_attributes.tsv: 1499 -> 1500 rows; 4 removed or replaced, 5 added or replacement rows
+unknown_captures.tsv: 2946 -> 2949 rows; 11 removed or replaced, 14 added or replacement rows
+unknown_macros.tsv: 3144 -> 3145 rows; 14 removed or replaced, 15 added or replacement rows
+unknown_storage.tsv: 91 -> 91 rows; 0 removed or replaced, 0 added or replacement rows
+Exact changed rows (including source-coordinate replacements): inventory-row-diff.patch.
+```
+
+Every changed baseline-to-final ownership/contract/certificate row, including source-coordinate replacements, is disclosed in [inventory-row-diff.patch](../../../.temp/brief-607/redispatch-5/inventory-row-diff.patch). The host ledger adds only the seven approved PublicInput and three approved Unbounded rows. Actual impl bounds/owned F storage supply computed witnesses, and the phantom-only, private-bound, concrete-Expr and extra-bound falsifiers all pass. All 65 old ledger rows, including 56–58, and unrelated identities/statuses/dispositions remain unchanged. Destruction debt is not discharged or strengthened.
+
+All 68 fingerprint cells were recomputed, preserving the first 18 fields: [contract-fingerprint-diff.tsv](../../../.temp/brief-607/redispatch-5/contract-fingerprint-diff.tsv). The 62 Discharged/six Pending statuses and strengths remain. Both initial earning runs produced zero rejections and failed only final reconciliation against stale C01 cells. Four actual new cells were copied from promoted-hash-true.tsv/promoted-hash-false.tsv, then both final replays passed.
+
+
+```text
+body	instance	rejections
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::Unarmed;R=rum_stdlib::option_consumers::OptionConsumer;hash=true	0
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=rum_stdlib::option_consumers::OptionConsumer;hash=true	0
+C02	rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr;M=runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=none (nongeneric C02);hash=true	0
+LeaseProbe538::probe	sealed modes	0
+LeaseProbe538::start	sealed modes	0
+LeaseProbe538::drive	sealed modes	0
+LeaseProbe538::resume	sealed modes	0
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+```
+
+
+```text
+body	instance	rejections
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::Unarmed;R=rum_stdlib::option_consumers::OptionConsumer;hash=false	0
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=rum_stdlib::option_consumers::OptionConsumer;hash=false	0
+C02	rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr;M=runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=none (nongeneric C02);hash=false	0
+LeaseProbe538::probe	sealed modes	0
+LeaseProbe538::start	sealed modes	0
+LeaseProbe538::drive	sealed modes	0
+LeaseProbe538::resume	sealed modes	0
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+```
+
+Old/new earned cells: [certificate-cell-diff.tsv](../../../.temp/brief-607/redispatch-5/certificate-cell-diff.tsv). Two LocalCovered body rows remain: two C01 instances and one nongeneric C02 instance per build, plus four separate probe marks. No helper/caller/consumer was promoted; all four consumer obligations remain unresolved.
+
+The initial post-move ownership replay also passed before shared support extraction:
+
+```text
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 1120 filtered out; finished in 67.70s
+```
+
+Observed intermediate failures, all resolved without weakening an assertion:
+
+
+```text
+census-after.log
+error[E0583]: file not found for module `projection`
+error[E0583]: file not found for module `sites`
+error[E0432]: unresolved imports `discovery::files`, `discovery::normalize`, `discovery::scan`
+error[E0432]: unresolved imports `super::classify`, `super::classify`, `super::receipts`, `super::source`
+derive.log
+test result: FAILED. 14 passed; 1 failed; 0 ignored; 0 measured; 1145 filtered out; finished in 1.31s
+cert-default-earn.log
+called `Result::unwrap()` on an `Err` value: "stale or omitted instance certificate C01 hash=true"
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1144 filtered out; finished in 18.04s
+cert-no-default-earn.log
+called `Result::unwrap()` on an `Err` value: "stale or omitted instance certificate C01 hash=false"
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1138 filtered out; finished in 18.23s
+```
+
+### 6. Stop-loss, deviations and remaining scope
+
+Final consecutive no-progress count: 0; no stop-loss triggered. Four split compile errors were resolved by restoring the existing classify/scan namespace. The first derive replay found the shared Echo fixture in tests.rs; moving it to the documented support module made the next replay pass. Each initial certificate failure earned new build-specific marks; copying those actual cells made both replays pass. No unchanged failing gate was retried twice without progress. A scratch report-generation quoting error made no edits and was corrected.
+
+The layout and census split follow amendment 5. Two X receipt prefixes/paths and one diagnostic companion path follow the moved tests. All old split bodies remain identical; only one module-visitor forwarding body was added. No ownership path normalization was added. The required oracle script's usual scratch location and the native loopback skip setting are disclosed above. No S1 gate or decision remains open.
+
+Original baseline: .temp/brief-607/redispatch-1/baseline/. Final checkpoint: .temp/brief-607/PROGRESS.md. All work remains uncommitted. S2 driver activation, later typing/transport flips, S54 preflip proof and recorded destruction debt retain their planned scope.

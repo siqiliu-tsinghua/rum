@@ -25,6 +25,7 @@ mod scoping;
 mod shared_completion;
 mod strings;
 mod strings_roles;
+mod typed_slots;
 
 fn make(
     id: &str,

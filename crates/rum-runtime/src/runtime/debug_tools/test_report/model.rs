@@ -26,7 +26,7 @@ pub(in crate::runtime::debug_tools::test_report) struct ParsedTestReportObject {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, FrameRootTrace)]
-pub(in crate::runtime::debug_tools::test_report) struct EvalCapturedOutcome {
+pub(in crate::runtime) struct EvalCapturedOutcome {
     pub(in crate::runtime::debug_tools::test_report) value: Expr,
     pub(in crate::runtime::debug_tools::test_report) failure_type: Option<&'static str>,
     pub(in crate::runtime::debug_tools::test_report) messages: Vec<RuntimeMessage>,

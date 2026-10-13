@@ -217,11 +217,11 @@ UnknownConstruct	crates/rum-runtime/src/runtime/definitions/value_table_assignme
 UnknownConstruct	crates/rum-runtime/src/runtime/definitions/value_table_assignment.rs	40	1	unresolved attribute/expansion derive (FrameRootTrace , AccumulatorChainNode)
 UnknownConstruct	crates/rum-runtime/src/runtime/definitions/value_table_assignment.rs	42	5	unresolved attribute/expansion accumulator_link
 UnknownConstruct	crates/rum-runtime/src/runtime/definitions/value_table_assignment.rs	47	1	unresolved attribute/expansion derive (Clone , FrameRootTrace)
-UnknownConstruct	crates/rum-runtime/src/runtime/eval_call_prepare.rs	15	1	unresolved attribute/expansion derive (FrameRootTrace)
-UnknownConstruct	crates/rum-runtime/src/runtime/eval_call_prepare.rs	21	1	unresolved attribute/expansion derive (Clone , FrameRootTrace)
-UnknownConstruct	crates/rum-runtime/src/runtime/eval_call_prepare.rs	28	1	unresolved attribute/expansion derive (FrameRootTrace , AccumulatorChainNode)
-UnknownConstruct	crates/rum-runtime/src/runtime/eval_call_prepare.rs	30	5	unresolved attribute/expansion accumulator_link
+UnknownConstruct	crates/rum-runtime/src/runtime/eval_call_prepare.rs	29	1	unresolved attribute/expansion derive (FrameRootTrace)
 UnknownConstruct	crates/rum-runtime/src/runtime/eval_call_prepare.rs	35	1	unresolved attribute/expansion derive (Clone , FrameRootTrace)
+UnknownConstruct	crates/rum-runtime/src/runtime/eval_call_prepare.rs	42	1	unresolved attribute/expansion derive (FrameRootTrace , AccumulatorChainNode)
+UnknownConstruct	crates/rum-runtime/src/runtime/eval_call_prepare.rs	44	5	unresolved attribute/expansion accumulator_link
+UnknownConstruct	crates/rum-runtime/src/runtime/eval_call_prepare.rs	49	1	unresolved attribute/expansion derive (Clone , FrameRootTrace)
 UnknownConstruct	crates/rum-runtime/src/runtime/eval_call_prepare/resume_frames.rs	4	1	unresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: PureFrameAbandon)
 UnknownConstruct	crates/rum-runtime/src/runtime/eval_call_prepare/resume_frames.rs	34	1	unresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: PureFrameAbandon)
 UnknownConstruct	crates/rum-runtime/src/runtime/eval_core/call.rs	5	1	unresolved attribute/expansion derive (Clone , FrameRootTrace)
@@ -912,6 +912,7 @@ UnknownConstruct	crates/rum-runtime/src/runtime/substitution/lexical_substitutio
 UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	14	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , PartialOrd , Ord)
 UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	35	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq)
 UnknownConstruct	crates/rum-runtime/src/runtime/suspension/output.rs	8	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
+UnknownConstruct	crates/rum-runtime/src/runtime/suspension/typed/adapter.rs	22	1	unresolved attribute/expansion derive (rum_derive :: FrameRootTrace)
 UnknownConstruct	crates/rum-runtime/src/runtime/tree_walkers/count_like.rs	8	1	unresolved attribute/expansion derive (Clone , Copy , FrameRootTrace)
 UnknownConstruct	crates/rum-runtime/src/runtime/tree_walkers/count_like.rs	15	1	unresolved attribute/expansion derive (Clone , FrameRootTrace)
 UnknownConstruct	crates/rum-runtime/src/runtime/tree_walkers/count_like/options.rs	10	1	unresolved attribute/expansion derive (FrameRootTrace)

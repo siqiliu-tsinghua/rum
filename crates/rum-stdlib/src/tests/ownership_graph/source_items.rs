@@ -405,11 +405,14 @@ impl<'ast> Visit<'ast> for Collector<'_> {
             })
             .collect();
         let previous_parameters = std::mem::replace(&mut self.impl_parameters, parameters);
-        if let Some((_, path, _)) = &item.trait_ {
+        if let Some((negative, path, _)) = &item.trait_ {
             self.loader.source.drops.push(DropImpl {
                 scope: self.scope.clone(),
                 ty: (*item.self_ty).clone(),
                 trait_path: path.clone(),
+                generics: item.generics.clone(),
+                positive: negative.is_none(),
+                conditional: self.conditional || conditional(&item.attrs),
                 location: self.location(item.span()),
             });
         }

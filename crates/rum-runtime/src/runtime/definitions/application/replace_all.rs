@@ -10,7 +10,7 @@ pub(in crate::runtime) use plan::RewriteRulePlan;
 use plan::RewriteRuleScanCursor;
 
 #[derive(Clone, Debug, PartialEq, Eq, FrameRootTrace)]
-struct ReplaceAllTraversalOutcome {
+pub(in crate::runtime) struct ReplaceAllTraversalOutcome {
     expr: Expr,
     changed: bool,
 }

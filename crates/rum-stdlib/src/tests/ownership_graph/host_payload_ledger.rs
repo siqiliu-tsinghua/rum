@@ -11,6 +11,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use super::model::{Discovery, Unknown, UnknownKind};
 use super::{graph, source};
 
+mod adapters;
 mod ownership;
 mod tests;
 

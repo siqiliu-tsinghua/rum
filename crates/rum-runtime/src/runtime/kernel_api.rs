@@ -5,6 +5,12 @@
 //! conversion at a time. Items exported here become semver-relevant when the
 //! crate split ships.
 
+// Dormant typed continuation construction; installation belongs to the driver.
+pub use super::suspension::{
+    ContinueToken, FrameChain, ResumeStop, SlotFinalizer, SlotValue, SlotWitness, TypedAction,
+    TypedFrame, slot_witness,
+};
+
 // Explicit accounting route; only the evaluation-stack owner is maintained.
 pub use super::accounting_mode::{
     AccountingBuiltinFn, AccountingContext, AccountingShadow, AccountingSnapshot, CallbackFailure,

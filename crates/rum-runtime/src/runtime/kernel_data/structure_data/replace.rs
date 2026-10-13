@@ -48,7 +48,7 @@ pub(super) enum ReplacePartHeadsMode {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, FrameRootTrace)]
-struct ReplacePartTarget {
+pub(in crate::runtime) struct ReplacePartTarget {
     path: Vec<isize>,
     rhs: Expr,
     delayed: bool,

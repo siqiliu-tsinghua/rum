@@ -234,8 +234,8 @@ Consequences for how I present and pick work:
   (a per-type transport mode, so typing steps stay `Value`-compatible and
   each lands green). Round 5 (606) partitioned it into 78 gated steps — S1
   dormant API, S2 driver, S3-S54 family typing, F1-F23 one flip per legacy
-  type, R removal. **Now: the implementation, one step per brief from 607**;
-  then E2 (a may-suspend result type with no `Try`).
+  type, R removal. S1 (607, the dormant API) is done. **Now: S2 (608), then
+  one step per brief**; then E2 (a may-suspend result type with no `Try`).
   Runs are serial by user ruling. Memory `suspension-continuation-branch.md`.
 
   **Four things from it are method, not history.**

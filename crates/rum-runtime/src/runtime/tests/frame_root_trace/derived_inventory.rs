@@ -642,6 +642,7 @@ pub(super) const DERIVED_FRAME_ROOT_TRACE_TYPES: &[&str] = &[
     "crates/rum-runtime/src/runtime/session/session_state.rs:SuspendedBuiltinSpec",
     "crates/rum-runtime/src/runtime/session/session_state.rs:SuspendedCallDispatchPlan",
     "crates/rum-runtime/src/runtime/session/session_state.rs:SuspendedCapability",
+    "crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:TypedAdapter",
     "crates/rum-runtime/src/runtime/tree_walkers/count_like.rs:CountLikeFinish",
     "crates/rum-runtime/src/runtime/tree_walkers/count_like.rs:SuspendedCountTraversal",
     "crates/rum-runtime/src/runtime/tree_walkers/count_like/options.rs:CountLikeOptionRead",

@@ -11,7 +11,7 @@ mod reap;
 mod reap_state;
 pub(in crate::runtime) mod resources;
 mod shared;
-mod test_report;
+pub(in crate::runtime) mod test_report;
 mod timing;
 
 mod trace;

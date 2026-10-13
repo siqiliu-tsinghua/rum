@@ -2,7 +2,7 @@ use super::super::*;
 use super::evaluated_part_selectors::EvaluatedPartSelectors;
 
 mod exact_paths;
-mod replace;
+pub(in crate::runtime) mod replace;
 mod selectors;
 
 use exact_paths::{

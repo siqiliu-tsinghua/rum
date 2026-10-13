@@ -9,6 +9,12 @@ pub use output::OutputBoundary;
 mod rewrite_rules;
 pub(in crate::runtime) mod trace;
 mod traversal;
+mod typed;
+
+pub use typed::{
+    ContinueToken, FrameChain, ResumeStop, SlotFinalizer, SlotValue, SlotWitness, TypedAction,
+    TypedFrame, slot_witness,
+};
 
 #[allow(unused_imports)]
 pub(in crate::runtime) use self::core::AbandonReason;

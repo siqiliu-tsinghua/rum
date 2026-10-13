@@ -62,12 +62,16 @@ fn collect_files(workspace: &Path, dir: &Path, files: &mut BTreeMap<String, Stri
 }
 
 pub(super) fn fixture(files: &[(&str, &str)]) -> Source {
+    fixture_with_roots(files, &["fixture"])
+}
+
+pub(super) fn fixture_with_roots(files: &[(&str, &str)], roots: &[&str]) -> Source {
     scan(
         files
             .iter()
             .map(|(p, s)| (p.to_string(), s.to_string()))
             .collect(),
-        &["fixture"],
+        roots,
     )
 }
 

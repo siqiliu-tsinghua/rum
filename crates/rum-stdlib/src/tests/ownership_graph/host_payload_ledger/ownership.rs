@@ -5,7 +5,7 @@ use std::collections::{BTreeSet, VecDeque};
 use super::super::model::{Discovery, Id, Unknown, UnknownKind};
 use super::super::{effects, resolve};
 
-const EXPRESSIONS: &[&str] = &[
+pub(super) const EXPRESSIONS: &[&str] = &[
     "rum_core::expr::Expr",
     "rum_core::expr::SharedExpr",
     "rum_core::expr::SharedArgs",
@@ -169,12 +169,19 @@ pub(super) fn expression_witness(discovered: &Discovery, row: &Unknown) -> Resul
             ));
         }
     }
+    if let Some(witness) = super::adapters::expression_witness(discovered, &trait_id) {
+        return Ok(witness);
+    }
     Err(format!(
         "opaque ownership via {trait_id} has no verified path to Expr/SharedExpr/SharedArgs; cannot attribute Expr debt"
     ))
 }
 
-fn ownership_path(discovered: &Discovery, start: &str, targets: &[&str]) -> Option<String> {
+pub(super) fn ownership_path(
+    discovered: &Discovery,
+    start: &str,
+    targets: &[&str],
+) -> Option<String> {
     let mut queue = VecDeque::from([(start.to_string(), Vec::<String>::new())]);
     let mut visited = BTreeSet::new();
     while let Some((id, path)) = queue.pop_front() {

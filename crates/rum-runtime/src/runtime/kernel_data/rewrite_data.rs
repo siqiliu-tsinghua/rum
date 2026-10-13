@@ -20,7 +20,7 @@ enum DeleteCasesResult {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-struct DeleteCasesOutcome {
+pub(in crate::runtime) struct DeleteCasesOutcome {
     result: DeleteCasesResult,
     depth: usize,
     deleted_count: usize,

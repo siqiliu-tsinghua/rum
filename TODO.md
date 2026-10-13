@@ -4,10 +4,11 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-14, committed tree through brief-606's report
-(G13 design round 5, gated and ratified). **Next: G13's implementation, 78
-gated steps** — S1 dormant API, S2 compatible driver, S3-S54 family typing,
-F1-F23 one flip per legacy type, R removal — each a director-rewritten brief
+Status checkpoint: 2026-10-14, committed tree through brief-607 (G13 step
+S1, the dormant typed API, gated). **Next: S2, the compatible driver
+(brief-608); G13's implementation is 78 gated steps** — S1 dormant API, S2
+compatible driver, S3-S54 family typing, F1-F23 one flip per legacy type, R
+removal — each a director-rewritten brief
 from `.temp/brief-606/draft-*.md`, dispatched to Codex (user ruling; GLM only
 if the content filter fires); then E2's design. Long-running
 briefs use `gpt-6-astra` max by user ruling (2026-10-13: `gpt-6.1-sol` hit
@@ -846,7 +847,9 @@ dormant declarations (28 files), 607 the compatible Legacy/Typed driver (470),
 Director gate: the 28 ordinary-value witnesses and all 16 raw AST/flow tables
 reproduce byte-identically; frame implementations 623 and production macro
 sites 600 reconcile exactly against an independent scan (the two extra hits
-are in-crate `tests.rs`). **Director review:** accepted except two points.
+are in-crate `tests.rs`; *corrected at S1:* 16 of the implementations and 11
+of the sites are the `#[cfg(test)]` interpreted matcher, so production is
+607/589 — both scans walked files, not the cfg-aware module tree). **Director review:** accepted except two points.
 (1) The atomic conversion is replaced by *type-then-flip*: a per-type
 transport mode on the sealed codec (existing encoded types stay `Value` until
 flipped, new carriers are `State` from birth, never both arms), so typing
@@ -872,6 +875,29 @@ sites match the director's own scan one-to-one with a single owner each.
 Director rulings: the two interpreted enums stay Legacy (existing identities);
 the sequence is ratified; measurement in every step follows TEMPLATE pitfall 8
 (counters, then one-codegen-unit instruction slopes; timing is indication).
+
+**S1 (brief-607, `<S1>`): the dormant typed API.** Five dispatches, every
+stop a correct one at the fence, four of them the director's omissions (two
+module-path owner files, the ledger verifier's need for impl bounds, a test
+location that forced a `..` module path the ownership loader does not follow)
+and one a real population conflict. Built: the nine public items
+(`SlotValue`, `TypedFrame`, `SlotFinalizer`, `TypedAction`, `SlotWitness`,
+`slot_witness`, `FrameChain`, `ContinueToken`, `ResumeStop`), the keyed codec
+with one associated mode per type, 21 types registered `Legacy` over their
+existing wire codecs, nothing installed in the driver. 22 compile-control
+pairs reject with checked codes and spans in both builds. The source census
+(`crates/rum-stdlib/tests/typed_slot_census*`) asserts two cohorts derived
+from the cfg walk — production 607 implementations / 589 macro sites,
+test-only 16/11 (S33's interpreted matcher) — owns all 1 399 rows, and has
+two observed forced reds (a deleted frame; the cfg guard removed, which a
+sum-only gate would miss). The ownership ledger gained a computed
+generic-adapter rule with three falsifiers; seven `PublicInput` and three
+`Unbounded` rows were added by ruling, old rows 56-58 kept until R. Exempt
+from measurement: 58 old bodies byte-identical, 109 new bodies all dormant.
+Owed to later steps: every `Legacy` decoder still has 31 unresolved
+same-name `from_continuation_expr` candidates that the preflip census (S54)
+must resolve; S33 and the two interpreted flips act on test-only code, so
+their corpus is runtime unit tests.
 
 **Recorded, not in this branch — the gensym sweep does not see Rust-local
 values (found 2026-10-14 reviewing brief-605; Q3, queued behind the branch by

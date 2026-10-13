@@ -100,6 +100,9 @@ pub(super) struct DropImpl {
     pub scope: Id,
     pub ty: syn::Type,
     pub trait_path: syn::Path,
+    pub generics: syn::Generics,
+    pub positive: bool,
+    pub conditional: bool,
     pub location: Location,
 }
 

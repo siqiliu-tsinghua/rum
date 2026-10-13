@@ -4,6 +4,8 @@ mod default_values;
 mod down_values;
 mod fast_match;
 mod replace_all;
+
+pub(in crate::runtime) use replace_all::ReplaceAllTraversalOutcome;
 mod rhs;
 mod sub_values;
 mod up_values;
