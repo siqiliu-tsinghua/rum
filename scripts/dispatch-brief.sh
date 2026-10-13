@@ -66,6 +66,7 @@ usage() {
   echo "       BRIEF_WORKER=codex|cgl   (default codex)" >&2
   echo "       BRIEF_SHELL=<shell>      shell that defines the worker command" >&2
   echo "       CDX_BIN / CGL_BIN        worker command name" >&2
+  echo "       CDX_FORK=<session id>    codex only: fork that earlier session" >&2
   exit 2
 }
 [[ $# -eq 1 ]] || usage
@@ -185,7 +186,21 @@ if [[ "$worker" == codex ]]; then
   # valid in fish, which is the dispatch shell on this host. Exporting lets the
   # interactive shell inherit it whatever its syntax.
   export RUST_LOG="$rust_log"
-  cmd="$worker_cmd exec -C '$repo_root' -s $sandbox '$task'"
+  if [[ -n "${CDX_FORK:-}" ]]; then
+    # CDX_FORK=<session id> forks an earlier Codex session (its id is the
+    # `session id:` line of that brief's log) so the worker keeps what it read
+    # and concluded there — e.g. a design round built on the same worker's
+    # review. Forking leaves the earlier session untouched. `exec fork` takes
+    # no -C/-s flags, so the directory comes from the cd and the sandbox from
+    # a config override; the log's `sandbox:` header line confirms it applied.
+    [[ "$CDX_FORK" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]] \
+      || { echo "error: CDX_FORK must be a session UUID, got '$CDX_FORK'" >&2; exit 2; }
+    echo "fork-of: $CDX_FORK"
+    task="This session is forked from an earlier session of yours; that context is background and the brief governs. $task"
+    cmd="cd '$repo_root' && $worker_cmd exec fork -c sandbox_mode=$sandbox '$CDX_FORK' '$task'"
+  else
+    cmd="$worker_cmd exec -C '$repo_root' -s $sandbox '$task'"
+  fi
 else
   permission_mode="${CGL_PERMISSION_MODE:-acceptEdits}"
   echo "permission-mode: $permission_mode (no OS-level write fence — see header)"
