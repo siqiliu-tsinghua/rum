@@ -4,13 +4,15 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-13, committed tree through brief-599's gate (E1
-closed: all 438 declared entries have an executed descriptor in both builds,
-and the owed ledger is gone); brief-600 (G13's design) is next; then G13's
-repair; then E2's design. Long-running
+Status checkpoint: 2026-10-14, committed tree through brief-605's report (G13
+design round 4, evidence reproduced by the director). **Next: the director's
+review of round 4** (`.temp/brief-605/design.md` and drafts 606-609), deciding
+its two open questions, then the implementation briefs (Codex first, by user
+ruling; GLM only if the content filter fires); then E2's design. Long-running
 briefs use `gpt-6-astra` max by user ruling (2026-10-13: `gpt-6.1-sol` hit
 capacity errors mid-run); the dispatcher pins no model, `~/.codex/config.toml`
-decides.
+decides. `CDX_FORK=<session id>` continues an earlier Codex session (round 4
+forked review 2's session `01a135be-…`; its own is `01a135d5-…`).
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
@@ -821,6 +823,30 @@ by detaching one descriptor. `docs/testing-strategy.md` states the final
 guarantee. Entries 438 = covered 438, descriptors 546, in both builds.
 Director gate: workspace 3415/0/58 with native ZeroMQ real; oracle 49/0 in
 each build.
+**G13's design, rounds 1-4 (briefs 600-605).** Round 1 (600, Codex stopped by
+the content filter during the reachability inventory, finished by GLM) found
+five raw completers and a binding rule the director rejected: it bound frames
+to the callee's result type, but every real site maps after the macro. Round 2
+(601, GLM) bound the output at the return position; Codex's review (602) kept
+the direction and rejected it as not ready. Round 3 (603, GLM): a closed
+runtime-owned `ContinuationState` enum, a sealed `SlotValue`, a zero-sized input
+witness, a chain builder, a continuation token, a classified mismatch error.
+Codex's second review (604) kept all of that and required seven changes, three
+verified in source by the director: the token must accept a fresh frame with
+advanced state; `EvaluationData` turns any error into `$Failed`, so a mismatch
+error can be swallowed; and round 3's propagation join compared `yes` with
+`YES`, so 617 of 619 edges read as frameless (485 with the join fixed). Round
+4 (605, Codex forked from its own review session, no filter at 1.09M tokens):
+67 whole-slot identities, fresh-state token, `FrameChain<I, O>`, a private
+fatal `DriverFault` unwound structurally before the request boundary, two-Arc
+accounting and a transit-root record, and four implementation drafts: 606
+dormant declarations (28 files), 607 the compatible Legacy/Typed driver (470),
+**608 one atomic conversion of every frame (528)**, 609 legacy removal (296).
+Director gate: the 28 ordinary-value witnesses and all 16 raw AST/flow tables
+reproduce byte-identically; frame implementations 623 and production macro
+sites 600 reconcile exactly against an independent scan (the two extra hits
+are in-crate `tests.rs`). Open for the review: 608's atomic width against
+decomposition with named bridges, and the transit record and test observer.
 
 **Recorded, not in this branch:** `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime

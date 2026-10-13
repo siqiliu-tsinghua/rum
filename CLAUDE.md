@@ -227,9 +227,12 @@ Consequences for how I present and pick work:
   sweep found **G13 — typed continuation state crosses frames in-band as
   `Expr` under `System`Internal*` heads guest source can write**, decoded
   leniently or by panic. 598-599 closed E1: all 438 declared entries have an
-  executed descriptor in both builds and the owed ledger is gone. **Now:
-  brief-600, G13's design**; then its repair, and E2 (a may-suspend result
-  type with no `Try`).
+  executed descriptor in both builds and the owed ledger is gone. G13's design
+  took four rounds (600-605: two by GLM, each rejected by a Codex review, then
+  Codex designing against its own review in a forked session). **Now: my
+  review of round 4** (four drafts 606-609, the widest an atomic 528-file
+  conversion); then its repair, and E2 (a may-suspend result type with no
+  `Try`).
   Runs are serial by user ruling. Memory `suspension-continuation-branch.md`.
 
   **Four things from it are method, not history.**
