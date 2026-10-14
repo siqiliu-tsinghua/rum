@@ -9276,3 +9276,324 @@ the finish path's transfer count. Two attempts that move neither is a stop.
 Append a new `## Execution report` after this section. Section 5 may cite
 R6's evidence for anything this change cannot reach, but only after showing
 that the final binaries reproduce it.
+
+## Execution report — redispatch 7: one-box finalizer candidate; STOP on ownership discovery
+
+**S3 is not accepted. The mandatory ownership STOP has fired.** The two-file candidate removes FinalizerAdapter, stores the finalizer itself in Action::Finalize and calls SlotFinalizer::finish by qualified path before the same mode encode. Rust compilation succeeds, but the unchanged ownership analyzer cannot derive the expression-debt witness for Action.Finalize.0 through the blanket implementation. The complete ownership run exits 101: 21 passed, four failed. Formatting passes. No ownership chain, inventory, pin or analyzer was edited to make it pass.
+
+The governing amendment says: “If discovery cannot follow the new shape (for example, a blanket impl over a trait bound), that is a STOP.” This exact case occurred. No alternate shape was attempted. No release candidate was built, and none of the required new allocation, finish-path, instruction, native-stack or timing results is claimed. The R6 measurements remain historical and do not validate this changed source. All R7 scratch evidence is under `.temp/brief-609/r7/`; bounded command logs and receipts are `.temp/brief-609/r7-*.{log,command.json,exit.json}`.
+
+### 1. Files changed, ripple and pin disclosures
+
+| File | Change | Characters before → after |
+| --- | --- | --- |
+| crates/rum-runtime/src/runtime/suspension/typed/action.rs | Remove FinalizerAdapter import; Action::Finalize(Box::new(FinalizerAdapter(finalizer))) → Action::Finalize(Box::new(finalizer)). | 2376 → 2340 |
+| crates/rum-runtime/src/runtime/suspension/typed/adapter.rs | Remove FinalizerAdapter<F>; impl ErasedFinalizer for FinalizerAdapter<F> → blanket impl<F: SlotFinalizer> ErasedFinalizer for F. Box::new(self.0).finish() → SlotFinalizer::finish(self); retain the mode-encoding map. | 2724 → 2620 |
+| docs/dev/codex/brief-609-g13-s3-evaluation-dispatch.md | Append this STOP report only; preserve all entry bytes, including the director amendment. | append only |
+
+Both edited Rust files remain below 10k characters and retain their existing action/erasure responsibilities. No module root, visibility, public SlotFinalizer signature, mode, caller, concrete finalizer, driver, test, manifest, lockfile, toolchain or core representation changes. There is no new unsafe code. The complete two-file patch is:
+
+```diff
+--- crates/rum-runtime/src/runtime/suspension/typed/action.rs R7-entry
++++ crates/rum-runtime/src/runtime/suspension/typed/action.rs R7-candidate
+@@ -2,7 +2,7 @@
+ 
+ use rum_core::Expr;
+ 
+-use super::adapter::{DecodeFailure, ErasedFrame, FinalizerAdapter, erase};
++use super::adapter::{DecodeFailure, ErasedFrame, erase};
+ use super::channel::{CodecKey, Slot, encode};
+ use super::{Arc, EvalError, SlotFinalizer, SlotValue, TypedFrame};
+ 
+@@ -57,7 +57,7 @@
+ 
+     pub fn finalize<F: SlotFinalizer<Output = O>>(finalizer: F) -> Self {
+         Self {
+-            inner: Action::Finalize(Box::new(FinalizerAdapter(finalizer))),
++            inner: Action::Finalize(Box::new(finalizer)),
+             output: PhantomData,
+         }
+     }
+--- crates/rum-runtime/src/runtime/suspension/typed/adapter.rs R7-entry
++++ crates/rum-runtime/src/runtime/suspension/typed/adapter.rs R7-candidate
+@@ -70,12 +70,8 @@
+         + std::mem::size_of::<F>()
+ }
+ 
+-pub(super) struct FinalizerAdapter<F: SlotFinalizer>(pub F);
+-
+-impl<F: SlotFinalizer> ErasedFinalizer for FinalizerAdapter<F> {
++impl<F: SlotFinalizer> ErasedFinalizer for F {
+     fn finish(self: Box<Self>) -> Result<Slot, EvalError> {
+-        Box::new(self.0)
+-            .finish()
+-            .map(|value| encode(value, CodecKey::new()))
++        SlotFinalizer::finish(self).map(|value| encode(value, CodecKey::new()))
+     }
+ }
+```
+
+The only discovered UnknownConstruct ripple is the unchanged encoding closure moving from adapter.rs:79:18 to adapter.rs:75:41. It remains unresolved. The inventory was deliberately left stale after the mandatory STOP. Action.Finalize.0 remains at action.rs:22:14; its stored witness still names the removed FinalizerAdapter.0 and is not replaced with a hand-written chain. All frame-root pins and census receipts remain unchanged and unrerun.
+
+### 2. Owned-row reconciliation, transformations and census status
+
+This repair adds no owned frame or macro row. F0570 remains FinishPreparedCallArgumentsFinalizer implementing the unchanged public SlotFinalizer API; its concrete finish body is byte-identical. Only its private erasure/construction shape changes. The following source reconciliation is inherited identity, not a newly earned census receipt.
+
+| F row | S2 identity | Current source transition; R7 census not run |
+| --- | --- | --- |
+| F0204 | BuiltinEvaluateSuspensionFrame | Typed Expr → Expr; same name. |
+| F0272 | PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame | Typed Expr → PreparedCallArguments; also receives fresh repeated state formerly handled by F0273. |
+| F0273 | ResumeSuspendedCallArgumentPreparationSuspensionFrame | Merged into F0272; no remaining production implementation of the old name. |
+| F0274 | EvaluateCallSuspensionFrame | Typed Expr → Expr; head conversion at the shared entry. |
+| F0275 | ResumeCallWithDispatchPlanSuspensionFrame | Typed Option<Expr> → Expr; prepared branch split to PreparedDispatchFrame. |
+| F0276 | ResumeSuspendedCallWithDispatchPlanSuspensionFrame | Typed Option<Expr> → Expr; prepared branch uses the same PreparedDispatchFrame. |
+| F0277 | EvaluateStoredOwnValueSuspensionFrame | Typed CompiledMatchOutcome → Expr. |
+| F0278 | RunCallDispatchStageSuspensionFrame | Typed Expr → Option<Expr>; complete the semantic Some map. |
+| F0279 | EvalReleaseHoldSuspensionFrame | Typed Expr → Expr. |
+| F0526 | EvaluateProfiledFixedPointSuspensionFrame | Typed Expr → Expr. |
+| F0527 | ResumeFixedPointFromSuspensionFrame | Typed Expr → Expr. |
+| F0570 | FinishPreparedCallArgumentsFinalizer | SlotFinalizer Output=PreparedCallArguments. |
+
+| M row | Actual producer (unchanged in R7) | Ordinary map (unchanged) | Resumed map (unchanged) |
+| --- | --- | --- | --- |
+| M0205 | Expr | builtin_evaluate returns the evaluated value unchanged | Typed identity frame; no post-witness semantic map. |
+| M0279 | Expr | append/splice/drop-Nothing; preserve Unevaluated entries; advance remaining arguments; build PreparedCallArguments | Typed F0272 reentry uses the same append helper and fresh cursor/splice fields; pure finalizer builds the exact output after Arc release. |
+| M0280 | Expr | the same append and cursor/restore work for later arguments | Old macro removed by D0001; witness of actual evaluated_result is passed to token.suspend with fresh F0272. No original Arc is captured. |
+| M0281 | Expr | SharedExpr conversion, plan construction and dispatch; profiling records | Witness now at evaluate(head.into_owned()); shared resume_call_after_head accepts Expr or existing SharedExpr and performs Into<SharedExpr> once. |
+| M0282 | PreparedCallArguments or Option<Expr> (split) | normalize prepared args, install restore; stage Some returns value, None advances cursor | Prepare macro → PreparedDispatchFrame; direct stage macro M0282S → F0275. Shared normalization/restore runs once; None advances the loop; resumed frame enters k+1. |
+| M0283 | PreparedCallArguments or Option<Expr> (split) | same work with the suspended plan and frozen restore | Prepare macro → PreparedDispatchFrame; direct stage macro M0283S → F0276. Restore freezes after the common installer; None advances the loop; resumed frame enters k+1. |
+| M0285 | CompiledMatchOutcome | matched branch evaluates own value; unmatched branch resumes symbol lookup | Same branches in F0277; only the Expr transport map and raw input decode disappear. |
+| M0286 | Expr | Some(value) after evaluating the threaded call | F0278 now completes resumed.map(Some); three listable fixtures watched fail → pass. |
+| M0287 | Expr | Shared finish_builtin_dispatch: profile, original checked/unchecked growth behavior, semantic Some. | F0278 runs the same growth check and semantic Some; M0288 merged into M0287. |
+| M0288 | Expr | Shared finish_builtin_dispatch: profile, original checked/unchecked growth behavior, semantic Some. | F0278 runs the same growth check and semantic Some; M0288 merged into M0287. |
+| M0289 | Expr | ReleaseHold evaluation result unchanged | Typed identity frame. |
+| M0561 | Expr | fixed-point equality/cycle history/trace update and next pass | Typed F0526 uses outcome? then the unchanged resume_fixed_point_from state transition. |
+| M0562 | Expr | same fixed-point transition in resumed evaluation | Typed F0527 uses outcome? then the same helper. |
+
+T0023–T0027 are unchanged from R6. D0001 still uses fresh state through the witnessed token and invokes the finalizer after both originating Arcs drop; the driver source is unchanged. The candidate now erases the finalizer's own box. Existing production receipts still record 607 implementations, 589 macro sites, 12 typed implementations and 13 typed macros, but neither feature build reran the census after this edit. No receipt is advanced on the basis of those old figures. No global mode flips or later-family conversions occur.
+
+### 3. Divergence fixtures and equality status
+
+No fixture was added, removed or weakened. The six isolated S3 builtin/listable cases and prepared.twice/head.map.twice controls are byte-identical to entry. Their pre-conversion failures and earlier equality outputs remain in the earlier execution reports and raw logs; they were not rerun here. The six original Fold/Nest cases remain assigned to S13. Because discovery required STOP before section C, there is no R7 post-change oracle result in either build, no new fault-occurrence delta, and no renewed equality claim.
+
+### 4. Gates, exact discovery output and replay status
+
+Only the ownership gate and formatting check ran in R7. Both used the required bounded wrapper with offline Cargo, one build job, one test thread and TMPDIR under brief609. The exact invocations and child-command environments follow.
+
+**r7-ownership-discovery: exit 101.** Raw output: `.temp/brief-609/r7-ownership-discovery.log`.
+
+```text
+python3 scripts/run-bounded.py --timeout 900 -- python3 .temp/brief-609/gate.py r7-ownership-discovery cargo test -p rum-stdlib --lib ownership_graph -- --nocapture
+```
+
+```text
+CARGO_BUILD_JOBS=1
+RUST_TEST_THREADS=1
+CARGO_NET_OFFLINE=true
+TMPDIR=/home/remi/dev/rum/.temp/brief-609/tmp
+RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1
+```
+
+**r7-format-check: exit 0.** Raw output: `.temp/brief-609/r7-format-check.log`.
+
+```text
+python3 scripts/run-bounded.py --timeout 900 -- python3 .temp/brief-609/gate.py r7-format-check cargo fmt --check
+```
+
+```text
+CARGO_BUILD_JOBS=1
+RUST_TEST_THREADS=1
+CARGO_NET_OFFLINE=true
+TMPDIR=/home/remi/dev/rum/.temp/brief-609/tmp
+RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1
+```
+
+Formatting output: none; exit 0.
+
+Rust compilation completed without compiler errors or warnings:
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 35.33s
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-5f7f08d1c3c3a0e1)
+
+running 25 tests
+```
+
+The inventory-independent report emitted 79 UnknownHostPayload rows, 7,716 UnknownConstruct rows and 59 self-reaching rows. All 79 host rows and all 59 self-reaching rows are byte-identical to the current inventories. The complete report is retained in `r7/ownership-discovery.txt`; its extracted comparison is `r7/discovery-summary.json`. The only UnknownConstruct set difference is this same-closure span move:
+
+```text
+REMOVED (old span):
+UnknownConstruct	crates/rum-runtime/src/runtime/suspension/typed/adapter.rs	79	18	closure captures: |value| (capture types/modes unresolved)
+ADDED (new span):
+UnknownConstruct	crates/rum-runtime/src/runtime/suspension/typed/adapter.rs	75	41	closure captures: |value| (capture types/modes unresolved)
+```
+
+All four failed tests, verbatim from the single ownership run:
+
+```text
+test tests::ownership_graph::host_payload_ledger::production_host_payload_ledger_is_complete_and_attributed ... 
+thread 'tests::ownership_graph::host_payload_ledger::production_host_payload_ledger_is_complete_and_attributed' panicked at crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger.rs:146:57:
+check 3: opaque ownership via rum_runtime::runtime::suspension::typed::action::ErasedFinalizer has no verified path to Expr/SharedExpr/SharedArgs; cannot attribute Expr debt
+row: UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/action.rs	22	14	rum_runtime::runtime::suspension::typed::action::Action.Finalize.0/std::boxed::Box[Own]/arg0: opaque owned payload dyn ErasedFinalizer
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+```
+
+```text
+test tests::ownership_graph::host_payload_ledger::tests::adapter_production_witnesses_are_computed ... ADAPTER_WITNESS	UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/action.rs	20	15	rum_runtime::runtime::suspension::typed::action::Action.Evaluate.next/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame	rum_runtime::runtime::suspension::typed::adapter::ErasedFrame => rum_runtime::runtime::suspension::typed::adapter::TypedAdapter.inner (impl at crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:33:1) => rum_runtime::runtime::suspension::typed::TypedFrame => rum_runtime::runtime::eval_call_prepare::resume_frames::PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame (impl at crates/rum-runtime/src/runtime/eval_call_prepare/resume_frames.rs:40:1); rum_runtime::runtime::eval_call_prepare::resume_frames::PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame.state -> rum_runtime::runtime::eval_call_prepare::SuspendedCallArgumentPreparation ; rum_runtime::runtime::eval_call_prepare::SuspendedCallArgumentPreparation.head -> rum_core::expr::Expr
+
+thread 'tests::ownership_graph::host_payload_ledger::tests::adapter_production_witnesses_are_computed' panicked at crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/tests.rs:268:71:
+called `Result::unwrap()` on an `Err` value: "opaque ownership via rum_runtime::runtime::suspension::typed::action::ErasedFinalizer has no verified path to Expr/SharedExpr/SharedArgs; cannot attribute Expr debt"
+FAILED
+```
+
+```text
+test tests::ownership_graph::host_payload_ledger::tests::missing_stale_and_unrelated_expression_debt_are_rejected ... 
+thread 'tests::ownership_graph::host_payload_ledger::tests::missing_stale_and_unrelated_expression_debt_are_rejected' panicked at crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/tests.rs:70:5:
+assertion `left == right` failed
+  left: "check 3: opaque ownership via rum_runtime::runtime::suspension::typed::action::ErasedFinalizer has no verified path to Expr/SharedExpr/SharedArgs; cannot attribute Expr debt\nrow: UnknownHostPayload\tcrates/rum-runtime/src/runtime/suspension/typed/action.rs\t22\t14\trum_runtime::runtime::suspension::typed::action::Action.Finalize.0/std::boxed::Box[Own]/arg0: opaque owned payload dyn ErasedFinalizer\ncheck 1: missing ledger entry: UnknownHostPayload\ttest-side-suspension-copy.rs\t1\t1\trum_runtime::runtime::suspension::core::SuspendedEvaluation.unrelated_payload/fixture::OtherChain<arg0> via payload/std::boxed::Box[Own]/arg0: opaque owned payload dyn fixture :: OtherPayload"
+ right: "check 1: missing ledger entry: UnknownHostPayload\ttest-side-suspension-copy.rs\t1\t1\trum_runtime::runtime::suspension::core::SuspendedEvaluation.unrelated_payload/fixture::OtherChain<arg0> via payload/std::boxed::Box[Own]/arg0: opaque owned payload dyn fixture :: OtherPayload"
+FAILED
+```
+
+```text
+test tests::ownership_graph::production_inventory_is_exact ... EXACT INVENTORY self-reaching types: 59 rows
+EXACT INVENTORY UnknownHostPayload: 79 rows
+
+thread 'tests::ownership_graph::production_inventory_is_exact' panicked at crates/rum-stdlib/src/tests/ownership_graph/mod.rs:73:37:
+UnknownConstruct inventory mismatch:
+missing inventory row: UnknownConstruct	crates/rum-runtime/src/runtime/suspension/typed/adapter.rs	75	41	closure captures: |value| (capture types/modes unresolved)
+stale inventory row: UnknownConstruct	crates/rum-runtime/src/runtime/suspension/typed/adapter.rs	79	18	closure captures: |value| (capture types/modes unresolved)
+FAILED
+```
+
+```text
+failures:
+
+failures:
+    tests::ownership_graph::host_payload_ledger::production_host_payload_ledger_is_complete_and_attributed
+    tests::ownership_graph::host_payload_ledger::tests::adapter_production_witnesses_are_computed
+    tests::ownership_graph::host_payload_ledger::tests::missing_stale_and_unrelated_expression_debt_are_rejected
+    tests::ownership_graph::production_inventory_is_exact
+
+test result: FAILED. 21 passed; 4 failed; 0 ignored; 0 measured; 1127 filtered out; finished in 67.17s
+
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+
+The missing/stale negative-control failure is a consequence of the new production attribution failure also appearing in its diagnostic; the control was not relaxed. The exact-inventory failure is the 79:18 → 75:41 closure location. Neither explains away the two independent production witness failures. No disposition chain was emitted for the blanket shape.
+
+The analyzer gap is concrete. `ownership_graph/host_payload_ledger/ownership.rs:121` first looks for concrete nominal implementations and then delegates at line172. `host_payload_ledger/adapters.rs:111` supports a nominal generic adapter with an owned field; lines122–123 require the implementation self type to resolve to a source definition, and the following checks require its generic argument and owned parameter field. Bare parameter F in impl<F: SlotFinalizer> ErasedFinalizer for F is not that nominal adapter shape. There is no blanket-bound implication witness. The analyzer therefore reaches the explicit “no verified path” rejection at ownership.rs:176. These files and every existing control remain byte-identical. Extending this proof requires a director decision; it was not attempted as an inventory update.
+
+The source edit expires retention fingerprints and certificate cells. They were not refreshed after the mandatory STOP, and no old certificate is claimed current. No frame-root or census pin replay was performed. The scope audit preserves the entire analyzer, all inventories, the public API and every file outside the two edits plus this report.
+
+Not run on R7 source: typed runtime tests; frame-root tests; the 48-level test; either census or 31-pair compile-control build; either complete suspension oracle or ordinary-control build; local-production acceptance in either build; fingerprint/certificate replay; frontier and compiler-instrument replays; the full workspace; native ZeroMQ tests; and every native stack/performance measurement. No native skip is counted as a pass: native tests did not run. Section C remains incomplete because the amendment explicitly stops this path first.
+
+### 5. Allocation, finish-path, instruction, stack and timing status
+
+No new measurement binary or performance panel was produced. The source removes the second Box construction from the erased finish method, but no instruction, allocation or transfer result is inferred from source alone. In particular, the required 7N + 5 → 7N + 4 call-repeat intercept, absence of the 56-byte allocation, absence of replacement allocations, single legacy-equivalent free and absence of stack payload transfers have not been measured. The other four workloads have not been rechecked either.
+
+The 59 ordinary flags/copy/equality gates, three leaves, all four native-stack limits, complete 64-label allocation/instruction panels, five-workload resume attribution, repeats and timing remain unrun. No R6 measurement is carried over as R7 acceptance, and section 5 does not use R6 evidence to clear an unmeasured new binary. The four S2 bases and four historical R6b candidates retain their hashes; preserving those artifacts is not a measurement of this candidate. Timing did not run because the prerequisite STOP was reached.
+
+### 6. S2 cold-helper retype and hot-boundary status
+
+The earlier continuation_fault_outcome retype, four callers and two test callers are unchanged. No R7 release binary exists, so none of the four address-level boundary comparisons was repeated. R6's accepted guard/spill result is historical; this report makes no new assembly-identity or hot-boundary claim.
+
+### 7. Stop-loss, scope audit and remaining decision
+
+One source-shape attempt was made, with zero compiler errors and one ownership-suite run. The named allocation-intercept and finish-transfer gates were not reached, so their consecutive no-progress counter remains zero. This is the separate mandatory ownership STOP, not the two-attempt stop-loss. Formatting is the only subsequent code check; all remaining work is preservation, read-only diagnosis, scope verification and this report.
+
+The working tree retains the two-file candidate for review; the stale witness and closure inventory are intentionally visible. No weaker finalizer shape, hand-written witness, analyzer exemption, relaxed test, per-frame mode, public raw API or additional source edit was attempted. The next decision is whether to authorize an ownership proof for the blanket trait-bound implementation. Only after that proof emits the chain and all replays pass can the full final-source section C and acceptance measurements resume.
+
+The R7 entry snapshot covers 2027 files. The audit confirms only action.rs and adapter.rs changed before this appended report; no new source file, unsafe, manifest, lockfile, toolchain or out-of-scope edit occurred. All 183 protected inputs and eight historical measurement binaries are preserved, as are all entry bytes of this brief and the director-owned documents. No git command, network request or sub-agent was used. The tree is left uncommitted for the director. Raw patch and checks: `r7/candidate.patch`, `r7/audit.json`, `r7/discovery-summary.json` and `r7-ownership-discovery.log`.
+
+
+## Director amendment — redispatch 8: the ledger learns the blanket erasure
+
+The STOP was correct. The diagnosis matches the source.
+`adapters.rs::adapter` requires the implementation's self type to resolve
+to a nominal definition with one owned parameter field. Bare `F` in
+`impl<F: SlotFinalizer> ErasedFinalizer for F` is not that shape, so
+`ownership.rs` reaches its "no verified path" rejection.
+
+### Ruling: keep the blanket shape, and extend the existential proof to it
+
+The blanket impl is the right shape: S2's legacy finalizer is
+`PureFrameFinalizer::finish(self: Box<Self>)`, called on its own box with
+no transfer. Your two-file candidate reproduces exactly that. No nominal
+shape gets there without `unsafe` or a payload move. A by-value
+`SlotFinalizer::finish` would move 56 B out of the box, which the
+acceptance forbids.
+
+So the analyzer must model the shape. A blanket implementation over the
+type parameter itself is the degenerate erasure adapter: the erased value
+*is* the bounded `F`, owned directly by the erased box. The existing rule's
+soundness argument carries over unchanged.
+
+**Authorized files** (the R7 candidate's two runtime files remain authorized):
+
+- `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/adapters.rs`
+- `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/ownership.rs`,
+  only if the delegation needs it
+- `crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/tests.rs`
+- the inventories and ledgers the change moves, re-derived by discovery
+
+**The rule.** Accept an implementation whose self type is exactly its sole
+type parameter only when every one of the following holds:
+
+- **The impl's own form.** It is positive and non-conditional, has exactly
+  one type parameter, and that parameter has exactly one ordinary trait
+  bound under the existing `bound()` rule. Self is the bare parameter path:
+  not `&F`, `Box<F>`, `Vec<F>` or a qualified path.
+- **The trait.** It is not public, by the existing `public()` check.
+- **Every other implementation of the trait** still validates. It is either
+  a nominal adapter under the existing rule or another blanket under this
+  one. One unsupported implementor rejects the whole trait, as today.
+- **The witness hop** names the blanket and its bound:
+  `{trait} => impl<F: {bound}> for F (impl at …) => {bound} => {concrete} (impl at …); {path}`.
+- **The bound** must have an in-tree concrete implementor whose ownership
+  path reaches `EXPRESSIONS`, by the existing search. The public-bound
+  interim witness applies to a blanket exactly as it does to an adapter, no
+  more.
+
+Update the module doc comment to name both shapes.
+
+**Watched falsifiers.** Add these as fixtures beside the existing
+`adapter_fixture` tests, in the same style. Show each positive control
+failing with the new rule disabled, then passing with it restored:
+
+1. A positive blanket over a bound with a concrete implementor reaching
+   `Expr` emits the exact hop.
+2. The same with two bounds, or a bound with generic arguments: rejected.
+3. Self `Box<F>`, `&F` or `Vec<F>` written as a blanket (it is not one):
+   not accepted by this rule.
+4. A public trait: rejected.
+5. A blanket whose bound has no implementor reaching `Expr`: rejected,
+   unless the existing interim rule applies.
+6. The trait has a second, unsupported implementor beside a valid blanket:
+   the trait is rejected.
+
+`adapter_production_witnesses_are_computed` must then compute the
+production `Action.Finalize.0` chain through the blanket, and the ledger
+row must carry that computed chain. The existing negative control
+(`missing_stale_and_unrelated_expression_debt_are_rejected`) passes
+unchanged; its expected text is not edited.
+
+**Acceptance.** Everything in redispatch 7's acceptance, unchanged:
+
+- call-repeat 7N + 5 → 7N + 4 in all three pairs;
+- the finish path: no allocation, no extra free, no payload transfer
+  through a stack temporary;
+- section C in full on the final source, including every replay the
+  runtime change and the analyzer change expire, both builds, the full
+  panel, resume attribution, and timing last.
+
+**Stop-loss.** The named gates are the six falsifiers, the production
+chain, the allocation intercept and the finish-path transfers. Two
+attempts that move none of them is a stop. A soundness doubt about the
+rule is a STOP to report, not something to resolve by narrowing the rule
+silently.
+
+Append a new `## Execution report` after this section.
