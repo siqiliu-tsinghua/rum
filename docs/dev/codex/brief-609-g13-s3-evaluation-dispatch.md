@@ -4190,3 +4190,741 @@ Newly authorized files, for A only:
 B needs no new file: the recursive-path files are already in scope.
 
 Append a new `## Execution report` after this section.
+
+## Execution report — redispatch 4: analyzer views repaired; STOP on the native-stack gate
+
+**S3 is not accepted.** Amendment A is implemented: all four production views use one checked adapter; the three watched falsifiers now pass, legacy opacity and fail-closed drift controls pass, and both compiler instruments pass without Python changes. The working runtime remains byte-identical to the redispatch-4 entry.
+
+Amendment B was measured before runtime edits in isolated S2 and S3 trees. The best isolated repair passes the unchanged 48-level test and uses less native stack than S2 in both debug shapes. Release still exceeds S2 by 320 B/level for peel and 384 B/level for arithmetic recursion. Attempt 6 moved neither release result; attempt 7 worsened both. The Hard rule **“Stop after two attempts that move none of the named failing gates”** applies. Stop-loss is 2. No runtime trial was promoted, no remaining regression was accepted, and section C's final gates/performance were not run.
+
+All runtime trials, binaries, raw probes and disassembly remain under `.temp/brief-609/r4/stack/`. The best 13-site trial is `fix1/attempt5-source/`, with the reviewable patch `best-trial.patch`; `fix1/tree/` contains the rejected final trial 7 and must not be mistaken for the best trial. `stop.json` records the distinction. This report appends after the R4 amendment and preserves the entire entry brief byte-for-byte.
+
+### 1. Files changed, ripple and pin disclosures
+
+Seven existing Rust files changed in this redispatch, plus this append-only report. All other S3 changes below are inherited from the prior reports. Scratch runtime trials are disclosed separately in section 5 and are not working-tree changes.
+
+| File | This redispatch / inherited | Semantic change or pin |
+| --- | --- | --- |
+| crates/rum-runtime/src/runtime/builtin_adapters.rs | Inherited R1–R3 | M0205 legacy macro → witnessed typed macro; identity success tail retained. |
+| crates/rum-runtime/src/runtime/builtin_adapters/resume_frames.rs | Inherited R1–R3 | F0204 legacy frame → TypedFrame&lt;Expr, Expr&gt;. |
+| crates/rum-runtime/src/runtime/eval_call_prepare.rs | Inherited R1–R3 | T0023 wrapper removed; initial witnessed capture; deferred helpers return ResumeStop&lt;PreparedCallArguments&gt;, advance fresh cursor/splice state, and use the witnessed token. Pure completion now returns PreparedCallArguments; its existing Legacy wire provider consumes those fields directly instead of freeze/thaw round-tripping them. The test-only old-wire fixture follows that helper’s typed result. |
+| crates/rum-runtime/src/runtime/eval_call_prepare/resume_frames.rs | Inherited R1–R3 | F0273 merges into F0272 so every repeat freezes fresh state of the same nominal type. F0570 becomes SlotFinalizer&lt;Output=PreparedCallArguments&gt;; finish_work schedules it after originating owners drop. |
+| crates/rum-runtime/src/runtime/eval_core/call.rs | Inherited R1–R3 | T0024 witnesses Expr before head sharing; shared resume_call_after_head performs the conversion. T0025/T0026 add PreparedDispatchFrame and share argument normalization/restore installation. F0275/F0276 consume Option&lt;Expr&gt;; their ordinary stage-result macro is shared in finish_call_dispatch_stage. Remove both shape-dependent old decoder branches. Stable heads retain their existing SharedExpr value. Profiling stop remains after ordinary preparation normalization and before returning a suspension. |
+| crates/rum-runtime/src/runtime/eval_core/mod.rs | Inherited R1–R3 | The SharedExpr-result profiling wrapper loses its final caller under T0024 and is removed; generic outcome classification remains. |
+| crates/rum-runtime/src/runtime/eval_core/symbol.rs | Inherited R1–R3 | Only F0277/M0285 typed: CompiledMatchOutcome → Expr, retaining matched/unmatched semantics and deleting the Expr wire map. The S14 loader capture in this file is unchanged. |
+| crates/rum-runtime/src/runtime/eval_dispatch/mod.rs | Inherited R1–R3 | Remove the generic PrepareArguments work and leave an unreachable arm. M0286 now witnesses the actual threaded Result instead of receiving only a request in a cold helper. M0287/M0288 use typed macros, preserving profiling on suspension. F0278 completes resumed.map(Some) after the existing memory-growth validation. |
+| crates/rum-runtime/src/runtime/hold_thread.rs | Inherited R1–R3 | F0279/M0289 typed Expr identity continuation for ReleaseHold. |
+| crates/rum-runtime/src/runtime/resolution.rs | Inherited R1–R3 | M0561/M0562 witnessed at the actual next_result before matching; saved current, pass count and history retain their transitions. |
+| crates/rum-runtime/src/runtime/resolution/resume_frames.rs | Inherited R1–R3 | F0526/F0527 typed Expr → Expr, retaining outcome? and resume_fixed_point_from. |
+| crates/rum-runtime/src/runtime/session/session_eval.rs | Inherited R1–R3 | Two callers: Err(self.continuation_fault_outcome(...).unwrap_err()) → Err(self.continuation_fault_outcome(...)). |
+| crates/rum-runtime/src/runtime/session/session_requests.rs | Inherited R1–R3 | Two callers: remove unwrap_err from the cold latch projection, retaining the same hot discriminant check. |
+| crates/rum-runtime/src/runtime/suspension/core/fault.rs | Inherited R1–R3 | Cold continuation_fault_outcome: Result&lt;T, EvalError&gt; → EvalError; still consumes the outcome and takes the same latch. |
+| crates/rum-runtime/src/runtime/suspension/typed/resume_token.rs | Inherited R1–R3 | Redispatch 2: delete suspend_witnessed; original suspend(session, request, fresh) → suspend(session, SlotWitness&lt;F::Input&gt;, request, fresh). Same public identity, same fresh F constraint, no Arc in the token. |
+| crates/rum-runtime/src/runtime/suspension/typed/tests/accounting.rs | Inherited R1–R3 | The legacy-queue setup calls eval_input_string directly instead of evaluating an InputString call through newly typed S3 frames. This restores the legacy-to-mixed widening precondition; every allocation, byte and admission assertion is unchanged. |
+| crates/rum-runtime/src/runtime/suspension/typed/tests/driver_faults.rs | Inherited R1–R3 | Only the cold-helper test caller loses unwrap_err. |
+| crates/rum-runtime/src/runtime/suspension/typed/tests/file_faults.rs | Inherited R1–R3 | Only the cold-helper test caller loses unwrap_err. |
+| crates/rum-runtime/src/runtime/suspension/typed/tests/live.rs | Inherited R1–R3 | repeat_work now captures slot_witness(&outcome) from its actual input producer before matching and passes it to the sole suspend route. |
+| crates/rum-runtime/src/runtime/tests/frame_root_trace.rs | Inherited R1–R3 | Scan both legacy and typed frame/finalizer traits; preserve 564-frame population and root/drop checks. Pin the Session-free PreparedCallArguments finalizer signature. Now compiled and tested: 15/15 frame-root tests pass. |
+| crates/rum-runtime/src/runtime/tests/frame_root_trace/derived_inventory.rs | Inherited R1–R3 | In both derived-root and pure-abandon arrays: eval_call_prepare/resume_frames.rs:ResumeSuspendedCallArgumentPreparationSuspensionFrame → eval_core/call.rs:PreparedDispatchFrame. This pairs the D0001 merge with the T0025/T0026 split consumer. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payload_ledger.tsv | Inherited R1–R3 | Exact discovery replay of source positions/owned S3 constructs; all 79 host identities and dispositions retained. Full old/new rows in ownership replay patch. Four emitted adapter witnesses replace interim no-production-instantiation text with concrete S3 preparation-frame/finalizer ownership paths; disposition, owed_by and external coverage unchanged. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payloads.tsv | Inherited R1–R3 | Exact discovery replay of source positions/owned S3 constructs; all 79 host identities and dispositions retained. Full old/new rows in ownership replay patch. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/self_reaching.tsv | Inherited R1–R3 | Exact discovery replay of source positions/owned S3 constructs; all 79 host identities and dispositions retained. Full old/new rows in ownership replay patch. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv | Inherited R1–R3 | Exact discovery replay of source positions/owned S3 constructs; all 79 host identities and dispositions retained. Full old/new rows in ownership replay patch. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv | Inherited R1–R3 | Exact discovery replay of source positions/owned S3 constructs; all 79 host identities and dispositions retained. Full old/new rows in ownership replay patch. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv | Inherited R1–R3 | Exact discovery replay of source positions/owned S3 constructs; all 79 host identities and dispositions retained. Full old/new rows in ownership replay patch. |
+| crates/rum-stdlib/src/tests/retention_closure/census/tests.rs | Inherited R1–R3 | Historical frontier 932 → 936; RET001 10 unchanged, RET002 895 → 900, RET003 27 → 26. 918 identical rows, 13 moved pairs, one old opaque site replaced by four accounted rows, and one new Try rejection. Explicitly preserve the freeze rejection; historical ACCEPTANCE_BASELINE string unchanged. |
+| crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs | R4 | CallAt now carries Source and Function, searches each alternative body with its real file, and traverses checked typed arguments. Add one actual generic typed fixture plus six permanent view controls in this existing module; no new frame implementation. |
+| crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/exact.rs | R4 | Context pins172→170 and preserved-clone total174→172. Exactly the two M0561 Err constructors moved into checked expansion; no claim filtered or new type invented. |
+| crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv | Inherited R1–R3 | Inherited R3 fingerprint/certificate replay retained. It is stale after the R4 checker-source changes; no R4 replay or acceptance is claimed. |
+| crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv | Inherited R1–R3 | Inherited R3 fingerprint/certificate replay retained. It is stale after the R4 checker-source changes; no R4 replay or acceptance is claimed. |
+| crates/rum-stdlib/src/tests/retention_closure/methods/context.rs | R4 | Read typed arguments in producer/success/session/frame order through checked. Bind the success pattern from an already inferred Result payload, otherwise unknown; restore locals. The conditional-attribute pre-scan uses the same adapter. |
+| crates/rum-stdlib/src/tests/retention_closure/mod.rs | R4 | Declare typed_resume_macro once as an ordinary sibling module. No new visibility or path escape. |
+| crates/rum-stdlib/src/tests/retention_closure/regions.rs | R4 | Replace its path-based private adapter module and direct adapt calls with the shared checked entry. Preserve four expansion rejections and argument traversal order; no admission or pin change. |
+| crates/rum-stdlib/src/tests/retention_closure/typed_resume_macro.rs | R4 | Make recognizes/adapt private; expose one checked(Source, Function, Macro) entry. Unrecognized macros return None; recognized adaptation errors panic with the located reason. Macro-definition and hygiene checks remain exact. |
+| crates/rum-stdlib/src/tests/retention_closure/types/context.rs | R4 | Read expression and statement macro arguments through checked, preserving success-only scope. Propagate only an already established expected type; preserve reference binding shape. Legacy and other macros remain opaque. |
+| crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs | Inherited R1–R3 | New strict If-held and listable-completion cases for three marker shapes, plus prepared.twice/head.map.twice controls. Checks::ALL and unconditional FaultProbe checks retained. Fold/Nest definitions archived for S13. |
+| crates/rum-stdlib/tests/suspension_oracle/fixtures/mod.rs | Inherited R1–R3 | No module → ordinary sibling mod evaluation_dispatch; no ../ path attribute. |
+| crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs | Inherited R1–R3 | S2 → S3 receipt, used by marker fixtures and census. FLIP_SLOT becomes census-only. Both oracle targets compile without warnings. |
+| crates/rum-stdlib/tests/suspension_oracle/inventory/typed-slot-stages.tsv | Inherited R1–R3 | Record all owned F/M/T/D transitions; retain F0273/M0280 removal receipts, add F0275P/M0282S; remove four raw decoder consumers; add S3 and X0040 finalizer-wire fixture receipt. Every changed row is in the receipt-transition artifact. |
+| crates/rum-stdlib/tests/suspension_oracle/support/drive.rs | Inherited R1–R3 | Retain the exact execute wrapper required by nine historical integration families through path aliases. Add a function-local allow(dead_code) for the oracle target, which calls execute_planned directly. This corrects the earlier erroneous removal; execute_planned and all comparisons remain unchanged. |
+| crates/rum-stdlib/tests/typed_slot_census.rs | Inherited R1–R3 | Scratch brief-608 → brief-609; S2 → S3 receipt and negative-preflip labels. Scope FLIP_SLOT here; connect s3 module. Guard-removal legacy counts 564/59 → 553/58; removed-frame sentinel remains 622. Both scratch falsifiers verified in both builds. |
+| crates/rum-stdlib/tests/typed_slot_census/receipts.rs | Inherited R1–R3 | Production legacy frames/finalizers 553/54 → 542/53, total 607 unchanged; macro result/insert 345/244 → 353/236, total 589 unchanged. Receipt row totals F623 → F624 and M600 → M601 retain merged rows plus new split identities. Closed-set S3 removal proof precedes skipping removed source anchors; all other exact source/mode checks remain. |
+| crates/rum-stdlib/tests/typed_slot_census/reporting.rs | Inherited R1–R3 | Scratch brief-608 → brief-609. Removed Whole0029–Whole0032 emit explicit S3 transition records, assert absence of the old identity, and preserve decoder IDs; live decoder rows still require rediscovery. |
+| crates/rum-stdlib/tests/typed_slot_census/routes.rs | Inherited R1–R3 | I0003 still names ContinueToken::suspend and its executable repeat witness. Update mechanism output to disclose typed S3 evaluation while later families remain untyped; S2 mechanism ownership is unchanged. |
+| crates/rum-stdlib/tests/typed_slot_census/s3.rs | Inherited R1–R3 | New closed-set gate for exactly 12 typed implementations / 13 typed macros, input/output pairs, 8 approved removals, absent T0023 wrapper/callers, relocated maps and witnessed token repeat. |
+| crates/rum-stdlib/tests/typed_slot_compile_controls.rs | Inherited R1–R3 | Scratch directory brief609; actual producer witnesses added to repeat/finalizer controls. Add token-witness-input, changing only producer Expr → Option&lt;Expr&gt;, requiring one E0308 at the complete witness span. 31 positive/intended-negative pairs pass in each build. |
+
+No runtime module-root widening, dependency, lockfile, toolchain, registry, core representation or unrelated documentation edit was made. `corpus.py` and `exact.py` are byte-identical to entry. No git command or network operation was used. There is no new unsafe code in the working patch or the scratch probes.
+
+The final scope audit found a new unrelated `docs/dev/security-hardening-progress.md`, absent from the entry manifest and timestamped2026-10-14T10:46:51Z. None of this execution’s tools wrote it. It was preserved separately at SHA-256 `1c7be1ded5fa952282940578e32582531018c1e6bf21c4ab86b97e10062193a0`; it is not included in the agent patch or claimed as an authorized edit. The initial all-tree audit flagged it; the corrected audit records that exception explicitly rather than modifying it.
+
+| R4 file | Entry chars | Final chars |
+| --- | --- | --- |
+| crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs | 3801 | 12367 |
+| crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/exact.rs | 9336 | 9649 |
+| crates/rum-stdlib/src/tests/retention_closure/methods/context.rs | 13557 | 15049 |
+| crates/rum-stdlib/src/tests/retention_closure/mod.rs | 17313 | 17337 |
+| crates/rum-stdlib/src/tests/retention_closure/regions.rs | 12983 | 12657 |
+| crates/rum-stdlib/src/tests/retention_closure/typed_resume_macro.rs | 6540 | 7023 |
+| crates/rum-stdlib/src/tests/retention_closure/types/context.rs | 10416 | 12093 |
+
+The adapter remains below 10k characters. The other enlarged existing modules remain in the 10k–20k warning band; the brief expressly requires these fixtures in existing retention modules. No arbitrary file split or new production module was added. Full cumulative patch and scope/protected-file evidence: `r4/candidate.patch`, `r4/final-audit.json`.
+
+### 2. Owned rows, modes and census state
+
+No F/M/T/D conversion changed in the working runtime during R4. The existing owned transitions remain:
+
+| F row | Current transition |
+| --- | --- |
+| F0204 | Typed Expr → Expr; same name. |
+| F0272 | Typed Expr → PreparedCallArguments; also receives fresh repeated state formerly handled by F0273. |
+| F0273 | Merged into F0272; no remaining production implementation of the old name. |
+| F0274 | Typed Expr → Expr; head conversion at the shared entry. |
+| F0275 | Typed Option&lt;Expr&gt; → Expr; prepared branch split to PreparedDispatchFrame. |
+| F0276 | Typed Option&lt;Expr&gt; → Expr; prepared branch uses the same PreparedDispatchFrame. |
+| F0277 | Typed CompiledMatchOutcome → Expr. |
+| F0278 | Typed Expr → Option&lt;Expr&gt;; complete the semantic Some map. |
+| F0279 | Typed Expr → Expr. |
+| F0526 | Typed Expr → Expr. |
+| F0527 | Typed Expr → Expr. |
+| F0570 | SlotFinalizer Output=PreparedCallArguments. |
+
+New F0275P remains PreparedDispatchFrame, Input=PreparedCallArguments and Output=Expr. F0273 remains merged into F0272; F0570 remains the pure typed finalizer. Modes remain Expr Value and the existing 21 Legacy modes, with no State births, per-frame overrides or dual-arm decoder.
+
+| M row | Actual producer type | Current transition |
+| --- | --- | --- |
+| M0205 | Expr | Typed identity frame; no post-witness semantic map. |
+| M0279 | Expr | Typed F0272 reentry uses the same append helper and fresh cursor/splice fields; pure finalizer builds the exact output after Arc release. |
+| M0280 | Expr | Old macro removed by D0001; witness of actual evaluated_result is passed to token.suspend with fresh F0272. No original Arc is captured. |
+| M0281 | Expr | Witness now at evaluate(head.into_owned()); shared resume_call_after_head accepts Expr or existing SharedExpr and performs Into&lt;SharedExpr&gt; once. |
+| M0282 | PreparedCallArguments or Option&lt;Expr&gt; (split) | Prepare macro → PreparedDispatchFrame; stage macro → shared finish_call_dispatch_stage, F0275. Shared normalization/restore helper runs once. |
+| M0283 | PreparedCallArguments or Option&lt;Expr&gt; (split) | Prepare macro → PreparedDispatchFrame; shared stage macro → F0276; restore freezes after the same helper. |
+| M0285 | CompiledMatchOutcome | Same branches in F0277; only the Expr transport map and raw input decode disappear. |
+| M0286 | Expr | F0278 now completes resumed.map(Some); three listable fixtures watched fail → pass. |
+| M0287 | Expr | Same Some completion in unchecked F0278; suspension records the existing profiling event before the typed macro returns. |
+| M0288 | Expr | Checked F0278 validates the Expr result and then wraps Some. The If-held fixtures exercise the checked test build; the unchecked constructor shares this completion body. Its release path has not yet been measured. |
+| M0289 | Expr | Typed identity frame. |
+| M0561 | Expr | Typed F0526 uses outcome? then the unchanged resume_fixed_point_from state transition. |
+| M0562 | Expr | Typed F0527 uses outcome? then the same helper. |
+
+M0282S remains the shared Option-stage macro in finish_call_dispatch_stage in the working tree. T0023 removes the unreachable PrepareArguments arm and unused wrapper. T0024 witnesses Expr before the shared head conversion. T0025/T0026 split the prepared/stage consumers and install normalization/restore state once. T0027 removes transport-only encoding. D0001 uses actual producer evidence and fresh F0272 state through the sole token.suspend route, with finalization after both originating owners drop.
+
+Last executed source-census output is inherited R3 evidence, not a fresh R4 gate: production 607 implementations=542 legacy frames+53 legacy finalizers+11 TypedFrame+1 SlotFinalizer;589 macro sites=576 legacy+13 typed, with 353 result/236 insert. Test-only 16 implementations/11 macros; combined 623/600. The new compiled A fixture contributes one test-only typed invocation and no frame implementation. Its test-only receipt/count reconciliation is outstanding: expected test-only macro 11→12 and combined macro 600→601 must be confirmed by discovery, not merely pinned. Production runtime totals are unchanged by the verified byte-identical runtime tree. R4 did not rerun the census or update its receipts after the B stop.
+
+The isolated best trial preserves13 production macro sites by splitting the Option-stage helper into two direct matches and sharing M0287/M0288 through finish_builtin_dispatch. Those trial-only macro identity changes, the extra test fixture, and the altered macro expansion would all need exact receipt/frontier reconciliation before any promotion. No such trial receipt or adapter change was smuggled into the working source.
+
+### 3. Watched falsifiers and divergence evidence
+
+A3 used one compiled generic TypedFrame fixture with an explicit Some constructor, Local::choose, and Ok(Some(value)) whose expected type comes from the signature. An initial scratch E0608 (indexing a BTreeSet) was corrected before the watched failing run; it is not counted as the required behavioral failure. The permanent tests remain in compiler_oracle/corpus.rs. Scratch copies were used to show pre/post behavior without changing the checked production macro.
+
+Raw output: `.temp/brief-609/r4-view-fail-first-compiled.log`.
+
+```text
+running 3 tests
+test checker::compiler_oracle::corpus::typed_macro_constructor_locator_reads_arguments ... 
+thread 'checker::compiler_oracle::corpus::typed_macro_constructor_locator_reads_arguments' panicked at checker/compiler_oracle/corpus.rs:151:9:
+constructor locator hid crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:123:25-123:37
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test checker::compiler_oracle::corpus::typed_macro_expected_constructor_type_reads_arguments ... 
+thread 'checker::compiler_oracle::corpus::typed_macro_expected_constructor_type_reads_arguments' panicked at checker/compiler_oracle/corpus.rs:171:5:
+assertion `left == right` failed: explicit Some and both contextual constructors
+  left: 0
+ right: 3
+FAILED
+test checker::compiler_oracle::corpus::typed_macro_method_selection_reads_arguments ... 
+thread 'checker::compiler_oracle::corpus::typed_macro_method_selection_reads_arguments' panicked at checker/compiler_oracle/corpus.rs:160:5:
+assertion `left == right` failed: typed local method must be visited
+  left: 0
+ right: 1
+FAILED
+
+failures:
+
+failures:
+    checker::compiler_oracle::corpus::typed_macro_constructor_locator_reads_arguments
+    checker::compiler_oracle::corpus::typed_macro_expected_constructor_type_reads_arguments
+    checker::compiler_oracle::corpus::typed_macro_method_selection_reads_arguments
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 2 filtered out; finished in 44.17s
+
+error: test failed, to rerun pass `--test frontier`
+```
+
+The legacy control changes only the macro path in the fixture AST, preserving identical argument tokens and spans. It passes before the repair and remains opaque in all four views. The final six-control run also proves all-view hard failure on definition drift and that an unknown success binding neither selects a method nor leaks outside its scope. The four printed drift panics below are deliberately caught hard-failure assertions:
+
+Raw output: `.temp/brief-609/r4-views-controls.log`.
+
+```text
+running 6 tests
+test checker::compiler_oracle::corpus::legacy_macro_stays_opaque_in_all_four_views ... LEGACY_MACRO_OPAQUE regions/locator/methods/types
+ok
+test checker::compiler_oracle::corpus::typed_macro_constructor_locator_reads_arguments ... TYPED_MACRO_LOCATED crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:151:25-151:37 std::option::Option::Some
+TYPED_MACRO_LOCATED crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:153:17-153:32 std::result::Result::Ok
+TYPED_MACRO_LOCATED crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:153:20-153:31 std::option::Option::Some
+ok
+test checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view ... 
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:183:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+TYPED_MACRO_DRIFT regions crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:183:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT locator crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:183:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT methods crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:183:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT types crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+ok
+test checker::compiler_oracle::corpus::typed_macro_expected_constructor_type_reads_arguments ... TYPED_MACRO_TYPE crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:151:25-151:37 std::option::Option::Some std::option::Option<usize>
+TYPED_MACRO_TYPE crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:153:17-153:32 std::result::Result::Ok std::result::Result<std::option::Option<rum_core::expr::Expr>, rum_runtime::runtime::session::session_state::EvalError>
+TYPED_MACRO_TYPE crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:153:20-153:31 std::option::Option::Some std::option::Option<rum_core::expr::Expr>
+ok
+test checker::compiler_oracle::corpus::typed_macro_method_selection_reads_arguments ... TYPED_MACRO_METHOD crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:152:25-152:39 rum_stdlib::tests::retention_closure::compiler_oracle::corpus::typed_argument_fixture::Local::choose
+ok
+test checker::compiler_oracle::corpus::typed_macro_unknown_pattern_does_not_leak_or_select ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 87.68s
+```
+
+The earlier six strict language-divergence failures are retained below as historical S2 evidence, not rerun baselines. R1 replaced the director-reassigned Fold/Nest cases with three If-held and three listable-completion cases; F0528/M0563 remain untouched for S13.
+
+Raw output: `.temp/brief-609/r1-pre-builtin-held-default.log`.
+
+```text
+running 3 tests
+test oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some ... builtin.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.empty_some resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=12
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.empty_some: UnexpectedPause(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_builtin_none ... builtin.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.none resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=24
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.none: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_builtin_some ... builtin.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.some resumed: Ok(ResultView { observation: Observation { value: Some(Atom(Integer(Small(5)))), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=48
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.some: Value
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_builtin_none
+    oracle::fixtures::evaluation_dispatch::s3_builtin_some
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 50 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+Raw output: `.temp/brief-609/r1-pre-builtin-held-no-default.log`.
+
+```text
+running 3 tests
+test oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some ... builtin.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 659, identity: None, text: SymbolText { id: 659, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.empty_some resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=12
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.empty_some: UnexpectedPause(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_builtin_none ... builtin.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 661, identity: None, text: SymbolText { id: 661, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.none resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=24
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.none: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_builtin_some ... builtin.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 659, identity: None, text: SymbolText { id: 659, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.some resumed: Ok(ResultView { observation: Observation { value: Some(Atom(Integer(Small(5)))), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=48
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.some: Value
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_builtin_none
+    oracle::fixtures::evaluation_dispatch::s3_builtin_some
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 50 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+Raw output: `.temp/brief-609/r1-pre-threaded-dv-default.log`.
+
+```text
+running 3 tests
+test oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some ... threaded.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 670, identity: None, text: SymbolText { id: 670, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.empty_some resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=12
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.empty_some: UnexpectedPause(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_threaded_none ... threaded.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 673, identity: None, text: SymbolText { id: 673, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.none resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=24
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.none: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_threaded_some ... threaded.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 670, identity: None, text: SymbolText { id: 670, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.some resumed: Ok(ResultView { observation: Observation { value: Some(Atom(Integer(Small(5)))), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=48
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.some: Value
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_threaded_none
+    oracle::fixtures::evaluation_dispatch::s3_threaded_some
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 53 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+Raw output: `.temp/brief-609/r1-pre-threaded-dv-no-default.log`.
+
+```text
+running 3 tests
+test oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some ... threaded.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 664, identity: None, text: SymbolText { id: 664, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.empty_some resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=12
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.empty_some: UnexpectedPause(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_threaded_none ... threaded.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.none resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=24
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.none: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_threaded_some ... threaded.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 664, identity: None, text: SymbolText { id: 664, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.some resumed: Ok(ResultView { observation: Observation { value: Some(Atom(Integer(Small(5)))), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=48
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.some: Value
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_threaded_none
+    oracle::fixtures::evaluation_dispatch::s3_threaded_some
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 53 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+Their latest complete post-conversion equality is the R3 full suspension-oracle evidence below: Checks::ALL and unconditional FaultProbe absence were unchanged. R4 did not rerun either full suspension-oracle build, so these are not claimed as final-source acceptance:
+
+Historical R3 default
+
+```text
+test oracle::fixtures::evaluation_dispatch::head_map_twice ... continuation-slot fault-occurrence delta=0; observations=17175
+test oracle::fixtures::evaluation_dispatch::prepared_twice ... continuation-slot fault-occurrence delta=0; observations=17187
+test oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some ... continuation-slot fault-occurrence delta=0; observations=17199
+test oracle::fixtures::evaluation_dispatch::s3_builtin_none ... continuation-slot fault-occurrence delta=0; observations=17211
+test oracle::fixtures::evaluation_dispatch::s3_builtin_some ... continuation-slot fault-occurrence delta=0; observations=17223
+test oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some ... continuation-slot fault-occurrence delta=0; observations=17235
+test oracle::fixtures::evaluation_dispatch::s3_threaded_none ... continuation-slot fault-occurrence delta=0; observations=17247
+test oracle::fixtures::evaluation_dispatch::s3_threaded_some ... continuation-slot fault-occurrence delta=0; observations=17259
+test zz_continuation_fault_occurrences ... continuation-slot fault-occurrence delta=0; observations=88016
+test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 30.47s
+```
+
+Historical R3 no-default
+
+```text
+test oracle::fixtures::evaluation_dispatch::head_map_twice ... continuation-slot fault-occurrence delta=0; observations=17175
+test oracle::fixtures::evaluation_dispatch::prepared_twice ... continuation-slot fault-occurrence delta=0; observations=17187
+test oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some ... continuation-slot fault-occurrence delta=0; observations=17199
+test oracle::fixtures::evaluation_dispatch::s3_builtin_none ... continuation-slot fault-occurrence delta=0; observations=17211
+test oracle::fixtures::evaluation_dispatch::s3_builtin_some ... continuation-slot fault-occurrence delta=0; observations=17223
+test oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some ... continuation-slot fault-occurrence delta=0; observations=17235
+test oracle::fixtures::evaluation_dispatch::s3_threaded_none ... continuation-slot fault-occurrence delta=0; observations=17247
+test oracle::fixtures::evaluation_dispatch::s3_threaded_some ... continuation-slot fault-occurrence delta=0; observations=17259
+test zz_continuation_fault_occurrences ... continuation-slot fault-occurrence delta=0; observations=88016
+test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 30.27s
+```
+
+### 4. Analyzer reconciliation, compiler evidence and gate ledger
+
+A4 required no Python instrument change. The production constructor oracle independently observes all 7315 claims, including all 11 previously unlocatable typed-argument constructors. The exact oracle reports285 agreements and 0 disagreements. Raw inputs, MIR observation tables and fingerprints were copied into `r4/constructor-oracle/` and `r4/exact-oracle/`; all 11 paired observations are in `r4/eleven-constructor-observations.json`.
+
+| Claim | Location | Compiler observation |
+| --- | --- | --- |
+| corpus_611 | crates/rum-runtime/src/runtime/builtin_adapters.rs:937:26 | Result::&lt;rum_core::Expr, session_state::EvalError&gt;::Ok |
+| corpus_1335 | crates/rum-runtime/src/runtime/eval_core/call.rs:138:33 | Result::&lt;eval_call_prepare::PreparedCallArguments, session_state::EvalError&gt;::Ok |
+| corpus_1337 | crates/rum-runtime/src/runtime/eval_core/call.rs:262:33 | Result::&lt;eval_call_prepare::PreparedCallArguments, session_state::EvalError&gt;::Ok |
+| corpus_1338 | crates/rum-runtime/src/runtime/eval_core/call.rs:351:32 | Result::&lt;rum_core::Expr, session_state::EvalError&gt;::Ok |
+| corpus_1402 | crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:128:42 | Result::&lt;Option&lt;rum_core::Expr&gt;, session_state::EvalError&gt;::Ok |
+| corpus_1403 | crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:128:45 | Option::&lt;rum_core::Expr&gt;::Some |
+| corpus_1411 | crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:191:30 | Result::&lt;rum_core::Expr, session_state::EvalError&gt;::Ok |
+| corpus_1412 | crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:206:26 | Result::&lt;rum_core::Expr, session_state::EvalError&gt;::Ok |
+| corpus_1451 | crates/rum-runtime/src/runtime/hold_thread.rs:29:26 | Result::&lt;rum_core::Expr, session_state::EvalError&gt;::Ok |
+| corpus_3118 | crates/rum-runtime/src/runtime/resolution.rs:380:30 | Result::&lt;rum_core::Expr, session_state::EvalError&gt;::Ok |
+| corpus_3124 | crates/rum-runtime/src/runtime/resolution.rs:448:30 | Result::&lt;rum_core::Expr, session_state::EvalError&gt;::Ok |
+
+Verbatim totals: r4-constructor-oracle
+
+```text
+A1_CORPUS_TOTAL agreements=7315 disagreements=0 claims=7315
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1150 filtered out; finished in 257.06s
+```
+
+Verbatim totals: r4-exact-oracle
+
+```text
+A1_ORACLE_TOTAL agreements=285 disagreements=0
+A1_ORACLE_TOTAL agreements=285 disagreements=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1150 filtered out; finished in 197.89s
+```
+
+A5 re-derivation:172→170 contextual claims;174→172 with the two preserved-clone contexts. All170 retained records are identical to R3; no historical contextual claim was newly added by the types view. Exactly these two S2 rows were removed, both because M0561 moved their explicit Err construction into the checked expansion:
+
+```text
+crates/rum-runtime/src/runtime/resolution.rs:386:28-386:69	std::result::Result::Err	std::result::Result<rum_core::expr::Expr, rum_runtime::runtime::session::session_state::EvalError>
+crates/rum-runtime/src/runtime/resolution.rs:388:38-388:48	std::result::Result::Err	std::result::Result<rum_core::expr::Expr, rum_runtime::runtime::session::session_state::EvalError>
+```
+
+A6 historical frontier:936 rows, byte-identical to R3, with 0 view-agreement row changes. Against S2:932→936;918 identical rows,13 same-operation moved pairs, the old opaque M0561 RET003 row replaced by four explicit expansion RET002 rows, and one new S3 Try/FromResidual rejection. RET001 10 unchanged, RET002 895→900, RET003 27→26. No unpaired removal; the AccumulatorChain::default rejection in FixedPointHistory::freeze remains. The exact S2 pairing ledger remains `r3/frontier-classified-diff.json`; the R4 equality/context reconciliation is `r4/view-agreement-reconciliation.json`.
+
+A7: the local analyzer is unchanged. Neither C01 nor C02’s certified body contains a converted site; runtime/options/core.rs is unchanged. However the 68 source-context fingerprints and four promoted certificate cells retained from R3 are stale after the R4 analyzer edit. No certificate replay or local acceptance, default or no-default, was performed in R4. Ownership discovery was likewise not replayed;79 approved host identities/59 cycles are the last R3 observation, not a new R4 claim.
+
+All R4 gate commands were serial, bounded, offline/jobs1/test-threads1 with TMPDIR under brief609. No R4 Cargo overlap occurred. The following table gives every saved top-level R4 gate’s exact test-result lines; each command/environment and full raw output is beside the log as .command.json/.exit.json. Empty result cells mean build/format/measurement-driver commands, not passed tests.
+
+| Raw log | Exit | Verbatim test-result totals |
+| --- | --- | --- |
+| .temp/brief-609/r4-constructor-oracle.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1150 filtered out; finished in 257.06s |
+| .temp/brief-609/r4-exact-oracle.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1150 filtered out; finished in 197.89s |
+| .temp/brief-609/r4-final-format.log | 0 | No test-result line |
+| .temp/brief-609/r4-fix1-format.log | 0 | No test-result line |
+| .temp/brief-609/r4-fix3-format-corrected.log | 0 | No test-result line |
+| .temp/brief-609/r4-fix3-format.log | 1 | No test-result line |
+| .temp/brief-609/r4-fix5-format.log | 0 | No test-result line |
+| .temp/brief-609/r4-format.log | 0 | No test-result line |
+| .temp/brief-609/r4-marker-base-debug.log | 0 | No test-result line |
+| .temp/brief-609/r4-marker-base-release.log | 0 | No test-result line |
+| .temp/brief-609/r4-marker-before-debug.log | 0 | No test-result line |
+| .temp/brief-609/r4-marker-before-release.log | 0 | No test-result line |
+| .temp/brief-609/r4-neighborhood-base-debug.log | 0 | No test-result line |
+| .temp/brief-609/r4-neighborhood-base-release.log | 0 | No test-result line |
+| .temp/brief-609/r4-neighborhood-before-debug.log | 0 | No test-result line |
+| .temp/brief-609/r4-neighborhood-before-release.log | 0 | No test-result line |
+| .temp/brief-609/r4-original-48-base.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.04s |
+| .temp/brief-609/r4-original-48-before.log | 101 | test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.05s |
+| .temp/brief-609/r4-original-48-fix1.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.01s |
+| .temp/brief-609/r4-production-views-inventory.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 10.35s |
+| .temp/brief-609/r4-prologues-base-release.log | 0 | No test-result line |
+| .temp/brief-609/r4-prologues-base-trace.log | 0 | No test-result line |
+| .temp/brief-609/r4-prologues-before-release.log | 0 | No test-result line |
+| .temp/brief-609/r4-prologues-before-trace.log | 0 | No test-result line |
+| .temp/brief-609/r4-stack-base-debug-v2.log | 0 | No test-result line |
+| .temp/brief-609/r4-stack-base-debug.log | 0 | No test-result line |
+| .temp/brief-609/r4-stack-base-release.log | 0 | No test-result line |
+| .temp/brief-609/r4-stack-before-debug-v2.log | 0 | No test-result line |
+| .temp/brief-609/r4-stack-before-debug.log | 0 | No test-result line |
+| .temp/brief-609/r4-stack-before-release.log | 0 | No test-result line |
+| .temp/brief-609/r4-trace-base-release.log | 0 | No test-result line |
+| .temp/brief-609/r4-trace-before-release.log | 0 | No test-result line |
+| .temp/brief-609/r4-view-fail-first-compiled.log | 101 | test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 2 filtered out; finished in 44.17s |
+| .temp/brief-609/r4-view-fail-first.log | 101 | No test-result line |
+| .temp/brief-609/r4-view-legacy-before.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 14.86s |
+| .temp/brief-609/r4-views-controls.log | 0 | test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 87.68s |
+| .temp/brief-609/r4-views-post.log | 0 | test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 58.42s |
+
+Both production compiler-oracle tests and the view-fixture gates emitted no compiler warning. The isolated native builds carry three pre-existing unused-helper warnings, recorded separately below from their compiler-message JSON. All native-probe result lines are saved verbatim with their paths in `r4/stack/probe-test-results.tsv`:839 subprocess results total,431 with 1172 filtered out and 408 with 1171 filtered out. Every such probe reports1 passed/0 failed/0 ignored/0 measured. That means the probe ran successfully, **not** that its requested depth completed: StackLimit is an expected returned observation, recorded separately in depth-probes.json. The unchanged 48-level test is a real equality assertion and its three outputs follow.
+
+Raw output: `.temp/brief-609/r4-original-48-base.log`.
+
+```text
+running 1 test
+test runtime::tests::holding_and_control_part2::bounded_recursive_definition_below_native_stack_limit_succeeds ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.04s
+```
+
+Raw output: `.temp/brief-609/r4-original-48-before.log`.
+
+```text
+running 1 test
+test runtime::tests::holding_and_control_part2::bounded_recursive_definition_below_native_stack_limit_succeeds ... 
+thread 'runtime::tests::holding_and_control_part2::bounded_recursive_definition_below_native_stack_limit_succeeds' panicked at crates/rum-runtime/src/runtime/tests/holding_and_control_part2.rs:504:5:
+assertion `left == right` failed
+  left: "TerminatedEvaluation[\"StackLimit\"]"
+ right: "done"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    runtime::tests::holding_and_control_part2::bounded_recursive_definition_below_native_stack_limit_succeeds
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.05s
+```
+
+Raw output: `.temp/brief-609/r4-original-48-fix1.log`.
+
+```text
+running 1 test
+test runtime::tests::holding_and_control_part2::bounded_recursive_definition_below_native_stack_limit_succeeds ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.01s
+```
+
+The fix1-named48 log uses the best debug-fix5b binary, not the first trial. Build/probe metadata binds its exact SHA. Native ZeroMQ tests did not run in R4, so no new native passes/skips are claimed. The9 R3 loopback-capability skips remain historical skips.
+
+**Not run on final R4 source:** full workspace, typed runtime suite, frame-root suite, all 31 compiler pairs in both builds, typed census in both builds, both complete suspension-oracle builds, ownership discovery/acceptance, default/no-default certificate acceptance, and the Cargo production_rejection_census_is_complete gate. The required historical frontier itself was recomputed by the copied production views inventory and compared row-for-row. R3 results are not substituted for these final gates. No new FaultProbe run occurred; R3’s full-oracle final 88016 observations per build and all occurrence deltas0 remain historical only.
+
+### 5. Native-stack experiment and unrun performance requirements
+
+S2 was rebuilt in a separate target tree from the 2023 SHA-256-verified original S2 entry files, using saved original bytes for changed files. This satisfies the separate S2 source build without using the amendment’s optional git archive route, which the user expressly forbids. Every reconstructed file was reverified; only the scratch probe was appended to the original recursion-test file. See `r4/stack/s2-snapshot-verification.json`. This is the original S2 snapshot associated with cb09bfde by the supplied brief; no git-object identity was independently read or claimed.
+
+Method: fresh-process/session bisection against the unchanged 1048576-byte native guard, with the existing libtest thread stack and RUST_MIN_STACK absent. Both debug test profile and release test profile were built; release uses codegen-units1. The copied probe raises only the separate logical recursion ceiling to 100000 so it cannot mask native guard failure. It constructs the peel expression iteratively to avoid measuring parser nesting limits. The actual 48-level text test and its depth are untouched and were tested separately. No process-abort probe was used.
+
+B/level is the complete resident-prologue sum: sub-rsp allocation plus pushed registers,8 B return address per native frame, and outgoing stack arguments. A supplemental safe-Rust leaf marker checks native_base minus a local address at four heights×three fresh repetitions: debug 4/8/12/16 and release 10/20/30/40, all fits zero residual. The marker adds only fixed bottom-frame overhead; it does not instrument the recursive functions. Depth bisection is the requested primary method, not VmStk and not wall-clock timing. Base/entry neighborhoods were checked at ten adjacent depths×three fresh processes per shape/profile, with no mixed or nonmonotone boundary results.
+
+| Profile / shape | S2 B/level | Entry S3 B/level | Best isolated B/level | S2 max / first limit | Entry max / first limit | Best max / first limit |
+| --- | --- | --- | --- | --- | --- | --- |
+| Debug peel | 21424 | 24384 | 21184 | 51 /52 | 43 /44 | 51 /52 |
+| Debug arithmetic | 37728 | 43280 | 36768 | 28 /29 | 24 /25 | 28 /29 |
+| Release peel | 8096 | 8752 | 8416 | 131 /132 | 119 /120 | 127 /128 |
+| Release arithmetic | 14720 | 15904 | 15104 | 70 /71 | 66 /67 | 68 /69 |
+
+All per-function prologues, addresses, call multiplicities and raw disassemblies are retained. The tables below include every resident runtime frame in the two repeating cycles. Values exclude the 8-byte return address, which is added to each occurrence in the sums. The release cycles also have32 bytes of outgoing call arguments (16 at each of the two resident dispatch calls); this is present in all three arms. Inlined/absent entries contribute no independent frame. Native backtraces identify the cycles; inline debug annotations such as try_apply_down_values_fallback are distinguished from native frames at the same PC. The complete sums exactly match the independent marker slopes.
+
+#### debug prologues
+
+| Function | Per-level count peel / plus | S2 | Entry S3 | Best isolated trial |
+| --- | --- | ---: | ---: | ---: |
+| evaluate | 1 / 2 | 312 | 312 | 312 |
+| evaluate_profiled_fixed_point | 1 / 2 | 2072 | 2568 | 1816 |
+| evaluate_once_unstable_after_input_check_with_cycle_tracking | 1 / 2 | 184 | 184 | 184 |
+| evaluate_once_in_accounting_mode | 1 / 2 | 2264 | 2264 | 2264 |
+| evaluate_inner_unstable | 1 / 2 | 1000 | 1000 | 1000 |
+| evaluate_call | 1 / 2 | 1288 | 856 | 856 |
+| resume_call_after_head | 1 / 2 | 552 | 568 | 568 |
+| resume_call_with_dispatch_plan | 2 / 3 | 1768 | 2840 | 2184 |
+| run_call_dispatch_stage | 1 / 1 | 1880 | 1656 | 1480 |
+| try_apply_down_values | 1 / 1 | 2088 | 2088 | 2088 |
+| try_apply_down_values_from_symbol | 1 / 2 | 3800 | 3800 | 3800 |
+| evaluate_definition_rhs | 1 / 1 | 1336 | 1336 | 1336 |
+| evaluate_with_option_value_scope | 1 / 1 | 1000 | 1000 | 1000 |
+| prepare_arguments_for_call_with_unevaluated_restore | 0 / 1 | 344 | 344 | 344 |
+| prepare_arguments_for_call_with_unevaluated_restore::{{closure}} | 0 / 1 | 2200 | 2680 | 1736 |
+| evaluate_atom_fast_path | 0 / 1 | 424 | 424 | 424 |
+| evaluate_call::{{closure}} | 1 / 2 | inlined / absent from path | 952 | inlined / absent from path |
+
+#### release prologues
+
+| Function | Per-level count peel / plus | S2 | Entry S3 | Best isolated trial |
+| --- | --- | ---: | ---: | ---: |
+| evaluate_definition_rhs | 1 / 1 | 840 | 840 | 840 |
+| try_apply_down_values_from_symbol | 1 / 2 | 1272 | 1272 | 1272 |
+| try_apply_down_values | 1 / 1 | 776 | 776 | 776 |
+| run_call_dispatch_stage | 1 / 1 | 296 | 280 | 280 |
+| resume_call_with_dispatch_plan | 2 / 3 | 584 | 920 | 808 |
+| resume_call_after_head | 1 / 2 | 632 | inlined / absent from path | inlined / absent from path |
+| evaluate_inner_unstable | 1 / 2 | 1080 | 1656 | 1608 |
+| evaluate_once_unstable_after_input_check_with_cycle_tracking | 1 / 2 | 760 | 760 | 760 |
+| evaluate | 1 / 2 | 840 | 904 | 840 |
+| evaluate_with_option_value_scope | 1 / 1 | 312 | 312 | 312 |
+| evaluate_atom_fast_path | 0 / 1 | 408 | 408 | 408 |
+| prepare_arguments_for_call_with_unevaluated_restore | 0 / 1 | 984 | 1176 | 936 |
+
+
+
+The entry regression is fully attributed: debug fixed-point+496, evaluate_call changes1288→856 but adds a952-byte closure plus return address, after-head+16, dispatch resumer+1072 per occurrence, stage−224, argument-preparation closure+480. Their multiplicities yield+2960/+5552 B per guest level. Release evaluate+64, inner evaluator1080→1656 with the 632-byte after-head frame inlined away, dispatch resumer+336 per occurrence, stage−16, preparation+192 yield+656/+1184 B.
+
+The best trial removes the stable-head closure and the shared owned-payload dispatch helper, avoids redundant Ok/? and producer Result temporaries, moves suspension construction cold, and shares builtin completion through an always-inlined helper to retain13 production typed macro sites. Its release dispatch resumer still has an808-byte prologue versus S2’s584: +224, paid twice for peel and three times for arithmetic. At measured-binary addresses this is S2 0x569640 → trial 0x567e40. Release inner evaluation including head handling saves112 B per occurrence, stage saves16 B, preparation saves48 B, and the fixed-point evaluator returns to 840 B. Therefore peel 2×224−112−16=320; arithmetic 3×224−2×112−16−48=384. The remaining object/temporary cost is in the resumer’s distinct typed prepared/stage paths and owned suspension-state transfers. No proof that this is unavoidable for the typed design is claimed; it remains an unremoved implementation cost, not an accepted inherent overhead.
+
+| Attempt / isolated variant | Debug peel / arithmetic | Release peel / arithmetic | Disposition |
+| --- | --- | --- | --- |
+| Entry S3 | 24384 /43280 | 8752 /15904 | Measured before repair |
+| 1 cold frame builders, branch-only head closure, inline shared stage helper | 24928 /43360 | 8720 /15760 | Debug worse; release moved |
+| 2b cold suspension closure helper | 24432 /42464 | 8528 /15424 | Improved, still red |
+| Direct-match diagnostic,14 macro sites | 23312 /40784 | Not built | Diagnostic only; count not acceptable |
+| 3 success exits instead of Ok/? temporaries | 23216 /39984 | Not built | Debug moved |
+| 4 identifier macro arm avoids duplicate producer Result | 22272 /38400 | Not built | Debug moved |
+| 5b direct stages plus inlined shared builtin completion,13 sites | 21184 /36768 | 8416 /15104 | Best; debug gate and48 test green; release red |
+| 6 early drop of obsolete restore option | Not rebuilt | 8416 /15104 | No progress; counter1 |
+| 7 debug outline/release inline policy and inlined frame builders | Not rebuilt | 8448 /15136 | Worse; counter2 → STOP |
+
+Trial6 was reverted only inside scratch before trial 7. Trial7’s release stage prologue grows280→312, explaining its additional32 B/level; no debug improvement was claimed or measured. The best trial was never copied into the working tree. Its altered macro definition would require an exact checked-adapter update, all-view reruns and expansion-operation accounting before promotion. Trial runtime semantics beyond the stack probe/48 assertion were not validated; no language-oracle acceptance is claimed for them.
+
+The trial build failures were reduced explicitly:14 E0658 expression-attribute diagnostics became a stable local cold generic function; one scratch formatting edit produced delimiter errors and was corrected before compiling; two E0382 diagnostics for the non-Copy profiling token were fixed by giving the shared builtin helper sole ownership. None was hidden by a changed toolchain, weakened test or ignored diagnostic. Build stdout JSONL, stderr, commands, exits and binary hashes remain in each stack arm/profile directory.
+
+| Native diagnostic artifact | SHA-256 | Profile |
+| --- | --- | --- |
+| .temp/brief-609/r4/stack/base/debug | 57d57cfb7670c6f8bfb1d66d1b50297fdf5d1f558c58e9ba1c3b47c1b293b7d5 | debug |
+| .temp/brief-609/r4/stack/base/debug-v2 | 1d7f02b0e2a736963a8dc6134f8ea7c8a832d810a5dfa80e8f4a257ee449f37b | debug |
+| .temp/brief-609/r4/stack/base/release | 45b1a015ae6f225a63b8fabaa0788354bff85a18dab9f99def983d629ad1e417 | release |
+| .temp/brief-609/r4/stack/base/trace-release | 085fc3e0c14f239e0698ce2ef339cf841508a0b5f24acf7dc573aae8cf7586d1 | release |
+| .temp/brief-609/r4/stack/before/debug | ca7ece2ea224649f005057eafb01a2cf688f866091b4910a3947654b64dd450d | debug |
+| .temp/brief-609/r4/stack/before/debug-v2 | 9d0b5b7ae6e11120745004d28f460807dd918fe8f84093f9be1cfa429a5660e2 | debug |
+| .temp/brief-609/r4/stack/before/release | de4ba95f5e3a27b3e913790e1821741a3b3a15b252aae6885391f521a5e65279 | release |
+| .temp/brief-609/r4/stack/before/trace-release | dda7c8e732a86d7109a10eb4e693122c9926613abbf9fa3449ac55f6da5da640 | release |
+| .temp/brief-609/r4/stack/fix1/debug | d919321f052b46171968c4fabf0a494f01b0940be2cacc3611d1027558ff0d91 | debug |
+| .temp/brief-609/r4/stack/fix1/debug-direct | 1e273e5bcdcfd0db1fbfb9b195bdf94ce33caba90c03fa86d40fa7be643cb99a | debug |
+| .temp/brief-609/r4/stack/fix1/debug-fix2b | 6e5c250579b0b39461ddddb36d3bcdf590b61a904e73560809ff020c9a51dbf0 | debug |
+| .temp/brief-609/r4/stack/fix1/debug-fix3 | be43d01b374ea2a392ee77bdb321029992f681ea4bfc87bbdf1d9c381675c880 | debug |
+| .temp/brief-609/r4/stack/fix1/debug-fix4 | 50b361d9d5f94e73779205c4149190a0d5d4cc8e9d4101da32941ed7fca38325 | debug |
+| .temp/brief-609/r4/stack/fix1/debug-fix5b | 7ab4efd2b7d6a35fa0164ba0744fda2cc6288b4d9bc7107b885d867026acc694 | debug |
+| .temp/brief-609/r4/stack/fix1/release | 1328272142edccec2d1204646cf5335b2964fe6b102c69e0efaec031e632e114 | release |
+| .temp/brief-609/r4/stack/fix1/release-fix2b | 7c438270d51d4e5b8594250588bb7e916d6bcf363dc69806afeecf5be122e64c | release |
+| .temp/brief-609/r4/stack/fix1/release-fix5b | 991b796a8350ff48d471b8dfdb3be9b63c1c77eddf3e469349ea6e3375f651a4 | release |
+| .temp/brief-609/r4/stack/fix1/release-fix6 | a4aa794d1b124baccba3049a99b34f0c610496af82e7ae69aaf4bf030af88236 | release |
+| .temp/brief-609/r4/stack/fix1/release-fix7 | 019aa12d10ae01174f523d2e8dba456f7f24bca5ac58bf9f1b10409981a4da8a | release |
+
+The following four immutable S2 performance bases were not rebuilt or overwritten; the final audit rehashed each successfully:
+
+| Performance base | SHA-256 |
+| --- | --- |
+| rum-cli | b553a00e63e8af387e3141fe35764f54515a3e3154fd09b2756f911a2e87d9bf |
+| rum-cli-alloc | f1fb356eb26f45dedaa09ad46e8d697dfde6bd10fbfe1aa12290f61dfcf6e9f1 |
+| resume | 57e800bca2cca0d327b358f410d34ced30787410bdee6afe5838f9334a24e81f |
+| resume-alloc | 73f279bfb5e13ab4daa34242a9d591e52d9d8012267197268e80f63d41ecc503 |
+
+**Not run:** candidate performance builds;64-label allocation/byte panel; two interleaved instruction-slope pairs per arm; flagged-label five-run/three-callgrind-process expansion; all-five-workload per-function/address-level typed resume attribution; timing panel and idle-host preflight. No allocation equivalence, typed +1 allocation/+24-byte formula, instruction threshold, resumed-frame overhead or timing result is asserted. Native diagnostic test binaries are not the required production performance binaries. These requirements remain mandatory after B is resolved.
+
+Native build ledger:21 attempts,19 successful builds and 2 compile failures, with 14 E0658 and 2 E0382 diagnostics. The separate view-fixture E0608 and scratch formatting delimiter failure are disclosed above. Each of the 19 successful native builds reports the same three pre-existing warnings,57 warning occurrences total; all three already occur in the rebuilt S2 base and refer to unchanged runtime/test_builtins.rs. Neither the working analyzer patch nor the scratch runtime patches introduce them. Full diagnostics and commands: `r4/stack/build-ledger.json`.
+
+```text
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+```
+
+### 6. S2 cold-helper leftover and hot-boundary check
+
+The inherited working change still retypes continuation_fault_outcome from Result<T, EvalError> to EvalError, keeps it cold, wraps the same four production calls in Err, and removes unwrap_err from the two owned tests. R4 did not change those files. The required address-level comparison of its hot boundary has **not run**; source inspection and earlier focused tests are not substituted for that evidence.
+
+### 7. Stop-loss, deviations and exact remaining work
+
+Stop-loss 2 applies to the final two no-progress release repairs; preceding attempts moved measured stack gates, and compile errors were reduced. Section B3 remains unmet in release, and the original 48 test still fails on the unmodified working runtime. Only the isolated best debug trial passes it. No safety margin, guard, stack size, RUST_MIN_STACK, original test depth or production recursion limit was changed. No gate was weakened or unpaired retention removal accepted.
+
+R4’s seven analyzer edits are complete and reviewable; their compiler instruments pass. Final source certificates, ownership/census replay (including the new test-only macro receipt), the full workspace/dual-build gates and every production performance check remain outstanding. No git, network or commit action was taken. The four immutable bases and 183 protected design/harness inputs remain intact. A later authorized continuation should start from the preserved best trial, resolve the named release-frame growth within the brief’s constraints, then validate the exact final macro adapter/census identities and run section C in its prescribed order. This report does not authorize silently applying the scratch macro or its unchecked receipt changes.
+
+Final report/audit artifacts: `r4/final-audit.json`, `r4/final-changed.json`, `r4/candidate.patch`, `r4/gate-totals.json`, `r4/stack/attribution.tsv`, `r4/stack/probe-test-results.tsv`, `r4/stack/best-trial.patch`, and `PROGRESS.md`. The scope audit’s initial unrelated-document detection, report-query mistakes, and final warning-audit correction made no runtime-source changes or measurement decisions. The first warning-audit assertion incorrectly expected no native JSON warnings; it was corrected to preserve and disclose the three inherited S2 warning kinds. The report was corrected only inside this execution’s appended block, preserving the entire director entry prefix.
+
+## Director amendment — redispatch 5: one resumer frame per call, not one per stage
+
+Amendment A is accepted as reported. On B, the measurement is exactly what
+was needed: the stop-loss was the right call, and the attribution points
+to the fix. The `docs/dev/security-hardening-progress.md` file your audit
+found is the director's own; you were right to leave it out of your patch.
+
+### Why seven attempts could not close release
+
+On release, every remaining byte comes from one function. With the best
+trial, `resume_call_with_dispatch_plan`'s prologue is 808 B against S2's
+584 B (+224). The guest level pays that frame **two times for `peel` and
+three times for arithmetic**, because the resumer moves to the next stage
+by calling itself (`return self.resume_call_with_dispatch_plan(…,
+stage_index + 1, …)`), so every stage it passes through stays resident.
+
+Attempts 6 and 7 tried to shrink the frame. The multiplicity is the other
+lever, and it is the structural one. The stage advance is a loop written as
+recursion: each stage moves `plan` and `state` into a new frame and keeps
+the old one alive under it for the rest of the guest level.
+
+### Ruling
+
+1. **Start from the best trial.** Use `.temp/brief-609/r4/stack/fix1/attempt5-source/`
+   (`best-trial.patch`), not `fix1/tree/`.
+2. **Advance stages in a loop, in both dispatch resumers.**
+   - Rewrite `resume_call_with_dispatch_plan` and
+     `resume_suspended_call_with_dispatch_plan` so that one invocation walks
+     its stages in a loop. It returns on a `Some(result)` stage, the final
+     assembly, an error or a suspension.
+   - Moving to stage `stage_index + 1` becomes the loop's next iteration,
+     not a call.
+   - Leave every suspension frame's captured `stage_index` and every resume
+     entry point's contract unchanged. A frame resumed at stage *k* enters
+     the loop at stage *k + 1*, exactly as before.
+   - The ordinary path gains no branch: the back-edge replaces the call.
+     This is an explicit exception to "move locals, not control flow". It
+     removes work (two by-value moves of `plan` and `state` and one
+     prologue per stage) rather than adding a check.
+   - Expected effect: one resident resumer frame per guest-level call
+     instead of two or three. On the reported numbers, release `peel`
+     drops by about one 808 B frame, to well under S2's 8 096 B. Measure
+     it; do not assume it.
+3. **The macro change in the best trial is accepted on one condition.**
+   - The cold `#[inline(never)]` suspend helper inside the `InputRequired`
+     arm keeps frame construction out of the caller's frame. Every later
+     typing step gets that for free, so it stays.
+   - The identifier arm is a second macro form that every analyzer view
+     must then read. Keep it only if the debug gate fails without it,
+     after the loop change. Measure both variants and report both.
+   - Either way, the macro definition has changed:
+     - update the checked adapter's expected definition to the final form
+       (every arm checked exactly) and re-watch the definition-drift
+       falsifier against it;
+     - re-derive the fixed expansion-operation rejection list from the
+       final expansion, so that the cold helper's capture and move of the
+       frame inputs is an accounted operation;
+     - have all four views read every arm the same way, with the A3
+       fixtures covering each arm;
+     - classify the census rows that move against S2 with the existing
+       classes.
+4. **Acceptance is unchanged from B3.**
+   - For both shapes in both profiles, bytes per level are at most S2's:
+     debug `peel` 21 424, debug arithmetic 37 728, release `peel` 8 096,
+     release arithmetic 14 720.
+   - The unchanged 48-level test passes on the working tree.
+   - Report the final prologue table in the same form as before.
+   - The stop-loss rule is unchanged.
+5. **Then finish the step (section C of redispatch 4, in its order).**
+   Also:
+   - reconcile the A fixture's test-only macro (expected 11 → 12, and
+     600 → 601 combined) by discovery, not by a pin;
+   - replay the certificates and fingerprints that the R4 checker-source
+     changes expired;
+   - run the oracle in both builds over the final runtime, since the
+     loop changes the ordinary dispatch path;
+   - in the instruction panel, take the dispatch-heavy labels'
+     instruction slopes at face value. The loop should not raise them;
+     if it does, attribute the increase per address.
+
+No new file needs authorizing: the dispatch resumers, the macro definition
+(`suspension/typed/witness.rs`), its adapter and the four views are already
+in scope.
+
+Append a new `## Execution report` after this section.
