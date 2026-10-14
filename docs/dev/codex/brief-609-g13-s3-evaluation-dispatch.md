@@ -379,3 +379,67 @@ half-edited files, and the exact next action.
 5. Allocation, instruction, resume-attribution and timing evidence.
 6. The S2 leftover's retype and its hot-path check.
 7. Stop-loss counters, deviations and open questions.
+
+## Director amendment — redispatch 1: the six Fold/Nest promotions belong to S13
+
+Your step-2 STOP was correct, and the director confirmed the path in the
+source. A model-capacity error cut your session while you were writing the
+stop report. Append the stop evidence briefly as section 0 of this
+redispatch's report: the six pre-conversion failures verbatim and the traced
+path.
+
+**Root cause: two skipped semantic maps.**
+- `try_dispatch_builtin_call` (`eval_dispatch/mod.rs`) applies
+  `result.map(Some)` after M0287/M0288. F0278's resume, however, completes
+  with the raw value.
+- `try_apply_function` (`scoping/callable.rs`) applies `.map(Some)` after
+  its macro site (M0563). F0528's resume completes with the raw
+  `finish_function_application` value.
+- The legacy `Option<Expr>` decoder's lenient arm (`other => Some(other)`,
+  `suspension/primitive.rs`) hides both, until a guest value carries an
+  `InternalContinuation*` head.
+
+The Fold/Nest path crosses both. The design table assigned all six
+promotions to S3, and that was wrong: S3 owns only the first map.
+
+**Rulings.**
+
+1. **Reassign the six to S13.** The `fold`/`nest` promotions move to S13,
+   the step that types F0528/M0563 and must make its resume execute the
+   same `.map(Some)`. The director records the move in `TODO.md` and in
+   S13's brief.
+   - Remove the six fixtures from the oracle suite now: a test that is red
+     by design cannot land.
+   - Keep their code and your recorded pre-conversion output under
+     `.temp/brief-609/` (for example `fold-nest-for-S13.patch` and
+     `fold-nest-pre-conversion.txt`) for S13 to reuse.
+2. **S3 owns its own map.** F0278's typed resume must execute the same
+   `.map(Some)` as the ordinary path; a semantic map runs identically on
+   both paths.
+   - Add strict-equality fixtures that isolate it. Each is a builtin
+     completion carrying a guest value under each internal head (the
+     `none`, `some` and `empty_some` shapes). The resumed value must reach
+     the stage consumer through F0278, with no frame of another family on
+     the path that skips a map.
+   - Candidates are ordinary builtins that evaluate guest code internally
+     (`If`, `Catch`, `Block`, …). Choose by trace and state each fixture's
+     frame path.
+   - Watch the fixtures fail before converting F0278: production is still
+     byte-identical to entry, so run them now. Then show them pass after.
+     A fixture that passes before the conversion does not isolate the map;
+     replace it.
+3. **Audit S3's maps as a class.**
+   - For every owned macro site, list the transformation between the
+     witness point and the function's return on the ordinary path: `map`,
+     `?`, wrapping, `Some`, `SharedExpr::new`, and so on. Show that the
+     resumed path executes the same transformation. T0024 and the F0278
+     `Some` are two instances.
+   - An owned site whose resumed path skips a semantic map gets the same
+     fix and its own watched-to-fail fixture.
+   - A skipped map at a site S3 does not own goes in the report: file,
+     line, owning step and the skipped transformation. Do not fix it; the
+     director carries it to that step's brief.
+4. **Everything else in the brief stands**, including the step-1 bases
+   you already built. Do not rebuild them.
+
+Append a new `## Execution report` after this section.
