@@ -4,9 +4,9 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-14, committed tree through brief-607 (G13 step
-S1, the dormant typed API, gated). **Next: S2, the compatible driver
-(brief-608); G13's implementation is 78 gated steps** — S1 dormant API, S2
+Status checkpoint: 2026-10-14, committed tree through brief-608 (G13 step
+S2, the compatible driver, gated). **Next: S3, evaluation, argument
+preparation and dispatch (brief-609); G13's implementation is 78 gated steps** — S1 dormant API, S2
 compatible driver, S3-S54 family typing, F1-F23 one flip per legacy type, R
 removal — each a director-rewritten brief
 from `.temp/brief-606/draft-*.md`, dispatched to Codex (user ruling; GLM only
@@ -898,6 +898,48 @@ Owed to later steps: every `Legacy` decoder still has 31 unresolved
 same-name `from_continuation_expr` candidates that the preflip census (S54)
 must resolve; S33 and the two interpreted flips act on test-only code, so
 their corpus is runtime unit tests.
+
+**S2 (brief-608, `cb09bfde`): the compatible driver.** Seven dispatches.
+- **Run 1** stopped before any edit, correctly. The panel asked for resume
+  workloads through `rum-cli`, which retires every input suspension. They
+  became a release resume harness on `HostSession::resume_with_input`, kept
+  in `.temp/brief-608/resume-harness/` for later steps.
+- **Runs 2 and 3** stopped at test pins the director's scope omitted: the
+  ownership ledger's adapter-site count and the retention census's
+  abandonment line pins. Run 2 also caught a director design error. A
+  public-field `ContinuationSlotMismatch` could be built by any crate and
+  reach a new `unreachable!` through the legacy error wire. The payload
+  became the opaque `SlotMismatch`, with a suspension-private constructor
+  and an external-crate compile control.
+- **Run 4** was correct but cost +4-7% per legacy resume. The director's
+  callgrind attribution traced this to wrapper layers, not to the design:
+  `Entry::resume` re-wrapped the 136-byte `FrameAction` twice into a
+  `DispatchAction`.
+- **Runs 5-7** removed them. One was cut by a host power-off and resumed by
+  fork. The legacy arm now dispatches in the driver and pops its `Arc`
+  directly; request boundaries test only the latch discriminant, with a
+  cold projection.
+
+The residual per legacy resume is +9 to +52 instructions on 14k-25k. Five
+ruled-inherent items cover it: a queue discriminant per operation, the
+`Value` match, the completion decode, the boundary latch, and the driver's
+fault exit.
+
+Director gate:
+- oracle 50/50 in each build, with fault delta 0 over 87,920 observations;
+- census 607/589 production, 16/11 test-only, typed 0;
+- compile controls 30/30 in both builds;
+- workspace 3447 passed, 0 failed, 0 native ZeroMQ skips;
+- allocation and byte slopes equal on all 64 labels.
+
+Method learned: callgrind totals vary per process, because rum seeds its
+hashing per process. Base against base varied by up to 335 instructions per
+iteration. A callgrind total therefore needs at least 3 processes per arm,
+with each arm's range as its floor. Address-level attribution is
+deterministic and decides mechanism questions.
+
+Owed to S3: `continuation_fault_outcome` always returns `Err` but keeps a
+`Result` signature; retype it to return `EvalError`.
 
 **Recorded, not in this branch — the gensym sweep does not see Rust-local
 values (found 2026-10-14 reviewing brief-605; Q3, queued behind the branch by
