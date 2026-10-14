@@ -2577,3 +2577,32 @@ classification has to be re-earned on the repaired binary (item 3).
    historical retention census, `cargo fmt --check`, candidate release
    builds and hashes, error sizes and feature trees, and the workspace run.
    Append a new `## Execution report` after this section.
+
+## Director note — redispatch 4 resumed after a host power-off
+
+The host was powered off at 11:09:50 (+08:00) while redispatch 4 was in item 4.
+Your session continues from its last recorded step. The director checked the
+scene: the filesystem is intact, `git fsck` is clean, and no repository file
+outside `.temp/` was written after 10:31, so the working tree is the first
+repair you retained after ending tuning. Your scratch under
+`.temp/brief-608/redispatch-4/` survives. The previous dispatch log is
+`.temp/logs/cdx_brief_608.reboot-5.log`.
+
+Lost in flight: the workspace run (`workspace.log` stops inside
+`rum-stdlib`'s `typed_slot_census` integration test; rum-runtime had passed),
+the final release builds and measurements, and the report.
+
+Do not reopen tuning or re-run the gates that already completed on this tree
+and recorded an exit status. First confirm that the tree matches your last
+recorded state: a source-file hash comparison against your own records is
+enough. If it does not match, STOP and report the difference. Then:
+
+1. Run the workspace suite again from the start, serial as in the brief.
+2. Build the final candidate release binaries and record their hashes.
+3. Run item 2 (resume-workload gate) and item 3 (ordinary panel gate) on
+   those binaries.
+4. Append the `## Execution report` that item 4 asks for. Report the
+   residual per resume (about +136 instructions on `Do` and +85 on `Fold` in
+   your first-repair profiles) against the four inherent items, each with
+   its callgrind number. Report any part that no inherent item covers as a
+   defect, with its attribution.
