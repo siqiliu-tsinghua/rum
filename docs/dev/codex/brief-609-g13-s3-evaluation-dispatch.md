@@ -4923,8 +4923,10 @@ the old one alive under it for the rest of the guest level.
      instruction slopes at face value. The loop should not raise them;
      if it does, attribute the increase per address.
 
-No new file needs authorizing: the dispatch resumers, the macro definition
-(`suspension/typed/witness.rs`), its adapter and the four views are already
-in scope.
+**Newly authorized:** `crates/rum-runtime/src/runtime/suspension/typed/witness.rs`.
+It is the macro's definition, and the edit is limited to the macro's arms
+and its cold suspend helper. The S1 public API stays as it is. Every other
+file is already in scope: the dispatch resumers, the adapter and the four
+views.
 
 Append a new `## Execution report` after this section.
