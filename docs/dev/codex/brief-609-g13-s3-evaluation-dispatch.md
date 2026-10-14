@@ -6884,3 +6884,2395 @@ The stop-loss rule is unchanged. Its named gates are:
 Two attempts that move none of them is a stop.
 
 Append a new `## Execution report` after this section.
+
+## Execution report — redispatch 6: caller-place macro and erased-driver copy repair
+
+The requested ordinary copy repair, deterministic-leaf repair and typed adapter/driver copy repair are implemented and measured. All 59 ordinary labels have exactly S2's allocation counts, bytes and memcpy counts; none is flagged by the final two-pair instruction panel. All three leaf paths execute 112 → 110 self instructions in Session::evaluate. All four native-stack slopes remain below S2, and the unchanged 48-level test passes. Final correctness, both full oracles, census, compile controls, ownership, certificate and fingerprint gates pass.
+
+Full performance acceptance is withheld. The five resume slopes have exactly one extra allocation per typed frame plus the three accepted Some-wire allocations, but raw whole-program profiles expose an additional 56-byte FinalizerAdapter rebox and its payload moves once per call-repeat program. Those costs cancel from N/2N slopes and are not elided. Extra freeze-helper ABI work and a Session spill/reload are also reported at their addresses without claiming them inherent. Complete ledgers retain all other signed residuals. This report uses the brief's explicit “remove or report” route for the remaining work; it does not claim zero non-inherent residual or approval to land.
+
+The final workspace run reports 3,462 harness successes, of which nine native ZeroMQ tests returned early under the documented environment skip: 3,453 exercised successes, zero failures and 59 ignored tests. Both full suspension-oracle builds pass 58 tests with every fault-occurrence delta zero. No new compiler warning is introduced. No git command was run; the tree remains uncommitted for the director.
+
+All paths abbreviated `r6/` or `r6b/` below are under `.temp/brief-609/`. `r6/` preserves the first six runtime trials and their complete preliminary gates/panel. The full address audit then exposed remaining inlined driver copies; trials 7 and 8 are also preserved there. `r6b/` is the final source validation and measurement after trial 8, within this same redispatch. No older report or raw measurement was overwritten.
+
+### 1. Files changed, ripple and pin disclosures
+
+20 existing source/test/inventory files changed from redispatch-6 entry, plus this appended report. The following table covers the cumulative S3 patch. All entry bytes of this brief, including the redispatch-6 amendment, are preserved. The director-owned security progress document was preserved separately.
+
+| File | Redispatch | Semantic change / pin transition |
+| --- | --- | --- |
+| crates/rum-runtime/src/runtime/builtin_adapters.rs | Inherited R1–R5 | M0205 legacy macro → witnessed typed macro; identity success tail retained. |
+| crates/rum-runtime/src/runtime/builtin_adapters/resume_frames.rs | Inherited R1–R5 | F0204 legacy frame → TypedFrame<Expr, Expr>. |
+| crates/rum-runtime/src/runtime/eval_call_prepare.rs | Inherited R1–R5 | Typed prepared-argument result; actual producer witness precedes semantic work. F0272 fresh cursor/splice state uses its sole witnessed token route on repeats; no captured Arc. Successful macro arms escape directly and construction uses cold freeze; ordinary result/effect order preserved. |
+| crates/rum-runtime/src/runtime/eval_call_prepare/resume_frames.rs | Inherited R1–R5 | Merge F0273 into F0272 nominal typed frame; freeze fresh cursor/prefix/restore state cold. Typed FinishPreparedCallArgumentsFinalizer executes after both originating owners drop. R5 cold factory moves impl citation13→40 and finalizer43→70. |
+| crates/rum-runtime/src/runtime/eval_core/call.rs | R6 | R6 removes the record_head aggregate closure; both head branches consume all three profile records directly, in their original order. Looped resumers and their captured indices stay unchanged. |
+| crates/rum-runtime/src/runtime/eval_core/mod.rs | Inherited R1–R5 | The SharedExpr-result profiling wrapper loses its final caller under T0024 and is removed; generic outcome classification remains. |
+| crates/rum-runtime/src/runtime/eval_core/symbol.rs | Inherited R1–R5 | Only F0277/M0285 typed: CompiledMatchOutcome → Expr, retaining matched/unmatched semantics and deleting the Expr wire map. The S14 loader capture in this file is unchanged. |
+| crates/rum-runtime/src/runtime/eval_dispatch/mod.rs | Inherited R1–R5 | Typed Option/Expr completion and F0278 semantic Some on resumed builtin result with original growth checks. Always-inlined finish_builtin_dispatch shares checked/unchecked M0287/M0288 completion and owns the non-Copy timing token once; M0288 removed→M0287 receipt. |
+| crates/rum-runtime/src/runtime/hold_thread.rs | Inherited R1–R5 | F0279/M0289 typed Expr identity continuation for ReleaseHold. |
+| crates/rum-runtime/src/runtime/resolution.rs | R6 | R6 changes M0561 success to Ok(value)/? and outlines only cycle-error formatting into a cold, inline-never helper; measured leaf setup drops below S2. Profiling and error behavior are preserved. |
+| crates/rum-runtime/src/runtime/resolution/resume_frames.rs | Inherited R1–R5 | Both fixed-point frames implement TypedFrame<Input=Expr,Output=Expr>; freeze current/pass/history cold and resume exact fixed-point logic. |
+| crates/rum-runtime/src/runtime/session/session_eval.rs | Inherited R1–R5 | Two callers: Err(self.continuation_fault_outcome(...).unwrap_err()) → Err(self.continuation_fault_outcome(...)). |
+| crates/rum-runtime/src/runtime/session/session_requests.rs | Inherited R1–R5 | Two callers: remove unwrap_err from the cold latch projection, retaining the same hot discriminant check. |
+| crates/rum-runtime/src/runtime/suspension/core.rs | R6 | R6 assigns outcomes inside each dispatch arm, borrows the typed adapter and passes the outcome by mutable reference. The cloned outer Arc drops immediately after the adapter call. Decode failures return before queue pop; both Arcs drop before finalization. Final trial8 ends the resource-free Abort placeholder lifetime before extracting Action::Complete, with a debug assertion of the sole private adapter postcondition. This removes the extra action-to-temporary completion copy; ordinary assignment remains. |
+| crates/rum-runtime/src/runtime/suspension/core/fault.rs | Inherited R1–R5 | Cold continuation_fault_outcome: Result<T, EvalError> → EvalError; still consumes the outcome and takes the same latch. |
+| crates/rum-runtime/src/runtime/suspension/typed/action.rs | R6 | R6 adds a private structural DecodeFailure action so the erased adapter returns Action directly instead of Result<Action, DecodeFailure>; no public action constructor or raw adapter is exposed. |
+| crates/rum-runtime/src/runtime/suspension/typed/adapter.rs | R6 | R6 changes only the erased private resume signature to &self and &mut Result<Slot, EvalError>. It takes the input with an Abort placeholder, decodes through the registered mode, and returns the concrete action directly; witness/token rules remain intact. Its sealed private postcondition explicitly states that Abort remains in the consumed input place. |
+| crates/rum-runtime/src/runtime/suspension/typed/resume_token.rs | Inherited R1–R5 | Redispatch 2: delete suspend_witnessed; original suspend(session, request, fresh) → suspend(session, SlotWitness<F::Input>, request, fresh). Same public identity, same fresh F constraint, no Arc in the token. |
+| crates/rum-runtime/src/runtime/suspension/typed/tests/accounting.rs | Inherited R1–R5 | The legacy-queue setup calls eval_input_string directly instead of evaluating an InputString call through newly typed S3 frames. This restores the legacy-to-mixed widening precondition; every allocation, byte and admission assertion is unchanged. |
+| crates/rum-runtime/src/runtime/suspension/typed/tests/composition.rs | R6 | R6 adapts existing private adapter calls to the new mutable input signature; assertions unchanged. Final trial8 adds placeholder assertions; faults also checks forwarding an owned String error payload while the input becomes Abort. Existing assertions remain. |
+| crates/rum-runtime/src/runtime/suspension/typed/tests/driver_faults.rs | Inherited R1–R5 | Only the cold-helper test caller loses unwrap_err. |
+| crates/rum-runtime/src/runtime/suspension/typed/tests/faults.rs | R6 | R6 adapts existing private adapter calls and structural-fault pattern to the private direct Action return; failure payload and ownership assertions unchanged. Final trial8 adds placeholder assertions; faults also checks forwarding an owned String error payload while the input becomes Abort. Existing assertions remain. |
+| crates/rum-runtime/src/runtime/suspension/typed/tests/file_faults.rs | Inherited R1–R5 | Only the cold-helper test caller loses unwrap_err. |
+| crates/rum-runtime/src/runtime/suspension/typed/tests/live.rs | Inherited R1–R5 | repeat_work now captures slot_witness(&outcome) from its actual input producer before matching and passes it to the sole suspend route. |
+| crates/rum-runtime/src/runtime/suspension/typed/witness.rs | R6 | R6 adds a caller-place identifier arm ahead of the retained expression arm. The identifier form borrows &($result) for the actual-result witness and matches the caller place without rebinding it; both cold helper capture paths remain accounted. |
+| crates/rum-runtime/src/runtime/tests/frame_root_trace.rs | R6 | R6 replays the exact typed resume/order pin to the borrowed signature, explicit outer drop and structural-fault return; finalizer assignment pin follows the new shape. Decode-before-pop and drop-before-finalizer order checks remain. |
+| crates/rum-runtime/src/runtime/tests/frame_root_trace/derived_inventory.rs | Inherited R1–R5 | In both derived-root and pure-abandon arrays: eval_call_prepare/resume_frames.rs:ResumeSuspendedCallArgumentPreparationSuspensionFrame → eval_core/call.rs:PreparedDispatchFrame. This pairs the D0001 merge with the T0025/T0026 split consumer. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payload_ledger.tsv | R6 | R6 preserves79 approved identities/dispositions and replays seven action locations plus four exact adapter witness citations: three36→32, one82→74. Final private adapter documentation moves those same witnesses32→33 and74→75. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payloads.tsv | R6 | R6 same79 identities, seven action locations move by one line. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/self_reaching.tsv | Inherited R1–R5 | Exact discovery replay of source positions/owned S3 constructs; all 79 host identities and dispositions retained. Full old/new rows in ownership replay patch. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv | R6 | R6 all1514 same unresolved attributes; five source locations move. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv | R6 | R6 2956→2954: owned record_head and typed map_err closures removed; remaining changed locations follow their same operations. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv | R6 | R6 3152→3153: one owned unreachable! added to the exhaustive typed Action match; other changes are spans of the same macros. Final macros3153→3154 for the debug assertion; no unknown is admitted. |
+| crates/rum-stdlib/src/tests/retention_closure/census/tests.rs | R6 | R6 frontier936→937, RET002900→901 after pairing every old changed row. One explicit Try/FromResidual rejection is added; all freeze and unresolved-boundary assertions remain. |
+| crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs | R6 | R6 retains the compiled identifier A3 fixture and adds a compiled expression A3 fixture, each read by all four views. Seven independent definition mutations are rejected by all four views (28 rejections). |
+| crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/exact.rs | Inherited R1–R5 | Context pins172→170 and preserved-clone total174→172: exactly two M0561 Err constructors moved into the checked expansion. R5 preserves all170 contexts and updates the moved-Ok explanatory comment; no instrument/filter change. |
+| crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv | R6 | R6 replays all68 context fingerprints after both source revisions; final context fnv1a64:928be82d795f65ef. No contract field changes. |
+| crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv | R6 | R6 replays only four independently emitted C01/C02 certificate cells, in both feature builds; all other columns and certified bodies unchanged. |
+| crates/rum-stdlib/src/tests/retention_closure/methods/context.rs | Inherited R1–R5 | Read typed invocation arguments through checked; bind a success pattern only from an already inferred Result payload, otherwise unknown, and restore locals. Conditional-attribute pre-scan uses the same adapter. Legacy macros remain opaque. |
+| crates/rum-stdlib/src/tests/retention_closure/mod.rs | Inherited R1–R5 | Declare one ordinary sibling typed_resume_macro module; no visibility widening. |
+| crates/rum-stdlib/src/tests/retention_closure/regions.rs | R6 | R6 asks the checked parsed arm for its rejection list, retaining all five expansion obligations for each macro form. |
+| crates/rum-stdlib/src/tests/retention_closure/typed_resume_macro.rs | R6 | R6 exactly checks both definitions; only a bare identifier selects the caller-place rejection wording. The expression binding and both cold-helper captures remain rejected and strict token equality remains enforced. |
+| crates/rum-stdlib/src/tests/retention_closure/types/context.rs | Inherited R1–R5 | Read expression/statement typed invocations through checked; propagate only established expected types and preserve success-only scope/reference binding shape. Legacy macros remain opaque. |
+| crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs | Inherited R1–R5 | New strict If-held and listable-completion cases for three marker shapes, plus prepared.twice/head.map.twice controls. Checks::ALL and unconditional FaultProbe checks retained. Fold/Nest definitions archived for S13. |
+| crates/rum-stdlib/tests/suspension_oracle/fixtures/mod.rs | Inherited R1–R5 | No module → ordinary sibling mod evaluation_dispatch; no ../ path attribute. |
+| crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs | Inherited R1–R5 | S2 → S3 receipt, used by marker fixtures and census. FLIP_SLOT becomes census-only. Both oracle targets compile without warnings. |
+| crates/rum-stdlib/tests/suspension_oracle/inventory/typed-slot-stages.tsv | Inherited R1–R5 | Record all owned S3 transitions. R5 shared-stage M0282S splits into direct M0282S/M0283S; builtin M0288 merges→M0287. T0025/T0026 direct install_prepared_call_arguments anchors replace map anchors. Add X0041 for legacy-opacity AST path quotation; X40→41. |
+| crates/rum-stdlib/tests/suspension_oracle/support/drive.rs | Inherited R1–R5 | Retain the exact execute wrapper required by nine historical integration families through path aliases. Add a function-local allow(dead_code) for the oracle target, which calls execute_planned directly. This corrects the earlier erroneous removal; execute_planned and all comparisons remain unchanged. |
+| crates/rum-stdlib/tests/typed_slot_census.rs | Inherited R1–R5 | Scratch brief-608 → brief-609; S2 → S3 receipt and negative-preflip labels. Scope FLIP_SLOT here; connect s3 module. Guard-removal legacy counts 564/59 → 553/58; removed-frame sentinel remains 622. Both scratch falsifiers verified in both builds. |
+| crates/rum-stdlib/tests/typed_slot_census/receipts.rs | Inherited R1–R5 | Replay S3 receipts and retained removals: F624; M602 total =600 active+2 removed (M0280 and M0288). Production/test-only active pins unchanged; discovered A fixture is TestSupport. |
+| crates/rum-stdlib/tests/typed_slot_census/reporting.rs | Inherited R1–R5 | Scratch brief-608 → brief-609. Removed Whole0029–Whole0032 emit explicit S3 transition records, assert absence of the old identity, and preserve decoder IDs; live decoder rows still require rediscovery. |
+| crates/rum-stdlib/tests/typed_slot_census/routes.rs | Inherited R1–R5 | I0003 still names ContinueToken::suspend and its executable repeat witness. Update mechanism output to disclose typed S3 evaluation while later families remain untyped; S2 mechanism ownership is unchanged. |
+| crates/rum-stdlib/tests/typed_slot_census/s3.rs | Inherited R1–R5 | S3 owned F/M/T/D reconciliation and parsed T0023 no-definition/no-caller checks. R5 expected typed macro set replaces M0288 with M0283S; closed removal M0288→M0287. |
+| crates/rum-stdlib/tests/typed_slot_compile_controls.rs | Inherited R1–R5 | Scratch directory brief609; actual producer witnesses added to repeat/finalizer controls. Add token-witness-input, changing only producer Expr → Option<Expr>, requiring one E0308 at the complete witness span. 31 positive/intended-negative pairs pass in each build. |
+
+The S1 public witness API prefix is unchanged; both checked macro arms change only the macro. The erased adapter/action changes are private. The sole ErasedFrame implementation is TypedAdapter<F>; it replaces its input with resource-free Abort before every branch. The driver ends only that empty placeholder lifetime with safe mem::forget before installing the next action. The debug assertion and success/mismatch/Abort/owned-error checks enforce this private postcondition. No mode, registry, shape, certified C01/C02 body, local analyzer, compiler instrument Python, dependency, lockfile, toolchain or core representation changed. All 183 protected inputs and four immutable S2 binaries pass the scope audit; no unsafe was added. Exact cumulative patch and hashes: `r6b/candidate.patch` and `r6b/final-audit.json`.
+
+| R6 touched Rust file | Entry characters | Final characters |
+| --- | --- | --- |
+| crates/rum-runtime/src/runtime/eval_core/call.rs | 21389 | 21676 |
+| crates/rum-runtime/src/runtime/resolution.rs | 17524 | 17590 |
+| crates/rum-runtime/src/runtime/suspension/core.rs | 29221 | 29879 |
+| crates/rum-runtime/src/runtime/suspension/typed/action.rs | 2327 | 2376 |
+| crates/rum-runtime/src/runtime/suspension/typed/adapter.rs | 2704 | 2724 |
+| crates/rum-runtime/src/runtime/suspension/typed/tests/composition.rs | 1808 | 1852 |
+| crates/rum-runtime/src/runtime/suspension/typed/tests/faults.rs | 2016 | 2636 |
+| crates/rum-runtime/src/runtime/suspension/typed/witness.rs | 1726 | 2401 |
+| crates/rum-runtime/src/runtime/tests/frame_root_trace.rs | 35051 | 35111 |
+| crates/rum-stdlib/src/tests/retention_closure/census/tests.rs | 9685 | 9911 |
+| crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs | 13061 | 16804 |
+| crates/rum-stdlib/src/tests/retention_closure/regions.rs | 12657 | 12643 |
+| crates/rum-stdlib/src/tests/retention_closure/typed_resume_macro.rs | 7480 | 9100 |
+
+The three new cumulative S3 modules remain under 10k characters. Existing larger modules keep their coherent evaluation/dispatch, argument preparation, driver and compiler-analysis responsibilities; this repair adds no arbitrary split. The size table exposes every touched Rust file in R6 and its change. frame_root_trace.rs already exceeds 35k characters at entry; its 60-character pin adjustment retains that existing architecture debt under the brief's pin-only scope rather than broadening this repair.
+
+### 2. Owned-row reconciliation, semantic maps and census
+
+| F row | S2 name | Final S3 transition |
+| --- | --- | --- |
+| F0204 | BuiltinEvaluateSuspensionFrame | Typed Expr → Expr; same name. |
+| F0272 | PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame | Typed Expr → PreparedCallArguments; also receives fresh repeated state formerly handled by F0273. |
+| F0273 | ResumeSuspendedCallArgumentPreparationSuspensionFrame | Merged into F0272; no remaining production implementation of the old name. |
+| F0274 | EvaluateCallSuspensionFrame | Typed Expr → Expr; head conversion at the shared entry. |
+| F0275 | ResumeCallWithDispatchPlanSuspensionFrame | Typed Option<Expr> → Expr; prepared branch split to PreparedDispatchFrame. |
+| F0276 | ResumeSuspendedCallWithDispatchPlanSuspensionFrame | Typed Option<Expr> → Expr; prepared branch uses the same PreparedDispatchFrame. |
+| F0277 | EvaluateStoredOwnValueSuspensionFrame | Typed CompiledMatchOutcome → Expr. |
+| F0278 | RunCallDispatchStageSuspensionFrame | Typed Expr → Option<Expr>; complete the semantic Some map. |
+| F0279 | EvalReleaseHoldSuspensionFrame | Typed Expr → Expr. |
+| F0526 | EvaluateProfiledFixedPointSuspensionFrame | Typed Expr → Expr. |
+| F0527 | ResumeFixedPointFromSuspensionFrame | Typed Expr → Expr. |
+| F0570 | FinishPreparedCallArgumentsFinalizer | SlotFinalizer Output=PreparedCallArguments. |
+
+| M row | Actual producer | Ordinary transformation | Resumed transformation |
+| --- | --- | --- | --- |
+| M0205 | Expr | builtin_evaluate returns the evaluated value unchanged | Typed identity frame; no post-witness semantic map. |
+| M0279 | Expr | append/splice/drop-Nothing; preserve Unevaluated entries; advance remaining arguments; build PreparedCallArguments | Typed F0272 reentry uses the same append helper and fresh cursor/splice fields; pure finalizer builds the exact output after Arc release. |
+| M0280 | Expr | the same append and cursor/restore work for later arguments | Old macro removed by D0001; witness of actual evaluated_result is passed to token.suspend with fresh F0272. No original Arc is captured. |
+| M0281 | Expr | SharedExpr conversion, plan construction and dispatch; profiling records | Witness now at evaluate(head.into_owned()); shared resume_call_after_head accepts Expr or existing SharedExpr and performs Into<SharedExpr> once. |
+| M0282 | PreparedCallArguments or Option<Expr> (split) | normalize prepared args, install restore; stage Some returns value, None advances cursor | Prepare macro → PreparedDispatchFrame; direct stage macro M0282S → F0275. Shared normalization/restore runs once; None advances the loop; resumed frame enters k+1. |
+| M0283 | PreparedCallArguments or Option<Expr> (split) | same work with the suspended plan and frozen restore | Prepare macro → PreparedDispatchFrame; direct stage macro M0283S → F0276. Restore freezes after the common installer; None advances the loop; resumed frame enters k+1. |
+| M0285 | CompiledMatchOutcome | matched branch evaluates own value; unmatched branch resumes symbol lookup | Same branches in F0277; only the Expr transport map and raw input decode disappear. |
+| M0286 | Expr | Some(value) after evaluating the threaded call | F0278 now completes resumed.map(Some); three listable fixtures watched fail → pass. |
+| M0287 | Expr | Shared finish_builtin_dispatch: profile, original checked/unchecked growth behavior, semantic Some. | F0278 runs the same growth check and semantic Some; M0288 merged into M0287. |
+| M0288 | Expr | Shared finish_builtin_dispatch: profile, original checked/unchecked growth behavior, semantic Some. | F0278 runs the same growth check and semantic Some; M0288 merged into M0287. |
+| M0289 | Expr | ReleaseHold evaluation result unchanged | Typed identity frame. |
+| M0561 | Expr | fixed-point equality/cycle history/trace update and next pass | Typed F0526 uses outcome? then the unchanged resume_fixed_point_from state transition. |
+| M0562 | Expr | same fixed-point transition in resumed evaluation | Typed F0527 uses outcome? then the same helper. |
+
+F0273 merges into F0272; repeated suspension uses fresh state of that nominal frame and its witnessed token. F0275P PreparedDispatchFrame consumes PreparedCallArguments, while the two stage consumers take Option<Expr>. M0280 is removed into the token route. Looped resumers retain captured k+1 and normalization/restore order. M0282S/M0283S are their direct stage macros; M0288 remains removed→M0287 in finish_builtin_dispatch. There are 13 production typed macro sites and 12 typed implementations: 11 TypedFrame and one SlotFinalizer.
+
+T0023 removes the unreachable generic preparation arm and wrapper, retaining the parsed no-definition/no-caller gate. T0024 witnesses the actual Expr result before SharedExpr construction. T0025/T0026 install normalization and restore once. T0027 removes transport conversion while preserving semantic Some and head conversion. D0001 retains fresh cursor/splice state and finalization after both originating Arcs drop. M0561 now returns Ok(value) from its success arm and uses the explicit trailing ?, adding the accounted Try rejection. Its cycle-error formatting alone moves to the cold inline-never helper. Global modes remain one Expr Value plus 21 Legacy; no State birth or dual decode.
+
+Final census: default
+
+```text
+S3 CENSUS production frames=542 finalizers=53 implementations=607 typed=12 macros=589 result=353 insert=236
+S3 CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+S3 CENSUS test-support frames=5 finalizers=0 implementations=15 typed=10 macros=10 result=5 insert=5
+S3 PARTITION implementations=623 macros=600
+S3 T0023 wrapper/callers absent; D0001 witnessed token live; typed=12 macros=13
+S3 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; typed evaluation uses unchanged global modes
+S3 CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+S3 CENSUS test-support frames=5 finalizers=0 implementations=15 typed=10 macros=10 result=5 insert=5
+S3 PARTITION implementations=622 macros=600
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.29s
+S3 CENSUS production frames=542 finalizers=53 implementations=607 typed=12 macros=589 result=353 insert=236
+S3 CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+S3 CENSUS test-support frames=5 finalizers=0 implementations=15 typed=10 macros=10 result=5 insert=5
+S3 PARTITION implementations=623 macros=600
+S3 T0023 wrapper/callers absent; D0001 witnessed token live; typed=12 macros=13
+S3 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; typed evaluation uses unchanged global modes
+S3 CENSUS test-only frames=0 finalizers=0 implementations=0 typed=0 macros=0 result=0 insert=0
+S3 CENSUS test-support frames=5 finalizers=0 implementations=15 typed=10 macros=10 result=5 insert=5
+S3 PARTITION implementations=623 macros=600
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.33s
+S3 CENSUS production frames=542 finalizers=53 implementations=607 typed=12 macros=589 result=353 insert=236
+S3 CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+S3 CENSUS test-support frames=5 finalizers=0 implementations=15 typed=10 macros=10 result=5 insert=5
+S3 PARTITION implementations=623 macros=600
+S3 T0023 wrapper/callers absent; D0001 witnessed token live; typed=12 macros=13
+S3 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; typed evaluation uses unchanged global modes
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 139.09s
+```
+
+Final census: no-default
+
+```text
+S3 CENSUS production frames=542 finalizers=53 implementations=607 typed=12 macros=589 result=353 insert=236
+S3 CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+S3 CENSUS test-support frames=5 finalizers=0 implementations=15 typed=10 macros=10 result=5 insert=5
+S3 PARTITION implementations=623 macros=600
+S3 T0023 wrapper/callers absent; D0001 witnessed token live; typed=12 macros=13
+S3 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; typed evaluation uses unchanged global modes
+S3 CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+S3 CENSUS test-support frames=5 finalizers=0 implementations=15 typed=10 macros=10 result=5 insert=5
+S3 PARTITION implementations=622 macros=600
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.42s
+S3 CENSUS production frames=542 finalizers=53 implementations=607 typed=12 macros=589 result=353 insert=236
+S3 CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+S3 CENSUS test-support frames=5 finalizers=0 implementations=15 typed=10 macros=10 result=5 insert=5
+S3 PARTITION implementations=623 macros=600
+S3 T0023 wrapper/callers absent; D0001 witnessed token live; typed=12 macros=13
+S3 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; typed evaluation uses unchanged global modes
+S3 CENSUS test-only frames=0 finalizers=0 implementations=0 typed=0 macros=0 result=0 insert=0
+S3 CENSUS test-support frames=5 finalizers=0 implementations=15 typed=10 macros=10 result=5 insert=5
+S3 PARTITION implementations=623 macros=600
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.56s
+S3 CENSUS production frames=542 finalizers=53 implementations=607 typed=12 macros=589 result=353 insert=236
+S3 CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+S3 CENSUS test-support frames=5 finalizers=0 implementations=15 typed=10 macros=10 result=5 insert=5
+S3 PARTITION implementations=623 macros=600
+S3 T0023 wrapper/callers absent; D0001 witnessed token live; typed=12 macros=13
+S3 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; typed evaluation uses unchanged global modes
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 140.94s
+```
+
+Discovery remains authoritative: production607 implementations/589 macros; test-only16/11; combined623/600. TestSupport macros9→10 because both identifier and expression A3 fixtures are compiled. Neither fixture is silently classified as TestOnly and no 12/601 estimate is forced. Active M receipts remain600; whole-slot Legacy types23 and all later-family receipts remain unchanged.
+
+| Receipt | S2 status → final | Final identity and anchors |
+| --- | --- | --- |
+| F0204 | untyped → typed | rum_runtime::runtime::builtin_adapters::resume_frames::BuiltinEvaluateSuspensionFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; - |
+| F0272 | untyped → typed | rum_runtime::runtime::eval_call_prepare::resume_frames::PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; - |
+| F0273 | untyped → removed | rum_runtime::runtime::eval_call_prepare::resume_frames::ResumeSuspendedCallArgumentPreparationSuspensionFrame implements rum_runtime::runtime::suspension::core::SuspensionFrame; F0272 |
+| F0274 | untyped → typed | rum_runtime::runtime::eval_core::call::EvaluateCallSuspensionFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; - |
+| F0275 | untyped → typed | rum_runtime::runtime::eval_core::call::ResumeCallWithDispatchPlanSuspensionFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; - |
+| F0276 | untyped → typed | rum_runtime::runtime::eval_core::call::ResumeSuspendedCallWithDispatchPlanSuspensionFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; - |
+| F0277 | untyped → typed | rum_runtime::runtime::eval_core::symbol::EvaluateStoredOwnValueSuspensionFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; - |
+| F0278 | untyped → typed | rum_runtime::runtime::eval_dispatch::RunCallDispatchStageSuspensionFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; - |
+| F0279 | untyped → typed | rum_runtime::runtime::hold_thread::EvalReleaseHoldSuspensionFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; - |
+| F0526 | untyped → typed | rum_runtime::runtime::resolution::resume_frames::EvaluateProfiledFixedPointSuspensionFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; - |
+| F0527 | untyped → typed | rum_runtime::runtime::resolution::resume_frames::ResumeFixedPointFromSuspensionFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; - |
+| F0570 | untyped → typed | rum_runtime::runtime::eval_call_prepare::resume_frames::FinishPreparedCallArgumentsFinalizer implements rum_runtime::runtime::suspension::typed::SlotFinalizer; - |
+| M0205 | untyped → typed | rum_runtime::runtime::builtin_adapters::builtin_evaluate#macro1:resume_typed_or_suspend:result; - |
+| M0279 | untyped → typed | rum_runtime::runtime::eval_call_prepare::<Session as inherent>::prepare_arguments_for_call_with_unevaluated_restore#macro1:resume_typed_or_suspend:result; - |
+| M0280 | untyped → removed | rum_runtime::runtime::eval_call_prepare::<Session as inherent>::resume_suspended_call_argument_preparation#macro1:resume_or_suspend:insert; F0272 |
+| M0281 | untyped → typed | rum_runtime::runtime::eval_core::call::<Session as inherent>::evaluate_call#macro1:resume_typed_or_suspend:result; - |
+| M0282 | untyped → typed | rum_runtime::runtime::eval_core::call::<Session as inherent>::resume_call_with_dispatch_plan#macro1:resume_typed_or_suspend:result; - |
+| M0283 | untyped → typed | rum_runtime::runtime::eval_core::call::<Session as inherent>::resume_suspended_call_with_dispatch_plan#macro1:resume_typed_or_suspend:result; - |
+| M0285 | untyped → typed | rum_runtime::runtime::eval_core::symbol::<Session as inherent>::evaluate_stored_own_value#macro1:resume_typed_or_suspend:result; - |
+| M0286 | untyped → typed | rum_runtime::runtime::eval_dispatch::<Session as inherent>::run_call_dispatch_stage#macro1:resume_typed_or_suspend:result; - |
+| M0287 | untyped → typed | rum_runtime::runtime::eval_dispatch::<Session as inherent>::finish_builtin_dispatch#macro1:resume_typed_or_suspend:result; M0288 |
+| M0288 | untyped → removed | rum_runtime::runtime::eval_dispatch::<Session as inherent>::try_dispatch_builtin_call#macro2:resume_typed_or_suspend:result; M0287 |
+| M0289 | untyped → typed | rum_runtime::runtime::hold_thread::<Session as inherent>::eval_release_hold#macro1:resume_typed_or_suspend:result; - |
+| M0561 | untyped → typed | rum_runtime::runtime::resolution::<Session as inherent>::evaluate_profiled_fixed_point#macro1:resume_typed_or_suspend:result; - |
+| M0562 | untyped → typed | rum_runtime::runtime::resolution::<Session as inherent>::resume_fixed_point_from#macro1:resume_typed_or_suspend:result; - |
+| D0001 | untyped → implemented | deferred::prepared arguments; F0204;F0272;F0273;F0274;F0275;F0276;F0277;F0278;F0279;F0526;F0527;F0570;F0275P |
+| T0023 | untyped → removed | rum_runtime::runtime::eval_call_prepare::<Session as inherent>::prepare_arguments_for_call#method1:map:self . prepare_arguments_for_call_with_unevaluated_restore (head , attributes , args); F0272 |
+| T0024 | untyped → applied | rum_runtime::runtime::eval_core::call::<Session as inherent>::resume_call_after_head#method1:into:evaluated_head; F0274 |
+| T0025 | untyped → applied | rum_runtime::runtime::eval_core::call::<Session as inherent>::resume_call_with_dispatch_plan#method14:install_prepared_call_arguments:self; F0275;F0275P |
+| T0026 | untyped → applied | rum_runtime::runtime::eval_core::call::<Session as inherent>::resume_suspended_call_with_dispatch_plan#method16:install_prepared_call_arguments:self; F0276;F0275P |
+| T0027 | untyped → removed | rum_runtime::runtime::eval_core::symbol::<EvaluateStoredOwnValueSuspensionFrame as crate :: runtime :: suspension :: SuspensionFrame>::resume#method4:map:(\| \| -> Result < rum_core :: Expr , EvalError > { if outcome . matched { session . evaluate_accepted_own_value (& symbol , body , delayed) } else { session . evaluate_symbol_after_stored_own_value (symbol) } }) (); F0277 |
+| Whole0029 | legacy-use → removed | rum_runtime::runtime::eval_core::call::<Session as inherent>::resume_suspended_call_dispatch_frame#call1:prepared_call_arguments_from_continuation_expr:; D009 |
+| Whole0030 | legacy-use → removed | rum_runtime::runtime::eval_core::call::<Session as inherent>::resume_suspended_call_dispatch_frame#call4:from_continuation_expr:; D125 |
+| Whole0031 | legacy-use → removed | rum_runtime::runtime::eval_core::call::<Session as inherent>::resume_suspended_call_dispatch_frame#call5:from_continuation_expr:; D125 |
+| Whole0032 | legacy-use → removed | rum_runtime::runtime::eval_core::symbol::<EvaluateStoredOwnValueSuspensionFrame as crate :: runtime :: suspension :: SuspensionFrame>::resume#call1:from_continuation_expr:; D049 |
+| F0275P | absent → typed | rum_runtime::runtime::eval_core::call::PreparedDispatchFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; F0275;F0276 |
+| M0282S | absent → typed | rum_runtime::runtime::eval_core::call::<Session as inherent>::resume_call_with_dispatch_plan#macro2:resume_typed_or_suspend:result; M0282 |
+| S3 | absent → implemented | S3 evaluation dispatch: 12 typed implementations and 13 typed macro sites; T0023;T0024;T0025;T0026;T0027;D0001 |
+| X0040 | absent → legacy-test | rum_runtime::runtime::eval_call_prepare::prepared_slot_finalizer_fixture#method1:into_continuation_expr:finish_suspended_prepared_call (SuspendedPreparedCallArguments { evaluated_args : PreparedArgumentAccumulator :: freeze (prepared . evaluated_args . iter () . cloned () . collect () ,) , unevaluated_restores : prepared . unevaluated_restore . as_ref () . map (\| restore \| UnevaluatedRestoreAccumulator :: freeze (restore . wrappers . clone ())) , }); S3 typed finalizer materialized through the unchanged Legacy provider |
+| M0283S | absent → typed | rum_runtime::runtime::eval_core::call::<Session as inherent>::resume_suspended_call_with_dispatch_plan#macro2:resume_typed_or_suspend:result; M0283 |
+| X0041 | absent → legacy-test | rum_stdlib::tests::retention_closure::compiler_oracle::corpus::legacy_macro_stays_opaque_in_all_four_views#reference7:resume_or_suspend:; S3 A3 AST-only legacy-opacity control; macro argument spans preserved |
+
+### 3. Watched failures and final equality in both builds
+
+The six replacement S3 divergences were watched on byte-identical S2 production in both builds. The three If-held and three listable-completion cases isolate F0278 semantic Some without crossing S13’s skipped Function map. These are preserved pre-conversion outputs, not rebuilt baselines. The six original Fold/Nest cases stay archived for S13; F0528/M0563 remain untouched.
+
+**r1-pre-builtin-held-default: exit 101.** Full raw output: `.temp/brief-609/r1-pre-builtin-held-default.log`.
+
+```text
+cargo test -p rum-stdlib --test suspension_oracle fixtures::evaluation_dispatch::s3_ -- --nocapture
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+warning: constant `FLIP_SLOT` is never used
+ --> crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs:4:11
+  |
+4 | pub const FLIP_SLOT: Option<&str> = None;
+  |           ^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: function `execute` is never used
+  --> crates/rum-stdlib/tests/suspension_oracle/support/drive.rs:13:8
+   |
+13 | pub fn execute(
+   |        ^^^^^^^
+
+warning: `rum-stdlib` (test "suspension_oracle") generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.29s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ad9873bc53ac1c0b)
+
+running 3 tests
+test oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some ... builtin.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.empty_some resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=12
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.empty_some: UnexpectedPause(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_builtin_none ... builtin.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.none resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=24
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.none: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_builtin_some ... builtin.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.some resumed: Ok(ResultView { observation: Observation { value: Some(Atom(Integer(Small(5)))), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=48
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.some: Value
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_builtin_none
+    oracle::fixtures::evaluation_dispatch::s3_builtin_some
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 50 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+**r1-pre-builtin-held-no-default: exit 101.** Full raw output: `.temp/brief-609/r1-pre-builtin-held-no-default.log`.
+
+```text
+cargo test -p rum-stdlib --no-default-features --test suspension_oracle fixtures::evaluation_dispatch::s3_ -- --nocapture
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+warning: constant `FLIP_SLOT` is never used
+ --> crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs:4:11
+  |
+4 | pub const FLIP_SLOT: Option<&str> = None;
+  |           ^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: function `execute` is never used
+  --> crates/rum-stdlib/tests/suspension_oracle/support/drive.rs:13:8
+   |
+13 | pub fn execute(
+   |        ^^^^^^^
+
+warning: `rum-stdlib` (test "suspension_oracle") generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.13s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ed9ba19bc18733e6)
+
+running 3 tests
+test oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some ... builtin.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 659, identity: None, text: SymbolText { id: 659, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.empty_some resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=12
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.empty_some: UnexpectedPause(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_builtin_none ... builtin.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 661, identity: None, text: SymbolText { id: 661, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.none resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=24
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.none: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_builtin_some ... builtin.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 659, identity: None, text: SymbolText { id: 659, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.some resumed: Ok(ResultView { observation: Observation { value: Some(Atom(Integer(Small(5)))), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=48
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.some: Value
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_builtin_none
+    oracle::fixtures::evaluation_dispatch::s3_builtin_some
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 50 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+**r1-pre-threaded-dv-default: exit 101.** Full raw output: `.temp/brief-609/r1-pre-threaded-dv-default.log`.
+
+```text
+cargo test -p rum-stdlib --test suspension_oracle fixtures::evaluation_dispatch::s3_threaded -- --nocapture
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+warning: constant `FLIP_SLOT` is never used
+ --> crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs:4:11
+  |
+4 | pub const FLIP_SLOT: Option<&str> = None;
+  |           ^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: function `execute` is never used
+  --> crates/rum-stdlib/tests/suspension_oracle/support/drive.rs:13:8
+   |
+13 | pub fn execute(
+   |        ^^^^^^^
+
+warning: `rum-stdlib` (test "suspension_oracle") generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.35s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ad9873bc53ac1c0b)
+
+running 3 tests
+test oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some ... threaded.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 670, identity: None, text: SymbolText { id: 670, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.empty_some resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=12
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.empty_some: UnexpectedPause(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_threaded_none ... threaded.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 673, identity: None, text: SymbolText { id: 673, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.none resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=24
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.none: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_threaded_some ... threaded.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 670, identity: None, text: SymbolText { id: 670, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.some resumed: Ok(ResultView { observation: Observation { value: Some(Atom(Integer(Small(5)))), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=48
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.some: Value
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_threaded_none
+    oracle::fixtures::evaluation_dispatch::s3_threaded_some
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 53 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+**r1-pre-threaded-dv-no-default: exit 101.** Full raw output: `.temp/brief-609/r1-pre-threaded-dv-no-default.log`.
+
+```text
+cargo test -p rum-stdlib --no-default-features --test suspension_oracle fixtures::evaluation_dispatch::s3_threaded -- --nocapture
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+warning: constant `FLIP_SLOT` is never used
+ --> crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs:4:11
+  |
+4 | pub const FLIP_SLOT: Option<&str> = None;
+  |           ^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: function `execute` is never used
+  --> crates/rum-stdlib/tests/suspension_oracle/support/drive.rs:13:8
+   |
+13 | pub fn execute(
+   |        ^^^^^^^
+
+warning: `rum-stdlib` (test "suspension_oracle") generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.46s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ed9ba19bc18733e6)
+
+running 3 tests
+test oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some ... threaded.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 664, identity: None, text: SymbolText { id: 664, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.empty_some resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=12
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.empty_some: UnexpectedPause(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_threaded_none ... threaded.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.none resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=24
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.none: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_threaded_some ... threaded.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 664, identity: None, text: SymbolText { id: 664, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.some resumed: Ok(ResultView { observation: Observation { value: Some(Atom(Integer(Small(5)))), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=48
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.some: Value
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_threaded_none
+    oracle::fixtures::evaluation_dispatch::s3_threaded_some
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 53 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+**r6b-ordinary-default: exit 0.** Full raw output: `.temp/brief-609/r6b-ordinary-default.log`.
+
+```text
+cargo test --manifest-path .temp/brief-609/r2/ordinary-controls/Cargo.toml --test ordinary -- --nocapture
+```
+
+```text
+     Running witness_test.rs (.temp/brief-609/r2/ordinary-controls/target/debug/deps/ordinary-5cf883959ece1e3c)
+running 1 test
+ORDINARY CONTROLS: 28 PASS, Checks::ALL; unconditional FaultProbe absence
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+```
+
+**r6b-ordinary-no-default: exit 0.** Full raw output: `.temp/brief-609/r6b-ordinary-no-default.log`.
+
+```text
+cargo test --manifest-path .temp/brief-609/r2/ordinary-controls/Cargo.toml --no-default-features --test ordinary -- --nocapture
+```
+
+```text
+     Running witness_test.rs (.temp/brief-609/r2/ordinary-controls/target/debug/deps/ordinary-8f58f702763e7810)
+running 1 test
+ORDINARY CONTROLS: 28 PASS, Checks::ALL; unconditional FaultProbe absence
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+```
+
+Final complete suspension oracle: default
+
+```text
+test oracle::fixtures::evaluation_dispatch::head_map_twice ... continuation-slot fault-occurrence delta=0; observations=17175
+test oracle::fixtures::evaluation_dispatch::prepared_twice ... continuation-slot fault-occurrence delta=0; observations=17187
+test oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some ... continuation-slot fault-occurrence delta=0; observations=17199
+test oracle::fixtures::evaluation_dispatch::s3_builtin_none ... continuation-slot fault-occurrence delta=0; observations=17211
+test oracle::fixtures::evaluation_dispatch::s3_builtin_some ... continuation-slot fault-occurrence delta=0; observations=17223
+test oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some ... continuation-slot fault-occurrence delta=0; observations=17235
+test oracle::fixtures::evaluation_dispatch::s3_threaded_none ... continuation-slot fault-occurrence delta=0; observations=17247
+test oracle::fixtures::evaluation_dispatch::s3_threaded_some ... continuation-slot fault-occurrence delta=0; observations=17259
+test zz_continuation_fault_occurrences ... continuation-slot fault-occurrence delta=0; observations=88016
+test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.75s
+```
+
+Final complete suspension oracle: no-default
+
+```text
+test oracle::fixtures::evaluation_dispatch::head_map_twice ... continuation-slot fault-occurrence delta=0; observations=17175
+test oracle::fixtures::evaluation_dispatch::prepared_twice ... continuation-slot fault-occurrence delta=0; observations=17187
+test oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some ... continuation-slot fault-occurrence delta=0; observations=17199
+test oracle::fixtures::evaluation_dispatch::s3_builtin_none ... continuation-slot fault-occurrence delta=0; observations=17211
+test oracle::fixtures::evaluation_dispatch::s3_builtin_some ... continuation-slot fault-occurrence delta=0; observations=17223
+test oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some ... continuation-slot fault-occurrence delta=0; observations=17235
+test oracle::fixtures::evaluation_dispatch::s3_threaded_none ... continuation-slot fault-occurrence delta=0; observations=17247
+test oracle::fixtures::evaluation_dispatch::s3_threaded_some ... continuation-slot fault-occurrence delta=0; observations=17259
+test zz_continuation_fault_occurrences ... continuation-slot fault-occurrence delta=0; observations=88016
+test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.43s
+```
+
+Checks::ALL and unconditional FaultProbe absence are unchanged. The full raw outputs above identify both feature builds, every final equality and all fault-occurrence deltas. Native transport skips are reported separately from exercised passes below.
+
+### 4. Analyzer, inventories, certificates and complete gate ledger
+
+Both macro forms use the exact checked definition. Bare identifiers match the caller place without a new producer binding; expressions retain the binding. Each has five explicit expansion rejection obligations, including cold closure captures/moves, FnOnce invocation and drop. All four views read both compiled A3 fixtures. Legacy invocations stay opaque, and unknown success bindings stay unknown and scoped. Seven independent definition mutations are rejected in each view:28 deliberate rejections. No retention reject or strict token comparison was weakened.
+
+The expression-only old definition was watched red; the first two-arm adapter exposed a quote-token whitespace mismatch, corrected with the identical &($result) spelling in both definitions. Two deliberate guard-disabled runs failed the drift falsifier. Restoring with an old file timestamp initially reused that weakened scratch binary; that failed run is retained, not accepted. A fresh timestamp rebuilt the restored exact guard and all seven controls passed. These watched controls apply to the byte-identical final macro/adapter sources.
+
+**r6-views-old-definition: exit 101.** Full raw output: `.temp/brief-609/r6-views-old-definition.log`.
+
+```text
+cargo test --manifest-path .temp/brief-609/r6/view-fixture/Cargo.toml --test frontier macro_ -- --nocapture
+```
+
+```text
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.47
+   Compiling proc-macro2 v1.0.107
+   Compiling syn v3.0.4
+   Compiling autocfg v1.5.1
+   Compiling num-traits v0.2.19
+   Compiling serde_core v1.0.229
+   Compiling serde v1.0.229
+   Compiling serde_derive v1.0.229
+   Compiling thiserror v2.0.20
+   Compiling num-integer v0.1.47
+   Compiling thiserror-impl v2.0.20
+   Compiling num-bigint v0.4.8
+   Compiling syn v2.0.119
+   Compiling rum-derive v0.2.0 (/home/remi/dev/rum/crates/rum-derive)
+   Compiling rum-core v0.2.0 (/home/remi/dev/rum/crates/rum-core)
+   Compiling rum-syntax v0.2.0 (/home/remi/dev/rum/crates/rum-syntax)
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling brief609-frontier-fixture v0.0.0 (/home/remi/dev/rum/.temp/brief-609/r6/view-fixture)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 46.89s
+     Running main.rs (.temp/brief-609/r6/view-fixture/target/debug/deps/frontier-eb82c8738f75f1e7)
+
+running 6 tests
+test checker::compiler_oracle::corpus::legacy_macro_stays_opaque_in_all_four_views ... 
+thread 'checker::compiler_oracle::corpus::legacy_macro_stays_opaque_in_all_four_views' panicked at checker/typed_resume_macro.rs:190:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test checker::compiler_oracle::corpus::typed_macro_constructor_locator_reads_arguments ... 
+thread 'checker::compiler_oracle::corpus::typed_macro_constructor_locator_reads_arguments' panicked at checker/typed_resume_macro.rs:190:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+FAILED
+test checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view ... 
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:190:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT producer regions crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:190:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT producer locator crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:190:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT producer methods crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:190:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT producer types crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:190:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT cold helper regions crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:190:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT cold helper locator crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:190:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT cold helper methods crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:190:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT cold helper types crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:190:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT owned capture regions crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:190:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT owned capture locator crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:190:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT owned capture methods crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:190:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT owned capture types crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+ok
+test checker::compiler_oracle::corpus::typed_macro_expected_constructor_type_reads_arguments ... 
+thread 'checker::compiler_oracle::corpus::typed_macro_expected_constructor_type_reads_arguments' panicked at checker/typed_resume_macro.rs:190:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+FAILED
+test checker::compiler_oracle::corpus::typed_macro_method_selection_reads_arguments ... 
+thread 'checker::compiler_oracle::corpus::typed_macro_method_selection_reads_arguments' panicked at checker/typed_resume_macro.rs:190:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+FAILED
+test checker::compiler_oracle::corpus::typed_macro_unknown_pattern_does_not_leak_or_select ... 
+thread 'checker::compiler_oracle::corpus::typed_macro_unknown_pattern_does_not_leak_or_select' panicked at checker/typed_resume_macro.rs:190:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:2:9-7:10: typed resume macro definition changed
+FAILED
+
+failures:
+
+failures:
+    checker::compiler_oracle::corpus::legacy_macro_stays_opaque_in_all_four_views
+    checker::compiler_oracle::corpus::typed_macro_constructor_locator_reads_arguments
+    checker::compiler_oracle::corpus::typed_macro_expected_constructor_type_reads_arguments
+    checker::compiler_oracle::corpus::typed_macro_method_selection_reads_arguments
+    checker::compiler_oracle::corpus::typed_macro_unknown_pattern_does_not_leak_or_select
+
+test result: FAILED. 1 passed; 5 failed; 0 ignored; 0 measured; 2 filtered out; finished in 88.23s
+
+error: test failed, to rerun pass `--test frontier`
+```
+
+**r6-drift-final-watched: exit 101.** Full raw output: `.temp/brief-609/r6-drift-final-watched.log`.
+
+```text
+cargo test --manifest-path .temp/brief-609/r6/view-fixture/Cargo.toml --test frontier typed_macro_definition_drift_fails_every_view -- --nocapture
+```
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling brief609-frontier-fixture v0.0.0 (/home/remi/dev/rum/.temp/brief-609/r6/view-fixture)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.75s
+     Running main.rs (.temp/brief-609/r6/view-fixture/target/debug/deps/frontier-eb82c8738f75f1e7)
+
+running 1 test
+test checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view ... TYPED_MACRO_DRIFT_NOT_REJECTED identifier matcher regions
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier matcher locator
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier matcher methods
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier matcher types
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier witness regions
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier witness locator
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier witness methods
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier witness types
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier cold helper regions
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier cold helper locator
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier cold helper methods
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier cold helper types
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier owned capture regions
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier owned capture locator
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier owned capture methods
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier owned capture types
+TYPED_MACRO_DRIFT_NOT_REJECTED expression producer regions
+TYPED_MACRO_DRIFT_NOT_REJECTED expression producer locator
+TYPED_MACRO_DRIFT_NOT_REJECTED expression producer methods
+TYPED_MACRO_DRIFT_NOT_REJECTED expression producer types
+TYPED_MACRO_DRIFT_NOT_REJECTED expression cold helper regions
+TYPED_MACRO_DRIFT_NOT_REJECTED expression cold helper locator
+TYPED_MACRO_DRIFT_NOT_REJECTED expression cold helper methods
+TYPED_MACRO_DRIFT_NOT_REJECTED expression cold helper types
+TYPED_MACRO_DRIFT_NOT_REJECTED expression owned capture regions
+TYPED_MACRO_DRIFT_NOT_REJECTED expression owned capture locator
+TYPED_MACRO_DRIFT_NOT_REJECTED expression owned capture methods
+TYPED_MACRO_DRIFT_NOT_REJECTED expression owned capture types
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/compiler_oracle/corpus.rs:462:5:
+every view must fail on drift: ["identifier matcher: regions", "identifier matcher: locator", "identifier matcher: methods", "identifier matcher: types", "identifier witness: regions", "identifier witness: locator", "identifier witness: methods", "identifier witness: types", "identifier cold helper: regions", "identifier cold helper: locator", "identifier cold helper: methods", "identifier cold helper: types", "identifier owned capture: regions", "identifier owned capture: locator", "identifier owned capture: methods", "identifier owned capture: types", "expression producer: regions", "expression producer: locator", "expression producer: methods", "expression producer: types", "expression cold helper: regions", "expression cold helper: locator", "expression cold helper: methods", "expression cold helper: types", "expression owned capture: regions", "expression owned capture: locator", "expression owned capture: methods", "expression owned capture: types"]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 15.45s
+
+error: test failed, to rerun pass `--test frontier`
+```
+
+**r6-views-final: exit 101.** Full raw output: `.temp/brief-609/r6-views-final.log`.
+
+```text
+cargo test --manifest-path .temp/brief-609/r6/view-fixture/Cargo.toml --test frontier macro_ -- --nocapture
+```
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running main.rs (.temp/brief-609/r6/view-fixture/target/debug/deps/frontier-eb82c8738f75f1e7)
+
+running 7 tests
+test checker::compiler_oracle::corpus::legacy_macro_stays_opaque_in_all_four_views ... LEGACY_MACRO_OPAQUE regions/locator/methods/types
+ok
+test checker::compiler_oracle::corpus::typed_macro_constructor_locator_reads_arguments ... TYPED_MACRO_LOCATED crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:151:25-151:37 std::option::Option::Some
+TYPED_MACRO_LOCATED crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:153:17-153:32 std::result::Result::Ok
+TYPED_MACRO_LOCATED crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:153:20-153:31 std::option::Option::Some
+ok
+test checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view ... TYPED_MACRO_DRIFT_NOT_REJECTED identifier matcher regions
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier matcher locator
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier matcher methods
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier matcher types
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier witness regions
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier witness locator
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier witness methods
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier witness types
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier cold helper regions
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier cold helper locator
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier cold helper methods
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier cold helper types
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier owned capture regions
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier owned capture locator
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier owned capture methods
+TYPED_MACRO_DRIFT_NOT_REJECTED identifier owned capture types
+TYPED_MACRO_DRIFT_NOT_REJECTED expression producer regions
+TYPED_MACRO_DRIFT_NOT_REJECTED expression producer locator
+TYPED_MACRO_DRIFT_NOT_REJECTED expression producer methods
+TYPED_MACRO_DRIFT_NOT_REJECTED expression producer types
+TYPED_MACRO_DRIFT_NOT_REJECTED expression cold helper regions
+TYPED_MACRO_DRIFT_NOT_REJECTED expression cold helper locator
+TYPED_MACRO_DRIFT_NOT_REJECTED expression cold helper methods
+TYPED_MACRO_DRIFT_NOT_REJECTED expression cold helper types
+TYPED_MACRO_DRIFT_NOT_REJECTED expression owned capture regions
+TYPED_MACRO_DRIFT_NOT_REJECTED expression owned capture locator
+TYPED_MACRO_DRIFT_NOT_REJECTED expression owned capture methods
+TYPED_MACRO_DRIFT_NOT_REJECTED expression owned capture types
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/compiler_oracle/corpus.rs:462:5:
+every view must fail on drift: ["identifier matcher: regions", "identifier matcher: locator", "identifier matcher: methods", "identifier matcher: types", "identifier witness: regions", "identifier witness: locator", "identifier witness: methods", "identifier witness: types", "identifier cold helper: regions", "identifier cold helper: locator", "identifier cold helper: methods", "identifier cold helper: types", "identifier owned capture: regions", "identifier owned capture: locator", "identifier owned capture: methods", "identifier owned capture: types", "expression producer: regions", "expression producer: locator", "expression producer: methods", "expression producer: types", "expression cold helper: regions", "expression cold helper: locator", "expression cold helper: methods", "expression cold helper: types", "expression owned capture: regions", "expression owned capture: locator", "expression owned capture: methods", "expression owned capture: types"]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test checker::compiler_oracle::corpus::typed_macro_expected_constructor_type_reads_arguments ... TYPED_MACRO_TYPE crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:151:25-151:37 std::option::Option::Some std::option::Option<usize>
+TYPED_MACRO_TYPE crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:153:17-153:32 std::result::Result::Ok std::result::Result<std::option::Option<rum_core::expr::Expr>, rum_runtime::runtime::session::session_state::EvalError>
+TYPED_MACRO_TYPE crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:153:20-153:31 std::option::Option::Some std::option::Option<rum_core::expr::Expr>
+ok
+test checker::compiler_oracle::corpus::typed_macro_expression_form_reads_all_four_views ... TYPED_MACRO_EXPRESSION regions/locator/methods/types
+ok
+test checker::compiler_oracle::corpus::typed_macro_method_selection_reads_arguments ... TYPED_MACRO_METHOD crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:152:25-152:39 rum_stdlib::tests::retention_closure::compiler_oracle::corpus::typed_argument_fixture::Local::choose
+ok
+test checker::compiler_oracle::corpus::typed_macro_unknown_pattern_does_not_leak_or_select ... ok
+
+failures:
+
+failures:
+    checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view
+
+test result: FAILED. 6 passed; 1 failed; 0 ignored; 0 measured; 2 filtered out; finished in 108.60s
+
+error: test failed, to rerun pass `--test frontier`
+```
+
+**r6-views-rebuilt: exit 0.** Full raw output: `.temp/brief-609/r6-views-rebuilt.log`.
+
+```text
+cargo test --manifest-path .temp/brief-609/r6/view-fixture/Cargo.toml --test frontier macro_ -- --nocapture
+```
+
+```text
+   Compiling brief609-frontier-fixture v0.0.0 (/home/remi/dev/rum/.temp/brief-609/r6/view-fixture)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.10s
+     Running main.rs (.temp/brief-609/r6/view-fixture/target/debug/deps/frontier-eb82c8738f75f1e7)
+
+running 7 tests
+test checker::compiler_oracle::corpus::legacy_macro_stays_opaque_in_all_four_views ... LEGACY_MACRO_OPAQUE regions/locator/methods/types
+ok
+test checker::compiler_oracle::corpus::typed_macro_constructor_locator_reads_arguments ... TYPED_MACRO_LOCATED crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:151:25-151:37 std::option::Option::Some
+TYPED_MACRO_LOCATED crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:153:17-153:32 std::result::Result::Ok
+TYPED_MACRO_LOCATED crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:153:20-153:31 std::option::Option::Some
+ok
+test checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view ... 
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+TYPED_MACRO_DRIFT identifier matcher regions crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT identifier matcher locator crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT identifier matcher methods crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT identifier matcher types crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT identifier witness regions crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT identifier witness locator crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT identifier witness methods crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT identifier witness types crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT identifier cold helper regions crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT identifier cold helper locator crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT identifier cold helper methods crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT identifier cold helper types crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT identifier owned capture regions crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT identifier owned capture locator crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT identifier owned capture methods crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT identifier owned capture types crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT expression producer regions crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT expression producer locator crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT expression producer methods crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT expression producer types crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT expression cold helper regions crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT expression cold helper locator crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT expression cold helper methods crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT expression cold helper types crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT expression owned capture regions crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT expression owned capture locator crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT expression owned capture methods crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+
+thread 'checker::compiler_oracle::corpus::typed_macro_definition_drift_fails_every_view' panicked at checker/typed_resume_macro.rs:228:9:
+crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+TYPED_MACRO_DRIFT expression owned capture types crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:148:9-156:10: typed resume macro definition changed
+ok
+test checker::compiler_oracle::corpus::typed_macro_expected_constructor_type_reads_arguments ... TYPED_MACRO_TYPE crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:151:25-151:37 std::option::Option::Some std::option::Option<usize>
+TYPED_MACRO_TYPE crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:153:17-153:32 std::result::Result::Ok std::result::Result<std::option::Option<rum_core::expr::Expr>, rum_runtime::runtime::session::session_state::EvalError>
+TYPED_MACRO_TYPE crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:153:20-153:31 std::option::Option::Some std::option::Option<rum_core::expr::Expr>
+ok
+test checker::compiler_oracle::corpus::typed_macro_expression_form_reads_all_four_views ... TYPED_MACRO_EXPRESSION regions/locator/methods/types
+ok
+test checker::compiler_oracle::corpus::typed_macro_method_selection_reads_arguments ... TYPED_MACRO_METHOD crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:152:25-152:39 rum_stdlib::tests::retention_closure::compiler_oracle::corpus::typed_argument_fixture::Local::choose
+ok
+test checker::compiler_oracle::corpus::typed_macro_unknown_pattern_does_not_leak_or_select ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 104.42s
+```
+
+The final frontier is937: RET00110, RET002901, RET00326. Direct S2 reconciliation is932→937:912 identical rows, 19 paired same-operation moves, one opaque M0561 RET003 replaced by five explicitly rejected expansion rows, and one explicit Try/FromResidual rejection. No unpaired removal or newly admitted boundary remains. The final driver repair leaves all937 frontier rows, all170 scoped constructor contexts and all7348 broad contexts byte-identical to the first R6 validation. See `r6/frontier-s2-classified.json` and `r6b/stage6-view-diff.json`. The historical printed ACCEPTANCE_BASELINE927 is deliberately unchanged.
+
+The constructor claim change7311→7313 is fully owned: driver Err3→4 and M0561 Ok2→3. The final compiler instruments below provide the authoritative agreement totals; duplicate exact TOTAL prints are not summed. Ownership retains79 approved payload identities and59 self-reaching types. From R6 entry, unresolved captures2956→2954 removes only record_head and the adapter map_err closure; macros3152→3154 adds unreachable! and the placeholder debug assertion. Attributes1514/storage94 are unchanged. Four adapter witness cells move 36→32→33 (three cells) and82→74→75 (one). All identity/disposition cells remain unchanged. Full replay diffs are preserved in both R6 evidence directories.
+
+All68 context fingerprints were replayed after the final source: fnv1a64:928be82d795f65ef. Both feature builds independently earned three production-instance and four probe marks, with no fixture/helper marks, before rejecting the stale certificates. Only four C01/C02 certificate cells changed; all seven other columns, certified bodies and the local analyzer remain unchanged. Both final local acceptance runs pass.
+
+The following ledger pastes every test-result line from every R6/R6b bounded gate, including intended negative children and stale-pin failures. Logs without test-result lines remain in `r6b/all-r6-gate-totals.json`; they are not counted as tests. Each raw log has its exact command, environment and exit record. Final acceptance is the R6b sequence after the last runtime revision; earlier green runs are intermediate evidence.
+
+| Raw log | Exit | Verbatim totals |
+| --- | --- | --- |
+| .temp/brief-609/r6-attempt4-typed.log | 0 | test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 1152 filtered out; finished in 0.46s |
+| .temp/brief-609/r6-census-default.log | 0 | test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.49s<br>test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.65s<br>test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 140.21s |
+| .temp/brief-609/r6-census-discovery.log | 0 | test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.67s<br>test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.97s<br>test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 142.55s |
+| .temp/brief-609/r6-census-no-default.log | 0 | test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.55s<br>test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.60s<br>test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 141.29s |
+| .temp/brief-609/r6-constructor-oracle.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 260.62s |
+| .temp/brief-609/r6-controls-default.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 45.13s |
+| .temp/brief-609/r6-controls-no-default.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 25.99s |
+| .temp/brief-609/r6-definition-token-diagnostic.log | 101 | test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 14.79s |
+| .temp/brief-609/r6-drift-final-watched.log | 101 | test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 15.45s |
+| .temp/brief-609/r6-drift-watched.log | 101 | test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 15.68s |
+| .temp/brief-609/r6-emit-certificates-default.log | 101 | test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 18.93s |
+| .temp/brief-609/r6-emit-certificates-no-default.log | 101 | test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1145 filtered out; finished in 18.93s |
+| .temp/brief-609/r6-exact-oracle.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 199.65s |
+| .temp/brief-609/r6-frame-roots-reconciled.log | 0 | test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1157 filtered out; finished in 1.37s |
+| .temp/brief-609/r6-frame-roots.log | 101 | test result: FAILED. 14 passed; 1 failed; 0 ignored; 0 measured; 1157 filtered out; finished in 1.52s |
+| .temp/brief-609/r6-frontier-final.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 26.03s |
+| .temp/brief-609/r6-local-default.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 18.33s |
+| .temp/brief-609/r6-local-no-default.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1145 filtered out; finished in 18.86s |
+| .temp/brief-609/r6-native-skips.log | 0 | test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 142 filtered out; finished in 0.00s |
+| .temp/brief-609/r6-oracle-default.log | 0 | test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.14s |
+| .temp/brief-609/r6-oracle-no-default.log | 0 | test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.69s |
+| .temp/brief-609/r6-ordinary-default.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s |
+| .temp/brief-609/r6-ordinary-no-default.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s |
+| .temp/brief-609/r6-ownership-discovery.log | 101 | test result: FAILED. 22 passed; 3 failed; 0 ignored; 0 measured; 1127 filtered out; finished in 68.28s |
+| .temp/brief-609/r6-ownership-final.log | 0 | test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 1127 filtered out; finished in 70.96s |
+| .temp/brief-609/r6-typed-runtime.log | 0 | test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 1152 filtered out; finished in 0.45s |
+| .temp/brief-609/r6-unchanged-depth48-exact.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1171 filtered out; finished in 0.01s |
+| .temp/brief-609/r6-unchanged-depth48.log | 0 | test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s |
+| .temp/brief-609/r6-views-final.log | 101 | test result: FAILED. 6 passed; 1 failed; 0 ignored; 0 measured; 2 filtered out; finished in 108.60s |
+| .temp/brief-609/r6-views-inventory.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 8 filtered out; finished in 10.37s |
+| .temp/brief-609/r6-views-old-definition.log | 101 | test result: FAILED. 1 passed; 5 failed; 0 ignored; 0 measured; 2 filtered out; finished in 88.23s |
+| .temp/brief-609/r6-views-rebuilt.log | 0 | test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 104.42s |
+| .temp/brief-609/r6-views.log | 101 | test result: FAILED. 1 passed; 6 failed; 0 ignored; 0 measured; 2 filtered out; finished in 104.25s |
+| .temp/brief-609/r6-workspace.log | 0 | test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s<br>test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s<br>test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s<br>test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.92s<br>test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.63s<br>test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s<br>test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s<br>test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s<br>test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s<br>test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 45.40s<br>test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s<br>test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s<br>test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s<br>test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s<br>test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s<br>test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.30s<br>test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.02s<br>test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s<br>test result: ok. 151 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.71s<br>test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.40s<br>test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s<br>test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s<br>test result: ok. 1169 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 39.53s<br>test result: ok. 1099 passed; 0 failed; 53 ignored; 0 measured; 0 filtered out; finished in 1217.74s<br>test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s<br>test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s<br>test result: ok. 47 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.03s<br>test result: ok. 69 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 23.23s<br>test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.30s<br>test result: ok. 100 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.94s<br>test result: ok. 71 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.55s<br>test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.08s<br>test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.44s<br>test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 29.04s<br>test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 141.39s<br>test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 30.46s<br>test result: ok. 193 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.63s<br>test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.44s<br>test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.23s<br>test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.85s<br>test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s |
+| .temp/brief-609/r6b-census-default.log | 0 | test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.29s<br>test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.33s<br>test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 139.09s |
+| .temp/brief-609/r6b-census-no-default.log | 0 | test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.42s<br>test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.56s<br>test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 140.94s |
+| .temp/brief-609/r6b-constructor-oracle.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 231.25s |
+| .temp/brief-609/r6b-controls-default.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 44.36s |
+| .temp/brief-609/r6b-controls-no-default.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 24.77s |
+| .temp/brief-609/r6b-depth48-exact.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1171 filtered out; finished in 0.01s |
+| .temp/brief-609/r6b-emit-certificates-default.log | 101 | test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 18.71s |
+| .temp/brief-609/r6b-emit-certificates-no-default.log | 101 | test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1145 filtered out; finished in 18.49s |
+| .temp/brief-609/r6b-exact-oracle.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 200.98s |
+| .temp/brief-609/r6b-frame-roots.log | 0 | test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1157 filtered out; finished in 1.28s |
+| .temp/brief-609/r6b-frontier-final.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 25.36s |
+| .temp/brief-609/r6b-local-default.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 18.36s |
+| .temp/brief-609/r6b-local-no-default.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1145 filtered out; finished in 18.62s |
+| .temp/brief-609/r6b-native-skips.log | 0 | test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 142 filtered out; finished in 0.00s |
+| .temp/brief-609/r6b-oracle-default.log | 0 | test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.75s |
+| .temp/brief-609/r6b-oracle-no-default.log | 0 | test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.43s |
+| .temp/brief-609/r6b-ordinary-default.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s |
+| .temp/brief-609/r6b-ordinary-no-default.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s |
+| .temp/brief-609/r6b-ownership-discovery.log | 101 | test result: FAILED. 22 passed; 3 failed; 0 ignored; 0 measured; 1127 filtered out; finished in 67.77s |
+| .temp/brief-609/r6b-ownership-final.log | 0 | test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 1127 filtered out; finished in 70.21s |
+| .temp/brief-609/r6b-post-stack-frame-roots.log | 0 | test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1157 filtered out; finished in 1.76s |
+| .temp/brief-609/r6b-post-stack-frontier-final.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 25.90s |
+| .temp/brief-609/r6b-post-stack-local-default.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 19.29s |
+| .temp/brief-609/r6b-post-stack-local-no-default.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1145 filtered out; finished in 19.85s |
+| .temp/brief-609/r6b-post-stack-ownership-final.log | 0 | test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 1127 filtered out; finished in 70.57s |
+| .temp/brief-609/r6b-post-stack-typed-runtime.log | 0 | test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 1152 filtered out; finished in 0.46s |
+| .temp/brief-609/r6b-typed-runtime.log | 0 | test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 1152 filtered out; finished in 0.44s |
+| .temp/brief-609/r6b-views-inventory.log | 0 | test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 8 filtered out; finished in 10.32s |
+| .temp/brief-609/r6b-workspace.log | 0 | test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s<br>test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.25s<br>test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s<br>test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.94s<br>test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.63s<br>test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s<br>test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s<br>test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s<br>test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s<br>test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 47.98s<br>test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s<br>test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s<br>test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s<br>test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s<br>test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s<br>test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.28s<br>test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.01s<br>test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s<br>test result: ok. 151 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.70s<br>test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.39s<br>test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s<br>test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s<br>test result: ok. 1169 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 38.06s<br>test result: ok. 1099 passed; 0 failed; 53 ignored; 0 measured; 0 filtered out; finished in 869.30s<br>test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s<br>test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s<br>test result: ok. 47 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.04s<br>test result: ok. 69 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 23.34s<br>test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.30s<br>test result: ok. 100 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.95s<br>test result: ok. 71 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.55s<br>test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.99s<br>test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.45s<br>test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.78s<br>test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 140.84s<br>test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 29.91s<br>test result: ok. 193 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.52s<br>test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.43s<br>test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.28s<br>test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.03s<br>test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s<br>test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s |
+
+Final mandatory command receipts follow. Each command ran under scripts/run-bounded.py with CARGO_BUILD_JOBS=1, RUST_TEST_THREADS=1, CARGO_NET_OFFLINE=true and TMPDIR under brief609; workspace used 3600 seconds, each oracle 1500 seconds and other gates 900 seconds. Full raw output and exact environment are retained beside each command receipt.
+
+**r6b-format-final: exit 0.** Full raw output: `.temp/brief-609/r6b-format-final.log`.
+
+```text
+cargo fmt --check
+```
+
+```text
+(no output)
+```
+
+**r6b-post-stack-typed-runtime: exit 0.** Full raw output: `.temp/brief-609/r6b-post-stack-typed-runtime.log`.
+
+```text
+cargo test -p rum-runtime --lib suspension::typed::tests
+```
+
+```text
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+     Running unittests src/lib.rs (target/debug/deps/rum_runtime-95cd5fbb46da4f1c)
+running 20 tests
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 1152 filtered out; finished in 0.46s
+```
+
+**r6b-post-stack-frame-roots: exit 0.** Full raw output: `.temp/brief-609/r6b-post-stack-frame-roots.log`.
+
+```text
+cargo test -p rum-runtime --lib frame_root_trace
+```
+
+```text
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+     Running unittests src/lib.rs (target/debug/deps/rum_runtime-95cd5fbb46da4f1c)
+running 15 tests
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1157 filtered out; finished in 1.76s
+```
+
+**r6b-depth48-exact: exit 0.** Full raw output: `.temp/brief-609/r6b-depth48-exact.log`.
+
+```text
+cargo test -p rum-runtime --lib runtime::tests::holding_and_control_part2::bounded_recursive_definition_below_native_stack_limit_succeeds -- --exact
+```
+
+```text
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+     Running unittests src/lib.rs (target/debug/deps/rum_runtime-95cd5fbb46da4f1c)
+running 1 test
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1171 filtered out; finished in 0.01s
+```
+
+**r6b-census-default: exit 0.** Full raw output: `.temp/brief-609/r6b-census-default.log`.
+
+```text
+cargo test -p rum-stdlib --test typed_slot_census -- --nocapture
+```
+
+```text
+     Running tests/typed_slot_census.rs (target/debug/deps/typed_slot_census-943817a3ecf6c029)
+running 6 tests
+running 1 test
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.29s
+running 1 test
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.33s
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 139.09s
+```
+
+**r6b-census-no-default: exit 0.** Full raw output: `.temp/brief-609/r6b-census-no-default.log`.
+
+```text
+cargo test -p rum-stdlib --no-default-features --test typed_slot_census -- --nocapture
+```
+
+```text
+     Running tests/typed_slot_census.rs (target/debug/deps/typed_slot_census-cce6bcaa604a405f)
+running 6 tests
+running 1 test
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.42s
+running 1 test
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.56s
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 140.94s
+```
+
+**r6b-post-stack-ownership-final: exit 0.** Full raw output: `.temp/brief-609/r6b-post-stack-ownership-final.log`.
+
+```text
+cargo test -p rum-stdlib --lib ownership_graph
+```
+
+```text
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-5f7f08d1c3c3a0e1)
+running 25 tests
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 1127 filtered out; finished in 70.57s
+```
+
+**r6b-post-stack-local-default: exit 0.** Full raw output: `.temp/brief-609/r6b-post-stack-local-default.log`.
+
+```text
+cargo test -p rum-stdlib --lib local_production_acceptance -- --nocapture
+```
+
+```text
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-5f7f08d1c3c3a0e1)
+running 1 test
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 19.29s
+```
+
+**r6b-post-stack-local-no-default: exit 0.** Full raw output: `.temp/brief-609/r6b-post-stack-local-no-default.log`.
+
+```text
+cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance -- --nocapture
+```
+
+```text
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-c942ac40233a21b0)
+running 1 test
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1145 filtered out; finished in 19.85s
+```
+
+**r6b-post-stack-frontier-final: exit 0.** Full raw output: `.temp/brief-609/r6b-post-stack-frontier-final.log`.
+
+```text
+cargo test -p rum-stdlib --lib production_rejection_census_is_complete -- --nocapture
+```
+
+```text
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-5f7f08d1c3c3a0e1)
+running 1 test
+INDEPENDENT_AUDIT EDGE_ALL roots=7343 definitions=7343 raw=48341 deduplicated=48341 reason_classes=59 all_spans_read=true
+ACCEPTANCE_BASELINE OPTION_FRONTIER=927 RET001=10 RET002=890 RET003=27 PUBLIC_WRAPPER=16 LOCAL_PRODUCTION_BODY_ROWS=2
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 25.90s
+```
+
+**r6b-oracle-default: exit 0.** Full raw output: `.temp/brief-609/r6b-oracle-default.log`.
+
+```text
+cargo test -p rum-stdlib --test suspension_oracle -- --nocapture
+```
+
+```text
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ad9873bc53ac1c0b)
+running 58 tests
+test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.75s
+```
+
+**r6b-oracle-no-default: exit 0.** Full raw output: `.temp/brief-609/r6b-oracle-no-default.log`.
+
+```text
+cargo test -p rum-stdlib --no-default-features --test suspension_oracle -- --nocapture
+```
+
+```text
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ed9ba19bc18733e6)
+running 58 tests
+test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.43s
+```
+
+**r6b-controls-default: exit 0.** Full raw output: `.temp/brief-609/r6b-controls-default.log`.
+
+```text
+cargo test -p rum-stdlib --test typed_slot_compile_controls -- --nocapture
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.33s
+     Running tests/typed_slot_compile_controls.rs (target/debug/deps/typed_slot_compile_controls-d6fbf6132444c3d1)
+
+running 1 test
+test typed_slot_compile_controls ... PAIR first-chain-input: positive PASS; negative E0271 at src/lib.rs:27:35
+PAIR chain-adjacency: positive PASS; negative E0271 at src/lib.rs:34:70
+PAIR unbound-chain-constructor: positive PASS; negative E0599 at src/lib.rs:40:41
+PAIR evaluate-input: positive PASS; negative E0271 at src/lib.rs:46:66
+PAIR evaluate-output: positive PASS; negative E0271 at src/lib.rs:52:66
+PAIR finalizer-output: positive PASS; negative E0271 at src/lib.rs:58:48
+PAIR opaque-action: positive PASS; negative E0599 at src/lib.rs:63:39
+PAIR token-no-clone: positive PASS; negative E0599 at src/lib.rs:69:18
+PAIR token-no-mint: positive PASS; negative E0599 at src/lib.rs:75:27
+PAIR token-no-escape: positive PASS; negative lifetime at src/lib.rs:81:1
+PAIR sealed-extension: positive PASS; negative E0277 at src/lib.rs:87:20
+PAIR codec-key-private: positive PASS; negative E0603 at src/lib.rs:93:18
+PAIR opaque-selector-pass: positive PASS; negative E0271 at src/lib.rs:100:35
+PAIR mode-not-frame-chosen: positive PASS; negative E0599 at src/lib.rs:106:65
+PAIR mode-private-selection: positive PASS; negative E0603 at src/lib.rs:112:18
+PAIR slot-mismatch-private: positive PASS; negative E0451 at src/lib.rs:124:95
+PAIR input: positive PASS; negative E0271 at src/lib.rs:131:41
+PAIR output-return: positive PASS; negative E0308 at src/lib.rs:138:1
+PAIR chain-last-output: positive PASS; negative E0308 at src/lib.rs:145:1
+PAIR token-fresh-type: positive PASS; negative E0308 at src/lib.rs:159:47
+PAIR token-witness-input: positive PASS; negative E0308 at src/lib.rs:167:17
+PAIR deferred-final-output: positive PASS; negative E0308 at src/lib.rs:174:5
+PAIR generic-frame: positive PASS; negative E0308 at src/lib.rs:180:1
+PAIR closure-return: positive PASS; negative E0308 at src/lib.rs:187:1
+PAIR sibling-erased-private: positive PASS; negative E0603 at crates/rum-runtime/src/runtime/mod.rs:135:47
+PAIR mode-expr-fixed: positive PASS; negative E0277 at crates/rum-runtime/src/runtime/suspension/typed/registry.rs:21:17
+PAIR mode-new-state-only: positive PASS; negative E0277 at crates/rum-runtime/src/runtime/suspension/typed.rs:66:40
+PAIR mode-one-associated-type: positive PASS; negative E0201 at crates/rum-runtime/src/runtime/suspension/typed/registry.rs:27:5
+PAIR mode-no-codec-override: positive PASS; negative E0407 at crates/rum-runtime/src/runtime/suspension/typed/registry.rs:27:5
+PAIR mode-legacy-provider-narrow: positive PASS; negative E0053 at crates/rum-runtime/src/runtime/suspension/typed.rs:74:19
+PAIR mode-state-provider-narrow: positive PASS; negative E0053 at crates/rum-runtime/src/runtime/suspension/typed.rs:79:15
+COMPILE CONTROLS: 31 positive / 31 intended rejections (22 S1 + 7 S2 + opaque fault + token witness); raw Cargo JSON and primary spans retained
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 44.36s
+```
+
+**r6b-controls-no-default: exit 0.** Full raw output: `.temp/brief-609/r6b-controls-no-default.log`.
+
+```text
+cargo test -p rum-stdlib --no-default-features --test typed_slot_compile_controls -- --nocapture
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.37s
+     Running tests/typed_slot_compile_controls.rs (target/debug/deps/typed_slot_compile_controls-e5d376d145e23731)
+
+running 1 test
+test typed_slot_compile_controls ... PAIR first-chain-input: positive PASS; negative E0271 at src/lib.rs:27:35
+PAIR chain-adjacency: positive PASS; negative E0271 at src/lib.rs:34:70
+PAIR unbound-chain-constructor: positive PASS; negative E0599 at src/lib.rs:40:41
+PAIR evaluate-input: positive PASS; negative E0271 at src/lib.rs:46:66
+PAIR evaluate-output: positive PASS; negative E0271 at src/lib.rs:52:66
+PAIR finalizer-output: positive PASS; negative E0271 at src/lib.rs:58:48
+PAIR opaque-action: positive PASS; negative E0599 at src/lib.rs:63:39
+PAIR token-no-clone: positive PASS; negative E0599 at src/lib.rs:69:18
+PAIR token-no-mint: positive PASS; negative E0599 at src/lib.rs:75:27
+PAIR token-no-escape: positive PASS; negative lifetime at src/lib.rs:81:1
+PAIR sealed-extension: positive PASS; negative E0277 at src/lib.rs:87:20
+PAIR codec-key-private: positive PASS; negative E0603 at src/lib.rs:93:18
+PAIR opaque-selector-pass: positive PASS; negative E0271 at src/lib.rs:100:35
+PAIR mode-not-frame-chosen: positive PASS; negative E0599 at src/lib.rs:106:65
+PAIR mode-private-selection: positive PASS; negative E0603 at src/lib.rs:112:18
+PAIR slot-mismatch-private: positive PASS; negative E0451 at src/lib.rs:124:95
+PAIR input: positive PASS; negative E0271 at src/lib.rs:131:41
+PAIR output-return: positive PASS; negative E0308 at src/lib.rs:138:1
+PAIR chain-last-output: positive PASS; negative E0308 at src/lib.rs:145:1
+PAIR token-fresh-type: positive PASS; negative E0308 at src/lib.rs:159:47
+PAIR token-witness-input: positive PASS; negative E0308 at src/lib.rs:167:17
+PAIR deferred-final-output: positive PASS; negative E0308 at src/lib.rs:174:5
+PAIR generic-frame: positive PASS; negative E0308 at src/lib.rs:180:1
+PAIR closure-return: positive PASS; negative E0308 at src/lib.rs:187:1
+PAIR sibling-erased-private: positive PASS; negative E0603 at crates/rum-runtime/src/runtime/mod.rs:135:47
+PAIR mode-expr-fixed: positive PASS; negative E0277 at crates/rum-runtime/src/runtime/suspension/typed/registry.rs:21:17
+PAIR mode-new-state-only: positive PASS; negative E0277 at crates/rum-runtime/src/runtime/suspension/typed.rs:66:40
+PAIR mode-one-associated-type: positive PASS; negative E0201 at crates/rum-runtime/src/runtime/suspension/typed/registry.rs:27:5
+PAIR mode-no-codec-override: positive PASS; negative E0407 at crates/rum-runtime/src/runtime/suspension/typed/registry.rs:27:5
+PAIR mode-legacy-provider-narrow: positive PASS; negative E0053 at crates/rum-runtime/src/runtime/suspension/typed.rs:74:19
+PAIR mode-state-provider-narrow: positive PASS; negative E0053 at crates/rum-runtime/src/runtime/suspension/typed.rs:79:15
+COMPILE CONTROLS: 31 positive / 31 intended rejections (22 S1 + 7 S2 + opaque fault + token witness); raw Cargo JSON and primary spans retained
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 24.77s
+```
+
+**r6b-constructor-oracle: exit 0.** Full raw output: `.temp/brief-609/r6b-constructor-oracle.log`.
+
+```text
+cargo test -p rum-stdlib --lib census_constructor_resolutions_are_compiler_observed -- --nocapture
+```
+
+```text
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-5f7f08d1c3c3a0e1)
+running 1 test
+A1_CORPUS_TOTAL agreements=7313 disagreements=0 claims=7313
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 231.25s
+```
+
+**r6b-exact-oracle: exit 0.** Full raw output: `.temp/brief-609/r6b-exact-oracle.log`.
+
+```text
+cargo test -p rum-stdlib --lib exact_types_and_constructor_claims_match_rustc -- --nocapture
+```
+
+```text
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-5f7f08d1c3c3a0e1)
+running 1 test
+A1_ORACLE_TOTAL agreements=285 disagreements=0
+A1_ORACLE_TOTAL agreements=285 disagreements=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 200.98s
+```
+
+**r6b-workspace: exit 0.** Full raw output: `.temp/brief-609/r6b-workspace.log`.
+
+```text
+cargo test --workspace --no-fail-fast
+```
+
+```text
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+     Running unittests src/main.rs (target/debug/deps/rum_cli-0aee412e0b99cbf1)
+running 15 tests
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+     Running tests/cli.rs (target/debug/deps/cli-bc0b4c8761b62ae9)
+running 28 tests
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.25s
+     Running tests/input_requests.rs (target/debug/deps/input_requests-e84d0b9e62f1dd0f)
+running 6 tests
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+     Running tests/terminal.rs (target/debug/deps/terminal-70e027c8b6d403e3)
+running 9 tests
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.94s
+     Running unittests src/lib.rs (target/debug/deps/rum_core-05ee71324ea83d3f)
+running 7 tests
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/lib.rs (target/debug/deps/rum_derive-058a94fcf3064f03)
+running 5 tests
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/accumulator_chain.rs (target/debug/deps/accumulator_chain-c657e563db7a31de)
+running 3 tests
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/derive.rs (target/debug/deps/derive-cb1c0b1fa13c3a60)
+running 3 tests
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/lib.rs (target/debug/deps/rum_host-0c15fc615add95e2)
+running 90 tests
+test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.63s
+     Running tests/adapter_contract.rs (target/debug/deps/adapter_contract-75627f143cb45b08)
+running 7 tests
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+     Running tests/batch_boundary_ownership.rs (target/debug/deps/batch_boundary_ownership-f1d7a1c822224b1c)
+running 5 tests
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+     Running tests/capture_output_lifecycle.rs (target/debug/deps/capture_output_lifecycle-3426e74b0e43035a)
+running 3 tests
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+     Running tests/guest_loading_resume.rs (target/debug/deps/guest_loading_resume-3f3ebe72da026eee)
+running 4 tests
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+     Running tests/host_payload_destruction_contract.rs (target/debug/deps/host_payload_destruction_contract-52956b33f57a0130)
+running 1 test
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 47.98s
+     Running tests/installer.rs (target/debug/deps/installer-245b9a9d0dd76683)
+running 4 tests
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+     Running tests/lifecycle_buildout.rs (target/debug/deps/lifecycle_buildout-cf4abded19978b7b)
+running 7 tests
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+     Running tests/lifecycle_contract.rs (target/debug/deps/lifecycle_contract-7db6f3bc8fd1b373)
+running 16 tests
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+     Running tests/random_password_policy.rs (target/debug/deps/random_password_policy-bcf408336a660b97)
+running 2 tests
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+     Running tests/shared_accumulator_completion.rs (target/debug/deps/shared_accumulator_completion-4fc6d427214e6aa2)
+running 1 test
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+     Running tests/stress.rs (target/debug/deps/stress-29e64a7d12eeb866)
+running 6 tests
+test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.28s
+     Running tests/suspended_timeout_contract.rs (target/debug/deps/suspended_timeout_contract-0e6a452c6cdaf889)
+running 13 tests
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.01s
+     Running tests/suspension_abandonment_contract.rs (target/debug/deps/suspension_abandonment_contract-7953000542543e9e)
+running 12 tests
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+     Running unittests src/lib.rs (target/debug/deps/rum_jupyter-598afbd7e7b200bf)
+running 151 tests
+test result: ok. 151 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.70s
+     Running unittests src/bin/rum-jupyter-kernel.rs (target/debug/deps/rum_jupyter_kernel-0f1e351c2b3d67dc)
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/lib.rs (target/debug/deps/rum_repl-4387fdc47fc58f50)
+running 48 tests
+test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.39s
+     Running tests/input_abandonment.rs (target/debug/deps/input_abandonment-11b7b14c69d5d259)
+running 10 tests
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+     Running tests/input_continuation.rs (target/debug/deps/input_continuation-02bf146f80080963)
+running 12 tests
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+     Running unittests src/lib.rs (target/debug/deps/rum_runtime-f6425a9dcb35714f)
+running 1172 tests
+test result: ok. 1169 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 38.06s
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-8951251f7d2e445e)
+running 1152 tests
+test result: ok. 1099 passed; 0 failed; 53 ignored; 0 measured; 0 filtered out; finished in 869.30s
+     Running unittests src/bin/generate-builtin-reference.rs (target/debug/deps/generate_builtin_reference-d2ad2c98e57a1cba)
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/default_fallback_continuations.rs (target/debug/deps/default_fallback_continuations-f117f222c1cc964c)
+running 21 tests
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+     Running tests/destructuring_continuations.rs (target/debug/deps/destructuring_continuations-368dcefe778b9dd9)
+running 16 tests
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+     Running tests/guest_loading_resume.rs (target/debug/deps/guest_loading_resume-2c9bd859cff3337d)
+running 47 tests
+test result: ok. 47 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.04s
+     Running tests/lazy_pull_continuations.rs (target/debug/deps/lazy_pull_continuations-ef76e1f37b5e402d)
+running 69 tests
+test result: ok. 69 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 23.34s
+     Running tests/loop_continuations.rs (target/debug/deps/loop_continuations-dbe263d2d0c33a6d)
+running 21 tests
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.30s
+     Running tests/option_reader_continuations.rs (target/debug/deps/option_reader_continuations-13289bfd2ecc5d28)
+running 100 tests
+test result: ok. 100 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.95s
+     Running tests/rule_pattern_continuations.rs (target/debug/deps/rule_pattern_continuations-487a4fb3b8b94ac7)
+running 71 tests
+test result: ok. 71 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.55s
+     Running tests/schema_continuations.rs (target/debug/deps/schema_continuations-4182a401e6279d72)
+running 40 tests
+test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.99s
+     Running tests/sow_trace_continuations.rs (target/debug/deps/sow_trace_continuations-757402035d2c0050)
+running 51 tests
+test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.45s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-58e5a1c5f9b651ff)
+running 58 tests
+test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.78s
+     Running tests/typed_slot_census.rs (target/debug/deps/typed_slot_census-3f7c0defd057db37)
+running 6 tests
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 140.84s
+     Running tests/typed_slot_compile_controls.rs (target/debug/deps/typed_slot_compile_controls-d72233bfaf7c8103)
+running 1 test
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 29.91s
+     Running unittests src/lib.rs (target/debug/deps/rum_syntax-08cb56e2fd17a1b7)
+running 193 tests
+test result: ok. 193 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.52s
+     Running unittests src/lib.rs (target/debug/deps/rum_terminal-f8efeb939a755a12)
+running 5 tests
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_core
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_derive
+running 7 tests
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.43s
+   Doc-tests rum_host
+running 1 test
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.28s
+   Doc-tests rum_jupyter
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_repl
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_runtime
+running 22 tests
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.03s
+   Doc-tests rum_stdlib
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_syntax
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_terminal
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+
+**r6b-native-skips: exit 0.** Full raw output: `.temp/brief-609/r6b-native-skips.log`.
+
+```text
+cargo test -p rum-jupyter --lib zeromq::tests::native -- --nocapture
+```
+
+```text
+     Running unittests src/lib.rs (target/debug/deps/rum_jupyter-dd24b36d3edaa47a)
+running 9 tests
+test zeromq::tests::native::basic::native_zeromq_backend_echoes_heartbeat_over_loopback_req_socket ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::basic::native_zeromq_backend_round_trips_execute_over_loopback_sockets ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::control::native_zeromq_backend_frontend_style_control_interrupt_round_trip ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::control::native_zeromq_backend_shutdown_stops_shell_work_and_reports_pending_shell_messages ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::execute::native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_metadata ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::session_flow::native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts_and_shutdown ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::stdin::native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_reply ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::signed::native_zeromq_backend_rejects_tampered_signed_requests_end_to_end ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::signed::native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 142 filtered out; finished in 0.00s
+```
+
+The final workspace command exited 0: 53 suites, 3462 reported passes, 0 failures and 59 ignored tests. Nine reported passes are native ZeroMQ early returns because loopback access is unavailable; the separate `--nocapture` run records each skip. Therefore 3453 tests exercised their bodies successfully, plus nine native skips. All test-result lines and skip messages are pasted above and archived in `r6b/workspace-summary.json`.
+
+After the last runtime revision, typed-driver tests passed 20/0, frame-root tests 15/0, ownership 25/0, frontier 1/0, and the unchanged fully qualified 48-level recursion test 1/0. Both local-production builds passed. Each compile-control build passed all 31 positive/negative pairs; each census harness passed 5/0 with one intentionally ignored direct probe and two deliberately failing child probes. The constructor instrument agreed on all 7313 claims, with zero disagreements; the exact instrument agreed on 285 claims, with zero disagreements. All 28 ordinary controls passed with Checks::ALL and 336 zero-fault observations per build. Each complete suspension oracle passed 58/0, with every fault-occurrence delta zero and 88016 final observations. Formatting passed again after the workspace run. The final scope audit found 52 changed files (including this brief) and three new cumulative S3 files, preserved all 183 protected inputs and all four S2 binaries, and found no new unsafe or out-of-scope change.
+
+Builds/tests/measurements were bounded and serial, with offline Cargo, one build job, one test thread and TMPDIR under brief609. The inherited unused runtime test-helper warnings are register_test_if_builtin, register_test_return_builtin and register_test_vm_template_builtins; their definitions are unchanged. No new warning is introduced, and both complete suspension oracle builds are warning-free. All native probe test outputs, including successful harness runs returning StackLimit, remain under r6b/stack/. A returned StackLimit is not counted as a successful guest depth.
+
+### 5. Native stack, allocation, instruction, resume attribution and timing evidence
+
+The director's 136-byte hypothesis was confirmed before editing; the 168-byte hypothesis was refuted. In the R5 CLI, `0x59e625`, `0x5a04a0` and `0x5a0642` copy a produced result into the macro's new owned binding before its discriminant match. The prepared-argument branch at `0x5a04a0` does not borrow that result for profiling, so profiling is not a necessary cause. The preserved historical identifier/expression native binaries isolate the macro shape: the corresponding unconditional copies disappear with the caller-place form. The exact windows are in `r6/pre-fix-copy-windows.json` and `historical-ident-vs-expr-copy-sites.json`.
+
+The 168-byte transfers at `0x5a9457` and `0x5a94a7` surround head evaluation, before profile observation. They move the `record_head` FnOnce capture: three 56-byte timing records. They remain in the historical identifier binary, so they are not producer-result rebinds. Removing that aggregate closure and consuming its three records directly, in the original order in each branch, removes these transfers.
+
+The R5 leaf's extra `lea 0x120(%rsp),%r14` at `0x71fe9d` hoists a stack address used by cycle-error formatting before the stable-value branch. The M0561 typed-macro conversion changed the enclosing function's temporary/register allocation. An isolated M0561 Ok/? change reduced the quick leaf114→113 but retained the hoist (`0x72016d`, then offset0x190); isolating only the cycle-error formatting into the cold helper removed it and reduced the quick leaf to110 versus S2's112. These are the observed dataflow and source-isolated results; a claim about the compiler's internal heuristic would be inference. Final addressed leaf comparisons are in the performance evidence below.
+
+| Trial | Change | Named-gate evidence | Consecutive no-progress count |
+| --- | --- | --- | ---: |
+| 1 | Caller-place identifier macro arm | Quick map-first-64 copies fall to1252; S2 is1124. Leaf114. | 0 |
+| 2 | Remove record_head aggregate closure | Quick map-first-64 copies1124, equal to S2. | 0 |
+| 3 | M0561 Ok(value)/? shape | Quick leaf114→113. | 0 |
+| 4 | Private DecodeFailure action, mutable input, per-arm outcome assignment | Pre-adapter driver copy goes; two completion/assignment copies still execute at0x72ac7a/0x72b07d, three times in table. Four adapter action copies remain. | 0 |
+| 5 | Borrow erased adapter; caller drops its cloned outer Arc | All four adapter action copies disappear. Driver still has two completion/assignment copies at0x72acdf/0x72b0e5. | 0 |
+| 6 | Cold cycle-error formatter | Quick leaf113→110, below S2's112; map copies stay1124. Full first panel reduces ordinary flags35→1. | 0 |
+| 7 | By-value input with borrowed adapter | Two driver copies remain, at0x72a6eb before dispatch and0x72b094 at assignment; three/four times in table/call-repeat. No named gate moves; reverted. | 1 |
+| 8 | End the resource-free Abort placeholder lifetime before action extraction | Only the ordinary assignment remains at0x72b084, three/four times in table/call-repeat; no adapter action copy. Named gate advances. | 0 |
+
+**Correction to the preliminary quick-check conclusion:** its console filter searched `drive_resuming_frames`, but that method is inlined into `resume_eval_request_from_checkpoint`. The raw summaries always retained its calls. The complete object/address ledger exposed the two surviving driver copies in the first supposedly final source at `0x72acff` and `0x72b105`, with3/3/4/3/5 calls per resume. These were not declared inherent or hidden in the total. Trial7 failed to reduce them; trial8 removed the extra completion temporary. The console filter was corrected, all old evidence was retained, and every final gate/measurement was rerun under `r6b/` after the repair. The final five-workload address ledger, not the quick console output, decides the copy gate.
+
+The adapter return fix uses a private Action::DecodeFailure arm instead of Result<Action, DecodeFailure>, and borrows the outer adapter so the concrete typed frame can write directly to the erased return destination. Observed Action layout grows136→144 bytes, without a new allocation. The input place is replaced with Abort by the sole private adapter before decoding, including mismatch/error paths. The driver checks the structural failure before pop, drops both originating owners before finalization, and explicitly ends only the empty placeholder lifetime before assigning the next outcome. No public raw protocol or transit record is added. Tests retain all old assertions and check the placeholder postcondition on success, mismatch, Abort and an owned-string error. The final native stack and full behavior gates below use this source.
+
+| Profile / shape | S2 B/level | Final B/level | Max success / first StackLimit |
+| --- | --- | --- | --- |
+| debug peel | 21424 | 19152.0 | 55 / 56 |
+| debug plus | 37728 | 34896.0 | 30 / 31 |
+| release peel | 8096 | 7312.0 | 143 / 144 |
+| release plus | 14720 | 13744.0 | 76 / 77 |
+
+The native guard stays1048576B and libtest’s thread stack is unchanged; RUST_MIN_STACK is absent. Only the scratch logical recursion ceiling is100000. Four heights and three repetitions per shape have zero slope residual and agree with the complete resident-frame sums, with zero outgoing-argument residue. Fresh-process bisections and the ±4/+5 neighborhoods agree without mixed heights. The unchanged fully qualified48-level test passes. Final stack binaries, source hashes, native PCs and prologue tables are preserved; no aborting probe was used.
+
+#### debug prologues
+
+| Function | S2 count peel / arithmetic | Final count | S2 bytes | Entry S3 bytes | R4 best bytes | R6 final bytes |
+| --- | --- | --- | ---: | ---: | ---: | ---: |
+| evaluate | 1 / 2 | 1 / 2 | 312 | 312 | 312 | 312 |
+| evaluate_profiled_fixed_point | 1 / 2 | 1 / 2 | 2072 | 2568 | 1816 | 2264 |
+| evaluate_once_unstable_after_input_check_with_cycle_tracking | 1 / 2 | 1 / 2 | 184 | 184 | 184 | 184 |
+| evaluate_once_in_accounting_mode | 1 / 2 | 1 / 2 | 2264 | 2264 | 2264 | 2264 |
+| evaluate_inner_unstable | 1 / 2 | 1 / 2 | 1000 | 1000 | 1000 | 1000 |
+| evaluate_call | 1 / 2 | 1 / 2 | 1288 | 856 | 856 | 696 |
+| resume_call_after_head | 1 / 2 | 1 / 2 | 552 | 568 | 568 | 568 |
+| resume_call_with_dispatch_plan | 2 / 3 | 1 / 2 | 1768 | 2840 | 2184 | 2056 |
+| run_call_dispatch_stage | 1 / 1 | 1 / 1 | 1880 | 1656 | 1480 | 1480 |
+| try_apply_down_values | 1 / 1 | 1 / 1 | 2088 | 2088 | 2088 | 2088 |
+| try_apply_down_values_from_symbol | 1 / 2 | 1 / 2 | 3800 | 3800 | 3800 | 3800 |
+| evaluate_definition_rhs | 1 / 1 | 1 / 1 | 1336 | 1336 | 1336 | 1336 |
+| evaluate_with_option_value_scope | 1 / 1 | 1 / 1 | 1000 | 1000 | 1000 | 1000 |
+| prepare_arguments_for_call_with_unevaluated_restore | 0 / 1 | 0 / 1 | 344 | 344 | 344 | 344 |
+| prepare_arguments_for_call_with_unevaluated_restore::{{closure}} | 0 / 1 | 0 / 1 | 2200 | 2680 | 1736 | 1736 |
+| evaluate_atom_fast_path | 0 / 1 | 0 / 1 | 424 | 424 | 424 | 424 |
+| evaluate_call::{{closure}} | 0 / 0 | 0 / 0 | inlined / absent | 952 | inlined / absent | inlined / absent |
+
+#### release prologues
+
+| Function | S2 count peel / arithmetic | Final count | S2 bytes | Entry S3 bytes | R4 best bytes | R6 final bytes |
+| --- | --- | --- | ---: | ---: | ---: | ---: |
+| evaluate_definition_rhs | 1 / 1 | 1 / 1 | 840 | 840 | 840 | 840 |
+| try_apply_down_values_from_symbol | 1 / 2 | 1 / 2 | 1272 | 1272 | 1272 | 1272 |
+| try_apply_down_values | 1 / 1 | 1 / 1 | 776 | 776 | 776 | 776 |
+| run_call_dispatch_stage | 1 / 1 | 1 / 1 | 296 | 280 | 280 | 280 |
+| resume_call_with_dispatch_plan | 2 / 3 | 1 / 2 | 584 | 920 | 808 | 824 |
+| resume_call_after_head | 1 / 2 | 0 / 0 | 632 | inlined / absent | inlined / absent | inlined / absent |
+| evaluate_inner_unstable | 1 / 2 | 1 / 2 | 1080 | 1656 | 1608 | 1304 |
+| evaluate_once_unstable_after_input_check_with_cycle_tracking | 1 / 2 | 1 / 2 | 760 | 760 | 760 | 760 |
+| evaluate | 1 / 2 | 1 / 2 | 840 | 904 | 840 | 872 |
+| evaluate_with_option_value_scope | 1 / 1 | 1 / 1 | 312 | 312 | 312 | 312 |
+| evaluate_atom_fast_path | 0 / 1 | 0 / 1 | 408 | 408 | 408 | 408 |
+| prepare_arguments_for_call_with_unevaluated_restore | 0 / 1 | 0 / 1 | 984 | 1176 | 936 | 936 |
+
+The four final candidate binaries were built serially with release codegen-units=1, separate allocation builds, and no test-continuation-slots observer. The four immutable S2 bases were reused without rebuilding; all eight hashes and the final source hashes were checked. The unchanged brief608 resume harness and all64 value controls pass on both arms. These are the r6b final binaries, not the preliminary r6 panel.
+
+| Arm | Binary | SHA-256 |
+| --- | --- | --- |
+| base | rum-cli | b553a00e63e8af387e3141fe35764f54515a3e3154fd09b2756f911a2e87d9bf |
+| base | rum-cli-alloc | f1fb356eb26f45dedaa09ad46e8d697dfde6bd10fbfe1aa12290f61dfcf6e9f1 |
+| base | resume | 57e800bca2cca0d327b358f410d34ced30787410bdee6afe5838f9334a24e81f |
+| base | resume-alloc | 73f279bfb5e13ab4daa34242a9d591e52d9d8012267197268e80f63d41ecc503 |
+| candidate | rum-cli | b38b56750d3245d056bb762f1179cc37399377a8e72cde74c895615e72b323ab |
+| candidate | rum-cli-alloc | 547a5aab968220650c7421ff10e15650dff878fa0e719980d6192e71f199492d |
+| candidate | resume | 074063d0f7eab31d900638982720ac84ec3b843dc5ab94f3102613967e8b1bba |
+| candidate | resume-alloc | b3d1fa13e4fb12a551e7d6c04b0edc68cc6d3ac4adb7408bf06223cd50cabd2c |
+
+Allocations and bytes ran first:128 raw N/2N cells per arm. Fractional slopes below reflect the unchanged sources and amortization; equality is tested before formatting. Raw commands/stdout/stderr and parsed counters are under `r6b/perf/alloc/`. Resume allocation attribution follows the full table.
+
+| Label | S2 alloc/N | S3 alloc/N | S2 bytes/N | S3 bytes/N |
+| --- | --- | --- | --- | --- |
+| lazy-range-take-small | 141 | 141 | 2714 | 2714 |
+| lazy-range-normal-small | 157 | 157 | 3388 | 3388 |
+| lazy-map-realize-small | 333 | 333 | 13740 | 13740 |
+| lazy-select-realize-small | 236 | 236 | 6834 | 6834 |
+| lazy-select-scan-small | 1471 | 1471 | 62793 | 62793 |
+| lazy-nestlist-realize-small | 197 | 197 | 11316 | 11316 |
+| lazy-foldlist-realize-small | 216 | 216 | 7604 | 7604 |
+| lazy-drop-realize-small | 351 | 351 | 14204 | 14204 |
+| lazy-first-small | 64 | 64 | 2868 | 2868 |
+| lazy-part-small | 152 | 152 | 6182 | 6182 |
+| lazy-transparent-adapters-small | 319 | 319 | 12876 | 12876 |
+| lazy-table-construct-short | 63 | 63 | 1537 | 1537 |
+| lazy-table-construct-full | 64 | 64 | 1449 | 1449 |
+| lazy-table-realize-small | 251 | 251 | 9190 | 9190 |
+| lazy-permutations-take-small | 29 | 29 | 1729 | 1729 |
+| lazy-subsets-take-small | 29 | 29 | 1417 | 1417 |
+| lazy-tuples-take-small | 29 | 29 | 1361 | 1361 |
+| scan-no-input | 33 | 33 | 2536 | 2536 |
+| optionvalue-three-no-input | 9 | 9 | 1128 | 1128 |
+| replacerepeated-no-input | 57 | 57 | 7899 | 7899 |
+| dot-three-no-input | 596 | 596 | 23504 | 23504 |
+| differences-no-input | 13 | 13 | 704 | 704 |
+| do-count-null | 0 | 0 | 0 | 0 |
+| do-iterator-null | 0 | 0 | 32 | 32 |
+| table-iterator-null | 0 | 0 | 32 | 32 |
+| replaceall-simple | 5 | 5 | 1352 | 1352 |
+| table-small | 22 | 22 | 977 | 977 |
+| table-iterator-plus | 2 | 2 | 72 | 72 |
+| table-iterator-pair-list | 2 | 2 | 136 | 136 |
+| take-multispec-small | 109 | 109 | 5856 | 5856 |
+| lazy-depth-map-build-8 | 16.001 | 16.001 | 1879.864 | 1879.864 |
+| lazy-depth-map-first-8 | 188 | 188 | 11176 | 11176 |
+| lazy-depth-map-eight-8 | 1464.001 | 1464.001 | 82776.864 | 82776.864 |
+| lazy-depth-select-restart-8 | 327 | 327 | 16980 | 16980 |
+| lazy-depth-drop-all-one-8 | 170 | 170 | 3128 | 3128 |
+| lazy-depth-take-map-8 | 220 | 220 | 12144 | 12144 |
+| lazy-depth-fold-through-source-8 | 743.001 | 743.001 | 58440.864 | 58440.864 |
+| lazy-depth-nest-map-8 | 192 | 192 | 11964 | 11964 |
+| lazy-depth-map-build-64 | 16.001 | 16.001 | 5911.864 | 5911.864 |
+| lazy-depth-map-first-64 | 1364 | 1364 | 85320 | 85320 |
+| lazy-depth-map-eight-64 | 10872.001 | 10872.001 | 647704.864 | 647704.864 |
+| lazy-depth-select-restart-64 | 1671 | 1671 | 99412 | 99412 |
+| lazy-depth-drop-all-one-64 | 1178 | 1178 | 17520 | 17520 |
+| lazy-depth-take-map-64 | 1620 | 1620 | 93064 | 93064 |
+| lazy-depth-fold-through-source-64 | 43334.001 | 43334.001 | 3402649.864 | 3402649.864 |
+| lazy-depth-nest-map-64 | 1368 | 1368 | 86108 | 86108 |
+| lazy-depth-map-build-256 | 16.001 | 16.001 | 19735.864 | 19735.864 |
+| lazy-depth-map-first-256 | 5396 | 5396 | 339528 | 339528 |
+| lazy-depth-map-eight-256 | 43128.001 | 43128.001 | 2584600.864 | 2584600.864 |
+| lazy-depth-select-restart-256 | 6279 | 6279 | 382036 | 382036 |
+| lazy-depth-drop-all-one-256 | 4634 | 4634 | 66864 | 66864 |
+| lazy-depth-take-map-256 | 6420 | 6420 | 370504 | 370504 |
+| lazy-depth-fold-through-source-256 | 689320.001 | 689320.001 | 54008857.864 | 54008857.864 |
+| lazy-depth-nest-map-256 | 5400 | 5400 | 340316 | 340316 |
+| literal-integer | 0 | 0 | 0 | 0 |
+| downvalue-pattern-hit | 11 | 11 | 908 | 908 |
+| module-local | 23.0001 | 23.0001 | 2163.6272 | 2163.6272 |
+| block-local | 8 | 8 | 752 | 752 |
+| matcher-single-wide-small | 11 | 11 | 287280 | 287280 |
+| resume-table | 27.003 | 33.003 | 1742.456 | 2030.456 |
+| resume-do-chain | 24 | 30 | 1634 | 2050 |
+| resume-call-repeat | 40.007 | 47.007 | 4210.024 | 4522.024 |
+| resume-cleanup | 22 | 28 | 1394 | 1746 |
+| resume-fold | 41 | 49 | 2873 | 3337 |
+
+Two full interleaved instruction pairs ran S2-1,S3-1,S2-2,S3-2:512 raw cells, all value-correct. Commands use taskset -c2 and perf stat -x, -e cpu_core/instructions/u with stdin /dev/null. The threshold is max(0.0005×S2 mean,S2 range,S3 range). Conservatively, either paired delta above that threshold triggers investigation: 5 labels, including 0 ordinary labels and 5 resume labels.
+
+| Label | S2 slopes1/2 | S3 slopes1/2 | Mean delta I | Threshold I | Flag |
+| --- | --- | --- | --- | --- | --- |
+| lazy-range-take-small | 42245.09775 / 42207.21465 | 41912.20125 / 41862.83365 | -338.63875 | 49.3676 | no |
+| lazy-range-normal-small | 54104.317 / 54097.90125 | 53553.0794 / 53552.41225 | -548.3633 | 27.0505545625 | no |
+| lazy-map-realize-small | 178878.1997 / 178822.9798 | 176386.9967 / 176461.00655 | -2426.588125 | 89.425294875 | no |
+| lazy-select-realize-small | 114552.72615 / 114853.57715 | 112361.9297 / 112561.848 | -2241.2628 | 300.851 | no |
+| lazy-select-scan-small | 805257.25875 / 805198.5913 | 793727.24515 / 793735.52285 | -11496.541025 | 402.613962512 | no |
+| lazy-nestlist-realize-small | 145303.22175 / 145463.62195 | 142886.97875 / 142924.74035 | -2477.5623 | 160.4002 | no |
+| lazy-foldlist-realize-small | 112775.7788 / 112782.6464 | 110660.66635 / 110792.83255 | -2052.46315 | 132.1662 | no |
+| lazy-drop-realize-small | 191545.41275 / 191486.4454 | 188695.62575 / 188697.56175 | -2819.335325 | 95.7579645375 | no |
+| lazy-first-small | 41205.8228 / 41208.21825 | 40654.97685 / 40605.63425 | -576.714975 | 49.3426 | no |
+| lazy-part-small | 88307.39375 / 88292.5233 | 87201.24 / 87219.54035 | -1089.56835 | 44.1499792625 | no |
+| lazy-transparent-adapters-small | 181508.8211 / 181435.85385 | 178724.18415 / 178726.44595 | -2747.022425 | 90.7361687375 | no |
+| lazy-table-construct-short | 23561.3864 / 23537.4014 | 23338.52835 / 23372.1807 | -194.039375 | 33.65235 | no |
+| lazy-table-construct-full | 24146.9052 / 24120.2337 | 23848.9603 / 23894.12785 | -262.025375 | 45.16755 | no |
+| lazy-table-realize-small | 117156.65725 / 117157.502 | 115728.95065 / 115753.93405 | -1415.637275 | 58.5785398125 | no |
+| lazy-permutations-take-small | 28197.77575 / 28199.2898 | 27818.6217 / 27848.98695 | -364.72845 | 30.36525 | no |
+| lazy-subsets-take-small | 25358.11455 / 25371.57305 | 25043.45775 / 25013.86025 | -336.1848 | 29.5975 | no |
+| lazy-tuples-take-small | 26581.003 / 26629.2037 | 26264.39575 / 26240.1694 | -352.820775 | 48.2007 | no |
+| scan-no-input | 29684.5483 / 29681.29025 | 28949.20985 / 28950.79165 | -732.918525 | 14.8414596375 | no |
+| optionvalue-three-no-input | 9589.1259 / 9590.4774 | 9465.36315 / 9466.9522 | -123.643975 | 4.794900825 | no |
+| replacerepeated-no-input | 39174.4922 / 39174.36125 | 39040.31175 / 39040.56495 | -133.988375 | 19.5872133625 | no |
+| dot-three-no-input | 254199.2807 / 254199.79925 | 249927.75055 / 249927.6766 | -4271.8264 | 127.099769988 | no |
+| differences-no-input | 10037.77405 / 10037.5433 | 9908.87305 / 9908.7855 | -128.8294 | 5.0188293375 | no |
+| do-count-null | 536.86115 / 537.0055 | 535.03545 / 534.9016 | -1.9648 | 0.2684666625 | no |
+| do-iterator-null | 1154.126 / 1153.99675 | 1151.97935 / 1151.8791 | -2.13215 | 0.5770306875 | no |
+| table-iterator-null | 387.0865 / 387.04515 | 386.95415 / 386.95685 | -0.110325 | 0.1935329125 | no |
+| replaceall-simple | 11458.48745 / 11380.20655 | 11353.27325 / 11353.3564 | -66.032175 | 78.2809 | no |
+| table-small | 14633.7463 / 14681.6726 | 14509.1648 / 14508.9554 | -148.64935 | 47.9263 | no |
+| table-iterator-plus | 563.1878 / 563.35475 | 563.1831 / 563.23605 | -0.0617000000001 | 0.2816356375 | no |
+| table-iterator-pair-list | 1640.81195 / 1640.67505 | 1640.6822 / 1640.78415 | -0.0103250000002 | 0.82037175 | no |
+| take-multispec-small | 49938.71935 / 49939.27355 | 49772.0907 / 49771.7283 | -167.08695 | 24.969498225 | no |
+| lazy-depth-map-build-8 | 18127.483 / 18124.66 | 17814.284 / 17814.839 | -311.51 | 9.06303575 | no |
+| lazy-depth-map-first-8 | 130372.104 / 130402.331 | 128734.325 / 128745.273 | -1647.4185 | 65.19360875 | no |
+| lazy-depth-map-eight-8 | 959569.324 / 959661.844 | 946179.27 / 946167.867 | -13442.0155 | 479.807792 | no |
+| lazy-depth-select-restart-8 | 179119.597 / 179381.612 | 177765.675 / 177765.676 | -1484.929 | 262.015 | no |
+| lazy-depth-drop-all-one-8 | 46664.654 / 46663.603 | 46359.807 / 46357.681 | -305.3845 | 23.33206425 | no |
+| lazy-depth-take-map-8 | 138951.913 / 138949.594 | 136917.474 / 136883.453 | -2050.29 | 69.47537675 | no |
+| lazy-depth-fold-through-source-8 | 589546.446 / 589552.606 | 581600.475 / 581491.726 | -8003.4255 | 294.774763 | no |
+| lazy-depth-nest-map-8 | 141003.7 / 141398.448 | 138541.596 / 138750.41 | -2555.071 | 394.748 | no |
+| lazy-depth-map-build-64 | 30135.331 / 30118.158 | 29818.735 / 29816.279 | -309.2375 | 17.173 | no |
+| lazy-depth-map-first-64 | 946187.009 / 944594.043 | 930349.712 / 930348.482 | -15041.429 | 1592.966 | no |
+| lazy-depth-map-eight-64 | 7422080.426 / 7422351.537 | 7308941.228 / 7308599.684 | -113445.5255 | 3711.10799075 | no |
+| lazy-depth-select-restart-64 | 981707.097 / 975693.337 | 965752.623 / 969126.335 | -11260.738 | 6013.76 | no |
+| lazy-depth-drop-all-one-64 | 327585.057 / 327583.7 | 327277.737 / 327277.878 | -306.571 | 163.79218925 | no |
+| lazy-depth-take-map-64 | 1007501.138 / 1007405.21 | 993182.464 / 993238.304 | -14242.79 | 503.726587 | no |
+| lazy-depth-fold-through-source-64 | 33997047.791 / 33998183.789 | 33539136.924 / 33544738.142 | -455678.257 | 16998.807895 | no |
+| lazy-depth-nest-map-64 | 957228.983 / 958617.943 | 942484.659 / 944152.834 | -14604.7165 | 1668.175 | no |
+| lazy-depth-map-build-256 | 70766.13 / 70762.578 | 70486.52 / 70469.674 | -286.257 | 35.382177 | no |
+| lazy-depth-map-first-256 | 3723177.091 / 3722823.07 | 3666659.907 / 3666660.516 | -56339.869 | 1861.50004025 | no |
+| lazy-depth-map-eight-256 | 29546204.161 / 29546113.091 | 29084731.312 / 29086540.392 | -460522.774 | 14773.079313 | no |
+| lazy-depth-select-restart-256 | 3664231.637 / 3665397.065 | 3653996.14 / 3628165.836 | -23733.363 | 25830.304 | no |
+| lazy-depth-drop-all-one-256 | 2218610.197 / 2218619.315 | 2218306.581 / 2218310.309 | -306.311 | 1109.307378 | no |
+| lazy-depth-take-map-256 | 3985882.898 / 3985901.942 | 3929392.065 / 3929188.058 | -56602.3585 | 1992.94621 | no |
+| lazy-depth-fold-through-source-256 | 530578692.023 / 530588080.283 | 523276558.054 / 523313109.562 | -7288552.345 | 265291.693077 | no |
+| lazy-depth-nest-map-256 | 3733562.267 / 3726880.888 | 3677238.902 / 3670577.266 | -56313.4935 | 6681.379 | no |
+| literal-integer | 294.00725 / 293.97785 | 291.89105 / 291.77315 | -2.16045 | 0.146996275 | no |
+| downvalue-pattern-hit | 13949.4149 / 13949.8585 | 13664.68745 / 13665.0745 | -284.755725 | 6.97481835 | no |
+| module-local | 22653.2982 / 22651.95 | 22426.34165 / 22428.40295 | -225.2518 | 11.32631205 | no |
+| block-local | 14671.792 / 14671.7832 | 14446.0008 / 14445.9811 | -225.79665 | 7.3358938 | no |
+| matcher-single-wide-small | 760208.732 / 760181.254 | 760156.101 / 760141.4 | -46.2424999999 | 380.0974965 | no |
+| resume-table | 15722.797 / 15687.018 | 18274.944 / 18256.724 | 2560.9265 | 35.779 | yes |
+| resume-do-chain | 15156.812 / 15130.381 | 17664.689 / 17648.683 | 2513.0895 | 26.431 | yes |
+| resume-call-repeat | 24579.856 / 24580.951 | 27282.432 / 27185.29 | 2653.4575 | 97.142 | yes |
+| resume-cleanup | 14244.556 / 14277.002 | 16722.693 / 16774.892 | 2488.0135 | 52.199 | yes |
+| resume-fold | 24429.39 / 24415.264 | 27411.295 / 27417.187 | 2991.914 | 14.126 | yes |
+
+Every flagged label received five fresh N/2N perf slopes per arm and three fresh N/2N Callgrind pairs per arm (six processes per arm). All59 ordinary labels received Callgrind for the copy gate; the three deterministic leaves also received three pairs regardless of flag status. Instrumentation N is prebudgeted to approximately20million instructions, clamped to1..2000; hardware repeats retain the original N. All raw cells are retained.
+
+| Label | S2 mean/range | S3 mean/range | Delta I | Delta % | Above repeat threshold |
+| --- | --- | --- | --- | --- | --- |
+| resume-table | 15731.1346 / 34.627 | 18280.1112 / 51.728 | 2548.9766 | 16.2033868809 | yes |
+| resume-do-chain | 15187.8464 / 131.997 | 17683.1208 / 73.192 | 2495.2744 | 16.4294155622 | yes |
+| resume-call-repeat | 24676.5862 / 304.589 | 27206.258 / 75.943 | 2529.6718 | 10.2513037237 | yes |
+| resume-cleanup | 14264.5446 / 98.495 | 16746.2276 / 50.094 | 2481.683 | 17.3975620645 | yes |
+| resume-fold | 24429.4576 / 16.332 | 27413.4094 / 111.776 | 2983.9518 | 12.2145642726 | yes |
+
+Each per-function Callgrind sum is checked against its raw summary slope. The mean difference is compared with the larger arm range because hashing is seeded per process. A positive mean within that range is not by itself called added work; address evidence is considered separately.
+
+| Ordinary label | CG N | S2 mean | S3 mean | Delta I | Larger range | Added by total |
+| --- | --- | --- | --- | --- | --- | --- |
+
+| Resume (N200) | S2 mean | S3 mean | Delta I | Larger range | Added by total |
+| --- | --- | --- | --- | --- | --- |
+| table | 15972.585 | 18555.7083333 | 2583.12333333 | 212.435 | yes |
+| do-chain | 15219.26 | 17773.1216667 | 2553.86166667 | 36.105 | yes |
+| call-repeat | 25371.3633333 | 28040.2 | 2668.83666667 | 82.235 | yes |
+| cleanup | 14253.07 | 16721.6816667 | 2468.61166667 | 38.455 | yes |
+| fold | 24525.7733333 | 27545.775 | 3020.00166667 | 48.08 | yes |
+
+The per-label copy counts below sum every caller of the object-qualified resolved libc memcpy IFUNC, not only the named runtime symbols. The addressed call windows retain copy widths where an immediate proves them. This counts calls, not all memory traffic; inline payload moves are separately reviewed in the ordinary/resume address notes. The full59-label object/address ledgers include allocator and libc code.
+
+| Ordinary label | S2 memcpy/N | S3 memcpy/N | Delta | At most S2 |
+| --- | --- | --- | --- | --- |
+| lazy-range-take-small | 129 | 129 | 0 | True |
+| lazy-range-normal-small | 143 | 143 | 0 | True |
+| lazy-map-realize-small | 295 | 295 | 0 | True |
+| lazy-select-realize-small | 221 | 221 | 0 | True |
+| lazy-select-scan-small | 1351 | 1351 | 0 | True |
+| lazy-nestlist-realize-small | 177 | 177 | 0 | True |
+| lazy-foldlist-realize-small | 203 | 203 | 0 | True |
+| lazy-drop-realize-small | 311 | 311 | 0 | True |
+| lazy-first-small | 59 | 59 | 0 | True |
+| lazy-part-small | 137 | 137 | 0 | True |
+| lazy-transparent-adapters-small | 285 | 285 | 0 | True |
+| lazy-table-construct-short | 50 | 50 | 0 | True |
+| lazy-table-construct-full | 51 | 51 | 0 | True |
+| lazy-table-realize-small | 211 | 211 | 0 | True |
+| lazy-permutations-take-small | 24 | 24 | 0 | True |
+| lazy-subsets-take-small | 24 | 24 | 0 | True |
+| lazy-tuples-take-small | 24 | 24 | 0 | True |
+| scan-no-input | 51 | 51 | 0 | True |
+| optionvalue-three-no-input | 7 | 7 | 0 | True |
+| replacerepeated-no-input | 29 | 29 | 0 | True |
+| dot-three-no-input | 465 | 465 | 0 | True |
+| differences-no-input | 9 | 9 | 0 | True |
+| do-count-null | 1 | 1 | 0 | True |
+| do-iterator-null | 2 | 2 | 0 | True |
+| table-iterator-null | 0 | 0 | 0 | True |
+| replaceall-simple | 23 | 23 | 0 | True |
+| table-small | 13 | 13 | 0 | True |
+| table-iterator-plus | 1 | 1 | 0 | True |
+| table-iterator-pair-list | 0 | 0 | 0 | True |
+| take-multispec-small | 47 | 47 | 0 | True |
+| lazy-depth-map-build-8 | 25 | 25 | 0 | True |
+| lazy-depth-map-first-8 | 172 | 172 | 0 | True |
+| lazy-depth-map-eight-8 | 1219 | 1219 | 0 | True |
+| lazy-depth-select-restart-8 | 281 | 281 | 0 | True |
+| lazy-depth-drop-all-one-8 | 155 | 155 | 0 | True |
+| lazy-depth-take-map-8 | 188 | 188 | 0 | True |
+| lazy-depth-fold-through-source-8 | 696 | 696 | 0 | True |
+| lazy-depth-nest-map-8 | 178 | 178 | 0 | True |
+| lazy-depth-map-build-64 | 25 | 25 | 0 | True |
+| lazy-depth-map-first-64 | 1124 | 1124 | 0 | True |
+| lazy-depth-map-eight-64 | 8835 | 8835 | 0 | True |
+| lazy-depth-select-restart-64 | 1401 | 1401 | 0 | True |
+| lazy-depth-drop-all-one-64 | 995 | 995 | 0 | True |
+| lazy-depth-take-map-64 | 1252 | 1252 | 0 | True |
+| lazy-depth-fold-through-source-64 | 37549 | 37549 | 0 | True |
+| lazy-depth-nest-map-64 | 1130 | 1130 | 0 | True |
+| lazy-depth-map-build-256 | 25 | 25 | 0 | True |
+| lazy-depth-map-first-256 | 4388 | 4388 | 0 | True |
+| lazy-depth-map-eight-256 | 34949 | 34949 | 0 | True |
+| lazy-depth-select-restart-256 | 5241 | 5241 | 0 | True |
+| lazy-depth-drop-all-one-256 | 3875 | 3875 | 0 | True |
+| lazy-depth-take-map-256 | 4900 | 4900 | 0 | True |
+| lazy-depth-fold-through-source-256 | 592431 | 592431 | 0 | True |
+| lazy-depth-nest-map-256 | 4394 | 4394 | 0 | True |
+| literal-integer | 1 | 1 | 0 | True |
+| downvalue-pattern-hit | 18 | 18 | 0 | True |
+| module-local | 32 | 32 | 0 | True |
+| block-local | 29 | 29 | 0 | True |
+| matcher-single-wide-small | 15 | 15 | 0 | True |
+
+| Leaf | S2 evaluate I (3 samples) | S3 evaluate I (3 samples) | Whole slope mean delta | Evaluate ≤S2 |
+| --- | --- | --- | --- | --- |
+| literal-integer | 112 / 112 / 112 | 110 / 110 / 110 | -1.15933333333 | True |
+| do-count-null | 112 / 112 / 112 | 110 / 110 / 110 | -1.30783333333 | True |
+| do-iterator-null | 112 / 112 / 112 | 110 / 110 / 110 | -1.36983333333 | True |
+
+The ordinary allocation, copy and deterministic-leaf gates pass. None of the 59 ordinary labels was flagged by the final two-pair instruction panel, so no ordinary flag requires a clearance claim. The full ordinary address ledger retains every self instruction and call edge, including allocator and libc code; its per-label sums reconcile to the raw Callgrind slopes. The unflagged labels have one N/2N pair per arm, except the three deterministic leaves, which have three. This is not a claim that one process pair measures hash-dependent totals without noise.
+
+All three leaf paths execute 112 → 110 self instructions in Session::evaluate in every sample. The containing CLI function moves from S2 entry 0x71e5a0 to candidate entry 0x7201a0. The executed opcode-count difference is −3 lea, +2 mov, −1 jmp. The candidate retains the lexical-profile flag address in %r14 across its loads. The R5 cycle-error stack-address hoist is absent. The isolated source trials in the preceding table establish the M0561/cold-formatting cause; compiler register allocation heuristics are not asserted as a fact. Full addressed instruction sequences and edits are in ordinary-callgrind/leaf-addresses.json, with all three samples in leaf-gates.json.
+
+The two kinds of removed ordinary aggregate transfer are distinct: caller-result rebinding at the 136-byte macro sites, and the three-record profile closure at the 168-byte sites. Direct profile recording preserves order and balance in every branch. All 59 final memcpy counts are exactly S2, not merely below its limit. Inline loads/stores are retained in the complete address ledgers; a zero memcpy delta is not presented as zero memory traffic. The final ledgers are under address-ledgers/ordinary/, and the addressed copy call windows are in ordinary-callgrind/.
+
+Three objectless Callgrind addresses per ordinary arm have no resolvable ELF instructions: S2 0x4070118/0x4070128/0x4070160 and candidate 0x4071118/0x4071128/0x4071160. Their corresponding count maps are exactly equal on all 59 labels, so their signed contribution is zero. Their identity is not guessed and no disassembly is invented. No cold continuation-fault helper instruction executes in any ordinary profile.
+
+The following resume evidence separates the passing targeted-copy gates from the remaining performance defects and attribution limits. Counts are per N resume unless explicitly labelled whole program. All five workload totals exceed the larger Callgrind arm range; timing cannot clear them. The final source keeps the global Legacy wire exactly as ruled by the director.
+
+The raw frame-call census identifies the before/after concrete frames, including constant terminal work. Method suffixes below abbreviate only the crate/module prefix. A zero slope does not mean the method never executes. The base/candidate N and 2N counts are from the first 200/400 pair; fixed allocation checks additionally cover all three pairs.
+
+| table / arm | Concrete method | N calls | 2N calls | Calls/resume |
+| --- | --- | --- | --- | --- |
+| base | <eval_core::call::ResumeCallWithDispatchPlanSuspensionFrame as suspension::core::SuspensionFrame>::resume | 201 | 401 | 1 |
+| base | <eval_dispatch::RunCallDispatchStageSuspensionFrame as suspension::core::SuspensionFrame>::resume | 201 | 401 | 1 |
+| base | <kernel_data::control_data::branching_loops::iteration::driver::resume_frames::ResumeTableIterationsSuspensionFrame as suspension::core::SuspensionFrame>::resume | 200 | 400 | 1 |
+| base | <resolution::resume_frames::ResumeFixedPointFromSuspensionFrame as suspension::core::SuspensionFrame>::resume | 201 | 401 | 1 |
+| base | <kernel_data::control_data::branching_loops::iteration::WithIterationProductScopeSuspensionFrame as suspension::core::SuspensionFrame>::resume | 1 | 1 | 0 |
+| candidate | <suspension::typed::adapter::TypedAdapter<F> as suspension::typed::adapter::ErasedFrame>::resume | 603 | 1203 | 3 |
+| candidate | <eval_core::call::ResumeCallWithDispatchPlanSuspensionFrame as suspension::typed::TypedFrame>::resume | 201 | 401 | 1 |
+| candidate | <eval_dispatch::RunCallDispatchStageSuspensionFrame as suspension::typed::TypedFrame>::resume | 201 | 401 | 1 |
+| candidate | <kernel_data::control_data::branching_loops::iteration::driver::resume_frames::ResumeTableIterationsSuspensionFrame as suspension::core::SuspensionFrame>::resume | 200 | 400 | 1 |
+| candidate | <resolution::resume_frames::ResumeFixedPointFromSuspensionFrame as suspension::typed::TypedFrame>::resume | 201 | 401 | 1 |
+| candidate | <kernel_data::control_data::branching_loops::iteration::WithIterationProductScopeSuspensionFrame as suspension::core::SuspensionFrame>::resume | 1 | 1 | 0 |
+
+| do-chain / arm | Concrete method | N calls | 2N calls | Calls/resume |
+| --- | --- | --- | --- | --- |
+| base | <eval_core::call::ResumeCallWithDispatchPlanSuspensionFrame as suspension::core::SuspensionFrame>::resume | 201 | 401 | 1 |
+| base | <eval_dispatch::RunCallDispatchStageSuspensionFrame as suspension::core::SuspensionFrame>::resume | 201 | 401 | 1 |
+| base | <kernel_data::control_data::branching_loops::iteration::driver::resume_frames::EvaluateLoopIteratorBodyWithDynamicValueSuspensionFrame as suspension::core::SuspensionFrame>::resume | 200 | 400 | 1 |
+| base | <kernel_data::control_data::branching_loops::iteration::driver::resume_frames::ResumeDoIterationsSuspensionFrame as suspension::core::SuspensionFrame>::resume | 200 | 400 | 1 |
+| base | <resolution::resume_frames::ResumeFixedPointFromSuspensionFrame as suspension::core::SuspensionFrame>::resume | 201 | 401 | 1 |
+| base | <kernel_data::control_data::branching_loops::iteration::WithIterationProductScopeSuspensionFrame as suspension::core::SuspensionFrame>::resume | 1 | 1 | 0 |
+| candidate | <suspension::typed::adapter::TypedAdapter<F> as suspension::typed::adapter::ErasedFrame>::resume | 603 | 1203 | 3 |
+| candidate | <eval_core::call::ResumeCallWithDispatchPlanSuspensionFrame as suspension::typed::TypedFrame>::resume | 201 | 401 | 1 |
+| candidate | <eval_dispatch::RunCallDispatchStageSuspensionFrame as suspension::typed::TypedFrame>::resume | 201 | 401 | 1 |
+| candidate | <kernel_data::control_data::branching_loops::iteration::driver::resume_frames::EvaluateLoopIteratorBodyWithDynamicValueSuspensionFrame as suspension::core::SuspensionFrame>::resume | 200 | 400 | 1 |
+| candidate | <kernel_data::control_data::branching_loops::iteration::driver::resume_frames::ResumeDoIterationsSuspensionFrame as suspension::core::SuspensionFrame>::resume | 200 | 400 | 1 |
+| candidate | <resolution::resume_frames::ResumeFixedPointFromSuspensionFrame as suspension::typed::TypedFrame>::resume | 201 | 401 | 1 |
+| candidate | <kernel_data::control_data::branching_loops::iteration::WithIterationProductScopeSuspensionFrame as suspension::core::SuspensionFrame>::resume | 1 | 1 | 0 |
+
+| call-repeat / arm | Concrete method | N calls | 2N calls | Calls/resume |
+| --- | --- | --- | --- | --- |
+| base | <eval_call_prepare::resume_frames::ResumeSuspendedCallArgumentPreparationSuspensionFrame as suspension::core::SuspensionFrame>::resume | 200 | 400 | 1 |
+| base | <eval_core::call::ResumeCallWithDispatchPlanSuspensionFrame as suspension::core::SuspensionFrame>::resume | 201 | 401 | 1 |
+| base | <eval_dispatch::RunCallDispatchStageSuspensionFrame as suspension::core::SuspensionFrame>::resume | 200 | 400 | 1 |
+| base | <resolution::resume_frames::ResumeFixedPointFromSuspensionFrame as suspension::core::SuspensionFrame>::resume | 201 | 401 | 1 |
+| base | <eval_call_prepare::resume_frames::FinishPreparedCallArgumentsFinalizer as suspension::core::PureFrameFinalizer>::finish | 1 | 1 | 0 |
+| candidate | <suspension::typed::adapter::TypedAdapter<F> as suspension::typed::adapter::ErasedFrame>::resume | 802 | 1602 | 4 |
+| candidate | <eval_call_prepare::resume_frames::PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame as suspension::typed::TypedFrame>::resume | 200 | 400 | 1 |
+| candidate | <eval_core::call::ResumeCallWithDispatchPlanSuspensionFrame as suspension::typed::TypedFrame>::resume | 200 | 400 | 1 |
+| candidate | <eval_dispatch::RunCallDispatchStageSuspensionFrame as suspension::typed::TypedFrame>::resume | 200 | 400 | 1 |
+| candidate | <resolution::resume_frames::ResumeFixedPointFromSuspensionFrame as suspension::typed::TypedFrame>::resume | 201 | 401 | 1 |
+| candidate | <eval_call_prepare::resume_frames::FinishPreparedCallArgumentsFinalizer as suspension::typed::SlotFinalizer>::finish | 1 | 1 | 0 |
+| candidate | <eval_core::call::PreparedDispatchFrame as suspension::typed::TypedFrame>::resume | 1 | 1 | 0 |
+| candidate | <suspension::typed::adapter::FinalizerAdapter<F> as suspension::typed::action::ErasedFinalizer>::finish | 1 | 1 | 0 |
+
+| cleanup / arm | Concrete method | N calls | 2N calls | Calls/resume |
+| --- | --- | --- | --- | --- |
+| base | <eval_core::call::ResumeCallWithDispatchPlanSuspensionFrame as suspension::core::SuspensionFrame>::resume | 203 | 403 | 1 |
+| base | <eval_dispatch::RunCallDispatchStageSuspensionFrame as suspension::core::SuspensionFrame>::resume | 203 | 403 | 1 |
+| base | <kernel_data::control_data::branching_loops::iteration::driver::resume_frames::ResumeDoIterationsSuspensionFrame as suspension::core::SuspensionFrame>::resume | 200 | 400 | 1 |
+| base | <resolution::resume_frames::ResumeFixedPointFromSuspensionFrame as suspension::core::SuspensionFrame>::resume | 203 | 403 | 1 |
+| base | <kernel_data::control_data::branching_loops::iteration::WithIterationProductScopeSuspensionFrame as suspension::core::SuspensionFrame>::resume | 1 | 1 | 0 |
+| base | <kernel_data::control_data::branching_loops::resume_frames::ResumeCompoundExpressionFromIndexSuspensionFrame as suspension::core::SuspensionFrame>::resume | 1 | 1 | 0 |
+| base | <kernel_data::control_data::cleanup::DriveWithCleanupPrimarySuspensionFrame as suspension::core::SuspensionFrame>::resume | 1 | 1 | 0 |
+| candidate | <suspension::typed::adapter::TypedAdapter<F> as suspension::typed::adapter::ErasedFrame>::resume | 609 | 1209 | 3 |
+| candidate | <eval_core::call::ResumeCallWithDispatchPlanSuspensionFrame as suspension::typed::TypedFrame>::resume | 203 | 403 | 1 |
+| candidate | <eval_dispatch::RunCallDispatchStageSuspensionFrame as suspension::typed::TypedFrame>::resume | 203 | 403 | 1 |
+| candidate | <kernel_data::control_data::branching_loops::iteration::driver::resume_frames::ResumeDoIterationsSuspensionFrame as suspension::core::SuspensionFrame>::resume | 200 | 400 | 1 |
+| candidate | <resolution::resume_frames::ResumeFixedPointFromSuspensionFrame as suspension::typed::TypedFrame>::resume | 203 | 403 | 1 |
+| candidate | <kernel_data::control_data::branching_loops::iteration::WithIterationProductScopeSuspensionFrame as suspension::core::SuspensionFrame>::resume | 1 | 1 | 0 |
+| candidate | <kernel_data::control_data::branching_loops::resume_frames::ResumeCompoundExpressionFromIndexSuspensionFrame as suspension::core::SuspensionFrame>::resume | 1 | 1 | 0 |
+| candidate | <kernel_data::control_data::cleanup::DriveWithCleanupPrimarySuspensionFrame as suspension::core::SuspensionFrame>::resume | 1 | 1 | 0 |
+
+| fold / arm | Concrete method | N calls | 2N calls | Calls/resume |
+| --- | --- | --- | --- | --- |
+| base | <eval_core::call::ResumeCallWithDispatchPlanSuspensionFrame as suspension::core::SuspensionFrame>::resume | 401 | 801 | 2 |
+| base | <resolution::resume_frames::ResumeFixedPointFromSuspensionFrame as suspension::core::SuspensionFrame>::resume | 401 | 801 | 2 |
+| base | <eval_dispatch::RunCallDispatchStageSuspensionFrame as suspension::core::SuspensionFrame>::resume | 201 | 401 | 1 |
+| base | <scoping::callable::TryApplyFunctionSuspensionFrame as suspension::core::SuspensionFrame>::resume | 200 | 400 | 1 |
+| base | <rum_stdlib::functional_ops::sequence::fold::plain::ResumeFoldFromIndexSuspensionFrame as suspension::core::SuspensionFrame>::resume | 200 | 400 | 1 |
+| candidate | <suspension::typed::adapter::TypedAdapter<F> as suspension::typed::adapter::ErasedFrame>::resume | 1003 | 2003 | 5 |
+| candidate | <eval_core::call::ResumeCallWithDispatchPlanSuspensionFrame as suspension::typed::TypedFrame>::resume | 401 | 801 | 2 |
+| candidate | <resolution::resume_frames::ResumeFixedPointFromSuspensionFrame as suspension::typed::TypedFrame>::resume | 401 | 801 | 2 |
+| candidate | <eval_dispatch::RunCallDispatchStageSuspensionFrame as suspension::typed::TypedFrame>::resume | 201 | 401 | 1 |
+| candidate | <scoping::callable::TryApplyFunctionSuspensionFrame as suspension::core::SuspensionFrame>::resume | 200 | 400 | 1 |
+| candidate | <rum_stdlib::functional_ops::sequence::fold::plain::ResumeFoldFromIndexSuspensionFrame as suspension::core::SuspensionFrame>::resume | 200 | 400 | 1 |
+
+The four physical adapter bodies with positive slopes are listed next. F0526/F0527 have identical resume bodies merged by the compiler at the observed ResumeFixedPointFromSuspensionFrame symbol; the physical profile alone does not distinguish them. F0273 is replaced by F0272 as the owned fresh-state transition. PreparedDispatchFrame is a fifth active adapter in call-repeat, but runs once for the entire program and therefore has zero slope.
+
+| Input / concrete frame | Adapter entry | Concrete resume entry | Calls: table / do / call / cleanup / fold | Adapter self I/call |
+| --- | --- | --- | --- | --- |
+| Option<Expr> / F0275 | 0x756b50 | 0x579350 | 1 / 1 / 1 / 1 / 2 | 63 |
+| Expr / F0278 | 0x7572f0 | 0x584570 | 1 / 1 / 1 / 1 / 1 | 53 |
+| Expr / F0526/F0527 physical body | 0x7576f0 | 0x6f0ef0 | 1 / 1 / 1 / 1 / 2 | 53 |
+| Expr / F0272 (S2 F0273) | 0x757880 | 0x572580 | 0 / 0 / 1 / 0 / 0 | 53 |
+| PreparedCallArguments / PreparedDispatchFrame | 0x757480 | see fixed raw call graph | 0 slope; 1 whole call-repeat program | 70 |
+
+Each of the four positive-slope adapters now writes the concrete action directly into the erased return destination: no libc memcpy call remains in any of them. The constant fifth adapter also has no such call. The erased signature is private &self plus &mut Result<Slot, EvalError>, returning Action directly; DecodeFailure is a private Action variant. Action grows 136 → 144 bytes in this binary, without another allocation. The sole implementation replaces its input with resource-free Abort before decoding; the caller drops its cloned outer Arc immediately after resume and handles decode failure before popping the queue owner. This preserves the fault latch and both-owner-before-finalizer ordering.
+
+The typed driver is inlined into resume_eval_request_from_checkpoint (candidate entry 0x729f70). Both extra driver copies identified by redispatch 6 are gone. Only the common outcome assignment at 0x72b084 remains: 136 bytes, 3/3/4/3/5 calls per resume. The S2 common loop assignment is 0x72a565, 4/5/4/4/7 calls including legacy roles. Other candidate copies in this containing function, 0x72c348 (136 B) and 0x72c9fb (152 B), occur once per resume request outside the typed loop. Ending the empty Abort placeholder lifetime before extracting the next action removes the redundant completion temporary. These observations do not claim all output transfers vanish.
+
+Concrete frame transfer comparison: the remaining F0526/F0527 input copy is 0x6f0fa9 (136 B, 1/1/1/1/2 per resume), corresponding to S2 0x6f04c8. S2 output copy 0x6f05f9 is gone. The F0275 S2 copy at 0x579d5e and F0278 copies at 0x584691/0x5846a7 are also gone. F0278 uses inline stores for its typed result, all retained in paired-frame-differences.json; they are not counted as no work merely because there is no memcpy call. Typical concrete-frame self costs are F0526/F0527 82 → 105, F0275 78 → 103 and F0278 37 → 68. Those increases include replacing library-copy work (26 I per 136-byte copy in these paths) and ABI/mode work. F0273 102 → F0272 328 includes an inlined helper body moved into the method; its 226-I difference is not all new semantic work. Fold takes a different F0275 branch on one of its two calls. Complete frame self costs, inline instructions and callee counts are in semantic-costs.json, paired-frame-differences.json and call-edge-costs.{json,tsv}, all under candidate/.
+
+The per-resume allocation-count rule passes: extra allocations are the typed-frame count plus the three strict Some-wire allocations. Each extra adapter Arc is 24 B (16 B counters plus 8 B inner Arc pointer). The Some wire is 120 B at its three allocation sites: 32 B single argument buffer at 0x7523d3, 48 B SharedExpr at 0x79a2fe, and 40 B SharedArgs at 0x79a55d. F0278 calls its encoder at 0x58464d once per resume. Symbol interning/hashing is included as mode work, per the director ruling. The outer-Arc allocation sites are 0x10b06d, 0x75913b, 0x7592ca and 0x757b83; the last is call-repeat only.
+
+| Workload | Typed frames | Extra alloc/resume | Extra B/resume | Outer Arc B | Some B | Queue residual B | Inferred cumulative capacity |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| table | 3 | 6 | 288 | 72 | 120 | 96 | 12 |
+| do-chain | 3 | 6 | 416 | 72 | 120 | 224 | 28 |
+| call-repeat | 4 | 7 | 312 | 96 | 120 | 96 | 12 |
+| cleanup | 3 | 6 | 352 | 72 | 120 | 160 | 20 |
+| fold | 5 | 8 | 464 | 120 | 120 | 224 | 28 |
+
+The residual bytes are consistent with mixed-queue entries growing 16 → 24 B: 8 B times the capacities in the table. These cumulative capacities are inferred from the measured residual, not independently sampled allocation arguments. They retain the director-accepted inference status. No second allocation beyond frame + Some appears in any N/2N slope.
+
+Whole-program counts reveal an additional defect hidden by those slopes. FinalizerAdapter::finish (entry 0x757c10) executes Box::new(self.0); it allocates 56 B at 0x757c56, with size immediate 0x38 at 0x757c4c. Every one of the six call-repeat processes executes this allocation once (38 inclusive allocator instructions), so N/2N subtraction cancels it. It is not elided or proven inherent. Payload transfers at 0x757c20–0x757c3e and 0x757c65–0x757c84 move all 56 B through a stack temporary to the new Box (16 memory instructions); the old Box is freed at 0x757d5b. The concrete finalizer call is 0x757c8d and its PreparedLegacy encoding is 0x757caf. This extra reallocation and payload copying remain unfixed and are reported as defects, separately from the four corrected frame-adapter bodies.
+
+| Call-repeat sample | N | Finalizer allocation address | Whole-process calls | Allocator inclusive I |
+| --- | --- | --- | --- | --- |
+| 1 | 200 | 0x757c56 | 1 | 38 |
+| 1 | 400 | 0x757c56 | 1 | 38 |
+| 2 | 200 | 0x757c56 | 1 | 38 |
+| 2 | 400 | 0x757c56 | 1 | 38 |
+| 3 | 200 | 0x757c56 | 1 | 38 |
+| 3 | 400 | 0x757c56 | 1 | 38 |
+
+All 30 raw resume allocation-count cells (five workloads × three pairs × N/2N) reconcile exactly to outer adapters + 3 × Some encodings + two one-time interning allocations + the finalizer rebox where present. The one-time mode allocations are the 24-byte InternalContinuationSome text at 0x797305 and 40-byte symbol data at 0x79754e, each +1 relative to S2. The extra constant outer adapter at 0x7594a6 belongs to PreparedDispatchFrame; its inner allocation at 0x759423 is 104 B versus the former 128 B at S2 0x1050ad. Exact raw counts, addresses and the fifth adapter are in candidate/fixed-allocation-reconciliation.json.
+
+| Workload | All outer adapters | All Some encodings | Fixed intern allocations | Fixed rebox | Total extra allocations |
+| --- | --- | --- | --- | --- | --- |
+| table | 3N + 3 | N + 1 | 2 | 0 | 6N + 8 |
+| do-chain | 3N + 3 | N + 1 | 2 | 0 | 6N + 8 |
+| call-repeat | 4N + 2 | N | 2 | 1 | 7N + 5 |
+| cleanup | 3N + 9 | N + 3 | 2 | 0 | 6N + 20 |
+| fold | 5N + 3 | N + 1 | 2 | 0 | 8N + 8 |
+
+| Workload | N | Raw extra allocations | Count intercept | Raw extra bytes | Byte intercept |
+| --- | --- | --- | --- | --- | --- |
+| resume-table | 1000 | 6008 | 8 | 288261 | 261 |
+| resume-table | 2000 | 12008 | 8 | 576261 | 261 |
+| resume-do-chain | 1000 | 6008 | 8 | 416261 | 261 |
+| resume-do-chain | 2000 | 12008 | 8 | 832261 | 261 |
+| resume-call-repeat | 1000 | 7005 | 5 | 312149 | 149 |
+| resume-call-repeat | 2000 | 14005 | 5 | 624149 | 149 |
+| resume-cleanup | 1000 | 6020 | 20 | 352709 | 709 |
+| resume-cleanup | 2000 | 12020 | 20 | 704709 | 709 |
+| resume-fold | 1000 | 8008 | 8 | 464261 | 261 |
+| resume-fold | 2000 | 16008 | 8 | 928261 | 261 |
+
+The 261-B intercept in table/do/fold is consistent with 3 × 24 B outer adapters + 120 B Some + 64 B initial interning + 5 B from the longer executable path in the unchanged std::env::args() collection. Call-repeat gives 2 × 24 + 56 + 64 + 5 − 24 = 149 B, with the last term the directly observed initial-frame size reduction. Cleanup gives 9 × 24 + 3 × 120 + 64 + 5 + 64 = 709 B; its remaining 64 B is consistent with 8 × 8 queue capacity. Path-length and residual-queue byte explanations are not independent allocator-argument samples; the count reconciliation above is exact raw call evidence.
+
+Instruction attribution names the four permitted classes without assigning every remaining instruction to them by assumption. The Expr adapters execute 53 self instructions: 37 mode decode/result-layout instructions, 13 adapter dispatch/ABI instructions and 3 inner-Arc clone instructions. The Option adapter executes 63: 42 mode, 18 dispatch/ABI and 3 clone. Each executed address and its count is listed in candidate/address-partition.json. Example clone addresses are 0x75777b/0x75777e/0x757782 for the fixed-point adapter and 0x756bdf/0x756be2/0x756be6 for Option. Cold mismatch/error instructions are not exercised by these normal profiles and are not assigned a measured cost.
+
+The strict Option decoder call moves from S2 0x579730 to candidate 0x756bc2; calls are 1/1/1/1/2, inclusive costs 22/22/22/22/44 → 280/280/280/280/302, hence +258 I in every workload. The Some encoder root 0x58464d includes interning, hashing and all three wire allocations. The adapter dispatch call is 0x72a6e0, 3/3/4/3/5 per resume. Destruction roots S2 0x48fb8a → candidate 0x48ff7a resolve to each concrete frame/adapter drop glue; inner frame destruction is retained and only the subtree difference is counted. Queue roots are insertion widening at 0x74b20c, append at 0x72b6ff and mixed legacy pop at 0x72a95e, with final empty-queue destruction 0x40aafd → 0x40b01d. The append root contains its own widen call 0xd9b61; that child is not added twice.
+
+First accounting: every self-address row is assigned exactly once. Directly identified mode/adapter/Arc/queue instructions are separated from a reported remainder. The signed category totals sum exactly to each raw mean delta. Shared callees of known costs, moved bodies, baseline credits, hash variation and extra helper ABI work remain in that remainder. It is neither all inherent nor all new defects. The full additive ledger is candidate/address-partition.tsv (object, physical function, address, assembly and five counts).
+
+| Direct self-address category | table | do-chain | call-repeat | cleanup | fold |
+| --- | --- | --- | --- | --- | --- |
+| mode | 199 | 199 | 236 | 199 | 278 |
+| adapter dispatch | 44 | 44 | 57 | 44 | 75 |
+| second Arc | 21 | 21 | 28 | 21 | 35 |
+| mixed queue | 490 | 526 | 517 | 490 | 657 |
+| reported remainder | 1829.12333333 | 1763.86166667 | 1830.83666667 | 1714.61166667 | 1975.00166667 |
+
+Second accounting: disjoint known call subtrees include the mode and allocator callees excluded from the direct self-address categories. They are combined with adapter self costs, without double-counting nested roots. Do not add this table to the preceding table. Its signed residual also contains removed S2 inline queue operations and other credits. A negative residual cannot prove that no outside added instruction exists.
+
+| Disjoint known-root contribution | table | do-chain | call-repeat | cleanup | fold |
+| --- | --- | --- | --- | --- | --- |
+| mode | 1880.77 | 1852 | 1909.005 | 1877.15166667 | 1932.96166667 |
+| adapter dispatch | 44 | 44 | 57 | 44 | 75 |
+| second Arc | 253.9 | 253.9 | 337.68 | 245 | 422.46 |
+| mixed queue | 625 | 682.375 | 602.42 | 672.195 | 716.375 |
+| Reported signed remainder | -220.546666667 | -278.413333333 | -237.268333333 | -369.735 | -126.795 |
+
+| Known root | Class | table | do-chain | call-repeat | cleanup | fold |
+| --- | --- | --- | --- | --- | --- | --- |
+| Legacy Some encoder including interning, hashing and all three allocations | mode | 1506.77 | 1478 | 1498.005 | 1503.15166667 | 1479.96166667 |
+| All Option decoder calls, candidate minus base | mode | 258 | 258 | 258 | 258 | 258 |
+| Four outer adapter allocations | second Arc | 122.9 | 122.9 | 162.68 | 114 | 202.46 |
+| Adapter destruction subtrees minus legacy frame destruction | second Arc | 122 | 122 | 163 | 122 | 205 |
+| Widen from insertion, append and mixed legacy pop (disjoint roots) | mixed queue | 608 | 665.375 | 585.42 | 655.195 | 699.375 |
+| Final empty queue destruction difference | mixed queue | 17 | 17 | 17 | 17 | 17 |
+| Erased adapters: mode self instructions | mode | 116 | 116 | 153 | 116 | 195 |
+| Erased adapters: second Arc self instructions | second Arc | 9 | 9 | 12 | 9 | 15 |
+| Erased adapters: adapter dispatch self instructions | adapter dispatch | 44 | 44 | 57 | 44 | 75 |
+
+Two concrete outside-class changes remain reported. First, the cold freeze helper at 0xcdc30 has seven prologue/epilogue instructions at 0xcdc30/0xcdc32/0xcdc33/0xcdc78/0xcdc7c/0xcdc7d/0xcdc7f plus the caller instruction at 0x10afb4: eight gross ABI instructions, 1/1/1/1/2 times per resume, absent as that boundary in S2. Its other instructions pack the existing state; all 22 helper self instructions are not called new work. Second, the resumed driver spills/reloads Session at 0x72a097/0x72c73b once per resume request. The reload replaces a later register move, but the memory traffic differs and the spill is not proved inherent. Section 6 describes the exact cold-boundary comparison. These costs and the finalizer rebox are not silently absorbed into the four allowed classes.
+
+The complete resume address ledger reconciles to the five raw mean deltas and retains every added/removed self instruction, including shared allocator/libc code. Two objectless addresses, 0x406d128 and 0x406d160, have identical count maps in both arms and net zero contribution; their instructions cannot be resolved to an ELF object. No fault-helper instruction executes in these normal profiles. This harness measures the four positive-slope frame shapes and the constant prepared/finalizer path, not every S3 frame or error-only performance. Full correctness coverage remains the complete final suites and oracles.
+
+Resume allocation slopes and the specifically ordered copy-removal gates pass. Full performance acceptance is withheld: the finalizer rebox and payload moves are real remaining defects, and helper ABI/Session spill work is reported rather than proved inherent. Both additive accounting views preserve explicit remainders. This uses the brief's requirement to remove or report work outside the accepted classes; it does not claim a zero non-inherent residual.
+
+Resume table: largest physical-function self-cost changes; complete costs and all addresses are in `candidate/callgrind-means.json` and the object-qualified ledgers.
+
+| Function | S2 I | S3 I | Delta I |
+| --- | --- | --- | --- |
+| <core::hash::sip::Hasher<S> as core::hash::Hasher>::write | 933 | 1417 | 484 |
+| core::hash::BuildHasher::hash_one | 696 | 995 | 299 |
+| rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::insert_suspension_frame | 284 | 78 | -206 |
+| <rum_runtime::runtime::suspension::typed::adapter::TypedAdapter<F> as rum_runtime::runtime::suspension::typed::adapter::ErasedFrame>::resume | 0 | 169 | 169 |
+| rum_core::expr::intern_text | 436.673333333 | 583.381666667 | 146.708333333 |
+| rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::insert_typed_erased_frame | 0 | 143 | 143 |
+| rum_runtime::runtime::suspension::typed::witness::SlotWitness<I>::suspend | 0 | 140 | 140 |
+| 0x00000000001b1980 | 1318.95 | 1188.95 | -130 |
+| rum_core::expr::intern_symbol_text | 187.316666667 | 314.741666667 | 127.425 |
+| mi_theap_malloc_aligned | 543.09 | 666.95 | 123.86 |
+
+Resume do-chain: largest physical-function self-cost changes; complete costs and all addresses are in `candidate/callgrind-means.json` and the object-qualified ledgers.
+
+| Function | S2 I | S3 I | Delta I |
+| --- | --- | --- | --- |
+| <core::hash::sip::Hasher<S> as core::hash::Hasher>::write | 933 | 1417 | 484 |
+| core::hash::BuildHasher::hash_one | 696 | 995 | 299 |
+| rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::insert_suspension_frame | 334 | 132 | -202 |
+| rum_core::expr::intern_text | 375.101666667 | 573.331666667 | 198.23 |
+| <rum_runtime::runtime::suspension::typed::adapter::TypedAdapter<F> as rum_runtime::runtime::suspension::typed::adapter::ErasedFrame>::resume | 0 | 169 | 169 |
+| 0x00000000001b1980 | 1185.775 | 1033.775 | -152 |
+| rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::insert_typed_erased_frame | 0 | 143 | 143 |
+| rum_runtime::runtime::suspension::typed::witness::SlotWitness<I>::suspend | 0 | 140 | 140 |
+| mi_theap_malloc_aligned | 459.34 | 584.78 | 125.44 |
+| rum_runtime::runtime::eval_core::call::<impl rum_runtime::runtime::model::session::Session>::resume_call_after_head | 123 | 0 | -123 |
+
+Resume call-repeat: largest physical-function self-cost changes; complete costs and all addresses are in `candidate/callgrind-means.json` and the object-qualified ledgers.
+
+| Function | S2 I | S3 I | Delta I |
+| --- | --- | --- | --- |
+| <core::hash::sip::Hasher<S> as core::hash::Hasher>::write | 1365 | 1849 | 484 |
+| <rum_runtime::runtime::eval_call_prepare::resume_frames::PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume | 0 | 328 | 328 |
+| core::hash::BuildHasher::hash_one | 995 | 1294 | 299 |
+| rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::insert_suspension_frame | 278 | 0 | -278 |
+| rum_runtime::runtime::eval_call_prepare::<impl rum_runtime::runtime::model::session::Session>::resume_suspended_call_after_argument | 251 | 0 | -251 |
+| <rum_runtime::runtime::suspension::typed::adapter::TypedAdapter<F> as rum_runtime::runtime::suspension::typed::adapter::ErasedFrame>::resume | 0 | 222 | 222 |
+| rum_core::expr::intern_text | 571.545 | 764.601666667 | 193.056666667 |
+| rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::insert_typed_erased_frame | 0 | 189 | 189 |
+| mi_theap_malloc_aligned | 795.4 | 939.51 | 144.11 |
+| mi_free | 802.77 | 942.77 | 140 |
+
+Resume cleanup: largest physical-function self-cost changes; complete costs and all addresses are in `candidate/callgrind-means.json` and the object-qualified ledgers.
+
+| Function | S2 I | S3 I | Delta I |
+| --- | --- | --- | --- |
+| <core::hash::sip::Hasher<S> as core::hash::Hasher>::write | 933 | 1417 | 484 |
+| core::hash::BuildHasher::hash_one | 696 | 995 | 299 |
+| rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::insert_suspension_frame | 276 | 70 | -206 |
+| rum_core::expr::intern_text | 381.238333333 | 560.145 | 178.906666667 |
+| <rum_runtime::runtime::suspension::typed::adapter::TypedAdapter<F> as rum_runtime::runtime::suspension::typed::adapter::ErasedFrame>::resume | 0 | 169 | 169 |
+| rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::insert_typed_erased_frame | 0 | 143 | 143 |
+| rum_runtime::runtime::suspension::typed::witness::SlotWitness<I>::suspend | 0 | 140 | 140 |
+| mi_theap_malloc_aligned | 438.4 | 563.76 | 125.36 |
+| rum_runtime::runtime::eval_core::call::<impl rum_runtime::runtime::model::session::Session>::resume_call_after_head | 123 | 0 | -123 |
+| mi_free | 442.04 | 563.72 | 121.68 |
+
+Resume fold: largest physical-function self-cost changes; complete costs and all addresses are in `candidate/callgrind-means.json` and the object-qualified ledgers.
+
+| Function | S2 I | S3 I | Delta I |
+| --- | --- | --- | --- |
+| <core::hash::sip::Hasher<S> as core::hash::Hasher>::write | 933 | 1417 | 484 |
+| rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::insert_suspension_frame | 477 | 127 | -350 |
+| core::hash::BuildHasher::hash_one | 696 | 995 | 299 |
+| <rum_runtime::runtime::suspension::typed::adapter::TypedAdapter<F> as rum_runtime::runtime::suspension::typed::adapter::ErasedFrame>::resume | 0 | 285 | 285 |
+| rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::insert_typed_erased_frame | 0 | 240 | 240 |
+| rum_runtime::runtime::suspension::typed::witness::SlotWitness<I>::suspend | 0 | 218 | 218 |
+| rum_core::expr::intern_text | 384.705 | 601.43 | 216.725 |
+| 0x00000000001b1980 | 1653.775 | 1441.775 | -212 |
+| <rum_runtime::runtime::resolution::resume_frames::ResumeFixedPointFromSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume | 0 | 210 | 210 |
+| <rum_runtime::runtime::eval_core::call::ResumeCallWithDispatchPlanSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume | 0 | 198 | 198 |
+
+Timing ran last, after correctness, allocation, all flagged-label repeats, Callgrind and address attribution. The full core-language-microbench.sh panel produced120 matching labels per arm, scale1/reps7, retained-module-gc-batches3 (the script default), profiling disabled, on the two CGU1 CLI binaries. These are in-kernel monotonic AbsoluteTiming measurements, not wall-clock differences. The median candidate/base ratio is0.991613; 35 labels are slower in this single panel pair. Timing is an indication only and does not override instruction evidence.
+
+The host monitor observed five consecutive quiet seconds before each arm and no competing CPU process above0.15 core during either panel. It did not stop or alter other processes. GPU occupancy could not be read from the available sysfs interface, so GPU idleness is not independently verified. Raw activity samples are in timing-{base,candidate}-host.json; exact commands, benchmark .rum input, stdout, stderr and per-label timings.tsv are under r6b/perf/timing/. This is one final timing pair, not a repeated statistical timing acceptance.
+
+The largest slower ratios are matcher-single-wide-small 1.15426, matcher-single-wide-large 1.15347, association-part-key-read-width32000 1.13284 and table-iterator-symbol 1.10759. These individual results remain reported; the median does not clear them. The complete per-label table follows. No timing-only source change or additional performance acceptance is inferred from this single pair.
+
+| Timing label | S2 seconds | S3 seconds | S3/S2 |
+| --- | --- | --- | --- |
+| association-part-key-read-width4000 | 0.00233879 | 0.00256072 | 1.09489094788 |
+| association-part-key-read-width32000 | 0.00866228 | 0.00981294 | 1.13283569684 |
+| association-part-positional-read-width4000 | 3.1343e-05 | 3.0236e-05 | 0.96468110902 |
+| association-part-positional-read-width32000 | 3.1236e-05 | 3.0304e-05 | 0.97016263286 |
+| loop-empty | 0.000271031 | 0.000256535 | 0.946515343263 |
+| do-count-null | 0.000246824 | 0.000245387 | 0.994178037792 |
+| do-iterator-null | 6.0497e-05 | 5.6552e-05 | 0.934790154884 |
+| table-count-null | 8.2247e-05 | 8.3264e-05 | 1.01236519265 |
+| table-iterator-null | 1.9054e-05 | 1.8749e-05 | 0.983992862391 |
+| table-iterator-symbol | 7.454e-06 | 8.256e-06 | 1.10759323853 |
+| literal-integer | 9.8998e-05 | 9.6761e-05 | 0.977403583911 |
+| literal-string | 0.00010217 | 9.4317e-05 | 0.923137907409 |
+| symbol-ownvalue-read | 0.000226378 | 0.000220559 | 0.974295205364 |
+| symbol-ownvalue-guarded-read | 0.000191316 | 0.000182967 | 0.956360158063 |
+| set-ownvalue | 0.000261978 | 0.000264428 | 1.00935193031 |
+| list-literal-small | 5.4994e-05 | 5.5198e-05 | 1.00370949558 |
+| head-list | 0.000904125 | 0.000935681 | 1.03490225356 |
+| length-list | 0.000905002 | 0.00093849 | 1.03700323314 |
+| part-list | 0.00107884 | 0.00110734 | 1.02641726299 |
+| sameq-integer | 0.000624546 | 0.000636368 | 1.01892894999 |
+| sameq-list | 0.00060895 | 0.00062528 | 1.02681665161 |
+| if-true | 0.000702467 | 0.000695944 | 0.990714154544 |
+| module-local | 0.000727757 | 0.000724075 | 0.994940618915 |
+| module-chain-escape-small | 4.9328e-05 | 5.2171e-05 | 1.05763460915 |
+| module-chain-escape-large | 9.836e-05 | 9.7277e-05 | 0.988989426596 |
+| block-local | 0.000470794 | 0.000467372 | 0.992731428183 |
+| block-symbol-only-repeat | 0.000305235 | 0.000307151 | 1.00627713074 |
+| block-init-null-repeat | 0.000355356 | 0.000350559 | 0.986500861108 |
+| block-init-read-repeat | 0.000402258 | 0.000399966 | 0.994302164283 |
+| with-local | 0.000476271 | 0.00047185 | 0.990717469676 |
+| with-deep-body-small | 0.00184433 | 0.00182968 | 0.99205673605 |
+| table-small | 0.000190327 | 0.000185762 | 0.97601496372 |
+| table-iterator-plus | 3.6978e-05 | 3.9648e-05 | 1.07220509492 |
+| table-iterator-pair-list | 6.532e-05 | 6.4923e-05 | 0.993922229026 |
+| do-small | 0.000902483 | 0.000900154 | 0.997419341971 |
+| d-nested-sin-small | 0.00516074 | 0.00521355 | 1.0102330286 |
+| downvalue-exact-hit | 0.00075538 | 0.000762677 | 1.00966003866 |
+| downvalue-exact-miss | 0.000545589 | 0.000546807 | 1.0022324497 |
+| downvalue-pattern-hit | 0.000948413 | 0.000947354 | 0.998883397845 |
+| downvalue-pattern-miss | 0.000282966 | 0.000280751 | 0.992172204434 |
+| downvalue-exact-miss-repeat | 0.00125208 | 0.00123142 | 0.983499456904 |
+| downvalue-pattern-miss-repeat | 0.00130105 | 0.0012497 | 0.960531878098 |
+| downvalue-guarded-hit | 0.00189833 | 0.0018599 | 0.979755890704 |
+| downvalue-guarded-decline-fallback | 0.00141975 | 0.00139353 | 0.981531959852 |
+| upvalue-guarded-hit | 0.00236081 | 0.0023324 | 0.987965994722 |
+| subvalue-unguarded-hit | 0.00139724 | 0.0013699 | 0.980432853339 |
+| subvalue-unguarded-miss | 0.000766066 | 0.000760622 | 0.992893562696 |
+| subvalue-guarded-hit | 0.00243863 | 0.00239179 | 0.980792494146 |
+| default-unguarded-hit | 0.00127902 | 0.00127406 | 0.99612203093 |
+| default-unguarded-miss | 0.00106872 | 0.00105857 | 0.990502657385 |
+| default-guarded-hit | 0.00162438 | 0.00163599 | 1.00714734237 |
+| matchq-integer-success | 0.000282548 | 0.000286495 | 1.01396930787 |
+| matchq-integer-fail | 0.000289246 | 0.000290864 | 1.00559385437 |
+| matcher-single-tiny | 0.000677894 | 0.000665035 | 0.981030957642 |
+| matcher-single-wide-small | 4.2792e-05 | 4.9393e-05 | 1.1542578052 |
+| matcher-single-wide-large | 8.4552e-05 | 9.7528e-05 | 1.15346768852 |
+| replaceall-simple | 0.000351853 | 0.000358207 | 1.01805867791 |
+| rule-rhs-deep-small | 0.00303495 | 0.00298425 | 0.983294617704 |
+| rewrite-guarded-hit | 0.00179813 | 0.00177737 | 0.988454672354 |
+| rewrite-guarded-decline-fallback | 0.00255325 | 0.00253971 | 0.994696954861 |
+| cases-wide-no-match | 0.000147916 | 0.000143872 | 0.972660158468 |
+| count-wide-no-match | 0.000140716 | 0.000138024 | 0.980869268598 |
+| position-wide-no-match | 0.000176694 | 0.000170456 | 0.964696028162 |
+| deletecases-wide-no-match | 0.000171559 | 0.000166045 | 0.967859453599 |
+| deletecases-wide-association-no-match | 0.000436134 | 0.000417453 | 0.957166834046 |
+| deletecases-leaf-delete-small | 0.00221082 | 0.00212906 | 0.963018246623 |
+| replace-wide-no-match | 8.2353e-05 | 7.7394e-05 | 0.93978361444 |
+| replace-leaf-rebuild-small | 0.00269748 | 0.00256806 | 0.952021887095 |
+| take-multispec-small | 0.00163141 | 0.00160726 | 0.985196854255 |
+| replacepart-deep-path-small | 0.00132294 | 0.001299 | 0.981903941222 |
+| replacepart-wide-rule-list | 0.000292486 | 0.000289783 | 0.990758532032 |
+| replacepart-guarded-hit | 0.000535434 | 0.00053853 | 1.00578222526 |
+| replacepart-guarded-decline-fallback | 0.000588664 | 0.000586398 | 0.996150605439 |
+| string-repeat-small | 0.000186225 | 0.00018679 | 1.00303396429 |
+| character-range-small | 0.000134911 | 0.000128745 | 0.954295795006 |
+| stringtrim-literal-list-4000 | 0.000683551 | 0.00065921 | 0.964390367361 |
+| stringtrim-literal-list-32000 | 0.00506054 | 0.00504234 | 0.996403545867 |
+| stringtrim-single-literal-4000 | 0.000634111 | 0.000635871 | 1.0027755393 |
+| stringtrim-single-literal-32000 | 0.0050295 | 0.00502371 | 0.998848792126 |
+| stringtrim-whitespace-4000 | 0.000626169 | 0.00062764 | 1.00234920605 |
+| stringtrim-whitespace-32000 | 0.00502736 | 0.00501123 | 0.996791556602 |
+| stringreplace-single-literal-unguarded | 0.000380491 | 0.000388071 | 1.01992162758 |
+| stringreplace-pattern-unguarded | 0.00104138 | 0.00103644 | 0.995256294532 |
+| stringreplace-guarded-hit | 0.000690059 | 0.000690739 | 1.00098542299 |
+| stringreplace-guarded-decline-fallback | 0.000826004 | 0.000808121 | 0.978349983777 |
+| appendto-list-incremental-small | 0.00060201 | 0.000484865 | 0.805410209133 |
+| appendto-list-incremental-large | 0.00155541 | 0.00165576 | 1.06451675121 |
+| appendto-part-outer1000-small | 0.00234094 | 0.00221047 | 0.944265978624 |
+| appendto-part-outer1000-large | 0.00445862 | 0.00446103 | 1.00054052599 |
+| association-set-key-incremental-small | 0.00147483 | 0.00140728 | 0.954198110969 |
+| association-set-key-incremental-large | 0.00556573 | 0.00534531 | 0.960396929064 |
+| association-small-literal-repeat | 0.000736163 | 0.000742152 | 1.00813542653 |
+| merge-nested-small | 0.00117145 | 0.00115437 | 0.985419778906 |
+| set-part-fixed100-len100 | 0.000139793 | 0.00013755 | 0.983954847525 |
+| set-part-fixed100-len800 | 0.000544723 | 0.000540486 | 0.992221734717 |
+| set-part-fill-small | 0.000408156 | 0.000404503 | 0.99104999069 |
+| set-part-fill-large | 0.0012721 | 0.00127012 | 0.998443518591 |
+| upvalue-candidates-tiny | 0.0019388 | 0.00195753 | 1.00966061481 |
+| upvalue-candidates-wide-small | 0.00015333 | 0.000148963 | 0.971518946064 |
+| upvalue-candidates-wide-large | 0.000298904 | 0.000304348 | 1.01821320558 |
+| sort-callback-small | 0.000163231 | 0.000162935 | 0.998186618963 |
+| sort-callback-large | 0.000377318 | 0.000373986 | 0.991169252461 |
+| sortby-callback-small | 0.000195636 | 0.000193234 | 0.987722096138 |
+| sortby-callback-large | 0.000437676 | 0.000433116 | 0.989581334138 |
+| reversesort-callback-small | 0.000159578 | 0.000159666 | 1.00055145446 |
+| reversesort-callback-large | 0.000359777 | 0.000359113 | 0.998154412317 |
+| keysort-callback-small | 8.5073e-05 | 8.2462e-05 | 0.969308711342 |
+| keysort-callback-large | 0.000190246 | 0.000180971 | 0.951247332401 |
+| keysortby-callback-small | 4.5621e-05 | 4.4207e-05 | 0.969005501852 |
+| keysortby-callback-large | 9.8931e-05 | 9.6135e-05 | 0.971737877915 |
+| sort-default-wide | 2.8362e-05 | 1.6757e-05 | 0.590825752768 |
+| sort-symbol-default-width4000 | 0.000299842 | 0.000291784 | 0.973125846279 |
+| sort-symbol-default-width16000 | 0.00124652 | 0.00123831 | 0.99341366364 |
+| sortby-default-wide | 0.000524936 | 0.000509671 | 0.970920264566 |
+| reversesort-default-wide | 2.815e-05 | 1.7174e-05 | 0.610088809947 |
+| keysort-default-wide | 0.000374159 | 0.000372487 | 0.995531311555 |
+| keysortby-default-wide | 0.000873295 | 0.000867594 | 0.993471850864 |
+| valueq-undefined-symbol-definitions-2000 | 7.985e-06 | 7.959e-06 | 0.996743894803 |
+| valueq-undefined-symbol-definitions-8000 | 8.197e-06 | 7.779e-06 | 0.949005733805 |
+| module-retained-gensym-gc-batch | 6.8221e-05 | 6.2337e-05 | 0.913750897817 |
+
+The final ordinary-path gates pass: 59/59 allocation and byte equalities, 59/59 exact memcpy equalities, zero ordinary flags, and all three deterministic leaf paths below S2. The targeted four adapter action copies and two extra typed-driver slot copies are removed. Native-stack and 48-level gates also pass.
+
+Resume totals remain higher because the global Legacy wire, adapter, second Arc and mixed queue execute additional work. The allocation slopes match typed frames + 3, but that slope check is insufficient to accept the whole path: the 56-byte finalizer rebox and two payload transfers execute once at terminal finalization. Their addresses and six raw executions are reported above. Freeze-helper ABI work and the driver's Session spill/reload are also reported rather than asserted inherent. The complete address partition has an explicit remainder; the disjoint-root accounting's negative residual does not erase these concrete operations. Full performance acceptance remains withheld, and timing does not change that verdict.
+
+### 6. S2 cold-helper retype and hot boundary
+
+The inherited cleanup makes continuation_fault_outcome consume the outcome and return EvalError directly, retaining cold/inline-never. Four callers wrap Err explicitly; the two specified test callers lose unwrap_err. The final binary comparison below checks all four hot boundaries.
+
+All four boundaries retain one fault-word comparison and one cold conditional branch. Three fast successor sequences are equal after normalizing only stack-slot offsets and relocations, retaining registers, immediates, operations and called symbols. The resumed request has the exact reviewed register/spill difference described below; it is not claimed assembly-identical. This is a boundary check, not a claim that the entire resumed evaluator has unchanged cost.
+
+| Boundary / binary | S2 guard → cold call | Candidate guard → cold call | Hot successor instructions |
+| --- | --- | --- | --- |
+| eval_expr_request_from_checkpoint | 0x728f4e, 0x728f56 → 0x72942f | 0x7299ce, 0x7299d6 → 0x729eac | 11 → 11 |
+| resume_eval_request_from_checkpoint | 0x72bb28, 0x72bb30 → 0x72c2d6 | 0x72c740, 0x72c748 → 0x72cefd | 24 → 23 |
+| eval_input_with_terminated_handling | 0x750120, 0x750128 → 0x75066c | 0x751ba0, 0x751ba8 → 0x7520ec | 23 → 23 |
+| resume_inspect_rewrite_rules_with_input (inlined test thunk) | 0x1cc629, 0x1cc632 → 0x1cd557 | 0x1ccbd0, 0x1ccbd9 → 0x1cdaf7 | 11 → 11 |
+
+The first strict comparison rejected `%r15` versus `%rsi` at the resumed guard. The reviewed dataflow is explicit: S2 saves the incoming Session in `%r15` at0x729524; the candidate saves it via `%rbx` at0x729f81/0x72a097, then reloads stack slot0x10 into `%rsi` at0x72c73b immediately before the guard. The guard still reads Session+0x450. The S2 post-guard `mov %r15,%rsi` at0x72bbd1 disappears. Thus the guard-plus-successor region is26→25 instructions, or26→26 when the candidate predecessor reload is included. The candidate does introduce a Session spill/reload in the containing driver; this is disclosed at its addresses, not normalized away or claimed to have identical memory traffic. The driver’s complete instruction/copy accounting is in section5. The corrected checker accepts only this exact observed transformation and retains the first rejection log.
+
+The first two rows use the immutable CGU1 resume binaries; top-level text evaluation uses the immutable CGU1 CLI binaries. The generic rewrite-inspection method is absent from both production measurement binaries and is inlined in the existing release runtime-test thunk (`FnOnce::call_once`, S2 0x1cc2c0, candidate 0x1cc870). Its identity is established by the ordered resume call and `Option<Vec<RewriteRuleInfo>>::from_continuation_expr` call; no new fixture or binary was built. Those two release test binary hashes and complete addressed bodies are recorded in `r6b/cold-boundaries/native-inspection.json`.
+
+No cold-helper instruction executes in the three N/2N Callgrind pairs for any of the five normal resume workloads. These profiles do not exercise a continuation fault. The final typed fault tests and complete oracles provide the separate fault/absence checks. Exact guard, fall-through and cold-call instructions: `r6b/cold-boundaries/comparison.json`; whole containing functions and ELF-resolved helper targets: `production.json` and `native-inspection.json` in that directory.
+
+The same absence check passes for every ordinary profile across all 59 labels. Both top-level success branches, ConvertToValue and ConvertCyclesToValue, were compared. The three identical normalized successor sequences and the exact reviewed resumed-request exception are the limits of this hot-boundary claim.
+
+### 7. Stop-loss counters, deviations and open questions
+
+The runtime attempt counter ends at eight. Attempt 7 moved none of the named gates (the two inlined typed-driver copies remained), so its consecutive no-progress count was one. Attempt 8 removed one of those two copies and left the common outcome assignment, resetting that count to zero. The earlier leaf/caller-place trials and their measured progress are listed in section 5. No attempt was continued past two consecutive no-progress outcomes.
+
+The initial quick console filter looked for `drive_resuming_frames`, missing its inlined body inside `resume_eval_request_from_checkpoint`. The complete saved copy table did contain both copies. The full object/address audit caught the error before acceptance. The filter was corrected, attempts 7/8 followed, and all final source correctness, native-stack and performance gates were rerun under `r6b/`. Intermediate `r6/` binaries and measurements remain available and are not presented as final evidence.
+
+Two watched macro-definition falsifiers intentionally disabled the exact-definition guard. A scratch restore using an older timestamp then reused that weakened binary; its failed drift test remains in the ledger. Updating the scratch source timestamp forced a rebuild, after which all seven controls passed. The earlier quote-token whitespace mismatch was corrected identically in both definitions; strict equality was retained. The final macro, adapter and fixture source hashes equal the watched sources.
+
+An early unqualified `--exact` invocation selected zero tests. It was not accepted; the final fully qualified 48-level test selected and passed one test. The first copied scope-audit script carried a stale R5 hash for the director-owned security document. The R6 entry snapshot established the actual hash, the scratch assertion was corrected, and that document remains byte-identical to its R6 entry. Copied measurement-script paths were inspected and corrected before execution so final evidence is isolated in `r6b/`.
+
+Two early short metadata-only Python invocations in a prior continuation lacked the bounded wrapper; they spawned no child process. All builds, tests, compiler fixtures, profiles, timing runs and subsequent Python analysis commands used the required bounds. The oracle was run as its underlying Cargo commands in both builds, as accepted by the director; test selection, features and assertions were preserved. Native ZeroMQ early returns are counted as skips, not exercised passes.
+
+No git command, network request, sub-agent, commit, dependency change, toolchain change, unsafe addition, mode flip, new public raw API or out-of-scope production edit was made. The old brief bytes and earlier raw evidence are preserved. No documented semantic contract, rejection, Checks flag or fault-absence assertion was weakened. Any remaining performance limitation is stated explicitly in section 5 and the verdict; timing does not override the instruction evidence.
+
+A subsequent session fork ended the first final allocation panel after 105 correct base cells, before an exit record was written. No measurement process remained. Its raw output is preserved under `r6b/perf/alloc-interrupted-1/` and is not used in the final comparison. The complete allocation panel was restarted under a new gate name; the interrupted gate has no invented exit status.
+
+The first root-cost accounting assertion expected two physical Option decoder call sites; the final addressed graph contains one per arm, with a second execution of that same site in Fold. The scratch assertion was corrected to the observed single site, and the failed analysis log is retained. The first cold-boundary comparison rejected a register difference. Its reviewed replacement accepts only the exact Session spill/reload and removed register move documented in section6; it is not a general register-normalization relaxation and changes no production test.
+
+The final whole-program audit found a zero-slope defect: FinalizerAdapter allocates a new 56-byte Box and moves its payload twice once per call-repeat terminal finalization. It is not elided. All 30 raw allocation-count cells now reconcile, including the constant fifth frame adapter, two one-time interning allocations and this rebox. No ninth production repair attempt was made; the brief explicitly allows reporting remaining defects. The final stop-loss counter is zero, not a claim that the remaining costs are accepted. Freeze-helper ABI instructions and Session spill/reload are also reported outside the four accepted categories, and the address accounting keeps its remaining signed residual explicit.
+
+Normal-path profiles do not measure error-only performance or independently isolate every owned S3 frame. The four positive-slope physical frame shapes, the constant PreparedDispatchFrame and its finalizer are disclosed. Complete correctness tests still cover the owned API and fault paths. Objectless Callgrind addresses have equal count maps and net zero delta; their identities and assembly are not invented. Queue capacities and fixed residual byte explanations retain their stated inference limits.
+
+Timing ran last and completed 120 labels in each arm. The host monitor observed no competing CPU process above 0.15 core; GPU occupancy was unavailable from the allowed sysfs interface. All 35 slower labels and the largest ratios are retained as indications, without using the median or timing to override instruction evidence. No further production edit or new measurement run followed the final timing pair.
+
+
+## Director amendment — redispatch 7: the finalizer stops reboxing
+
+The report is exact, and its refusal to claim acceptance is right. One
+defect remains, and this redispatch removes it. Everything else is ruled
+below.
+
+### Accepted as reported
+
+The director reproduces all of this at the gate.
+
+- **The ordinary path.** No label is flagged. All 59 `memcpy` counts equal
+  S2. The three leaves run 110 instructions against S2's 112. Allocations
+  and bytes are equal on all 59. Both causes are named and separately
+  isolated: the 136 B caller-result rebind and the 168 B three-record
+  profile closure.
+- **The stack.** All four limits are below S2, and the 48-level test
+  passes.
+- **The driver and adapter shape.** This covers four things:
+  - the private `Action::DecodeFailure`;
+  - the borrowed adapter;
+  - the input passed by mutable reference;
+  - ending the `Abort` placeholder's lifetime with `mem::forget`.
+
+  The placeholder is acceptable for four reasons:
+  - it has exactly one implementor, which is private;
+  - the debug assertion checks it, and the tests check the postcondition
+    on all four branches;
+  - every path re-initializes `outcome` before the loop continues;
+  - a violation could only leak an `EvalError`. It could never be unsound.
+- **The cold freeze helper's 8 ABI instructions per suspension.** They are
+  the price of outlining frame construction, and R5's stack result rests on
+  that outlining.
+- **The Session spill and reload, once per resume request.** This is a
+  register-allocation response in the containing function, with no source
+  operation behind it. The guard region goes 26 → 25 instructions, or 26
+  with the reload. There is nothing to remove.
+- **The resume accounting.**
+  - The disjoint known-root view explains more than the measured delta in
+    all five workloads; the signed remainder is −127 to −370.
+  - Most of the added cost is the Legacy `Some` wire: its encoder at about
+    1 500 I per resume, plus the +258 I strict decode. That is mode work
+    owed to `Option<Expr>`'s flip.
+  - The second `Arc` and the mixed queue are the design's own items.
+
+### Ruling: remove the `FinalizerAdapter` rebox
+
+`FinalizerAdapter<F>::finish` (`suspension/typed/adapter.rs`) runs
+`Box::new(self.0)`:
+
+- `SlotFinalizer::finish` takes `self: Box<Self>`, while the erased box
+  holds `FinalizerAdapter<F>`.
+- Every typed finalization therefore pays a second 56 B allocation, two
+  payload transfers through a stack temporary, and a free.
+- S2's legacy F0570 used one box. S3's typed F0570 uses two.
+
+This is an S3 regression on call-repeat. It is also a defect in S1 code
+that every typed finalizer would inherit: 53 production finalizers convert
+in S4–S54.
+
+Fix by shape, so that the erased box is the finalizer's own box. One
+candidate:
+
+- a blanket `impl<F: SlotFinalizer> ErasedFinalizer for F`;
+- `Action::Finalize(Box::new(finalizer))`;
+- `SlotFinalizer::finish(self)` called by qualified path, followed by the
+  mode encode.
+
+Any shape with the same result is fine. The constraints:
+
+- The public `SlotFinalizer` signature does not change.
+- Nothing new becomes public, and no `unsafe` is added.
+- `FinalizerAdapter` goes away if the shape no longer needs it.
+
+**The ripple is part of the change.** The host-payload ledger row for
+`Action.Finalize.0` (`dyn ErasedFinalizer`) records a disposition chain
+through `FinalizerAdapter.0`:
+
+- That chain must be re-derived by ownership discovery, not hand-edited.
+- If discovery cannot follow the new shape (for example, a blanket impl
+  over a trait bound), that is a STOP. Report it with the discovery output.
+  Do not write the chain by hand, and do not pick a weaker shape to avoid
+  the analyzer gap without saying so.
+
+The same applies to the following, wherever the change moves them:
+
+- the unknown-attribute, capture and macro inventories;
+- the frame-root pins;
+- the census.
+
+**Acceptance:**
+
+- **Allocation counts.** Call-repeat's whole-program extra allocations fall
+  from 7N + 5 to 7N + 4, in all three pairs. The 56 B allocation at finish is
+  absent, with no replacement allocation anywhere. The other four workloads
+  are unchanged.
+- **The finish path at its addresses.** It executes no allocation, no free
+  beyond the one box the legacy path also frees, and no payload transfer
+  through a stack temporary. Beyond S2's legacy finish, it executes nothing
+  except the encode through the mode.
+- **Section C in full on the final source.** Every gate, verbatim, in both
+  builds, including:
+  - the oracle;
+  - census and compile controls;
+  - every replay the change expires;
+  - the four native-stack limits and the 48-level test;
+  - the full instruction panel (all 59 ordinary labels must stay unflagged,
+    with `memcpy` counts equal to S2's and the leaves at or below S2);
+  - the allocation panel;
+  - resume attribution;
+  - timing, last.
+
+  The final binaries change, so no earlier measurement carries over.
+
+**Stop-loss.** The named gates are the call-repeat allocation intercept and
+the finish path's transfer count. Two attempts that move neither is a stop.
+
+Append a new `## Execution report` after this section. Section 5 may cite
+R6's evidence for anything this change cannot reach, but only after showing
+that the final binaries reproduce it.
