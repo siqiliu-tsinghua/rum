@@ -1000,3 +1000,550 @@ remaining work.
    from base/base, every resume delta attributed); and the workspace run.
    Rerun the focused typed tests after the payload change. Append a new
    `## Execution report` after this section.
+
+## Execution report — redispatch 2: STOP at the historical retention census
+
+The opaque-fault correction and exact four-site ownership assertion are implemented. Formatting, 20 typed tests, 30 compiler-control pairs in both builds, both censuses, ownership 25/25, both production certificate replays and both 50-test suspension oracles pass. Each oracle measured fault-occurrence delta **0**, with **87,920 observations**.
+
+The workspace gate exposes another source-location assertion outside Scope: `crates/rum-stdlib/src/tests/retention_closure/census/tests.rs:190`. It requires three unresolved abandonment method sites at `suspension/core.rs:667,668,684`; the corresponding operations now live at `suspension/core/abandon.rs:42,43,59`. That test file is not one of the permitted retention maintenance files and this is not an exhaustiveness error.
+
+This invokes Disclosure duty: **“make no edit there; STOP and report the file, the line and why.”** The test was not edited. Its subsequent exact frontier total (932) and kind totals have not been reconciled; the location assertion fails first. A director ruling is needed for source-discovery maintenance of that test while retaining its unresolved-boundary assertions. No checker rule or contract was weakened to evade it.
+
+No new implementation or verification command was started after identifying the scope stop. The already-running `cargo test --workspace --no-fail-fast` was allowed to finish. Candidate release builds, candidate error-size measurement and candidate performance remain unrun, so **S2 is not fully gated or complete**.
+
+### 1. Files changed
+
+This is the complete S2 source/inventory change, including the implementation from redispatch 1. The brief itself receives only this appended report. The redispatch-2 source snapshot, exact patch and file descriptions are retained under `.temp/brief-608/redispatch-2/`.
+
+| File | Semantic change |
+| --- | --- |
+| [crates/rum-host/src/model/outcome.rs](/home/remi/dev/rum/crates/rum-host/src/model/outcome.rs) | Map ContinuationSlotMismatch to the existing terminal HostFailureCode::Other outcome. |
+| [crates/rum-runtime/Cargo.toml](/home/remi/dev/rum/crates/rum-runtime/Cargo.toml) | Add the empty test-continuation-slots feature. |
+| [crates/rum-runtime/src/runtime/debug_tools/evaluation_data.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/debug_tools/evaluation_data.rs) | Explicitly propagate the public fault variant from capture rendering. |
+| [crates/rum-runtime/src/runtime/debug_tools/resources/occurrence/suspension.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/debug_tools/resources/occurrence/suspension.rs) | Independently enumerate legacy or mixed queue cells and both typed Arc allocations; visit frame payloads once. |
+| [crates/rum-runtime/src/runtime/debug_tools/test_report/evaluation.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/debug_tools/test_report/evaluation.rs) | Explicit fatal passthrough in capture completion and outcome rendering. |
+| [crates/rum-runtime/src/runtime/kernel_api.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/kernel_api.rs) | Export the typed macro, the feature-gated FaultProbe and the opaque SlotMismatch beside EvalError. |
+| [crates/rum-runtime/src/runtime/mod.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/mod.rs) | Export feature-gated FaultProbe and public SlotMismatch at the runtime facade. |
+| [crates/rum-runtime/src/runtime/model/requests.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/model/requests.rs) | Add SessionRequestError::ContinuationSlotMismatch and its Display arm. |
+| [crates/rum-runtime/src/runtime/session/session_eval.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/session/session_eval.rs) | Project the latched fault at text/inspection resume boundaries before legacy value decoding. |
+| [crates/rum-runtime/src/runtime/session/session_requests.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/session/session_requests.rs) | Project the latched fault at request boundaries and map the new EvalError variant to SessionRequestError. |
+| [crates/rum-runtime/src/runtime/session/session_state.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/session/session_state.rs) | Add EvalError::ContinuationSlotMismatch(SlotMismatch), formatted through read-only static-label accessors. |
+| [crates/rum-runtime/src/runtime/suspension/core.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/core.rs) | Integrate compatible queue owners, typed insertion/layout projection and the typed/legacy driver; extract structural abandonment. |
+| [crates/rum-runtime/src/runtime/suspension/core/abandon.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/core/abandon.rs) | Move the existing abandonment worklist protocol into its own module and share its drain with faults. |
+| [crates/rum-runtime/src/runtime/suspension/core/fault.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/core/fault.rs) | First-fault latch and structural unwind; opaque SlotMismatch with suspension-only production constructor and cfg(test) injection constructor; feature/test-only monotonic FaultProbe. |
+| [crates/rum-runtime/src/runtime/suspension/core/queue.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/core/queue.rs) | New legacy-buffer-preserving queue; widen to real Entry cells only when needed. |
+| [crates/rum-runtime/src/runtime/suspension/error.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/error.rs) | Exhaustiveness arm guards against structural faults entering the legacy error wire; explicitly removed with that wire at R. |
+| [crates/rum-runtime/src/runtime/suspension/output.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/output.rs) | Collect capture boundaries from either queue representation without cloning frame state. |
+| [crates/rum-runtime/src/runtime/suspension/trace.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/trace.rs) | Re-export FaultProbe and SlotMismatch through the existing suspension module boundary. |
+| [crates/rum-runtime/src/runtime/suspension/typed.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/typed.rs) | Remove the module-wide dead-code allowance and connect private driver exports. |
+| [crates/rum-runtime/src/runtime/suspension/typed/action.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/typed/action.rs) | Make sealed actions reachable by the driver; add only a cfg(test)-private malformed-slot constructor. |
+| [crates/rum-runtime/src/runtime/suspension/typed/adapter.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/typed/adapter.rs) | Expose the inner borrowed layout to both accounting models; preserve exact decode and adapter-only token minting. |
+| [crates/rum-runtime/src/runtime/suspension/typed/chain.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/typed/chain.rs) | Implement witnessed chain installation and return the last output type. |
+| [crates/rum-runtime/src/runtime/suspension/typed/channel.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/typed/channel.rs) | Centralize exact completion decoding and static fault kind names; no dual-arm decode. |
+| [crates/rum-runtime/src/runtime/suspension/typed/entry.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/typed/entry.rs) | New private legacy/typed entry, dispatch action and borrowed metadata/accounting view. |
+| [crates/rum-runtime/src/runtime/suspension/typed/resume_token.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/typed/resume_token.rs) | Accept fresh state of the same nominal frame and return ResumeStop<F::Output>. |
+| [crates/rum-runtime/src/runtime/suspension/typed/tests.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/typed/tests.rs) | Connect live route, driver-fault, file and accounting tests. |
+| [crates/rum-runtime/src/runtime/suspension/typed/tests/accounting.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/typed/tests/accounting.rs) | Verify two-Arc layout, real queue cells, maintained/independent totals and below/at/above admission. |
+| [crates/rum-runtime/src/runtime/suspension/typed/tests/driver_faults.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/typed/tests/driver_faults.rs) | Fault matrix across captures/scopes, cleanup, completion, rollback/reset and direct public-variant capture defence. |
+| [crates/rum-runtime/src/runtime/suspension/typed/tests/fault_support.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/typed/tests/fault_support.rs) | Runtime-private wrong-mode/exact-state fixtures, non-running consumer/suffix spies and common restoration assertions. |
+| [crates/rum-runtime/src/runtime/suspension/typed/tests/file_faults.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/typed/tests/file_faults.rs) | Nested memory-file and public-batch rollback under all three injected mismatch kinds. |
+| [crates/rum-runtime/src/runtime/suspension/typed/tests/live.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/typed/tests/live.rs) | Test macro/chain, legacy neighbors, repeat helper, nested Evaluate and both-Arc finalizer release. |
+| [crates/rum-runtime/src/runtime/suspension/typed/witness.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/suspension/typed/witness.rs) | Implement witnessed suspension and the cold actual-Result typed macro. |
+| [crates/rum-runtime/src/runtime/tests/frame_root_trace.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/tests/frame_root_trace.rs) | Keep exact cleanup capability confinement across the extracted abandonment module; require successful exact decode before pop, release before both finalizers, and the shared structural worklist without resume. |
+| [crates/rum-runtime/src/runtime/tests/frame_root_trace/derived_inventory.rs](/home/remi/dev/rum/crates/rum-runtime/src/runtime/tests/frame_root_trace/derived_inventory.rs) | Record SlotMismatch's new FrameRootTrace derive in the sorted closed inventory. |
+| [crates/rum-stdlib/Cargo.toml](/home/remi/dev/rum/crates/rum-stdlib/Cargo.toml) | Enable that feature only on the existing runtime dev-dependency. |
+| [crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/tests.rs](/home/remi/dev/rum/crates/rum-stdlib/src/tests/ownership_graph/host_payload_ledger/tests.rs) | Replace only the three-site count assertion with exact set equality over four discovered constructs; witness loop byte-identical. |
+| [crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payload_ledger.tsv](/home/remi/dev/rum/crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payload_ledger.tsv) | Replay source discovery and locations with existing or director-approved S2 dispositions; full row transitions retained in the replay patches. |
+| [crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payloads.tsv](/home/remi/dev/rum/crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payloads.tsv) | Replay source discovery and locations with existing or director-approved S2 dispositions; full row transitions retained in the replay patches. |
+| [crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv](/home/remi/dev/rum/crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv) | Replay source discovery and locations with existing or director-approved S2 dispositions; full row transitions retained in the replay patches. |
+| [crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv](/home/remi/dev/rum/crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv) | Replay source discovery and locations with existing or director-approved S2 dispositions; full row transitions retained in the replay patches. |
+| [crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv](/home/remi/dev/rum/crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv) | Replay source discovery and locations with existing or director-approved S2 dispositions; full row transitions retained in the replay patches. |
+| [crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_storage.tsv](/home/remi/dev/rum/crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_storage.tsv) | Replay source discovery and locations with existing or director-approved S2 dispositions; full row transitions retained in the replay patches. |
+| [crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv](/home/remi/dev/rum/crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv) | Replay all 68 dependency fingerprints; preserve every contract field and strength. |
+| [crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv](/home/remi/dev/rum/crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv) | Replay exactly the four emitted default/no-default C01/C02 certificate cells; preserve statuses, bodies, preconditions, strengths and exclusions. |
+| [crates/rum-stdlib/tests/suspension_oracle.rs](/home/remi/dev/rum/crates/rum-stdlib/tests/suspension_oracle.rs) | Add the serial last aggregate fault-occurrence assertion. |
+| [crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs](/home/remi/dev/rum/crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs) | Select the S2 typing receipt while continuing to refuse preflip. |
+| [crates/rum-stdlib/tests/suspension_oracle/inventory/typed-slot-stages.tsv](/home/remi/dev/rum/crates/rum-stdlib/tests/suspension_oracle/inventory/typed-slot-stages.tsv) | Record S2 mechanism routes, unchanged observed T0010, and four discovered test-support legacy uses X0036-X0039. |
+| [crates/rum-stdlib/tests/suspension_oracle/support/drive.rs](/home/remi/dev/rum/crates/rum-stdlib/tests/suspension_oracle/support/drive.rs) | Unconditional fault observer around every shared drive, independent of Checks. |
+| [crates/rum-stdlib/tests/suspension_oracle/support/faults.rs](/home/remi/dev/rum/crates/rum-stdlib/tests/suspension_oracle/support/faults.rs) | New unconditional guards and retained probe observations for the per-build aggregate assertion. |
+| [crates/rum-stdlib/tests/suspension_oracle/support/lifecycle.rs](/home/remi/dev/rum/crates/rum-stdlib/tests/suspension_oracle/support/lifecycle.rs) | Check before session replacement/reset and retain the old probe through lifecycle completion. |
+| [crates/rum-stdlib/tests/suspension_oracle/support/mod.rs](/home/remi/dev/rum/crates/rum-stdlib/tests/suspension_oracle/support/mod.rs) | Wire the fault-observer support module. |
+| [crates/rum-stdlib/tests/suspension_oracle/support/session.rs](/home/remi/dev/rum/crates/rum-stdlib/tests/suspension_oracle/support/session.rs) | Observe initialization, retirement, fresh requests and input-queue controls. |
+| [crates/rum-stdlib/tests/typed_slot_census.rs](/home/remi/dev/rum/crates/rum-stdlib/tests/typed_slot_census.rs) | Connect route receipts, S2 preflip refusal and scratch-copy falsifiers under brief-608. |
+| [crates/rum-stdlib/tests/typed_slot_census/classify.rs](/home/remi/dev/rum/crates/rum-stdlib/tests/typed_slot_census/classify.rs) | Keep codec population metadata so private injection carriers are reported separately from production registry entries. |
+| [crates/rum-stdlib/tests/typed_slot_census/receipts.rs](/home/remi/dev/rum/crates/rum-stdlib/tests/typed_slot_census/receipts.rs) | Preserve exact production/test-only counts and production mode checks; identify output as S2. |
+| [crates/rum-stdlib/tests/typed_slot_census/reporting.rs](/home/remi/dev/rum/crates/rum-stdlib/tests/typed_slot_census/reporting.rs) | Write under brief-608 and include codec population in discovery output. |
+| [crates/rum-stdlib/tests/typed_slot_census/routes.rs](/home/remi/dev/rum/crates/rum-stdlib/tests/typed_slot_census/routes.rs) | New live source/witness checks for six S2 routes, unchanged family ownership of four remaining routes and T0010 observation. |
+| [crates/rum-stdlib/tests/typed_slot_compile_controls.rs](/home/remi/dev/rum/crates/rum-stdlib/tests/typed_slot_compile_controls.rs) | Retain 22 S1 pairs, add seven S2 pairs and the external opaque-payload pair; require E0451 with both exact privacy spans in each feature build. |
+
+The only compiler-required exhaustive arm is in `suspension/error.rs`: a structural fault cannot enter the legacy error wire; the invariant guard now explicitly says that this wire and guard disappear at R. It is protected by the opaque payload. Other capture, request and host arms are in explicitly scoped files. `SessionRequestError::ContinuationSlotMismatch { expected, got }` keeps its named static-string output shape.
+
+`SlotMismatch` has private fields and public `expected()` / `got()` accessors. Its production `new` is restricted to `runtime::suspension` and is called by DriverFault projection; the separate injection constructor is `cfg(test)`. The type is exported at both EvalError export surfaces (runtime/crate root and kernel_api). The positive external control names both exports and reads both labels; the negative cannot initialize either private field.
+
+The ownership witness file changed only the authorized assertion. Its prefix, unchanged witness loop and remainder are byte-identical to the entry snapshot. The set contains the full discovered identities of Action.Evaluate.next, Action.Finalize.0, FrameChain.frames and Entry.Typed.0.
+
+Split assessment: the driver split has begun with core/queue.rs, typed/entry.rs, core/fault.rs and core/abandon.rs. Core retains owner lifecycle, insertion and resumption; it is 27,551 characters, below the 35k limit. All new modules are under 20k. The live-route test is 11.6k, a cohesive route matrix. The existing compiler-control test is 21,012 characters, within the test-file warning band; future separation is fixture definitions versus diagnostic harness. Existing larger files received bounded changes: session_requests.rs (34,742; future request handlers versus error conversion), session_state.rs (24,330; state types versus EvalError), error.rs (26,604; legacy encode/decode, removed at R), host outcome.rs (29,650; error conversion versus outcome rendering). The 33,350-character frame-root test can separate protocol source checks from inventory checks later. Its 175,662-character closed derive inventory is existing data debt; one sorted SlotMismatch entry was added. No unrelated split or TODO edit was made.
+
+### 2. Driver, routes, fault path and probe
+
+Legacy-only owners retain VecDeque cells containing one Arc<dyn SuspensionFrame>; a typed insertion widens that owner to private Entry cells. Queue representation does not choose transport. Legacy accepts Value only; typed transport is its type's sealed associated mode, with no dual-arm decoder or per-frame override.
+
+I0001 borrows and matches the actual producer Result once and constructs the frame only for InputRequired. I0002 checks the first input, adjacency and last output. I0003 uses the adapter-minted token and fresh state of the same nominal frame. I0007 requires an Expr-input successor with the parent's output. I0008 releases both frame Arcs before the pure finalizer. I0009 seeds a Value string, places nested owners before the unrun suffix and exactly decodes completion. I0004/I0005/I0006/I0010 remain S5/S18/S14/S24; T0010 observes the unchanged CLI mapping. No production frame was typed and no codec was flipped.
+
+The driver resumes an Arc clone while the queue retains the consumer; it never clones frame state. A decode failure therefore leaves the consumer at the active front. The first private DriverFault is latched, active and nested owners enter the existing accounted abandonment worklist, pending handles are cleared, output rolls back, and structural abandonment restores scopes and loaders. Approved WithCleanup evaluation is the only guest cleanup transition; its nested input owner is abandoned before the saved suffix. Cleanup failures cannot replace the first fault. Only after unwind does the boundary project SlotMismatch; it never enters the frame-completion loop. EvaluationData and TestReport also propagate a direct internal public-variant return.
+
+FaultProbe exists only in runtime tests or the test-continuation-slots feature. Only creation of the first private fault increments it. Retained observers survive reset, rollback and session replacement. Oracle checks are independent of Checks flags, run before lifecycle reset, and retain observations for the final aggregate. Both measured oracle deltas are zero. Release feature exclusion is implemented but its candidate feature trees remain unmeasured because of the stop.
+
+### 3. Fault-injection matrix
+
+All injections are runtime-unit-test-only. The three mismatch kinds are Value-for-State, State-for-Value and the wrong exact State variant.
+
+| Cases | Assertions exercised |
+| --- | --- |
+| EvaluationData, TestReport/TestCreate, Catch, Check, Quiet, Trace, Block, iterator, OptionsPattern: 9 × 3 | Exact first fault; one occurrence; rejected consumer and two suffix sentinels never resume; all abandon in order; print/message/trace rollback and visibility; restored scopes/loaders/handles and outer variables; fresh 1+1 = 2. |
+| WithCleanup: Abort, cleanup InputString, different direct internal fault | First fault preserved; one occurrence; separately nested owner abandoned before consumer/suffix; cleanup runs once; cleanup post-input suffix does not run; fresh request succeeds. |
+| Completion: all 3 kinds | Exact completion decode; empty owner/worklist/handles; rollback retains probe count; old probe survives replacement; fresh request. Expr is the public boundary and private StateBool exercises exact State completion. |
+| Nested memory files: 3 kinds × Get/public batch routes | Both loader levels roll back; definitions and Block scope restore; cleanup output retained; sentinel abandonment and one occurrence; no outstanding input; fresh request. |
+| Direct internal public fault under EvaluationData and TestReport | Fatal passthrough without a guest failure value; no pending owner; fresh request; probe remains zero because no private decode fault was created. |
+
+The director accepted TestCreate/TestReport as the correct rum surface in place of the nonexistent VerificationTest. No compatibility alias was added. Cases without a queued consumer do not claim a consumer assertion.
+
+### 4. Accounting
+
+Typed charge = outer Arc header + adapter inline size + inner Arc header + F inline size; legacy retains its single-Arc layout. Capacity uses actual legacy or mixed cell size. The independent model enumerates both owners without calling the maintained helper; frame payloads are visited once. Typed projected admission is available for S18 without converting its route.
+
+Below/at/above admission tests use the real pre-existing InputString queue. Widening its four cells and adding a zero-sized typed frame costs exactly 72 bytes: 40 for both Arc layouts and 32 for wider cells. Maintained/independent reconciliation also covers nested Evaluate, finalization, capture/scope faults, cleanup input, reset and nested/public file rollback. Legacy per-resume allocation/byte equality has not yet been measured on the candidate.
+
+### 5. Compiler controls and census
+
+Both builds pass 30 positive / 30 intended rejections: all 22 S1 pairs, seven S2 pairs and the opaque-fault pair. The seven S2 controls retain input E0271 and output-return / chain-last-output / token-fresh-type / deferred-final-output / generic-frame / closure-return E0308. Positives compile first; each negative has one invalid construction and pins its diagnostic category and source location.
+
+The new external pair reads both public accessors in its positive fixture. Its negative gets **E0451** twice at `src/lib.rs:124:95-114` (expected) and `src/lib.rs:124:115-124` (got). Both complete primary spans are checked and retained with Cargo JSON in `.temp/brief-608/compile-controls/{default,no-default}/results.json`.
+
+The final census output is:
+
+
+```text
+S2 CENSUS production frames=553 finalizers=54 implementations=607 typed=0 macros=589 result=345 insert=244
+S2 CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+S2 CENSUS test-support frames=5 finalizers=0 implementations=15 typed=10 macros=8 result=3 insert=5
+S2 PARTITION implementations=623 macros=600
+S2 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; production evaluation remains untyped
+S2 ROUTE I0001 mechanism=rum_runtime::runtime::suspension::typed::witness::<SlotWitness < I > as inherent>::suspend witness=macro_is_cold_and_a_witnessed_chain_returns_its_last_output; production family frames remain untyped
+S2 ROUTE I0002 mechanism=rum_runtime::runtime::suspension::typed::chain::<FrameChain < I , O > as inherent>::suspend witness=macro_is_cold_and_a_witnessed_chain_returns_its_last_output; production family frames remain untyped
+S2 ROUTE I0003 mechanism=rum_runtime::runtime::suspension::typed::resume_token::<ContinueToken < '_ , F > as inherent>::suspend witness=repeat_token_freezes_fresh_state_and_keeps_the_deferred_output_type; production family frames remain untyped
+S2 ROUTE I0007 mechanism=rum_runtime::runtime::suspension::typed::action::<TypedAction < O > as inherent>::evaluate witness=evaluate_successor_and_nested_owner_precede_the_unrun_suffix; production family frames remain untyped
+S2 ROUTE I0008 mechanism=rum_runtime::runtime::suspension::typed::action::<TypedAction < O > as inherent>::finalize witness=driver_drops_both_owning_arcs_before_running_the_finalizer; production family frames remain untyped
+S2 ROUTE I0009 mechanism=rum_runtime::runtime::suspension::core::<Session as inherent>::drive_resuming_frames witness=completion_exact_decode_and_probe_survive_rollback_and_replacement; production family frames remain untyped
+S2 ROUTE I0004 remains untyped; family=S5
+S2 ROUTE I0005 remains untyped; family=S18
+S2 ROUTE I0006 remains untyped; family=S14
+S2 ROUTE I0010 remains untyped; family=S24
+S2 T0010 observed unchanged: public CLI Result mapping; no slot conversion
+```
+
+Both frame-removal and test-guard-removal falsifiers reject as intended in both builds. Their child FAILED totals below are intentional. Preflip still refuses without S54; private test carriers are not production registry entries. X0036–X0039 record four actually discovered compatibility-fixture uses; no production receipt was removed.
+
+### 6. Gates, sizes, measurements and maintenance evidence
+
+Commands ran serially through scripts/run-bounded.py with CARGO_BUILD_JOBS=1, RUST_TEST_THREADS=1, CARGO_NET_OFFLINE=true and the brief-608 TMPDIR. Ordinary gate bounds were 900s, workspace 3600s and the oracle 1500s per build (3030s envelope for the mandatory two-build script). The script uses its own existing scratch directory; its per-build logs were copied into this brief's scratch. Workspace additionally used --nocapture and RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1, which allows a skip only after actual loopback PermissionDenied. The existing script/test-owned scratch locations were not altered.
+
+`cargo fmt --check` exited 0 with empty output. All amended-run test-result totals follow verbatim, including repaired failures and the ongoing-at-stop workspace command's final result. Individual oracle log copies duplicate the script output and are not repeated a third time. Earlier redispatch-1 totals remain in that report above.
+
+`census-default-1.log` (exit 0)
+```text
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.21s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.77s
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 138.89s
+```
+
+`census-no-default-1.log` (exit 0)
+```text
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.83s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.62s
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 140.96s
+```
+
+`certificates-default-1.log` (exit 101)
+```text
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1144 filtered out; finished in 18.27s
+```
+
+`certificates-default-2.log` (exit 0)
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1144 filtered out; finished in 18.34s
+```
+
+`certificates-no-default-1.log` (exit 101)
+```text
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1138 filtered out; finished in 18.15s
+```
+
+`certificates-no-default-2.log` (exit 0)
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1138 filtered out; finished in 17.89s
+```
+
+`compile-controls-default-1.log` (exit 0)
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 47.95s
+```
+
+`compile-controls-default-2.log` (exit 0)
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 24.03s
+```
+
+`compile-controls-default-3.log` (exit 0)
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 25.28s
+```
+
+`compile-controls-no-default-1.log` (exit 0)
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 24.18s
+```
+
+`compile-controls-no-default-2.log` (exit 0)
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 24.58s
+```
+
+`frame-root-1.log` (exit 0)
+```text
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1157 filtered out; finished in 1.24s
+```
+
+`oracle-both-1.log` (exit 0)
+```text
+test result: ok. 50 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.43s
+test result: ok. 50 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 31.32s
+```
+
+`ownership-discovery-1.log` (exit 0)
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1144 filtered out; finished in 5.71s
+```
+
+`ownership-gate-1.log` (exit 0)
+```text
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 1120 filtered out; finished in 69.13s
+```
+
+`runtime-all-1.log` (exit 101)
+```text
+test result: FAILED. 1168 passed; 1 failed; 3 ignored; 0 measured; 0 filtered out; finished in 46.02s
+```
+
+`runtime-typed-1.log` (exit 0)
+```text
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 1152 filtered out; finished in 0.40s
+```
+
+`runtime-typed-2.log` (exit 0)
+```text
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 1152 filtered out; finished in 0.42s
+```
+
+`workspace-1.log` (exit 101)
+```text
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.90s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.64s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 73.07s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.35s
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.06s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+test result: ok. 151 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.71s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.36s
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+test result: ok. 1169 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 28.60s
+test result: FAILED. 1091 passed; 1 failed; 53 ignored; 0 measured; 0 filtered out; finished in 1205.44s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+test result: ok. 47 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.06s
+test result: ok. 69 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 23.69s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s
+test result: ok. 100 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.98s
+test result: ok. 71 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.56s
+test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.15s
+test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.44s
+test result: ok. 50 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.26s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.80s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.73s
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 139.57s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 27.14s
+test result: ok. 193 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.72s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.44s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.68s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+
+The first full runtime run had one source-layout assertion failure; the scoped frame-root invariant test was updated without weakening its ownership checks. It then passed 15/15, and workspace runtime passed 1169 with 3 ignored. Both first certificate runs earned all marks with zero rejections, wrote fresh cells and then rejected stale inventory certificates; both replay runs passed. These are disclosed failures, not omitted attempts.
+
+Measured oracle observations:
+
+`default`
+```text
+test zz_continuation_fault_occurrences ... continuation-slot fault-occurrence delta=0; observations=87920
+```
+
+`no-default`
+```text
+test zz_continuation_fault_occurrences ... continuation-slot fault-occurrence delta=0; observations=87920
+```
+
+The scope-stopping failure, verbatim:
+```text
+thread 'tests::retention_closure::census::tests::production_rejection_census_is_complete' panicked at crates/rum-stdlib/src/tests/retention_closure/census/tests.rs:190:9:
+assertion failed: options.rejected.iter().any(|row|
+        row.kind == Kind::RET002 &&
+                row.site.file.ends_with("suspension/core.rs") &&
+            row.site.start.0 == line)
+FAILED
+```
+
+Native ZeroMQ: **9 skipped** on denied loopback access. Rust's aggregate lists these early-return cases as passed; they are reported here as skips, not native transport passes.
+```text
+test zeromq::tests::native::basic::native_zeromq_backend_echoes_heartbeat_over_loopback_req_socket ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::basic::native_zeromq_backend_round_trips_execute_over_loopback_sockets ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::control::native_zeromq_backend_frontend_style_control_interrupt_round_trip ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::control::native_zeromq_backend_shutdown_stops_shell_work_and_reports_pending_shell_messages ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::execute::native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_metadata ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::session_flow::native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts_and_shutdown ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::stdin::native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_reply ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::signed::native_zeromq_backend_rejects_tampered_signed_requests_end_to_end ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::signed::native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+```
+
+Base error sizes (previously measured from the untouched release rlibs):
+```text
+size_of::<EvalError>() = 136
+size_of::<Result<Expr, EvalError>>() = 136
+```
+
+Candidate sizes are unmeasured. No no-growth verdict is claimed. The four original, pre-edit, one-codegen-unit base binaries remain available:
+
+| Binary | SHA-256 |
+| --- | --- |
+| `.temp/brief-608/base/rum-cli` | `76efb7c611f510a4b46c8d181d77ec37c5fe7ef057c2572ce05978e7a795ecf5` |
+| `.temp/brief-608/base/rum-cli-alloc` | `0e9c806bab777893c83e4e7cf1411d977ac63bb77c64374af0164e40a51e56a4` |
+| `.temp/brief-608/base/resume` | `be2739b2e4a62ff412500e01d7edb74e362726030796b90c722167ac639eb131` |
+| `.temp/brief-608/base/resume-alloc` | `16aaeffd58bcf727704bd829db9ad7bc3219da67a6ccc78e87bb0b44431b0fb9` |
+The 64 baseline correctness checks, 128 allocation N/2N cells and four instruction samples of 128 cells were completed before source edits. Four instruction samples provide the two base/base floor pairs. Raw outputs, commands and slopes remain in `.temp/brief-608/perf/`; the earlier execution report above prints every base allocation/instruction row. No baseline measurement was rerun during this redispatch. The reusable public HostSession harness still drives actual Table, Do-chain, call-repeat, WithCleanup and Fold resumes.
+
+| Required candidate evidence | Status |
+| --- | --- |
+| Four one-unit release builds and feature trees | Not run after scope stop. |
+| EvalError and Result<Expr, EvalError> size fixture | Not run; candidate 136-byte condition unverified. |
+| 64 result checks and allocation/byte slopes | Not run; no equality claim. |
+| Two paired instruction samples and per-resume attribution | Not run; no regression verdict. |
+| Full core-language-microbench base/candidate timing panel | Not run; no timing rows. |
+
+Scratch helpers for those remaining commands were prepared before the stop but not executed: build-candidate.py, error-sizes.py and timing.py in redispatch-2. The original perf/run.py and perf/compare.py remain available. No process-aborting probe was run.
+
+Ownership replay and actual witness output:
+
+
+```text
+test tests::ownership_graph::host_payload_ledger::production_host_payload_ledger_is_complete_and_attributed ... HOST PAYLOAD LEDGER: 79 rows; 11 storage edges (3 Declared, 8 Unbounded); 68 PublicInput
+checks 1/2/3: complete, no stale entries, field-specific expression attribution verified
+external_implementation_coverage: unresolved for every Unbounded entry
+test tests::ownership_graph::host_payload_ledger::tests::adapter_production_witnesses_are_computed ... ADAPTER_WITNESS	UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/action.rs	19	15	rum_runtime::runtime::suspension::typed::action::Action.Evaluate.next/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame	rum_runtime::runtime::suspension::typed::adapter::ErasedFrame => rum_runtime::runtime::suspension::typed::adapter::TypedAdapter.inner (impl at crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:36:1) => rum_runtime::runtime::suspension::typed::TypedFrame (public bound; no in-tree instantiation exists yet)
+ADAPTER_WITNESS	UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/action.rs	21	14	rum_runtime::runtime::suspension::typed::action::Action.Finalize.0/std::boxed::Box[Own]/arg0: opaque owned payload dyn ErasedFinalizer	rum_runtime::runtime::suspension::typed::action::ErasedFinalizer => rum_runtime::runtime::suspension::typed::adapter::FinalizerAdapter.0 (impl at crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:82:1) => rum_runtime::runtime::suspension::typed::SlotFinalizer (public bound; no in-tree instantiation exists yet)
+ADAPTER_WITNESS	UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/chain.rs	9	13	rum_runtime::runtime::suspension::typed::chain::FrameChain.frames/std::vec::Vec[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame	rum_runtime::runtime::suspension::typed::adapter::ErasedFrame => rum_runtime::runtime::suspension::typed::adapter::TypedAdapter.inner (impl at crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:36:1) => rum_runtime::runtime::suspension::typed::TypedFrame (public bound; no in-tree instantiation exists yet)
+ADAPTER_WITNESS	UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	14	11	rum_runtime::runtime::suspension::typed::entry::Entry.Typed.0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame	rum_runtime::runtime::suspension::typed::adapter::ErasedFrame => rum_runtime::runtime::suspension::typed::adapter::TypedAdapter.inner (impl at crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:36:1) => rum_runtime::runtime::suspension::typed::TypedFrame (public bound; no in-tree instantiation exists yet)
+test tests::ownership_graph::production_inventory_is_exact ... EXACT INVENTORY self-reaching types: 59 rows
+EXACT INVENTORY UnknownHostPayload: 79 rows
+EXACT INVENTORY UnknownConstruct: 7712 rows
+```
+
+
+```text
+unknown_attributes.tsv: 1513 -> 1514 lines
+unknown_captures.tsv: 2955 -> 2955 lines
+unknown_macros.tsv: 3149 -> 3149 lines
+unknown_storage.tsv: 94 -> 94 lines
+host_payloads.tsv: 79 -> 79 lines
+self_reaching.tsv: 59 -> 59 lines
+host_payload_ledger.tsv: 80 -> 80 lines
+```
+
+Redispatch 2 preserved all 79 host-payload identities and all disposition/witness cells. Its one added UnknownConstruct is the SlotMismatch derive; other differences are actual source positions. Combined S2 discovery is 79 host payloads, 7712 UnknownConstruct rows and 59 self-reaching types. The approved redispatch-1 queue/insertion transitions retain Unbounded Expr-destruction debt and unresolved external coverage; old ledger rows 56–58 remain. No new host payload lacks an approved disposition.
+
+Every ownership row transition is disclosed in the two replay patches:
+- [.temp/brief-608/redispatch-1/ownership-replay.patch](/home/remi/dev/rum/.temp/brief-608/redispatch-1/ownership-replay.patch)
+- [.temp/brief-608/redispatch-2/ownership-replay.patch](/home/remi/dev/rum/.temp/brief-608/redispatch-2/ownership-replay.patch)
+All 68 contract fingerprint changes are recorded without altering the first 18 fields:
+```text
+id	before	after
+B01	fnv1a64:7ada97087bc2eb12	fnv1a64:2762acca6234859c
+B02	fnv1a64:4f8cfbade00a45d3	fnv1a64:05dedfbde4406b55
+B03	fnv1a64:02d11fe622095a20	fnv1a64:c613714abc98e842
+B04	fnv1a64:9cfd4de02b06cffa	fnv1a64:deefdade6d385a14
+B05	fnv1a64:3d5f6a0175207bbf	fnv1a64:a632ca753bb166f9
+B06	fnv1a64:68354a189c4a2cb6	fnv1a64:465d5b4a51ea8e98
+B07	fnv1a64:3b744f79abcbb9cf	fnv1a64:bec4f1db53e5b049
+B08	fnv1a64:812f75f1ee8b184c	fnv1a64:8596ba743f3d80e6
+B09	fnv1a64:5f698287e1a5d5be	fnv1a64:fab1ed723a57fcd0
+B10	fnv1a64:fcb04cb114deeba1	fnv1a64:2740ee773bb1c57b
+B11	fnv1a64:5e54ff3d44faf5fa	fnv1a64:a0478c3b872c8014
+B12	fnv1a64:1e760283bdae6abe	fnv1a64:b9be6d6e166091d0
+I01	fnv1a64:58bc8205e87ae192	fnv1a64:054497c7ceec7c1c
+I02	fnv1a64:94a0e7956d5703bf	fnv1a64:fd74480933e7eef9
+I03	fnv1a64:0f3630bae623967e	fnv1a64:49509a594e34e490
+I04	fnv1a64:2fe01dbbc2e15bf3	fnv1a64:e8465b54c60dbf75
+P01	fnv1a64:a3f7a12ceca0ecd6	fnv1a64:3d980a7408b95238
+P02	fnv1a64:d17d0bd726333711	fnv1a64:52a9ab73419a3c6b
+P03	fnv1a64:1fb7f132ffd071b8	fnv1a64:a2502fee344e972a
+P04	fnv1a64:446819c364b361d3	fnv1a64:fab9fdd368e98755
+P05	fnv1a64:83d166cefaa79082	fnv1a64:d1103a6554610c8c
+P06	fnv1a64:6ef5275449de043e	fnv1a64:0a3d923ea2902b50
+P070	fnv1a64:a942c39628537e3e	fnv1a64:448b2e808105a550
+P080	fnv1a64:07f91d9239b48a61	fnv1a64:3ec096221ca40b3b
+P090	fnv1a64:dc03d72fd558a493	fnv1a64:8985e4762056ff15
+P100	fnv1a64:acd0d826b38999ca	fnv1a64:c1eaea7d774c66e4
+P110	fnv1a64:73636a8f5462b399	fnv1a64:1bebf6c452e014e3
+P120	fnv1a64:d032459e337b3aec	fnv1a64:02fba299a1c7a486
+P130	fnv1a64:df41a8d6da7f93cf	fnv1a64:62924b3882998a49
+P140	fnv1a64:f985b65b1757f78b	fnv1a64:acf9a84971a3d15d
+P150	fnv1a64:833ea4f8f66042b3	fnv1a64:4475b95bb2c62435
+P071	fnv1a64:210addf8ae1248ef	fnv1a64:9338971a420e0369
+P081	fnv1a64:2ea814a8d79a40de	fnv1a64:e97255fbe9b45af0
+P091	fnv1a64:75a89ccaab950996	fnv1a64:6f840adc2356c1f8
+P101	fnv1a64:6b665b5c89c65099	fnv1a64:13eee7918843b1e3
+P111	fnv1a64:33888cb37d7b3b8e	fnv1a64:ee9a9e79b957bb20
+P121	fnv1a64:eb36c5ea4fc74285	fnv1a64:219326fb63c78347
+P131	fnv1a64:3aa77046615af17a	fnv1a64:7c99fd44a38c7b94
+P141	fnv1a64:f4cf17ea4589ac76	fnv1a64:128a302b25614858
+P151	fnv1a64:69d64ea9445f7d2c	fnv1a64:f5dbd1ca1e6e9ac6
+B13	fnv1a64:f645dda1cce6e8b6	fnv1a64:d46deed382874a98
+R01	fnv1a64:06969837ac013363	fnv1a64:5773a351b8ebc6e5
+R02	fnv1a64:45d2821f7b89a678	fnv1a64:36713fc1d1264aea
+R03	fnv1a64:63787705e7e53c57	fnv1a64:5c2ff0785c7b51e1
+R040	fnv1a64:ff1ab67c57a9af83	fnv1a64:07474a8f04dd5885
+R050	fnv1a64:608ceea73aab4062	fnv1a64:bbbf3e0544aa18ec
+R060	fnv1a64:0502f106e0ac7b5b	fnv1a64:b176295276086b2d
+R070	fnv1a64:9715dcc2b93bffde	fnv1a64:51e01e15cb5619f0
+R080	fnv1a64:f6e486ae926624f3	fnv1a64:af4ac44795928875
+R090	fnv1a64:dc2b8b37e76eea8a	fnv1a64:f3970a120e1b32a4
+R100	fnv1a64:c7f6c438cbdf04a0	fnv1a64:8b39159d666e92c2
+R110	fnv1a64:285b2ad7a2e14ae9	fnv1a64:aa62ff0e9a0c09f3
+R041	fnv1a64:dc7f40cbe40ea7b6	fnv1a64:baa751fd99af0998
+R051	fnv1a64:6a2605456286b113	fnv1a64:17a8128bad850b95
+R061	fnv1a64:856ca3a65d017f3c	fnv1a64:e9853b5a0f617c96
+R071	fnv1a64:52bf5b832d6daf0d	fnv1a64:95acc10af451045f
+R081	fnv1a64:68bb417b4f356eca	fnv1a64:7dd553d212f83be4
+R091	fnv1a64:843bfbc9ef924fcb	fnv1a64:7498f0c7dbf5d39d
+R101	fnv1a64:cf04a6f439b0b41b	fnv1a64:c8320d48fb6d6ded
+R111	fnv1a64:819e4394f206cb94	fnv1a64:3d4902991701d7de
+R12	fnv1a64:13bf7d9beb6ea2d4	fnv1a64:d12c6648cf30221e
+R13	fnv1a64:de664c72d43f4a90	fnv1a64:f12439cbd985d432
+R14	fnv1a64:c728e69c903a59ca	fnv1a64:dc42f8f353fd26e4
+R15	fnv1a64:2ef558386079c4a6	fnv1a64:f5bd7211e095a408
+O010	fnv1a64:2190c40298947f1c	fnv1a64:1de605b4d5860476
+O0200	fnv1a64:f44d582f660f1d8b	fnv1a64:a7c14a1dc05af75d
+O011	fnv1a64:478bad8eee3e3fdb	fnv1a64:f3fee5da839a2fad
+O0210	fnv1a64:158a42fb699f0fb4	fnv1a64:66ad5f3f573896fe
+```
+
+Both certificate builds earned two C01 concrete instances, one nongeneric C02 and four separate LeaseProbe marks, with zero rejections. Their actual acceptance outputs:
+`hash=true`
+```text
+body	instance	rejections
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::Unarmed;R=rum_stdlib::option_consumers::OptionConsumer;hash=true	0
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=rum_stdlib::option_consumers::OptionConsumer;hash=true	0
+C02	rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr;M=runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=none (nongeneric C02);hash=true	0
+LeaseProbe538::probe	sealed modes	0
+LeaseProbe538::start	sealed modes	0
+LeaseProbe538::drive	sealed modes	0
+LeaseProbe538::resume	sealed modes	0
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+```
+
+`hash=false`
+```text
+body	instance	rejections
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::Unarmed;R=rum_stdlib::option_consumers::OptionConsumer;hash=false	0
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=rum_stdlib::option_consumers::OptionConsumer;hash=false	0
+C02	rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr;M=runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=none (nongeneric C02);hash=false	0
+LeaseProbe538::probe	sealed modes	0
+LeaseProbe538::start	sealed modes	0
+LeaseProbe538::drive	sealed modes	0
+LeaseProbe538::resume	sealed modes	0
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+```
+
+Only four emitted certificate cells were replayed; all other columns remain unchanged. Full old/new cells and the exact inventory patch are retained:
+- [.temp/brief-608/redispatch-2/certificate-diff.json](/home/remi/dev/rum/.temp/brief-608/redispatch-2/certificate-diff.json)
+- [.temp/brief-608/redispatch-2/certificate-replay.patch](/home/remi/dev/rum/.temp/brief-608/redispatch-2/certificate-replay.patch)
+
+### 7. Stop-loss, deviations and next decision
+
+The source-location failure at retention_closure/census/tests.rs:190 is outside Scope. Its old locations and subsequent exact historical frontier counts need an authorized discovery replay, preserving all unresolved boundary checks and without changing the checker. That file was not edited. No new gate or implementation change began after the stop; the already-running no-fail-fast workspace command completed naturally.
+
+No-progress stop-loss count is 0. The opaque payload compiled immediately, all 30 compiler controls passed, the runtime source-layout failure was repaired and the full runtime suite passed, ownership moved to 25/25, certificate builds earned/replayed their marks, and both oracle deltas were measured at zero. This is a scope stop, not a stalled two-attempt loop.
+
+No git command, network request, new unsafe, production-frame conversion, dependency/version change, workspace lockfile/toolchain change or out-of-scope source edit occurred. The prior ps read and TestCreate substitution were explicitly accepted by the director. Runtime's scoped source-layout invariant maintenance and the explicit native skip allowance are disclosed above. The tree is left uncommitted.
+
+Remaining work after a scope ruling: reconcile the historical retention census from actual discovery; rerun affected final-tree gates and required maintenance; build/hash the four candidates, prove error-size equality and release feature exclusion, then finish the recorded-base allocation, instruction and full timing comparisons. Bases, raw floor samples and the reusable resume harness are preserved. Checkpoint: `.temp/brief-608/PROGRESS.md`.
+
+## Director amendment — redispatch 3
+
+The stop was correct and the omission was mine: this census pins source
+sites in the suspension driver, and every brief that has moved that driver
+has had to maintain it (brief-595 moved the same three pins and grew the
+frontier by its five receivers, `28817e26`).
+
+1. **Scope gains `crates/rum-stdlib/src/tests/retention_closure/census/tests.rs`**
+   for discovery maintenance of `production_rejection_census_is_complete`
+   only:
+   - The three guest-form abandonment pins follow their code: same kind
+     (`RET002`), same three method sites (take/install the paused
+     environment, capture it for cleanup), new file and lines
+     (`suspension/core/abandon.rs`). Update the comment to say where they
+     live now.
+   - The exact total (932) and the kind totals are re-derived from
+     discovery on the final tree. Classify every difference before you write
+     a number: each removed row must pair with an added row for the same
+     operation moved by the split (old site → new site), and each unpaired
+     added row must name the S2 code that introduced it (driver, queue,
+     entry dispatch, fault latch, abandonment drain). An unpaired removed
+     row, or an added row you cannot attribute, is a STOP. Record the
+     classified diff under `.temp/brief-608/` and write a comment beside the
+     new totals in the style of the brief-595 comment above it.
+   - Every unresolved-boundary assertion stays; no row is granted coverage;
+     the checker, the regions and `local::verify_promotions` do not change.
+     The `ACCEPTANCE_BASELINE` print stays as it is.
+
+2. **Then finish the brief** exactly as redispatch 2's item 4 lists, on the
+   final tree: rerun the census and certificate gates touched by this
+   change, the workspace run, the candidate release builds and hashes,
+   feature trees, error sizes, and the candidate halves of the ordinary
+   panel and the resume harness against your recorded bases. Append a new
+   `## Execution report` after this section.
