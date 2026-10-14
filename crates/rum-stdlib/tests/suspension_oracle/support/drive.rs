@@ -10,6 +10,9 @@ pub struct Run {
 
 // Shared by catalog descriptors and the historical suites. The final output is
 // cumulative. Each intermediate output channel must remain an ordered prefix.
+// Historical integration targets call this wrapper; the oracle uses the planned
+// entry directly while loading this same support module.
+#[allow(dead_code)]
 pub fn execute(
     s: &mut Session,
     source: &str,

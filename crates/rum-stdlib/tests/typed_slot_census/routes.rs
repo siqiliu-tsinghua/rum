@@ -71,7 +71,7 @@ pub(super) fn compatible_driver(facts: &Facts) -> Result<(), String> {
             return Err(format!("{id}: S2 mechanism receipt missing"));
         }
         println!(
-            "S2 ROUTE {id} mechanism={} witness={witness}; production family frames remain untyped",
+            "S2 ROUTE {id} mechanism={} witness={witness}; S3 types evaluation; later families remain untyped",
             live[0].identity
         );
     }

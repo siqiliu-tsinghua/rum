@@ -269,3 +269,168 @@ fn adapter_production_witnesses_are_computed() {
         println!("ADAPTER_WITNESS\t{}\t{witness}", row.row());
     }
 }
+
+fn blanket_fixture(bound: &str, visibility: &str, implementation: &str, extra: &str) -> Discovery {
+    let fixture = format!(
+        "{bound}\n\
+         {visibility} trait Erased {{}}\n\
+         {implementation}\n\
+         struct Queue {{ payload: Box<dyn Erased> }}\n{extra}"
+    );
+    graph::discover(source::fixture_with_roots(
+        &[
+            ("crates/fixture/src/lib.rs", &fixture),
+            (
+                "crates/rum-core/src/lib.rs",
+                "pub mod expr { pub struct Expr; }",
+            ),
+        ],
+        &["fixture", "rum-core"],
+    ))
+}
+
+const BLANKET_IMPL: &str = "impl<F: Bound> Erased for F {}";
+const BLANKET_CONCRETE: &str =
+    "struct Concrete { value: rum_core::expr::Expr }\nimpl Bound for Concrete {}";
+const BLANKET_WITNESS: &str = "fixture::Erased => impl<F: fixture::Bound> for F (impl at crates/fixture/src/lib.rs:3:1) => fixture::Bound => fixture::Concrete (impl at crates/fixture/src/lib.rs:6:1); fixture::Concrete.value -> rum_core::expr::Expr";
+
+fn blanket_positive() -> Discovery {
+    let positive = blanket_fixture("pub trait Bound {}", "", BLANKET_IMPL, BLANKET_CONCRETE);
+    let witness = ownership::expression_witness(&positive, adapter_row(&positive)).unwrap();
+    assert_eq!(witness, BLANKET_WITNESS);
+    println!("BLANKET POSITIVE: {witness}");
+    positive
+}
+
+fn blanket_rejected(negative: &Discovery, reason: &str) {
+    let error = ownership::expression_witness(negative, adapter_row(negative)).unwrap_err();
+    assert!(error.contains("no verified path"), "{error}");
+    println!("BLANKET REJECTED ({reason}): {error}");
+}
+
+#[test]
+fn blanket_concrete_hop_and_implementation_form() {
+    let positive = blanket_positive();
+    let where_clause = blanket_fixture(
+        "pub trait Bound {}",
+        "",
+        "impl<F> Erased for F where F: Bound {}",
+        BLANKET_CONCRETE,
+    );
+    assert_eq!(
+        ownership::expression_witness(&where_clause, adapter_row(&where_clause)).unwrap(),
+        BLANKET_WITNESS
+    );
+    for conditional in [false, true] {
+        let mut input =
+            blanket_fixture("pub trait Bound {}", "", BLANKET_IMPL, BLANKET_CONCRETE).source;
+        input.drops[0].positive = conditional;
+        input.drops[0].conditional = conditional;
+        let negative = graph::discover(input);
+        blanket_rejected(
+            &negative,
+            if conditional {
+                "conditional"
+            } else {
+                "negative"
+            },
+        );
+    }
+    let mut input = positive.source;
+    input.drops[0].generics = syn::parse_quote!(<F: Bound, G>);
+    blanket_rejected(&graph::discover(input), "two type parameters");
+}
+
+#[test]
+fn blanket_extra_or_generic_bounds_are_rejected() {
+    blanket_positive();
+    for (bound, implementation, extra) in [
+        (
+            "pub trait Bound {}",
+            "impl<F: Bound + Clone> Erased for F {}",
+            BLANKET_CONCRETE,
+        ),
+        (
+            "pub trait Bound<T> {}",
+            "impl<F: Bound<u8>> Erased for F {}",
+            "struct Concrete { value: rum_core::expr::Expr }\nimpl Bound<u8> for Concrete {}",
+        ),
+    ] {
+        let negative = blanket_fixture(bound, "", implementation, extra);
+        blanket_rejected(&negative, implementation);
+    }
+}
+
+#[test]
+fn blanket_self_must_be_the_bare_parameter() {
+    blanket_positive();
+    for self_type in ["Box<F>", "&F", "Vec<F>", "crate::F", "<F as Bound>::Item"] {
+        let negative = blanket_fixture(
+            "pub trait Bound {}",
+            "",
+            &format!("impl<F: Bound> Erased for {self_type} {{}}"),
+            BLANKET_CONCRETE,
+        );
+        blanket_rejected(&negative, self_type);
+    }
+}
+
+#[test]
+fn blanket_public_erased_trait_is_rejected() {
+    blanket_positive();
+    let negative = blanket_fixture("pub trait Bound {}", "pub", BLANKET_IMPL, BLANKET_CONCRETE);
+    blanket_rejected(&negative, "public erased trait");
+}
+
+#[test]
+fn blanket_expression_path_and_interim_limits() {
+    blanket_positive();
+    let private_concrete = blanket_fixture("trait Bound {}", "", BLANKET_IMPL, BLANKET_CONCRETE);
+    assert_eq!(
+        ownership::expression_witness(&private_concrete, adapter_row(&private_concrete)).unwrap(),
+        BLANKET_WITNESS
+    );
+    let interim = blanket_fixture("pub trait Bound {}", "", BLANKET_IMPL, "");
+    assert_eq!(
+        ownership::expression_witness(&interim, adapter_row(&interim)).unwrap(),
+        "fixture::Erased => impl<F: fixture::Bound> for F (impl at crates/fixture/src/lib.rs:3:1) => fixture::Bound (public bound; no in-tree instantiation exists yet)"
+    );
+    let private_empty = blanket_fixture("trait Bound {}", "", BLANKET_IMPL, "");
+    blanket_rejected(&private_empty, "private bound without implementor");
+    for bound in ["trait Bound {}", "pub trait Bound {}"] {
+        let negative = blanket_fixture(
+            bound,
+            "",
+            BLANKET_IMPL,
+            "struct Concrete { value: u64 }\nimpl Bound for Concrete {}\nstruct Unrelated { value: rum_core::expr::Expr }",
+        );
+        blanket_rejected(&negative, "implementor lacks expression ownership");
+    }
+}
+
+#[test]
+fn blanket_checks_every_erased_implementor() {
+    blanket_positive();
+    let supported = blanket_fixture(
+        "pub trait Bound {}",
+        "",
+        BLANKET_IMPL,
+        &format!(
+            "{BLANKET_CONCRETE}\nstruct Adapter<T: Bound> {{ inner: T }}\nimpl<T: Bound> Erased for Adapter<T> {{}}"
+        ),
+    );
+    assert!(ownership::expression_witness(&supported, adapter_row(&supported)).is_ok());
+    for unsupported in [
+        "struct Other { value: rum_core::expr::Expr }\nimpl Erased for Other {}",
+        "struct Phantom<T> { value: std::marker::PhantomData<T> }\nimpl<T: Bound> Erased for Phantom<T> {}",
+        "impl<G: Bound + Clone> Erased for G {}",
+    ] {
+        let negative = blanket_fixture(
+            "pub trait Bound {}",
+            "",
+            BLANKET_IMPL,
+            &format!("{BLANKET_CONCRETE}\n{unsupported}"),
+        );
+        blanket_rejected(&negative, unsupported);
+    }
+}

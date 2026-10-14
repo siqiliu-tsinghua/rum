@@ -9597,3 +9597,88 @@ rule is a STOP to report, not something to resolve by narrowing the rule
 silently.
 
 Append a new `## Execution report` after this section.
+
+## Director gate record — redispatch 8 (the worker's report was not written)
+
+The Codex usage limit ended redispatch 8 at 05:06 on 2026-10-15, during
+resume Callgrind repeats and before the report. Its log
+(`.temp/logs/cdx_brief_609.log`) and gate receipts (`.temp/brief-609/r8-*`)
+show what it finished:
+
+- **The blanket rule** in `host_payload_ledger/adapters.rs`. The concrete
+  shortcut in `ownership.rs` is now skipped whenever an implementation is a
+  blanket, so every implementor is validated.
+- **The six falsifier groups** in `tests.rs`, each positive control watched
+  failing with the rule disabled (`r8-blanket-disabled*`).
+- **The production chain**, computed through the blanket.
+- **All replays.**
+- **Correctness in both builds.**
+- **The four stack limits**, unchanged from R6.
+- **The allocation panel.**
+- **Two instruction pairs.**
+
+The director then gated the final tree.
+
+**Correctness** (`.temp/director/gate-609/`):
+
+- Fingerprints and both builds' certificates were re-derived independently;
+  the retention and ownership inventories stayed byte-identical.
+- `cargo fmt --check` is clean.
+- The suspension oracle passes 58/58 in each build, with 0 warnings.
+- The census passes in both builds, including the two intended child
+  failures.
+- All 31 compile-control pairs pass in both builds.
+- `ownership_graph` passes 31/31.
+- The fully qualified 48-level recursion test passes.
+- Workspace: 3468 passed, 0 failed, 59 ignored, 0 native ZeroMQ skips.
+
+**Binaries.** Re-running each frozen candidate's recorded build command in
+its target directory compiled nothing. The four outputs hash-equal the
+frozen copies (`3172599858fa64dd…`, `b46102f0ddcc38ed…`,
+`89778ac6a5e0a0d3…`, `58166288617d4258…`). The four S2 bases keep their
+hashes.
+
+**Allocation panel** (`perf/alloc-r8.txt`):
+
+- All 59 ordinary labels are exactly equal in count and bytes.
+- Resume slopes are the typed frames + 3 (6/6/7/6/8).
+- Whole-program extras at N = 1000 and N = 2000:
+  - table 6N + 8;
+  - do-chain 6N + 8;
+  - call-repeat 7N + 4 (R6: 7N + 5);
+  - cleanup 6N + 20;
+  - fold 8N + 8.
+
+**Instruction panel** (`perf/r8-run.txt`, two interleaved pairs, taskset,
+`cpu_core/instructions/u`):
+
+- Every one of the 59 ordinary labels is below S2, from −0.004% to −2.48%.
+  None is flagged.
+- `literal-integer` is −0.69%.
+- Resume: +16.6%, +16.6%, +10.6%, +17.4% and +12.0%. That matches R6's
+  partition, which the redispatch-7 ruling accepted. The finalizer change
+  runs once per program, so it has zero slope.
+
+**Finish path** (callgrind, call-repeat N = 200, at addresses):
+
+- The erased `<F as ErasedFinalizer>::finish` (0x757c00) passes the box
+  pointer through unchanged to the concrete `finish`, and calls `old_encode`
+  once. The finalizer payload is not moved.
+- The only stores on the success path write the encoded `Slot` into the
+  return place (about 120 B), which is mode-encode plumbing. The 136 B
+  `memcpy` sits on the error arm only.
+- Inclusive cost is 35 + 20 357 + 2 886 = 23 278 instructions, against S2's
+  legacy 30 + 23 220 + 21 = 23 271. There is no `__rust_alloc` in the erased
+  layer and exactly one box free.
+
+**Not re-run** on the R8 binaries:
+
+- per-label `memcpy` counts on the ordinary path (R6: 59/59 equal);
+- leaf addresses;
+- the hot boundaries.
+
+R8 touches only the finalizer, which no ordinary label executes, and every
+ordinary instruction slope is below S2. Timing was not run; it is
+indication only.
+
+**Verdict: S3 accepted.**

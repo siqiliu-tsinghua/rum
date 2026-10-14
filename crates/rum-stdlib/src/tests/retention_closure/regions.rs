@@ -6,7 +6,7 @@ use syn::spanned::Spanned;
 use syn::visit::{self, Visit};
 
 use super::model::*;
-use super::{effects, leaves, methods, resolve, types};
+use super::{effects, leaves, methods, resolve, typed_resume_macro, types};
 
 pub(super) const DEMO: &str = "fixture::accepted::root";
 pub(super) const SESSION: &str = "rum_runtime::runtime::model::session::Session";
@@ -293,6 +293,22 @@ impl<'ast> Visit<'ast> for Edges<'_> {
     }
 
     fn visit_macro(&mut self, mac: &'ast syn::Macro) {
+        if let Some(arm) = typed_resume_macro::checked(self.source, self.function, mac) {
+            // Recognizing syntax earns no ownership coverage. These fixed
+            // expansion operations remain rejected at the invocation span;
+            // argument expressions retain their own spans and normal visitor.
+            for reason in arm.expansion_rejections() {
+                self.reject(mac.span(), Kind::RET002, None, reason);
+            }
+            self.visit_expr(&arm.result);
+            let enclosing_locals = self.locals.clone();
+            self.visit_pat(&arm.value);
+            self.visit_expr(&arm.success);
+            self.locals = enclosing_locals;
+            self.visit_expr(&arm.session);
+            self.visit_expr(&arm.frame);
+            return;
+        }
         self.reject(
             mac.span(),
             Kind::RET003,

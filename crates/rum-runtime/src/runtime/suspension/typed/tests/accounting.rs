@@ -40,9 +40,10 @@ fn armed_pause() -> Session {
     let mut s = Session::new();
     s.current_memory_limit = Some(1_000_000_000);
     s.note_accounting_arm();
-    let input = s.lower_text("InputString[\"accounting\"]").unwrap();
+    // Start at the input producer: ordinary evaluation now installs S3 typed
+    // frames and would widen the queue before these tests measure that step.
     assert!(matches!(
-        s.evaluate(input),
+        s.eval_input_string(&[Expr::string("accounting")]),
         Err(EvalError::InputRequired { .. })
     ));
     reconcile(&s);

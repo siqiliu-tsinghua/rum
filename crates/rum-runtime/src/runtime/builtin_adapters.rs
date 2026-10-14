@@ -931,7 +931,7 @@ pub(in crate::runtime) fn builtin_evaluate(
     let args = args.as_ref();
     Ok(if args.len() == 1 {
         let evaluated_result = session.evaluate(args[0].clone());
-        crate::resume_or_suspend!(
+        crate::resume_typed_or_suspend!(
             session,
             evaluated_result,
             ok(value) => Ok(value),

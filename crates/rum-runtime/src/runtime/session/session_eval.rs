@@ -188,7 +188,7 @@ impl Session {
     ) -> Result<Option<Vec<RewriteRuleInfo>>, EvalError> {
         let resumed = self.resume_suspended_evaluation(input);
         if self.has_continuation_fault() {
-            return Err(self.continuation_fault_outcome(resumed).unwrap_err());
+            return Err(self.continuation_fault_outcome(resumed));
         }
         let resumed = resumed?;
         Ok(Option::<Vec<RewriteRuleInfo>>::from_continuation_expr(
@@ -242,7 +242,7 @@ impl Session {
                 self.evaluate(expr)
             };
             if self.has_continuation_fault() {
-                return Err(self.continuation_fault_outcome(result).unwrap_err());
+                return Err(self.continuation_fault_outcome(result));
             }
             match terminated_handling {
                 TerminatedEvaluationHandling::ConvertToValue => {

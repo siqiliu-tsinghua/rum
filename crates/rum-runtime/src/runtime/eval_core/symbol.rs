@@ -121,7 +121,7 @@ impl Session {
                     SymbolExprMap::default(),
                     option_scope,
                 );
-                crate::resume_or_suspend!(
+                crate::resume_typed_or_suspend!(
                     self,
                     guard_result,
                     ok(outcome) => { let session = self; (|| {
@@ -307,12 +307,16 @@ struct EvaluateStoredOwnValueSuspensionFrame {
     delayed: bool,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for EvaluateStoredOwnValueSuspensionFrame {
-    fn resume(
+impl crate::runtime::suspension::TypedFrame for EvaluateStoredOwnValueSuspensionFrame {
+    type Input = CompiledMatchOutcome;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        outcome: Result<CompiledMatchOutcome, EvalError>,
+        _token: crate::runtime::suspension::ContinueToken<'resume, Self>,
+    ) -> crate::runtime::suspension::TypedAction<Expr> {
         #[allow(unused_mut)]
         let mut symbol = self.symbol.clone();
         #[allow(unused_mut)]
@@ -320,19 +324,15 @@ impl crate::runtime::suspension::SuspensionFrame for EvaluateStoredOwnValueSuspe
         #[allow(unused_mut)]
         let mut delayed = self.delayed.clone();
         let resumed = match outcome {
-            Ok(resumed_value) => {
-                let outcome = <CompiledMatchOutcome as crate::runtime::suspension::ContinuationValue>::from_continuation_expr(resumed_value);
-                (|| -> Result<rum_core::Expr, EvalError> {
-                    if outcome.matched {
-                        session.evaluate_accepted_own_value(&symbol, body, delayed)
-                    } else {
-                        session.evaluate_symbol_after_stored_own_value(symbol)
-                    }
-                })()
-                    .map(|value| <rum_core::Expr as crate::runtime::suspension::ContinuationValue>::into_continuation_expr(value))
-            }
+            Ok(outcome) => (|| -> Result<rum_core::Expr, EvalError> {
+                if outcome.matched {
+                    session.evaluate_accepted_own_value(&symbol, body, delayed)
+                } else {
+                    session.evaluate_symbol_after_stored_own_value(symbol)
+                }
+            })(),
             Err(error) => Err(error),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        crate::runtime::suspension::TypedAction::complete(resumed)
     }
 }

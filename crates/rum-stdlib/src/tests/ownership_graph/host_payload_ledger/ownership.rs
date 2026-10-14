@@ -124,6 +124,7 @@ pub(super) fn expression_witness(discovered: &Discovery, row: &Unknown) -> Resul
     // implementations. Resolve both sides; a same-spelled unrelated trait or
     // an Expr somewhere else on FrameAction cannot supply this witness.
     let mut implementations = Vec::new();
+    let mut has_blanket = false;
     for implementation in &discovered.source.drops {
         if resolve::type_path(
             &discovered.source,
@@ -133,6 +134,7 @@ pub(super) fn expression_witness(discovered: &Discovery, row: &Unknown) -> Resul
         {
             continue;
         }
+        has_blanket |= super::adapters::blanket_self(implementation);
         let syn::Type::Path(ty) = &implementation.ty else {
             continue;
         };
@@ -160,13 +162,17 @@ pub(super) fn expression_witness(discovered: &Discovery, row: &Unknown) -> Resul
             }
         }
     }
-    implementations.sort();
-    for (id, location) in implementations {
-        if let Some(path) = ownership_path(discovered, &id, EXPRESSIONS) {
-            return Ok(format!(
-                "{trait_id} => {id} (impl at {}); {path}",
-                location.display()
-            ));
+    // Blanket erasure must validate every implementor, including a concrete
+    // implementation that could otherwise supply a direct existential witness.
+    if !has_blanket {
+        implementations.sort();
+        for (id, location) in implementations {
+            if let Some(path) = ownership_path(discovered, &id, EXPRESSIONS) {
+                return Ok(format!(
+                    "{trait_id} => {id} (impl at {}); {path}",
+                    location.display()
+                ));
+            }
         }
     }
     if let Some(witness) = super::adapters::expression_witness(discovered, &trait_id) {

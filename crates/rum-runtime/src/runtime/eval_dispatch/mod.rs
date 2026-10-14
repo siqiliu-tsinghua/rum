@@ -115,25 +115,19 @@ impl Session {
                 self.try_dispatch_builtin_call(builtin_spec, head, state.raw_args())
             }
             CallDispatchStage::PrepareArguments => {
-                let raw_args = state.take_raw_args();
-                let prepared =
-                    self.prepare_arguments_for_call(head.clone(), attributes, raw_args)?;
-                state
-                    .set_prepared_args(self.normalize_call_args_shared(head, prepared, attributes));
-                Ok(None)
+                unreachable!("argument preparation is handled before generic dispatch")
             }
             CallDispatchStage::Listable => {
                 match self.dispatch_listable_stage(head, state.prepared_args(), attributes)? {
                     ThreadingDispatch::NotApplicable => Ok(None),
                     ThreadingDispatch::Threaded(threaded) => {
                         let threaded_result = self.evaluate(threaded);
-                        match threaded_result {
-                            Ok(value) => Ok(Some(value)),
-                            Err(EvalError::InputRequired { request }) => {
-                                self.suspend_threaded_call_dispatch(request)
-                            }
-                            Err(error) => Err(error),
-                        }
+                        crate::resume_typed_or_suspend!(
+                            self,
+                            threaded_result,
+                            ok(value) => Ok(Some(value)),
+                            suspend => RunCallDispatchStageSuspensionFrame::threaded_call(),
+                        )
                     }
                     ThreadingDispatch::Mismatch => Ok(Some(Expr::call(
                         head.clone(),
@@ -155,19 +149,6 @@ impl Session {
             }
             CallDispatchStage::Function => self.try_apply_function(head, state.prepared_args()),
         }
-    }
-
-    #[cold]
-    #[inline(never)]
-    fn suspend_threaded_call_dispatch(
-        &mut self,
-        request: RuntimeInputRequest,
-    ) -> Result<Option<Expr>, EvalError> {
-        crate::resume_or_suspend!(
-            insert self,
-            RunCallDispatchStageSuspensionFrame::threaded_call()
-        );
-        Err(EvalError::InputRequired { request })
     }
 
     pub(super) fn try_dispatch_builtin_call<S>(
@@ -204,38 +185,59 @@ impl Session {
             builtin_symbol.map(|symbol| builtin_timing_start(&symbol, args.len()));
         if !builtin_memory_growth_test_enabled() {
             let result = self.run_builtin_handler(handler, head, args);
-            let result = crate::resume_or_suspend!(
-                self,
+            return self.finish_builtin_dispatch(
                 result,
-                ok(value) => Ok(value),
-                suspend => RunCallDispatchStageSuspensionFrame::unchecked_builtin(),
+                profile_builtin_start,
+                RunCallDispatchStageSuspensionFrame::unchecked_builtin,
+                |_, result| result.map(Some),
             );
-            record_profile_builtin_timing(profile_builtin_start.flatten(), result.is_ok());
-            return result.map(Some);
         }
 
         let projection_count_before = self.builtin_memory_projection_count.get();
         let result = self.run_builtin_handler(handler, head, args);
-        let result = crate::resume_or_suspend!(
-            self,
+        self.finish_builtin_dispatch(
             result,
+            profile_builtin_start,
+            || {
+                RunCallDispatchStageSuspensionFrame::builtin(
+                    spec.name(),
+                    spec.memory_growth(),
+                    args.clone(),
+                    projection_count_before,
+                )
+            },
+            |session, result| {
+                session.validate_builtin_memory_growth_slow(
+                    spec.name(),
+                    spec.memory_growth(),
+                    args,
+                    projection_count_before,
+                    &result,
+                );
+                result.map(Some)
+            },
+        )
+    }
+
+    #[inline(always)]
+    fn finish_builtin_dispatch(
+        &mut self,
+        produced: Result<Expr, EvalError>,
+        profile_builtin_start: Option<Option<crate::runtime::profiling::BuiltinTimingToken>>,
+        freeze: impl FnOnce() -> RunCallDispatchStageSuspensionFrame,
+        finish: impl FnOnce(&mut Self, Result<Expr, EvalError>) -> Result<Option<Expr>, EvalError>,
+    ) -> Result<Option<Expr>, EvalError> {
+        let result = crate::resume_typed_or_suspend!(
+            self,
+            produced,
             ok(value) => Ok(value),
-            suspend => RunCallDispatchStageSuspensionFrame::builtin(
-                spec.name(),
-                spec.memory_growth(),
-                args.clone(),
-                projection_count_before,
-            ),
+            suspend => {
+                record_profile_builtin_timing(profile_builtin_start.flatten(), false);
+                freeze()
+            },
         );
         record_profile_builtin_timing(profile_builtin_start.flatten(), result.is_ok());
-        self.validate_builtin_memory_growth_slow(
-            spec.name(),
-            spec.memory_growth(),
-            args,
-            projection_count_before,
-            &result,
-        );
-        result.map(Some)
+        finish(self, result)
     }
 
     #[inline]
@@ -463,12 +465,16 @@ impl RunCallDispatchStageSuspensionFrame {
     }
 }
 
-impl crate::runtime::suspension::SuspensionFrame for RunCallDispatchStageSuspensionFrame {
-    fn resume(
+impl crate::runtime::suspension::TypedFrame for RunCallDispatchStageSuspensionFrame {
+    type Input = Expr;
+    type Output = Option<Expr>;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        _token: crate::runtime::suspension::ContinueToken<'resume, Self>,
+    ) -> crate::runtime::suspension::TypedAction<Option<Expr>> {
         let resumed = match outcome {
             Ok(value) => {
                 let result = Ok(value);
@@ -485,6 +491,6 @@ impl crate::runtime::suspension::SuspensionFrame for RunCallDispatchStageSuspens
             }
             Err(error) => Err(error),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        crate::runtime::suspension::TypedAction::complete(resumed.map(Some))
     }
 }

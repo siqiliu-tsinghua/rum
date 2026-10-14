@@ -23,7 +23,7 @@ impl Session {
         let released = release_hold_once(&args[0]).unwrap_or_else(|| args[0].clone());
 
         let released_result = self.evaluate(released);
-        crate::resume_or_suspend!(
+        crate::resume_typed_or_suspend!(
             self,
             released_result,
             ok(value) => Ok(value),
@@ -114,16 +114,20 @@ impl Session {
 #[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct EvalReleaseHoldSuspensionFrame;
 
-impl crate::runtime::suspension::SuspensionFrame for EvalReleaseHoldSuspensionFrame {
-    fn resume(
+impl crate::runtime::suspension::TypedFrame for EvalReleaseHoldSuspensionFrame {
+    type Input = Expr;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         _session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        _token: crate::runtime::suspension::ContinueToken<'resume, Self>,
+    ) -> crate::runtime::suspension::TypedAction<Expr> {
         let resumed = match outcome {
             Ok(value) => Ok(value),
             Err(error) => Err(error),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        crate::runtime::suspension::TypedAction::complete(resumed)
     }
 }

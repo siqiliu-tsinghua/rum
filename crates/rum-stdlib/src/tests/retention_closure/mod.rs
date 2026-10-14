@@ -17,6 +17,7 @@ mod obligations;
 mod regions;
 mod resolve;
 mod source;
+mod typed_resume_macro;
 mod types;
 
 use std::collections::BTreeMap;

@@ -55,7 +55,7 @@ fn slot_fault_rolls_back_nested_memory_files_and_public_batch_owner() {
             super::accounting::reconcile(&s);
             if public_batch {
                 let result = s.resume_suspended_evaluation("answer");
-                let error = s.continuation_fault_outcome(result).unwrap_err();
+                let error = s.continuation_fault_outcome(result);
                 kind.assert_eval(&error);
             } else {
                 kind.assert_request(

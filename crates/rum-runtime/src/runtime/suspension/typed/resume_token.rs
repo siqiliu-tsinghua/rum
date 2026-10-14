@@ -11,9 +11,11 @@ pub struct ContinueToken<'resume, F: TypedFrame> {
 }
 
 impl<F: TypedFrame> ContinueToken<'_, F> {
+    /// Repeat with evidence from the actual producer before it was matched.
     pub fn suspend(
         self,
         session: &mut Session,
+        _witness: super::SlotWitness<F::Input>,
         request: RuntimeInputRequest,
         fresh: F,
     ) -> ResumeStop<F::Output> {

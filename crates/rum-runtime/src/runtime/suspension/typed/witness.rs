@@ -32,6 +32,25 @@ impl<I: SlotValue> SlotWitness<I> {
 #[macro_export]
 macro_rules! resume_typed_or_suspend {
     (
+        $session:expr, $result:ident,
+        ok($value:pat) => $continue:expr,
+        suspend => $frame:expr $(,)?
+    ) => {{
+        let witness = $crate::kernel_api::slot_witness(&($result));
+        match $result {
+            Ok($value) => $continue,
+            Err($crate::kernel_api::EvalError::InputRequired { request }) => {
+                #[cold]
+                #[inline(never)]
+                fn suspend<R>(make: impl ::core::ops::FnOnce() -> R) -> R {
+                    make()
+                }
+                return suspend(move || witness.suspend($session, request, $frame));
+            }
+            Err(error) => Err(error),
+        }
+    }};
+    (
         $session:expr, $result:expr,
         ok($value:pat) => $continue:expr,
         suspend => $frame:expr $(,)?
@@ -41,7 +60,12 @@ macro_rules! resume_typed_or_suspend {
         match produced {
             Ok($value) => $continue,
             Err($crate::kernel_api::EvalError::InputRequired { request }) => {
-                return witness.suspend($session, request, $frame);
+                #[cold]
+                #[inline(never)]
+                fn suspend<R>(make: impl ::core::ops::FnOnce() -> R) -> R {
+                    make()
+                }
+                return suspend(move || witness.suspend($session, request, $frame));
             }
             Err(error) => Err(error),
         }

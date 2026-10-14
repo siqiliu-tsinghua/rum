@@ -1,4 +1,4 @@
-//! Narrow existential ownership proof for private generic erasure adapters.
+//! Narrow existential ownership proof for private nominal and blanket erasures.
 //! Unsupported obligations reject; declaration bounds never replace impl bounds.
 
 use std::collections::BTreeSet;
@@ -102,10 +102,19 @@ fn owned_parameter(source: &Source, scope: &str, ty: &syn::Type, name: &str) -> 
 }
 
 struct Adapter {
-    id: Id,
-    field: String,
+    owner: String,
     bound: Id,
     location: String,
+}
+
+// Select the guarded proof before a concrete implementor can bypass validation
+// of the other impls. This recognizes the shape only; adapter() checks every
+// bound, parameter, polarity and configuration obligation before admission.
+pub(super) fn blanket_self(implementation: &DropImpl) -> bool {
+    implementation
+        .generics
+        .type_params()
+        .any(|parameter| parameter_type(&implementation.ty, &parameter.ident.to_string()))
 }
 
 fn adapter(source: &Source, implementation: &DropImpl) -> Option<Adapter> {
@@ -113,6 +122,13 @@ fn adapter(source: &Source, implementation: &DropImpl) -> Option<Adapter> {
         return None;
     }
     let (parameter, required) = bound(source, &implementation.scope, &implementation.generics)?;
+    if parameter_type(&implementation.ty, &parameter) {
+        return Some(Adapter {
+            owner: format!("impl<{parameter}: {required}> for {parameter}"),
+            bound: required,
+            location: implementation.location.display(),
+        });
+    }
     let syn::Type::Path(ty) = &implementation.ty else {
         return None;
     };
@@ -153,8 +169,7 @@ fn adapter(source: &Source, implementation: &DropImpl) -> Option<Adapter> {
             )
     })?;
     Some(Adapter {
-        id,
-        field: field.path.clone(),
+        owner: format!("{id}.{}", field.path),
         bound: required,
         location: implementation.location.display(),
     })
@@ -181,12 +196,12 @@ pub(super) fn expression_witness(discovered: &Discovery, trait_id: &str) -> Opti
         .into_iter()
         .map(|i| adapter(source, i))
         .collect::<Option<_>>()?;
-    adapters.sort_by(|a, b| (&a.id, &a.location).cmp(&(&b.id, &b.location)));
+    adapters.sort_by(|a, b| (&a.owner, &a.location).cmp(&(&b.owner, &b.location)));
     let mut interim = None;
     for adapter in adapters {
         let hop = format!(
-            "{trait_id} => {}.{} (impl at {}) => {}",
-            adapter.id, adapter.field, adapter.location, adapter.bound
+            "{trait_id} => {} (impl at {}) => {}",
+            adapter.owner, adapter.location, adapter.bound
         );
         let mut any_implementor = false;
         let mut concrete = Vec::new();

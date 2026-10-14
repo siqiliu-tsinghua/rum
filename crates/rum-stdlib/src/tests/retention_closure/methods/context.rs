@@ -1,7 +1,7 @@
 //! Located receiver provenance for diagnostic edges. This is deliberately
 //! independent of ownership certification; effects checks every selected body.
 
-use super::super::resolve;
+use super::super::{resolve, typed_resume_macro};
 use super::*;
 use std::collections::BTreeMap;
 use syn::{
@@ -13,15 +13,32 @@ pub(in super::super) fn claims(
     source: &Source,
     f: &Function,
 ) -> BTreeMap<Site, Result<Selection, String>> {
-    struct Conditional(bool);
-    impl<'ast> Visit<'ast> for Conditional {
+    struct Conditional<'a> {
+        unknown: bool,
+        source: &'a Source,
+        function: &'a Function,
+    }
+    impl<'ast> Visit<'ast> for Conditional<'_> {
+        fn visit_macro(&mut self, mac: &'ast syn::Macro) {
+            if let Some(arm) = typed_resume_macro::checked(self.source, self.function, mac) {
+                self.visit_expr(&arm.result);
+                self.visit_pat(&arm.value);
+                self.visit_expr(&arm.success);
+                self.visit_expr(&arm.session);
+                self.visit_expr(&arm.frame);
+            }
+        }
         fn visit_attribute(&mut self, a: &'ast syn::Attribute) {
-            self.0 |= a.path().is_ident("cfg") || a.path().is_ident("cfg_attr");
+            self.unknown |= a.path().is_ident("cfg") || a.path().is_ident("cfg_attr");
         }
     }
-    let mut conditional = Conditional(f.conditional || types::attributes(&f.attrs).is_err());
+    let mut conditional = Conditional {
+        unknown: f.conditional || types::attributes(&f.attrs).is_err(),
+        source,
+        function: f,
+    };
     for input in &f.sig.inputs {
-        conditional.0 |= match input {
+        conditional.unknown |= match input {
             syn::FnArg::Typed(a) => !a.attrs.is_empty(),
             syn::FnArg::Receiver(r) => !r.attrs.is_empty(),
         };
@@ -31,7 +48,7 @@ pub(in super::super) fn claims(
         source,
         f,
         locals: BTreeMap::new(),
-        closed: !conditional.0,
+        closed: !conditional.unknown,
         claims: BTreeMap::new(),
     };
     // An unrelated unknown generic parameter must not erase an independently
@@ -364,7 +381,32 @@ impl<'ast> Visit<'ast> for Context<'_> {
         visit::visit_expr_method_call(self, c);
     }
     fn visit_expr_closure(&mut self, _: &'ast syn::ExprClosure) {}
-    fn visit_macro(&mut self, _: &'ast syn::Macro) {}
+    fn visit_macro(&mut self, mac: &'ast syn::Macro) {
+        let Some(arm) = typed_resume_macro::checked(self.source, self.f, mac) else {
+            return;
+        };
+        self.visit_expr(&arm.result);
+        let payload = self.infer(&arm.result).and_then(|mut value| {
+            let ExactTy::Nominal(id, args) = &value.exact else {
+                return None;
+            };
+            if id != "std::result::Result" || args.len() != 2 {
+                return None;
+            }
+            value.exact = args[0].clone();
+            value
+                .provenance
+                .projections
+                .push("checked Result Ok payload".into());
+            Some(value)
+        });
+        let enclosing = self.locals.clone();
+        self.bind(&arm.value, payload);
+        self.visit_expr(&arm.success);
+        self.locals = enclosing;
+        self.visit_expr(&arm.session);
+        self.visit_expr(&arm.frame);
+    }
     fn visit_item(&mut self, _: &'ast syn::Item) {}
     fn visit_expr_let(&mut self, l: &'ast syn::ExprLet) {
         self.visit_expr(&l.expr);

@@ -3,7 +3,7 @@
 //! method's name never supplies its type; its enclosing constructor can still
 //! have a known instance. This deliberately does not attempt Rust inference.
 
-use super::super::{model::*, resolve};
+use super::super::{model::*, resolve, typed_resume_macro};
 use super::{arguments, exact, exact_output, exact_parameters, fields};
 use std::collections::BTreeMap;
 use syn::{
@@ -223,6 +223,14 @@ impl<'ast> Visit<'ast> for Context<'_> {
                         }
                     }
                 }
+                syn::Stmt::Macro(m) => {
+                    let old = self.expected.clone();
+                    if m.semi_token.is_some() {
+                        self.expected = None;
+                    }
+                    self.visit_macro(&m.mac);
+                    self.expected = old;
+                }
                 _ => {}
             }
         }
@@ -238,6 +246,40 @@ impl<'ast> Visit<'ast> for Context<'_> {
         {
             self.locals.insert(pat.ident.to_string(), None);
         }
+    }
+
+    fn visit_macro(&mut self, mac: &'ast syn::Macro) {
+        let Some(arm) = typed_resume_macro::checked(self.source, self.function, mac) else {
+            return;
+        };
+        self.descend(&arm.result, None);
+        let payload = self.infer(&arm.result).and_then(|ty| match ty {
+            ExactTy::Nominal(id, args) if id == "std::result::Result" && args.len() == 2 => {
+                Some(args[0].clone())
+            }
+            _ => None,
+        });
+        let enclosing = self.locals.clone();
+        // Unsupported patterns still shadow their enclosing names as unknown.
+        self.visit_pat(&arm.value);
+        if let syn::Pat::Ident(p) = &arm.value {
+            if p.subpat.is_none() {
+                self.locals.insert(
+                    p.ident.to_string(),
+                    payload.map(|ty| {
+                        if p.by_ref.is_some() {
+                            ExactTy::Reference(Box::new(ty), p.mutability.is_some())
+                        } else {
+                            ty
+                        }
+                    }),
+                );
+            }
+        }
+        self.descend(&arm.success, self.expected.clone());
+        self.locals = enclosing;
+        self.descend(&arm.session, None);
+        self.descend(&arm.frame, None);
     }
 
     fn visit_expr(&mut self, expr: &'ast syn::Expr) {
@@ -278,7 +320,8 @@ impl<'ast> Visit<'ast> for Context<'_> {
             }
             syn::Expr::Block(b) => self.visit_block(&b.block),
             syn::Expr::Paren(p) => self.descend(&p.expr, self.expected.clone()),
-            syn::Expr::Closure(_) | syn::Expr::Macro(_) => {}
+            syn::Expr::Macro(m) => self.visit_macro(&m.mac),
+            syn::Expr::Closure(_) => {}
             _ => {
                 let old = self.expected.take();
                 visit::visit_expr(self, expr);

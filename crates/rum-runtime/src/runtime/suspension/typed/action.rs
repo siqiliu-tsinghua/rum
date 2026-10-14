@@ -2,7 +2,7 @@ use std::marker::PhantomData;
 
 use rum_core::Expr;
 
-use super::adapter::{ErasedFrame, FinalizerAdapter, erase};
+use super::adapter::{DecodeFailure, ErasedFrame, erase};
 use super::channel::{CodecKey, Slot, encode};
 use super::{Arc, EvalError, SlotFinalizer, SlotValue, TypedFrame};
 
@@ -13,6 +13,7 @@ pub(in crate::runtime::suspension) trait ErasedFinalizer:
 }
 
 pub(in crate::runtime::suspension) enum Action {
+    DecodeFailure(DecodeFailure),
     Complete(Result<Slot, EvalError>),
     Evaluate {
         expr: Expr,
@@ -56,7 +57,7 @@ impl<O: SlotValue> TypedAction<O> {
 
     pub fn finalize<F: SlotFinalizer<Output = O>>(finalizer: F) -> Self {
         Self {
-            inner: Action::Finalize(Box::new(FinalizerAdapter(finalizer))),
+            inner: Action::Finalize(Box::new(finalizer)),
             output: PhantomData,
         }
     }

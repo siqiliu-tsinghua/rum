@@ -358,9 +358,7 @@ impl Session {
             let track_cycle = should_track_evaluation_cycle(&current);
             if track_cycle {
                 if fixed_point_seen.iter().any(|previous| previous == &current) {
-                    return Err(EvalError::EvaluationCycleDetected {
-                        expr: current.to_string(),
-                    });
+                    return Err(evaluation_cycle_error(&current));
                 }
                 fixed_point_seen.push(current.clone());
             }
@@ -374,19 +372,14 @@ impl Session {
                 runtime_profile_once,
                 runtime_profile_outcome_for_expr_result(&next_result),
             );
-            let next = match next_result {
-                Ok(value) => value,
-                Err(EvalError::InputRequired { request }) => {
-                    let state = SuspendedFixedPointState {
-                        current,
-                        evaluation_passes,
-                        seen: FixedPointHistory::freeze(fixed_point_seen),
-                    };
-                    crate::resume_or_suspend!(insert self, EvaluateProfiledFixedPointSuspensionFrame { state });
-                    return Err(EvalError::InputRequired { request });
-                }
-                Err(error) => return Err(error),
-            };
+            let next = crate::resume_typed_or_suspend!(
+                self,
+                next_result,
+                ok(value) => Ok(value),
+                suspend => EvaluateProfiledFixedPointSuspensionFrame::freeze(
+                    current, evaluation_passes, fixed_point_seen,
+                ),
+            )?;
 
             let runtime_profile_equal = runtime_path_timing_start("evaluate.fixed_point_equal");
             let fixed_point = next == current;
@@ -442,13 +435,13 @@ impl Session {
                 state.current.clone(),
                 track_cycle,
             );
-            let next = match next_result {
-                Ok(value) => value,
-                Err(EvalError::InputRequired { request }) => {
-                    crate::resume_or_suspend!(insert self, ResumeFixedPointFromSuspensionFrame { state });
-                    return Err(EvalError::InputRequired { request });
-                }
-                Err(error) => return Err(error),
+            let next = 'next_value: {
+                return crate::resume_typed_or_suspend!(
+                    self,
+                    next_result,
+                    ok(value) => break 'next_value value,
+                    suspend => ResumeFixedPointFromSuspensionFrame { state },
+                );
             };
 
             if next == state.current {
@@ -467,6 +460,15 @@ const _: fn() = || {
     assert_traces::<FixedPointHistory>();
     assert_traces::<SuspendedFixedPointState>();
 };
+
+// Formatting a cycle error must not reserve a buffer on the ordinary loop.
+#[cold]
+#[inline(never)]
+fn evaluation_cycle_error(expr: &Expr) -> EvalError {
+    EvalError::EvaluationCycleDetected {
+        expr: expr.to_string(),
+    }
+}
 
 const EVALUATION_CYCLE_HISTORY_NODE_LIMIT: usize = 8;
 

@@ -251,12 +251,6 @@ fn runtime_profile_outcome_for_expr_result(
     runtime_profile_outcome_for_result(result)
 }
 
-fn runtime_profile_outcome_for_shared_expr_result(
-    result: &Result<SharedExpr, EvalError>,
-) -> RuntimeProfileOutcome {
-    runtime_profile_outcome_for_result(result)
-}
-
 fn runtime_profile_outcome_for_result<T>(result: &Result<T, EvalError>) -> RuntimeProfileOutcome {
     match result {
         Ok(_) => RuntimeProfileOutcome::Ok,

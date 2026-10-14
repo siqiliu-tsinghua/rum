@@ -37,7 +37,7 @@ fn save(dir: &Path, name: &str, header: &str, rows: impl IntoIterator<Item = Str
 }
 
 pub(super) fn emit(root: &Path, facts: &Facts, report: &Report) {
-    let dir = root.join(format!(".temp/brief-608/census/{}", feature()));
+    let dir = root.join(format!(".temp/brief-609/census/{}", feature()));
     let hashes = hashes(root);
     let hash = |site: &scan::Site| {
         hashes
@@ -283,13 +283,24 @@ pub(super) fn emit(root: &Path, facts: &Facts, report: &Report) {
         save(
             &dir,
             file,
-            "id\tidentity\tdecoder_ids\tkind\tpopulation\tfile\tline\tcolumn\tend_line\tend_column\tsha256",
+            "id\tidentity\tdecoder_ids\tkind\tpopulation\tfile\tline\tcolumn\tend_line\tend_column\tsha256\tstatus",
             receipts.iter().filter(|r| r[0] == kind).map(|r| {
+                if r[3] == "removed" {
+                    assert!(
+                        !by_use.contains_key(r[4]),
+                        "removed use reappeared: {}",
+                        r[1]
+                    );
+                    return format!(
+                        "{}\t{}\t{}\tremoved\t{}\t{}\t-\t-\t-\t-\t-\tS3 owned transformation",
+                        r[1], r[4], r[8], r[7], r[5]
+                    );
+                }
                 let site = by_use
                     .get(r[4])
                     .expect("recorded decoder use must be rediscovered");
                 format!(
-                    "{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                    "{}\t{}\t{}\t{}\t{}\t{}\t{}\tlive",
                     r[1],
                     r[4],
                     r[8],

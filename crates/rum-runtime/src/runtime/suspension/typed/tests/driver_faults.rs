@@ -170,9 +170,7 @@ fn completion_exact_decode_and_probe_survive_rollback_and_replacement() {
             _ => s.resume_suspended_slot::<StateBool>("answer").unwrap_err(),
         };
         kind.assert_eval(&error);
-        let error = s
-            .continuation_fault_outcome::<Expr>(Err(error))
-            .unwrap_err();
+        let error = s.continuation_fault_outcome::<Expr>(Err(error));
         kind.assert_eval(&error);
         assert_eq!(*events.lock().unwrap(), ["emit"]);
         assert_eq!(probe.occurrences(), 1);

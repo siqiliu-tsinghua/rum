@@ -717,7 +717,7 @@ impl Session {
 
             // Borrow the entry, then clone only its Arc. Exact decoding happens
             // while the consumer remains rooted at the front of the queue.
-            outcome = match dispatch_frame {
+            match dispatch_frame {
                 EntryRef::Legacy(frame) => {
                     let frame = Arc::clone(frame);
                     let input = match outcome {
@@ -741,7 +741,7 @@ impl Session {
                     );
                     drop(completed_frame);
 
-                    match action {
+                    outcome = match action {
                         FrameAction::Complete(outcome) => outcome.map(Slot::Value),
                         FrameAction::Evaluate { expr, next_frame } => {
                             self.resuming_suspension
@@ -754,13 +754,15 @@ impl Session {
                             self.evaluate(expr).map(Slot::Value)
                         }
                         FrameAction::Finalize(finalizer) => finalizer.finish().map(Slot::Value),
-                    }
+                    };
                 }
                 EntryRef::Typed(frame) => {
                     let frame = Arc::clone(frame);
-                    let action = frame
-                        .resume(self, outcome)
-                        .map_err(|failure| self.record_slot_fault(failure))?;
+                    let action = frame.resume(self, &mut outcome);
+                    drop(frame);
+                    if let Action::DecodeFailure(failure) = action {
+                        return Err(self.record_slot_fault(failure));
+                    }
                     let completed_frame = self
                         .resuming_suspension
                         .as_mut()
@@ -771,8 +773,16 @@ impl Session {
                     );
                     drop(completed_frame);
 
+                    // The sole erased adapter takes the input and leaves Abort,
+                    // which owns no data. End that empty placeholder's lifetime
+                    // before extracting the next outcome from the action.
+                    debug_assert!(matches!(outcome, Err(EvalError::Abort)));
+                    std::mem::forget(outcome);
                     match action {
-                        Action::Complete(outcome) => outcome,
+                        Action::DecodeFailure(_) => {
+                            unreachable!("decode failure returned before pop")
+                        }
+                        Action::Complete(next_outcome) => outcome = next_outcome,
                         Action::Evaluate { expr, next } => {
                             self.resuming_suspension
                                 .as_mut()
@@ -782,9 +792,9 @@ impl Session {
                             self.refresh_memory_owner(
                                 crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
                             );
-                            self.evaluate(expr).map(Slot::Value)
+                            outcome = self.evaluate(expr).map(Slot::Value);
                         }
-                        Action::Finalize(finalizer) => finalizer.finish(),
+                        Action::Finalize(finalizer) => outcome = finalizer.finish(),
                     }
                 }
             };

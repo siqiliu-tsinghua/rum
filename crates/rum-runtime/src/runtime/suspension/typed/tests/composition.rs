@@ -15,10 +15,9 @@ fn witnessed_chain_and_actions_remain_dormant() {
     };
     assert_eq!(expr, Expr::string("evaluate"));
     let mut session = Session::new();
-    let resumed = next
-        .resume(&mut session, Ok(Slot::Value(Expr::string("child"))))
-        .ok()
-        .unwrap();
+    let mut input = Ok(Slot::Value(Expr::string("child")));
+    let resumed = next.resume(&mut session, &mut input);
+    assert!(matches!(input, Err(EvalError::Abort)));
     assert!(
         matches!(resumed, Action::Complete(Ok(Slot::Value(expr))) if expr == Expr::string("child"))
     );

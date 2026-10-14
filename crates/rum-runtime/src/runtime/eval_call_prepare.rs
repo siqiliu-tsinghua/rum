@@ -5,6 +5,9 @@ use super::*;
 use crate::runtime::kernel_api::{
     AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
 };
+use crate::runtime::suspension::{
+    ContinueToken, ResumeStop, SlotWitness, TypedFrame, slot_witness,
+};
 use std::sync::Arc;
 
 pub(super) struct PreparedCallArguments {
@@ -13,16 +16,27 @@ pub(super) struct PreparedCallArguments {
 }
 
 impl PreparedCallArguments {
-    // Dormant typed-slot provider. Reuse the existing suspended wire encoder.
+    // The existing Legacy wire; typed frames use this same single provider.
     pub(in crate::runtime) fn into_continuation_expr(self) -> Expr {
-        finish_suspended_prepared_call(SuspendedPreparedCallArguments {
-            evaluated_args: PreparedArgumentAccumulator::freeze(
-                self.evaluated_args.into_iter().collect(),
-            ),
-            unevaluated_restores: self
-                .unevaluated_restore
-                .map(|restore| UnevaluatedRestoreAccumulator::freeze(restore.wrappers)),
-        })
+        let restores = self
+            .unevaluated_restore
+            .map(|restore| restore.wrappers)
+            .unwrap_or_default()
+            .into_iter()
+            .map(|(position, wrapper)| {
+                Expr::call(
+                    system_expr("InternalContinuationUnevaluatedRestore"),
+                    vec![Expr::integer(BigInt::from(position)), wrapper],
+                )
+            })
+            .collect();
+        Expr::call(
+            system_expr("InternalContinuationPreparedCallArguments"),
+            vec![
+                Expr::call_shared(SharedExpr::new(system_expr("List")), self.evaluated_args),
+                Expr::call(system_expr("List"), restores),
+            ],
+        )
     }
 }
 
@@ -133,27 +147,18 @@ mod abandonment_tests {
     }
 }
 
-fn finish_suspended_prepared_call(state: SuspendedPreparedCallArguments) -> Expr {
-    let evaluated_args = state.evaluated_args.into_vec();
-    let restores = state
-        .unevaluated_restores
-        .map(UnevaluatedRestoreAccumulator::into_vec)
-        .unwrap_or_default()
-        .into_iter()
-        .map(|(position, wrapper)| {
-            Expr::call(
-                system_expr("InternalContinuationUnevaluatedRestore"),
-                vec![Expr::integer(BigInt::from(position)), wrapper],
-            )
+fn finish_suspended_prepared_call(state: SuspendedPreparedCallArguments) -> PreparedCallArguments {
+    let evaluated_args = SharedArgs::new(state.evaluated_args.into_vec());
+    let unevaluated_restore = state.unevaluated_restores.map(|restores| {
+        Box::new(UnevaluatedRestorePlan {
+            prepared_args: evaluated_args.clone(),
+            wrappers: restores.into_vec(),
         })
-        .collect::<Vec<_>>();
-    Expr::call(
-        system_expr("InternalContinuationPreparedCallArguments"),
-        vec![
-            Expr::call(system_expr("List"), evaluated_args),
-            Expr::call(system_expr("List"), restores),
-        ],
-    )
+    });
+    PreparedCallArguments {
+        evaluated_args,
+        unevaluated_restore,
+    }
 }
 
 pub(super) fn prepared_call_arguments_from_continuation_expr(
@@ -227,16 +232,6 @@ pub(super) fn prepared_call_arguments_from_continuation_expr(
 }
 
 impl Session {
-    pub(super) fn prepare_arguments_for_call(
-        &mut self,
-        head: Expr,
-        attributes: AttributeSet,
-        args: SharedArgs,
-    ) -> Result<SharedArgs, EvalError> {
-        self.prepare_arguments_for_call_with_unevaluated_restore(head, attributes, args)
-            .map(|prepared| prepared.evaluated_args)
-    }
-
     pub(super) fn prepare_arguments_for_call_with_unevaluated_restore(
         &mut self,
         head: Expr,
@@ -266,24 +261,16 @@ impl Session {
                             runtime_profile_evaluate,
                             runtime_profile_outcome_for_expr_result(&evaluated_result),
                         );
-                        match evaluated_result {
-                            Ok(value) => value,
-                            Err(EvalError::InputRequired { request }) => {
-                                let prepared =
-                                    built.take().unwrap_or_else(|| args[..index].to_vec());
-                                let state = SuspendedCallArgumentPreparation {
-                                    head,
-                                    attributes,
-                                    args,
-                                    cursor: index + 1,
-                                    prepared: PreparedArgumentAccumulator::freeze(prepared),
-                                    unevaluated_restores: unevaluated_restores
-                                        .map(UnevaluatedRestoreAccumulator::freeze),
-                                };
-                                crate::resume_or_suspend!(insert self, PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame { state, allow_sequence_splice });
-                                return Err(EvalError::InputRequired { request });
-                            }
-                            Err(error) => return Err(error),
+                        'argument_value: {
+                            return crate::resume_typed_or_suspend!(
+                                self,
+                                evaluated_result,
+                                ok(value) => break 'argument_value value,
+                                suspend => PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame::freeze(
+                                    head, attributes, args, index, built.take(),
+                                    unevaluated_restores, allow_sequence_splice,
+                                ),
+                            );
                         }
                     }
                     CallArgumentMode::Hold => plan.expr,
@@ -395,12 +382,13 @@ impl Session {
         result
     }
 
-    fn resume_suspended_call_after_argument(
+    fn resume_suspended_call_after_argument<'resume>(
         &mut self,
         mut state: SuspendedCallArgumentPreparation,
         value: Expr,
         allow_sequence_splice: bool,
-    ) -> Result<SuspendedPreparedCallArguments, EvalError> {
+        token: ContinueToken<'resume, PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame>,
+    ) -> Result<SuspendedPreparedCallArguments, ResumeStop<PreparedCallArguments>> {
         let list_drops_nothing = is_system_symbol_name(&state.head, heads::structure::LIST);
         state.prepared = append_suspended_prepared_argument(
             state.prepared,
@@ -409,13 +397,14 @@ impl Session {
             state.attributes.sequence_hold(),
             list_drops_nothing,
         );
-        self.resume_suspended_call_argument_preparation(state)
+        self.resume_suspended_call_argument_preparation(state, token)
     }
 
-    fn resume_suspended_call_argument_preparation(
+    fn resume_suspended_call_argument_preparation<'resume>(
         &mut self,
         mut state: SuspendedCallArgumentPreparation,
-    ) -> Result<SuspendedPreparedCallArguments, EvalError> {
+        token: ContinueToken<'resume, PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame>,
+    ) -> Result<SuspendedPreparedCallArguments, ResumeStop<PreparedCallArguments>> {
         let sequence_hold = state.attributes.sequence_hold();
         let list_drops_nothing = is_system_symbol_name(&state.head, heads::structure::LIST);
 
@@ -443,14 +432,25 @@ impl Session {
                         runtime_profile_evaluate,
                         runtime_profile_outcome_for_expr_result(&evaluated_result),
                     );
+                    // The witness is derived before matching the actual evaluator Result.
+                    let witness: SlotWitness<
+                        <PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame as TypedFrame>::Input,
+                    > = slot_witness(&evaluated_result);
                     match evaluated_result {
                         Ok(value) => value,
                         Err(EvalError::InputRequired { request }) => {
                             state.cursor += 1;
-                            crate::resume_or_suspend!(insert self, ResumeSuspendedCallArgumentPreparationSuspensionFrame { state, allow_sequence_splice });
-                            return Err(EvalError::InputRequired { request });
+                            return Err(token.suspend(
+                                self,
+                                witness,
+                                request,
+                                PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame {
+                                    state,
+                                    allow_sequence_splice,
+                                },
+                            ));
                         }
-                        Err(error) => return Err(error),
+                        Err(error) => return Err(ResumeStop::failure(error)),
                     }
                 }
                 CallArgumentMode::Hold => plan.expr,
@@ -574,4 +574,5 @@ pub(in crate::runtime) fn prepared_slot_finalizer_fixture(
             .as_ref()
             .map(|restore| UnevaluatedRestoreAccumulator::freeze(restore.wrappers.clone())),
     })
+    .into_continuation_expr()
 }

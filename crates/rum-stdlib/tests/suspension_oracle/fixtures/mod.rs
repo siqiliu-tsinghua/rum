@@ -12,6 +12,7 @@ use super::descriptors::{Fixture, Pause};
 use rum_runtime::RuntimeInputKind;
 mod debug;
 mod definitions;
+mod evaluation_dispatch;
 mod lazy;
 mod loops;
 mod options;

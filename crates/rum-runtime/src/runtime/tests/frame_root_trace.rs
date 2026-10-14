@@ -236,12 +236,19 @@ fn suspension_protocol_repository_invariants_hold() {
             );
         }
 
-        for block in trait_impl_blocks(&source, "SuspensionFrame") {
+        for (trait_name, block) in ["SuspensionFrame", "TypedFrame"]
+            .into_iter()
+            .flat_map(|name| {
+                trait_impl_blocks(&source, name)
+                    .into_iter()
+                    .map(move |block| (name, block))
+            })
+        {
             if block.header.contains("PureFrameFinalizer") {
                 continue;
             }
             frame_count += 1;
-            let type_name = implemented_type_name(block.header, "SuspensionFrame");
+            let type_name = implemented_type_name(block.header, trait_name);
             let declaration = format!("struct {type_name}");
             let declaration_offset = source.find(&declaration).unwrap_or_else(|| {
                 panic!(
@@ -307,9 +314,16 @@ fn suspension_protocol_repository_invariants_hold() {
             }
         }
 
-        for block in trait_impl_blocks(&source, "PureFrameFinalizer") {
+        for (trait_name, block) in ["PureFrameFinalizer", "SlotFinalizer"]
+            .into_iter()
+            .flat_map(|name| {
+                trait_impl_blocks(&source, name)
+                    .into_iter()
+                    .map(move |block| (name, block))
+            })
+        {
             finalizer_count += 1;
-            let type_name = implemented_type_name(block.header, "PureFrameFinalizer");
+            let type_name = implemented_type_name(block.header, trait_name);
             let declaration = format!("struct {type_name}");
             let declaration_offset = source.find(&declaration).unwrap_or_else(|| {
                 panic!(
@@ -327,7 +341,16 @@ fn suspension_protocol_repository_invariants_hold() {
             );
             let compact_block = remove_ascii_whitespace(block.body);
             assert!(
-                compact_block.contains("fnfinish(self:Box<Self>)->Result<Expr,EvalError>"),
+                if trait_name == "SlotFinalizer" {
+                    // S3's sole typed finalizer preserves the same Session-free tail.
+                    type_name == "FinishPreparedCallArgumentsFinalizer"
+                        && compact_block.contains("typeOutput=PreparedCallArguments;")
+                        && compact_block.contains(
+                            "fnfinish(self:Box<Self>)->Result<PreparedCallArguments,EvalError>",
+                        )
+                } else {
+                    compact_block.contains("fnfinish(self:Box<Self>)->Result<Expr,EvalError>")
+                },
                 "PureFrameFinalizer {type_name} must use the closed Session-free signature in {}",
                 path.display()
             );
@@ -396,9 +419,9 @@ fn suspension_protocol_repository_invariants_hold() {
             "FrameAction::Finalize(finalizer)=>finalizer.finish().map(Slot::Value)",
         ),
         (
-            "letaction=frame.resume(self,outcome).map_err(|failure|self.record_slot_fault(failure))?;",
+            "letaction=frame.resume(self,&mutoutcome);drop(frame);ifletAction::DecodeFailure(failure)=action{returnErr(self.record_slot_fault(failure));}",
             ".pop_front();",
-            "Action::Finalize(finalizer)=>finalizer.finish()",
+            "Action::Finalize(finalizer)=>outcome=finalizer.finish()",
         ),
     ] {
         let resume_index = compact_core
@@ -798,8 +821,15 @@ fn suspension_oracle_fixture_population_is_exact() {
         let path = workspace.join(relative);
         let source = fs::read_to_string(&path).unwrap();
         derived.extend(derived_frame_root_trace_types(workspace, &path));
-        for block in trait_impl_blocks(&source, "SuspensionFrame") {
-            let name = implemented_type_name(block.header, "SuspensionFrame");
+        for (trait_name, block) in ["SuspensionFrame", "TypedFrame"]
+            .into_iter()
+            .flat_map(|name| {
+                trait_impl_blocks(&source, name)
+                    .into_iter()
+                    .map(move |block| (name, block))
+            })
+        {
+            let name = implemented_type_name(block.header, trait_name);
             let declaration = source.find(&format!("struct {name}")).unwrap();
             let derive_start = source[..declaration].rfind("#[derive(").unwrap();
             assert!(source[derive_start..declaration].contains("PureFrameAbandon"));

@@ -88,13 +88,12 @@ impl Session {
     pub(in crate::runtime) fn continuation_fault_outcome<T>(
         &mut self,
         _outcome: Result<T, EvalError>,
-    ) -> Result<T, EvalError> {
-        Err(self
-            .pending_suspension
+    ) -> EvalError {
+        self.pending_suspension
             .fault
             .take()
             .expect("the boundary checked the continuation fault latch")
-            .into_error())
+            .into_error()
     }
 
     pub(super) fn unwind_continuation_fault(&mut self) {

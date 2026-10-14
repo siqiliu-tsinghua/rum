@@ -13,11 +13,8 @@ pub(in crate::runtime::suspension) struct DecodeFailure {
 pub(in crate::runtime::suspension) trait ErasedFrame:
     FrameRootTrace + FrameAbandon + Send + Sync
 {
-    fn resume(
-        self: Arc<Self>,
-        session: &mut Session,
-        input: Result<Slot, EvalError>,
-    ) -> Result<Action, DecodeFailure>;
+    /// Consumes input, leaving the resource-free Abort even when decoding fails.
+    fn resume(&self, session: &mut Session, input: &mut Result<Slot, EvalError>) -> Action;
     fn output_boundary(&self) -> OutputBoundary;
     fn inner_frame(&self) -> &dyn FrameRootTrace;
 }
@@ -34,16 +31,12 @@ impl<F: TypedFrame> FrameAbandon for TypedAdapter<F> {
 }
 
 impl<F: TypedFrame> ErasedFrame for TypedAdapter<F> {
-    fn resume(
-        self: Arc<Self>,
-        session: &mut Session,
-        input: Result<Slot, EvalError>,
-    ) -> Result<Action, DecodeFailure> {
-        let decoded = match input {
+    fn resume(&self, session: &mut Session, input: &mut Result<Slot, EvalError>) -> Action {
+        let decoded = match std::mem::replace(input, Err(EvalError::Abort)) {
             Ok(slot) => match decode::<F::Input>(slot, CodecKey::new()) {
                 Ok(value) => Ok(value),
                 Err(actual) => {
-                    return Err(DecodeFailure {
+                    return Action::DecodeFailure(DecodeFailure {
                         expected: std::any::type_name::<F::Input>(),
                         actual,
                     });
@@ -53,7 +46,7 @@ impl<F: TypedFrame> ErasedFrame for TypedAdapter<F> {
         };
         // This is the sole token mint. It stores neither this adapter nor F.
         let token = ContinueToken { proof: PhantomData };
-        Ok(self.inner.clone().resume(session, decoded, token).inner)
+        self.inner.clone().resume(session, decoded, token).inner
     }
 
     fn output_boundary(&self) -> OutputBoundary {
@@ -77,12 +70,8 @@ pub(in crate::runtime::suspension) fn allocation_bytes<F: TypedFrame>() -> usize
         + std::mem::size_of::<F>()
 }
 
-pub(super) struct FinalizerAdapter<F: SlotFinalizer>(pub F);
-
-impl<F: SlotFinalizer> ErasedFinalizer for FinalizerAdapter<F> {
+impl<F: SlotFinalizer> ErasedFinalizer for F {
     fn finish(self: Box<Self>) -> Result<Slot, EvalError> {
-        Box::new(self.0)
-            .finish()
-            .map(|value| encode(value, CodecKey::new()))
+        SlotFinalizer::finish(self).map(|value| encode(value, CodecKey::new()))
     }
 }

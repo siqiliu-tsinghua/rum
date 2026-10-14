@@ -1,4 +1,4 @@
-//! Paired compiler controls for S1 sealing and the S2 live suspension routes.
+//! Paired compiler controls for sealing and the witnessed live suspension routes.
 //! Diagnostics are parsed as Cargo JSON, including exact primary source spans.
 use std::{path::Path, process::Command};
 
@@ -42,7 +42,7 @@ from pathlib import Path
 import json, os, shutil, subprocess, sys
 
 root=Path(sys.argv[1]); feature=sys.argv[2]
-scratch=root/'.temp/brief-608/compile-controls'; scratch.mkdir(parents=True,exist_ok=True)
+scratch=root/'.temp/brief-609/compile-controls'; scratch.mkdir(parents=True,exist_ok=True)
 logs=scratch/feature; logs.mkdir(exist_ok=True)
 external=scratch/'external'; (external/'src').mkdir(parents=True,exist_ok=True)
 copy=scratch/'private-workspace'; copy.mkdir(exist_ok=True)
@@ -169,13 +169,18 @@ impl FrameAbandon for A {fn abandon(self:Arc<Self>,_:&mut AbandonmentContext<'_>
 impl FrameAbandon for B {fn abandon(self:Arc<Self>,_:&mut AbandonmentContext<'_>)->FrameAbandonAction{FrameAbandonAction::Discard}}
 impl TypedFrame for A {type Input=Expr;type Output=Expr;fn resume<'r>(self:Arc<Self>,_:&mut Session,value:Result<Expr,EvalError>,_:ContinueToken<'r,Self>)->TypedAction<Expr>{TypedAction::complete(value)}}
 impl TypedFrame for B {type Input=Expr;type Output=Expr;fn resume<'r>(self:Arc<Self>,_:&mut Session,value:Result<Expr,EvalError>,_:ContinueToken<'r,Self>)->TypedAction<Expr>{TypedAction::complete(value)}}
-fn check<'r>(s:&mut Session,request:RuntimeInputRequest,token:ContinueToken<'r,A>,cursor:usize)->ResumeStop<Expr>{
-token.suspend(s,request,A{cursor:cursor+1}) // @token-fresh-type
-}''','token.suspend(s,request,A{cursor:cursor+1})','token.suspend(s,request,B{cursor:cursor+1})','E0308','B{cursor:cursor+1}',category='mismatched types')
+fn check<'r>(s:&mut Session,actual:Result<Expr,EvalError>,request:RuntimeInputRequest,token:ContinueToken<'r,A>,cursor:usize)->ResumeStop<Expr>{
+token.suspend(s,slot_witness(&actual),request,A{cursor:cursor+1}) // @token-fresh-type
+}''','token.suspend(s,slot_witness(&actual),request,A{cursor:cursor+1})','token.suspend(s,slot_witness(&actual),request,B{cursor:cursor+1})','E0308','B{cursor:cursor+1}',category='mismatched types')
+external_case('token-witness-input', '''type Input=Expr; // token witness input
+fn check<'r>(s:&mut Session,actual:Result<Input,EvalError>,request:RuntimeInputRequest,token:ContinueToken<'r,Frame<Expr,Expr>>)->ResumeStop<Expr>{
+let witness=slot_witness(&actual);
+token.suspend(s,witness,request,frame::<Expr,Expr>()) // @token-witness-input
+}''','type Input=Expr; // token witness input','type Input=Option<Expr>; // token witness input','E0308','witness',category='mismatched types')
 external_case('deferred-final-output', '''type Output=Option<Expr>; // deferred owner output
-fn check<'r>(s:&mut Session,request:RuntimeInputRequest,token:ContinueToken<'r,Frame<Expr,Option<Expr>>>)->Result<usize,ResumeStop<Output>>{
-Err(token.suspend(s,request,frame::<Expr,Option<Expr>>())) // @deferred-final-output
-}''','type Output=Option<Expr>; // deferred owner output','type Output=Expr; // deferred owner output','E0308','token.suspend(s,request,frame::<Expr,Option<Expr>>())',category='mismatched types')
+fn check<'r>(s:&mut Session,actual:Result<Expr,EvalError>,request:RuntimeInputRequest,token:ContinueToken<'r,Frame<Expr,Option<Expr>>>)->Result<usize,ResumeStop<Output>>{
+Err(token.suspend(s,slot_witness(&actual),request,frame::<Expr,Option<Expr>>())) // @deferred-final-output
+}''','type Output=Option<Expr>; // deferred owner output','type Output=Expr; // deferred owner output','E0308','token.suspend(s,slot_witness(&actual),request,frame::<Expr,Option<Expr>>())',category='mismatched types')
 external_case('generic-frame', '''fn check<F:TypedFrame<Input=Expr,Output=Expr>>(s:&mut Session,actual:Result<Expr,EvalError>,request:RuntimeInputRequest,frame:F)->Result<Expr,EvalError>{
 slot_witness(&actual).suspend(s,request,frame) // @generic-frame
 }''','F:TypedFrame<Input=Expr,Output=Expr>','F:TypedFrame<Input=Expr>','E0308','slot_witness(&actual).suspend',category='mismatched types')
@@ -227,7 +232,7 @@ private_case('mode-one-associated-type',registry,'impl Codec for Option<Expr> {\
 private_case('mode-no-codec-override',registry,'impl Codec for Option<Expr> {\n    type Mode = LegacyMode;','impl Codec for Option<Expr> {\n    type Mode = LegacyMode;\n    fn decode(slot: super::channel::Slot, _: CodecKey) -> Result<Self, super::channel::Slot> { Err(slot) } // @mode-no-codec-override','E0407','fn decode')
 private_case('mode-legacy-provider-narrow',typed,'fn old_decode(_:Expr,_:CodecKey)','fn old_decode(_:Slot,_:CodecKey)','E0053','Slot',category='incompatible type for trait')
 private_case('mode-state-provider-narrow',typed,'fn unpack(_:ContinuationState,_:CodecKey)->Result<Self,ContinuationState> { Ok(Self) } // @mode-state-provider-narrow','fn unpack(_:Slot,_:CodecKey)->Result<Self,ContinuationState> { Ok(Self) } // @mode-state-provider-narrow','E0053','Slot',category='incompatible type for trait')
-assert len(cases)==30
+assert len(cases)==31
 base={case['file']:case['file'].read_text() for case in cases}
 
 def compile(kind,label):
@@ -282,6 +287,10 @@ for kind in ['external','private']:
                     return any(span['is_primary'] and span['file_name'].endswith('/suspension/typed/tests/registry.rs') and any('value::<Expr>();' in text['text'] for text in span['text']) for span in error['spans'])
                 return False
             assert all(related(error) for error in errors),(case['id'],'unrelated diagnostic',errors)
+            if case['id']=='token-witness-input':
+                expected_span=(line,column,line,column+len(case['needle']))
+                actual_spans=[(span['line_start'],span['column_start'],span['line_end'],span['column_end']) for error in errors for span in error['spans'] if span['is_primary'] and span['file_name']==expected_file]
+                assert len(errors)==1 and actual_spans==[expected_span],(case['id'],expected_span,errors)
             if case['id']=='slot-mismatch-private':
                 # Pin both private fields' complete primary spans, not just
                 # the start of the first diagnostic at the constructor.
@@ -295,6 +304,6 @@ for kind in ['external','private']:
             print(f'PAIR {case["id"]}: positive PASS; negative {case["code"] or "lifetime"} at {expected_file}:{line}:{column}',flush=True)
         finally: file.write_text(base[file])
 (logs/'results.json').write_text(json.dumps(report,indent=2)+'\n')
-assert len(report)==30
-print('COMPILE CONTROLS: 30 positive / 30 intended rejections (22 S1 + 7 S2 + opaque fault); raw Cargo JSON and primary spans retained',flush=True)
+assert len(report)==31
+print('COMPILE CONTROLS: 31 positive / 31 intended rejections (22 S1 + 7 S2 + opaque fault + token witness); raw Cargo JSON and primary spans retained',flush=True)
 "###;

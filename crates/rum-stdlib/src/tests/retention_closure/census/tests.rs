@@ -205,14 +205,27 @@ fn baseline(source: &Source) {
     // shifted from core.rs:473 to :477; all other 931 diagnostics are identical.
     // Redispatch 5: the same receiver moves from :477 to :482; the other
     // 931 rows and every unresolved-boundary assertion remain unchanged.
+    // brief-609 S3: 916 S2 records are unchanged and 15 identical operations
+    // move (one witness gains the cold frame factory). M0561's legacy RET003
+    // becomes five accounted typed-expansion RET002 rows, including the cold
+    // helper's captures/moves, FnOnce call and drops. The interim Try boundary
+    // disappears when success exits the labeled block directly. No unpaired
+    // removal or newly revealed legacy-arm row; freeze remains visible.
+    // Redispatch 6: all 936 rows pair with the same operations, including
+    // the caller-place witness and the outlined cycle formatter. Restoring
+    // M0561's trailing `?` adds one unresolved Try/FromResidual boundary.
+    assert!(options.rejected.iter().any(|row| row.kind == Kind::RET002
+        && row.site.file.ends_with("resolution.rs")
+        && row.site.start == (35, 19)
+        && row.reason == "path AccumulatorChain::default has 0 exact bindings"));
     assert_eq!(
         options.rejected.len(),
-        932,
+        937,
         "STOP: brief-545 exact legacy frontier inventory moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 895), (Kind::RET003, 27)])
+        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 901), (Kind::RET003, 26)])
     );
     let wrapper = regions::frontier(
         source,

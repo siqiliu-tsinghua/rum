@@ -4,9 +4,9 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-14, committed tree through brief-608 (G13 step
-S2, the compatible driver, gated). **Next: S3, evaluation, argument
-preparation and dispatch (brief-609); G13's implementation is 78 gated steps** — S1 dormant API, S2
+Status checkpoint: 2026-10-15, committed tree through brief-609 (G13 step
+S3, evaluation, argument preparation and dispatch, gated). **Next: S4
+(brief-610); G13's implementation is 78 gated steps** — S1 dormant API, S2
 compatible driver, S3-S54 family typing, F1-F23 one flip per legacy type, R
 removal — each a director-rewritten brief
 from `.temp/brief-606/draft-*.md`, dispatched to Codex (user ruling; GLM only
@@ -865,9 +865,9 @@ existing `PreparedInterpreted*` enums in S33), 43 new carriers State from
 birth. 1 399 obligation rows (623 frame rows, 600 macro sites, 62 chains, 14
 deferred families, 10 routes, 90 transform rows) each owned by exactly one of
 52 family steps, largest 26 implementations / 24 macros. The 21 historical
-divergences promote to strict equality in their owning steps (S3 Fold/Nest,
-S7 Part/association, S10 Failure Message, S13 Function, S19 Cases); no
-waiver. No transport cycle, so 23 singleton flips, each after every frame is
+divergences promote to strict equality in their owning steps (Fold/Nest —
+reassigned from S3 to S13 by brief-609 —, S7 Part/association, S10 Failure
+Message, S13 Function, S19 Cases); no waiver. No transport cycle, so 23 singleton flips, each after every frame is
 typed, under a source census and that type's internal-encoding corpus. 35
 compile-control pairs (26 + 9 for the mode). Director gate: the partition
 checker and the four model tests reproduce; the 623 frame rows and 600 macro
@@ -938,8 +938,87 @@ iteration. A callgrind total therefore needs at least 3 processes per arm,
 with each arm's range as its floor. Address-level attribution is
 deterministic and decides mechanism questions.
 
-Owed to S3: `continuation_fault_outcome` always returns `Err` but keeps a
+Owed to S3 (done in S3): `continuation_fault_outcome` always returns `Err` but keeps a
 `Result` signature; retype it to return `EvalError`.
+
+**S3 (brief-609): evaluation, argument preparation and dispatch.** Nine
+dispatches. Two were cut by model capacity and resumed by fork, and one by
+the Codex usage limit; the director measured that run's remainder. S3 adds
+12 typed implementations (11 `TypedFrame`, 1 `SlotFinalizer`) and 13 typed
+macro sites. F0273 merges into F0272 and M0288 into M0287. Production stays
+at 607 implementations and 589 macro sites, of which 12 and 13 are now
+typed. Every stop was correct, and four of them found a class:
+- **The six Fold/Nest promotions belong to S13, not S3.** Their divergence
+  is F0528's skipped `.map(Some)` in `try_apply_function`
+  (`scoping/callable.rs`). S3 fixed its own skipped map, F0278's in
+  `try_dispatch_builtin_call`, behind builtin-completion fixtures watched to
+  fail first. The six fixtures are kept in `.temp/brief-609/fold-nest-*` for
+  S13's brief.
+- **One witnessed token route.** `ContinueToken::suspend` takes the
+  producer's `SlotWitness<F::Input>`; there is no unwitnessed sibling.
+- **The retention analyzer reads the typed macro.** Its frontier view and all
+  four production views read one checked adapter
+  (`retention_closure/typed_resume_macro.rs`). It has exact definitions for
+  both macro arms, a fixed expansion rejection list, and a drift falsifier
+  (seven mutations × four views, watched failing). The legacy macro stays
+  opaque. The local analyzer needs the same model when a certified body
+  converts (the options region).
+- **Stack.** S3's new helper layers broke the unchanged 48-level recursion
+  test. Both dispatch resumers now loop over stages, so a guest call keeps
+  one resident frame, and frame construction is outlined cold. Bytes per
+  level are now below S2: debug 19152/34896 against 21424/37728, and release
+  7312/13744 against 8096/14720 (peel/arithmetic).
+- **Copies.** These fixes were each isolated at the address level:
+  - a caller-place macro arm, so the producer's result is not re-bound
+    (136 B);
+  - direct profile records instead of a three-record closure (168 B);
+  - cold cycle-error formatting (leaf 112 → 110 instructions);
+  - a borrowed erased adapter that takes its input in place and returns
+    `Action` directly, through a private `Action::DecodeFailure`.
+
+  The driver ends the resource-free `Abort` placeholder with `mem::forget`.
+  This is accepted because there is one private implementor, a debug
+  assertion and branch tests check it, and a violation can only leak.
+- **Finalizer.** The erased box is now the finalizer's own box, through a
+  blanket `impl<F: SlotFinalizer> ErasedFinalizer for F`, the same
+  zero-transfer shape as the legacy `PureFrameFinalizer`. The host-payload
+  ledger's existential proof now covers blanket erasure: private trait, one
+  ordinary bound, every implementor validated. Six falsifiers were watched
+  failing.
+
+Director gate (the director's own runs):
+- oracle 58/58 in both builds, warning-free;
+- census in both builds;
+- 31 compile-control pairs in both builds;
+- ownership 31/31;
+- fingerprints and certificates re-derived independently, with inventories
+  byte-identical;
+- workspace 3468 passed, 0 failed, 59 ignored, 0 native ZeroMQ skips;
+- 48-level test green;
+- candidate binaries confirmed fresh against the tree.
+
+Performance, one codegen unit, S2 against S3:
+- ordinary allocations and bytes are equal on 59/59 labels;
+- ordinary instructions: no label flagged, and S3 is 0-2% below S2;
+- `memcpy` counts equal S2 on 59/59;
+- resume costs +10-17% instructions, with allocations exactly the typed
+  frames + 3 (call-repeat 7N + 4).
+
+The finish path runs 23 278 instructions against S2's 23 271, with no
+allocation and no payload transfer. Accepted as inherent:
+- the cold freeze helper's 8 ABI instructions per suspension (the stack
+  result rests on it);
+- one Session spill per resume request.
+
+Owed:
+- **The Legacy `Option<Expr>` `Some` wire.** F0278 adds 3 allocations,
+  120 B and about 1.5k instructions per resume. This is the strict Legacy
+  encoding of `Some(value)`, which S2's lenient decoder
+  (`other => Some(other)`) used to invent. It is owed to `Option<Expr>`'s
+  flip, whose gate must show it gone.
+- **S13** takes the six Fold/Nest promotions and F0528's `.map(Some)`.
+- **The local analyzer** needs typed-macro modeling when C01/C02's body
+  converts.
 
 **Recorded, not in this branch — the gensym sweep does not see Rust-local
 values (found 2026-10-14 reviewing brief-605; Q3, queued behind the branch by

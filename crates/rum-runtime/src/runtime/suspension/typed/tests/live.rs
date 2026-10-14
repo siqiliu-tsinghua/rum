@@ -255,9 +255,11 @@ fn repeat_work<'r>(
         return Ok(Expr::small_integer(4));
     }
     let outcome = input(s);
+    let witness = slot_witness(&outcome);
     match outcome {
         Err(EvalError::InputRequired { request }) => Err(token.suspend(
             s,
+            witness,
             request,
             Repeat {
                 remaining: fresh.remaining - 1,

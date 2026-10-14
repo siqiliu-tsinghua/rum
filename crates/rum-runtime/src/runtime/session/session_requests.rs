@@ -226,7 +226,7 @@ impl Session {
             std::mem::replace(&mut self.current_message_list_dirty, false);
         let outcome = self.evaluate(expr);
         let finalized = if self.has_continuation_fault() {
-            Err(self.continuation_fault_outcome(outcome).unwrap_err())
+            Err(self.continuation_fault_outcome(outcome))
         } else {
             self.finalize_top_level_eval_value(outcome, checkpoint.handled_error_checkpoint)
         };
@@ -337,7 +337,7 @@ impl Session {
             }
         };
         let finalized = if self.has_continuation_fault() {
-            Err(self.continuation_fault_outcome(outcome).unwrap_err())
+            Err(self.continuation_fault_outcome(outcome))
         } else {
             self.finalize_top_level_eval_value(outcome, checkpoint.handled_error_checkpoint)
         };
