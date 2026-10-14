@@ -12,6 +12,7 @@ description = "Pure rum kernel for lowering, evaluation, definitions, matching, 
 [features]
 test-builtin-memory-growth = []
 test-native-stack-guard-zero = []
+test-continuation-slots = []
 
 [dependencies]
 rum-core = { path = "../rum-core" }

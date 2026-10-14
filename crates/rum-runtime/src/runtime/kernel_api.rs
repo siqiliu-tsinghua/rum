@@ -118,6 +118,7 @@ pub use super::messages::parse_and_message_helpers::{
 
 // session_state
 pub use super::session::session_state::{EvalError, ThreadArgSpec, ThreadingDispatch};
+pub use super::suspension::trace::SlotMismatch;
 
 // structure_data
 #[doc(hidden)]
@@ -131,6 +132,8 @@ pub use super::kernel_data::structure_data::{
 pub use super::tree_walkers::collect_level_parts_owned;
 
 // suspension/core (stdlib-only bridge)
+#[cfg(any(test, feature = "test-continuation-slots"))]
+pub use super::suspension::trace::FaultProbe;
 #[doc(hidden)]
 pub use super::suspension::{
     AbandonmentContext, ContinuationValue, FrameAbandon, FrameAbandonAction, FrameAction,
@@ -138,6 +141,7 @@ pub use super::suspension::{
 };
 #[doc(hidden)]
 pub use crate::resume_or_suspend;
+pub use crate::resume_typed_or_suspend;
 
 // suspension/trace (stdlib-only bridge)
 pub use super::accounting_mode::RetainedOptions;

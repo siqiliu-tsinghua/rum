@@ -37,7 +37,7 @@ fn save(dir: &Path, name: &str, header: &str, rows: impl IntoIterator<Item = Str
 }
 
 pub(super) fn emit(root: &Path, facts: &Facts, report: &Report) {
-    let dir = root.join(format!(".temp/brief-607/census/{}", feature()));
+    let dir = root.join(format!(".temp/brief-608/census/{}", feature()));
     let hashes = hashes(root);
     let hash = |site: &scan::Site| {
         hashes
@@ -167,15 +167,16 @@ pub(super) fn emit(root: &Path, facts: &Facts, report: &Report) {
     save(
         &dir,
         "typed-registry.tsv",
-        "id\tslot\tmode\tfile\tline\tcolumn\tend_line\tend_column\tsha256",
+        "id\tslot\tmode\tfile\tline\tcolumn\tend_line\tend_column\tsha256\tpopulation",
         report.registry.iter().map(|r| {
             format!(
-                "{}\t{}\t{}\t{}\t{}",
+                "{}\t{}\t{}\t{}\t{}\t{}",
                 classify::stable("T", &r.slot),
                 r.slot,
                 r.mode,
                 r.site.fields(),
-                hash(&r.site)
+                hash(&r.site),
+                r.population.label()
             )
         }),
     );

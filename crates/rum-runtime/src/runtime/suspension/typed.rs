@@ -1,6 +1,4 @@
-//! Typed continuation construction. S1 deliberately has no queue integration.
-// Private erased operations become driver entry points in S2.
-#![allow(dead_code)]
+//! Typed continuation construction and private driver entries.
 
 use std::sync::Arc;
 
@@ -12,6 +10,7 @@ mod action;
 mod adapter;
 mod chain;
 mod channel;
+mod entry;
 mod legacy;
 mod registry;
 mod resume_token;
@@ -24,6 +23,13 @@ pub use action::{ResumeStop, TypedAction};
 pub use chain::FrameChain;
 pub use resume_token::ContinueToken;
 pub use witness::{SlotWitness, slot_witness};
+
+pub(super) use action::Action;
+pub(super) use adapter::{
+    DecodeFailure, ErasedFrame, allocation_bytes as typed_allocation_bytes, erase,
+};
+pub(super) use channel::{Slot, decode_completion};
+pub(super) use entry::{Entry, EntryRef};
 
 /// A runtime-registered continuation payload. External implementations are sealed.
 pub trait SlotValue: channel::Codec + Sized + Send + 'static {}

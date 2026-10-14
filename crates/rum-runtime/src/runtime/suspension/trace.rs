@@ -9,6 +9,10 @@ use rum_syntax::SyntaxError;
 
 use crate::runtime::metadata::BuiltinFn;
 
+#[cfg(any(test, feature = "test-continuation-slots"))]
+pub use super::core::fault::FaultProbe;
+pub use super::core::fault::SlotMismatch;
+
 /// A borrowed visitor over the two kinds of roots held by suspension state.
 pub trait FrameRootVisitor {
     fn visit_expr(&mut self, expr: &Expr);

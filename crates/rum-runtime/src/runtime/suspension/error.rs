@@ -268,6 +268,11 @@ fn syntax_error_from_expr(expr: Expr) -> SyntaxError {
 impl ContinuationValue for EvalError {
     fn into_continuation_expr(self) -> Expr {
         match self {
+            EvalError::ContinuationSlotMismatch(_) => {
+                unreachable!(
+                    "a structural slot fault cannot enter the legacy error wire; this wire and guard are removed at R"
+                )
+            }
             EvalError::Syntax(error) => tagged(
                 "InternalContinuationEvalErrorSyntax",
                 vec![syntax_error_into_expr(error)],

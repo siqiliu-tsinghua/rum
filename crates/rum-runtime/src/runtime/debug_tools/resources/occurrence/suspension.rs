@@ -9,10 +9,14 @@ macro_rules! define_oracle {
 
         impl SuspendedEvaluation {
             pub(in crate::runtime) fn occurrence_bytes(&self) -> Bytes {
-                let mut bytes = Bytes::Exact(size_of::<Self>()).add(
-                    Bytes::Exact(self.frames.capacity())
+                let queue = match &self.frames {
+                    FrameQueue::Legacy(frames) => Bytes::Exact(frames.capacity())
                         .multiply(size_of::<Arc<DynSuspensionFrame>>()),
-                );
+                    FrameQueue::Mixed(frames) => {
+                        Bytes::Exact(frames.capacity()).multiply(size_of::<Entry>())
+                    }
+                };
+                let mut bytes = Bytes::Exact(size_of::<Self>()).add(queue);
                 // As in the specified legacy model, saved-stack spare capacity is
                 // omitted; the live Session evaluation_stack does charge its spare.
                 for entry in &self.active_stack {
@@ -21,15 +25,28 @@ macro_rules! define_oracle {
                         .add(expression(&entry.expr));
                 }
                 let mut roots = OccurrenceRoots { bytes };
-                for frame in &self.frames {
-                    roots.bytes = roots
-                        .bytes
-                        .add(Bytes::Exact(size_of::<usize>()).multiply(2))
-                        .add(Bytes::Exact(size_of_val(frame.as_ref())));
+                self.frames.visit(|frame| {
+                    match &frame {
+                        EntryRef::Legacy(owner) => {
+                            roots.bytes = roots
+                                .bytes
+                                .add(Bytes::Exact(size_of::<usize>()).multiply(2))
+                                .add(Bytes::Exact(size_of_val(owner.as_ref())));
+                        }
+                        EntryRef::Typed(adapter) => {
+                            // Enumerate each owning allocation independently.
+                            roots.bytes = roots
+                                .bytes
+                                .add(Bytes::Exact(size_of::<usize>()).multiply(2))
+                                .add(Bytes::Exact(size_of_val(adapter.as_ref())))
+                                .add(Bytes::Exact(size_of::<usize>()).multiply(2))
+                                .add(Bytes::Exact(size_of_val(adapter.inner_frame())));
+                        }
+                    }
                     // The structural protocol is shared, but the expression arithmetic
                     // and the frame/container accounting are independent of memory.rs.
                     frame.trace_roots(&mut roots);
-                }
+                });
                 roots.bytes
             }
 

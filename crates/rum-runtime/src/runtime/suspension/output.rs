@@ -51,9 +51,9 @@ impl OutputBoundary {
 impl SuspendedEvaluation {
     fn output_boundary(&self) -> OutputBoundary {
         let mut boundary = OutputBoundary::default();
-        for frame in &self.frames {
+        self.frames.visit(|frame| {
             boundary.include(frame.output_boundary());
-        }
+        });
         boundary
     }
 }

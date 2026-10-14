@@ -1,4 +1,4 @@
-//! Source census and earned typing receipts. S1 deliberately refuses preflip.
+//! Source census and earned typing receipts. S2 deliberately refuses preflip.
 use std::{fs, process::Command};
 
 // Reuse the real lexical resolver; the census does not invent a second trait
@@ -38,6 +38,8 @@ mod discovery;
 mod receipts;
 #[path = "typed_slot_census/reporting.rs"]
 mod reporting;
+#[path = "typed_slot_census/routes.rs"]
+mod routes;
 use discovery::{discover, feature, root};
 use receipts::{baseline, preflip};
 use reporting::emit;
@@ -51,6 +53,7 @@ fn source_baseline_matches_earned_receipt() {
     let (_, facts, report) = discover(&root);
     emit(&root, &facts, &report);
     baseline(&facts, &report).unwrap_or_else(|error| panic!("{error}"));
+    routes::compatible_driver(&facts).unwrap();
 }
 #[test]
 fn preflip_no_legacy_transport_uses() {
@@ -58,13 +61,13 @@ fn preflip_no_legacy_transport_uses() {
     if let Some(slot) = stage::FLIP_SLOT {
         preflip(&facts, &report, slot).unwrap();
     } else {
-        assert_eq!(stage::TYPING_RECEIPT, "S1");
+        assert_eq!(stage::TYPING_RECEIPT, "S2");
         let error = preflip(&facts, &report, "Option<Expr>").unwrap_err();
         assert_eq!(
             error,
             "preflip refused: S54 completed receipt is required first"
         );
-        println!("S1 negative control: {error}; no zero-legacy claim");
+        println!("S2 negative control: {error}; no zero-legacy claim");
     }
 }
 
@@ -81,7 +84,7 @@ fn forced_red(remove_guard: bool) {
     let root = root();
     let (files, facts, report) = discover(&root);
     baseline(&facts, &report).unwrap();
-    let scratch = root.join(".temp/brief-607/census/forced-red/tree");
+    let scratch = root.join(".temp/brief-608/census/forced-red/tree");
     for (file, source) in &files {
         let p = scratch.join(file);
         fs::create_dir_all(p.parent().unwrap()).unwrap();
@@ -147,7 +150,7 @@ fn forced_red(remove_guard: bool) {
     let kind = if remove_guard { "guard" } else { "frame" };
     fs::write(
         root.join(format!(
-            ".temp/brief-607/census/forced-red/{}-{kind}.log",
+            ".temp/brief-608/census/forced-red/{}-{kind}.log",
             feature()
         )),
         &log,
@@ -156,10 +159,10 @@ fn forced_red(remove_guard: bool) {
     let marker = if remove_guard {
         "production frames=564 finalizers=59 implementations=623"
     } else {
-        "S1 PARTITION implementations=622"
+        "S2 PARTITION implementations=622"
     };
     assert!(
-        !output.status.success() && log.contains(marker) && log.contains("S1 baseline requires"),
+        !output.status.success() && log.contains(marker) && log.contains("S2 baseline requires"),
         "{log}"
     );
     println!("FORCED RED removed {kind} at {}:\n{log}", site.fields());
@@ -167,6 +170,6 @@ fn forced_red(remove_guard: bool) {
 #[test]
 #[ignore = "invoked explicitly by both bounded scratch-copy falsifiers"]
 fn forced_red_probe() {
-    let (_, facts, report) = discover(&root().join(".temp/brief-607/census/forced-red/tree"));
+    let (_, facts, report) = discover(&root().join(".temp/brief-608/census/forced-red/tree"));
     baseline(&facts, &report).unwrap();
 }

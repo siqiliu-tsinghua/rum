@@ -26,6 +26,7 @@ pub fn execute_planned(
     queued: bool,
     expected: Option<&[(rum_runtime::RuntimeInputKind, String)]>,
 ) -> Result<Run, Rejection> {
+    let _fault_check = super::faults::Check::new(s);
     if queued {
         for answer in answers {
             s.queue_input_response(*answer);

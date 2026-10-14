@@ -6,11 +6,13 @@ use super::adapter::{ErasedFrame, FinalizerAdapter, erase};
 use super::channel::{CodecKey, Slot, encode};
 use super::{Arc, EvalError, SlotFinalizer, SlotValue, TypedFrame};
 
-pub(super) trait ErasedFinalizer: Send {
+pub(in crate::runtime::suspension) trait ErasedFinalizer:
+    Send
+{
     fn finish(self: Box<Self>) -> Result<Slot, EvalError>;
 }
 
-pub(super) enum Action {
+pub(in crate::runtime::suspension) enum Action {
     Complete(Result<Slot, EvalError>),
     Evaluate {
         expr: Expr,
@@ -26,6 +28,15 @@ pub struct TypedAction<O: SlotValue> {
 }
 
 impl<O: SlotValue> TypedAction<O> {
+    // Runtime unit tests only: deliberately violate the declared output mode.
+    #[cfg(test)]
+    pub(super) fn malformed_slot(slot: Slot) -> Self {
+        Self {
+            inner: Action::Complete(Ok(slot)),
+            output: PhantomData,
+        }
+    }
+
     pub fn complete(result: Result<O, EvalError>) -> Self {
         Self {
             inner: Action::Complete(result.map(|value| encode(value, CodecKey::new()))),

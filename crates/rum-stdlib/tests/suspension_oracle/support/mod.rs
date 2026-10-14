@@ -1,4 +1,5 @@
 pub mod drive;
+pub mod faults;
 pub mod files;
 pub mod lifecycle;
 pub mod normalize;

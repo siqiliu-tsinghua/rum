@@ -1,13 +1,25 @@
 use std::collections::VecDeque;
-use std::mem::{size_of, size_of_val};
+use std::mem::size_of;
+#[cfg(test)]
+use std::mem::size_of_val;
 use std::sync::Arc;
 use std::time::Instant;
 
 use super::trace::{FrameRootTrace, FrameRootVisitor};
+use super::typed::{
+    Action, DecodeFailure, Entry, EntryRef, ErasedFrame, Slot, SlotValue, TypedFrame,
+    decode_completion, erase,
+};
 use super::*;
+
+mod abandon;
+pub(super) mod fault;
+mod queue;
 use crate::runtime::session::guest_loading::{
     GuestFileTransaction, GuestFormEnvironment, GuestFormScope,
 };
+use fault::DriverFault;
+use queue::FrameQueue;
 
 type DynSuspensionFrame = dyn SuspensionFrame;
 
@@ -18,7 +30,7 @@ pub(in crate::runtime) struct SuspendedEvaluation {
     pub(in crate::runtime) active_stack: Vec<EvaluationStackEntry>,
     generation: SuspensionGeneration,
     guest_form_environment: Option<Box<GuestFormEnvironment>>,
-    pub(super) frames: VecDeque<Arc<DynSuspensionFrame>>,
+    pub(super) frames: FrameQueue,
 }
 
 /// Opaque owner slot for the one pending continuation.
@@ -28,12 +40,16 @@ pub(in crate::runtime) struct SuspendedEvaluation {
 pub(in crate::runtime) struct SuspensionSlot {
     owner: Option<SuspendedEvaluation>,
     next_generation: u64,
+    fault: Option<DriverFault>,
+    #[cfg(any(test, feature = "test-continuation-slots"))]
+    fault_probe: fault::FaultProbe,
 }
 
 /// Why a live continuation owner is being abandoned.
 #[allow(dead_code)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(in crate::runtime) enum AbandonReason {
+    ContinuationSlotMismatch,
     CancelledRequest,
     FailedSnapshotRestore,
     HelperBestEffortDiscard,
@@ -146,59 +162,63 @@ impl SuspendedEvaluation {
             active_stack,
             generation,
             guest_form_environment: None,
-            frames: VecDeque::new(),
+            frames: FrameQueue::new(),
         }
     }
 
+    #[inline]
     fn push_back(&mut self, frame: Arc<DynSuspensionFrame>) {
         self.frames.push_back(frame);
     }
 
+    #[inline]
     fn push_front(&mut self, frame: Arc<DynSuspensionFrame>) {
         self.frames.push_front(frame);
     }
 
-    fn front(&self) -> Option<Arc<DynSuspensionFrame>> {
-        self.frames.front().cloned()
+    #[inline]
+    fn front(&self) -> Option<EntryRef<'_>> {
+        self.frames.front()
     }
 
-    fn pop_front(&mut self) -> Arc<DynSuspensionFrame> {
+    #[inline]
+    fn pop_front(&mut self) -> Entry {
         self.frames
             .pop_front()
             .expect("the resumed suspension frame should remain queued")
     }
 
+    #[inline]
+    fn pop_front_legacy(&mut self) -> Arc<DynSuspensionFrame> {
+        self.frames.pop_front_legacy()
+    }
+
     #[allow(dead_code)]
-    fn take_front(&mut self) -> Option<Arc<DynSuspensionFrame>> {
+    fn take_front(&mut self) -> Option<Entry> {
         self.frames.pop_front()
     }
 
+    #[inline]
     fn is_empty(&self) -> bool {
         self.frames.is_empty()
     }
 
+    #[inline]
     fn append(&mut self, suffix: &mut Self) {
         self.frames.append(&mut suffix.frames);
     }
 
     pub(in crate::runtime) fn trace_frame_roots(&self, visitor: &mut dyn FrameRootVisitor) {
         self.guest_form_environment.trace_roots(visitor);
-        for frame in &self.frames {
-            frame.trace_roots(visitor);
-        }
+        self.frames.visit(|frame| frame.trace_roots(visitor));
     }
 
     pub(in crate::runtime) fn frame_storage_memory_proxy_bytes(&self) -> usize {
-        let queue_storage = self
-            .frames
-            .capacity()
-            .saturating_mul(size_of::<Arc<DynSuspensionFrame>>());
-        let allocations = self.frames.iter().fold(0usize, |total, frame| {
-            total
-                .saturating_add(2usize.saturating_mul(size_of::<usize>()))
-                .saturating_add(size_of_val(frame.as_ref()))
+        let mut allocations = 0usize;
+        self.frames.visit(|frame| {
+            allocations = allocations.saturating_add(frame.allocation_bytes());
         });
-        queue_storage.saturating_add(allocations)
+        self.frames.storage_bytes().saturating_add(allocations)
     }
 }
 
@@ -208,10 +228,13 @@ struct SuspensionAccess<'a> {
 }
 
 impl SuspensionSlot {
-    pub(in crate::runtime) const fn empty() -> Self {
+    pub(in crate::runtime) fn empty() -> Self {
         Self {
             owner: None,
             next_generation: 0,
+            fault: None,
+            #[cfg(any(test, feature = "test-continuation-slots"))]
+            fault_probe: fault::FaultProbe::default(),
         }
     }
 
@@ -519,21 +542,48 @@ impl Session {
     pub(in crate::runtime) fn pending_frame_allocation_bytes<F: SuspensionFrame>(
         &self,
     ) -> Option<usize> {
-        let frames = &self.pending_suspension.as_ref()?.frames;
-        // Conservative VecDeque growth projection; the maintained S owner is
-        // still refreshed from the actual capacity by insertion.
-        let extra_slots = if frames.len() == frames.capacity() {
-            frames
-                .capacity()
-                .checked_mul(2)?
-                .max(8)
-                .checked_sub(frames.capacity())?
-        } else {
-            0
-        };
         size_of::<F>()
             .checked_add(2 * size_of::<usize>())?
-            .checked_add(extra_slots.checked_mul(size_of::<Arc<DynSuspensionFrame>>())?)
+            .checked_add(
+                self.pending_suspension
+                    .as_ref()?
+                    .frames
+                    .projected_growth(false)?,
+            )
+    }
+
+    pub(in crate::runtime::suspension) fn insert_typed_suspension_frame<F: TypedFrame>(
+        &mut self,
+        frame: F,
+    ) {
+        self.insert_typed_erased_frame(erase(frame));
+    }
+
+    pub(in crate::runtime::suspension) fn insert_typed_erased_frame(
+        &mut self,
+        frame: Arc<dyn ErasedFrame>,
+    ) {
+        self.pending_suspension
+            .as_mut()
+            .expect("input suspension should be initialized before frames are pushed")
+            .frames
+            .push_back_typed(frame);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingSuspension,
+        );
+    }
+
+    // S18 uses this layout projection when retention's frame becomes typed.
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn pending_typed_frame_allocation_bytes<F: TypedFrame>(
+        &self,
+    ) -> Option<usize> {
+        super::typed::typed_allocation_bytes::<F>().checked_add(
+            self.pending_suspension
+                .as_ref()?
+                .frames
+                .projected_growth(true)?,
+        )
     }
 
     fn finish_completed_resumption(&mut self) {
@@ -559,6 +609,13 @@ impl Session {
         &mut self,
         input: impl Into<String>,
     ) -> Result<Expr, EvalError> {
+        self.resume_suspended_slot::<Expr>(input)
+    }
+
+    pub(in crate::runtime::suspension) fn resume_suspended_slot<O: SlotValue>(
+        &mut self,
+        input: impl Into<String>,
+    ) -> Result<O, EvalError> {
         let stack_marker = 0_u8;
         self.native_stack_base = (&stack_marker as *const u8) as usize;
         debug_assert!(
@@ -604,159 +661,132 @@ impl Session {
         } else {
             None
         };
-        let outcome = Ok(Expr::string(input.into()));
+        let outcome = Ok(Slot::Value(Expr::string(input.into())));
 
-        let result = self.drive_resuming_frames(outcome);
+        let result = self.drive_resuming_frames::<O>(outcome);
+        if result.is_err() {
+            self.unwind_continuation_fault();
+        }
         self.guest_form = previous_guest_form;
 
         self.replace_accounted_evaluation_stack(saved_stack);
         self.evaluation_depth = saved_depth;
 
         match result {
-            Ok(value) => {
+            Err(fault) => {
+                if let Some(displaced) = displaced_guest_environment {
+                    displaced.restore(self);
+                }
+                Err(fault.into_error())
+            }
+            Ok(Ok(value)) => {
                 self.finish_completed_resumption();
                 Ok(value)
             }
-            Err(EvalError::InputRequired { request }) => {
+            Ok(Err(EvalError::InputRequired { request })) => {
                 debug_assert!(self.resuming_suspension.is_none());
                 if let Some(displaced) = displaced_guest_environment {
                     displaced.restore(self);
                 }
                 Err(EvalError::InputRequired { request })
             }
-            Err(error) => {
+            Ok(Err(error)) => {
                 self.finish_completed_resumption();
                 Err(error)
             }
         }
     }
 
-    pub(in crate::runtime) fn abandon_pending_suspension(
-        &mut self,
-        reason: AbandonReason,
-    ) -> AbandonReason {
-        let pending = self.take_accounted_pending_suspension_for_abandon();
-        self.pending_eval_request = None;
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
-        );
-        let Some(pending) = pending else {
-            return reason;
-        };
-
-        self.abandonment_worklist.push(pending);
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::AbandonmentWorklist,
-        );
-        if self.abandonment_active {
-            return reason;
-        }
-
-        self.abandonment_active = true;
-        let previous_guest_form = self.guest_form;
-        let saved_stack = self.replace_accounted_evaluation_stack(Vec::new());
-        let saved_depth = std::mem::replace(&mut self.evaluation_depth, 0);
-
-        while let Some(mut suspension) = self.abandonment_worklist.pop() {
-            self.refresh_memory_owner(
-                crate::runtime::debug_tools::resources::MemoryOwner::AbandonmentWorklist,
-            );
-            debug_assert!(self.evaluation_stack.is_empty());
-            self.replace_accounted_evaluation_stack(std::mem::take(&mut suspension.active_stack));
-            self.evaluation_depth = self.evaluation_stack.len();
-            if let Some(environment) = suspension.guest_form_environment.take() {
-                environment.install(self);
-            }
-
-            while let Some(frame) = suspension.take_front() {
-                self.rollback_capture_output(frame.output_boundary());
-                let action = frame.abandon(&mut AbandonmentContext {
-                    session: self,
-                    reason,
-                });
-
-                match action {
-                    FrameAbandonAction::Discard => {}
-                    FrameAbandonAction::EvaluateCleanup(cleanup) => {
-                        if !suspension.is_empty() {
-                            suspension.active_stack = self.evaluation_stack.clone();
-                            suspension.guest_form_environment =
-                                self.capture_guest_form_environment();
-                            self.abandonment_worklist.push(suspension);
-                            self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::AbandonmentWorklist);
-                        }
-
-                        let cleanup_outcome = self.evaluate(cleanup.expr);
-                        if matches!(cleanup_outcome, Err(EvalError::InputRequired { .. })) {
-                            if let Some(nested) =
-                                self.take_accounted_pending_suspension_for_abandon()
-                            {
-                                self.abandonment_worklist.push(nested);
-                                self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::AbandonmentWorklist);
-                            }
-                            self.pending_eval_request = None;
-                            self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest);
-                        }
-
-                        self.clear_accounted_evaluation_stack();
-                        self.evaluation_depth = 0;
-                        break;
-                    }
-                }
-            }
-
-            self.clear_accounted_evaluation_stack();
-            self.evaluation_depth = 0;
-        }
-
-        self.replace_accounted_evaluation_stack(saved_stack);
-        self.evaluation_depth = saved_depth;
-        self.abandonment_active = false;
-        self.guest_form = previous_guest_form;
-        reason
-    }
-
     pub(in crate::runtime) fn pending_suspension_generation(&self) -> Option<SuspensionGeneration> {
         self.pending_suspension.generation()
     }
 
-    fn drive_resuming_frames(
+    fn drive_resuming_frames<O: SlotValue>(
         &mut self,
-        mut outcome: Result<Expr, EvalError>,
-    ) -> Result<Expr, EvalError> {
+        mut outcome: Result<Slot, EvalError>,
+    ) -> Result<Result<O, EvalError>, DriverFault> {
         loop {
             let Some(dispatch_frame) = self
                 .resuming_suspension
                 .as_ref()
                 .and_then(SuspendedEvaluation::front)
             else {
-                return outcome;
+                return decode_completion::<O>(outcome)
+                    .map_err(|failure| self.record_slot_fault(failure));
             };
 
-            let action = dispatch_frame.resume(self, outcome);
-            let completed_frame = self
-                .resuming_suspension
-                .as_mut()
-                .expect("the active resumption remains Session-rooted")
-                .pop_front();
-            self.refresh_memory_owner(
-                crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
-            );
-            drop(completed_frame);
-
-            outcome = match action {
-                FrameAction::Complete(outcome) => outcome,
-                FrameAction::Evaluate { expr, next_frame } => {
-                    self.resuming_suspension
+            // Borrow the entry, then clone only its Arc. Exact decoding happens
+            // while the consumer remains rooted at the front of the queue.
+            outcome = match dispatch_frame {
+                EntryRef::Legacy(frame) => {
+                    let frame = Arc::clone(frame);
+                    let input = match outcome {
+                        Ok(Slot::Value(value)) => Ok(value),
+                        Ok(actual) => {
+                            return Err(self.record_slot_fault(DecodeFailure {
+                                expected: std::any::type_name::<Expr>(),
+                                actual,
+                            }));
+                        }
+                        Err(error) => Err(error),
+                    };
+                    let action = frame.resume(self, input);
+                    let completed_frame = self
+                        .resuming_suspension
                         .as_mut()
                         .expect("the active resumption remains Session-rooted")
-                        .push_front(next_frame);
+                        .pop_front_legacy();
                     self.refresh_memory_owner(
                         crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
                     );
-                    self.evaluate(expr)
+                    drop(completed_frame);
+
+                    match action {
+                        FrameAction::Complete(outcome) => outcome.map(Slot::Value),
+                        FrameAction::Evaluate { expr, next_frame } => {
+                            self.resuming_suspension
+                                .as_mut()
+                                .expect("the active resumption remains Session-rooted")
+                                .push_front(next_frame);
+                            self.refresh_memory_owner(
+                                crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
+                            );
+                            self.evaluate(expr).map(Slot::Value)
+                        }
+                        FrameAction::Finalize(finalizer) => finalizer.finish().map(Slot::Value),
+                    }
                 }
-                FrameAction::Finalize(finalizer) => finalizer.finish(),
+                EntryRef::Typed(frame) => {
+                    let frame = Arc::clone(frame);
+                    let action = frame
+                        .resume(self, outcome)
+                        .map_err(|failure| self.record_slot_fault(failure))?;
+                    let completed_frame = self
+                        .resuming_suspension
+                        .as_mut()
+                        .expect("the active resumption remains Session-rooted")
+                        .pop_front();
+                    self.refresh_memory_owner(
+                        crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
+                    );
+                    drop(completed_frame);
+
+                    match action {
+                        Action::Complete(outcome) => outcome,
+                        Action::Evaluate { expr, next } => {
+                            self.resuming_suspension
+                                .as_mut()
+                                .expect("the active resumption remains Session-rooted")
+                                .frames
+                                .push_front_typed(next);
+                            self.refresh_memory_owner(
+                                crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
+                            );
+                            self.evaluate(expr).map(Slot::Value)
+                        }
+                        Action::Finalize(finalizer) => finalizer.finish(),
+                    }
+                }
             };
 
             if let Err(EvalError::InputRequired { request }) = &outcome {
@@ -783,9 +813,9 @@ impl Session {
                 self.refresh_memory_owner(
                     crate::runtime::debug_tools::resources::MemoryOwner::PendingSuspension,
                 );
-                return Err(EvalError::InputRequired {
+                return Ok(Err(EvalError::InputRequired {
                     request: request.clone(),
-                });
+                }));
             }
         }
     }

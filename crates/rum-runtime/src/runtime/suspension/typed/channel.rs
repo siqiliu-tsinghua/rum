@@ -3,11 +3,11 @@ use super::registry::*;
 
 // Public inside this private module: no reachable key constructor or raw channel.
 pub struct CodecKey {
-    private: (),
+    _private: (),
 }
 impl CodecKey {
     pub(super) fn new() -> Self {
-        Self { private: () }
+        Self { _private: () }
     }
 }
 
@@ -51,6 +51,20 @@ pub(super) fn encode<T: Codec>(value: T, key: CodecKey) -> Slot {
 
 pub(super) fn decode<T: Codec>(slot: Slot, key: CodecKey) -> Result<T, Slot> {
     T::Mode::decode(slot, key)
+}
+
+pub(in crate::runtime::suspension) fn decode_completion<T: super::SlotValue>(
+    outcome: Result<Slot, super::EvalError>,
+) -> Result<Result<T, super::EvalError>, super::adapter::DecodeFailure> {
+    match outcome {
+        Ok(slot) => decode::<T>(slot, CodecKey::new())
+            .map(Ok)
+            .map_err(|actual| super::adapter::DecodeFailure {
+                expected: std::any::type_name::<T>(),
+                actual,
+            }),
+        Err(error) => Ok(Err(error)),
+    }
 }
 
 pub trait Transport<T>: Sized {
@@ -104,6 +118,37 @@ impl<T: StateCodec> Transport<T> for StateMode {
         match slot {
             Slot::State(value) => T::unpack(value, key).map_err(Slot::State),
             other => Err(other),
+        }
+    }
+}
+
+impl Slot {
+    pub(in crate::runtime::suspension) fn kind_name(&self) -> &'static str {
+        match self {
+            Self::Value(_) => "Value",
+            Self::State(state) => match state {
+                ContinuationState::OptionalExpr(..) => "State::OptionalExpr",
+                ContinuationState::ExprVec(..) => "State::ExprVec",
+                ContinuationState::BindingsVec(..) => "State::BindingsVec",
+                ContinuationState::OptionalExprVec(..) => "State::OptionalExprVec",
+                ContinuationState::OptionalRewriteRules(..) => "State::OptionalRewriteRules",
+                ContinuationState::OptionalCasesLevel(..) => "State::OptionalCasesLevel",
+                ContinuationState::Bool(..) => "State::Bool",
+                ContinuationState::String(..) => "State::String",
+                ContinuationState::MatchOutcome(..) => "State::MatchOutcome",
+                ContinuationState::CasesResolution(..) => "State::CasesResolution",
+                ContinuationState::TraversalResolution(..) => "State::TraversalResolution",
+                ContinuationState::CasesCollection(..) => "State::CasesCollection",
+                ContinuationState::PositionCollection(..) => "State::PositionCollection",
+                ContinuationState::DeleteCases(..) => "State::DeleteCases",
+                ContinuationState::TraversalCount(..) => "State::TraversalCount",
+                ContinuationState::Replace(..) => "State::Replace",
+                ContinuationState::ReplaceAll(..) => "State::ReplaceAll",
+                ContinuationState::ReplacePartTargets(..) => "State::ReplacePartTargets",
+                ContinuationState::CapturedEvaluation(..) => "State::CapturedEvaluation",
+                ContinuationState::PreparedArguments(..) => "State::PreparedArguments",
+                ContinuationState::PartSelectors(..) => "State::PartSelectors",
+            },
         }
     }
 }

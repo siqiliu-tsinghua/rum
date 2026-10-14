@@ -45,6 +45,7 @@ pub fn exercise_observed_at(
     for (owner_pause, stop) in stops.into_iter().enumerate() {
         for reset in [false, true] {
             let mut s = make();
+            let fault_check = super::faults::Check::new(&s);
             let delivered = Arc::new(Mutex::new(Vec::<String>::new()));
             let sink = delivered.clone();
             s.set_print_sink(Box::new(ClosurePrintSink::assert_bounded_destruction(
@@ -83,6 +84,7 @@ pub fn exercise_observed_at(
                 // The Session counterpart of HostSession::reset (whose host
                 // lifecycle is tested in rum-host): replace from configuration.
                 s.queue_input_response("must be discarded by reset");
+                fault_check.assert_unchanged();
                 s = make();
                 handle.cancel();
                 assert_eq!(
@@ -120,6 +122,8 @@ pub fn exercise_observed_at(
                     1
                 );
             }
+            fault_check.assert_unchanged();
+            let _fresh_fault_check = super::faults::Check::new(&s);
             assert!(s.pending_input_request().is_none());
             assert!(s.reject_overlapping_evaluation_request().is_ok());
             verify(&mut s, owner_pause, reset);

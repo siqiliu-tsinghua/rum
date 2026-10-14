@@ -190,6 +190,7 @@ impl Session {
             }
             Err(EvalError::InputRequired { request }) => Err(EvalError::InputRequired { request }),
             Err(EvalError::Exit { code }) => Err(EvalError::Exit { code }),
+            Err(error @ EvalError::ContinuationSlotMismatch(_)) => Err(error),
             Err(_) => Ok((system_expr("$Failed"), Some("Error"))),
         }
     }
@@ -230,6 +231,7 @@ impl Session {
         result: Result<Expr, EvalError>,
     ) -> Result<EvalCapturedOutcome, EvalError> {
         match result {
+            Err(error @ EvalError::ContinuationSlotMismatch(_)) => Err(error),
             Ok(value) => {
                 let messages = self.split_accounted_messages(message_checkpoint);
                 let prints = self.split_accounted_prints(print_checkpoint);

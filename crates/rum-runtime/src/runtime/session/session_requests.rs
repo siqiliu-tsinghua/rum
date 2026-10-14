@@ -225,8 +225,11 @@ impl Session {
         let previous_message_list_dirty =
             std::mem::replace(&mut self.current_message_list_dirty, false);
         let outcome = self.evaluate(expr);
-        let finalized =
-            self.finalize_top_level_eval_value(outcome, checkpoint.handled_error_checkpoint);
+        let finalized = if self.has_continuation_fault() {
+            Err(self.continuation_fault_outcome(outcome).unwrap_err())
+        } else {
+            self.finalize_top_level_eval_value(outcome, checkpoint.handled_error_checkpoint)
+        };
         self.current_message_list_checkpoint = previous_message_list_checkpoint;
         self.current_message_list_dirty = previous_message_list_dirty;
         let (value, termination) = match finalized {
@@ -333,8 +336,11 @@ impl Session {
                 }
             }
         };
-        let finalized =
-            self.finalize_top_level_eval_value(outcome, checkpoint.handled_error_checkpoint);
+        let finalized = if self.has_continuation_fault() {
+            Err(self.continuation_fault_outcome(outcome).unwrap_err())
+        } else {
+            self.finalize_top_level_eval_value(outcome, checkpoint.handled_error_checkpoint)
+        };
         self.current_message_list_checkpoint = previous_message_list_checkpoint;
         self.current_message_list_dirty = previous_message_list_dirty;
         let (value, termination) = match finalized {
@@ -777,6 +783,12 @@ fn session_request_error_from_eval_error_with_source(
     source: Option<&str>,
 ) -> SessionRequestError {
     match err {
+        EvalError::ContinuationSlotMismatch(fault) => {
+            SessionRequestError::ContinuationSlotMismatch {
+                expected: fault.expected(),
+                got: fault.got(),
+            }
+        }
         EvalError::Syntax(error) => source
             .map(|source| {
                 SessionRequestError::Syntax(

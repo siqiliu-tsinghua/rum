@@ -186,7 +186,11 @@ impl Session {
         &mut self,
         input: impl Into<String>,
     ) -> Result<Option<Vec<RewriteRuleInfo>>, EvalError> {
-        let resumed = self.resume_suspended_evaluation(input)?;
+        let resumed = self.resume_suspended_evaluation(input);
+        if self.has_continuation_fault() {
+            return Err(self.continuation_fault_outcome(resumed).unwrap_err());
+        }
+        let resumed = resumed?;
         Ok(Option::<Vec<RewriteRuleInfo>>::from_continuation_expr(
             resumed,
         ))
@@ -237,6 +241,9 @@ impl Session {
                 let expr = self.lower_syntax_expr(&syntax)?;
                 self.evaluate(expr)
             };
+            if self.has_continuation_fault() {
+                return Err(self.continuation_fault_outcome(result).unwrap_err());
+            }
             match terminated_handling {
                 TerminatedEvaluationHandling::ConvertToValue => {
                     self.finalize_top_level_eval_value(result, handled_error_checkpoint)

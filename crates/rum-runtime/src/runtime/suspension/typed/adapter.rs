@@ -4,19 +4,22 @@ use super::action::{Action, ErasedFinalizer};
 use super::channel::{CodecKey, Slot, decode, encode};
 use super::*;
 
-/// Keeps a rejected input intact; the live driver's fault policy belongs to S2.
-pub(super) struct DecodeFailure {
+/// Keeps a rejected input intact until the driver records a structural fault.
+pub(in crate::runtime::suspension) struct DecodeFailure {
     pub expected: &'static str,
     pub actual: Slot,
 }
 
-pub(super) trait ErasedFrame: FrameRootTrace + FrameAbandon + Send + Sync {
+pub(in crate::runtime::suspension) trait ErasedFrame:
+    FrameRootTrace + FrameAbandon + Send + Sync
+{
     fn resume(
         self: Arc<Self>,
         session: &mut Session,
         input: Result<Slot, EvalError>,
     ) -> Result<Action, DecodeFailure>;
     fn output_boundary(&self) -> OutputBoundary;
+    fn inner_frame(&self) -> &dyn FrameRootTrace;
 }
 
 #[derive(rum_derive::FrameRootTrace)]
@@ -56,12 +59,22 @@ impl<F: TypedFrame> ErasedFrame for TypedAdapter<F> {
     fn output_boundary(&self) -> OutputBoundary {
         self.inner.output_boundary()
     }
+
+    fn inner_frame(&self) -> &dyn FrameRootTrace {
+        self.inner.as_ref()
+    }
 }
 
-pub(super) fn erase<F: TypedFrame>(frame: F) -> Arc<dyn ErasedFrame> {
+pub(in crate::runtime::suspension) fn erase<F: TypedFrame>(frame: F) -> Arc<dyn ErasedFrame> {
     Arc::new(TypedAdapter {
         inner: Arc::new(frame),
     })
+}
+
+pub(in crate::runtime::suspension) fn allocation_bytes<F: TypedFrame>() -> usize {
+    4 * std::mem::size_of::<usize>()
+        + std::mem::size_of::<TypedAdapter<F>>()
+        + std::mem::size_of::<F>()
 }
 
 pub(super) struct FinalizerAdapter<F: SlotFinalizer>(pub F);

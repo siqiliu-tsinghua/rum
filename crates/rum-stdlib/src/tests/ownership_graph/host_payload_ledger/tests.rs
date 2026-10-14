@@ -253,7 +253,17 @@ fn adapter_production_witnesses_are_computed() {
                 && row.construct.contains(": opaque owned payload dyn Erased")
         })
         .collect();
-    assert_eq!(rows.len(), 3);
+    assert_eq!(
+        rows.iter()
+            .map(|row| row.construct.as_str())
+            .collect::<std::collections::BTreeSet<_>>(),
+        std::collections::BTreeSet::from([
+            "rum_runtime::runtime::suspension::typed::action::Action.Evaluate.next/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame",
+            "rum_runtime::runtime::suspension::typed::action::Action.Finalize.0/std::boxed::Box[Own]/arg0: opaque owned payload dyn ErasedFinalizer",
+            "rum_runtime::runtime::suspension::typed::chain::FrameChain.frames/std::vec::Vec[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame",
+            "rum_runtime::runtime::suspension::typed::entry::Entry.Typed.0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame",
+        ])
+    );
     for row in rows {
         let witness = ownership::expression_witness(&discovered, row).unwrap();
         println!("ADAPTER_WITNESS\t{}\t{witness}", row.row());

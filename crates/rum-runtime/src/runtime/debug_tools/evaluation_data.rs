@@ -124,6 +124,7 @@ impl Session {
                 return Err(EvalError::InputRequired { request });
             }
             Err(EvalError::Exit { code }) => return Err(EvalError::Exit { code }),
+            Err(error @ EvalError::ContinuationSlotMismatch(_)) => return Err(error),
             Err(_) => (system_expr("$Failed"), false, Expr::string("Error")),
         };
 

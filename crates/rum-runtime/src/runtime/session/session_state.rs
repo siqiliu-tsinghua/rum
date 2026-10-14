@@ -497,6 +497,8 @@ pub enum ThreadArgSpec {
 
 #[derive(Debug, Error, FrameRootTrace)]
 pub enum EvalError {
+    #[error("continuation slot mismatch: expected {}, got {}", .0.expected(), .0.got())]
+    ContinuationSlotMismatch(SlotMismatch),
     #[error(transparent)]
     Syntax(#[from] SyntaxError),
     #[error("invalid integer literal `{literal}`")]

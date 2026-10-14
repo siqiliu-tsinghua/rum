@@ -137,6 +137,7 @@ fn suspension_protocol_repository_invariants_hold() {
     );
 
     let core_path = workspace.join("crates/rum-runtime/src/runtime/suspension/core.rs");
+    let abandon_path = workspace.join("crates/rum-runtime/src/runtime/suspension/core/abandon.rs");
     let cleanup_path =
         workspace.join("crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs");
     let banned_legacy_names = [
@@ -210,11 +211,13 @@ fn suspension_protocol_repository_invariants_hold() {
                 "named frames must be inserted only through the data-only macro in {}",
                 path.display()
             );
-            assert!(
-                !compact.contains("FrameAbandonAction::EvaluateCleanup("),
-                "EvaluateCleanup capability payload escaped core in {}",
-                path.display()
-            );
+            if path != &abandon_path {
+                assert!(
+                    !compact.contains("FrameAbandonAction::EvaluateCleanup("),
+                    "EvaluateCleanup capability payload escaped core in {}",
+                    path.display()
+                );
+            }
         }
         let cleanup_constructor_hits = compact
             .matches("FrameAbandonAction::evaluate_cleanup(")
@@ -386,32 +389,69 @@ fn suspension_protocol_repository_invariants_hold() {
         &compact_core[abandon_action_open + 1..abandon_action_close],
         "Discard,EvaluateCleanup(AbandonCleanup),"
     );
-    let resume_index = compact_core
-        .find("letaction=dispatch_frame.resume(self,outcome);")
-        .expect("driver should invoke the still-rooted front frame");
-    let drop_index = compact_core[resume_index..]
-        .find("drop(completed_frame);")
-        .map(|offset| offset + resume_index)
-        .expect("driver should explicitly drop the rooted completed frame");
-    let finalize_index = compact_core[drop_index..]
-        .find("FrameAction::Finalize(finalizer)=>finalizer.finish()")
-        .map(|offset| offset + drop_index)
-        .expect("driver should invoke pure finalizers");
-    assert!(resume_index < drop_index && drop_index < finalize_index);
+    for (resume, pop, finalizer) in [
+        (
+            "letaction=frame.resume(self,input);",
+            ".pop_front_legacy();",
+            "FrameAction::Finalize(finalizer)=>finalizer.finish().map(Slot::Value)",
+        ),
+        (
+            "letaction=frame.resume(self,outcome).map_err(|failure|self.record_slot_fault(failure))?;",
+            ".pop_front();",
+            "Action::Finalize(finalizer)=>finalizer.finish()",
+        ),
+    ] {
+        let resume_index = compact_core
+            .find(resume)
+            .expect("driver should invoke the still-rooted front frame directly");
+        let pop_index = compact_core[resume_index..]
+            .find(pop)
+            .map(|offset| offset + resume_index)
+            .expect("driver should pop the consumer only after successful exact decoding");
+        let drop_index = compact_core[resume_index..]
+            .find("drop(completed_frame);")
+            .map(|offset| offset + resume_index)
+            .expect("driver should explicitly drop the rooted completed frame");
+        assert!(resume_index < pop_index && pop_index < drop_index);
+        let finalize_index = compact_core[resume_index..]
+            .find(finalizer)
+            .map(|offset| offset + resume_index)
+            .expect("driver should invoke each pure finalizer after releasing the frame");
+        assert!(drop_index < finalize_index);
+    }
+    let legacy_decode = compact_core
+        .find("Ok(Slot::Value(value))=>Ok(value)")
+        .expect("legacy frames accept only a Value slot");
+    assert!(
+        legacy_decode
+            < compact_core
+                .find("letaction=frame.resume(self,input);")
+                .unwrap()
+    );
 
-    let abandon_driver = compact_core
+    let compact_abandon = remove_ascii_whitespace(
+        &fs::read_to_string(abandon_path).expect("source gate should read abandonment core"),
+    );
+    let abandon_driver = compact_abandon
         .find("fnabandon_pending_suspension(")
         .expect("the closed abandonment driver should exist");
     let abandon_driver_open = abandon_driver
-        + compact_core[abandon_driver..]
+        + compact_abandon[abandon_driver..]
             .find('{')
             .expect("abandonment driver should have a body");
-    let abandon_driver_close = matching_brace(&compact_core, abandon_driver_open)
+    let abandon_driver_close = matching_brace(&compact_abandon, abandon_driver_open)
         .expect("abandonment driver should have a closed body");
-    let abandon_driver_body = &compact_core[abandon_driver_open + 1..abandon_driver_close];
-    assert!(abandon_driver_body.contains("frame.abandon("));
+    let abandon_driver_body = &compact_abandon[abandon_driver_open + 1..abandon_driver_close];
+    assert!(abandon_driver_body.contains("self.drain_abandonment_worklist(reason)"));
+    let drain = compact_abandon
+        .find("fndrain_abandonment_worklist(")
+        .expect("cancellation and faults should share the accounted worklist");
+    let drain_open = drain + compact_abandon[drain..].find('{').unwrap();
+    let drain_close = matching_brace(&compact_abandon, drain_open).unwrap();
+    let drain_body = &compact_abandon[drain_open + 1..drain_close];
+    assert!(drain_body.contains("frame.abandon("));
     assert!(
-        !abandon_driver_body.contains(".resume("),
+        !abandon_driver_body.contains(".resume(") && !drain_body.contains(".resume("),
         "abandonment must never invoke ordinary frame resumption"
     );
 

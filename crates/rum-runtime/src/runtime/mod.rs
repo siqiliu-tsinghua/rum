@@ -33,6 +33,8 @@ mod expr_runtime_helpers;
 mod file_io;
 mod hold_thread;
 pub mod kernel_api;
+#[cfg(any(test, feature = "test-continuation-slots"))]
+pub use suspension::trace::FaultProbe;
 mod kernel_data;
 mod listable_dispatch;
 mod lowering;
@@ -74,6 +76,7 @@ use self::{
 pub use self::{
     builtin_catalog::core_builtin_specs, capabilities::*, file_io::*, lowering::lower_syntax_expr,
     metadata::*, model::*, print_sink::*, random::*, session::session_state::EvalError,
+    suspension::trace::SlotMismatch,
 };
 
 impl Session {

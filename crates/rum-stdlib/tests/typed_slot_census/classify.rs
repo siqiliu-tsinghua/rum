@@ -56,6 +56,7 @@ pub struct Registry {
     pub slot: String,
     pub mode: String,
     pub site: Site,
+    pub population: Population,
 }
 pub struct Call {
     pub site: Use,
@@ -182,6 +183,7 @@ pub fn classify(mut source: Source, facts: &Facts) -> Report {
                 slot: compact(&text(&implementation.ty)),
                 mode: compact(&ast.mode),
                 site: ast.site.clone(),
+                population: ast.population,
             });
             continue;
         }

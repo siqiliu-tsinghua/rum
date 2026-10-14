@@ -184,17 +184,27 @@ fn baseline(source: &Source) {
     }
     // The direct unarmed guest entry reaches the evaluator in this historical
     // frontier. Guest-form abandonment adds exactly three rejected method sites:
-    // taking/installing the paused environment and capturing it for cleanup.
+    // taking/installing the paused environment and capturing it for cleanup
+    // in suspension/core/abandon.rs.
     // These remain unresolved boundaries; the loader earns no retention mark.
-    for line in [667, 668, 684] {
+    for line in [42, 43, 59] {
         assert!(options.rejected.iter().any(|row| row.kind == Kind::RET002
-            && row.site.file.ends_with("suspension/core.rs")
+            && row.site.file.ends_with("suspension/core/abandon.rs")
             && row.site.start.0 == line));
     }
     // brief-595: abandonment settles a frame's provisional capture output
     // before abandoning it (`frame.output_boundary()` in suspension/core.rs and
     // four receiver calls in suspension/output.rs). All five are unresolved
     // method-receiver boundaries; no retention mark is earned.
+    // brief-608: discovery pairs all 20 changed sites: 19 identical operations
+    // moved into core/abandon.rs and one receiver shifted within core.rs. No
+    // unpaired additions/removals; totals stay 932 (10/895/27). The cleanup
+    // capture's new lexical scope reports an opaque Arc import instead of an
+    // unexpanded item; it remains RET002. All boundaries remain unresolved.
+    // Redispatch 4: the one changed site is the same take_for_abandon receiver
+    // shifted from core.rs:473 to :477; all other 931 diagnostics are identical.
+    // Redispatch 5: the same receiver moves from :477 to :482; the other
+    // 931 rows and every unresolved-boundary assertion remain unchanged.
     assert_eq!(
         options.rejected.len(),
         932,

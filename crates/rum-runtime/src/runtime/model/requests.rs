@@ -4,6 +4,10 @@ use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 impl fmt::Display for SessionRequestError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
+            Self::ContinuationSlotMismatch { expected, got } => write!(
+                f,
+                "continuation slot mismatch: expected {expected}, got {got}"
+            ),
             Self::Syntax(diagnostic) => f.write_str(&diagnostic.message),
             Self::InvalidInteger { literal } => write!(f, "invalid integer literal `{literal}`"),
             Self::Io { path, message } => write!(f, "could not read `{path}`: {message}"),
@@ -156,6 +160,10 @@ pub struct SessionInspectResponse {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum SessionRequestError {
+    ContinuationSlotMismatch {
+        expected: &'static str,
+        got: &'static str,
+    },
     Syntax(StructuredSourceDiagnostic),
     InvalidInteger {
         literal: String,

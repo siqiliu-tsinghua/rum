@@ -7,6 +7,13 @@ pub use host_facade::*;
 #[path = "suspension_oracle/mod.rs"]
 mod oracle;
 
+// The prescribed oracle command runs tests serially. Keep this last so its
+// retained probes also cover sessions replaced during lifecycle checks.
+#[test]
+fn zz_continuation_fault_occurrences() {
+    oracle::support::faults::assert_all();
+}
+
 #[test]
 fn runner_scan_middle_and_twice() {
     use oracle::descriptors::{Checks, Fixture, Pause, accept};

@@ -93,7 +93,7 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
         let result = macros.iter().filter(|s| s.receiver == "result").count();
         let insert = macros.iter().filter(|s| s.receiver == "insert").count();
         println!(
-            "S1 CENSUS {} frames={frames} finalizers={finalizers} implementations={} typed={} macros={} result={result} insert={insert}",
+            "S2 CENSUS {} frames={frames} finalizers={finalizers} implementations={} typed={} macros={} result={result} insert={insert}",
             population.label(),
             cohort.len(),
             cohort.len() - frames - finalizers,
@@ -109,13 +109,13 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
         ));
     }
     println!(
-        "S1 PARTITION implementations={} macros={}",
+        "S2 PARTITION implementations={} macros={}",
         counts[0].2 + counts[1].2,
         counts[0].3 + counts[1].3
     );
     if counts[0] != (553, 54, 607, 589, 345, 244) || counts[1] != (11, 5, 16, 11, 3, 8) {
         return Err(
-            "S1 baseline requires production 607/589 and test-only 16/11; combined 623/600".into(),
+            "S2 baseline requires production 607/589 and test-only 16/11; combined 623/600".into(),
         );
     }
     let macros: Vec<_> = facts
@@ -232,6 +232,7 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
     let registry: BTreeMap<_, _> = report
         .registry
         .iter()
+        .filter(|r| r.population == Population::Production)
         .map(|r| (r.slot.as_str(), r.mode.as_str()))
         .collect();
     let expected: BTreeMap<_, _> = rows(SHAPES)
@@ -304,7 +305,7 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
         ));
     }
     println!(
-        "S1 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; production evaluation remains untyped"
+        "S2 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; production evaluation remains untyped"
     );
     Ok(())
 }
@@ -329,9 +330,17 @@ pub(super) fn preflip(facts: &Facts, report: &Report, slot: &str) -> Result<(), 
             "preflip refused: production legacy implementation or insertion remains".into(),
         );
     }
-    let slots: BTreeSet<_> = report.registry.iter().map(|r| r.slot.as_str()).collect();
+    let production_registry: Vec<_> = report
+        .registry
+        .iter()
+        .filter(|r| r.population == Population::Production)
+        .collect();
+    let slots: BTreeSet<_> = production_registry
+        .iter()
+        .map(|r| r.slot.as_str())
+        .collect();
     let expected: BTreeSet<_> = rows(SHAPES).into_iter().map(|r| r[1]).collect();
-    if slots != expected || report.registry.len() != 67 || !slots.contains(slot) {
+    if slots != expected || production_registry.len() != 67 || !slots.contains(slot) {
         return Err("preflip refused: exact 67-type sealed registry required".into());
     }
     if !report.unresolved.is_empty()

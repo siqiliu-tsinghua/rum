@@ -25,5 +25,5 @@ sha2 = { workspace = true, optional = true }
 [dev-dependencies]
 proc-macro2 = { version = "1", features = ["span-locations"] }
 quote = "1"
-rum-runtime = { path = "../rum-runtime", features = ["test-builtin-memory-growth"] }
+rum-runtime = { path = "../rum-runtime", features = ["test-builtin-memory-growth", "test-continuation-slots"] }
 syn = { version = "2", features = ["full", "visit"] }
