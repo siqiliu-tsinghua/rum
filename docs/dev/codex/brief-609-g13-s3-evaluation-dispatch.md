@@ -443,3 +443,998 @@ promotions to S3, and that was wrong: S3 owns only the first map.
    you already built. Do not rebuild them.
 
 Append a new `## Execution report` after this section.
+
+## Execution report — redispatch 1: STOP on the new witnessed-token host-payload row
+
+**S3 is a partial candidate, not an accepted step.** The six replacement S3 marker cases were watched to fail on byte-identical S2 production code in both builds, then passed after conversion. The two ordinary two-pause controls also passed in the no-default run. Independent ownership discovery subsequently added an unapproved `UnknownHostPayload` for the new public witnessed-token method. Step 9 explicitly requires STOP. No disposition was invented and no inventory gate was weakened. The source-census receipt migration, broader tests and performance gates remain unfinished.
+
+### 0. Evidence from the accepted pre-amendment STOP
+
+Before redispatch 1, all four S2 bases were archived before edits, and the exact six Fold/Nest sources failed strict equality in both builds. The path is `Fold` (`functional_ops/sequence/fold/plain.rs:45`) / `Nest` (`functional_ops/iteration.rs:269`) → Function stage (`eval_dispatch/mod.rs:156` at S2 entry) → `try_apply_function` (`scoping/callable.rs:60–74`) → F0528/M0563, owned by S13. The ordinary function tail uses `.map(Some)`; F0528 completes `finish_function_application(outcome)` at `scoping/callable.rs:150–151` without it. The Legacy `Option<Expr>` decoder (`suspension/primitive.rs:46–66`) reads raw guest None/Some[5]/Some[] as None/Some(5)/None. This is independent of F0278’s S3 map. The director accepted that STOP and reassigned these six cases to S13. Their suite definitions were removed; their exact code, patch and raw outputs are preserved at `.temp/brief-609/fold-nest-fixtures-for-S13.rs`, `fold-nest-for-S13.patch`, and `fold-nest-pre-conversion.txt`. F0528/M0563 remain unchanged.
+
+**pre-divergences-default: exit 101.** Raw log: `.temp/brief-609/pre-divergences-default.log`.
+
+```text
+cargo test -p rum-stdlib --test suspension_oracle fixtures::evaluation_dispatch::s3_ -- --nocapture
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+warning: constant `FLIP_SLOT` is never used
+ --> crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs:4:11
+  |
+4 | pub const FLIP_SLOT: Option<&str> = None;
+  |           ^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: function `execute` is never used
+  --> crates/rum-stdlib/tests/suspension_oracle/support/drive.rs:13:8
+   |
+13 | pub fn execute(
+   |        ^^^^^^^
+
+warning: `rum-stdlib` (test "suspension_oracle") generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.67s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ad9873bc53ac1c0b)
+
+running 6 tests
+test oracle::fixtures::evaluation_dispatch::s3_fold_empty_some ... fold.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+fold.empty_some resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=12
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_fold_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:19:50:
+fold.empty_some: UnexpectedPause(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_fold_none ... fold.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+fold.none resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=24
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_fold_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:19:50:
+fold.none: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_fold_some ... fold.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+fold.some resumed: Ok(ResultView { observation: Observation { value: Some(Atom(Integer(Small(5)))), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=48
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_fold_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:19:50:
+fold.some: Value
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_nest_empty_some ... nest.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+nest.empty_some resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=60
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_nest_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:19:50:
+nest.empty_some: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_nest_none ... nest.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+nest.none resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=72
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_nest_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:19:50:
+nest.none: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_nest_some ... nest.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+nest.some resumed: Ok(ResultView { observation: Observation { value: Some(Atom(Integer(Small(5)))), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=96
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_nest_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:19:50:
+nest.some: Value
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::evaluation_dispatch::s3_fold_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_fold_none
+    oracle::fixtures::evaluation_dispatch::s3_fold_some
+    oracle::fixtures::evaluation_dispatch::s3_nest_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_nest_none
+    oracle::fixtures::evaluation_dispatch::s3_nest_some
+
+test result: FAILED. 0 passed; 6 failed; 0 ignored; 0 measured; 50 filtered out; finished in 0.06s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+**pre-divergences-no-default: exit 101.** Raw log: `.temp/brief-609/pre-divergences-no-default.log`.
+
+```text
+cargo test -p rum-stdlib --no-default-features --test suspension_oracle fixtures::evaluation_dispatch::s3_ -- --nocapture
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+warning: constant `FLIP_SLOT` is never used
+ --> crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs:4:11
+  |
+4 | pub const FLIP_SLOT: Option<&str> = None;
+  |           ^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: function `execute` is never used
+  --> crates/rum-stdlib/tests/suspension_oracle/support/drive.rs:13:8
+   |
+13 | pub fn execute(
+   |        ^^^^^^^
+
+warning: `rum-stdlib` (test "suspension_oracle") generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.11s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ed9ba19bc18733e6)
+
+running 6 tests
+test oracle::fixtures::evaluation_dispatch::s3_fold_empty_some ... fold.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 659, identity: None, text: SymbolText { id: 659, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+fold.empty_some resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=12
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_fold_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:19:50:
+fold.empty_some: UnexpectedPause(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_fold_none ... fold.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 661, identity: None, text: SymbolText { id: 661, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+fold.none resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=24
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_fold_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:19:50:
+fold.none: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_fold_some ... fold.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 659, identity: None, text: SymbolText { id: 659, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+fold.some resumed: Ok(ResultView { observation: Observation { value: Some(Atom(Integer(Small(5)))), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=48
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_fold_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:19:50:
+fold.some: Value
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_nest_empty_some ... nest.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 659, identity: None, text: SymbolText { id: 659, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+nest.empty_some resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=60
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_nest_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:19:50:
+nest.empty_some: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_nest_none ... nest.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 661, identity: None, text: SymbolText { id: 661, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+nest.none resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=72
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_nest_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:19:50:
+nest.none: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_nest_some ... nest.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 659, identity: None, text: SymbolText { id: 659, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+nest.some resumed: Ok(ResultView { observation: Observation { value: Some(Atom(Integer(Small(5)))), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=96
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_nest_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:19:50:
+nest.some: Value
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::evaluation_dispatch::s3_fold_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_fold_none
+    oracle::fixtures::evaluation_dispatch::s3_fold_some
+    oracle::fixtures::evaluation_dispatch::s3_nest_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_nest_none
+    oracle::fixtures::evaluation_dispatch::s3_nest_some
+
+test result: FAILED. 0 passed; 6 failed; 0 ignored; 0 measured; 50 filtered out; finished in 0.06s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+### 1. Files changed and pin/ripple disclosures
+
+| File | Semantic change / old → new |
+| --- | --- |
+| crates/rum-runtime/src/runtime/builtin_adapters.rs | M0205 legacy macro → witnessed typed macro; identity success tail retained. |
+| crates/rum-runtime/src/runtime/builtin_adapters/resume_frames.rs | F0204 legacy frame → TypedFrame<Expr, Expr>. |
+| crates/rum-runtime/src/runtime/eval_call_prepare.rs | T0023 wrapper removed; initial witnessed capture; deferred helpers return ResumeStop<PreparedCallArguments>, advance fresh cursor/splice state, and use the witnessed token. Pure completion now returns PreparedCallArguments; its existing Legacy wire provider consumes those fields directly instead of freeze/thaw round-tripping them. The test-only old-wire fixture follows that helper’s typed result. |
+| crates/rum-runtime/src/runtime/eval_call_prepare/resume_frames.rs | F0273 merges into F0272 so every repeat freezes fresh state of the same nominal type. F0570 becomes SlotFinalizer<Output=PreparedCallArguments>; finish_work schedules it after originating owners drop. |
+| crates/rum-runtime/src/runtime/eval_core/call.rs | T0024 witnesses Expr before head sharing; shared resume_call_after_head performs the conversion. T0025/T0026 add PreparedDispatchFrame and share argument normalization/restore installation. F0275/F0276 consume Option<Expr>; their ordinary stage-result macro is shared in finish_call_dispatch_stage. Remove both shape-dependent old decoder branches. Stable SharedExpr heads retain their direct path. Profiling stop remains after ordinary preparation normalization and before returning a suspension. |
+| crates/rum-runtime/src/runtime/eval_core/mod.rs | The SharedExpr-result profiling wrapper loses its final caller under T0024 and is removed; generic outcome classification remains. |
+| crates/rum-runtime/src/runtime/eval_core/symbol.rs | Only F0277/M0285 typed: CompiledMatchOutcome → Expr, retaining matched/unmatched semantics and deleting the Expr wire map. The S14 loader capture in this file is unchanged. |
+| crates/rum-runtime/src/runtime/eval_dispatch/mod.rs | Remove the generic PrepareArguments work and leave an unreachable arm. M0286 now witnesses the actual threaded Result instead of receiving only a request in a cold helper. M0287/M0288 use typed macros, preserving profiling on suspension. F0278 completes resumed.map(Some) after the existing memory-growth validation. |
+| crates/rum-runtime/src/runtime/hold_thread.rs | F0279/M0289 typed Expr identity continuation for ReleaseHold. |
+| crates/rum-runtime/src/runtime/resolution.rs | M0561/M0562 witnessed at the actual next_result before matching; saved current, pass count and history retain their transitions. |
+| crates/rum-runtime/src/runtime/resolution/resume_frames.rs | F0526/F0527 typed Expr → Expr, retaining outcome? and resume_fixed_point_from. |
+| crates/rum-runtime/src/runtime/session/session_eval.rs | Two callers: Err(self.continuation_fault_outcome(...).unwrap_err()) → Err(self.continuation_fault_outcome(...)). |
+| crates/rum-runtime/src/runtime/session/session_requests.rs | Two callers: remove unwrap_err from the cold latch projection, retaining the same hot discriminant check. |
+| crates/rum-runtime/src/runtime/suspension/core/fault.rs | Cold continuation_fault_outcome: Result<T, EvalError> → EvalError; still consumes the outcome and takes the same latch. |
+| crates/rum-runtime/src/runtime/suspension/typed/resume_token.rs | Adds public suspend_witnessed with SlotWitness<F::Input>, request and fresh F, delegating to the existing same-frame token operation. This exposes the undisposed public generic input that triggered STOP. |
+| crates/rum-runtime/src/runtime/suspension/typed/tests/driver_faults.rs | Only the cold-helper test caller loses unwrap_err. |
+| crates/rum-runtime/src/runtime/suspension/typed/tests/file_faults.rs | Only the cold-helper test caller loses unwrap_err. |
+| crates/rum-runtime/src/runtime/tests/frame_root_trace.rs | Pin/discovery follows the owned trait renames: scan legacy and typed frame/finalizer traits, retain frame count 564, and check the single S3 typed finalizer’s exact Session-free PreparedCallArguments signature. These late test edits have not been compiled or run. |
+| crates/rum-runtime/src/runtime/tests/frame_root_trace/derived_inventory.rs | In both derived-root and pure-abandon arrays: eval_call_prepare/resume_frames.rs:ResumeSuspendedCallArgumentPreparationSuspensionFrame → eval_core/call.rs:PreparedDispatchFrame. This pairs the D0001 merge with the T0025/T0026 split consumer. |
+| crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs | New strict If-held and listable-completion cases for three marker shapes, plus prepared.twice/head.map.twice controls. Checks::ALL and unconditional FaultProbe checks retained. Fold/Nest definitions archived for S13. |
+| crates/rum-stdlib/tests/suspension_oracle/fixtures/mod.rs | No module → ordinary sibling mod evaluation_dispatch; no ../ path attribute. |
+| crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs | Provisional label S2 → S3; exercised by marker-case output. This is NOT an earned S3 census receipt: the receipt inventory and census acceptance logic are still S2 and remain red. |
+| crates/rum-stdlib/tests/typed_slot_census.rs | Only scratch paths .temp/brief-608/census → .temp/brief-609/census; the S3 acceptance/forced-red expectation migration is unfinished. |
+| crates/rum-stdlib/tests/typed_slot_census/reporting.rs | Only emitted scratch path brief-608 → brief-609. It correctly failed closed on a stale removed decoder-use receipt. |
+| crates/rum-stdlib/tests/typed_slot_compile_controls.rs | Only generated scratch path brief-608/compile-controls → brief-609/compile-controls; the 30 control pairs are unchanged and have not been rerun. |
+| This brief | Append this report after the director amendment; preserve all preceding bytes. |
+
+No other constructor ripple or production module visibility/re-export change was made. The new fixture is 4,327 bytes. The protected-input audit verifies all 183 design/harness hashes, all four archived bases, every manifest/lock/toolchain input, AGENTS.md/TODO.md, the mode registry and the S13 Function implementation. `.temp/brief-609/r1-candidate.patch` is a complete byte-snapshot diff without git; `r1-stop-audit.json` records final source hashes. Scratch stays under brief-609; no certificate output was produced in this redispatch.
+
+Size assessment: builtin_adapters.rs remains about 23.5k with a macro-only change; future separation is by builtin adapter family. eval_call_prepare.rs is about 23.3k and still combines ordinary preparation, suspended accumulation and the existing wire provider; that is the future split boundary. eval_core/call.rs is about 21.5k after the required typed consumer split; dispatch planning/ordinary loops versus resume consumers is the next coherent boundary. This candidate keeps the owned conversion together and does not add unrelated splits. Existing symbol/dispatch/resolution/session files stay in their existing warning or split-plan ranges with only the scoped changes listed above. The large derived inventory is existing literal data; frame_root_trace.rs is a 35k test module. No new module exceeds 10k.
+
+### 2. Owned rows, transformation audit and partial census
+
+| F row | Baseline name | Candidate transition |
+| --- | --- | --- |
+| F0204 | BuiltinEvaluateSuspensionFrame | Typed Expr → Expr; same name. |
+| F0272 | PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame | Typed Expr → PreparedCallArguments; also receives fresh repeated state formerly handled by F0273. |
+| F0273 | ResumeSuspendedCallArgumentPreparationSuspensionFrame | Merged into F0272; no remaining production implementation of the old name. |
+| F0274 | EvaluateCallSuspensionFrame | Typed Expr → Expr; head conversion at the shared entry. |
+| F0275 | ResumeCallWithDispatchPlanSuspensionFrame | Typed Option<Expr> → Expr; prepared branch split to PreparedDispatchFrame. |
+| F0276 | ResumeSuspendedCallWithDispatchPlanSuspensionFrame | Typed Option<Expr> → Expr; prepared branch uses the same PreparedDispatchFrame. |
+| F0277 | EvaluateStoredOwnValueSuspensionFrame | Typed CompiledMatchOutcome → Expr. |
+| F0278 | RunCallDispatchStageSuspensionFrame | Typed Expr → Option<Expr>; complete the semantic Some map. |
+| F0279 | EvalReleaseHoldSuspensionFrame | Typed Expr → Expr. |
+| F0526 | EvaluateProfiledFixedPointSuspensionFrame | Typed Expr → Expr. |
+| F0527 | ResumeFixedPointFromSuspensionFrame | Typed Expr → Expr. |
+| F0570 | FinishPreparedCallArgumentsFinalizer | SlotFinalizer Output=PreparedCallArguments. |
+
+New split frame: `PreparedDispatchFrame`, Input=PreparedCallArguments, Output=Expr, shared by the ordinary and already-suspended dispatch loops. The F0273 merge (-1) and this added consumer (+1) preserve the implementation total. No State birth or mode flip occurred; Expr remains Value and all existing non-Expr slots retain Legacy. No dual-arm decode, per-frame override or raw public adapter was added.
+
+| M row | Actual producer before maps | Ordinary transformation/tail | Resumed transformation / transition |
+| --- | --- | --- | --- |
+| M0205 | Expr | builtin_evaluate returns the evaluated value unchanged | Typed identity frame; no post-witness semantic map. |
+| M0279 | Expr | append/splice/drop-Nothing; preserve Unevaluated entries; advance remaining arguments; build PreparedCallArguments | Typed F0272 reentry uses the same append helper and fresh cursor/splice fields; pure finalizer builds the exact output after Arc release. |
+| M0280 | Expr | the same append and cursor/restore work for later arguments | Old macro removed by D0001; witness of actual evaluated_result is passed to token.suspend_witnessed with fresh F0272. No original Arc is captured. |
+| M0281 | Expr | SharedExpr conversion, plan construction and dispatch; profiling records | Witness now at evaluate(head.into_owned()); shared resume_call_after_head accepts Expr or existing SharedExpr and performs Into<SharedExpr> once. |
+| M0282 | PreparedCallArguments or Option<Expr> (split) | normalize prepared args, install restore; stage Some returns value, None advances cursor | Prepare macro → PreparedDispatchFrame; stage macro → shared finish_call_dispatch_stage, F0275. Shared normalization/restore helper runs once. |
+| M0283 | PreparedCallArguments or Option<Expr> (split) | same work with the suspended plan and frozen restore | Prepare macro → PreparedDispatchFrame; shared stage macro → F0276; restore freezes after the same helper. |
+| M0285 | CompiledMatchOutcome | matched branch evaluates own value; unmatched branch resumes symbol lookup | Same branches in F0277; only the Expr transport map and raw input decode disappear. |
+| M0286 | Expr | Some(value) after evaluating the threaded call | F0278 now completes resumed.map(Some); three listable fixtures watched fail → pass. |
+| M0287 | Expr | profile the builtin result, then result.map(Some) | Same Some completion in unchecked F0278; suspension records the existing profiling event before the typed macro returns. |
+| M0288 | Expr | profile, memory-growth validation, then result.map(Some) | Checked F0278 validates the Expr result and then wraps Some. The If-held fixtures exercise the checked test build; the unchecked constructor shares this completion body. Its release path has not yet been measured. |
+| M0289 | Expr | ReleaseHold evaluation result unchanged | Typed identity frame. |
+| M0561 | Expr | fixed-point equality/cycle history/trace update and next pass | Typed F0526 uses outcome? then the unchanged resume_fixed_point_from state transition. |
+| M0562 | Expr | same fixed-point transition in resumed evaluation | Typed F0527 uses outcome? then the same helper. |
+
+The 13 baseline M rows reconcile to 13 live typed macro sites: M0280 becomes a witnessed token call (-1 macro); M0282/M0283 split into two preparation sites plus one shared Option-stage site (+1 macro). The shared generic helper owns only a synchronous Rust payload and constructs its frame in the suspension arm. Output is bound by its Result<Expr, EvalError> return. No synthetic Err supplies the input witness. The broader source receipt for these splits is still pending; this table is a source audit, not an earned gate result.
+
+| Transformation / obligation | Candidate state |
+| --- | --- |
+| T0023 | Generic PrepareArguments work and unused prepare_arguments_for_call wrapper removed. The dedicated no-caller source assertion is not yet added. |
+| T0024 | Witness actual Expr Result before sharing; common entry performs conversion. head.map.twice passes in the no-default focused gate. |
+| T0025 / T0026 | Separate PreparedCallArguments and Option<Expr> consumers; shared normalization and restore installation. prepared.twice passes in the no-default focused gate. |
+| T0027 | Delete only the Expr transport map/raw CompiledMatchOutcome decode; exact typed helper result retained. The full owning oracle descriptor has not yet run. |
+| D0001 | Same nominal F0272 token, fresh cursor/splice state, no captured Arc; typed deferred finalizer after driver drop. Production two-pause case passes; dedicated typed driver/accounting gates not rerun. New witnessed public API triggered the STOP. |
+
+The out-of-scope skipped semantic map found on the original paths remains `scoping/callable.rs:150–151`, F0528/M0563, S13: `.map(Some)` after `finish_function_application`. It is disclosed in section 0 and was not repaired. The owned-site audit above found the shared F0278 Some omission; no global audit of all other families is claimed.
+
+Partial discovery wrote frames.tsv, macro-sites.tsv, definitions.tsv, all-uses.tsv and related files under `.temp/brief-609/census/default/` before failing during emission of old decoder receipts. Counting the actual emitted production records gives:
+
+```text
+production implementations=607: SuspensionFrame=542, PureFrameFinalizer=53, TypedFrame=11, SlotFinalizer=1
+production macro sites=589: legacy=576, typed=13; result arms=353, insert arms=236
+```
+
+These counts are parsed from discovery artifacts, not a passing S3 census. `typed-slot-stages.tsv`, `typed-slot-shapes.tsv`, census acceptance and forced-red expectations were not updated. The provisional fixture label is S3, while earned stage receipts still stop at S2. The stale source anchors awaiting owned reconciliation are:
+
+| Kind | Receipt | Pending transition |
+| --- | --- | --- |
+| Transform | T0023 | Owned transform replaced/removed; full identity saved in r1-pending-receipt-transitions.json |
+| Transform | T0024 | Owned transform replaced/removed; full identity saved in r1-pending-receipt-transitions.json |
+| Transform | T0025 | Owned transform replaced/removed; full identity saved in r1-pending-receipt-transitions.json |
+| Transform | T0026 | Owned transform replaced/removed; full identity saved in r1-pending-receipt-transitions.json |
+| Transform | T0027 | Owned transform replaced/removed; full identity saved in r1-pending-receipt-transitions.json |
+| Whole | Whole0029 | Owned raw decoder use removed by the typed consumer; no inventory removal performed |
+| Whole | Whole0030 | Owned raw decoder use removed by the typed consumer; no inventory removal performed |
+| Whole | Whole0031 | Owned raw decoder use removed by the typed consumer; no inventory removal performed |
+| Whole | Whole0032 | Owned raw decoder use removed by the typed consumer; no inventory removal performed |
+
+### 3. Replacement S3 divergence fixtures and ordinary controls
+
+The retained builtin fixture selects an If held branch which suspends in CompoundExpression. Source path: InputString → its builtin/dispatch/fixed-point frames (ordinary string) → ResumeCompoundExpressionFromIndexSuspensionFrame (Expr) → F0278 for CompoundExpression (missing Some) → F0275 Option consumer → fixed-point frame → F0278 for If → F0275 → fixed point. Both omitted maps on that path belong to F0278/S3; the CompoundExpression continuation returns Expr on both paths. No Function frame is involved.
+
+The retained listable fixture installs a List[1] DownValue only after the scalar callback pauses. Source path: the scalar downvalue body resumes to ordinary integer 1 → the completed threaded List is ordinarily rewritten to the marker → F0278::threaded_call → Option stage consumer. Other paused definition frames see integer 1, not the marker; the marker-producing List rule runs synchronously during resume. The observed post-conversion equality supports that isolation.
+
+| Cases | Source template (SHAPE = None[] / Some[5] / Some[]) | Observed S2 failures in each build |
+| --- | --- | --- |
+| builtin.none / builtin.some / builtin.empty_some | If[True, (InputString["sweep"];System`InternalContinuationSHAPE), 0] | UnexpectedPause(1) / Value (5) / UnexpectedPause(1) |
+| threaded.none / threaded.some / threaded.empty_some | SetAttributes[f,Listable]; f[x_] := (InputString["sweep"]; Unprotect[List]; DownValues[List]={HoldPattern[List[1]] :> System`InternalContinuationSHAPE}; 1); f[{1}] | UnexpectedPause(1) / Value (5) / UnexpectedPause(1) |
+
+Every retained case uses Checks::ALL, compares value/log/messages/prints/trace, checks the planned request and exhausted queue, and executes FaultProbe absence unconditionally before the equality assertion. Each pre-conversion group of three ends at 48 zero-fault observations. Default post-conversion six-case run ends at 72; no-default eight-case run ends at 96. All deltas are zero. The two ordinary controls pin expected results/log and prepared.twice additionally pins hits=1; all 28 ordinary controls were NOT run before the ownership STOP.
+
+**r1-pre-builtin-held-default: exit 101.** Raw log: `.temp/brief-609/r1-pre-builtin-held-default.log`.
+
+```text
+cargo test -p rum-stdlib --test suspension_oracle fixtures::evaluation_dispatch::s3_ -- --nocapture
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+warning: constant `FLIP_SLOT` is never used
+ --> crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs:4:11
+  |
+4 | pub const FLIP_SLOT: Option<&str> = None;
+  |           ^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: function `execute` is never used
+  --> crates/rum-stdlib/tests/suspension_oracle/support/drive.rs:13:8
+   |
+13 | pub fn execute(
+   |        ^^^^^^^
+
+warning: `rum-stdlib` (test "suspension_oracle") generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.29s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ad9873bc53ac1c0b)
+
+running 3 tests
+test oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some ... builtin.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.empty_some resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=12
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.empty_some: UnexpectedPause(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_builtin_none ... builtin.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.none resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=24
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.none: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_builtin_some ... builtin.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.some resumed: Ok(ResultView { observation: Observation { value: Some(Atom(Integer(Small(5)))), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=48
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.some: Value
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_builtin_none
+    oracle::fixtures::evaluation_dispatch::s3_builtin_some
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 50 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+**r1-pre-builtin-held-no-default: exit 101.** Raw log: `.temp/brief-609/r1-pre-builtin-held-no-default.log`.
+
+```text
+cargo test -p rum-stdlib --no-default-features --test suspension_oracle fixtures::evaluation_dispatch::s3_ -- --nocapture
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+warning: constant `FLIP_SLOT` is never used
+ --> crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs:4:11
+  |
+4 | pub const FLIP_SLOT: Option<&str> = None;
+  |           ^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: function `execute` is never used
+  --> crates/rum-stdlib/tests/suspension_oracle/support/drive.rs:13:8
+   |
+13 | pub fn execute(
+   |        ^^^^^^^
+
+warning: `rum-stdlib` (test "suspension_oracle") generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.13s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ed9ba19bc18733e6)
+
+running 3 tests
+test oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some ... builtin.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 659, identity: None, text: SymbolText { id: 659, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.empty_some resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=12
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.empty_some: UnexpectedPause(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_builtin_none ... builtin.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 661, identity: None, text: SymbolText { id: 661, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.none resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=24
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.none: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_builtin_some ... builtin.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 659, identity: None, text: SymbolText { id: 659, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.some resumed: Ok(ResultView { observation: Observation { value: Some(Atom(Integer(Small(5)))), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=48
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.some: Value
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_builtin_none
+    oracle::fixtures::evaluation_dispatch::s3_builtin_some
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 50 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+**r1-pre-threaded-dv-default: exit 101.** Raw log: `.temp/brief-609/r1-pre-threaded-dv-default.log`.
+
+```text
+cargo test -p rum-stdlib --test suspension_oracle fixtures::evaluation_dispatch::s3_threaded -- --nocapture
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+warning: constant `FLIP_SLOT` is never used
+ --> crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs:4:11
+  |
+4 | pub const FLIP_SLOT: Option<&str> = None;
+  |           ^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: function `execute` is never used
+  --> crates/rum-stdlib/tests/suspension_oracle/support/drive.rs:13:8
+   |
+13 | pub fn execute(
+   |        ^^^^^^^
+
+warning: `rum-stdlib` (test "suspension_oracle") generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.35s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ad9873bc53ac1c0b)
+
+running 3 tests
+test oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some ... threaded.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 670, identity: None, text: SymbolText { id: 670, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.empty_some resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=12
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.empty_some: UnexpectedPause(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_threaded_none ... threaded.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 673, identity: None, text: SymbolText { id: 673, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.none resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=24
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.none: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_threaded_some ... threaded.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 670, identity: None, text: SymbolText { id: 670, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.some resumed: Ok(ResultView { observation: Observation { value: Some(Atom(Integer(Small(5)))), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=48
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.some: Value
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_threaded_none
+    oracle::fixtures::evaluation_dispatch::s3_threaded_some
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 53 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+**r1-pre-threaded-dv-no-default: exit 101.** Raw log: `.temp/brief-609/r1-pre-threaded-dv-no-default.log`.
+
+```text
+cargo test -p rum-stdlib --no-default-features --test suspension_oracle fixtures::evaluation_dispatch::s3_threaded -- --nocapture
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+warning: constant `FLIP_SLOT` is never used
+ --> crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs:4:11
+  |
+4 | pub const FLIP_SLOT: Option<&str> = None;
+  |           ^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: function `execute` is never used
+  --> crates/rum-stdlib/tests/suspension_oracle/support/drive.rs:13:8
+   |
+13 | pub fn execute(
+   |        ^^^^^^^
+
+warning: `rum-stdlib` (test "suspension_oracle") generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.46s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ed9ba19bc18733e6)
+
+running 3 tests
+test oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some ... threaded.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 664, identity: None, text: SymbolText { id: 664, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.empty_some resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=12
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.empty_some: UnexpectedPause(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_threaded_none ... threaded.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.none resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=24
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.none: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_threaded_some ... threaded.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 664, identity: None, text: SymbolText { id: 664, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.some resumed: Ok(ResultView { observation: Observation { value: Some(Atom(Integer(Small(5)))), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=48
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.some: Value
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_threaded_none
+    oracle::fixtures::evaluation_dispatch::s3_threaded_some
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 53 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+**r1-post-map-1: exit 0.** Raw log: `.temp/brief-609/r1-post-map-1.log`.
+
+```text
+cargo test -p rum-stdlib --test suspension_oracle fixtures::evaluation_dispatch::s3_ -- --nocapture
+```
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+warning: constant `FLIP_SLOT` is never used
+ --> crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs:4:11
+  |
+4 | pub const FLIP_SLOT: Option<&str> = None;
+  |           ^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: function `execute` is never used
+  --> crates/rum-stdlib/tests/suspension_oracle/support/drive.rs:13:8
+   |
+13 | pub fn execute(
+   |        ^^^^^^^
+
+warning: `rum-stdlib` (test "suspension_oracle") generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 36.43s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ad9873bc53ac1c0b)
+
+running 6 tests
+test oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some ... continuation-slot fault-occurrence delta=0; observations=12
+S2 builtin.empty_some strict equality PASS: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }; log=List[]
+ok
+test oracle::fixtures::evaluation_dispatch::s3_builtin_none ... continuation-slot fault-occurrence delta=0; observations=24
+S2 builtin.none strict equality PASS: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }; log=List[]
+ok
+test oracle::fixtures::evaluation_dispatch::s3_builtin_some ... continuation-slot fault-occurrence delta=0; observations=36
+S2 builtin.some strict equality PASS: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }; log=List[]
+ok
+test oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some ... continuation-slot fault-occurrence delta=0; observations=48
+S2 threaded.empty_some strict equality PASS: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }; log=List[]
+ok
+test oracle::fixtures::evaluation_dispatch::s3_threaded_none ... continuation-slot fault-occurrence delta=0; observations=60
+S2 threaded.none strict equality PASS: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }; log=List[]
+ok
+test oracle::fixtures::evaluation_dispatch::s3_threaded_some ... continuation-slot fault-occurrence delta=0; observations=72
+S2 threaded.some strict equality PASS: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }; log=List[]
+ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 50 filtered out; finished in 0.04s
+```
+
+**r1-post-map-no-default: exit 0.** Raw log: `.temp/brief-609/r1-post-map-no-default.log`.
+
+```text
+cargo test -p rum-stdlib --no-default-features --test suspension_oracle fixtures::evaluation_dispatch -- --nocapture
+```
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+warning: constant `FLIP_SLOT` is never used
+ --> crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs:4:11
+  |
+4 | pub const FLIP_SLOT: Option<&str> = None;
+  |           ^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: function `execute` is never used
+  --> crates/rum-stdlib/tests/suspension_oracle/support/drive.rs:13:8
+   |
+13 | pub fn execute(
+   |        ^^^^^^^
+
+warning: `rum-stdlib` (test "suspension_oracle") generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 33.22s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ed9ba19bc18733e6)
+
+running 8 tests
+test oracle::fixtures::evaluation_dispatch::head_map_twice ... continuation-slot fault-occurrence delta=0; observations=12
+ok
+test oracle::fixtures::evaluation_dispatch::prepared_twice ... continuation-slot fault-occurrence delta=0; observations=24
+ok
+test oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some ... continuation-slot fault-occurrence delta=0; observations=36
+S3 builtin.empty_some strict equality PASS: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 664, identity: None, text: SymbolText { id: 664, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }; log=List[]
+ok
+test oracle::fixtures::evaluation_dispatch::s3_builtin_none ... continuation-slot fault-occurrence delta=0; observations=48
+S3 builtin.none strict equality PASS: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 677, identity: None, text: SymbolText { id: 677, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }; log=List[]
+ok
+test oracle::fixtures::evaluation_dispatch::s3_builtin_some ... continuation-slot fault-occurrence delta=0; observations=60
+S3 builtin.some strict equality PASS: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 664, identity: None, text: SymbolText { id: 664, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }; log=List[]
+ok
+test oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some ... continuation-slot fault-occurrence delta=0; observations=72
+S3 threaded.empty_some strict equality PASS: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 664, identity: None, text: SymbolText { id: 664, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }; log=List[]
+ok
+test oracle::fixtures::evaluation_dispatch::s3_threaded_none ... continuation-slot fault-occurrence delta=0; observations=84
+S3 threaded.none strict equality PASS: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 677, identity: None, text: SymbolText { id: 677, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }; log=List[]
+ok
+test oracle::fixtures::evaluation_dispatch::s3_threaded_some ... continuation-slot fault-occurrence delta=0; observations=96
+S3 threaded.some strict equality PASS: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 664, identity: None, text: SymbolText { id: 664, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }; log=List[]
+ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 50 filtered out; finished in 0.06s
+```
+
+### 4. Gates, ownership STOP, warnings and unfinished inventories
+
+All Cargo commands ran serially under the bounded wrapper with CARGO_BUILD_JOBS=1, RUST_TEST_THREADS=1, CARGO_NET_OFFLINE=true and TMPDIR=/home/remi/dev/rum/.temp/brief-609/tmp. Filtered fixtures used the 900 s “everything else” bound; no full oracle gate was launched. The wrapper additionally allows the repository’s native-ZeroMQ skip. None of these focused runs executed native ZeroMQ tests; no such skip is counted as a pass.
+
+Fixture selection evidence is preserved, including rejected candidates. The first If-condition candidate passed because If is Ordinary/HoldRest: argument preparation suspends before its builtin starts. It was replaced, not accepted. The first listable candidate tried Set[List[1], marker], which invokes destructuring and emits Set::shape in both paths; its ExpectedValue failures did not isolate the defect. It was replaced with DownValues installation, then genuine queued/resumed divergences were observed.
+
+**r1-pre-builtin-default: exit 0.** Raw log: `.temp/brief-609/r1-pre-builtin-default.log`.
+
+```text
+cargo test -p rum-stdlib --test suspension_oracle fixtures::evaluation_dispatch::s3_ -- --nocapture
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+warning: constant `FLIP_SLOT` is never used
+ --> crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs:4:11
+  |
+4 | pub const FLIP_SLOT: Option<&str> = None;
+  |           ^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: function `execute` is never used
+  --> crates/rum-stdlib/tests/suspension_oracle/support/drive.rs:13:8
+   |
+13 | pub fn execute(
+   |        ^^^^^^^
+
+warning: `rum-stdlib` (test "suspension_oracle") generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.38s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ad9873bc53ac1c0b)
+
+running 3 tests
+test oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some ... continuation-slot fault-occurrence delta=0; observations=12
+S2 builtin.empty_some strict equality PASS: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }; log=List[]
+ok
+test oracle::fixtures::evaluation_dispatch::s3_builtin_none ... continuation-slot fault-occurrence delta=0; observations=24
+S2 builtin.none strict equality PASS: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 668, identity: None, text: SymbolText { id: 668, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }; log=List[]
+ok
+test oracle::fixtures::evaluation_dispatch::s3_builtin_some ... continuation-slot fault-occurrence delta=0; observations=36
+S2 builtin.some strict equality PASS: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }; log=List[]
+ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 50 filtered out; finished in 0.03s
+```
+
+**r1-pre-threaded-default: exit 101.** Raw log: `.temp/brief-609/r1-pre-threaded-default.log`.
+
+```text
+cargo test -p rum-stdlib --test suspension_oracle fixtures::evaluation_dispatch::s3_threaded -- --nocapture
+```
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+warning: constant `FLIP_SLOT` is never used
+ --> crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs:4:11
+  |
+4 | pub const FLIP_SLOT: Option<&str> = None;
+  |           ^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: function `execute` is never used
+  --> crates/rum-stdlib/tests/suspension_oracle/support/drive.rs:13:8
+   |
+13 | pub fn execute(
+   |        ^^^^^^^
+
+warning: `rum-stdlib` (test "suspension_oracle") generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 17.53s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ad9873bc53ac1c0b)
+
+running 3 tests
+test oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some ... expected=Some("InternalContinuationSome[]") actual=Some("List[1]")
+threaded.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([Atom(Integer(Small(1)))]) }), error: None, termination: None, messages: [RuntimeMessage { symbol: "Set", tag: "shape", text: "Lists List[1] and InternalContinuationSome[] are not the same shape." }], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.empty_some resumed: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([Atom(Integer(Small(1)))]) }), error: None, termination: None, messages: [RuntimeMessage { symbol: "Set", tag: "shape", text: "Lists List[1] and InternalContinuationSome[] are not the same shape." }], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=24
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.empty_some: ExpectedValue
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_threaded_none ... expected=Some("InternalContinuationNone[]") actual=Some("List[1]")
+threaded.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([Atom(Integer(Small(1)))]) }), error: None, termination: None, messages: [RuntimeMessage { symbol: "Set", tag: "shape", text: "Lists List[1] and InternalContinuationNone[] are not the same shape." }], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.none resumed: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([Atom(Integer(Small(1)))]) }), error: None, termination: None, messages: [RuntimeMessage { symbol: "Set", tag: "shape", text: "Lists List[1] and InternalContinuationNone[] are not the same shape." }], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=48
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.none: ExpectedValue
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_threaded_some ... expected=Some("InternalContinuationSome[5]") actual=Some("List[1]")
+threaded.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([Atom(Integer(Small(1)))]) }), error: None, termination: None, messages: [RuntimeMessage { symbol: "Set", tag: "shape", text: "Lists List[1] and InternalContinuationSome[5] are not the same shape." }], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.some resumed: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([Atom(Integer(Small(1)))]) }), error: None, termination: None, messages: [RuntimeMessage { symbol: "Set", tag: "shape", text: "Lists List[1] and InternalContinuationSome[5] are not the same shape." }], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=72
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.some: ExpectedValue
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_threaded_none
+    oracle::fixtures::evaluation_dispatch::s3_threaded_some
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 53 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+**r1-census-discover: exit 101.** Raw log: `.temp/brief-609/r1-census-discover.log`.
+
+```text
+cargo test -p rum-stdlib --test typed_slot_census source_baseline_matches_earned_receipt -- --nocapture
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.90s
+     Running tests/typed_slot_census.rs (target/debug/deps/typed_slot_census-943817a3ecf6c029)
+
+running 1 test
+test source_baseline_matches_earned_receipt ... census walk: 14946 functions, 299598 uses, 1499 module visits
+census resolver: 34898 scopes
+
+thread 'source_baseline_matches_earned_receipt' panicked at crates/rum-stdlib/tests/typed_slot_census/reporting.rs:290:22:
+recorded decoder use must be rediscovered
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    source_baseline_matches_earned_receipt
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 20.77s
+
+error: test failed, to rerun pass `-p rum-stdlib --test typed_slot_census`
+```
+
+**r1-ownership-discover: exit 0.** Raw log: `.temp/brief-609/r1-ownership-discover.log`.
+
+```text
+cargo test -p rum-stdlib --lib discovery_report_without_inventory_input -- --nocapture
+```
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 37.67s
+running 1 test
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1144 filtered out; finished in 5.84s
+```
+
+**Mandatory STOP:** independent discovery has 80 UnknownHostPayload rows versus the existing 79. Comparing file/construct identities while normalizing only source-position suffixes finds exactly one added identity and no removed identities:
+
+```text
+UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/resume_token.rs	20	16	public input rum_runtime::runtime::suspension::typed::resume_token::impl(ContinueToken < '_ , F >)@13::suspend_witnessed(fresh): opaque owned generic parameter F : TypedFrame
+```
+
+The added public input is `fresh: F` at `suspension/typed/resume_token.rs:20:16`, bound by `F: TypedFrame`. The method consumes a SlotWitness<F::Input> from the real repeated producer so D0001 can retain producer evidence, but its new public by-value generic parameter creates a distinct host-payload obligation. The existing `suspend(fresh)` disposition does not automatically approve this new method. Step 9 says: “A new UnknownHostPayload without an approved disposition is a STOP.” No new disposition, broad allowlist or discovery modification was made. A director decision can require narrower runtime-only visibility or explicitly authorize/discharge the public operation; I made no implementation repair after this discovery.
+
+**fmt-check: exit 0.** Raw log: `.temp/brief-609/fmt-check.log`.
+
+```text
+cargo fmt --check
+```
+
+```text
+(no output)
+```
+
+**r1-fmt-write: exit 0.** Raw log: `.temp/brief-609/r1-fmt-write.log`.
+
+```text
+cargo fmt
+```
+
+```text
+(no output)
+```
+
+**r1-fmt-write-2: exit 0.** Raw log: `.temp/brief-609/r1-fmt-write-2.log`.
+
+```text
+cargo fmt
+```
+
+```text
+(no output)
+```
+
+**r1-final-format: exit 0.** Raw log: `.temp/brief-609/r1-final-format.log`.
+
+```text
+cargo fmt
+```
+
+```text
+(no output)
+```
+
+**r1-final-fmt-check: exit 0.** Raw log: `.temp/brief-609/r1-final-fmt-check.log`.
+
+```text
+cargo fmt --check
+```
+
+```text
+(no output)
+```
+
+Observed compiler warnings are the pre-existing unused FLIP_SLOT and unused support::drive::execute warnings in the oracle target. No new warning appeared in executed builds. TYPING_RECEIPT is now used by the fixture output. The initial conversion and the profiling-corrected production code compiled; there were zero Rust compiler-error attempts. The late frame_root_trace test/inventory edits have only been formatted, not compiled or tested.
+
+**Not run after the STOP:** runtime typed unit suite; frame_root_trace; both 30-pair compile-control suites; full typed census in either build; full suspension oracle in either build; ownership exactness/ledger acceptance; both local production certificate suites; historical retention census; workspace tests; all-28 ordinary control replay. The only census attempt failed on stale owned decoder receipts, and ownership discovery itself succeeded while exposing the unapproved row. No correctness acceptance is claimed.
+
+No ownership inventory, host disposition, retention fingerprint, promotion/certificate cell, oracle effect/catalog pin or historical rejection-census pin was replayed. Their hashes/positions may therefore be stale for this partial candidate. `Whole0029–Whole0032` and T0023–T0027 are explicitly pending owned transitions, not silently deleted rows. Certificates were not emitted. The two derived frame inventory substitutions are listed in section 1 and remain untested.
+
+### 5. Bases and performance evidence
+
+The four fresh one-codegen-unit S2 bases from step 1 were reused exactly as directed; none was rebuilt in redispatch 1. Their hashes were reverified during the final audit. Each was built in its own brief-609 target. Existing brief-608 resume-harness sources are unchanged; feature trees exclude test-continuation-slots.
+
+| Binary | Bytes | SHA-256 |
+| --- | --- | --- |
+| rum-cli | 12537440 | b553a00e63e8af387e3141fe35764f54515a3e3154fd09b2756f911a2e87d9bf |
+| rum-cli-alloc | 12547616 | f1fb356eb26f45dedaa09ad46e8d697dfde6bd10fbfe1aa12290f61dfcf6e9f1 |
+| resume | 12180552 | 57e800bca2cca0d327b358f410d34ced30787410bdee6afe5838f9334a24e81f |
+| resume-alloc | 12185720 | 73f279bfb5e13ab4daa34242a9d591e52d9d8012267197268e80f63d41ecc503 |
+
+**base cli: exit 0.**
+
+```text
+cargo build --release -p rum-cli
+CARGO_BUILD_JOBS=1
+RUST_TEST_THREADS=1
+CARGO_NET_OFFLINE=true
+TMPDIR=/home/remi/dev/rum/.temp/brief-609/tmp
+CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+CARGO_TARGET_DIR=/home/remi/dev/rum/.temp/brief-609/target-base-cli
+```
+
+```text
+    Finished `release` profile [optimized] target(s) in 1m 41s
+```
+
+**base cli-alloc: exit 0.**
+
+```text
+cargo build --release -p rum-cli --features rum-cli/alloc-count
+CARGO_BUILD_JOBS=1
+RUST_TEST_THREADS=1
+CARGO_NET_OFFLINE=true
+TMPDIR=/home/remi/dev/rum/.temp/brief-609/tmp
+CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+CARGO_TARGET_DIR=/home/remi/dev/rum/.temp/brief-609/target-base-cli-alloc
+```
+
+```text
+    Finished `release` profile [optimized] target(s) in 1m 38s
+```
+
+**base resume: exit 0.**
+
+```text
+cargo build --release --manifest-path /home/remi/dev/rum/.temp/brief-608/resume-harness/Cargo.toml
+CARGO_BUILD_JOBS=1
+RUST_TEST_THREADS=1
+CARGO_NET_OFFLINE=true
+TMPDIR=/home/remi/dev/rum/.temp/brief-609/tmp
+CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+CARGO_TARGET_DIR=/home/remi/dev/rum/.temp/brief-609/target-base-resume
+```
+
+```text
+    Finished `release` profile [optimized] target(s) in 1m 32s
+```
+
+**base resume-alloc: exit 0.**
+
+```text
+cargo build --release --manifest-path /home/remi/dev/rum/.temp/brief-608/resume-harness/Cargo.toml --features alloc-count
+CARGO_BUILD_JOBS=1
+RUST_TEST_THREADS=1
+CARGO_NET_OFFLINE=true
+TMPDIR=/home/remi/dev/rum/.temp/brief-609/tmp
+CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+CARGO_TARGET_DIR=/home/remi/dev/rum/.temp/brief-609/target-base-resume-alloc
+```
+
+```text
+    Finished `release` profile [optimized] target(s) in 1m 33s
+```
+
+No candidate release binaries were built. All 64 allocation/byte comparisons, interleaved instruction slopes, flagged-label repeats/Callgrind, five resume-workload function/address attribution and the full timing panel remain unrun. This conversion changes hot paths and Legacy wire work; no no-cost or permitted-allocation-delta claim is made from the successful debug fixtures. The brief’s performance requirements remain outstanding.
+
+### 6. S2 cold-helper leftover
+
+continuation_fault_outcome remains #[cold] and #[inline(never)], consumes Result<T, EvalError>, and now returns EvalError directly. All four production callers retain their original hot has_continuation_fault discriminant check and wrap the returned error with Err. Only the two specified test callers changed. This compiled with the candidate, but the mandatory address-level hot-boundary comparison and the typed fault tests have not run; source similarity is not measurement evidence.
+
+### 7. Stop-loss counters, deviations and open decisions
+
+Stop-loss counter: 0. The pre-conversion red tests were required evidence; fixture selection progressed to actual divergences. The first conversion compiled without Rust errors and made six named failures pass. The next focused build passed all eight cases. The source census reached actual 607/589 discovery and exposed stale owned receipts; independent ownership discovery then triggered an explicit STOP. This is not the two-unproductive-attempt stop-loss condition.
+
+The governing amendment was read before redispatch work. The original six promotions were reassigned only under that explicit ruling. No git command, network operation, unsafe, dependency/lock/toolchain edit, out-of-scope family conversion or comparison weakening occurred. All source/protected-input audits are snapshot/hash based. The only production API addition was disclosed and is exactly the new ownership blocker. All launched commands completed. The final formatting check passes.
+
+Open decision: resolve the public witnessed-token obligation before resuming. A narrower visibility/API design may avoid creating a new public host-input row; otherwise the public operation needs an approved disposition and evidence. Then complete the S3 census/source gate, test and inventory replay, all mandatory gates and measurements. The working tree is deliberately left uncommitted and **not acceptance-ready**. Partial files are concrete and preserved: provisional S3 fixture label, unchanged S2 receipt inventory/acceptance logic, pending decoder transitions, untested late frame-root pins, and unreplayed certificates/ownership. `.temp/brief-609/PROGRESS.md` records the exact next action and no hidden running command remains.
+
+
+## Director amendment — redispatch 2: one witnessed token route
+
+The ownership STOP is correct. The cause is the API shape, not a missing
+disposition.
+
+1. **No second public route.** `ContinueToken::suspend` itself takes the
+   witness:
+   `suspend(self, session, witness: SlotWitness<F::Input>, request, fresh)`.
+   Remove `suspend_witnessed`.
+   - With two routes, the witness is a convention a caller can skip. With
+     one, the compiler requires producer evidence at every repeat site,
+     which is what the design's "input evidence comes from the actual
+     `Result`" means.
+   - The existing ledger row for `suspend(fresh)` keeps its identity.
+     Discovery must return to 79 `UnknownHostPayload` rows, differing only
+     in position. If a new identity still appears, STOP.
+   - Update S2's token tests under `suspension/typed/tests/` to pass a
+     witness from their producer.
+   - Update the I0003 compile-control pair the same way. Its negative still
+     isolates exactly one invalidity: the fresh-state type.
+   - Add one pair: a witness whose input type is not `F::Input` must be
+     rejected. Pin its error code and primary span. The controls become 31
+     in both builds.
+   - The census route I0003 still names `ContinueToken::suspend`. Update its
+     witness text if it quotes the signature.
+   - Authorized for this: `typed_slot_compile_controls.rs` and the files
+     under `suspension/typed/`.
+2. **Oracle warnings.** At S2 the oracle target warned three times:
+   `TYPING_RECEIPT`, `FLIP_SLOT` and `support::drive::execute`. Step 7 now
+   means the oracle target compiles with no warning in either build.
+   - Scope a constant that only the census reads.
+   - Remove `drive::execute` if nothing calls it in either build; say which.
+3. **Then finish the step.** Do the census receipt migration, the
+   inventory, fingerprint and certificate replays, every gate in the
+   Verification section, and the performance section. Compile and test the
+   derived frame inventory edits; they are untested so far.
+
+Append a new `## Execution report` after this section.
