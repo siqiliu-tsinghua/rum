@@ -2507,3 +2507,1686 @@ The STOP is correct, and the cause is a class, not this one site.
 4. **Then finish the step**, exactly as redispatch 2 listed.
 
 Append a new `## Execution report` after this section.
+
+
+## Execution report — redispatch 3: STOP on compiler-oracle macro traversal
+
+**S3 remains a partial candidate and is not accepted.** The checked typed-macro frontier adapter restores the missing rejection and passes both watched falsifiers. Both full oracle builds pass 58 tests without warnings and with zero fault-occurrence deltas; all 31 compiler pairs and all 28 ordinary controls pass in each build. The completed workspace run exposes a new compiler-oracle traversal gap outside the authorized analyzer files, which triggers the Scope’s explicit STOP. No constructor claim, rejection, assertion or fault gate was removed to bypass it.
+
+The workspace also finds an unresolved native-stack regression in the unchanged 48-level recursion test. No repair was applied after the scope stop. No candidate release binary or performance measurement exists; the four S2 bases remain intact. The new report preserves all earlier reports as historical evidence, including their superseded STOPs and the corrected claim about the shared support wrapper.
+
+### 1. Files changed, ripple and pin disclosures
+
+| File | Semantic change / old → new |
+| --- | --- |
+| crates/rum-runtime/src/runtime/builtin_adapters.rs | M0205 legacy macro → witnessed typed macro; identity success tail retained. |
+| crates/rum-runtime/src/runtime/builtin_adapters/resume_frames.rs | F0204 legacy frame → TypedFrame<Expr, Expr>. |
+| crates/rum-runtime/src/runtime/eval_call_prepare.rs | T0023 wrapper removed; initial witnessed capture; deferred helpers return ResumeStop<PreparedCallArguments>, advance fresh cursor/splice state, and use the witnessed token. Pure completion now returns PreparedCallArguments; its existing Legacy wire provider consumes those fields directly instead of freeze/thaw round-tripping them. The test-only old-wire fixture follows that helper’s typed result. |
+| crates/rum-runtime/src/runtime/eval_call_prepare/resume_frames.rs | F0273 merges into F0272 so every repeat freezes fresh state of the same nominal type. F0570 becomes SlotFinalizer<Output=PreparedCallArguments>; finish_work schedules it after originating owners drop. |
+| crates/rum-runtime/src/runtime/eval_core/call.rs | T0024 witnesses Expr before head sharing; shared resume_call_after_head performs the conversion. T0025/T0026 add PreparedDispatchFrame and share argument normalization/restore installation. F0275/F0276 consume Option<Expr>; their ordinary stage-result macro is shared in finish_call_dispatch_stage. Remove both shape-dependent old decoder branches. Stable heads retain their existing SharedExpr value. Profiling stop remains after ordinary preparation normalization and before returning a suspension. |
+| crates/rum-runtime/src/runtime/eval_core/mod.rs | The SharedExpr-result profiling wrapper loses its final caller under T0024 and is removed; generic outcome classification remains. |
+| crates/rum-runtime/src/runtime/eval_core/symbol.rs | Only F0277/M0285 typed: CompiledMatchOutcome → Expr, retaining matched/unmatched semantics and deleting the Expr wire map. The S14 loader capture in this file is unchanged. |
+| crates/rum-runtime/src/runtime/eval_dispatch/mod.rs | Remove the generic PrepareArguments work and leave an unreachable arm. M0286 now witnesses the actual threaded Result instead of receiving only a request in a cold helper. M0287/M0288 use typed macros, preserving profiling on suspension. F0278 completes resumed.map(Some) after the existing memory-growth validation. |
+| crates/rum-runtime/src/runtime/hold_thread.rs | F0279/M0289 typed Expr identity continuation for ReleaseHold. |
+| crates/rum-runtime/src/runtime/resolution.rs | M0561/M0562 witnessed at the actual next_result before matching; saved current, pass count and history retain their transitions. |
+| crates/rum-runtime/src/runtime/resolution/resume_frames.rs | F0526/F0527 typed Expr → Expr, retaining outcome? and resume_fixed_point_from. |
+| crates/rum-runtime/src/runtime/session/session_eval.rs | Two callers: Err(self.continuation_fault_outcome(...).unwrap_err()) → Err(self.continuation_fault_outcome(...)). |
+| crates/rum-runtime/src/runtime/session/session_requests.rs | Two callers: remove unwrap_err from the cold latch projection, retaining the same hot discriminant check. |
+| crates/rum-runtime/src/runtime/suspension/core/fault.rs | Cold continuation_fault_outcome: Result<T, EvalError> → EvalError; still consumes the outcome and takes the same latch. |
+| crates/rum-runtime/src/runtime/suspension/typed/resume_token.rs | Redispatch 2: delete suspend_witnessed; original suspend(session, request, fresh) → suspend(session, SlotWitness<F::Input>, request, fresh). Same public identity, same fresh F constraint, no Arc in the token. |
+| crates/rum-runtime/src/runtime/suspension/typed/tests/accounting.rs | The legacy-queue setup calls eval_input_string directly instead of evaluating an InputString call through newly typed S3 frames. This restores the legacy-to-mixed widening precondition; every allocation, byte and admission assertion is unchanged. |
+| crates/rum-runtime/src/runtime/suspension/typed/tests/driver_faults.rs | Only the cold-helper test caller loses unwrap_err. |
+| crates/rum-runtime/src/runtime/suspension/typed/tests/file_faults.rs | Only the cold-helper test caller loses unwrap_err. |
+| crates/rum-runtime/src/runtime/suspension/typed/tests/live.rs | repeat_work now captures slot_witness(&outcome) from its actual input producer before matching and passes it to the sole suspend route. |
+| crates/rum-runtime/src/runtime/tests/frame_root_trace.rs | Scan both legacy and typed frame/finalizer traits; preserve 564-frame population and root/drop checks. Pin the Session-free PreparedCallArguments finalizer signature. Now compiled and tested: 15/15 frame-root tests pass. |
+| crates/rum-runtime/src/runtime/tests/frame_root_trace/derived_inventory.rs | In both derived-root and pure-abandon arrays: eval_call_prepare/resume_frames.rs:ResumeSuspendedCallArgumentPreparationSuspensionFrame → eval_core/call.rs:PreparedDispatchFrame. This pairs the D0001 merge with the T0025/T0026 split consumer. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payload_ledger.tsv | Exact discovery replay of source positions/owned S3 constructs; all 79 host identities and dispositions retained. Full old/new rows in ownership replay patch. Four emitted adapter witnesses replace interim no-production-instantiation text with concrete S3 preparation-frame/finalizer ownership paths; disposition, owed_by and external coverage unchanged. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payloads.tsv | Exact discovery replay of source positions/owned S3 constructs; all 79 host identities and dispositions retained. Full old/new rows in ownership replay patch. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/self_reaching.tsv | Exact discovery replay of source positions/owned S3 constructs; all 79 host identities and dispositions retained. Full old/new rows in ownership replay patch. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv | Exact discovery replay of source positions/owned S3 constructs; all 79 host identities and dispositions retained. Full old/new rows in ownership replay patch. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv | Exact discovery replay of source positions/owned S3 constructs; all 79 host identities and dispositions retained. Full old/new rows in ownership replay patch. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv | Exact discovery replay of source positions/owned S3 constructs; all 79 host identities and dispositions retained. Full old/new rows in ownership replay patch. |
+| crates/rum-stdlib/src/tests/retention_closure/census/tests.rs | Historical frontier 932 → 936; RET001 10 unchanged, RET002 895 → 900, RET003 27 → 26. 918 identical rows, 13 moved pairs, one old opaque site replaced by four accounted rows, and one new Try rejection. Explicitly preserve the freeze rejection; historical ACCEPTANCE_BASELINE string unchanged. |
+| crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv | Replay 68 fingerprint cells from final source context; first 18 fields of each row unchanged. |
+| crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv | Replay four emitted C01/C02 certificate cells for hash=true/false; other seven columns unchanged. Certified bodies contain no converted macro and local analyzer source is unchanged. |
+| crates/rum-stdlib/src/tests/retention_closure/regions.rs | Recognize canonical typed macro, check its expansion through adjacent adapter, visit producer/result binding/success/session/frame expressions with source spans and enclosing resolver. Record four unresolved expansion operations at macro span. Legacy macros stay opaque. |
+| crates/rum-stdlib/src/tests/retention_closure/typed_resume_macro.rs | New checked adapter: exact macro body/matcher/attributes, canonical path and Ok/Err hygiene, full pattern/argument parsing; fixed exhaustive four expansion-operation rejection rows. Definition drift fails census; no retention admission. |
+| crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs | New strict If-held and listable-completion cases for three marker shapes, plus prepared.twice/head.map.twice controls. Checks::ALL and unconditional FaultProbe checks retained. Fold/Nest definitions archived for S13. |
+| crates/rum-stdlib/tests/suspension_oracle/fixtures/mod.rs | No module → ordinary sibling mod evaluation_dispatch; no ../ path attribute. |
+| crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs | S2 → S3 receipt, used by marker fixtures and census. FLIP_SLOT becomes census-only. Both oracle targets compile without warnings. |
+| crates/rum-stdlib/tests/suspension_oracle/inventory/typed-slot-stages.tsv | Record all owned F/M/T/D transitions; retain F0273/M0280 removal receipts, add F0275P/M0282S; remove four raw decoder consumers; add S3 and X0040 finalizer-wire fixture receipt. Every changed row is in the receipt-transition artifact. |
+| crates/rum-stdlib/tests/suspension_oracle/support/drive.rs | Retain the exact execute wrapper required by nine historical integration families through path aliases. Add a function-local allow(dead_code) for the oracle target, which calls execute_planned directly. This corrects the earlier erroneous removal; execute_planned and all comparisons remain unchanged. |
+| crates/rum-stdlib/tests/typed_slot_census.rs | Scratch brief-608 → brief-609; S2 → S3 receipt and negative-preflip labels. Scope FLIP_SLOT here; connect s3 module. Guard-removal legacy counts 564/59 → 553/58; removed-frame sentinel remains 622. Both scratch falsifiers verified in both builds. |
+| crates/rum-stdlib/tests/typed_slot_census/receipts.rs | Production legacy frames/finalizers 553/54 → 542/53, total 607 unchanged; macro result/insert 345/244 → 353/236, total 589 unchanged. Receipt row totals F623 → F624 and M600 → M601 retain merged rows plus new split identities. Closed-set S3 removal proof precedes skipping removed source anchors; all other exact source/mode checks remain. |
+| crates/rum-stdlib/tests/typed_slot_census/reporting.rs | Scratch brief-608 → brief-609. Removed Whole0029–Whole0032 emit explicit S3 transition records, assert absence of the old identity, and preserve decoder IDs; live decoder rows still require rediscovery. |
+| crates/rum-stdlib/tests/typed_slot_census/routes.rs | I0003 still names ContinueToken::suspend and its executable repeat witness. Update mechanism output to disclose typed S3 evaluation while later families remain untyped; S2 mechanism ownership is unchanged. |
+| crates/rum-stdlib/tests/typed_slot_census/s3.rs | New closed-set gate for exactly 12 typed implementations / 13 typed macros, input/output pairs, 8 approved removals, absent T0023 wrapper/callers, relocated maps and witnessed token repeat. |
+| crates/rum-stdlib/tests/typed_slot_compile_controls.rs | Scratch directory brief609; actual producer witnesses added to repeat/finalizer controls. Add token-witness-input, changing only producer Expr → Option<Expr>, requiring one E0308 at the complete witness span. 31 positive/intended-negative pairs pass in each build. |
+
+The brief is append-only after the redispatch-3 amendment. All prior report/amendment bytes are preserved. No module visibility widening was needed. Registry and typed-slot-shapes.tsv remain unchanged; S3 has no State births. The exact cumulative source patch is `.temp/brief-609/r3/candidate.patch`. No git command, network operation, unsafe code, dependency, lockfile, toolchain, core representation or unrelated documentation change was made.
+
+Size assessment: new modules remain below 10k characters: crates/rum-stdlib/tests/typed_slot_census/s3.rs=5206, crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs=4327, crates/rum-stdlib/src/tests/retention_closure/typed_resume_macro.rs=6540. Existing split-plan modules retain their semantic boundaries: argument preparation versus Legacy wire provider, dispatch loops versus resumed consumers, adapter families, and compiler fixture definitions versus diagnostic harness. No unrelated split or TODO change was made. All touched Rust sizes are in final-audit.json.
+
+### 2. Owned-row reconciliation and census
+
+| F row | S2 type | S3 transition |
+| --- | --- | --- |
+| F0204 | BuiltinEvaluateSuspensionFrame | Typed Expr → Expr; same name. |
+| F0272 | PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame | Typed Expr → PreparedCallArguments; also receives fresh repeated state formerly handled by F0273. |
+| F0273 | ResumeSuspendedCallArgumentPreparationSuspensionFrame | Merged into F0272; no remaining production implementation of the old name. |
+| F0274 | EvaluateCallSuspensionFrame | Typed Expr → Expr; head conversion at the shared entry. |
+| F0275 | ResumeCallWithDispatchPlanSuspensionFrame | Typed Option<Expr> → Expr; prepared branch split to PreparedDispatchFrame. |
+| F0276 | ResumeSuspendedCallWithDispatchPlanSuspensionFrame | Typed Option<Expr> → Expr; prepared branch uses the same PreparedDispatchFrame. |
+| F0277 | EvaluateStoredOwnValueSuspensionFrame | Typed CompiledMatchOutcome → Expr. |
+| F0278 | RunCallDispatchStageSuspensionFrame | Typed Expr → Option<Expr>; complete the semantic Some map. |
+| F0279 | EvalReleaseHoldSuspensionFrame | Typed Expr → Expr. |
+| F0526 | EvaluateProfiledFixedPointSuspensionFrame | Typed Expr → Expr. |
+| F0527 | ResumeFixedPointFromSuspensionFrame | Typed Expr → Expr. |
+| F0570 | FinishPreparedCallArgumentsFinalizer | SlotFinalizer Output=PreparedCallArguments. |
+
+| M row | Actual producer | Ordinary transformation | Resumed transformation |
+| --- | --- | --- | --- |
+| M0205 | Expr | builtin_evaluate returns the evaluated value unchanged | Typed identity frame; no post-witness semantic map. |
+| M0279 | Expr | append/splice/drop-Nothing; preserve Unevaluated entries; advance remaining arguments; build PreparedCallArguments | Typed F0272 reentry uses the same append helper and fresh cursor/splice fields; pure finalizer builds the exact output after Arc release. |
+| M0280 | Expr | the same append and cursor/restore work for later arguments | Old macro removed by D0001; witness of actual evaluated_result is passed to token.suspend with fresh F0272. No original Arc is captured. |
+| M0281 | Expr | SharedExpr conversion, plan construction and dispatch; profiling records | Witness now at evaluate(head.into_owned()); shared resume_call_after_head accepts Expr or existing SharedExpr and performs Into<SharedExpr> once. |
+| M0282 | PreparedCallArguments or Option<Expr> (split) | normalize prepared args, install restore; stage Some returns value, None advances cursor | Prepare macro → PreparedDispatchFrame; stage macro → shared finish_call_dispatch_stage, F0275. Shared normalization/restore helper runs once. |
+| M0283 | PreparedCallArguments or Option<Expr> (split) | same work with the suspended plan and frozen restore | Prepare macro → PreparedDispatchFrame; shared stage macro → F0276; restore freezes after the same helper. |
+| M0285 | CompiledMatchOutcome | matched branch evaluates own value; unmatched branch resumes symbol lookup | Same branches in F0277; only the Expr transport map and raw input decode disappear. |
+| M0286 | Expr | Some(value) after evaluating the threaded call | F0278 now completes resumed.map(Some); three listable fixtures watched fail → pass. |
+| M0287 | Expr | profile the builtin result, then result.map(Some) | Same Some completion in unchecked F0278; suspension records the existing profiling event before the typed macro returns. |
+| M0288 | Expr | profile, memory-growth validation, then result.map(Some) | Checked F0278 validates the Expr result and then wraps Some. The If-held fixtures exercise the checked test build; the unchecked constructor shares this completion body. Its release path has not yet been measured. |
+| M0289 | Expr | ReleaseHold evaluation result unchanged | Typed identity frame. |
+| M0561 | Expr | fixed-point equality/cycle history/trace update and next pass | Typed F0526 uses outcome? then the unchanged resume_fixed_point_from state transition. |
+| M0562 | Expr | same fixed-point transition in resumed evaluation | Typed F0527 uses outcome? then the same helper. |
+
+F0273 merges into F0272 for same-type fresh token repeats. New F0275P PreparedDispatchFrame consumes PreparedCallArguments and is shared by both call loops. M0280 becomes the witnessed token route; M0282S is the shared Option-stage result macro. T0023 removes the unreachable generic PrepareArguments body and wrapper, with a parsed no-definition/no-caller gate. T0024 witnesses Expr before the common SharedExpr conversion. T0025/T0026 split prepared/stage consumers and share normalization/restore installation. T0027 removes only transport encoding/decoding. D0001 preserves cursor/splice state, mandatory actual producer evidence and finalization after both owners drop. Modes remain Expr Value plus21 Legacy;23 whole-slot Legacy types remain.
+
+```text
+S3 CENSUS production frames=542 finalizers=53 implementations=607 typed=12 macros=589 result=353 insert=236
+S3 CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+S3 CENSUS test-support frames=5 finalizers=0 implementations=15 typed=10 macros=8 result=3 insert=5
+S3 PARTITION implementations=623 macros=600
+S3 T0023 wrapper/callers absent; D0001 witnessed token live; typed=12 macros=13
+S3 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; typed evaluation uses unchanged global modes
+S3 CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+S3 CENSUS test-support frames=5 finalizers=0 implementations=15 typed=10 macros=8 result=3 insert=5
+S3 PARTITION implementations=622 macros=600
+S3 CENSUS production frames=542 finalizers=53 implementations=607 typed=12 macros=589 result=353 insert=236
+S3 CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+S3 CENSUS test-support frames=5 finalizers=0 implementations=15 typed=10 macros=8 result=3 insert=5
+S3 PARTITION implementations=623 macros=600
+S3 T0023 wrapper/callers absent; D0001 witnessed token live; typed=12 macros=13
+S3 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; typed evaluation uses unchanged global modes
+S3 CENSUS test-only frames=0 finalizers=0 implementations=0 typed=0 macros=0 result=0 insert=0
+S3 CENSUS test-support frames=5 finalizers=0 implementations=15 typed=10 macros=8 result=3 insert=5
+S3 PARTITION implementations=623 macros=600
+S3 CENSUS production frames=542 finalizers=53 implementations=607 typed=12 macros=589 result=353 insert=236
+S3 CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+S3 CENSUS test-support frames=5 finalizers=0 implementations=15 typed=10 macros=8 result=3 insert=5
+S3 PARTITION implementations=623 macros=600
+S3 T0023 wrapper/callers absent; D0001 witnessed token live; typed=12 macros=13
+S3 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; typed evaluation uses unchanged global modes
+```
+
+Both census builds passed5/0/1ignored; the ignored probe is executed explicitly in two bounded scratch falsifiers, both of which fail as intended. Production 607 implementations include 11 TypedFrame and 1 SlotFinalizer; 589 macros include 13 typed. Test-only 16 implementations / 11 macros remain. Retained removal receipts explain inventory F624/M601; X0040 records the existing finalizer-wire fixture. Exact receipt transitions follow.
+
+| Receipt | Status old → new | Final identity / anchors |
+| --- | --- | --- |
+| F0204 | untyped → typed | rum_runtime::runtime::builtin_adapters::resume_frames::BuiltinEvaluateSuspensionFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; - |
+| F0272 | untyped → typed | rum_runtime::runtime::eval_call_prepare::resume_frames::PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; - |
+| F0273 | untyped → removed | rum_runtime::runtime::eval_call_prepare::resume_frames::ResumeSuspendedCallArgumentPreparationSuspensionFrame implements rum_runtime::runtime::suspension::core::SuspensionFrame; F0272 |
+| F0274 | untyped → typed | rum_runtime::runtime::eval_core::call::EvaluateCallSuspensionFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; - |
+| F0275 | untyped → typed | rum_runtime::runtime::eval_core::call::ResumeCallWithDispatchPlanSuspensionFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; - |
+| F0276 | untyped → typed | rum_runtime::runtime::eval_core::call::ResumeSuspendedCallWithDispatchPlanSuspensionFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; - |
+| F0277 | untyped → typed | rum_runtime::runtime::eval_core::symbol::EvaluateStoredOwnValueSuspensionFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; - |
+| F0278 | untyped → typed | rum_runtime::runtime::eval_dispatch::RunCallDispatchStageSuspensionFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; - |
+| F0279 | untyped → typed | rum_runtime::runtime::hold_thread::EvalReleaseHoldSuspensionFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; - |
+| F0526 | untyped → typed | rum_runtime::runtime::resolution::resume_frames::EvaluateProfiledFixedPointSuspensionFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; - |
+| F0527 | untyped → typed | rum_runtime::runtime::resolution::resume_frames::ResumeFixedPointFromSuspensionFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; - |
+| F0570 | untyped → typed | rum_runtime::runtime::eval_call_prepare::resume_frames::FinishPreparedCallArgumentsFinalizer implements rum_runtime::runtime::suspension::typed::SlotFinalizer; - |
+| M0205 | untyped → typed | rum_runtime::runtime::builtin_adapters::builtin_evaluate#macro1:resume_typed_or_suspend:result; - |
+| M0279 | untyped → typed | rum_runtime::runtime::eval_call_prepare::<Session as inherent>::prepare_arguments_for_call_with_unevaluated_restore#macro1:resume_typed_or_suspend:result; - |
+| M0280 | untyped → removed | rum_runtime::runtime::eval_call_prepare::<Session as inherent>::resume_suspended_call_argument_preparation#macro1:resume_or_suspend:insert; F0272 |
+| M0281 | untyped → typed | rum_runtime::runtime::eval_core::call::<Session as inherent>::evaluate_call#macro1:resume_typed_or_suspend:result; - |
+| M0282 | untyped → typed | rum_runtime::runtime::eval_core::call::<Session as inherent>::resume_call_with_dispatch_plan#macro1:resume_typed_or_suspend:result; - |
+| M0283 | untyped → typed | rum_runtime::runtime::eval_core::call::<Session as inherent>::resume_suspended_call_with_dispatch_plan#macro1:resume_typed_or_suspend:result; - |
+| M0285 | untyped → typed | rum_runtime::runtime::eval_core::symbol::<Session as inherent>::evaluate_stored_own_value#macro1:resume_typed_or_suspend:result; - |
+| M0286 | untyped → typed | rum_runtime::runtime::eval_dispatch::<Session as inherent>::run_call_dispatch_stage#macro1:resume_typed_or_suspend:result; - |
+| M0287 | untyped → typed | rum_runtime::runtime::eval_dispatch::<Session as inherent>::try_dispatch_builtin_call#macro1:resume_typed_or_suspend:result; - |
+| M0288 | untyped → typed | rum_runtime::runtime::eval_dispatch::<Session as inherent>::try_dispatch_builtin_call#macro2:resume_typed_or_suspend:result; - |
+| M0289 | untyped → typed | rum_runtime::runtime::hold_thread::<Session as inherent>::eval_release_hold#macro1:resume_typed_or_suspend:result; - |
+| M0561 | untyped → typed | rum_runtime::runtime::resolution::<Session as inherent>::evaluate_profiled_fixed_point#macro1:resume_typed_or_suspend:result; - |
+| M0562 | untyped → typed | rum_runtime::runtime::resolution::<Session as inherent>::resume_fixed_point_from#macro1:resume_typed_or_suspend:result; - |
+| D0001 | untyped → implemented | deferred::prepared arguments; F0204;F0272;F0273;F0274;F0275;F0276;F0277;F0278;F0279;F0526;F0527;F0570;F0275P |
+| T0023 | untyped → removed | rum_runtime::runtime::eval_call_prepare::<Session as inherent>::prepare_arguments_for_call#method1:map:self . prepare_arguments_for_call_with_unevaluated_restore (head , attributes , args); F0272 |
+| T0024 | untyped → applied | rum_runtime::runtime::eval_core::call::<Session as inherent>::resume_call_after_head#method1:into:evaluated_head; F0274 |
+| T0025 | untyped → applied | rum_runtime::runtime::eval_core::call::<Session as inherent>::resume_call_with_dispatch_plan#method16:map:prepared; F0275;F0275P |
+| T0026 | untyped → applied | rum_runtime::runtime::eval_core::call::<Session as inherent>::resume_suspended_call_with_dispatch_plan#method16:map:prepared; F0276;F0275P |
+| T0027 | untyped → removed | rum_runtime::runtime::eval_core::symbol::<EvaluateStoredOwnValueSuspensionFrame as crate :: runtime :: suspension :: SuspensionFrame>::resume#method4:map:(\| \| -> Result < rum_core :: Expr , EvalError > { if outcome . matched { session . evaluate_accepted_own_value (& symbol , body , delayed) } else { session . evaluate_symbol_after_stored_own_value (symbol) } }) (); F0277 |
+| Whole0029 | legacy-use → removed | rum_runtime::runtime::eval_core::call::<Session as inherent>::resume_suspended_call_dispatch_frame#call1:prepared_call_arguments_from_continuation_expr:; D009 |
+| Whole0030 | legacy-use → removed | rum_runtime::runtime::eval_core::call::<Session as inherent>::resume_suspended_call_dispatch_frame#call4:from_continuation_expr:; D125 |
+| Whole0031 | legacy-use → removed | rum_runtime::runtime::eval_core::call::<Session as inherent>::resume_suspended_call_dispatch_frame#call5:from_continuation_expr:; D125 |
+| Whole0032 | legacy-use → removed | rum_runtime::runtime::eval_core::symbol::<EvaluateStoredOwnValueSuspensionFrame as crate :: runtime :: suspension :: SuspensionFrame>::resume#call1:from_continuation_expr:; D049 |
+| F0275P | absent → typed | rum_runtime::runtime::eval_core::call::PreparedDispatchFrame implements rum_runtime::runtime::suspension::typed::TypedFrame; F0275;F0276 |
+| M0282S | absent → typed | rum_runtime::runtime::eval_core::call::<Session as inherent>::finish_call_dispatch_stage#macro1:resume_typed_or_suspend:result; M0282;M0283 |
+| S3 | absent → implemented | S3 evaluation dispatch: 12 typed implementations and 13 typed macro sites; T0023;T0024;T0025;T0026;T0027;D0001 |
+| X0040 | absent → legacy-test | rum_runtime::runtime::eval_call_prepare::prepared_slot_finalizer_fixture#method1:into_continuation_expr:finish_suspended_prepared_call (SuspendedPreparedCallArguments { evaluated_args : PreparedArgumentAccumulator :: freeze (prepared . evaluated_args . iter () . cloned () . collect () ,) , unevaluated_restores : prepared . unevaluated_restore . as_ref () . map (\| restore \| UnevaluatedRestoreAccumulator :: freeze (restore . wrappers . clone ())) , }); S3 typed finalizer materialized through the unchanged Legacy provider |
+
+### 3. Watched divergence failures and final equality
+
+The six replacement S3 cases were watched failing on byte-identical S2 production in both builds: three If-held marker shapes and three listable-completion marker shapes. The director reassigned the original Fold/Nest cases to S13; their raw failures remain preserved under brief609, and F0528/M0563 are unchanged. The pre-conversion failures below are retained evidence, not newly rerun baselines.
+
+**r1-pre-builtin-held-default: exit 101.** Full raw log: `.temp/brief-609/r1-pre-builtin-held-default.log`.
+
+```text
+cargo test -p rum-stdlib --test suspension_oracle fixtures::evaluation_dispatch::s3_ -- --nocapture
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+warning: constant `FLIP_SLOT` is never used
+ --> crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs:4:11
+  |
+4 | pub const FLIP_SLOT: Option<&str> = None;
+  |           ^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: function `execute` is never used
+  --> crates/rum-stdlib/tests/suspension_oracle/support/drive.rs:13:8
+   |
+13 | pub fn execute(
+   |        ^^^^^^^
+
+warning: `rum-stdlib` (test "suspension_oracle") generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.29s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ad9873bc53ac1c0b)
+
+running 3 tests
+test oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some ... builtin.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.empty_some resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=12
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.empty_some: UnexpectedPause(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_builtin_none ... builtin.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.none resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=24
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.none: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_builtin_some ... builtin.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.some resumed: Ok(ResultView { observation: Observation { value: Some(Atom(Integer(Small(5)))), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=48
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.some: Value
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_builtin_none
+    oracle::fixtures::evaluation_dispatch::s3_builtin_some
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 50 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+**r1-pre-builtin-held-no-default: exit 101.** Full raw log: `.temp/brief-609/r1-pre-builtin-held-no-default.log`.
+
+```text
+cargo test -p rum-stdlib --no-default-features --test suspension_oracle fixtures::evaluation_dispatch::s3_ -- --nocapture
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+warning: constant `FLIP_SLOT` is never used
+ --> crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs:4:11
+  |
+4 | pub const FLIP_SLOT: Option<&str> = None;
+  |           ^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: function `execute` is never used
+  --> crates/rum-stdlib/tests/suspension_oracle/support/drive.rs:13:8
+   |
+13 | pub fn execute(
+   |        ^^^^^^^
+
+warning: `rum-stdlib` (test "suspension_oracle") generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.13s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ed9ba19bc18733e6)
+
+running 3 tests
+test oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some ... builtin.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 659, identity: None, text: SymbolText { id: 659, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.empty_some resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=12
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.empty_some: UnexpectedPause(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_builtin_none ... builtin.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 661, identity: None, text: SymbolText { id: 661, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.none resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=24
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.none: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_builtin_some ... builtin.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 659, identity: None, text: SymbolText { id: 659, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+builtin.some resumed: Ok(ResultView { observation: Observation { value: Some(Atom(Integer(Small(5)))), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=48
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_builtin_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+builtin.some: Value
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_builtin_none
+    oracle::fixtures::evaluation_dispatch::s3_builtin_some
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 50 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+**r1-pre-threaded-dv-default: exit 101.** Full raw log: `.temp/brief-609/r1-pre-threaded-dv-default.log`.
+
+```text
+cargo test -p rum-stdlib --test suspension_oracle fixtures::evaluation_dispatch::s3_threaded -- --nocapture
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+warning: constant `FLIP_SLOT` is never used
+ --> crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs:4:11
+  |
+4 | pub const FLIP_SLOT: Option<&str> = None;
+  |           ^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: function `execute` is never used
+  --> crates/rum-stdlib/tests/suspension_oracle/support/drive.rs:13:8
+   |
+13 | pub fn execute(
+   |        ^^^^^^^
+
+warning: `rum-stdlib` (test "suspension_oracle") generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.35s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ad9873bc53ac1c0b)
+
+running 3 tests
+test oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some ... threaded.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 670, identity: None, text: SymbolText { id: 670, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.empty_some resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=12
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.empty_some: UnexpectedPause(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_threaded_none ... threaded.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 673, identity: None, text: SymbolText { id: 673, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.none resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=24
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.none: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_threaded_some ... threaded.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 670, identity: None, text: SymbolText { id: 670, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.some resumed: Ok(ResultView { observation: Observation { value: Some(Atom(Integer(Small(5)))), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=48
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.some: Value
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_threaded_none
+    oracle::fixtures::evaluation_dispatch::s3_threaded_some
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 53 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+**r1-pre-threaded-dv-no-default: exit 101.** Full raw log: `.temp/brief-609/r1-pre-threaded-dv-no-default.log`.
+
+```text
+cargo test -p rum-stdlib --no-default-features --test suspension_oracle fixtures::evaluation_dispatch::s3_threaded -- --nocapture
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+warning: constant `FLIP_SLOT` is never used
+ --> crates/rum-stdlib/tests/suspension_oracle/fixtures/typed_slots.rs:4:11
+  |
+4 | pub const FLIP_SLOT: Option<&str> = None;
+  |           ^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` on by default
+
+warning: function `execute` is never used
+  --> crates/rum-stdlib/tests/suspension_oracle/support/drive.rs:13:8
+   |
+13 | pub fn execute(
+   |        ^^^^^^^
+
+warning: `rum-stdlib` (test "suspension_oracle") generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.46s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ed9ba19bc18733e6)
+
+running 3 tests
+test oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some ... threaded.empty_some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 664, identity: None, text: SymbolText { id: 664, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.empty_some resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=12
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.empty_some: UnexpectedPause(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_threaded_none ... threaded.none queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: "System`", name: "InternalContinuationNone" } }))), args: SharedArgs([]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.none resumed: Err(UnexpectedPause(1))
+continuation-slot fault-occurrence delta=0; observations=24
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_none' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.none: UnexpectedPause(1)
+FAILED
+test oracle::fixtures::evaluation_dispatch::s3_threaded_some ... threaded.some queued: Ok(ResultView { observation: Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 664, identity: None, text: SymbolText { id: 664, context: "System`", name: "InternalContinuationSome" } }))), args: SharedArgs([Atom(Integer(Small(5)))]) }), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+threaded.some resumed: Ok(ResultView { observation: Observation { value: Some(Atom(Integer(Small(5)))), error: None, termination: None, messages: [], prints: [], trace: [] }, log: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: "System`", name: "List" } }))), args: SharedArgs([]) }, projections: [] })
+continuation-slot fault-occurrence delta=0; observations=48
+
+thread 'oracle::fixtures::evaluation_dispatch::s3_threaded_some' panicked at crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_dispatch.rs:22:50:
+threaded.some: Value
+FAILED
+
+failures:
+
+failures:
+    oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some
+    oracle::fixtures::evaluation_dispatch::s3_threaded_none
+    oracle::fixtures::evaluation_dispatch::s3_threaded_some
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 53 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `-p rum-stdlib --test suspension_oracle`
+```
+
+Final full-oracle runs pass all six strict S3 cases plus prepared.twice and head.map.twice in both builds, under Checks::ALL and unconditional FaultProbe absence. All 28 immutable brief606 ordinary controls also pass in each build; each run has 336 zero-fault observations. Full oracle totals are58 / 58 per build, final 88016 observations per build, every occurrence delta 0. Neither oracle build emits a warning.
+
+**r3-ordinary-default-serial: exit 0.** Full raw log: `.temp/brief-609/r3-ordinary-default-serial.log`.
+
+```text
+cargo test --manifest-path .temp/brief-609/r2/ordinary-controls/Cargo.toml --test ordinary -- --nocapture
+```
+
+```text
+     Running witness_test.rs (.temp/brief-609/r2/ordinary-controls/target/debug/deps/ordinary-5cf883959ece1e3c)
+running 1 test
+ORDINARY CONTROLS: 28 PASS, Checks::ALL; unconditional FaultProbe absence
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+```
+
+**r3-ordinary-no-default-serial: exit 0.** Full raw log: `.temp/brief-609/r3-ordinary-no-default-serial.log`.
+
+```text
+cargo test --manifest-path .temp/brief-609/r2/ordinary-controls/Cargo.toml --no-default-features --test ordinary -- --nocapture
+```
+
+```text
+     Running witness_test.rs (.temp/brief-609/r2/ordinary-controls/target/debug/deps/ordinary-8f58f702763e7810)
+running 1 test
+ORDINARY CONTROLS: 28 PASS, Checks::ALL; unconditional FaultProbe absence
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+```
+
+Final oracle default
+
+```text
+test oracle::fixtures::evaluation_dispatch::head_map_twice ... continuation-slot fault-occurrence delta=0; observations=17175
+test oracle::fixtures::evaluation_dispatch::prepared_twice ... continuation-slot fault-occurrence delta=0; observations=17187
+test oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some ... continuation-slot fault-occurrence delta=0; observations=17199
+test oracle::fixtures::evaluation_dispatch::s3_builtin_none ... continuation-slot fault-occurrence delta=0; observations=17211
+test oracle::fixtures::evaluation_dispatch::s3_builtin_some ... continuation-slot fault-occurrence delta=0; observations=17223
+test oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some ... continuation-slot fault-occurrence delta=0; observations=17235
+test oracle::fixtures::evaluation_dispatch::s3_threaded_none ... continuation-slot fault-occurrence delta=0; observations=17247
+test oracle::fixtures::evaluation_dispatch::s3_threaded_some ... continuation-slot fault-occurrence delta=0; observations=17259
+test zz_continuation_fault_occurrences ... continuation-slot fault-occurrence delta=0; observations=88016
+test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 30.47s
+```
+
+Final oracle no-default
+
+```text
+test oracle::fixtures::evaluation_dispatch::head_map_twice ... continuation-slot fault-occurrence delta=0; observations=17175
+test oracle::fixtures::evaluation_dispatch::prepared_twice ... continuation-slot fault-occurrence delta=0; observations=17187
+test oracle::fixtures::evaluation_dispatch::s3_builtin_empty_some ... continuation-slot fault-occurrence delta=0; observations=17199
+test oracle::fixtures::evaluation_dispatch::s3_builtin_none ... continuation-slot fault-occurrence delta=0; observations=17211
+test oracle::fixtures::evaluation_dispatch::s3_builtin_some ... continuation-slot fault-occurrence delta=0; observations=17223
+test oracle::fixtures::evaluation_dispatch::s3_threaded_empty_some ... continuation-slot fault-occurrence delta=0; observations=17235
+test oracle::fixtures::evaluation_dispatch::s3_threaded_none ... continuation-slot fault-occurrence delta=0; observations=17247
+test oracle::fixtures::evaluation_dispatch::s3_threaded_some ... continuation-slot fault-occurrence delta=0; observations=17259
+test zz_continuation_fault_occurrences ... continuation-slot fault-occurrence delta=0; observations=88016
+test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 30.27s
+```
+
+### 4. Gates, frontier proof and inventory/certificate replays
+
+The checked frontier adapter now visits invocation syntax in the enclosing function. The four expansion operations remain explicit RET002 rejections; no ownership admission is inferred. Legacy macro invocations remain opaque. C01/C02 have no converted macro body, and every local analyzer Rust file is byte-identical to S2. Parsing is separate because the existing local adapter accepts one identifier while the typed macro accepts a full Rust pattern.
+
+**r3-pre-visibility: exit 101.** Full raw log: `.temp/brief-609/r3-pre-visibility.log`.
+
+```text
+cargo test --manifest-path .temp/brief-609/r3/frontier-fixture/Cargo.toml --test frontier visibility -- --nocapture
+```
+
+```text
+     Locking 4 packages to latest Rust 1.85.0 compatible versions
+      Adding syn v2.0.119 (available: v3.0.4)
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.47
+   Compiling syn v2.0.119
+   Compiling brief609-frontier-fixture v0.0.0 (/home/remi/dev/rum/.temp/brief-609/r3/frontier-fixture)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.65s
+     Running main.rs (.temp/brief-609/r3/frontier-fixture/target/debug/deps/frontier-a1f280449b6ff9ca)
+
+running 1 test
+test checker::visibility ... RET001	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:87-1:100	std::vec::Vec::new	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	not a resolved function definition: std::vec::Vec::new
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:113-1:180	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	primitive operand proof or exact operator/conversion impl required
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:302-1:324	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	primitive operand proof or exact operator/conversion impl required
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:327-1:385	rum_runtime::runtime::model::session::Session::enforce_active_resource_limits_for_expr	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	method syntax: opaque imported trait candidate std::sync::Arc
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:327-1:387	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	implicit Try/FromResidual/error ownership not modeled
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:761-1:787	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	method syntax: method receiver lacks checked nominal/place provenance
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:761-1:830	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	method syntax: method receiver lacks checked nominal/place provenance
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:795-1:829	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	closure capture/callback effects unresolved; closure body is a rejected boundary
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:891-1:913	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:923-1:967	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	method syntax: method receiver lacks checked nominal/place provenance
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:948-1:966	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:1141-1:1159	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:1310-1:1620	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	implicit Try/FromResidual/error ownership not modeled
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:1728-1:1743	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	primitive operand proof or exact operator/conversion impl required
+RET003	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:1310-1:1618	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	unexpanded macro; contents are not resolved Rust
+
+thread 'checker::visibility' panicked at checker/mod.rs:43:5:
+typed macro arm hid the rejected std::mem::forget operation
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    checker::visibility
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 9.44s
+
+error: test failed, to rerun pass `--test frontier`
+```
+
+**r3-pre-drift: exit 101.** Full raw log: `.temp/brief-609/r3-pre-drift.log`.
+
+```text
+cargo test --manifest-path .temp/brief-609/r3/frontier-fixture/Cargo.toml --test frontier definition_drift -- --nocapture
+```
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s
+     Running main.rs (.temp/brief-609/r3/frontier-fixture/target/debug/deps/frontier-a1f280449b6ff9ca)
+
+running 1 test
+test checker::definition_drift ... 
+thread 'checker::definition_drift' panicked at checker/mod.rs:66:18:
+altered typed macro definition did not fail the adapter check
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    checker::definition_drift
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 9.41s
+
+error: test failed, to rerun pass `--test frontier`
+```
+
+**r3-pre-outside: exit 0.** Full raw log: `.temp/brief-609/r3-pre-outside.log`.
+
+```text
+cargo test --manifest-path .temp/brief-609/r3/frontier-fixture/Cargo.toml --test frontier rejected_operation_outside_macro -- --nocapture
+```
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s
+     Running main.rs (.temp/brief-609/r3/frontier-fixture/target/debug/deps/frontier-a1f280449b6ff9ca)
+
+running 1 test
+test checker::rejected_operation_outside_macro ... RET002	crates/rum-runtime/src/runtime/resolution.rs:1:3-1:27	std::mem::forget	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	not a resolved function definition: std::mem::forget
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 9.30s
+```
+
+**r3-final-falsifiers: exit 0.** Full raw log: `.temp/brief-609/r3-final-falsifiers.log`.
+
+```text
+cargo test --manifest-path .temp/brief-609/r3/frontier-fixture/Cargo.toml --test frontier -- --nocapture
+```
+
+```text
+   Compiling brief609-frontier-fixture v0.0.0 (/home/remi/dev/rum/.temp/brief-609/r3/frontier-fixture)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.32s
+     Running main.rs (.temp/brief-609/r3/frontier-fixture/target/debug/deps/frontier-a1f280449b6ff9ca)
+
+running 4 tests
+test checker::census ... ok
+test checker::definition_drift ... 
+thread 'checker::definition_drift' panicked at checker/regions.rs:302:21:
+crates/rum-runtime/src/runtime/resolution.rs:377:24-389:14: typed resume macro definition changed
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+DRIFT rejected by checked adapter: crates/rum-runtime/src/runtime/resolution.rs:377:24-389:14: typed resume macro definition changed
+ok
+test checker::rejected_operation_outside_macro ... RET002	crates/rum-runtime/src/runtime/resolution.rs:1:3-1:27	std::mem::forget	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	not a resolved function definition: std::mem::forget
+ok
+test checker::visibility ... RET001	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:87-1:100	std::vec::Vec::new	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	not a resolved function definition: std::vec::Vec::new
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:113-1:180	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	primitive operand proof or exact operator/conversion impl required
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:302-1:324	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	primitive operand proof or exact operator/conversion impl required
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:327-1:385	rum_runtime::runtime::model::session::Session::enforce_active_resource_limits_for_expr	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	method syntax: opaque imported trait candidate std::sync::Arc
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:327-1:387	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	implicit Try/FromResidual/error ownership not modeled
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:761-1:787	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	method syntax: method receiver lacks checked nominal/place provenance
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:761-1:830	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	method syntax: method receiver lacks checked nominal/place provenance
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:795-1:829	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	closure capture/callback effects unresolved; closure body is a rejected boundary
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:891-1:913	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:923-1:967	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	method syntax: method receiver lacks checked nominal/place provenance
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:948-1:966	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:1141-1:1159	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:1310-1:1618	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	typed macro expansion: delegated InputRequired reconstruction and request/error ownership unresolved
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:1310-1:1618	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	typed macro expansion: owned Result match, Ok/InputRequired/error bindings, Err(error) forwarding and local drops unresolved
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:1310-1:1618	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	typed macro expansion: owned producer binding and slot_witness(&produced) borrow/call unresolved
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:1310-1:1618	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	typed macro expansion: return through witness.suspend; typed insertion and frame ownership transfer unresolved
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:1310-1:1620	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	implicit Try/FromResidual/error ownership not modeled
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:1407-1:1431	std::mem::forget	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	not a resolved function definition: std::mem::forget
+RET002	/home/remi/dev/rum/.temp/brief-609/r3/visibility-body.rs:1:1728-1:1743	-	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	primitive operand proof or exact operator/conversion impl required
+ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 37.15s
+```
+
+Historical frontier 932 →936 = RET001 10 + RET002 900 + RET003 26.918 rows are byte-identical, including the freeze/default rejection at resolution.rs:35.13 rows pair by exact operation and column after a two-line move. M0561 old opaque span385:21–385:112 becomes four checked expansion rows at377:24–389:14. One S3 Try/FromResidual row is added at377:24–389:15. Revealed-on-conversion rows: 0 for this root. Unpaired removals: 0. The historical ACCEPTANCE_BASELINE print is unchanged. Full old/new records and source snippets: r3/frontier-classified-diff.json.
+
+| Operation | Old span | New span |
+| --- | --- | --- |
+| *remaining | 482:9 | 480:9 |
+| *remaining | 479:12 | 477:12 |
+| *remaining -= 1 | 482:9 | 480:9 |
+| *remaining == 0 | 479:12 | 477:12 |
+| args.iter() | 490:17 | 488:17 |
+| walk(expr, &mut remaining) | 496:5 | 494:5 |
+| walk(head, remaining) | 487:21 | 485:21 |
+| !walk(head, remaining) | 487:20 | 485:20 |
+| \|arg\| walk(arg, remaining) | 490:33 | 488:33 |
+| limit - remaining | 496:42 | 494:42 |
+| args.iter().all(\|arg\| walk(arg, remaining)) | 490:17 | 488:17 |
+| walk(expr, &mut remaining).then_some(limit - remaining) | 496:5 | 494:5 |
+| expr_node_count_with_limit(expr, EVALUATION_CYCLE_HISTORY_NODE_LIMIT).is_some() | 474:5 | 472:5 |
+
+Ownership discovery retains 79 approved host-payload identities and 59 self-reaching types. UnknownConstruct 7712 →7719 follows owned S3 captures/macros; every row is disclosed in ownership-replay.patch. unknown_storage.tsv stays byte-identical. Four adapter witness cells are replayed from ADAPTER_WITNESS output: three concrete preparation-frame paths and one concrete finalizer path replace interim public-bound/no-instantiation text. All identity, disposition, owed_by and external coverage cells remain unchanged.
+
+```text
+unknown_attributes.tsv: 1514 -> 1514 lines
+unknown_captures.tsv: 2954 -> 2959 lines
+unknown_macros.tsv: 3150 -> 3152 lines
+unknown_storage.tsv: 94 -> 94 lines
+host_payloads.tsv: 79 -> 79 lines
+self_reaching.tsv: 59 -> 59 lines
+host_payload_ledger.tsv: 80 -> 80 lines
+```
+
+| Row | Old witness | Emitted witness |
+| --- | --- | --- |
+| rum_runtime::runtime::suspension::typed::action::Action.Evaluate.next/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame | rum_runtime::runtime::suspension::typed::adapter::ErasedFrame => rum_runtime::runtime::suspension::typed::adapter::TypedAdapter.inner (impl at crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:36:1) => rum_runtime::runtime::suspension::typed::TypedFrame (public bound; no in-tree instantiation exists yet) | rum_runtime::runtime::suspension::typed::adapter::ErasedFrame => rum_runtime::runtime::suspension::typed::adapter::TypedAdapter.inner (impl at crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:36:1) => rum_runtime::runtime::suspension::typed::TypedFrame => rum_runtime::runtime::eval_call_prepare::resume_frames::PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame (impl at crates/rum-runtime/src/runtime/eval_call_prepare/resume_frames.rs:13:1); rum_runtime::runtime::eval_call_prepare::resume_frames::PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame.state -> rum_runtime::runtime::eval_call_prepare::SuspendedCallArgumentPreparation ; rum_runtime::runtime::eval_call_prepare::SuspendedCallArgumentPreparation.head -> rum_core::expr::Expr |
+| rum_runtime::runtime::suspension::typed::action::Action.Finalize.0/std::boxed::Box[Own]/arg0: opaque owned payload dyn ErasedFinalizer | rum_runtime::runtime::suspension::typed::action::ErasedFinalizer => rum_runtime::runtime::suspension::typed::adapter::FinalizerAdapter.0 (impl at crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:82:1) => rum_runtime::runtime::suspension::typed::SlotFinalizer (public bound; no in-tree instantiation exists yet) | rum_runtime::runtime::suspension::typed::action::ErasedFinalizer => rum_runtime::runtime::suspension::typed::adapter::FinalizerAdapter.0 (impl at crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:82:1) => rum_runtime::runtime::suspension::typed::SlotFinalizer => rum_runtime::runtime::eval_call_prepare::resume_frames::FinishPreparedCallArgumentsFinalizer (impl at crates/rum-runtime/src/runtime/eval_call_prepare/resume_frames.rs:43:1); rum_runtime::runtime::eval_call_prepare::resume_frames::FinishPreparedCallArgumentsFinalizer.state -> rum_runtime::runtime::eval_call_prepare::SuspendedPreparedCallArguments ; rum_runtime::runtime::eval_call_prepare::SuspendedPreparedCallArguments.evaluated_args -> rum_runtime::runtime::call_preparation::PreparedArgumentAccumulator ; rum_runtime::runtime::call_preparation::PreparedArgumentAccumulator.prefix -> rum_core::expr::SharedArgs |
+| rum_runtime::runtime::suspension::typed::chain::FrameChain.frames/std::vec::Vec[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame | rum_runtime::runtime::suspension::typed::adapter::ErasedFrame => rum_runtime::runtime::suspension::typed::adapter::TypedAdapter.inner (impl at crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:36:1) => rum_runtime::runtime::suspension::typed::TypedFrame (public bound; no in-tree instantiation exists yet) | rum_runtime::runtime::suspension::typed::adapter::ErasedFrame => rum_runtime::runtime::suspension::typed::adapter::TypedAdapter.inner (impl at crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:36:1) => rum_runtime::runtime::suspension::typed::TypedFrame => rum_runtime::runtime::eval_call_prepare::resume_frames::PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame (impl at crates/rum-runtime/src/runtime/eval_call_prepare/resume_frames.rs:13:1); rum_runtime::runtime::eval_call_prepare::resume_frames::PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame.state -> rum_runtime::runtime::eval_call_prepare::SuspendedCallArgumentPreparation ; rum_runtime::runtime::eval_call_prepare::SuspendedCallArgumentPreparation.head -> rum_core::expr::Expr |
+| rum_runtime::runtime::suspension::typed::entry::Entry.Typed.0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame | rum_runtime::runtime::suspension::typed::adapter::ErasedFrame => rum_runtime::runtime::suspension::typed::adapter::TypedAdapter.inner (impl at crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:36:1) => rum_runtime::runtime::suspension::typed::TypedFrame (public bound; no in-tree instantiation exists yet) | rum_runtime::runtime::suspension::typed::adapter::ErasedFrame => rum_runtime::runtime::suspension::typed::adapter::TypedAdapter.inner (impl at crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:36:1) => rum_runtime::runtime::suspension::typed::TypedFrame => rum_runtime::runtime::eval_call_prepare::resume_frames::PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame (impl at crates/rum-runtime/src/runtime/eval_call_prepare/resume_frames.rs:13:1); rum_runtime::runtime::eval_call_prepare::resume_frames::PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame.state -> rum_runtime::runtime::eval_call_prepare::SuspendedCallArgumentPreparation ; rum_runtime::runtime::eval_call_prepare::SuspendedCallArgumentPreparation.head -> rum_core::expr::Expr |
+
+All 68 contract fingerprints and four C01/C02 certificate cells were replayed twice: initially, then after restoring the shared execute wrapper. The emission runs reject stale pins after producing zero-rejection certificates; final acceptance uses the replayed cells. All first 18 contract fields and seven noncertificate promoted columns are unchanged. Initial and final replay artifacts are retained; final source context is fnv1a64:070ae574dd0b586c.
+
+**r3-census-default: exit 0.** Full raw log: `.temp/brief-609/r3-census-default.log`.
+
+```text
+cargo test -p rum-stdlib --test typed_slot_census -- --nocapture
+```
+
+```text
+     Running tests/typed_slot_census.rs (target/debug/deps/typed_slot_census-943817a3ecf6c029)
+running 6 tests
+running 1 test
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 20.02s
+running 1 test
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.87s
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 144.31s
+```
+
+**r3-census-no-default: exit 0.** Full raw log: `.temp/brief-609/r3-census-no-default.log`.
+
+```text
+cargo test -p rum-stdlib --no-default-features --test typed_slot_census -- --nocapture
+```
+
+```text
+     Running tests/typed_slot_census.rs (target/debug/deps/typed_slot_census-cce6bcaa604a405f)
+running 6 tests
+running 1 test
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 18.95s
+running 1 test
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.69s
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 141.53s
+```
+
+**r3-constructor-diagnostic: exit 0.** Full raw log: `.temp/brief-609/r3-constructor-diagnostic.log`.
+
+```text
+cargo test --manifest-path .temp/brief-609/r3/frontier-fixture/Cargo.toml constructor_oracle_visibility_diagnostic -- --nocapture
+```
+
+```text
+     Running main.rs (.temp/brief-609/r3/frontier-fixture/target/debug/deps/frontier-a1f280449b6ff9ca)
+running 1 test
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 12.19s
+```
+
+**r3-controls-default: exit 0.** Full raw log: `.temp/brief-609/r3-controls-default.log`.
+
+```text
+cargo test -p rum-stdlib --test typed_slot_compile_controls -- --nocapture
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.20s
+     Running tests/typed_slot_compile_controls.rs (target/debug/deps/typed_slot_compile_controls-d6fbf6132444c3d1)
+
+running 1 test
+test typed_slot_compile_controls ... PAIR first-chain-input: positive PASS; negative E0271 at src/lib.rs:27:35
+PAIR chain-adjacency: positive PASS; negative E0271 at src/lib.rs:34:70
+PAIR unbound-chain-constructor: positive PASS; negative E0599 at src/lib.rs:40:41
+PAIR evaluate-input: positive PASS; negative E0271 at src/lib.rs:46:66
+PAIR evaluate-output: positive PASS; negative E0271 at src/lib.rs:52:66
+PAIR finalizer-output: positive PASS; negative E0271 at src/lib.rs:58:48
+PAIR opaque-action: positive PASS; negative E0599 at src/lib.rs:63:39
+PAIR token-no-clone: positive PASS; negative E0599 at src/lib.rs:69:18
+PAIR token-no-mint: positive PASS; negative E0599 at src/lib.rs:75:27
+PAIR token-no-escape: positive PASS; negative lifetime at src/lib.rs:81:1
+PAIR sealed-extension: positive PASS; negative E0277 at src/lib.rs:87:20
+PAIR codec-key-private: positive PASS; negative E0603 at src/lib.rs:93:18
+PAIR opaque-selector-pass: positive PASS; negative E0271 at src/lib.rs:100:35
+PAIR mode-not-frame-chosen: positive PASS; negative E0599 at src/lib.rs:106:65
+PAIR mode-private-selection: positive PASS; negative E0603 at src/lib.rs:112:18
+PAIR slot-mismatch-private: positive PASS; negative E0451 at src/lib.rs:124:95
+PAIR input: positive PASS; negative E0271 at src/lib.rs:131:41
+PAIR output-return: positive PASS; negative E0308 at src/lib.rs:138:1
+PAIR chain-last-output: positive PASS; negative E0308 at src/lib.rs:145:1
+PAIR token-fresh-type: positive PASS; negative E0308 at src/lib.rs:159:47
+PAIR token-witness-input: positive PASS; negative E0308 at src/lib.rs:167:17
+PAIR deferred-final-output: positive PASS; negative E0308 at src/lib.rs:174:5
+PAIR generic-frame: positive PASS; negative E0308 at src/lib.rs:180:1
+PAIR closure-return: positive PASS; negative E0308 at src/lib.rs:187:1
+PAIR sibling-erased-private: positive PASS; negative E0603 at crates/rum-runtime/src/runtime/mod.rs:135:47
+PAIR mode-expr-fixed: positive PASS; negative E0277 at crates/rum-runtime/src/runtime/suspension/typed/registry.rs:21:17
+PAIR mode-new-state-only: positive PASS; negative E0277 at crates/rum-runtime/src/runtime/suspension/typed.rs:66:40
+PAIR mode-one-associated-type: positive PASS; negative E0201 at crates/rum-runtime/src/runtime/suspension/typed/registry.rs:27:5
+PAIR mode-no-codec-override: positive PASS; negative E0407 at crates/rum-runtime/src/runtime/suspension/typed/registry.rs:27:5
+PAIR mode-legacy-provider-narrow: positive PASS; negative E0053 at crates/rum-runtime/src/runtime/suspension/typed.rs:74:19
+PAIR mode-state-provider-narrow: positive PASS; negative E0053 at crates/rum-runtime/src/runtime/suspension/typed.rs:79:15
+COMPILE CONTROLS: 31 positive / 31 intended rejections (22 S1 + 7 S2 + opaque fault + token witness); raw Cargo JSON and primary spans retained
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 80.71s
+```
+
+**r3-controls-no-default: exit 0.** Full raw log: `.temp/brief-609/r3-controls-no-default.log`.
+
+```text
+cargo test -p rum-stdlib --no-default-features --test typed_slot_compile_controls -- --nocapture
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.77s
+     Running tests/typed_slot_compile_controls.rs (target/debug/deps/typed_slot_compile_controls-e5d376d145e23731)
+
+running 1 test
+test typed_slot_compile_controls ... PAIR first-chain-input: positive PASS; negative E0271 at src/lib.rs:27:35
+PAIR chain-adjacency: positive PASS; negative E0271 at src/lib.rs:34:70
+PAIR unbound-chain-constructor: positive PASS; negative E0599 at src/lib.rs:40:41
+PAIR evaluate-input: positive PASS; negative E0271 at src/lib.rs:46:66
+PAIR evaluate-output: positive PASS; negative E0271 at src/lib.rs:52:66
+PAIR finalizer-output: positive PASS; negative E0271 at src/lib.rs:58:48
+PAIR opaque-action: positive PASS; negative E0599 at src/lib.rs:63:39
+PAIR token-no-clone: positive PASS; negative E0599 at src/lib.rs:69:18
+PAIR token-no-mint: positive PASS; negative E0599 at src/lib.rs:75:27
+PAIR token-no-escape: positive PASS; negative lifetime at src/lib.rs:81:1
+PAIR sealed-extension: positive PASS; negative E0277 at src/lib.rs:87:20
+PAIR codec-key-private: positive PASS; negative E0603 at src/lib.rs:93:18
+PAIR opaque-selector-pass: positive PASS; negative E0271 at src/lib.rs:100:35
+PAIR mode-not-frame-chosen: positive PASS; negative E0599 at src/lib.rs:106:65
+PAIR mode-private-selection: positive PASS; negative E0603 at src/lib.rs:112:18
+PAIR slot-mismatch-private: positive PASS; negative E0451 at src/lib.rs:124:95
+PAIR input: positive PASS; negative E0271 at src/lib.rs:131:41
+PAIR output-return: positive PASS; negative E0308 at src/lib.rs:138:1
+PAIR chain-last-output: positive PASS; negative E0308 at src/lib.rs:145:1
+PAIR token-fresh-type: positive PASS; negative E0308 at src/lib.rs:159:47
+PAIR token-witness-input: positive PASS; negative E0308 at src/lib.rs:167:17
+PAIR deferred-final-output: positive PASS; negative E0308 at src/lib.rs:174:5
+PAIR generic-frame: positive PASS; negative E0308 at src/lib.rs:180:1
+PAIR closure-return: positive PASS; negative E0308 at src/lib.rs:187:1
+PAIR sibling-erased-private: positive PASS; negative E0603 at crates/rum-runtime/src/runtime/mod.rs:135:47
+PAIR mode-expr-fixed: positive PASS; negative E0277 at crates/rum-runtime/src/runtime/suspension/typed/registry.rs:21:17
+PAIR mode-new-state-only: positive PASS; negative E0277 at crates/rum-runtime/src/runtime/suspension/typed.rs:66:40
+PAIR mode-one-associated-type: positive PASS; negative E0201 at crates/rum-runtime/src/runtime/suspension/typed/registry.rs:27:5
+PAIR mode-no-codec-override: positive PASS; negative E0407 at crates/rum-runtime/src/runtime/suspension/typed/registry.rs:27:5
+PAIR mode-legacy-provider-narrow: positive PASS; negative E0053 at crates/rum-runtime/src/runtime/suspension/typed.rs:74:19
+PAIR mode-state-provider-narrow: positive PASS; negative E0053 at crates/rum-runtime/src/runtime/suspension/typed.rs:79:15
+COMPILE CONTROLS: 31 positive / 31 intended rejections (22 S1 + 7 S2 + opaque fault + token witness); raw Cargo JSON and primary spans retained
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 24.83s
+```
+
+**r3-emit-local-default: exit 101.** Full raw log: `.temp/brief-609/r3-emit-local-default.log`.
+
+```text
+cargo test -p rum-stdlib --lib local_production_acceptance -- --nocapture
+```
+
+```text
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-5f7f08d1c3c3a0e1)
+running 1 test
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+called `Result::unwrap()` on an `Err` value: "stale or omitted instance certificate C01 hash=true"
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1144 filtered out; finished in 18.97s
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+
+**r3-emit-local-final-default: exit 101.** Full raw log: `.temp/brief-609/r3-emit-local-final-default.log`.
+
+```text
+cargo test -p rum-stdlib --lib local_production_acceptance -- --nocapture
+```
+
+```text
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-5f7f08d1c3c3a0e1)
+running 1 test
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+called `Result::unwrap()` on an `Err` value: "stale or omitted instance certificate C01 hash=true"
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1144 filtered out; finished in 18.62s
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+
+**r3-emit-local-final-no-default: exit 101.** Full raw log: `.temp/brief-609/r3-emit-local-final-no-default.log`.
+
+```text
+cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance -- --nocapture
+```
+
+```text
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-c942ac40233a21b0)
+running 1 test
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+called `Result::unwrap()` on an `Err` value: "stale or omitted instance certificate C01 hash=false"
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1138 filtered out; finished in 19.13s
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+
+**r3-emit-local-no-default: exit 101.** Full raw log: `.temp/brief-609/r3-emit-local-no-default.log`.
+
+```text
+cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance -- --nocapture
+```
+
+```text
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-c942ac40233a21b0)
+running 1 test
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+called `Result::unwrap()` on an `Err` value: "stale or omitted instance certificate C01 hash=false"
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1138 filtered out; finished in 19.62s
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+
+**r3-fmt-check: exit 0.** Full raw log: `.temp/brief-609/r3-fmt-check.log`.
+
+```text
+cargo fmt --check
+```
+
+```text
+(no output)
+```
+
+**r3-format: exit 0.** Full raw log: `.temp/brief-609/r3-format.log`.
+
+```text
+cargo fmt --all
+```
+
+```text
+(no output)
+```
+
+**r3-frame-root: exit 0.** Full raw log: `.temp/brief-609/r3-frame-root.log`.
+
+```text
+cargo test -p rum-runtime --lib frame_root_trace -- --nocapture
+```
+
+```text
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+     Running unittests src/lib.rs (target/debug/deps/rum_runtime-95cd5fbb46da4f1c)
+running 15 tests
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1157 filtered out; finished in 1.45s
+```
+
+**r3-frontier: exit 0.** Full raw log: `.temp/brief-609/r3-frontier.log`.
+
+```text
+cargo test -p rum-stdlib --lib production_rejection_census_is_complete -- --nocapture
+```
+
+```text
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-5f7f08d1c3c3a0e1)
+running 1 test
+INDEPENDENT_AUDIT EDGE_ALL roots=7337 definitions=7337 raw=48338 deduplicated=48338 reason_classes=57 all_spans_read=true
+ACCEPTANCE_BASELINE OPTION_FRONTIER=927 RET001=10 RET002=890 RET003=27 PUBLIC_WRAPPER=16 LOCAL_PRODUCTION_BODY_ROWS=2
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1144 filtered out; finished in 26.23s
+```
+
+**r3-local-default: exit 0.** Full raw log: `.temp/brief-609/r3-local-default.log`.
+
+```text
+cargo test -p rum-stdlib --lib local_production_acceptance -- --nocapture
+```
+
+```text
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-5f7f08d1c3c3a0e1)
+running 1 test
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1144 filtered out; finished in 19.36s
+```
+
+**r3-local-no-default: exit 0.** Full raw log: `.temp/brief-609/r3-local-no-default.log`.
+
+```text
+cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance -- --nocapture
+```
+
+```text
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-c942ac40233a21b0)
+running 1 test
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1138 filtered out; finished in 19.01s
+```
+
+**r3-oracle-final-script: exit 0.** Full raw log: `.temp/brief-609/r3-oracle-final-script.log`.
+
+```text
+bash .temp/brief-609/r3/check-suspension-oracle-final.sh 1500
+```
+
+```text
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ad9873bc53ac1c0b)
+running 58 tests
+test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 30.47s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ed9ba19bc18733e6)
+running 58 tests
+test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 30.27s
+```
+
+**r3-oracle-script: exit 0.** Full raw log: `.temp/brief-609/r3-oracle-script.log`.
+
+```text
+bash .temp/brief-609/r3/check-suspension-oracle.sh 1500
+```
+
+```text
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ad9873bc53ac1c0b)
+running 58 tests
+test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.87s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-ed9ba19bc18733e6)
+running 58 tests
+test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.18s
+```
+
+**r3-ordinary-default: exit 0.** Full raw log: `.temp/brief-609/r3-ordinary-default.log`.
+
+```text
+cargo test --manifest-path .temp/brief-609/r2/ordinary-controls/Cargo.toml --test ordinary -- --nocapture
+```
+
+```text
+     Running witness_test.rs (.temp/brief-609/r2/ordinary-controls/target/debug/deps/ordinary-5cf883959ece1e3c)
+running 1 test
+ORDINARY CONTROLS: 28 PASS, Checks::ALL; unconditional FaultProbe absence
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+```
+
+**r3-ordinary-no-default: exit 0.** Full raw log: `.temp/brief-609/r3-ordinary-no-default.log`.
+
+```text
+cargo test --manifest-path .temp/brief-609/r2/ordinary-controls/Cargo.toml --no-default-features --test ordinary -- --nocapture
+```
+
+```text
+     Running witness_test.rs (.temp/brief-609/r2/ordinary-controls/target/debug/deps/ordinary-8f58f702763e7810)
+running 1 test
+ORDINARY CONTROLS: 28 PASS, Checks::ALL; unconditional FaultProbe absence
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+```
+
+**r3-ownership: exit 101.** Full raw log: `.temp/brief-609/r3-ownership.log`.
+
+```text
+cargo test -p rum-stdlib --lib ownership_graph -- --nocapture
+```
+
+```text
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-5f7f08d1c3c3a0e1)
+running 25 tests
+EXACT INVENTORY UnknownHostPayload: 79 rows
+EXACT INVENTORY UnknownConstruct: 7719 rows
+test result: FAILED. 23 passed; 2 failed; 0 ignored; 0 measured; 1120 filtered out; finished in 72.42s
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+
+**r3-ownership-discover: exit 0.** Full raw log: `.temp/brief-609/r3-ownership-discover.log`.
+
+```text
+cargo test -p rum-stdlib --lib discovery_report_without_inventory_input -- --nocapture
+```
+
+```text
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-5f7f08d1c3c3a0e1)
+running 1 test
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1144 filtered out; finished in 5.92s
+```
+
+**r3-ownership-replayed: exit 0.** Full raw log: `.temp/brief-609/r3-ownership-replayed.log`.
+
+```text
+cargo test -p rum-stdlib --lib ownership_graph -- --nocapture
+```
+
+```text
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-5f7f08d1c3c3a0e1)
+running 25 tests
+EXACT INVENTORY UnknownHostPayload: 79 rows
+EXACT INVENTORY UnknownConstruct: 7719 rows
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 1120 filtered out; finished in 73.66s
+```
+
+**r3-post-falsifiers: exit 0.** Full raw log: `.temp/brief-609/r3-post-falsifiers.log`.
+
+```text
+cargo test --manifest-path .temp/brief-609/r3/frontier-fixture/Cargo.toml --test frontier -- --nocapture
+```
+
+```text
+     Running main.rs (.temp/brief-609/r3/frontier-fixture/target/debug/deps/frontier-a1f280449b6ff9ca)
+running 4 tests
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 37.10s
+```
+
+**r3-stop-fmt: exit 0.** Full raw log: `.temp/brief-609/r3-stop-fmt.log`.
+
+```text
+cargo fmt --check
+```
+
+```text
+(no output)
+```
+
+**r3-typed-runtime: exit 0.** Full raw log: `.temp/brief-609/r3-typed-runtime.log`.
+
+```text
+cargo test -p rum-runtime --lib suspension::typed::tests -- --nocapture
+```
+
+```text
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+     Running unittests src/lib.rs (target/debug/deps/rum_runtime-95cd5fbb46da4f1c)
+running 20 tests
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 1152 filtered out; finished in 0.58s
+```
+
+**r3-workspace: exit 101.** Full raw log: `.temp/brief-609/r3-workspace.log`.
+
+```text
+cargo test --workspace --no-fail-fast -- --nocapture
+```
+
+```text
+error: could not compile `rum-stdlib` (test "destructuring_continuations") due to 2 previous errors
+```
+
+**r3-workspace-final: exit 101.** Full raw log: `.temp/brief-609/r3-workspace-final.log`.
+
+```text
+cargo test --workspace --no-fail-fast -- --nocapture
+```
+
+```text
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+     Running unittests src/main.rs (target/debug/deps/rum_cli-0aee412e0b99cbf1)
+running 15 tests
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+     Running tests/cli.rs (target/debug/deps/cli-bc0b4c8761b62ae9)
+running 28 tests
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.28s
+     Running tests/input_requests.rs (target/debug/deps/input_requests-e84d0b9e62f1dd0f)
+running 6 tests
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+     Running tests/terminal.rs (target/debug/deps/terminal-70e027c8b6d403e3)
+running 9 tests
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.90s
+     Running unittests src/lib.rs (target/debug/deps/rum_core-05ee71324ea83d3f)
+running 7 tests
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/lib.rs (target/debug/deps/rum_derive-058a94fcf3064f03)
+running 5 tests
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/accumulator_chain.rs (target/debug/deps/accumulator_chain-c657e563db7a31de)
+running 3 tests
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/derive.rs (target/debug/deps/derive-cb1c0b1fa13c3a60)
+running 3 tests
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/lib.rs (target/debug/deps/rum_host-0c15fc615add95e2)
+running 90 tests
+test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.62s
+     Running tests/adapter_contract.rs (target/debug/deps/adapter_contract-75627f143cb45b08)
+running 7 tests
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+     Running tests/batch_boundary_ownership.rs (target/debug/deps/batch_boundary_ownership-f1d7a1c822224b1c)
+running 5 tests
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+     Running tests/capture_output_lifecycle.rs (target/debug/deps/capture_output_lifecycle-3426e74b0e43035a)
+running 3 tests
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+     Running tests/guest_loading_resume.rs (target/debug/deps/guest_loading_resume-3f3ebe72da026eee)
+running 4 tests
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+     Running tests/host_payload_destruction_contract.rs (target/debug/deps/host_payload_destruction_contract-52956b33f57a0130)
+running 1 test
+error: could not compile `host-payload-legacy-impl` (lib) due to 1 previous error
+error: could not compile `host-payload-legacy-new` (lib) due to 1 previous error
+error: could not compile `host-payload-legacy-from-arc` (lib) due to 1 previous error
+error: could not compile `host-payload-legacy-file-io-impl` (lib) due to 1 previous error
+error: could not compile `host-payload-legacy-file-io-new` (lib) due to 1 previous error
+error: could not compile `host-payload-legacy-file-io-from-arc` (lib) due to 1 previous error
+error: could not compile `host-payload-legacy-raw-closure-sink` (lib) due to 1 previous error
+error: could not compile `host-payload-legacy-boxed-fnmut-sink` (lib) due to 1 previous error
+error: could not compile `host-payload-named-sink-without-marker` (lib) due to 1 previous error
+error: could not compile `host-payload-adapter-private-field-bypass` (lib) due to 1 previous error
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 52.22s
+     Running tests/installer.rs (target/debug/deps/installer-245b9a9d0dd76683)
+running 4 tests
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+     Running tests/lifecycle_buildout.rs (target/debug/deps/lifecycle_buildout-cf4abded19978b7b)
+running 7 tests
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+     Running tests/lifecycle_contract.rs (target/debug/deps/lifecycle_contract-7db6f3bc8fd1b373)
+running 16 tests
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+     Running tests/random_password_policy.rs (target/debug/deps/random_password_policy-bcf408336a660b97)
+running 2 tests
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+     Running tests/shared_accumulator_completion.rs (target/debug/deps/shared_accumulator_completion-4fc6d427214e6aa2)
+running 1 test
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+     Running tests/stress.rs (target/debug/deps/stress-29e64a7d12eeb866)
+running 6 tests
+test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.28s
+     Running tests/suspended_timeout_contract.rs (target/debug/deps/suspended_timeout_contract-0e6a452c6cdaf889)
+running 13 tests
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.03s
+     Running tests/suspension_abandonment_contract.rs (target/debug/deps/suspension_abandonment_contract-7953000542543e9e)
+running 12 tests
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+     Running unittests src/lib.rs (target/debug/deps/rum_jupyter-598afbd7e7b200bf)
+running 151 tests
+test zeromq::tests::native::basic::native_zeromq_backend_echoes_heartbeat_over_loopback_req_socket ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::basic::native_zeromq_backend_round_trips_execute_over_loopback_sockets ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::control::native_zeromq_backend_frontend_style_control_interrupt_round_trip ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::control::native_zeromq_backend_shutdown_stops_shell_work_and_reports_pending_shell_messages ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::execute::native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_metadata ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::session_flow::native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts_and_shutdown ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::stdin::native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_reply ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::signed::native_zeromq_backend_rejects_tampered_signed_requests_end_to_end ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::signed::native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test result: ok. 151 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.73s
+     Running unittests src/bin/rum-jupyter-kernel.rs (target/debug/deps/rum_jupyter_kernel-0f1e351c2b3d67dc)
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/lib.rs (target/debug/deps/rum_repl-4387fdc47fc58f50)
+running 48 tests
+test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.38s
+     Running tests/input_abandonment.rs (target/debug/deps/input_abandonment-11b7b14c69d5d259)
+running 10 tests
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+     Running tests/input_continuation.rs (target/debug/deps/input_continuation-02bf146f80080963)
+running 12 tests
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+     Running unittests src/lib.rs (target/debug/deps/rum_runtime-f6425a9dcb35714f)
+running 1172 tests
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+warning: function `consume` is never used
+warning: `option-read-proof` (bin "option-read-proof") generated 1 warning
+error: could not compile `option-read-proof` (bin "option-read-proof") due to 1 previous error
+warning: function `consume` is never used
+warning: `option-read-proof` (bin "option-read-proof") generated 1 warning
+warning: unused import: `rum_core::Symbol`
+warning: unreachable call
+warning: `option-read-proof` (bin "option-read-proof") generated 2 warnings
+error: could not compile `option-read-proof` (bin "option-read-proof") due to 1 previous error; 2 warnings emitted
+warning: struct `Capture` is never constructed
+warning: struct `Frozen` is never constructed
+warning: `option-read-proof` (bin "option-read-proof") generated 2 warnings
+error: could not compile `option-read-proof` (bin "option-read-proof") due to 1 previous error
+warning: function `consume` is never used
+warning: `option-read-proof` (bin "option-read-proof") generated 1 warning
+error: could not compile `option-read-proof` (bin "option-read-proof") due to 1 previous error
+warning: function `consume` is never used
+warning: `option-read-proof` (bin "option-read-proof") generated 1 warning
+error: could not compile `option-read-proof` (bin "option-read-proof") due to 1 previous error
+warning: struct `Capture` is never constructed
+warning: struct `Frozen` is never constructed
+warning: `option-read-proof` (bin "option-read-proof") generated 2 warnings
+warning: struct `Capture` is never constructed
+warning: struct `Frozen` is never constructed
+warning: `option-read-proof` (bin "option-read-proof") generated 2 warnings
+warning: struct `Capture` is never constructed
+warning: struct `Frozen` is never constructed
+warning: `option-read-proof` (bin "option-read-proof") generated 2 warnings
+error: could not compile `option-read-proof` (bin "option-read-proof") due to 1 previous error
+error: could not compile `option-read-proof` (bin "option-read-proof") due to 1 previous error
+error: could not compile `option-read-proof` (bin "option-read-proof") due to 1 previous error
+warning: unused import: `rum_core::Symbol`
+warning: `option-read-proof` (bin "option-read-proof") generated 1 warning
+error: could not compile `option-read-proof` (bin "option-read-proof") due to 1 previous error; 1 warning emitted
+error: could not compile `option-read-proof` (bin "option-read-proof") due to 1 previous error
+warning: function `consume` is never used
+warning: 1 warning emitted
+error: aborting due to 1 previous error
+test result: FAILED. 1168 passed; 1 failed; 3 ignored; 0 measured; 0 filtered out; finished in 44.56s
+error: test failed, to rerun pass `-p rum-runtime --lib`
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-8951251f7d2e445e)
+running 1145 tests
+EXACT INVENTORY UnknownHostPayload: 79 rows
+EXACT INVENTORY UnknownConstruct: 7719 rows
+INDEPENDENT_AUDIT EDGE_N_FRONTIER roots=79 definitions=991 raw=72838 deduplicated=5917 reason_classes=31 all_spans_read=true
+INDEPENDENT_AUDIT EDGE_ALL roots=7337 definitions=7337 raw=48338 deduplicated=48338 reason_classes=57 all_spans_read=true
+ACCEPTANCE_BASELINE OPTION_FRONTIER=927 RET001=10 RET002=890 RET003=27 PUBLIC_WRAPPER=16 LOCAL_PRODUCTION_BODY_ROWS=2
+error: could not compile `rum-runtime` (lib test) due to 84 previous errors; 47 warnings emitted
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+expired-C01: RED stale or omitted instance certificate C01 hash=true
+omitted-C01-instance-0: RED stale or omitted instance certificate C01 hash=true
+omitted-C01-instance-1: RED stale or omitted instance certificate C01 hash=true
+expired-C02: RED stale or omitted instance certificate C02 hash=true
+PRODUCTION_BODY_ROWS=2 N=78 UNSPLIT=147 UNSETTLED=90 LOCAL_OPTION_BODIES=2 PENDING=315
+test result: FAILED. 1090 passed; 2 failed; 53 ignored; 0 measured; 0 filtered out; finished in 773.22s
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+     Running unittests src/bin/generate-builtin-reference.rs (target/debug/deps/generate_builtin_reference-d2ad2c98e57a1cba)
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/default_fallback_continuations.rs (target/debug/deps/default_fallback_continuations-f117f222c1cc964c)
+running 21 tests
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
+     Running tests/destructuring_continuations.rs (target/debug/deps/destructuring_continuations-368dcefe778b9dd9)
+running 16 tests
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+     Running tests/guest_loading_resume.rs (target/debug/deps/guest_loading_resume-2c9bd859cff3337d)
+running 47 tests
+test result: ok. 47 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.07s
+     Running tests/lazy_pull_continuations.rs (target/debug/deps/lazy_pull_continuations-ef76e1f37b5e402d)
+running 69 tests
+test result: ok. 69 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 23.36s
+     Running tests/loop_continuations.rs (target/debug/deps/loop_continuations-dbe263d2d0c33a6d)
+running 21 tests
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+     Running tests/option_reader_continuations.rs (target/debug/deps/option_reader_continuations-13289bfd2ecc5d28)
+running 100 tests
+test result: ok. 100 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.62s
+     Running tests/rule_pattern_continuations.rs (target/debug/deps/rule_pattern_continuations-487a4fb3b8b94ac7)
+running 71 tests
+test result: ok. 71 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.33s
+     Running tests/schema_continuations.rs (target/debug/deps/schema_continuations-4182a401e6279d72)
+running 40 tests
+test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.63s
+     Running tests/sow_trace_continuations.rs (target/debug/deps/sow_trace_continuations-757402035d2c0050)
+running 51 tests
+test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+     Running tests/suspension_oracle.rs (target/debug/deps/suspension_oracle-58e5a1c5f9b651ff)
+running 58 tests
+test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 29.01s
+     Running tests/typed_slot_census.rs (target/debug/deps/typed_slot_census-3f7c0defd057db37)
+running 6 tests
+running 1 test
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.10s
+running 1 test
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.85s
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 139.71s
+     Running tests/typed_slot_compile_controls.rs (target/debug/deps/typed_slot_compile_controls-d72233bfaf7c8103)
+running 1 test
+COMPILE CONTROLS: 31 positive / 31 intended rejections (22 S1 + 7 S2 + opaque fault + token witness); raw Cargo JSON and primary spans retained
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 27.60s
+     Running unittests src/lib.rs (target/debug/deps/rum_syntax-08cb56e2fd17a1b7)
+running 193 tests
+test result: ok. 193 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.55s
+     Running unittests src/lib.rs (target/debug/deps/rum_terminal-f8efeb939a755a12)
+running 5 tests
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_core
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_derive
+running 7 tests
+error: aborting due to 2 previous errors
+error: aborting due to 2 previous errors
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.44s
+   Doc-tests rum_host
+running 1 test
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.94s
+   Doc-tests rum_jupyter
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_repl
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_runtime
+running 22 tests
+error: aborting due to 1 previous error
+error: aborting due to 2 previous errors
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+error: aborting due to 1 previous error
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.79s
+   Doc-tests rum_stdlib
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_syntax
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests rum_terminal
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+error: 2 targets failed:
+```
+
+**Scope STOP.** `crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs:34` requires every discovered constructor claim to be found by `CallAt`. Its `Visit` implementation at line 96 visits plain `ExprCall` nodes only; the default macro visitor does not parse macro tokens. The new frontier adapter exposes 11 real calls in typed macro arguments, but this independent locator cannot reach them. Repair requires checked macro traversal in that compiler-oracle visitor. This is analyzer behavior, not an update to a named path/line/count pin. The amendment authorizes `regions.rs` and one adjacent adapter, not this visitor. The governing Scope says: “If a needed change falls outside every list and class, make no edit there. STOP and report the file, the line and why.” No edit was made to `corpus.rs` or `exact.rs`.
+
+Read-only scratch diagnosis (the diagnostic passes by reproducing the mismatch; it does not fix the gate):
+
+```text
+UNLOCATABLE	crates/rum-runtime/src/runtime/builtin_adapters.rs:937:26-937:35	rum_runtime::runtime::builtin_adapters::builtin_evaluate	std::result::Result::Ok
+UNLOCATABLE	crates/rum-runtime/src/runtime/eval_core/call.rs:138:33-138:45	rum_runtime::runtime::model::session::Session::resume_call_with_dispatch_plan	std::result::Result::Ok
+UNLOCATABLE	crates/rum-runtime/src/runtime/eval_core/call.rs:262:33-262:45	rum_runtime::runtime::model::session::Session::resume_suspended_call_with_dispatch_plan	std::result::Result::Ok
+UNLOCATABLE	crates/rum-runtime/src/runtime/eval_core/call.rs:351:32-351:41	rum_runtime::runtime::model::session::Session::finish_call_dispatch_stage	std::result::Result::Ok
+UNLOCATABLE	crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:128:42-128:57	rum_runtime::runtime::model::session::Session::run_call_dispatch_stage	std::result::Result::Ok
+UNLOCATABLE	crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:128:45-128:56	rum_runtime::runtime::model::session::Session::run_call_dispatch_stage	std::option::Option::Some
+UNLOCATABLE	crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:191:30-191:39	rum_runtime::runtime::model::session::Session::try_dispatch_builtin_call	std::result::Result::Ok
+UNLOCATABLE	crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:206:26-206:35	rum_runtime::runtime::model::session::Session::try_dispatch_builtin_call	std::result::Result::Ok
+UNLOCATABLE	crates/rum-runtime/src/runtime/hold_thread.rs:29:26-29:35	rum_runtime::runtime::model::session::Session::eval_release_hold	std::result::Result::Ok
+UNLOCATABLE	crates/rum-runtime/src/runtime/resolution.rs:380:30-380:39	rum_runtime::runtime::model::session::Session::evaluate_profiled_fixed_point	std::result::Result::Ok
+UNLOCATABLE	crates/rum-runtime/src/runtime/resolution.rs:448:30-448:39	rum_runtime::runtime::model::session::Session::resume_fixed_point_from	std::result::Result::Ok
+CONSTRUCTOR_VISIBILITY claims=7315 unlocatable=11
+```
+
+**Separate permitted pin transition, identified but unapplied after STOP.** `compiler_oracle/exact.rs:169–177` still pins 172 contexts and 174 including two preserved clone contexts. The final source has 170 and 172. Exactly two old M0561 explicit `Err` constructors moved into the checked expansion; no other contextual claim disappears. Their error forwarding and InputRequired reconstruction are explicit expansion rejection rows. The precise two removed records are:
+
+```text
+crates/rum-runtime/src/runtime/resolution.rs:386:28-386:69	std::result::Result::Err	std::result::Result<rum_core::expr::Expr, rum_runtime::runtime::session::session_state::EvalError>
+crates/rum-runtime/src/runtime/resolution.rs:388:38-388:48	std::result::Result::Err	std::result::Result<rum_core::expr::Expr, rum_runtime::runtime::session::session_state::EvalError>
+```
+
+**Unresolved runtime regression, verbatim:**
+
+```text
+S2 accepted workspace:
+test runtime::tests::holding_and_control_part2::bounded_recursive_definition_below_native_stack_limit_succeeds ... ok
+
+S3 workspace:
+test runtime::tests::holding_and_control_part2::bounded_recursive_definition_below_native_stack_limit_succeeds ... 
+thread 'runtime::tests::holding_and_control_part2::bounded_recursive_definition_below_native_stack_limit_succeeds' panicked at crates/rum-runtime/src/runtime/tests/holding_and_control_part2.rs:504:5:
+assertion `left == right` failed
+  left: "TerminatedEvaluation[\"StackLimit\"]"
+ right: "done"
+FAILED
+```
+
+The proposed scoped follow-up would keep the profiling closure only on the unstable/call-head branch and force the small shared stage helper to inline. This is an untested hypothesis, not a fix or a stack-cost claim. `eval_core/call.rs` is byte-identical to the saved pre-fix snapshot. The test and native stack limits remain unchanged. No such edit followed the scope STOP.
+
+The completed workspace gate exits 101 with exactly two failing targets. The runtime target reports 1168 passed / 1 failed / 3 ignored. The stdlib target reports 1090 passed / 2 failed / 53 ignored: constructor corpus and contextual-constructor count. Remaining targets complete successfully; the census’s nested red probes are intentional. The first workspace attempt instead stopped at two E0425 errors caused by removal of the shared execute wrapper; that wrapper was restored before this completed run.
+
+**Nine native ZeroMQ tests were skipped**, because loopback binding was unavailable. Cargo reports these early-return tests as `ok`; they are not native transport passes. Exact skip output:
+
+```text
+test zeromq::tests::native::basic::native_zeromq_backend_echoes_heartbeat_over_loopback_req_socket ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::basic::native_zeromq_backend_round_trips_execute_over_loopback_sockets ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::control::native_zeromq_backend_frontend_style_control_interrupt_round_trip ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::control::native_zeromq_backend_shutdown_stops_shell_work_and_reports_pending_shell_messages ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::execute::native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_metadata ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::session_flow::native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts_and_shutdown ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::stdin::native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_reply ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::signed::native_zeromq_backend_rejects_tampered_signed_requests_end_to_end ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::signed::native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+```
+
+Final-source verification limits: default local certificate acceptance and default typed census ran in the completed workspace and passed. The no-default certificate acceptance and census last passed before the shared execute wrapper was restored. After restoration, the no-default zero-rejection certificate was emitted and all four cells replayed, but its final acceptance/census rerun did not occur before STOP. Both full oracle builds did run after the restoration and passed. The runtime typed/frame-root controls and both compiler-pair suites already passed; the workspace repeats their default coverage.
+
+No new unique compiler warning appears compared with the accepted S2 workspace log. The three runtime unit-registration warnings and negative compiler-fixture warnings are pre-existing. Both final oracle builds and the scratch constructor diagnosis emit no warnings. Full warning comparison: `r3/warning-audit.json`.
+
+Exact cumulative inventory-cell transitions from S2 are retained in `r3/local-contracts.tsv.cumulative-diff.json` and `r3/promoted.tsv.cumulative-diff.json`; the candidate.patch includes every old/new inventory row. The final fingerprint cells are:
+
+| Contract row | S2 fingerprint | Final fingerprint |
+| --- | --- | --- |
+| B01 | fnv1a64:1c3b721878987f04 | fnv1a64:7f7f4819e5b9a38e |
+| B02 | fnv1a64:f2a3f3b047002161 | fnv1a64:712d316bf283105f |
+| B03 | fnv1a64:99b57974704ae1de | fnv1a64:bb302670cce29d70 |
+| B04 | fnv1a64:4d433f2fd68dc13c | fnv1a64:b69ee54eb1e4e5f6 |
+| B05 | fnv1a64:8d4b7183d50d6aad | fnv1a64:161d107652ca21bb |
+| B06 | fnv1a64:a7372ea199a86ee8 | fnv1a64:6a26cb7c33930fb2 |
+| B07 | fnv1a64:73aa73578e14967d | fnv1a64:3c0e6cf90a4b20ab |
+| B08 | fnv1a64:556937292c8a2a7a | fnv1a64:4966a6f1db18c84c |
+| B09 | fnv1a64:74d4c27e198e5220 | fnv1a64:80e814575e60f59a |
+| B10 | fnv1a64:6dbf97d1152e376b | fnv1a64:2d6196f179eb40c1 |
+| B11 | fnv1a64:0e9af08cf081e73c | fnv1a64:77f696abcbd90bf6 |
+| B12 | fnv1a64:33e14279f596e720 | fnv1a64:3ff494533a698a9a |
+| I01 | fnv1a64:fa1d5d15e5507584 | fnv1a64:5d61331752719a0e |
+| I02 | fnv1a64:e48cef17cd43f2ad | fnv1a64:6d5e8e0a4b00a9bb |
+| I03 | fnv1a64:3374e948a81374e0 | fnv1a64:0b081722fca292da |
+| I04 | fnv1a64:35a0a22dc0253901 | fnv1a64:2da9bc21554e4bff |
+| P01 | fnv1a64:612c956bc5430088 | fnv1a64:6a3183f598e9ae52 |
+| P02 | fnv1a64:2925bc324eca969b | fnv1a64:1367702abef38d91 |
+| P03 | fnv1a64:037b5c8c7cad54c6 | fnv1a64:ddfdce90e9bf5508 |
+| P04 | fnv1a64:e77f11c5cba93d61 | fnv1a64:66084f81772c2c5f |
+| P05 | fnv1a64:8239767ec9580ef4 | fnv1a64:80b049d3310b895e |
+| P06 | fnv1a64:8460674a81c680a0 | fnv1a64:9073b923c699241a |
+| P070 | fnv1a64:beae038c603bfaa0 | fnv1a64:cac15565a50e9e1a |
+| P080 | fnv1a64:6e46f5021fa8072b | fnv1a64:c38298e8b2ab4801 |
+| P090 | fnv1a64:d20b7dae239f2e21 | fnv1a64:15d383e2253fe99f |
+| P100 | fnv1a64:f1424228c7c568cc | fnv1a64:f767e600640e9b66 |
+| P110 | fnv1a64:d8ccdca01b59bc53 | fnv1a64:cbf5e64b391dca39 |
+| P120 | fnv1a64:8203731bbd1bec1a | fnv1a64:835c564a2a9b9b6c |
+| P130 | fnv1a64:1777ccb4bcc8707d | fnv1a64:dfdbc65638fefaab |
+| P140 | fnv1a64:8a2a2897c38ccf49 | fnv1a64:67058ea4a0d1af77 |
+| P150 | fnv1a64:87ffdcb4d8906ac1 | fnv1a64:933a196da917ea3f |
+| P071 | fnv1a64:cecebd7646779b1d | fnv1a64:be417460f769a3cb |
+| P081 | fnv1a64:535fbdce5ad308c0 | fnv1a64:97853e0543967f3a |
+| P091 | fnv1a64:f06e70336e3c1d48 | fnv1a64:beb8b673c37a4a92 |
+| P101 | fnv1a64:d0cfcd6d50bd5953 | fnv1a64:c3f8d7186e816739 |
+| P111 | fnv1a64:22d77b10be0749f0 | fnv1a64:578c52f4de8ab84a |
+| P121 | fnv1a64:52b9d732ea82e2af | fnv1a64:d20326cdbe171825 |
+| P131 | fnv1a64:eaed61960ce1e2bc | fnv1a64:544907b4e8390776 |
+| P141 | fnv1a64:70ed259f8ea132a8 | fnv1a64:fe514def84fbaff2 |
+| P151 | fnv1a64:792b2b152d50cd5a | fnv1a64:923d610dc4bf712c |
+| B13 | fnv1a64:3547c22aca452ae8 | fnv1a64:f8375f05642fcbb2 |
+| R01 | fnv1a64:5637a52d5fc869b1 | fnv1a64:2e886eabdfb04f4f |
+| R02 | fnv1a64:2c93edf91308ea86 | fnv1a64:a0210ab041b99448 |
+| R03 | fnv1a64:372549388a547bb5 | fnv1a64:574f389302c46b73 |
+| R040 | fnv1a64:0d2cd69aac435851 | fnv1a64:1e8225656b5729ef |
+| R050 | fnv1a64:a8cd88b982e085d4 | fnv1a64:fcac1d46013b443e |
+| R060 | fnv1a64:f149c14ca56e6499 | fnv1a64:a87bcc02e97b0a27 |
+| R070 | fnv1a64:bbcd85e83c74c7c0 | fnv1a64:fff3061f25383e3a |
+| R080 | fnv1a64:fca50b208faa0201 | fnv1a64:f4ae251424d314ff |
+| R090 | fnv1a64:74b6cb3cc6e1048c | fnv1a64:f64aaa1c89852ca6 |
+| R100 | fnv1a64:5edb1dc71a208c5e | fnv1a64:8055cac376b847f0 |
+| R110 | fnv1a64:1293a83d6b0e6da3 | fnv1a64:901c2ee93c3c6469 |
+| R041 | fnv1a64:1b812554e16ce9e8 | fnv1a64:de70c22f7b578ab2 |
+| R051 | fnv1a64:602dabc3b0cd3aa1 | fnv1a64:a3f5b1f7b26df61f |
+| R061 | fnv1a64:4069d71c34d898aa | fnv1a64:8608ea13dba4489c |
+| R071 | fnv1a64:4b51c33c2dcb6ea7 | fnv1a64:eedf02a4ea805e2d |
+| R081 | fnv1a64:ad2cab7d63713dcc | fnv1a64:b3524f54ffba7066 |
+| R091 | fnv1a64:00b6216aed52b789 | fnv1a64:0408aad752e44f37 |
+| R101 | fnv1a64:6730a137333a9f59 | fnv1a64:ebb208352fdc9267 |
+| R111 | fnv1a64:2546ae3bbf0b3d32 | fnv1a64:af1c1334cc2d6ad4 |
+| R12 | fnv1a64:73340a5c2f7e7672 | fnv1a64:b6794ef44ed32294 |
+| R13 | fnv1a64:36d941926cbb664e | fnv1a64:c58e7cf8d183cbc0 |
+| R14 | fnv1a64:0b9a509ea47628cc | fnv1a64:11bff47640bf5b66 |
+| R15 | fnv1a64:49427c7d0584d158 | fnv1a64:3cb95f40ba8ca382 |
+| O010 | fnv1a64:5b6e9825b424bb0a | fnv1a64:9490b3d0e18fe57c |
+| O0200 | fnv1a64:84f1ca6c1243f549 | fnv1a64:61cd3078ef88d577 |
+| O011 | fnv1a64:33d27dd4b3002919 | fnv1a64:eb04888af70ccea7 |
+| O0210 | fnv1a64:fcbac932352016d2 | fnv1a64:9538694e7122c2f4 |
+
+### 5. Allocation, instruction, resume attribution and timing evidence
+
+**Not run.** The explicit scope STOP occurred before candidate release builds or performance collection. There is no allocation, instruction, resume-attribution, address-level, or timing acceptance claim. Prepared scripts are unexecuted scaffolding, not results.
+
+All four bases were built before production edits, with release codegen-units=1, in separate targets; their feature trees exclude test-continuation-slots. Hashes were rechecked at this STOP:
+
+| S2 base | Bytes | SHA-256 |
+| --- | --- | --- |
+| rum-cli | 12537440 | b553a00e63e8af387e3141fe35764f54515a3e3154fd09b2756f911a2e87d9bf |
+| rum-cli-alloc | 12547616 | f1fb356eb26f45dedaa09ad46e8d697dfde6bd10fbfe1aa12290f61dfcf6e9f1 |
+| resume | 12180552 | 57e800bca2cca0d327b358f410d34ced30787410bdee6afe5838f9334a24e81f |
+| resume-alloc | 12185720 | 73f279bfb5e13ab4daa34242a9d591e52d9d8012267197268e80f63d41ecc503 |
+
+Still required: all 64 labels’ allocation/byte slopes; exact ordinary equality and per-frame resume attribution; two interleaved instruction pairs per arm with max(0.05%, base range, candidate range); five runs and at least three Callgrind processes per arm for every flagged label; all five resume workloads’ function/address diffs and every added typed instruction; and the full timing panel last on an idle host. Any action/slot/error copy or extra cost must be removed or reported. The expected additional adapter Arc has not been measured.
+
+### 6. S2 cold-helper retype and hot boundary
+
+continuation_fault_outcome consumes the outcome and returns EvalError directly; four production callers and only the two specified test callers remove unwrap_err. The helper remains cold/inline-never. No driver protocol or mode was changed for this cleanup.
+
+The source retype and its six specified caller updates are present, and the typed fault tests pass. The required address-level comparison of the hot boundary has **not run** because no candidate measurement binary was built. No unchanged-hot-path-cost claim is made from source inspection alone.
+
+### 7. Stop-loss, deviations and open decisions
+
+Stop-loss counter: 0. The expected pre-adapter failures became passing falsifiers, stale ownership witnesses became verified concrete witnesses, the missing execute wrapper compile error was corrected, and all isolated S3 tests progressed. The final STOP is the explicit scope boundary for the constructor-oracle visitor, not the two-unproductive-attempt rule. The native-stack repair hypothesis was not tried.
+
+Disclosed workflow deviations and corrections:
+
+- One initial ordinary-control compilation overlapped the tail of the no-default census and its source-root probe. This violated the requested serial execution. The probed file was verified restored to its original hash, and both ordinary controls were rerun serially before relying on them. No performance command ran during that overlap. All other Cargo gates were serial.
+- The full oracle script was copied under brief609 with only its repository-root and scratch-output paths adjusted, preserving the two Cargo commands and 1500-second per-build bounds. The outer aggregate bound was 3100 seconds. The repository script remains unchanged.
+- The prior report incorrectly described historical suspension_support::drive::execute as a distinct implementation. Nine historical test families alias the exact oracle support module. The completed workspace exposed the mistake; the exact wrapper is restored with only a function-local dead-code allowance, and both oracle targets remain warning-free.
+- The first adapter-witness replay parser missed a test-prefixed output line and failed before writing any ledger cell; the corrected parser matched all four emitted rows. The following attempted batch could not start because its input file had not been created. Neither command ran a compiler gate or changed source.
+- Certificate replays were repeated after the wrapper restoration because all-source fingerprints deliberately expire on test-source changes. Every intermediate diff remains archived.
+
+The director must resolve the compiler-oracle visitor scope before more repair work. After that, the 170/172 contextual-count pins need their attributed S3 replay, the recursion regression needs a scoped fix and unchanged-contract retest, final gates need completion, and every performance requirement remains outstanding. All commands have finished. The tree is left uncommitted; no git command was run.
+
+
+## Director amendment — redispatch 4: every production view reads the typed macro; the recursion depth comes back
+
+Both findings are real, and the scope STOP was the right call. Neither is
+fixed by updating a pin.
+
+### A. The analyzer's views disagree about the typed macro
+
+**Cause.** Redispatch 3 taught one view, `regions::Edges`, to read the
+typed macro's arguments as plain Rust. The retention analyzer has three
+other syn views over the same production bodies, and each still treats
+every macro as opaque:
+
+| View | Today on a typed macro | Effect |
+| --- | --- | --- |
+| `compiler_oracle/corpus.rs` `CallAt` | default `visit_macro`, tokens unparsed | the 11 constructor claims inside typed arguments cannot be located; the gate fails loudly (this STOP) |
+| `methods/context.rs` `Context` | `fn visit_macro(&mut self, _) {}` | no selection for a method call inside typed arguments, so `regions` rejects it as "method outside checked lexical scope". The reason is false. None exists in the historical frontier today, but S4 onward will create hundreds. |
+| `types/context.rs` `Context` | default `visit_macro` | constructor claims inside typed arguments get no exact type. `exact.rs` stops checking them, silently. |
+
+This is one defect, and fixing only `CallAt` would close the instance
+that failed while leaving the class open. The rule is: **every view that
+enumerates sites in production bodies reads the typed macro the same way
+`regions` does, through the same adapter.**
+
+**Ruling A.**
+
+1. **One adapter, declared once.** Declare `typed_resume_macro` in
+   `retention_closure/mod.rs` as an ordinary module, next to `regions`.
+   Remove the `#[path = "typed_resume_macro.rs"]` declaration from
+   `regions.rs`. Export one entry point that returns the checked arguments
+   (`adapt`, or a thin wrapper around it). Every view calls it; no view
+   parses the macro's tokens itself.
+2. **The same reading in all four views.**
+   - **Order and scope:** visit `$result` first. Bind the `ok` pattern only
+     for `$continue`, then restore the enclosing locals. Visit the session
+     expression and `$frame` after that. This is the order `regions`
+     uses now.
+   - **Legacy macros:** `resume_or_suspend!` and every other macro stay
+     opaque in every view.
+   - **An adapter error is a hard failure in every view.** A view that sees
+     a recognized typed macro it cannot adapt must fail, and must never
+     fall back to skipping the macro.
+   - **`methods` binds the `ok` pattern conservatively.** It may give the
+     binding the `Ok` payload type only if its existing inference already
+     establishes the `Result` type of `$result`. Otherwise it binds as
+     unknown, as `visit_expr_let` does. An unknown receiver must never
+     produce a selection.
+   - **`types` follows the same rule.** It gives `$continue` the macro
+     expression's expected type only where that type is already
+     established. It must never invent one.
+3. **Falsifiers, watched to fail first.** Use one fixture whose typed macro
+   arguments contain a constructor call, a method call on a typed local, and
+   a constructor whose expected type comes from the enclosing signature.
+   - Show each of the three views (`CallAt` locates the claim, `methods`
+     selects it, `types` claims its exact type) failing on the current
+     tree, then passing.
+   - Show that a legacy `resume_or_suspend!` carrying the same arguments
+     stays opaque in all four views.
+   - Keep the fixtures inside the existing retention test modules. Scratch
+     copies are for the watched failures only.
+4. **Compiler instruments.** If `corpus.py` or `exact.py` cannot observe a
+   call whose span lies in macro arguments, you may change them only so
+   they observe it as the compiler reports it. Never skip a claim and never
+   assume a result. Disclose the change and show the instrument observing
+   one of the 11 calls.
+5. **`exact.rs` pins follow code, with attribution.** Re-derive the
+   contextual count (172) and the count with preserved clones (174) after
+   the `types` view change. List every record added or removed, each with
+   its cause:
+   - an explicit constructor moved into the checked expansion (the two
+     M0561 `Err` rows you identified);
+   - a constructor newly visible in typed arguments.
+
+   Any other cause is a STOP.
+6. **Census.** Rerun the historical frontier. Classify every row change
+   against S2 with redispatch 3's four classes, plus one new class,
+   *view agreement*: a row that moved from a false
+   method-outside-scope rejection to a real selection or to its true
+   rejection. Any other unpaired removal is a STOP.
+7. **The local analyzer stays out of scope**, as in redispatch 3. Say again
+   whether any certified local body contains a converted site.
+
+### B. Guest recursion lost depth: a stack regression on the recursive path
+
+**Cause, as far as the report shows.** In the unchanged test
+`holding_and_control_part2.rs:486`, 48 levels of `peel[wrap[…]]` passed
+on S2 and now end at `StackLimit`. The test, its depth, the guard and the
+stack size are unchanged, so S3 made each level of guest recursion use
+more native stack. S3 rewrote the recursive evaluation path itself
+(`evaluate_call`, both dispatch-plan resumers, the dispatch stage), added
+shared helpers on that path (`resume_call_after_head`,
+`finish_call_dispatch_stage`), and placed the macro expansion's locals and
+suspend-arm construction in those frames. Stack bytes per level are the
+depth contract; they are a first-class cost (see the traversal-depth
+line's lessons in `CLAUDE.md`). A per-level number means nothing without
+its build profile.
+
+**Ruling B.**
+
+1. **Measure before changing anything.**
+   - **Bracket the maximum depth on S2 and S3.** Use both guest recursion
+     shapes: the `peel` test's shape and `f[k_] := f[k - 1] + 1`. Measure
+     in both the debug test profile and release. Either bisect the depth
+     against the unchanged guard with a fresh session per probe, or use
+     the `/proc` VmStk high-water slope at four heights; say which.
+     Report S2 and S3 bytes per level for each shape and profile.
+   - **Attribute the change per function.** Take each frame size on the
+     recursive path from its prologue (`objdump -d`, the `sub …,%rsp`
+     immediate) in both binaries, for every function the recursion passes
+     through once per level. Name each function whose frame grew or that
+     is new on the path, with its bytes.
+   - **Build S2 for this.** Build the S2 tree (`cb09bfde`) in a separate
+     target directory under `.temp/brief-609/`, without touching the
+     working tree, for example from a `git archive` export. You may read
+     git objects this way; you may not run any git command that changes
+     the repository.
+2. **Fix by shape, not by limits.**
+   - Move cold work off the hot frames: suspend-arm frame construction,
+     profiling captures that exist only for a branch, and temporaries that
+     live across the recursive call.
+   - A shared helper on the recursive path either costs no extra frame
+     (show it inlined in both profiles) or is restructured so it does not
+     add a level.
+   - Move locals, not control flow: no extra branch on the ordinary path.
+   - The test, its depth, the native stack guard, the stack size and
+     `RUST_MIN_STACK` stay unchanged.
+3. **Acceptance.** For both shapes, in both profiles, bytes per level are
+   at most S2's. The unchanged 48-level test passes. If an increase remains
+   that you cannot remove, attribute it to a named inherent item, then STOP
+   and report. Do not accept it yourself.
+4. **The instruction gates cover this change too.** Section 5's panel
+   measures the final shape, not the pre-fix one.
+
+### C. Then finish the step
+
+After A and B:
+- complete the gates the report lists as not rerun: the no-default
+  certificate acceptance and census on final source, the full workspace,
+  both oracle builds warning-free, and the 31 compile pairs in both builds;
+- run every performance requirement from the original brief and from
+  redispatch 2, with S2's rules: allocation first, then instruction slopes
+  under `max(0.05%, base range, candidate range)`, ≥5 runs and ≥3 callgrind
+  processes per arm for every flagged label, address-level resume
+  attribution, and timing last on an idle host;
+- run the hot-boundary comparison for `continuation_fault_outcome`.
+
+Newly authorized files, for A only:
+- `retention_closure/mod.rs`
+- `retention_closure/methods/context.rs`
+- `retention_closure/types/context.rs`
+- `retention_closure/compiler_oracle/corpus.rs`
+- `retention_closure/compiler_oracle/exact.rs`
+- `corpus.py` and `exact.py`, under A4 only
+
+B needs no new file: the recursive-path files are already in scope.
+
+Append a new `## Execution report` after this section.
