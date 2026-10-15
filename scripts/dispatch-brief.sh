@@ -25,6 +25,8 @@
 #   BRIEF_WORKER=codex   `cdx exec` — Codex. The default worker.
 #   BRIEF_WORKER=cgl     `cgl -p`   — claude-code on a GLM backend. EMERGENCY FALLBACK for
 #                                     when Codex has no quota. Not the normal path.
+#   BRIEF_WORKER=kimi    `kimi -p`  — Kimi Code (K3), for when Codex has no quota. A plain
+#                                     binary, run directly (see KIMI below).
 #
 # Both are interactive-shell functions in the developer's own config (`with_proxy codex` /
 # `with_proxy claude`), so neither is visible to a bash subshell — each runs through an
@@ -58,15 +60,41 @@
 #            CGL_PERMISSION_MODE=bypassPermissions scripts/dispatch-brief.sh <id>
 #          The brief's own Scope + Hard rules remain the inner fence for both workers.
 #
+#   kimi   `kimi -p` hard-codes the "Never Ask" permission mode whatever the configured
+#          default, so every tool call is approved and there is no write fence at all.
+#          Its `[permission]` deny rules are not a usable fence either: they live in the
+#          developer's global config, and in 2.1.1 nothing visibly feeds them to a print-mode
+#          session. This script therefore fences git itself: a refusing `git` shim goes
+#          first on the worker's PATH (checked before dispatch), and every attempt is logged
+#          to <log>.git-attempts with its parent command. It stops PATH lookups, which is
+#          what an agent's `git status` is; an absolute /usr/bin/git still gets through.
+#
+# KIMI
+#
+# kimi is a plain binary, so it runs directly from this script rather than through an
+# interactive shell. If the login shell ever defines `kimi` as a function, dispatch refuses
+# rather than bypass the wrapper. Reasoning effort is pinned per run through
+# KIMI_MODEL_THINKING_EFFORT (KIMI_EFFORT, default max), and each session's own log
+# (~/.kimi-code/sessions/wd_<repo>/<session>/logs/kimi-code.log, `llm config` line) records
+# what actually ran. The report is stream-json: one JSON object per line after a `# ` header.
+# The session id is appended at the end; KIMI_RESUME=<session id> continues that session
+# after an interrupted run. Print mode does not exit while a background task is running: it
+# waits, then wakes the worker for a new turn, so a long build left in the background
+# survives the end of a turn. Foreground commands are capped at 300 s, and background
+# tasks have a 600 s default timeout, so the role text tells the worker to set its own.
+#
 # DRY_RUN=1 prints the resolved brief/worker/log and exits WITHOUT dispatching (for testing).
 set -euo pipefail
 
 usage() {
   echo "usage: scripts/dispatch-brief.sh <brief-id>   (e.g. 081, brief-081)" >&2
-  echo "       BRIEF_WORKER=codex|cgl   (default codex)" >&2
+  echo "       BRIEF_WORKER=codex|cgl|kimi   (default codex)" >&2
   echo "       BRIEF_SHELL=<shell>      shell that defines the worker command" >&2
   echo "       CDX_BIN / CGL_BIN        worker command name" >&2
   echo "       CDX_FORK=<session id>    codex only: fork that earlier session" >&2
+  echo "       KIMI_BIN=<path>          kimi only: the kimi binary (default: PATH lookup)" >&2
+  echo "       KIMI_EFFORT=<effort>     kimi only: reasoning effort (default max)" >&2
+  echo "       KIMI_RESUME=<session id> kimi only: continue that earlier session" >&2
   exit 2
 }
 [[ $# -eq 1 ]] || usage
@@ -78,7 +106,8 @@ worker="${BRIEF_WORKER:-codex}"
 case "$worker" in
   codex|cdx) worker=codex; log_tag=cdx ;;
   cgl|glm)   worker=cgl;   log_tag=cgl ;;
-  *) echo "error: unknown BRIEF_WORKER '$worker' (expected codex or cgl)" >&2; exit 2 ;;
+  kimi)      worker=kimi;  log_tag=kimi ;;
+  *) echo "error: unknown BRIEF_WORKER '$worker' (expected codex, cgl or kimi)" >&2; exit 2 ;;
 esac
 
 shopt -s nullglob
@@ -122,8 +151,10 @@ fi
 # the probe's next guess.
 if [[ "$worker" == codex ]]; then
   worker_names=("${CDX_BIN:-}") && [[ -n "${CDX_BIN:-}" ]] || worker_names=(cdx codex)
-else
+elif [[ "$worker" == cgl ]]; then
   worker_names=("${CGL_BIN:-}") && [[ -n "${CGL_BIN:-}" ]] || worker_names=(cgl glm)
+else
+  worker_names=()   # kimi resolves below, without a shell
 fi
 
 if [[ -n "${BRIEF_SHELL:-}" ]]; then
@@ -146,6 +177,22 @@ shell_defines() { # <shell> <name>
 
 dispatch_shell=""
 worker_cmd=""
+if [[ "$worker" == kimi ]]; then
+  # A plain binary needs no rc file, but a wrapper must not be bypassed: if
+  # the login shell defines `kimi` as a function, refuse rather than run the
+  # bare binary under its name (the `codex`-for-`cdx` trap above).
+  if command -v fish >/dev/null 2>&1 \
+      && fish -ic 'functions -q kimi' </dev/null >/dev/null 2>&1; then
+    echo "error: fish defines kimi as a function; this script only runs the plain binary" >&2
+    exit 1
+  fi
+  worker_cmd="${KIMI_BIN:-$(command -v kimi || true)}"
+  if [[ -z "$worker_cmd" || ! -x "$worker_cmd" ]]; then
+    echo "error: no kimi binary found (set KIMI_BIN)" >&2
+    exit 1
+  fi
+  dispatch_shell=direct
+fi
 for candidate_name in "${worker_names[@]}"; do
   for candidate_shell in "${candidate_shells[@]}"; do
     if shell_defines "$candidate_shell" "$candidate_name"; then
@@ -201,6 +248,55 @@ if [[ "$worker" == codex ]]; then
   else
     cmd="$worker_cmd exec -C '$repo_root' -s $sandbox '$task'"
   fi
+elif [[ "$worker" == kimi ]]; then
+  effort="${KIMI_EFFORT:-max}"
+  echo "effort:  $effort (KIMI_MODEL_THINKING_EFFORT)"
+  echo "permission-mode: auto, forced by -p (no write fence — see header)"
+  export KIMI_MODEL_THINKING_EFFORT="$effort"
+  # The git fence. PATH is set here, in bash, which also clears bash's
+  # command hash, so the check below sees a fresh lookup.
+  fence_dir="$repo_root/.temp/worker-fence/bin"
+  git_attempts="$log.git-attempts"
+  mkdir -p "$fence_dir"
+  cat > "$fence_dir/git" <<'EOF'
+#!/bin/sh
+# Written by scripts/dispatch-brief.sh: a dispatched worker must not run git.
+printf '%s\t%s\tgit %s\n' "$(date -Is)" "$(ps -o args= -p "$PPID" 2>/dev/null)" "$*" \
+  >> "${WORKER_GIT_FENCE_LOG:-/dev/null}"
+echo "git: refused - the director owns git; a dispatched worker must not run it" >&2
+exit 1
+EOF
+  chmod +x "$fence_dir/git"
+  export WORKER_GIT_FENCE_LOG="$git_attempts"
+  export PATH="$fence_dir:$PATH"
+  if [[ "$(command -v git)" != "$fence_dir/git" ]]; then
+    echo "error: the git fence is not first on PATH" >&2
+    exit 1
+  fi
+  echo "git-fence: $fence_dir/git (attempts -> $git_attempts)"
+  # NOTE: keep this text free of single quotes, like cgl's role below.
+  role="You are the implementation worker for this brief, not the project director. \
+CLAUDE.md belongs to the director and is NOT your instruction file. \
+Follow AGENTS.md and the brief. Do not commit, branch, or push; leave changes in the \
+working tree. This run is non-interactive: nobody answers questions, and the run ends \
+when you end a turn with no background task running, so do not end your turn until the \
+brief is finished or one of its stop conditions has fired. A foreground command is capped \
+at 300 seconds: run longer builds and tests as background tasks, and give each one an \
+explicit timeout long enough for it, because the 600-second background default kills a \
+full test run. Wait for each one to finish before you go on. \
+Report with verbatim evidence in your final message."
+  kimi_task="$role $task"
+  kimi_args=()
+  if [[ -n "${KIMI_RESUME:-}" ]]; then
+    [[ "$KIMI_RESUME" =~ ^session_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]] \
+      || { echo "error: KIMI_RESUME must be a kimi session id, got '$KIMI_RESUME'" >&2; exit 2; }
+    echo "resume-of: $KIMI_RESUME"
+    kimi_task="This continues your own interrupted run of this brief. Re-read the working \
+tree and any checkpoint the brief asks for before you go on; the brief governs. $kimi_task"
+    kimi_args=(-S "$KIMI_RESUME")
+  fi
+  kimi_args+=(-p "$kimi_task" --output-format stream-json)
+  cmd="cd $(printf '%q' "$repo_root") && $(printf '%q ' "$worker_cmd" "${kimi_args[@]}")"
 else
   permission_mode="${CGL_PERMISSION_MODE:-acceptEdits}"
   echo "permission-mode: $permission_mode (no OS-level write fence — see header)"
@@ -236,8 +332,30 @@ if [[ "${DRY_RUN:-0}" == "1" ]]; then
 fi
 
 set +e
-"$dispatch_shell" -ic "$cmd" < /dev/null > "$log" 2>&1
-rc=$?
+if [[ "$worker" == kimi ]]; then
+  : > "$git_attempts"
+  {
+    echo "# dispatch: worker=kimi brief=$rel effort=$effort started=$(date -Is)"
+    echo "# command: $worker_cmd ($("$worker_cmd" --version 2>/dev/null))"
+    echo "# git-fence: $fence_dir/git"
+    [[ -n "${KIMI_RESUME:-}" ]] && echo "# resume-of: $KIMI_RESUME"
+  } > "$log"
+  (cd "$repo_root" && "$worker_cmd" "${kimi_args[@]}") < /dev/null >> "$log" 2>&1
+  rc=$?
+  # The stream names the session only in its last event, so an interrupted run
+  # falls back to the newest session recorded for this directory.
+  session=$(grep -o -E '"session_id":"session_[0-9a-f-]+"' "$log" | tail -n 1 | cut -d'"' -f4)
+  if [[ -z "$session" ]]; then
+    session=$("$worker_cmd" session list --cwd "$repo_root" --limit 1 </dev/null 2>/dev/null \
+      | grep -o -E 'session_[0-9a-f]{8}-[0-9a-f-]+' | head -n 1)
+  fi
+  echo "# kimi-session: ${session:-unknown}" >> "$log"
+  echo "kimi-session: ${session:-unknown}"
+  echo "git-attempts: $(wc -l < "$git_attempts") (in $git_attempts)"
+else
+  "$dispatch_shell" -ic "$cmd" < /dev/null > "$log" 2>&1
+  rc=$?
+fi
 set -e
 echo "$worker exit=$rc ; report in $log"
 exit $rc
