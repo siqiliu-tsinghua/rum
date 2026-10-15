@@ -1120,3 +1120,222 @@ changed the code is fine. The attribution is of the final binaries.
 for A3 only. If the macro changes, the retention analyzer's typed-macro
 model and its four views, already named in Scope, follow it. The disclosure
 duty covers anything else.
+
+## Execution report — redispatch 1
+
+**STOP on A's two-attempt stop-loss.** The original working source and macro
+remain unchanged; neither isolated macro trial was promoted. Both attempts
+left seven failing pairs and increased the summed excess from 272 to 7 936
+bytes, so neither lowered either progress metric. B's final-binary remainder
+review, C's rebuild/gates and the pinned B,C,B,C timing panel were not run.
+No performance acceptance is claimed.
+
+### A1. Complete native-path reconciliation
+
+Before either trial, I rebuilt the original base and candidate with a
+scratch-only map/backtrace marker and captured all seven shapes at depth 3 in
+both profiles. `stack/*/reconcile/*/resident-paths.json` contains every live
+native frame, including generic instantiations, closures and functions outside
+the owned files. `stack/frame-deltas.tsv` contains the base/candidate grouping
+for every frame. Marker slopes at four heights and three repetitions have zero
+residual.
+
+All 14 slopes equal the complete resident-frame sum plus outgoing stack area:
+
+```text
+RECONCILED_WITH_OUTGOING 14 / 14
+```
+
+Thirteen pairs reconcile from prologue deltas alone. Release `count` has a
+separate +16-byte outgoing/ABI residual:
+
+```text
+PROLOGUE_ONLY_RECONCILED 13 / 14
+{"profile": "release", "shape": "count", "base_slope": 25568.0, "base_resident": 24896, "base_outgoing": 672.0, "candidate_slope": 25616.0, "candidate_resident": 24928, "candidate_outgoing": 688.0, "frame_delta": 32, "outgoing_delta": 16.0, "measured_delta": 48.0, "prologue_only_reconciled": false, "reconciled": true}
+```
+
+The nonzero frame deltas on the original binaries are:
+
+| Profile / shape | Function delta | Net |
+| --- | --- | ---: |
+| debug rewrite | `drive_rewrite_rule_exprs_owned` 984 → 744; `resolve_rewrite_rule_exprs_owned` 616 → 472 | -384 |
+| debug compiled | `drive_rewrite_rules_owned` 824 → 632 | -192 |
+| debug cases-spec | `resolve_cases_spec_expr_for_matching_owned` 776 → 616 | -160 |
+| debug cases-traversal | `resolve_argument_exprs_from_cursor` 888 → 1 048 (+160); `resolve_cases_traversal_owned` 648 → 520 (-128) | +32 |
+| debug position | The same argument +160; `resolve_position_traversal_owned` 648 → 520 (-128) | +32 |
+| debug count | The same argument +160; `resolve_traversal_without_limit_owned` 648 → 520 (-128) | +32 |
+| release rewrite | `drive_rewrite_rule_exprs_owned` 360 → 328 | -32 |
+| release compiled | `drive_rewrite_rules_owned` 312 → 344 | +32 |
+| release cases-traversal | `resolve_argument_exprs_owned` 328 → 360 (+32); `resolve_cases_traversal_owned` 408 → 424 (+16) | +48 |
+| release position | `resolve_argument_exprs_owned` +32; `tree_walkers::position::options::finish_position_option` 696 → 712 (+16) | +48 |
+| release count | `resolve_argument_exprs_owned` +32, plus the +16 outgoing residual above | +48 |
+
+Debug `argument` has no frame-size delta on its actual path, so its zero native
+slope is now explained rather than contradicted by the unrelated growth table.
+Release `cases-spec` and both `argument` slopes likewise have zero frame delta.
+The original release `count` decomposition is fully accounted numerically, but
+its +16 outgoing residual is not asserted inherent.
+
+### A2. Stack-slot attribution
+
+The converted macro's cold closure is present in the growing functions and
+holds exactly the values identified by the amendment: the moved
+`RuntimeInputRequest`, the frame's captured state and the session reference.
+It is not a guessed type or a new ordinary-path construction.
+
+- Debug `resolve_argument_exprs_from_cursor` (base entry `0x1b7c70`,
+  candidate `0x1bb370`, 888 → 1 048): candidate instructions
+  `0x1bb67d`–`0x1bb6e0` build a 96-byte closure at stack offsets
+  `0x270`–`0x2cf`. The two 16-byte slots at `0x270`/`0x280` hold the request;
+  `0x290`–`0x2a0` the shared expressions; `0x2a8`–`0x2b8` the frozen
+  accumulator; `0x2c0` the session reference; and `0x2c8` the cursor. The call
+  at `0x1bb6e8` passes that closure to the cold suspend helper.
+- Release `resolve_argument_exprs_owned` (base `0x52fc10`, candidate
+  `0x52f880`, 328 → 360): the same 96-byte environment is built at
+  `0x52fa69`–`0x52fac4`, in slots `0x50`–`0xaf`, and passed at `0x52face`.
+  Slot reuse makes the net prologue increase 32 rather than 96 bytes.
+- Release `drive_rewrite_rules_owned` (base `0x5375d0`, candidate `0x5367f0`,
+  312 → 344): `0x536917`–`0x536969` constructs the cold closure. The request
+  occupies `0x68`–`0x87`, the `CompiledRewriteRuleContinuation` occupies
+  `0x20`–`0x60`, and the session reference is at `0x88`; the suspend call is
+  `0x536971`.
+- Release `finish_position_option` (base `0x797130`, candidate `0x798150`,
+  696 → 712): its prologue moves `sub $0x288,%rsp` → `sub $0x298,%rsp`.
+  Candidate instructions `0x7984e7`–`0x798544` build the position closure:
+  request at `0xe0`–`0xff`, `CasesTraversalConfig` at `0xb0`–`0xdf`, and session
+  reference at `0x100`; `0x79854c` calls the cold position suspend helper.
+- The release count's remaining +16 is not an added instruction. The
+  `suspend_option_read` call moves from base `0x792fe8` to candidate
+  `0x794008` inside `resume_count_after_pattern`; its surrounding argument
+  construction is instruction-for-instruction identical. The measured
+  decomposition is +32 from `resolve_argument_exprs_owned` and +16 outgoing
+  ABI area. No distinct new slot or inherent item is claimed for the latter;
+  it remains reported as an ABI residual.
+
+The other release traversal growth (`resolve_cases_traversal_owned`,
+`resolve_cases_traversal_shared_from`) has the same converted macro and config
+capture shape. The native cycle table above, rather than a blanket assumption
+that frame impls are recursive, drives this attribution: the typed frame impls
+are not on these guest-recursive paths.
+
+### A3. Isolated macro trials and stop-loss
+
+Both trials changed only `.temp/brief-610/stack/candidate/tree/.../witness.rs`
+and their scratch binaries. They removed the nested `FnOnce` closure from both
+macro arms and called `witness.suspend` directly. `direct-cold` additionally
+marked the method cold/out-of-line; `direct-inline` left the original method
+attributes unchanged. No working-source macro, analyzer or production fixture
+was edited.
+
+The variants have identical debug results. Their seven release failures all
+close, but every debug shape becomes worse:
+
+```text
+# direct-inline; direct-cold has the same debug values and failing count
+Native no-growth rows: 7 / 14
+debug argument        58768 -> 59760  (+992)
+debug rewrite         80352 -> 81216  (+864)
+debug compiled        79760 -> 80800  (+1040)
+debug cases-spec      91856 -> 93136  (+1280)
+debug cases-traversal 82688 -> 84032  (+1344)
+debug position        79424 -> 80768  (+1344)
+debug count           67936 -> 69008  (+1072)
+```
+
+Summed positive excess is therefore 7 936 bytes against the original 272,
+with seven failures unchanged. This is two attempts that lower neither A
+metric, so the required stop fired. S3's two shapes were not re-measured
+because neither macro edit reached the final source; no A3 production
+obligation is claimed complete.
+
+### B and C: not run
+
+Because A stopped, the following were not run on a new final binary:
+
+- B's >25-instruction resume-remainder split;
+- rebuilt candidates and repeated correctness, oracle, inventory,
+  certificate and fingerprint gates;
+- repeated allocation, instruction, copy, leaf and resume-attribution panels;
+- S3 `peel`/arithmetic stack measurements on a promoted macro; and
+- the pinned base, candidate, base, candidate timing panel and any required
+  deterministic-leaf reruns.
+
+The earlier green correctness evidence remains attached to the unchanged
+working source, but it is not represented as redispatch-1 final-source
+acceptance. No git command was run, no background task remains, and the tree
+is uncommitted.
+
+
+## Director amendment — redispatch 2: keep the cold closure, take the request and the session out of it
+
+A1 and A2 are what I asked for, and they settle the cause. The reconciliation
+is exact (14/14). In every growing release frame the growth is the cold
+closure's environment, and A2 names its slots. Two of those slots duplicate
+values the caller already holds:
+
+- the moved `RuntimeInputRequest`, 32 bytes;
+- the session reference, 8 bytes.
+
+The legacy arm re-wrapped `request` in place and never copied it. Those 40
+bytes, rounded by slot alignment and reuse, match the +16/+32/+48 frame
+deltas.
+
+**Why the two trials could not have worked.** Both removed the closure, and
+the second changed only the method's attributes. Removing the closure closed
+the release rows, but every debug shape grew by 864-1 344 bytes per level.
+The likely reason is that the macro is shared. S3's sites on the evaluator's
+recursive path, which every shape crosses, use the same expansion. S3
+redispatch 4-5 bought its debug depth with exactly this cold closure: it
+moves frame construction, and its debug temporaries, out of the caller.
+**Confirm this attribution** by listing the debug frames that grew in either
+trial. If it is not S3's sites, say what it is.
+
+So the closure is right, and its environment is too big. The stop-loss fired
+correctly. This amendment is a new hypothesis, so the counter restarts.
+
+### Ruling
+
+1. **The shape to try first.** Keep the cold, out-of-line helper and the
+   lazy closure. Pass the request and the session to the helper as
+   parameters, so the closure captures only what `$frame` uses. For example:
+
+   ```rust
+   return suspend(witness, $session, request, move || $frame);
+   // where the cold, never-inlined helper is
+   fn suspend<I, F>(witness: SlotWitness<I>, session: &mut Session,
+                    request: RuntimeInputRequest, make: impl FnOnce() -> F)
+       -> Result<F::Output, EvalError>
+   where F: TypedFrame<Input = I> { witness.suspend(session, request, make()) }
+   ```
+
+   - Where the helper lives is your choice: inside the macro arm as today,
+     or as a `#[doc(hidden)]` method or function next to `SlotWitness` in
+     `witness.rs`. Nothing public may name a mode or construct an erased
+     entry.
+   - A `$frame` expression that itself uses the session would conflict with
+     the separate `&mut`. The compiler will say so. Report any such site;
+     do not restructure it.
+2. **Measure it the same way, on more shapes.**
+   - The 14 S4 pairs.
+   - S3's two shapes, `peel` and `f[k_] := f[k - 1] + 1`
+     (`.temp/brief-609/r6b/stack/`), in both profiles, against base. The
+     macro change moves S3's 13 sites too, and the release side may gain.
+   - The reconciliation and per-frame slot table for every frame that still
+     grows.
+3. **Acceptance** is unchanged: all 14 pairs and S3's two shapes at or below
+   base in both profiles, and the 48-level test green.
+4. **If a residual remains,** derive the next attempt from its slot table,
+   not from an attribute variation:
+   - capture by reference what `$frame` only reads;
+   - build a `$frame` component inside the closure rather than before it;
+   - for a site-specific temporary, fix it at the site.
+
+   Stop-loss is unchanged: progress is the summed excess over base (now 272
+   bytes across the 14 pairs; add S3's two shapes, at 0 today) or the count
+   of failing pairs. Stop after two attempts that lower neither, with each
+   attempt's slot table.
+5. **Promote only what passes.** Then the R5 obligations from redispatch 1
+   apply to the final expansion, followed by B and C from redispatch 1 in
+   full, including the pinned timing panel.
+
+Append `## Execution report — redispatch 2` after this section.
