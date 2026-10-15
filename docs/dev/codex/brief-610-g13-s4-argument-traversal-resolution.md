@@ -1339,3 +1339,186 @@ correctly. This amendment is a new hypothesis, so the counter restarts.
    full, including the pinned timing panel.
 
 Append `## Execution report — redispatch 2` after this section.
+
+## Execution report — redispatch 2
+
+**STOP on the restarted two-attempt stop-loss.** Neither split-capture helper
+was promoted; the working macro remains unchanged. Both attempts left seven
+S4 failures and increased S4 positive excess from 272 to 1 648 bytes. The
+nested-helper attempt also failed both S3 release shapes by a further 80
+bytes. R5, B, C and the pinned timing panel were not run.
+
+### Prior-trial attribution requested by the amendment
+
+The earlier direct-call trials' debug growth is predominantly S3 evaluator
+machinery, not a new S4-only frame. `direct-inline-debug-frame-deltas.log`
+shows, per affected shape:
+
+- `prepare_arguments_for_call_with_unevaluated_restore::{{closure}}`
+  1 736 → 1 864, +128 per occurrence;
+- `resume_call_with_dispatch_plan` 2 056 → 2 152, +96 per occurrence;
+- `run_call_dispatch_stage` 1 480 → 1 512, +32 per occurrence;
+- `evaluate_profiled_fixed_point` 2 264 → 2 312, +48 per occurrence; and
+- `try_dispatch_builtin_call` 2 936 → 3 000, +64 where present.
+
+These are the shared evaluator frames crossed by every shape and explain why
+removing the closure was not a valid repair. The cold closure is necessary for
+debug; its environment must shrink without moving those costs elsewhere.
+
+### Attempt 1: free split-capture helper
+
+The first helper was a doc-hidden cold function next to `SlotWitness`, with
+request and session parameters and a closure containing only `$frame`.
+Reexports were used only inside the scratch tree. The function initially
+lacked the required `I: SlotValue` bound; the two compiler diagnostics were
+corrected before measurement.
+
+All seven S4 debug shapes improved, but all seven release shapes regressed:
+
+```text
+Native no-growth rows: 7 / 14
+release argument        24048 -> 24208  (+160)
+release rewrite         31248 -> 31472  (+224)
+release compiled        31104 -> 31328  (+224)
+release cases-spec      36480 -> 36768  (+288)
+release cases-traversal 31488 -> 31776  (+288)
+release position        30784 -> 31040  (+256)
+release count           25568 -> 25776  (+208)
+```
+
+Positive S4 excess is 1 648 bytes. The debug improvements were -704,
+-1 504, -1 280, -1 408, -1 008, -1 008 and -832 bytes in the same shape order.
+No S3 measurement is claimed for this first attempt.
+
+Its resident-frame table shows that moving request/session out of the lazy
+closure introduced call-argument work throughout the evaluator:
+
+- `prepare_arguments_for_call_with_unevaluated_restore` 936 → 952;
+- `resume_call_with_dispatch_plan` 824 → 856;
+- `try_dispatch_builtin_call` 664 → 680; and
+- `run_call_dispatch_stage` 280 → 264, a credit, not a regression.
+
+Owned examples also grew: `resolve_rewrite_rule_exprs_owned` 232 → 248,
+`drive_rewrite_rules_owned` 312 → 328,
+`resolve_cases_spec_expr_for_matching_owned` 680 → 712,
+`resolve_argument_exprs_owned` 328 → 360,
+`resolve_cases_traversal_owned` 408 → 456, and
+`finish_position_option` 696 → 712. The complete per-shape, per-frame table is
+`.temp/brief-610/stack/split-capture-frame-deltas.tsv`.
+
+### Attempt 2: the same helper nested in each macro arm
+
+The slot table motivated moving the helper back inside the macro expansion,
+not another attribute variation. The nested helper takes fully qualified
+`SlotWitness`, `Session` and `RuntimeInputRequest` types; no reexports remain.
+It produced the same 14 S4 results and the same 1 648-byte release excess and
+seven failures. Thus helper placement did not improve either metric.
+
+S3's two shapes were also measured for this attempt:
+
+```text
+S3 no-growth rows: 2 / 4
+debug peel  19152 -> 18976  (-176)
+debug plus  34896 -> 34544  (-352)
+release peel 7312  -> 7328   (+16)
+release plus 13744 -> 13808  (+64)
+```
+
+The S3 frame table independently names the same class:
+
+```text
+release peel: resume_call_with_dispatch_plan 824 -> 856 (+32)
+release peel: run_call_dispatch_stage 280 -> 264 (-16)
+release plus: prepare_arguments_for_call_with_unevaluated_restore 936 -> 952 (+16)
+release plus: resume_call_with_dispatch_plan 824 -> 856, twice (+64)
+release plus: run_call_dispatch_stage 280 -> 264 (-16)
+```
+
+At the addressed helper boundary, the original base invokes the single lazy
+closure at `0x568213`; the nested split helper is called at `0x564bf0` with
+separate argument areas for request/session and the reduced closure. The S4
+table also includes the nonidentical but corresponding `0x564d13` site. This
+is direct evidence that the split moved stack cost into the helper ABI rather
+than removing it.
+
+Both attempts therefore lower neither summed excess nor failing count:
+7 936 excess bytes from redispatch 1 was not the baseline used here; the
+restarted baseline is 272, and both new attempts are at 1 648. The second
+attempt adds 80 bytes of S3 release excess. The required stop fired. No third
+capture/reference or site-specific attempt was made.
+
+### Not run after the stop
+
+- R5's analyzer model, drift falsifier, rejection list, four views and A3
+  fixture were not changed because no expansion passed.
+- B's final resume-remainder split, C's rebuilt correctness/inventory/
+  certificate/performance gates, and the pinned base, candidate, base,
+  candidate timing panel were not run.
+- No final-source 48-level acceptance is claimed for an unpromoted trial.
+  The original working source and its earlier green evidence remain unchanged.
+
+Every modified trial file was under `.temp/brief-610/`; production files were
+not edited by these attempts. No git command was run, no background task
+remains, and the tree is uncommitted.
+
+
+## Director amendment — redispatch 3: never copy the request; then close the step either way
+
+Redispatch 2 refuted my hypothesis, and its slot tables show why. A
+`RuntimeInputRequest` passed by value to a non-inlined helper is passed
+indirectly, so the caller makes a fresh copy for the argument area. The split
+moved the request's bytes from the closure into that argument area, on S3's
+evaluator frames as well. The stop was correct.
+
+Three expansions are now characterized, each with a slot table:
+
+| Expansion | S4 excess (14 pairs) | S3 (4 rows) |
+| --- | --- | --- |
+| lazy cold closure (working source) | 272 B, 7 failing | at base |
+| no closure | debug +864 to +1 344 per shape | debug machinery grows |
+| closure plus request/session parameters | 1 648 B, release | release +16/+64 |
+
+What none of them does is the legacy arm's actual property: **the request is
+never copied.** The legacy arm left the error where the producer put it and
+returned it.
+
+### Ruling
+
+1. **One more expansion, derived from the slot tables.** Keep the lazy cold
+   closure as the helper's only argument, so no new argument area appears.
+   - The request stays in place. The closure holds a reference to it where
+     it lies, plus the session reference and what `$frame` captures. No
+     by-value `RuntimeInputRequest` goes into the closure or into any
+     argument.
+   - After the cold call, the arm returns the producer's original error in
+     place, as the legacy arm did. The cold helper only inserts the frame.
+   - If this needs a `SlotWitness` method that takes the request by
+     reference and returns nothing, add it next to `suspend`. It keeps the
+     input-type witness, stays `#[doc(hidden)]`, and constructs no erased
+     entry. Disclose it.
+   - If the S1/S2 compile controls pin `suspend`'s signature, they still
+     pass. Add the matching rejection for the new method: a frame whose
+     `Input` differs from the witness must not compile.
+2. **Measure exactly as in redispatch 2:**
+   - the 14 S4 pairs;
+   - S3's four rows (`peel` and `plus`, debug and release);
+   - the frame and slot table for anything that still grows.
+3. **Decide by the pre-committed rule. There is no further attempt.**
+   - **Promote the new expansion** if all four S3 rows are at or below
+     base, no S4 pair is worse than in the working source, and the summed
+     S4 excess falls below 272 B. Then the R5 obligations apply to it.
+   - **Otherwise, keep the working-source expansion.** Its macro, analyzer
+     model and inventories are then unchanged, so R5 does not apply.
+   - Either way, report the residual per pair, attributed to its slots. I
+     rule on it at my gate; do not accept it yourself.
+4. **Then finish.**
+   - **If the macro changed:** run B and all of C from redispatch 1 on the
+     final source.
+   - **If it did not:** the run-1 correctness and performance evidence
+     stands on that unchanged source. Re-verify that it is unchanged by
+     source hashes against run 1's `native-source-hashes.json` and the
+     measurement-binary hashes. Then run only B (name the resume remainder
+     on the run-1 candidate binaries) and C3 (the pinned base, candidate,
+     base, candidate timing panel).
+
+Append `## Execution report — redispatch 3` after this section.
