@@ -37,7 +37,7 @@ fn save(dir: &Path, name: &str, header: &str, rows: impl IntoIterator<Item = Str
 }
 
 pub(super) fn emit(root: &Path, facts: &Facts, report: &Report) {
-    let dir = root.join(format!(".temp/brief-609/census/{}", feature()));
+    let dir = root.join(format!(".temp/brief-610/census/{}", feature()));
     let hashes = hashes(root);
     let hash = |site: &scan::Site| {
         hashes
@@ -292,8 +292,8 @@ pub(super) fn emit(root: &Path, facts: &Facts, report: &Report) {
                         r[1]
                     );
                     return format!(
-                        "{}\t{}\t{}\tremoved\t{}\t{}\t-\t-\t-\t-\t-\tS3 owned transformation",
-                        r[1], r[4], r[8], r[7], r[5]
+                        "{}\t{}\t{}\tremoved\t{}\t{}\t-\t-\t-\t-\t-\t{} owned transformation",
+                        r[1], r[4], r[8], r[7], r[5], r[2]
                     );
                 }
                 let site = by_use

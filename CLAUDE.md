@@ -235,9 +235,13 @@ Consequences for how I present and pick work:
   each lands green). Round 5 (606) partitioned it into 78 gated steps — S1
   dormant API, S2 driver, S3-S54 family typing, F1-F23 one flip per legacy
   type, R removal. S1 (607, the dormant API), S2 (608, the compatible
-  driver, `cb09bfde`) and S3 (609, evaluation and dispatch, nine dispatches)
-  are done. **Now: S4 (610), then one step per brief**; then E2 (a
-  may-suspend result type with no `Try`). S3's last defect lived in S1:
+  driver, `cb09bfde`), S3 (609, evaluation and dispatch, nine dispatches)
+  and S4 (610, argument/rewrite/traversal resolution, the first Kimi K3
+  brief) are done. **Now: S5 (611), then one step per brief**; then E2 (a
+  may-suspend result type with no `Try`). From S5 the per-step stack bar is
+  the named closure environment attributed per slot: S4 showed that an
+  every-pair at-or-below-base bar at 16-B granularity is not reachable by
+  any macro expansion. S3's last defect lived in S1:
   dormant code is unmeasured code. The typed finalizer reboxed itself on
   every finish from day one, and only the first step that executed one on a
   measured path could see it.

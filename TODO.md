@@ -4,13 +4,14 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-15, committed tree through brief-609 (G13 step
-S3, evaluation, argument preparation and dispatch, gated). **Next: S4
-(brief-610); G13's implementation is 78 gated steps** — S1 dormant API, S2
+Status checkpoint: 2026-10-15, committed tree through brief-610 (G13 step
+S4, argument, rewrite-rule and traversal resolution, gated). **Next: S5
+(brief-611); G13's implementation is 78 gated steps** — S1 dormant API, S2
 compatible driver, S3-S54 family typing, F1-F23 one flip per legacy type, R
 removal — each a director-rewritten brief
 from `.temp/brief-606/draft-*.md`, dispatched to Codex (user ruling; GLM only
-if the content filter fires); then E2's design. Long-running
+if the content filter fires; Kimi K3 via `BRIEF_WORKER=kimi`, introduced by
+the user on 2026-10-15 and proven on S4); then E2's design. Long-running
 briefs use `gpt-6-astra` max by user ruling (2026-10-13: `gpt-6.1-sol` hit
 capacity errors mid-run); the dispatcher pins no model, `~/.codex/config.toml`
 decides. `CDX_FORK=<session id>` continues an earlier Codex session (round 4
@@ -1019,6 +1020,48 @@ Owed:
 - **S13** takes the six Fold/Nest promotions and F0528's `.map(Some)`.
 - **The local analyzer** needs typed-macro modeling when C01/C02's body
   converts.
+
+**S4 (brief-610): argument, rewrite-rule and traversal resolution.** Kimi
+K3, four dispatches. The first converted everything correctly. The next
+three chased the native-stack growth, and the last of them closed the step
+under a rule fixed before it ran. S4 types 9 frames and 1 finalizer
+(F0247, F0249-F0256, F0568; typed implementations 12 → 22) and merges F0248 into F0247. D0002 now resumes
+argument resolution through the witnessed token with fresh state.
+Production totals are 606 implementations and 588 macro sites, of which 22
+and 24 are typed.
+
+- **Stack.** The typed macro's lazy cold closure costs 32-48 B per level on
+  7 of 14 profile/shape pairs (272 B summed, at most 0.15% of a level).
+  Every byte is attributed by slot to the closure environment, and the
+  other pairs shrink or stay at base. S3's shapes stay at base. Three other
+  expansions were built, measured and rejected:
+  - no closure: debug +864 to +1 344 per level;
+  - request and session as helper parameters: release +1 648 B, plus
+    growth on S3;
+  - a borrowed request: +46 576 B on S4 and +3 536 B on S3.
+
+  The director accepted the cost as named. **From S5 the stack bar is "no
+  growth beyond the named closure environment, attributed per slot"**,
+  because an every-pair at-or-below-base bar at 16-B granularity in both
+  profiles is not reachable by any expansion tried.
+- **Resume path.** Each typed frame adds exactly one 24-B adapter `Arc` per
+  resume (S3's rule). Instructions rise 0.35-0.92% per iteration. Callgrind
+  with nine processes per arm names every deterministic function delta; the
+  residue was hash-seeded interner noise.
+
+Director gate: oracle 66/66 ×2 warning-free, census identical in both
+builds, 31 pairs ×2, ownership 31/31, workspace 3476/0/59 with 0 ZeroMQ
+skips, the stack table reproduced from fresh trees, allocations exact on all
+90 labels, and ordinary instructions with no label slower.
+
+Owed:
+- **Owed to R:** the resume driver moves a 136-B typed outcome once more per
+  typed `Complete`/`Finalize` transfer than the legacy arm, about 30
+  instructions per typed frame per resume. A legacy-shaped single-assignment
+  repair measured worse (23 `memcpy` increments against 13). Revisit it when
+  the legacy arm leaves the driver.
+- **S5:** make `typed_slot_compile_controls.rs`'s scratch path
+  step-independent (it pins `.temp/brief-610/compile-controls`).
 
 **Recorded, not in this branch — the gensym sweep does not see Rust-local
 values (found 2026-10-14 reviewing brief-605; Q3, queued behind the branch by

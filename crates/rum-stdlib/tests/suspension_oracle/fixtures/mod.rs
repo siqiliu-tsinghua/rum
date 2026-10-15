@@ -1,3 +1,4 @@
+mod argument_traversal_resolution;
 mod associations_roles;
 mod boundaries;
 mod capture_output;

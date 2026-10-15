@@ -42,7 +42,7 @@ from pathlib import Path
 import json, os, shutil, subprocess, sys
 
 root=Path(sys.argv[1]); feature=sys.argv[2]
-scratch=root/'.temp/brief-609/compile-controls'; scratch.mkdir(parents=True,exist_ok=True)
+scratch=root/'.temp/brief-610/compile-controls'; scratch.mkdir(parents=True,exist_ok=True)
 logs=scratch/feature; logs.mkdir(exist_ok=True)
 external=scratch/'external'; (external/'src').mkdir(parents=True,exist_ok=True)
 copy=scratch/'private-workspace'; copy.mkdir(exist_ok=True)

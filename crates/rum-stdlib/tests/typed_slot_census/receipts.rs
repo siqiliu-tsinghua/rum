@@ -93,7 +93,7 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
         let result = macros.iter().filter(|s| s.receiver == "result").count();
         let insert = macros.iter().filter(|s| s.receiver == "insert").count();
         println!(
-            "S3 CENSUS {} frames={frames} finalizers={finalizers} implementations={} typed={} macros={} result={result} insert={insert}",
+            "S4 CENSUS {} frames={frames} finalizers={finalizers} implementations={} typed={} macros={} result={result} insert={insert}",
             population.label(),
             cohort.len(),
             cohort.len() - frames - finalizers,
@@ -109,13 +109,13 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
         ));
     }
     println!(
-        "S3 PARTITION implementations={} macros={}",
+        "S4 PARTITION implementations={} macros={}",
         counts[0].2 + counts[1].2,
         counts[0].3 + counts[1].3
     );
-    if counts[0] != (542, 53, 607, 589, 353, 236) || counts[1] != (11, 5, 16, 11, 3, 8) {
+    if counts[0] != (532, 52, 606, 588, 356, 232) || counts[1] != (11, 5, 16, 11, 3, 8) {
         return Err(
-            "S3 baseline requires production 607/589 and test-only 16/11; combined 623/600".into(),
+            "S4 baseline requires production 606/588 and test-only 16/11; combined 622/599".into(),
         );
     }
     let macros: Vec<_> = facts
@@ -145,8 +145,8 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
     exact("M", macros.iter().map(|s| use_identity(s)).collect())?;
     let receipts = rows(RECEIPTS);
     for (kind, count) in [
-        ("F", 624), // F0273 merged; F0275P splits the prepared consumer.
-        ("M", 602), // M0280 is the token route; M0288 merges into M0287.
+        ("F", 624), // F0273 merged; F0275P splits the prepared consumer; F0248 has a retained removal receipt.
+        ("M", 602), // M0280 and M0288 are retained removals; M0250 has a retained removal receipt.
         // M0282S/M0283S complete the two looping stage consumers.
         ("Chain", 62),
         ("Obligation", 14),
@@ -163,9 +163,9 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
         return Err("duplicate receipt identity".into());
     }
     let uses: BTreeMap<_, _> = facts.uses.iter().map(|s| (use_identity(s), s)).collect();
-    super::s3::transitions(facts, report)?;
+    super::s4::transitions(facts, report)?;
     for row in &receipts {
-        // The S3 gate checks the exact closed set of removals and proves each
+        // The S4 gate checks the exact closed set of removals and proves each
         // old identity absent. All other source anchors remain mandatory.
         if row[3] == "removed" {
             continue;
@@ -312,7 +312,7 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
         ));
     }
     println!(
-        "S3 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; typed evaluation uses unchanged global modes"
+        "S4 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; typed evaluation uses unchanged global modes"
     );
     Ok(())
 }

@@ -1522,3 +1522,291 @@ returned it.
      base, candidate timing panel).
 
 Append `## Execution report — redispatch 3` after this section.
+
+## Execution report — redispatch 3
+
+**The new expansion is rejected; the working-source expansion is retained.**
+No trial was promoted. Its macro, analyzer model and inventories therefore stay
+unchanged, and R5 does not apply. B and C3 are complete on the run-1 binaries.
+
+### New expansion: measurements and slot attribution
+
+The tested expansion added `suspend_without_request` and returned the original
+error in place. The lazy cold helper took only the lazy closure. The error and
+an `error_ref` remained in the caller; the closure held that reference,
+session and `$frame`. The first build exposed moved-value diagnostics because
+`move ||` captured the whole error; `error_ref` corrected that ownership issue
+without cloning the request.
+
+It failed every promotion condition. All 14 S4 pairs and all four S3 rows are
+worse:
+
+```text
+Native no-growth rows: 0 / 14
+debug argument        58768 -> 62720  (+3952)
+debug rewrite         80352 -> 86352  (+6000)
+debug compiled        79760 -> 85712  (+5952)
+debug cases-spec      91856 -> 98848  (+6992)
+debug cases-traversal 82688 -> 88640  (+5952)
+debug position        79424 -> 85376  (+5952)
+debug count           67936 -> 72896  (+4960)
+release argument      24048 -> 24704  (+656)
+release rewrite       31248 -> 32352  (+1104)
+release compiled      31104 -> 32128  (+1024)
+release cases-spec    36480 -> 37552  (+1072)
+release cases-traversal 31488 -> 32512 (+1024)
+release position      30784 -> 31824  (+1040)
+release count         25568 -> 26464  (+896)
+```
+
+```text
+S3 no-growth rows: 0 / 4
+debug peel  19152 -> 20128  (+976)
+debug plus  34896 -> 36864  (+1968)
+release peel 7312 -> 7536   (+224)
+release plus 13744 -> 14112 (+368)
+```
+
+The total positive S4 excess is 46 576 bytes, not a decrease from 272. S3's
+positive excess is 3 536 bytes. These are direct measurements, not an
+inference that keeping the error alive would be cheap.
+
+The per-frame tables are in
+`stack/borrowed-request-frame-deltas.tsv` and
+`stack/s3-candidate/frame-deltas.tsv`. They show the error/error_ref temporaries
+reappearing across shared evaluator frames:
+
+- Debug: prepare-argument closure 1 736 → 1 992 (+256),
+  `resume_call_with_dispatch_plan` 2 056 → 2 536 (+480), dispatch stage
+  1 480 → 1 720 (+240), fixed-point evaluator 2 264 → 2 520 (+256),
+  and builtin dispatch 2 936 → 3 432 (+496 where present).
+- Release: `evaluate_inner_unstable` 1 304 → 1 368 (+64),
+  `resume_call_with_dispatch_plan` 824 → 872 (+48), dispatch stage
+  280 → 376 (+96), and `Session::evaluate` 872 → 888 (+16).
+- S3 release `peel` has exactly those +64/+48/+96/+16 rows. S3 release
+  `plus` adds prepare-argument 936 → 952 (+16) and two 48-byte dispatch
+  resumptions, with the other rows at +128/+96/+96/+32.
+- Release `count` is the only pair with an outgoing-ABI residual: +848 in
+  resident prologues and +48 outgoing, totaling +896. All other 13 pairs
+  reconcile from prologue deltas alone.
+
+The report retains every resident frame and exact prologue address; no frame
+was omitted to make the residual look understood. The working expansion was
+then retained under the pre-committed rule, with no further macro attempt.
+
+### Unchanged-source verification
+
+The final source and binaries are the original run-1 artifacts, not any trial:
+
+```text
+UNCHANGED: run-1 native source hashes, working typed macro bytes, and all eight measurement-binary hashes verified
+55f0214690dfef2a7b77f12db24690180a9937227e58d59729b241ff31cf8385  base/rum-cli
+9d1482c6389c3715b19135b194c05892d778649b893c741164bf78b6ac953934  base/rum-cli-alloc
+e795b10353c4658925e3bcd441f71ff4eb866c943f26c1f0f24641ff48918a32  base/resume
+9908a2341f38df01e488218657f4755e70445914da5d46a297a57fdc8215c9c7  base/resume-alloc
+b5b6abadd170bcd01cbf75b915ed2d47da3dc9dbbd070e1652cba277d7ebb194  candidate/rum-cli
+77448691768cd39c91c9820815df1c466042eb7d8049c6f66aa716a4c4bb0bf2  candidate/rum-cli-alloc
+ff3ff8139e3f7be3a84c2660d979c674e908ce18b888278fa654597ea03209f5  candidate/resume
+d7060084db98dbd51f53b3fea483fbc61d7f14da7a396b352055faefd6530c91  candidate/resume-alloc
+```
+
+### B: named resume remainder and a rejected copy repair
+
+`candidate/remainder-attribution.{json,md}` assigns every prior remainder
+above 25 instructions per actual resume to a class, with raw three-process
+samples and addressed evidence. All 119 independent validation checks pass.
+`fold`, `argument-twice`, `rewrite-compiled`, `cases-spec`,
+`cases-traversal`, `position-traversal` and `count-traversal` are fully
+classified. `rewrite-exprs` retains **141.068333 I/actual resume** as
+unexplained: its larger same-arm residual range is 140.95, so process
+variation is not asserted. All item sums reconcile to the complete raw mean
+deltas.
+
+A real defect is also present: additional 136-byte typed-outcome copies at
+base `0x72d2b4` and candidate `0x72ca54`, with `mov $0x88,%edx` at
+`0x72ca3f`. Added calls per actual resume are argument-twice +1,
+rewrite-exprs +2, rewrite-compiled +1, cases-spec +1, each traversal +2, and
+cases-shared +1.5. The small-N Action-path split proves that these are new
+`Action::Complete` and `Action::Finalize` transfers, not a finalizer-only
+interpretation or an accounting artifact.
+
+The proposed legacy-shaped single outer assignment was tested only in
+scratch. Its total driver `memcpy` increment was **23**, compared with 13 on
+the original candidate and 11 on base:
+
+```text
+run-1 base increment: 11
+run-1 candidate increment: 13
+copyfix increment: 23
+```
+
+It therefore made the copy cost worse and was rejected; `suspension/core.rs`
+was not changed in the working tree. The defect and the 141.068333 residual
+remain explicitly open for the director.
+
+### C3: pinned timing
+
+Four full panels ran in base, candidate, base, candidate order under
+`taskset -c 2`, with the same verified CGU1 binaries. Every panel has 120
+in-kernel `AbsoluteTiming` rows, profiling disabled, scale 1 and seven reps.
+Five quiet seconds preceded each panel and no competing CPU process above
+0.15 core was observed; GPU occupancy could not be read from sysfs.
+
+```text
+PINNED pair-1 median 1.00196908128953 labels 120
+PINNED pair-2 median 1.0013900187122609 labels 120
+OUTSIDE LEAVES []
+```
+
+Pair-1's largest ratio is `reversesort-default-wide=1.337234995521051`;
+pair-2's is `appendto-list-incremental-small=1.3784927932014892`. No
+`literal-integer`, `do-count-null` or `do-iterator-null` ratio was outside
+[0.8, 1.25], so no deterministic-leaf rerun was required. Full per-label
+ratios and host samples are under `perf/timing-pinned/`.
+
+The rejected copy repair, the rewrite-exprs residue and native-stack residual
+are reported for director review, not accepted by the worker. No git command
+was run, no background task remains, and the tree is uncommitted.
+
+
+## Director gate record
+
+Redispatch 3 kept the working-source expansion under the pre-committed rule:
+the borrowed-request expansion was worse on all 14 S4 pairs and all four S3
+rows. The final source is run 1's. The director gated it
+(`.temp/director/gate-610/`).
+
+**Correctness:**
+
+- Fingerprints and both builds' certificates were re-derived independently;
+  the retention and ownership inventories stayed byte-identical.
+- `cargo fmt --check` is clean.
+- The suspension oracle passes 66/66 in each build, with 0 warnings.
+- The census output is identical in both builds (production 606
+  implementations, 588 macro sites, 22 and 24 typed), including both
+  forced-red children.
+- All 31 compile-control pairs pass in both builds.
+- `ownership_graph` passes 31/31.
+- The 48-level recursion test passes.
+- Workspace: 3476 passed, 0 failed, 59 ignored, 0 native ZeroMQ skips.
+- No `unsafe`, `Cargo.toml`, `Cargo.lock` or `suspension/` change. Every
+  edited file is inside the Scope classes.
+
+**Binaries.**
+
+- Re-running each frozen candidate's recorded build command compiled
+  nothing, and the four outputs hash-equal the frozen copies.
+- The base binaries' recorded source hashes (1 428 files) all equal `HEAD`'s
+  blobs, and the candidates' (1 430) equal the working tree.
+
+**Stack.** The director rebuilt both arms from fresh trees (`git archive
+HEAD`, and a copy of the working tree, each with the S4 and S3 probes
+appended). It re-measured with 4 heights × 3 samples per shape; every fit has
+residual 0. The table equals run 1's exactly:
+
+| Profile | Grows | Shrinks | At base |
+| --- | --- | --- | --- |
+| debug | cases-traversal, position, count +32 | rewrite −384, compiled −192, cases-spec −160 | argument; S3 peel 19 152, plus 34 896 |
+| release | compiled +32; cases-traversal, position, count +48 | rewrite −32 | argument, cases-spec; S3 peel 7 312, plus 13 744 |
+
+**Ruling: accepted as a named cost of the typed macro.**
+
+- The growth is 272 B summed over 7 pairs, at most 48 B on a 31 488 B
+  level (0.15%).
+- Redispatch 1 attributed every byte by slot: the cold closure's
+  environment, meaning the request reference, the frame state and the
+  session reference, in the resolvers' prologues.
+- Three other expansions were built and measured, and each was worse:
+  - no closure: debug +864 to +1 344 per level;
+  - request and session passed as parameters: 1 648 B in release;
+  - borrowed request: 46 576 B on S4 and 3 536 B on S3.
+- The guard still fails closed, and the 48-level test is green.
+
+For S5 onward, the stack bar is "no growth beyond the named closure
+environment, attributed per slot", not "every pair at or below base".
+
+**Allocations** (all 90 labels):
+
+- 77 ordinary and 5 inherited resume labels are equal in count and bytes.
+- The only whole-program constant is +5 B, the length of the binary's path.
+- The 8 S4 resume labels add exactly one 24-B adapter `Arc` per typed frame
+  per resume: +1, +1, +2, +2, +2, +2 and +3 per iteration, with
+  `argument-twice` at +2 for two resumes. This is S3's rule.
+
+**Instructions** (`taskset -c 2`, `cpu_core/instructions/u`, one codegen
+unit):
+
+- **Ordinary path.** Two interleaved pairs on all 77 labels: median
+  −0.0004% and maximum +0.20%. All six labels that cross
+  max(0.05%, range) are faster, down to −0.86%. The three leaves are equal
+  (292.08 against 291.95 instructions; 534.96/535.05; 1 152.11/1 152.01).
+- **Resume path.** Eight interleaved runs per arm:
+  - The five inherited workloads are within noise (−0.14% to +0.04%).
+  - The S4 workloads cost +0.35% to +0.92% per iteration, with
+    `rewrite-exprs` at +452 on 49 250.
+
+**Resume remainder.** Run 1 left up to 386 instructions per resume
+unattributed, and redispatch 3 named all of it except 141.07 on
+`rewrite-exprs`. Its three processes per arm put that residue in the symbol
+interner. The director ran six more callgrind processes per arm and diffed
+every function:
+
+- **Deterministic deltas** (identical in every process, standard error 0),
+  per resume:
+  - typed frame and adapter bodies, which replace the legacy bodies (net
+    about −4);
+  - the typed queue: `insert_typed_erased_frame` +97, `widen` +34 and
+    adapter `resume` +118, against `insert_suspension_frame` −127 and
+    `pop_front_mixed_legacy` −72;
+  - the two cold suspend helpers' ABI, +74 and +54;
+  - two 136-B typed-outcome `memcpy`s, +60;
+  - the adapter `Arc` allocation and free, about +130;
+  - the driver's checkpoint resume, −42.
+
+  Together they come to about +321.
+- **Process-variable deltas.** Only the hash-seeded interner varies:
+  `intern_text` −33 ± 34, `intern_symbol_text` −9 ± 16, `Symbol::system`
+  +4 ± 32. Each is within one standard error of zero, and call counts and
+  callers are identical in both arms.
+- **Conclusion.** The residue was interner noise that three processes could
+  not resolve. Nothing is unnamed.
+
+**The 136-B typed-outcome copy is a cost, not a defect.** The worker called
+it a defect. The driver moves the outcome once more per typed `Complete` or
+`Finalize` transfer than the legacy arm does, about 30 instructions per typed
+frame per resume. A by-value move of an outcome that size is ordinary.
+
+- The worker's legacy-shaped repair was measured worse: 23 `memcpy`
+  increments against 13.
+- It belongs to the driver, which S4 does not own.
+- It is recorded in `TODO.md` for R, where the legacy arm leaves the driver.
+
+**Timing.**
+
+- The worker's pinned panels (C3: base, candidate, base, candidate under
+  `taskset -c 2`) have medians 1.002 and 1.001, and no deterministic leaf
+  falls outside [0.8, 1.25].
+- The director's earlier pinned leaf check (`timing-check/`) found equal
+  instructions and cycles within 8%.
+- Timing is indication only.
+
+**Not re-run:**
+
+- per-label `memcpy` counts on the ordinary path (run 1: 77/77 at or below
+  base);
+- the ZeroMQ real-pass count beyond the workspace's 0 skips.
+
+**Worker notes (Kimi K3, first perf-heavy brief).**
+
+- Every stop was correct, and the report withheld acceptance on its own
+  failing gate.
+- Run 1 lost one workspace run to a 300-s tool timeout set below the
+  command's own bound. The dispatcher's role text now forbids that
+  (`aaef6073`).
+- Its three-process residual test was underpowered. It reported the residue
+  honestly instead of calling it noise.
+- `typed_slot_compile_controls.rs` pins a per-brief scratch path
+  (`.temp/brief-610/compile-controls`), so every step must edit it. S5 makes
+  it step-independent.
+
+**Verdict: S4 accepted.**

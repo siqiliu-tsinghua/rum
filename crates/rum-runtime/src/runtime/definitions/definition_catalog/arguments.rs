@@ -2,6 +2,9 @@ use super::*;
 use crate::runtime::kernel_api::{
     AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
 };
+use crate::runtime::suspension::{
+    ContinueToken, ResumeStop, SlotFinalizer, SlotWitness, TypedAction, TypedFrame, slot_witness,
+};
 use std::sync::Arc;
 
 #[derive(Clone, FrameRootTrace)]
@@ -83,22 +86,22 @@ impl Session {
                 return Ok(resolved);
             };
 
-            match self.evaluate(expr.clone()) {
-                Ok(value) => {
+            crate::resume_typed_or_suspend!(
+                self,
+                self.evaluate(expr.clone()),
+                ok(value) => {
                     resolved.push(value);
                     cursor += 1;
-                }
-                Err(EvalError::InputRequired { request }) => {
-                    let suspended = SuspendedArgumentResolution {
+                    Ok(())
+                },
+                suspend => ResolveArgumentExprsFromCursorSuspensionFrame {
+                    suspended: SuspendedArgumentResolution {
                         exprs: SharedArgs::new(exprs),
                         cursor,
                         resolved: ResolvedArgumentAccumulator::freeze(resolved),
-                    };
-                    crate::resume_or_suspend!(insert self, ResolveArgumentExprsFromCursorSuspensionFrame { suspended });
-                    return Err(EvalError::InputRequired { request });
-                }
-                Err(error) => return Err(error),
-            }
+                    },
+                },
+            )?;
         }
     }
 
@@ -113,30 +116,31 @@ impl Session {
                 return Ok(resolved);
             };
 
-            match self.evaluate(expr.clone()) {
-                Ok(value) => {
+            crate::resume_typed_or_suspend!(
+                self,
+                self.evaluate(expr.clone()),
+                ok(value) => {
                     resolved.push(value);
                     cursor += 1;
-                }
-                Err(EvalError::InputRequired { request }) => {
-                    let suspended = SuspendedArgumentResolution {
+                    Ok(())
+                },
+                suspend => ResolveArgumentExprsFromCursorSuspensionFrame {
+                    suspended: SuspendedArgumentResolution {
                         exprs,
                         cursor,
                         resolved: ResolvedArgumentAccumulator::freeze(resolved),
-                    };
-                    crate::resume_or_suspend!(insert self, ResolveArgumentExprsFromCursorSuspensionFrame { suspended });
-                    return Err(EvalError::InputRequired { request });
-                }
-                Err(error) => return Err(error),
-            }
+                    },
+                },
+            )?;
         }
     }
 
-    fn resume_suspended_argument_resolution(
+    fn resume_suspended_argument_resolution<'resume>(
         &mut self,
         mut state: SuspendedArgumentResolution,
         value: Expr,
-    ) -> Result<ResolvedArgumentAccumulator, EvalError> {
+        token: ContinueToken<'resume, ResolveArgumentExprsFromCursorSuspensionFrame>,
+    ) -> Result<ResolvedArgumentAccumulator, ResumeStop<Vec<Expr>>> {
         state.resolved = state.resolved.appended(value);
         state.cursor += 1;
 
@@ -145,16 +149,24 @@ impl Session {
                 return Ok(state.resolved);
             };
 
-            match self.evaluate(expr.clone()) {
+            let evaluated_result = self.evaluate(expr.clone());
+            let witness: SlotWitness<
+                <ResolveArgumentExprsFromCursorSuspensionFrame as TypedFrame>::Input,
+            > = slot_witness(&evaluated_result);
+            match evaluated_result {
                 Ok(value) => {
                     state.resolved = state.resolved.appended(value);
                     state.cursor += 1;
                 }
                 Err(EvalError::InputRequired { request }) => {
-                    crate::resume_or_suspend!(insert self, ResumeSuspendedArgumentResolutionSuspensionFrame { state });
-                    return Err(EvalError::InputRequired { request });
+                    return Err(token.suspend(
+                        self,
+                        witness,
+                        request,
+                        ResolveArgumentExprsFromCursorSuspensionFrame { suspended: state },
+                    ));
                 }
-                Err(error) => return Err(error),
+                Err(error) => return Err(ResumeStop::failure(error)),
             }
         }
     }
@@ -173,53 +185,26 @@ struct ResolveArgumentExprsFromCursorSuspensionFrame {
         crate::runtime::definitions::definition_catalog::arguments::SuspendedArgumentResolution,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for ResolveArgumentExprsFromCursorSuspensionFrame {
-    fn resume(
+impl TypedFrame for ResolveArgumentExprsFromCursorSuspensionFrame {
+    type Input = Expr;
+    type Output = Vec<Expr>;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Vec<Expr>> {
         #[allow(unused_mut)]
         let mut suspended = self.suspended.clone();
         let value = match outcome {
             Ok(value) => value,
-            Err(error) => return crate::runtime::suspension::FrameAction::complete(Err(error)),
+            Err(error) => return TypedAction::complete(Err(error)),
         };
-        match session.resume_suspended_argument_resolution(suspended, value) {
-            Ok(resolved) => crate::runtime::suspension::FrameAction::finalize(
-                FinishArgumentResolutionFinalizer { resolved },
-            ),
-            Err(error) => crate::runtime::suspension::FrameAction::complete(Err(error)),
-        }
-    }
-}
-
-#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
-struct ResumeSuspendedArgumentResolutionSuspensionFrame {
-    pub(super) state:
-        crate::runtime::definitions::definition_catalog::arguments::SuspendedArgumentResolution,
-}
-
-impl crate::runtime::suspension::SuspensionFrame
-    for ResumeSuspendedArgumentResolutionSuspensionFrame
-{
-    fn resume(
-        self: std::sync::Arc<Self>,
-        session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut state = self.state.clone();
-        let value = match outcome {
-            Ok(value) => value,
-            Err(error) => return crate::runtime::suspension::FrameAction::complete(Err(error)),
-        };
-        match session.resume_suspended_argument_resolution(state, value) {
-            Ok(resolved) => crate::runtime::suspension::FrameAction::finalize(
-                FinishArgumentResolutionFinalizer { resolved },
-            ),
-            Err(error) => crate::runtime::suspension::FrameAction::complete(Err(error)),
-        }
+        TypedAction::finish_work(
+            session.resume_suspended_argument_resolution(suspended, value, token),
+            |resolved| FinishArgumentResolutionFinalizer { resolved },
+        )
     }
 }
 
@@ -227,8 +212,10 @@ struct FinishArgumentResolutionFinalizer {
     resolved: ResolvedArgumentAccumulator,
 }
 
-impl crate::runtime::suspension::PureFrameFinalizer for FinishArgumentResolutionFinalizer {
-    fn finish(self: Box<Self>) -> Result<Expr, EvalError> {
-        Ok(self.resolved.into_vec().into_continuation_expr())
+impl SlotFinalizer for FinishArgumentResolutionFinalizer {
+    type Output = Vec<Expr>;
+
+    fn finish(self: Box<Self>) -> Result<Vec<Expr>, EvalError> {
+        Ok(self.resolved.into_vec())
     }
 }
