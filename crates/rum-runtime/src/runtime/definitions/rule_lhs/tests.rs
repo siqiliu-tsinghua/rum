@@ -1,7 +1,6 @@
 use super::*;
-use crate::runtime::suspension::{AbandonReason, SuspensionFrame};
+use crate::runtime::suspension::AbandonReason;
 use crate::runtime::test_builtins::session_with_test_control_builtins;
-use std::sync::Arc;
 
 const DEPTH: usize = 2_000;
 
@@ -274,8 +273,16 @@ fn rule_lhs_scalar_state_copy_trace_drop_and_abandon_20000() {
         let input = shallow(&mut session, r#"InputString["abandon: "]"#);
         let out = session.evaluate(input);
         prompt(&out, "abandon: ");
-        crate::resume_or_suspend!(insert session, RulePatternSuspensionFrame { state,
-            pending: RuleLhsAwait { destination: RuleLhsDestination::Argument(1), pending_expr: Expr::small_integer(7) } });
+        let _: Result<Expr, EvalError> = {
+            let session = &mut session;
+            (|| {
+                crate::resume_typed_or_suspend!(session, out,
+                    ok(_) => panic!("the input producer must pause"),
+                    suspend => RulePatternSuspensionFrame { state,
+                        pending: RuleLhsAwait { destination: RuleLhsDestination::Argument(1), pending_expr: Expr::small_integer(7) } },
+                )
+            })()
+        };
         assert_eq!(
             session.abandon_pending_suspension(AbandonReason::CancelledRequest),
             AbandonReason::CancelledRequest
@@ -290,19 +297,20 @@ fn rule_lhs_scalar_state_copy_trace_drop_and_abandon_20000() {
 
 #[test]
 fn rule_lhs_error_resume_propagates_without_running_work() {
-    let frame = Arc::new(RulePatternSuspensionFrame {
+    let frame = RulePatternSuspensionFrame {
         state: root_fixture(),
         pending: RuleLhsAwait {
             destination: RuleLhsDestination::Argument(1),
             pending_expr: Expr::small_integer(7),
         },
-    });
+    };
     let mut session = session_with_test_control_builtins();
-    let action = frame.resume(&mut session, Err(EvalError::Abort));
-    assert!(matches!(
-        action,
-        crate::runtime::suspension::FrameAction::Complete(Err(EvalError::Abort))
-    ));
+    let action = crate::runtime::suspension::resume_typed_completion_for_test(
+        frame,
+        &mut session,
+        Err(EvalError::Abort),
+    );
+    assert!(matches!(action, Err(EvalError::Abort)));
 }
 
 mod base_cases;

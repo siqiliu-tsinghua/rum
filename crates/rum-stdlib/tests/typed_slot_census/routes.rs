@@ -82,12 +82,7 @@ pub(super) fn compatible_driver(facts: &Facts) -> Result<(), String> {
     {
         return Err("I0001: no actual typed macro producer witness".into());
     }
-    for (id, step) in [
-        ("I0004", "S5"),
-        ("I0005", "S18"),
-        ("I0006", "S14"),
-        ("I0010", "S24"),
-    ] {
+    for (id, step) in [("I0005", "S18"), ("I0006", "S14"), ("I0010", "S24")] {
         if !receipts
             .iter()
             .any(|r| r[0] == "Route" && r[1] == id && r[2] == step && r[3] == "untyped")
@@ -95,6 +90,12 @@ pub(super) fn compatible_driver(facts: &Facts) -> Result<(), String> {
             return Err(format!("{id}: family owner changed"));
         }
         println!("S2 ROUTE {id} remains untyped; family={step}");
+    }
+    if !receipts
+        .iter()
+        .any(|r| r[1] == "I0004" && r[2] == "S5" && r[3] == "implemented")
+    {
+        return Err("I0004: S5 fallback witness receipt missing".into());
     }
     let transform = receipts.iter().find(|r| r[1] == "T0010").unwrap();
     if transform[3] != "observed"

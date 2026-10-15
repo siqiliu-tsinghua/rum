@@ -1,4 +1,4 @@
-//! Source census and earned typing receipts. S4 deliberately refuses preflip.
+//! Source census and earned typing receipts. S5 deliberately refuses preflip.
 use std::{fs, process::Command};
 
 // Reuse the real lexical resolver; the census does not invent a second trait
@@ -45,6 +45,10 @@ mod routes;
 mod s3;
 #[path = "typed_slot_census/s4.rs"]
 mod s4;
+#[path = "typed_slot_census/s5.rs"]
+mod s5;
+#[path = "typed_slot_census/witnessed.rs"]
+mod witnessed;
 use discovery::{discover, feature, root};
 use receipts::{baseline, preflip};
 use reporting::emit;
@@ -69,13 +73,13 @@ fn preflip_no_legacy_transport_uses() {
     if let Some(slot) = FLIP_SLOT {
         preflip(&facts, &report, slot).unwrap();
     } else {
-        assert_eq!(stage::TYPING_RECEIPT, "S4");
+        assert_eq!(stage::TYPING_RECEIPT, "S5");
         let error = preflip(&facts, &report, "Option<Expr>").unwrap_err();
         assert_eq!(
             error,
             "preflip refused: S54 completed receipt is required first"
         );
-        println!("S4 negative control: {error}; no zero-legacy claim");
+        println!("S5 negative control: {error}; no zero-legacy claim");
     }
 }
 
@@ -92,7 +96,7 @@ fn forced_red(remove_guard: bool) {
     let root = root();
     let (files, facts, report) = discover(&root);
     baseline(&facts, &report).unwrap();
-    let scratch = root.join(".temp/brief-610/census/forced-red/tree");
+    let scratch = root.join(".temp/brief-611/r3/census/forced-red/tree");
     for (file, source) in &files {
         let p = scratch.join(file);
         fs::create_dir_all(p.parent().unwrap()).unwrap();
@@ -158,19 +162,19 @@ fn forced_red(remove_guard: bool) {
     let kind = if remove_guard { "guard" } else { "frame" };
     fs::write(
         root.join(format!(
-            ".temp/brief-610/census/forced-red/{}-{kind}.log",
+            ".temp/brief-611/r3/census/forced-red/{}-{kind}.log",
             feature()
         )),
         &log,
     )
     .unwrap();
     let marker = if remove_guard {
-        "production frames=543 finalizers=57 implementations=622"
+        "production frames=529 finalizers=57 implementations=623"
     } else {
-        "S4 PARTITION implementations=621"
+        "S5 PARTITION implementations=622"
     };
     assert!(
-        !output.status.success() && log.contains(marker) && log.contains("S4 baseline requires"),
+        !output.status.success() && log.contains(marker) && log.contains("S5 baseline requires"),
         "{log}"
     );
     println!("FORCED RED removed {kind} at {}:\n{log}", site.fields());
@@ -178,6 +182,60 @@ fn forced_red(remove_guard: bool) {
 #[test]
 #[ignore = "invoked explicitly by both bounded scratch-copy falsifiers"]
 fn forced_red_probe() {
-    let (_, facts, report) = discover(&root().join(".temp/brief-610/census/forced-red/tree"));
+    let (_, facts, report) = discover(&root().join(".temp/brief-611/r3/census/forced-red/tree"));
     baseline(&facts, &report).unwrap();
+}
+
+#[test]
+fn removing_a_witnessed_insertion_in_a_scratch_copy_is_red() {
+    forced_red_witness("no-insertion");
+}
+
+#[test]
+fn witnessing_a_different_binding_in_a_scratch_copy_is_red() {
+    forced_red_witness("wrong-binding");
+}
+
+#[test]
+fn shadowing_a_witness_in_a_cold_helper_is_red() {
+    forced_red_witness("shadowed-witness");
+}
+
+fn forced_red_witness(kind: &str) {
+    let root = root();
+    let (files, facts, report) = discover(&root);
+    baseline(&facts, &report).unwrap();
+    let scratch = root.join(format!(".temp/brief-611/r3/census/forced-red/{kind}"));
+    for (file, source) in &files {
+        let path = scratch.join(file);
+        fs::create_dir_all(path.parent().unwrap()).unwrap();
+        fs::write(path, source).unwrap();
+    }
+    let path = scratch.join("crates/rum-runtime/src/runtime/definitions/application/rhs.rs");
+    let source = fs::read_to_string(&path).unwrap();
+    let (before, after) = if kind == "wrong-binding" {
+        (
+            "let witness = slot_witness(&rhs_result);",
+            "let unrelated = Ok(Expr::null()); let witness = slot_witness(&unrelated);",
+        )
+    } else if kind == "shadowed-witness" {
+        (
+            "witness.suspend(self, request, EvaluateDefinitionRhsSuspensionFrame)",
+            "let unrelated = Ok(Expr::null()); let witness = slot_witness(&unrelated); witness.suspend(self, request, EvaluateDefinitionRhsSuspensionFrame)",
+        )
+    } else {
+        assert_eq!(kind, "no-insertion");
+        (
+            "witness.suspend(self, request, EvaluateDefinitionRhsSuspensionFrame)",
+            "Err(EvalError::InputRequired { request })",
+        )
+    };
+    assert!(source.contains(before));
+    fs::write(&path, source.replacen(before, after, 1)).unwrap();
+    let changed = scan::scan(&scan::files(&scratch));
+    let error = s5::transitions(&changed, &report).unwrap_err();
+    assert_eq!(error, "M0245: witnessed typed insertion absent");
+    let log = format!("FORCED RED {kind}: {error}\n");
+    fs::write(scratch.join(format!("{}.log", feature())), &log).unwrap();
+    print!("{log}");
 }

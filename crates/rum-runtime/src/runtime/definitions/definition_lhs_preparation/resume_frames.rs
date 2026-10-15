@@ -153,16 +153,20 @@ pub(super) struct DefinitionLhsPreparationSuspensionFrame {
         crate::runtime::definitions::definition_lhs_preparation::DefinitionLhsPreparationState,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for DefinitionLhsPreparationSuspensionFrame {
-    fn resume(
+impl crate::runtime::kernel_api::TypedFrame for DefinitionLhsPreparationSuspensionFrame {
+    type Input = Expr;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        token: ContinueToken<'resume, Self>,
+    ) -> crate::runtime::kernel_api::TypedAction<Expr> {
         #[allow(unused_mut)]
         let mut state = self.state.clone();
-        let resumed = session.resume_definition_lhs_preparation(state, outcome);
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        let resumed = session.resume_definition_lhs_preparation(state, outcome, token);
+        crate::runtime::kernel_api::TypedAction::complete_work(resumed)
     }
 }
 

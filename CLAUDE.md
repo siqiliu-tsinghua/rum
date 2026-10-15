@@ -235,13 +235,22 @@ Consequences for how I present and pick work:
   each lands green). Round 5 (606) partitioned it into 78 gated steps — S1
   dormant API, S2 driver, S3-S54 family typing, F1-F23 one flip per legacy
   type, R removal. S1 (607, the dormant API), S2 (608, the compatible
-  driver, `cb09bfde`), S3 (609, evaluation and dispatch, nine dispatches)
-  and S4 (610, argument/rewrite/traversal resolution, the first Kimi K3
-  brief) are done. **Now: S5 (611), then one step per brief**; then E2 (a
+  driver, `cb09bfde`), S3 (609, evaluation and dispatch, nine dispatches),
+  S4 (610, argument/rewrite/traversal resolution, the first Kimi K3 brief)
+  and S5 (611, definition application, four dispatches) are done. **Now:
+  G14 (612, design-only) — found 2026-10-16: resume never unwinds the
+  evaluation stack it restores, so a repeated identical expression after
+  one pause reports a false cycle; the defect is as old as resumable input
+  (`b51dd794`, day 4). Then S6 (613), one step per brief**; then E2 (a
   may-suspend result type with no `Try`). From S5 the per-step stack bar is
   the named closure environment attributed per slot: S4 showed that an
   every-pair at-or-below-base bar at 16-B granularity is not reachable by
-  any macro expansion. S3's last defect lived in S1:
+  any macro expansion. S5's lesson: *a shape that needs an `unreachable!`
+  arm for a state the types allow is pointing at the shape nobody tried* —
+  its cold helpers took the producer's whole `Result`; the design's own
+  shape (the ZST witness and the request cross the call) cut the stack
+  residual from 2 320 B to near-base and deleted all fourteen impossible
+  arms. S3's last defect lived in S1:
   dormant code is unmeasured code. The typed finalizer reboxed itself on
   every finish from day one, and only the first step that executed one on a
   measured path could see it.

@@ -1,4 +1,7 @@
 use super::*;
+use crate::runtime::kernel_api::{
+    ContinueToken, ResumeStop, SlotWitness, TypedAction, TypedFrame, slot_witness,
+};
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 use std::sync::Arc;
 
@@ -100,7 +103,7 @@ impl Session {
                     &substituted,
                 );
                 let profile_rule_start = definition_rule_timing_start();
-                let result = self.evaluate_definition_rhs(option_scope, substituted);
+                let result = self.evaluate_definition_application_rhs(option_scope, substituted);
                 record_profile_definition_rule_timing(
                     "up_value_rhs_eval",
                     &symbol,
@@ -108,7 +111,7 @@ impl Session {
                     profile_rule_start,
                     result.is_ok(),
                 );
-                return result.map(Some);
+                return result;
             }
 
             record_profile_definition_dispatch_candidate("up_value", &symbol);
@@ -180,7 +183,7 @@ impl Session {
                     &substituted,
                 );
                 let profile_rule_start = definition_rule_timing_start();
-                let result = self.evaluate_definition_rhs(option_scope, substituted);
+                let result = self.evaluate_definition_application_rhs(option_scope, substituted);
                 record_profile_definition_rule_timing(
                     "up_value_rhs_eval",
                     &symbol,
@@ -188,7 +191,7 @@ impl Session {
                     profile_rule_start,
                     result.is_ok(),
                 );
-                return result.map(Some);
+                return result;
             }
 
             let up_value = up_value.clone();
@@ -203,6 +206,7 @@ impl Session {
                 normalized_candidate.clone(),
                 SymbolExprMap::default(),
             );
+            let witness = slot_witness(&match_result);
             record_profile_definition_dispatch_phase_timing(
                 "up_value",
                 &symbol,
@@ -218,6 +222,7 @@ impl Session {
                         normalized_candidate,
                         up_values,
                         index,
+                        witness,
                         request,
                     );
                 }
@@ -234,6 +239,7 @@ impl Session {
         normalized_candidate: Expr,
         up_values: Vec<(Symbol, UpValue)>,
         index: usize,
+        witness: SlotWitness<CompiledMatchOutcome>,
         request: RuntimeInputRequest,
     ) -> Result<Option<Expr>, EvalError> {
         self.suspend_up_value_scan(
@@ -243,6 +249,7 @@ impl Session {
                 up_values: Arc::from(up_values),
                 index,
             },
+            witness,
             request,
         )
     }
@@ -252,17 +259,22 @@ impl Session {
     fn suspend_up_value_scan(
         &mut self,
         state: SuspendedUpValueScan,
+        witness: SlotWitness<CompiledMatchOutcome>,
         request: RuntimeInputRequest,
     ) -> Result<Option<Expr>, EvalError> {
-        crate::resume_or_suspend!(insert self, TryApplyUpValuesFromListSuspensionFrame { state });
-        Err(EvalError::InputRequired { request })
+        witness.suspend(
+            self,
+            request,
+            TryApplyUpValuesFromListSuspensionFrame { state },
+        )
     }
 
     fn resume_suspended_up_value_scan(
         &mut self,
         mut state: SuspendedUpValueScan,
         mut outcome: CompiledMatchOutcome,
-    ) -> Result<Option<Expr>, EvalError> {
+        token: ContinueToken<'_, TryApplyUpValuesFromListSuspensionFrame>,
+    ) -> Result<Option<Expr>, ResumeStop<Option<Expr>>> {
         loop {
             let Some((symbol, up_value)) = state.up_values.get(state.index) else {
                 return Ok(None);
@@ -296,7 +308,7 @@ impl Session {
                     &substituted,
                 );
                 let profile_rule_start = definition_rule_timing_start();
-                let result = self.evaluate_definition_rhs(option_scope, substituted);
+                let result = self.evaluate_definition_application_rhs(option_scope, substituted);
                 record_profile_definition_rule_timing(
                     "up_value_rhs_eval",
                     &symbol,
@@ -304,7 +316,7 @@ impl Session {
                     profile_rule_start,
                     result.is_ok(),
                 );
-                return result.map(Some);
+                return result.map_err(ResumeStop::failure);
             }
             state.index += 1;
 
@@ -374,6 +386,7 @@ impl Session {
                     state.normalized_candidate.clone(),
                     SymbolExprMap::default(),
                 );
+                let witness = slot_witness(&match_result);
                 record_profile_definition_dispatch_phase_timing(
                     "up_value",
                     &symbol,
@@ -387,9 +400,14 @@ impl Session {
                         break;
                     }
                     Err(EvalError::InputRequired { request }) => {
-                        return self.suspend_up_value_scan(state, request);
+                        return Err(token.suspend(
+                            self,
+                            witness,
+                            request,
+                            TryApplyUpValuesFromListSuspensionFrame { state },
+                        ));
                     }
-                    Err(error) => return Err(error),
+                    Err(error) => return Err(ResumeStop::failure(error)),
                 }
             }
         }
@@ -407,21 +425,21 @@ struct TryApplyUpValuesFromListSuspensionFrame {
     pub(super) state: crate::runtime::definitions::application::up_values::SuspendedUpValueScan,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for TryApplyUpValuesFromListSuspensionFrame {
-    fn resume(
+impl TypedFrame for TryApplyUpValuesFromListSuspensionFrame {
+    type Input = CompiledMatchOutcome;
+    type Output = Option<Expr>;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut state = self.state.clone();
-        let value = outcome;
+        outcome: Result<CompiledMatchOutcome, EvalError>,
+        token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Option<Expr>> {
+        let state = self.state.clone();
         let resumed = (|| {
-            let outcome = CompiledMatchOutcome::from_continuation_expr(value?);
-            session
-                .resume_suspended_up_value_scan(state, outcome)
-                .map(|result| result.into_continuation_expr())
+            let outcome = outcome.map_err(ResumeStop::failure)?;
+            session.resume_suspended_up_value_scan(state, outcome, token)
         })();
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete_work(resumed)
     }
 }

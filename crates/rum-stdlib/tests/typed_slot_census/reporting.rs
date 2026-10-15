@@ -37,7 +37,7 @@ fn save(dir: &Path, name: &str, header: &str, rows: impl IntoIterator<Item = Str
 }
 
 pub(super) fn emit(root: &Path, facts: &Facts, report: &Report) {
-    let dir = root.join(format!(".temp/brief-610/census/{}", feature()));
+    let dir = root.join(format!(".temp/brief-611/r3/census/{}", feature()));
     let hashes = hashes(root);
     let hash = |site: &scan::Site| {
         hashes
@@ -98,6 +98,29 @@ pub(super) fn emit(root: &Path, facts: &Facts, report: &Report) {
                 s.receiver
             )
         }),
+    );
+    save(
+        &dir,
+        "witnessed-sites.tsv",
+        "identity\tproved\tfile\tline\tcolumn\tend_line\tend_column\tsha256",
+        facts
+            .uses
+            .iter()
+            .filter(|s| {
+                s.population == Population::Production
+                    && s.caller.contains("::definitions::")
+                    && s.name.starts_with("suspend")
+                    && matches!(s.kind.as_str(), "call" | "method")
+            })
+            .map(|s| {
+                format!(
+                    "{}\t{}\t{}\t{}",
+                    use_identity(s),
+                    super::witnessed::insertion(facts, s),
+                    s.site.fields(),
+                    hash(&s.site)
+                )
+            }),
     );
     let decoder_names: BTreeSet<_> = rows(RECEIPTS)
         .into_iter()

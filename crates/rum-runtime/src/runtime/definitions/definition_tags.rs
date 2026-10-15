@@ -12,7 +12,7 @@ impl Session {
 
         let lhs = lhs.clone();
         let rhs_result = self.evaluate(rhs.clone());
-        let rhs = crate::resume_or_suspend!(
+        let rhs = crate::resume_typed_or_suspend!(
             self,
             rhs_result,
             ok(value) => Ok(value),
@@ -55,7 +55,7 @@ impl Session {
         };
 
         let rhs_result = self.evaluate(args_slice[2].clone());
-        let rhs = crate::resume_or_suspend!(
+        let rhs = crate::resume_typed_or_suspend!(
             self,
             rhs_result,
             ok(value) => Ok(value),
@@ -255,17 +255,21 @@ struct EvalUpSetSuspensionFrame {
     lhs: Expr,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for EvalUpSetSuspensionFrame {
-    fn resume(
+impl crate::runtime::kernel_api::TypedFrame for EvalUpSetSuspensionFrame {
+    type Input = Expr;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        _token: crate::runtime::kernel_api::ContinueToken<'resume, Self>,
+    ) -> crate::runtime::kernel_api::TypedAction<Expr> {
         let resumed = match outcome {
             Ok(rhs) => session.prepare_up_set_assignment(self.lhs.clone(), rhs, false),
             Err(error) => Err(error),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        crate::runtime::kernel_api::TypedAction::complete(resumed)
     }
 }
 
@@ -275,16 +279,20 @@ struct EvalTagSetSuspensionFrame {
     tag: Symbol,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for EvalTagSetSuspensionFrame {
-    fn resume(
+impl crate::runtime::kernel_api::TypedFrame for EvalTagSetSuspensionFrame {
+    type Input = Expr;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        _token: crate::runtime::kernel_api::ContinueToken<'resume, Self>,
+    ) -> crate::runtime::kernel_api::TypedAction<Expr> {
         let resumed = match outcome {
             Ok(rhs) => session.prepare_tag_set_assignment(self.tag, self.args.clone(), rhs, false),
             Err(error) => Err(error),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        crate::runtime::kernel_api::TypedAction::complete(resumed)
     }
 }

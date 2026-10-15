@@ -4,6 +4,8 @@ mod boundaries;
 mod capture_output;
 mod control_roles;
 mod debug_roles;
+mod definition_application;
+mod definition_storage;
 mod functional_roles;
 mod predicate_roles;
 pub mod preparation;

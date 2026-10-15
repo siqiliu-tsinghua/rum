@@ -1,4 +1,7 @@
 use super::*;
+use crate::runtime::kernel_api::{
+    ContinueToken, ResumeStop, SlotWitness, TypedAction, TypedFrame, slot_witness,
+};
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 use std::sync::Arc;
 
@@ -80,7 +83,7 @@ impl Session {
                 let Some(rhs) = exact_down_value_rhs(down_values, &lhs) else {
                     continue;
                 };
-                return self.evaluate_definition_rhs(None, rhs).map(Some);
+                return self.evaluate_definition_application_rhs(None, rhs);
             }
             return Ok(None);
         }
@@ -90,9 +93,7 @@ impl Session {
                 continue;
             };
             if down_value.guards.is_empty() {
-                return self
-                    .evaluate_definition_rhs(None, down_value.rhs.clone())
-                    .map(Some);
+                return self.evaluate_definition_application_rhs(None, down_value.rhs.clone());
             }
 
             return self.evaluate_first_exact_default_value_from_cursor(
@@ -119,7 +120,7 @@ impl Session {
             if let Some((index, outcome)) = pending.take() {
                 if outcome.matched {
                     let rhs = down_values[index].rhs.clone();
-                    return self.evaluate_definition_rhs(None, rhs).map(Some);
+                    return self.evaluate_definition_application_rhs(None, rhs);
                 }
                 candidate_index = index + 1;
             }
@@ -137,9 +138,7 @@ impl Session {
             let index = candidate_index + relative_index;
 
             if down_value.guards.is_empty() {
-                return self
-                    .evaluate_definition_rhs(None, down_value.rhs.clone())
-                    .map(Some);
+                return self.evaluate_definition_application_rhs(None, down_value.rhs.clone());
             }
 
             let guard_result = self.evaluate_guard_sequence_owned(
@@ -148,6 +147,7 @@ impl Session {
                 SymbolExprMap::default(),
                 None,
             );
+            let witness = slot_witness(&guard_result);
             match guard_result {
                 Ok(outcome) => pending = Some((index, outcome)),
                 Err(EvalError::InputRequired { request }) => {
@@ -157,6 +157,7 @@ impl Session {
                         lookup_index,
                         candidate_index,
                         index,
+                        witness,
                         request,
                     );
                 }
@@ -174,6 +175,7 @@ impl Session {
         lookup_index: usize,
         candidate_index: usize,
         matched_index: usize,
+        witness: SlotWitness<CompiledMatchOutcome>,
         request: RuntimeInputRequest,
     ) -> Result<Option<Expr>, EvalError> {
         self.suspend_exact_default_value_scan(
@@ -184,6 +186,7 @@ impl Session {
                 candidate_index,
                 matched_index,
             },
+            witness,
             request,
         )
     }
@@ -193,21 +196,28 @@ impl Session {
     fn suspend_exact_default_value_scan(
         &mut self,
         state: SuspendedExactDefaultValueScan,
+        witness: SlotWitness<CompiledMatchOutcome>,
         request: RuntimeInputRequest,
     ) -> Result<Option<Expr>, EvalError> {
-        crate::resume_or_suspend!(insert self, EvaluateFirstExactDefaultValueFromCursorSuspensionFrame { state });
-        Err(EvalError::InputRequired { request })
+        witness.suspend(
+            self,
+            request,
+            EvaluateFirstExactDefaultValueFromCursorSuspensionFrame { state },
+        )
     }
 
     fn resume_suspended_exact_default_value_scan(
         &mut self,
         mut state: SuspendedExactDefaultValueScan,
         mut outcome: CompiledMatchOutcome,
-    ) -> Result<Option<Expr>, EvalError> {
+        token: ContinueToken<'_, EvaluateFirstExactDefaultValueFromCursorSuspensionFrame>,
+    ) -> Result<Option<Expr>, ResumeStop<Option<Expr>>> {
         loop {
             if outcome.matched {
                 let rhs = state.down_values[state.matched_index].rhs.clone();
-                return self.evaluate_definition_rhs(None, rhs).map(Some);
+                return self
+                    .evaluate_definition_application_rhs(None, rhs)
+                    .map_err(ResumeStop::failure);
             }
             state.candidate_index = state.matched_index + 1;
 
@@ -226,8 +236,8 @@ impl Session {
 
                 if down_value.guards.is_empty() {
                     return self
-                        .evaluate_definition_rhs(None, down_value.rhs.clone())
-                        .map(Some);
+                        .evaluate_definition_application_rhs(None, down_value.rhs.clone())
+                        .map_err(ResumeStop::failure);
                 }
 
                 let guard_result = self.evaluate_guard_sequence_owned(
@@ -236,15 +246,21 @@ impl Session {
                     SymbolExprMap::default(),
                     None,
                 );
+                let witness = slot_witness(&guard_result);
                 match guard_result {
                     Ok(next_outcome) => {
                         outcome = next_outcome;
                         break;
                     }
                     Err(EvalError::InputRequired { request }) => {
-                        return self.suspend_exact_default_value_scan(state, request);
+                        return Err(token.suspend(
+                            self,
+                            witness,
+                            request,
+                            EvaluateFirstExactDefaultValueFromCursorSuspensionFrame { state },
+                        ));
                     }
-                    Err(error) => return Err(error),
+                    Err(error) => return Err(ResumeStop::failure(error)),
                 }
             }
         }
@@ -273,23 +289,21 @@ struct EvaluateFirstExactDefaultValueFromCursorSuspensionFrame {
         crate::runtime::definitions::application::default_values::SuspendedExactDefaultValueScan,
 }
 
-impl crate::runtime::suspension::SuspensionFrame
-    for EvaluateFirstExactDefaultValueFromCursorSuspensionFrame
-{
-    fn resume(
+impl TypedFrame for EvaluateFirstExactDefaultValueFromCursorSuspensionFrame {
+    type Input = CompiledMatchOutcome;
+    type Output = Option<Expr>;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut state = self.state.clone();
-        let value = outcome;
+        outcome: Result<CompiledMatchOutcome, EvalError>,
+        token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Option<Expr>> {
+        let state = self.state.clone();
         let resumed = (|| {
-            let outcome = CompiledMatchOutcome::from_continuation_expr(value?);
-            session
-                .resume_suspended_exact_default_value_scan(state, outcome)
-                .map(|result| result.into_continuation_expr())
+            let outcome = outcome.map_err(ResumeStop::failure)?;
+            session.resume_suspended_exact_default_value_scan(state, outcome, token)
         })();
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete_work(resumed)
     }
 }

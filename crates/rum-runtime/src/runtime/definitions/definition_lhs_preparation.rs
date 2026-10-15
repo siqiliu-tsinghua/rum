@@ -1,3 +1,5 @@
+use super::application::DefinitionResumeRoute;
+use crate::runtime::kernel_api::{ContinueToken, ResumeStop, SlotWitness, slot_witness};
 mod prepared_store;
 mod resume_frames;
 mod syntax_policy;
@@ -183,15 +185,18 @@ impl Session {
         lhs: Expr,
         continuation: DefinitionLhsPreparationContinuation,
     ) -> Result<Expr, EvalError> {
-        self.drive_definition_lhs_preparation(DefinitionLhsPreparationState {
-            work: DefinitionLhsPreparationWork::PrepareNode {
-                expr: lhs,
-                region: DefinitionLhsRegion::Root,
+        self.drive_definition_lhs_preparation(
+            DefinitionLhsPreparationState {
+                work: DefinitionLhsPreparationWork::PrepareNode {
+                    expr: lhs,
+                    region: DefinitionLhsRegion::Root,
+                },
+                parents: DefinitionLhsParentStack::default(),
+                continuation,
+                prepared_outer_call: None,
             },
-            parents: DefinitionLhsParentStack::default(),
-            continuation,
-            prepared_outer_call: None,
-        })
+            (),
+        )
     }
 
     #[doc(hidden)]
@@ -233,10 +238,32 @@ impl Session {
 
     #[cold]
     #[inline(never)]
-    fn drive_definition_lhs_preparation(
+    fn suspend_definition_lhs_preparation<
+        Route: DefinitionResumeRoute<DefinitionLhsPreparationSuspensionFrame>,
+    >(
+        &mut self,
+        state: DefinitionLhsPreparationState,
+        witness: SlotWitness<Expr>,
+        request: RuntimeInputRequest,
+        route: Route,
+    ) -> Result<Expr, Route::Error> {
+        route.suspend(
+            self,
+            witness,
+            request,
+            DefinitionLhsPreparationSuspensionFrame { state },
+        )
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn drive_definition_lhs_preparation<
+        Route: DefinitionResumeRoute<DefinitionLhsPreparationSuspensionFrame>,
+    >(
         &mut self,
         mut state: DefinitionLhsPreparationState,
-    ) -> Result<Expr, EvalError> {
+        route: Route,
+    ) -> Result<Expr, Route::Error> {
         loop {
             let work = std::mem::replace(&mut state.work, DefinitionLhsPreparationWork::Vacant);
             match work {
@@ -254,17 +281,20 @@ impl Session {
                     }
                     Expr::Atom(_) => {
                         let source = expr;
-                        match self.evaluate_definition_lhs_active_expr(&source) {
+                        let produced = self.evaluate_definition_lhs_active_expr(&source);
+                        let witness = slot_witness(&produced);
+                        match produced {
                             Ok(value) => {
                                 state.work = DefinitionLhsPreparationWork::CompleteNode(value);
                             }
                             Err(EvalError::InputRequired { request }) => {
                                 state.work =
                                     DefinitionLhsPreparationWork::AwaitPatternAtom { source };
-                                crate::resume_or_suspend!(insert self, DefinitionLhsPreparationSuspensionFrame { state });
-                                return Err(EvalError::InputRequired { request });
+                                return self.suspend_definition_lhs_preparation(
+                                    state, witness, request, route,
+                                );
                             }
-                            Err(error) => return Err(error),
+                            Err(error) => return Err(Route::failure(error)),
                         }
                     }
                     Expr::Call { head, args } => {
@@ -305,8 +335,12 @@ impl Session {
                                     matches!(region, DefinitionLhsRegion::Root)
                                         && state.continuation.captures_outer_call();
                                 let source_head = head.clone();
-                                match self.evaluate_definition_lhs_call_head(head) {
-                                    Ok(evaluated_head) => {
+                                let produced = self.evaluate_definition_lhs_active_expr(&head);
+                                let witness = slot_witness(&produced);
+                                match produced {
+                                    Ok(value) => {
+                                        let evaluated_head =
+                                            reuse_definition_lhs_call_head(head, value);
                                         state.work =
                                             DefinitionLhsPreparationWork::PrepareCallArguments(
                                                 self.definition_lhs_call_state(
@@ -317,15 +351,20 @@ impl Session {
                                             );
                                     }
                                     Err(EvalError::InputRequired { request }) => {
+                                        drop(head);
                                         state.work = DefinitionLhsPreparationWork::AwaitCallHead {
                                             source_head,
                                             args,
                                             capture_outer_call,
                                         };
-                                        crate::resume_or_suspend!(insert self, DefinitionLhsPreparationSuspensionFrame { state });
-                                        return Err(EvalError::InputRequired { request });
+                                        return self.suspend_definition_lhs_preparation(
+                                            state, witness, request, route,
+                                        );
                                     }
-                                    Err(error) => return Err(error),
+                                    Err(error) => {
+                                        drop(head);
+                                        return Err(Route::failure(error));
+                                    }
                                 }
                             }
                         }
@@ -367,7 +406,9 @@ impl Session {
                         }
                         CallArgumentMode::Evaluate => {
                             let source = plan.expr;
-                            match self.evaluate_definition_lhs_active_expr(&source) {
+                            let produced = self.evaluate_definition_lhs_active_expr(&source);
+                            let witness = slot_witness(&produced);
+                            match produced {
                                 Ok(value) => {
                                     self.merge_definition_lhs_call_argument(
                                         &mut call, argument, value,
@@ -381,10 +422,11 @@ impl Session {
                                         argument,
                                         source,
                                     };
-                                    crate::resume_or_suspend!(insert self, DefinitionLhsPreparationSuspensionFrame { state });
-                                    return Err(EvalError::InputRequired { request });
+                                    return self.suspend_definition_lhs_preparation(
+                                        state, witness, request, route,
+                                    );
                                 }
-                                Err(error) => return Err(error),
+                                Err(error) => return Err(Route::failure(error)),
                             }
                         }
                         CallArgumentMode::Hold | CallArgumentMode::StrippedUnevaluated => {
@@ -407,7 +449,11 @@ impl Session {
                             value,
                             state.prepared_outer_call.take(),
                         );
-                        match state.continuation.resume(self, prepared)? {
+                        match state
+                            .continuation
+                            .resume(self, prepared)
+                            .map_err(Route::failure)?
+                        {
                             DefinitionLhsPreparationContinuationResult::Complete(value) => {
                                 return Ok(value);
                             }
@@ -453,8 +499,9 @@ impl Session {
         &mut self,
         mut state: DefinitionLhsPreparationState,
         outcome: Result<Expr, EvalError>,
-    ) -> Result<Expr, EvalError> {
-        let value = outcome?;
+        token: ContinueToken<'_, DefinitionLhsPreparationSuspensionFrame>,
+    ) -> Result<Expr, ResumeStop<Expr>> {
+        let value = outcome.map_err(ResumeStop::failure)?;
         state.work =
             match state.work {
                 DefinitionLhsPreparationWork::AwaitPatternAtom { .. } => {
@@ -478,15 +525,7 @@ impl Session {
                 }
                 _ => unreachable!("a definition-lhs frame stores awaited work"),
             };
-        self.drive_definition_lhs_preparation(state)
-    }
-
-    fn evaluate_definition_lhs_call_head(
-        &mut self,
-        source_head: SharedExpr,
-    ) -> Result<SharedExpr, EvalError> {
-        let evaluated = self.evaluate_definition_lhs_active_expr(&source_head)?;
-        Ok(reuse_definition_lhs_call_head(source_head, evaluated))
+        self.drive_definition_lhs_preparation(state, token)
     }
 
     fn evaluate_definition_lhs_active_expr(&mut self, source: &Expr) -> Result<Expr, EvalError> {

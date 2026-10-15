@@ -1,7 +1,9 @@
 mod default_fallback;
 
 use super::*;
+use crate::runtime::kernel_api::{ContinueToken, ResumeStop, TypedAction, TypedFrame};
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::kernel_api::{SlotWitness, slot_witness};
 
 #[derive(Clone, FrameRootTrace)]
 struct SuspendedDownValueApplication {
@@ -71,6 +73,7 @@ impl Session {
                 &down_values,
                 has_guarded_default_values,
             );
+            let witness = slot_witness(&direct_default);
             record_profile_runtime_path_timing(
                 runtime_profile_default,
                 runtime_profile_outcome_for_option_result(&direct_default),
@@ -78,17 +81,17 @@ impl Session {
             match direct_default {
                 Ok(Some(value)) => return Ok(Some(value)),
                 Ok(None) => {}
-                Err(error) => {
-                    if matches!(error, EvalError::InputRequired { .. }) {
-                        default_fallback::suspend(
-                            self,
-                            &identity,
-                            symbol,
-                            down_values_cannot_match,
-                        );
-                    }
-                    return Err(error);
+                Err(EvalError::InputRequired { request }) => {
+                    return default_fallback::suspend(
+                        self,
+                        &identity,
+                        symbol,
+                        down_values_cannot_match,
+                        witness,
+                        request,
+                    );
                 }
+                Err(error) => return Err(error),
             }
         }
 
@@ -155,6 +158,7 @@ impl Session {
                 normalized_candidate,
                 symbol.clone(),
                 scan,
+                (),
             )
         } else {
             self.try_apply_down_values_from_symbol(
@@ -162,17 +166,22 @@ impl Session {
                 normalized_candidate,
                 symbol.clone(),
                 LinearDownValueScan::default(),
+                (),
             )
         }
     }
 
-    fn try_apply_down_values_from_symbol<Scan: DownValueScan>(
+    fn try_apply_down_values_from_symbol<
+        Scan: DownValueScan,
+        Route: DefinitionResumeRoute<TryApplyDownValuesFromSymbolSuspensionFrame<Scan>>,
+    >(
         &mut self,
         candidate: Expr,
         normalized_candidate: Expr,
         symbol: Symbol,
         mut scan: Scan,
-    ) -> Result<Option<Expr>, EvalError> {
+        route: Route,
+    ) -> Result<Option<Expr>, Route::Error> {
         let runtime_profile_value = runtime_path_timing_start("down_values.value_lookup");
         let Some((index, down_value)) = self.definitions.get(&symbol).and_then(|definition| {
             let index = scan.next_rule_index(definition, self.evaluation_epoch)?;
@@ -195,6 +204,7 @@ impl Session {
                     normalized_candidate,
                     symbol,
                     scan,
+                    route,
                 );
             }
 
@@ -218,7 +228,7 @@ impl Session {
             self.record_profile_down_value_application(&symbol);
             let _profile_definition_source = evaluation_profile_definition_source(symbol);
             let profile_rule_start = definition_rule_timing_start();
-            let result = self.evaluate_definition_rhs(option_scope, rhs);
+            let result = self.evaluate_definition_application_rhs(option_scope, rhs);
             record_profile_definition_rule_timing(
                 "down_value_rhs_eval",
                 &symbol,
@@ -226,7 +236,7 @@ impl Session {
                 profile_rule_start,
                 result.is_ok(),
             );
-            return result.map(Some);
+            return result.map_err(Route::failure);
         }
 
         let runtime_profile_prefilter = runtime_path_timing_start("down_values.prefilter");
@@ -250,6 +260,7 @@ impl Session {
                 normalized_candidate,
                 symbol,
                 scan,
+                route,
             );
         }
 
@@ -282,6 +293,7 @@ impl Session {
                     normalized_candidate,
                     symbol,
                     scan,
+                    route,
                 );
             }
 
@@ -319,7 +331,7 @@ impl Session {
             self.record_profile_down_value_application(&symbol);
             let _profile_definition_source = evaluation_profile_definition_source(symbol);
             let profile_rule_start = definition_rule_timing_start();
-            let result = self.evaluate_definition_rhs(option_scope, rhs);
+            let result = self.evaluate_definition_application_rhs(option_scope, rhs);
             record_profile_definition_rule_timing(
                 "down_value_rhs_eval",
                 &symbol,
@@ -327,7 +339,7 @@ impl Session {
                 profile_rule_start,
                 result.is_ok(),
             );
-            return result.map(Some);
+            return result.map_err(Route::failure);
         }
 
         let matcher_is_current = down_value.matcher_attribute_revision == self.attribute_revision;
@@ -352,6 +364,7 @@ impl Session {
             application.normalized_candidate.clone(),
             SymbolExprMap::default(),
         );
+        let witness = slot_witness(&match_result);
         record_profile_definition_dispatch_phase_timing(
             "down_value",
             &symbol,
@@ -364,32 +377,47 @@ impl Session {
         );
 
         match match_result {
-            Ok(outcome) => self.finish_suspended_down_value_application(application, scan, outcome),
-            Err(EvalError::InputRequired { request }) => {
-                self.suspend_down_value_application(application, scan, request)
+            Ok(outcome) => {
+                self.finish_suspended_down_value_application(application, scan, outcome, route)
             }
-            Err(error) => Err(error),
+            Err(EvalError::InputRequired { request }) => {
+                self.suspend_down_value_application(application, scan, witness, request, route)
+            }
+            Err(error) => Err(Route::failure(error)),
         }
     }
 
     #[cold]
     #[inline(never)]
-    fn suspend_down_value_application<Scan: DownValueScan>(
+    fn suspend_down_value_application<
+        Scan: DownValueScan,
+        Route: DefinitionResumeRoute<TryApplyDownValuesFromSymbolSuspensionFrame<Scan>>,
+    >(
         &mut self,
         application: SuspendedDownValueApplication,
         scan: Scan,
+        witness: SlotWitness<CompiledMatchOutcome>,
         request: RuntimeInputRequest,
-    ) -> Result<Option<Expr>, EvalError> {
-        crate::resume_or_suspend!(insert self, TryApplyDownValuesFromSymbolSuspensionFrame { application, scan });
-        Err(EvalError::InputRequired { request })
+        route: Route,
+    ) -> Result<Option<Expr>, Route::Error> {
+        route.suspend(
+            self,
+            witness,
+            request,
+            TryApplyDownValuesFromSymbolSuspensionFrame { application, scan },
+        )
     }
 
-    fn finish_suspended_down_value_application<Scan: DownValueScan>(
+    fn finish_suspended_down_value_application<
+        Scan: DownValueScan,
+        Route: DefinitionResumeRoute<TryApplyDownValuesFromSymbolSuspensionFrame<Scan>>,
+    >(
         &mut self,
         application: SuspendedDownValueApplication,
         scan: Scan,
         outcome: CompiledMatchOutcome,
-    ) -> Result<Option<Expr>, EvalError> {
+        route: Route,
+    ) -> Result<Option<Expr>, Route::Error> {
         record_profile_definition_dispatch_matcher_outcome(
             "down_value",
             &application.symbol,
@@ -401,6 +429,7 @@ impl Session {
                 application.normalized_candidate,
                 application.symbol,
                 scan,
+                route,
             );
         }
 
@@ -435,7 +464,7 @@ impl Session {
         self.record_profile_down_value_application(&application.symbol);
         let _profile_definition_source = evaluation_profile_definition_source(application.symbol);
         let profile_rule_start = definition_rule_timing_start();
-        let result = self.evaluate_definition_rhs(option_scope, rhs);
+        let result = self.evaluate_definition_application_rhs(option_scope, rhs);
         record_profile_definition_rule_timing(
             "down_value_rhs_eval",
             &application.symbol,
@@ -443,7 +472,7 @@ impl Session {
             profile_rule_start,
             result.is_ok(),
         );
-        result.map(Some)
+        result.map_err(Route::failure)
     }
 }
 
@@ -460,27 +489,25 @@ struct TryApplyDownValuesFromSymbolSuspensionFrame<Scan> {
     pub(super) scan: Scan,
 }
 
-impl<Scan> crate::runtime::suspension::SuspensionFrame
-    for TryApplyDownValuesFromSymbolSuspensionFrame<Scan>
+impl<Scan> TypedFrame for TryApplyDownValuesFromSymbolSuspensionFrame<Scan>
 where
     Scan: DownValueScan,
 {
-    fn resume(
+    type Input = CompiledMatchOutcome;
+    type Output = Option<Expr>;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut application = self.application.clone();
-        #[allow(unused_mut)]
-        let mut scan = self.scan.clone();
-        let value = outcome;
+        outcome: Result<CompiledMatchOutcome, EvalError>,
+        token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Option<Expr>> {
+        let application = self.application.clone();
+        let scan = self.scan.clone();
         let resumed = (|| {
-            let outcome = CompiledMatchOutcome::from_continuation_expr(value?);
-            session
-                .finish_suspended_down_value_application(application, scan, outcome)
-                .map(|result| result.into_continuation_expr())
+            let outcome = outcome.map_err(ResumeStop::failure)?;
+            session.finish_suspended_down_value_application(application, scan, outcome, token)
         })();
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete_work(resumed)
     }
 }

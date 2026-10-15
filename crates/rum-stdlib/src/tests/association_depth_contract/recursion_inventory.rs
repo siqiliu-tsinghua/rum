@@ -936,8 +936,16 @@ impl<'ast> Visit<'ast> for FlatCalls<'_> {
                     .join("::");
                 self.calls.insert(self.resolve(&name));
             }
-            _ => {
-                self.calls.insert("<indirect-call>".into());
+            mut callee => {
+                while let Expr::Paren(parenthesized) = callee {
+                    callee = &parenthesized.expr;
+                }
+                // The normal visit below audits the literal's body as part of
+                // this caller. A stored closure or another non-path callee is
+                // still an indirect boundary.
+                if !matches!(callee, Expr::Closure(_)) {
+                    self.calls.insert("<indirect-call>".into());
+                }
             }
         }
         visit::visit_expr_call(self, call);
@@ -991,4 +999,42 @@ pub(super) fn flat_walk_recursive_edges(source: &str) -> Vec<(String, String)> {
         }
     }
     edges
+}
+
+#[test]
+fn flat_walk_immediate_closure_preserves_body_edges_without_indirection() {
+    for callee in ["(|| owned())", "((|| owned()))", "((move || owned()))"] {
+        let source = format!("fn caller() {{ {callee}(); }} fn owned() {{}}");
+        assert_eq!(
+            flat_walk_call_graph(&source)["caller"],
+            BTreeSet::from(["owned".to_string()]),
+            "the literal body remains audited: {source}"
+        );
+    }
+}
+
+#[test]
+fn flat_walk_immediate_closure_cannot_hide_a_recursive_cycle() {
+    let source = "fn caller() { (move || owned())(); } fn owned() { caller(); }";
+    assert_eq!(
+        flat_walk_recursive_edges(source),
+        vec![
+            ("caller".to_string(), "owned".to_string()),
+            ("owned".to_string(), "caller".to_string()),
+        ]
+    );
+}
+
+#[test]
+fn flat_walk_stored_closure_and_callback_remain_audited() {
+    let source = "fn caller() { let c = || owned(); c(); } fn owned() {}";
+    assert_eq!(
+        flat_walk_call_graph(source)["caller"],
+        BTreeSet::from(["c".to_string(), "owned".to_string()])
+    );
+    let source = "impl Caller { fn run(&self) { (self.callback)(); } }";
+    assert_eq!(
+        flat_walk_call_graph(source)["Caller::run"],
+        BTreeSet::from(["<indirect-call>".to_string()])
+    );
 }

@@ -13,6 +13,7 @@ fn rule_base_case_outcome(
         session.drive_rule_lhs(
             RuleLhsState { stack: Vec::new() },
             RuleLhsStep::Visit(expr, RuleLhsVisit::Classify),
+            (),
         )
     } else {
         session.evaluate_rule_lhs(expr)

@@ -26,3 +26,6 @@ pub(super) use self::core::{SuspendedEvaluation, SuspensionGeneration, Suspensio
 pub(in crate::runtime) use self::error::{
     result_from_continuation_expr, result_into_continuation_expr,
 };
+
+#[cfg(test)]
+pub(in crate::runtime) use typed::resume_typed_completion_for_test;

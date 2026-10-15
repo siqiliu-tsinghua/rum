@@ -47,3 +47,21 @@ fn deferred_completion_preserves_output_and_stops_without_finalizing() {
         Action::Complete(Err(EvalError::Abort))
     ));
 }
+
+#[test]
+fn immediate_work_preserves_completion_and_token_stop() {
+    let action = TypedAction::<Option<Expr>>::complete_work(Ok(Some(Expr::string("done"))));
+    let Action::Complete(Ok(slot)) = action.inner else {
+        panic!("complete")
+    };
+    assert_eq!(
+        decode::<Option<Expr>>(slot, CodecKey::new()).ok().unwrap(),
+        Some(Expr::string("done"))
+    );
+    let action =
+        TypedAction::<Option<Expr>>::complete_work(Err(ResumeStop::failure(EvalError::Abort)));
+    assert!(matches!(
+        action.inner,
+        Action::Complete(Err(EvalError::Abort))
+    ));
+}

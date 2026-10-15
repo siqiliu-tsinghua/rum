@@ -57,3 +57,19 @@ pub trait SlotFinalizer: Send + 'static {
     type Output: SlotValue;
     fn finish(self: Box<Self>) -> Result<Self::Output, EvalError>;
 }
+
+// Private sibling tests enter through the real adapter, which alone mints the token.
+#[cfg(test)]
+pub(in crate::runtime) fn resume_typed_completion_for_test<F: TypedFrame>(
+    frame: F,
+    session: &mut Session,
+    outcome: Result<F::Input, EvalError>,
+) -> Result<F::Output, EvalError> {
+    let mut input = outcome.map(|value| channel::encode(value, channel::CodecKey::new()));
+    match erase(frame).resume(session, &mut input) {
+        Action::Complete(outcome) => {
+            decode_completion(outcome).unwrap_or_else(|_| panic!("test completion slot mismatch"))
+        }
+        _ => panic!("test expected a typed completion"),
+    }
+}

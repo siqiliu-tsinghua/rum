@@ -4,9 +4,11 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-15, committed tree through brief-610 (G13 step
-S4, argument, rewrite-rule and traversal resolution, gated). **Next: S5
-(brief-611); G13's implementation is 78 gated steps** — S1 dormant API, S2
+Status checkpoint: 2026-10-16, committed tree through brief-611 (G13 step
+S5, definition application, defaults and fallback, gated). **Next: G14's
+design (brief-612, design-only; resume never unwinds the evaluation stack it
+restores — found 2026-10-16, below), then S6 (brief-613). G13's
+implementation is 78 gated steps** — S1 dormant API, S2
 compatible driver, S3-S54 family typing, F1-F23 one flip per legacy type, R
 removal — each a director-rewritten brief
 from `.temp/brief-606/draft-*.md`, dispatched to Codex (user ruling; GLM only
@@ -1060,8 +1062,125 @@ Owed:
   instructions per typed frame per resume. A legacy-shaped single-assignment
   repair measured worse (23 `memcpy` increments against 13). Revisit it when
   the legacy arm leaves the driver.
-- **S5:** make `typed_slot_compile_controls.rs`'s scratch path
-  step-independent (it pins `.temp/brief-610/compile-controls`).
+- ~~**S5:** make `typed_slot_compile_controls.rs`'s scratch path
+  step-independent~~ — done in S5 (`.temp/typed-slot-compile-controls`).
+
+**S5 (brief-611): definition application, defaults and fallback.** Codex,
+four dispatches. The first converted everything. Its stack residual stopped
+the step in the G4 audit. The next three walked the insertion shape until
+the one the design describes was measured. S5 types 15 frames (F0237-F0239,
+F0244/F0244A, F0245, F0246, F0257-F0259, F0262-F0264, F0270, F0271; typed
+implementations 22 → 37).
+
+- **The skipped-`Some` repair.** The application RHS splits into F0244
+  (`Expr`, the OwnValue path) and F0244A (`Option<Expr>`), with one frame
+  per pause. Guest-written `System`InternalContinuationSome`/`None` values
+  were being decoded as the continuation's own wrapper. There are 48
+  application fixtures (32 sentinels failed on S4) and 19 storage controls.
+  The director's 9-shape probe went from 8 DIFF on S4 to all SAME.
+- **The insertion shape is the design's own.** The first shape gave each cold
+  helper the producer's whole 136-B `Result`. That needed twelve
+  `ok(_) => unreachable!` arms, two more in the route trait, and cost
+  2 320 B summed over 9 pairs. Two more shapes were measured and rejected: a
+  conversion closure (6 336 B) and split ordinary/resumed drivers
+  (11 360 B). The retained shape takes the ZST witness at the producer and
+  passes only `(witness, request)` across the cold call. One total method,
+  `DefinitionResumeRoute::suspend`, replaces `suspend_again`, and no
+  impossible arm remains. Twelve receipts are witnessed insertions. The
+  census proves each witness comes from the binding the site matches on,
+  and three falsifiers were watched failing: no insertion, a wrong binding,
+  a shadowed witness.
+- **Stack against S4, bytes per level.**
+
+  | Profile | peel | plus | SubValue | UpValue | guarded |
+  |---|---|---|---|---|---|
+  | debug | 19152 → 19024 (−128) | 34896 → 34912 (+16) | 30352 → 29376 (−976) | 28528 → 28064 (−464) | 35824 → 35840 (+16) |
+  | release | 7312 → 7344 (+32) | 13744 → 13792 (+48) | 12928 → 13168 (+240) | 11424 → 11456 (+32) | 14192 → 14240 (+48) |
+
+  Accepted as named:
+  - Release peel, plus, guarded and UpValue are within S4's +32-48 B.
+  - Release SubValue's +240 B is compiler slot layout in the generic scan.
+    The worker mapped every high slot against the previous shape but could
+    not map it to Rust locals against S4. It is recorded below, not
+    attributed.
+- **The G4 audit.** An in-place closure literal adds no `<indirect-call>`, so
+  the walker skips it; its falsifier was watched failing. `OUTBOUND` follows
+  the new route. G7 is unchanged.
+- **The dead SubValue `pending` branch is removed** (15 → 14 callers).
+- **Ordinary path.**
+  - Allocations and bytes are equal on 107/107 labels.
+  - `memcpy` shows no increase.
+  - No instruction label stays flagged after five-run reruns.
+  - Redispatch 2's `default-unguarded-miss` +14 I/iter was layout. glibc
+    `bcmp`'s small-size page-cross test reads the OR of the page offsets of
+    two `"Default"` literals: 0xbdf on S4 and 0xfff on the candidate. The
+    owned code was −10. Check that OR first if the label flags again.
+- **Resume.** Each newly typed entry adds a 24-B adapter `Arc`, and each new
+  application `Some` wire adds 3 allocations / 120 B. Both are reconciled
+  exactly on all 32 workloads.
+
+Director gate:
+- oracle 133/133 in both builds, warning-free;
+- census in both builds, with all five forced-red refusals;
+- 32 compile-control pairs in both builds;
+- ownership 31/31;
+- fingerprints and certificates re-derived, inventories byte-identical;
+- workspace 3550 passed, 0 failed, 59 ignored, with 0 native ZeroMQ skips;
+- 48-level test green;
+- candidate binaries fresh;
+- allocations exact on 107/107 ordinary labels, and every resume delta
+  reconciled.
+
+Owed:
+- **Owed to `Option<Expr>`'s flip:** F0244A's Legacy `Some` wire, about
+  3 allocations / 120 B / 1.4k instructions per resume, beside F0278's.
+- **Owed to R:** the driver's extra 136-B typed-outcome transfer, now one per
+  newly typed entry (S4's item). Also re-measure release SubValue's
+  unattributed +240 B/level, and the debug-only second 136-B error
+  temporary in the DownValue and SubValue scans, against the stack ledger
+  (S4 + S5 rows above).
+- **S6:** make `typed_slot_census.rs`'s scratch path step-independent. It
+  pins `.temp/brief-611/r3/census/`.
+
+**G14 FOUND (2026-10-16, director): resume never unwinds the evaluation
+stack it restores. Design-only brief-612 before S6.** The director found it
+when S5's 2 000-resume harness hit `RecursionLimit` at 1 021 resumes. It is
+already present on S4.
+
+- **Mechanism.** `begin_input_suspension` (`suspension/core.rs:493-505`)
+  keeps the active evaluation-stack entries minus the top two.
+  `resume_suspended_slot` sets the depth to the stack length. Completing a
+  resumed frame never pops an entry or lowers the depth.
+- **What fails, after one pause, through the resumed path only.**
+  Re-evaluating an identical expression reports a false cycle:
+  `General::passlim` + `TerminatedEvaluation["IterationLimit"]`. Shapes that
+  fail:
+  - `f[1]+f[1]` with `f[x_] := (InputString["rhs"]; 7)`;
+  - `Table[f[1], {3}]`;
+  - SubValue `k[1][2]` in a `Table`;
+  - OwnValue `v := (InputString[...]; 7); Table[v, {3}]`;
+  - `Table[{{InputString["x"]}}, {3}]`;
+  - `Table[h[{InputString["x"]}], {3}]`;
+  - `Table[g[g[InputString["x"]]], {3}]`.
+
+  Expressions that change each time leak one depth per resume, reaching
+  `RecursionLimit` at 1 021. `Table[InputString[...], {n}]`, `If`, `Module`,
+  `Map[f, ...]` and `Set` shapes pass. The drop-two heuristic covers exactly
+  the shallow shapes every earlier probe used. The queued-input path is
+  always correct.
+- **Origin.** Resumable input itself: `b51dd794` (2026-03-20), which dropped
+  the top one entry. `eee42d2f` (2026-03-21) widened that to two after false
+  positives, which patched instances. brief-611's amendment 1 says "since
+  eee42d2f"; that is corrected here.
+- **Likely precise model.** Each queued frame records the stack length and
+  depth at insertion, and the driver truncates to them before resuming that
+  frame. The evaluation level's epilogue
+  (`enforce_active_resource_limits_for_expr`) is also skipped on resume and
+  needs the same treatment.
+- **Probes.** `.temp/director/depth-leak-probe{,-s4}/` (rum-host; resumed
+  against queued; arg 1 is the pause cap, then setup/source pairs).
+- **The lesson.** A class falsifier must vary the depth between the pause
+  and the repeating construct, and must repeat an identical expression.
 
 **Recorded, not in this branch — the gensym sweep does not see Rust-local
 values (found 2026-10-14 reviewing brief-605; Q3, queued behind the branch by

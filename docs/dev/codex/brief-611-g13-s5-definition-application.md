@@ -3671,3 +3671,1086 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; f
    every `--timeout` you pass. Scratch and checkpoints go under
    `.temp/brief-611/r3/`. Append `## Execution report — redispatch 3` after
    this section.
+
+
+## Execution report — redispatch 3
+
+The required witness/request shape is retained at every owned site, and F has finished on that source. All final correctness gates pass. All 107 ordinary allocation and memcpy gates pass; all 13 initially flagged ordinary instruction labels clear after five extra runs per arm. All 32 resume allocation deltas reconcile, and the driver transfer count is proved for every workload and sample.
+
+**Director decisions remain.** Release SubValue grows by **16 B/level** against the r2-final tree: its scan grows 48 B and its application RHS shrinks 32 B. The shape is kept as ordered. The three leaf evaluate bodies are instruction-identical, but the strict whole-label no-growth proof is not established; the two loop leaves have six positive variable function residues outside one standard error. The resume census also reports every variable residue rather than declaring it zero. No stack or performance acceptance is claimed on the director’s behalf.
+
+No git command, network request or sub-agent was used. The tree is left uncommitted. No new unsafe, dependency, root manifest, lockfile, toolchain, slot-mode, decoder or witness.rs change was made. Timing was not run, as the redispatch-3 amendment directs; C did not flag and remains closed. Redispatch-2 D remains applied.
+
+### Redispatch 3 file disclosure
+
+Paths below are relative to the repository root. Changes are relative to the r3 entry snapshot (r2 final); the earlier S5 repair is retained. The brief itself receives the requested execution report.
+
+| File | Semantic change / pin transition |
+|---|---|
+| `crates/rum-runtime/src/runtime/definitions/application/default_values.rs` | The guard producer creates its witness immediately; both cold scan helpers carry witness/request and retain ordinary/token routing. |
+| `crates/rum-runtime/src/runtime/definitions/application/down_values.rs` | Both direct-default and matcher producers match locally; their cold calls receive witness/request. The generic Scan and existing profiling remain. |
+| `crates/rum-runtime/src/runtime/definitions/application/down_values/default_fallback.rs` | Cold fallback receives SlotWitness<Option<Expr>> and RuntimeInputRequest, builds its frame there, and calls witness.suspend. |
+| `crates/rum-runtime/src/runtime/definitions/application/mod.rs` | Replace suspend_again and ORDINARY branching with the total suspend method; () delegates to witness.suspend and ContinueToken delegates to its inherent suspend. |
+| `crates/rum-runtime/src/runtime/definitions/application/rhs.rs` | Both Expr and Option<Expr> RHS producers retain Ok/error matching at the producer; cold helpers take witness/request. The Some semantic transform remains on both paths. |
+| `crates/rum-runtime/src/runtime/definitions/application/sub_values.rs` | The matcher producer owns the match and forwards witness/request to the cold helper. Redispatch 2 D stays applied. |
+| `crates/rum-runtime/src/runtime/definitions/application/up_values.rs` | The matcher producer and resumed scan take the witness before profiling/matching; both cold scan helpers carry witness/request. |
+| `crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs` | All three LHS producers take immediate witnesses. One cold helper builds DefinitionLhsPreparationSuspensionFrame and invokes the total route. |
+| `crates/rum-runtime/src/runtime/definitions/definitions/destructuring.rs` | The producer takes the witness and extracts the request; the cold helper builds and inserts through the total route. |
+| `crates/rum-runtime/src/runtime/definitions/mod.rs` | Authorized re-export ripple: application::* -> application::{ReplaceAllTraversalOutcome, RewriteRulePlan}. This stops DefinitionResumeRoute::suspend from becoming a competing imported method in the retention probe; no checker change. |
+| `crates/rum-runtime/src/runtime/definitions/rule_lhs.rs` | The producer owns the match; cold insertion takes witness/request. An empty stack forwards InputRequired once through Route::failure. |
+| `crates/rum-stdlib/src/tests/association_depth_contract/rule_pattern_depth_contract.rs` | G4 OUTBOUND removes dead map_err, suspend_again, resume_typed_or_suspend edges and adds slot_witness and suspend with one-line audits. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payload_ledger.tsv` | Discovery replay of moved adapter-witness coordinates; all 79 payload identities/dispositions and 59 cycles retained. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv` | Discovery replay of moved owned derive locations. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv` | Discovery replay of moved closures and removal of the seven ordinary-route wrapper closures replaced by total routing. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv` | Discovery replay removes twelve replaced typed macro uses and two impossible route unreachable macros; remaining moved uses are paired. |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv` | Replay 68 fingerprint fields; the other 18 columns stay unchanged. Context fingerprint becomes fnv1a64:b27fcfb9c5bd127f. |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv` | Replay four C01/C02 certificate cells (both feature builds); all seven other columns unchanged. |
+| `crates/rum-stdlib/tests/suspension_oracle/inventory/typed-slot-stages.tsv` | Replay twelve M identities from cold-helper macro sites to the actual producer witnessed insertion sites, result -> witnessed. F rows and the other six S5 M receipts unchanged. |
+| `crates/rum-stdlib/tests/typed_slot_census.rs` | Register witnessed proof module, use r3 scratch paths, and add the required missing-insertion, wrong-binding, and shadowed-witness scratch refusal checks. |
+| `crates/rum-stdlib/tests/typed_slot_census/receipts.rs` | Accept a witnessed M receipt only at its proved identity while preserving the macro route and frame checks. |
+| `crates/rum-stdlib/tests/typed_slot_census/reporting.rs` | Report proved witnessed sites and updated totals alongside macro sites. |
+| `crates/rum-stdlib/tests/typed_slot_census/s5.rs` | Require the complete S5 receipt set, enforce macro-or-witnessed insertion, update route suffix to ::suspend, and print the new TOTAL; SPLIT unchanged. |
+| `crates/rum-stdlib/tests/typed_slot_census/scan.rs` | Retain function signature/body AST and cold status for witnessed flow verification. |
+| `crates/rum-stdlib/tests/typed_slot_census/scan/sites.rs` | Populate the function AST facts used by witnessed verification. |
+| `crates/rum-stdlib/tests/typed_slot_census/witnessed.rs` | New 9616-character module proves immediate slot_witness(&actual), the match on that same binding, the InputRequired request binding, and unchanged propagation through named cold helpers to insertion. Rejects shadows, unrelated witnesses, uncalled closures, cycles and missing insertion. |
+
+G7 was examined and its 18 checks passed without an inventory edit. The retention frontier remains byte-identical (937 rows). There is no new host-payload disposition, no unpaired ownership removal, no changed checker rejection, and no change to witness.rs or the core representation. Exact old/new row data are in receipt-transitions.json, ownership-pairs.json, ownership-replay.patch, contract-fingerprint-diff.tsv, and certificate-diff.json.
+
+The additional changed document is this brief, by append only. The complete entry snapshot has 1,486 files and matches all 1,433 r2-final Rust hashes. The retained source has 1,434 Rust files. All 13 protected build inputs and the explicitly protected files match their entry hashes. The new witness checker is 9,616 characters; the existing large LHS file shrinks from 32,755 to 31,371 characters. No new module exceeds 10k.
+
+Review artifacts: [entry/hashes.json](../../../.temp/brief-611/r3/entry/hashes.json), [retained-source-hashes.json](../../../.temp/brief-611/r3/retained-source-hashes.json), [implementation.patch](../../../.temp/brief-611/r3/implementation.patch), [implementation-files.json](../../../.temp/brief-611/r3/implementation-files.json), [file-sizes.json](../../../.temp/brief-611/r3/file-sizes.json), [final-scope-audit.json](../../../.temp/brief-611/r3/final-scope-audit.json).
+
+### Redispatch 3 census and insertion routes
+
+All 15 S5 frame implementations, the F0244/F0244A split, the generic F0239 Scan parameter, slot modes and the skipped-Some repair are retained from r2. Twelve M receipts move from a macro inside a cold helper to the actual producer call carrying its witness and extracted request. The six other S5 M receipts retain the typed macro.
+
+F0239 retains both concrete Scan instantiations, IndexedDownValueScan and LinearDownValueScan. Each uses the ordinary route () on entry and the corresponding ContinueToken on resume. There is still one frame per pause. The fifteen skipped-Some fixture histories and the inherited transport-map removals remain as recorded in the earlier S5 reports; this redispatch changes their insertion plumbing, and reruns both complete oracle builds on it.
+
+The ordinary route calls witness.suspend; a generic helper calls the total DefinitionResumeRoute::suspend, whose ContinueToken implementation returns Err(token.suspend(...)). The cold helper constructs the frame. Ok and other errors stay at the producer; no whole producer Result crosses these cold calls. witness.rs remains byte-identical.
+
+| Receipt | Old anchor | New producer anchor |
+|---|---|---|
+| M0237 | `application::default_values::<Session as inherent>::suspend_exact_default_value_scan#macro1:resume_typed_or_suspend:result` | `application::default_values::<Session as inherent>::evaluate_first_exact_default_value_from_cursor#method10:suspend_exact_default_value_scan_from_owned:self` |
+| M0238 | `application::down_values::default_fallback::suspend#macro1:resume_typed_or_suspend:result` | `application::down_values::<Session as inherent>::try_apply_down_values#call19:suspend:` |
+| M0239 | `application::down_values::<Session as inherent>::suspend_down_value_application#macro1:resume_typed_or_suspend:result` | `application::down_values::<Session as inherent>::try_apply_down_values_from_symbol#method37:suspend_down_value_application:self` |
+| M0245 | `application::rhs::<Session as inherent>::suspend_definition_rhs_evaluation#macro1:resume_typed_or_suspend:result` | `application::rhs::<Session as inherent>::evaluate_definition_rhs#method3:suspend_definition_rhs_evaluation:self` |
+| M0246 | `application::sub_values::<Session as inherent>::suspend_sub_value_application#macro1:resume_typed_or_suspend:result` | `application::sub_values::<Session as inherent>::try_apply_sub_values_from_symbol#method24:suspend_sub_value_application:self` |
+| M0247 | `application::up_values::<Session as inherent>::suspend_up_value_scan#macro1:resume_typed_or_suspend:result` | `application::up_values::<Session as inherent>::try_apply_up_values_from_list#method20:suspend_up_value_scan_from_owned:self` |
+| M0260 | `definition_lhs_preparation::<Session as inherent>::drive_definition_lhs_preparation#macro1:resume_typed_or_suspend:result` | `definition_lhs_preparation::<Session as inherent>::drive_definition_lhs_preparation#method2:suspend_definition_lhs_preparation:self` |
+| M0261 | `definition_lhs_preparation::<Session as inherent>::drive_definition_lhs_preparation#macro2:resume_typed_or_suspend:result` | `definition_lhs_preparation::<Session as inherent>::drive_definition_lhs_preparation#method10:suspend_definition_lhs_preparation:self` |
+| M0262 | `definition_lhs_preparation::<Session as inherent>::drive_definition_lhs_preparation#macro3:resume_typed_or_suspend:result` | `definition_lhs_preparation::<Session as inherent>::drive_definition_lhs_preparation#method21:suspend_definition_lhs_preparation:self` |
+| M0267 | `definitions::destructuring::suspend_destructuring#macro1:resume_typed_or_suspend:result` | `definitions::destructuring::<Session as inherent>::drive_list_destructuring#call2:suspend_destructuring:` |
+| M0278 | `rule_lhs::<Session as inherent>::suspend_rule_lhs#macro1:resume_typed_or_suspend:result` | `rule_lhs::<Session as inherent>::drive_rule_lhs#method2:suspend_rule_lhs:self` |
+| M0245A | `application::rhs::<Session as inherent>::suspend_definition_application_rhs_evaluation#macro1:resume_typed_or_suspend:result` | `application::rhs::<Session as inherent>::evaluate_definition_application_rhs#method3:suspend_definition_application_rhs_evaluation:self` |
+
+For each row above, shape is result -> witnessed. Exact identities, files and all unchanged receipt fields are in receipt-transitions.json. M0238 moves from down_values/default_fallback.rs to its producer in down_values.rs; the other receipts stay in their source files. M0260/M0261/M0262 share the new cold LHS helper. The unchanged macro receipts are M0263, M0264, M0268, M0269, M0270 and M0271.
+
+Pins relative to entry: production implementations 607 -> 607; typed implementations 37 -> 37; production macros 589 -> 577 (result 368 -> 356; insert 221 -> 221); test-only implementations 16 -> 16 and macros 11 -> 11; combined implementations 623 -> 623, macros 600 -> 588. Typed macros 42 -> 30 plus 12 proved witnessed sites. The token-route suffix ::suspend_again -> ::suspend. SPLIT is unchanged.
+
+Old TOTAL:
+```text
+S5 TOTAL typed=37 typed_macros=42; modes unchanged; preflip remains refused
+```
+
+Final real output:
+```text
+S5 CENSUS production frames=518 finalizers=52 implementations=607 typed=37 macros=577 result=356 insert=221
+S5 CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+S5 CENSUS test-support frames=5 finalizers=0 implementations=15 typed=10 macros=10 result=6 insert=4
+S5 PARTITION implementations=623 macros=588
+S5 FRAME F0237 EvaluateFirstExactDefaultValueFromCursorSuspensionFrame CompiledMatchOutcome -> Option<Expr>
+S5 FRAME F0238 DirectDefaultFallbackFrame Option<Expr> -> Option<Expr>
+S5 FRAME F0239 TryApplyDownValuesFromSymbolSuspensionFrame CompiledMatchOutcome -> Option<Expr>
+S5 FRAME F0244 EvaluateDefinitionRhsSuspensionFrame Expr -> Expr
+S5 FRAME F0244A EvaluateDefinitionApplicationRhsSuspensionFrame Expr -> Option<Expr>
+S5 FRAME F0245 TryApplySubValuesFromSymbolSuspensionFrame CompiledMatchOutcome -> Option<Expr>
+S5 FRAME F0246 TryApplyUpValuesFromListSuspensionFrame CompiledMatchOutcome -> Option<Expr>
+S5 FRAME F0257 DefinitionLhsPreparationSuspensionFrame Expr -> Expr
+S5 FRAME F0258 EvalUpSetSuspensionFrame Expr -> Expr
+S5 FRAME F0259 EvalTagSetSuspensionFrame Expr -> Expr
+S5 FRAME F0262 DestructuringSuspensionFrame Expr -> Expr
+S5 FRAME F0263 EvalSetSuspensionFrame Expr -> Expr
+S5 FRAME F0264 EvalRuleSuspensionFrame Expr -> Expr
+S5 FRAME F0270 RulePatternSuspensionFrame Expr -> Expr
+S5 FRAME F0271 RuleLhsCompletionFrame Expr -> Expr
+S5 SPLIT F0244 Expr / F0244A Option<Expr>; one frame per pause; generic F0239 retains Scan
+S5 TOTAL typed=37 typed_macros=30 witnessed_sites=12; modes unchanged; preflip remains refused
+```
+
+#### Refusal evidence
+
+Both feature builds passed 8 tests, with one ignored probe that the existing scratch falsifiers invoke explicitly. Missing insertion and a witness from a different producer binding are refused at M0245. Review added a cold-helper shadowing falsifier: it first failed against the old checker because the mutated source was accepted (review-shadow-before, unwrap_err on Ok). After adding the conservative rebinding guard, it passed by refusing that same mutation. The final checker is 9616 characters, below the 10k limit.
+
+```text
+FORCED RED no-insertion: M0245: witnessed typed insertion absent
+FORCED RED wrong-binding: M0245: witnessed typed insertion absent
+FORCED RED shadowed-witness: M0245: witnessed typed insertion absent
+```
+
+The proof checks the immediate producer/witness local pair, the match on that same binding, the InputRequired request binding, and unchanged witness/request propagation through named cold helpers to insertion. Rebindings in a matched arm or helper are refused, as are uncalled closures, cyclic helper paths, missing insertion and ambiguous helper resolution. Ordinary and token paths share the verified cold insertion helpers. No preflip or zero-legacy claim is made.
+
+The twelve impossible success arms in the replaced S5 cold helpers and the two route unreachable arms are removed. Existing unrelated LHS/destructuring invariants are unchanged. No whole producer Result crosses these cold calls. The fresh frame is constructed only inside the cold helper; the ordinary and token route methods are total.
+
+The fifteen inherited fail-first histories are retained in [Skipped-Some repair and fail-first fixtures](#3-skipped-some-repair-and-fail-first-fixtures). This redispatch changes no fixture, Checks flag or fault-absence contract. Both complete oracle builds were rerun on the final source, as recorded below. The inherited workload definitions are in [Harness workloads and other oracle fixtures](#4-harness-workloads-and-other-oracle-fixtures). Both fresh no-default-feature harnesses pass all 32 workloads; their raw results are [S4 results](../../../.temp/brief-611/r3/harness-no-default/base/results.json) and [candidate results](../../../.temp/brief-611/r3/harness-no-default/candidate/results.json).
+
+### Redispatch 3 audits and inventory replay
+
+G4 OUTBOUND removes map_err, suspend_again and resume_typed_or_suspend and adds slot_witness and suspend with one-line audits. G7 was examined and all 18 checks passed; its source did not need an edit. The module-root re-export is narrowed from application::* to application::{ReplaceAllTraversalOutcome, RewriteRulePlan}; this prevents the newly named route method from becoming a competing imported method in the retention probe. The retention checker is unchanged.
+
+Ownership discovery keeps all 79 normalized host-payload identities and their dispositions and all 59 self-reaching types. Constructs change 7715 -> 7694: twelve replaced typed macro sites, seven ordinary-route closures and two impossible route arms disappear. All 58 coordinate movements are paired, the 21 eliminations are attributed to S5, and there is no new host payload or unpaired removal. The by-value route frame produces no new inventory identity. Exact old/new rows and dispositions are in ownership-pairs.json and ownership-replay.patch.
+
+The retention frontier remains byte-identical: 937 rows, SHA-256 91672dfb87f6143c95c234387d8ed61dc5f38260c7a5a0a7198b782f4599028b. No frontier disposition or rejection rule changed. The final production rejection census retains roots=7346, definitions=7346, raw=48456, deduplicated=48456 and reason classes=60. Its printed OPTION_FRONTIER=927 is the pre-existing historical label; the canonical inventory has 937 rows.
+
+The global contract context now hashes to fnv1a64:b27fcfb9c5bd127f. Every .rs/.py/.toml under crates participates, including the two census files changed during hardening. Only the 68 fingerprint fields below changed; all other 18 contract columns are unchanged. Both final certificate emissions produced seven zero-rejection rows. Four C01/C02 cells were replayed from those emissions, leaving the other seven certificate columns unchanged. Intermediate replay artifacts remain under review/.
+
+| Contract | Entry fingerprint | Retained fingerprint |
+|---|---|---|
+| B01 | fnv1a64:d84cec17eacedac2 | fnv1a64:44e9e9ae5732c9d0 |
+| B02 | fnv1a64:aaf861f067661c3b | fnv1a64:375d1a5b5d197599 |
+| B03 | fnv1a64:015b2428c15389b0 | fnv1a64:3fce90dcc88713de |
+| B04 | fnv1a64:5f479ff0607eff7a | fnv1a64:f70fd72437a7f118 |
+| B05 | fnv1a64:3bfd8f1d16e68a97 | fnv1a64:487a184d8ab3f645 |
+| B06 | fnv1a64:d3f713603fe426b6 | fnv1a64:df1d68f399d5b984 |
+| B07 | fnv1a64:ea254397fa00cbe7 | fnv1a64:3a282f979cd9d995 |
+| B08 | fnv1a64:97f9b04824a6abdc | fnv1a64:fa9874031f46ea8a |
+| B09 | fnv1a64:081d2d2b9ba2036e | fnv1a64:4ddf77400e78d76c |
+| B10 | fnv1a64:d3ace321f0cbd031 | fnv1a64:1227b8d516deb13f |
+| B11 | fnv1a64:209f514d7a73257a | fnv1a64:b8678881519c1718 |
+| B12 | fnv1a64:c729ad2777aa986e | fnv1a64:0cebf73bea816c6c |
+| I01 | fnv1a64:b62ed7155786d142 | fnv1a64:22cbd4abc3eac050 |
+| I02 | fnv1a64:933f0cb10f1d1297 | fnv1a64:9fbb95e182ea7e45 |
+| I03 | fnv1a64:d6b6d73dbc53842e | fnv1a64:0520af80e6e8b72c |
+| I04 | fnv1a64:5d69c08448c1c8db | fnv1a64:2d746c9ba77b7139 |
+| P01 | fnv1a64:837941d0d679fbd6 | fnv1a64:66fbf48f412c8ba4 |
+| P02 | fnv1a64:02eb6637b0d81061 | fnv1a64:51706cd4c516096f |
+| P03 | fnv1a64:107c9c36d8a18058 | fnv1a64:888be0564eac23f6 |
+| P04 | fnv1a64:9fd38005ec0f383b | fnv1a64:2c383870e1c29199 |
+| P05 | fnv1a64:a47b5b8cf2ed9ab2 | fnv1a64:552e56edc8191240 |
+| P06 | fnv1a64:17a8d1f803da31ee | fnv1a64:5d6b1c0c76b105ec |
+| P070 | fnv1a64:51f66e39e24fabee | fnv1a64:97b8b84e55267fec |
+| P080 | fnv1a64:829160720b8a18f1 | fnv1a64:790150160e33bfff |
+| P090 | fnv1a64:38bc0c0d5447eefb | fnv1a64:f159872b70926c59 |
+| P100 | fnv1a64:902bfac6139d198a | fnv1a64:6f41e6eeceb771a8 |
+| P110 | fnv1a64:08d4ec77e2ceaa39 | fnv1a64:be9ad46e19a48617 |
+| P120 | fnv1a64:559ea35fa0391bfc | fnv1a64:1b8d9c21cb87fbaa |
+| P130 | fnv1a64:8df29cf528b4a5e7 | fnv1a64:ddf588f4cb8db395 |
+| P140 | fnv1a64:c298a00cd72518e3 | fnv1a64:6072122428d433b1 |
+| P150 | fnv1a64:f61a81055a6ce39b | fnv1a64:bf7a2702166665f9 |
+| P071 | fnv1a64:820dd7e99fe33787 | fnv1a64:847c37349e0af3b5 |
+| P081 | fnv1a64:7d9fc860d16f8a8e | fnv1a64:010250404c10c60c |
+| P091 | fnv1a64:464439abbb7db896 | fnv1a64:4788d057b492d664 |
+| P101 | fnv1a64:00d7dd4518324739 | fnv1a64:b69dc53b4f082317 |
+| P111 | fnv1a64:9a25cf0a27df0ffe | fnv1a64:4719a0d6831c693c |
+| P121 | fnv1a64:b5544ec750df37f5 | fnv1a64:cc12c38f9283a423 |
+| P131 | fnv1a64:fcf1c25696d320fa | fnv1a64:94b9f98a6dfc1298 |
+| P141 | fnv1a64:92e0bad57d858376 | fnv1a64:d50e886532666944 |
+| P151 | fnv1a64:fb237b7820b2763c | fnv1a64:b7533790e61ca0ea |
+| B13 | fnv1a64:6207a6e97080e2b6 | fnv1a64:6d2dfc7cca727584 |
+| R01 | fnv1a64:7fc8ba9caff04d4b | fnv1a64:0b744d91a98e15a9 |
+| R02 | fnv1a64:e98180af76751318 | fnv1a64:c4c18104340467b6 |
+| R03 | fnv1a64:f73e8e6428bbb67f | fnv1a64:700b7fb962a32b7d |
+| R040 | fnv1a64:ab4fbff6e1902e6b | fnv1a64:1f57a7ae01de3449 |
+| R050 | fnv1a64:1c73e40a66e95192 | fnv1a64:8939ad35ee824b20 |
+| R060 | fnv1a64:d494a6f42b612fb3 | fnv1a64:df13effd16872901 |
+| R070 | fnv1a64:e60d907ab311498e | fnv1a64:6970185a2db2850c |
+| R080 | fnv1a64:246e2977184691db | fnv1a64:f478d58e77003a39 |
+| R090 | fnv1a64:21d64a1131ed284a | fnv1a64:d430345d4ea8ac68 |
+| R100 | fnv1a64:c680c87b6b293430 | fnv1a64:04f4352f725cbe5e |
+| R110 | fnv1a64:e21e754af04fc149 | fnv1a64:dc7ba34a96557d27 |
+| R041 | fnv1a64:48410a1387a8a1b6 | fnv1a64:53675fa6e19a3484 |
+| R051 | fnv1a64:c6de3a22e175fb7b | fnv1a64:7f7bb540fdc078d9 |
+| R061 | fnv1a64:26e58a2139c28b4c | fnv1a64:510efb9e0db1f73a |
+| R071 | fnv1a64:0a9a4517174f31cd | fnv1a64:3ee38dcf05b86e8b |
+| R081 | fnv1a64:4c16641aaf48ee8a | fnv1a64:2b2c50436a6346a8 |
+| R091 | fnv1a64:b2bae939a152d923 | fnv1a64:4a23ddafb2eb5ef1 |
+| R101 | fnv1a64:3c45c0a799f8f773 | fnv1a64:5f4016ef495e02c1 |
+| R111 | fnv1a64:10e49ba1a31c2954 | fnv1a64:6ec779229b08c132 |
+| R12 | fnv1a64:941ed1e5c291ed94 | fnv1a64:c3e0b4c6a9030872 |
+| R13 | fnv1a64:0effd0a4dfd7b060 | fnv1a64:e5228f8170cfee4e |
+| R14 | fnv1a64:aa84093bf04dd98a | fnv1a64:8999f564ab6831a8 |
+| R15 | fnv1a64:25909dcea10f4f26 | fnv1a64:a4e7be52107a1f34 |
+| O010 | fnv1a64:843a4008bc9ad5ac | fnv1a64:12b75408c0f89e9a |
+| O0200 | fnv1a64:bd6041e125dc3ee3 | fnv1a64:5b39b3f8778b59b1 |
+| O011 | fnv1a64:171d637c38f2f433 | fnv1a64:219cac852418ed81 |
+| O0210 | fnv1a64:e7020576ec3b0ff4 | fnv1a64:7172d6eea3d28952 |
+
+The certificate table lists all body fingerprints and instance marks. The full four old/new cells, including each direct-contract fingerprint, are preserved in certificate-diff.json and certificate-replay.patch.
+
+| Certificate / feature | Body fingerprint old -> new | Instance marks old -> new |
+|---|---|---|
+| C01 hash=true | fnv1a64:a8213b4a1c564752 -> fnv1a64:4a7518d46d0e6829 | fnv1a64:91c1aca7ec803066 / fnv1a64:93226f679c70ebf4 -> fnv1a64:c2e6456886d5597b / fnv1a64:abb40cd8a4a6ed85 |
+| C01 hash=false | fnv1a64:0adfd107d478087d -> fnv1a64:1b67d5871cecf831 | fnv1a64:cf936ae90fca28fc / fnv1a64:c0ed60a5f6b724f6 -> fnv1a64:be550c8b2ffec4bd / fnv1a64:c0357c69ebf12d5f |
+| C02 hash=true | fnv1a64:a4cba7438e7f979c -> fnv1a64:fa1e4d38afa3afe7 | fnv1a64:47aa91bf05534a81 -> fnv1a64:d42dff5111f1bd4c |
+| C02 hash=false | fnv1a64:6e3e09e954537db3 -> fnv1a64:21173f3b2ae911df | fnv1a64:6078f6324c3cedb7 -> fnv1a64:5065a3cb49f8891a |
+
+Exact row evidence: [receipt-transitions.json](../../../.temp/brief-611/r3/receipt-transitions.json), [ownership-pairs.json](../../../.temp/brief-611/r3/ownership-pairs.json), [ownership-replay.patch](../../../.temp/brief-611/r3/ownership-replay.patch), [contract-fingerprint-diff.tsv](../../../.temp/brief-611/r3/contract-fingerprint-diff.tsv), [certificate-diff.json](../../../.temp/brief-611/r3/certificate-diff.json), [certificate-replay.patch](../../../.temp/brief-611/r3/certificate-replay.patch), [frontier-verification.json](../../../.temp/brief-611/r3/frontier-verification.json).
+
+### Redispatch 3 final correctness
+
+Every final correctness command exited zero. The full workspace passed with runtime 1170 passed/3 ignored and stdlib 1108 passed/53 ignored. Both compile-control builds checked 32 positive/negative pairs; both ordinary-control builds checked 28 cases with the existing complete checks and fault-absence assertions.
+
+Both oracle builds passed 133 tests with no compiler warnings. Each emitted 84 fault-occurrence assertions, all delta=0; the final observation count was 88916. All individual fault records are retained in gate-results.json and the raw logs.
+
+Native ZeroMQ coverage was skipped nine times because loopback was unavailable. Its Rust wrappers return successfully after printing the skip; the printed "9 passed" total does not mean those native transport cases ran.
+
+The final census passes 8 tests with 1 ignored scratch probe in each feature build. The FAILED child totals below are the existing deliberate frame/guard falsifiers. The no-insertion, wrong-binding and shadowed-witness mutations are also refused.
+
+The runtime test build still reports the three pre-existing unused test helpers register_test_if_builtin, register_test_return_builtin and register_test_vm_template_builtins. The workspace also prints diagnostics from its deliberate option-read-proof compiler fixtures. No new retained-source compiler warning was identified. Both oracle builds, all four measurement candidate builds and both no-default harness builds are warning-free. Exact warning lines and their gates are retained in correctness-summary.json and gate-results.json.
+
+The earlier shadowing falsifier exposed a real checker defect (review-shadow-before: unwrap_err on Ok). A conservative rebinding guard repaired it. The two changed census integration files then expired the global retention fingerprints, causing 17 stale-pin failures in final-workspace-reviewed. Replaying 68 fingerprint fields and four C01/C02 cells cleared both acceptance builds, the rejection census and the complete workspace. No rejection rule or contract column was weakened. The complete earlier totals remain in correctness-all-attempts.md; the 17 identities are in review/expired-pin-failures.json.
+
+The commands below are the final passing selection. Every recorded command has its exact command JSON, bounded exit record and raw log under r3/. Commands used the offline local toolchain with one Cargo build job and one test thread. Workspace was bounded at 3600 seconds, each oracle at 1500 seconds, and the other gate commands at 900 seconds; the process-session lifetime did not truncate those bounds.
+
+```text
+final-fmt-reviewed
+$ cargo fmt --check
+exit=0
+
+final-typed-api
+$ cargo test -p rum-runtime --lib suspension::typed::tests
+exit=0
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 1152 filtered out; finished in 0.46s
+
+final-frame-roots
+$ cargo test -p rum-runtime --lib frame_root_trace
+exit=0
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1158 filtered out; finished in 1.25s
+
+final-native48
+$ cargo test -p rum-runtime --lib runtime::tests::holding_and_control_part2::bounded_recursive_definition_below_native_stack_limit_succeeds -- --exact
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.01s
+
+final-controls-default
+$ cargo test -p rum-stdlib --test typed_slot_compile_controls -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 39.29s
+
+final-controls-no-default
+$ cargo test -p rum-stdlib --no-default-features --test typed_slot_compile_controls -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 25.03s
+
+final-census-default-reviewed
+$ cargo test -p rum-stdlib --test typed_slot_census -- --nocapture
+exit=0
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 19.60s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 19.55s
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 231.95s
+
+final-census-no-default-reviewed
+$ cargo test -p rum-stdlib --no-default-features --test typed_slot_census -- --nocapture
+exit=0
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 19.38s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 19.40s
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 230.81s
+
+final-ownership
+$ cargo test -p rum-stdlib --lib ownership_graph -- --nocapture
+exit=0
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 1130 filtered out; finished in 69.42s
+
+final-certificate-default-reviewed
+$ cargo test -p rum-stdlib --lib local_production_acceptance -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 18.12s
+
+final-certificate-no-default-reviewed
+$ cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1154 filtered out; finished in 18.22s
+
+final-production-rejections-reviewed
+$ cargo test -p rum-stdlib --lib production_rejection_census_is_complete -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 25.35s
+
+final-ordinary-default
+$ cargo test --manifest-path /home/remi/dev/rum/.temp/brief-611/r3/ordinary-controls/Cargo.toml --test ordinary -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+
+final-ordinary-no-default
+$ cargo test --manifest-path /home/remi/dev/rum/.temp/brief-611/r3/ordinary-controls/Cargo.toml --no-default-features --test ordinary -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+
+final-oracle-default
+$ cargo test -p rum-stdlib --test suspension_oracle -- --nocapture
+exit=0
+test result: ok. 133 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.75s
+
+final-oracle-no-default
+$ cargo test -p rum-stdlib --no-default-features --test suspension_oracle -- --nocapture
+exit=0
+test result: ok. 133 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.82s
+
+final-workspace-replayed
+$ cargo test --workspace --no-fail-fast -- --nocapture
+exit=0
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.89s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.65s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.00s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.30s
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.10s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.30s
+test result: ok. 151 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.75s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.41s
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+test result: ok. 1170 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 28.02s
+test result: ok. 1108 passed; 0 failed; 53 ignored; 0 measured; 0 filtered out; finished in 1200.24s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+test result: ok. 47 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.03s
+test result: ok. 69 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 23.21s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s
+test result: ok. 100 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.96s
+test result: ok. 71 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.56s
+test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.99s
+test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.44s
+test result: ok. 133 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.88s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 19.49s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 19.57s
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 232.08s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.94s
+test result: ok. 193 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.52s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.40s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.61s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.65s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+final-native-zeromq-replayed
+$ cargo test -p rum-jupyter --lib native_zeromq -- --nocapture
+exit=0
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 142 filtered out; finished in 0.01s
+```
+
+Final oracle fault records:
+
+```text
+final-oracle-default
+test zz_continuation_fault_occurrences ... continuation-slot fault-occurrence delta=0; observations=88916
+final-oracle-no-default
+test zz_continuation_fault_occurrences ... continuation-slot fault-occurrence delta=0; observations=88916
+```
+
+Native ZeroMQ skip output:
+
+```text
+test zeromq::tests::native::basic::native_zeromq_backend_echoes_heartbeat_over_loopback_req_socket ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::basic::native_zeromq_backend_round_trips_execute_over_loopback_sockets ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::control::native_zeromq_backend_frontend_style_control_interrupt_round_trip ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::control::native_zeromq_backend_shutdown_stops_shell_work_and_reports_pending_shell_messages ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::execute::native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_metadata ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::session_flow::native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts_and_shutdown ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::stdin::native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_reply ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::signed::native_zeromq_backend_rejects_tampered_signed_requests_end_to_end ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::signed::native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+```
+
+Every recorded correctness attempt and test-result line is reproduced in the final ledger below, including expected refusal children and superseded failures. Machine records with all warnings and fault assertions are in [gate-results.json](../../../.temp/brief-611/r3/gate-results.json).
+
+### Measurement identity and method
+
+Performance compares the frozen S4 binaries with freshly built r3 CGU1 binaries. Native stack compares the frozen r2-final binaries (including D) with r3. These are different baselines by instruction. The final binary audit verifies all fourteen binaries and all four measurement build-source manifests. The native scratch source has only the recorded 3,989-byte probe extension in its test file. All 529 runtime source hashes are unchanged since native measurement; only two census integration files changed afterward. The audit verifies that distinction explicitly.
+
+| Arm / purpose | SHA-256 |
+|---|---|
+| S4 base rum-cli | `7881a7149a3c5a5d8e6d792f39d46338b365987d5c02908a65b6f4648d950e80` |
+| S4 base rum-cli-alloc | `adf80f3eeebbbe39dcba9b6295191c9462893540a0fdce48215fba3499284b24` |
+| S4 base resume | `40f5c75c6b42d698523822959b9f0a39372c5d4700f0bad55e21b8c2f2aade3d` |
+| S4 base resume-alloc | `0414b33d5cee14192e786f2ca705ab250c35ccf76b257f5ea69da0dfaece04c5` |
+| r3 candidate rum-cli | `0a63eab606e439b6f1d3c7f42fd1c66899114332456542b7760ea071669b406b` |
+| r3 candidate rum-cli-alloc | `87df7df340a4d47805c8f3dbd68d73477b8ed8fbefa8a7b242419453333a2635` |
+| r3 candidate resume | `92d9455fd3c71622cbbd267bf261d771b51c4ecd5a3a15b6e716c767aeb0a37b` |
+| r3 candidate resume-alloc | `bc61d1222cce52c08492ca5baa4476cb27557af2b40f1c6140c603efc0c30403` |
+| native base debug | `8465b366463dcb87056858de1a90c6558ac8e86c0188b34b68a0cce5bcf29c94` |
+| native base release | `013e44fc1bfe20058a3c250dc82fa6dad22e05d6bddcd9f03531f296be7a3121` |
+| native candidate debug | `e14d5c16e506c25c3027d591411cfa08b8b9af7b7c97a6866e4c0bd344d14d8a` |
+| native candidate release | `f1900a19c94c0beba8e927400d1b1ca6fc9d18094091ddb0d70166793c1ac92f` |
+| no-default harness base | `cd544c5aa0106a16f2f7e67976064b43a062eb63e4a56db12177880735b34d5a` |
+| no-default harness candidate | `1389ef2972f60045919228c7bdcc6e855d6c34e401db9d29ff05f0b9d347ed59` |
+
+Hash/source evidence: [base-verification.json](../../../.temp/brief-611/r3/base-verification.json), [measurement-build-summary.json](../../../.temp/brief-611/r3/measurement-build-summary.json), [final-binary-audit.json](../../../.temp/brief-611/r3/final-binary-audit.json), [review/source-hash-delta.json](../../../.temp/brief-611/r3/review/source-hash-delta.json).
+
+The 139-label instruction panel ran base/candidate/base/candidate on CPU 2 with cpu_core/instructions/u, stdin /dev/null and profiling off. All raw perf output was saved before parsing. Each slope is (count(2N)-count(N))/N. Initial flag selection uses the maximum paired delta against max(0.05% of base, base range, candidate range), which can select more labels than the mean-delta rule. All 32 selected labels received five additional interleaved runs per arm; those comparisons use the mean delta and the stated threshold. All checked outputs matched.
+
+Callgrind used separate N and 2N processes. Ordinary copy coverage is 107 labels; the three leaves and all 32 resume workloads each have six N/2N pairs per arm. Resume callgrind uses N=100/200 throughout; ordinary callgrind sizes are recorded per label and bounded by the existing instruction-budget rule. The tools ran serially. All final measurement and attribution gates exited zero.
+
+### Redispatch 3 ordinary evidence
+
+Ordinary allocations: 107/107 labels exactly equal in whole counts and bytes at N and 2N. Slopes and intercepts are retained in perf/allocation-comparison.json.
+
+Resolved-libc memcpy gate: 107/107 labels have no increase at N, 2N or in slope. Every caller is listed in ordinary-callgrind/copy-callers.tsv; the actual GOT bindings and symbol resolution are in attribution/libc-binding.json and ordinary-callgrind/copy-symbol-resolution.json.
+
+The 139-label instruction panel used two interleaved pairs per arm. Every one of the 32 initially flagged labels received five additional runs per arm, including resume labels. This table lists the ordinary subset; complete results are in perf/all-flagged-five-run-comparison.json.
+
+| Initially flagged ordinary label | Base mean | Candidate mean | Delta | Threshold | Below flag threshold after five extra runs |
+|---|---:|---:|---:|---:|---|
+| lazy-foldlist-realize-small | 110766.087700 | 110803.678660 | 37.590960 | 233.596450 | True |
+| lazy-depth-map-first-8 | 128299.904600 | 128297.337000 | -2.567600 | 64.149952 | True |
+| lazy-depth-map-build-64 | 29818.346400 | 29809.150000 | -9.196400 | 22.998000 | True |
+| lazy-depth-map-first-256 | 3664110.871200 | 3664218.028400 | 107.157200 | 20435.363000 | True |
+| deletecases-leaf-delete-small | 63116.456800 | 63197.712800 | 81.256000 | 498.160000 | True |
+| replace-leaf-rebuild-small | 73673.194000 | 74313.496800 | 640.302800 | 1876.960000 | True |
+| rewrite-guarded-decline-fallback | 77027.328000 | 76955.252400 | -72.075600 | 218.910000 | True |
+| part-list | 8302.904500 | 8298.660500 | -4.244000 | 38.960000 | True |
+| set-part-fill-large | 5587482.056000 | 5584844.350000 | -2637.706000 | 16150.830000 | True |
+| table-iterator-symbol | 333.234400 | 332.469500 | -0.764900 | 3.636500 | True |
+| downvalue-exact-miss | 997.855600 | 997.434900 | -0.420700 | 2.846500 | True |
+| downvalue-pattern-miss-repeat | 776.145000 | 776.005100 | -0.139900 | 3.692000 | True |
+| reversesort-default-wide | 340860.070000 | 340933.160000 | 73.090000 | 447.100000 | True |
+
+#### Leaves
+
+The full address alignment and function deltas for all three leaves are in attribution/cli/*-leaf-proof.json. Equal evaluate bodies alone do not establish the whole-label no-growth bar. Variable residues outside one standard error remain explicitly reported.
+
+| Leaf | Base mean | Candidate mean | Delta | Whole-label no-growth | Evaluate-body no-growth | Evaluate address changes | Positive function residues outside SE or deterministic growth |
+|---|---:|---:|---:|---|---|---:|---:|
+| literal-integer | 291.863583333 | 291.464916667 | -0.398666667 | False | True | 0 | 0 |
+| do-count-null | 534.771500000 | 535.647250000 | 0.875750000 | False | True | 0 | 4 |
+| do-iterator-null | 1152.196250000 | 1152.522416667 | 0.326166667 | False | True | 0 | 2 |
+
+Every evaluate-body sample is 110 instructions per iteration in both arms, with zero changed executed instructions after address alignment. All leaf function deltas are process-variable; there is no deterministic function growth. The whole-label samples overlap, so the strict whole-label no-growth proof is not established. The positive variable residues outside one standard error are:
+
+| Leaf | Function / resolved body | Delta | Standard error |
+|---|---|---:|---:|
+| do-count-null | `hashbrown::map::HashMap<K,V,S,A>::insert` | 0.341000000 | 0.217975527 |
+| do-count-null | `rum_core::expr::intern_symbol_text` | 0.256166667 | 0.249660942 |
+| do-count-null | `rum_core::expr::intern_text` | 0.243833333 | 0.149049554 |
+| do-count-null | `rum_runtime::runtime::builtin_catalog::default_builtin_dispatch_spec_for_symbol` | 0.008416667 | 0.005385294 |
+| do-iterator-null | `/usr/lib/libc.so.6 0x00000000001b1220` | 0.054083333 | 0.038153437 |
+| do-iterator-null | `rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom` | 0.003250000 | 0.002422407 |
+
+The libc body at 0x1b1220 is the resolved bcmp/memcmp alias in libc-binding.json. The full function and address ledgers retain all six samples, including negative residues; no variable remainder is rounded to zero. The copy alias audit separately proves that memcpy/memmove share body 0x1b1980 and that every caller of that proven memcpy target was counted (copy-target-alias-audit.json).
+
+#### Default miss
+
+C remains closed by the director amendment. default-unguarded-miss did not flag in this panel; default-literal-or.json records that result. No new literal-OR analysis, C source repair, additional C callgrind experiment, or timing experiment was performed.
+
+Ordinary measurement evidence: [perf/allocation-comparison.json](../../../.temp/brief-611/r3/perf/allocation-comparison.json), [perf/instruction-comparison.json](../../../.temp/brief-611/r3/perf/instruction-comparison.json), [perf/all-flagged-five-run-comparison.json](../../../.temp/brief-611/r3/perf/all-flagged-five-run-comparison.json), [ordinary-callgrind/copy-gate.json](../../../.temp/brief-611/r3/ordinary-callgrind/copy-gate.json), [ordinary-callgrind/copy-callers.tsv](../../../.temp/brief-611/r3/ordinary-callgrind/copy-callers.tsv), [ordinary-callgrind/copy-target-alias-audit.json](../../../.temp/brief-611/r3/ordinary-callgrind/copy-target-alias-audit.json), [ordinary-callgrind/leaf-proof.json](../../../.temp/brief-611/r3/ordinary-callgrind/leaf-proof.json), [default-literal-or.json](../../../.temp/brief-611/r3/default-literal-or.json).
+
+### Native stack: redispatch 3 versus redispatch 2 final
+
+The base is the r2 final tree, including D. The candidate is the retained witness/request tree. Each pair uses four heights and three samples per height. Every linear fit has zero residual. Native binaries, source hashes, raw samples, fits, complete changed-function prologues and disassembly excerpts are preserved under stack/.
+
+| Shape | Debug base | Debug candidate | Delta | Release base | Release candidate | Delta |
+|---|---:|---:|---:|---:|---:|---:|
+| peel | 19360 | 19024 | -336 | 7440 | 7344 | -96 |
+| plus | 35376 | 34912 | -464 | 13920 | 13792 | -128 |
+| SubValue | 29600 | 29376 | -224 | 13152 | 13168 | +16 |
+| UpValue | 28288 | 28064 | -224 | 11584 | 11456 | -128 |
+| guarded DownValue | 36304 | 35840 | -464 | 14368 | 14240 | -128 |
+
+The +16 release SubValue pair requires the director's ruling. The requested shape is retained; no further source experiment was made. All other changed resident frames below shrink. frame-deltas.json/tsv records every resident function and its multiplicity, including unchanged functions. The change sums exactly to every measured pair: debug peel = -96-128-112; plus/guard = -96-2*128-112; sub = -112-112; up = -112-112. Release peel = -32-32-32; plus/guard = -32-2*32-32; sub = +48-32; up = -96-32.
+
+Offsets below are from rsp after the prologue. Payload sizes are 136 B for the producer Result, 32 B for RuntimeInputRequest, and 168 B for SuspendedDownValueApplication / the analogous application state. SlotWitness is zero-sized. A reduced payload does not imply that the entire frame shrinks by that amount: release code reuses low slots and rearranges live return areas. Saved-register counts and alignment are included in the measured prologues.
+
+| Profile / resident function | Entry base -> candidate | Frame bytes | Producer / cold-input slots and evidence |
+|---|---|---|---|
+| debug outer DownValue | 19df00 -> 1a3c10 | 2104 -> 2008 (-96) | Result 2a0 -> 298; cold Result 368..3ef becomes request 360..37f; cold calls 19f018 -> 1a4d26. The cold payload saves 104 B; remaining frame layout differs by +8 B. |
+| debug DownValue scan | a5e6e0 -> a57080 | 4072 -> 3944 (-128) | Actual Result a48 -> a28; cold application c10..cb7 -> c18..cbf; cold Result cb8..d3f becomes request bf0..c0f. Cold calls a5fa81 -> a583ed. The payload saves 104 B; other slot placement/alignment saves 24 B. |
+| debug application RHS | 1a4e30 -> 1aac10 | 1256 -> 1144 (-112) | Actual Result 1a8 -> 198; cold Result 310..397 becomes request 270..28f. Cold output 288 -> 298; cold calls 1a51c6 -> 1aafd9. The payload saves 104 B; other slot layout saves 8 B. |
+| debug SubValue scan | a626b0 -> a5aea0 | 3048 -> 2936 (-112) | Actual Result 708 -> 6f8; application 8d0..977 -> 8e8..98f; cold Result 978..9ff becomes request 8c0..8df; calls a638ca -> a5c0a2. The payload saves 104 B; other slot layout saves 8 B. |
+| debug UpValue list scan | 1a67d0 -> 1ac1d0 | 2472 -> 2360 (-112) | Actual Result 638 -> 628; cold Result 7e8..86f becomes request 780..79f; candidate Expr arguments 7a0/7c0 and vector 7e0; cold calls 1a7ade -> 1ad4c9. The payload saves 104 B; other slot layout saves 8 B. |
+| release outer DownValue | 51ada0 -> 519820 | 776 -> 744 (-32) | Actual Result 1d0 -> 120; cold Result copied to reused a0 at 51c63f becomes request 290..2af at 51b086..51b0a1. Timing return area 2a0..2d7 -> 258..28f, followed by the new request. Cold calls 51c65f -> 51b0cc. The timing area moves down 72 B; a new 32-B request plus an 8-B frame-tail gap gives the net -32 B. |
+| release DownValue scan | 51f000 -> 51dba0 | 1320 -> 1288 (-32) | Actual Result 320 -> 180; cold application a0 -> 60; cold Result at reused 260 becomes request 450..46f (extract 51fc22..51fc3d). OptionValueScope return slots 498/4c8 -> 478/4a8, each 48 B; highest end 4f8 -> 4d8. Cold calls 5210c7 -> 51fc7f. |
+| release application RHS | 52e340 -> 52d160 | 920 -> 888 (-32) | Actual Result 258 -> c0; cold Result at reused 80 becomes request 2a0..2bf; cold output 110 -> 150; cold calls 52e88e -> 52d6db. The highest 136-B finish-helper argument moves 2e0..367 -> 2c0..347, lowering the frame end by 32 B. |
+| release SubValue scan | 52f6e0 -> 52e5a0 | 1528 -> 1576 (+48) | Detailed high-slot map below; actual Result 4a0 -> 420. Cold application remains 70. The old cold Result reuses 150; the new request has a dedicated 5a0..5bf slot. Cold calls 5319d7 -> 530900. |
+| release UpValue (list scan inlined) | 534620 -> 533690 | 1096 -> 1000 (-96) | Cold Result at 280, copied from actual 330 at 535867, becomes request 310..32f (534889..534898). OptionValueScope slots 3b8/3e8 -> 358/388, each 48 B; highest end 418 -> 3b8. Cold calls 535898 -> 534911. |
+
+The debug SubValue outer (744 B), debug UpValue outer (696 B), release SubValue outer (504 B), and finish_suspended_down_value_application (debug 920 B, release 440 B) are unchanged. Other resident functions cancel exactly; see frame-deltas.tsv. native-changed-prologues.tsv includes cold/nonresident functions as well and does not substitute their frame sizes for resident-cycle measurements.
+
+#### Release SubValue high-slot layout (+48 B)
+
+Both prologues push six registers (48 B); the rsp subtraction changes 0x5c8 -> 0x5f8. Both layouts reserve a lower region ending at 0x420; the high-area extent differs as follows. The following high-area slots explain the entire difference:
+
+| Slot | Base range | Candidate range | Evidence |
+|---|---|---|---|
+| Producer Result (136 B) | 4a0..527 | 420..4a7 | matcher calls 5306c1 -> 52f581 |
+| Alignment gap before SIMD mask (8 B) | absent | 4a8..4af | mask needs 16-byte alignment after relocated 136-B Result |
+| Hash SIMD mask (16 B) | 420..42f | 4b0..4bf | stores 52f751 -> 52e611 |
+| Existing 8-B gap | 430..437 | 4c0..4c7 | no direct accesses in either function |
+| Matcher return area (48 B) | 438..467 | 4c8..4f7 | compile_down_value_matcher calls 530525 -> 52f3e5 |
+| First timing return area (56 B) | 468..49f | 4f8..52f | runtime_path_timing_start_slow calls 52f9d4 -> 52e894 |
+| Second timing return area (56 B) | 528..55f | 530..567 | calls 52fb78 -> 52ea38 |
+| Third timing return area (56 B) | 560..597 | 568..59f | calls 52fdcf -> 52ec8f |
+| Dedicated cold request (32 B) | absent: old Result reused low 150 | 5a0..5bf | extract 5308a4..5308bf, cold call 530900 |
+| New 8-B gap | absent | 5c0..5c7 | no direct access; precedes highest OptionValueScope slot |
+| Option<OptionValueScope> (48 B) | 598..5c7 | 5c8..5f7 | construct 53073a -> 52f606; RHS argument 530ff6 -> 52fee1; drop 531e06 -> 530d65 |
+
+The new high region is larger by 8 + 32 + 8 = 48 B. The RHS frame shrinks by 32 B, giving the measured +16 B/level. This is compiler slot layout, not a new frame or allocation on the ordinary path.
+
+#### Debug error forwarding
+
+The debug-only second 136-B error temporary persists. DownValue scan copies actual a28 -> cc0 at a58419, cc0 -> d48 at a58433, then forwards out. Base temporaries were d40/dc8. SubValue scan copies actual 6f8 -> 990 at a5c0ce, 990 -> a18 at a5c0e8, and out at a5c109; base temporaries were a00/a88. Each error is forwarded once semantically; the extra compiler temporary has not been chased. Full instruction streams are in final-slot-excerpts/.
+
+The full 584-row owned-function prologue table includes cold and nonresident functions as well as the resident cycle; it is not restricted to the ten changing resident rows shown above. Evidence: [stack/native-comparison.json](../../../.temp/brief-611/r3/stack/native-comparison.json), [stack/frame-deltas.tsv](../../../.temp/brief-611/r3/stack/frame-deltas.tsv), [stack/native-changed-prologues.tsv](../../../.temp/brief-611/r3/stack/native-changed-prologues.tsv), [stack/final-slot-excerpts/index.json](../../../.temp/brief-611/r3/stack/final-slot-excerpts/index.json).
+
+### Redispatch 3 resume attribution
+
+All 32 workloads ran at N=100/200 in six independent callgrind N/2N pairs per arm (twelve processes per arm per workload). The base is the frozen S4 binary and the candidate is the retained r3 source. Raw stdout preserves the checked final values and actual resume counts. No timing panel was run.
+
+#### Allocations and frames
+
+resume-callgrind/frame-calls.json records each measured frame before/after, its whole N/2N counts, calls per iteration, and calls per actual resume. All 32 allocation deltas reconcile to delta(typed entries) + 3*new application Some wires; byte deltas are 24*delta(typed entries) + 120*new wires. Every count and byte intercept is zero. Allocation instruction sites are disclosed separately in allocation-site-evidence.json.
+
+#### Driver and payload copies
+
+driver-copy-proof.json proves the unique 136-B typed-outcome transfer site set in each binary: its execution count equals the typed-adapter resume count for every workload in all six N/2N samples. Exact source/destination instruction windows are retained there. The extra copies equal the new typed entries, 136 B each, and remain owed to R. No driver change was made.
+
+Every resolved memcpy call is listed in resume-copy-sites.tsv with the binary arm, exact body entry/name, category, address, nearby-immediate size where proved, and all six execution slopes. Per-label *-copies.json preserves the full instruction windows; unknown sizes are not guessed. resume-simd-moves.tsv records executed vector/rep moves in the transport, frame, helper and allocation categories. All other instructions are retained in the full address tables. Corresponding legacy and typed bodies must be paired before calling a movement additional.
+
+#### Complete instruction attribution
+
+Each workload .json contains all per-function samples and standard errors, including unchanged functions in all_functions. Each *-addresses.tsv contains every executed address, disassembly and six slopes. Each *-calls.tsv contains callers, callees, call addresses and six counts. *-bodies.json resolves aliased names to actual ELF entries. Category totals in semantic-summary.json sum exactly to the whole-label delta. Categories organize the evidence; the named functions and addresses remain the attribution.
+
+Variable residues are listed with their standard errors and are not silently accepted as zero. Missing-disassembly rows, if any, are disclosed in the workload JSON and summarized below.
+
+| Workload | New typed entries | New Some wires | Extra allocs / bytes | Added 136-B transfers | Instruction delta | Deterministic part | Variable functions outside 1 SE |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| resume-table | 0 | 0 | 0 / 0 | 0 | 8.188333 | 0.000000 | 3 |
+| resume-do-chain | 0 | 0 | 0 / 0 | 0 | -43.868333 | 0.000000 | 3 |
+| resume-call-repeat | 0 | 0 | 0 / 0 | 0 | -4.260000 | 0.000000 | 5 |
+| resume-cleanup | 0 | 0 | 0 / 0 | 0 | 2.271667 | 0.000000 | 3 |
+| resume-fold | 0 | 0 | 0 / 0 | 0 | -36.078333 | 0.000000 | 4 |
+| resume-argument-twice | 0 | 0 | 0 / 0 | 0 | -10.905000 | 0.000000 | 1 |
+| resume-rewrite-exprs | 0 | 0 | 0 / 0 | 0 | 41.166667 | 0.000000 | 1 |
+| resume-rewrite-compiled | 0 | 0 | 0 / 0 | 0 | 17.636667 | 0.000000 | 3 |
+| resume-cases-spec | 1 | 0 | 1 / 24 | 1 | 282.920000 | 167.960000 | 6 |
+| resume-cases-traversal | 0 | 0 | 0 / 0 | 0 | -19.081667 | 0.000000 | 6 |
+| resume-position-traversal | 0 | 0 | 0 / 0 | 0 | -155.106667 | 0.000000 | 5 |
+| resume-count-traversal | 0 | 0 | 0 / 0 | 0 | -46.811667 | 0.000000 | 2 |
+| resume-cases-shared | 1 | 0 | 1 / 24 | 1 | 157.420000 | 170.010000 | 3 |
+| resume-s5-down-rhs | 1 | 1 | 4 / 144 | 1 | 1947.955000 | 1407.840000 | 6 |
+| resume-s5-down-guard | 2 | 1 | 5 / 168 | 2 | 1999.863333 | 1435.350000 | 8 |
+| resume-s5-sub-rhs | 1 | 1 | 4 / 144 | 1 | 1881.460000 | 1360.780000 | 5 |
+| resume-s5-sub-guard | 2 | 1 | 5 / 168 | 2 | 2114.156667 | 1567.570000 | 6 |
+| resume-s5-up-rhs | 1 | 1 | 4 / 144 | 1 | 2027.991667 | 1428.340000 | 6 |
+| resume-s5-up-guard | 2 | 1 | 5 / 168 | 2 | 2161.160000 | 1671.000000 | 5 |
+| resume-s5-default-rhs | 2 | 1 | 5 / 168 | 2 | 1999.631667 | 1455.860000 | 9 |
+| resume-s5-default-guard | 3 | 1 | 6 / 192 | 3 | 2015.020000 | 1655.540000 | 8 |
+| resume-s5-default-fallback-rhs | 2 | 1 | 5 / 168 | 2 | 1934.955000 | 1506.960000 | 6 |
+| resume-s5-set | 1 | 0 | 1 / 24 | 1 | 170.095000 | 108.000000 | 3 |
+| resume-s5-upset | 1 | 0 | 1 / 24 | 1 | 173.181667 | 232.100000 | 0 |
+| resume-s5-tagset | 1 | 0 | 1 / 24 | 1 | 264.998333 | 249.100000 | 4 |
+| resume-s5-rule-rhs | 1 | 0 | 1 / 24 | 1 | 153.880000 | 117.560000 | 4 |
+| resume-s5-rule-lhs | 2 | 0 | 2 / 48 | 2 | 83.368333 | 127.480000 | 4 |
+| resume-s5-destructure | 1 | 0 | 1 / 24 | 1 | 0.295000 | 100.040000 | 4 |
+| resume-s5-lhs-twice | 2 | 0 | 2 / 48 | 2 | 347.965000 | 385.560000 | 4 |
+| resume-s5-own-rhs | 1 | 0 | 1 / 24 | 1 | 209.231667 | 117.000000 | 4 |
+| resume-s5-destructure-twice | 2 | 0 | 2 / 48 | 2 | 326.978333 | 228.460000 | 6 |
+| resume-s5-rule-lhs-twice | 3 | 0 | 3 / 72 | 3 | 107.960000 | 210.280000 | 5 |
+
+The complete ledgers contain 1286 function-delta rows, 2453 resolved copy sites, 44690 vector/rep movement rows and 19808 body rows. Of 463 variable function records, 142 lie outside one standard error; each measured value and standard error is retained in resume-function-deltas.tsv. These residues are reported, not accepted as zero.
+
+There are 120 missing-disassembly rows, at 0x406e128, 0x406e160. They are Callgrind object ??? entries. All 60 corresponding workload/address pairs have identical base and candidate samples, so their delta is exactly zero (missing-assembly-comparison.json). No source name or disassembly is invented for them.
+
+The unique driver transfer sites are:
+
+| Arm | memcpy call address | Bytes | Stack source -> destination |
+|---|---|---:|---|
+| base | 0x72d414 | 136 | rsp+0x310 -> rsp+0x228 |
+| candidate | 0x73b484 | 136 | rsp+0x310 -> rsp+0x228 |
+
+Representative allocation sites for resume-s5-down-rhs follow. Every listed call count is identical across all six samples. The three Some-wire sites each increase by one call per iteration; the typed adapter adds one new 24-byte allocation. The full windows and source locations are in allocation-site-evidence.json.
+
+| Arm | Allocation | Bytes | Size instruction | Allocator call | Calls / iteration |
+|---|---|---:|---|---|---:|
+| base | Some wire one-element Vec<Expr> | 32 | 0x754759 | 0x754763 | 3 |
+| base | Some wire SharedExpr Arc | 48 | 0x79d904 | 0x79d90e | 4 |
+| base | Some wire SharedArgs Arc | 40 | 0x79db63 | 0x79db6d | 7 |
+| candidate | outer typed adapter Arc | 24 | 0xb9bd9 | 0xb9be3 | 1 |
+| candidate | Some wire one-element Vec<Expr> | 32 | 0x7627c9 | 0x7627d3 | 4 |
+| candidate | Some wire SharedExpr Arc | 48 | 0x7af674 | 0x7af67e | 5 |
+| candidate | Some wire SharedArgs Arc | 40 | 0x7af8d3 | 0x7af8dd | 8 |
+
+Resume measurement evidence: [resume-callgrind/frame-calls.json](../../../.temp/brief-611/r3/resume-callgrind/frame-calls.json), [perf/allocation-frame-proof.json](../../../.temp/brief-611/r3/perf/allocation-frame-proof.json), [allocation-site-evidence.json](../../../.temp/brief-611/r3/allocation-site-evidence.json), [attribution/resume/semantic-summary.json](../../../.temp/brief-611/r3/attribution/resume/semantic-summary.json), [attribution/resume/resume-function-deltas.tsv](../../../.temp/brief-611/r3/attribution/resume/resume-function-deltas.tsv), [attribution/resume/resume-copy-sites.tsv](../../../.temp/brief-611/r3/attribution/resume/resume-copy-sites.tsv), [attribution/resume/resume-simd-moves.tsv](../../../.temp/brief-611/r3/attribution/resume/resume-simd-moves.tsv), [attribution/resume/resume-body-costs.tsv](../../../.temp/brief-611/r3/attribution/resume/resume-body-costs.tsv), [attribution/resume/driver-copy-proof.json](../../../.temp/brief-611/r3/attribution/resume/driver-copy-proof.json), [attribution/resume/missing-assembly-comparison.json](../../../.temp/brief-611/r3/attribution/resume/missing-assembly-comparison.json).
+
+### Stop-loss, repairs and remaining limits
+
+The final consecutive no-progress repair count is zero. Initial compilation reduced one doc-comment-placement error to zero; the duplicate cold attribute warning was removed in the same repair. Two receipt-discovery invocations still used the old M0237 anchor and refused it; the twelve witnessed insertion identities were proved before replaying the receipts. G4/G7 and ownership replay then passed. An initial ownership classification assertion stopped before any inventory write and was corrected by restricting the removal classification to the owned S5 constructs.
+
+The route-name collision was repaired through the authorized module-root re-export, with no retention-checker edit. The shadowed-witness falsifier first demonstrated false acceptance, then passed with the rebinding guard. The resulting integration source changes expired global fingerprints: one workspace run had 17 stale-pin failures. A single fingerprint/certificate replay cycle cleared both acceptances, the production rejection census and the final full workspace. The failed identities and exact cause are in [review/expired-pin-failures.json](../../../.temp/brief-611/r3/review/expired-pin-failures.json).
+
+The final binary-audit script initially compared the probe-augmented native manifest directly with the canonical test source. Its corrected check proves the exact canonical prefix plus the saved probe and separately compares every canonical runtime hash. This was an audit-script correction, not a source repair. The memcpy alias audit confirms that the saved resolution selected the proven memcpy target even though memmove shares it; no copy caller was omitted.
+
+Recorded bounded gate counters: 139 completed parent records, including 48 direct Cargo test invocations and 8 formatting invocations. The complete correctness ledger contains 219 test-result lines. These include expected refusal controls, discovery emissions and superseded attempts; they are not counts of unsuccessful source repairs. Final selected correctness exits are all zero. The historical final-workspace-reviewed failure remains in the ledger and is superseded by final-workspace-replayed.
+
+Scratch remains under r3 except the pre-authorized step-independent compile-control scratch and certificate replay output. The oracle’s exact two Cargo invocations were used with the r3 scratch/log paths instead of its wrapper’s fixed scratch path. No unsafe probe or abort was used. No second stack shape, debug error-temporary chase, new C experiment or timing panel was attempted.
+
+Remaining limits are explicit: release SubValue +16 B/level needs the director’s choice between this tree and entry/; the strict leaf whole-label proof remains uncleared; 142 of 463 variable resume function records lie outside one standard error and remain reported; native ZeroMQ coverage has nine skips. The 120 unmapped Callgrind address rows have exactly zero base/candidate delta. All required commands have finished; no gate is left running.
+
+### Redispatch 3 complete recorded correctness ledger
+
+These are all recorded parent gates with test-result output, plus formatting commands. Expected forced-red child totals and superseded failures are preserved verbatim. The final passing selection is in correctness-final.md.
+
+```text
+adapter-witnesses
+$ cargo test -p rum-stdlib --lib adapter_production_witnesses_are_computed -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 5.99s
+
+census-discovery1
+$ cargo test -p rum-stdlib --test typed_slot_census source_baseline_matches_earned_receipt -- --exact --nocapture
+exit=101
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 22.51s
+
+census-discovery2
+$ cargo test -p rum-stdlib --test typed_slot_census source_baseline_matches_earned_receipt -- --exact --nocapture
+exit=101
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 22.63s
+
+census-final-format
+$ cargo fmt
+exit=0
+
+census-format
+$ cargo fmt
+exit=0
+
+census-witnessed
+$ cargo test -p rum-stdlib --test typed_slot_census -- --nocapture
+exit=0
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 7 filtered out; finished in 19.27s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 7 filtered out; finished in 19.58s
+test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 202.81s
+
+certificate-emission-default-census-hardening
+$ cargo test -p rum-stdlib --lib local_production_acceptance -- --nocapture
+exit=101
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 18.08s
+
+certificate-emission-default-drop-order
+$ cargo test -p rum-stdlib --lib local_production_acceptance -- --nocapture
+exit=101
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 17.85s
+
+certificate-emission-default-route-scope
+$ cargo test -p rum-stdlib --lib local_production_acceptance -- --nocapture
+exit=101
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 18.05s
+
+certificate-emission-no-default-census-hardening
+$ cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance -- --nocapture
+exit=101
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1154 filtered out; finished in 18.28s
+
+certificate-emission-no-default-route-scope
+$ cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance -- --nocapture
+exit=101
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1154 filtered out; finished in 18.47s
+
+discovery
+$ cargo test -p rum-stdlib --lib tests::ownership_graph::discovery_report_without_inventory_input -- --exact --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 5.70s
+
+final-census-default-reviewed
+$ cargo test -p rum-stdlib --test typed_slot_census -- --nocapture
+exit=0
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 19.60s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 19.55s
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 231.95s
+
+final-census-default
+$ cargo test -p rum-stdlib --test typed_slot_census -- --nocapture
+exit=0
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 7 filtered out; finished in 19.41s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 7 filtered out; finished in 19.34s
+test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 202.15s
+
+final-census-no-default-reviewed
+$ cargo test -p rum-stdlib --no-default-features --test typed_slot_census -- --nocapture
+exit=0
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 19.38s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 19.40s
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 230.81s
+
+final-census-no-default
+$ cargo test -p rum-stdlib --no-default-features --test typed_slot_census -- --nocapture
+exit=0
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 7 filtered out; finished in 19.69s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 7 filtered out; finished in 19.41s
+test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 202.23s
+
+final-certificate-default-reviewed
+$ cargo test -p rum-stdlib --lib local_production_acceptance -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 18.12s
+
+final-certificate-default
+$ cargo test -p rum-stdlib --lib local_production_acceptance -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 18.28s
+
+final-certificate-no-default-reviewed
+$ cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1154 filtered out; finished in 18.22s
+
+final-certificate-no-default
+$ cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1154 filtered out; finished in 18.30s
+
+final-controls-default
+$ cargo test -p rum-stdlib --test typed_slot_compile_controls -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 39.29s
+
+final-controls-no-default
+$ cargo test -p rum-stdlib --no-default-features --test typed_slot_compile_controls -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 25.03s
+
+final-fmt-reviewed
+$ cargo fmt --check
+exit=0
+
+final-fmt
+$ cargo fmt --check
+exit=0
+
+final-frame-roots
+$ cargo test -p rum-runtime --lib frame_root_trace
+exit=0
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1158 filtered out; finished in 1.25s
+
+final-native-zeromq-replayed
+$ cargo test -p rum-jupyter --lib native_zeromq -- --nocapture
+exit=0
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 142 filtered out; finished in 0.01s
+
+final-native-zeromq
+$ cargo test -p rum-jupyter --lib native_zeromq -- --nocapture
+exit=0
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 142 filtered out; finished in 0.00s
+
+final-native48
+$ cargo test -p rum-runtime --lib runtime::tests::holding_and_control_part2::bounded_recursive_definition_below_native_stack_limit_succeeds -- --exact
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.01s
+
+final-oracle-default
+$ cargo test -p rum-stdlib --test suspension_oracle -- --nocapture
+exit=0
+test result: ok. 133 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.75s
+
+final-oracle-no-default
+$ cargo test -p rum-stdlib --no-default-features --test suspension_oracle -- --nocapture
+exit=0
+test result: ok. 133 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.82s
+
+final-ordinary-default
+$ cargo test --manifest-path /home/remi/dev/rum/.temp/brief-611/r3/ordinary-controls/Cargo.toml --test ordinary -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+
+final-ordinary-no-default
+$ cargo test --manifest-path /home/remi/dev/rum/.temp/brief-611/r3/ordinary-controls/Cargo.toml --no-default-features --test ordinary -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+
+final-ownership
+$ cargo test -p rum-stdlib --lib ownership_graph -- --nocapture
+exit=0
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 1130 filtered out; finished in 69.42s
+
+final-production-rejections-reviewed
+$ cargo test -p rum-stdlib --lib production_rejection_census_is_complete -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 25.35s
+
+final-production-rejections
+$ cargo test -p rum-stdlib --lib production_rejection_census_is_complete -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 25.22s
+
+final-shadow-refusal
+$ cargo test -p rum-stdlib --test typed_slot_census shadowing_a_witness_in_a_cold_helper_is_red -- --exact --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 8 filtered out; finished in 28.96s
+
+final-typed-api
+$ cargo test -p rum-runtime --lib suspension::typed::tests
+exit=0
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 1152 filtered out; finished in 0.46s
+
+final-workspace-replayed
+$ cargo test --workspace --no-fail-fast -- --nocapture
+exit=0
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.89s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.65s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.00s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.30s
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.10s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.30s
+test result: ok. 151 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.75s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.41s
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+test result: ok. 1170 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 28.02s
+test result: ok. 1108 passed; 0 failed; 53 ignored; 0 measured; 0 filtered out; finished in 1200.24s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+test result: ok. 47 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.03s
+test result: ok. 69 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 23.21s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s
+test result: ok. 100 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.96s
+test result: ok. 71 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.56s
+test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.99s
+test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.44s
+test result: ok. 133 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.88s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 19.49s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 19.57s
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 232.08s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.94s
+test result: ok. 193 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.52s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.40s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.61s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.65s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+final-workspace-reviewed
+$ cargo test --workspace --no-fail-fast -- --nocapture
+exit=101
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.32s
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.89s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.68s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.25s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.45s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.34s
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.10s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.34s
+test result: ok. 151 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.81s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.46s
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+test result: ok. 1170 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 28.52s
+test result: FAILED. 1091 passed; 17 failed; 53 ignored; 0 measured; 0 filtered out; finished in 949.39s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+test result: ok. 47 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.04s
+test result: ok. 69 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 23.13s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.33s
+test result: ok. 100 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.98s
+test result: ok. 71 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.57s
+test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.08s
+test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.47s
+test result: ok. 133 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.68s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 19.30s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 19.51s
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 230.87s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.34s
+test result: ok. 193 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.49s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.93s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.58s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+final-workspace
+$ cargo test --workspace --no-fail-fast -- --nocapture
+exit=0
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.25s
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.92s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.62s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 49.50s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.28s
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.00s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+test result: ok. 151 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.71s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.34s
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+test result: ok. 1170 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 40.69s
+test result: ok. 1108 passed; 0 failed; 53 ignored; 0 measured; 0 filtered out; finished in 1301.36s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+test result: ok. 47 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.06s
+test result: ok. 69 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 23.31s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.32s
+test result: ok. 100 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.97s
+test result: ok. 71 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.57s
+test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.97s
+test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.46s
+test result: ok. 133 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.69s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 7 filtered out; finished in 19.54s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 7 filtered out; finished in 19.35s
+test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 201.79s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 29.49s
+test result: ok. 193 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.52s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.42s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.55s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.63s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+format-repair1
+$ cargo fmt
+exit=0
+
+frontier
+$ cargo test --manifest-path /home/remi/dev/rum/.temp/brief-611/r3/frontier-fixture/Cargo.toml --test frontier checker::r6_production_views_inventory -- --exact --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 9 filtered out; finished in 10.26s
+
+g4-audit
+$ cargo test -p rum-stdlib --lib structural_rule_pattern_depth_contract -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 0.13s
+
+g7-audit
+$ cargo test -p rum-stdlib --lib g7_continuation_contract -- --nocapture
+exit=0
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 1143 filtered out; finished in 0.35s
+
+initial-format
+$ cargo fmt
+exit=1
+
+initial-typed-api
+$ cargo test -p rum-runtime --lib suspension::typed::tests
+exit=101
+
+review-shadow-before
+$ cargo test -p rum-stdlib --test typed_slot_census shadowing_a_witness_in_a_cold_helper_is_red -- --exact --nocapture
+exit=101
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 28.99s
+
+review-shadow-format
+$ cargo fmt --all
+exit=0
+
+route-scope-adapter-witnesses
+$ cargo test -p rum-stdlib --lib adapter_production_witnesses_are_computed -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 5.91s
+
+route-scope-candidates
+$ cargo test --manifest-path .temp/brief-611/r3/frontier-fixture/Cargo.toml --test frontier checker::s5_probe_repeat_candidates -- --exact --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 9 filtered out; finished in 14.56s
+
+route-scope-discovery
+$ cargo test -p rum-stdlib --lib tests::ownership_graph::discovery_report_without_inventory_input -- --exact --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 5.70s
+
+route-scope-format
+$ cargo fmt
+exit=0
+
+route-scope-frontier
+$ cargo test --manifest-path /home/remi/dev/rum/.temp/brief-611/r3/frontier-fixture/Cargo.toml --test frontier checker::r6_production_views_inventory -- --exact --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 9 filtered out; finished in 10.20s
+
+route-scope-g4-audit
+$ cargo test -p rum-stdlib --lib structural_rule_pattern_depth_contract -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 0.12s
+
+route-scope-g7-audit
+$ cargo test -p rum-stdlib --lib g7_continuation_contract -- --nocapture
+exit=0
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 1143 filtered out; finished in 0.30s
+
+typed-api-repair1
+$ cargo test -p rum-runtime --lib suspension::typed::tests
+exit=0
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 1152 filtered out; finished in 0.49s
+```

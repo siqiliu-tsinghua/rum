@@ -21,7 +21,16 @@ pub use self::definition_lhs_preparation::{
 
 #[allow(unused_imports)]
 pub(super) use self::{
-    application::*, definition_analysis_helpers::*, definition_catalog::*, definition_clear::*,
-    definition_lhs_preparation::*, definition_tags::*, definition_updates::*, definitions::*,
-    incremental_append::*, part_assignment::*, rhs_guards::*, value_table_assignment::*,
+    application::{ReplaceAllTraversalOutcome, RewriteRulePlan},
+    definition_analysis_helpers::*,
+    definition_catalog::*,
+    definition_clear::*,
+    definition_lhs_preparation::*,
+    definition_tags::*,
+    definition_updates::*,
+    definitions::*,
+    incremental_append::*,
+    part_assignment::*,
+    rhs_guards::*,
+    value_table_assignment::*,
 };

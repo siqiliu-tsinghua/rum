@@ -62,6 +62,14 @@ impl<O: SlotValue> TypedAction<O> {
         }
     }
 
+    /// Complete a non-deferred helper, preserving a same-frame token stop.
+    pub(in crate::runtime) fn complete_work(work: Result<O, ResumeStop<O>>) -> Self {
+        match work {
+            Ok(value) => Self::complete(Ok(value)),
+            Err(stop) => stop.action,
+        }
+    }
+
     pub fn finish_work<T, F: SlotFinalizer<Output = O>>(
         work: Result<T, ResumeStop<O>>,
         finish: impl FnOnce(T) -> F,

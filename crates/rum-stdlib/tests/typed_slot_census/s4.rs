@@ -42,6 +42,16 @@ pub(super) fn transitions(facts: &Facts, report: &Report) -> Result<(), String> 
         println!("S4 TRANSITION {id} removed; successor/provider={anchor}");
     }
 
+    let s5_frames: BTreeSet<_> = receipts
+        .iter()
+        .filter(|r| r[0] == "F" && r[2] == "S5" && r[3] == "typed")
+        .map(|r| r[4])
+        .collect();
+    let s5_macros: BTreeSet<_> = receipts
+        .iter()
+        .filter(|r| r[0] == "M" && r[2] == "S5" && r[3] == "typed")
+        .map(|r| r[4])
+        .collect();
     let expected = [
         ("F0204", "Expr", "Expr"),
         ("F0247", "Expr", "Vec<Expr>"),
@@ -71,6 +81,7 @@ pub(super) fn transitions(facts: &Facts, report: &Report) -> Result<(), String> 
         .iter()
         .filter(|f| {
             f.population == Population::Production
+                && !s5_frames.contains(f.identity.as_str())
                 && matches!(f.kind.as_str(), "TypedFrame" | "SlotFinalizer")
         })
         .map(|f| f.identity.as_str())
@@ -113,7 +124,11 @@ pub(super) fn transitions(facts: &Facts, report: &Report) -> Result<(), String> 
     let actual: BTreeSet<_> = facts
         .uses
         .iter()
-        .filter(|s| s.population == Population::Production && s.name == "resume_typed_or_suspend")
+        .filter(|s| {
+            s.population == Population::Production
+                && s.name == "resume_typed_or_suspend"
+                && !s5_macros.contains(use_identity(s).as_str())
+        })
         .map(use_identity)
         .collect();
     if actual != identities || expected.iter().any(|id| by_id[id][3] != "typed") {

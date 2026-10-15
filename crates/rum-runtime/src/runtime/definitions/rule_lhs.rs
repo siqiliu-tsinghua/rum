@@ -1,9 +1,11 @@
 //! Flat preparation of rule LHS syntax. Rebuilt calls are never applied here.
 use super::super::*;
+use super::application::DefinitionResumeRoute;
 use super::definition_lhs_preparation::{
     definition_lhs_blank_head, definition_lhs_contains_pattern_syntax,
     definition_lhs_pattern_wrapper_head,
 };
+use crate::runtime::kernel_api::{SlotWitness, slot_witness};
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
 pub(super) mod continuation;
@@ -50,15 +52,17 @@ impl Session {
                 stack: Vec::with_capacity(4),
             },
             RuleLhsStep::Visit(lhs, RuleLhsVisit::Structural),
+            (),
         )
     }
 
     #[inline(never)]
-    fn drive_rule_lhs(
+    fn drive_rule_lhs<Route: DefinitionResumeRoute<RulePatternSuspensionFrame>>(
         &mut self,
         mut state: RuleLhsState,
         mut step: RuleLhsStep,
-    ) -> Result<Expr, EvalError> {
+        route: Route,
+    ) -> Result<Expr, Route::Error> {
         loop {
             let (expr, mode) = match step {
                 RuleLhsStep::Done(value) => return Ok(value),
@@ -69,12 +73,14 @@ impl Session {
                 || (matches!(mode, RuleLhsVisit::Classify)
                     && !definition_lhs_contains_pattern_syntax(&expr))
             {
-                let value = match self.evaluate(expr) {
+                let produced = self.evaluate(expr);
+                let witness = slot_witness(&produced);
+                let value = match produced {
                     Ok(value) => value,
-                    Err(error @ EvalError::InputRequired { .. }) => {
-                        return self.suspend_rule_lhs(state, error);
+                    Err(EvalError::InputRequired { request }) => {
+                        return self.suspend_rule_lhs(state, witness, request, route);
                     }
-                    Err(error) => return Err(error),
+                    Err(error) => return Err(Route::failure(error)),
                 };
                 let destination = state.destination();
                 step = accept_rule_lhs_value(&mut state, destination, value);
@@ -124,22 +130,31 @@ impl Session {
     }
 
     #[cold]
-    fn suspend_rule_lhs(
+    fn suspend_rule_lhs<Route: DefinitionResumeRoute<RulePatternSuspensionFrame>>(
         &mut self,
         state: RuleLhsState,
-        error: EvalError,
-    ) -> Result<Expr, EvalError> {
+        witness: SlotWitness<Expr>,
+        request: RuntimeInputRequest,
+        route: Route,
+    ) -> Result<Expr, Route::Error> {
         // A direct root evaluation already owns its evaluator continuation.
         if state.stack.is_empty() {
-            return Err(error);
+            return Err(Route::failure(EvalError::InputRequired { request }));
         }
         let destination = state.destination();
         let pending_expr = state.pending_expr(destination).clone();
-        crate::resume_or_suspend!(insert self, RulePatternSuspensionFrame {
-            state,
-            pending: RuleLhsAwait { destination, pending_expr },
-        });
-        Err(error)
+        route.suspend(
+            self,
+            witness,
+            request,
+            RulePatternSuspensionFrame {
+                state,
+                pending: RuleLhsAwait {
+                    destination,
+                    pending_expr,
+                },
+            },
+        )
     }
 }
 

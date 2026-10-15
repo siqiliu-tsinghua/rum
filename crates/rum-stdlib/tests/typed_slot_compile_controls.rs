@@ -42,7 +42,7 @@ from pathlib import Path
 import json, os, shutil, subprocess, sys
 
 root=Path(sys.argv[1]); feature=sys.argv[2]
-scratch=root/'.temp/brief-610/compile-controls'; scratch.mkdir(parents=True,exist_ok=True)
+scratch=root/'.temp/typed-slot-compile-controls'; scratch.mkdir(parents=True,exist_ok=True)
 logs=scratch/feature; logs.mkdir(exist_ok=True)
 external=scratch/'external'; (external/'src').mkdir(parents=True,exist_ok=True)
 copy=scratch/'private-workspace'; copy.mkdir(exist_ok=True)
@@ -157,6 +157,10 @@ external_case('output-return', '''type Output=Option<Expr>; // return output
 fn check(s:&mut Session,actual:Result<Expr,EvalError>,request:RuntimeInputRequest)->Result<Output,EvalError>{
 slot_witness(&actual).suspend(s,request,frame::<Expr,Option<Expr>>()) // @output-return
 }''','type Output=Option<Expr>; // return output','type Output=Expr; // return output','E0308','slot_witness(&actual).suspend',category='mismatched types')
+external_case('fallback-output', '''type Output=Option<Expr>; // fallback output
+fn check(s:&mut Session,actual:Result<Option<Expr>,EvalError>,request:RuntimeInputRequest)->Result<Output,EvalError>{
+slot_witness(&actual).suspend(s,request,frame::<Option<Expr>,Option<Expr>>()) // @fallback-output
+}''','type Output=Option<Expr>; // fallback output','type Output=Expr; // fallback output','E0308','slot_witness(&actual).suspend',category='mismatched types')
 external_case('chain-last-output', '''type Last=Expr; // chain final output
 fn check(s:&mut Session,actual:Result<Expr,EvalError>,request:RuntimeInputRequest)->Result<Expr,EvalError>{
 slot_witness(&actual).chain(frame::<Expr,Option<Expr>>()).then(frame::<Option<Expr>,Last>()).suspend(s,request) // @chain-last-output
@@ -232,7 +236,7 @@ private_case('mode-one-associated-type',registry,'impl Codec for Option<Expr> {\
 private_case('mode-no-codec-override',registry,'impl Codec for Option<Expr> {\n    type Mode = LegacyMode;','impl Codec for Option<Expr> {\n    type Mode = LegacyMode;\n    fn decode(slot: super::channel::Slot, _: CodecKey) -> Result<Self, super::channel::Slot> { Err(slot) } // @mode-no-codec-override','E0407','fn decode')
 private_case('mode-legacy-provider-narrow',typed,'fn old_decode(_:Expr,_:CodecKey)','fn old_decode(_:Slot,_:CodecKey)','E0053','Slot',category='incompatible type for trait')
 private_case('mode-state-provider-narrow',typed,'fn unpack(_:ContinuationState,_:CodecKey)->Result<Self,ContinuationState> { Ok(Self) } // @mode-state-provider-narrow','fn unpack(_:Slot,_:CodecKey)->Result<Self,ContinuationState> { Ok(Self) } // @mode-state-provider-narrow','E0053','Slot',category='incompatible type for trait')
-assert len(cases)==31
+assert len(cases)==32
 base={case['file']:case['file'].read_text() for case in cases}
 
 def compile(kind,label):
@@ -304,6 +308,6 @@ for kind in ['external','private']:
             print(f'PAIR {case["id"]}: positive PASS; negative {case["code"] or "lifetime"} at {expected_file}:{line}:{column}',flush=True)
         finally: file.write_text(base[file])
 (logs/'results.json').write_text(json.dumps(report,indent=2)+'\n')
-assert len(report)==31
-print('COMPILE CONTROLS: 31 positive / 31 intended rejections (22 S1 + 7 S2 + opaque fault + token witness); raw Cargo JSON and primary spans retained',flush=True)
+assert len(report)==32
+print('COMPILE CONTROLS: 32 positive / 32 intended rejections (22 S1 + 7 S2 + opaque fault + token witness + fallback output); raw Cargo JSON and primary spans retained',flush=True)
 "###;

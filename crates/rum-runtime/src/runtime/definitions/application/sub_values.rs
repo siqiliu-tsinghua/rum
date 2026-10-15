@@ -1,5 +1,7 @@
 use super::*;
+use crate::runtime::kernel_api::{ContinueToken, ResumeStop, TypedAction, TypedFrame};
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::kernel_api::{SlotWitness, slot_witness};
 
 #[derive(Clone, FrameRootTrace)]
 struct SuspendedSubValueApplication {
@@ -53,22 +55,22 @@ impl Session {
             self.normalize_definition_candidate_for_matching(&candidate, attributes);
         record_profile_runtime_path_timing(runtime_profile_normalize, RuntimeProfileOutcome::Ok);
 
-        self.try_apply_sub_values_from_symbol(candidate, normalized_candidate, symbol, 0, None)
+        self.try_apply_sub_values_from_symbol(candidate, normalized_candidate, symbol, 0, ())
     }
 
     /// Walks the sub-value candidates one per loop iteration instead of
     /// recursing per candidate, so a wide sub-value list no longer grows the
-    /// native stack. `pending` carries an already-computed matcher outcome
-    /// across a suspension resume, so the outcome is merged exactly once per
-    /// candidate on both the live and the resumed paths.
-    fn try_apply_sub_values_from_symbol(
+    /// native stack.
+    fn try_apply_sub_values_from_symbol<
+        Route: DefinitionResumeRoute<TryApplySubValuesFromSymbolSuspensionFrame>,
+    >(
         &mut self,
         candidate: Expr,
         normalized_candidate: Expr,
         symbol: Symbol,
         mut index: usize,
-        mut pending: Option<CompiledMatchOutcome>,
-    ) -> Result<Option<Expr>, EvalError> {
+        route: Route,
+    ) -> Result<Option<Expr>, Route::Error> {
         loop {
             let runtime_profile_value = runtime_path_timing_start("sub_values.value_lookup");
             let Some(sub_value) = self
@@ -83,59 +85,6 @@ impl Session {
                 return Ok(None);
             };
             record_profile_runtime_path_timing(runtime_profile_value, RuntimeProfileOutcome::Some);
-
-            if let Some(outcome) = pending.take() {
-                record_profile_definition_dispatch_matcher_outcome(
-                    "sub_value",
-                    &symbol,
-                    outcome.matched,
-                );
-                if !outcome.matched {
-                    index += 1;
-                    continue;
-                }
-
-                let _profile_rhs_source = expression_rebuild_source_symbol(symbol);
-                let runtime_profile_rhs_substitution =
-                    runtime_path_timing_start("sub_values.rhs_substitution");
-                let rhs_substitution_start = definition_dispatch_timing_start();
-                let lhs = sub_value.lhs.clone();
-                let rhs = substitute_rule_bindings_for_rhs(
-                    &sub_value.rhs,
-                    &outcome.bindings,
-                    sub_value.rhs_may_splice_without_bindings,
-                );
-                record_profile_definition_dispatch_phase_timing(
-                    "sub_value",
-                    &symbol,
-                    "rhs_substitution",
-                    rhs_substitution_start,
-                );
-                record_profile_runtime_path_timing(
-                    runtime_profile_rhs_substitution,
-                    RuntimeProfileOutcome::Ok,
-                );
-                let option_scope = self.option_value_scope_for_definition(&lhs, &candidate);
-                let trace_rhs = rhs.clone();
-                self.push_rule_applied_trace(
-                    RuleApplicationSource::SubValue,
-                    &candidate,
-                    &lhs,
-                    &trace_rhs,
-                );
-                self.record_profile_sub_value_application(&symbol);
-                let _profile_definition_source = evaluation_profile_definition_source(symbol);
-                let profile_rule_start = definition_rule_timing_start();
-                let result = self.evaluate_definition_rhs(option_scope, rhs);
-                record_profile_definition_rule_timing(
-                    "sub_value_rhs_eval",
-                    &symbol,
-                    index,
-                    profile_rule_start,
-                    result.is_ok(),
-                );
-                return result.map(Some);
-            }
 
             record_profile_definition_dispatch_candidate("sub_value", &symbol);
             let runtime_profile_prefilter = runtime_path_timing_start("sub_values.prefilter");
@@ -227,7 +176,7 @@ impl Session {
                 self.record_profile_sub_value_application(&symbol);
                 let _profile_definition_source = evaluation_profile_definition_source(symbol);
                 let profile_rule_start = definition_rule_timing_start();
-                let result = self.evaluate_definition_rhs(option_scope, rhs);
+                let result = self.evaluate_definition_application_rhs(option_scope, rhs);
                 record_profile_definition_rule_timing(
                     "sub_value_rhs_eval",
                     &symbol,
@@ -235,7 +184,7 @@ impl Session {
                     profile_rule_start,
                     result.is_ok(),
                 );
-                return result.map(Some);
+                return result.map_err(Route::failure);
             }
 
             let matcher_is_current =
@@ -261,6 +210,7 @@ impl Session {
                 application.normalized_candidate.clone(),
                 SymbolExprMap::default(),
             );
+            let witness = slot_witness(&match_result);
             record_profile_definition_dispatch_phase_timing(
                 "sub_value",
                 &symbol,
@@ -274,32 +224,52 @@ impl Session {
 
             match match_result {
                 Ok(outcome) => {
-                    return self.finish_suspended_sub_value_application(application, outcome);
+                    return self.finish_suspended_sub_value_application(
+                        application,
+                        outcome,
+                        route,
+                    );
                 }
                 Err(EvalError::InputRequired { request }) => {
-                    return self.suspend_sub_value_application(application, request);
+                    return self.suspend_sub_value_application(
+                        application,
+                        witness,
+                        request,
+                        route,
+                    );
                 }
-                Err(error) => return Err(error),
+                Err(error) => return Err(Route::failure(error)),
             }
         }
     }
 
     #[cold]
     #[inline(never)]
-    fn suspend_sub_value_application(
+    fn suspend_sub_value_application<
+        Route: DefinitionResumeRoute<TryApplySubValuesFromSymbolSuspensionFrame>,
+    >(
         &mut self,
         application: SuspendedSubValueApplication,
+        witness: SlotWitness<CompiledMatchOutcome>,
         request: RuntimeInputRequest,
-    ) -> Result<Option<Expr>, EvalError> {
-        crate::resume_or_suspend!(insert self, TryApplySubValuesFromSymbolSuspensionFrame { application });
-        Err(EvalError::InputRequired { request })
+        route: Route,
+    ) -> Result<Option<Expr>, Route::Error> {
+        route.suspend(
+            self,
+            witness,
+            request,
+            TryApplySubValuesFromSymbolSuspensionFrame { application },
+        )
     }
 
-    fn finish_suspended_sub_value_application(
+    fn finish_suspended_sub_value_application<
+        Route: DefinitionResumeRoute<TryApplySubValuesFromSymbolSuspensionFrame>,
+    >(
         &mut self,
         application: SuspendedSubValueApplication,
         outcome: CompiledMatchOutcome,
-    ) -> Result<Option<Expr>, EvalError> {
+        route: Route,
+    ) -> Result<Option<Expr>, Route::Error> {
         record_profile_definition_dispatch_matcher_outcome(
             "sub_value",
             &application.symbol,
@@ -311,7 +281,7 @@ impl Session {
                 application.normalized_candidate,
                 application.symbol,
                 application.index + 1,
-                None,
+                route,
             );
         }
 
@@ -346,7 +316,7 @@ impl Session {
         self.record_profile_sub_value_application(&application.symbol);
         let _profile_definition_source = evaluation_profile_definition_source(application.symbol);
         let profile_rule_start = definition_rule_timing_start();
-        let result = self.evaluate_definition_rhs(option_scope, rhs);
+        let result = self.evaluate_definition_application_rhs(option_scope, rhs);
         record_profile_definition_rule_timing(
             "sub_value_rhs_eval",
             &application.symbol,
@@ -354,7 +324,7 @@ impl Session {
             profile_rule_start,
             result.is_ok(),
         );
-        result.map(Some)
+        result.map_err(Route::failure)
     }
 }
 
@@ -370,21 +340,21 @@ struct TryApplySubValuesFromSymbolSuspensionFrame {
         crate::runtime::definitions::application::sub_values::SuspendedSubValueApplication,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for TryApplySubValuesFromSymbolSuspensionFrame {
-    fn resume(
+impl TypedFrame for TryApplySubValuesFromSymbolSuspensionFrame {
+    type Input = CompiledMatchOutcome;
+    type Output = Option<Expr>;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut application = self.application.clone();
-        let value = outcome;
+        outcome: Result<CompiledMatchOutcome, EvalError>,
+        token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Option<Expr>> {
+        let application = self.application.clone();
         let resumed = (|| {
-            let outcome = CompiledMatchOutcome::from_continuation_expr(value?);
-            session
-                .finish_suspended_sub_value_application(application, outcome)
-                .map(|result| result.into_continuation_expr())
+            let outcome = outcome.map_err(ResumeStop::failure)?;
+            session.finish_suspended_sub_value_application(application, outcome, token)
         })();
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete_work(resumed)
     }
 }

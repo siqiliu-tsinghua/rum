@@ -99,7 +99,8 @@ fn assert_files_and_functions(sources: &BTreeMap<String, String>) {
 }
 
 // Every external call/macro is reviewed: ordinary evaluator reentry, existing
-// completion, syntax registry, shared constructors, scalar and Vec operations.
+// completion (including the typed continuation API), syntax registry, shared
+// constructors, scalar and Vec operations.
 const OUTBOUND: &[&str] = &[
     "Session::evaluate",
     "resume_call_from_prepared_args",
@@ -118,6 +119,14 @@ const OUTBOUND: &[&str] = &[
     "Expr::call",
     "Expr::call_shared",
     "FrameAction::complete",
+    "TypedAction::complete",
+    "TypedAction::complete_work",
+    "ResumeStop::failure",
+    "Route::failure",
+    // ZST evidence borrows the actual producer; it cannot evaluate guest code.
+    "slot_witness",
+    // The route installs fresh typed state and forwards the request; no G4 reentry.
+    "suspend",
     "std::slice::from_ref",
     "as_slice",
     "is_empty",

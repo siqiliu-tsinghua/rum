@@ -39,15 +39,21 @@ impl Session {
                 runtime_profile_outcome_for_expr_result(&rhs_result),
             );
             let runtime_profile_suspend = runtime_path_timing_start("set.rhs.suspend");
-            let rhs_result = crate::resume_or_suspend!(
-                self,
-                rhs_result,
-                ok(value) => Ok(value),
-                suspend => {
-            let lhs = lhs.clone();
-            EvalSetSuspensionFrame { lhs }
-            },
-            );
+            let rhs_result = {
+                let session = &mut *self;
+                let suspended_lhs = &lhs;
+                (|| {
+                    crate::resume_typed_or_suspend!(
+                        session,
+                        rhs_result,
+                        ok(value) => Ok(value),
+                        suspend => {
+                    let lhs = suspended_lhs.clone();
+                    EvalSetSuspensionFrame { lhs }
+                    },
+                    )
+                })()
+            };
             record_profile_runtime_path_timing(
                 runtime_profile_suspend,
                 runtime_profile_outcome_for_expr_result(&rhs_result),
@@ -83,7 +89,7 @@ impl Session {
         }
 
         let lhs_result = self.evaluate_rule_lhs(args[0].clone());
-        crate::resume_or_suspend!(
+        crate::resume_typed_or_suspend!(
             self,
             lhs_result,
             ok(lhs) => self.finish_rule_lhs(lhs, args[1].clone(), false),
@@ -100,7 +106,7 @@ impl Session {
         }
 
         let lhs_result = self.evaluate_rule_lhs(args[0].clone());
-        crate::resume_or_suspend!(
+        crate::resume_typed_or_suspend!(
             self,
             lhs_result,
             ok(lhs) => self.finish_rule_lhs(lhs, args[1].clone(), true),
@@ -119,7 +125,7 @@ impl Session {
             return Ok(Expr::call(system_expr("RuleDelayed"), vec![lhs, rhs]));
         }
         let rhs_result = self.evaluate(rhs);
-        let rhs = crate::resume_or_suspend!(
+        let rhs = crate::resume_typed_or_suspend!(
             self,
             rhs_result,
             ok(value) => Ok(value),

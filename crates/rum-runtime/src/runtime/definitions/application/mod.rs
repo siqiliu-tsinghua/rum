@@ -166,3 +166,57 @@ fn exact_down_value_rhs(down_values: &[DownValue], lhs: &Expr) -> Option<Expr> {
         .find(|down_value| down_value.lhs == *lhs)
         .map(|down_value| down_value.rhs.clone())
 }
+
+// The same scan driver is entered both initially and by its own typed frame.
+// Monomorphization keeps the initial Result/EvalError path unchanged; only a
+// resumed instantiation can consume a token to install fresh state.
+pub(in crate::runtime::definitions) trait DefinitionResumeRoute<
+    F: crate::runtime::kernel_api::TypedFrame,
+>: Sized
+{
+    type Error;
+    fn failure(error: EvalError) -> Self::Error;
+    fn suspend(
+        self,
+        session: &mut Session,
+        witness: crate::runtime::kernel_api::SlotWitness<F::Input>,
+        request: RuntimeInputRequest,
+        fresh: F,
+    ) -> Result<F::Output, Self::Error>;
+}
+
+impl<F: crate::runtime::kernel_api::TypedFrame> DefinitionResumeRoute<F> for () {
+    type Error = EvalError;
+    #[inline(always)]
+    fn failure(error: EvalError) -> Self::Error {
+        error
+    }
+    fn suspend(
+        self,
+        session: &mut Session,
+        witness: crate::runtime::kernel_api::SlotWitness<F::Input>,
+        request: RuntimeInputRequest,
+        fresh: F,
+    ) -> Result<F::Output, Self::Error> {
+        witness.suspend(session, request, fresh)
+    }
+}
+
+impl<F: crate::runtime::kernel_api::TypedFrame> DefinitionResumeRoute<F>
+    for crate::runtime::kernel_api::ContinueToken<'_, F>
+{
+    type Error = crate::runtime::kernel_api::ResumeStop<F::Output>;
+    #[inline(always)]
+    fn failure(error: EvalError) -> Self::Error {
+        crate::runtime::kernel_api::ResumeStop::failure(error)
+    }
+    fn suspend(
+        self,
+        session: &mut Session,
+        witness: crate::runtime::kernel_api::SlotWitness<F::Input>,
+        request: RuntimeInputRequest,
+        fresh: F,
+    ) -> Result<F::Output, Self::Error> {
+        Err(self.suspend(session, witness, request, fresh))
+    }
+}
