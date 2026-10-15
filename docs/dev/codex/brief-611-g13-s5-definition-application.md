@@ -1730,3 +1730,683 @@ defect, do not add tests for it, and do not shape any fixture around it.
 - Your tool timeout must exceed every `--timeout` you pass.
 - Checkpoint as before. Then append `## Execution report — redispatch 1`
   after this section.
+
+
+## Execution report — redispatch 1
+
+**STOP under the Hard rules; S5 is not accepted or complete.** A is implemented
+and its shared audit suite passes. B(a) made the native stack worse. B(b) then
+failed to compile twice with the same two `E0658` errors on the required Rust
+toolchain. I stopped instead of making a third compile experiment. The six
+application files changed by the experiments have been restored byte-for-byte
+to their redispatch-entry contents. The four-file A repair remains. C, D and
+the final-source F gates have not been executed in this redispatch.
+
+This report supplements, and does not replace, the original report or the
+director amendment above. No git command, network operation, dependency,
+lockfile, toolchain or `unsafe` change was made. No sub-agent was used.
+`typed/witness.rs` is unchanged. Scratch is under `.temp/brief-611/r1/`;
+`TMPDIR` remained `.temp/brief-611/tmp`. All expensive commands ran serially
+through `run-bounded.py`, with one Cargo job, one test thread and offline mode.
+
+The checkpoint is `.temp/brief-611/r1/state.json`; `PROGRESS.md`, the entry
+snapshot, the retained patch, the rejected patches/source, all command records,
+raw output and exit records are beside it. The root brief-611 checkpoint now
+points to this STOP, rather than the earlier G4 scope STOP that the amendment
+cleared. The four original performance bases and both frozen native stack
+bases were hash-verified. No new performance candidate is presented as final.
+
+**Retained files and source boundaries.** These are the only four source files
+different from the 1,486-file redispatch-entry snapshot. This appended report
+is the only documentation edit.
+
+| File | Retained change |
+|---|---|
+| `crates/rum-stdlib/src/tests/association_depth_contract/recursion_inventory.rs` | At the non-path callee branch in `FlatCalls::visit_expr_call`, unwrap parentheses solely to recognize a closure literal. Omit its generic indirect marker and retain the normal recursive visit of its body. Other non-path callees retain the marker. Add the three requested falsifier tests. |
+| `crates/rum-stdlib/src/tests/association_depth_contract/rule_pattern_depth_contract.rs` | Extend the comment to name the typed continuation API; add exactly the seven authorized `OUTBOUND` names. No other audit rule changes. |
+| `crates/rum-stdlib/src/tests/association_depth_contract/g7_continuation_contract.rs` | Delete exactly the one `<indirect-call>` token at line 372. G7 passes without it after the walker change. |
+| `crates/rum-runtime/src/runtime/definitions/rule_lhs/continuation.rs` | At line 61, `crate::runtime::kernel_api::TypedAction::complete` → the already imported `TypedAction::complete`. This names the exact audited callee without adding an eighth outbound alias. Its behavior, arguments and line count are unchanged. |
+
+The complete retained diff and before/after hashes are
+`r1/retained-source.patch` and `r1/retained-source-changes.json`. No frame-root
+pin, F/M row, stage row, fixture, census receipt or inventory row was changed
+in this redispatch. Fingerprints and certificates have **not** been replayed
+after A; they must not be treated as current acceptance evidence.
+
+**A: falsifier and shared users.** Before changing the walker, the new first
+test failed exactly as required:
+
+```text
+assertion `left == right` failed: the literal body remains audited: fn caller() { (|| owned())(); } fn owned() {}
+  left: {"<indirect-call>", "owned"}
+ right: {"owned"}
+```
+
+The three tests cover `(|| owned())()`, nested parentheses, a parenthesized
+`move` closure, a cycle through the closure body, `let c = || owned(); c()`
+(edges `c` and `owned`), and `(self.callback)()` (the indirect marker).
+The shared suite changed from 59 passed / 2 failed to 61 passed / 0 failed.
+The two outcome changes are the new first walker test and the existing
+`structural_rule_pattern_depth_contract`, both failed → passed. The cycle
+test and stored-closure/callback test already passed on the old walker and
+still pass. No falsifier was weakened or deleted.
+
+The other users found by the source search are G7, the destructuring contract,
+G4's other graph/recursion checks and the recursion-inventory tests themselves.
+There are **no other existing test outcome changes**. In particular, G7 and
+destructuring pass both before and after; G7's after-run has no generic
+indirect exemption. Expected panics from the suite's falsifiers remain in the
+raw `--nocapture` logs and are not additional test failures.
+
+All seven definitions were read before extending `OUTBOUND`:
+
+| Callee | Semantic audit |
+|---|---|
+| `TypedAction::complete` | Encodes/completes the already produced value; the G4 `Expr` slot is Value. It neither evaluates guest code nor calls a G4 function. |
+| `TypedAction::complete_work` | Selects immediate completion or an existing stop action. It neither evaluates guest code nor calls a G4 function. |
+| `ResumeStop::failure` | Constructs error completion. It neither evaluates guest code nor calls a G4 function. |
+| `Route::failure` | Ordinary identity or `ResumeStop::failure` on the token route. It neither evaluates guest code nor calls a G4 function. |
+| `map_err` | The local Rust 1.85 `Result` implementation forwards `Ok` or calls the supplied error mapper; this audited use supplies `Route::failure`. It neither evaluates guest code nor calls a G4 function. |
+| `suspend_again` | Witnesses the actual producer, extracts its request and queues fresh same-type state through the token. It neither evaluates guest code nor calls a G4 function. |
+| `resume_typed_or_suspend!` | Matches the actual producer and inserts only on InputRequired; the audited G4 success arm is unreachable. It neither evaluates guest code nor calls a G4 function. The walker remains opaque to both this macro's tokens and its legacy sibling's tokens. |
+
+**Owned rows, fixtures and the accepted earlier evidence.** A retains the
+previous S5 implementation: the accepted production totals are 607 frames /
+589 macro sites, with 37 typed frames / 42 typed macro sites. These totals
+were not rerun in this redispatch. F0244A/M0245A and the application RHS
+`Option<Expr>` frame remain the previously reported split; OwnValue retains
+its `Expr` frame. The generic DownValue instantiations, one-frame-per-pause
+repair, removed transport maps, all fixture observations, and original row
+classification tables remain as reported above. There is no new owned-row
+transition in the retained redispatch patch.
+
+The 48 application fixtures, 19 storage controls, 133-test oracle builds,
+32 compile pairs, 28 ordinary controls and their S4 observations are **earlier
+evidence**, not reruns here. No fixture or harness source was changed. The
+three allocations / 120 B owed to the application RHS Some wire are untouched.
+The amendment's diagnosis of the 1,021-resume failure supersedes the earlier
+report's size-limit explanation: it is the pre-existing resume-depth leak.
+No repair, test or fixture workaround for that leak was attempted. The 19
+new resume labels remain at N=100/200.
+
+**B(a): measured and rejected.** The trial moved the typed macros from the
+whole-result cold helpers into the DownValue, SubValue, UpValue and direct
+default producer sites, and introduced inline RHS bodies so the outer
+profiling tail still executes after suspension. For the generic DownValue
+and SubValue return types it used an immediately invoked conversion closure
+under `Route::ORDINARY`, followed by `map_err(Route::failure)`. That closure
+still captured the entire result; it did not achieve the required shape.
+No macro expansion, guard, recursion limit or native stack configuration was
+changed.
+
+The experiment touched these six application files, all now restored:
+`down_values.rs`, `down_values/default_fallback.rs`, `sub_values.rs`,
+`up_values.rs`, `rhs.rs`, and (in B(b) only) `mod.rs`. The exact B(a) source
+snapshot contains all 1,433 Rust files and matches both native builds' source
+hash maps. Its scratch-only probe appendix is retained and unchanged from
+the previous native method. It is in `r1/b-a-source/`; the rejected B(b)
+application sources and diff are in `r1/b-b-source/` and
+`r1/b-b-rejected.patch`. `r1/b-rollback.json` proves the six restored files
+equal their redispatch-entry hashes.
+
+The first native debug build failed because the scratch synchronization list
+contained only 12 application-root files and missed the nested fallback
+module. Its diagnostic was `E0425: cannot find function frame in module
+default_fallback`. I retained that failed build under
+`stack/candidate/b-a/debug-incomplete`, synchronized the full 1,433-file
+manifest, and rebuilt successfully. This setup failure was corrected before
+measurement and was not counted as a measured stack attempt.
+
+The candidate has 120 successful samples: five shapes × two profiles × four
+heights × three repeats. Debug heights are 2/4/6/8 and release heights are
+5/10/15/20. The guard remains 1,048,576 B and the canonical 48-level test is
+unchanged. Every candidate fit and every reused frozen-base fit has zero
+residual. The frozen base measurements were reused, not rerun during r1.
+The new measurements are exclusively for the rejected B(a) source, not the
+restored retained source.
+
+| Profile | Shape | Frozen S4 B/level | B(a) B/level | Delta |
+|---|---|---:|---:|---:|
+| debug | peel | 19152 | 19920 | +768 |
+| debug | plus | 34896 | 36080 | +1184 |
+| debug | sub | 30352 | 30912 | +560 |
+| debug | up | 28528 | 28672 | +144 |
+| debug | guarded | 35824 | 37008 | +1184 |
+| release | peel | 7312 | 7664 | +352 |
+| release | plus | 13744 | 14512 | +768 |
+| release | sub | 12928 | 13456 | +528 |
+| release | up | 11424 | 11504 | +80 |
+| release | guarded | 14192 | 14960 | +768 |
+
+The summed positive excess is **6,336 B**, versus the amendment's 2,320 B;
+the failing-pair count is **10**, versus 9. Debug UpValue also violates its
+explicit no-growth bar. B(a) is one measured non-progress attempt. No growth
+in this table is accepted by this report.
+
+The resident prologues reconcile every measured delta. `plus` and `guarded`
+retain two DownValue scans per level; `peel` retains one. The following sizes
+exclude the equally present eight-byte return addresses. The two differently
+named RHS helpers are paired because they are the actual resident functions.
+
+| Profile | Resident function | Base prologue B | B(a) prologue B | Delta |
+|---|---|---:|---:|---:|
+| debug | `try_apply_down_values` | 2088 | 2264 | +176 |
+| debug | `try_apply_down_values_from_symbol` | 3800 | 4216 | +416 |
+| debug | `try_apply_sub_values_from_symbol` | 3656 | 4040 | +384 |
+| debug | `try_apply_up_values_from_list` | 2632 | 2600 | -32 |
+| debug | RHS: Expr helper → application Option helper | 1336 | 1512 | +176 |
+| release | `try_apply_down_values` | 776 | 728 | -48 |
+| release | `try_apply_down_values_from_symbol` | 1272 | 1688 | +416 |
+| release | `try_apply_sub_values_from_symbol` | 1336 | 1880 | +544 |
+| release | `try_apply_up_values` | 1016 | 1112 | +96 |
+| release | RHS: Expr helper → application Option helper | 840 | 824 | -16 |
+
+The complete touched-family superset, including individual monomorph
+addresses, has 606 profile/function rows in
+`r1/stack/b-a-changed-prologues.{json,tsv}`. Every resident frame and call path
+is in `b-a-frame-deltas.{json,tsv}` and each profile's `resident-paths.json`.
+Unmatched functions are explicitly marked base-only or candidate-only;
+they are not silently compared as zero-sized functions.
+
+**B(a) slot evidence.** All offsets below are from `%rsp` after the prologue;
+the full disassembly and selected complete functions are preserved beside
+the native binaries. Base slot excerpts are also retained in the original
+`brief-611/stack/slot-excerpts/`.
+
+| Profile / resident function | Named storage and instructions in B(a) |
+|---|---|
+| Debug DownValue scan `0xa2a7b0` | Actual matcher result at `0xa38..0xabf`, producer call `0xa2b8f6`. Conversion-closure result at `0xc08..0xc8f` (136 B). Its 320-B capture is application `0xc90..0xd37` (168 B), actual Result `0xd38..0xdbf` (136 B), session at `0xdc0`, scan reference at `0xdc8`; Result copy `0xa2bb33..0xa2bb44`, closure call `0xa2bb94`, remapping call `0xa2bbab`. Other-error temporaries `0xdd0..0xe57` and `0xe58..0xedf`, copies `0xa2bada..0xa2baf9`. |
+| Debug SubValue scan `0xa30000` | Actual result at `0x9f8`. Conversion result `0xbc0..0xc47`; 312-B capture: application `0xc48..0xcef`, Result `0xcf0..0xd77`, session at `0xd78`. Result copy `0xa318be..0xa318cf`, closure call `0xa3190f`, remapping call `0xa31926`. Other-error temporaries `0xd80..0xe07` and `0xe08..0xe8f`, copies `0xa31865..0xa31884`. |
+| Debug outer DownValue `0x1794d0` | Actual Option producer at `0x290`. Extracted request at `0x390..0x3af`; the macro capture is `0x3b0..0x3ff`: request 32 B, session 8 B, lookup identity 24 B, symbol reference 8 B, Boolean 1 B plus padding. Capture stores `0x17a674..0x17a6e4`; macro cold call `0x17a6f3`. The outer error arm uses `0x488..0x50f` (`0x17a5a3..0x17a5c2`); the macro's other-error arm adds `0x400..0x487` (`0x17a71a..0x17a739`). |
+| Debug application RHS `0x180580` | Actual result at `0x258`, intermediate outcome at `0x338`, other-error temporary at `0x430`, finish argument at `0x540` (each 136 B). Error copies `0x180b32..0x180b51`; argument copy `0x180a7c..0x180a88`, finish call `0x180a9c`. Request temporary `0x3e0..0x3ff`; macro capture `0x400..0x427` contains the 32-B request and session reference; cold call `0x180b0b`. The outer profiled Option result is at `0xc8`. |
+| Release DownValue scan `0x51e240` | Actual result at `0x3a0`; whole-result copy to conversion capture `0x308..0x38f` at `0x51fc8f..0x51fc97`. Capture application is `0x260..0x307`, session `0x390`, scan reference `0x398`. The conversion closure has been inlined, but its capture stores remain. A separate macro capture begins at `0x180`, with application 168 B, extracted request at `0x228..0x247`, session `0x248`, and scan at `0x250` (`0x520400..0x52044f`). This is not solely the macro's capture. |
+| Release SubValue scan `0x52ed00` | The macro capture begins at `0x120`: 168-B application, extracted request at `0x1c8`, session at `0x1e8`; application copy `0x5319c5..0x5319cd`, macro call `0x5319de`, conversion output at `0x480`. Full disassembly retains the separate conversion-result/capture paths. |
+| Release UpValue `0x534800` | Macro capture at `0x1a0..0x227`: two Expr values (64 B), extracted request (32 B), owned Vec (24 B), session and index (8 B each). Capture stores `0x5356c0..0x535716`, cold call `0x53572b`. The actual result remains at `0x320`; the other-error forwarding copy is `0x53575e..0x535768`. |
+| Release application RHS `0x52d890` | Actual result at `0x110`; payload staging at `0xf0` and `0x230..0x28f`; finish argument at `0x40`, finish output at `0x1a0`; staging/copies `0x52dbee..0x52dcdc`, finish call `0x52dcf5`. Net frame size is 16 B below base, despite those moves. |
+
+The debug DownValue region accounting is exact: the old 208-B cold input
+region becomes 456 B (136-B conversion result plus 320-B capture), adding
+248 B; the extra error temporary adds 136 B; the region begins 24 B later,
+and final rounding contributes another 8 B: **24 + 248 + 136 + 8 = 416 B**.
+The 24-B prefix shift is not attributed to a named Rust local or accepted as
+macro capture. For debug SubValue, 208 B becomes 448 B (136 + 312), plus
+136 B for the second error temporary and 8 B rounding: **240 + 136 + 8 =
+384 B**. The 320/312-B conversion captures contain the producer Result and
+are **not** the typed macro's permitted extracted-request closure.
+
+For `peel`, the complete resident differences are debug
+`+176 lookup +416 scan +176 RHS = +768 B`, release
+`−48 lookup +416 scan −16 RHS = +352 B`. For `plus` and `guarded`, they
+are debug `176 + 2×416 + 176 = 1184 B`, release
+`−48 + 2×416 −16 = 768 B`. These slot and resident tables identify a failed
+attempt; they are not an acceptance argument. Release slot reuse/spills and
+the complete debug lookup/RHS net-layout attribution were not closed before
+the STOP. In particular, I do not label any unexplained net growth a macro
+environment cost. Any future retained `peel`/`plus` growth still needs the
+director's ruling.
+
+**B(b): compile STOP and rollback.** The next proposed shape added an inline
+`DefinitionResumeRoute::failure_result` so the ordinary error arm constructs
+its `Result` directly; changed the RHS body to forward the actual non-pause
+outcome directly to the finish helper; and tried to force the generic-route
+conversion closure inline. The first placement was
+`return (#[inline(always)] || { ... })()`. The second placed the same
+attribute on the closure in a `let insert_ordinary = ...` initializer.
+Both are rejected as experimental expression attributes by Rust 1.85, at
+both the DownValue and SubValue sites. No nightly feature or toolchain change
+was attempted. These were my introduced compile errors, not pre-existing
+errors in the repository.
+
+`b-b-typed.log` (exit 101), verbatim:
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+error[E0658]: attributes on expressions are experimental
+   --> crates/rum-runtime/src/runtime/definitions/application/down_values.rs:380:29
+    |
+380 |                     return (#[inline(always)] || {
+    |                             ^^^^^^^^^^^^^^^^^
+    |
+    = note: see issue #15701 <https://github.com/rust-lang/rust/issues/15701> for more information
+
+error[E0658]: attributes on expressions are experimental
+   --> crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:289:33
+    |
+289 |                         return (#[inline(always)] || {
+    |                                 ^^^^^^^^^^^^^^^^^
+    |
+    = note: see issue #15701 <https://github.com/rust-lang/rust/issues/15701> for more information
+
+For more information about this error, try `rustc --explain E0658`.
+error: could not compile `rum-runtime` (lib test) due to 2 previous errors
+```
+
+`b-b-typed-closure-attribute.log` (exit 101), verbatim:
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+error[E0658]: attributes on expressions are experimental
+   --> crates/rum-runtime/src/runtime/definitions/application/down_values.rs:380:43
+    |
+380 |                     let insert_ordinary = #[inline(always)] || {
+    |                                           ^^^^^^^^^^^^^^^^^
+    |
+    = note: see issue #15701 <https://github.com/rust-lang/rust/issues/15701> for more information
+
+error[E0658]: attributes on expressions are experimental
+   --> crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:289:47
+    |
+289 |                         let insert_ordinary = #[inline(always)] || {
+    |                                               ^^^^^^^^^^^^^^^^^
+    |
+    = note: see issue #15701 <https://github.com/rust-lang/rust/issues/15701> for more information
+
+For more information about this error, try `rustc --explain E0658`.
+error: could not compile `rum-runtime` (lib test) due to 2 previous errors
+```
+
+The required Hard rule is: “Stop after two attempts that move none of the
+named failing gates.” The two B(b) compile placements had the identical two
+errors, so there was no reduction to justify another attempt. Separately,
+the one completed native trial lowered neither B stack metric. **B(b) never
+produced a measurement binary, and its error-forwarding proposal has no
+performance result.** Splitting ordinary and resumed drivers was authorized
+but was not attempted before this STOP. Restoring the entry application
+files preserved the verified A source state and removed all rejected code;
+it was not a third optimization experiment. No acceptance suite was rerun
+after that byte-for-byte restoration.
+
+**Commands and all test totals.** There were nine Cargo invocations: three A
+test commands, the B(a) typed test, three native build invocations (one setup
+failure and two successes), and two rejected B(b) compile attempts. Four
+Cargo test invocations reached their test harness, plus 120 native probe
+invocations. Complete command/environment/exit records are in
+`r1/gate-index.json` and each gate's `.command.json` / `.exit.json`.
+
+| Gate | Command after the common bounded/offline environment | Exit |
+|---|---|---:|
+| `a-shared-users-after` | `cargo test -p rum-stdlib --lib association_depth_contract -- --nocapture` | 0 |
+| `a-shared-users-before` | `cargo test -p rum-stdlib --lib association_depth_contract -- --nocapture` | 101 |
+| `a-walker-before` | `cargo test -p rum-stdlib --lib flat_walk_ -- --nocapture` | 101 |
+| `b-a-native-debug-build-retry` | `python3 .temp/brief-611/r1/build-native.py candidate debug b-a` | 0 |
+| `b-a-native-debug-build` | `python3 .temp/brief-611/r1/build-native.py candidate debug b-a` | 1 |
+| `b-a-native-debug-measure` | `python3 .temp/brief-611/r1/measure-native-stack.py candidate debug b-a` | 0 |
+| `b-a-native-release-build` | `python3 .temp/brief-611/r1/build-native.py candidate release b-a` | 0 |
+| `b-a-native-release-measure` | `python3 .temp/brief-611/r1/measure-native-stack.py candidate release b-a` | 0 |
+| `b-a-typed` | `cargo test -p rum-runtime --lib suspension::typed::tests -- --nocapture` | 0 |
+| `b-b-typed-closure-attribute` | `cargo test -p rum-runtime --lib suspension::typed::tests` | 101 |
+| `b-b-typed` | `cargo test -p rum-runtime --lib suspension::typed::tests` | 101 |
+
+The B(a) typed run emitted the same three pre-existing unused test-helper
+warnings as the original `final-typed-api.log`: `register_test_if_builtin`,
+`register_test_return_builtin`, and `register_test_vm_template_builtins`.
+They are not new warnings from this patch. No oracle build ran in r1, so
+there is no new warning-free oracle claim or fault-occurrence delta.
+
+All 124 emitted `test result:` lines follow. Each is labelled with its raw
+log; the 120 marker tests are the B(a) native probe, not the canonical
+48-level test.
+
+```text
+a-shared-users-after.log
+test result: ok. 61 passed; 0 failed; 0 ignored; 0 measured; 1100 filtered out; finished in 1.71s
+a-shared-users-before.log
+test result: FAILED. 59 passed; 2 failed; 0 ignored; 0 measured; 1100 filtered out; finished in 1.70s
+a-walker-before.log
+test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 1158 filtered out; finished in 0.00s
+b-a-typed.log
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 1152 filtered out; finished in 0.48s
+stack/candidate/b-a/debug/marker-guarded-2-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.04s
+stack/candidate/b-a/debug/marker-guarded-2-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-guarded-2-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-guarded-4-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-guarded-4-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-guarded-4-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-guarded-6-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-guarded-6-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-guarded-6-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-guarded-8-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-guarded-8-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.01s
+stack/candidate/b-a/debug/marker-guarded-8-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-peel-2-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.07s
+stack/candidate/b-a/debug/marker-peel-2-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-peel-2-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-peel-4-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-peel-4-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-peel-4-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.01s
+stack/candidate/b-a/debug/marker-peel-6-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-peel-6-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-peel-6-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-peel-8-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-peel-8-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-peel-8-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-plus-2-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.05s
+stack/candidate/b-a/debug/marker-plus-2-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-plus-2-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-plus-4-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-plus-4-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-plus-4-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-plus-6-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-plus-6-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-plus-6-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-plus-8-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-plus-8-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-plus-8-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-sub-2-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.05s
+stack/candidate/b-a/debug/marker-sub-2-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-sub-2-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-sub-4-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-sub-4-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-sub-4-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-sub-6-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-sub-6-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.01s
+stack/candidate/b-a/debug/marker-sub-6-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-sub-8-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.01s
+stack/candidate/b-a/debug/marker-sub-8-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-sub-8-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-up-2-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.05s
+stack/candidate/b-a/debug/marker-up-2-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-up-2-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-up-4-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-up-4-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-up-4-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-up-6-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-up-6-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-up-6-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-up-8-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-up-8-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/debug/marker-up-8-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-guarded-10-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-guarded-10-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-guarded-10-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-guarded-15-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-guarded-15-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-guarded-15-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-guarded-20-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-guarded-20-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-guarded-20-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-guarded-5-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-guarded-5-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-guarded-5-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-peel-10-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-peel-10-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-peel-10-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-peel-15-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-peel-15-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-peel-15-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-peel-20-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-peel-20-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-peel-20-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-peel-5-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-peel-5-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-peel-5-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-plus-10-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-plus-10-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-plus-10-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-plus-15-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-plus-15-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-plus-15-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-plus-20-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-plus-20-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-plus-20-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-plus-5-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-plus-5-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-plus-5-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-sub-10-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-sub-10-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-sub-10-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-sub-15-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-sub-15-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-sub-15-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-sub-20-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-sub-20-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-sub-20-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-sub-5-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-sub-5-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-sub-5-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-up-10-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-up-10-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-up-10-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-up-15-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-up-15-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-up-15-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-up-20-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-up-20-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-up-20-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-up-5-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-up-5-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/b-a/release/marker-up-5-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+```
+
+**Remaining gates, explicitly not run on the retained final source.**
+
+- B acceptance and a final-source stack table; the canonical 48-level test
+  and frame roots were not rerun in this redispatch.
+- C: `default-unguarded-miss` was not remeasured, and its six-process
+  address/caller attribution was not run. The earlier instruction regression
+  remains unresolved; the suspect direct-default move is not declared fixed.
+- D: the dead SubValue `pending` parameter/branch/doc sentence remain.
+  The original application-site count is still 15; the requested removal to
+  14 and its pins/stage/census changes are unfinished.
+- F correctness: final fmt, typed tests, frame roots, native48, both compile
+  control configurations, both census configurations, both local production
+  configurations, both ordinary-control configurations, ownership,
+  production rejection census, both warning-free oracle builds, native
+  ZeroMQ and the full workspace. The A suite and rejected-trial typed result
+  above are the only fresh correctness evidence. Native ZeroMQ has no fresh
+  result here; its previously reported skips remain skips.
+- F replay: ownership discovery, fingerprints, both certificate sets and
+  other moved-row receipts. No handwritten ledger or relaxed rejection was
+  introduced to skip this work.
+- F performance: no-default-feature resume harness; final allocation panel
+  and measured candidate frame-call reconciliation; all 107 ordinary memcpy
+  comparisons; six-process address proofs for the three leaves; six-process
+  per-function attribution for all 32 resume workloads including the owed
+  136-B driver copies; and the full instruction panel.
+- Timing: none. Four pinned panels and any required five interleaved leaf
+  reruns remain unexecuted.
+
+The earlier 107-label allocation equality and the accepted fixture/oracle
+results remain archived, but are not substituted for these requested
+final-source reruns. The task is left uncommitted and stopped for a director
+redispatch, with a verified A repair and preserved evidence of the rejected
+B work.
+
+Verified SHA-256 values (also in `r1/binary-verification.json`):
+
+| Binary | SHA-256 |
+|---|---|
+| `.temp/brief-611/base/rum-cli` | `7881a7149a3c5a5d8e6d792f39d46338b365987d5c02908a65b6f4648d950e80` |
+| `.temp/brief-611/base/rum-cli-alloc` | `adf80f3eeebbbe39dcba9b6295191c9462893540a0fdce48215fba3499284b24` |
+| `.temp/brief-611/base/resume` | `40f5c75c6b42d698523822959b9f0a39372c5d4700f0bad55e21b8c2f2aade3d` |
+| `.temp/brief-611/base/resume-alloc` | `0414b33d5cee14192e786f2ca705ab250c35ccf76b257f5ea69da0dfaece04c5` |
+| `.temp/brief-611/r1/stack/base/native/debug/runtime-tests` | `b02963e59ccf6ef3f83f52c6e860c09d63e5e1ca0c072555a9dff1d3a11c4018` |
+| `.temp/brief-611/r1/stack/candidate/b-a/debug/runtime-tests` | `cc77a9843957a486cd8f0fc108df2e32d16ca5f716c3a5b5dae8b8d392ea42e6` |
+| `.temp/brief-611/r1/stack/base/native/release/runtime-tests` | `778ed46cd14c17c57738529f8e6673b6bc4d674ae447031fe44d7bc27bd2ae2c` |
+| `.temp/brief-611/r1/stack/candidate/b-a/release/runtime-tests` | `70e399720a50e9ba2daead4a4385f2cde8196c65490fd4d112b233dee581ce61` |
+
+## Director amendment — redispatch 2: split the ordinary driver, then close the step either way
+
+A is accepted as reported. The walker rule is precise and was watched
+failing first. G7 lost its generic `<indirect-call>` and still passes. The
+seven callees are audited one line each. I re-run all of it at my gate.
+
+B(a) was a fair measurement and it settles one question. A closure that
+converts the generic route's return type always captures the producer's
+`Result`. Its 320-B and 312-B captures are the whole cost. So no placement
+of the macro inside such a closure can meet the bar.
+
+B(b) was not a shape. Attributes on expressions are unstable on 1.85, which
+can be checked before compiling. The shape that Ruling B(a) also authorized,
+separate ordinary and resumed drivers, was never tried. That is this
+redispatch's only stack attempt.
+
+The run also stopped the whole step on B's stop-loss, leaving C, D and F
+unrun for a second time. From here, a stop-loss in B ends B, not the step.
+
+### Ruling
+
+1. **One stack attempt: the split drivers (S4's `arguments.rs` shape).**
+   - **The ordinary driver.** For the DownValue scan, the SubValue scan and
+     wherever else the generic `Route` forced the conversion closure, the
+     ordinary driver is a non-generic function. Its error type is
+     `EvalError`, and the caller-place macro sits inline at the producer's
+     site with its own `return`. There is no conversion closure, no
+     `map_err` on the ordinary path, and no `Result` passed across a call.
+   - **The resumed driver.** It keeps the token route and `suspend_again`.
+     It is not on the ordinary recursion's resident path. Report its prologue
+     anyway.
+   - **Shared code goes into helpers that contain no suspension point.**
+     Candidate lookup, prefilter, substitution, trace and profiling are
+     examples. Do not duplicate a loop body you can factor. Do not route the
+     producer `Result` through a helper's return value either; that is the
+     same copy moved elsewhere.
+   - **The other sites.** For the outer DownValue lookup, UpValue and the
+     application-RHS helper, keep run 1's shape unless the split itself
+     changes them.
+   - **Measure it** on all ten pairs, with the per-slot attribution.
+2. **Pre-committed rule.** Keep the split source only if it lowers run 1's
+   summed excess (2,320 B) or its failing-pair count (9), without making
+   any `peel` or `plus` pair worse than run 1. Otherwise restore run 1's
+   application source byte for byte and verify the hashes. Either way, B ends
+   there.
+   - **Report the retained source's residual** per slot, with the
+     `peel`/`plus` table. I rule on it at my gate.
+   - **Do not try another shape.** If you see one you believe would work,
+     describe it in the report with your reasoning, but do not build it.
+3. **Then C, D and F, on the retained source, all of them.**
+   - **C** stands as written. Re-measure `default-unguarded-miss` and
+     attribute it over six callgrind processes per arm. Remove a copy that
+     base did not make.
+   - **D** stands as written. Remove the `pending` parameter and its branch
+     (15 callers → 14), and follow every pin it moves.
+   - **F** stands as written: every correctness gate, every replay, every
+     performance section that has not run, and timing last.
+
+   A failing gate in C, D or F is repaired under the brief's normal
+   stop-loss, which counts compile errors and failing tests as progress
+   when they fall. A stack residual is not a failing gate; it goes to the
+   report.
+4. **Process.** This run forks your session again. Your tool timeout must
+   exceed every `--timeout` you pass. Checkpoint as before. Then append
+   `## Execution report — redispatch 2` after this section.
