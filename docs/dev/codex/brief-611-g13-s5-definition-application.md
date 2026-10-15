@@ -2410,3 +2410,1264 @@ unrun for a second time. From here, a stop-loss in B ends B, not the step.
 4. **Process.** This run forks your session again. Your tool timeout must
    exceed every `--timeout` you pass. Checkpoint as before. Then append
    `## Execution report — redispatch 2` after this section.
+
+
+## Execution report — redispatch 2
+
+**All requested redispatch sections and final measurements ran. S5 is not
+self-accepted: the stack residual, ordinary default-miss regression, strict
+whole-leaf proof limitations and timing indications below remain for the
+director.** Every final correctness command passed. The one authorized split
+attempt was rejected under the precommitted rule and restored byte for byte;
+C was measured and attributed; D removed the dead branch; F ran through timing.
+
+No git command, network operation, sub-agent, new unsafe, repository dependency,
+lockfile or toolchain change was made. `typed/witness.rs` is unchanged. Work is
+uncommitted. This report supplements the earlier reports and preserves the
+entire redispatch-entry brief as its byte-identical prefix. Evidence is under
+`.temp/brief-611/r2/`; C's pre-D measurements are preserved in `c-initial/`.
+`state.json`, `PROGRESS.md`, command/exit records and raw logs are there.
+
+### Retained files, pins and replay
+
+Relative to the 1,486-file redispatch-2 entry snapshot, these are the six source
+or inventory files changed; this appended brief is the sole documentation edit.
+The accepted four-file A repair was already present and remains unchanged.
+
+| File | Change |
+|---|---|
+| `crates/rum-runtime/src/runtime/definitions/application/sub_values.rs` | Delete the unused `pending` parameter, its entire branch, both `None` arguments and the stale resume sentence. Resume still enters `finish_suspended_sub_value_application`. Application RHS calls: 15 → 14 (six default, three DownValue, two SubValue, three UpValue). |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv` | Discovery replay moves the SubValue frame's derive row 394:1 → 337:1. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv` | Discovery replay moves the five SubValue rows: 81:27 → 78:27, 247:58 → 191:58, 257:57 → 201:57, 306:21 → 250:21, 411:24 → 354:24. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv` | Same typed macro: 307:17–310:18 → 251:17–254:18. |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv` | Refresh all 68 source-context fingerprints using the checker formula; all other fields remain unchanged. Every old → new fingerprint is reproduced below. |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv` | Replay the four emitted C01/C02 certificate cells, both hash configurations. Identity, source, preconditions, strength and exclusions remain unchanged. Exact old → new cells are in `certificate-diff.json` and `certificate-replay.patch`. |
+
+Discovery retained the exact 79 host identities, 59 cycles and 7,715 constructs;
+no new UnknownHostPayload appeared. All construct movement is paired and
+attributed to D. Four adapter witnesses were re-emitted. The frontier's 937
+rows are byte-identical to run 1, so no frontier pin changed. The frame-root,
+stage and census identities/counts remain unchanged: removing a dead ordinary
+branch removes neither a frame nor a macro site. No fixture was deleted.
+
+Evidence: [D's fourteen call sites](../../../.temp/brief-611/r2/d-removal.json),
+[ownership replay](../../../.temp/brief-611/r2/ownership-replay.patch),
+[certificate cells](../../../.temp/brief-611/r2/certificate-diff.json),
+[frontier](../../../.temp/brief-611/r2/frontier-candidate.tsv), and
+[final source/binary verification](../../../.temp/brief-611/r2/final-verification.json).
+
+The accepted F/M transitions, two Scan instantiations, ordinary/token site
+classification and F0244 Expr / F0244A Option split remain as reported earlier.
+The skipped-`Some` transform still runs inside the application RHS frame with
+one frame per pause. The original failing-first S4 observations were not redone
+or substituted; both final 133-test oracle builds exercised the retained fixtures.
+D removes the previously reported guest-unreachable pending site.
+
+Final census output (the same cohort passed in both feature configurations):
+
+```text
+S5 CENSUS production frames=518 finalizers=52 implementations=607 typed=37 macros=589 result=368 insert=221
+S5 CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+S5 CENSUS test-support frames=5 finalizers=0 implementations=15 typed=10 macros=10 result=6 insert=4
+S5 PARTITION implementations=623 macros=600
+S5 FRAME F0237 EvaluateFirstExactDefaultValueFromCursorSuspensionFrame CompiledMatchOutcome -> Option<Expr>
+S5 FRAME F0238 DirectDefaultFallbackFrame Option<Expr> -> Option<Expr>
+S5 FRAME F0239 TryApplyDownValuesFromSymbolSuspensionFrame CompiledMatchOutcome -> Option<Expr>
+S5 FRAME F0244 EvaluateDefinitionRhsSuspensionFrame Expr -> Expr
+S5 FRAME F0244A EvaluateDefinitionApplicationRhsSuspensionFrame Expr -> Option<Expr>
+S5 FRAME F0245 TryApplySubValuesFromSymbolSuspensionFrame CompiledMatchOutcome -> Option<Expr>
+S5 FRAME F0246 TryApplyUpValuesFromListSuspensionFrame CompiledMatchOutcome -> Option<Expr>
+S5 FRAME F0257 DefinitionLhsPreparationSuspensionFrame Expr -> Expr
+S5 FRAME F0258 EvalUpSetSuspensionFrame Expr -> Expr
+S5 FRAME F0259 EvalTagSetSuspensionFrame Expr -> Expr
+S5 FRAME F0262 DestructuringSuspensionFrame Expr -> Expr
+S5 FRAME F0263 EvalSetSuspensionFrame Expr -> Expr
+S5 FRAME F0264 EvalRuleSuspensionFrame Expr -> Expr
+S5 FRAME F0270 RulePatternSuspensionFrame Expr -> Expr
+S5 FRAME F0271 RuleLhsCompletionFrame Expr -> Expr
+S5 SPLIT F0244 Expr / F0244A Option<Expr>; one frame per pause; generic F0239 retains Scan
+S5 TOTAL typed=37 typed_macros=42; modes unchanged; preflip remains refused
+S5 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; typed evaluation uses unchanged global modes
+S5 PARTITION implementations=622 macros=600
+S5 CENSUS test-only frames=0 finalizers=0 implementations=0 typed=0 macros=0 result=0 insert=0
+```
+
+### B — one split attempt, rejected and restored
+
+The attempted ordinary routes used concrete `EvalError`, caller-place macros
+at the producer and direct error forwarding. Only the Route genericity was
+removed; the required DownValue `Scan` genericity remained. Resumed drivers
+used the token and `suspend_again`. Pure preparation helpers factored the
+candidate, prefilter, substitution and tracing work without carrying producer
+Results. The outer DownValue lookup, UpValue and RHS retained run 1's shape.
+
+The trial changed and then restored these eight existing files beneath
+`crates/rum-runtime/src/runtime/definitions/`: `application/down_values.rs`,
+`application/sub_values.rs`, `application/mod.rs`, `definitions/destructuring.rs`,
+`rule_lhs.rs`, `rule_lhs/continuation.rs`, `rule_lhs/tests/base_cases.rs`, and
+`definition_lhs_preparation.rs`. Its six new modules were removed:
+`application/down_values/{preparation,resume}.rs`,
+`application/sub_values/{preparation,resume}.rs`, and
+`definition_lhs_preparation/{drive_step,resumed}.rs`. Each new module was under
+10k characters. Full trial source, hashes and the restoration proof are in
+`split-source/`, `split-source-hashes.json` and `b-decision.json`.
+
+| Profile / shape | S4 B/level | Split B/level | Split delta |
+|---|---:|---:|---:|
+| debug peel | 19152 | 20912 | +1760 |
+| debug plus | 34896 | 38480 | +3584 |
+| debug sub | 30352 | 32048 | +1696 |
+| debug up | 28528 | 28288 | -240 |
+| debug guarded | 35824 | 39696 | +3872 |
+| release peel | 7312 | 7408 | +96 |
+| release plus | 13744 | 13856 | +112 |
+| release sub | 12928 | 13008 | +80 |
+| release up | 11424 | 11584 | +160 |
+| release guarded | 14192 | 13856 | -336 |
+
+The split reduced failing-pair count 9 → 8 but increased summed positive
+excess 2,320 → 11,360 B, and made debug peel/plus worse. It therefore failed
+the conjunction in the keep rule. All eight files were hash-verified against
+entry and all application files were restored before C and D. No second shape
+was built. The named pure-helper aggregate temporaries, cold closure captures,
+other-error slots and every resumed-driver prologue are in
+[split slot attribution](../../../.temp/brief-611/r2/stack/slot-attribution.md).
+Some compiler spill identities remain unassigned; they are not claimed as
+accepted macro cost.
+
+Final-source verification after D gives:
+
+| Profile / shape | S4 B/level | Final B/level | Final delta |
+|---|---:|---:|---:|
+| debug peel | 19152 | 19360 | +208 |
+| debug plus | 34896 | 35376 | +480 |
+| debug sub | 30352 | 29600 | -752 |
+| debug up | 28528 | 28288 | -240 |
+| debug guarded | 35824 | 36304 | +480 |
+| release peel | 7312 | 7440 | +128 |
+| release plus | 13744 | 13920 | +176 |
+| release sub | 12928 | 13152 | +224 |
+| release up | 11424 | 11584 | +160 |
+| release guarded | 14192 | 14368 | +176 |
+
+All four-height/three-sample fits have zero residual. D improves SubValue stack
+use; summed positive excess is now 2,032 B in eight pairs. Peel and plus retain
+their run-1 residuals. Debug peel is +272 scan +16 outer lookup −80 RHS = +208;
+debug plus is 2×272 +16 −80 = +480. Release peel is +48 scan +80 RHS = +128;
+release plus is 2×48 +80 = +176. These include the producer Result crossing a
+cold call and the extra error temporary, not just the macro environment.
+
+The final per-slot report names current addresses, SubValue's remaining slots
+and all attribution limitations:
+[final slot attribution](../../../.temp/brief-611/r2/stack/final-slot-attribution.md),
+[whole resident cycles](../../../.temp/brief-611/r2/stack/final-frame-deltas.tsv),
+[all owned prologues](../../../.temp/brief-611/r2/stack/final-changed-prologues.tsv).
+The unchanged 48-level test passed. No stack residual is accepted here.
+
+### C and F — final ordinary measurements
+
+The original four S4 binary hashes were reverified, and all four CGU1 candidates
+were rebuilt from the final source. Every candidate build's complete Rust
+source hash map agrees with that source. Equal-depth `base`/`cand` executable
+paths avoid a constant argv allocation discrepancy.
+
+| Binary | Frozen S4 SHA-256 | Final SHA-256 |
+|---|---|---|
+| rum-cli | `7881a7149a3c5a5d8e6d792f39d46338b365987d5c02908a65b6f4648d950e80` | `669b82e9788749f1be6c7d26522bfcd76090a683f44c2f12308b4ee90e79948f` |
+| rum-cli-alloc | `adf80f3eeebbbe39dcba9b6295191c9462893540a0fdce48215fba3499284b24` | `563d9bdd0d8528c2205f9df95b4f35d4e29af54e68b86d757a5756609c4ea4fe` |
+| resume | `40f5c75c6b42d698523822959b9f0a39372c5d4700f0bad55e21b8c2f2aade3d` | `e325d992080e015f5645d2f8a8b038ff1faca6123ba9513e814d4dcd9febc31a` |
+| resume-alloc | `0414b33d5cee14192e786f2ca705ab250c35ccf76b257f5ea69da0dfaece04c5` | `6353758a1ef259b0cbdd43c725ae7ec641f9c766528a45ffeff1f3729cd23841` |
+
+All 139 result checks passed. On all 107 ordinary labels, allocation counts
+and bytes match exactly at N and 2N and in slope. All 107 labels also pass the
+resolved-libc memcpy gate at N, 2N and in slope, counting every caller. The
+target binding is proved through real GOT call sites, not a nearest exported
+symbol in stripped libc. See `perf/allocation-comparison.json`,
+`ordinary-callgrind/copy-gate.json`, `copy-callers.tsv` and
+`attribution/libc-binding.json`.
+
+Two interleaved perf pairs covered all 139 labels. Eleven ordinary labels
+were flagged. Five additional interleaved runs per arm cleared ten; the
+remaining `default-unguarded-miss` result is base 12,787.03390, candidate
+12,801.02240, delta +13.98850 instructions/iteration against a 6.39351695 bar.
+This remains a regression. The exact flags, all slopes/ranges and five-run
+decisions are in `perf/{instruction-comparison,ordinary-five-run-comparison}.json`.
+
+Six final-source callgrind processes per arm again show the default miss's
+dominant increase in libc `bcmp` at 0x1b1220: +24.046035806, SE 0.029858034.
+The owned DownValue and default scans contribute deterministic −9 and −1.
+The outer DownValue lookup stays exactly 283 instructions/iteration. The
+base vector return 0x1b1533 and candidate short-path return 0x1b157a each
+execute three times/iteration in every sample, following the page-boundary
+test against 0xfe0. The exact compared string/pointer remains unidentified.
+All twelve memcpy measurements have slope 12; whole counts are base
+19,838/38,606 and candidate 19,837/38,605. The suspect direct-default cold
+move does not execute on this miss. There was no added executed copy to
+remove, so no speculative C source edit was made.
+
+The three leaves have identical `Session::evaluate` cost, 110 instructions
+per iteration in every sample, with zero aligned address changes in that
+body. No leaf has a positive deterministic per-function delta. However,
+whole-label sample ranges overlap and positive process-variable residues
+remain outside one standard error. **The strict whole-label no-growth proof
+is not declared green.** All addresses, caller counts, per-function samples
+and standard errors are disclosed in
+[final ordinary attribution](../../../.temp/brief-611/r2/final-ordinary-attribution.md)
+and its linked JSON/TSV files. Synthetic `???` disassembly gaps have zero delta
+and are explicitly identified.
+
+### Resume census, allocation and instruction attribution
+
+Both no-default-feature harnesses passed all 32 workloads. The 19 new labels
+remain N=100/200. All 32 workloads have six independent callgrind processes
+per arm, full per-function/address/caller diffs, and a measured before/after
+frame census including calls per actual resume.
+
+All 32 allocation deltas reconcile exactly to one 24-B outer adapter Arc per
+newly typed entry plus three allocations/120 B for each new application
+`Some` wire. Count and byte intercepts are zero. The latter consists of the
+32-B element buffer, 48-B shared head and 40-B shared argument owner; the
+source and allocation instruction sites are named in the report.
+
+The unique driver 136-B typed-outcome copy is base 0x72d414, candidate
+0x73bde4. Its count equals typed-adapter calls for every label in every sample.
+Each newly typed entry adds exactly one such transfer. It is counted and owed
+to R; the driver was not changed. The per-label copies and SIMD/rep moves,
+including action/input/state/error and helper ABI transfers, are retained
+with addresses and source/destination windows. Existing transfers are paired
+with their legacy bodies rather than all being labelled new cost.
+
+The full report and combined ledgers are
+[resume attribution](../../../.temp/brief-611/r2/final-resume-attribution.md),
+[frame calls](../../../.temp/brief-611/r2/resume-callgrind/frame-calls.json),
+[allocation reconciliation](../../../.temp/brief-611/r2/perf/allocation-frame-proof.json),
+[function deltas](../../../.temp/brief-611/r2/attribution/resume/resume-function-deltas.tsv),
+[copy sites](../../../.temp/brief-611/r2/attribution/resume/resume-copy-sites.tsv),
+[movement sites](../../../.temp/brief-611/r2/attribution/resume/resume-simd-moves.tsv),
+and [driver proof](../../../.temp/brief-611/r2/attribution/resume/driver-copy-proof.json).
+Every process-variable delta is reported with its SE; none is silently cleared.
+
+| Workload | New typed entries | New Some wires | Extra allocs / bytes | Added 136-B transfers | Instruction delta | Deterministic part | Variable functions outside 1 SE |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| resume-table | 0 | 0 | 0 / 0 | 0 | -10.025000 | 0.000000 | 6 |
+| resume-do-chain | 0 | 0 | 0 / 0 | 0 | -26.725000 | 0.000000 | 2 |
+| resume-call-repeat | 0 | 0 | 0 / 0 | 0 | -76.873333 | 0.000000 | 3 |
+| resume-cleanup | 0 | 0 | 0 / 0 | 0 | 1.313333 | 0.000000 | 3 |
+| resume-fold | 0 | 0 | 0 / 0 | 0 | -62.870000 | 0.000000 | 6 |
+| resume-argument-twice | 0 | 0 | 0 / 0 | 0 | 32.241667 | 0.000000 | 5 |
+| resume-rewrite-exprs | 0 | 0 | 0 / 0 | 0 | -211.456667 | 0.000000 | 4 |
+| resume-rewrite-compiled | 0 | 0 | 0 / 0 | 0 | -56.198333 | 0.000000 | 2 |
+| resume-cases-spec | 1 | 0 | 1 / 24 | 1 | 155.465000 | 166.000000 | 5 |
+| resume-cases-traversal | 0 | 0 | 0 / 0 | 0 | -63.893333 | 0.000000 | 5 |
+| resume-position-traversal | 0 | 0 | 0 / 0 | 0 | 89.863333 | 0.000000 | 6 |
+| resume-count-traversal | 0 | 0 | 0 / 0 | 0 | -71.461667 | 0.000000 | 2 |
+| resume-cases-shared | 1 | 0 | 1 / 24 | 1 | 336.975000 | 170.010000 | 5 |
+| resume-s5-down-rhs | 1 | 1 | 4 / 144 | 1 | 1854.958333 | 1430.980000 | 8 |
+| resume-s5-down-guard | 2 | 1 | 5 / 168 | 2 | 2232.701667 | 1575.260000 | 10 |
+| resume-s5-sub-rhs | 1 | 1 | 4 / 144 | 1 | 1828.588333 | 1409.780000 | 4 |
+| resume-s5-sub-guard | 2 | 1 | 5 / 168 | 2 | 2345.328333 | 1823.570000 | 6 |
+| resume-s5-up-rhs | 1 | 1 | 4 / 144 | 1 | 1909.275000 | 1427.340000 | 6 |
+| resume-s5-up-guard | 2 | 1 | 5 / 168 | 2 | 2245.180000 | 1838.000000 | 6 |
+| resume-s5-default-rhs | 2 | 1 | 5 / 168 | 2 | 1932.806667 | 1722.730000 | 8 |
+| resume-s5-default-guard | 3 | 1 | 6 / 192 | 3 | 2206.573333 | 1870.700000 | 5 |
+| resume-s5-default-fallback-rhs | 2 | 1 | 5 / 168 | 2 | 1928.723333 | 1612.700000 | 5 |
+| resume-s5-set | 1 | 0 | 1 / 24 | 1 | 133.948333 | 108.000000 | 3 |
+| resume-s5-upset | 1 | 0 | 1 / 24 | 1 | 94.881667 | 230.100000 | 3 |
+| resume-s5-tagset | 1 | 0 | 1 / 24 | 1 | 226.060000 | 247.100000 | 1 |
+| resume-s5-rule-rhs | 1 | 0 | 1 / 24 | 1 | 138.130000 | 117.560000 | 6 |
+| resume-s5-rule-lhs | 2 | 0 | 2 / 48 | 2 | 279.010000 | 263.480000 | 3 |
+| resume-s5-destructure | 1 | 0 | 1 / 24 | 1 | 336.501667 | 263.640000 | 6 |
+| resume-s5-lhs-twice | 2 | 0 | 2 / 48 | 2 | 763.950000 | 660.370000 | 4 |
+| resume-s5-own-rhs | 1 | 0 | 1 / 24 | 1 | 166.503333 | 165.000000 | 2 |
+| resume-s5-destructure-twice | 2 | 0 | 2 / 48 | 2 | 429.353333 | 501.780000 | 3 |
+| resume-s5-rule-lhs-twice | 3 | 0 | 3 / 72 | 3 | 262.018333 | 381.280000 | 4 |
+
+### Timing, last and indicative
+
+Four full pinned panels ran B/C/B/C with profiling disabled, seven repetitions,
+scale 1 and retained-module GC batches 3. Each produced 120 in-kernel
+`AbsoluteTiming` rows. All preflights observed quiet CPU and all monitored
+measurement samples found no competing CPU process above 0.15 cores. GPU
+activity was unobservable through the available provider; universal host
+quiescence is not claimed.
+
+Median candidate/base ratios were 0.996671875 and 0.999653720. No deterministic
+leaf was outside [0.8, 1.25], so the conditional five-run rerun was not required.
+The two association key-read labels were about 21–23% slower in both pairs;
+those indications remain reported, not hidden by the medians. Timing does
+not override the instruction findings.
+
+| Label | Pair 1 candidate/base | Pair 2 candidate/base |
+|---|---:|---:|
+| literal-integer | 0.986012573 | 1.092480165 |
+| do-count-null | 0.972684498 | 0.975839615 |
+| do-iterator-null | 0.963230172 | 1.042230373 |
+| association-part-key-read-width4000 | 1.216490287 | 1.226468927 |
+| association-part-key-read-width32000 | 1.211501791 | 1.219572326 |
+| appendto-list-incremental-small | 1.232194117 | 0.904875337 |
+
+Raw `timings.tsv` panels, generated `.rum`, host-monitor records and pairwise
+ratios are under `perf/timing-pinned/` and `timing-pinned-*-host.json`.
+
+### Correctness results and warnings
+
+Final fmt, typed API, frame roots, native48, both compile-control/census/local
+production/ordinary-control builds, ownership, rejection census, both oracle
+builds, native ZeroMQ command and full workspace all exited zero. Compile
+controls ran 32 positive/negative pairs per build; ordinary controls checked
+28 cases with Checks::ALL and unconditional FaultProbe absence per build.
+Both oracle builds passed 133 tests, emitted no compiler warning and ended
+with fault-occurrence delta=0, observations=88916; all 84 captured fault
+assertions per build are zero.
+
+The native ZeroMQ command's harness says nine passed because its wrappers
+return after reporting unavailable loopback. **All nine are skips of native
+transport coverage, not passes of that coverage.** The same limitation applies
+to the workspace run. The literal skip output is reproduced below.
+
+The runtime test binary reports the three existing dead-code warnings for
+`register_test_if_builtin`, `register_test_return_builtin`, and
+`register_test_vm_template_builtins`. No warning was introduced by the retained
+change; both oracle builds and all four production candidate builds are clean.
+Workspace also prints warnings from its deliberate `option-read-proof`
+compiler fixtures; raw warnings and context are preserved in the log.
+
+The `FAILED` totals within successful census/workspace logs are expected
+forced-red child controls. They are reproduced verbatim, not removed. The
+earlier certificate-emission failures are expected stale-certificate checks
+after seven zero-rejection rows, followed by emitted-cell replay and green
+final acceptance tests.
+
+```text
+b-split-fmt-initial
+$ cargo fmt --check
+exit=1
+
+b-split-format
+$ cargo fmt
+exit=0
+
+b-split-typed-1
+$ cargo test -p rum-runtime --lib suspension::typed::tests
+exit=0
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 1152 filtered out; finished in 0.46s
+
+certificate-emission-default-drop-order
+$ cargo test -p rum-stdlib --lib local_production_acceptance -- --nocapture
+exit=101
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 18.35s
+
+certificate-emission-no-default-drop-order
+$ cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance -- --nocapture
+exit=101
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1154 filtered out; finished in 18.16s
+
+f-adapter-witnesses
+$ cargo test -p rum-stdlib --lib adapter_production_witnesses_are_computed -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 5.97s
+
+f-discovery
+$ cargo test -p rum-stdlib --lib tests::ownership_graph::discovery_report_without_inventory_input -- --exact --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 6.06s
+
+f-frontier-replay-template
+$ cargo test --manifest-path /home/remi/dev/rum/.temp/brief-611/frontier-fixture/Cargo.toml --test frontier checker::r6_production_views_inventory -- --exact --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 9 filtered out; finished in 10.27s
+
+final-census-default
+$ cargo test -p rum-stdlib --test typed_slot_census -- --nocapture
+exit=0
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 18.99s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 18.98s
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 141.40s
+
+final-census-no-default
+$ cargo test -p rum-stdlib --no-default-features --test typed_slot_census -- --nocapture
+exit=0
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 18.95s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.22s
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 139.86s
+
+final-certificate-default
+$ cargo test -p rum-stdlib --lib local_production_acceptance -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 18.16s
+
+final-certificate-no-default
+$ cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1154 filtered out; finished in 18.14s
+
+final-controls-default
+$ cargo test -p rum-stdlib --test typed_slot_compile_controls -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 27.90s
+
+final-controls-no-default
+$ cargo test -p rum-stdlib --no-default-features --test typed_slot_compile_controls -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 25.43s
+
+final-fmt
+$ cargo fmt --check
+exit=0
+
+final-frame-roots
+$ cargo test -p rum-runtime --lib frame_root_trace
+exit=0
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1158 filtered out; finished in 1.36s
+
+final-native-zeromq
+$ cargo test -p rum-jupyter --lib native_zeromq -- --nocapture
+exit=0
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 142 filtered out; finished in 0.00s
+
+final-native48
+$ cargo test -p rum-runtime --lib runtime::tests::holding_and_control_part2::bounded_recursive_definition_below_native_stack_limit_succeeds -- --exact
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.01s
+
+final-oracle-default
+$ cargo test -p rum-stdlib --test suspension_oracle -- --nocapture
+exit=0
+test result: ok. 133 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.33s
+
+final-oracle-no-default
+$ cargo test -p rum-stdlib --no-default-features --test suspension_oracle -- --nocapture
+exit=0
+test result: ok. 133 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.44s
+
+final-ordinary-default
+$ cargo test --manifest-path /home/remi/dev/rum/.temp/brief-611/ordinary-controls/Cargo.toml --test ordinary -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+final-ordinary-no-default
+$ cargo test --manifest-path /home/remi/dev/rum/.temp/brief-611/ordinary-controls/Cargo.toml --no-default-features --test ordinary -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+final-ownership
+$ cargo test -p rum-stdlib --lib ownership_graph -- --nocapture
+exit=0
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 1130 filtered out; finished in 68.96s
+
+final-production-rejections
+$ cargo test -p rum-stdlib --lib production_rejection_census_is_complete -- --nocapture
+exit=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1160 filtered out; finished in 25.50s
+
+final-typed-api
+$ cargo test -p rum-runtime --lib suspension::typed::tests
+exit=0
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 1152 filtered out; finished in 0.45s
+
+final-workspace
+$ cargo test --workspace --no-fail-fast -- --nocapture
+exit=0
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.25s
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.95s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.63s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 37.89s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.28s
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.07s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+test result: ok. 151 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.72s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.41s
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+test result: ok. 1170 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 37.30s
+test result: ok. 1108 passed; 0 failed; 53 ignored; 0 measured; 0 filtered out; finished in 1270.50s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+test result: ok. 47 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.06s
+test result: ok. 69 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 23.44s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.30s
+test result: ok. 100 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.98s
+test result: ok. 71 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.58s
+test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.99s
+test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.48s
+test result: ok. 133 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 29.60s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.50s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 19.84s
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 146.49s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 29.61s
+test result: ok. 193 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.59s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.39s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.27s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.74s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+```
+
+```text
+test zeromq::tests::native::basic::native_zeromq_backend_echoes_heartbeat_over_loopback_req_socket ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::basic::native_zeromq_backend_round_trips_execute_over_loopback_sockets ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::control::native_zeromq_backend_frontend_style_control_interrupt_round_trip ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::control::native_zeromq_backend_shutdown_stops_shell_work_and_reports_pending_shell_messages ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::execute::native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_metadata ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::session_flow::native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts_and_shutdown ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::stdin::native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_reply ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::signed::native_zeromq_backend_rejects_tampered_signed_requests_end_to_end ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::signed::native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+```
+
+### Stop-loss, repairs, deviations and remaining decisions
+
+- B: one parse error corrected, then 45 compile errors → 0. The sole measured
+  split fails the keep rule and is restored. No second shape, unstable
+  expression attribute or witness macro change was tried.
+- C: the first analysis misclassified the symlinked base object. Canonicalizing
+  both paths repaired the reader; the same raw data was reanalysed. The initial
+  invalid analysis is archived and is not evidence. Final bases are copied
+  binaries with reverified original hashes.
+- D: a scratch call counter initially counted only 12 direct `self.` lines;
+  following multiline calls found the actual 14. No source was changed to
+  satisfy the counter.
+- F frontier scratch harness: duplicate module compilation had one error;
+  the first repair left three unresolved imports; restoring the existing S4
+  scratch module selection reduced them to zero and the 937-row replay passed.
+  Only one repair failed to make progress; canonical checker code was unchanged.
+- No-default scratch harness: `--locked` rejected the copied default-feature
+  lock before compilation. One repair allowed offline feature selection only
+  in that scratch copy. Package/version/source/checksum identities were checked
+  to be a subset of the frozen harness lock. Both arms then built and all
+  32 workloads passed. The repository manifests/lockfile and frozen harness
+  source/lock remain unchanged. The initial failure remains in the gate ledger.
+- The trial used `cargo check -p rum-runtime --tests` once while reducing
+  compile errors. The oracle was run with the exact two Cargo test commands
+  used by the script, bounded separately at 1500 s, to keep scratch output in
+  the authorized fence. Persistent shell sessions imposed no shorter deadline
+  than `run-bounded.py`. Cargo jobs/test threads were one, offline mode was on,
+  and expensive commands and all measurements ran serially.
+
+No mandatory correctness, replay or performance section remains unrun.
+Remaining findings are the final eight positive stack pairs (especially all
+peel/plus pairs), the +13.9885 default-miss instruction regression, the strict
+whole-leaf proof's variable residues, and the indicated key-read timing
+slowdowns. B is closed; none of these is self-approved. E's depth defect was
+not fixed, tested afresh or worked around. The director owns acceptance and git.
+
+### Exact fingerprint transitions
+
+```tsv
+id	before	after
+B01	fnv1a64:61ec6da8509828cc	fnv1a64:d84cec17eacedac2
+B02	fnv1a64:24b7a4e2536c9b1d	fnv1a64:aaf861f067661c3b
+B03	fnv1a64:64c876414d7dcb8a	fnv1a64:015b2428c15389b0
+B04	fnv1a64:16d310aad2d33624	fnv1a64:5f479ff0607eff7a
+B05	fnv1a64:39d9ba91553d7d09	fnv1a64:3bfd8f1d16e68a97
+B06	fnv1a64:96d1aab07ec8eec0	fnv1a64:d3f713603fe426b6
+B07	fnv1a64:30c85fd4bb7f0b79	fnv1a64:ea254397fa00cbe7
+B08	fnv1a64:bfdfb056ecc56d16	fnv1a64:97f9b04824a6abdc
+B09	fnv1a64:ce8d286f635a9718	fnv1a64:081d2d2b9ba2036e
+B10	fnv1a64:ff027c5aed91d823	fnv1a64:d3ace321f0cbd031
+B11	fnv1a64:d82ac207ecc75c24	fnv1a64:209f514d7a73257a
+B12	fnv1a64:8d99a86b3f632c18	fnv1a64:c729ad2777aa986e
+I01	fnv1a64:3fce58a5bd501f4c	fnv1a64:b62ed7155786d142
+I02	fnv1a64:911b38254d740509	fnv1a64:933f0cb10f1d1297
+I03	fnv1a64:75721f8c04be5c58	fnv1a64:d6b6d73dbc53842e
+I04	fnv1a64:777013f22ccd14bd	fnv1a64:5d69c08448c1c8db
+P01	fnv1a64:9b92851d28290660	fnv1a64:837941d0d679fbd6
+P02	fnv1a64:5925c7e58a1a99f3	fnv1a64:02eb6637b0d81061
+P03	fnv1a64:b87ecf0ee689c112	fnv1a64:107c9c36d8a18058
+P04	fnv1a64:1992c2f7d815b71d	fnv1a64:9fd38005ec0f383b
+P05	fnv1a64:c02677d596f9551c	fnv1a64:a47b5b8cf2ed9ab2
+P06	fnv1a64:de18cd3bcb92c598	fnv1a64:17a8d1f803da31ee
+P070	fnv1a64:1866697daa083f98	fnv1a64:51f66e39e24fabee
+P080	fnv1a64:cf06babc546a2063	fnv1a64:829160720b8a18f1
+P090	fnv1a64:bf502e6fbc8c875d	fnv1a64:38bc0c0d5447eefb
+P100	fnv1a64:8c57a8c58d5dbd54	fnv1a64:902bfac6139d198a
+P110	fnv1a64:f41d1e9c2d82604b	fnv1a64:08d4ec77e2ceaa39
+P120	fnv1a64:f1d4504dcaeaab36	fnv1a64:559ea35fa0391bfc
+P130	fnv1a64:d495b931ea32e579	fnv1a64:8df29cf528b4a5e7
+P140	fnv1a64:d9354095d750a085	fnv1a64:c298a00cd72518e3
+P150	fnv1a64:f48b6e9a730148fd	fnv1a64:f61a81055a6ce39b
+P071	fnv1a64:0e9d354feab91d19	fnv1a64:820dd7e99fe33787
+P081	fnv1a64:8a377b8471edfb38	fnv1a64:7d9fc860d16f8a8e
+P091	fnv1a64:8b4c26e29d3210a0	fnv1a64:464439abbb7db896
+P101	fnv1a64:ec200f6962e5fd4b	fnv1a64:00d7dd4518324739
+P111	fnv1a64:0140c89d6543c988	fnv1a64:9a25cf0a27df0ffe
+P121	fnv1a64:6fdd582b0e87da97	fnv1a64:b5544ec750df37f5
+P131	fnv1a64:b47d3311092757a4	fnv1a64:fcf1c25696d320fa
+P141	fnv1a64:95ba7d1c0cbbb200	fnv1a64:92e0bad57d858376
+P151	fnv1a64:a980ff8091e3daf6	fnv1a64:fb237b7820b2763c
+B13	fnv1a64:24e23e39af65aac0	fnv1a64:6207a6e97080e2b6
+R01	fnv1a64:1dd7021694e4b5cd	fnv1a64:7fc8ba9caff04d4b
+R02	fnv1a64:c7c3eb7bdfca6f52	fnv1a64:e98180af76751318
+R03	fnv1a64:a7cbb673f7171e11	fnv1a64:f73e8e6428bbb67f
+R040	fnv1a64:d5e701eb07f723ed	fnv1a64:ab4fbff6e1902e6b
+R050	fnv1a64:41209a4b1c6c3f7c	fnv1a64:1c73e40a66e95192
+R060	fnv1a64:aa33d11019262535	fnv1a64:d494a6f42b612fb3
+R070	fnv1a64:f2a5439e538fba38	fnv1a64:e60d907ab311498e
+R080	fnv1a64:3e747ce4fc51ddbd	fnv1a64:246e2977184691db
+R090	fnv1a64:4dc83ed58d74bb94	fnv1a64:21d64a1131ed284a
+R100	fnv1a64:29ee1a93f753760a	fnv1a64:c680c87b6b293430
+R110	fnv1a64:fed0c43fa5d0b13b	fnv1a64:e21e754af04fc149
+R041	fnv1a64:0b1ba163c68d69c0	fnv1a64:48410a1387a8a1b6
+R051	fnv1a64:4d725c8549ba93dd	fnv1a64:c6de3a22e175fb7b
+R061	fnv1a64:25caeefdda0a6726	fnv1a64:26e58a2139c28b4c
+R071	fnv1a64:26fd2eb9dbdd88ef	fnv1a64:0a9a4517174f31cd
+R081	fnv1a64:4842121a29099254	fnv1a64:4c16641aaf48ee8a
+R091	fnv1a64:e4ebef9b6cf39445	fnv1a64:b2bae939a152d923
+R101	fnv1a64:f1168df5ab912775	fnv1a64:3c45c0a799f8f773
+R111	fnv1a64:07ed3bc6d034abae	fnv1a64:10e49ba1a31c2954
+R12	fnv1a64:ed8d5ee2e2185c6e	fnv1a64:941ed1e5c291ed94
+R13	fnv1a64:171c4f87ef12675a	fnv1a64:0effd0a4dfd7b060
+R14	fnv1a64:a6afb73b6a0e7d54	fnv1a64:aa84093bf04dd98a
+R15	fnv1a64:36ea39000506a490	fnv1a64:25909dcea10f4f26
+O010	fnv1a64:7f8ec3d664a17f86	fnv1a64:843a4008bc9ad5ac
+O0200	fnv1a64:d3fce26a2607c685	fnv1a64:bd6041e125dc3ee3
+O011	fnv1a64:ecbc8d9826b7e9b5	fnv1a64:171d637c38f2f433
+O0210	fnv1a64:ad57105c2852c8ce	fnv1a64:e7020576ec3b0ff4
+```
+
+### All native-probe test totals
+
+The following are the real `test result:` lines for the rejected split and
+final-source stack samples. Base samples are frozen earlier evidence and were
+hash-verified rather than rerun. The probe guard and stack size are unchanged.
+
+```text
+stack/candidate/split/debug/marker-guarded-2-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.04s
+stack/candidate/split/debug/marker-guarded-2-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-guarded-2-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-guarded-4-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-guarded-4-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-guarded-4-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-guarded-6-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-guarded-6-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-guarded-6-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-guarded-8-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-guarded-8-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-guarded-8-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.01s
+stack/candidate/split/debug/marker-peel-2-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.05s
+stack/candidate/split/debug/marker-peel-2-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-peel-2-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-peel-4-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-peel-4-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-peel-4-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-peel-6-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-peel-6-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-peel-6-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-peel-8-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-peel-8-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-peel-8-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-plus-2-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.05s
+stack/candidate/split/debug/marker-plus-2-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-plus-2-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-plus-4-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-plus-4-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-plus-4-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-plus-6-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-plus-6-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-plus-6-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-plus-8-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-plus-8-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.01s
+stack/candidate/split/debug/marker-plus-8-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.01s
+stack/candidate/split/debug/marker-sub-2-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.05s
+stack/candidate/split/debug/marker-sub-2-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-sub-2-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-sub-4-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.01s
+stack/candidate/split/debug/marker-sub-4-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.01s
+stack/candidate/split/debug/marker-sub-4-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-sub-6-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-sub-6-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-sub-6-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-sub-8-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-sub-8-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-sub-8-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-up-2-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.05s
+stack/candidate/split/debug/marker-up-2-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-up-2-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-up-4-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-up-4-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-up-4-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-up-6-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.01s
+stack/candidate/split/debug/marker-up-6-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-up-6-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-up-8-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-up-8-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/debug/marker-up-8-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-guarded-10-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-guarded-10-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-guarded-10-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-guarded-15-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-guarded-15-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-guarded-15-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-guarded-20-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-guarded-20-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-guarded-20-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-guarded-5-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-guarded-5-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-guarded-5-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-peel-10-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-peel-10-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-peel-10-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-peel-15-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-peel-15-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-peel-15-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-peel-20-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-peel-20-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-peel-20-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-peel-5-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-peel-5-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-peel-5-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-plus-10-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-plus-10-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-plus-10-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-plus-15-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-plus-15-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-plus-15-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-plus-20-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-plus-20-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-plus-20-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-plus-5-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-plus-5-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-plus-5-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-sub-10-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-sub-10-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-sub-10-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-sub-15-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-sub-15-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-sub-15-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-sub-20-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-sub-20-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-sub-20-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-sub-5-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-sub-5-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-sub-5-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-up-10-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-up-10-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-up-10-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-up-15-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-up-15-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-up-15-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-up-20-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-up-20-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-up-20-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-up-5-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-up-5-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/split/release/marker-up-5-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-guarded-2-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.05s
+stack/candidate/final/debug/marker-guarded-2-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-guarded-2-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-guarded-4-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-guarded-4-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-guarded-4-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-guarded-6-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-guarded-6-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-guarded-6-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-guarded-8-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-guarded-8-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.01s
+stack/candidate/final/debug/marker-guarded-8-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.01s
+stack/candidate/final/debug/marker-peel-2-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.06s
+stack/candidate/final/debug/marker-peel-2-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-peel-2-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-peel-4-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-peel-4-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-peel-4-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-peel-6-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-peel-6-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-peel-6-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-peel-8-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-peel-8-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-peel-8-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-plus-2-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.04s
+stack/candidate/final/debug/marker-plus-2-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-plus-2-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-plus-4-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-plus-4-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-plus-4-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-plus-6-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-plus-6-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-plus-6-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-plus-8-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-plus-8-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-plus-8-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-sub-2-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.06s
+stack/candidate/final/debug/marker-sub-2-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-sub-2-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-sub-4-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-sub-4-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-sub-4-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-sub-6-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-sub-6-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-sub-6-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-sub-8-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-sub-8-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-sub-8-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-up-2-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.05s
+stack/candidate/final/debug/marker-up-2-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-up-2-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-up-4-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-up-4-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-up-4-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-up-6-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-up-6-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-up-6-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-up-8-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-up-8-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/debug/marker-up-8-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-guarded-10-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-guarded-10-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-guarded-10-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-guarded-15-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-guarded-15-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-guarded-15-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-guarded-20-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-guarded-20-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-guarded-20-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-guarded-5-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-guarded-5-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-guarded-5-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-peel-10-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-peel-10-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-peel-10-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-peel-15-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-peel-15-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-peel-15-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-peel-20-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-peel-20-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-peel-20-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-peel-5-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-peel-5-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-peel-5-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-plus-10-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-plus-10-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-plus-10-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-plus-15-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-plus-15-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-plus-15-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-plus-20-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-plus-20-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-plus-20-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-plus-5-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-plus-5-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-plus-5-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-sub-10-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-sub-10-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-sub-10-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-sub-15-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-sub-15-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-sub-15-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-sub-20-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-sub-20-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-sub-20-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-sub-5-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-sub-5-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-sub-5-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-up-10-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-up-10-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-up-10-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-up-15-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-up-15-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-up-15-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-up-20-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-up-20-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-up-20-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-up-5-1.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-up-5-2.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+stack/candidate/final/release/marker-up-5-3.log
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 0.00s
+```
+
+## Director amendment — redispatch 3: the witness crosses the cold call, not the `Result`
+
+### Rulings on redispatch 2
+
+- **B's split is closed.** It was measured honestly, rejected under the
+  pre-committed rule and restored byte for byte.
+- **D is accepted.** The dead `pending` branch is gone (15 → 14 callers),
+  and every moved pin is paired.
+- **C is attributed at my gate, and needs no source change.** The +24 in
+  `bcmp` is glibc's small-size page-cross test. It takes the bitwise OR of
+  both operands' page offsets and compares it with `0xfe0`. Both operands
+  are `"Default"` literals:
+  - the probe, `heads::patterns::DEFAULT`, passed by `default_value_lhs`;
+  - the key, from `CANONICAL_CORE_HEADS`.
+
+  | Arm | Probe | Key | OR of page offsets | Path |
+  |---|---|---|---|---|
+  | base | `0x860b97` | `0x8779db` | `0xb97 \| 0x9db = 0xbdf` (≤ `0xfe0`) | vector |
+  | candidate | `0x873bf7` | `0x88ae0b` | `0xbf7 \| 0xe0b = 0xfff` (> `0xfe0`) | page-cross |
+
+  This is read-only data layout, not executed code; your owned functions are
+  −10. If this label flags again, report the same OR for the two literals
+  and stop there.
+- **The key-read timing is cleared at my gate.** I ran width 4000 at
+  N = 400/800, five runs per arm, with the redispatch-2 binaries.
+  Instructions per iteration are equal (about 19,940 in both arms). Median
+  cycles per iteration are base 6,779 and candidate 6,505. Timing is not
+  required in this redispatch.
+- **The stack is not accepted yet, because one shape is still unwalked.**
+  Your slot tables name the cause: each cold helper receives the producer's
+  whole `Result`. That shape also needs an impossible state. The tree now
+  has twelve `ok(_) => unreachable!` arms, and two `unreachable!` arms in
+  `DefinitionResumeRoute`. HEAD has none: S3 and S4 put the macro at the
+  producer. No run has tried the shape the design itself describes. The
+  witness is a ZST, borrowed from the actual producer `Result` before any
+  transformation, and it is what crosses the call. The `Result` never does.
+
+### Ruling
+
+1. **One shape: the witness and the request cross the call.** Apply it at
+   every S5 site where a producer `Result` now crosses into a cold helper or
+   a route method. Today those are:
+   - `application/mod.rs`: `DefinitionResumeRoute::suspend_again`, both
+     impls;
+   - `application/rhs.rs`: both cold RHS helpers;
+   - `application/down_values.rs`: `suspend_down_value_application`;
+   - `application/down_values/default_fallback.rs`: `suspend`;
+   - `application/sub_values.rs`, `application/default_values.rs` and
+     `application/up_values.rs`: their cold scan helpers;
+   - `definition_lhs_preparation.rs`: the three LHS branches;
+   - `rule_lhs.rs`: the cold helper;
+   - `definitions/destructuring.rs`: the cold helper.
+
+   The shape at each site:
+   - **At the producer.** Take `let witness = slot_witness(&actual);`
+     immediately after the producer returns, before any match. The
+     `InputRequired { request }` arm extracts the request and passes
+     `(witness, request)` together with the frame's parts. The `Ok` arm and
+     the other-error arm stay at the site. Other errors are forwarded once.
+   - **The route method.** Replace `suspend_again` with one total method:
+
+     ```rust
+     fn suspend(
+         self,
+         session: &mut Session,
+         witness: SlotWitness<F::Input>,
+         request: RuntimeInputRequest,
+         fresh: F,
+     ) -> Result<F::Output, Self::Error>
+     ```
+
+     - The ordinary route `()` is `witness.suspend(session, request, fresh)`.
+     - The token route is `Err(self.suspend(session, witness, request, fresh))`.
+     - A cold helper that is generic over `Route` calls this method. It has
+       no `Route::ORDINARY` branch and no closure.
+     - A helper that is not generic over `Route` calls
+       `witness.suspend(self, request, frame)` directly. The RHS helpers and
+       the default fallback are examples.
+   - **Afterwards.** The tree has no `ok(_) => unreachable!` arm, and the
+     route trait has no `unreachable!`. If a site cannot take this shape,
+     leave that site as it is and report why. Do not build a third shape.
+   - **Constraints, unchanged.** `witness.rs` stays as it is. Nothing is
+     constructed on the ordinary path: the witness is a ZST, and the frame
+     is built only inside the cold helper.
+   - **Before editing**, snapshot the current application source with
+     hashes under `.temp/brief-611/r3/entry/`. Redispatch 2's F evidence
+     belongs to that source, so I can restore it exactly at my gate.
+2. **The census follows the insertion route.** The census now proves that
+   each owned S5 `M` receipt has a `resume_typed_or_suspend` use. Change it
+   to accept either of two forms:
+   - that macro at the receipt's identity; or
+   - a witnessed insertion, meaning a `suspend` whose witness argument is
+     `slot_witness(&x)` taken from the same binding `x` that the site
+     matches on.
+
+   It must still refuse a receipt with neither form. Watch it refuse twice
+   in a scratch copy: once for a site with no insertion, and once for a
+   witness taken from a different binding.
+
+   The printed TOTAL and SPLIT lines and the token-route suffixes may change
+   with the route. They are pins that follow code: disclose each one as
+   old → new.
+3. **Audits and pins.**
+   - **G4 `OUTBOUND` and G7.** Add the new callees with one-line audits.
+     Remove the edges that become dead, for example `suspend_again`, the
+     typed macro's closure edges and `map_err`.
+   - **Ownership and retention inventories.** Replay them only. A row the
+     new route method introduces, such as its by-value `fresh: F`, is an
+     attributed S5 change. Give it the disposition of the nearest existing
+     equivalent (`ContinueToken::suspend` or `SlotWitness::suspend`), and
+     disclose it. An unpaired removal is still a STOP.
+4. **Measure the ten pairs against the current tree** (run 1 with D, the
+   final table above). Attribute each pair per slot.
+   - **Keep the shape whatever the bytes are, and run F on it.** It removes
+     the impossible states even if the stack does not move.
+   - **If any pair is worse than the current tree,** say so with its slot
+     table. I will choose between this tree and the `entry/` snapshot at my
+     gate.
+   - **The debug-only second error temporary** may survive this shape.
+     Attribute it, and do not chase it.
+5. **F on the retained source.**
+   - **Correctness:** every correctness command in redispatch 2's ledger.
+   - **Allocations:** all 107 ordinary labels at N and 2N.
+   - **Instructions:** the 139-label perf panel, with five runs per arm for
+     any flagged label.
+   - **The resume census:** all 32 workloads, six callgrind processes per
+     arm, with the allocation reconciliation.
+   - **The memcpy gate.**
+   - **Timing** is not required.
+   - **C** is closed, as ruled above.
+6. **Process.** This run forks your session. Your tool timeout must exceed
+   every `--timeout` you pass. Scratch and checkpoints go under
+   `.temp/brief-611/r3/`. Append `## Execution report — redispatch 3` after
+   this section.
