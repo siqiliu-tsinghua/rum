@@ -283,7 +283,9 @@ when you end a turn with no background task running, so do not end your turn unt
 brief is finished or one of its stop conditions has fired. A foreground command is capped \
 at 300 seconds: run longer builds and tests as background tasks, and give each one an \
 explicit timeout long enough for it, because the 600-second background default kills a \
-full test run. Wait for each one to finish before you go on. \
+full test run. Your own tool timeout must exceed any bound the command sets itself, such as \
+the run-bounded.py timeout: a 300-second tool timeout kills a command bounded at 3600. \
+Wait for each one to finish before you go on. \
 Report with verbatim evidence in your final message."
   kimi_task="$role $task"
   kimi_args=()
@@ -291,7 +293,8 @@ Report with verbatim evidence in your final message."
     [[ "$KIMI_RESUME" =~ ^session_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]] \
       || { echo "error: KIMI_RESUME must be a kimi session id, got '$KIMI_RESUME'" >&2; exit 2; }
     echo "resume-of: $KIMI_RESUME"
-    kimi_task="This continues your own interrupted run of this brief. Re-read the working \
+    kimi_task="This continues your own earlier run of this brief, which was interrupted or \
+answered by a new director amendment at the end of the brief. Re-read the brief, the working \
 tree and any checkpoint the brief asks for before you go on; the brief governs. $kimi_task"
     kimi_args=(-S "$KIMI_RESUME")
   fi
