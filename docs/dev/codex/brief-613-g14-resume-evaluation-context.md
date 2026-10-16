@@ -1001,3 +1001,280 @@ module is `session_memory::maintained`, as you ran it.
 
 The process is as before. Append `## Execution report — redispatch 2`
 after this section.
+
+## Execution report — redispatch 2
+
+**STOP: the retention frontier contains an unpaired removal. This is still an
+incomplete execution, not a green gate.** The canonical-output authorization
+was used, the eight approved test-support receipts were replayed, and both
+census builds and both local-production builds are green. The production
+rejection census is red. No census pin was changed after discovering the
+unpaired removal. The source remains uncommitted; no git, network, sub-agent,
+new unsafe code or aborting probe was used.
+
+### 1. STOP evidence and the precise remaining boundary
+
+The canonical repository command
+`cargo test -p rum-stdlib --lib production_rejection_census_is_complete -- --nocapture`
+first completed its independent all-definition audit, then failed at
+`crates/rum-stdlib/src/tests/retention_closure/census/tests.rs:191`. Its
+abandonment anchors `[42, 43, 59]` now lie at `[41, 42, 60]` in the same file.
+Those three moves are ordinary source pins. Before editing them or the
+aggregate count, I compared the old and current option frontiers.
+
+The existing S5 frontier is
+`.temp/brief-611/r3/frontier-candidate.tsv` (937 rows). Auxiliary discovery
+using the current analyzer and reading the **real repository** emitted
+`.temp/brief-613/frontier-candidate.tsv` (950 rows). This auxiliary discovery
+is diagnostic evidence, not a replacement run or a claimed pass of the
+canonical gate. Its source and raw outputs are in
+`.temp/brief-613/frontier-discovery/` and `r2-frontier-discovery-2.txt`.
+
+The comparison finds a removed, rather than relocated, diagnostic:
+
+```text
+kind: RET002
+file: crates/rum-runtime/src/runtime/suspension/core/abandon.rs
+old line: 41
+old operation: self.evaluation_stack.len()
+old statement: self.evaluation_depth = self.evaluation_stack.len();
+reason: method syntax: method receiver lacks checked nominal/place provenance
+new counterpart: absent
+```
+
+Its source deletion is the approved removal of depth-from-length restoration.
+Its existing frontier rejection nevertheless disappears; it cannot be paired
+as the same operation moved to a new line. The brief separately says:
+“A new `UnknownHostPayload`, an unpaired removal, or a changed identity,
+status, disposition or exclusion is a STOP.” I have not treated approval of
+the implementation model as an exception to that replay rule, or replaced
+this row with the different `len()` operation in accounted truncation.
+
+The complete classification is:
+
+| Frontier fact | Old → current |
+| --- | --- |
+| Total | 937 → 950 |
+| RET001 | 10 → 10 |
+| RET002 | 901 → 913 |
+| RET003 | 26 → 27 |
+| Same diagnostic operation, allowing coordinate moves | 930 pairs |
+| Same macro operations after changing only the selected arm | 5 further pairs |
+| Checked macro-return rejection | `witness.suspend` → private `Expr` `witness.suspend_evaluation_return` |
+| New cold-operation rejections | 14: twelve in maintained stack handling, one return-event operation, one context assertion |
+| Unpaired removal | The old abandonment `evaluation_stack.len()` rejection above |
+
+The checked macro return remains rejected; the new event and newly reached
+cold operations also remain rejected. No retention coverage or local mark is
+claimed for them. Full old/new rows, complete witness paths and source
+snippets are preserved in `r2-frontier-comparison.json`,
+`r2-frontier-stop.json` and `r2-frontier-disclosures.md` under brief-613.
+The latter records the return-operation transition and every new diagnostic.
+
+No edit was made to `retention_closure/census/tests.rs`. Besides the three
+line pins, its assertions at lines 223 and 228 still require 937 and
+`(10, 901, 26)`. The stale printed baseline at line 246 also remains as it
+was. A director ruling on the disappearing frontier diagnostic and the
+checked return-operation transition is needed before replaying these facts.
+There was no further correctness or performance execution after identifying
+this STOP.
+
+### 2. Files changed, replay constraints and all row disclosures
+
+Only the following three repository files changed in this redispatch,
+followed by this report appended to the assigned brief:
+
+| File | Lines / cells changed | Evidence and preserved contract |
+| --- | --- | --- |
+| `crates/rum-stdlib/tests/suspension_oracle/inventory/typed-slot-stages.tsv` | Eight appended rows, lines 2341–2348 | Exactly the eight approved discovered test-support insertions; every previous row is byte-identical, including every production receipt. |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv` | Fingerprint cell in each of 68 rows, lines 2–69 | Recomputed with the canonical length-prefixed FNV algorithm; the other eighteen cells in each row are byte-identical. |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv` | Four certificate cells across C01/C02, lines 2–3 | Copied from both canonical emissions after all seven production/probe rows earned zero rejections; the other seven columns are unchanged. |
+
+The census replay uses the canonical `stable` identity algorithm for the new
+IDs and copies site identity/file/name from discovery. All eight remain at
+stage R, status `legacy-test`, population `test-support`. They are the two
+oracle witness handlers, three typed route insertions and three runtime
+context insertions authorized by Amendment B. No G13 production receipt or
+stage assignment changed.
+
+**Every added or changed row is disclosed old → new** in these brief-613
+artifacts:
+
+- Census: `r2-census-disclosures.md`, `r2-census-row-changes.json` and
+  `r2-census-replay.patch`. The disclosure also records the unchanged
+  production-receipt digest.
+- Contracts: `r2-contract-disclosures.md`, `contract-fingerprint-diff.tsv`,
+  `r2-contract-row-changes.json` (complete old/new rows), and
+  `r2-contract-replay.patch`. The replayed context is
+  `fnv1a64:b37a54abc5819a88`.
+- Certificates: `r2-certificate-disclosures.md`, `certificate-diff.json`,
+  `certificate-replay.patch`, and copies of both emitted
+  `promoted-hash-{true,false}.tsv` files.
+
+The earlier six-file ownership replay is unchanged and remains disclosed in
+the preceding report. The exact queue-envelope transition, all four ledger
+cells and the 79 host/59 self-reaching/7,709 unknown-construct populations
+have not been edited again. No obligations row or other retention inventory
+was changed this redispatch.
+
+`r2-final-file-audit.json` confirms 31 source/inventory files differ from the
+initial snapshot: the prior 22 Rust files, six ownership inventories, and the
+three files above. All are disclosed. `r2-source-check.json` confirms that
+**all 22 implementation/test Rust hashes are unchanged from the first
+execution**. In particular the rejected census test is unchanged. Initial
+source hunks and the accepted tuple-layout stand-ins remain documented in the
+first two reports.
+
+### 3. Exact verification output and canonical outputs
+
+Commands ran serially in `/home/remi/dev/rum`, offline, with one build job and
+test thread. Each gate used `scripts/run-bounded.py --timeout 900`, with raw
+output redirected under brief-613 before parsing. The following lines are
+copied from their `r2-*.txt` logs:
+
+```text
+census-default:
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 232.40s
+census-no-default:
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 231.79s
+local-default:
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 18.37s
+local-no-default:
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1155 filtered out; finished in 18.21s
+production-census:
+EDGE_ALL roots=7355 definitions=7355 raw=48522 deduplicated=48522 resolved_sites=16230
+FIRST_FAILURE EDGE_ALL rejected=7352 returned_ok=3 (effects::check per root; not edge frequency or production coverage)
+INDEPENDENT_AUDIT EDGE_ALL roots=7355 definitions=7355 raw=48522 deduplicated=48522 reason_classes=62 all_spans_read=true
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 17.31s
+```
+
+Both census logs include intentionally failing child probes, and each ends
+with the green eight-test parent result above. The one ignored test is the
+forced-red harness entry invoked explicitly by those controls. Production
+counts remain 607 implementations (37 typed), 577 macros; the test-only
+partition remains 16 implementations and 11 macros.
+
+Before replay, each local-production emission earned all seven zero-rejection
+rows and failed only on `stale or omitted instance certificate C01 hash=true`
+or `hash=false`. Those two expected failures are retained in
+`r2-local-emission-{default,no-default}.txt`; neither is counted as a passing
+gate. Their emitted cells were replayed, then both final tests passed as
+shown above. The auxiliary frontier probe initially had missing imports from
+unneeded compiler-oracle test modules. Removing that unused module from the
+scratch probe resolved its compile error; no repository source changed.
+
+Unchanged canonical tools wrote to these fixed output roots this redispatch:
+
+| Output root | Writer |
+| --- | --- |
+| `.temp/brief-611/r3/census/` | Both typed-slot census builds and their falsifiers |
+| `.temp/brief-546/certificates/` | Local-production emissions and final acceptance runs |
+| `target/brief-535/EDGE_ALL/` | Production rejection census and independent audit |
+
+These are covered by Amendment A. No canonical tool was modified or
+redirected to move its fixed outputs. The `EDGE_ALL` artifacts were copied
+after the run into `.temp/brief-613/r2-canonical-EDGE_ALL/` for this report.
+Own scripts, copied harness/programs, auxiliary discovery, targets, TMPDIR and
+raw logs all stayed under brief-613. The other previously disclosed canonical
+paths were not newly exercised because the remaining gates did not run.
+
+### 4. Accepted semantics, unmeasured work and stop-loss
+
+The accepted prior semantic evidence is unchanged: S5 rejects 25/34 seeds and
+27/37 dimensions; the candidate passes all 71 strict descriptors; six initial
+invariants turn green; all seven class mutants are rejected with their
+input-free control green; 2,000/default and 100/limit-32 runs complete; both
+resource witnesses reach 99. The three full-context traces and the eleven
+strengthened runtime controls are recorded in the prior reports and logs.
+They were not rerun in this redispatch and are not a substitute for final
+correctness closure.
+
+The full oracle script and workspace **have not run**. Default and no-default
+full-oracle fault-occurrence deltas remain **unmeasured**; neither oracle
+build's warning-free gate is claimed. There are no new native ZeroMQ results
+or skips. Earlier green runtime, maintained-memory, typed, root-trace,
+macro-adapter, compile-control and ownership counts remain in the redispatch-1
+report, with no affected Rust source change in this redispatch.
+
+No performance build or measurement has run. The exact 139-label panel and
+resume harness were copied under brief-613, with source-copy hashes in
+`performance-input-copy.json`. Scratch runners were prepared for complete
+N/2N result/resume-count preflight and explicit ineligible-base reporting,
+but were not executed. The supplied S5 binaries were neither modified nor
+rebuilt; their previously verified hashes were not redundantly rechecked.
+
+All 107 ordinary allocation/byte comparisons, instruction slopes and address
+attribution, resume allocation/cost attribution, per-workload widening owners
+and moved-cell bytes, memcpy/leaves, native-stack samples/prologues/slot
+attribution, and final monotonic timing remain outstanding. There is no
+default-path performance claim and no proposed acceptance of an unmeasured
+resume cost. Physical-safety equivalence remains the approved native policy;
+identical addresses or polling cadence are not claimed.
+
+The semantic attempt count remains **1 / 6**, with no new semantic or
+performance repair attempt and no stop-loss threshold reached. G13's
+remaining 73 steps and every production receipt are unchanged. The next
+action requires a director ruling on the retention frontier transition above;
+after that, replay the permitted pins and any resulting fingerprints and
+certificates, finish the rejection census/oracle/workspace gates, then execute
+the full performance order. State and evidence are checkpointed in
+`.temp/brief-613/PROGRESS.md`.
+
+## Director amendment — redispatch 3: derived facts follow the diff
+
+The STOP was correct under the rule's wording, and stopping was the safe
+reading. The rule was written for the ownership inventories, and its words
+reached further than its purpose. Here is the purpose, stated as a class,
+for every derived inventory and frontier this step touches:
+
+### A. The class rule
+
+Each row or diagnostic falls into exactly one case:
+
+| Its operation in this brief's diff | Ruling |
+| --- | --- |
+| **Deleted** by the ruled design | Retired with its source. Disclose it. |
+| **Added** by this diff | A new row. It stays rejected or unknown; no mark or coverage is claimed. Disclose it. |
+| **Moved**, or its text follows a ruled rename (such as the selected macro arm) | Paired. Disclose it old → new. |
+
+A STOP is a change of *meaning* where the source did not change:
+- a row whose operation's source text is unchanged disappears, or changes
+  kind, reason, status, disposition or exclusion;
+- a retention mark, coverage or promotion is gained or lost;
+- a new `UnknownHostPayload`;
+- any change in a production census receipt.
+
+### B. This case
+
+- The `RET002` at old `abandon.rs:41` (`self.evaluation_stack.len()` in
+  `self.evaluation_depth = self.evaluation_stack.len();`) is **retired with
+  its statement**. Deleting it is the ruled removal of depth-from-length.
+  brief-609 S3 retired a Try boundary the same way.
+- `witness.suspend` → `witness.suspend_evaluation_return` at the two
+  fixed-point sites is **paired**, because it follows the ruled arm.
+- The fourteen new cold-operation rejections are **new rows**: twelve in
+  the maintained stack handling, the return event and the context
+  assertion.
+- In `retention_closure/census/tests.rs`, replay as follows:
+  - the abandonment anchors `[42, 43, 59]` → `[41, 42, 60]`;
+  - the total 937 → 950;
+  - the kinds `(10, 901, 26)` → `(10, 913, 27)`;
+  - a comment in the file's existing per-brief style that names the
+    retired row, the paired transition and the fourteen additions.
+- Leave the printed `ACCEPTANCE_BASELINE` line as it is. It is a historical
+  constant, not the current frontier.
+
+Then replay whatever fingerprints and certificates follow from it.
+
+### C. Then continue
+
+Continue with:
+- the production rejection census;
+- the oracle script in both builds;
+- the workspace;
+- the whole performance order, including the widening attribution.
+
+The process is as before. Append `## Execution report — redispatch 3`
+after this section.
