@@ -1311,6 +1311,25 @@ attribute; `docs/dev/usability-pass.md:361` parks the deep-position boundary
 without a reason. Ruling: no reason found, so follow WL — `Protected` only,
 and one layer released at every position.
 
+**Q5 — Part assignment into an association by position is a silent no-op
+(found 2026-10-16 by the director's S7 probe; ordinary path, unrelated to
+suspension; awaiting the user's priority).** `a = <|"k" -> 0, "j" -> 1|>;
+a[[2]] = 9` returns `9` and leaves `a` unchanged, with no message. So do a
+key followed by a list position (`e = <|"k" -> {0, 0}|>; e[["k", 2]] = 8`),
+a key followed by a position into a nested association (`h[["k", 1]] = 2`)
+and negative positions (`a[[-1]] = 3`). Pure key paths work, both `a[["j"]]`
+and `a[[Key["j"]]]`. A list position followed by a key
+(`g = {<|"k" -> 0|>}; g[[1, "k"]] = 4`) fails loudly with `Set::argform`.
+The cause: `set_association_part_path`
+(`kernel_data/association_data.rs:966`) handles only paths made entirely of
+keys (`association_part_key_path`) and returns
+`AssociationSetUpdate::Unchanged` otherwise, after which
+`finish_association_set_part_lvalue` returns the right-hand side. WL
+supports positional and mixed List/Association Part assignment at every
+level. This is the same shape as plan-297's `lst[[i]] = v`, which never
+worked and was invisible because the assignment returned its value. Probes
+are in `.temp/director/s7-probe/assoc-{pos,mixed}.rum`.
+
 **Recorded, not in this branch:** `rum-cli` and `rum-repl` carry a `rum-runtime`
 **dev**-dependency (`Cargo.toml:27`, `:22`), which the "zero rum-runtime
 dependencies" statement of dogfood stance A does not mention — audit it after
