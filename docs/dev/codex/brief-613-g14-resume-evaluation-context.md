@@ -746,3 +746,258 @@ used.
 - Your tool timeout must exceed every `--timeout` you pass.
 - Checkpoint as before. Then append `## Execution report — redispatch 1`
   after this section.
+
+## Execution report — redispatch 1
+
+**STOP: additional fixed scratch paths conflict with the Hard rules.** The
+approved queue-envelope transition has been replayed and its ownership gate
+passes. Execution is still incomplete. This redispatch made no production or
+test-source repair; all 22 previously changed Rust files retain their prior
+hashes (`.temp/brief-613/redispatch-source-check.json`). The semantic attempt
+count remains **1 / 6**. No git, network, unsafe, sub-agent or aborting probe
+was used.
+
+### 1. New STOP evidence
+
+The required `production_rejection_census_is_complete` calls `report::write`,
+which unconditionally writes under `source::workspace().join("target/brief-535")`
+at `crates/rum-stdlib/src/tests/retention_closure/census/report.rs:65`.
+`source::workspace()` is the repository root, derived from
+`CARGO_MANIFEST_DIR` (`retention_closure/source.rs:14`). It does not consult
+`CARGO_TARGET_DIR` or `TMPDIR`. The mandatory workspace gate includes further
+fixed scratch writers:
+
+| Fixed output path | Writer and source line | Required gate that reaches it |
+| --- | --- | --- |
+| `target/brief-535/` | `retention_closure/census/report.rs:65`; compiler-oracle `mod.rs:30`, `corpus.rs:15`, `exact.rs:31`, `methods.rs:11` | Production rejection census and workspace compiler-oracle tests |
+| `target/brief-540/oracle/` | `retention_closure/local/oracle/mod.rs:143` | Workspace `local_probe_claims_match_stable_rustc` |
+| `.temp/brief-542/falsifiers/` | `retention_closure/local/reads/tests.rs:23` | Workspace local read-contract falsifiers |
+| `.temp/brief-543/oracle-reads/` | `retention_closure/local/reads/oracle.rs:53` | Workspace local-read compiler-oracle tests |
+
+The table's source paths are relative to
+`crates/rum-stdlib/src/tests/`. These are existing real directories, not
+symlinks into brief-613. Exact resolved paths are recorded in
+`.temp/brief-613/redispatch-scratch-stop.json`.
+
+The Hard rule prohibits scratch outside brief-613 except the named
+exceptions. Amendment C adds only `.temp/suspension-oracle/` and
+`.temp/brief-611/r3/census/`, and requires repository execution instead of a
+verification copy. The four paths above are not among those exceptions.
+Their writers are outside the editable source scope. I did not run those
+writers, alter the tools, redirect paths with filesystem tricks, or infer a
+further exception from the general gate requirement. The director needs to
+authorize those canonical-tool output paths or explicitly authorize a
+different routing change before those gates can run under the current rules.
+
+### 2. Approved discovery replay and all changed files
+
+Fresh discovery is in `redispatch-ownership-discovery.txt`. The replay script
+is `.temp/brief-613/replay-ownership.py`; its raw output is
+`redispatch-ownership-replay.txt`. It checks the host population, permitted
+hop, complete self-reaching edge witnesses, existing construct pairings and
+unchanged ledger cells before writing inventories.
+
+The approved transition was applied at both
+`ownership_graph/inventory/host_payloads.tsv:57` and
+`ownership_graph/inventory/host_payload_ledger.tsv:53`:
+
+```text
+old: FrameQueue.Legacy.0/VecDeque[Own]/arg0/Arc[LastStrongHolder]/arg0/alias(DynSuspensionFrame)
+new: FrameQueue.Legacy.0/VecDeque[Own]/arg0/Queued<arg0> via payload/Arc[LastStrongHolder]/arg0/alias(DynSuspensionFrame)
+```
+
+The new construct is copied from discovery. The four ledger cells remain
+byte-identical: `Unbounded`, its existing AccountedCompoundFrame expression
+witness, `TODO.md#standing-engineering-debt`, and `unresolved`. There is no
+other host-payload identity transition, and no `FrameQueue.Mixed` or `Entry`
+row change. All 59 self-reaching identities and complete edge witnesses are
+unchanged. No existing UnknownConstruct row is removed; coordinate-only
+changes are paired after normalizing embedded source coordinates. Fifteen
+new derive/macro/closure sites in the owned code remain UnknownConstruct;
+none is reclassified or waived.
+
+Only these six repository inventory files changed in this redispatch,
+followed by this report appended to the assigned brief:
+
+| File under `crates/rum-stdlib/src/tests/ownership_graph/inventory/` | Changed or added rows |
+| --- | ---: |
+| `host_payloads.tsv` | 6 |
+| `host_payload_ledger.tsv` | 6 |
+| `unknown_attributes.tsv` | 5 |
+| `unknown_captures.tsv` | 18 |
+| `unknown_macros.tsv` | 13 |
+| `unknown_storage.tsv` | 1 |
+
+**Every one of the 49 old → new row disclosures** is retained in
+`.temp/brief-613/redispatch-ownership-disclosures.md` and its machine-readable
+`redispatch-ownership-row-changes.json`; exact file hunks are in
+`redispatch-ownership-replay.patch`. Of these, 34 pair existing rows and 15
+add newly observed unresolved constructs. Host rows remain 79; constructs
+change 7,694 → 7,709; self-reaching rows remain 59. Status, disposition,
+witness, coverage and exclusion cells were not rewritten.
+
+The director's tuple ruling is recorded explicitly: the
+`(usize, usize, Arc<…>)` layouts in `session_memory_structures.rs` and typed
+accounting tests are **stand-ins for the private `Queued<…>`**. The tests
+check their size through exact independent memory equations. The saved-root
+count 1 → 3 follows the full snapshot. No further pin edit was made this run.
+
+### 3. Exact verification output and the remaining census failure
+
+All gates in this redispatch ran in `/home/remi/dev/rum`, serially, offline,
+with one build job and test thread, through a 900-second bounded command.
+The target and TMPDIR were under brief-613; canonical census output used its
+explicitly authorized path. Raw output was saved before parsing it.
+
+The two strengthened runtime assertions are now tested. The corrected
+macro adapter is watched green in both feature builds after its recorded red.
+The following lines are copied from the named `redispatch-*.txt` files:
+
+```text
+context:
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 1176 filtered out; finished in 0.15s
+macro-default:
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 1155 filtered out; finished in 102.44s
+macro-no-default:
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 1149 filtered out; finished in 102.88s
+memory (the brief's literal filter session_memory_maintained):
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+memory-module (the actual session_memory::maintained module):
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 1173 filtered out; finished in 0.23s
+typed:
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 0.47s
+root-trace:
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 1.28s
+runtime:
+test result: ok. 1184 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 29.68s
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.41s
+native48:
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.01s
+ownership:
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 1131 filtered out; finished in 69.34s
+compile-default:
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 55.46s
+compile-no-default:
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.33s
+census-default:
+test result: FAILED. 2 passed; 6 failed; 1 ignored; 0 measured; 0 filtered out; finished in 170.35s
+```
+
+`cargo fmt --check` also passes (`redispatch-fmt.txt`, empty successful
+output). Each compile-control build reports **34 positive controls / 34
+intended rejections**, including E0271 at the helper's input and output
+constraint sites. The full runtime's three ignores remain its release-only
+cache/profile and two left-chain deployment/drop probes. The three existing
+dead-code warnings in read-only runtime test builtins remain; they are not
+new oracle warnings. The census's ignored `forced_red_probe` is invoked
+explicitly by its bounded falsifier harness. The workspace did not run, so
+there are no new native ZeroMQ results or skips to report.
+
+The full ownership output confirms:
+
+```text
+HOST PAYLOAD LEDGER: 79 rows; 11 storage edges (3 Declared, 8 Unbounded); 68 PublicInput
+EXACT INVENTORY self-reaching types: 59 rows
+EXACT INVENTORY UnknownHostPayload: 79 rows
+EXACT INVENTORY UnknownConstruct: 7709 rows
+```
+
+The census failure is `X receipt mismatch: expected 40, discovered 48`, with
+no missing existing receipt. All eight unrecorded sites are direct
+`insert_suspension_frame` calls in the new G14 test controls. Their exact
+emitted identities and coordinates are in
+`redispatch-census-new-test-sites.json`, and the complete fresh 48-row source
+list is copied to `redispatch-census-legacy-test-users.tsv`. The eight sites
+are the two oracle witness handlers, three typed route-control insertions,
+and three runtime context-control insertions. The production census remains
+607 implementations (37 typed) and 577 macros; the test-only partition
+remains 16 implementations and 11 macros. No G13 production receipt changed.
+
+I had begun preparing the test-support count replay, but **no census receipt
+was edited** before identifying the fixed-output conflict. Consequently the
+six baseline-dependent census tests remain red, the no-default census was
+not run, and the receipt replay is still pending. This is not a green census
+or a reason to weaken its exact equality check.
+
+### 4. Accepted semantics, outstanding work and stop-loss
+
+The accepted prior red ledger, 71 strict passing descriptors, seven mutation
+falsifiers, 2,000/default and 100/limit-32 runs are unchanged; this redispatch
+does not claim it reran those full oracle populations. The 11-test context
+rerun verifies the previously strengthened exact return-level and closed
+source-boundary assertions, and again records the three contexts: full
+four-entry false-cycle snapshots, three-entry depth-leak snapshots at fixed
+depth 5 over 1,100 pauses, and two-entry passing-shape snapshots. All initial
+entry epochs are retained, while intervening global epoch changes survive.
+
+The required full suspension-oracle script has not yet run. Its default and
+no-default fault-occurrence deltas are therefore **both unmeasured**. Local
+production acceptance, contract fingerprints, certificates, production
+rejection census and the full workspace also remain outstanding. The prior
+report's semantic/accounting evidence is not substituted for those gates.
+
+No performance measurement or candidate performance build has started.
+All 107 allocation/byte rows, instruction slopes and address attribution,
+memcpy/leaves, native stack tables/prologues and final monotonic timing A/B
+remain unmeasured. Amendment D's per-workload widening counts, moved-cell
+bytes and `Queued<Entry>` versus `Queued<Arc<…>>` sizes are likewise pending.
+No redesign or performance acceptance is claimed. Supplied base binaries
+were not changed or rebuilt.
+
+There was no second semantic repair attempt and no performance repair
+attempt. No stop-loss threshold was reached. This STOP is solely the
+remaining scratch-boundary conflict, with the separately recorded census
+test-support replay still unfinished. All pending work and exact evidence
+paths are checkpointed in `.temp/brief-613/PROGRESS.md`.
+
+## Director amendment — redispatch 2: canonical tools write where they write
+
+The STOP was correct, and it is my omission. Amendment C named two output
+paths where it should have stated a class. It is a class now.
+
+### A. Canonical tool outputs
+
+Any **unchanged** canonical gate tool, meaning a repository test or script
+that this brief requires you to run, may write to its own fixed output
+paths under `target/` or `.temp/`. This includes the four you found:
+- `target/brief-535/`;
+- `target/brief-540/oracle/`;
+- `.temp/brief-542/falsifiers/`;
+- `.temp/brief-543/oracle-reads/`;
+
+and any others the workspace or the performance tools reach, such as
+`scripts/core-language-microbench.sh`.
+
+You may not modify, redirect or wrap those tools to move their output.
+Disclose each such path in the report. Your own scratch stays in
+`.temp/brief-613/`. Do not STOP for another path of this class.
+
+### B. The census's test-support receipts
+
+There are eight new direct `insert_suspension_frame` sites, all in G14's own
+test controls (two oracle witness handlers, three typed route controls and
+three runtime context controls). They join the census's test-support
+partition by replay under the pins-that-follow-code class, each disclosed.
+Test-only sites need the legacy route, because the route controls exist to
+cover it, and they leave with `Legacy` at R.
+
+The production receipts must not change. Any production receipt change, or
+any new site outside those eight, is a STOP.
+
+### C. Noted
+
+The brief's `session_memory_maintained` filter name was mine and wrong. The
+module is `session_memory::maintained`, as you ran it.
+
+### D. Then continue Amendment E from where you stopped
+
+- the no-default census;
+- local production, fingerprints and certificates;
+- the production rejection census;
+- the oracle script in both builds;
+- the workspace;
+- then the whole performance order, including Amendment D's widening
+  attribution.
+
+The process is as before. Append `## Execution report — redispatch 2`
+after this section.
