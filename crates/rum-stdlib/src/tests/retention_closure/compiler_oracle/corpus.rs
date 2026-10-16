@@ -371,6 +371,18 @@ fn typed_macro_definition_drift_fails_every_view() {
     let old = source.files[file].clone();
     let mut missed = Vec::new();
     for (label, before, after, last) in [
+        (
+            "legacy identifier selector",
+            "suspend => $frame:expr",
+            "suspend => $frame:path",
+            false,
+        ),
+        (
+            "evaluation return helper",
+            "witness.suspend_evaluation_return($session, request, $frame)",
+            "witness.suspend($session, request, $frame)",
+            false,
+        ),
         ("identifier matcher", "$result:ident", "$result:path", false),
         (
             "identifier witness",
@@ -500,4 +512,41 @@ fn typed_macro_unknown_pattern_does_not_leak_or_select() {
         }
     }
     assert_eq!((selected, unknown), (3, 1));
+}
+
+#[test]
+fn typed_macro_evaluation_return_reads_all_four_views() {
+    let (source, mut f) = typed_argument_source();
+    let mac = match f.body.stmts.last_mut().unwrap() {
+        syn::Stmt::Expr(syn::Expr::Macro(m), _) => &mut m.mac,
+        syn::Stmt::Macro(m) => &mut m.mac,
+        _ => panic!("fixture tail is a macro"),
+    };
+    let arguments = mac
+        .tokens
+        .to_string()
+        .replace("suspend =>", "evaluation_return =>");
+    mac.tokens = arguments.parse().unwrap();
+    let edges = regions::definition_edges(&source, &f);
+    assert!(edges.rejected.iter().any(|row| {
+        row.reason
+            .contains("inline evaluation-return event insertion before witnessed consumer")
+    }));
+    assert_eq!(edges.constructors.len(), 3);
+    for claim in edges.constructors {
+        let mut find = CallAt {
+            source: &source,
+            function: &f,
+            site: &claim.site,
+            callee: None,
+        };
+        find.visit_block(&f.body);
+        assert!(find.callee.is_some());
+    }
+    assert_eq!(super::super::methods::claims(&source, &f).len(), 1);
+    assert_eq!(
+        super::super::types::constructor_claims(&source, &f).len(),
+        3
+    );
+    println!("TYPED_MACRO_EVALUATION_RETURN regions/locator/methods/types");
 }

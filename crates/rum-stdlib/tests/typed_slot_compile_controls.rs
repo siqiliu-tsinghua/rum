@@ -230,13 +230,32 @@ def private_case(id,file,old,new,code,needle,marker=None,category=''):
     assert file.read_text().count(old)==1,(id,old)
     cases.append(dict(id=id,kind='private',file=file,old=old,new=new,code=code,needle=needle,category=category,marker=marker or '@'+id))
 private_case('sibling-erased-private',sibling,'TypedAction::<Expr>::evaluate(Expr::string("x"),frame::<Expr,Expr>())','crate::runtime::suspension::typed::adapter::erase(frame::<Expr,Expr>())','E0603','typed::adapter')
+sibling.write_text(sibling.read_text()+'''
+#[cfg(test)]
+mod evaluation_return_controls {
+'''+support.replace('rum_runtime::','crate::')+'''
+type ReturnInput=Expr; // return event input
+type ReturnOutput=Expr; // return event output
+fn input(s:&mut Session,actual:Result<Expr,EvalError>,request:RuntimeInputRequest)->Result<Expr,EvalError>{
+ slot_witness(&actual).suspend_evaluation_return(s,request,frame::<ReturnInput,Expr>()) // @return-event-input
+}
+fn output(s:&mut Session,actual:Result<Expr,EvalError>,request:RuntimeInputRequest)->Result<Expr,EvalError>{
+ slot_witness(&actual).suspend_evaluation_return(s,request,frame::<Expr,ReturnOutput>()) // @return-event-output
+}
+fn macro_form(s:&mut Session,actual:Result<Expr,EvalError>)->Result<Expr,EvalError>{
+ crate::resume_typed_or_suspend!(s,actual,ok(value)=>Ok(value),evaluation_return=>frame::<Expr,Expr>())
+}
+}
+''')
+private_case('return-event-input',sibling,'type ReturnInput=Expr; // return event input','type ReturnInput=Option<Expr>; // return event input','E0271','frame::<ReturnInput,Expr>()')
+private_case('return-event-output',sibling,'type ReturnOutput=Expr; // return event output','type ReturnOutput=Option<Expr>; // return event output','E0271','frame::<Expr,ReturnOutput>()')
 private_case('mode-expr-fixed',registry,'impl Codec for Expr {\n    type Mode = ValueMode;','impl Codec for Expr {\n    type Mode = StateMode; // @mode-expr-fixed','E0277','StateMode',category='StateCodec')
 private_case('mode-new-state-only',typed,'type Mode=StateMode; } // @mode-new-state-only','type Mode=LegacyMode; } // @mode-new-state-only','E0277','LegacyMode',category='LegacyCodec')
 private_case('mode-one-associated-type',registry,'impl Codec for Option<Expr> {\n    type Mode = LegacyMode;','impl Codec for Option<Expr> {\n    type Mode = LegacyMode;\n    type Mode = LegacyMode; // @mode-one-associated-type','E0201','type Mode = LegacyMode;')
 private_case('mode-no-codec-override',registry,'impl Codec for Option<Expr> {\n    type Mode = LegacyMode;','impl Codec for Option<Expr> {\n    type Mode = LegacyMode;\n    fn decode(slot: super::channel::Slot, _: CodecKey) -> Result<Self, super::channel::Slot> { Err(slot) } // @mode-no-codec-override','E0407','fn decode')
 private_case('mode-legacy-provider-narrow',typed,'fn old_decode(_:Expr,_:CodecKey)','fn old_decode(_:Slot,_:CodecKey)','E0053','Slot',category='incompatible type for trait')
 private_case('mode-state-provider-narrow',typed,'fn unpack(_:ContinuationState,_:CodecKey)->Result<Self,ContinuationState> { Ok(Self) } // @mode-state-provider-narrow','fn unpack(_:Slot,_:CodecKey)->Result<Self,ContinuationState> { Ok(Self) } // @mode-state-provider-narrow','E0053','Slot',category='incompatible type for trait')
-assert len(cases)==32
+assert len(cases)==34
 base={case['file']:case['file'].read_text() for case in cases}
 
 def compile(kind,label):
@@ -308,6 +327,6 @@ for kind in ['external','private']:
             print(f'PAIR {case["id"]}: positive PASS; negative {case["code"] or "lifetime"} at {expected_file}:{line}:{column}',flush=True)
         finally: file.write_text(base[file])
 (logs/'results.json').write_text(json.dumps(report,indent=2)+'\n')
-assert len(report)==32
-print('COMPILE CONTROLS: 32 positive / 32 intended rejections (22 S1 + 7 S2 + opaque fault + token witness + fallback output); raw Cargo JSON and primary spans retained',flush=True)
+assert len(report)==34
+print('COMPILE CONTROLS: 34 positive / 34 intended rejections (22 S1 + 7 S2 + opaque fault + token witness + fallback output + 2 G14 return-event constraints); raw Cargo JSON and primary spans retained',flush=True)
 "###;

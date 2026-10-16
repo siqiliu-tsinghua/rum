@@ -1,10 +1,10 @@
-//! Keep legacy queue buffers unchanged; widen only an owner containing typed entries.
+//! Every cell retains its logical context through widening and nested splicing.
 use super::*;
 use crate::runtime::suspension::typed::{Entry, EntryRef};
 
 pub(in crate::runtime::suspension) enum FrameQueue {
-    Legacy(VecDeque<Arc<DynSuspensionFrame>>),
-    Mixed(VecDeque<Entry>),
+    Legacy(VecDeque<Queued<Arc<DynSuspensionFrame>>>),
+    Mixed(VecDeque<Queued<Entry>>),
 }
 
 impl FrameQueue {
@@ -15,10 +15,10 @@ impl FrameQueue {
 
     #[cold]
     #[inline(never)]
-    fn widen(&mut self) -> &mut VecDeque<Entry> {
+    fn widen(&mut self) -> &mut VecDeque<Queued<Entry>> {
         if let Self::Legacy(frames) = self {
             let mut mixed = VecDeque::with_capacity(frames.capacity());
-            mixed.extend(frames.drain(..).map(Entry::Legacy));
+            mixed.extend(frames.drain(..).map(|cell| cell.map(Entry::Legacy)));
             *self = Self::Mixed(mixed);
         }
         let Self::Mixed(frames) = self else {
@@ -28,41 +28,72 @@ impl FrameQueue {
     }
 
     #[inline]
-    pub(super) fn push_back(&mut self, frame: Arc<DynSuspensionFrame>) {
+    pub(super) fn push_back(&mut self, context: ResumeContext, frame: Arc<DynSuspensionFrame>) {
         match self {
-            Self::Legacy(frames) => frames.push_back(frame),
-            Self::Mixed(frames) => frames.push_back(Entry::Legacy(frame)),
+            Self::Legacy(frames) => frames.push_back(Queued {
+                context,
+                payload: frame,
+            }),
+            Self::Mixed(frames) => frames.push_back(Queued {
+                context,
+                payload: Entry::Legacy(frame),
+            }),
         }
     }
 
     #[inline]
-    pub(super) fn push_front(&mut self, frame: Arc<DynSuspensionFrame>) {
+    pub(super) fn push_front(&mut self, context: ResumeContext, frame: Arc<DynSuspensionFrame>) {
         match self {
-            Self::Legacy(frames) => frames.push_front(frame),
-            Self::Mixed(frames) => frames.push_front(Entry::Legacy(frame)),
+            Self::Legacy(frames) => frames.push_front(Queued {
+                context,
+                payload: frame,
+            }),
+            Self::Mixed(frames) => frames.push_front(Queued {
+                context,
+                payload: Entry::Legacy(frame),
+            }),
         }
     }
 
-    pub(super) fn push_back_typed(&mut self, frame: Arc<dyn ErasedFrame>) {
-        self.widen().push_back(Entry::Typed(frame));
+    pub(super) fn push_back_typed(&mut self, context: ResumeContext, frame: Arc<dyn ErasedFrame>) {
+        self.widen().push_back(Queued {
+            context,
+            payload: Entry::Typed(frame),
+        });
     }
 
-    pub(super) fn push_front_typed(&mut self, frame: Arc<dyn ErasedFrame>) {
-        self.widen().push_front(Entry::Typed(frame));
+    pub(super) fn push_front_typed(&mut self, context: ResumeContext, frame: Arc<dyn ErasedFrame>) {
+        self.widen().push_front(Queued {
+            context,
+            payload: Entry::Typed(frame),
+        });
+    }
+
+    pub(super) fn push_evaluation_return(&mut self, context: ResumeContext) {
+        self.widen().push_back(Queued {
+            context,
+            payload: Entry::EvaluationReturn,
+        });
     }
 
     #[inline]
-    pub(super) fn front(&self) -> Option<EntryRef<'_>> {
+    pub(super) fn front(&self) -> Option<Queued<EntryRef<'_>>> {
         match self {
-            Self::Legacy(frames) => frames.front().map(EntryRef::Legacy),
-            Self::Mixed(frames) => frames.front().map(Entry::as_ref),
+            Self::Legacy(frames) => frames.front().map(|cell| Queued {
+                context: cell.context,
+                payload: EntryRef::Legacy(&cell.payload),
+            }),
+            Self::Mixed(frames) => frames.front().map(|cell| Queued {
+                context: cell.context,
+                payload: cell.payload.as_ref(),
+            }),
         }
     }
 
     #[inline]
-    pub(super) fn pop_front(&mut self) -> Option<Entry> {
+    pub(super) fn pop_front(&mut self) -> Option<Queued<Entry>> {
         match self {
-            Self::Legacy(frames) => frames.pop_front().map(Entry::Legacy),
+            Self::Legacy(frames) => frames.pop_front().map(|cell| cell.map(Entry::Legacy)),
             Self::Mixed(frames) => frames.pop_front(),
         }
     }
@@ -70,22 +101,28 @@ impl FrameQueue {
     #[inline]
     pub(super) fn pop_front_legacy(&mut self) -> Arc<DynSuspensionFrame> {
         match self {
-            Self::Legacy(frames) => frames
-                .pop_front()
-                .expect("the resumed suspension frame should remain queued"),
+            Self::Legacy(frames) => {
+                frames
+                    .pop_front()
+                    .expect("the resumed suspension frame should remain queued")
+                    .payload
+            }
             Self::Mixed(frames) => Self::pop_front_mixed_legacy(frames),
         }
     }
 
     #[cold]
     #[inline(never)]
-    fn pop_front_mixed_legacy(frames: &mut VecDeque<Entry>) -> Arc<DynSuspensionFrame> {
+    fn pop_front_mixed_legacy(frames: &mut VecDeque<Queued<Entry>>) -> Arc<DynSuspensionFrame> {
         match frames
             .pop_front()
             .expect("the resumed suspension frame should remain queued")
+            .payload
         {
             Entry::Legacy(frame) => frame,
-            Entry::Typed(_) => unreachable!("legacy dispatch must pop its observed front"),
+            Entry::Typed(_) | Entry::EvaluationReturn => {
+                unreachable!("legacy dispatch must pop its observed front")
+            }
         }
     }
 
@@ -109,8 +146,8 @@ impl FrameQueue {
         match self {
             Self::Legacy(frames) => frames
                 .capacity()
-                .saturating_mul(size_of::<Arc<DynSuspensionFrame>>()),
-            Self::Mixed(frames) => frames.capacity().saturating_mul(size_of::<Entry>()),
+                .saturating_mul(size_of::<Queued<Arc<DynSuspensionFrame>>>()),
+            Self::Mixed(frames) => frames.capacity().saturating_mul(size_of::<Queued<Entry>>()),
         }
     }
 
@@ -119,11 +156,15 @@ impl FrameQueue {
             Self::Legacy(frames) => (
                 frames.len(),
                 frames.capacity(),
-                size_of::<Arc<DynSuspensionFrame>>(),
+                size_of::<Queued<Arc<DynSuspensionFrame>>>(),
             ),
-            Self::Mixed(frames) => (frames.len(), frames.capacity(), size_of::<Entry>()),
+            Self::Mixed(frames) => (frames.len(), frames.capacity(), size_of::<Queued<Entry>>()),
         };
-        let new_size = if typed { size_of::<Entry>() } else { old_size };
+        let new_size = if typed {
+            size_of::<Queued<Entry>>()
+        } else {
+            old_size
+        };
         let next_capacity = if len == capacity {
             capacity.checked_mul(2)?.max(8)
         } else {
@@ -138,12 +179,12 @@ impl FrameQueue {
         match self {
             Self::Legacy(frames) => {
                 for frame in frames {
-                    visit(EntryRef::Legacy(frame));
+                    visit(EntryRef::Legacy(&frame.payload));
                 }
             }
             Self::Mixed(frames) => {
                 for frame in frames {
-                    visit(frame.as_ref());
+                    visit(frame.payload.as_ref());
                 }
             }
         }
@@ -163,7 +204,7 @@ impl FrameQueue {
     fn append_mixed(&mut self, suffix: &mut Self) {
         let frames = self.widen();
         match suffix {
-            Self::Legacy(rest) => frames.extend(rest.drain(..).map(Entry::Legacy)),
+            Self::Legacy(rest) => frames.extend(rest.drain(..).map(|cell| cell.map(Entry::Legacy))),
             Self::Mixed(rest) => frames.append(rest),
         }
     }

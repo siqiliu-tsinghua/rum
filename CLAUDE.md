@@ -237,15 +237,20 @@ Consequences for how I present and pick work:
   type, R removal. S1 (607, the dormant API), S2 (608, the compatible
   driver, `cb09bfde`), S3 (609, evaluation and dispatch, nine dispatches),
   S4 (610, argument/rewrite/traversal resolution, the first Kimi K3 brief)
-  and S5 (611, definition application, four dispatches) are done. **Now:
-  G14 (612, design-only) — found 2026-10-16: resume never unwinds the
-  evaluation stack it restores, so a repeated identical expression after
-  one pause reports a false cycle; the defect is as old as resumable input
-  (`b51dd794`, day 4). Then S6 (613), one step per brief**; then E2 (a
+  and S5 (611, definition application, four dispatches) are done. G14 (612 design, 613
+  implementation, four dispatches) is done: resume never unwound the
+  evaluation stack it restored, a defect as old as resumable input
+  (`b51dd794`, day 4). Every queue cell now carries its insertion context,
+  and an inline return event runs the skipped completion checks. **Now: S6
+  (614), one step per brief**; then E2 (a
   may-suspend result type with no `Try`). From S5 the per-step stack bar is
   the named closure environment attributed per slot: S4 showed that an
   every-pair at-or-below-base bar at 16-B granularity is not reachable by
-  any macro expansion. S5's lesson: *a shape that needs an `unreachable!`
+  any macro expansion. G14's timing lesson: an identical-instruction cycle
+  residual is settled causally, by rebuilding both arms with every function
+  64-byte aligned (`-C llvm-args=-align-all-functions=6`). A timing-label
+  probe is cut from the benchmark program itself: my S5 key-read probe hit a
+  fast path 250x cheaper than the label and cleared it by luck. S5's lesson: *a shape that needs an `unreachable!`
   arm for a state the types allow is pointing at the shape nobody tried* —
   its cold helpers took the producer's whole `Result`; the design's own
   shape (the ZST witness and the request cross the call) cut the stack

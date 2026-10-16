@@ -383,3 +383,6 @@ fn driver_drops_both_owning_arcs_before_running_the_finalizer() {
     );
     super::accounting::reconcile(&s);
 }
+
+#[path = "evaluation_context.rs"]
+mod evaluation_context;

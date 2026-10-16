@@ -57,6 +57,27 @@ fn definition(source: &Source) -> Result<(), String> {
             (
                 $session:expr, $result:ident,
                 ok($value:pat) => $continue:expr,
+                evaluation_return => $frame:expr $(,)?
+            ) => {{
+                let witness = $crate::kernel_api::slot_witness(&($result));
+                match $result {
+                    Ok($value) => $continue,
+                    Err($crate::kernel_api::EvalError::InputRequired { request }) => {
+                        #[cold]
+                        #[inline(never)]
+                        fn suspend<R>(make: impl ::core::ops::FnOnce() -> R) -> R {
+                            make()
+                        }
+                        return suspend(move || {
+                            witness.suspend_evaluation_return($session, request, $frame)
+                        });
+                    }
+                    Err(error) => Err(error),
+                }
+            }};
+            (
+                $session:expr, $result:ident,
+                ok($value:pat) => $continue:expr,
                 suspend => $frame:expr $(,)?
             ) => {{
                 let witness = $crate::kernel_api::slot_witness(&($result));
@@ -113,11 +134,12 @@ pub(super) struct Arm {
     pub value: syn::Pat,
     pub success: syn::Expr,
     pub frame: syn::Expr,
+    evaluation_return: bool,
 }
 
 impl Arm {
-    pub(super) fn expansion_rejections(&self) -> [&'static str; 5] {
-        let mut operations = EXPANSION_REJECTIONS;
+    pub(super) fn expansion_rejections(&self) -> Vec<&'static str> {
+        let mut operations = EXPANSION_REJECTIONS.to_vec();
         // Only a bare identifier selects the first Rust macro arm. Parentheses,
         // blocks and qualified paths select the expression arm and its binding.
         if matches!(
@@ -129,6 +151,10 @@ impl Arm {
                     && matches!(path.path.segments[0].arguments, syn::PathArguments::None)
         ) {
             operations[0] = "typed macro expansion: caller producer place and slot_witness(&($result)) borrow/call unresolved";
+        }
+        if self.evaluation_return {
+            operations[3] = "typed macro expansion: return through private Expr witness.suspend_evaluation_return; frame ownership transfer unresolved";
+            operations.push("typed macro expansion: inline evaluation-return event insertion before witnessed consumer; parent context and resource epilogue unresolved");
         }
         operations
     }
@@ -152,8 +178,18 @@ impl Parse for Arm {
         input.parse::<syn::Token![=>]>()?;
         let success = input.parse()?;
         input.parse::<syn::Token![,]>()?;
-        if input.parse::<syn::Ident>()? != "suspend" {
-            return Err(input.error("expected suspend arm"));
+        let selector = input.parse::<syn::Ident>()?;
+        let evaluation_return = selector == "evaluation_return";
+        if selector != "suspend" && !evaluation_return {
+            return Err(input.error("expected suspend or evaluation_return arm"));
+        }
+        if evaluation_return
+            && !matches!(&result, syn::Expr::Path(path)
+            if path.qself.is_none() && path.path.leading_colon.is_none()
+                && path.path.segments.len() == 1
+                && matches!(path.path.segments[0].arguments, syn::PathArguments::None))
+        {
+            return Err(input.error("evaluation_return requires a producer identifier"));
         }
         input.parse::<syn::Token![=>]>()?;
         let frame = input.parse()?;
@@ -169,6 +205,7 @@ impl Parse for Arm {
             value,
             success,
             frame,
+            evaluation_return,
         })
     }
 }

@@ -4,10 +4,9 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-16, committed tree through brief-611 (G13 step
-S5, definition application, defaults and fallback, gated). **Next: G14's
-design (brief-612, design-only; resume never unwinds the evaluation stack it
-restores — found 2026-10-16, below), then S6 (brief-613). G13's
+Status checkpoint: 2026-10-16, committed tree through brief-613 (G14: resume
+restores each continuation's evaluation context and runs the skipped
+completion checks, gated; below). **Next: S6 (brief-614). G13's
 implementation is 78 gated steps** — S1 dormant API, S2
 compatible driver, S3-S54 family typing, F1-F23 one flip per legacy type, R
 removal — each a director-rewritten brief
@@ -1142,45 +1141,97 @@ Owed:
 - **S6:** make `typed_slot_census.rs`'s scratch path step-independent. It
   pins `.temp/brief-611/r3/census/`.
 
-**G14 FOUND (2026-10-16, director): resume never unwinds the evaluation
-stack it restores. Design-only brief-612 before S6.** The director found it
-when S5's 2 000-resume harness hit `RecursionLimit` at 1 021 resumes. It is
-already present on S4.
+**G14 DONE (2026-10-16; design brief-612, implementation brief-613, four
+dispatches): resume never unwound the evaluation stack it restored.** Found
+when S5's 2 000-resume harness hit `RecursionLimit` at 1 021 resumes. Present
+since resumable input itself (`b51dd794`, 2026-03-20); `eee42d2f` widened its
+drop-one heuristic to drop-two after false positives, which patched instances.
 
-- **Mechanism.** `begin_input_suspension` (`suspension/core.rs:493-505`)
-  keeps the active evaluation-stack entries minus the top two.
-  `resume_suspended_slot` sets the depth to the stack length. Completing a
-  resumed frame never pops an entry or lowers the depth.
-- **What fails, after one pause, through the resumed path only.**
-  Re-evaluating an identical expression reports a false cycle:
-  `General::passlim` + `TerminatedEvaluation["IterationLimit"]`. Shapes that
-  fail:
-  - `f[1]+f[1]` with `f[x_] := (InputString["rhs"]; 7)`;
-  - `Table[f[1], {3}]`;
-  - SubValue `k[1][2]` in a `Table`;
-  - OwnValue `v := (InputString[...]; 7); Table[v, {3}]`;
-  - `Table[{{InputString["x"]}}, {3}]`;
-  - `Table[h[{InputString["x"]}], {3}]`;
-  - `Table[g[g[InputString["x"]]], {3}]`.
+- **What was wrong.**
+  - Resume kept the stack minus its top two entries and took the depth from
+    the stack length, but only expressions of at most 8 nodes are tracked, so
+    the two are different quantities.
+  - Completing a resumed frame never popped an entry. After one pause, a
+    repeated identical expression reported a false cycle
+    (`f[1]+f[1]`, `Table[f[1],{3}]`), and changing expressions leaked one
+    depth per resume.
+  - The level epilogue (`enforce_active_resource_limits_for_expr`) was skipped
+    on resume, a real `TimeConstrained`/`MemoryConstrained` bypass: 77
+    resumed against 99 queued.
+  - On S5, 25 of brief-612's 34 seeds diverged.
+- **The model.**
+  - Every queue cell carries `Queued<P> { context: {stack_len, depth},
+    payload }`, captured at insertion and preserved through widening and
+    append.
+  - The suspension saves the full stack; drop-two is gone.
+  - The driver restores each cell's context (accounted truncation) before
+    dispatch and before abandonment.
+  - The two cycle-tracking fixed-point sites (`resolution.rs`) select a third
+    macro arm, `evaluation_return =>`, which queues an inline
+    `Entry::EvaluationReturn` before the fixed-point frame. On resume it
+    restores the parent level and runs the epilogue on a successful `Expr`
+    only.
+  - Native polling rebases to the live segment, polls at each resumed frame,
+    and saves and restores the displaced base and threshold. This is
+    physical-safety equivalence, not identical addresses.
+- **Evidence.**
+  - 71 strict descriptors (34 seeds + 37 dimensions; 52 red on S5) and seven
+    class mutants, each watched rejecting its assigned descriptors.
+  - 2 000 resumes at the default limit and 100 at limit 32.
+  - The director's gate:
+    - workspace 3 568/0/59 with 0 ZeroMQ skips;
+    - oracle 136/136 in both builds, warning-free;
+    - census, compile controls (34 pairs) and local production, each in both
+      builds;
+    - ownership 31/31;
+    - production rejection census at 950 (10/913/27).
+  - The director's own depth-leak probe gives 23 SAME and 0 DIFF, including
+    the 1 100- and 2 000-resume runs that S5 terminated at 1 021.
+  - Derived-inventory rulings:
+    - the one host-payload identity transition (the `Queued` hop on
+      `FrameQueue.Legacy.0`, disposition carried over);
+    - 8 test-support census receipts;
+    - one `RET002` retired with its deleted statement;
+    - 14 new cold rejections.
+- **Costs ruled acceptable.**
+  - Ordinary path:
+    - allocations 107/107 equal;
+    - instructions: three 2-run flags, all cleared at 5 runs;
+    - `memcpy` at or below base;
+    - the leaves show no deterministic growth;
+    - all ten stack slopes equal to S5.
+  - Resume:
+    - +1.1k-6.1k instructions per resume (+5-11%);
+    - +72 to +4 400 B per iteration: 16-B context per cell, the fuller
+      snapshot, and event capacity;
+    - every delta attributed with zero residual.
 
-  Expressions that change each time leak one depth per resume, reaching
-  `RecursionLimit` at 1 021. `Table[InputString[...], {n}]`, `If`, `Module`,
-  `Map[f, ...]` and `Set` shapes pass. The drop-two heuristic covers exactly
-  the shallow shapes every earlier probe used. The queued-input path is
-  always correct.
-- **Origin.** Resumable input itself: `b51dd794` (2026-03-20), which dropped
-  the top one entry. `eee42d2f` (2026-03-21) widened that to two after false
-  positives, which patched instances. brief-611's amendment 1 says "since
-  eee42d2f"; that is corrected here.
-- **Likely precise model.** Each queued frame records the stack length and
-  depth at insertion, and the driver truncates to them before resuming that
-  frame. The evaluation level's epilogue
-  (`enforce_active_resource_limits_for_expr`) is also skipped on resume and
-  needs the same treatment.
-- **Probes.** `.temp/director/depth-leak-probe{,-s4}/` (rum-host; resumed
-  against queued; arg 1 is the pause cap, then setup/source pairs).
-- **The lesson.** A class falsifier must vary the depth between the pause
-  and the repeating construct, and must repeat an identical expression.
+    This is an input-bound path, and the same change removes S5's
+    quadratic root term on ten workloads (-15 to -35 KB per iteration at N = 100).
+  - Cold prologues: release `drive_resuming_frames` 1 160 → 1 480 B (debug
+    4 488 → 6 872). The cost is constant per resume segment, not per level.
+- **The timing residual is layout.** The `association-part-key-read` timing
+  read +20.8%. Instructions per read are identical (5.1677M), while cycles
+  are +18%.
+  - 75% of those cycles are `collect_upvalue_candidate_symbols_in_matching_order`,
+    unchanged and recursive per element.
+  - Its entry moved from offset 32 to offset 48 within a 64-B line.
+  - With every function 64-byte aligned in both arms, the difference is
+    +1.3%, within range.
+  - S4 and S5 share offset 32 and equal cycles.
+
+  The probe must be cut from the benchmark program. The director's S5
+  probe hit a fast path at 20k instructions per read and never reached this
+  code (`.temp/director/gate-613/keyread/`).
+- **The lessons.**
+  - A class falsifier must vary the depth between the pause and the repeating
+    construct, and must repeat an identical expression.
+  - The dispatch stopped three times on permissions the brief stated as lists
+    (one ownership row, scratch paths, a retired diagnostic). Amendment 3's
+    class rule is now the model: a derived row on a deleted operation is
+    retired, one on an added operation is new, one on a moved or renamed
+    operation is paired; only a change of meaning under unchanged source
+    stops.
 
 **Recorded, not in this branch — the gensym sweep does not see Rust-local
 values (found 2026-10-14 reviewing brief-605; Q3, queued behind the branch by

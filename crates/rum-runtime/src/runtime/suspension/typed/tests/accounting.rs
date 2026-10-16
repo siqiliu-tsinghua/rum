@@ -59,14 +59,18 @@ fn typed_layout_charges_two_arcs_and_real_queue_cells_in_both_models() {
         .as_ref()
         .unwrap()
         .occurrence_frame_capacity()
-        * std::mem::size_of::<Arc<dyn crate::runtime::suspension::SuspensionFrame>>();
+        * std::mem::size_of::<(
+            usize,
+            usize,
+            Arc<dyn crate::runtime::suspension::SuspensionFrame>,
+        )>();
     s.insert_typed_suspension_frame(Empty);
     let owner = s.pending_suspension.as_ref().unwrap();
     let capacity = owner.occurrence_frame_capacity();
     // Outer Arc<TypedAdapter<Empty>>: two counts plus one inner Arc pointer.
     // Inner Arc<Empty>: two counts plus a zero-sized Empty. No shared helper.
     let exact_layout = 5 * std::mem::size_of::<usize>();
-    let cells = capacity * std::mem::size_of::<entry::Entry>();
+    let cells = capacity * std::mem::size_of::<(usize, usize, entry::Entry)>();
     assert_eq!(
         s.current_memory_proxy_bytes_for_test() - before,
         exact_layout + cells - legacy_cells
@@ -87,7 +91,9 @@ fn typed_admission_is_checked_below_at_and_above_projected_boundary() {
         let mut s = armed_pause();
         let projected = s.pending_typed_frame_allocation_bytes::<Empty>().unwrap();
         assert!(
-            projected >= 5 * std::mem::size_of::<usize>() + std::mem::size_of::<entry::Entry>()
+            projected
+                >= 5 * std::mem::size_of::<usize>()
+                    + std::mem::size_of::<(usize, usize, entry::Entry)>()
         );
         let before = s.current_memory_proxy_bytes_for_test();
         let capacity = s

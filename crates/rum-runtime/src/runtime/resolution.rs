@@ -376,7 +376,7 @@ impl Session {
                 self,
                 next_result,
                 ok(value) => Ok(value),
-                suspend => EvaluateProfiledFixedPointSuspensionFrame::freeze(
+                evaluation_return => EvaluateProfiledFixedPointSuspensionFrame::freeze(
                     current, evaluation_passes, fixed_point_seen,
                 ),
             )?;
@@ -440,7 +440,7 @@ impl Session {
                     self,
                     next_result,
                     ok(value) => break 'next_value value,
-                    suspend => ResumeFixedPointFromSuspensionFrame { state },
+                    evaluation_return => ResumeFixedPointFromSuspensionFrame { state },
                 );
             };
 

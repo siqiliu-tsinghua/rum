@@ -13,11 +13,13 @@ use super::typed::{
 use super::*;
 
 mod abandon;
+mod evaluation_context;
 pub(super) mod fault;
 mod queue;
 use crate::runtime::session::guest_loading::{
     GuestFileTransaction, GuestFormEnvironment, GuestFormScope,
 };
+use evaluation_context::{Queued, ResumeContext};
 use fault::DriverFault;
 use queue::FrameQueue;
 
@@ -167,22 +169,22 @@ impl SuspendedEvaluation {
     }
 
     #[inline]
-    fn push_back(&mut self, frame: Arc<DynSuspensionFrame>) {
-        self.frames.push_back(frame);
+    fn push_back(&mut self, context: ResumeContext, frame: Arc<DynSuspensionFrame>) {
+        self.frames.push_back(context, frame);
     }
 
     #[inline]
-    fn push_front(&mut self, frame: Arc<DynSuspensionFrame>) {
-        self.frames.push_front(frame);
+    fn push_front(&mut self, context: ResumeContext, frame: Arc<DynSuspensionFrame>) {
+        self.frames.push_front(context, frame);
     }
 
     #[inline]
-    fn front(&self) -> Option<EntryRef<'_>> {
+    fn front(&self) -> Option<Queued<EntryRef<'_>>> {
         self.frames.front()
     }
 
     #[inline]
-    fn pop_front(&mut self) -> Entry {
+    fn pop_front(&mut self) -> Queued<Entry> {
         self.frames
             .pop_front()
             .expect("the resumed suspension frame should remain queued")
@@ -194,7 +196,7 @@ impl SuspendedEvaluation {
     }
 
     #[allow(dead_code)]
-    fn take_front(&mut self) -> Option<Entry> {
+    fn take_front(&mut self) -> Option<Queued<Entry>> {
         self.frames.pop_front()
     }
 
@@ -490,19 +492,9 @@ impl Session {
     }
 
     pub(in crate::runtime) fn begin_input_suspension(&mut self, request: RuntimeInputRequest) {
-        // The current InputString call and its immediate caller are both
-        // resumed from saved suspension frames rather than by restarting
-        // evaluate_once. Keeping either expression on the active stack causes
-        // false-positive cycle detection when matcher backtracking or other
-        // helper-level continuations legitimately re-enter that caller after
-        // input arrives.
-        let retained_depth = self.evaluation_stack.len().saturating_sub(2);
-        let active_stack = self
-            .evaluation_stack
-            .iter()
-            .take(retained_depth)
-            .cloned()
-            .collect::<Vec<_>>();
+        #[cfg(test)]
+        self.record_context_for_test("pause");
+        let active_stack = self.evaluation_stack.clone();
 
         let guest_form_environment = self.capture_guest_form_environment();
         self.suspension_access().install(request, active_stack);
@@ -529,11 +521,12 @@ impl Session {
     where
         F: SuspensionFrame,
     {
+        let context = self.resume_context();
         let suspension = self
             .pending_suspension
             .as_mut()
             .expect("input suspension should be initialized before frames are pushed");
-        suspension.push_back(Arc::new(frame));
+        suspension.push_back(context, Arc::new(frame));
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::PendingSuspension,
         );
@@ -563,11 +556,12 @@ impl Session {
         &mut self,
         frame: Arc<dyn ErasedFrame>,
     ) {
+        let context = self.resume_context();
         self.pending_suspension
             .as_mut()
             .expect("input suspension should be initialized before frames are pushed")
             .frames
-            .push_back_typed(frame);
+            .push_back_typed(context, frame);
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::PendingSuspension,
         );
@@ -616,6 +610,8 @@ impl Session {
         &mut self,
         input: impl Into<String>,
     ) -> Result<O, EvalError> {
+        let saved_native_base = self.native_stack_base;
+        let saved_native_threshold = self.native_stack_next_check_depth;
         let stack_marker = 0_u8;
         self.native_stack_base = (&stack_marker as *const u8) as usize;
         debug_assert!(
@@ -640,11 +636,8 @@ impl Session {
             crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
         );
         let saved_stack = self.replace_accounted_evaluation_stack(active_stack);
-        let saved_depth =
-            std::mem::replace(&mut self.evaluation_depth, self.evaluation_stack.len());
-        self.native_stack_next_check_depth = self
-            .evaluation_depth
-            .saturating_add(NATIVE_STACK_DEPTH_POLL_STRIDE);
+        // The first queue cell restores its independently captured logical depth.
+        let saved_depth = self.evaluation_depth;
         self.pending_input_request = None;
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
@@ -671,6 +664,8 @@ impl Session {
 
         self.replace_accounted_evaluation_stack(saved_stack);
         self.evaluation_depth = saved_depth;
+        self.native_stack_base = saved_native_base;
+        self.native_stack_next_check_depth = saved_native_threshold;
 
         match result {
             Err(fault) => {
@@ -706,20 +701,45 @@ impl Session {
         mut outcome: Result<Slot, EvalError>,
     ) -> Result<Result<O, EvalError>, DriverFault> {
         loop {
-            let Some(dispatch_frame) = self
+            let Some(context) = self
                 .resuming_suspension
                 .as_ref()
                 .and_then(SuspendedEvaluation::front)
+                .map(|cell| cell.context)
             else {
                 return decode_completion::<O>(outcome)
                     .map_err(|failure| self.record_slot_fault(failure));
             };
 
+            self.restore_resume_context(context);
+            let dispatch_frame = self
+                .resuming_suspension
+                .as_ref()
+                .and_then(SuspendedEvaluation::front)
+                .expect("restoring context preserves the queue front")
+                .payload;
+
             // Borrow the entry, then clone only its Arc. Exact decoding happens
             // while the consumer remains rooted at the front of the queue.
             match dispatch_frame {
+                EntryRef::EvaluationReturn => {
+                    #[cfg(test)]
+                    self.record_context_for_test("return");
+                    outcome = self.complete_evaluation_return(outcome)?;
+                    self.resuming_suspension
+                        .as_mut()
+                        .expect("the return event remains Session-rooted")
+                        .pop_front();
+                    self.refresh_memory_owner(
+                        crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
+                    );
+                }
                 EntryRef::Legacy(frame) => {
                     let frame = Arc::clone(frame);
+                    #[cfg(test)]
+                    self.record_context_for_test("frame");
+                    let native_check = self.poll_resumed_native_stack();
+                    outcome = outcome.and_then(|value| native_check.map(|()| value));
                     let input = match outcome {
                         Ok(Slot::Value(value)) => Ok(value),
                         Ok(actual) => {
@@ -744,20 +764,27 @@ impl Session {
                     outcome = match action {
                         FrameAction::Complete(outcome) => outcome.map(Slot::Value),
                         FrameAction::Evaluate { expr, next_frame } => {
+                            let context = self.resume_context();
                             self.resuming_suspension
                                 .as_mut()
                                 .expect("the active resumption remains Session-rooted")
-                                .push_front(next_frame);
+                                .push_front(context, next_frame);
                             self.refresh_memory_owner(
                                 crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
                             );
-                            self.evaluate(expr).map(Slot::Value)
+                            self.poll_resumed_native_stack()
+                                .and_then(|()| self.evaluate(expr))
+                                .map(Slot::Value)
                         }
                         FrameAction::Finalize(finalizer) => finalizer.finish().map(Slot::Value),
                     };
                 }
                 EntryRef::Typed(frame) => {
                     let frame = Arc::clone(frame);
+                    #[cfg(test)]
+                    self.record_context_for_test("frame");
+                    let native_check = self.poll_resumed_native_stack();
+                    outcome = outcome.and_then(|value| native_check.map(|()| value));
                     let action = frame.resume(self, &mut outcome);
                     drop(frame);
                     if let Action::DecodeFailure(failure) = action {
@@ -784,15 +811,19 @@ impl Session {
                         }
                         Action::Complete(next_outcome) => outcome = next_outcome,
                         Action::Evaluate { expr, next } => {
+                            let context = self.resume_context();
                             self.resuming_suspension
                                 .as_mut()
                                 .expect("the active resumption remains Session-rooted")
                                 .frames
-                                .push_front_typed(next);
+                                .push_front_typed(context, next);
                             self.refresh_memory_owner(
                                 crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
                             );
-                            outcome = self.evaluate(expr).map(Slot::Value);
+                            outcome = self
+                                .poll_resumed_native_stack()
+                                .and_then(|()| self.evaluate(expr))
+                                .map(Slot::Value);
                         }
                         Action::Finalize(finalizer) => outcome = finalizer.finish(),
                     }

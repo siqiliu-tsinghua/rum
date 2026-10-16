@@ -249,11 +249,10 @@ fn suspended_frames_charge_storage_repeated_roots_and_exception_payloads() {
         omitted_text: reserved("opaque", 4096),
     });
     let owner = session.pending_suspension.as_ref().unwrap();
-    assert_eq!(owner.active_stack.len(), 1);
+    assert_eq!(owner.active_stack.len(), 3);
     let expected = size_of::<SuspendedEvaluation>()
-        + size_of::<EvaluationStackEntry>()
-        + root_bytes
-        + owner.occurrence_frame_capacity() * size_of::<Arc<dyn SuspensionFrame>>()
+        + 3 * (size_of::<EvaluationStackEntry>() + root_bytes)
+        + owner.occurrence_frame_capacity() * size_of::<(usize, usize, Arc<dyn SuspensionFrame>)>()
         + 2 * size_of::<usize>()
         + size_of::<PayloadFrame>()
         + 3 * root_bytes

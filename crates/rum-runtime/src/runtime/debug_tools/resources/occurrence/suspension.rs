@@ -11,9 +11,9 @@ macro_rules! define_oracle {
             pub(in crate::runtime) fn occurrence_bytes(&self) -> Bytes {
                 let queue = match &self.frames {
                     FrameQueue::Legacy(frames) => Bytes::Exact(frames.capacity())
-                        .multiply(size_of::<Arc<DynSuspensionFrame>>()),
+                        .multiply(size_of::<Queued<Arc<DynSuspensionFrame>>>()),
                     FrameQueue::Mixed(frames) => {
-                        Bytes::Exact(frames.capacity()).multiply(size_of::<Entry>())
+                        Bytes::Exact(frames.capacity()).multiply(size_of::<Queued<Entry>>())
                     }
                 };
                 let mut bytes = Bytes::Exact(size_of::<Self>()).add(queue);
@@ -27,6 +27,7 @@ macro_rules! define_oracle {
                 let mut roots = OccurrenceRoots { bytes };
                 self.frames.visit(|frame| {
                     match &frame {
+                        EntryRef::EvaluationReturn => {}
                         EntryRef::Legacy(owner) => {
                             roots.bytes = roots
                                 .bytes

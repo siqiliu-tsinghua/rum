@@ -38,12 +38,13 @@ impl Session {
             );
             debug_assert!(self.evaluation_stack.is_empty());
             self.replace_accounted_evaluation_stack(std::mem::take(&mut suspension.active_stack));
-            self.evaluation_depth = self.evaluation_stack.len();
             if let Some(environment) = suspension.guest_form_environment.take() {
                 environment.install(self);
             }
 
-            while let Some(frame) = suspension.take_front() {
+            while let Some(cell) = suspension.take_front() {
+                self.restore_resume_context(cell.context);
+                let frame = cell.payload;
                 self.rollback_capture_output(frame.output_boundary());
                 let action = frame.abandon(&mut AbandonmentContext {
                     session: self,

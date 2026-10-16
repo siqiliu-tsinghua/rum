@@ -205,6 +205,18 @@ impl Session {
         std::mem::replace(&mut self.evaluation_stack, entries)
     }
 
+    /// Release removed occurrences while retaining and charging the vector shell.
+    #[cold]
+    pub(in crate::runtime) fn truncate_accounted_evaluation_stack(&mut self, len: usize) {
+        if self.current_memory_limit.is_some() {
+            while self.evaluation_stack.len() > len {
+                self.pop_cold_armed_evaluation_entry();
+            }
+        } else {
+            self.evaluation_stack.truncate(len);
+        }
+    }
+
     pub(in crate::runtime) fn clear_accounted_evaluation_stack(&mut self) {
         self.evaluation_stack.clear();
         if self.current_memory_limit.is_some() {

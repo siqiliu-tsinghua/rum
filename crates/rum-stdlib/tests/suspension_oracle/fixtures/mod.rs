@@ -16,6 +16,7 @@ use rum_runtime::RuntimeInputKind;
 mod debug;
 mod definitions;
 mod evaluation_dispatch;
+mod evaluation_stack;
 mod lazy;
 mod loops;
 mod options;

@@ -9,11 +9,13 @@ use crate::runtime::suspension::SuspensionFrame;
 pub(in crate::runtime::suspension) enum Entry {
     Legacy(Arc<dyn SuspensionFrame>),
     Typed(Arc<dyn ErasedFrame>),
+    EvaluationReturn,
 }
 
 pub(in crate::runtime::suspension) enum EntryRef<'a> {
     Legacy(&'a Arc<dyn SuspensionFrame>),
     Typed(&'a Arc<dyn ErasedFrame>),
+    EvaluationReturn,
 }
 
 impl Entry {
@@ -21,6 +23,7 @@ impl Entry {
         match self {
             Self::Legacy(frame) => frame.output_boundary(),
             Self::Typed(frame) => frame.output_boundary(),
+            Self::EvaluationReturn => OutputBoundary::default(),
         }
     }
 
@@ -31,6 +34,7 @@ impl Entry {
         match self {
             Self::Legacy(frame) => frame.abandon(context),
             Self::Typed(frame) => frame.abandon(context),
+            Self::EvaluationReturn => FrameAbandonAction::Discard,
         }
     }
 
@@ -39,6 +43,7 @@ impl Entry {
         match self {
             Self::Legacy(frame) => EntryRef::Legacy(frame),
             Self::Typed(frame) => EntryRef::Typed(frame),
+            Self::EvaluationReturn => EntryRef::EvaluationReturn,
         }
     }
 }
@@ -48,6 +53,7 @@ impl EntryRef<'_> {
         match self {
             Self::Legacy(frame) => frame.output_boundary(),
             Self::Typed(frame) => frame.output_boundary(),
+            Self::EvaluationReturn => OutputBoundary::default(),
         }
     }
 
@@ -55,6 +61,7 @@ impl EntryRef<'_> {
         match self {
             Self::Legacy(frame) => frame.trace_roots(visitor),
             Self::Typed(frame) => frame.trace_roots(visitor),
+            Self::EvaluationReturn => {}
         }
     }
 
@@ -66,6 +73,7 @@ impl EntryRef<'_> {
                 .saturating_add(size_of_val(frame.as_ref()))
                 .saturating_add(header)
                 .saturating_add(size_of_val(frame.inner_frame())),
+            Self::EvaluationReturn => 0,
         }
     }
 }

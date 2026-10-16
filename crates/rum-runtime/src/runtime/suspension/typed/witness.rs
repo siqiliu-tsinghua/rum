@@ -28,9 +28,44 @@ impl<I: SlotValue> SlotWitness<I> {
     }
 }
 
+impl SlotWitness<rum_core::Expr> {
+    pub(crate) fn suspend_evaluation_return<
+        F: TypedFrame<Input = rum_core::Expr, Output = rum_core::Expr>,
+    >(
+        self,
+        session: &mut Session,
+        request: RuntimeInputRequest,
+        frame: F,
+    ) -> Result<rum_core::Expr, EvalError> {
+        session.insert_evaluation_return();
+        self.suspend(session, request, frame)
+    }
+}
+
 /// Captures the actual producer once and constructs a frame only on suspension.
 #[macro_export]
 macro_rules! resume_typed_or_suspend {
+    (
+        $session:expr, $result:ident,
+        ok($value:pat) => $continue:expr,
+        evaluation_return => $frame:expr $(,)?
+    ) => {{
+        let witness = $crate::kernel_api::slot_witness(&($result));
+        match $result {
+            Ok($value) => $continue,
+            Err($crate::kernel_api::EvalError::InputRequired { request }) => {
+                #[cold]
+                #[inline(never)]
+                fn suspend<R>(make: impl ::core::ops::FnOnce() -> R) -> R {
+                    make()
+                }
+                return suspend(move || {
+                    witness.suspend_evaluation_return($session, request, $frame)
+                });
+            }
+            Err(error) => Err(error),
+        }
+    }};
     (
         $session:expr, $result:ident,
         ok($value:pat) => $continue:expr,

@@ -178,8 +178,7 @@ impl GuestFormScope {
     }
 
     /// On a native unwind evaluate already restored its stack. Resumed and
-    /// abandoned forms must reinstall the full caller prefix, including entries
-    /// deliberately omitted by the input boundary's two-entry stack shortening.
+    /// abandoned forms must reinstall the caller prefix saved at form entry.
     pub(in crate::runtime) fn restore(&self, session: &mut Session, restore_stack: bool) {
         session.current_message_list_checkpoint = self.previous_message_checkpoint;
         session.current_message_list_dirty = self.previous_message_dirty;

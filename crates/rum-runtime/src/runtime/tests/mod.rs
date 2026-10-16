@@ -192,3 +192,5 @@ mod traversal_part2;
 mod valueq_stable_shortcut;
 mod wide_child_traversals;
 mod wide_definition_dispatch;
+
+mod resume_evaluation_context;

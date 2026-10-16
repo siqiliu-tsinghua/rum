@@ -187,7 +187,7 @@ fn baseline(source: &Source) {
     // taking/installing the paused environment and capturing it for cleanup
     // in suspension/core/abandon.rs.
     // These remain unresolved boundaries; the loader earns no retention mark.
-    for line in [42, 43, 59] {
+    for line in [41, 42, 60] {
         assert!(options.rejected.iter().any(|row| row.kind == Kind::RET002
             && row.site.file.ends_with("suspension/core/abandon.rs")
             && row.site.start.0 == line));
@@ -214,18 +214,24 @@ fn baseline(source: &Source) {
     // Redispatch 6: all 936 rows pair with the same operations, including
     // the caller-place witness and the outlined cycle formatter. Restoring
     // M0561's trailing `?` adds one unresolved Try/FromResidual boundary.
+    // brief-613 G14: retire the old abandon.rs:41 stack.len() rejection with
+    // the deleted depth-from-length assignment; pair witness.suspend with
+    // witness.suspend_evaluation_return at the ruled fixed-point macro arm.
+    // Fourteen new cold rejections cover twelve maintained-stack operations,
+    // the return event and the context assertion. All remain rejected; the
+    // frontier is 950 (10/913/27), with no new retention mark or coverage.
     assert!(options.rejected.iter().any(|row| row.kind == Kind::RET002
         && row.site.file.ends_with("resolution.rs")
         && row.site.start == (35, 19)
         && row.reason == "path AccumulatorChain::default has 0 exact bindings"));
     assert_eq!(
         options.rejected.len(),
-        937,
+        950,
         "STOP: brief-545 exact legacy frontier inventory moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 901), (Kind::RET003, 26)])
+        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 913), (Kind::RET003, 27)])
     );
     let wrapper = regions::frontier(
         source,
