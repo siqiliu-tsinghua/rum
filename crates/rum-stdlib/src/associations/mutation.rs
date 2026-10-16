@@ -232,7 +232,7 @@ fn resume_associate_to_after_target_preparation(
     }
 
     let target_result = session.evaluate_prepared_definition_lhs(&prepared);
-    rum_runtime::resume_or_suspend!(
+    rum_runtime::resume_typed_or_suspend!(
         session,
         target_result,
         ok(expr) => finish_associate_to_value(session, call_args, prepared, expr),
@@ -361,7 +361,7 @@ fn resume_key_drop_from_after_target_preparation(
     call_args: SharedArgs,
 ) -> Result<Expr, EvalError> {
     let target_result = session.evaluate_prepared_definition_lhs(&prepared);
-    rum_runtime::resume_or_suspend!(
+    rum_runtime::resume_typed_or_suspend!(
         session,
         target_result,
         ok(expr) => finish_key_drop_from_value(session, call_args, prepared, expr),
@@ -527,34 +527,17 @@ fn eval_held_association_part_mutation(
     selector_exprs: Vec<Expr>,
     spec: Expr,
 ) -> Result<Expr, EvalError> {
-    match session.evaluate_part_selectors_owned_for_builtin(selector_exprs) {
-        EvaluatedPartSelectorsEvaluation::Complete(result) => {
-            finish_held_association_part_mutation(
-                session,
-                operation,
-                target_expr,
-                target,
-                result?,
-                spec,
-            )
-        }
-        EvaluatedPartSelectorsEvaluation::Suspended {
-            error,
-            continuation,
-        } => {
-            rum_runtime::resume_or_suspend!(
-                insert session,
-                FinishHeldAssociationPartSelectorEvaluationSuspensionFrame {
-                    operation,
-                    target_expr,
-                    target,
-                    spec,
-                    continuation,
-                },
-            );
-            Err(error)
-        }
-    }
+    let evaluated_result = session.evaluate_part_selectors_owned_for_builtin(selector_exprs);
+    rum_runtime::resume_typed_or_suspend!(
+        session,
+        evaluated_result,
+        ok(evaluated_selectors) => finish_held_association_part_mutation(
+            session, operation, target_expr, target, evaluated_selectors, spec,
+        ),
+        suspend => FinishHeldAssociationPartSelectorEvaluationSuspensionFrame {
+            operation, target_expr, target, spec,
+        },
+    )
 }
 
 fn finish_held_association_part_mutation(

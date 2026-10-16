@@ -4,8 +4,8 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-16, committed tree through brief-614 (G13 step
-S6, guards and binding completion, gated; below). **Next: S7 (brief-615).
+Status checkpoint: 2026-10-17, committed tree through brief-615 (G13 step
+S7, Part selectors and held assignment, gated; below). **Next: S8 (brief-616).
 G13's implementation is 78 gated steps** — S1 dormant API, S2
 compatible driver, S3-S54 family typing, F1-F23 one flip per legacy type, R
 removal — each a director-rewritten brief
@@ -1139,6 +1139,16 @@ Owed:
   (S4 + S5 rows above).
 - ~~**S6:** make `typed_slot_census.rs`'s scratch path step-independent~~ —
   done in S6 (`.temp/typed-slot-census/`).
+- **Owed to `EvaluatedPartSelectors`' flip (S7):** the held-association
+  path (`AssociateTo`/`KeyDropFrom` on a `Part` target, F0047) now crosses
+  the Legacy selector wire where the deleted `OnceLock` protocol bypassed it.
+  Per resumed iteration that is +1 allocation / +39 B (`AssociateTo`) or
+  +2 / +40 B (`KeyDropFrom`) and +1.1-1.2% instructions, plus a
+  once-per-process interned 42-B `InternalContinuationEvaluatedPartSelectors`
+  literal (+2 allocations / 82 B). The flip must remove all of it.
+- **Cosmetic, any later step:** the census console still prints
+  `OPTION_FRONTIER=927` where the pinned legacy option frontier is 950
+  (found by brief-615; reporting text only).
 
 **G14 DONE (2026-10-16; design brief-612, implementation brief-613, four
 dispatches): resume never unwound the evaluation stack it restored.** Found
@@ -1284,6 +1294,72 @@ go 37 → 42 of 607, and production macro sites 577 → 573.
   - the probe gives 45 SAME and 0 DIFF (S6 shapes plus the G14 and
     skipped-`Some` regressions).
 
+**S7 (brief-615): Part selectors and held assignment.** Codex, one
+dispatch. S7 types F0047-F0049 (the first typed frames in `rum-stdlib`, so
+the typed API's first use across the crate edge), F0260, F0261, F0265,
+F0280-F0282 and F0347, and deletes F0348 with the runtime-to-stdlib
+`Arc<OnceLock>` selector publishing protocol
+(`EvaluatedPartSelectorsContinuation`/`Evaluation`). Production
+implementations go 607 → 606, typed 42 → 52, macro sites 573 → 566.
+
+- **Routes.**
+  - Every producer witness comes from its bound `Result` before the match,
+    and the cold helpers take only `(witness, request)` plus frozen state.
+  - The builtin-facing producer
+    `evaluate_part_selectors_owned_for_builtin` (doc-hidden) now returns
+    `Result<EvaluatedPartSelectors, EvalError>`. F0047 receives the opaque
+    selectors through its typed slot. A 35th compile-control pair, compiled
+    as an external crate, rejects a stdlib witness taken from a
+    `Result<Expr, _>` (E0271).
+  - F0260 and F0281 insert a different frame through the witnessed route and
+    stop with `ResumeStop`. F0282 reuses S5's `DefinitionResumeRoute`, so
+    `definitions::application` widens to `pub(in crate::runtime)`.
+- **No defect to repair.** The director's 32 Part/association shapes were
+  all SAME before and after. The six recorded `InternalContinuation*`
+  divergences (`part.*`/`assoc.*` none/some/empty_some) are now strict
+  fixtures, among 53 new ones (214 oracle tests per build). The positional
+  association shapes stay equality-only, labelled Q5.
+- **The worker's own gate caught a regression in its first shape.** Binding
+  the completion inside a wrapper closure cost one extra 136-B copy per
+  ordinary Part assignment. Moving the producer local, then S5's
+  witness-and-request cold helpers, then direct error returns removed it.
+- **Costs ruled acceptable.**
+  - Ordinary allocations 126/126 equal; no new ordinary `memcpy`.
+  - Positional Part assignment falls 100 → 93 own instructions. Explicit
+    association Key Part assignment rises 312 → 317 (+5 per assignment,
+    0.03% of its label; the director's native panel cannot see it). Its
+    ledger is +9 register/memory moves (`Session` reloads), -3 jumps and
+    -1 compare, with no allocation or copy. It is ruled register
+    allocation, as S6's +2 was.
+  - Stack: all twelve profile/shape slopes equal to S6. Some non-recursive
+    resume-side frames grow (release up to +352 B on
+    `ResumeSuspendedAssociationSetLvalue…::resume`; on the ordinary path
+    `resume_associate_to_after_target_preparation` +32 B, which is padding).
+  - Resume: one 24-B adapter `Arc` per newly typed transfer, the known 136-B
+    driver move owed to R, and the held-association Legacy round trip owed
+    to the selectors' flip (above).
+  - Timing: `table-count-null`, `do-iterator-null`, `loop-empty` and
+    `table-iterator-null` read +4-7% in the director's own panel-harness
+    probe. Instructions are identical (`Table[Null]` 399.07 per element in
+    both arms; `Do[Null]` 1152.0 per iteration). With every function
+    64-byte aligned in both arms, all four go to 0 or below. They are
+    layout, settled causally as G14's key read was. The worker's probes
+    stopped on its magnitude gate because single calls ran 2x the panel's
+    cost. One director probe of mine hit the 100 000 iteration limit and
+    measured startup; the tell was a zero slope.
+- **Director gate:**
+  - workspace 3 646/0/59 with 0 ZeroMQ skips;
+  - oracle 214/214 in both builds, warning-free;
+  - census, compile controls (35 pairs) and local production, each in both
+    builds;
+  - ownership 31/31;
+  - inventories byte-identical after the replay;
+  - base sources proved equal to `e9707d15` (1 492/1 492), and candidates
+    fresh;
+  - the probe gives 77 SAME and 0 DIFF (S7, S6 and G14 shapes), plus 11
+    SAME where a guest value carries the selector wire's own head as a
+    selector or key.
+
 **Recorded, not in this branch — the gensym sweep does not see Rust-local
 values (found 2026-10-14 reviewing brief-605; Q3, queued behind the branch by
 user ruling 2026-10-14).** The sweep's roots
@@ -1313,11 +1389,13 @@ and one layer released at every position.
 
 **Q5 — Part assignment into an association by position is a silent no-op
 (found 2026-10-16 by the director's S7 probe; ordinary path, unrelated to
-suspension; awaiting the user's priority).** `a = <|"k" -> 0, "j" -> 1|>;
+suspension; queued behind the branch unless the user inserts it).** `a = <|"k" -> 0, "j" -> 1|>;
 a[[2]] = 9` returns `9` and leaves `a` unchanged, with no message. So do a
 key followed by a list position (`e = <|"k" -> {0, 0}|>; e[["k", 2]] = 8`),
 a key followed by a position into a nested association (`h[["k", 1]] = 2`)
-and negative positions (`a[[-1]] = 3`). Pure key paths work, both `a[["j"]]`
+and negative positions (`a[[-1]] = 3`). An invalid selector is silent
+too: `a[[f[1]]] = 7` returns `7` with no message, where a list gives
+`Set::argform` (same on `e9707d15`). Pure key paths work, both `a[["j"]]`
 and `a[[Key["j"]]]`. A list position followed by a key
 (`g = {<|"k" -> 0|>}; g[[1, "k"]] = 4`) fails loudly with `Set::argform`.
 The cause: `set_association_part_path`

@@ -1,4 +1,4 @@
-mod application;
+pub(in crate::runtime) mod application;
 mod definition_analysis_helpers;
 mod definition_catalog;
 mod definition_clear;

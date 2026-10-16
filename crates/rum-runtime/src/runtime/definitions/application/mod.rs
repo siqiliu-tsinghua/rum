@@ -170,9 +170,8 @@ fn exact_down_value_rhs(down_values: &[DownValue], lhs: &Expr) -> Option<Expr> {
 // The same scan driver is entered both initially and by its own typed frame.
 // Monomorphization keeps the initial Result/EvalError path unchanged; only a
 // resumed instantiation can consume a token to install fresh state.
-pub(in crate::runtime::definitions) trait DefinitionResumeRoute<
-    F: crate::runtime::kernel_api::TypedFrame,
->: Sized
+pub(in crate::runtime) trait DefinitionResumeRoute<F: crate::runtime::kernel_api::TypedFrame>:
+    Sized
 {
     type Error;
     fn failure(error: EvalError) -> Self::Error;

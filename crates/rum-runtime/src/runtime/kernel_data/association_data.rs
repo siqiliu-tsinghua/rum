@@ -2,6 +2,8 @@ mod resume_frames;
 use resume_frames::*;
 
 use super::super::*;
+use crate::runtime::definitions::application::DefinitionResumeRoute;
+use crate::runtime::kernel_api::slot_witness;
 use crate::runtime::kernel_api::{
     AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
 };
@@ -744,20 +746,27 @@ impl Session {
                     [selector] if explicit_association_key_selector(selector).is_some()
                 );
                 let evaluated_result = self.evaluate_part_selectors_owned(selectors);
-                crate::resume_or_suspend!(
-                    self,
-                    evaluated_result,
-                    ok(evaluated_selectors) => self.finish_association_set_part_lvalue(
-                        symbol,
-                        direct_single_key,
-                        evaluated_selectors,
-                        rhs,
-                    ),
-                    suspend => FinishAssociationSetPartSelectorEvaluationSuspensionFrame {
-                        symbol,
-                        direct_single_key,
-                        rhs,
-                    },
+                let witness = slot_witness(&evaluated_result);
+                let evaluated_selectors = match evaluated_result {
+                    Ok(evaluated_selectors) => evaluated_selectors,
+                    Err(EvalError::InputRequired { request }) => {
+                        return resume_frames::suspend_association_set_part_selectors(
+                            self,
+                            symbol,
+                            direct_single_key,
+                            rhs,
+                            witness,
+                            request,
+                        )
+                        .map(Some);
+                    }
+                    Err(error) => return Err(error),
+                };
+                self.finish_association_set_part_lvalue(
+                    symbol,
+                    direct_single_key,
+                    evaluated_selectors,
+                    rhs,
                 )?
             }
         };
@@ -814,55 +823,67 @@ impl Session {
                 );
             };
 
-            match self.evaluate(selector.clone()) {
+            let selector_result = self.evaluate(selector.clone());
+            let witness = slot_witness(&selector_result);
+            match selector_result {
                 Ok(selector) => {
                     evaluated_selectors.push(selector);
                     index += 1;
                 }
                 Err(EvalError::InputRequired { request }) => {
-                    let suspended = SuspendedAssociationSetLValue::freeze(
+                    return resume_frames::suspend_association_set_lvalue_selectors(
+                        self,
                         symbol,
                         selectors,
                         rhs,
                         index,
                         evaluated_selectors,
+                        witness,
+                        request,
                     );
-                    crate::resume_or_suspend!(insert self, ResumeAssociationSetLvalueSelectorEvaluationSuspensionFrame { suspended });
-                    return Err(EvalError::InputRequired { request });
                 }
                 Err(error) => return Err(error),
             }
         }
     }
 
-    fn resume_suspended_association_set_lvalue(
+    fn resume_suspended_association_set_lvalue<Route>(
         &mut self,
         mut state: SuspendedAssociationSetLValue,
         selector: Expr,
-    ) -> Result<Expr, EvalError> {
+        route: Route,
+    ) -> Result<Expr, Route::Error>
+    where
+        Route: DefinitionResumeRoute<ResumeSuspendedAssociationSetLvalueSuspensionFrame>,
+    {
         state.evaluated = state.evaluated.appended(selector);
         state.cursor += 1;
 
         loop {
             let Some(selector) = state.selectors.get(state.cursor) else {
-                return self.finish_association_set_function_lvalue(
-                    state.symbol,
-                    state.selectors.as_ref(),
-                    state.evaluated.into_vec(),
-                    state.rhs,
-                );
+                return self
+                    .finish_association_set_function_lvalue(
+                        state.symbol,
+                        state.selectors.as_ref(),
+                        state.evaluated.into_vec(),
+                        state.rhs,
+                    )
+                    .map_err(Route::failure);
             };
 
-            match self.evaluate(selector.clone()) {
+            let selector_result = self.evaluate(selector.clone());
+            let witness = slot_witness(&selector_result);
+            match selector_result {
                 Ok(selector) => {
                     state.evaluated = state.evaluated.appended(selector);
                     state.cursor += 1;
                 }
                 Err(EvalError::InputRequired { request }) => {
-                    crate::resume_or_suspend!(insert self, ResumeSuspendedAssociationSetLvalueSuspensionFrame { state });
-                    return Err(EvalError::InputRequired { request });
+                    return resume_frames::suspend_suspended_association_set_lvalue(
+                        self, state, witness, request, route,
+                    );
                 }
-                Err(error) => return Err(error),
+                Err(error) => return Err(Route::failure(error)),
             }
         }
     }

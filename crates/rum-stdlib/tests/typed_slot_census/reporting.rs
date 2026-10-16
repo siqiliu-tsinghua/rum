@@ -108,7 +108,8 @@ pub(super) fn emit(root: &Path, facts: &Facts, report: &Report) {
             .iter()
             .filter(|s| {
                 s.population == Population::Production
-                    && s.caller.contains("::definitions::")
+                    && (s.caller.contains("::definitions::")
+                        || s.caller.contains("::kernel_data::association_data::"))
                     && s.name.starts_with("suspend")
                     && matches!(s.kind.as_str(), "call" | "method")
             })

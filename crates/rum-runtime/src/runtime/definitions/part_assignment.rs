@@ -1,5 +1,4 @@
 mod resume_frames;
-use resume_frames::*;
 
 use super::super::*;
 use super::incremental_mutation::DefinitionValueRollback;
@@ -40,17 +39,19 @@ impl Session {
         }
 
         let evaluated_result = self.evaluate_part_selectors_owned(selectors.to_vec());
-        let value = crate::resume_or_suspend!(
-            self,
-            evaluated_result,
-            ok(evaluated_selectors) => self.finish_positional_part_assignment(
-                owner,
-                evaluated_selectors,
-                rhs,
-            ),
-            suspend => FinishPositionalPartSelectorEvaluationSuspensionFrame { owner, rhs },
-        )?;
-        Ok(Some(value))
+        let witness = slot_witness(&evaluated_result);
+        let evaluated_selectors = match evaluated_result {
+            Ok(evaluated_selectors) => evaluated_selectors,
+            Err(EvalError::InputRequired { request }) => {
+                return resume_frames::suspend_positional_part_selectors(
+                    self, owner, rhs, witness, request,
+                )
+                .map(Some);
+            }
+            Err(error) => return Err(error),
+        };
+        self.finish_positional_part_assignment(owner, evaluated_selectors, rhs)
+            .map(Some)
     }
 
     fn finish_positional_part_assignment(

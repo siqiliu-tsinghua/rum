@@ -1,6 +1,7 @@
 use super::super::*;
+use crate::runtime::kernel_api::{ContinueToken, TypedAction, TypedFrame};
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
-use std::sync::{Arc, OnceLock};
+use std::sync::Arc;
 
 /// A Part selector sequence whose expressions have each been evaluated once.
 ///
@@ -15,42 +16,6 @@ pub struct EvaluatedPartSelectors {
 enum EvaluatedPartSelectorStorage {
     Owned(Vec<Expr>),
     StablePartArgs { args: SharedArgs, start: usize },
-}
-
-/// The completion capability for an actually suspended selector evaluation.
-///
-/// Only the runtime's private finishing frame can populate the shared slot.
-/// Supplying an arbitrary continuation expression therefore cannot construct
-/// an [`EvaluatedPartSelectors`].
-#[doc(hidden)]
-#[derive(Clone, FrameRootTrace)]
-pub struct EvaluatedPartSelectorsContinuation {
-    completed: Arc<OnceLock<EvaluatedPartSelectors>>,
-}
-
-impl EvaluatedPartSelectorsContinuation {
-    #[doc(hidden)]
-    pub fn finish(
-        &self,
-        outcome: Result<Expr, EvalError>,
-    ) -> Result<EvaluatedPartSelectors, EvalError> {
-        outcome?;
-        Ok(self
-            .completed
-            .get()
-            .expect("the runtime selector frame completes before its caller")
-            .clone())
-    }
-}
-
-/// The result of beginning exactly-once Part selector evaluation.
-#[doc(hidden)]
-pub enum EvaluatedPartSelectorsEvaluation {
-    Complete(Result<EvaluatedPartSelectors, EvalError>),
-    Suspended {
-        error: EvalError,
-        continuation: EvaluatedPartSelectorsContinuation,
-    },
 }
 
 impl EvaluatedPartSelectors {
@@ -119,7 +84,7 @@ impl Session {
         selector_exprs: Vec<Expr>,
     ) -> Result<EvaluatedPartSelectors, EvalError> {
         let evaluated_result = self.resolve_argument_exprs_owned(selector_exprs);
-        crate::resume_or_suspend!(
+        crate::resume_typed_or_suspend!(
             self,
             evaluated_result,
             ok(values) => Ok(EvaluatedPartSelectors::from_evaluated(values)),
@@ -127,76 +92,30 @@ impl Session {
         )
     }
 
-    /// Evaluates Part selectors for a downstream builtin family without
-    /// publishing the raw continuation decoder.
+    /// Evaluates Part selectors exactly once for a downstream builtin family.
     #[doc(hidden)]
     pub fn evaluate_part_selectors_owned_for_builtin(
         &mut self,
         selector_exprs: Vec<Expr>,
-    ) -> EvaluatedPartSelectorsEvaluation {
-        match self.resolve_argument_exprs_owned(selector_exprs) {
-            Ok(values) => EvaluatedPartSelectorsEvaluation::Complete(Ok(
-                EvaluatedPartSelectors::from_evaluated(values),
-            )),
-            Err(error @ EvalError::InputRequired { .. }) => {
-                let completed = Arc::new(OnceLock::new());
-                crate::resume_or_suspend!(
-                    insert self,
-                    FinishPublishedEvaluatedPartSelectorsSuspensionFrame {
-                        completed: completed.clone(),
-                    },
-                );
-                EvaluatedPartSelectorsEvaluation::Suspended {
-                    error,
-                    continuation: EvaluatedPartSelectorsContinuation { completed },
-                }
-            }
-            Err(error) => EvaluatedPartSelectorsEvaluation::Complete(Err(error)),
-        }
+    ) -> Result<EvaluatedPartSelectors, EvalError> {
+        self.evaluate_part_selectors_owned(selector_exprs)
     }
 }
 
 #[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct FinishEvaluatedPartSelectorsSuspensionFrame;
 
-impl crate::runtime::suspension::SuspensionFrame for FinishEvaluatedPartSelectorsSuspensionFrame {
-    fn resume(
+impl TypedFrame for FinishEvaluatedPartSelectorsSuspensionFrame {
+    type Input = Vec<Expr>;
+    type Output = EvaluatedPartSelectors;
+
+    fn resume<'resume>(
         self: Arc<Self>,
         _session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        let resumed = outcome.map(|value| {
-            let values = <Vec<Expr> as crate::runtime::suspension::ContinuationValue>::from_continuation_expr(value);
-            EvaluatedPartSelectors::from_evaluated(values).into_continuation_expr()
-        });
-        crate::runtime::suspension::FrameAction::complete(resumed)
-    }
-}
-
-#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
-struct FinishPublishedEvaluatedPartSelectorsSuspensionFrame {
-    completed: Arc<OnceLock<EvaluatedPartSelectors>>,
-}
-
-impl crate::runtime::suspension::SuspensionFrame
-    for FinishPublishedEvaluatedPartSelectorsSuspensionFrame
-{
-    fn resume(
-        self: Arc<Self>,
-        _session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        let resumed = outcome.map(|value| {
-            let values = <Vec<Expr> as crate::runtime::suspension::ContinuationValue>::from_continuation_expr(value);
-            assert!(
-                self.completed
-                    .set(EvaluatedPartSelectors::from_evaluated(values))
-                    .is_ok(),
-                "a selector continuation completes exactly once",
-            );
-            system_expr("Null")
-        });
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        outcome: Result<Vec<Expr>, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<EvaluatedPartSelectors> {
+        TypedAction::complete(outcome.map(EvaluatedPartSelectors::from_evaluated))
     }
 }
 
@@ -205,7 +124,5 @@ const _: fn() = || {
     fn assert_traces<T: FrameRootTrace>() {}
     assert_traces::<EvaluatedPartSelectors>();
     assert_traces::<EvaluatedPartSelectorStorage>();
-    assert_traces::<EvaluatedPartSelectorsContinuation>();
     assert_traces::<FinishEvaluatedPartSelectorsSuspensionFrame>();
-    assert_traces::<FinishPublishedEvaluatedPartSelectorsSuspensionFrame>();
 };

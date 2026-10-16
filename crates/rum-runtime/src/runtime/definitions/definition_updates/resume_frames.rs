@@ -1,4 +1,5 @@
 use super::*;
+use crate::runtime::kernel_api::{ContinueToken, TypedAction, TypedFrame};
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
 #[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
@@ -8,19 +9,20 @@ pub(super) struct FinishHeldPartSelectorEvaluationSuspensionFrame {
     pub(super) args: SharedArgs,
 }
 
-impl crate::runtime::suspension::SuspensionFrame
-    for FinishHeldPartSelectorEvaluationSuspensionFrame
-{
-    fn resume(
+impl TypedFrame for FinishHeldPartSelectorEvaluationSuspensionFrame {
+    type Input = EvaluatedPartSelectors;
+    type Output = Expr;
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        outcome: Result<EvaluatedPartSelectors, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
         let operation = self.operation;
         let target = self.target;
         let args = self.args.clone();
         let resumed = (|| {
-            let evaluated_selectors = EvaluatedPartSelectors::from_continuation_expr(outcome?);
+            let evaluated_selectors = outcome?;
             session.finish_suspended_held_part_selector_evaluation(
                 operation,
                 target,
@@ -28,7 +30,7 @@ impl crate::runtime::suspension::SuspensionFrame
                 evaluated_selectors,
             )
         })();
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete_work(resumed.map_err(crate::runtime::kernel_api::ResumeStop::failure))
     }
 }
 
@@ -39,12 +41,15 @@ pub(super) struct FinishHeldUpdateSuspensionFrame {
     pub(super) return_value: crate::runtime::definitions::definition_updates::HeldUpdateReturn,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for FinishHeldUpdateSuspensionFrame {
-    fn resume(
+impl TypedFrame for FinishHeldUpdateSuspensionFrame {
+    type Input = Expr;
+    type Output = Expr;
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
         #[allow(unused_mut)]
         let mut operator = self.operator;
         #[allow(unused_mut)]
@@ -55,6 +60,51 @@ impl crate::runtime::suspension::SuspensionFrame for FinishHeldUpdateSuspensionF
             let updated = outcome?;
             session.store_suspended_held_update(operator, target, updated, return_value)
         })();
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete(resumed)
     }
+}
+
+#[cold]
+#[inline(never)]
+pub(super) fn suspend_held_part_selectors(
+    session: &mut Session,
+    operation: HeldUpdateOperation,
+    target: Symbol,
+    args: &[Expr],
+    witness: crate::runtime::kernel_api::SlotWitness<EvaluatedPartSelectors>,
+    request: RuntimeInputRequest,
+) -> Result<HeldUpdateCurrent, EvalError> {
+    witness
+        .suspend(
+            session,
+            request,
+            FinishHeldPartSelectorEvaluationSuspensionFrame {
+                operation,
+                target,
+                args: SharedArgs::new(args.to_vec()),
+            },
+        )
+        .map(HeldUpdateCurrent::Immediate)
+}
+
+#[cold]
+#[inline(never)]
+pub(super) fn suspend_held_update(
+    session: &mut Session,
+    operator: &'static str,
+    target: HeldUpdateTarget,
+    return_value: HeldUpdateReturn,
+    witness: crate::runtime::kernel_api::SlotWitness<Expr>,
+    request: RuntimeInputRequest,
+) -> Result<Expr, EvalError> {
+    let target = SuspendedHeldUpdateTarget::freeze(target);
+    witness.suspend(
+        session,
+        request,
+        FinishHeldUpdateSuspensionFrame {
+            operator,
+            target,
+            return_value,
+        },
+    )
 }

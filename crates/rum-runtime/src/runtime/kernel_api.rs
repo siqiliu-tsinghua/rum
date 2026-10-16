@@ -35,9 +35,7 @@ pub use super::kernel_data::control_data::ControlDataBuiltin;
 
 // assignment Part selectors
 #[doc(hidden)]
-pub use super::kernel_data::evaluated_part_selectors::{
-    EvaluatedPartSelectors, EvaluatedPartSelectorsContinuation, EvaluatedPartSelectorsEvaluation,
-};
+pub use super::kernel_data::evaluated_part_selectors::EvaluatedPartSelectors;
 
 // rewrite_data
 pub use super::kernel_data::rewrite_data::RewriteDataBuiltin;

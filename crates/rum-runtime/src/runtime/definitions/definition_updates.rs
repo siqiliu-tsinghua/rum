@@ -1,7 +1,7 @@
 mod resume_frames;
-use resume_frames::*;
 
 use super::super::*;
+use crate::runtime::kernel_api::slot_witness;
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 use std::sync::Arc;
 
@@ -251,21 +251,21 @@ impl Session {
 
         if let Some((target, selector_exprs)) = normalize_part_update_target(target_expr) {
             let evaluated_result = self.evaluate_part_selectors_owned(selector_exprs);
-            return crate::resume_or_suspend!(
-                self,
-                evaluated_result,
-                ok(evaluated_selectors) => Ok(self.current_part_held_update_value(
+            let witness = slot_witness(&evaluated_result);
+            return match evaluated_result {
+                Ok(evaluated_selectors) => Ok(self.current_part_held_update_value(
                     operator,
                     target,
                     &evaluated_selectors,
                     args,
                 )),
-                suspend => FinishHeldPartSelectorEvaluationSuspensionFrame {
-                    operation,
-                    target,
-                    args: SharedArgs::new(args.to_vec()),
-                },
-            );
+                Err(EvalError::InputRequired { request }) => {
+                    resume_frames::suspend_held_part_selectors(
+                        self, operation, target, args, witness, request,
+                    )
+                }
+                Err(error) => Err(error),
+            };
         }
 
         self.push_held_update_rvalue_message(operator, target_expr);
@@ -509,13 +509,18 @@ impl Session {
         update: Expr,
         return_value: HeldUpdateReturn,
     ) -> Result<Expr, EvalError> {
-        match self.evaluate(update) {
+        let updated_result = self.evaluate(update);
+        let witness = slot_witness(&updated_result);
+        match updated_result {
             Ok(updated) => self.store_held_update(operator, target, updated, return_value),
-            Err(EvalError::InputRequired { request }) => {
-                let target = SuspendedHeldUpdateTarget::freeze(target);
-                crate::resume_or_suspend!(insert self, FinishHeldUpdateSuspensionFrame { operator, target, return_value });
-                Err(EvalError::InputRequired { request })
-            }
+            Err(EvalError::InputRequired { request }) => resume_frames::suspend_held_update(
+                self,
+                operator,
+                target,
+                return_value,
+                witness,
+                request,
+            ),
             Err(error) => Err(error),
         }
     }

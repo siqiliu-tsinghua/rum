@@ -93,7 +93,7 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
         let result = macros.iter().filter(|s| s.receiver == "result").count();
         let insert = macros.iter().filter(|s| s.receiver == "insert").count();
         println!(
-            "S6 CENSUS {} frames={frames} finalizers={finalizers} implementations={} typed={} macros={} result={result} insert={insert}",
+            "S7 CENSUS {} frames={frames} finalizers={finalizers} implementations={} typed={} macros={} result={result} insert={insert}",
             population.label(),
             cohort.len(),
             cohort.len() - frames - finalizers,
@@ -109,13 +109,13 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
         ));
     }
     println!(
-        "S6 PARTITION implementations={} macros={}",
+        "S7 PARTITION implementations={} macros={}",
         counts[0].2 + counts[1].2,
         counts[0].3 + counts[1].3
     );
-    if counts[0] != (514, 51, 607, 573, 356, 217) || counts[1] != (11, 5, 16, 11, 3, 8) {
+    if counts[0] != (503, 51, 606, 566, 354, 212) || counts[1] != (11, 5, 16, 11, 3, 8) {
         return Err(
-            "S6 baseline requires production 607/573 and test-only 16/11; combined 623/584".into(),
+            "S7 baseline requires production 606/566 and test-only 16/11; combined 622/577".into(),
         );
     }
     let macros: Vec<_> = facts
@@ -144,9 +144,10 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
     )?;
     super::s5::transitions(facts, report)?;
     super::s6::transitions(facts, report)?;
+    super::s7::transitions(facts, report)?;
     let witnessed: BTreeSet<_> = rows(RECEIPTS)
         .into_iter()
-        .filter(|r| r[0] == "M" && matches!(r[2], "S5" | "S6") && r[6] == "witnessed")
+        .filter(|r| r[0] == "M" && matches!(r[2], "S5" | "S6" | "S7") && r[6] == "witnessed")
         .map(|r| r[4])
         .collect();
     exact(
@@ -335,7 +336,7 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
         ));
     }
     println!(
-        "S6 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; typed evaluation uses unchanged global modes"
+        "S7 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; typed evaluation uses unchanged global modes"
     );
     Ok(())
 }

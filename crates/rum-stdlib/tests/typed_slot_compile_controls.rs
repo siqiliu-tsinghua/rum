@@ -134,6 +134,15 @@ external_case('opaque-selector-pass', '''type Input=EvaluatedPartSelectors; // o
 fn check(actual:Result<EvaluatedPartSelectors,EvalError>){
 let _=slot_witness(&actual).chain(frame::<Input,Expr>()); // @opaque-selector-pass
 }''','type Input=EvaluatedPartSelectors; // opaque input','type Input=Option<Expr>; // opaque input','E0271','frame::<Input,Expr>()')
+external_case('builtin-selector-producer', '''fn check(s:&mut Session,selectors:Vec<Expr>,wrong:Result<Expr,EvalError>)->Result<Expr,EvalError>{
+let actual=s.evaluate_part_selectors_owned_for_builtin(selectors);
+let witness=slot_witness(&actual);
+match actual {
+ Ok(selectors)=>Ok(Expr::small_integer(selectors.len() as i64)),
+ Err(EvalError::InputRequired{request})=>witness.suspend(s,request,frame::<EvaluatedPartSelectors,Expr>()), // @builtin-selector-producer
+ Err(error)=>Err(error),
+}
+}''','let witness=slot_witness(&actual);','let witness=slot_witness(&wrong);','E0271','frame::<EvaluatedPartSelectors,Expr>()')
 external_case('mode-not-frame-chosen', '''fn check(actual:Result<Option<Expr>,EvalError>){
 let _=slot_witness(&actual).chain(frame::<Option<Expr>,Expr>()); // @mode-not-frame-chosen
 }''','chain(frame::<Option<Expr>,Expr>()); // @mode-not-frame-chosen','chain(frame::<Option<Expr>,Expr>()).with_mode::<()>(); // @mode-not-frame-chosen','E0599','with_mode')
@@ -255,7 +264,7 @@ private_case('mode-one-associated-type',registry,'impl Codec for Option<Expr> {\
 private_case('mode-no-codec-override',registry,'impl Codec for Option<Expr> {\n    type Mode = LegacyMode;','impl Codec for Option<Expr> {\n    type Mode = LegacyMode;\n    fn decode(slot: super::channel::Slot, _: CodecKey) -> Result<Self, super::channel::Slot> { Err(slot) } // @mode-no-codec-override','E0407','fn decode')
 private_case('mode-legacy-provider-narrow',typed,'fn old_decode(_:Expr,_:CodecKey)','fn old_decode(_:Slot,_:CodecKey)','E0053','Slot',category='incompatible type for trait')
 private_case('mode-state-provider-narrow',typed,'fn unpack(_:ContinuationState,_:CodecKey)->Result<Self,ContinuationState> { Ok(Self) } // @mode-state-provider-narrow','fn unpack(_:Slot,_:CodecKey)->Result<Self,ContinuationState> { Ok(Self) } // @mode-state-provider-narrow','E0053','Slot',category='incompatible type for trait')
-assert len(cases)==34
+assert len(cases)==35
 base={case['file']:case['file'].read_text() for case in cases}
 
 def compile(kind,label):
@@ -327,6 +336,6 @@ for kind in ['external','private']:
             print(f'PAIR {case["id"]}: positive PASS; negative {case["code"] or "lifetime"} at {expected_file}:{line}:{column}',flush=True)
         finally: file.write_text(base[file])
 (logs/'results.json').write_text(json.dumps(report,indent=2)+'\n')
-assert len(report)==34
-print('COMPILE CONTROLS: 34 positive / 34 intended rejections (22 S1 + 7 S2 + opaque fault + token witness + fallback output + 2 G14 return-event constraints); raw Cargo JSON and primary spans retained',flush=True)
+assert len(report)==35
+print('COMPILE CONTROLS: 35 positive / 35 intended rejections (22 S1 + 7 S2 + opaque fault + token witness + fallback output + 2 G14 return-event constraints + S7 builtin-selector producer); raw Cargo JSON and primary spans retained',flush=True)
 "###;
