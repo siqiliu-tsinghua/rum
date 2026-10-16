@@ -4,10 +4,16 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-17, committed tree through brief-616 (G13 step
-S8, ReplaceAll and the traversal collectors, gated; below). **Next: S9
-(brief-617).** Codex's usage limit cut brief-616's run at its last stage and
-resets 2026-10-22 20:32; S9's worker until then is the user's decision.
+Status checkpoint: 2026-10-17, committed tree through brief-617's commit
+(`0a86c322`; G13 step S8 gated, below). **Next: dispatch S9 (brief-617,
+control and cleanup), committed and not yet dispatched.** Its worker is the
+user's open decision: Codex's usage limit cut brief-616's run at its last stage
+and resets 2026-10-22 20:32, and a usage limit is not the content-filter case
+that routes to GLM. The session switched here on the user's instruction; the
+gate plan for S9 is in memory `suspension-continuation-branch.md`. Owed, any
+time (no code): `CHANGELOG.md`'s `[Unreleased]` has not been updated since
+2026-09-04 (`cc8ba769`), so the ownership branch, the interner and armed-ceiling
+lines, the retention line and this branch are missing from it.
 **G13's implementation is 78 gated steps** — S1 dormant API, S2
 compatible driver, S3-S54 family typing, F1-F23 one flip per legacy type, R
 removal — each a director-rewritten brief
@@ -21,8 +27,9 @@ forked review 2's session `01a135be-…`; its own is `01a135d5-…`).
 Uncommitted performance candidates do not count as completed until their
 correctness, timing, counter, and memory gates have all been reviewed.
 
-**Where work resumes (2026-09-30) — the suspension-continuation branch, step
-4: G1-G8, the 86 lost continuations, after the front ends (briefs 553-558).**
+**The branch's record, oldest first. It opens where work resumed on
+2026-09-30 — step 4: G1-G8, the 86 lost continuations, after the front ends
+(briefs 553-558).**
 Steps 1-2 are done. brief-550 (`c6e95dd1`) made guest `Get`, `Needs`, `BeginPackage` dependencies
 and `DeclarePackage` stubs suspend and resume with an inherited request budget.
 brief-551 (`34e57a8d`) fixed what the re-probe of the batch boundary found: a

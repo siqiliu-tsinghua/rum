@@ -3476,3 +3476,181 @@ Method:
 - *An adjacent finding is not the branch's scope unless the branch rewrites
   it.* The duplicated `First::nofirst` on an empty lazy list is recorded, not
   fixed here; the stack abort is in G2 because G2 rewrites that machine.
+
+## 2026-10-04 → 06 — the suspension branch: three walks made flat, a typed option protocol, and every brief-548 group repaired (briefs 563-582)
+
+G2, the lazy pull machine, was built as brief-562 chose it (brief-563): one
+source plus a stage vector under an indexed down/up cursor, every walk
+iterative, the suspension state the cursor itself. Structural checks forbid a
+recursive call edge in the lazy sources and a self-reaching lazy type, each
+with a falsifier, and a 20 000-stage chain on the ruled 2 MiB stack that
+aborted the release CLI now returns exact values. brief-564 resumed
+`LazyTable`'s bounds into its plan (lost 80 -> 69 -> 66). brief-565 then
+stopped at its stop-loss on a measurement error that was the director's: the
+release profile has 16 codegen units, so adding code anywhere repartitions
+them and moves inlining in untouched code. With one unit, G2 costs the
+non-lazy path nothing; brief-566 cut the shallow lazy residual to six labels at
++0.07% to +0.40%, recorded as the price of depth safety.
+
+Each later group's re-probe asked what else the walk it rewrites could do, and
+G3 and G4 had the same answer as G2. The schema validator's own walk aborts the
+process at list depth 6 000 (the director's first abort probe had measured the
+matcher instead, because `ConformSchema` holds its schema); brief-568 made it
+one flat work stack with one mutable path buffer and one frame (66 -> 59), and
+brief-569 left small lists faster than before G3. G4 (briefs 570-575) is
+thirteen repairs and three retirements of dead matcher adapters: the rule
+left-hand-side walk and the held-pattern resolver became explicit work stacks
+(59 -> 43). Its second tuning round settled each walker's base cases in a
+small entry before the out-of-line driver, with falsifiers driving every base
+case through both, and `MatchQ[5, _Integer]` ended 3.3% faster than before G4;
+the residuals (+1.4% to +4.3%, populated structural walks only) are recorded.
+
+G5 (briefs 576-579) is a typed read-and-complete boundary: an option reader
+takes the caller's continuation and returns the completed builtin's `Expr`, so
+a read without its continuation does not compile, and read order stays
+observable (after-target reads, `Names`' reversed order, reads before arity
+checks). The retention line's certified option bodies stayed verbatim (43 ->
+14). G7 (briefs 580-582) made `Sow`'s tag matching and the structured trace
+filters resume, the filters as one flat work stack (14 -> 0). **All 195 of
+brief-548's probes agree on `033711f9`.**
+
+Found outside the branch: the matcher aborts on deep literals (`MatchQ[v, w]`
+at 1 200 levels) and several `Expr`-depth helpers recurse unguarded, both
+queued for the hardening line; and guest recursion stops at 60-80 levels,
+because the native guard is fixed at 1 MiB and one guest level costs 13-15 KB,
+recorded for the user to place.
+
+Method:
+
+- *An instruction gate finer than about 1% needs one codegen unit on both
+  arms.* Sixteen units moved untouched code by ~0.6%; `TEMPLATE.md` pitfall 8.
+- *Attribute an abort to the code that ran, not the code the probe named.* A
+  holding attribute decides which walk a probe reaches.
+- *A design can be wrong about depth in the other direction.* brief-580 showed
+  a captured trace expression can be deeper than the evaluation that produced
+  it, so the flat walk was chosen for enforceability, not on an empirical
+  bound.
+- *A fast entry is not a second algorithm when a falsifier drives every base
+  case through both it and the driver.* The director's earlier rule against
+  it had blocked G4's best candidate.
+
+## 2026-10-06 → 13 — the re-census, a catalog-wide oracle, and the three groups the census could not see (briefs 583-599)
+
+brief-583 re-ran the census on the current tree and resolved every Unsettled
+edge, 495 of which brief-548 had left open: 2 443 candidate edges, all 86 old
+Lost sites repaired or removed, and **4 new Lost sites in two groups**, both
+long-standing. G9 (brief-584): list-destructuring assignment resumed to one
+element and skipped the later stores; it now stores through an owned cursor.
+G10 (brief-585): a suspended direct `Default` lookup did not continue the
+down-value scan. The worker stopped on +0.26% instructions, and the cause was
+one attribute: the shared helper was `#[inline(always)]`, so its body existed
+at two call sites and the indexed-scan helper lost LLVM's single-call-site
+inlining bonus. Lost 4 -> 0.
+
+E1 (briefs 586-599) built the oracle the census cannot replace: a reviewed
+manifest row for every installed spec (643 default, 637 no-default), a
+two-session runner comparing resumed against queued input in value and side
+effects, falsifiers watched to fail, and an owed ledger drained family by
+family. The manifest had been written by inference; the drains removed **68
+declared roles that did not exist**, each verified from source. It closed with
+an exact equality — 438 declared entries, each with an executed descriptor, in
+both builds — and the ledger mechanism deleted.
+
+The drains found what the census could not, because the frames existed but
+were incomplete. **G11** (briefs 593-595): `EvaluationData` resumed to the whole
+capture association, and `TestReport` **panicked the kernel** when a second
+case suspended. Of 32 production `Arc::try_unwrap` sites, three were
+guest-reachable panics, each a consumer finalizing an accumulator node a still
+rooted frame shares; one private completion cursor now moves a unique node or
+shallow-clones a shared one. Output inside an unsettled capture became
+provisional through one declarative output boundary and one pause builder,
+which also caught `Quiet` leaking messages at a pause. Its third amendment
+found that the resume driver, on a re-pause, restored only the guest form and
+left the guest's tail, checkpoints, deadlines and memory limit live. **G12**
+(brief-597): `ToExpression[str, form, head]` resumed through a fieldless frame
+and never applied `head`. Sweeping 600 sites for frames carrying less state
+than the work after them found no other instance of that shape and **G13**:
+typed continuation state crosses frames in-band as `Expr` under
+``System`Internal*`` heads that guest source can write, decoded leniently or by
+panic.
+
+Method:
+
+- *A census of call edges cannot see an incomplete frame.* G11 and G12 had
+  frames; only executing resumed against queued showed what they dropped.
+- *Verify a manifest row from source before writing it.* 68 of 506 inferred
+  roles did not exist.
+- *When a split shares a helper between a hot path and a cold resume, look
+  first for the inlining decision that flipped.*
+- *A resume driver must restore everything it displaces.* The test now asserts
+  that two pauses leave identical live state. The second amendment, which
+  ruled the opposite, was the director's error.
+
+## 2026-10-13 → 17 — G13: five design rounds, type-then-flip, the first eight steps, and G14 (briefs 600-616)
+
+G13's design took five rounds and two models. GLM drafted rounds 1-3 (600,
+601, 603; round 1 was begun by Codex and cut by the content filter), and Codex
+reviewed rounds 2 and 3 (602, 604). Each review found faults the drafts had
+missed; the second required seven changes, among them that `EvaluationData`
+turns any error into `$Failed`, so a mismatch error could be swallowed, and
+that round 3's propagation join compared `yes` with `YES`, so 617 of 619 edges
+read as frameless. Round 4 (605) was Codex forked from its own review session.
+The director accepted it except the atomic 528-file conversion, replaced by
+**type-then-flip**: a per-type transport mode, so each typing step exchanges
+only `Value` with legacy neighbours and lands green with its own gate, then
+each legacy type flips under its own corpus. Atomicity bought no detection,
+since a missed frameless edge is caught at run time either way. Round 5 (606)
+partitioned the work into 78 gated steps; each of its 1 399 obligation rows
+has exactly one owning step.
+
+S1 (607) installed the dormant typed API in five dispatches and S2 (608) the
+compatible driver in seven; most of their stops were the director's scope
+omissions. S2's resume
+harness runs on `HostSession::resume_with_input`, because `rum-cli` retires
+every input suspension. S3 (609) found that the typed finalizer had reboxed
+itself on every finish since S1, visible only once a measured path executed
+it. S4 (610) was Kimi K3's first brief, and no macro expansion it tried
+reached an at-or-below-base stack bar at 16-byte granularity; the bar became
+the named closure environment, attributed per slot. S5 (611) repaired the
+skipped `Some` (guest-written ``System`InternalContinuationSome`` values were
+decoded as the continuation's own wrapper) and found the insertion shape the
+design describes: the zero-sized witness and the request cross the cold call,
+not the producer's `Result`. That cut the stack residual from 2 320 B to near
+the base and deleted fourteen `unreachable!` arms.
+
+**G14** (612-613) was found when S5's 2 000-resume harness stopped at 1 021
+resumes. Resume never unwound the evaluation stack it restored, a defect as
+old as resumable input (`b51dd794`, 2026-03-20). A repeated identical
+expression reported a false cycle after one pause, changing expressions leaked
+one depth per resume, and the per-level resource epilogue was skipped on
+resume, which let `TimeConstrained`/`MemoryConstrained` be bypassed. Every
+queue cell now carries the context it was inserted under, and an inline
+return event runs the skipped checks. Its timing residual (+20.8% on one label
+at identical instructions) was settled causally: with every function 64-byte
+aligned in both arms it is +1.3%.
+
+S6 (614), S7 (615) and S8 (616) typed guards and binding completion, Part
+selectors and held assignment (the first typed frames in `rum-stdlib`, and the
+`Arc<OnceLock>` selector protocol deleted), and `ReplaceAll` with the
+traversal collectors. Their pre-probes found no defect (22, 32 and 48 shapes,
+all equal). S8's worker run was cut by Codex's usage limit at its timing
+stage, and the director finished the gate. 70 of 606 production frame
+implementations are typed; S9 (brief-617, control and cleanup) is committed
+and waits for its worker.
+
+Method:
+
+- *A design reviewed by a second model is worth the round.* Both reviews found
+  faults that three drafting rounds had not.
+- *Dormant code is unmeasured code.*
+- *A shape that needs an `unreachable!` arm for a state the types allow points
+  at the shape nobody tried.*
+- *A class falsifier must vary the depth between the pause and the repeating
+  construct, and repeat an identical expression.* G14 hid behind a drop-two
+  heuristic that patched the instances seen.
+- *Settle an identical-instruction timing residual causally*, by aligning every
+  function in both arms. *A timing probe runs the benchmark program itself,
+  whole*: a cut probe hit a fast path 250 times cheaper than its label.
+- *Run a new probe shape once before writing it into a brief.* S8's first
+  dispatch stopped on a stack shape of the director's that recursed on the
+  `List` head.
