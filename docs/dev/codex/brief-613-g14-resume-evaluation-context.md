@@ -313,3 +313,436 @@ Append `## brief-613 execution report` to this file:
    and slot attribution; copies; timing.
 5. G13 transparency, the limits of the native policy, open costs, and the
    stop-loss ledger.
+
+## brief-613 execution report
+
+**STOP: ownership construct identity changed. This is an incomplete execution,
+not a green gate.** No inventory was refreshed. No further implementation or
+gate execution was performed after identifying the STOP condition. The source
+remains uncommitted; no git command, network operation, sub-agent, unsafe code,
+or aborting probe was used.
+
+### 1. STOP evidence and changed files
+
+Fresh discovery (`.temp/brief-613/ownership-discovery.txt`) reports 79
+UnknownHostPayload rows, 7,709 UnknownConstruct rows and 59 self-reaching rows.
+After ignoring source coordinates and the implementation-block line embedded
+in function names, exactly one host-payload identity is removed and one added.
+Both point to `crates/rum-runtime/src/runtime/suspension/core/queue.rs:6:12`:
+
+```text
+old construct:
+rum_runtime::runtime::suspension::core::queue::FrameQueue.Legacy.0/std::collections::VecDeque[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0/alias(rum_runtime::runtime::suspension::core::DynSuspensionFrame): opaque owned payload dyn SuspensionFrame
+
+new discovered construct:
+rum_runtime::runtime::suspension::core::queue::FrameQueue.Legacy.0/std::collections::VecDeque[Own]/arg0/rum_runtime::runtime::suspension::core::evaluation_context::Queued<arg0> via payload/std::sync::Arc[LastStrongHolder]/arg0/alias(rum_runtime::runtime::suspension::core::DynSuspensionFrame): opaque owned payload dyn SuspensionFrame
+```
+
+The old row is `ownership_graph/inventory/host_payloads.tsv:57`, with its
+disposition row at `host_payload_ledger.tsv:53`. The source envelope is
+`suspension/core/evaluation_context.rs:10`. This is a change in the recorded
+construct's ownership path, beyond a file/line/count pin. The brief says:
+“A new `UnknownHostPayload`, an unpaired removal, or a changed identity,
+status, disposition or exclusion is a STOP.” The total remaining 79 does not
+authorize replacing that identity. The exact old/new rows and normalization
+are in `.temp/brief-613/ownership-stop.json`. No disposition, witness,
+fingerprint, certificate cell or exclusion was changed to accommodate it.
+The 16 existing ownership/retention inventory files are byte-identical to the
+initial snapshot (`inventories-unchanged.json`). Other inventory differences
+have not been replayed or fully classified after this STOP.
+
+There are 22 changed source/test files, listed below with hunk coordinates.
+`owned-changes.json` contains their initial/candidate hashes and sizes;
+`owned-changes.patch` contains all old/new hunks. The initial snapshot is in
+`.temp/brief-613/initial-source/`. This brief additionally receives this report.
+
+| File | Candidate changed lines | Reason |
+| --- | --- | --- |
+| `crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs` | 205-222 | Cold accounted truncation removes each occurrence while retaining vector capacity. |
+| `crates/rum-runtime/src/runtime/debug_tools/resources/occurrence/suspension.rs` | 11-19, 27-33 | Independent queue-storage calculation includes both context words and zero-allocation return events. |
+| `crates/rum-runtime/src/runtime/resolution.rs` | 376-382, 440-446 | Select evaluation_return only at the two InputRequired fixed-point construction branches. |
+| `crates/rum-runtime/src/runtime/session/guest_loading/scope.rs` | 178-184 | Remove the obsolete drop-two comment; behavior unchanged. |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs` | 38-50 | Restore each queued context before abandonment; do not derive depth from stack length. |
+| `crates/rum-runtime/src/runtime/suspension/core/evaluation_context.rs` | 1-128 | New private context/envelope, restore, native poll and return-epilogue responsibility; cfg(test) observations. |
+| `crates/rum-runtime/src/runtime/suspension/core/queue.rs` | 1-10, 15-24, 28-99, 101-128, 146-153, 156-170, 179-190, 204-210 | Mandatory context in every Legacy/Mixed cell; preserve it through widening and append; inline return event. |
+| `crates/rum-runtime/src/runtime/suspension/core.rs` | 13-25, 169-190, 196-202, 492-500, 521-532, 556-567, 610-617, 636-643, 664-671, 701-745, 764-790, 811-829 | Full snapshot, context capture at insertion, driver restoration, event handling and displaced native-state preservation. |
+| `crates/rum-runtime/src/runtime/suspension/typed/entry.rs` | 9-21, 23-29, 34-40, 43-49, 53-59, 61-67, 73-79 | Inline EvaluationReturn traversal, no retained roots or allocation, discard during abandonment. |
+| `crates/rum-runtime/src/runtime/suspension/typed/tests/accounting.rs` | 59-76, 91-99 | Exact cell-layout/count pins for the larger queue cells; adapter allocation unchanged. |
+| `crates/rum-runtime/src/runtime/suspension/typed/tests/evaluation_context.rs` | 1-256 | Route controls for populated widening, chain, tokens, nested append, both Evaluate arms, Finalize and fault/error behavior. |
+| `crates/rum-runtime/src/runtime/suspension/typed/tests/live.rs` | 383-388 | Declare the new route-control test module. |
+| `crates/rum-runtime/src/runtime/suspension/typed/witness.rs` | 28-71 | Crate-private Expr-to-Expr helper and new internal macro arm; original arms byte-identical. |
+| `crates/rum-runtime/src/runtime/tests/mod.rs` | 192-196 | Declare the new runtime test module. |
+| `crates/rum-runtime/src/runtime/tests/resume_evaluation_context.rs` | 1-420 | Snapshot/epoch/depth/native/accounting/lifecycle invariants, three traces and closed caller boundary. |
+| `crates/rum-runtime/src/runtime/tests/session_memory_structures.rs` | 249-258 | Count/layout pins follow the same saved-stack and queue-storage constructs under the explicit pins class. |
+| `crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs` | 371-388, 513-552 | New-arm four-view positive control and drift mutations for the new and existing identifier arms. |
+| `crates/rum-stdlib/src/tests/retention_closure/typed_resume_macro.rs` | 54-80, 134-145, 152-161, 178-195, 205-211 | Exact checked expansion for the third arm, including its resource-event/helper operations. |
+| `crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_stack.rs` | 1-477 | 34 original seeds plus 37 dimensions, complete attempted ledger, strict acceptance and mutation panel. |
+| `crates/rum-stdlib/tests/suspension_oracle/fixtures/evaluation_stack_support.rs` | 1-131 | Test-only resource/widening witnesses and raw paired-observation support using existing InputString registration. |
+| `crates/rum-stdlib/tests/suspension_oracle/fixtures/mod.rs` | 16-22 | Register the G14 fixture module. |
+| `crates/rum-stdlib/tests/typed_slot_compile_controls.rs` | 230-261, 327-332 | Two new positive/negative pairs for helper Input=Expr and Output=Expr; expected pairs 32 to 34. |
+
+Full old/new hunks and byte hashes are in `owned-changes.patch` and `owned-changes.json`.
+
+Count/layout pin disclosures, also in `pin-disclosures.md`:
+
+- `runtime/tests/session_memory_structures.rs:252`: saved roots 1 → 3;
+  one entry shell/root occurrence → three of each. Legacy queue cell
+  `Arc<dyn SuspensionFrame>` → `(usize, usize, Arc<dyn SuspensionFrame>)`.
+  This uses the brief's explicit count-pin class, rather than its named
+  runtime-test file list. No assertion was removed.
+- `suspension/typed/tests/accounting.rs`: both queue-cell layouts gain two
+  `usize` fields. The measured insertion charge is 136 → 200 bytes for four
+  cells; the adapter allocation remains five `usize` words.
+- `typed_slot_compile_controls.rs`: expected paired controls 32 → 34.
+  The two new pairs constrain the helper's input and output independently.
+- No inventory row has an applied old → new update. The proposed ownership
+  replacement above is explicitly unapplied and is the STOP evidence.
+
+`suspension/core.rs` grows from 29,879 to 31,587 bytes, still in the split-plan
+range; context/restore/return/native-policy logic is isolated in the new
+4,647-byte `core/evaluation_context.rs`. The compile-control harness grows
+from 22,610 to 23,890 bytes; its existing paired-build responsibility stays
+together. No unrelated module split was attempted.
+
+### 2. Red baseline, progression and verification actually run
+
+All 34 original descriptors were attempted through `Fixture` and
+`accept(Checks::ALL)` before production edits: **25 failed, 9 passed**, with
+25 unequal raw pairs (`red-seeds.txt`). The first 32 added dimensions had
+25 failures/7 passes (`red-dimensions.txt`). All six initial runtime
+invariants failed (`red-invariants-2.txt`). Their first compilation exposed
+test-import mistakes, corrected before recording that six-failure baseline.
+
+The expanded final population was also replayed against unchanged S5
+production in an isolated copy. `red-final-population.txt` records **34 seeds:
+25 failures; 37 dimensions: 27 failures**, hence 52/71 rejected descriptors.
+Every descriptor was attempted, even after an earlier rejection. The strict
+ledger is accompanied by raw queued/resumed observations and actual pauses.
+The added widening and post-child-return epoch controls pass S5 but reject
+their targeted metadata/epoch mutations.
+
+Only **one compiled semantic repair attempt** was made. It changed the
+original 66 raw pairs from 50 unequal to zero unequal and all six initial
+invariants from failing to passing. One strict fixture expectation initially
+used `HoldForm` instead of the observed/documented queued `Hold`; correcting
+that test typo made the 34-seed strict ledger pass. The first existing runtime
+suite had two failures caused by the now-larger snapshot/cell layout; the
+disclosed exact count pins were corrected. Subsequent changes added controls
+or corrected test harnesses, not another production semantic repair.
+
+Latest focused default-feature G14 run (`attempt-1-oracle-epoch.txt`), exact
+summary output:
+
+```text
+continuation-slot fault-occurrence delta=0; observations=666
+G14 TOTAL attempted=37 failed=0 passed=37
+continuation-slot fault-occurrence delta=0; observations=790
+continuation-slot fault-occurrence delta=0; observations=1402
+G14 TOTAL attempted=34 failed=0 passed=34
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 133 filtered out; finished in 1.89s
+```
+
+These three tests are the dimensions, mutation-panel control run, and seeds.
+All 71 strict descriptors pass. They are not the full two-feature oracle gate.
+
+The full runtime run in `runtime-validation.txt` reported:
+
+```text
+test result: ok. 1184 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 29.91s
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.46s
+```
+
+The second line is rustdoc. The three ignored tests are the release-only
+evaluation-cache profile and two release-only left-chain deployment/drop
+probes. The three dead-code warnings in read-only `test_builtins.rs` were
+already present in the red runtime build. The runtime run includes 11 new
+context/lifecycle tests and three new typed-route controls. Two test-only
+assertions were subsequently strengthened (recursive closed-caller scan and
+exact first-segment return-level comparison); those latest assertions have
+not been rerun. There was no subsequent production semantic change.
+
+The required macro-adapter red was witnessed (`macro-adapter-red.txt`):
+
+```text
+test result: FAILED. 1 passed; 5 failed; 0 ignored; 0 measured; 1155 filtered out; finished in 87.85s
+```
+
+After adding the checked arm, a second run caught rustfmt's braces around the
+new lazy closure expression (`macro-adapter-validation.txt`):
+
+```text
+test result: FAILED. 1 passed; 6 failed; 0 ignored; 0 measured; 1155 filtered out; finished in 101.40s
+```
+
+The expected token expansion was corrected to include those braces and
+compiled during ownership discovery, but the adapter tests have not been
+rerun. No green adapter result is claimed. The two pre-existing macro arms
+are byte-identical to the initial snapshot (`macro-old-arms.json`).
+
+Fresh ownership discovery itself completed normally; it emits facts and does
+not certify inventory equality:
+
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 5.71s
+```
+
+Final required verification status at STOP:
+
+| Required command/group | Evidence/status |
+| --- | --- |
+| `cargo fmt --check` | Not run; owned Rust files were formatted directly. |
+| Runtime context filter | Initial six pass; expanded controls pass in the full runtime run; latest two strengthened assertions unverified. |
+| Separate maintained-memory, typed-test and root-trace filters | Not run as separate final commands; existing tests were included in the runtime run. |
+| `cargo test -p rum-runtime` | 1,184 unit tests and 22 rustdoc tests pass, with the later test-only caveat above. |
+| Compile controls, both feature configurations | Added, not run. |
+| Census, both feature configurations | Not run. |
+| `scripts/check-suspension-oracle.sh 1500` | Not run. Full default-feature and no-default-feature fault deltas are both **unmeasured**. |
+| Full ownership-graph suite | Discovery only; identity STOP prevents replay/closure. |
+| Local production acceptance, both configurations | Not run. |
+| Complete production-rejection census | Not run. |
+| Workspace `--no-fail-fast` | Not run. No native ZeroMQ run or skip was observed. |
+
+Observed commands were serial, offline, one build job/test thread, bounded
+through `scripts/run-bounded.py`; raw logs and targets are under brief-613.
+An identical verification copy was prepared at `validation-source/`, with
+`validation-manifest.json`, because canonical oracle/census tools hard-code
+historical scratch paths. Running them there would keep their unchanged
+behavior inside the permitted scratch tree. Those gates had not started
+when discovery triggered the STOP.
+
+### 3. Context, routes, resources, lifecycle and mutations
+
+The before states below come from the accepted brief-612 traces and the S5
+red replay. Candidate observations are in
+`attempt-1-expanded-invariants-2.txt`; the trace test later passed in the full
+runtime run. Let T be Table, F the definition call, C its input compound, and
+I InputString. Entries retain their original epochs.
+
+| Witness | S5 resumed context | Candidate context and result |
+| --- | --- | --- |
+| False cycle, `Table[f[1],{3}]` | Snapshot `[T,F]`, installed depth 2; F survives the Table handoff and the second call is rejected. | Full `[T,F,C,I] / 4`, epoch 255. Return levels `[T,F,C]/3`, `[T,F]/2`, `[T]/1`; every next input is again the full four-entry context. Three pauses, 50 observed events, result `List[7,7,7]`. |
+| Changing-expression depth leak | First snapshot `[F]/1`; old F roots accumulate. S5 stops after 1,021 pauses at the default limit. | Every input has `[F,C,I]/5`; return levels `[F,C]/4`, `[F]/3`, `[]/2`, `[]/1`. Entry/global epochs advance 256, 257, … with the assignment. All 1,100 pauses complete at fixed depth 5, with 23,105 events. |
+| Passing direct Table | Snapshot `[]/0`, incorrectly loses T though the value happens to pass. | `[T,I]/2` at each input, `[T]/1` at Table handoff, `[]/0` at completion. Three-pause trace has 23 events; the strict 1,100-pause direct control also passes. |
+
+The final strict population additionally verifies **2,000 actual resumed
+pauses** at the unchanged default recursion limit and 100 at limit 32, with
+equal queued results. S5 reaches only 1,021 of the 2,000 planned pauses. No
+terminated baseline is treated as a performance result.
+
+Route controls cover Legacy and Mixed, populated widening, witnessed insert,
+fresh token, FrameChain, both deferred Evaluate arms, nested append, Finalize,
+ordinary errors and structural wrong-slot failure. Existing chain/token
+production files are unchanged: their common insertion endpoints capture the
+context. Context is restored before frame dispatch and abandonment. The
+return event restores its parent level, checks successful Expr results only,
+forwards errors without the success epilogue and reports a structural driver
+fault for a wrong successful slot.
+
+The deterministic memory witness grows retained memory beyond its 5,000,000
+byte limit; the time witness sleeps 150 ms against 100 ms. Both now produce
+99, matching queued evaluation, and both assert one actual resumed pause.
+Their S5 resumed result is 77. Test-only registration uses existing builtin
+roles; no production builtin was added.
+
+Independent maintained-memory checks cover per-occurrence truncation, shared
+roots, retained vector capacity, arming/rearming, a second pause, completion,
+error/fault cleanup and cancellation. Shadow counts remain balanced. Existing
+guest-file prefix-restore tests pass in the runtime run; that production file
+has only the obsolete comment removed. These are semantic accounting checks,
+not the unperformed performance allocation panel.
+
+All seven class-mutant runs rejected their assigned strict descriptors and
+kept the separate genuinely input-free control green:
+
+| Mutation | Assigned rejecting descriptors |
+| --- | --- |
+| Restore drop-two | `g14.stack-pass`, `g14.false-cycle-table` |
+| Omit restoration | `g14.false-cycle-table`, `g14.stack-pass` |
+| Depth from tracked length | `g14.untracked-depth-pressure` |
+| Lose widening record | `g14.legacy-widen` |
+| Lose append record | `g14.nested-append-depth-pressure` |
+| Rewind global epoch | `g14.epoch-after-child-return` |
+| Skip return success check | `g14.memory-epilogue`, `g14.time-epilogue` |
+
+`mutation-summary.json` gives exact commands, expected failing outputs and
+restoration hashes. All seven production-restoration hashes were checked again
+at STOP and match. Initial harness weaknesses are preserved, not hidden:
+the first “no-input” control used a sentinel that itself requested input;
+the first widening/epoch assignments did not exercise the intended boundary.
+The control was made actually input-free, and new boundary-specific fixtures
+were added without removing the old strict descriptors. The initial mutant
+logs remain under `mutants/*-initial.*`.
+
+### 4. Performance, stack, copies and timing
+
+All six supplied binaries match `base-hashes.txt` (`hash-verification.json`).
+No candidate performance binaries or measurements were produced before the
+ownership STOP. Consequently no ordinary-path zero-regression claim is made.
+
+| Required evidence | Result at STOP |
+| --- | --- |
+| 107 ordinary allocation/byte N/2N rows | Unmeasured. |
+| Resume allocation/capacity attribution | Unmeasured performance panel; structural unit accounting only. |
+| Interleaved instruction slopes, flagged-row follow-ups and address attribution | Unmeasured. |
+| Ordinary memcpy counts and three deterministic leaves | Unmeasured. |
+| Debug/release S5 probe, five families × four heights × three samples | Unmeasured; no candidate stack probe built. |
+| Changed resident prologues and closure-slot attribution | Unmeasured. |
+| Final monotonic microbenchmark A/B | Not run. |
+
+The source adds two context words per queue cell, inline return events and the
+full saved snapshot, with no Arc per event. The unit-accounting observation
+of +64 bytes for four cells is not a substitute for the mandatory allocation
+panel. Instruction, native-stack and timing costs remain open for the director.
+
+### 5. G13, native-policy limits and stop-loss ledger
+
+G13's remaining S6–S54/F1–F23/R frame work is unchanged. No production frame
+implementation, public continuation shape, Session field, Expr/slot/result
+carrier, manifest, lockfile, toolchain, eval_core implementation, or unrelated
+roadmap document changed. No extra ordinary-path counter, branch, record
+capture or field was introduced by source intent; the missing performance
+evidence prevents claiming zero generated-code cost.
+
+Native resume saves/restores the displaced base and threshold, rebases to the
+live segment, polls before each resumed callable frame and deferred Evaluate,
+and sets the next threshold to restored logical depth + 4. A zero-budget
+control returns StackLimit through cleanup without an overflowing probe.
+This is the approved **physical-safety equivalence**, not identical native
+addresses or polling cadence. Native resident-stack measurements remain open.
+
+The semantic stop-loss history is one compiled attempt: 50/66 unequal
+descriptors plus six failing initial invariants → zero unequal pairs/zero
+initial invariant failures. The strict expectation typo and two layout pins
+were separately corrected. The final expanded population is 71/71 passing;
+no second production semantic attempt occurred. Mutation builds are negative
+controls, not repair attempts. No consecutive non-improving-attempt or budget
+threshold was reached. The actual stop is the explicit ownership-identity
+boundary above. Final correctness closure, inventory replay and all required
+performance gates remain outstanding pending a director ruling on that path.
+
+## Director amendment — redispatch 1: the queue-envelope transition, then finish the step
+
+The STOP was correct. The rule named a changed identity, and you neither
+widened it nor wrote the row by hand. The report is also honest about what
+did not run.
+
+### Accepted as reported (I re-verify all of it at my gate)
+
+- The red ledgers: 25 of 34 seeds and 27 of 37 dimensions on S5, every
+  descriptor attempted, plus the six red invariants.
+- One compiled semantic attempt, leading to 71/71 strict descriptors.
+- The seven class mutants, each rejecting its assigned descriptors while the
+  input-free control stays green.
+- 2 000 resumes at the default limit, and 100 at limit 32.
+- The memory and time witnesses now give 99 on both paths.
+- The design as written. I read the diff:
+  - the `Queued<P>` envelope on every cell, preserved through widening and
+    append;
+  - the full snapshot;
+  - the return event inserted before the fixed-point frame;
+  - context restored before dispatch and before abandonment;
+  - native base and threshold saved and restored;
+  - the third macro arm, whose `pub(crate)` helper keeps it unusable outside
+    the crate.
+
+### A. Ruling: the queue-envelope transition is approved
+
+```text
+old  FrameQueue.Legacy.0/VecDeque[Own]/arg0/Arc[LastStrongHolder]/arg0/alias(DynSuspensionFrame)
+new  FrameQueue.Legacy.0/VecDeque[Own]/arg0/Queued<arg0> via payload/Arc[LastStrongHolder]/arg0/alias(DynSuspensionFrame)
+```
+
+Several things are unchanged:
+- the terminal payload, `dyn SuspensionFrame`;
+- the owner, the `VecDeque` cell;
+- the `Arc[LastStrongHolder]` edge.
+
+The added hop is a plain struct field: no `Drop`, no sharing and no second
+owner. This is the same kind of transition as S2's approved
+`SuspendedEvaluation.frames` → `FrameQueue.Legacy.0`.
+
+Carry the ledger row's four cells over unchanged: disposition `Unbounded`,
+the witness, `owed_by` `TODO.md#standing-engineering-debt`, and external
+coverage `unresolved`. Apply the transition by discovery replay, so the
+construct cell takes the discovered text. Disclose it old → new in both
+`host_payloads.tsv` and `host_payload_ledger.tsv`.
+
+This approval covers exactly this one transition. Every other STOP condition
+stands. If the replay shows any other new, removed or changed identity,
+status, disposition or exclusion, including a `FrameQueue.Mixed` or `Entry`
+row, it is still a STOP.
+
+### B. Pin rulings
+
+- The `session_memory_structures.rs` pins are accepted under the
+  pins-that-follow-code class. Saved roots 1 → 3 is the full snapshot the
+  design rules.
+- The tuple `(usize, usize, Arc<…>)` stands in for the private `Queued<…>`
+  in two tests. This is accepted, because a size mismatch fails loudly.
+  Disclose it as a stand-in.
+
+### C. Run the canonical gates in the repository
+
+Two unchanged canonical tools write to fixed scratch paths:
+`scripts/check-suspension-oracle.sh` writes to `.temp/suspension-oracle/`,
+and `typed_slot_census` writes to `.temp/brief-611/r3/census/`. Both paths
+are authorized, for those tools only.
+
+Run every gate in the repository tree, not in `validation-source/`, which
+you may delete. My gate runs them in the repository too. A copy only doubles
+the build.
+
+### D. Attribute the widening; do not redesign it
+
+`push_evaluation_return` widens a `Legacy` owner to `Mixed`. Return events
+are inserted at the fixed-point sites, so nearly every real suspension now
+widens. The S2 legacy-only cells survive only for owners that never cross a
+return site.
+
+This is a resume-path cost, and it is acceptable in principle, since
+`Legacy` goes away at R. The resume attribution must name it. For each
+workload, report:
+- how many owners widen;
+- the widening move (cells × cell size);
+- the cell sizes, `Queued<Entry>` against `Queued<Arc<…>>`.
+
+I rule on the numbers.
+
+### E. Then finish the step, on the final source
+
+1. **What did not run, run first:**
+   - the two strengthened runtime assertions;
+   - the macro adapter, both views, watched green after its red.
+2. **Every correctness gate:**
+   - fmt, the context, maintained-memory, typed and root-trace filters, and
+     `cargo test -p rum-runtime`;
+   - the 48-level test;
+   - the compile controls, the census and local production, each in both
+     builds;
+   - the full ownership suite and the production rejection census;
+   - `scripts/check-suspension-oracle.sh 1500`: both builds warning-free,
+     both fault-occurrence deltas reported;
+   - the workspace with `--no-fail-fast`, reporting native ZeroMQ skips as
+     skips.
+
+   Replay the inventories, certificates and fingerprints, and disclose every
+   changed row.
+3. **Every performance section, in the brief's order**, against the frozen
+   S5 bases in `.temp/brief-613/` (hashes already verified, so verify them
+   again only if a file changed):
+   - allocations;
+   - instructions;
+   - `memcpy` and the three leaves;
+   - the stack table, with attribution per slot;
+   - timing, last.
+
+The stop-loss continues from your ledger: one compiled semantic attempt is
+used.
+
+### Process
+
+- This run forks your session, so your scratch and state are where you left
+  them in `.temp/brief-613/`.
+- Your tool timeout must exceed every `--timeout` you pass.
+- Checkpoint as before. Then append `## Execution report — redispatch 1`
+  after this section.
