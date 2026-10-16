@@ -2,7 +2,10 @@ mod resume_frames;
 use resume_frames::*;
 
 use super::*;
-use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::kernel_api::{
+    ContinueToken, FrameRootTrace, FrameRootVisitor, ResumeStop, SlotWitness, TypedAction,
+    TypedFrame, slot_witness,
+};
 
 mod plan;
 
@@ -85,10 +88,10 @@ impl Session {
     ) -> Result<Expr, EvalError> {
         let outcome_result =
             self.apply_replace_all_owned(expr, RewriteRulePlan::from_slice(rules), source);
-        crate::resume_or_suspend!(
+        crate::resume_typed_or_suspend!(
             self,
             outcome_result,
-            ok(outcome) => { (|| { Ok(outcome.expr) })() },
+            ok(outcome) => Ok(outcome.expr),
             suspend => ApplyReplaceAllSuspensionFrame,
         )
     }
@@ -100,10 +103,10 @@ impl Session {
         source: RuleApplicationSource,
     ) -> Result<Expr, EvalError> {
         let outcome_result = self.apply_replace_all_owned(expr, rules, source);
-        crate::resume_or_suspend!(
+        crate::resume_typed_or_suspend!(
             self,
             outcome_result,
-            ok(outcome) => { (|| { Ok(outcome.expr) })() },
+            ok(outcome) => Ok(outcome.expr),
             suspend => ApplyReplaceAllWithPlanSuspensionFrame,
         )
     }
@@ -130,7 +133,7 @@ impl Session {
         // traversal; their cloneable applier carries the same plan across
         // targets and suspension frames.
         let cursor = rules.start_scan(&normalized_expr);
-        self.apply_rules_once_from_list(expr, normalized_expr, rules, source, cursor)
+        self.apply_rules_once_from_list(expr, normalized_expr, rules, source, cursor, ())
     }
 
     fn apply_replace_all_owned(
@@ -142,6 +145,7 @@ impl Session {
         if matches!(expr, Expr::Atom(_)) {
             let replace_result =
                 self.apply_rewrite_rule_plan_once(expr.clone(), rules.clone(), source);
+            let witness = slot_witness(&replace_result);
             return match replace_result {
                 Ok(Some(replaced)) => Ok(ReplaceAllTraversalOutcome {
                     expr: replaced,
@@ -152,31 +156,32 @@ impl Session {
                     changed: false,
                 }),
                 Err(EvalError::InputRequired { request }) => {
-                    let state = ReplaceAllTraversalState {
-                        work: Vec::new(),
-                        completed: Vec::new(),
-                        rules,
-                        source,
-                    };
-                    crate::resume_or_suspend!(insert self, ApplyReplaceAllOwnedSuspensionFrame { state, expr });
-                    Err(EvalError::InputRequired { request })
+                    resume_frames::suspend_replace_all_atom(
+                        self, witness, request, expr, rules, source,
+                    )
                 }
                 Err(error) => Err(error),
             };
         }
 
-        self.drive_replace_all_traversal(ReplaceAllTraversalState {
-            work: vec![ReplaceAllTraversalWork::Visit(expr)],
-            completed: Vec::new(),
-            rules,
-            source,
-        })
+        self.drive_replace_all_traversal(
+            ReplaceAllTraversalState {
+                work: vec![ReplaceAllTraversalWork::Visit(expr)],
+                completed: Vec::new(),
+                rules,
+                source,
+            },
+            (),
+        )
     }
 
-    fn drive_replace_all_traversal(
+    fn drive_replace_all_traversal<
+        Route: DefinitionResumeRoute<ApplyReplaceAllOwnedSuspensionFrame>,
+    >(
         &mut self,
         mut state: ReplaceAllTraversalState,
-    ) -> Result<ReplaceAllTraversalOutcome, EvalError> {
+        route: Route,
+    ) -> Result<ReplaceAllTraversalOutcome, Route::Error> {
         while let Some(work) = state.work.pop() {
             match work {
                 ReplaceAllTraversalWork::Visit(expr) => {
@@ -185,15 +190,17 @@ impl Session {
                         state.rules.clone(),
                         state.source,
                     );
+                    let witness = slot_witness(&replace_result);
                     match replace_result {
                         Ok(replaced) => {
                             self.finish_replace_all_visit(&mut state, expr, replaced);
                         }
                         Err(EvalError::InputRequired { request }) => {
-                            crate::resume_or_suspend!(insert self, ApplyReplaceAllOwnedSuspensionFrame { state, expr });
-                            return Err(EvalError::InputRequired { request });
+                            return resume_frames::suspend_replace_all_traversal(
+                                self, witness, request, state, expr, route,
+                            );
                         }
-                        Err(error) => return Err(error),
+                        Err(error) => return Err(Route::failure(error)),
                     }
                 }
                 ReplaceAllTraversalWork::FinishCall {
@@ -254,14 +261,15 @@ impl Session {
             .expect("ReplaceAll traversal completes its root"))
     }
 
-    fn resume_replace_all_traversal(
+    fn resume_replace_all_traversal<'resume>(
         &mut self,
         mut state: ReplaceAllTraversalState,
         expr: Expr,
         replaced: Option<Expr>,
-    ) -> Result<ReplaceAllTraversalOutcome, EvalError> {
+        token: ContinueToken<'resume, ApplyReplaceAllOwnedSuspensionFrame>,
+    ) -> Result<ReplaceAllTraversalOutcome, ResumeStop<ReplaceAllTraversalOutcome>> {
         self.finish_replace_all_visit(&mut state, expr, replaced);
-        self.drive_replace_all_traversal(state)
+        self.drive_replace_all_traversal(state, token)
     }
 
     fn finish_replace_all_visit(
@@ -351,14 +359,17 @@ impl Session {
         }
     }
 
-    fn apply_rules_once_from_list(
+    fn apply_rules_once_from_list<
+        Route: DefinitionResumeRoute<ApplyRulesOnceFromListSuspensionFrame>,
+    >(
         &mut self,
         expr: Expr,
         normalized_expr: Expr,
         rules: RewriteRulePlan,
         source: RuleApplicationSource,
         mut cursor: RewriteRuleScanCursor,
-    ) -> Result<Option<Expr>, EvalError> {
+        route: Route,
+    ) -> Result<Option<Expr>, Route::Error> {
         loop {
             let Some(index) = rules.next_rule_index(&mut cursor) else {
                 return Ok(None);
@@ -382,19 +393,25 @@ impl Session {
                 normalized_expr.clone(),
                 SymbolExprMap::default(),
             );
-
+            let witness = slot_witness(&match_result);
             let outcome = match match_result {
                 Ok(outcome) => outcome,
                 Err(EvalError::InputRequired { request }) => {
-                    let state = SuspendedRewriteRuleMatch {
+                    return resume_frames::suspend_rewrite_rule_match(
+                        self,
+                        witness,
+                        request,
                         expr,
                         normalized_expr,
                         rules,
-                    };
-                    crate::resume_or_suspend!(insert self, ApplyRulesOnceFromListSuspensionFrame { state, source, cursor, index, would_reject });
-                    return Err(EvalError::InputRequired { request });
+                        source,
+                        cursor,
+                        index,
+                        would_reject,
+                        route,
+                    );
                 }
-                Err(error) => return Err(error),
+                Err(error) => return Err(Route::failure(error)),
             };
             record_profile_rewrite_rule_match_outcome(would_reject, outcome.matched);
 
@@ -415,7 +432,7 @@ impl Session {
         }
     }
 
-    fn finish_suspended_rewrite_rule_match(
+    fn finish_suspended_rewrite_rule_match<'resume>(
         &mut self,
         state: SuspendedRewriteRuleMatch,
         source: RuleApplicationSource,
@@ -423,7 +440,8 @@ impl Session {
         index: usize,
         would_reject: bool,
         outcome: CompiledMatchOutcome,
-    ) -> Result<Option<Expr>, EvalError> {
+        token: ContinueToken<'resume, ApplyRulesOnceFromListSuspensionFrame>,
+    ) -> Result<Option<Expr>, ResumeStop<Option<Expr>>> {
         record_profile_rewrite_rule_match_outcome(would_reject, outcome.matched);
         if !outcome.matched {
             return self.apply_rules_once_from_list(
@@ -432,6 +450,7 @@ impl Session {
                 state.rules,
                 source,
                 cursor,
+                token,
             );
         }
 

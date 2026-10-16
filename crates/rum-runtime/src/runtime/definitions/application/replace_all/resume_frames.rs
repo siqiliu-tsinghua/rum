@@ -4,42 +4,42 @@ use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 #[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ApplyReplaceAllSuspensionFrame;
 
-impl crate::runtime::suspension::SuspensionFrame for ApplyReplaceAllSuspensionFrame {
-    fn resume(
+impl TypedFrame for ApplyReplaceAllSuspensionFrame {
+    type Input = ReplaceAllTraversalOutcome;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         _session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        outcome: Result<ReplaceAllTraversalOutcome, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
         let resumed = match outcome {
-            Ok(resumed_value) => {
-                let outcome = <ReplaceAllTraversalOutcome as crate::runtime::suspension::ContinuationValue>::from_continuation_expr(resumed_value);
-                (|| -> Result<rum_core::Expr, EvalError> { Ok(outcome.expr) })()
-                    .map(|value| <rum_core::Expr as crate::runtime::suspension::ContinuationValue>::into_continuation_expr(value))
-            }
+            Ok(outcome) => Ok(outcome.expr),
             Err(error) => Err(error),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete(resumed)
     }
 }
 
 #[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct ApplyReplaceAllWithPlanSuspensionFrame;
 
-impl crate::runtime::suspension::SuspensionFrame for ApplyReplaceAllWithPlanSuspensionFrame {
-    fn resume(
+impl TypedFrame for ApplyReplaceAllWithPlanSuspensionFrame {
+    type Input = ReplaceAllTraversalOutcome;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         _session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        outcome: Result<ReplaceAllTraversalOutcome, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
         let resumed = match outcome {
-            Ok(resumed_value) => {
-                let outcome = <ReplaceAllTraversalOutcome as crate::runtime::suspension::ContinuationValue>::from_continuation_expr(resumed_value);
-                (|| -> Result<rum_core::Expr, EvalError> { Ok(outcome.expr) })()
-                    .map(|value| <rum_core::Expr as crate::runtime::suspension::ContinuationValue>::into_continuation_expr(value))
-            }
+            Ok(outcome) => Ok(outcome.expr),
             Err(error) => Err(error),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete(resumed)
     }
 }
 
@@ -50,23 +50,23 @@ pub(super) struct ApplyReplaceAllOwnedSuspensionFrame {
         crate::runtime::definitions::application::replace_all::ReplaceAllTraversalState,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for ApplyReplaceAllOwnedSuspensionFrame {
-    fn resume(
+impl TypedFrame for ApplyReplaceAllOwnedSuspensionFrame {
+    type Input = Option<Expr>;
+    type Output = ReplaceAllTraversalOutcome;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        outcome: Result<Option<Expr>, EvalError>,
+        token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<ReplaceAllTraversalOutcome> {
         let expr = self.expr.clone();
         let state = self.state.clone();
         let resumed = match outcome {
-            Ok(resumed_value) => {
-                let outcome = <Option<rum_core::Expr> as crate::runtime::suspension::ContinuationValue>::from_continuation_expr(resumed_value);
-                session.resume_replace_all_traversal(state, expr, outcome)
-                    .map(|value| <ReplaceAllTraversalOutcome as crate::runtime::suspension::ContinuationValue>::into_continuation_expr(value))
-            }
-            Err(error) => Err(error),
+            Ok(outcome) => session.resume_replace_all_traversal(state, expr, outcome, token),
+            Err(error) => Err(ResumeStop::failure(error)),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete_work(resumed)
     }
 }
 
@@ -80,36 +80,112 @@ pub(super) struct ApplyRulesOnceFromListSuspensionFrame {
     pub(super) would_reject: bool,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for ApplyRulesOnceFromListSuspensionFrame {
-    fn resume(
+impl TypedFrame for ApplyRulesOnceFromListSuspensionFrame {
+    type Input = CompiledMatchOutcome;
+    type Output = Option<Expr>;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut state = self.state.clone();
-        #[allow(unused_mut)]
-        let mut source = self.source.clone();
-        #[allow(unused_mut)]
-        let mut cursor = self.cursor.clone();
-        #[allow(unused_mut)]
-        let mut index = self.index.clone();
-        #[allow(unused_mut)]
-        let mut would_reject = self.would_reject.clone();
-        let value = outcome;
-        let resumed = (|| {
-            let outcome = CompiledMatchOutcome::from_continuation_expr(value?);
-            session
-                .finish_suspended_rewrite_rule_match(
-                    state,
-                    source,
-                    cursor,
-                    index,
-                    would_reject,
-                    outcome,
-                )
-                .map(|result| result.into_continuation_expr())
-        })();
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        outcome: Result<CompiledMatchOutcome, EvalError>,
+        token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Option<Expr>> {
+        let state = self.state.clone();
+        let source = self.source;
+        let cursor = self.cursor.clone();
+        let index = self.index;
+        let would_reject = self.would_reject;
+        let resumed = match outcome {
+            Ok(outcome) => session.finish_suspended_rewrite_rule_match(
+                state,
+                source,
+                cursor,
+                index,
+                would_reject,
+                outcome,
+                token,
+            ),
+            Err(error) => Err(ResumeStop::failure(error)),
+        };
+        TypedAction::complete_work(resumed)
     }
+}
+
+#[cold]
+#[inline(never)]
+pub(super) fn suspend_replace_all_atom(
+    session: &mut Session,
+    witness: SlotWitness<Option<Expr>>,
+    request: RuntimeInputRequest,
+    expr: Expr,
+    rules: RewriteRulePlan,
+    source: RuleApplicationSource,
+) -> Result<ReplaceAllTraversalOutcome, EvalError> {
+    let state = ReplaceAllTraversalState {
+        work: Vec::new(),
+        completed: Vec::new(),
+        rules,
+        source,
+    };
+    witness.suspend(
+        session,
+        request,
+        ApplyReplaceAllOwnedSuspensionFrame { state, expr },
+    )
+}
+
+#[cold]
+#[inline(never)]
+pub(super) fn suspend_replace_all_traversal<
+    Route: DefinitionResumeRoute<ApplyReplaceAllOwnedSuspensionFrame>,
+>(
+    session: &mut Session,
+    witness: SlotWitness<Option<Expr>>,
+    request: RuntimeInputRequest,
+    state: ReplaceAllTraversalState,
+    expr: Expr,
+    route: Route,
+) -> Result<ReplaceAllTraversalOutcome, Route::Error> {
+    route.suspend(
+        session,
+        witness,
+        request,
+        ApplyReplaceAllOwnedSuspensionFrame { state, expr },
+    )
+}
+
+#[cold]
+#[inline(never)]
+pub(super) fn suspend_rewrite_rule_match<
+    Route: DefinitionResumeRoute<ApplyRulesOnceFromListSuspensionFrame>,
+>(
+    session: &mut Session,
+    witness: SlotWitness<CompiledMatchOutcome>,
+    request: RuntimeInputRequest,
+    expr: Expr,
+    normalized_expr: Expr,
+    rules: RewriteRulePlan,
+    source: RuleApplicationSource,
+    cursor: RewriteRuleScanCursor,
+    index: usize,
+    would_reject: bool,
+    route: Route,
+) -> Result<Option<Expr>, Route::Error> {
+    let state = SuspendedRewriteRuleMatch {
+        expr,
+        normalized_expr,
+        rules,
+    };
+    route.suspend(
+        session,
+        witness,
+        request,
+        ApplyRulesOnceFromListSuspensionFrame {
+            state,
+            source,
+            cursor,
+            index,
+            would_reject,
+        },
+    )
 }

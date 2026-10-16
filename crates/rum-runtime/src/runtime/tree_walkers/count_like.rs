@@ -3,7 +3,11 @@ mod resume_frames;
 use resume_frames::*;
 
 use super::*;
-use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::definitions::application::DefinitionResumeRoute;
+use crate::runtime::kernel_api::{
+    ContinueToken, FrameRootTrace, FrameRootVisitor, ResumeStop, SlotWitness, TypedAction,
+    TypedFrame, slot_witness,
+};
 
 #[derive(Clone, Copy, FrameRootTrace)]
 enum CountLikeFinish {
@@ -42,7 +46,7 @@ impl Session {
         }
 
         let target_result = self.evaluate(args_slice[0].clone());
-        let target = crate::resume_or_suspend!(
+        let target = crate::resume_typed_or_suspend!(
             self,
             target_result,
             ok(value) => Ok(value),
@@ -68,7 +72,7 @@ impl Session {
         }
 
         let target_result = self.evaluate(args_slice[0].clone());
-        let target = crate::resume_or_suspend!(
+        let target = crate::resume_typed_or_suspend!(
             self,
             target_result,
             ok(value) => Ok(value),
@@ -91,7 +95,7 @@ impl Session {
         }
 
         let target_result = self.evaluate(args_slice[0].clone());
-        let target = crate::resume_or_suspend!(
+        let target = crate::resume_typed_or_suspend!(
             self,
             target_result,
             ok(value) => Ok(value),
@@ -110,7 +114,7 @@ impl Session {
         args: &SharedArgs,
     ) -> Result<Expr, EvalError> {
         let pattern_result = self.resolve_matcher_pattern_expr_owned(args[1].clone());
-        let pattern = crate::resume_or_suspend!(
+        let pattern = crate::resume_typed_or_suspend!(
             self,
             pattern_result,
             ok(value) => Ok(value),
@@ -149,7 +153,7 @@ impl Session {
         args: &SharedArgs,
     ) -> Result<Expr, EvalError> {
         let pattern_result = self.resolve_matcher_pattern_expr_owned(args[1].clone());
-        let pattern = crate::resume_or_suspend!(
+        let pattern = crate::resume_typed_or_suspend!(
             self,
             pattern_result,
             ok(value) => Ok(value),
@@ -188,7 +192,7 @@ impl Session {
         args: &SharedArgs,
     ) -> Result<Expr, EvalError> {
         let pattern_result = self.resolve_matcher_pattern_expr_owned(args[1].clone());
-        let pattern = crate::resume_or_suspend!(
+        let pattern = crate::resume_typed_or_suspend!(
             self,
             pattern_result,
             ok(value) => Ok(value),
@@ -232,6 +236,7 @@ impl Session {
     ) -> Result<Expr, EvalError> {
         let traversal_result =
             self.resolve_traversal_without_limit_owned(args[2..].to_vec(), defaults);
+        let witness = slot_witness(&traversal_result);
         match traversal_result {
             Ok(traversal) => self.finish_count_like_after_traversal(
                 builtin_name,
@@ -241,11 +246,16 @@ impl Session {
                 finish,
                 traversal,
             ),
-            Err(EvalError::InputRequired { request }) => {
-                let args = args.clone();
-                crate::resume_or_suspend!(insert self, FinishCountLikeAfterPatternSuspensionFrame { builtin_name, target, pattern, args, finish });
-                Err(EvalError::InputRequired { request })
-            }
+            Err(EvalError::InputRequired { request }) => resume_frames::suspend_count_like_pattern(
+                self,
+                witness,
+                request,
+                builtin_name,
+                target,
+                pattern,
+                args,
+                finish,
+            ),
             Err(error) => Err(error),
         }
     }
@@ -271,12 +281,10 @@ impl Session {
         };
 
         let outcome_result = self.count_pattern_matches_owned(target, pattern, traversal);
-        crate::resume_or_suspend!(
+        crate::resume_typed_or_suspend!(
             self,
             outcome_result,
-            ok(outcome) => { (|| {
-                    Ok(finish.finish(outcome.count))
-                })() },
+            ok(outcome) => Ok(finish.finish(outcome.count)),
             suspend => FinishCountLikeAfterTraversalSuspensionFrame { finish },
         )
     }
@@ -294,13 +302,16 @@ impl Session {
             count: 0,
             current_depth: 1,
         };
-        self.drive_count_pattern_matches(state)
+        self.drive_count_pattern_matches(state, ())
     }
 
-    fn drive_count_pattern_matches(
+    fn drive_count_pattern_matches<
+        Route: DefinitionResumeRoute<ContinueCountTraversalSuspensionFrame>,
+    >(
         &mut self,
         mut state: SuspendedCountTraversal,
-    ) -> Result<TraversalCountOutcome, EvalError> {
+        route: Route,
+    ) -> Result<TraversalCountOutcome, Route::Error> {
         while let Some(node) = state.walker.next() {
             state.current_depth = node.depth;
             if state.traversal.limit_reached(state.count) {
@@ -312,6 +323,7 @@ impl Session {
 
             let match_result =
                 self.match_expr_owned(state.pattern.clone(), node.expr, SymbolExprMap::default());
+            let witness = slot_witness(&match_result);
             match match_result {
                 Ok(outcome) => {
                     state.count += usize::from(outcome.matched);
@@ -320,10 +332,11 @@ impl Session {
                     }
                 }
                 Err(EvalError::InputRequired { request }) => {
-                    crate::resume_or_suspend!(insert self, ContinueCountTraversalSuspensionFrame { state });
-                    return Err(EvalError::InputRequired { request });
+                    return resume_frames::suspend_count_traversal(
+                        self, witness, request, state, route,
+                    );
                 }
-                Err(error) => return Err(error),
+                Err(error) => return Err(Route::failure(error)),
             }
         }
 
@@ -334,11 +347,12 @@ impl Session {
         ))
     }
 
-    fn resume_count_traversal(
+    fn resume_count_traversal<'resume>(
         &mut self,
         mut state: SuspendedCountTraversal,
         outcome: CompiledMatchOutcome,
-    ) -> Result<TraversalCountOutcome, EvalError> {
+        token: ContinueToken<'resume, ContinueCountTraversalSuspensionFrame>,
+    ) -> Result<TraversalCountOutcome, ResumeStop<TraversalCountOutcome>> {
         state.count += usize::from(outcome.matched);
         if state.traversal.limit_reached(state.count) {
             return Ok(TraversalCountOutcome::new(
@@ -347,7 +361,7 @@ impl Session {
                 true,
             ));
         }
-        self.drive_count_pattern_matches(state)
+        self.drive_count_pattern_matches(state, token)
     }
 }
 

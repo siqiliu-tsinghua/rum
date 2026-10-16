@@ -40,16 +40,37 @@ impl Session {
         let mut defaults = CasesTraversalConfig::default_position();
         defaults.include_heads = include_heads;
         let traversal_result = self.resolve_position_traversal_owned(args[2..].to_vec(), defaults);
+        let witness = slot_witness(&traversal_result);
         match traversal_result {
             Ok(traversal) => {
                 self.finish_position_after_resolved_traversal(target, pattern, traversal, args)
             }
             Err(EvalError::InputRequired { request }) => {
-                let args = args.clone();
-                crate::resume_or_suspend!(insert self, ResumePositionAfterPatternSuspensionFrame { target, pattern, args });
-                Err(EvalError::InputRequired { request })
+                suspend_position_pattern(self, witness, request, target, pattern, args)
             }
             Err(error) => Err(error),
         }
     }
+}
+
+#[cold]
+#[inline(never)]
+fn suspend_position_pattern(
+    session: &mut Session,
+    witness: SlotWitness<CasesTraversalResolution>,
+    request: RuntimeInputRequest,
+    target: Expr,
+    pattern: Expr,
+    args: &SharedArgs,
+) -> Result<Expr, EvalError> {
+    let args = args.clone();
+    witness.suspend(
+        session,
+        request,
+        ResumePositionAfterPatternSuspensionFrame {
+            target,
+            pattern,
+            args,
+        },
+    )
 }

@@ -4,7 +4,8 @@ use resume_frames::*;
 
 use super::*;
 use crate::runtime::kernel_api::{
-    AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
+    AccumulatorChain, AccumulatorChainNode, ContinueToken, FrameRootTrace, FrameRootVisitor,
+    ResumeStop, SlotWitness, TypedAction, TypedFrame, slot_witness,
 };
 use std::sync::Arc;
 
@@ -105,7 +106,7 @@ impl Session {
         }
 
         let target_result = self.evaluate(args_slice[0].clone());
-        let target = crate::resume_or_suspend!(
+        let target = crate::resume_typed_or_suspend!(
             self,
             target_result,
             ok(value) => Ok(value),
@@ -124,7 +125,7 @@ impl Session {
         args: &SharedArgs,
     ) -> Result<Expr, EvalError> {
         let pattern_result = self.resolve_matcher_pattern_expr_owned(args[1].clone());
-        let pattern = crate::resume_or_suspend!(
+        let pattern = crate::resume_typed_or_suspend!(
             self,
             pattern_result,
             ok(value) => Ok(value),
@@ -175,12 +176,10 @@ impl Session {
         }
 
         let positions_result = self.collect_positions_owned(target, pattern, traversal);
-        crate::resume_or_suspend!(
+        crate::resume_typed_or_suspend!(
             self,
             positions_result,
-            ok(outcome) => { (|| {
-                    Ok(Expr::call(system_expr("List"), outcome.positions))
-                })() },
+            ok(outcome) => Ok(Expr::call(system_expr("List"), outcome.positions)),
             suspend => FinishPositionAfterResolvedTraversalSuspensionFrame,
         )
     }
@@ -206,6 +205,7 @@ impl Session {
 
             let match_result =
                 self.match_expr_owned(pattern.clone(), node.expr, SymbolExprMap::default());
+            let witness = slot_witness(&match_result);
             match match_result {
                 Ok(outcome) => {
                     if outcome.matched {
@@ -216,16 +216,10 @@ impl Session {
                     }
                 }
                 Err(EvalError::InputRequired { request }) => {
-                    let state = SuspendedPositionTraversal {
-                        walker,
-                        pattern,
-                        traversal,
-                        positions: PersistentPositionAccumulator::freeze(positions),
-                        current_path: node.path,
-                        current_depth: node.depth,
-                    };
-                    crate::resume_or_suspend!(insert self, ContinuePositionTraversalSuspensionFrame { state });
-                    return Err(EvalError::InputRequired { request });
+                    return resume_frames::suspend_position_collection(
+                        self, witness, request, walker, pattern, traversal, positions, node.path,
+                        node.depth,
+                    );
                 }
                 Err(error) => return Err(error),
             }
@@ -238,11 +232,12 @@ impl Session {
         ))
     }
 
-    fn resume_position_traversal(
+    fn resume_position_traversal<'resume>(
         &mut self,
         mut state: SuspendedPositionTraversal,
         outcome: CompiledMatchOutcome,
-    ) -> Result<PositionCollectionOutcome, EvalError> {
+        token: ContinueToken<'resume, ContinuePositionTraversalSuspensionFrame>,
+    ) -> Result<PositionCollectionOutcome, ResumeStop<PositionCollectionOutcome>> {
         if outcome.matched {
             state.positions = state
                 .positions
@@ -255,13 +250,14 @@ impl Session {
                 ));
             }
         }
-        self.drive_suspended_position_traversal(state)
+        self.drive_suspended_position_traversal(state, token)
     }
 
-    fn drive_suspended_position_traversal(
+    fn drive_suspended_position_traversal<'resume>(
         &mut self,
         mut state: SuspendedPositionTraversal,
-    ) -> Result<PositionCollectionOutcome, EvalError> {
+        token: ContinueToken<'resume, ContinuePositionTraversalSuspensionFrame>,
+    ) -> Result<PositionCollectionOutcome, ResumeStop<PositionCollectionOutcome>> {
         while let Some(node) = state.walker.next() {
             state.current_path = node.path;
             state.current_depth = node.depth;
@@ -277,6 +273,7 @@ impl Session {
             }
             let match_result =
                 self.match_expr_owned(state.pattern.clone(), node.expr, SymbolExprMap::default());
+            let witness = slot_witness(&match_result);
             match match_result {
                 Ok(outcome) => {
                     if outcome.matched {
@@ -293,10 +290,11 @@ impl Session {
                     }
                 }
                 Err(EvalError::InputRequired { request }) => {
-                    crate::resume_or_suspend!(insert self, ContinuePositionTraversalSuspensionFrame { state });
-                    return Err(EvalError::InputRequired { request });
+                    return resume_frames::suspend_position_traversal(
+                        self, witness, request, state, token,
+                    );
                 }
-                Err(error) => return Err(error),
+                Err(error) => return Err(ResumeStop::failure(error)),
             }
         }
 

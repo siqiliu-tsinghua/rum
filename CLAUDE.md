@@ -242,17 +242,20 @@ Consequences for how I present and pick work:
   evaluation stack it restored, a defect as old as resumable input
   (`b51dd794`, day 4). Every queue cell now carries its insertion context,
   and an inline return event runs the skipped completion checks. S6 (614,
-  guards and binding completion, one dispatch) and S7 (615, Part selectors
-  and held assignment, the first typed stdlib frames, one dispatch) are
-  done. **Now: S8 (616), one step per brief**; then E2 (a
+  guards and binding completion, one dispatch), S7 (615, Part selectors
+  and held assignment, the first typed stdlib frames, one dispatch) and S8
+  (616, ReplaceAll and the traversal collectors; the worker's run was cut by
+  Codex's usage limit at its timing stage and I finished the gate) are
+  done. **Now: S9 (617), one step per brief**; then E2 (a
   may-suspend result type with no `Try`). From S5 the per-step stack bar is
   the named closure environment attributed per slot: S4 showed that an
   every-pair at-or-below-base bar at 16-B granularity is not reachable by
   any macro expansion. G14's timing lesson: an identical-instruction cycle
   residual is settled causally, by rebuilding both arms with every function
-  64-byte aligned (`-C llvm-args=-align-all-functions=6`). A timing-label
-  probe is cut from the benchmark program itself: my S5 key-read probe hit a
-  fast path 250x cheaper than the label and cleared it by luck. S5's lesson: *a shape that needs an `unreachable!`
+  64-byte aligned (`-C llvm-args=-align-all-functions=6`). A timing probe
+  runs the benchmark program itself, whole, with `rumMicroReps` raised (S8):
+  my S5 key-read probe hit a fast path 250x cheaper than the label and
+  cleared it by luck, and a cut can drop a label's prelude. S5's lesson: *a shape that needs an `unreachable!`
   arm for a state the types allow is pointing at the shape nobody tried* —
   its cold helpers took the producer's whole `Result`; the design's own
   shape (the ZST witness and the request cross the call) cut the stack

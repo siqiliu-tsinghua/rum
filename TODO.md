@@ -4,9 +4,11 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-17, committed tree through brief-615 (G13 step
-S7, Part selectors and held assignment, gated; below). **Next: S8 (brief-616).
-G13's implementation is 78 gated steps** — S1 dormant API, S2
+Status checkpoint: 2026-10-17, committed tree through brief-616 (G13 step
+S8, ReplaceAll and the traversal collectors, gated; below). **Next: S9
+(brief-617).** Codex's usage limit cut brief-616's run at its last stage and
+resets 2026-10-22 20:32; S9's worker until then is the user's decision.
+**G13's implementation is 78 gated steps** — S1 dormant API, S2
 compatible driver, S3-S54 family typing, F1-F23 one flip per legacy type, R
 removal — each a director-rewritten brief
 from `.temp/brief-606/draft-*.md`, dispatched to Codex (user ruling; GLM only
@@ -168,7 +170,10 @@ residual `First[List[]]` it returns is evaluated again).
 **Queue after this branch (user ruling 2026-09-30):** (Q1) one ordered output
 sequence from the kernel through the host, so prints and messages keep their
 relative order in every front end; (Q2) the duplicated `First::nofirst` on an
-empty lazy list. Both wait for the branch to close; the retention line, paused
+empty lazy list. The director met the same class again on 2026-10-17: a failed
+call returned unevaluated is evaluated once more outside the construct that
+produced it, so `Quiet[{1}[[3]]]` still prints `Part::partw` and
+`x = {1}[[3]]; 5` prints it twice. Both wait for the branch to close; the retention line, paused
 mid-line at E0, resumes first under the "a line once opened is finished"
 ruling unless the user places them earlier. Also behind the branch: the
 `rum-cli`/`rum-repl` `rum-runtime` dev-dependency audit.
@@ -1359,6 +1364,53 @@ implementations go 607 → 606, typed 42 → 52, macro sites 573 → 566.
   - the probe gives 77 SAME and 0 DIFF (S7, S6 and G14 shapes), plus 11
     SAME where a guest value carries the selector wire's own head as a
     selector or key.
+
+**S8 (brief-616): ReplaceAll and the traversal collectors.** Codex, two
+dispatches. The first stopped before any edit, correctly: the director's
+`position-guard` stack shape used `x_`, which `Position`'s default levels
+{0, ∞} with heads match at the `List` head, so the guard recursed on
+`p[List - 1]` (amendment 1: `x_Integer`). Lesson: run a new probe shape
+once before writing it into a brief. The redispatch did all the work and
+every gate, and was cut by Codex's usage limit during the timing
+investigation, before its report; the director completed the gate and the
+report. S8 types F0240-F0243 (ReplaceAll, ReplaceRepeated, the rule scan),
+F0551-F0559 (Count, MemberQ, FreeQ) and F0560-F0564 (Position), with their
+20 macro sites, deletes transports T0018/T0019/T0089/T0090, and retires
+ten owned identity decodes (`Whole` rows, owner R → S8). Implementations
+stay 606; typed 52 → 70; macro sites 566 → 558.
+
+- **Routes.** M0243/M0244 (traversal and rule scan) and M0594 (count
+  traversal) use `DefinitionResumeRoute`, `()` on the ordinary path and the
+  frame's own token on resume; the Position family keeps its two drivers,
+  the resumed one taking only the token (M0600). Different-frame resumes
+  stop with `ResumeStop`.
+- **No defect to repair.** The director's 48 shapes were SAME before and
+  after.
+- **Costs ruled acceptable.**
+  - Ordinary allocations 138/138 equal. The rule scan and the collectors
+    got cheaper (`replaceall-wide-no-match` -3.9%, `replace-wide-no-match`
+    -2.8%); every upward instruction flag cleared on five runs.
+  - Stack: the six old shapes equal S7; the four new guard-recursion shapes
+    fall 32-1 184 B per level. 24 functions' prologues grow, all either
+    inlining redistribution inside a measured recursion that falls, or
+    resume-side bodies.
+  - Resume: one 24-B adapter `Arc` per typed transfer (+0.15-0.52%
+    instructions on S8's workloads) and the 136-B driver move owed to R.
+  - Timing: 21 labels slower in the worker's panels, all with equal
+    instructions, `association-part-key-read` up to +21.8%. The director ran
+    the whole panel program with `rumMicroReps` 25: with every function
+    64-byte aligned in both arms no label is slower and that one reads
+    +1.6/+0.4%. Layout. **Timing probes now run the whole panel program**,
+    not a cut.
+- **Director gate:**
+  - workspace 3 713/0/59 with 0 ZeroMQ skips;
+  - oracle 281/281 in both builds, warning-free;
+  - census, compile controls and local production, each in both builds;
+  - ownership 31/31;
+  - inventories byte-identical after the replay;
+  - base sources proved equal to `a1359ba8` (2 066 files), and candidates
+    fresh;
+  - the probe gives 125 SAME and 0 DIFF (S8, S7, S6 and G14 shapes).
 
 **Recorded, not in this branch — the gensym sweep does not see Rust-local
 values (found 2026-10-14 reviewing brief-605; Q3, queued behind the branch by

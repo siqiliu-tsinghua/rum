@@ -6,19 +6,22 @@ pub(super) struct EvalCountSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for EvalCountSuspensionFrame {
-    fn resume(
+impl TypedFrame for EvalCountSuspensionFrame {
+    type Input = Expr;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut args = self.args.clone();
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        let args = self.args.clone();
         let resumed = match outcome {
-            Ok(target) => (|| session.resume_count_after_target(target, &args))(),
+            Ok(target) => session.resume_count_after_target(target, &args),
             Err(error) => Err(error),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete_work(resumed.map_err(ResumeStop::failure))
     }
 }
 
@@ -27,19 +30,22 @@ pub(super) struct EvalMemberQSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for EvalMemberQSuspensionFrame {
-    fn resume(
+impl TypedFrame for EvalMemberQSuspensionFrame {
+    type Input = Expr;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut args = self.args.clone();
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        let args = self.args.clone();
         let resumed = match outcome {
-            Ok(target) => (|| session.resume_member_q_after_target(target, &args))(),
+            Ok(target) => session.resume_member_q_after_target(target, &args),
             Err(error) => Err(error),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete_work(resumed.map_err(ResumeStop::failure))
     }
 }
 
@@ -48,19 +54,22 @@ pub(super) struct EvalFreeQSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for EvalFreeQSuspensionFrame {
-    fn resume(
+impl TypedFrame for EvalFreeQSuspensionFrame {
+    type Input = Expr;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut args = self.args.clone();
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        let args = self.args.clone();
         let resumed = match outcome {
-            Ok(target) => (|| session.resume_free_q_after_target(target, &args))(),
+            Ok(target) => session.resume_free_q_after_target(target, &args),
             Err(error) => Err(error),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete_work(resumed.map_err(ResumeStop::failure))
     }
 }
 
@@ -70,21 +79,23 @@ pub(super) struct ResumeCountAfterTargetSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for ResumeCountAfterTargetSuspensionFrame {
-    fn resume(
+impl TypedFrame for ResumeCountAfterTargetSuspensionFrame {
+    type Input = Expr;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut target = self.target.clone();
-        #[allow(unused_mut)]
-        let mut args = self.args.clone();
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        let target = self.target.clone();
+        let args = self.args.clone();
         let resumed = match outcome {
-            Ok(pattern) => (|| session.resume_count_after_pattern(target, pattern, &args))(),
+            Ok(pattern) => session.resume_count_after_pattern(target, pattern, &args),
             Err(error) => Err(error),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete_work(resumed.map_err(ResumeStop::failure))
     }
 }
 
@@ -94,21 +105,23 @@ pub(super) struct ResumeMemberQAfterTargetSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for ResumeMemberQAfterTargetSuspensionFrame {
-    fn resume(
+impl TypedFrame for ResumeMemberQAfterTargetSuspensionFrame {
+    type Input = Expr;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut target = self.target.clone();
-        #[allow(unused_mut)]
-        let mut args = self.args.clone();
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        let target = self.target.clone();
+        let args = self.args.clone();
         let resumed = match outcome {
-            Ok(pattern) => (|| session.resume_member_q_after_pattern(target, pattern, &args))(),
+            Ok(pattern) => session.resume_member_q_after_pattern(target, pattern, &args),
             Err(error) => Err(error),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete_work(resumed.map_err(ResumeStop::failure))
     }
 }
 
@@ -118,21 +131,23 @@ pub(super) struct ResumeFreeQAfterTargetSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for ResumeFreeQAfterTargetSuspensionFrame {
-    fn resume(
+impl TypedFrame for ResumeFreeQAfterTargetSuspensionFrame {
+    type Input = Expr;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut target = self.target.clone();
-        #[allow(unused_mut)]
-        let mut args = self.args.clone();
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        let target = self.target.clone();
+        let args = self.args.clone();
         let resumed = match outcome {
-            Ok(pattern) => (|| session.resume_free_q_after_pattern(target, pattern, &args))(),
+            Ok(pattern) => session.resume_free_q_after_pattern(target, pattern, &args),
             Err(error) => Err(error),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete_work(resumed.map_err(ResumeStop::failure))
     }
 }
 
@@ -145,34 +160,33 @@ pub(super) struct FinishCountLikeAfterPatternSuspensionFrame {
     pub(super) finish: crate::runtime::tree_walkers::count_like::CountLikeFinish,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for FinishCountLikeAfterPatternSuspensionFrame {
-    fn resume(
+impl TypedFrame for FinishCountLikeAfterPatternSuspensionFrame {
+    type Input = TraversalWithoutLimitResolution;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut builtin_name = self.builtin_name;
-        #[allow(unused_mut)]
-        let mut target = self.target.clone();
-        #[allow(unused_mut)]
-        let mut pattern = self.pattern.clone();
-        #[allow(unused_mut)]
-        let mut args = self.args.clone();
-        #[allow(unused_mut)]
-        let mut finish = self.finish.clone();
-        let resumed = (|| {
-            let traversal = TraversalWithoutLimitResolution::from_continuation_expr(outcome?);
-            session.finish_count_like_after_traversal(
+        outcome: Result<TraversalWithoutLimitResolution, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        let builtin_name = self.builtin_name;
+        let target = self.target.clone();
+        let pattern = self.pattern.clone();
+        let args = self.args.clone();
+        let finish = self.finish;
+        let resumed = match outcome {
+            Ok(traversal) => session.finish_count_like_after_traversal(
                 builtin_name,
                 target,
                 pattern,
                 &args,
                 finish,
                 traversal,
-            )
-        })();
-        crate::runtime::suspension::FrameAction::complete(resumed)
+            ),
+            Err(error) => Err(error),
+        };
+        TypedAction::complete_work(resumed.map_err(ResumeStop::failure))
     }
 }
 
@@ -181,25 +195,22 @@ pub(super) struct FinishCountLikeAfterTraversalSuspensionFrame {
     pub(super) finish: crate::runtime::tree_walkers::count_like::CountLikeFinish,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for FinishCountLikeAfterTraversalSuspensionFrame {
-    fn resume(
+impl TypedFrame for FinishCountLikeAfterTraversalSuspensionFrame {
+    type Input = TraversalCountOutcome;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         _session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut finish = self.finish.clone();
+        outcome: Result<TraversalCountOutcome, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        let finish = self.finish;
         let resumed = match outcome {
-            Ok(resumed_value) => {
-                let outcome = <crate::runtime::TraversalCountOutcome as crate::runtime::suspension::ContinuationValue>::from_continuation_expr(resumed_value);
-                (|| -> Result<rum_core::Expr, EvalError> {
-            Ok(finish.finish(outcome.count))
-        })()
-                    .map(|value| <rum_core::Expr as crate::runtime::suspension::ContinuationValue>::into_continuation_expr(value))
-            }
+            Ok(outcome) => Ok(finish.finish(outcome.count)),
             Err(error) => Err(error),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete(resumed)
     }
 }
 
@@ -208,20 +219,66 @@ pub(super) struct ContinueCountTraversalSuspensionFrame {
     pub(super) state: crate::runtime::tree_walkers::count_like::SuspendedCountTraversal,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for ContinueCountTraversalSuspensionFrame {
-    fn resume(
+impl TypedFrame for ContinueCountTraversalSuspensionFrame {
+    type Input = CompiledMatchOutcome;
+    type Output = TraversalCountOutcome;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        outcome: Result<CompiledMatchOutcome, EvalError>,
+        token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<TraversalCountOutcome> {
         let state = self.state.clone();
-        let value = outcome;
-        let resumed = (|| {
-            let outcome = CompiledMatchOutcome::from_continuation_expr(value?);
-            session
-                .resume_count_traversal(state, outcome)
-                .map(|outcome| outcome.into_continuation_expr())
-        })();
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        let resumed = match outcome {
+            Ok(outcome) => session.resume_count_traversal(state, outcome, token),
+            Err(error) => Err(ResumeStop::failure(error)),
+        };
+        TypedAction::complete_work(resumed)
     }
+}
+
+#[cold]
+#[inline(never)]
+pub(super) fn suspend_count_like_pattern(
+    session: &mut Session,
+    witness: SlotWitness<TraversalWithoutLimitResolution>,
+    request: RuntimeInputRequest,
+    builtin_name: &'static str,
+    target: Expr,
+    pattern: Expr,
+    args: &SharedArgs,
+    finish: CountLikeFinish,
+) -> Result<Expr, EvalError> {
+    let args = args.clone();
+    witness.suspend(
+        session,
+        request,
+        FinishCountLikeAfterPatternSuspensionFrame {
+            builtin_name,
+            target,
+            pattern,
+            args,
+            finish,
+        },
+    )
+}
+
+#[cold]
+#[inline(never)]
+pub(super) fn suspend_count_traversal<
+    Route: DefinitionResumeRoute<ContinueCountTraversalSuspensionFrame>,
+>(
+    session: &mut Session,
+    witness: SlotWitness<CompiledMatchOutcome>,
+    request: RuntimeInputRequest,
+    state: SuspendedCountTraversal,
+    route: Route,
+) -> Result<TraversalCountOutcome, Route::Error> {
+    route.suspend(
+        session,
+        witness,
+        request,
+        ContinueCountTraversalSuspensionFrame { state },
+    )
 }
