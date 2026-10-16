@@ -241,8 +241,9 @@ Consequences for how I present and pick work:
   implementation, four dispatches) is done: resume never unwound the
   evaluation stack it restored, a defect as old as resumable input
   (`b51dd794`, day 4). Every queue cell now carries its insertion context,
-  and an inline return event runs the skipped completion checks. **Now: S6
-  (614), one step per brief**; then E2 (a
+  and an inline return event runs the skipped completion checks. S6 (614,
+  guards and binding completion, one dispatch) is done. **Now: S7 (615), one
+  step per brief**; then E2 (a
   may-suspend result type with no `Try`). From S5 the per-step stack bar is
   the named closure environment attributed per slot: S4 showed that an
   every-pair at-or-below-base bar at 16-B granularity is not reachable by

@@ -7,6 +7,7 @@ mod debug_roles;
 mod definition_application;
 mod definition_storage;
 mod functional_roles;
+mod guards_binding_completion;
 mod predicate_roles;
 pub mod preparation;
 pub mod primary;

@@ -2,7 +2,11 @@ mod resume_frames;
 use resume_frames::*;
 
 use super::super::*;
-use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use super::application::DefinitionResumeRoute;
+use crate::runtime::kernel_api::{
+    ContinueToken, FrameRootTrace, FrameRootVisitor, ResumeStop, SlotFinalizer, SlotWitness,
+    TypedAction, TypedFrame, slot_witness,
+};
 
 #[doc(hidden)]
 #[inline]
@@ -103,12 +107,13 @@ impl Session {
         let DefinitionConditionMatcher { inner, lhs, guards } = matcher;
         let option_scope = self.option_value_scope_for_definition(&lhs, &value);
         let inner_result = self.match_compiled_owned(inner, value, bindings);
+        let witness = slot_witness(&inner_result);
         match inner_result {
             Ok(outcome) => {
                 self.finish_definition_condition_match_owned(guards, option_scope, outcome)
             }
             Err(EvalError::InputRequired { request }) => {
-                self.suspend_definition_condition_match(guards, option_scope, request)
+                self.suspend_definition_condition_match(guards, option_scope, witness, request)
             }
             Err(error) => Err(error),
         }
@@ -120,11 +125,18 @@ impl Session {
         &mut self,
         guards: Box<[Expr]>,
         option_scope: Option<OptionValueScope>,
+        witness: SlotWitness<CompiledMatchOutcome>,
         request: RuntimeInputRequest,
     ) -> Result<CompiledMatchOutcome, EvalError> {
         let guards = SharedArgs::new(guards.into_vec());
-        crate::resume_or_suspend!(insert self, MatchCompiledDefinitionConditionOwnedSuspensionFrame { guards, option_scope });
-        Err(EvalError::InputRequired { request })
+        witness.suspend(
+            self,
+            request,
+            MatchCompiledDefinitionConditionOwnedSuspensionFrame {
+                guards,
+                option_scope,
+            },
+        )
     }
 
     fn finish_definition_condition_match_owned(
@@ -179,12 +191,15 @@ impl Session {
         bindings: FrozenMatchBindings,
         option_scope: Option<OptionValueScope>,
     ) -> Result<bool, EvalError> {
-        self.evaluate_readonly_suspended_guards(SuspendedReadonlyGuardEvaluation {
-            guards,
-            bindings,
-            option_scope,
-            index: 0,
-        })
+        self.evaluate_readonly_suspended_guards(
+            SuspendedReadonlyGuardEvaluation {
+                guards,
+                bindings,
+                option_scope,
+                index: 0,
+            },
+            (),
+        )
     }
 
     fn evaluate_owned_guards(
@@ -201,6 +216,7 @@ impl Session {
 
         let guard_expr = substitute_bindings(guard, &bindings);
         let guard_result = self.evaluate_with_option_value_scope(option_scope.clone(), guard_expr);
+        let witness = slot_witness(&guard_result);
         match guard_result {
             Ok(result) => {
                 if is_system_symbol_name(&result, heads::structure::TRUE) {
@@ -221,6 +237,7 @@ impl Session {
                 false_bindings,
                 option_scope,
                 index,
+                witness,
                 request,
             ),
             Err(error) => Err(error),
@@ -236,6 +253,7 @@ impl Session {
         false_bindings: SymbolExprMap,
         option_scope: Option<OptionValueScope>,
         index: usize,
+        witness: SlotWitness<Expr>,
         request: RuntimeInputRequest,
     ) -> Result<CompiledMatchOutcome, EvalError> {
         let state = SuspendedGuardEvaluation {
@@ -245,15 +263,18 @@ impl Session {
             option_scope,
             index,
         };
-        crate::resume_or_suspend!(insert self, EvaluateOwnedGuardsSuspensionFrame { state });
-        Err(EvalError::InputRequired { request })
+        witness.suspend(self, request, EvaluateOwnedGuardsSuspensionFrame { state })
     }
 
-    fn resume_suspended_guard_deferred(
+    fn resume_suspended_guard_deferred<Route>(
         &mut self,
         mut state: SuspendedGuardEvaluation,
         result: Expr,
-    ) -> Result<SuspendedGuardCompletion, EvalError> {
+        route: Route,
+    ) -> Result<SuspendedGuardCompletion, Route::Error>
+    where
+        Route: DefinitionResumeRoute<EvaluateOwnedGuardsSuspensionFrame>,
+    {
         if !is_system_symbol_name(&result, heads::structure::TRUE) {
             return Ok(SuspendedGuardCompletion {
                 matched: false,
@@ -261,13 +282,17 @@ impl Session {
             });
         }
         state.index += 1;
-        self.evaluate_suspended_guards_deferred(state)
+        self.evaluate_suspended_guards_deferred(state, route)
     }
 
-    fn evaluate_suspended_guards_deferred(
+    fn evaluate_suspended_guards_deferred<Route>(
         &mut self,
         state: SuspendedGuardEvaluation,
-    ) -> Result<SuspendedGuardCompletion, EvalError> {
+        route: Route,
+    ) -> Result<SuspendedGuardCompletion, Route::Error>
+    where
+        Route: DefinitionResumeRoute<EvaluateOwnedGuardsSuspensionFrame>,
+    {
         let Some(guard) = state.guards.get(state.index) else {
             return Ok(SuspendedGuardCompletion {
                 matched: true,
@@ -278,38 +303,87 @@ impl Session {
         let guard_expr = substitute_bindings(guard, state.bindings.as_map());
         let guard_result =
             self.evaluate_with_option_value_scope(state.option_scope.clone(), guard_expr);
+        let witness = slot_witness(&guard_result);
         match guard_result {
-            Ok(result) => self.resume_suspended_guard_deferred(state, result),
+            Ok(result) => self.resume_suspended_guard_deferred(state, result, route),
             Err(EvalError::InputRequired { request }) => {
-                crate::resume_or_suspend!(insert self, EvaluateOwnedGuardsSuspensionFrame { state });
-                Err(EvalError::InputRequired { request })
+                self.suspend_deferred_guards(state, witness, request, route)
             }
-            Err(error) => Err(error),
+            Err(error) => Err(Route::failure(error)),
         }
     }
 
-    fn evaluate_readonly_suspended_guards(
+    #[cold]
+    #[inline(never)]
+    fn suspend_deferred_guards<Route>(
+        &mut self,
+        state: SuspendedGuardEvaluation,
+        witness: SlotWitness<Expr>,
+        request: RuntimeInputRequest,
+        route: Route,
+    ) -> Result<SuspendedGuardCompletion, Route::Error>
+    where
+        Route: DefinitionResumeRoute<EvaluateOwnedGuardsSuspensionFrame>,
+    {
+        route
+            .suspend(
+                self,
+                witness,
+                request,
+                EvaluateOwnedGuardsSuspensionFrame { state },
+            )
+            .map(|outcome| SuspendedGuardCompletion {
+                matched: outcome.matched,
+                bindings: FrozenMatchBindings::freeze(outcome.bindings),
+            })
+    }
+
+    fn evaluate_readonly_suspended_guards<Route>(
         &mut self,
         mut state: SuspendedReadonlyGuardEvaluation,
-    ) -> Result<bool, EvalError> {
+        route: Route,
+    ) -> Result<bool, Route::Error>
+    where
+        Route: DefinitionResumeRoute<EvaluateReadonlySuspendedGuardsSuspensionFrame>,
+    {
         let Some(guard) = state.guards.get(state.index) else {
             return Ok(true);
         };
         let guard_expr = substitute_bindings(guard, state.bindings.as_map());
         let guard_result =
             self.evaluate_with_option_value_scope(state.option_scope.clone(), guard_expr);
+        let witness = slot_witness(&guard_result);
         match guard_result {
             Ok(result) if is_system_symbol_name(&result, heads::structure::TRUE) => {
                 state.index += 1;
-                self.evaluate_readonly_suspended_guards(state)
+                self.evaluate_readonly_suspended_guards(state, route)
             }
             Ok(_) => Ok(false),
             Err(EvalError::InputRequired { request }) => {
-                crate::resume_or_suspend!(insert self, EvaluateReadonlySuspendedGuardsSuspensionFrame { state });
-                Err(EvalError::InputRequired { request })
+                self.suspend_readonly_guards(state, witness, request, route)
             }
-            Err(error) => Err(error),
+            Err(error) => Err(Route::failure(error)),
         }
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn suspend_readonly_guards<Route>(
+        &mut self,
+        state: SuspendedReadonlyGuardEvaluation,
+        witness: SlotWitness<Expr>,
+        request: RuntimeInputRequest,
+        route: Route,
+    ) -> Result<bool, Route::Error>
+    where
+        Route: DefinitionResumeRoute<EvaluateReadonlySuspendedGuardsSuspensionFrame>,
+    {
+        route.suspend(
+            self,
+            witness,
+            request,
+            EvaluateReadonlySuspendedGuardsSuspensionFrame { state },
+        )
     }
 }
 
@@ -391,7 +465,7 @@ pub fn evaluate_definition_rhs_guards_for_match(
         bindings.clone(),
         option_scope,
     );
-    crate::resume_or_suspend!(
+    crate::resume_typed_or_suspend!(
         session,
         guard_result,
         ok(outcome) => { (|| { Ok(outcome.matched) })() },

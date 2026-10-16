@@ -351,6 +351,11 @@ fn suspension_protocol_repository_invariants_hold() {
                             && compact_block.contains("typeOutput=Vec<Expr>;")
                             && compact_block
                                 .contains("fnfinish(self:Box<Self>)->Result<Vec<Expr>,EvalError>"))
+                        || (type_name == "GuardOutcomeFinalizer"
+                            && compact_block.contains("typeOutput=CompiledMatchOutcome;")
+                            && compact_block.contains(
+                                "fnfinish(self:Box<Self>)->Result<CompiledMatchOutcome,EvalError>",
+                            ))
                 } else {
                     compact_block.contains("fnfinish(self:Box<Self>)->Result<Expr,EvalError>")
                 },

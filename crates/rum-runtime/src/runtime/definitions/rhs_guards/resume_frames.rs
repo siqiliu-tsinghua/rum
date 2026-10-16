@@ -7,22 +7,22 @@ pub(super) struct MatchCompiledDefinitionConditionOwnedSuspensionFrame {
     pub(super) option_scope: std::option::Option<crate::runtime::options::OptionValueScope>,
 }
 
-impl crate::runtime::suspension::SuspensionFrame
-    for MatchCompiledDefinitionConditionOwnedSuspensionFrame
-{
-    fn resume(
+impl TypedFrame for MatchCompiledDefinitionConditionOwnedSuspensionFrame {
+    type Input = CompiledMatchOutcome;
+    type Output = CompiledMatchOutcome;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        outcome: Result<CompiledMatchOutcome, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<CompiledMatchOutcome> {
         let outcome = match outcome {
-            Ok(value) => CompiledMatchOutcome::from_continuation_expr(value),
-            Err(error) => return crate::runtime::suspension::FrameAction::complete(Err(error)),
+            Ok(value) => value,
+            Err(error) => return TypedAction::complete(Err(error)),
         };
         if !outcome.matched {
-            return crate::runtime::suspension::FrameAction::complete(Ok(
-                outcome.into_continuation_expr()
-            ));
+            return TypedAction::complete(Ok(outcome));
         }
         let false_bindings = outcome.bindings.clone();
         continue_guard_frame(
@@ -43,13 +43,17 @@ pub(super) struct EvaluateOwnedGuardsSuspensionFrame {
     pub(super) state: crate::runtime::definitions::rhs_guards::SuspendedGuardEvaluation,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for EvaluateOwnedGuardsSuspensionFrame {
-    fn resume(
+impl TypedFrame for EvaluateOwnedGuardsSuspensionFrame {
+    type Input = Expr;
+    type Output = CompiledMatchOutcome;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        resume_guard_frame(session, self.state.clone(), outcome)
+        token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<CompiledMatchOutcome> {
+        resume_guard_frame(session, self.state.clone(), outcome, token)
     }
 }
 
@@ -58,60 +62,62 @@ pub(super) struct EvaluateReadonlySuspendedGuardsSuspensionFrame {
     pub(super) state: crate::runtime::definitions::rhs_guards::SuspendedReadonlyGuardEvaluation,
 }
 
-impl crate::runtime::suspension::SuspensionFrame
-    for EvaluateReadonlySuspendedGuardsSuspensionFrame
-{
-    fn resume(
+impl TypedFrame for EvaluateReadonlySuspendedGuardsSuspensionFrame {
+    type Input = Expr;
+    type Output = bool;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<bool> {
         let mut state = self.state.clone();
         let resumed = match outcome {
             Ok(result) if is_system_symbol_name(&result, heads::structure::TRUE) => {
                 state.index += 1;
-                session
-                    .evaluate_readonly_suspended_guards(state)
-                    .map(|matched| matched.into_continuation_expr())
+                session.evaluate_readonly_suspended_guards(state, token)
             }
-            Ok(_) => Ok(false.into_continuation_expr()),
-            Err(error) => Err(error),
+            Ok(_) => Ok(false),
+            Err(error) => Err(ResumeStop::failure(error)),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete_work(resumed)
     }
 }
 
-fn resume_guard_frame(
+fn resume_guard_frame<'resume>(
     session: &mut Session,
     state: SuspendedGuardEvaluation,
     outcome: Result<Expr, EvalError>,
-) -> crate::runtime::suspension::FrameAction {
+    token: ContinueToken<'resume, EvaluateOwnedGuardsSuspensionFrame>,
+) -> TypedAction<CompiledMatchOutcome> {
     let result = match outcome {
         Ok(result) => result,
-        Err(error) => return crate::runtime::suspension::FrameAction::complete(Err(error)),
+        Err(error) => return TypedAction::complete(Err(error)),
     };
-    complete_guard_frame(session.resume_suspended_guard_deferred(state, result))
+    complete_guard_frame(session.resume_suspended_guard_deferred(state, result, token))
 }
 
 fn continue_guard_frame(
     session: &mut Session,
     state: SuspendedGuardEvaluation,
-) -> crate::runtime::suspension::FrameAction {
-    complete_guard_frame(session.evaluate_suspended_guards_deferred(state))
+) -> TypedAction<CompiledMatchOutcome> {
+    // F0266 inserts a different frame, F0267, through the ordinary witnessed
+    // route. F0267 owns the remaining guards; there is no chained F0266 entry.
+    complete_guard_frame(
+        session
+            .evaluate_suspended_guards_deferred(state, ())
+            .map_err(ResumeStop::failure),
+    )
 }
 
 fn complete_guard_frame(
-    completion: Result<SuspendedGuardCompletion, EvalError>,
-) -> crate::runtime::suspension::FrameAction {
-    match completion {
-        Ok(completion) => {
-            crate::runtime::suspension::FrameAction::finalize(GuardOutcomeFinalizer {
-                matched: completion.matched,
-                bindings: completion.bindings,
-            })
-        }
-        Err(error) => crate::runtime::suspension::FrameAction::complete(Err(error)),
-    }
+    completion: Result<SuspendedGuardCompletion, ResumeStop<CompiledMatchOutcome>>,
+) -> TypedAction<CompiledMatchOutcome> {
+    TypedAction::finish_work(completion, |completion| GuardOutcomeFinalizer {
+        matched: completion.matched,
+        bindings: completion.bindings,
+    })
 }
 
 struct GuardOutcomeFinalizer {
@@ -119,34 +125,31 @@ struct GuardOutcomeFinalizer {
     bindings: FrozenMatchBindings,
 }
 
-impl crate::runtime::suspension::PureFrameFinalizer for GuardOutcomeFinalizer {
-    fn finish(self: Box<Self>) -> Result<Expr, EvalError> {
-        Ok(guard_outcome(self.matched, self.bindings.into_owned()).into_continuation_expr())
+impl SlotFinalizer for GuardOutcomeFinalizer {
+    type Output = CompiledMatchOutcome;
+
+    fn finish(self: Box<Self>) -> Result<CompiledMatchOutcome, EvalError> {
+        Ok(guard_outcome(self.matched, self.bindings.into_owned()))
     }
 }
 
 #[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 pub(super) struct EvaluateDefinitionRhsGuardsForMatchSuspensionFrame;
 
-impl crate::runtime::suspension::SuspensionFrame
-    for EvaluateDefinitionRhsGuardsForMatchSuspensionFrame
-{
-    fn resume(
+impl TypedFrame for EvaluateDefinitionRhsGuardsForMatchSuspensionFrame {
+    type Input = CompiledMatchOutcome;
+    type Output = bool;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         _session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        outcome: Result<CompiledMatchOutcome, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<bool> {
         let resumed = match outcome {
-            Ok(resumed_value) => {
-                let outcome = <CompiledMatchOutcome as crate::runtime::suspension::ContinuationValue>::from_continuation_expr(resumed_value);
-                (|| -> Result<bool, EvalError> { Ok(outcome.matched) })().map(|value| {
-                    <bool as crate::runtime::suspension::ContinuationValue>::into_continuation_expr(
-                        value,
-                    )
-                })
-            }
+            Ok(outcome) => (|| -> Result<bool, EvalError> { Ok(outcome.matched) })(),
             Err(error) => Err(error),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete(resumed)
     }
 }

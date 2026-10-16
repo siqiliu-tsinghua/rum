@@ -4,10 +4,9 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-16, committed tree through brief-613 (G14: resume
-restores each continuation's evaluation context and runs the skipped
-completion checks, gated; below). **Next: S6 (brief-614). G13's
-implementation is 78 gated steps** — S1 dormant API, S2
+Status checkpoint: 2026-10-16, committed tree through brief-614 (G13 step
+S6, guards and binding completion, gated; below). **Next: S7 (brief-615).
+G13's implementation is 78 gated steps** — S1 dormant API, S2
 compatible driver, S3-S54 family typing, F1-F23 one flip per legacy type, R
 removal — each a director-rewritten brief
 from `.temp/brief-606/draft-*.md`, dispatched to Codex (user ruling; GLM only
@@ -1138,8 +1137,8 @@ Owed:
   unattributed +240 B/level, and the debug-only second 136-B error
   temporary in the DownValue and SubValue scans, against the stack ledger
   (S4 + S5 rows above).
-- **S6:** make `typed_slot_census.rs`'s scratch path step-independent. It
-  pins `.temp/brief-611/r3/census/`.
+- ~~**S6:** make `typed_slot_census.rs`'s scratch path step-independent~~ —
+  done in S6 (`.temp/typed-slot-census/`).
 
 **G14 DONE (2026-10-16; design brief-612, implementation brief-613, four
 dispatches): resume never unwound the evaluation stack it restored.** Found
@@ -1232,6 +1231,58 @@ drop-one heuristic to drop-two after false positives, which patched instances.
     retired, one on an added operation is new, one on a moved or renamed
     operation is paired; only a change of meaning under unchanged source
     stops.
+
+**S6 (brief-614): guards and binding completion.** Codex, one dispatch. S6
+types F0266-F0269 and `GuardOutcomeFinalizer` (F0569); typed implementations
+go 37 → 42 of 607, and production macro sites 577 → 573.
+
+- **Routes, as the brief ruled them.**
+  - M0273 and M0274 take the ZST witness at the producer and pass
+    `(witness, request)` across the cold call.
+  - M0275 and M0276 are reached both from the ordinary path and from their
+    own frame's resume. They use S5's `DefinitionResumeRoute`: `()` on the
+    ordinary path, the token on the resumed one.
+  - F0266's resume inserts F0267, a different frame type. It does so through
+    the witnessed route and then stops with
+    `ResumeStop<CompiledMatchOutcome>`.
+  - M0277, the public guarded-`StringReplace` adapter, keeps its signature
+    and uses the caller-place typed macro.
+  - D0003 carries the frozen binding accumulator through deferred work, and
+    `finish_work` selects the typed finalizer.
+  - T0022's `bool` identity transport is gone.
+- **No defect to repair.** The director's 22-shape resumed-against-queued
+  probe was all SAME before (`762563cd`) and after. It covers single, False,
+  non-Boolean and nested guards, pausing left sides, `MatchQ`/`Cases`,
+  guarded `ReplaceAll`/`ReplacePart`/`StringReplace`, OwnValue, Default,
+  SubValue and UpValue guards. There are 25 strict oracle fixtures (161
+  oracle tests in each build).
+- **Costs ruled acceptable.**
+  - Ordinary allocations 117/117 equal, and `memcpy` at or below base.
+  - `rewrite-guarded-hit` is +2 deterministic instructions per iteration
+    (0.004%). Both are register allocation. A drop flag that both arms
+    carry moves from `r13` to a stack slot (candidate `0x5a9a0e`), and one
+    move is added in the unchanged `match_compiled_owned`. The ZST witness
+    occupies nothing in the ABI. No director 2-run flag survived five runs.
+  - Stack is equal to G14 on all ten old pairs. The new `rhs-guard` shape
+    (recursion inside guard evaluation, `f[n_] := n /; (n == 0 || f[n - 1]
+    >= 0)`) is equal in release and +32 B/level in debug. The two resident
+    frames, `match_compiled_definition_condition_owned` and
+    `evaluate_owned_guards`, each grow 16 B: an 8-B compiler reserve before
+    the error slot and an 8-B reserve that holds the witness's debug
+    location.
+  - Resume: one 24-B adapter `Arc` per newly typed transfer, plus the known
+    136-B driver move owed to R.
+- **Director gate:**
+  - workspace 3 593/0/59 with 0 ZeroMQ skips;
+  - oracle 161/161 in both builds, warning-free;
+  - census, compile controls (34 pairs) and local production, each in both
+    builds;
+  - ownership 31/31;
+  - inventories byte-identical after the replay;
+  - base sources proved equal to `762563cd` (1 490/1 490), and candidates
+    fresh;
+  - the probe gives 45 SAME and 0 DIFF (S6 shapes plus the G14 and
+    skipped-`Some` regressions).
 
 **Recorded, not in this branch — the gensym sweep does not see Rust-local
 values (found 2026-10-14 reviewing brief-605; Q3, queued behind the branch by
