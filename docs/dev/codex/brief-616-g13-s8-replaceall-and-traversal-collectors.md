@@ -298,8 +298,8 @@ make no edit there. STOP and report the file, the line and why.
        a[x - 1] >= 0 :> x`;
      - `count-guard`: `c[0] := <leaf>`, `c[n_] := Count[{n}, x_ /;
        c[x - 1] >= 0] + n - 1`;
-     - `position-guard`: `p[0] := <leaf>`, `p[n_] := Position[{n}, x_ /;
-       p[x - 1] >= 0][[1, 1]] + n - 1`.
+     - `position-guard`: `p[0] := <leaf>`, `p[n_] := Position[{n},
+       x_Integer /; p[x - 1] >= 0][[1, 1]] + n - 1` (amendment 1).
 
      Each must return its depth. `<leaf>` is the marker when measuring and
      `0` otherwise, as for the existing shapes. If the runtime-only test
@@ -579,3 +579,573 @@ rule on it.
 5. Allocation, instruction, copy, stack and resume-attribution evidence, and
    timing with any alignment check.
 6. Stop-loss counters, deviations and open questions.
+
+## Codex checkpoint report — brief-616 (blocked before conversion)
+
+Step 1 cannot be completed as written. The prescribed `position-guard` hits `StackLimit` at depth 2 in both debug and release without reaching its leaf marker. The other nine shapes pass, including exact reproduction of all twelve S7 slopes. Clarification is pending on changing the Position pattern from `x_` to `x_Integer`; that correction has **not** been applied or tested. No production source has been edited.
+
+### 1. Files changed and scope
+
+This appended report is the only edited repository document. All preparation and evidence are under `.temp/brief-616/`. All 1,497 production source/build inputs still match the supplied export byte for byte. No git command or network operation was run. No workspace manifest, lockfile, toolchain, public signature, module root, receipt, inventory or pin changed.
+
+- `stack-base/probe.rs`: added the four exact requested formulas and reused `brief614_stack_greater_equal` for their guard comparison. Count, Position and Part already exist in runtime test registrations; Replace and ReplaceAll come from the existing test session.
+- `stack/base/tree/`: copied the supplied export; only its copied `crates/rum-runtime/src/runtime/tests/holding_and_control_part2.rs` has the extended probe appended. The production file is unchanged.
+- `resume-harness/`: copied S7 harness; `src/main.rs` adds S8 dispatch and new `src/s8.rs` holds 19 value/prompt-checking workloads. The copied manifest, lockfile and S5–S7 modules keep the predecessor setup.
+- `perf/labels.json`, `perf/*.rum`: copied 175 S7 labels/programs, added 12 ordinary N/2N labels and 19 resume labels. Total 206 = 138 ordinary + 68 resume. `table-count-null` uses N=8 to stay below 100,000 iterations at 2N including checks.
+- `build.py`, `measure-base-stack.py`, `base-resume-census.py`, `run-perf.py`: bounded scratch build/calibration/census/preflight runners. The census derives physical symbol aliases from `nm`.
+- `hash-verification.json`, `base-source-hashes.json`, `s8-resume-workloads.json`, `s8-ordinary-labels.json`, `builds/`, `stack/base/{debug,release}/`, `base-resume-census/`, `perf/check/base/s8/`, `compiler-warnings.json`, `evidence-summary.json`, `test-result-totals.txt`, `scratch-artifacts.json`, `REPORT.md`, `PROGRESS.md`, `state.json`: retained evidence/checkpoints. The artifact manifest lists individual scratch outputs outside copied source and Cargo target trees.
+
+Build target paths written: `.temp/brief-616/target-base-stack-debug/`, `target-base-stack-release/`, `target-base-resume/`, `target-base-resume-alloc/`. No canonical gate output outside `.temp/brief-616/` was written.
+
+### 2. Owned-row reconciliation
+
+Unchanged frames: F0240, F0241, F0242, F0243, F0551, F0552, F0553, F0554, F0555, F0556, F0557, F0558, F0559, F0560, F0561, F0562, F0563, F0564. Unchanged sites: M0240, M0241, M0242, M0243, M0244, M0586, M0587, M0588, M0589, M0590, M0591, M0592, M0593, M0594, M0595, M0596, M0597, M0598, M0599, M0600. Unchanged encodings: T0018, T0019, T0089, T0090. No row was typed or retired. The call-path/route table and production census have not been produced; there are no derived-fact transitions. The brief’s S7 census totals were not independently rerun.
+
+### 3. Harnesses, stack shapes and fixtures
+
+All 19 resume workloads passed exact value/prompt/pause assertions at N=100 and 200 on both baseline binaries (76 runs). All 38 Callgrind processes passed their physical-frame census. Counts below are per iteration and multiply by N.
+
+| Workload | Pauses | Owned frame calls | Final item |
+| --- | ---: | --- | --- |
+| `s8-replaceall-node` | 1 | F0240=1, F0242=1, F0243=1 | `f[2]` |
+| `s8-replaceall-atom` | 1 | F0240=1, F0242=1, F0243=1 | `2` |
+| `s8-replaceall-twice` | 2 | F0240=1, F0242=2, F0243=2 | `List[2, 3]` |
+| `s8-repeated-guard` | 1 | F0241=1, F0242=1, F0243=1 | `f[0]` |
+| `s8-replace-decline` | 1 | F0243=1 | `9` |
+| `s8-replace-both` | 2 | F0243=2 | `9` |
+| `s8-replaceat-guard` | 1 | F0243=1 | `List[1, 3, 3]` |
+| `s8-count-target` | 1 | F0551=1 | `1` |
+| `s8-count-pattern` | 1 | F0554=1 | `1` |
+| `s8-memberq-target` | 1 | F0552=1 | `True` |
+| `s8-memberq-pattern` | 1 | F0555=1 | `True` |
+| `s8-freeq-target` | 1 | F0553=1 | `False` |
+| `s8-freeq-pattern` | 1 | F0556=1 | `False` |
+| `s8-count-level` | 1 | F0557=1 | `1` |
+| `s8-count-guard-twice` | 2 | F0558=1, F0559=2 | `2` |
+| `s8-position-target` | 1 | F0560=1 | `List[List[1]]` |
+| `s8-position-pattern` | 1 | F0561=1 | `List[List[1]]` |
+| `s8-position-level` | 1 | F0562=1 | `List[List[1]]` |
+| `s8-position-guard-twice` | 2 | F0563=1, F0564=2 | `List[List[1], List[2]]` |
+
+F0240 and F0241 share emitted address `0x5450e0`, proved by `nm`. Callgrind names the body F0240 even for ReplaceRepeated, so that physical group is checked as F0240+F0241; no separate observed F0241 count is claimed. Every other owned symbol is distinct. See `base-resume-census/{frame-symbol-groups,frame-census}.json`.
+
+Stack bytes per recursive level at heights 2/4/6/8, three samples each; all completed fits have zero residual:
+
+| Shape | Debug | Release | Status |
+| --- | ---: | ---: | --- |
+| peel | 19024 | 7344 | Exact S7 match |
+| plus | 34912 | 13792 | Exact S7 match |
+| sub | 29376 | 13168 | Exact S7 match |
+| up | 28064 | 11456 | Exact S7 match |
+| guarded | 35840 | 14240 | Exact S7 match |
+| rhs-guard | 49152 | 17920 | Exact S7 match |
+| replace-guard | 65056 | 26960 | Base established |
+| replaceall-guard | 64080 | 25264 | Base established |
+| count-guard | 74928 | 28560 | Base established |
+| position-guard | unavailable | unavailable | StackLimit at first height, no marker |
+
+The exact prescribed formula used:
+
+```rum
+p[0] := Brief611StackMarker[];
+p[n_] := Position[{n}, x_ /; p[x - 1] >= 0][[1, 1]] + n - 1;
+p[2]
+```
+
+Source diagnosis: `CasesTraversalConfig::default_position` (`runtime/model/traversal.rs:98`) includes heads and levels 0 through Infinity. `PostOrderPathTraversal::schedule_standard_call` (`runtime/tree_walkers/post_order.rs:285`) schedules the head for the next LIFO visit. Thus `x_` admits `List` and its guard recurses through `p[List - 1]`. This explanation follows from source; the measured facts are StackLimit and the missing marker. `x_Integer` is only a proposed correction.
+
+All 12 new ordinary labels passed standalone checks plus N and 2N (36 runs). No oracle fixture was added while the required baseline stack prerequisite remains unresolved. The director’s 48 S8 / 32 S7 / 22 S6 pairs, both oracle feature builds, and 28 ordinary controls have not run. No candidate exists.
+
+### 4. Gates and verbatim evidence
+
+All build/measurement runners used `python3 scripts/run-bounded.py --timeout 900 -- env CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-616/tmp ...`. Builds set `CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1`, use cwd `/home/remi/dev/rum` and separate targets, and retain command/environment/source hashes. Shell sessions retained commands without a shorter timeout. Builds and measurement workloads ran serially.
+
+`base-resume`: exit 0, SHA-256 `a3839128f29faf3e89c1f29055156c232213642ff45d9b8e38ee65eacfde3407`.
+
+```text
+cargo build --offline --release --manifest-path /home/remi/dev/rum/.temp/brief-616/resume-harness/Cargo.toml --message-format=json
+    Finished `release` profile [optimized] target(s) in 1m 38s
+```
+
+`base-resume-alloc`: exit 0, SHA-256 `49446fa5f638eb460c77786a6487efaa0aa854746ad172d439df0c7b8383dafa`.
+
+```text
+cargo build --offline --release --manifest-path /home/remi/dev/rum/.temp/brief-616/resume-harness/Cargo.toml --message-format=json --features alloc-count
+    Finished `release` profile [optimized] target(s) in 1m 34s
+```
+
+`base-stack-debug`: exit 0, SHA-256 `36f7088022e740a10b71e33ef808b0da3b1e2935545496b124b86188d7907ca9`.
+
+```text
+cargo test --offline --manifest-path /home/remi/dev/rum/.temp/brief-616/stack/base/tree/Cargo.toml -p rum-runtime --lib --no-run --message-format=json
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 47.63s
+```
+
+`base-stack-release`: exit 0, SHA-256 `0ee208f9b60e04aa6c7f29c0dff65b5f8536072ec8241acfe69a11c25f1caf02`.
+
+```text
+cargo test --offline --manifest-path /home/remi/dev/rum/.temp/brief-616/stack/base/tree/Cargo.toml -p rum-runtime --lib --no-run --message-format=json --release
+    Finished `release` profile [optimized] target(s) in 1m 26s
+```
+
+Both resume builds emitted zero warnings. Each stack build emitted the following three warnings, identical to `.temp/brief-615/builds/candidate-stack-{debug,release}/stdout.jsonl`; none is introduced by S8’s scratch extension:
+
+```text
+warning: function `register_test_if_builtin` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:320:27
+    |
+320 | pub(in crate::runtime) fn register_test_if_builtin(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` on by default
+
+warning: function `register_test_return_builtin` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:330:27
+    |
+330 | pub(in crate::runtime) fn register_test_return_builtin(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `register_test_vm_template_builtins` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:358:27
+    |
+358 | pub(in crate::runtime) fn register_test_vm_template_builtins(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+```
+
+The original-six calibration runners exited 0. Each new-shape runner established three slopes, then exited 1 at Position’s result/marker check. Neither test process aborted: the supplied probe permits StackLimit as a reportable result, but the outer calibration correctly rejects it. Exact failures:
+
+`debug`:
+
+```text
+running 1 test
+test runtime::tests::holding_and_control_part2::brief611_stack_probe ... STACK_PROBE shape=position-guard depth=2 limit=1048576 result=StackLimit
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+```
+
+`release`:
+
+```text
+running 1 test
+test runtime::tests::holding_and_control_part2::brief611_stack_probe ... STACK_PROBE shape=position-guard depth=2 limit=1048576 result=StackLimit
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+```
+
+Base resume-census runner: exit 0. Verbatim stdout for all 114 executions:
+
+```text
+resume N=100: PASS s8-replaceall-node resumes=100
+resume-alloc N=100: PASS s8-replaceall-node resumes=100
+callgrind N=100: PASS s8-replaceall-node resumes=100
+resume N=200: PASS s8-replaceall-node resumes=200
+resume-alloc N=200: PASS s8-replaceall-node resumes=200
+callgrind N=200: PASS s8-replaceall-node resumes=200
+resume N=100: PASS s8-replaceall-atom resumes=100
+resume-alloc N=100: PASS s8-replaceall-atom resumes=100
+callgrind N=100: PASS s8-replaceall-atom resumes=100
+resume N=200: PASS s8-replaceall-atom resumes=200
+resume-alloc N=200: PASS s8-replaceall-atom resumes=200
+callgrind N=200: PASS s8-replaceall-atom resumes=200
+resume N=100: PASS s8-replaceall-twice resumes=200
+resume-alloc N=100: PASS s8-replaceall-twice resumes=200
+callgrind N=100: PASS s8-replaceall-twice resumes=200
+resume N=200: PASS s8-replaceall-twice resumes=400
+resume-alloc N=200: PASS s8-replaceall-twice resumes=400
+callgrind N=200: PASS s8-replaceall-twice resumes=400
+resume N=100: PASS s8-repeated-guard resumes=100
+resume-alloc N=100: PASS s8-repeated-guard resumes=100
+callgrind N=100: PASS s8-repeated-guard resumes=100
+resume N=200: PASS s8-repeated-guard resumes=200
+resume-alloc N=200: PASS s8-repeated-guard resumes=200
+callgrind N=200: PASS s8-repeated-guard resumes=200
+resume N=100: PASS s8-replace-decline resumes=100
+resume-alloc N=100: PASS s8-replace-decline resumes=100
+callgrind N=100: PASS s8-replace-decline resumes=100
+resume N=200: PASS s8-replace-decline resumes=200
+resume-alloc N=200: PASS s8-replace-decline resumes=200
+callgrind N=200: PASS s8-replace-decline resumes=200
+resume N=100: PASS s8-replace-both resumes=200
+resume-alloc N=100: PASS s8-replace-both resumes=200
+callgrind N=100: PASS s8-replace-both resumes=200
+resume N=200: PASS s8-replace-both resumes=400
+resume-alloc N=200: PASS s8-replace-both resumes=400
+callgrind N=200: PASS s8-replace-both resumes=400
+resume N=100: PASS s8-replaceat-guard resumes=100
+resume-alloc N=100: PASS s8-replaceat-guard resumes=100
+callgrind N=100: PASS s8-replaceat-guard resumes=100
+resume N=200: PASS s8-replaceat-guard resumes=200
+resume-alloc N=200: PASS s8-replaceat-guard resumes=200
+callgrind N=200: PASS s8-replaceat-guard resumes=200
+resume N=100: PASS s8-count-target resumes=100
+resume-alloc N=100: PASS s8-count-target resumes=100
+callgrind N=100: PASS s8-count-target resumes=100
+resume N=200: PASS s8-count-target resumes=200
+resume-alloc N=200: PASS s8-count-target resumes=200
+callgrind N=200: PASS s8-count-target resumes=200
+resume N=100: PASS s8-count-pattern resumes=100
+resume-alloc N=100: PASS s8-count-pattern resumes=100
+callgrind N=100: PASS s8-count-pattern resumes=100
+resume N=200: PASS s8-count-pattern resumes=200
+resume-alloc N=200: PASS s8-count-pattern resumes=200
+callgrind N=200: PASS s8-count-pattern resumes=200
+resume N=100: PASS s8-memberq-target resumes=100
+resume-alloc N=100: PASS s8-memberq-target resumes=100
+callgrind N=100: PASS s8-memberq-target resumes=100
+resume N=200: PASS s8-memberq-target resumes=200
+resume-alloc N=200: PASS s8-memberq-target resumes=200
+callgrind N=200: PASS s8-memberq-target resumes=200
+resume N=100: PASS s8-memberq-pattern resumes=100
+resume-alloc N=100: PASS s8-memberq-pattern resumes=100
+callgrind N=100: PASS s8-memberq-pattern resumes=100
+resume N=200: PASS s8-memberq-pattern resumes=200
+resume-alloc N=200: PASS s8-memberq-pattern resumes=200
+callgrind N=200: PASS s8-memberq-pattern resumes=200
+resume N=100: PASS s8-freeq-target resumes=100
+resume-alloc N=100: PASS s8-freeq-target resumes=100
+callgrind N=100: PASS s8-freeq-target resumes=100
+resume N=200: PASS s8-freeq-target resumes=200
+resume-alloc N=200: PASS s8-freeq-target resumes=200
+callgrind N=200: PASS s8-freeq-target resumes=200
+resume N=100: PASS s8-freeq-pattern resumes=100
+resume-alloc N=100: PASS s8-freeq-pattern resumes=100
+callgrind N=100: PASS s8-freeq-pattern resumes=100
+resume N=200: PASS s8-freeq-pattern resumes=200
+resume-alloc N=200: PASS s8-freeq-pattern resumes=200
+callgrind N=200: PASS s8-freeq-pattern resumes=200
+resume N=100: PASS s8-count-level resumes=100
+resume-alloc N=100: PASS s8-count-level resumes=100
+callgrind N=100: PASS s8-count-level resumes=100
+resume N=200: PASS s8-count-level resumes=200
+resume-alloc N=200: PASS s8-count-level resumes=200
+callgrind N=200: PASS s8-count-level resumes=200
+resume N=100: PASS s8-count-guard-twice resumes=200
+resume-alloc N=100: PASS s8-count-guard-twice resumes=200
+callgrind N=100: PASS s8-count-guard-twice resumes=200
+resume N=200: PASS s8-count-guard-twice resumes=400
+resume-alloc N=200: PASS s8-count-guard-twice resumes=400
+callgrind N=200: PASS s8-count-guard-twice resumes=400
+resume N=100: PASS s8-position-target resumes=100
+resume-alloc N=100: PASS s8-position-target resumes=100
+callgrind N=100: PASS s8-position-target resumes=100
+resume N=200: PASS s8-position-target resumes=200
+resume-alloc N=200: PASS s8-position-target resumes=200
+callgrind N=200: PASS s8-position-target resumes=200
+resume N=100: PASS s8-position-pattern resumes=100
+resume-alloc N=100: PASS s8-position-pattern resumes=100
+callgrind N=100: PASS s8-position-pattern resumes=100
+resume N=200: PASS s8-position-pattern resumes=200
+resume-alloc N=200: PASS s8-position-pattern resumes=200
+callgrind N=200: PASS s8-position-pattern resumes=200
+resume N=100: PASS s8-position-level resumes=100
+resume-alloc N=100: PASS s8-position-level resumes=100
+callgrind N=100: PASS s8-position-level resumes=100
+resume N=200: PASS s8-position-level resumes=200
+resume-alloc N=200: PASS s8-position-level resumes=200
+callgrind N=200: PASS s8-position-level resumes=200
+resume N=100: PASS s8-position-guard-twice resumes=200
+resume-alloc N=100: PASS s8-position-guard-twice resumes=200
+callgrind N=100: PASS s8-position-guard-twice resumes=200
+resume N=200: PASS s8-position-guard-twice resumes=400
+resume-alloc N=200: PASS s8-position-guard-twice resumes=400
+callgrind N=200: PASS s8-position-guard-twice resumes=400
+```
+
+New ordinary-preflight runner: exit 0. Verbatim stdout:
+
+```text
+table-count-null check: True
+table-count-null 8: Null
+table-count-null 16: Null
+replaceall-wide-no-match check: True
+replaceall-wide-no-match 400: Null
+replaceall-wide-no-match 800: Null
+replaceall-leaf-rebuild-small check: True
+replaceall-leaf-rebuild-small 500: Null
+replaceall-leaf-rebuild-small 1000: Null
+replaceall-guarded-hit-small check: List[1, 3, 4]
+replaceall-guarded-hit-small 500: Null
+replaceall-guarded-hit-small 1000: Null
+replace-rule-list-decline check: 9
+replace-rule-list-decline 500: Null
+replace-rule-list-decline 1000: Null
+replacerepeated-guarded-small check: f[0]
+replacerepeated-guarded-small 500: Null
+replacerepeated-guarded-small 1000: Null
+replaceat-small check: List[1, 3, 3]
+replaceat-small 500: Null
+replaceat-small 1000: Null
+memberq-wide-no-match check: False
+memberq-wide-no-match 400: Null
+memberq-wide-no-match 800: Null
+freeq-wide-no-match check: True
+freeq-wide-no-match 400: Null
+freeq-wide-no-match 800: Null
+count-wide-match check: 1600
+count-wide-match 400: Null
+count-wide-match 800: Null
+count-guarded-small check: 2
+count-guarded-small 500: Null
+count-guarded-small 1000: Null
+position-small-match check: List[List[1], List[3]]
+position-small-match 500: Null
+position-small-match 1000: Null
+```
+
+Every stack `test result:` total, verbatim. The two Position test-process passes do not clear the outer calibration failure.
+
+```text
+stack/base/debug/count-guard-2-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/count-guard-2-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/count-guard-2-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/count-guard-4-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/count-guard-4-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/count-guard-4-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+stack/base/debug/count-guard-6-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+stack/base/debug/count-guard-6-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/count-guard-6-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+stack/base/debug/count-guard-8-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/count-guard-8-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+stack/base/debug/count-guard-8-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/guarded-2-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/guarded-2-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/guarded-2-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/guarded-4-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/guarded-4-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/guarded-4-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/guarded-6-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/guarded-6-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/guarded-6-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/guarded-8-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/guarded-8-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+stack/base/debug/guarded-8-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/peel-2-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.02s
+stack/base/debug/peel-2-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/peel-2-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/peel-4-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/peel-4-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/peel-4-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/peel-6-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/peel-6-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/peel-6-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/peel-8-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/peel-8-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/peel-8-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/plus-2-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/plus-2-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/plus-2-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/plus-4-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/plus-4-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/plus-4-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/plus-6-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/plus-6-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/plus-6-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/plus-8-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/plus-8-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/plus-8-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/position-guard-2-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+stack/base/debug/replace-guard-2-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.02s
+stack/base/debug/replace-guard-2-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/replace-guard-2-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/replace-guard-4-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/replace-guard-4-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+stack/base/debug/replace-guard-4-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+stack/base/debug/replace-guard-6-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/replace-guard-6-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/replace-guard-6-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/replace-guard-8-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+stack/base/debug/replace-guard-8-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/replace-guard-8-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+stack/base/debug/replaceall-guard-2-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/replaceall-guard-2-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/replaceall-guard-2-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/replaceall-guard-4-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+stack/base/debug/replaceall-guard-4-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/replaceall-guard-4-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+stack/base/debug/replaceall-guard-6-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+stack/base/debug/replaceall-guard-6-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/replaceall-guard-6-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/replaceall-guard-8-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+stack/base/debug/replaceall-guard-8-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+stack/base/debug/replaceall-guard-8-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/rhs-guard-2-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/rhs-guard-2-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/rhs-guard-2-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/rhs-guard-4-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/rhs-guard-4-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/rhs-guard-4-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/rhs-guard-6-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/rhs-guard-6-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/rhs-guard-6-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/rhs-guard-8-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+stack/base/debug/rhs-guard-8-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/rhs-guard-8-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+stack/base/debug/sub-2-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/sub-2-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/sub-2-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/sub-4-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/sub-4-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/sub-4-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/sub-6-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/sub-6-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/sub-6-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/sub-8-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/sub-8-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/sub-8-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/up-2-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/up-2-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/up-2-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/up-4-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/up-4-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/up-4-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/up-6-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/up-6-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/up-6-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/up-8-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/up-8-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+stack/base/debug/up-8-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+stack/base/release/count-guard-2-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/count-guard-2-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/count-guard-2-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/count-guard-4-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/count-guard-4-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/count-guard-4-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/count-guard-6-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/count-guard-6-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/count-guard-6-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/count-guard-8-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/count-guard-8-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/count-guard-8-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/guarded-2-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/guarded-2-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/guarded-2-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/guarded-4-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/guarded-4-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/guarded-4-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/guarded-6-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/guarded-6-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/guarded-6-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/guarded-8-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/guarded-8-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/guarded-8-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/peel-2-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.01s
+stack/base/release/peel-2-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/peel-2-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/peel-4-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/peel-4-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/peel-4-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/peel-6-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/peel-6-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/peel-6-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/peel-8-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/peel-8-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/peel-8-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/plus-2-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/plus-2-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/plus-2-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/plus-4-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/plus-4-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/plus-4-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/plus-6-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/plus-6-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/plus-6-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/plus-8-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/plus-8-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/plus-8-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/position-guard-2-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replace-guard-2-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replace-guard-2-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replace-guard-2-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replace-guard-4-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replace-guard-4-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replace-guard-4-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replace-guard-6-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replace-guard-6-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replace-guard-6-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replace-guard-8-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replace-guard-8-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replace-guard-8-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replaceall-guard-2-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replaceall-guard-2-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replaceall-guard-2-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replaceall-guard-4-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replaceall-guard-4-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replaceall-guard-4-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replaceall-guard-6-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replaceall-guard-6-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replaceall-guard-6-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replaceall-guard-8-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replaceall-guard-8-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/replaceall-guard-8-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/rhs-guard-2-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/rhs-guard-2-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/rhs-guard-2-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/rhs-guard-4-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/rhs-guard-4-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/rhs-guard-4-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/rhs-guard-6-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/rhs-guard-6-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/rhs-guard-6-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/rhs-guard-8-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/rhs-guard-8-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/rhs-guard-8-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/sub-2-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/sub-2-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/sub-2-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/sub-4-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/sub-4-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/sub-4-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/sub-6-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/sub-6-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/sub-6-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/sub-8-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/sub-8-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/sub-8-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/up-2-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/up-2-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/up-2-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/up-4-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/up-4-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/up-4-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/up-6-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/up-6-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/up-6-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/up-8-0.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/up-8-1.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+stack/base/release/up-8-2.stdout: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+```
+
+Not run: formatting; all listed repository unit/integration/compile-control/census gates; either suspension oracle; ownership discovery; retention fingerprint/certificate replay; workspace tests; ordinary-controls harness; director probes. Oracle fault deltas are **unmeasured**, not zero. Native ZeroMQ did not run; no skip count is claimed. No certificate/inventory transition is claimed.
+
+### 5. Performance evidence and limits
+
+Only base stack calibration, result/pause preflights and one base Callgrind process per resume workload/size are complete. Allocation-enabled resume preflights retain counts in stderr; no A/B allocation slope or attribution is claimed. All-label allocation comparisons, perf pairs, ordinary memcpy and hot-function own-instruction gates, changed-function prologue/slot tables, six-process-per-arm resume attribution, four timing panels and alignment checks have not run. No timing conclusion is drawn from runner-duration metadata.
+
+### 6. Stop-loss, deviations and next action
+
+Counters: 4 successful builds; 216 valid stack measurements plus 2 invalid Position samples; 76 successful resume preflights; 38 successful frame-census processes; 36 successful ordinary preflights; 218 test-result lines; 0 production edits; 0 conversions. Stop-loss no-progress counter: 0. Both failed new-shape commands established three requested slopes, so this is a prerequisite/formula conflict, not exhaustion of stop-loss. No half-edited production file exists.
+
+Independent resume-base and label work proceeded while clarification was pending. Conversion, fixture writes and dependent gates did not. Full predecessor-brief reading and conversion route analysis remain unfinished; those prerequisites are not claimed complete. One report-assembly validation initially rejected an incorrect zero-warning assumption; the actual warnings above were then checked against S7 logs and recorded.
+
+Required next decision: authorize `x_Integer` for the Position stack probe or supply another depth-returning formula that keeps its guard path resident. If authorized, preserve these failures, rebuild corrected stack bases into separate targets, remeasure all ten shapes, finish predecessor reading, and then add/run base oracle fixtures before conversion. The pending clarification has not been treated as approval.
+
+## Director amendment 1 (2026-10-17) — `position-guard` uses `x_Integer`
+
+The checkpoint above is correct, and stopping was the right call. My
+`position-guard` formula was wrong: `Position` defaults to levels 0 through
+`Infinity` with heads included (`CasesTraversalConfig::default_position`),
+so `x_` admits the `List` head and the guard recurses through `p[List - 1]`.
+I wrote the shape without running it once.
+
+**Ruling.** The shape is `p[n_] := Position[{n}, x_Integer /; p[x - 1] >=
+0][[1, 1]] + n - 1`; Step 1 is updated. `x_Integer` excludes the head and the
+list itself, so the guard runs once per level, on `n`, and the result is
+still the depth. Measure it on the same base tree with the same calibration
+rule. The other nine shapes, their base values, the 19 resume workloads and
+the 12 ordinary labels stand as recorded above.
+
+Then continue from Step 2's remaining work: fixtures, conversion, and the
+full verification. Append your final report after this amendment.
