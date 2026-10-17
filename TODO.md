@@ -5,12 +5,14 @@ operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
 Status checkpoint: 2026-10-17, committed tree through brief-617's commit
-(`0a86c322`; G13 step S8 gated, below). **Next: dispatch S9 (brief-617,
-control and cleanup), committed and not yet dispatched.** Its worker is the
-user's open decision: Codex's usage limit cut brief-616's run at its last stage
-and resets 2026-10-22 20:32, and a usage limit is not the content-filter case
-that routes to GLM. The session switched here on the user's instruction; the
-gate plan for S9 is in memory `suspension-continuation-branch.md`. Owed, any
+(`0a86c322`; G13 step S8 gated, below). **Now: S9 (brief-617, control and
+cleanup) is dispatched to agy — Gemini 4 Argon at high effort, introduced by
+the user on 2026-10-17** (`BRIEF_WORKER=agy`; Codex's usage limit cut
+brief-616's run and resets 2026-10-22 20:32). agy runs every command in its
+Linux-namespace sandbox: writes reach only the repository, temporary
+directories and build caches, and there is no network. The dispatcher refuses
+to start unless the developer's agy config keeps that fence. The gate plan for
+S9 is in memory `suspension-continuation-branch.md`. Owed, any
 time (no code): `CHANGELOG.md`'s `[Unreleased]` has not been updated since
 2026-09-04 (`cc8ba769`), so the ownership branch, the interner and armed-ceiling
 lines, the retention line and this branch are missing from it.
@@ -19,7 +21,9 @@ compatible driver, S3-S54 family typing, F1-F23 one flip per legacy type, R
 removal — each a director-rewritten brief
 from `.temp/brief-606/draft-*.md`, dispatched to Codex (user ruling; GLM only
 if the content filter fires; Kimi K3 via `BRIEF_WORKER=kimi`, introduced by
-the user on 2026-10-15 and proven on S4); then E2's design. Long-running
+the user on 2026-10-15 and proven on S4; agy via `BRIEF_WORKER=agy`,
+introduced by the user on 2026-10-17 and first used on S9); then E2's
+design. Long-running
 briefs use `gpt-6-astra` max by user ruling (2026-10-13: `gpt-6.1-sol` hit
 capacity errors mid-run); the dispatcher pins no model, `~/.codex/config.toml`
 decides. `CDX_FORK=<session id>` continues an earlier Codex session (round 4

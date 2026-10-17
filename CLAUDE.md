@@ -246,9 +246,9 @@ Consequences for how I present and pick work:
   and held assignment, the first typed stdlib frames, one dispatch) and S8
   (616, ReplaceAll and the traversal collectors; the worker's run was cut by
   Codex's usage limit at its timing stage and I finished the gate) are
-  done. **Now: S9 (617, committed `0a86c322`, not yet dispatched; its
-  worker — GLM now or Codex after its quota resets 2026-10-22 20:32 — is the
-  user's open decision), one step per brief**; then E2 (a
+  done. **Now: S9 (617, committed `0a86c322`), dispatched to agy (Gemini 4
+  Argon, high effort; the user's choice on 2026-10-17 while Codex's quota
+  is out), one step per brief**; then E2 (a
   may-suspend result type with no `Try`). From S5 the per-step stack bar is
   the named closure environment attributed per slot: S4 showed that an
   every-pair at-or-below-base bar at 16-B granularity is not reachable by
