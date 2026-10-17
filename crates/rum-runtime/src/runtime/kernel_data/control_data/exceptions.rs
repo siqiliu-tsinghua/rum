@@ -2,7 +2,7 @@ mod resume_frames;
 use resume_frames::*;
 
 use super::*;
-use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor, ResumeStop, slot_witness};
 use std::sync::Arc;
 
 #[derive(Clone, Debug, FrameRootTrace)]
@@ -163,7 +163,7 @@ impl Session {
             return Ok(self.invalid_call_with_arg_range("CatchExceptions", args, 1, 2));
         }
 
-        let mut handlers = match args.get(1) {
+        let handlers = match args.get(1) {
             None => None,
             Some(expr) => match parse_exception_handlers(expr) {
                 Some(handlers) => Some(handlers),
@@ -178,20 +178,15 @@ impl Session {
         };
 
         let body_result = self.evaluate(args[0].clone());
-        let outcome = crate::resume_or_suspend!(
-            self,
-            body_result,
-            ok(value) => Ok(value),
-            suspend => {
-        let handlers = handlers.take().map(Arc::<[ExceptionHandler]>::from);
-        EvalCatchExceptionsSuspensionFrame { handlers }
-        },
-        );
-
-        match outcome {
-            Err(EvalError::InputRequired { request }) => Err(EvalError::InputRequired { request }),
-            outcome => self.resume_catch_exceptions_after_body(handlers, outcome),
-        }
+        let witness = slot_witness(&body_result);
+        let outcome = match body_result {
+            Err(EvalError::InputRequired { request }) => {
+                return resume_frames::suspend_catch_exceptions(self, handlers, witness, request);
+            }
+            Ok(value) => Ok(value),
+            Err(error) => Err(error),
+        };
+        self.resume_catch_exceptions_after_body(handlers, outcome)
     }
 
     fn resume_catch_exceptions_after_body(
@@ -221,7 +216,7 @@ impl Session {
         &mut self,
         handlers: Option<Arc<[ExceptionHandler]>>,
         outcome: Result<Expr, EvalError>,
-    ) -> Result<Expr, EvalError> {
+    ) -> Result<Expr, ResumeStop<Expr>> {
         match outcome {
             Ok(value) => Ok(value),
             Err(EvalError::ExceptionThrown { exception }) => {
@@ -229,7 +224,9 @@ impl Session {
                     return Ok(exception);
                 };
                 let Some((type_name, payload)) = exception_parts(&exception) else {
-                    return Err(EvalError::ExceptionThrown { exception });
+                    return Err(ResumeStop::failure(EvalError::ExceptionThrown {
+                        exception,
+                    }));
                 };
                 let state = SuspendedExceptionDispatch {
                     exception,
@@ -239,9 +236,9 @@ impl Session {
                     handler_index: 0,
                     ancestor_index: 0,
                 };
-                self.dispatch_suspended_exception_handlers(state)
+                self.dispatch_suspended_exception_handlers(state, (), ())
             }
-            Err(error) => Err(error),
+            Err(error) => Err(ResumeStop::failure(error)),
         }
     }
 
@@ -287,6 +284,7 @@ impl Session {
             let candidate = exception_expr(&type_chain[ancestor_index], payload.clone());
             let match_result =
                 self.match_expr_owned(handler.pattern.clone(), candidate, SymbolExprMap::default());
+            let witness = slot_witness(&match_result);
             match match_result {
                 Ok(outcome) => {
                     if !outcome.matched {
@@ -304,6 +302,7 @@ impl Session {
                         false_bindings,
                         None,
                     );
+                    let witness = slot_witness(&guard_result);
                     match guard_result {
                         Ok(outcome) if outcome.matched => {
                             return self.evaluate_exception_handler_rhs(handler, outcome.bindings);
@@ -312,46 +311,54 @@ impl Session {
                             ancestor_index += 1;
                         }
                         Err(EvalError::InputRequired { request }) => {
-                            let state = SuspendedExceptionDispatch {
+                            return resume_frames::suspend_exception_handlers_owned_guard(
+                                self,
                                 exception,
                                 payload,
-                                type_chain: Arc::from(type_chain),
-                                handlers: Arc::from(handlers),
+                                type_chain,
+                                handlers,
                                 handler_index,
                                 ancestor_index,
-                            };
-                            crate::resume_or_suspend!(insert self, DispatchExceptionHandlersOwnedSuspensionFrame1 { state });
-                            return Err(EvalError::InputRequired { request });
+                                witness,
+                                request,
+                            );
                         }
                         Err(error) => return Err(error),
                     }
                 }
                 Err(EvalError::InputRequired { request }) => {
-                    let state = SuspendedExceptionDispatch {
+                    return resume_frames::suspend_exception_handlers_owned_match(
+                        self,
                         exception,
                         payload,
-                        type_chain: Arc::from(type_chain),
-                        handlers: Arc::from(handlers),
+                        type_chain,
+                        handlers,
                         handler_index,
                         ancestor_index,
-                    };
-                    crate::resume_or_suspend!(insert self, DispatchExceptionHandlersOwnedSuspensionFrame2 { state });
-                    return Err(EvalError::InputRequired { request });
+                        witness,
+                        request,
+                    );
                 }
                 Err(error) => return Err(error),
             }
         }
     }
 
-    fn dispatch_suspended_exception_handlers(
+    fn dispatch_suspended_exception_handlers<MatchRoute, GuardRoute>(
         &mut self,
         mut state: SuspendedExceptionDispatch,
-    ) -> Result<Expr, EvalError> {
+        match_route: MatchRoute,
+        guard_route: GuardRoute,
+    ) -> Result<Expr, ResumeStop<Expr>>
+    where
+        MatchRoute: ExceptionResumeRoute<DispatchSuspendedExceptionHandlersSuspensionFrame>,
+        GuardRoute: ExceptionResumeRoute<ResumeSuspendedExceptionMatchOutcomeSuspensionFrame>,
+    {
         loop {
             let Some(handler) = state.handlers.get(state.handler_index) else {
-                return Err(EvalError::ExceptionThrown {
+                return Err(ResumeStop::failure(EvalError::ExceptionThrown {
                     exception: state.exception,
-                });
+                }));
             };
             if state.ancestor_index >= state.type_chain.len() {
                 state.handler_index += 1;
@@ -365,41 +372,55 @@ impl Session {
             );
             let match_result =
                 self.match_expr_owned(handler.pattern.clone(), candidate, SymbolExprMap::default());
+            let witness = slot_witness(&match_result);
             match match_result {
                 Ok(outcome) => {
-                    return self.resume_suspended_exception_match_outcome(state, outcome);
+                    if !outcome.matched {
+                        state.ancestor_index += 1;
+                        continue;
+                    }
+                    return self.resume_suspended_exception_match_outcome(
+                        state,
+                        outcome,
+                        match_route,
+                        guard_route,
+                    );
                 }
                 Err(EvalError::InputRequired { request }) => {
-                    crate::resume_or_suspend!(insert self, DispatchSuspendedExceptionHandlersSuspensionFrame { state });
-                    return Err(EvalError::InputRequired { request });
+                    return resume_frames::suspend_suspended_exception_handlers(
+                        self,
+                        state,
+                        witness,
+                        request,
+                        match_route,
+                    );
                 }
-                Err(error) => return Err(error),
+                Err(error) => return Err(ResumeStop::failure(error)),
             }
         }
     }
 
-    fn resume_suspended_exception_match(
-        &mut self,
-        state: SuspendedExceptionDispatch,
-        outcome: Result<Expr, EvalError>,
-    ) -> Result<Expr, EvalError> {
-        let outcome = CompiledMatchOutcome::from_continuation_expr(outcome?);
-        self.resume_suspended_exception_match_outcome(state, outcome)
-    }
-
-    fn resume_suspended_exception_match_outcome(
+    fn resume_suspended_exception_match_outcome<MatchRoute, GuardRoute>(
         &mut self,
         mut state: SuspendedExceptionDispatch,
         outcome: CompiledMatchOutcome,
-    ) -> Result<Expr, EvalError> {
+        match_route: MatchRoute,
+        guard_route: GuardRoute,
+    ) -> Result<Expr, ResumeStop<Expr>>
+    where
+        MatchRoute: ExceptionResumeRoute<DispatchSuspendedExceptionHandlersSuspensionFrame>,
+        GuardRoute: ExceptionResumeRoute<ResumeSuspendedExceptionMatchOutcomeSuspensionFrame>,
+    {
         if !outcome.matched {
             state.ancestor_index += 1;
-            return self.dispatch_suspended_exception_handlers(state);
+            return self.dispatch_suspended_exception_handlers(state, match_route, guard_route);
         }
 
         let handler = &state.handlers[state.handler_index];
         if handler.guards.is_empty() {
-            return self.evaluate_exception_handler_rhs(handler, outcome.bindings);
+            return self
+                .evaluate_exception_handler_rhs(handler, outcome.bindings)
+                .map_err(ResumeStop::failure);
         }
 
         let false_bindings = outcome.bindings.clone();
@@ -409,36 +430,45 @@ impl Session {
             false_bindings,
             None,
         );
+        let witness = slot_witness(&guard_result);
         match guard_result {
-            Ok(outcome) => self.resume_suspended_exception_guard_outcome(state, outcome),
+            Ok(outcome) => self.resume_suspended_exception_guard_outcome(
+                state,
+                outcome,
+                match_route,
+                guard_route,
+            ),
             Err(EvalError::InputRequired { request }) => {
-                crate::resume_or_suspend!(insert self, ResumeSuspendedExceptionMatchOutcomeSuspensionFrame { state });
-                Err(EvalError::InputRequired { request })
+                resume_frames::suspend_suspended_exception_match_outcome(
+                    self,
+                    state,
+                    witness,
+                    request,
+                    guard_route,
+                )
             }
-            Err(error) => Err(error),
+            Err(error) => Err(ResumeStop::failure(error)),
         }
     }
 
-    fn resume_suspended_exception_guard(
-        &mut self,
-        state: SuspendedExceptionDispatch,
-        outcome: Result<Expr, EvalError>,
-    ) -> Result<Expr, EvalError> {
-        let outcome = CompiledMatchOutcome::from_continuation_expr(outcome?);
-        self.resume_suspended_exception_guard_outcome(state, outcome)
-    }
-
-    fn resume_suspended_exception_guard_outcome(
+    fn resume_suspended_exception_guard_outcome<MatchRoute, GuardRoute>(
         &mut self,
         mut state: SuspendedExceptionDispatch,
         outcome: CompiledMatchOutcome,
-    ) -> Result<Expr, EvalError> {
+        match_route: MatchRoute,
+        guard_route: GuardRoute,
+    ) -> Result<Expr, ResumeStop<Expr>>
+    where
+        MatchRoute: ExceptionResumeRoute<DispatchSuspendedExceptionHandlersSuspensionFrame>,
+        GuardRoute: ExceptionResumeRoute<ResumeSuspendedExceptionMatchOutcomeSuspensionFrame>,
+    {
         if outcome.matched {
             let handler = &state.handlers[state.handler_index];
             self.evaluate_exception_handler_rhs(handler, outcome.bindings)
+                .map_err(ResumeStop::failure)
         } else {
             state.ancestor_index += 1;
-            self.dispatch_suspended_exception_handlers(state)
+            self.dispatch_suspended_exception_handlers(state, match_route, guard_route)
         }
     }
 
@@ -453,7 +483,7 @@ impl Session {
             handler.rhs_may_splice_without_bindings,
         );
         let rhs_result = self.evaluate(rhs);
-        crate::resume_or_suspend!(
+        crate::resume_typed_or_suspend!(
             self,
             rhs_result,
             ok(value) => Ok(value),
@@ -542,7 +572,7 @@ fn is_association_expr(expr: &Expr) -> bool {
 }
 #[cfg(test)]
 const _: fn() = || {
-    fn assert_traces<T: FrameRootTrace>() {}
-    assert_traces::<ExceptionHandler>();
-    assert_traces::<SuspendedExceptionDispatch>();
+    fn traces<T: FrameRootTrace>() {}
+    traces::<ExceptionHandler>();
+    traces::<SuspendedExceptionDispatch>();
 };

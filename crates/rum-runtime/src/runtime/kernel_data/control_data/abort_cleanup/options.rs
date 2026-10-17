@@ -53,14 +53,14 @@ impl Session {
         };
         if source.evaluate_rhs {
             let value_result = self.evaluate(source.value.clone());
-            let value = crate::resume_or_suspend!(
+            let value = crate::resume_typed_or_suspend!(
                 self,
                 value_result,
                 ok(value) => Ok(value),
                 suspend => {
-            let args = args.clone();
-            EvalCheckAbortSuspensionFrame { args }
-            },
+                    let args = args.clone();
+                    EvalCheckAbortSuspensionFrame { args }
+                },
             )?;
 
             return self.resume_check_abort_with_propagation(

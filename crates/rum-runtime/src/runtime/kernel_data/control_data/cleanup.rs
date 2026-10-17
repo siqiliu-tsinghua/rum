@@ -1,5 +1,8 @@
 use super::*;
-use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::kernel_api::{
+    ContinueToken, FrameRootTrace, FrameRootVisitor, SlotFinalizer, SlotWitness, TypedAction,
+    TypedFrame, slot_witness,
+};
 use std::sync::Arc;
 
 #[derive(Clone, FrameRootTrace)]
@@ -11,30 +14,28 @@ impl Session {
         args: &[Expr],
     ) -> Result<Expr, EvalError> {
         match args {
-            [expr, cleanup] => {
-                let primary_result = self.evaluate(expr.clone());
-                self.drive_with_cleanup_primary(cleanup.clone(), primary_result)
-            }
+            [expr, cleanup] => self.drive_with_cleanup_primary(expr.clone(), cleanup.clone()),
             [init, expr, cleanup] => {
                 let init_result = self.evaluate(init.clone());
-                let outcome = crate::resume_or_suspend!(
-                    self,
-                    init_result,
-                    ok(value) => Ok(value),
-                    suspend => {
-                let expr = expr.clone();
-                                    let cleanup = cleanup.clone();
-                EvalWithCleanupSuspensionFrame { expr, cleanup }
-                },
-                );
-
-                match outcome {
-                    Err(EvalError::InputRequired { request }) => {
-                        Err(EvalError::InputRequired { request })
-                    }
-                    outcome => {
-                        self.resume_with_cleanup_after_init(expr.clone(), cleanup.clone(), outcome)
-                    }
+                let witness = slot_witness(&init_result);
+                match init_result {
+                    Err(EvalError::InputRequired { request }) => suspend_with_cleanup_init(
+                        self,
+                        expr.clone(),
+                        cleanup.clone(),
+                        witness,
+                        request,
+                    ),
+                    Ok(value) => self.resume_with_cleanup_after_init(
+                        expr.clone(),
+                        cleanup.clone(),
+                        Ok(value),
+                    ),
+                    Err(error) => self.resume_with_cleanup_after_init(
+                        expr.clone(),
+                        cleanup.clone(),
+                        Err(error),
+                    ),
                 }
             }
             _ => Ok(self.invalid_call_with_arg_range("WithCleanup", args, 2, 3)),
@@ -48,31 +49,29 @@ impl Session {
         outcome: Result<Expr, EvalError>,
     ) -> Result<Expr, EvalError> {
         match outcome {
-            Ok(_) => {
-                let primary_result = self.evaluate(expr);
-                self.drive_with_cleanup_primary(cleanup, primary_result)
-            }
+            Ok(_) => self.drive_with_cleanup_primary_after_init(expr, cleanup),
             Err(error) => self.resume_with_cleanup_after_primary(cleanup, Err(error)),
         }
     }
 
-    fn drive_with_cleanup_primary(
+    // Kept out of line: inlined into the init path, the whole-Result handoff
+    // in `drive_with_cleanup_primary` costs a 136-byte copy per call.
+    #[inline(never)]
+    fn drive_with_cleanup_primary_after_init(
         &mut self,
+        expr: Expr,
         cleanup: Expr,
-        primary_result: Result<Expr, EvalError>,
     ) -> Result<Expr, EvalError> {
-        let outcome = crate::resume_or_suspend!(
-            self,
-            primary_result,
-            ok(value) => Ok(value),
-            suspend => {
-        let cleanup = cleanup.clone();
-        DriveWithCleanupPrimarySuspensionFrame { cleanup }
-        },
-        );
+        self.drive_with_cleanup_primary(expr, cleanup)
+    }
 
-        match outcome {
-            Err(EvalError::InputRequired { request }) => Err(EvalError::InputRequired { request }),
+    fn drive_with_cleanup_primary(&mut self, expr: Expr, cleanup: Expr) -> Result<Expr, EvalError> {
+        let primary_result = self.evaluate(expr);
+        let witness = slot_witness(&primary_result);
+        match primary_result {
+            Err(EvalError::InputRequired { request }) => {
+                suspend_with_cleanup_primary(self, cleanup, witness, request)
+            }
             outcome => self.resume_with_cleanup_after_primary(cleanup, outcome),
         }
     }
@@ -83,12 +82,11 @@ impl Session {
         primary_outcome: Result<Expr, EvalError>,
     ) -> Result<Expr, EvalError> {
         let cleanup_result = self.evaluate(cleanup.clone());
+        let witness = slot_witness(&cleanup_result);
         match cleanup_result {
             Ok(value) => finish_with_cleanup_outcomes(primary_outcome, Ok(value)),
             Err(EvalError::InputRequired { request }) => {
-                let primary_outcome = SuspendedCleanupPrimaryOutcome(Arc::new(primary_outcome));
-                crate::resume_or_suspend!(insert self, ResumeWithCleanupAfterPrimarySuspensionFrame { primary_outcome });
-                Err(EvalError::InputRequired { request })
+                suspend_with_cleanup_after_primary(self, primary_outcome, witness, request)
             }
             Err(error) => finish_with_cleanup_outcomes(primary_outcome, Err(error)),
         }
@@ -152,18 +150,22 @@ struct EvalWithCleanupSuspensionFrame {
     cleanup: rum_core::Expr,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for EvalWithCleanupSuspensionFrame {
-    fn resume(
+impl TypedFrame for EvalWithCleanupSuspensionFrame {
+    type Input = Expr;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
         #[allow(unused_mut)]
         let mut expr = self.expr.clone();
         #[allow(unused_mut)]
         let mut cleanup = self.cleanup.clone();
         let resumed = (|| session.resume_with_cleanup_after_init(expr, cleanup, outcome))();
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete(resumed)
     }
 }
 
@@ -181,17 +183,21 @@ struct DriveWithCleanupPrimarySuspensionFrame {
     cleanup: rum_core::Expr,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for DriveWithCleanupPrimarySuspensionFrame {
-    fn resume(
+impl TypedFrame for DriveWithCleanupPrimarySuspensionFrame {
+    type Input = Expr;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
         #[allow(unused_mut)]
         let mut cleanup = self.cleanup.clone();
         let primary_outcome = outcome;
         let resumed = (|| session.resume_with_cleanup_after_primary(cleanup, primary_outcome))();
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete(resumed)
     }
 }
 
@@ -210,13 +216,17 @@ struct ResumeWithCleanupAfterPrimarySuspensionFrame {
         crate::runtime::kernel_data::control_data::cleanup::SuspendedCleanupPrimaryOutcome,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for ResumeWithCleanupAfterPrimarySuspensionFrame {
-    fn resume(
+impl TypedFrame for ResumeWithCleanupAfterPrimarySuspensionFrame {
+    type Input = Expr;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         _session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        crate::runtime::suspension::FrameAction::finalize(FinishWithCleanupFinalizer {
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        TypedAction::finalize(FinishWithCleanupFinalizer {
             primary_outcome: self.primary_outcome.clone(),
             cleanup_outcome: outcome,
         })
@@ -228,10 +238,59 @@ struct FinishWithCleanupFinalizer {
     cleanup_outcome: Result<Expr, EvalError>,
 }
 
-impl crate::runtime::suspension::PureFrameFinalizer for FinishWithCleanupFinalizer {
+impl SlotFinalizer for FinishWithCleanupFinalizer {
+    type Output = Expr;
+
     fn finish(self: Box<Self>) -> Result<Expr, EvalError> {
         let primary_outcome = Arc::try_unwrap(self.primary_outcome.0)
             .unwrap_or_else(|_| panic!("completed cleanup outcome state must be unique"));
         finish_with_cleanup_outcomes(primary_outcome, self.cleanup_outcome)
     }
+}
+
+#[cold]
+#[inline(never)]
+fn suspend_with_cleanup_init(
+    session: &mut Session,
+    expr: Expr,
+    cleanup: Expr,
+    witness: SlotWitness<Expr>,
+    request: RuntimeInputRequest,
+) -> Result<Expr, EvalError> {
+    witness.suspend(
+        session,
+        request,
+        EvalWithCleanupSuspensionFrame { expr, cleanup },
+    )
+}
+
+#[cold]
+#[inline(never)]
+fn suspend_with_cleanup_primary(
+    session: &mut Session,
+    cleanup: Expr,
+    witness: SlotWitness<Expr>,
+    request: RuntimeInputRequest,
+) -> Result<Expr, EvalError> {
+    witness.suspend(
+        session,
+        request,
+        DriveWithCleanupPrimarySuspensionFrame { cleanup },
+    )
+}
+
+#[cold]
+#[inline(never)]
+fn suspend_with_cleanup_after_primary(
+    session: &mut Session,
+    primary_outcome: Result<Expr, EvalError>,
+    witness: SlotWitness<Expr>,
+    request: RuntimeInputRequest,
+) -> Result<Expr, EvalError> {
+    let primary_outcome = SuspendedCleanupPrimaryOutcome(Arc::new(primary_outcome));
+    witness.suspend(
+        session,
+        request,
+        ResumeWithCleanupAfterPrimarySuspensionFrame { primary_outcome },
+    )
 }

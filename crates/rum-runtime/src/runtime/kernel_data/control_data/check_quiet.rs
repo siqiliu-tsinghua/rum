@@ -1,4 +1,7 @@
 use super::*;
+use crate::runtime::kernel_api::{
+    ContinueToken, SlotWitness, TypedAction, TypedFrame, slot_witness,
+};
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 use std::sync::Arc;
 
@@ -13,7 +16,7 @@ impl Session {
             ));
         }
 
-        let mut selectors = match self.normalize_optional_message_selectors(args.get(2)) {
+        let selectors = match self.normalize_optional_message_selectors(args.get(2)) {
             Ok(selectors) => selectors,
             Err(error) => {
                 return Ok(self.invalid_call_with_arg_form("Check", args, error.message()));
@@ -24,25 +27,30 @@ impl Session {
         let message_checkpoint = self.messages.len();
         let handled_error_checkpoint = self.handled_non_loader_eval_errors.len();
         let primary_result = self.evaluate(args[0].clone());
-        let outcome = crate::resume_or_suspend!(
-            self,
-            primary_result,
-            ok(value) => Ok(value),
-            suspend => {
-        let selectors = selectors.take().map(Arc::<[MessageSelector]>::from);
-                    let fallback = fallback.clone();
-        EvalCheckSuspensionFrame { selectors, fallback, message_checkpoint, handled_error_checkpoint }
-        },
-        );
-
-        match outcome {
-            Err(EvalError::InputRequired { request }) => Err(EvalError::InputRequired { request }),
-            outcome => self.resume_check_after_primary(
+        let witness = slot_witness(&primary_result);
+        match primary_result {
+            Err(EvalError::InputRequired { request }) => suspend_check(
+                self,
+                selectors,
+                fallback,
+                message_checkpoint,
+                handled_error_checkpoint,
+                witness,
+                request,
+            ),
+            Ok(value) => self.resume_check_after_primary(
                 selectors.as_deref(),
                 fallback,
                 message_checkpoint,
                 handled_error_checkpoint,
-                outcome,
+                Ok(value),
+            ),
+            Err(error) => self.resume_check_after_primary(
+                selectors.as_deref(),
+                fallback,
+                message_checkpoint,
+                handled_error_checkpoint,
+                Err(error),
             ),
         }
     }
@@ -57,7 +65,7 @@ impl Session {
             ));
         }
 
-        let mut selectors = match self.normalize_optional_message_selectors(args.get(1)) {
+        let selectors = match self.normalize_optional_message_selectors(args.get(1)) {
             Ok(selectors) => selectors,
             Err(error) => {
                 return Ok(self.invalid_call_with_arg_form("Quiet", args, error.message()));
@@ -67,23 +75,27 @@ impl Session {
         let message_checkpoint = self.messages.len();
         let handled_error_checkpoint = self.handled_non_loader_eval_errors.len();
         let primary_result = self.evaluate(args[0].clone());
-        let result = crate::resume_or_suspend!(
-            self,
-            primary_result,
-            ok(value) => Ok(value),
-            suspend => {
-        let selectors = selectors.take().map(Arc::<[MessageSelector]>::from);
-        EvalQuietSuspensionFrame { selectors, message_checkpoint, handled_error_checkpoint }
-        },
-        );
-
-        match result {
-            Err(EvalError::InputRequired { request }) => Err(EvalError::InputRequired { request }),
-            outcome => self.resume_quiet_after_primary(
+        let witness = slot_witness(&primary_result);
+        match primary_result {
+            Err(EvalError::InputRequired { request }) => suspend_quiet(
+                self,
+                selectors,
+                message_checkpoint,
+                handled_error_checkpoint,
+                witness,
+                request,
+            ),
+            Ok(value) => self.resume_quiet_after_primary(
                 selectors.as_deref(),
                 message_checkpoint,
                 handled_error_checkpoint,
-                outcome,
+                Ok(value),
+            ),
+            Err(error) => self.resume_quiet_after_primary(
+                selectors.as_deref(),
+                message_checkpoint,
+                handled_error_checkpoint,
+                Err(error),
             ),
         }
     }
@@ -170,47 +182,39 @@ impl Session {
 
 #[derive(rum_derive::FrameRootTrace)]
 struct EvalCheckSuspensionFrame {
-    selectors: std::option::Option<std::sync::Arc<[crate::runtime::MessageSelector]>>,
-    fallback: rum_core::Expr,
+    selectors: Option<Arc<[MessageSelector]>>,
+    fallback: Expr,
     message_checkpoint: usize,
     handled_error_checkpoint: usize,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for EvalCheckSuspensionFrame {
+impl TypedFrame for EvalCheckSuspensionFrame {
+    type Input = Expr;
+    type Output = Expr;
+
     fn output_boundary(&self) -> crate::runtime::suspension::OutputBoundary {
-        use crate::runtime::suspension::OutputBoundary;
-        OutputBoundary::messages(self.message_checkpoint)
+        crate::runtime::suspension::OutputBoundary::messages(self.message_checkpoint)
     }
 
-    fn resume(
-        self: std::sync::Arc<Self>,
+    fn resume<'resume>(
+        self: Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut selectors = self.selectors.clone();
-        #[allow(unused_mut)]
-        let mut fallback = self.fallback.clone();
-        #[allow(unused_mut)]
-        let mut message_checkpoint = self.message_checkpoint.clone();
-        #[allow(unused_mut)]
-        let mut handled_error_checkpoint = self.handled_error_checkpoint.clone();
-        let resumed = (|| {
-            session.resume_check_after_primary(
-                selectors.as_deref(),
-                fallback,
-                message_checkpoint,
-                handled_error_checkpoint,
-                outcome,
-            )
-        })();
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        TypedAction::complete(session.resume_check_after_primary(
+            self.selectors.as_deref(),
+            self.fallback.clone(),
+            self.message_checkpoint,
+            self.handled_error_checkpoint,
+            outcome,
+        ))
     }
 }
 
 impl crate::runtime::suspension::FrameAbandon for EvalCheckSuspensionFrame {
     fn abandon(
-        self: std::sync::Arc<Self>,
+        self: Arc<Self>,
         context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
     ) -> crate::runtime::suspension::FrameAbandonAction {
         context.restore_message_capture(self.handled_error_checkpoint);
@@ -220,37 +224,31 @@ impl crate::runtime::suspension::FrameAbandon for EvalCheckSuspensionFrame {
 
 #[derive(rum_derive::FrameRootTrace)]
 struct EvalQuietSuspensionFrame {
-    selectors: std::option::Option<std::sync::Arc<[crate::runtime::MessageSelector]>>,
+    selectors: Option<Arc<[MessageSelector]>>,
     message_checkpoint: usize,
     handled_error_checkpoint: usize,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for EvalQuietSuspensionFrame {
+impl TypedFrame for EvalQuietSuspensionFrame {
+    type Input = Expr;
+    type Output = Expr;
+
     fn output_boundary(&self) -> crate::runtime::suspension::OutputBoundary {
-        use crate::runtime::suspension::OutputBoundary;
-        OutputBoundary::messages(self.message_checkpoint)
+        crate::runtime::suspension::OutputBoundary::messages(self.message_checkpoint)
     }
 
-    fn resume(
-        self: std::sync::Arc<Self>,
+    fn resume<'resume>(
+        self: Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
-        #[allow(unused_mut)]
-        let mut selectors = self.selectors.clone();
-        #[allow(unused_mut)]
-        let mut message_checkpoint = self.message_checkpoint.clone();
-        #[allow(unused_mut)]
-        let mut handled_error_checkpoint = self.handled_error_checkpoint.clone();
-        let resumed = (|| {
-            session.resume_quiet_after_primary(
-                selectors.as_deref(),
-                message_checkpoint,
-                handled_error_checkpoint,
-                outcome,
-            )
-        })();
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        TypedAction::complete(session.resume_quiet_after_primary(
+            self.selectors.as_deref(),
+            self.message_checkpoint,
+            self.handled_error_checkpoint,
+            outcome,
+        ))
     }
 }
 
@@ -262,4 +260,48 @@ impl crate::runtime::suspension::FrameAbandon for EvalQuietSuspensionFrame {
         context.restore_message_capture(self.handled_error_checkpoint);
         crate::runtime::suspension::FrameAbandonAction::Discard
     }
+}
+
+#[cold]
+#[inline(never)]
+fn suspend_check(
+    session: &mut Session,
+    selectors: Option<Vec<MessageSelector>>,
+    fallback: Expr,
+    message_checkpoint: usize,
+    handled_error_checkpoint: usize,
+    witness: SlotWitness<Expr>,
+    request: RuntimeInputRequest,
+) -> Result<Expr, EvalError> {
+    witness.suspend(
+        session,
+        request,
+        EvalCheckSuspensionFrame {
+            selectors: selectors.map(Arc::<[MessageSelector]>::from),
+            fallback,
+            message_checkpoint,
+            handled_error_checkpoint,
+        },
+    )
+}
+
+#[cold]
+#[inline(never)]
+fn suspend_quiet(
+    session: &mut Session,
+    selectors: Option<Vec<MessageSelector>>,
+    message_checkpoint: usize,
+    handled_error_checkpoint: usize,
+    witness: SlotWitness<Expr>,
+    request: RuntimeInputRequest,
+) -> Result<Expr, EvalError> {
+    witness.suspend(
+        session,
+        request,
+        EvalQuietSuspensionFrame {
+            selectors: selectors.map(Arc::<[MessageSelector]>::from),
+            message_checkpoint,
+            handled_error_checkpoint,
+        },
+    )
 }

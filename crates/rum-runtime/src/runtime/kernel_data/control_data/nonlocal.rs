@@ -1,4 +1,7 @@
 use super::*;
+use crate::runtime::kernel_api::{
+    ContinueToken, SlotWitness, TypedAction, TypedFrame, slot_witness,
+};
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
 impl Session {
@@ -89,24 +92,17 @@ impl Session {
         let handler = args.get(2).cloned();
         let runtime_profile_body = runtime_path_timing_start("catch.body.evaluate");
         let body_result = self.evaluate(args[0].clone());
+        let witness = slot_witness(&body_result);
         record_profile_runtime_path_timing(
             runtime_profile_body,
             runtime_profile_outcome_for_expr_result(&body_result),
         );
-        let outcome = crate::resume_or_suspend!(
-            self,
-            body_result,
-            ok(value) => Ok(value),
-            suspend => {
-        let form = form.clone();
-                    let handler = handler.clone();
-        EvalCatchSuspensionFrame { form, handler }
-        },
-        );
-
-        let result = match outcome {
-            Err(EvalError::InputRequired { request }) => Err(EvalError::InputRequired { request }),
-            outcome => self.resume_catch_after_body(form, handler, outcome),
+        let result = match body_result {
+            Err(EvalError::InputRequired { request }) => {
+                suspend_catch(self, form, handler, witness, request)
+            }
+            Ok(value) => self.resume_catch_after_body(form, handler, Ok(value)),
+            Err(error) => self.resume_catch_after_body(form, handler, Err(error)),
         };
         record_profile_runtime_path_timing(
             runtime_profile_total,
@@ -165,16 +161,16 @@ impl Session {
         };
 
         let form_result = self.resolve_matcher_pattern_expr_owned(form);
-        let form = crate::resume_or_suspend!(
+        let form = crate::resume_typed_or_suspend!(
             self,
             form_result,
             ok(value) => Ok(value),
             suspend => {
-        let handler = handler.clone();
-                    let value = value.clone();
-                    let tag = tag.clone();
-        ResumeCatchForThrowSuspensionFrame { handler, value, tag, explicit_tag }
-        },
+                let handler = handler.clone();
+                let value = value.clone();
+                let tag = tag.clone();
+                ResumeCatchForThrowSuspensionFrame { handler, value, tag, explicit_tag }
+            },
         )?;
 
         self.finish_catch_for_throw_with_form(form, handler, value, tag, explicit_tag)
@@ -201,10 +197,12 @@ impl Session {
         }
 
         let match_result = self.match_expr_owned(form, tag.clone(), SymbolExprMap::default());
-        crate::resume_or_suspend!(
+        crate::resume_typed_or_suspend!(
             self,
             match_result,
-            ok(outcome) => { let session = self; (|| {
+            ok(outcome) => {
+                let session = self;
+                (|| {
                     if outcome.matched {
                         session.finish_catch_match(handler, value, tag)
                     } else {
@@ -214,7 +212,8 @@ impl Session {
                             explicit_tag,
                         })
                     }
-                })() },
+                })()
+            },
             suspend => FinishCatchForThrowWithFormSuspensionFrame { handler, value, tag, explicit_tag },
         )
     }
@@ -238,17 +237,24 @@ impl Session {
         };
 
         let form_result = self.resolve_matcher_pattern_expr_owned(form);
-        let form = crate::resume_or_suspend!(
+        let form = crate::resume_typed_or_suspend!(
             self,
             form_result,
             ok(value) => Ok(value),
             suspend => {
-        let value = value.clone();
-                    let tag = tag.clone();
-                    let cleanup_value = cleanup_value.clone();
-                    let cleanup_tag = cleanup_tag.clone();
-        ResumeCatchForBypassingThrowSuspensionFrame { value, tag, explicit_tag, cleanup_value, cleanup_tag, cleanup_explicit_tag }
-        },
+                let value = value.clone();
+                let tag = tag.clone();
+                let cleanup_value = cleanup_value.clone();
+                let cleanup_tag = cleanup_tag.clone();
+                ResumeCatchForBypassingThrowSuspensionFrame {
+                    value,
+                    tag,
+                    explicit_tag,
+                    cleanup_value,
+                    cleanup_tag,
+                    cleanup_explicit_tag,
+                }
+            },
         )?;
 
         self.finish_catch_for_bypassing_throw_with_form(
@@ -292,10 +298,11 @@ impl Session {
         }
 
         let match_result = self.match_expr_owned(form, tag.clone(), SymbolExprMap::default());
-        crate::resume_or_suspend!(
+        crate::resume_typed_or_suspend!(
             self,
             match_result,
-            ok(outcome) => { (|| {
+            ok(outcome) => {
+                (|| {
                     if outcome.matched {
                         Err(EvalError::Thrown {
                             value,
@@ -312,8 +319,16 @@ impl Session {
                             cleanup_explicit_tag,
                         })
                     }
-                })() },
-            suspend => FinishCatchForBypassingThrowWithFormSuspensionFrame { value, tag, explicit_tag, cleanup_value, cleanup_tag, cleanup_explicit_tag },
+                })()
+            },
+            suspend => FinishCatchForBypassingThrowWithFormSuspensionFrame {
+                value,
+                tag,
+                explicit_tag,
+                cleanup_value,
+                cleanup_tag,
+                cleanup_explicit_tag,
+            },
         )
     }
 
@@ -354,18 +369,22 @@ struct EvalCatchSuspensionFrame {
     handler: std::option::Option<rum_core::Expr>,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for EvalCatchSuspensionFrame {
-    fn resume(
+impl TypedFrame for EvalCatchSuspensionFrame {
+    type Input = Expr;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
         #[allow(unused_mut)]
         let mut form = self.form.clone();
         #[allow(unused_mut)]
         let mut handler = self.handler.clone();
         let resumed = (|| session.resume_catch_after_body(form, handler, outcome))();
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete(resumed)
     }
 }
 
@@ -377,12 +396,16 @@ struct ResumeCatchForThrowSuspensionFrame {
     explicit_tag: bool,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for ResumeCatchForThrowSuspensionFrame {
-    fn resume(
+impl TypedFrame for ResumeCatchForThrowSuspensionFrame {
+    type Input = Expr;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
         #[allow(unused_mut)]
         let mut handler = self.handler.clone();
         #[allow(unused_mut)]
@@ -390,14 +413,14 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeCatchForThrowSuspensi
         #[allow(unused_mut)]
         let mut tag = self.tag.clone();
         #[allow(unused_mut)]
-        let mut explicit_tag = self.explicit_tag.clone();
+        let mut explicit_tag = self.explicit_tag;
         let resumed = match outcome {
             Ok(form) => (|| {
                 session.finish_catch_for_throw_with_form(form, handler, value, tag, explicit_tag)
             })(),
             Err(error) => Err(error),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete(resumed)
     }
 }
 
@@ -409,12 +432,16 @@ struct FinishCatchForThrowWithFormSuspensionFrame {
     explicit_tag: bool,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for FinishCatchForThrowWithFormSuspensionFrame {
-    fn resume(
+impl TypedFrame for FinishCatchForThrowWithFormSuspensionFrame {
+    type Input = CompiledMatchOutcome;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        outcome: Result<CompiledMatchOutcome, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
         #[allow(unused_mut)]
         let mut handler = self.handler.clone();
         #[allow(unused_mut)]
@@ -422,26 +449,22 @@ impl crate::runtime::suspension::SuspensionFrame for FinishCatchForThrowWithForm
         #[allow(unused_mut)]
         let mut tag = self.tag.clone();
         #[allow(unused_mut)]
-        let mut explicit_tag = self.explicit_tag.clone();
+        let mut explicit_tag = self.explicit_tag;
         let resumed = match outcome {
-            Ok(resumed_value) => {
-                let outcome = <CompiledMatchOutcome as crate::runtime::suspension::ContinuationValue>::from_continuation_expr(resumed_value);
-                (|| -> Result<rum_core::Expr, EvalError> {
-            if outcome.matched {
-                session.finish_catch_match(handler, value, tag)
-            } else {
-                Err(EvalError::Thrown {
-                    value,
-                    tag,
-                    explicit_tag,
-                })
-            }
-        })()
-                    .map(|value| <rum_core::Expr as crate::runtime::suspension::ContinuationValue>::into_continuation_expr(value))
-            }
+            Ok(outcome) => (|| {
+                if outcome.matched {
+                    session.finish_catch_match(handler, value, tag)
+                } else {
+                    Err(EvalError::Thrown {
+                        value,
+                        tag,
+                        explicit_tag,
+                    })
+                }
+            })(),
             Err(error) => Err(error),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete(resumed)
     }
 }
 
@@ -455,24 +478,28 @@ struct ResumeCatchForBypassingThrowSuspensionFrame {
     cleanup_explicit_tag: bool,
 }
 
-impl crate::runtime::suspension::SuspensionFrame for ResumeCatchForBypassingThrowSuspensionFrame {
-    fn resume(
+impl TypedFrame for ResumeCatchForBypassingThrowSuspensionFrame {
+    type Input = Expr;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
         #[allow(unused_mut)]
         let mut value = self.value.clone();
         #[allow(unused_mut)]
         let mut tag = self.tag.clone();
         #[allow(unused_mut)]
-        let mut explicit_tag = self.explicit_tag.clone();
+        let mut explicit_tag = self.explicit_tag;
         #[allow(unused_mut)]
         let mut cleanup_value = self.cleanup_value.clone();
         #[allow(unused_mut)]
         let mut cleanup_tag = self.cleanup_tag.clone();
         #[allow(unused_mut)]
-        let mut cleanup_explicit_tag = self.cleanup_explicit_tag.clone();
+        let mut cleanup_explicit_tag = self.cleanup_explicit_tag;
         let resumed = match outcome {
             Ok(form) => (|| {
                 session.finish_catch_for_bypassing_throw_with_form(
@@ -487,7 +514,7 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeCatchForBypassingThro
             })(),
             Err(error) => Err(error),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete(resumed)
     }
 }
 
@@ -501,51 +528,61 @@ struct FinishCatchForBypassingThrowWithFormSuspensionFrame {
     cleanup_explicit_tag: bool,
 }
 
-impl crate::runtime::suspension::SuspensionFrame
-    for FinishCatchForBypassingThrowWithFormSuspensionFrame
-{
-    fn resume(
+impl TypedFrame for FinishCatchForBypassingThrowWithFormSuspensionFrame {
+    type Input = CompiledMatchOutcome;
+    type Output = Expr;
+
+    fn resume<'resume>(
         self: std::sync::Arc<Self>,
         _session: &mut Session,
-        outcome: Result<Expr, EvalError>,
-    ) -> crate::runtime::suspension::FrameAction {
+        outcome: Result<CompiledMatchOutcome, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
         #[allow(unused_mut)]
         let mut value = self.value.clone();
         #[allow(unused_mut)]
         let mut tag = self.tag.clone();
         #[allow(unused_mut)]
-        let mut explicit_tag = self.explicit_tag.clone();
+        let mut explicit_tag = self.explicit_tag;
         #[allow(unused_mut)]
         let mut cleanup_value = self.cleanup_value.clone();
         #[allow(unused_mut)]
         let mut cleanup_tag = self.cleanup_tag.clone();
         #[allow(unused_mut)]
-        let mut cleanup_explicit_tag = self.cleanup_explicit_tag.clone();
+        let mut cleanup_explicit_tag = self.cleanup_explicit_tag;
         let resumed = match outcome {
-            Ok(resumed_value) => {
-                let outcome = <CompiledMatchOutcome as crate::runtime::suspension::ContinuationValue>::from_continuation_expr(resumed_value);
-                (|| -> Result<rum_core::Expr, EvalError> {
-            if outcome.matched {
-                Err(EvalError::Thrown {
-                    value,
-                    tag,
-                    explicit_tag,
-                })
-            } else {
-                Err(EvalError::ThrownBypassingCatch {
-                    value,
-                    tag,
-                    explicit_tag,
-                    cleanup_value,
-                    cleanup_tag,
-                    cleanup_explicit_tag,
-                })
-            }
-        })()
-                    .map(|value| <rum_core::Expr as crate::runtime::suspension::ContinuationValue>::into_continuation_expr(value))
-            }
+            Ok(outcome) => (|| {
+                if outcome.matched {
+                    Err(EvalError::Thrown {
+                        value,
+                        tag,
+                        explicit_tag,
+                    })
+                } else {
+                    Err(EvalError::ThrownBypassingCatch {
+                        value,
+                        tag,
+                        explicit_tag,
+                        cleanup_value,
+                        cleanup_tag,
+                        cleanup_explicit_tag,
+                    })
+                }
+            })(),
             Err(error) => Err(error),
         };
-        crate::runtime::suspension::FrameAction::complete(resumed)
+        TypedAction::complete(resumed)
     }
+}
+
+#[cold]
+#[inline(never)]
+fn suspend_catch(
+    session: &mut Session,
+    form: Option<Expr>,
+    handler: Option<Expr>,
+    witness: SlotWitness<Expr>,
+    request: RuntimeInputRequest,
+) -> Result<Expr, EvalError> {
+    witness.suspend(session, request, EvalCatchSuspensionFrame { form, handler })
 }

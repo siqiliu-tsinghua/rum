@@ -4,23 +4,17 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-17, committed tree through brief-617's commit
-(`0a86c322`; G13 step S8 gated, below). **Now: S9 (brief-617, control and
-cleanup) continues on grk — Grok Build, grok-4.7 at xhigh effort, introduced
-by the user on 2026-10-17** (`BRIEF_WORKER=grk`).
-- Run 1 went to agy (Gemini 4 Argon). agy's quota cut it at 11:25 with the
-  conversion done and no report. The brief's continuation 1 hands that tree
-  to the new worker.
-- Codex's usage limit cut brief-616's run and resets 2026-10-22 20:32.
-- grk runs under a kernel profile, `rum-worker` in `~/.grok/sandbox.toml`.
-  It reads only the repository, system paths and the toolchain; it writes
-  only the repository and temporary directories; its commands have no
-  network; and `.git` is denied.
-- The dispatcher refuses to start unless that profile holds and a census
-  session shows both the applied fence and the exact toolset.
+Status checkpoint: 2026-10-18, committed tree through G13 step S9 (brief-617,
+control and cleanup; gated, below). **Next: S10 = brief-618 from
+`.temp/brief-606/draft-S10.md`**, on Codex when its usage limit resets
+(2026-10-22 20:32).
+- S9 ran on two new workers. agy (Gemini 4 Argon) and grk (grok-4.7, under
+  the `rum-worker` kernel profile in `~/.grok/sandbox.toml`) were both cut by
+  their quotas, and the director finished the step by user ruling.
+- The director's gate found an ordinary-path copy that the worker's
+  instrument could not see. The record is at the end of brief-617.
 
-The gate plan for
-S9 is in memory `suspension-continuation-branch.md`. Owed, any
+Owed, any
 time (no code): `CHANGELOG.md`'s `[Unreleased]` has not been updated since
 2026-09-04 (`cc8ba769`), so the ownership branch, the interner and armed-ceiling
 lines, the retention line and this branch are missing from it.

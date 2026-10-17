@@ -1,3 +1,4 @@
+use crate::runtime::kernel_api::slot_witness;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 mod options;
 mod resume_frames;
@@ -124,18 +125,18 @@ impl Session {
         let pending_checkpoint = self.abort_protect_pending;
 
         let primary_result = self.evaluate(args[0].clone());
-        let outcome = crate::resume_or_suspend!(
-            self,
-            primary_result,
-            ok(value) => Ok(value),
-            suspend => {
-        let args = args.clone();
-        ResumeCheckAbortWithPropagationSuspensionFrame { args, propagate, pending_checkpoint }
-        },
-        );
-
-        match outcome {
-            Err(EvalError::InputRequired { request }) => Err(EvalError::InputRequired { request }),
+        let witness = slot_witness(&primary_result);
+        match primary_result {
+            Err(EvalError::InputRequired { request }) => {
+                resume_frames::suspend_check_abort_with_propagation(
+                    self,
+                    args,
+                    propagate,
+                    pending_checkpoint,
+                    witness,
+                    request,
+                )
+            }
             outcome => {
                 self.resume_check_abort_after_primary(args, propagate, pending_checkpoint, outcome)
             }
@@ -153,16 +154,13 @@ impl Session {
         let pending_checkpoint = self.abort_protect_pending;
         self.abort_protect_depth += 1;
         let body_result = self.evaluate(body.clone());
-        let outcome = crate::resume_or_suspend!(
-            self,
-            body_result,
-            ok(value) => Ok(value),
-            suspend => EvalAbortProtectSuspensionFrame { pending_checkpoint },
-        );
-
-        match outcome {
-            Err(EvalError::InputRequired { request }) => Err(EvalError::InputRequired { request }),
-            outcome => self.resume_abort_protect_after_body(pending_checkpoint, outcome),
+        let witness = slot_witness(&body_result);
+        match body_result {
+            Err(EvalError::InputRequired { request }) => {
+                resume_frames::suspend_abort_protect(self, pending_checkpoint, witness, request)
+            }
+            Ok(value) => self.resume_abort_protect_after_body(pending_checkpoint, Ok(value)),
+            Err(error) => self.resume_abort_protect_after_body(pending_checkpoint, Err(error)),
         }
     }
 
@@ -176,16 +174,16 @@ impl Session {
         match outcome {
             Ok(_value) if self.abort_protect_pending > pending_checkpoint => {
                 let fallback_result = self.evaluate(args[1].clone());
-                let outcome = crate::resume_or_suspend!(
-                    self,
-                    fallback_result,
-                    ok(value) => Ok(value),
-                    suspend => ResumeCheckAbortAfterPrimarySuspensionFrame1 { propagate, pending_checkpoint },
-                );
-
-                match outcome {
+                let witness = slot_witness(&fallback_result);
+                match fallback_result {
                     Err(EvalError::InputRequired { request }) => {
-                        Err(EvalError::InputRequired { request })
+                        resume_frames::suspend_check_abort_after_primary_pending(
+                            self,
+                            propagate,
+                            pending_checkpoint,
+                            witness,
+                            request,
+                        )
                     }
                     outcome => self.resume_check_abort_after_fallback(
                         propagate,
@@ -199,22 +197,29 @@ impl Session {
             Err(error @ (EvalError::Abort | EvalError::ProtectedAbort)) => {
                 let protected = matches!(error, EvalError::ProtectedAbort);
                 let fallback_result = self.evaluate(args[1].clone());
-                let outcome = crate::resume_or_suspend!(
-                    self,
-                    fallback_result,
-                    ok(value) => Ok(value),
-                    suspend => ResumeCheckAbortAfterPrimarySuspensionFrame2 { propagate, protected, pending_checkpoint },
-                );
-
-                match outcome {
+                let witness = slot_witness(&fallback_result);
+                match fallback_result {
                     Err(EvalError::InputRequired { request }) => {
-                        Err(EvalError::InputRequired { request })
+                        resume_frames::suspend_check_abort_after_primary_aborted(
+                            self,
+                            propagate,
+                            protected,
+                            pending_checkpoint,
+                            witness,
+                            request,
+                        )
                     }
-                    outcome => self.resume_check_abort_after_fallback(
+                    Ok(value) => self.resume_check_abort_after_fallback(
                         propagate,
                         protected,
                         pending_checkpoint,
-                        outcome,
+                        Ok(value),
+                    ),
+                    Err(error) => self.resume_check_abort_after_fallback(
+                        propagate,
+                        protected,
+                        pending_checkpoint,
+                        Err(error),
                     ),
                 }
             }

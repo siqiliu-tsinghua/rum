@@ -93,7 +93,7 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
         let result = macros.iter().filter(|s| s.receiver == "result").count();
         let insert = macros.iter().filter(|s| s.receiver == "insert").count();
         println!(
-            "S8 CENSUS {} frames={frames} finalizers={finalizers} implementations={} typed={} macros={} result={result} insert={insert}",
+            "S9 CENSUS {} frames={frames} finalizers={finalizers} implementations={} typed={} macros={} result={result} insert={insert}",
             population.label(),
             cohort.len(),
             cohort.len() - frames - finalizers,
@@ -109,13 +109,13 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
         ));
     }
     println!(
-        "S8 PARTITION implementations={} macros={}",
+        "S9 PARTITION implementations={} macros={}",
         counts[0].2 + counts[1].2,
         counts[0].3 + counts[1].3
     );
-    if counts[0] != (485, 51, 606, 558, 354, 204) || counts[1] != (11, 5, 16, 11, 3, 8) {
+    if counts[0] != (461, 50, 606, 542, 343, 199) || counts[1] != (11, 5, 16, 11, 3, 8) {
         return Err(
-            "S8 baseline requires production 606/558 and test-only 16/11; combined 622/569".into(),
+            "S9 baseline requires production 606/542 and test-only 16/11; combined 622/553".into(),
         );
     }
     let macros: Vec<_> = facts
@@ -146,9 +146,12 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
     super::s6::transitions(facts, report)?;
     super::s7::transitions(facts, report)?;
     super::s8::transitions(facts, report)?;
+    super::s9::transitions(facts, report)?;
     let witnessed: BTreeSet<_> = rows(RECEIPTS)
         .into_iter()
-        .filter(|r| r[0] == "M" && matches!(r[2], "S5" | "S6" | "S7" | "S8") && r[6] == "witnessed")
+        .filter(|r| {
+            r[0] == "M" && matches!(r[2], "S5" | "S6" | "S7" | "S8" | "S9") && r[6] == "witnessed"
+        })
         .map(|r| r[4])
         .collect();
     exact(
@@ -337,7 +340,7 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
         ));
     }
     println!(
-        "S8 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; typed evaluation uses unchanged global modes"
+        "S9 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; typed evaluation uses unchanged global modes"
     );
     Ok(())
 }

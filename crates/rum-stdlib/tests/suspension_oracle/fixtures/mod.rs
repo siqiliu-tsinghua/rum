@@ -2,6 +2,7 @@ mod argument_traversal_resolution;
 mod associations_roles;
 mod boundaries;
 mod capture_output;
+mod control_cleanup;
 mod control_roles;
 mod debug_roles;
 mod definition_application;

@@ -356,6 +356,10 @@ fn suspension_protocol_repository_invariants_hold() {
                             && compact_block.contains(
                                 "fnfinish(self:Box<Self>)->Result<CompiledMatchOutcome,EvalError>",
                             ))
+                        || (type_name == "FinishWithCleanupFinalizer"
+                            && compact_block.contains("typeOutput=Expr;")
+                            && compact_block
+                                .contains("fnfinish(self:Box<Self>)->Result<Expr,EvalError>"))
                 } else {
                     compact_block.contains("fnfinish(self:Box<Self>)->Result<Expr,EvalError>")
                 },

@@ -44,12 +44,16 @@ pub(super) fn transitions(facts: &Facts, report: &Report) -> Result<(), String> 
 
     let later_frames: BTreeSet<_> = receipts
         .iter()
-        .filter(|r| r[0] == "F" && matches!(r[2], "S5" | "S6" | "S7" | "S8") && r[3] == "typed")
+        .filter(|r| {
+            r[0] == "F" && matches!(r[2], "S5" | "S6" | "S7" | "S8" | "S9") && r[3] == "typed"
+        })
         .map(|r| r[4])
         .collect();
     let later_macros: BTreeSet<_> = receipts
         .iter()
-        .filter(|r| r[0] == "M" && matches!(r[2], "S5" | "S6" | "S7" | "S8") && r[3] == "typed")
+        .filter(|r| {
+            r[0] == "M" && matches!(r[2], "S5" | "S6" | "S7" | "S8" | "S9") && r[3] == "typed"
+        })
         .map(|r| r[4])
         .collect();
     let expected = [
