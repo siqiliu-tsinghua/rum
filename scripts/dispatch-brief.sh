@@ -30,6 +30,8 @@
 #   BRIEF_WORKER=agy     `agy -p`   — Antigravity CLI (Gemini 4 Argon), introduced by the user
 #                                     2026-10-17. A shell function (`with_proxy agy`) with the
 #                                     same name as its binary (see AGY below).
+#   BRIEF_WORKER=grk     `grk -p`   — Grok Build (grok-4.7), introduced by the user 2026-10-17.
+#                                     A shell function (`with_proxy grok`) (see GRK below).
 #
 # Both are interactive-shell functions in the developer's own config (`with_proxy codex` /
 # `with_proxy claude`), so neither is visible to a bash subshell — each runs through an
@@ -84,6 +86,22 @@
 #          here, so the script refuses to dispatch unless they hold (see AGY below). The
 #          git shim is installed as for kimi.
 #
+#   grk    An OS-level fence, the tightest of the five. `--sandbox rum-worker` applies a
+#          kernel profile (Landlock and seccomp, bwrap for its deny list) to the whole grok
+#          process before any tool runs, and nothing can relax it afterwards. The profile
+#          is grok's `strict` plus the Rust toolchain read-only. Reads are confined to the
+#          repo, system paths, ~/.grok and the toolchain. Writes go only to the repo,
+#          ~/.grok/sessions and the temp directories. Child processes have no network, and
+#          the repo's .git is denied outright. Tool approval is bypassed (--always-approve)
+#          because a headless grok REFUSES an unapproved call and carries on with exit 0,
+#          which silently skips the work. The kernel profile is the fence, not prompts. The
+#          toolset is an explicit allowlist. Web search, subagents and the Claude Code and
+#          Cursor compatibility layers are off; that layer would otherwise load the MCP
+#          servers in ~/.claude.json, including a Wolfram engine the testing policy forbids.
+#          The profile lives in the developer's grok config, so the script checks it and
+#          then observes the applied fence before dispatching (see GRK below). The git shim
+#          is installed as for kimi.
+#
 # KIMI
 #
 # kimi is a plain binary, so it runs directly from this script rather than through an
@@ -118,12 +136,36 @@
 # mode waits at most 30 minutes for them, so the role text tells the worker to keep
 # polling instead.
 #
+# GRK
+#
+# `grk` is a fish function wrapping the `grok` binary in the local proxy. Only a shell
+# FUNCTION named grk is accepted. Model and effort are pinned per run: GRK_MODEL defaults
+# to grok-4.7, and GRK_EFFORT defaults to xhigh, the highest grok-4.7 offers (low, medium,
+# high, xhigh). Before dispatching, the script reads the `rum-worker` profile in
+# sandbox.toml under GROK_HOME (default ~/.grok). The profile must extend strict, restrict
+# the network, add no read_write path, and deny this repository's .git.
+# requirements.toml and managed_config.toml must not pin a sandbox, since a pin outranks
+# --sandbox, and the repo must have no project .grok directory.
+# The script then runs a one-word census session under the same flags. It refuses unless
+# that session's init event lists exactly the allowed tools and no MCP server, and unless
+# the profile grok logged to sessions/sandbox-events.jsonl for it is rum-worker: enforced,
+# network-restricted, writing only to the expected paths, with .git denied. The census
+# log is <log>.census.
+# The report is Anthropic-messages stream JSON (init, assistant turns with their text and
+# tool calls, tool results, result) after a `# ` header. The session id is chosen up front
+# (-s) and written to the header, so even a run cut before its result event can be
+# resumed with GRK_RESUME=<session id> (`--resume`; the session keeps its sandbox profile).
+# After its turn ends, a headless run waits --background-wait-timeout for background work
+# and then kills it. The script sets that wait to 3900 s, above the brief's 3600-s
+# workspace bound, and the role text tells the worker to wait for long commands rather
+# than end its turn.
+#
 # DRY_RUN=1 prints the resolved brief/worker/log and exits WITHOUT dispatching (for testing).
 set -euo pipefail
 
 usage() {
   echo "usage: scripts/dispatch-brief.sh <brief-id>   (e.g. 081, brief-081)" >&2
-  echo "       BRIEF_WORKER=codex|cgl|kimi|agy   (default codex)" >&2
+  echo "       BRIEF_WORKER=codex|cgl|kimi|agy|grk   (default codex)" >&2
   echo "       BRIEF_SHELL=<shell>      shell that defines the worker command" >&2
   echo "       CDX_BIN / CGL_BIN        worker command name" >&2
   echo "       CDX_FORK=<session id>    codex only: fork that earlier session" >&2
@@ -134,6 +176,10 @@ usage() {
   echo "       AGY_EFFORT=<effort>      agy only: reasoning effort (default high)" >&2
   echo "       AGY_RESUME=<conv id>     agy only: continue that earlier conversation" >&2
   echo "       AGY_HOME=<dir>           agy only: agy config root (default ~/.gemini)" >&2
+  echo "       GRK_MODEL=<model>        grk only: model (default grok-4.7)" >&2
+  echo "       GRK_EFFORT=<effort>      grk only: reasoning effort (default xhigh)" >&2
+  echo "       GRK_RESUME=<session id>  grk only: continue that earlier session" >&2
+  echo "       GROK_HOME=<dir>          grk only: grok config root (default ~/.grok)" >&2
   exit 2
 }
 [[ $# -eq 1 ]] || usage
@@ -147,7 +193,8 @@ case "$worker" in
   cgl|glm)   worker=cgl;   log_tag=cgl ;;
   kimi)      worker=kimi;  log_tag=kimi ;;
   agy)       worker=agy;   log_tag=agy ;;
-  *) echo "error: unknown BRIEF_WORKER '$worker' (expected codex, cgl, kimi or agy)" >&2; exit 2 ;;
+  grk|grok)  worker=grk;   log_tag=grk ;;
+  *) echo "error: unknown BRIEF_WORKER '$worker' (expected codex, cgl, kimi, agy or grk)" >&2; exit 2 ;;
 esac
 
 shopt -s nullglob
@@ -195,6 +242,8 @@ elif [[ "$worker" == cgl ]]; then
   worker_names=("${CGL_BIN:-}") && [[ -n "${CGL_BIN:-}" ]] || worker_names=(cgl glm)
 elif [[ "$worker" == agy ]]; then
   worker_names=(agy)
+elif [[ "$worker" == grk ]]; then
+  worker_names=(grk)
 else
   worker_names=()   # kimi resolves below, without a shell
 fi
@@ -258,6 +307,16 @@ EOF
   echo "git-fence: $fence_dir/git (attempts -> $git_attempts)"
 }
 
+# The dispatch shell's rc file could put something ahead of the shim.
+check_git_fence_in_dispatch_shell() {
+  local seen_git
+  seen_git=$("$dispatch_shell" -ic 'command -v git' </dev/null 2>/dev/null | tail -n 1 || true)
+  if [[ "$seen_git" != "$fence_dir/git" ]]; then
+    echo "error: in $dispatch_shell the git fence is not first on PATH (got '$seen_git')" >&2
+    exit 1
+  fi
+}
+
 dispatch_shell=""
 worker_cmd=""
 if [[ "$worker" == kimi ]]; then
@@ -277,7 +336,7 @@ if [[ "$worker" == kimi ]]; then
   dispatch_shell=direct
 fi
 probe=shell_defines
-[[ "$worker" == agy ]] && probe=shell_defines_function
+[[ "$worker" == agy || "$worker" == grk ]] && probe=shell_defines_function
 for candidate_name in "${worker_names[@]}"; do
   for candidate_shell in "${candidate_shells[@]}"; do
     if "$probe" "$candidate_shell" "$candidate_name"; then
@@ -424,12 +483,7 @@ PY
 ) || exit 1
   echo "agy-fence: $agy_fence"
   install_git_fence
-  # The dispatch shell's rc file could put something ahead of the shim.
-  seen_git=$("$dispatch_shell" -ic 'command -v git' </dev/null 2>/dev/null | tail -n 1 || true)
-  if [[ "$seen_git" != "$fence_dir/git" ]]; then
-    echo "error: in $dispatch_shell the git fence is not first on PATH (got '$seen_git')" >&2
-    exit 1
-  fi
+  check_git_fence_in_dispatch_shell
   agy_version=$("$dispatch_shell" -ic "$worker_cmd changelog" </dev/null 2>/dev/null \
     | sed -n '1s/:$//p' || true)
   role="You are the implementation worker for this brief, not the project director. \
@@ -460,6 +514,121 @@ tree and any checkpoint the brief asks for before you go on; the brief governs. 
   # Through the environment, so the prompt needs no quoting in any shell.
   export AGY_TASK="$agy_task"
   cmd="cd '$repo_root' && $worker_cmd -p \"\$AGY_TASK\" $agy_args"
+elif [[ "$worker" == grk ]]; then
+  model="${GRK_MODEL:-grok-4.7}"
+  effort="${GRK_EFFORT:-xhigh}"
+  [[ "$model" =~ ^[A-Za-z0-9._-]+$ && "$effort" =~ ^[a-z]+$ ]] \
+    || { echo "error: GRK_MODEL/GRK_EFFORT must be plain names, got '$model'/'$effort'" >&2; exit 2; }
+  echo "model:   $model (effort $effort)"
+  # The fence is a profile in the developer's grok config, so check it rather
+  # than trust it; the census session below then observes what grok applied.
+  grok_home="${GROK_HOME:-$HOME/.grok}"
+  grk_profile=rum-worker
+  grk_fence=$(python3 - "$grok_home" "$repo_root" "$grk_profile" <<'PY'
+import os, sys, tomllib
+
+home, repo, name = sys.argv[1], os.path.realpath(sys.argv[2]), sys.argv[3]
+
+def load(path):
+    try:
+        with open(path, "rb") as f:
+            return tomllib.load(f)
+    except FileNotFoundError:
+        return {}
+
+errors = []
+profile = (load(os.path.join(home, "sandbox.toml")).get("profiles") or {}).get(name)
+if profile is None:
+    errors.append("no [profiles.%s] in %s/sandbox.toml" % (name, home))
+    profile = {}
+if profile.get("extends") != "strict":
+    errors.append("the profile extends %r, not strict: reads would reach the whole home"
+                  % profile.get("extends"))
+if profile.get("restrict_network") is not True:
+    errors.append("restrict_network is not true: child processes would have the network")
+if profile.get("read_write"):
+    errors.append("read_write grants %r: writes must stay in the repository and temp dirs"
+                  % profile["read_write"])
+# grok anchors a relative deny entry at the workspace and `~/` at the home.
+deny = [os.path.realpath(os.path.join(repo, os.path.expanduser(p)))
+        for p in profile.get("deny") or []]
+git_dir = os.path.join(repo, ".git")
+if git_dir not in deny:
+    errors.append("deny does not list %s: the worker could write git metadata" % git_dir)
+for pinned in ("requirements.toml", "managed_config.toml"):
+    if "sandbox" in load(os.path.join(home, pinned)):
+        errors.append("%s pins a sandbox, which outranks --sandbox" % pinned)
+if os.path.exists(os.path.join(repo, ".grok")):
+    errors.append("%s/.grok exists: a project grok config would join the session" % repo)
+if errors:
+    for e in errors:
+        print("error: grk fence: " + e, file=sys.stderr)
+    sys.exit(1)
+print("profile %s: strict, network restricted, %s denied, read-only %s"
+      % (name, git_dir, ", ".join(profile.get("read_only") or []) or "-"))
+PY
+) || exit 1
+  echo "grk-fence: $grk_fence"
+  install_git_fence
+  check_git_fence_in_dispatch_shell
+  grk_version=$("$dispatch_shell" -ic "$worker_cmd --version" </dev/null 2>/dev/null | tail -n 1 || true)
+  # grok's own environment switches: no cross-session memory, no self-update
+  # mid-run, and none of the Claude Code or Cursor configuration grok loads by
+  # default (skills, rules, CLAUDE.md, hooks, MCP servers). ~/.claude.json on
+  # this host declares a Wolfram engine, which the testing policy forbids a
+  # worker to reach.
+  export GROK_MEMORY=0 GROK_DISABLE_AUTOUPDATER=1
+  for layer in CLAUDE CURSOR; do
+    for part in SKILLS RULES AGENTS MCPS HOOKS; do
+      export "GROK_${layer}_${part}_ENABLED=0"
+    done
+  done
+  # The allowlist by tool id; the census checks the names the model is shown.
+  # search_tool and use_tool would reach deferred tools behind the allowlist.
+  grk_tools=run_terminal_cmd,read_file,search_replace,write,list_dir,grep,todo_write,get_task_output,kill_task,wait_tasks
+  grk_shown="get_command_or_subagent_output grep kill_command_or_subagent list_dir read_file \
+run_terminal_command search_replace todo_write write"
+  grk_fence_args="--output-format streaming-messages-json --cwd '$repo_root' \
+--sandbox $grk_profile --always-approve --disable-web-search --no-subagents --no-auto-update \
+--tools $grk_tools --disallowed-tools search_tool,use_tool"
+  role="You are the implementation worker for this brief, not the project director. \
+CLAUDE.md belongs to the director and is NOT your instruction file. \
+Follow AGENTS.md and the brief. Do not commit, branch, or push; leave changes in the \
+working tree. This run is non-interactive and runs inside a kernel sandbox: nobody answers \
+questions, you can write only inside this repository and the temp directories (keep all \
+scratch under the .temp directory of this repository), child processes have no network, \
+the .git directory is not accessible, and home directories outside the Rust toolchain are \
+unreadable. A command the sandbox refuses fails with a permission error: report it, and do \
+not work around it. Do the work yourself, without subagents. A shell command that outlives \
+its block_until_ms is not killed: it moves to the background and keeps running. \
+Run long builds and tests in the background and wait for each one with \
+get_command_or_subagent_output and a timeout. A single wait returns after at most one hour, \
+so wait again while the command still runs. Give every command a bound of its own, and \
+make it longer than the command needs. Never end your turn while a background command \
+runs: once your turn ends, the run waits about an hour for background work and then kills \
+it. Do not end your turn until the brief is finished or one of its stop conditions has \
+fired. Keep the checkpoint and report files the brief asks for current as you go: a run \
+cut by a usage limit keeps only what is already on disk. Report with verbatim evidence in \
+your final message."
+  grk_task="$role $task"
+  if [[ -n "${GRK_RESUME:-}" ]]; then
+    [[ "$GRK_RESUME" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]] \
+      || { echo "error: GRK_RESUME must be a session UUID, got '$GRK_RESUME'" >&2; exit 2; }
+    echo "resume-of: $GRK_RESUME"
+    grk_session="$GRK_RESUME"
+    grk_session_args="--resume $grk_session"
+    grk_task="This continues your own earlier run of this brief, which was interrupted or \
+answered by a new director amendment at the end of the brief. Re-read the brief, the working \
+tree and any checkpoint the brief asks for before you go on; the brief governs. $grk_task"
+  else
+    grk_session=$(python3 -c 'import uuid; print(uuid.uuid4())')
+    grk_session_args="-s $grk_session"
+  fi
+  echo "session: $grk_session"
+  # Through the environment, so the prompt needs no quoting in any shell.
+  export GRK_TASK="$grk_task"
+  cmd="cd '$repo_root' && $worker_cmd -p \"\$GRK_TASK\" -m $model --effort $effort \
+$grk_fence_args --background-wait-timeout 3900 $grk_session_args"
 else
   permission_mode="${CGL_PERMISSION_MODE:-acceptEdits}"
   echo "permission-mode: $permission_mode (no OS-level write fence — see header)"
@@ -556,6 +725,132 @@ PY
   if [[ $rc -eq 0 && "$denied" != "-" ]]; then
     echo "WARNING: the run ended on a denied action ($denied); resume with AGY_RESUME=$conversation" >&2
     rc=3
+  fi
+elif [[ "$worker" == grk ]]; then
+  # The census: one cheap session under the real fence flags, read back before
+  # the brief runs. The init event names the toolset the model is shown, and
+  # grok logs the kernel profile it applied.
+  census_log="$log.census"
+  census_session=$(python3 -c 'import uuid; print(uuid.uuid4())')
+  census_started=$(date -u +%Y-%m-%dT%H:%M:%S)
+  "$dispatch_shell" -ic "cd '$repo_root' && $worker_cmd -p 'Reply with the single word OK. \
+Use no tool.' -m $model --effort low $grk_fence_args -s $census_session" \
+    < /dev/null > "$census_log" 2>&1
+  census_rc=$?
+  grk_census=$(python3 - "$census_log" "$grok_home" "$census_started" "$repo_root" \
+      "$grk_profile" "$grk_shown" "$census_rc" <<'PY'
+import json, os, sys
+
+log, home, started, repo, name, shown, rc = sys.argv[1:]
+repo = os.path.realpath(repo)
+init = result = None
+for line in open(log, errors="replace"):
+    try:
+        event = json.loads(line)
+    except ValueError:
+        continue
+    if not isinstance(event, dict):
+        continue
+    if event.get("type") == "system" and event.get("subtype") == "init":
+        init = event
+    elif event.get("type") == "result":
+        result = event
+errors = []
+if rc != "0" or result is None or result.get("is_error"):
+    errors.append("the census session did not complete (exit %s)" % rc)
+if init is None:
+    errors.append("the census session logged no init event")
+else:
+    tools = sorted(init.get("tools") or [])
+    if tools != sorted(shown.split()):
+        errors.append("the model is shown %s, expected %s" % (tools, sorted(shown.split())))
+    if init.get("mcp_servers"):
+        errors.append("MCP servers are loaded: %r" % init["mcp_servers"])
+    if init.get("permissionMode") != "bypassPermissions":
+        errors.append("permission mode %r, expected bypassPermissions" % init.get("permissionMode"))
+applied = None
+try:
+    for line in open(os.path.join(home, "sessions", "sandbox-events.jsonl"), errors="replace"):
+        try:
+            event = json.loads(line)
+        except ValueError:
+            continue
+        if isinstance(event, dict) and event.get("event_type") == "ProfileApplied" \
+                and event.get("timestamp", "") >= started and event.get("workspace") == repo:
+            applied = event
+except FileNotFoundError:
+    pass
+writable = {repo, os.path.join(home, "sessions"), "/tmp", "/var/tmp"}
+git_dir = os.path.join(repo, ".git")
+if applied is None:
+    errors.append("grok logged no ProfileApplied event for the census session")
+else:
+    if applied.get("profile") != name or applied.get("enforced") is not True:
+        errors.append("applied profile %r, enforced=%r" % (applied.get("profile"), applied.get("enforced")))
+    if applied.get("restrict_network") is not True:
+        errors.append("the applied profile leaves child processes the network")
+    extra = sorted(set(applied.get("read_write_paths") or []) - writable)
+    if extra:
+        errors.append("the applied profile also writes %s" % extra)
+    if git_dir not in (applied.get("deny_paths") or []):
+        errors.append("the applied profile does not deny %s" % git_dir)
+if errors:
+    for e in errors:
+        print("error: grk census: " + e, file=sys.stderr)
+    sys.exit(1)
+print("%d tools, no MCP, bypassPermissions; %s enforced, writes %s, %s denied"
+      % (len(init["tools"]), name, " ".join(sorted(applied["read_write_paths"])), git_dir))
+PY
+)
+  census_ok=$?
+  if [[ $census_ok -ne 0 ]]; then
+    echo "error: grk census failed; nothing dispatched (see $census_log)" >&2
+    exit 1
+  fi
+  echo "grk-census: $grk_census"
+  : > "$git_attempts"
+  {
+    echo "# dispatch: worker=grk brief=$rel model=$model effort=$effort started=$(date -Is)"
+    echo "# command: $worker_cmd ($dispatch_shell) ${grk_version:-unknown}"
+    echo "# grk-fence: $grk_fence"
+    echo "# grk-census: $grk_census"
+    echo "# git-fence: $fence_dir/git"
+    echo "# grk-session: $grk_session"
+    [[ -n "${GRK_RESUME:-}" ]] && echo "# resume-of: $GRK_RESUME"
+  } > "$log"
+  "$dispatch_shell" -ic "$cmd" < /dev/null >> "$log" 2>&1
+  rc=$?
+  # A refused tool call does not end a headless run; only stderr names it.
+  summary=$(python3 - "$log" <<'PY'
+import json, sys
+status, turns, cost, refused = "none", "-", "-", 0
+for line in open(sys.argv[1], errors="replace"):
+    if line.startswith("permission required:"):
+        refused += 1
+    try:
+        event = json.loads(line)
+    except ValueError:
+        continue
+    if isinstance(event, dict) and event.get("type") == "result":
+        status = event.get("subtype") or "unknown"
+        if event.get("is_error"):
+            status += "/error"
+        turns = event.get("num_turns", "-")
+        cost = event.get("total_cost_usd", "-")
+print(status, turns, cost, refused)
+PY
+)
+  read -r status turns cost refused <<< "$summary"
+  echo "# grk-result: status=$status turns=$turns cost_usd=$cost refused=$refused" >> "$log"
+  echo "grk-session: $grk_session"
+  echo "grk-result: status=$status turns=$turns cost_usd=$cost refused=$refused"
+  echo "git-attempts: $(wc -l < "$git_attempts") (in $git_attempts)"
+  if [[ $rc -eq 0 && "$refused" != 0 ]]; then
+    echo "WARNING: $refused tool call(s) were refused and skipped; see the log" >&2
+    rc=3
+  fi
+  if [[ $rc -ne 0 || "$status" != success ]]; then
+    echo "hint: resume with GRK_RESUME=$grk_session BRIEF_WORKER=grk scripts/dispatch-brief.sh $num" >&2
   fi
 else
   "$dispatch_shell" -ic "$cmd" < /dev/null > "$log" 2>&1
