@@ -6,12 +6,20 @@ and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
 Status checkpoint: 2026-10-17, committed tree through brief-617's commit
 (`0a86c322`; G13 step S8 gated, below). **Now: S9 (brief-617, control and
-cleanup) is dispatched to agy — Gemini 4 Argon at high effort, introduced by
-the user on 2026-10-17** (`BRIEF_WORKER=agy`; Codex's usage limit cut
-brief-616's run and resets 2026-10-22 20:32). agy runs every command in its
-Linux-namespace sandbox: writes reach only the repository, temporary
-directories and build caches, and there is no network. The dispatcher refuses
-to start unless the developer's agy config keeps that fence. The gate plan for
+cleanup) continues on grk — Grok Build, grok-4.7 at xhigh effort, introduced
+by the user on 2026-10-17** (`BRIEF_WORKER=grk`).
+- Run 1 went to agy (Gemini 4 Argon). agy's quota cut it at 11:25 with the
+  conversion done and no report. The brief's continuation 1 hands that tree
+  to the new worker.
+- Codex's usage limit cut brief-616's run and resets 2026-10-22 20:32.
+- grk runs under a kernel profile, `rum-worker` in `~/.grok/sandbox.toml`.
+  It reads only the repository, system paths and the toolchain; it writes
+  only the repository and temporary directories; its commands have no
+  network; and `.git` is denied.
+- The dispatcher refuses to start unless that profile holds and a census
+  session shows both the applied fence and the exact toolset.
+
+The gate plan for
 S9 is in memory `suspension-continuation-branch.md`. Owed, any
 time (no code): `CHANGELOG.md`'s `[Unreleased]` has not been updated since
 2026-09-04 (`cc8ba769`), so the ownership branch, the interner and armed-ceiling
@@ -22,7 +30,9 @@ removal — each a director-rewritten brief
 from `.temp/brief-606/draft-*.md`, dispatched to Codex (user ruling; GLM only
 if the content filter fires; Kimi K3 via `BRIEF_WORKER=kimi`, introduced by
 the user on 2026-10-15 and proven on S4; agy via `BRIEF_WORKER=agy`,
-introduced by the user on 2026-10-17 and first used on S9); then E2's
+introduced by the user on 2026-10-17 and first used on S9; grk via
+`BRIEF_WORKER=grk`, introduced the same day after agy's quota failed, which
+continues S9); then E2's
 design. Long-running
 briefs use `gpt-6-astra` max by user ruling (2026-10-13: `gpt-6.1-sol` hit
 capacity errors mid-run); the dispatcher pins no model, `~/.codex/config.toml`

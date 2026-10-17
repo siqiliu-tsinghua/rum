@@ -667,3 +667,97 @@ rule on it.
 5. Allocation, instruction, copy, stack and resume-attribution evidence, and
    timing with any alignment check.
 6. Stop-loss counters, deviations and open questions.
+
+## Director continuation 1 (2026-10-17) — run 1 was cut; you take it over
+
+Run 1 was done by another worker, and its quota cut it at 11:25 after 2 h 20
+min. It left its work uncommitted in the tree, and it left **no report**:
+`.temp/brief-617/state.json` and `PROGRESS.md` stop at 09:31 (step 1, base
+builds), and `REPORT.md` is empty. I reconstructed what it did from its log.
+You take the brief over from that state. Everything above still governs, and
+this section adds to it. **Its results are not evidence for the final tree.**
+Verify what you keep, and rerun every gate in Verification yourself.
+
+**What run 1 left, step by step.**
+
+- **Step 1**, under `.temp/brief-617/`:
+  - the hash check (`hash-verification.json`);
+  - the stack bases (`target-base-stack-{debug,release}`) and their exact
+    17-shape calibration (`state.json`);
+  - the resume harness with S9 workloads (`resume-harness/src/s9.rs`,
+    `s9-resume-workloads.json`);
+  - `base-resume` and `base-resume-alloc`, rebuilt three times as the
+    workloads changed (the last hashes are in `state.json`);
+  - a base census (`base-resume-census/`, `base-resume-census.py`) and
+    performance preparation (`perf/`, `prepare-perf.py`, `run-perf.py`).
+
+  Rebuild any base whose source or harness no longer matches what it was
+  built from, and rerun any calibration whose evidence is not on disk.
+- **Step 3.** New fixtures in
+  `crates/rum-stdlib/tests/suspension_oracle/fixtures/control_cleanup/`. Its
+  log shows 88 `control_cleanup` tests passing in both builds before its
+  first source edit. It then added `director_nonlocal.rs` and edited
+  `director.rs` after the source edits, so **the final fixture set has never
+  run on the unedited tree.** Run it there:
+  - copy `.temp/brief-617/base-source/` to a scratch directory;
+  - add the final fixtures and only the registration they need;
+  - run them in both builds.
+
+  Every fixture must pass. Report the counts.
+- **Step 4.** All nine family files are converted. **Review every owned row
+  against the rulings above before you build on it**: the routes, the
+  cold-helper shape, every error's continuation, the state kept outside the
+  frames, the finalizer's uniqueness, abandonment, T0029 and the identity
+  decodes. Fix what does not hold, within Scope.
+- **Step 5** was never run.
+- **Step 6.** Its census printed `S9 TOTAL typed=95 typed_macros=55
+  witnessed_sites=46`. It also extended the `S4` filter in
+  `typed_slot_census/s4.rs` with `S9`, as S8 extended it with `S8`.
+- **Step 7.**
+  - The local-contract fingerprints were regenerated with the ignored
+    `regenerate_local_contract_fingerprints` test. Only build-input columns
+    changed, in 68 rows of `local-contracts.tsv` and 2 rows of
+    `promoted.tsv`.
+  - The ownership inventories (`unknown_attributes.tsv`,
+    `unknown_captures.tsv`, `unknown_macros.tsv`) were edited by a script.
+    It applied `production_inventory_is_exact`'s own missing/stale report:
+    91 rows added and 113 removed.
+  - The test is exact now, but **classify every one of those rows** under
+    the derived-facts class and disclose it, as S8's report did for its
+    discovery replay. A row outside S9's touched files, or a removed row
+    whose source text did not change, is a STOP.
+
+**Red or never run.**
+
+- **RED:** `frame_root_trace::suspension_protocol_repository_invariants_hold`
+  fails with "PureFrameFinalizer FinishWithCleanupFinalizer must use the
+  closed Session-free signature in …/cleanup.rs".
+  - Cause: run 1 moved F0572 to `SlotFinalizer`. The invariant
+    (`runtime/tests/frame_root_trace.rs`, near line 340) names each typed
+    `SlotFinalizer` with its `Output` and its `finish` signature.
+  - S4 and S6 added theirs there, and the file is in the derived-facts
+    class. Add F0572's entry the same way (`type Output = Expr;`, `fn
+    finish(self: Box<Self>) -> Result<Expr, EvalError>`), keep the check
+    exact, and disclose it.
+- **Never run:**
+  - step 5's ordinary controls;
+  - `cargo test --workspace --no-fail-fast`;
+  - the director probes (s9, s8, s7, s6);
+  - the whole performance section, items 1-6.
+- **Warnings.** The `rum-runtime` lib-test build prints three `dead_code`
+  warnings in `runtime/test_builtins.rs`: `register_test_if_builtin`,
+  `register_test_return_builtin` and `register_test_vm_template_builtins`.
+  Build `base-source/` and report whether they occur at `99ceab48`. If the
+  diff introduced them, fix it.
+
+**Checkpointing is a hard rule this time.** Run 1 lost its whole record this
+way. Start by rewriting `state.json` and `PROGRESS.md` to the state this
+section describes. After that:
+- update them whenever the work moves, at least after every step and every
+  gate;
+- append each report section to `REPORT.md` as soon as its evidence is
+  final.
+
+**Report.** Add a section 0, *Run 1 review*, before section 1: what you kept
+from run 1's diff, what you changed, and why. The rest of the report format
+is unchanged.
