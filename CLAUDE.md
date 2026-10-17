@@ -263,7 +263,7 @@ Consequences for how I present and pick work:
   its cold helpers took the producer's whole `Result`; the design's own
   shape (the ZST witness and the request cross the call) cut the stack
   residual from 2 320 B to near-base and deleted all fourteen impossible
-  arms. S3's last defect lived in S1:
+  arms. S9's lessons: *calibrate a worker's instrument in the worker's environment* — grk's copy count matched libc names in a sandbox where libc had no symbols, read a constant, and was reported as a pass; and *a copy fix is not done until the stack shapes are rerun* — the arms that removed the extra memcpy grew `cleanup-body` by ~300 B per level in the inlined dispatcher. S3's last defect lived in S1:
   dormant code is unmeasured code. The typed finalizer reboxed itself on
   every finish from day one, and only the first step that executed one on a
   measured path could see it.

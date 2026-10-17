@@ -3654,3 +3654,67 @@ Method:
 - *Run a new probe shape once before writing it into a brief.* S8's first
   dispatch stopped on a stack shape of the director's that recursed on the
   `List` head.
+
+## 2026-10-17 → 18 — G13 S9: control and cleanup, two new workers, and a copy the worker's instrument could not see (brief 617)
+
+S9 (brief-617) typed the 24 frames and the finalizer that suspend inside
+`CheckAbort`, `AbortProtect`, `Assert`, `Check`, `Quiet`, `WithCleanup`,
+`CatchExceptions` and `Catch`. That leaves 95 of 606 production frame
+implementations typed. This family resumes on *errors*: every
+non-`InputRequired` outcome reaches the continuation it reached at S8.
+`WithCleanup`'s finalizer is a typed `SlotFinalizer`, and its `Arc` stays
+unique because the typed driver drops the frame and its queue entry before
+`finish`. Committed as `f4a7c6b0`.
+
+Codex's quota was out, so the user tried two new workers. The dispatcher
+gained `BRIEF_WORKER=agy` and `BRIEF_WORKER=grk`. Each refuses to dispatch
+unless the developer's config keeps the worker's OS fence.
+- **agy** (Antigravity, Gemini 4 Argon) runs in Linux namespaces with a single
+  repository write grant.
+- **grk** (Grok Build) runs under a strict Landlock profile with `.git` denied.
+  Before each dispatch the script runs a census session that reads back the
+  toolset the model is shown and the kernel profile grok applied.
+
+The first grok probe showed that grok loads Claude Code's MCP servers by
+default, including a Wolfram engine. The census now refuses any MCP server.
+
+- **agy did the conversion.** Its weekly quota ran out after 2 h 20 min,
+  before it wrote any report. Its checkpoints had stopped 26 minutes in.
+- **grk took the tree over.** It reviewed run 1, ran every gate and wrote a
+  report. Two of its claims were false. It said the nine native ZeroMQ tests
+  "did not skip", although its sandbox cannot bind loopback. It also reported
+  memcpy "at or below base 164/164": libc had no symbols in its sandbox and
+  the counter matched names, so every label read a constant.
+- **The director's gate found the defect.** Five sites handed the whole
+  136-byte `Result` to the continuation, which cost one memcpy per call on
+  seven ordinary labels.
+- **grk's quota ran out again** while it applied the fix, and the director
+  finished by user ruling. The fix grk had applied added a copy on
+  `CheckAbort`'s abort path and grew `cleanup-body` by about 300 B per level.
+  The director measured five `WithCleanup` variants, and only one was at or
+  below base on both copies and stack.
+
+The final gate passed:
+- copies: 0 of 164 labels above base;
+- stack: all 17 shapes at or below base, S9's smaller;
+- instructions: every S9 ordinary label at or below base;
+- timing: 0 labels above base on the aligned rebuild;
+- oracle, census and the workspace green, with the nine ZeroMQ tests run
+  natively;
+- probes: 186 pairs, all equal.
+
+Both headless CLIs stayed alive after their last turn and had to be
+interrupted.
+
+Method:
+
+- *Calibrate a worker's instrument in the worker's environment.* A
+  name-matched count in an unsymbolized sandbox read a constant, and the report
+  quoted it as a pass.
+- *Before trusting a worker's green, ask what its sandbox can execute.* This is
+  the 09-02 ZeroMQ lesson again: a skip still prints `ok`.
+- *A copy fix is not done until the stack shapes are rerun.* The arms that
+  removed the memcpy put their temporaries in the inlined dispatcher's frame.
+- *Make a worker's checkpoints a stop condition, and write it into the
+  continuation.* agy lost its whole record by not writing one. grk, told to
+  checkpoint, left a tree the director could finish from.
