@@ -5,10 +5,12 @@ operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
 Status checkpoint: 2026-10-18, committed tree through G13 step S9 (brief-617,
-control and cleanup; gated, below). **Next: G15 = brief-618 (design-only,
-on Codex; its quota reset early, 2026-10-18), a branch inserted before S10**
-(entry below, after S8). Then G15's implementation, then S10 from
-`.temp/brief-606/draft-S10.md`.
+control and cleanup; gated, below). **Next: G15, a branch inserted before S10**
+(entry below, after S8; design brief-618 accepted). Sequence: brief-619
+G15-A (status), brief-620 G15-B (definition LHS), brief-621 G15-C (design:
+settle brief-548's 495 `Unsettled` pairs and the oracle's contexts), its
+repairs, then `CHANGELOG.md` (user ruling), then S10 from
+`.temp/brief-606/draft-S10.md`. All on Codex (its quota reset early).
 - S9 ran on two new workers. agy (Gemini 4 Argon) and grk (grok-4.7, under
   the `rum-worker` kernel profile in `~/.grok/sandbox.toml`) were both cut by
   their quotas, and the director finished the step by user ruling.
@@ -1442,11 +1444,30 @@ internal heads as state.
   :> (InputString["w"]; {})|>]["Message"]; 7); f[]` gives `3` resumed and `7`
   queued, and the same `Return` stops a `Do` early. The three q8 rows of round
   5 (assigned to S10) are the same missing frame.
-- No census found it. brief-548 names this mechanism but swept builtins. The
-  E1 descriptors `Failure.propertyParameters`/`propertyTemplate` reach F0345
-  but compare a top-level string, and the evaluator's fixed point redoes the
-  skipped evaluation; only `Return` absorption shows. The design must settle
-  the class and the oracle context that makes a skipped tail observable.
+- Why it survived: brief-548's census enumerated the edge (P1306, and P0686/
+  P0687 below it) and left it `Unsettled`, one of 495 pairs it said it had
+  not settled; nothing settled them since. The E1 descriptors
+  `Failure.propertyParameters`/`propertyTemplate` reach F0345 but compare a
+  top-level string, and the evaluator's fixed point redoes the skipped
+  evaluation; only control flow such as `Return` absorption shows.
+- **Design brief-618 (accepted 2026-10-18, `808600a8`).** 136 pairs, 35 DIFF,
+  reproduced 136/136 by the director. It found a second instance: a resumed
+  definition LHS loses its matching-symbol cycle recovery
+  (`definition_lhs_preparation.rs:503` against the ordinary `:532-540`), so
+  `x := (InputString["w"]; x); f[x] = 3` gives `IterationLimit` resumed and
+  `3` queued. It predates S5 (P0307, also `Unsettled`).
+- **The plan.** G15-A (619): a status classifier with no `Session`, the status
+  branch returning its whole stage, two typed frames Expr → `Option<Expr>`;
+  q8 promotes here. G15-B (620): one shared LHS finish on F0257's retained
+  source, no new frame. G15-C (621, design-only): rebase and settle all 495
+  `Unsettled` pairs and brief-618's screens with executed probes in an
+  observable context, and design an obligation-keyed oracle manifest; it
+  precedes S10. The compiler-enforced coordinator is E2's subject, not G15's;
+  its compile-fail controls become E2's acceptance criteria.
+- The remaining DIFFs have owners: S10 the seven information markers (T0028),
+  S13 the Function, composition, association and Failsafe markers and the six
+  Fold/Nest rows (already reassigned at brief-609), S19 the three `cases.*`
+  rows.
 - The S10 pre-probe (`.temp/director/s10-probe/`, 58 pairs) is otherwise 48
   SAME; its other 7 DIFF are `Confirm`-family information values misread
   through the same `Option<Expr>` decoder (T0028), which S10's typing

@@ -247,12 +247,17 @@ Consequences for how I present and pick work:
   (616, ReplaceAll and the traversal collectors; the worker's run was cut by
   Codex's usage limit at its timing stage and I finished the gate) are
   done, and S9 (617, control and cleanup) is done. agy and grk were both cut
-  by their quotas, and I finished the gate by user ruling. **Now: G15
-  (618, design-only on Codex), inserted before S10 by my S10 pre-probe**: a
+  by their quotas, and I finished the gate by user ruling. **Now: G15,
+  inserted before S10 by my S10 pre-probe** (`TODO.md`'s G15 entry): a
   `Failure` property call that pauses resumes past the Function stage's
-  tail, so a `Return` escapes the body (`TODO.md`'s G15 entry). The census
-  swept builtins and the oracle compared top-level values, which the
-  evaluator's fixed point repairs. Then S10, one step per brief;
+  tail, so a `Return` escapes the body; its design (618) found a resumed
+  LHS losing its cycle recovery too. Both were rows brief-548 left
+  `Unsettled` (495 of them, never settled), and the oracle compared
+  top-level values, which the evaluator's fixed point repairs. G15-A (619),
+  G15-B (620), G15-C (621, settle the 495), then CHANGELOG, then S10, one
+  step per brief. *Unsettled is not a verdict*: an enumerated row nobody
+  settled is an open obligation, and a closed line that carries one is not
+  closed;
   then E2 (a
   may-suspend result type with no `Try`). From S5 the per-step stack bar is
   the named closure environment attributed per slot: S4 showed that an
