@@ -1,5 +1,8 @@
 use super::*;
+use crate::runtime::kernel_data::control_data::classify_status_object_call;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
+
+mod status_application;
 
 impl Session {
     pub(in crate::runtime) fn try_apply_function(
@@ -30,8 +33,8 @@ impl Session {
             }
         } else if let Some(composition) = parse_composition(head) {
             apply_composition_to_args(&composition, args)
-        } else if let Some(status) = self.apply_status_object_to_args(head, args)? {
-            status
+        } else if let Some(status) = classify_status_object_call(head, args) {
+            return self.apply_status_function(head, status);
         } else if let Some(value) = self.apply_association_to_args(head, args) {
             value
         } else if let Some(invalid_key_application) =

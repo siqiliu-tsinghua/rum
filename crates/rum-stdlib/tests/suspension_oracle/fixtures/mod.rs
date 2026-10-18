@@ -32,6 +32,7 @@ mod rules;
 mod schema;
 mod scoping;
 mod shared_completion;
+mod status_function;
 mod strings;
 mod strings_roles;
 mod typed_slots;

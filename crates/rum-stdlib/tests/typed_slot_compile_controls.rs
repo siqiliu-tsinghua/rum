@@ -264,7 +264,11 @@ private_case('mode-one-associated-type',registry,'impl Codec for Option<Expr> {\
 private_case('mode-no-codec-override',registry,'impl Codec for Option<Expr> {\n    type Mode = LegacyMode;','impl Codec for Option<Expr> {\n    type Mode = LegacyMode;\n    fn decode(slot: super::channel::Slot, _: CodecKey) -> Result<Self, super::channel::Slot> { Err(slot) } // @mode-no-codec-override','E0407','fn decode')
 private_case('mode-legacy-provider-narrow',typed,'fn old_decode(_:Expr,_:CodecKey)','fn old_decode(_:Slot,_:CodecKey)','E0053','Slot',category='incompatible type for trait')
 private_case('mode-state-provider-narrow',typed,'fn unpack(_:ContinuationState,_:CodecKey)->Result<Self,ContinuationState> { Ok(Self) } // @mode-state-provider-narrow','fn unpack(_:Slot,_:CodecKey)->Result<Self,ContinuationState> { Ok(Self) } // @mode-state-provider-narrow','E0053','Slot',category='incompatible type for trait')
-assert len(cases)==35
+private_case('status-classifier-no-session',runtime/'kernel_data/control_data/status.rs',
+    '    let is_failure = is_failure_expr(head);',
+    '    let _ = self.evaluate(head.clone()); // @status-classifier-no-session\n    let is_failure = is_failure_expr(head);',
+    'E0424','self')
+assert len(cases)==36
 base={case['file']:case['file'].read_text() for case in cases}
 
 def compile(kind,label):
@@ -336,6 +340,6 @@ for kind in ['external','private']:
             print(f'PAIR {case["id"]}: positive PASS; negative {case["code"] or "lifetime"} at {expected_file}:{line}:{column}',flush=True)
         finally: file.write_text(base[file])
 (logs/'results.json').write_text(json.dumps(report,indent=2)+'\n')
-assert len(report)==35
-print('COMPILE CONTROLS: 35 positive / 35 intended rejections (22 S1 + 7 S2 + opaque fault + token witness + fallback output + 2 G14 return-event constraints + S7 builtin-selector producer); raw Cargo JSON and primary spans retained',flush=True)
+assert len(report)==36
+print('COMPILE CONTROLS: 36 positive / 36 intended rejections (22 S1 + 7 S2 + opaque fault + token witness + fallback output + 2 G14 return-event constraints + S7 builtin-selector producer + G15-A session-free classifier); raw Cargo JSON and primary spans retained',flush=True)
 "###;

@@ -14,7 +14,9 @@ mod status;
 pub(in crate::runtime) use self::failsafe::{
     apply_callable_failsafe_wrapper_to_args, is_callable_failsafe_wrapper,
 };
-pub(in crate::runtime) use self::status::{is_failure_expr, is_success_expr};
+pub(in crate::runtime) use self::status::{
+    StatusObjectProjection, classify_status_object_call, is_failure_expr, is_success_expr,
+};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ControlDataBuiltin {

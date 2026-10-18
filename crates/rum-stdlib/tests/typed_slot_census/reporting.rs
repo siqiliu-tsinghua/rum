@@ -111,6 +111,8 @@ pub(super) fn emit(root: &Path, facts: &Facts, report: &Report) {
                     && (s.caller.contains("::definitions::")
                         || s.caller.contains("::kernel_data::association_data::")
                         || s.caller.contains("::kernel_data::control_data::")
+                        || s.caller
+                            .contains("::scoping::callable::status_application::")
                         || s.caller.contains("::tree_walkers::count_like::")
                         || s.caller.contains("::tree_walkers::position::"))
                     && s.name.starts_with("suspend")

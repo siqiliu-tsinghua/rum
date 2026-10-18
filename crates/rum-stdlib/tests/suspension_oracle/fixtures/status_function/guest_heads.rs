@@ -1,0 +1,129 @@
+//! Guest continuation-shaped values remain data in the Function stage.
+case!(
+    director_04,
+    r#""#,
+    r#"Failure["t", <|"MessageTemplate" -> System`InternalContinuationNone[], "MessageParameters" :> (InputString["w"]; {})|>]["Message"]"#,
+    &["w"],
+    r#"InternalContinuationNone[]"#,
+    r#"List[]"#
+);
+case!(
+    director_05,
+    r#""#,
+    r#"Failure["t", <|"MessageTemplate" -> System`InternalContinuationSome[5], "MessageParameters" :> (InputString["w"]; {})|>]["Message"]"#,
+    &["w"],
+    r#"InternalContinuationSome[5]"#,
+    r#"List[]"#
+);
+case!(
+    director_06,
+    r#""#,
+    r#"Failure["t", <|"MessageTemplate" -> System`InternalContinuationSome[], "MessageParameters" :> (InputString["w"]; {})|>]["Message"]"#,
+    &["w"],
+    r#"InternalContinuationSome[]"#,
+    r#"List[]"#
+);
+case!(
+    status_value_pause,
+    r#""#,
+    r#"Failure["t",<|"MessageTemplate":>(InputString["w"];System`InternalContinuationNone[]),"MessageParameters":>(InputString["w"];{})|>]["Message"]"#,
+    &["w", "w"],
+    r#"InternalContinuationNone[]"#,
+    r#"List[]"#
+);
+case!(
+    status_raw_property,
+    r#""#,
+    r#"Failure["t",<|"x":>(InputString["w"];System`InternalContinuationNone[])|>]["x"]"#,
+    &["w"],
+    r#"InternalContinuationNone[]"#,
+    r#"List[]"#
+);
+case!(
+    status_success,
+    r#""#,
+    r#"Success["t",<|"x":>(InputString["w"];System`InternalContinuationNone[])|>]["x"]"#,
+    &["w"],
+    r#"InternalContinuationNone[]"#,
+    r#"List[]"#
+);
+case!(
+    failure_some,
+    r#""#,
+    r#"Failure["t",<|"x":>(InputString["value"];System`InternalContinuationSome[5])|>]["x"]"#,
+    &["value"],
+    r#"InternalContinuationSome[5]"#,
+    r#"List[]"#
+);
+case!(
+    failure_empty_some,
+    r#""#,
+    r#"Failure["t",<|"x":>(InputString["value"];System`InternalContinuationSome[])|>]["x"]"#,
+    &["value"],
+    r#"InternalContinuationSome[]"#,
+    r#"List[]"#
+);
+case!(
+    failure_nested,
+    r#""#,
+    r#"Failure["t",<|"x":>(InputString["value"];System`InternalContinuationSome[System`InternalContinuationNone[]])|>]["x"]"#,
+    &["value"],
+    r#"InternalContinuationSome[InternalContinuationNone[]]"#,
+    r#"List[]"#
+);
+case!(
+    success_some,
+    r#""#,
+    r#"Success["t",<|"x":>(InputString["value"];System`InternalContinuationSome[5])|>]["x"]"#,
+    &["value"],
+    r#"InternalContinuationSome[5]"#,
+    r#"List[]"#
+);
+case!(
+    success_empty_some,
+    r#""#,
+    r#"Success["t",<|"x":>(InputString["value"];System`InternalContinuationSome[])|>]["x"]"#,
+    &["value"],
+    r#"InternalContinuationSome[]"#,
+    r#"List[]"#
+);
+case!(
+    success_nested,
+    r#""#,
+    r#"Success["t",<|"x":>(InputString["value"];System`InternalContinuationSome[System`InternalContinuationNone[]])|>]["x"]"#,
+    &["value"],
+    r#"InternalContinuationSome[InternalContinuationNone[]]"#,
+    r#"List[]"#
+);
+case!(
+    message_nested,
+    r#""#,
+    r#"Failure["t",<|"MessageTemplate":>System`InternalContinuationSome[System`InternalContinuationNone[]],"MessageParameters":>(InputString["projection"];{})|>]["Message"]"#,
+    &["projection"],
+    r#"InternalContinuationSome[InternalContinuationNone[]]"#,
+    r#"List[]"#
+);
+case!(
+    projection_value_some,
+    r#""#,
+    r#"Failure["t",<|"MessageTemplate":>(InputString["value"];System`InternalContinuationSome[5]),"MessageParameters":>(InputString["projection"];{})|>]["Message"]"#,
+    &["projection", "value"],
+    r#"InternalContinuationSome[5]"#,
+    r#"List[]"#
+);
+case!(
+    projection_value_empty_some,
+    r#""#,
+    r#"Failure["t",<|"MessageTemplate":>(InputString["value"];System`InternalContinuationSome[]),"MessageParameters":>(InputString["projection"];{})|>]["Message"]"#,
+    &["projection", "value"],
+    r#"InternalContinuationSome[]"#,
+    r#"List[]"#
+);
+case!(
+    projection_value_nested,
+    r#""#,
+    r#"Failure["t",<|"MessageTemplate":>(InputString["value"];System`InternalContinuationSome[System`InternalContinuationNone[]]),"MessageParameters":>(InputString["projection"];{})|>]["Message"]"#,
+    &["projection", "value"],
+    r#"InternalContinuationSome[InternalContinuationNone[]]"#,
+    r#"List[]"#
+);

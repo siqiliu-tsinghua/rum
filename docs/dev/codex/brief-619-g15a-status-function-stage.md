@@ -3817,3 +3817,3363 @@ Overlapping ten-run ranges do not establish exact timing equality. 60 of the 120
 | `upvalue-candidates-wide-small` | 1.012621 | 7 | 1.016330 |
 | `matcher-single-wide-small` | 1.012304 | 8 | 1.009366 |
 | `association-part-key-read-width32000` | 1.012083 | 7 | 1.008393 |
+
+
+## Continuation 1
+
+The director continuation requires `#[inline(never)]` on `apply_status_function` and fresh measurements of the final code. The preceding report is the historical result before this fix. Its release `try_apply_function` reservation of `0x4a8` and `function-body` slope of 19,456 B/level failed the new explicit bar (base `0x458`, 19,376 B/level). Final figures and any superseding residuals are recorded below. Workspace and timing reruns are expressly excluded by the director; their accepted evidence above remains historical.
+
+The accepted pre-continuation source and state are snapshotted under `continuation-1/before/`; old candidate binaries and measurements remain at their original paths. New evidence lives under `continuation-1/`, with prefixed gate logs in `logs/c1-*.log`. No git or network is used.
+
+### Gate: c1-stack-build
+
+Command: `python3 .temp/brief-619/continuation-1/build-stack.py`. Exit 0. Full raw output: `logs/c1-stack-build.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-prologues-debug
+
+Command: `python3 .temp/brief-619/prologues.py candidate debug .temp/brief-619/continuation-1/stack-evidence/candidate/debug .temp/brief-619/continuation-1/stack/debug/runtime-tests`. Exit 0. Full raw output: `logs/c1-prologues-debug.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-prologues-release
+
+Command: `python3 .temp/brief-619/prologues.py candidate release .temp/brief-619/continuation-1/stack-evidence/candidate/release .temp/brief-619/continuation-1/stack/release/runtime-tests`. Exit 0. Full raw output: `logs/c1-prologues-release.log`.
+
+```text
+No diagnostics.
+```
+
+### First stack attempt: application helper only
+
+The attribute alone compiled in both profiles. Debug `try_apply_function` stayed 2,808 B (base 3,256); release stayed 1,240 B including 48 B saved registers, with `sub $0x4a8,%rsp` (base reservation `0x458`). The classifier remained inlined. This did not reduce the failed release bar; continuation nonprogress count is 1. The conditional classifier outlining is the next attempt. Full binaries, prologues and raw builds are retained under `continuation-1/attempt-1/`.
+
+### Gate: c1-stack-build-2
+
+Command: `python3 .temp/brief-619/continuation-1/build-stack.py`. Exit 0. Full raw output: `logs/c1-stack-build-2.log`.
+
+```text
+No diagnostics.
+```
+
+### Final stack measurement
+
+Two attributes only: `apply_status_function` and its session-free classifier are outlined. The dispatch control flow and all function bodies are unchanged. Both common-frame bars pass. The earlier release Function growth is superseded by these final measurements.
+
+| Shape | Base B/level | Before fix | Final | Delta from base |
+| --- | ---: | ---: | ---: | ---: |
+| debug/peel | 19024 | 19024 | 19024 | +0 |
+| debug/plus | 34912 | 34912 | 34912 | +0 |
+| debug/sub | 29376 | 29376 | 29376 | +0 |
+| debug/up | 28064 | 28064 | 28064 | +0 |
+| debug/guarded | 35840 | 35840 | 35840 | +0 |
+| debug/rhs-guard | 49152 | 49152 | 49152 | +0 |
+| debug/replace-guard | 64880 | 64880 | 64880 | +0 |
+| debug/replaceall-guard | 63296 | 63296 | 63296 | +0 |
+| debug/count-guard | 74064 | 74064 | 74064 | +0 |
+| debug/position-guard | 85648 | 85648 | 85648 | +0 |
+| debug/catch-body | 50528 | 50528 | 50528 | +0 |
+| debug/checkabort-body | 52720 | 52720 | 52720 | +0 |
+| debug/abortprotect-body | 49904 | 49904 | 49904 | +0 |
+| debug/cleanup-body | 50880 | 50880 | 50880 | +0 |
+| debug/check-body | 50432 | 50432 | 50432 | +0 |
+| debug/quiet-body | 50304 | 50304 | 50304 | +0 |
+| debug/catchexceptions-body | 49872 | 49872 | 49872 | +0 |
+| debug/function-body | 49760 | 49312 | 49312 | -448 |
+| debug/status-body | 49760 | 50816 | 50816 | +1056 |
+| debug/message-body | 49760 | 50816 | 50816 | +1056 |
+| debug/lhs-arg | 58400 | 58400 | 58400 | +0 |
+| release/peel | 7344 | 7344 | 7344 | +0 |
+| release/plus | 13792 | 13792 | 13792 | +0 |
+| release/sub | 13168 | 13168 | 13168 | +0 |
+| release/up | 11456 | 11456 | 11456 | +0 |
+| release/guarded | 14240 | 14240 | 14240 | +0 |
+| release/rhs-guard | 17920 | 17920 | 17920 | +0 |
+| release/replace-guard | 26768 | 26768 | 26768 | +0 |
+| release/replaceall-guard | 24640 | 24640 | 24640 | +0 |
+| release/count-guard | 28416 | 28416 | 28416 | +0 |
+| release/position-guard | 33632 | 33632 | 33632 | +0 |
+| release/catch-body | 19280 | 19280 | 19280 | +0 |
+| release/checkabort-body | 20864 | 20864 | 20864 | +0 |
+| release/abortprotect-body | 19280 | 19280 | 19280 | +0 |
+| release/cleanup-body | 19280 | 19280 | 19280 | +0 |
+| release/check-body | 18736 | 18736 | 18736 | +0 |
+| release/quiet-body | 18688 | 18688 | 18688 | +0 |
+| release/catchexceptions-body | 19472 | 19472 | 19472 | +0 |
+| release/function-body | 19376 | 19456 | 19312 | -64 |
+| release/status-body | 19376 | 20160 | 20432 | +1056 |
+| release/message-body | 19376 | 20160 | 20432 | +1056 |
+| release/lhs-arg | 18160 | 18160 | 18160 | +0 |
+
+All 42 fits have zero residual (four heights, three samples each); 504 successful probes. Raw output: `continuation-1/stack/raw-probes.log`. Every test total, verbatim:
+
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.02s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.00s
+```
+
+### Gate: c1-stack-check
+
+Command: `python3 .temp/brief-619/continuation-1/check-stack.py`. Exit 0. Full raw output: `logs/c1-stack-check.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-fmt
+
+Command: `cargo fmt --check`. Exit 0. Full raw output: `logs/c1-fmt.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-status-default
+
+Command: `cargo test -p rum-stdlib --test suspension_oracle fixtures::status_function -- --nocapture`. Exit 0. Full raw output: `logs/c1-status-default.log`.
+
+```text
+test result: ok. 53 passed; 0 failed; 0 ignored; 0 measured; 369 filtered out; finished in 0.40s
+continuation-slot fault-occurrence delta=0; observations=636
+```
+
+### Gate: c1-census-default
+
+Command: `cargo test -p rum-stdlib --test typed_slot_census -- --nocapture`. Exit 0. Full raw output: `logs/c1-census-default.log`.
+
+```text
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 20.80s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 20.49s
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 288.61s
+```
+
+### Gate: c1-compile-controls-default
+
+Command: `cargo test -p rum-stdlib --test typed_slot_compile_controls -- --nocapture`. Exit 0. Full raw output: `logs/c1-compile-controls-default.log`.
+
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 33.27s
+```
+
+### Gate: c1-status-no-default
+
+Command: `cargo test -p rum-stdlib --no-default-features --test suspension_oracle fixtures::status_function -- --nocapture`. Exit 0. Full raw output: `logs/c1-status-no-default.log`.
+
+```text
+test result: ok. 53 passed; 0 failed; 0 ignored; 0 measured; 369 filtered out; finished in 0.37s
+continuation-slot fault-occurrence delta=0; observations=636
+```
+
+### Gate: c1-census-no-default
+
+Command: `cargo test -p rum-stdlib --no-default-features --test typed_slot_census -- --nocapture`. Exit 0. Full raw output: `logs/c1-census-no-default.log`.
+
+```text
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 20.12s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 20.19s
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 283.16s
+```
+
+### Gate: c1-compile-controls-no-default
+
+Command: `cargo test -p rum-stdlib --no-default-features --test typed_slot_compile_controls -- --nocapture`. Exit 0. Full raw output: `logs/c1-compile-controls-no-default.log`.
+
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 30.36s
+```
+
+### Gate: c1-frame-root-trace
+
+Command: `cargo test -p rum-runtime --lib frame_root_trace -- --nocapture`. Exit 0. Full raw output: `logs/c1-frame-root-trace.log`.
+
+```text
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 1.55s
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+```
+
+### Gate: c1-ownership-discovery
+
+Command: `cargo test -p rum-stdlib --lib ownership_graph::discovery_report_without_inventory_input -- --nocapture`. Exit 0. Full raw output: `logs/c1-ownership-discovery.log`.
+
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 5.95s
+```
+
+### Continuation ownership replay
+
+Ownership replay: 25 pure coordinate moves; no new or removed rows, no meaning changes, no new UnknownHostPayload. Exact discovery compared before writing. Citation inventory search found no source-line references to either changed region.
+
+```json
+[
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t510\t1\tunresolved attribute/expansion derive (Clone , Debug , Default , PartialEq , Eq)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t511\t1\tunresolved attribute/expansion derive (Clone , Debug , Default , PartialEq , Eq)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/scoping/callable/status_application.rs\t70\t1\tunresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: PureFrameAbandon)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/scoping/callable/status_application.rs\t71\t1\tunresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: PureFrameAbandon)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/scoping/callable/status_application.rs\t93\t1\tunresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: PureFrameAbandon)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/scoping/callable/status_application.rs\t94\t1\tunresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: PureFrameAbandon)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t306\t30\tclosure captures: || (capture types/modes unresolved)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t307\t30\tclosure captures: || (capture types/modes unresolved)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t314\t30\tclosure captures: || (capture types/modes unresolved)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t315\t30\tclosure captures: || (capture types/modes unresolved)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t316\t30\tclosure captures: || (capture types/modes unresolved)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t317\t30\tclosure captures: || (capture types/modes unresolved)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t327\t60\tclosure captures: || (capture types/modes unresolved)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t328\t60\tclosure captures: || (capture types/modes unresolved)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t337\t67\tclosure captures: || (capture types/modes unresolved)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t338\t67\tclosure captures: || (capture types/modes unresolved)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t410\t14\tclosure captures: |(key , _)| (capture types/modes unresolved)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t411\t14\tclosure captures: |(key , _)| (capture types/modes unresolved)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t419\t14\tclosure captures: |(key , _)| (capture types/modes unresolved)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t420\t14\tclosure captures: |(key , _)| (capture types/modes unresolved)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t451\t15\tclosure captures: |entry| (capture types/modes unresolved)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t452\t15\tclosure captures: |entry| (capture types/modes unresolved)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t537\t25\tclosure captures: |(key , value)| (capture types/modes unresolved)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t538\t25\tclosure captures: |(key , value)| (capture types/modes unresolved)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t322\t15\tunexpanded macro matches! (ends at 322:89)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t323\t15\tunexpanded macro matches! (ends at 323:89)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t348\t5\tunexpanded macro matches! (ends at 348:107)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t349\t5\tunexpanded macro matches! (ends at 349:107)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t352\t5\tunexpanded macro matches! (ends at 352:107)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t353\t5\tunexpanded macro matches! (ends at 353:107)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t356\t5\tunexpanded macro matches! (ends at 356:86)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t357\t5\tunexpanded macro matches! (ends at 357:86)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t375\t69\tunexpanded macro vec! (ends at 375:80)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t376\t69\tunexpanded macro vec! (ends at 376:80)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t460\t42\tunexpanded macro vec! (ends at 460:56)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t461\t42\tunexpanded macro vec! (ends at 461:56)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t469\t8\tunexpanded macro matches! (ends at 469:55)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t470\t8\tunexpanded macro matches! (ends at 470:55)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t472\t13\tunexpanded macro vec! (ends at 472:48)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t473\t13\tunexpanded macro vec! (ends at 473:48)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t480\t5\tunexpanded macro matches! (ends at 480:52)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t481\t5\tunexpanded macro matches! (ends at 481:52)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t495\t38\tunexpanded macro vec! (ends at 495:76)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t496\t38\tunexpanded macro vec! (ends at 496:76)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t553\t9\tunexpanded macro vec! (ends at 560:10)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t554\t9\tunexpanded macro vec! (ends at 561:10)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t586\t12\tunexpanded macro matches! (ends at 586:72)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t587\t12\tunexpanded macro matches! (ends at 587:72)"
+  },
+  {
+    "inventory": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+    "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t594\t57\tunexpanded macro matches! (ends at 594:99)",
+    "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/kernel_data/control_data/status.rs\t595\t57\tunexpanded macro matches! (ends at 595:99)"
+  }
+]
+```
+
+### Gate: c1-ownership-replay
+
+Command: `python3 .temp/brief-619/continuation-1/replay-ownership.py`. Exit 0. Full raw output: `logs/c1-ownership-replay.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-regenerate-fingerprints
+
+Command: `cargo test -p rum-stdlib --lib regenerate_local_contract_fingerprints -- --ignored --nocapture`. Exit 0. Full raw output: `logs/c1-regenerate-fingerprints.log`.
+
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 0.21s
+```
+
+## Canonical fingerprints replay
+
+Destination: `crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv`. Canonical output paths: `target/brief-544/local-contracts.tsv`. Non-derived fields are identical. No handwritten hashes, marks or ledger cells.
+
+```text
+{"id": "B01", "old": "fnv1a64:a896eef2bf55f629", "new": "fnv1a64:fd76a8e9cc1a20ec"}
+{"id": "B02", "old": "fnv1a64:7b5c0216bd31de58", "new": "fnv1a64:94d8fbf3bab5dac1"}
+{"id": "B03", "old": "fnv1a64:153020959e70d02f", "new": "fnv1a64:e6334e935884d5ba"}
+{"id": "B04", "old": "fnv1a64:1b3d50b3668e4931", "new": "fnv1a64:b0711d348b43c614"}
+{"id": "B05", "old": "fnv1a64:0a9dff28040ddac4", "new": "fnv1a64:bcd8476091ad37a5"}
+{"id": "B06", "old": "fnv1a64:8c2dfde8d114b9cd", "new": "fnv1a64:8163acc57cd0cfe8"}
+{"id": "B07", "old": "fnv1a64:58e35ae00d6014d4", "new": "fnv1a64:ee9d05fed55ebe55"}
+{"id": "B08", "old": "fnv1a64:2554f91e8908052b", "new": "fnv1a64:ac4b06d1c345426e"}
+{"id": "B09", "old": "fnv1a64:e5a3e1f006ab33b5", "new": "fnv1a64:ad6ad84b5a58d3b0"}
+{"id": "B10", "old": "fnv1a64:c73b70077d6eb45e", "new": "fnv1a64:f25e5ecdaf64e74f"}
+{"id": "B11", "old": "fnv1a64:dc95021080826f31", "new": "fnv1a64:71c8ce91a537ec14"}
+{"id": "B12", "old": "fnv1a64:a4b061ebe2b3c8b5", "new": "fnv1a64:6c775847366168b0"}
+{"id": "I01", "old": "fnv1a64:8678d9f02c0deca9", "new": "fnv1a64:db5893e738d2176c"}
+{"id": "I02", "old": "fnv1a64:61df7cbbfc4462c4", "new": "fnv1a64:1419c4f489e3bfa5"}
+{"id": "I03", "old": "fnv1a64:9ebfa3b26fd63775", "new": "fnv1a64:b9d4326c4f2c67f0"}
+{"id": "I04", "old": "fnv1a64:9a7e9d64ec2f9af8", "new": "fnv1a64:d3d7bbd0b3d99261"}
+{"id": "P01", "old": "fnv1a64:6f21f43fe79d33ed", "new": "fnv1a64:1ac6ea867f1def88"}
+{"id": "P02", "old": "fnv1a64:99a7abc9b25ae8ce", "new": "fnv1a64:5ba6b58292f6b61f"}
+{"id": "P03", "old": "fnv1a64:446bf964c81cbe47", "new": "fnv1a64:55e2242c2c432c92"}
+{"id": "P04", "old": "fnv1a64:7037202c41dafa58", "new": "fnv1a64:89b41a093f5ef6c1"}
+{"id": "P05", "old": "fnv1a64:22b9469706e7fa19", "new": "fnv1a64:6a622ecfd3e1633c"}
+{"id": "P06", "old": "fnv1a64:f52f86bc6ee36235", "new": "fnv1a64:bcf67d17c2910230"}
+{"id": "P070", "old": "fnv1a64:2f7d22fe4d58dc35", "new": "fnv1a64:f7441959a1067c30"}
+{"id": "P080", "old": "fnv1a64:d3f368650a010f1e", "new": "fnv1a64:df118c2c9e43908f"}
+{"id": "P090", "old": "fnv1a64:5ba843aeb62e6618", "new": "fnv1a64:868482d6bbbad701"}
+{"id": "P100", "old": "fnv1a64:52a9ed68d4840a41", "new": "fnv1a64:092921f5740fe944"}
+{"id": "P110", "old": "fnv1a64:b066123e3a12f6d6", "new": "fnv1a64:fa283cdf94f52767"}
+{"id": "P120", "old": "fnv1a64:b15e176ac408754b", "new": "fnv1a64:c649d03bdfd7e78e"}
+{"id": "P130", "old": "fnv1a64:fcb0b43d3c13eed4", "new": "fnv1a64:926a5f5c04129855"}
+{"id": "P140", "old": "fnv1a64:dff9b1551f6ad1d0", "new": "fnv1a64:8b209a043045d0b9"}
+{"id": "P150", "old": "fnv1a64:422cdeb1aaf8c5b8", "new": "fnv1a64:723c6c9dbf9b4aa1"}
+{"id": "P071", "old": "fnv1a64:767417c48d5accf4", "new": "fnv1a64:06704c0b88e42175"}
+{"id": "P081", "old": "fnv1a64:39feebb0d86f1a55", "new": "fnv1a64:f464d785ee65ec50"}
+{"id": "P091", "old": "fnv1a64:87dbd908bf6d95ad", "new": "fnv1a64:5c3f91f7c1c89ac8"}
+{"id": "P101", "old": "fnv1a64:a869030b6f7693d6", "new": "fnv1a64:f22b2dacca58c467"}
+{"id": "P111", "old": "fnv1a64:08eee8b832a7f385", "new": "fnv1a64:ff3dbdf3da3e6a20"}
+{"id": "P121", "old": "fnv1a64:999ed01c9eb9e002", "new": "fnv1a64:dc6e40bb5297ae2b"}
+{"id": "P131", "old": "fnv1a64:b8e773199ce26ab1", "new": "fnv1a64:4e1b3f9ac197e794"}
+{"id": "P141", "old": "fnv1a64:b54ba8255ccf4c8d", "new": "fnv1a64:555f36bf09df5428"}
+{"id": "P151", "old": "fnv1a64:0796fd23d9e3698b", "new": "fnv1a64:cfb5851a7472b84e"}
+{"id": "B13", "old": "fnv1a64:1a3e917201b175cd", "new": "fnv1a64:0f74404ead6d8be8"}
+{"id": "R01", "old": "fnv1a64:2d7cc7fd00238568", "new": "fnv1a64:eff65103a5dc71f1"}
+{"id": "R02", "old": "fnv1a64:ce4f46625cba7807", "new": "fnv1a64:877c8b83e7bc97d2"}
+{"id": "R03", "old": "fnv1a64:43d975f55706879c", "new": "fnv1a64:7b70b943474cfabd"}
+{"id": "R040", "old": "fnv1a64:ed40091b299c9188", "new": "fnv1a64:53691890a226b691"}
+{"id": "R050", "old": "fnv1a64:cff26c1f698d5279", "new": "fnv1a64:fd7f0b8ea779611c"}
+{"id": "R060", "old": "fnv1a64:e097ae7315c57b60", "new": "fnv1a64:c5462069986221e9"}
+{"id": "R070", "old": "fnv1a64:a26cb3caba10d955", "new": "fnv1a64:5cd29f9fd007ab50"}
+{"id": "R080", "old": "fnv1a64:61830657bbb463f8", "new": "fnv1a64:9adc24c3835e5b61"}
+{"id": "R090", "old": "fnv1a64:369d9991d683e501", "new": "fnv1a64:febb4e06a6832184"}
+{"id": "R100", "old": "fnv1a64:da55c4e848467aaf", "new": "fnv1a64:ab58f2e6025a803a"}
+{"id": "R110", "old": "fnv1a64:695b1a32193a5926", "new": "fnv1a64:5237b03bdc90b757"}
+{"id": "R041", "old": "fnv1a64:0077f49c18d934cd", "new": "fnv1a64:f5ada378c4954ae8"}
+{"id": "R051", "old": "fnv1a64:e9ca71c4435c7298", "new": "fnv1a64:14a6b0ec48e8e381"}
+{"id": "R061", "old": "fnv1a64:7b2ac53b759eea1b", "new": "fnv1a64:b71422f3a2893dfe"}
+{"id": "R071", "old": "fnv1a64:0c96a1c3002d762a", "new": "fnv1a64:9972463ee1aefd53"}
+{"id": "R081", "old": "fnv1a64:0e9456bd702fdf41", "new": "fnv1a64:c5138b4a0fbbbe44"}
+{"id": "R091", "old": "fnv1a64:60d33aadf9a6d610", "new": "fnv1a64:22ad6051dccdb879"}
+{"id": "R101", "old": "fnv1a64:a639403984a53320", "new": "fnv1a64:ef278a0e32d7d629"}
+{"id": "R111", "old": "fnv1a64:a234fb99e5db4433", "new": "fnv1a64:55a81c226f91f1d6"}
+{"id": "R12", "old": "fnv1a64:e1df8459fed23073", "new": "fnv1a64:3177d545acad8e96"}
+{"id": "R13", "old": "fnv1a64:ab15bfa754e90c1f", "new": "fnv1a64:86a86eb64666b70a"}
+{"id": "R14", "old": "fnv1a64:6d01fbdeb134ca41", "new": "fnv1a64:2381306b50c0a944"}
+{"id": "R15", "old": "fnv1a64:e38b830431815f3d", "new": "fnv1a64:420e5111e0d4f978"}
+{"id": "O010", "old": "fnv1a64:ac4663e2c282727b", "new": "fnv1a64:c72c0b63449eebde"}
+{"id": "O0200", "old": "fnv1a64:dac153296e21f7d0", "new": "fnv1a64:85e83bd87efcf6b9"}
+{"id": "O011", "old": "fnv1a64:23206afb23573fe0", "new": "fnv1a64:07cedcf1a5f3e669"}
+{"id": "O0210", "old": "fnv1a64:0dd1fa2b0cfd13d3", "new": "fnv1a64:9f01addb88db1af6"}
+```
+
+### Gate: c1-certificate-discovery-default
+
+Command: `cargo test -p rum-stdlib --lib local_production_acceptance -- --nocapture`. Exit 101. Full raw output: `logs/c1-certificate-discovery-default.log`.
+
+```text
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 18.48s
+```
+
+### Gate: c1-certificate-discovery-no-default
+
+Command: `cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance -- --nocapture`. Exit 101. Full raw output: `logs/c1-certificate-discovery-no-default.log`.
+
+```text
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1155 filtered out; finished in 18.33s
+```
+
+## Canonical certificates replay
+
+Destination: `crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv`. Canonical output paths: `.temp/brief-546/certificates/promoted-hash-true.tsv`, `.temp/brief-546/certificates/promoted-hash-false.tsv`. Non-derived fields are identical. No handwritten hashes, marks or ledger cells.
+
+```text
+{"id": "C01", "feature_hash": "true", "old": "instance=Instance { body: \"rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol\", key: \"rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>\", mode: \"rum_runtime::runtime::accounting_mode::counter::AccountingShadow\", reentry: \"rum_stdlib::option_consumers::OptionConsumer\", build: \"target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None\", body_fingerprint: \"fnv1a64:03265d3e8582f2b4\", domain_fingerprint: \"fnv1a64:f1b1b5ec1f9ab7c9\" };mark=fnv1a64:6353433c6e9a106e;direct-covered={};direct-contracts={\"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>\": \"O0210@fnv1a64:0dd1fa2b0cfd13d3;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>\": \"O011@fnv1a64:23206afb23573fe0;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\"} || instance=Instance { body: \"rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol\", key: \"rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>\", mode: \"rum_runtime::runtime::accounting_mode::counter::Unarmed\", reentry: \"rum_stdlib::option_consumers::OptionConsumer\", build: \"target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None\", body_fingerprint: \"fnv1a64:03265d3e8582f2b4\", domain_fingerprint: \"fnv1a64:f1b1b5ec1f9ab7c9\" };mark=fnv1a64:2a43cb5cd0908a60;direct-covered={};direct-contracts={\"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>\": \"O0200@fnv1a64:dac153296e21f7d0;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>\": \"O010@fnv1a64:ac4663e2c282727b;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\"}", "new": "instance=Instance { body: \"rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol\", key: \"rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>\", mode: \"rum_runtime::runtime::accounting_mode::counter::AccountingShadow\", reentry: \"rum_stdlib::option_consumers::OptionConsumer\", build: \"target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None\", body_fingerprint: \"fnv1a64:fecc0ea262066aab\", domain_fingerprint: \"fnv1a64:f1b1b5ec1f9ab7c9\" };mark=fnv1a64:3fa6372e6845cee6;direct-covered={};direct-contracts={\"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>\": \"O0210@fnv1a64:9f01addb88db1af6;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>\": \"O011@fnv1a64:07cedcf1a5f3e669;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\"} || instance=Instance { body: \"rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol\", key: \"rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>\", mode: \"rum_runtime::runtime::accounting_mode::counter::Unarmed\", reentry: \"rum_stdlib::option_consumers::OptionConsumer\", build: \"target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None\", body_fingerprint: \"fnv1a64:fecc0ea262066aab\", domain_fingerprint: \"fnv1a64:f1b1b5ec1f9ab7c9\" };mark=fnv1a64:159c9ccce0628adc;direct-covered={};direct-contracts={\"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>\": \"O0200@fnv1a64:85e83bd87efcf6b9;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>\": \"O010@fnv1a64:c72c0b63449eebde;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\"}"}
+{"id": "C02", "feature_hash": "true", "old": "instance=Instance { body: \"rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr\", key: \"rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr\", mode: \"runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow\", reentry: \"none (nongeneric C02)\", build: \"target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None\", body_fingerprint: \"fnv1a64:d3ac466610f104ce\", domain_fingerprint: \"fnv1a64:f1b1b5ec1f9ab7c9\" };mark=fnv1a64:38cb1e49ab5b302d;direct-covered={};direct-contracts={\"<rum_core::expr::SharedArgs as std::ops::Deref>::deref\": \"I01@fnv1a64:8678d9f02c0deca9;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=SharedArgs deref borrows the same Vec with pointer identity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"<rum_core::expr::SharedExpr as std::ops::Deref>::deref\": \"I02@fnv1a64:61df7cbbfc4462c4;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=borrows same Expr with pointer identity; no owner or capacity receipt;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index\": \"I04@fnv1a64:9a7e9d64ec2f9af8;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec<Expr> indexing by usize borrows one element; bounds panic unwinds;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"rum_runtime::runtime::accounting_mode::rule::clone_result\": \"R01@fnv1a64:2d7cc7fd00238568;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"rum_runtime::runtime::accounting_mode::rule::evaluate_rule\": \"R02@fnv1a64:ce4f46625cba7807;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"rum_runtime::runtime::expr_runtime_helpers::is_system_symbol_name\": \"B13@fnv1a64:1a3e917201b175cd;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=None=false; System matching name=true; different name or context=false; scalar result;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"std::vec::Vec<rum_core::expr::Expr>::len\": \"B05@fnv1a64:0a9dff28040ddac4;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec length reads initialized length even with spare capacity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\"}", "new": "instance=Instance { body: \"rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr\", key: \"rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr\", mode: \"runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow\", reentry: \"none (nongeneric C02)\", build: \"target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None\", body_fingerprint: \"fnv1a64:ffac2aca1193f3a9\", domain_fingerprint: \"fnv1a64:f1b1b5ec1f9ab7c9\" };mark=fnv1a64:aadf2866da9d78d2;direct-covered={};direct-contracts={\"<rum_core::expr::SharedArgs as std::ops::Deref>::deref\": \"I01@fnv1a64:db5893e738d2176c;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=SharedArgs deref borrows the same Vec with pointer identity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"<rum_core::expr::SharedExpr as std::ops::Deref>::deref\": \"I02@fnv1a64:1419c4f489e3bfa5;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=borrows same Expr with pointer identity; no owner or capacity receipt;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index\": \"I04@fnv1a64:d3d7bbd0b3d99261;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec<Expr> indexing by usize borrows one element; bounds panic unwinds;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"rum_runtime::runtime::accounting_mode::rule::clone_result\": \"R01@fnv1a64:eff65103a5dc71f1;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"rum_runtime::runtime::accounting_mode::rule::evaluate_rule\": \"R02@fnv1a64:877c8b83e7bc97d2;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"rum_runtime::runtime::expr_runtime_helpers::is_system_symbol_name\": \"B13@fnv1a64:0f74404ead6d8be8;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=None=false; System matching name=true; different name or context=false; scalar result;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"std::vec::Vec<rum_core::expr::Expr>::len\": \"B05@fnv1a64:bcd8476091ad37a5;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec length reads initialized length even with spare capacity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\"}"}
+{"id": "C01", "feature_hash": "false", "old": "instance=Instance { body: \"rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol\", key: \"rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>\", mode: \"rum_runtime::runtime::accounting_mode::counter::AccountingShadow\", reentry: \"rum_stdlib::option_consumers::OptionConsumer\", build: \"target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None\", body_fingerprint: \"fnv1a64:946becd717009e33\", domain_fingerprint: \"fnv1a64:ed48860e2b2c615f\" };mark=fnv1a64:8fe9740ecd272e39;direct-covered={};direct-contracts={\"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>\": \"O0210@fnv1a64:0dd1fa2b0cfd13d3;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>\": \"O011@fnv1a64:23206afb23573fe0;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\"} || instance=Instance { body: \"rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol\", key: \"rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>\", mode: \"rum_runtime::runtime::accounting_mode::counter::Unarmed\", reentry: \"rum_stdlib::option_consumers::OptionConsumer\", build: \"target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None\", body_fingerprint: \"fnv1a64:946becd717009e33\", domain_fingerprint: \"fnv1a64:ed48860e2b2c615f\" };mark=fnv1a64:272448549ff4c987;direct-covered={};direct-contracts={\"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>\": \"O0200@fnv1a64:dac153296e21f7d0;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>\": \"O010@fnv1a64:ac4663e2c282727b;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\"}", "new": "instance=Instance { body: \"rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol\", key: \"rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>\", mode: \"rum_runtime::runtime::accounting_mode::counter::AccountingShadow\", reentry: \"rum_stdlib::option_consumers::OptionConsumer\", build: \"target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None\", body_fingerprint: \"fnv1a64:c003288f57b03b36\", domain_fingerprint: \"fnv1a64:ed48860e2b2c615f\" };mark=fnv1a64:44bbfe39c993ab1d;direct-covered={};direct-contracts={\"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>\": \"O0210@fnv1a64:9f01addb88db1af6;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>\": \"O011@fnv1a64:07cedcf1a5f3e669;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\"} || instance=Instance { body: \"rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol\", key: \"rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>\", mode: \"rum_runtime::runtime::accounting_mode::counter::Unarmed\", reentry: \"rum_stdlib::option_consumers::OptionConsumer\", build: \"target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None\", body_fingerprint: \"fnv1a64:c003288f57b03b36\", domain_fingerprint: \"fnv1a64:ed48860e2b2c615f\" };mark=fnv1a64:5ea9bb0a82afd1ef;direct-covered={};direct-contracts={\"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>\": \"O0200@fnv1a64:85e83bd87efcf6b9;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>\": \"O010@fnv1a64:c72c0b63449eebde;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\"}"}
+{"id": "C02", "feature_hash": "false", "old": "instance=Instance { body: \"rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr\", key: \"rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr\", mode: \"runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow\", reentry: \"none (nongeneric C02)\", build: \"target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None\", body_fingerprint: \"fnv1a64:1cff771c03708dc1\", domain_fingerprint: \"fnv1a64:ed48860e2b2c615f\" };mark=fnv1a64:48405f1a31e15c20;direct-covered={};direct-contracts={\"<rum_core::expr::SharedArgs as std::ops::Deref>::deref\": \"I01@fnv1a64:8678d9f02c0deca9;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=SharedArgs deref borrows the same Vec with pointer identity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"<rum_core::expr::SharedExpr as std::ops::Deref>::deref\": \"I02@fnv1a64:61df7cbbfc4462c4;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=borrows same Expr with pointer identity; no owner or capacity receipt;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index\": \"I04@fnv1a64:9a7e9d64ec2f9af8;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec<Expr> indexing by usize borrows one element; bounds panic unwinds;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"rum_runtime::runtime::accounting_mode::rule::clone_result\": \"R01@fnv1a64:2d7cc7fd00238568;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"rum_runtime::runtime::accounting_mode::rule::evaluate_rule\": \"R02@fnv1a64:ce4f46625cba7807;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"rum_runtime::runtime::expr_runtime_helpers::is_system_symbol_name\": \"B13@fnv1a64:1a3e917201b175cd;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=None=false; System matching name=true; different name or context=false; scalar result;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"std::vec::Vec<rum_core::expr::Expr>::len\": \"B05@fnv1a64:0a9dff28040ddac4;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec length reads initialized length even with spare capacity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\"}", "new": "instance=Instance { body: \"rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr\", key: \"rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr\", mode: \"runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow\", reentry: \"none (nongeneric C02)\", build: \"target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None\", body_fingerprint: \"fnv1a64:f793d8b58fdb5448\", domain_fingerprint: \"fnv1a64:ed48860e2b2c615f\" };mark=fnv1a64:90bd14da7efe1a2d;direct-covered={};direct-contracts={\"<rum_core::expr::SharedArgs as std::ops::Deref>::deref\": \"I01@fnv1a64:db5893e738d2176c;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=SharedArgs deref borrows the same Vec with pointer identity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"<rum_core::expr::SharedExpr as std::ops::Deref>::deref\": \"I02@fnv1a64:1419c4f489e3bfa5;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=borrows same Expr with pointer identity; no owner or capacity receipt;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index\": \"I04@fnv1a64:d3d7bbd0b3d99261;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec<Expr> indexing by usize borrows one element; bounds panic unwinds;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"rum_runtime::runtime::accounting_mode::rule::clone_result\": \"R01@fnv1a64:eff65103a5dc71f1;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"rum_runtime::runtime::accounting_mode::rule::evaluate_rule\": \"R02@fnv1a64:877c8b83e7bc97d2;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"rum_runtime::runtime::expr_runtime_helpers::is_system_symbol_name\": \"B13@fnv1a64:0f74404ead6d8be8;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=None=false; System matching name=true; different name or context=false; scalar result;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\", \"std::vec::Vec<rum_core::expr::Expr>::len\": \"B05@fnv1a64:bcd8476091ad37a5;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec length reads initialized length even with spare capacity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt\"}"}
+```
+
+### Gate: c1-ownership-default
+
+Command: `cargo test -p rum-stdlib --lib ownership_graph -- --nocapture`. Exit 0. Full raw output: `logs/c1-ownership-default.log`.
+
+```text
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 1131 filtered out; finished in 72.96s
+```
+
+### Gate: c1-acceptance-default
+
+Command: `cargo test -p rum-stdlib --lib local_production_acceptance -- --nocapture`. Exit 0. Full raw output: `logs/c1-acceptance-default.log`.
+
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 19.51s
+```
+
+### Gate: c1-ownership-no-default
+
+Command: `cargo test -p rum-stdlib --no-default-features --lib ownership_graph -- --nocapture`. Exit 0. Full raw output: `logs/c1-ownership-no-default.log`.
+
+```text
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 1125 filtered out; finished in 73.00s
+```
+
+### Gate: c1-acceptance-no-default
+
+Command: `cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance -- --nocapture`. Exit 0. Full raw output: `logs/c1-acceptance-no-default.log`.
+
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1155 filtered out; finished in 19.00s
+```
+
+### Gate: c1-rejection-census
+
+Command: `cargo test -p rum-stdlib --lib production_rejection_census_is_complete -- --nocapture`. Exit 0. Full raw output: `logs/c1-rejection-census.log`.
+
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 26.80s
+```
+
+### Final rejection-census replay
+
+48,713 before and 48,713 final rows; 123 pure coordinate moves, zero added/removed rows or semantic changes. All columns, including origins and witness citations, match after the two inserted attributes are mapped to their existing function spans. Complete old/new pairing: `continuation-1/rejection-replay.json`. Canonical output: `target/brief-535/EDGE_ALL/`, copied to `continuation-1/retention/`.
+
+### Gate: c1-rejection-replay
+
+Command: `python3 .temp/brief-619/continuation-1/audit-rejections.py`. Exit 0. Full raw output: `logs/c1-rejection-replay.log`.
+
+```text
+No diagnostics.
+```
+
+### Final prologues and stack-slot tables
+
+All source functions in the status/callable change and their emitted specializations are covered below. Values include saved registers but exclude the return address; a missing symbol is inlined/absent. Every concrete stack operand, store and surrounding copy call is retained in the linked per-function table, for base, pre-continuation and final builds. No source body or dispatch branch changed during Continuation 1.
+
+| Profile | Function | Base | Before | Final | Complete slot/store table |
+| --- | --- | ---: | ---: | ---: | --- |
+| debug | `<rum_runtime::runtime::scoping::callable::status_application::StatusFunctionProjectionFrame as rum_runtime::runtime::suspension::core::FrameAbandon>::abandon` | None | 24 | 24 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/1.json` |
+| debug | `<rum_runtime::runtime::scoping::callable::status_application::StatusFunctionProjectionFrame as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | None | 0 | 0 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/2.json` |
+| debug | `<rum_runtime::runtime::scoping::callable::status_application::StatusFunctionProjectionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | None | 680 | 680 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/3.json` |
+| debug | `<rum_runtime::runtime::scoping::callable::status_application::StatusFunctionValueFrame as rum_runtime::runtime::suspension::core::FrameAbandon>::abandon` | None | 24 | 24 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/4.json` |
+| debug | `<rum_runtime::runtime::scoping::callable::status_application::StatusFunctionValueFrame as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | None | 0 | 0 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/5.json` |
+| debug | `<rum_runtime::runtime::scoping::callable::status_application::StatusFunctionValueFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | None | 344 | 344 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/6.json` |
+| debug | `core::ptr::drop_in_place<alloc::sync::Arc<rum_runtime::runtime::scoping::callable::status_application::StatusFunctionProjectionFrame>>` | None | 8 | 8 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/7.json` |
+| debug | `core::ptr::drop_in_place<alloc::sync::Arc<rum_runtime::runtime::scoping::callable::status_application::StatusFunctionValueFrame>>` | None | 8 | 8 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/8.json` |
+| debug | `core::ptr::drop_in_place<alloc::sync::Arc<rum_runtime::runtime::suspension::typed::adapter::TypedAdapter<rum_runtime::runtime::scoping::callable::status_application::StatusFunctionProjectionFrame>>>` | None | 8 | 8 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/9.json` |
+| debug | `core::ptr::drop_in_place<alloc::sync::Arc<rum_runtime::runtime::suspension::typed::adapter::TypedAdapter<rum_runtime::runtime::scoping::callable::status_application::StatusFunctionValueFrame>>>` | None | 8 | 8 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/10.json` |
+| debug | `core::ptr::drop_in_place<alloc::sync::ArcInner<rum_runtime::runtime::suspension::typed::adapter::TypedAdapter<rum_runtime::runtime::scoping::callable::status_application::StatusFunctionProjectionFrame>>>` | None | 8 | 8 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/11.json` |
+| debug | `core::ptr::drop_in_place<alloc::sync::ArcInner<rum_runtime::runtime::suspension::typed::adapter::TypedAdapter<rum_runtime::runtime::scoping::callable::status_application::StatusFunctionValueFrame>>>` | None | 8 | 8 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/12.json` |
+| debug | `core::ptr::drop_in_place<alloc::sync::Weak<rum_runtime::runtime::scoping::callable::status_application::StatusFunctionProjectionFrame,&alloc::alloc::Global>>` | None | 8 | 8 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/13.json` |
+| debug | `core::ptr::drop_in_place<alloc::sync::Weak<rum_runtime::runtime::scoping::callable::status_application::StatusFunctionValueFrame,&alloc::alloc::Global>>` | None | 8 | 8 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/14.json` |
+| debug | `core::ptr::drop_in_place<alloc::sync::Weak<rum_runtime::runtime::suspension::typed::adapter::TypedAdapter<rum_runtime::runtime::scoping::callable::status_application::StatusFunctionProjectionFrame>,&alloc::alloc::Global>>` | None | 8 | 8 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/15.json` |
+| debug | `core::ptr::drop_in_place<alloc::sync::Weak<rum_runtime::runtime::suspension::typed::adapter::TypedAdapter<rum_runtime::runtime::scoping::callable::status_application::StatusFunctionValueFrame>,&alloc::alloc::Global>>` | None | 8 | 8 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/16.json` |
+| debug | `core::ptr::drop_in_place<rum_runtime::runtime::suspension::typed::adapter::TypedAdapter<rum_runtime::runtime::scoping::callable::status_application::StatusFunctionProjectionFrame>>` | None | 8 | 8 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/17.json` |
+| debug | `core::ptr::drop_in_place<rum_runtime::runtime::suspension::typed::adapter::TypedAdapter<rum_runtime::runtime::scoping::callable::status_application::StatusFunctionValueFrame>>` | None | 8 | 8 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/18.json` |
+| debug | `rum_runtime::runtime::kernel_data::control_data::status::<impl rum_runtime::runtime::model::session::Session>::apply_status_object_to_args` | 1448 | None | None | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/19.json` |
+| debug | `rum_runtime::runtime::kernel_data::control_data::status::<impl rum_runtime::runtime::model::session::Session>::failure_property_value` | 152 | 152 | 152 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/20.json` |
+| debug | `rum_runtime::runtime::kernel_data::control_data::status::<impl rum_runtime::runtime::model::session::Session>::project_status_function_message` | None | 1048 | 1048 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/21.json` |
+| debug | `rum_runtime::runtime::kernel_data::control_data::status::<impl rum_runtime::runtime::model::session::Session>::project_status_function_message::{{closure}}` | None | 72 | 72 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/22.json` |
+| debug | `rum_runtime::runtime::kernel_data::control_data::status::<impl rum_runtime::runtime::model::session::Session>::status_object_projection_value` | 1688 | 1640 | 1640 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/23.json` |
+| debug | `rum_runtime::runtime::kernel_data::control_data::status::<impl rum_runtime::runtime::model::session::Session>::status_object_projection_value::{{closure}}` | 72 | 72 | 72 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/24.json` |
+| debug | `rum_runtime::runtime::kernel_data::control_data::status::classify_status_object_call` | None | 712 | 712 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/25.json` |
+| debug | `rum_runtime::runtime::kernel_data::control_data::status::classify_status_object_call::{{closure}}` | None | 72 | 72 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/26.json` |
+| debug | `rum_runtime::runtime::kernel_data::control_data::status::status_object_pure_property_value` | None | 104 | 104 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/27.json` |
+| debug | `rum_runtime::runtime::kernel_data::control_data::status::status_object_pure_property_value::{{closure}}` | None | 72 | 72 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/28.json` |
+| debug | `rum_runtime::runtime::scoping::callable::<impl rum_runtime::runtime::model::session::Session>::try_apply_function` | 3256 | 2808 | 2808 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/29.json` |
+| debug | `rum_runtime::runtime::scoping::callable::status_application::<impl rum_runtime::runtime::model::session::Session>::apply_status_function` | None | 552 | 552 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/30.json` |
+| debug | `rum_runtime::runtime::scoping::callable::status_application::<impl rum_runtime::runtime::model::session::Session>::evaluate_status_function_value` | None | 936 | 936 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/31.json` |
+| debug | `rum_runtime::runtime::scoping::callable::status_application::<impl rum_runtime::runtime::model::session::Session>::suspend_status_function_projection` | None | 24 | 24 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/32.json` |
+| debug | `rum_runtime::runtime::scoping::callable::status_application::<impl rum_runtime::runtime::model::session::Session>::suspend_status_function_value` | None | 24 | 24 | `.temp/brief-619/continuation-1/stack-evidence/slots/debug/33.json` |
+| release | `rum_runtime::runtime::kernel_data::control_data::status::<impl rum_runtime::runtime::model::session::Session>::failure_property_value` | None | 296 | 296 | `.temp/brief-619/continuation-1/stack-evidence/slots/release/34.json` |
+| release | `rum_runtime::runtime::kernel_data::control_data::status::<impl rum_runtime::runtime::model::session::Session>::status_object_projection_value` | 440 | None | None | `.temp/brief-619/continuation-1/stack-evidence/slots/release/35.json` |
+| release | `rum_runtime::runtime::kernel_data::control_data::status::classify_status_object_call` | None | None | 216 | `.temp/brief-619/continuation-1/stack-evidence/slots/release/36.json` |
+| release | `rum_runtime::runtime::kernel_data::control_data::status::status_object_pure_property_value` | None | 104 | 104 | `.temp/brief-619/continuation-1/stack-evidence/slots/release/37.json` |
+| release | `rum_runtime::runtime::scoping::callable::<impl rum_runtime::runtime::model::session::Session>::try_apply_function` | 1160 | 1240 | 1096 | `.temp/brief-619/continuation-1/stack-evidence/slots/release/38.json` |
+| release | `rum_runtime::runtime::scoping::callable::status_application::<impl rum_runtime::runtime::model::session::Session>::apply_status_function` | None | None | 408 | `.temp/brief-619/continuation-1/stack-evidence/slots/release/39.json` |
+| release | `rum_runtime::runtime::scoping::callable::status_application::<impl rum_runtime::runtime::model::session::Session>::evaluate_status_function_value` | None | 696 | 696 | `.temp/brief-619/continuation-1/stack-evidence/slots/release/40.json` |
+| release | `rum_runtime::runtime::scoping::callable::status_application::<impl rum_runtime::runtime::model::session::Session>::suspend_status_function_projection` | None | 72 | 72 | `.temp/brief-619/continuation-1/stack-evidence/slots/release/41.json` |
+| release | `rum_runtime::runtime::scoping::callable::status_application::<impl rum_runtime::runtime::model::session::Session>::suspend_status_function_value` | None | 72 | 72 | `.temp/brief-619/continuation-1/stack-evidence/slots/release/42.json` |
+
+Release `try_apply_function` reserves `0x418` (1,048 B), down from `0x4a8` (1,192 B) and below base `0x458` (1,112 B); its six saved registers remain 48 B. Debug reserves 2,808 B, unchanged from before and below the 3,256 B base. Release status recursion retains outlined application 408+8 B and value phase 696+8 B: −64 + 416 + 704 = +1,056 B/level. Debug remains −448 + (552+8) + (936+8) = +1,056 B/level. The classifier returns before projected evaluation and is not retained at recursive depth. This supersedes the old +784 release status/message figure; the shared value phase remains owed to S13.
+
+### Gate: c1-prologue-tables
+
+Command: `python3 .temp/brief-619/continuation-1/prologue-tables.py`. Exit 0. Full raw output: `logs/c1-prologue-tables.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-oracle
+
+Command: `scripts/check-suspension-oracle.sh 1500`. Exit 0. Full raw output: `logs/c1-oracle.log`.
+
+```text
+test result: ok. 422 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 34.87s
+test result: ok. 422 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 35.28s
+continuation-slot fault-occurrence delta=0; observations=93750
+```
+
+### Full oracle: separate build receipts
+
+Canonical tool outputs `.temp/suspension-oracle/gate-{default,no-default}.txt` and its `tmp/` were written by the unchanged oracle script. Preserved outputs: `continuation-1/oracle/`.
+
+```json
+[
+  {
+    "build": "default",
+    "totals": [
+      "test result: ok. 422 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 34.87s"
+    ],
+    "fault_delta": 0,
+    "observations": 93750,
+    "warnings": 0
+  },
+  {
+    "build": "no-default",
+    "totals": [
+      "test result: ok. 422 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 35.28s"
+    ],
+    "fault_delta": 0,
+    "observations": 93750,
+    "warnings": 0
+  }
+]
+```
+
+### Gate: c1-fixed-618
+
+Command: `cargo test --offline --manifest-path /home/remi/dev/rum/.temp/brief-619/fixed-618/tree/Cargo.toml -p rum-stdlib --test zz_brief618_probe -- --nocapture`. Exit 0. Full raw output: `logs/c1-fixed-618.log`.
+
+```text
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.68s
+continuation-slot fault-occurrence delta=0; observations=1620
+```
+
+## Fixed brief-618 set
+
+Fixed 618 set: 136 pairs; SAME 101 -> 109; DIFF 35 -> 27; invalid 0; SAME -> DIFF 0.
+
+Fixed rows: director.01, director.02, director.03, director.04, director.05, director.06, status.raw_property, status.success. All 27 remaining differences are among the base 35. Raw observations: `fixed-618/tree/.temp/brief-618/`. Probe, body and cases were unchanged.
+
+Candidate `rum-cli` built from the workspace cwd, one codegen unit, separate target. SHA-256 `4a71298700adf5086ef1ed89a12ced833ec3e0493915752600623a9518c1980c`. Build command, source hashes and raw output: `continuation-1/builds/candidate-rum-cli/`.
+
+### Gate: c1-build-rum-cli
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/build-candidate.py rum-cli`. Exit 0. Full raw output: `logs/c1-build-rum-cli.log`.
+
+```text
+No diagnostics.
+```
+
+Candidate `resume-alloc` built from the workspace cwd, one codegen unit, separate target. SHA-256 `d9465bc13ab6b244f2efd8148ae5b5d10aa7d30924d04ce5922341e59c6ad744`. Build command, source hashes and raw output: `continuation-1/builds/candidate-resume-alloc/`.
+
+### Gate: c1-build-resume-alloc
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/build-candidate.py resume-alloc`. Exit 0. Full raw output: `logs/c1-build-resume-alloc.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-alloc-base
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/run-perf.py alloc base 1 resume @/home/remi/dev/rum/.temp/brief-619/continuation-1/resume-labels.json`. Exit 0. Full raw output: `logs/c1-alloc-base.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-alloc-candidate
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/run-perf.py alloc candidate 1 resume @/home/remi/dev/rum/.temp/brief-619/continuation-1/resume-labels.json`. Exit 0. Full raw output: `logs/c1-alloc-candidate.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-allocation-comparison
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/compare-performance.py alloc`. Exit 0. Full raw output: `logs/c1-allocation-comparison.log`.
+
+```text
+No diagnostics.
+```
+
+### Allocation-path calibration correction
+
+The first allocation rerun correctly failed exact raw equality: all eight candidate workloads gained a constant 15 B at both N and 2N, with unchanged allocation counts and slopes. The new executable path had length 67 versus base length 52; `resume-harness/src/main.rs:19` collects `std::env::args()` into `Vec<String>`. No runtime source or harness changed. The failed raw outputs remain in `continuation-1/perf/alloc/*/1/`, and their comparison is retained at `continuation-1/allocation-path-calibration/long-path-comparison.json`. Final invocations use `.temp/brief-619/can1/`, a symlink to `continuation-1/cand/`, matching base path length and preserving earlier binaries. All allocation runs are repeated at sample 2; all subsequent CLI measurements use the same path-length discipline. Exact raw equality is retained as the test, not relaxed.
+
+### Gate: c1-alloc-base-matched-path
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/run-perf.py alloc base 2 resume @/home/remi/dev/rum/.temp/brief-619/continuation-1/resume-labels.json`. Exit 0. Full raw output: `logs/c1-alloc-base-matched-path.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-alloc-candidate-matched-path
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/run-perf.py alloc candidate 2 resume @/home/remi/dev/rum/.temp/brief-619/continuation-1/resume-labels.json`. Exit 0. Full raw output: `logs/c1-alloc-candidate-matched-path.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-allocation-comparison-matched-path
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/compare-performance.py alloc`. Exit 0. Full raw output: `logs/c1-allocation-comparison-matched-path.log`.
+
+```text
+No diagnostics.
+```
+
+### Eight final resume allocation comparisons
+
+All 32 N/2N runs checked their final value and exact resume count. Every raw allocation/byte count and every intercept equals the accepted pre-continuation comparison, in both arms. The six new Function workload deltas therefore retain the allocation-site attribution above; Enclose and Confirm remain exact. Full results, verbatim:
+
+```json
+[
+  {
+    "label": "resume-g15-parameters",
+    "engine": "resume",
+    "N": 100,
+    "eligible": true,
+    "base_count_N": 13207,
+    "base_count_2N": 24710,
+    "base_count_slope": 115.03,
+    "base_bytes_total_N": 1423078,
+    "base_bytes_total_2N": 2399610,
+    "base_bytes_total_slope": 9765.32,
+    "base_actual_resumes": [
+      100,
+      200
+    ],
+    "candidate_count_N": 13707,
+    "candidate_count_2N": 25710,
+    "candidate_count_slope": 120.03,
+    "candidate_bytes_total_N": 1439078,
+    "candidate_bytes_total_2N": 2431610,
+    "candidate_bytes_total_slope": 9925.32,
+    "candidate_actual_resumes": [
+      100,
+      200
+    ],
+    "delta_count": 5.0,
+    "count_intercept_delta": 0.0,
+    "delta_bytes_total": 160.0,
+    "bytes_total_intercept_delta": 0.0,
+    "raw_exact": false
+  },
+  {
+    "label": "resume-g15-template",
+    "engine": "resume",
+    "N": 100,
+    "eligible": true,
+    "base_count_N": 13292,
+    "base_count_2N": 24795,
+    "base_count_slope": 115.03,
+    "base_bytes_total_N": 1435423,
+    "base_bytes_total_2N": 2418055,
+    "base_bytes_total_slope": 9826.32,
+    "base_actual_resumes": [
+      100,
+      200
+    ],
+    "candidate_count_N": 13792,
+    "candidate_count_2N": 25795,
+    "candidate_count_slope": 120.03,
+    "candidate_bytes_total_N": 1451423,
+    "candidate_bytes_total_2N": 2450055,
+    "candidate_bytes_total_slope": 9986.32,
+    "candidate_actual_resumes": [
+      100,
+      200
+    ],
+    "delta_count": 5.0,
+    "count_intercept_delta": 0.0,
+    "delta_bytes_total": 160.0,
+    "bytes_total_intercept_delta": 0.0,
+    "raw_exact": false
+  },
+  {
+    "label": "resume-g15-styled",
+    "engine": "resume",
+    "N": 100,
+    "eligible": true,
+    "base_count_N": 14617,
+    "base_count_2N": 27521,
+    "base_count_slope": 129.04,
+    "base_bytes_total_N": 1510602,
+    "base_bytes_total_2N": 2576322,
+    "base_bytes_total_slope": 10657.2,
+    "base_actual_resumes": [
+      100,
+      200
+    ],
+    "candidate_count_N": 15117,
+    "candidate_count_2N": 28521,
+    "candidate_count_slope": 134.04,
+    "candidate_bytes_total_N": 1526602,
+    "candidate_bytes_total_2N": 2608322,
+    "candidate_bytes_total_slope": 10817.2,
+    "candidate_actual_resumes": [
+      100,
+      200
+    ],
+    "delta_count": 5.0,
+    "count_intercept_delta": 0.0,
+    "delta_bytes_total": 160.0,
+    "bytes_total_intercept_delta": 0.0,
+    "raw_exact": false
+  },
+  {
+    "label": "resume-g15-raw-failure",
+    "engine": "resume",
+    "N": 100,
+    "eligible": true,
+    "base_count_N": 10178,
+    "base_count_2N": 18681,
+    "base_count_slope": 85.03,
+    "base_bytes_total_N": 1281582,
+    "base_bytes_total_2N": 2118590,
+    "base_bytes_total_slope": 8370.08,
+    "base_actual_resumes": [
+      100,
+      200
+    ],
+    "candidate_count_N": 10578,
+    "candidate_count_2N": 19481,
+    "candidate_count_slope": 89.03,
+    "candidate_bytes_total_N": 1295982,
+    "candidate_bytes_total_2N": 2147390,
+    "candidate_bytes_total_slope": 8514.08,
+    "candidate_actual_resumes": [
+      100,
+      200
+    ],
+    "delta_count": 4.0,
+    "count_intercept_delta": 0.0,
+    "delta_bytes_total": 144.0,
+    "bytes_total_intercept_delta": 0.0,
+    "raw_exact": false
+  },
+  {
+    "label": "resume-g15-raw-success",
+    "engine": "resume",
+    "N": 100,
+    "eligible": true,
+    "base_count_N": 9378,
+    "base_count_2N": 17081,
+    "base_count_slope": 77.03,
+    "base_bytes_total_N": 1166182,
+    "base_bytes_total_2N": 1887790,
+    "base_bytes_total_slope": 7216.08,
+    "base_actual_resumes": [
+      100,
+      200
+    ],
+    "candidate_count_N": 9778,
+    "candidate_count_2N": 17881,
+    "candidate_count_slope": 81.03,
+    "candidate_bytes_total_N": 1180582,
+    "candidate_bytes_total_2N": 1916590,
+    "candidate_bytes_total_slope": 7360.08,
+    "candidate_actual_resumes": [
+      100,
+      200
+    ],
+    "delta_count": 4.0,
+    "count_intercept_delta": 0.0,
+    "delta_bytes_total": 144.0,
+    "bytes_total_intercept_delta": 0.0,
+    "raw_exact": false
+  },
+  {
+    "label": "resume-g15-projection-value",
+    "engine": "resume",
+    "N": 100,
+    "eligible": true,
+    "base_count_N": 15923,
+    "base_count_2N": 30126,
+    "base_count_slope": 142.03,
+    "base_bytes_total_N": 1820449,
+    "base_bytes_total_2N": 3192857,
+    "base_bytes_total_slope": 13724.08,
+    "base_actual_resumes": [
+      200,
+      400
+    ],
+    "candidate_count_N": 16723,
+    "candidate_count_2N": 31726,
+    "candidate_count_slope": 150.03,
+    "candidate_bytes_total_N": 1851649,
+    "candidate_bytes_total_2N": 3255257,
+    "candidate_bytes_total_slope": 14036.08,
+    "candidate_actual_resumes": [
+      200,
+      400
+    ],
+    "delta_count": 8.0,
+    "count_intercept_delta": 0.0,
+    "delta_bytes_total": 312.0,
+    "bytes_total_intercept_delta": 0.0,
+    "raw_exact": false
+  },
+  {
+    "label": "resume-g15-enclose",
+    "engine": "resume",
+    "N": 100,
+    "eligible": true,
+    "base_count_N": 12548,
+    "base_count_2N": 23351,
+    "base_count_slope": 108.03,
+    "base_bytes_total_N": 1311517,
+    "base_bytes_total_2N": 2173249,
+    "base_bytes_total_slope": 8617.32,
+    "base_actual_resumes": [
+      100,
+      200
+    ],
+    "candidate_count_N": 12548,
+    "candidate_count_2N": 23351,
+    "candidate_count_slope": 108.03,
+    "candidate_bytes_total_N": 1311517,
+    "candidate_bytes_total_2N": 2173249,
+    "candidate_bytes_total_slope": 8617.32,
+    "candidate_actual_resumes": [
+      100,
+      200
+    ],
+    "delta_count": 0.0,
+    "count_intercept_delta": 0.0,
+    "delta_bytes_total": 0.0,
+    "bytes_total_intercept_delta": 0.0,
+    "raw_exact": true
+  },
+  {
+    "label": "resume-g15-confirm",
+    "engine": "resume",
+    "N": 100,
+    "eligible": true,
+    "base_count_N": 25229,
+    "base_count_2N": 48733,
+    "base_count_slope": 235.04,
+    "base_bytes_total_N": 2297027,
+    "base_bytes_total_2N": 4147987,
+    "base_bytes_total_slope": 18509.6,
+    "base_actual_resumes": [
+      100,
+      200
+    ],
+    "candidate_count_N": 25229,
+    "candidate_count_2N": 48733,
+    "candidate_count_slope": 235.04,
+    "candidate_bytes_total_N": 2297027,
+    "candidate_bytes_total_2N": 4147987,
+    "candidate_bytes_total_slope": 18509.6,
+    "candidate_actual_resumes": [
+      100,
+      200
+    ],
+    "delta_count": 0.0,
+    "count_intercept_delta": 0.0,
+    "delta_bytes_total": 0.0,
+    "bytes_total_intercept_delta": 0.0,
+    "raw_exact": true
+  }
+]
+```
+
+### Gate: c1-preflight-base
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/run-perf.py check base 1 cli`. Exit 0. Full raw output: `logs/c1-preflight-base.log`.
+
+```text
+No diagnostics.
+```
+
+### Concrete final stack slots
+
+Offsets below are from post-prologue `%rsp` in the release stack probe binary; the complete tables above retain every instruction/store for both profiles.
+
+| Owner / region | Base | Before continuation | Final | Final evidence |
+| --- | --- | --- | --- | --- |
+| `try_apply_function` local reservation | `0x458` | `0x4a8` | `0x418` | `0x7269fa sub $0x418,%rsp`; six saved registers unchanged |
+| Common-tail producer Result (136 B) | `0x1a0..0x227` | `0x180..0x207` | `0x1b0..0x237` | output pointer `0x729f76`, `evaluate` call `0x729f87` |
+| Common-tail finisher argument (136 B) | `0x3b8..0x43f` | `0x408..0x48f` | `0x378..0x3ff` | stores `0x72a20f..0x72a23a`, argument pointer `0x72a248`, call `0x72a250` |
+| Classifier result / application argument (32 B) | old selector | inlined classifier/application | `0x340..0x35f` in caller | classifier writes at `0x726a70/0x726a86`; the same address is passed at `0x726e7d/0x726e94` |
+| Outlined classifier locals / saves | absent | inlined | `0xa8` locals + 48 B saves = 216 B | `0x5d2b10..0x5d2b1a`; returns before recursive evaluation |
+| Outlined application locals / saves | absent | inlined | `0x178` locals + 32 B saves = 408 B | `0x726370..0x726377` |
+| Application projection Result (136 B) | in caller | in caller | `0x68..0xef` in application | output pointer `0x726390` or `0x7263b8`; projection calls `0x72639b` / `0x7263c3` |
+| Application matched Expr (32 B) | in caller | in caller | `0x40..0x5f` in application | two vector stores `0x7263a9/0x7263ae`; value call `0x72656a` |
+| Application error forwarding buffer (136 B) | in caller | in caller | `0xf0..0x177` in application | explicit vector/scalar stores `0x726454..0x7264d5`; error-only 136-B copy at `0x7264f6`; InputRequired selects the cold request helper at `0x726589` |
+| Value-phase producer Result (136 B) | common tail | `0x120..0x1a7` | `0x120..0x1a7` | output pointer `0x726626`, `evaluate` call `0x726636`; 696-B prologue unchanged |
+
+The 136-B error-forwarding copy is explicitly retained in the store evidence; this is not a claim that the outlined helper has no aggregate copies on any error path. The ordinary-label census below measures which copy sites execute. Debug prologues and the application's/value-phase concrete slot operands are unchanged from the prior tables; all final addresses are retained in `continuation-1/stack-evidence/slots/debug/`.
+
+`status.rs` is 20,725 characters, in the split-plan range; this continuation adds only one attribute there. A future responsibility split can move the session-free classifier and pure lookups into a projection module while leaving message evaluation with its S10 owner. That restructuring is outside the director's instruction to change only the outlining. `status_application.rs` remains 3,956 characters.
+
+### Gate: c1-preflight-candidate
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/run-perf.py check candidate 1 cli`. Exit 0. Full raw output: `logs/c1-preflight-candidate.log`.
+
+```text
+No diagnostics.
+```
+
+Final ordinary preflight: 178 labels × (single-result check, N, 2N) × two arms = 1,068 correct processes. Inputs are unchanged brief-619 programs. All final measurement invocations use equal-length base/candidate executable paths.
+
+### Gate: c1-instructions-1-base
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/run-perf.py instructions base extra-1 cli @/home/remi/dev/rum/.temp/brief-619/continuation-1/instruction-labels.json`. Exit 0. Full raw output: `logs/c1-instructions-1-base.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-instructions-1-candidate
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/run-perf.py instructions candidate extra-1 cli @/home/remi/dev/rum/.temp/brief-619/continuation-1/instruction-labels.json`. Exit 0. Full raw output: `logs/c1-instructions-1-candidate.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-instructions-2-base
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/run-perf.py instructions base extra-2 cli @/home/remi/dev/rum/.temp/brief-619/continuation-1/instruction-labels.json`. Exit 0. Full raw output: `logs/c1-instructions-2-base.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-instructions-2-candidate
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/run-perf.py instructions candidate extra-2 cli @/home/remi/dev/rum/.temp/brief-619/continuation-1/instruction-labels.json`. Exit 0. Full raw output: `logs/c1-instructions-2-candidate.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-instructions-3-base
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/run-perf.py instructions base extra-3 cli @/home/remi/dev/rum/.temp/brief-619/continuation-1/instruction-labels.json`. Exit 0. Full raw output: `logs/c1-instructions-3-base.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-instructions-3-candidate
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/run-perf.py instructions candidate extra-3 cli @/home/remi/dev/rum/.temp/brief-619/continuation-1/instruction-labels.json`. Exit 0. Full raw output: `logs/c1-instructions-3-candidate.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-instructions-4-base
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/run-perf.py instructions base extra-4 cli @/home/remi/dev/rum/.temp/brief-619/continuation-1/instruction-labels.json`. Exit 0. Full raw output: `logs/c1-instructions-4-base.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-instructions-4-candidate
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/run-perf.py instructions candidate extra-4 cli @/home/remi/dev/rum/.temp/brief-619/continuation-1/instruction-labels.json`. Exit 0. Full raw output: `logs/c1-instructions-4-candidate.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-instructions-5-base
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/run-perf.py instructions base extra-5 cli @/home/remi/dev/rum/.temp/brief-619/continuation-1/instruction-labels.json`. Exit 0. Full raw output: `logs/c1-instructions-5-base.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-instructions-5-candidate
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/run-perf.py instructions candidate extra-5 cli @/home/remi/dev/rum/.temp/brief-619/continuation-1/instruction-labels.json`. Exit 0. Full raw output: `logs/c1-instructions-5-candidate.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-instruction-comparison
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/compare-performance.py extra`. Exit 0. Full raw output: `logs/c1-instruction-comparison.log`.
+
+```text
+No diagnostics.
+```
+
+### Final instruction slopes: five runs per arm
+
+Twenty-four distinct labels cover the explicitly named four Function/association controls, all fourteen new labels (those four are already in the fourteen), six misses, the three leaf/loop controls, and `block-local`. All 480 N/2N perf runs returned the expected result. Arm suites alternated base/candidate for each of five samples. The existing threshold is max(0.05% of base mean, base range, candidate range). Raw comparisons:
+
+```json
+[
+  {
+    "label": "do-count-null",
+    "engine": "cli",
+    "N": 20000,
+    "eligible": true,
+    "base_slopes": [
+      534.8708,
+      535.0144,
+      535.12375,
+      535.039,
+      535.1209
+    ],
+    "base_mean": 535.03377,
+    "base_range": 0.2529499999999416,
+    "candidate_slopes": [
+      534.9551,
+      535.01845,
+      534.9512,
+      535.02965,
+      534.99095
+    ],
+    "candidate_mean": 534.98907,
+    "candidate_range": 0.07844999999997526,
+    "delta": -0.04470000000003438,
+    "threshold": 0.267516885,
+    "pair_deltas": [
+      0.08429999999998472,
+      0.004050000000006548,
+      -0.1725500000000011,
+      -0.009350000000040382,
+      -0.129950000000008
+    ],
+    "flagged": false
+  },
+  {
+    "label": "do-iterator-null",
+    "engine": "cli",
+    "N": 20000,
+    "eligible": true,
+    "base_slopes": [
+      1152.03505,
+      1151.9994,
+      1152.03125,
+      1151.8697,
+      1151.9552
+    ],
+    "base_mean": 1151.97812,
+    "base_range": 0.16534999999998945,
+    "candidate_slopes": [
+      1152.15495,
+      1152.24575,
+      1152.05075,
+      1152.1968,
+      1152.118
+    ],
+    "candidate_mean": 1152.15325,
+    "candidate_range": 0.19499999999993634,
+    "delta": 0.17513000000008105,
+    "threshold": 0.57598906,
+    "pair_deltas": [
+      0.11990000000014334,
+      0.24635000000012042,
+      0.01950000000010732,
+      0.3270999999999731,
+      0.16279999999983374
+    ],
+    "flagged": false
+  },
+  {
+    "label": "literal-integer",
+    "engine": "cli",
+    "N": 20000,
+    "eligible": true,
+    "base_slopes": [
+      292.03345,
+      292.0038,
+      292.0656,
+      292.05415,
+      291.9506
+    ],
+    "base_mean": 292.02152,
+    "base_range": 0.1150000000000091,
+    "candidate_slopes": [
+      291.89635,
+      291.83065,
+      292.11845,
+      291.8656,
+      291.90625
+    ],
+    "candidate_mean": 291.92346,
+    "candidate_range": 0.2878000000000043,
+    "delta": -0.09806000000003223,
+    "threshold": 0.2878000000000043,
+    "pair_deltas": [
+      -0.1371000000000322,
+      -0.173150000000021,
+      0.05284999999997808,
+      -0.18855000000002065,
+      -0.04435000000000855
+    ],
+    "flagged": false
+  },
+  {
+    "label": "block-local",
+    "engine": "cli",
+    "N": 20000,
+    "eligible": true,
+    "base_slopes": [
+      14463.00405,
+      14462.9329,
+      14462.74165,
+      14462.8381,
+      14462.86735
+    ],
+    "base_mean": 14462.87681,
+    "base_range": 0.26239999999961583,
+    "candidate_slopes": [
+      14471.74755,
+      14471.7397,
+      14471.6758,
+      14472.03245,
+      14471.747
+    ],
+    "candidate_mean": 14471.7885,
+    "candidate_range": 0.3566499999997177,
+    "delta": 8.911690000000817,
+    "threshold": 7.2314384050000005,
+    "pair_deltas": [
+      8.743500000000495,
+      8.806800000000294,
+      8.934150000000955,
+      9.194349999999758,
+      8.879649999998946
+    ],
+    "flagged": true
+  },
+  {
+    "label": "downvalue-exact-miss",
+    "engine": "cli",
+    "N": 2000,
+    "eligible": true,
+    "base_slopes": [
+      997.3265,
+      999.2595,
+      998.198,
+      999.2105,
+      996.8605
+    ],
+    "base_mean": 998.171,
+    "base_range": 2.399000000000001,
+    "candidate_slopes": [
+      997.7795,
+      996.823,
+      998.415,
+      997.988,
+      999.4825
+    ],
+    "candidate_mean": 998.0975999999999,
+    "candidate_range": 2.65949999999998,
+    "delta": -0.07340000000010605,
+    "threshold": 2.65949999999998,
+    "pair_deltas": [
+      0.45299999999997453,
+      -2.4365000000000236,
+      0.21699999999998454,
+      -1.2224999999999682,
+      2.6219999999999573
+    ],
+    "flagged": false
+  },
+  {
+    "label": "downvalue-pattern-miss",
+    "engine": "cli",
+    "N": 2000,
+    "eligible": true,
+    "base_slopes": [
+      998.9755,
+      997.3755,
+      998.2,
+      998.055,
+      997.528
+    ],
+    "base_mean": 998.0268,
+    "base_range": 1.6000000000000227,
+    "candidate_slopes": [
+      997.3515,
+      998.4345,
+      997.2795,
+      997.239,
+      997.492
+    ],
+    "candidate_mean": 997.5593,
+    "candidate_range": 1.1954999999999245,
+    "delta": -0.4674999999999727,
+    "threshold": 1.6000000000000227,
+    "pair_deltas": [
+      -1.6240000000000236,
+      1.058999999999969,
+      -0.9205000000000609,
+      -0.8159999999999172,
+      -0.03600000000005821
+    ],
+    "flagged": false
+  },
+  {
+    "label": "subvalue-unguarded-miss",
+    "engine": "cli",
+    "N": 2000,
+    "eligible": true,
+    "base_slopes": [
+      11280.1895,
+      11280.854,
+      11280.725,
+      11281.0045,
+      11280.571
+    ],
+    "base_mean": 11280.6688,
+    "base_range": 0.8149999999986903,
+    "candidate_slopes": [
+      11282.109,
+      11282.341,
+      11282.5605,
+      11282.4455,
+      11279.9475
+    ],
+    "candidate_mean": 11281.8807,
+    "candidate_range": 2.6129999999993743,
+    "delta": 1.2119000000002416,
+    "threshold": 5.6403343999999995,
+    "pair_deltas": [
+      1.919499999999971,
+      1.4870000000009895,
+      1.8354999999992287,
+      1.441000000000713,
+      -0.6234999999996944
+    ],
+    "flagged": false
+  },
+  {
+    "label": "default-unguarded-miss",
+    "engine": "cli",
+    "N": 2000,
+    "eligible": true,
+    "base_slopes": [
+      12785.7155,
+      12783.7365,
+      12785.2485,
+      12784.008,
+      12784.4985
+    ],
+    "base_mean": 12784.6414,
+    "base_range": 1.9789999999993597,
+    "candidate_slopes": [
+      12784.6335,
+      12785.2725,
+      12891.9115,
+      12784.5385,
+      12783.7435
+    ],
+    "candidate_mean": 12806.0199,
+    "candidate_range": 108.16799999999967,
+    "delta": 21.378499999998894,
+    "threshold": 108.16799999999967,
+    "pair_deltas": [
+      -1.0820000000003347,
+      1.5359999999982392,
+      106.66300000000047,
+      0.5305000000007567,
+      -0.7549999999991996
+    ],
+    "flagged": false
+  },
+  {
+    "label": "downvalue-exact-miss-repeat",
+    "engine": "cli",
+    "N": 2000,
+    "eligible": true,
+    "base_slopes": [
+      775.226,
+      777.1215,
+      774.322,
+      777.709,
+      776.095
+    ],
+    "base_mean": 776.0947,
+    "base_range": 3.3869999999999436,
+    "candidate_slopes": [
+      774.814,
+      776.894,
+      774.221,
+      773.929,
+      775.004
+    ],
+    "candidate_mean": 774.9724,
+    "candidate_range": 2.965000000000032,
+    "delta": -1.1222999999999956,
+    "threshold": 3.3869999999999436,
+    "pair_deltas": [
+      -0.41200000000003456,
+      -0.22749999999996362,
+      -0.10099999999999909,
+      -3.7799999999999727,
+      -1.0910000000000082
+    ],
+    "flagged": false
+  },
+  {
+    "label": "downvalue-pattern-miss-repeat",
+    "engine": "cli",
+    "N": 2000,
+    "eligible": true,
+    "base_slopes": [
+      774.5035,
+      776.495,
+      774.719,
+      775.391,
+      776.0945
+    ],
+    "base_mean": 775.4406,
+    "base_range": 1.9914999999999736,
+    "candidate_slopes": [
+      776.122,
+      775.3505,
+      776.6445,
+      776.1345,
+      775.465
+    ],
+    "candidate_mean": 775.9433,
+    "candidate_range": 1.2939999999999827,
+    "delta": 0.5027000000000044,
+    "threshold": 1.9914999999999736,
+    "pair_deltas": [
+      1.6184999999999263,
+      -1.1444999999999936,
+      1.9254999999999427,
+      0.74350000000004,
+      -0.6295000000000073
+    ],
+    "flagged": false
+  },
+  {
+    "label": "function-slot-apply",
+    "engine": "cli",
+    "N": 500,
+    "eligible": true,
+    "base_slopes": [
+      10771.762,
+      10745.428,
+      10742.936,
+      10726.234,
+      10741.354
+    ],
+    "base_mean": 10745.5428,
+    "base_range": 45.52800000000025,
+    "candidate_slopes": [
+      10738.022,
+      10737.23,
+      10741.116,
+      10738.736,
+      10735.362
+    ],
+    "candidate_mean": 10738.0932,
+    "candidate_range": 5.754000000000815,
+    "delta": -7.4495999999999185,
+    "threshold": 45.52800000000025,
+    "pair_deltas": [
+      -33.73999999999978,
+      -8.19800000000032,
+      -1.819999999999709,
+      12.502000000000407,
+      -5.992000000000189
+    ],
+    "flagged": false
+  },
+  {
+    "label": "function-named-apply",
+    "engine": "cli",
+    "N": 500,
+    "eligible": true,
+    "base_slopes": [
+      12587.19,
+      12588.96,
+      12572.138,
+      12567.724,
+      12581.87
+    ],
+    "base_mean": 12579.5764,
+    "base_range": 21.235999999998967,
+    "candidate_slopes": [
+      12564.046,
+      12589.152,
+      12561.24,
+      12554.164,
+      12585.966
+    ],
+    "candidate_mean": 12570.9136,
+    "candidate_range": 34.987999999999374,
+    "delta": -8.662800000000061,
+    "threshold": 34.987999999999374,
+    "pair_deltas": [
+      -23.144000000000233,
+      0.19200000000091677,
+      -10.898000000001048,
+      -13.55999999999949,
+      4.095999999999549
+    ],
+    "flagged": false
+  },
+  {
+    "label": "composition-apply",
+    "engine": "cli",
+    "N": 500,
+    "eligible": true,
+    "base_slopes": [
+      27809.458,
+      27801.452,
+      27803.358,
+      27806.396,
+      27803.94
+    ],
+    "base_mean": 27804.9208,
+    "base_range": 8.005999999997584,
+    "candidate_slopes": [
+      27798.52,
+      27801.858,
+      27795.524,
+      27885.784,
+      27800.692
+    ],
+    "candidate_mean": 27816.4756,
+    "candidate_range": 90.2599999999984,
+    "delta": 11.554800000001705,
+    "threshold": 90.2599999999984,
+    "pair_deltas": [
+      -10.937999999998283,
+      0.4059999999990396,
+      -7.833999999998923,
+      79.38799999999901,
+      -3.2479999999995925
+    ],
+    "flagged": false
+  },
+  {
+    "label": "association-apply",
+    "engine": "cli",
+    "N": 500,
+    "eligible": true,
+    "base_slopes": [
+      6938.94,
+      6953.646,
+      6948.55,
+      6910.062,
+      6940.372
+    ],
+    "base_mean": 6938.314,
+    "base_range": 43.58399999999983,
+    "candidate_slopes": [
+      6943.454,
+      6916.586,
+      6950.434,
+      6944.712,
+      6954.926
+    ],
+    "candidate_mean": 6942.0224,
+    "candidate_range": 38.340000000000146,
+    "delta": 3.7083999999995285,
+    "threshold": 43.58399999999983,
+    "pair_deltas": [
+      4.514000000000124,
+      -37.05999999999949,
+      1.8840000000000146,
+      34.650000000000546,
+      14.554000000000087
+    ],
+    "flagged": false
+  },
+  {
+    "label": "failure-raw-property",
+    "engine": "cli",
+    "N": 500,
+    "eligible": true,
+    "base_slopes": [
+      12625.018,
+      12591.036,
+      12671.622,
+      12617.35,
+      12640.348
+    ],
+    "base_mean": 12629.0748,
+    "base_range": 80.58599999999933,
+    "candidate_slopes": [
+      12547.2,
+      12618.522,
+      12550.522,
+      12602.876,
+      12602.304
+    ],
+    "candidate_mean": 12584.284800000001,
+    "candidate_range": 71.32200000000012,
+    "delta": -44.789999999999054,
+    "threshold": 80.58599999999933,
+    "pair_deltas": [
+      -77.8179999999993,
+      27.486000000000786,
+      -121.09999999999854,
+      -14.47400000000016,
+      -38.04399999999987
+    ],
+    "flagged": false
+  },
+  {
+    "label": "failure-list-property",
+    "engine": "cli",
+    "N": 500,
+    "eligible": true,
+    "base_slopes": [
+      14440.3,
+      14443.938,
+      14441.862,
+      14442.808,
+      14442.726
+    ],
+    "base_mean": 14442.3268,
+    "base_range": 3.6380000000008295,
+    "candidate_slopes": [
+      14433.836,
+      14429.164,
+      14429.444,
+      14421.632,
+      14431.828
+    ],
+    "candidate_mean": 14429.1808,
+    "candidate_range": 12.203999999999724,
+    "delta": -13.14600000000064,
+    "threshold": 12.203999999999724,
+    "pair_deltas": [
+      -6.463999999999942,
+      -14.773999999999432,
+      -12.417999999999665,
+      -21.176000000001295,
+      -10.898000000001048
+    ],
+    "flagged": false
+  },
+  {
+    "label": "failure-missing-property",
+    "engine": "cli",
+    "N": 500,
+    "eligible": true,
+    "base_slopes": [
+      16196.364,
+      16203.992,
+      16257.95,
+      16178.342,
+      16199.766
+    ],
+    "base_mean": 16207.2828,
+    "base_range": 79.60800000000017,
+    "candidate_slopes": [
+      16165.736,
+      16158.032,
+      16153.122,
+      16161.288,
+      16164.712
+    ],
+    "candidate_mean": 16160.578,
+    "candidate_range": 12.614000000001397,
+    "delta": -46.70480000000134,
+    "threshold": 79.60800000000017,
+    "pair_deltas": [
+      -30.627999999998792,
+      -45.960000000000946,
+      -104.82800000000134,
+      -17.054000000000087,
+      -35.05400000000009
+    ],
+    "flagged": false
+  },
+  {
+    "label": "success-raw-property",
+    "engine": "cli",
+    "N": 500,
+    "eligible": true,
+    "base_slopes": [
+      9206.99,
+      9201.7,
+      9175.262,
+      9220.044,
+      9196.412
+    ],
+    "base_mean": 9200.0816,
+    "base_range": 44.78199999999924,
+    "candidate_slopes": [
+      9132.166,
+      9107.492,
+      9182.314,
+      9153.636,
+      9159.512
+    ],
+    "candidate_mean": 9147.024,
+    "candidate_range": 74.82200000000012,
+    "delta": -53.05760000000009,
+    "threshold": 74.82200000000012,
+    "pair_deltas": [
+      -74.82400000000052,
+      -94.20800000000054,
+      7.05199999999968,
+      -66.40799999999945,
+      -36.899999999999636
+    ],
+    "flagged": false
+  },
+  {
+    "label": "failure-message-property",
+    "engine": "cli",
+    "N": 500,
+    "eligible": true,
+    "base_slopes": [
+      20920.162,
+      20913.63,
+      20909.754,
+      20911.972,
+      20921.46
+    ],
+    "base_mean": 20915.3956,
+    "base_range": 11.705999999998312,
+    "candidate_slopes": [
+      20830.03,
+      20919.47,
+      20939.806,
+      20877.708,
+      20884.812
+    ],
+    "candidate_mean": 20890.3652,
+    "candidate_range": 109.77600000000166,
+    "delta": -25.030399999999645,
+    "threshold": 109.77600000000166,
+    "pair_deltas": [
+      -90.13200000000143,
+      5.8400000000001455,
+      30.05199999999968,
+      -34.26400000000285,
+      -36.64799999999741
+    ],
+    "flagged": false
+  },
+  {
+    "label": "failure-message-delayed",
+    "engine": "cli",
+    "N": 500,
+    "eligible": true,
+    "base_slopes": [
+      33134.61,
+      33074.67,
+      33120.348,
+      33122.446,
+      33064.366
+    ],
+    "base_mean": 33103.288,
+    "base_range": 70.24399999999878,
+    "candidate_slopes": [
+      33076.46,
+      33049.72,
+      33024.266,
+      33093.34,
+      33109.58
+    ],
+    "candidate_mean": 33070.6732,
+    "candidate_range": 85.31399999999849,
+    "delta": -32.614800000003015,
+    "threshold": 85.31399999999849,
+    "pair_deltas": [
+      -58.150000000001455,
+      -24.94999999999709,
+      -96.08199999999488,
+      -29.106000000007043,
+      45.21399999999994
+    ],
+    "flagged": false
+  },
+  {
+    "label": "failure-styled-message",
+    "engine": "cli",
+    "N": 500,
+    "eligible": true,
+    "base_slopes": [
+      24233.116,
+      24105.26,
+      24100.122,
+      24095.972,
+      24149.696
+    ],
+    "base_mean": 24136.8332,
+    "base_range": 137.14400000000023,
+    "candidate_slopes": [
+      24060.188,
+      24048.696,
+      24054.282,
+      24053.368,
+      24051.282
+    ],
+    "candidate_mean": 24053.5632,
+    "candidate_range": 11.49199999999837,
+    "delta": -83.27000000000044,
+    "threshold": 137.14400000000023,
+    "pair_deltas": [
+      -172.92800000000352,
+      -56.56399999999849,
+      -45.840000000000146,
+      -42.604000000003,
+      -98.41400000000067
+    ],
+    "flagged": false
+  },
+  {
+    "label": "failure-tag-fallback",
+    "engine": "cli",
+    "N": 500,
+    "eligible": true,
+    "base_slopes": [
+      9557.474,
+      9553.706,
+      9565.174,
+      9545.426,
+      9575.576
+    ],
+    "base_mean": 9559.4712,
+    "base_range": 30.149999999999636,
+    "candidate_slopes": [
+      9545.376,
+      9540.836,
+      9505.028,
+      9540.542,
+      9522.364
+    ],
+    "candidate_mean": 9530.8292,
+    "candidate_range": 40.347999999999956,
+    "delta": -28.641999999999825,
+    "threshold": 40.347999999999956,
+    "pair_deltas": [
+      -12.097999999999956,
+      -12.8700000000008,
+      -60.14600000000064,
+      -4.8840000000000146,
+      -53.211999999999534
+    ],
+    "flagged": false
+  },
+  {
+    "label": "enclose-message-handler",
+    "engine": "cli",
+    "N": 500,
+    "eligible": true,
+    "base_slopes": [
+      41511.82,
+      41507.274,
+      41560.02,
+      41545.676,
+      41543.51
+    ],
+    "base_mean": 41533.659999999996,
+    "base_range": 52.745999999999185,
+    "candidate_slopes": [
+      41502.146,
+      41509.72,
+      41602.658,
+      41578.434,
+      41509.104
+    ],
+    "candidate_mean": 41540.4124,
+    "candidate_range": 100.51200000000244,
+    "delta": 6.7524000000048545,
+    "threshold": 100.51200000000244,
+    "pair_deltas": [
+      -9.673999999999069,
+      2.4460000000035507,
+      42.638000000006286,
+      32.75800000000163,
+      -34.40600000000268
+    ],
+    "flagged": false
+  },
+  {
+    "label": "confirm-failure-message",
+    "engine": "cli",
+    "N": 500,
+    "eligible": true,
+    "base_slopes": [
+      51941.65,
+      51829.948,
+      51832.392,
+      51775.52,
+      51825.15
+    ],
+    "base_mean": 51840.932,
+    "base_range": 166.13000000000466,
+    "candidate_slopes": [
+      51858.814,
+      51811.148,
+      51853.726,
+      51820.038,
+      51790.234
+    ],
+    "candidate_mean": 51826.792,
+    "candidate_range": 68.58000000000175,
+    "delta": -14.139999999999418,
+    "threshold": 166.13000000000466,
+    "pair_deltas": [
+      -82.83600000000297,
+      -18.799999999995634,
+      21.33400000000256,
+      44.51800000000367,
+      -34.916000000004715
+    ],
+    "flagged": false
+  }
+]
+```
+
+### Gate: c1-copy-calibration
+
+Command: `python3 .temp/brief-619/continuation-1/calibrate-copies.py`. Exit 0. Full raw output: `logs/c1-copy-calibration.log`.
+
+```text
+No diagnostics.
+```
+
+### Final copy-counter calibration
+
+Offline libc symbols were found, including `__memcpy_avx_unaligned_erms`. The base counter is nonconstant and its 500→1000 and 1000→2000 slopes are both 30 copies/iteration. Raw output:
+
+```text
+base catchexceptions-handler 500 rc=0 Null
+CALIBRATION {"N": 500, "memcpy": 16013, "symbols": ["__memcpy_avx_unaligned_erms", "__memcpy_chk", "memcpy@@GLIBC_2.14"]}
+base catchexceptions-handler 1000 rc=0 Null
+CALIBRATION {"N": 1000, "memcpy": 31013, "symbols": ["__memcpy_avx_unaligned_erms", "__memcpy_chk", "memcpy@@GLIBC_2.14"]}
+base catchexceptions-handler 2000 rc=0 Null
+CALIBRATION {"N": 2000, "memcpy": 61013, "symbols": ["__memcpy_avx_unaligned_erms", "__memcpy_chk", "memcpy@@GLIBC_2.14"]}
+PASS symbolized memcpy slopes 30.0 30.0
+
+```
+
+### Gate: c1-copy-census-1
+
+Command: `python3 .temp/brief-619/continuation-1/run-copy.py`. Exit 0. Full raw output: `logs/c1-copy-census-1.log`.
+
+```text
+No diagnostics.
+```
+
+### Calibrated copy census, all ordinary labels
+
+All 712 N/2N processes (178 labels, both arms) completed with the expected result, using the calibrated offline libc debuginfo. Canonical tool output: `continuation-1/copy-census/canonical-census.log`; whole-program counts and slopes: `continuation-1/copy-census/comparison.json`.
+
+```text
+lazy-range-take-small                         N=477   memcpy 129.000->129.000 memmove 0.000->0.000  ok
+lazy-range-normal-small                       N=373   memcpy 143.000->143.000 memmove 0.000->0.000  ok
+lazy-map-realize-small                        N=113   memcpy 295.000->295.000 memmove 0.000->0.000  ok
+lazy-select-realize-small                     N=177   memcpy 221.000->221.000 memmove 0.000->0.000  ok
+lazy-select-scan-small                        N=25    memcpy 1351.000->1351.000 memmove 0.000->0.000  ok
+lazy-nestlist-realize-small                   N=139   memcpy 177.000->177.000 memmove 0.000->0.000  ok
+lazy-foldlist-realize-small                   N=180   memcpy 203.000->203.000 memmove 0.000->0.000  ok
+lazy-drop-realize-small                       N=106   memcpy 311.000->311.000 memmove 0.000->0.000  ok
+lazy-first-small                              N=492   memcpy 59.000->59.000 memmove 0.000->0.000  ok
+lazy-part-small                               N=229   memcpy 137.000->137.000 memmove 0.000->0.000  ok
+lazy-transparent-adapters-small               N=111   memcpy 285.000->285.000 memmove 0.000->0.000  ok
+lazy-table-construct-short                    N=857   memcpy 50.000->50.000 memmove 0.000->0.000  ok
+lazy-table-construct-full                     N=838   memcpy 51.000->51.000 memmove 0.000->0.000  ok
+lazy-table-realize-small                      N=172   memcpy 211.000->211.000 memmove 0.000->0.000  ok
+lazy-permutations-take-small                  N=717   memcpy 24.000->24.000 memmove 0.000->0.000  ok
+lazy-subsets-take-small                       N=799   memcpy 24.000->24.000 memmove 0.000->0.000  ok
+lazy-tuples-take-small                        N=760   memcpy 24.000->24.000 memmove 0.000->0.000  ok
+scan-no-input                                 N=690   memcpy 51.000->51.000 memmove 0.000->0.000  ok
+optionvalue-three-no-input                    N=2000  memcpy 7.000->7.000 memmove 0.000->0.000  ok
+replacerepeated-no-input                      N=514   memcpy 29.000->29.000 memmove 0.000->0.000  ok
+dot-three-no-input                            N=80    memcpy 465.000->465.000 memmove 0.000->0.000  ok
+differences-no-input                          N=2000  memcpy 9.000->9.000 memmove 0.000->0.000  ok
+do-count-null                                 N=2000  memcpy 1.000->1.000 memmove 0.000->0.000  ok
+do-iterator-null                              N=2000  memcpy 2.000->2.000 memmove 0.000->0.000  ok
+table-iterator-null                           N=2000  memcpy 0.000->0.000 memmove 0.000->0.000  ok
+replaceall-simple                             N=1770  memcpy 23.000->23.000 memmove 0.000->0.000  ok
+table-small                                   N=1379  memcpy 13.000->13.000 memmove 0.000->0.000  ok
+table-iterator-plus                           N=2000  memcpy 1.000->1.000 memmove 0.000->0.000  ok
+table-iterator-pair-list                      N=2000  memcpy 0.000->0.000 memmove 0.000->0.000  ok
+take-multispec-small                          N=402   memcpy 47.000->47.000 memmove 0.000->0.000  ok
+lazy-depth-map-build-8                        N=1000  memcpy 25.000->25.000 memmove 0.000->0.000  ok
+lazy-depth-map-first-8                        N=155   memcpy 172.000->172.000 memmove 0.000->0.000  ok
+lazy-depth-map-eight-8                        N=21    memcpy 1219.000->1219.000 memmove 0.000->0.000  ok
+lazy-depth-select-restart-8                   N=112   memcpy 281.000->281.000 memmove 0.000->0.000  ok
+lazy-depth-drop-all-one-8                     N=431   memcpy 155.000->155.000 memmove 0.000->0.000  ok
+lazy-depth-take-map-8                         N=146   memcpy 188.000->188.000 memmove 0.000->0.000  ok
+lazy-depth-fold-through-source-8              N=34    memcpy 696.000->696.000 memmove 0.000->0.000  ok
+lazy-depth-nest-map-8                         N=144   memcpy 178.000->178.000 memmove 0.000->0.000  ok
+lazy-depth-map-build-64                       N=671   memcpy 25.000->25.000 memmove 0.000->0.000  ok
+lazy-depth-map-first-64                       N=21    memcpy 1124.000->1124.000 memmove 0.000->0.000  ok
+lazy-depth-map-eight-64                       N=2     memcpy 8835.000->8835.000 memmove 0.000->0.000  ok
+lazy-depth-select-restart-64                  N=20    memcpy 1401.000->1401.000 memmove 0.000->0.000  ok
+lazy-depth-drop-all-one-64                    N=61    memcpy 995.000->995.000 memmove 0.000->0.000  ok
+lazy-depth-take-map-64                        N=20    memcpy 1252.000->1252.000 memmove 0.000->0.000  ok
+lazy-depth-fold-through-source-64             N=1     memcpy 37549.000->37549.000 memmove 0.000->0.000  ok
+lazy-depth-nest-map-64                        N=21    memcpy 1130.000->1130.000 memmove 0.000->0.000  ok
+lazy-depth-map-build-256                      N=283   memcpy 25.000->25.000 memmove 0.000->0.000  ok
+lazy-depth-map-first-256                      N=5     memcpy 4388.000->4388.000 memmove 0.000->0.000  ok
+lazy-depth-map-eight-256                      N=1     memcpy 34949.000->34949.000 memmove 0.000->0.000  ok
+lazy-depth-select-restart-256                 N=5     memcpy 5241.000->5241.000 memmove 0.000->0.000  ok
+lazy-depth-drop-all-one-256                   N=9     memcpy 3875.000->3875.000 memmove 0.000->0.000  ok
+lazy-depth-take-map-256                       N=5     memcpy 4900.000->4900.000 memmove 0.000->0.000  ok
+lazy-depth-fold-through-source-256            N=1     memcpy 592431.000->592431.000 memmove 0.000->0.000  ok
+lazy-depth-nest-map-256                       N=5     memcpy 4394.000->4394.000 memmove 0.000->0.000  ok
+literal-integer                               N=2000  memcpy 1.000->1.000 memmove 0.000->0.000  ok
+downvalue-pattern-hit                         N=1465  memcpy 17.000->17.000 memmove 0.000->0.000  ok
+module-local                                  N=891   memcpy 32.000->32.000 memmove 0.000->0.000  ok
+block-local                                   N=1382  memcpy 29.000->29.000 memmove 0.000->0.000  ok
+matcher-single-wide-small                     N=26    memcpy 15.000->15.000 memmove 0.000->0.000  ok
+cases-wide-no-match                           N=8     memcpy 37.000->37.000 memmove 0.000->0.000  ok
+count-wide-no-match                           N=9     memcpy 32.000->32.000 memmove 0.000->0.000  ok
+position-wide-no-match                        N=7     memcpy 41.000->41.000 memmove 0.000->0.000  ok
+deletecases-wide-no-match                     N=7     memcpy 22.000->22.000 memmove 0.000->0.000  ok
+deletecases-wide-association-no-match         N=2     memcpy 31.000->31.000 memmove 0.000->0.000  ok
+deletecases-leaf-delete-small                 N=317   memcpy 12.000->12.000 memmove 0.000->0.000  ok
+replace-wide-no-match                         N=17    memcpy 32.000->32.000 memmove 0.000->0.000  ok
+replace-leaf-rebuild-small                    N=272   memcpy 22.000->22.000 memmove 0.000->0.000  ok
+rewrite-guarded-hit                           N=379   memcpy 51.000->51.000 memmove 0.000->0.000  ok
+rewrite-guarded-decline-fallback              N=259   memcpy 78.000->78.000 memmove 0.000->0.000  ok
+rule-rhs-deep-small                           N=242   memcpy 77.000->77.000 memmove 0.000->0.000  ok
+part-list                                     N=2000  memcpy 15.000->15.000 memmove 0.000->0.000  ok
+appendto-part-outer1000-small                 N=9     memcpy 2842.000->2842.000 memmove 0.000->0.000  ok
+appendto-part-outer1000-large                 N=5     memcpy 4643.000->4643.000 memmove 0.000->0.000  ok
+set-part-fixed100-len100                      N=15    memcpy 1713.000->1713.000 memmove 0.000->0.000  ok
+set-part-fixed100-len800                      N=15    memcpy 1713.000->1713.000 memmove 0.000->0.000  ok
+set-part-fill-small                           N=7     memcpy 3813.000->3813.000 memmove 0.000->0.000  ok
+set-part-fill-large                           N=3     memcpy 7613.000->7613.000 memmove 0.000->0.000  ok
+table-iterator-symbol                         N=2000  memcpy 0.000->0.000 memmove 0.000->0.000  ok
+symbol-ownvalue-read                          N=2000  memcpy 4.000->4.000 memmove 0.000->0.000  ok
+symbol-ownvalue-guarded-read                  N=2000  memcpy 6.000->6.000 memmove 0.000->0.000  ok
+block-symbol-only-repeat                      N=1871  memcpy 24.000->24.000 memmove 0.000->0.000  ok
+downvalue-exact-hit                           N=2000  memcpy 8.000->8.000 memmove 0.000->0.000  ok
+downvalue-exact-miss                          N=2000  memcpy 2.000->2.000 memmove 0.000->0.000  ok
+downvalue-pattern-miss                        N=2000  memcpy 2.000->2.000 memmove 0.000->0.000  ok
+downvalue-guarded-hit                         N=725   memcpy 32.000->32.000 memmove 0.000->0.000  ok
+downvalue-guarded-decline-fallback            N=958   memcpy 21.000->21.000 memmove 0.000->0.000  ok
+upvalue-guarded-hit                           N=590   memcpy 35.000->35.000 memmove 0.000->0.000  ok
+subvalue-unguarded-hit                        N=996   memcpy 25.000->25.000 memmove 0.000->0.000  ok
+subvalue-unguarded-miss                       N=1772  memcpy 17.000->17.000 memmove 0.000->0.000  ok
+subvalue-guarded-hit                          N=567   memcpy 41.000->41.000 memmove 0.000->0.000  ok
+default-unguarded-hit                         N=1163  memcpy 14.000->14.000 memmove 0.000->0.000  ok
+default-unguarded-miss                        N=1564  memcpy 12.000->12.000 memmove 0.000->0.000  ok
+default-guarded-hit                           N=894   memcpy 15.000->15.000 memmove 0.000->0.000  ok
+downvalue-exact-miss-repeat                   N=2000  memcpy 2.000->2.000 memmove 0.000->0.000  ok
+downvalue-pattern-miss-repeat                 N=2000  memcpy 2.000->2.000 memmove 0.000->0.000  ok
+upvalue-candidates-tiny                       N=637   memcpy 41.000->41.000 memmove 0.000->0.000  ok
+upvalue-candidates-wide-small                 N=6     memcpy 1646.000->1646.000 memmove 0.000->0.000  ok
+upvalue-candidates-wide-large                 N=3     memcpy 3247.000->3247.000 memmove 0.000->0.000  ok
+sort-default-wide                             N=20    memcpy 12.000->12.000 memmove 0.000->0.000  ok
+sortby-default-wide                           N=2     memcpy 11222.000->11222.000 memmove 0.000->0.000  ok
+reversesort-default-wide                      N=20    memcpy 12.000->12.000 memmove 0.000->0.000  ok
+keysort-default-wide                          N=2     memcpy 1639.000->1639.000 memmove 0.000->0.000  ok
+keysortby-default-wide                        N=1     memcpy 12842.000->12842.000 memmove 0.000->0.000  ok
+sort-symbol-default-width4000                 N=3     memcpy 18.000->18.000 memmove 0.000->0.000  ok
+sort-symbol-default-width16000                N=1     memcpy 23.000->23.000 memmove 0.000->0.000  ok
+valueq-undefined-symbol-definitions-2000      N=20    memcpy 7.000->7.000 memmove 0.000->0.000  ok
+valueq-undefined-symbol-definitions-8000      N=20    memcpy 7.000->7.000 memmove 0.000->0.000  ok
+matcher-single-tiny                           N=1000  memcpy 8.000->8.000 memmove 0.000->0.000  ok
+matcher-single-wide-large                     N=13    memcpy 17.000->17.000 memmove 0.000->0.000  ok
+replacepart-deep-path-small                   N=489   memcpy 48.000->48.000 memmove 0.000->0.000  ok
+replacepart-wide-rule-list                    N=3     memcpy 4817.000->4817.000 memmove 0.000->0.000  ok
+replacepart-guarded-hit                       N=500   memcpy 24.000->24.000 memmove 0.000->0.000  ok
+replacepart-guarded-decline-fallback          N=500   memcpy 28.000->28.000 memmove 0.000->0.000  ok
+stringreplace-single-literal-unguarded        N=200   memcpy 34.000->34.000 memmove 0.000->0.000  ok
+stringreplace-pattern-unguarded               N=500   memcpy 37.000->37.000 memmove 0.000->0.000  ok
+stringreplace-guarded-hit                     N=500   memcpy 34.000->34.000 memmove 0.000->0.000  ok
+stringreplace-guarded-decline-fallback        N=500   memcpy 38.000->38.000 memmove 0.000->0.000  ok
+association-part-key-read-width4000           N=40    memcpy 21.000->21.000 memmove 0.000->0.000  ok
+association-part-positional-read-width4000    N=40    memcpy 16.000->16.000 memmove 0.000->0.000  ok
+association-part-key-read-width32000          N=40    memcpy 21.000->21.000 memmove 0.000->0.000  ok
+association-part-positional-read-width32000   N=40    memcpy 16.000->16.000 memmove 0.000->0.000  ok
+appendto-list-incremental-small               N=250   memcpy 12.004->12.004 memmove 0.000->0.000  ok
+appendto-list-incremental-large               N=500   memcpy 12.002->12.002 memmove 0.000->0.000  ok
+association-set-key-incremental-small         N=100   memcpy 14.030->14.030 memmove 0.000->0.000  ok
+association-set-key-incremental-large         N=200   memcpy 14.015->14.015 memmove 0.000->0.000  ok
+association-set-part-key-investigation        N=100   memcpy 21.000->21.000 memmove 0.000->0.000  ok
+table-count-null                              N=8     memcpy 10.000->10.000 memmove 0.000->0.000  ok
+replaceall-wide-no-match                      N=24    memcpy 35.000->35.000 memmove 0.000->0.000  ok
+replaceall-leaf-rebuild-small                 N=304   memcpy 35.000->35.000 memmove 0.000->0.000  ok
+replaceall-guarded-hit-small                  N=254   memcpy 82.000->82.000 memmove 0.000->0.000  ok
+replace-rule-list-decline                     N=391   memcpy 49.000->49.000 memmove 0.000->0.000  ok
+replacerepeated-guarded-small                 N=53    memcpy 484.000->484.000 memmove 0.000->0.000  ok
+replaceat-small                               N=500   memcpy 41.000->41.000 memmove 0.000->0.000  ok
+memberq-wide-no-match                         N=9     memcpy 28.000->28.000 memmove 0.000->0.000  ok
+freeq-wide-no-match                           N=8     memcpy 28.000->28.000 memmove 0.000->0.000  ok
+count-wide-match                              N=9     memcpy 31.000->31.000 memmove 0.000->0.000  ok
+count-guarded-small                           N=398   memcpy 44.000->44.000 memmove 0.000->0.000  ok
+position-small-match                          N=500   memcpy 11.000->11.000 memmove 0.000->0.000  ok
+catch-no-throw                                N=500   memcpy 9.000->9.000 memmove 0.000->0.000  ok
+catch-throw-untagged                          N=500   memcpy 20.000->20.000 memmove 0.000->0.000  ok
+catch-throw-tagged-hit                        N=500   memcpy 22.000->22.000 memmove 0.000->0.000  ok
+catch-throw-pattern-hit                       N=500   memcpy 25.000->25.000 memmove 0.000->0.000  ok
+checkabort-no-abort                           N=500   memcpy 7.000->7.000 memmove 0.000->0.000  ok
+checkabort-caught                             N=500   memcpy 17.000->17.000 memmove 0.000->0.000  ok
+abortprotect-clean                            N=500   memcpy 14.000->14.000 memmove 0.000->0.000  ok
+assert-disabled                               N=500   memcpy 7.000->7.000 memmove 0.000->0.000  ok
+assert-enabled-true                           N=500   memcpy 19.000->19.000 memmove 0.000->0.000  ok
+check-clean                                   N=500   memcpy 14.000->14.000 memmove 0.000->0.000  ok
+check-message-fallback                        N=500   memcpy 40.000->40.000 memmove 0.000->0.000  ok
+quiet-clean                                   N=500   memcpy 15.000->15.000 memmove 0.000->0.000  ok
+withcleanup-two-arg                           N=500   memcpy 23.000->23.000 memmove 0.000->0.000  ok
+catchexceptions-caught                        N=500   memcpy 41.000->41.000 memmove 0.000->0.000  ok
+catch-throw                                   N=500   memcpy 20.000->20.000 memmove 0.000->0.000  ok
+catch-tagged-throw                            N=500   memcpy 22.000->22.000 memmove 0.000->0.000  ok
+catch-form-pattern                            N=500   memcpy 25.000->25.000 memmove 0.000->0.000  ok
+checkabort-abort                              N=500   memcpy 17.000->17.000 memmove 0.000->0.000  ok
+abortprotect-small                            N=500   memcpy 7.000->7.000 memmove 0.000->0.000  ok
+withcleanup-small                             N=500   memcpy 11.000->11.000 memmove 0.000->0.000  ok
+withcleanup-init                              N=500   memcpy 12.000->12.000 memmove 0.000->0.000  ok
+check-no-message                              N=500   memcpy 7.000->7.000 memmove 0.000->0.000  ok
+quiet-no-message                              N=500   memcpy 8.000->8.000 memmove 0.000->0.000  ok
+catchexceptions-handler                       N=500   memcpy 30.000->30.000 memmove 0.000->0.000  ok
+catchexceptions-no-throw                      N=500   memcpy 7.000->7.000 memmove 0.000->0.000  ok
+assert-off                                    N=500   memcpy 7.000->7.000 memmove 0.000->0.000  ok
+function-slot-apply                           N=500   memcpy 18.000->18.000 memmove 0.000->0.000  ok
+function-named-apply                          N=500   memcpy 17.000->17.000 memmove 0.000->0.000  ok
+composition-apply                             N=500   memcpy 59.000->59.000 memmove 0.000->0.000  ok
+association-apply                             N=500   memcpy 15.000->15.000 memmove 0.000->0.000  ok
+failure-raw-property                          N=500   memcpy 23.000->23.000 memmove 0.000->0.000  ok
+failure-list-property                         N=500   memcpy 22.000->22.000 memmove 0.000->0.000  ok
+failure-missing-property                      N=500   memcpy 25.000->25.000 memmove 0.000->0.000  ok
+success-raw-property                          N=500   memcpy 19.000->19.000 memmove 0.000->0.000  ok
+failure-message-property                      N=500   memcpy 45.000->45.000 memmove 0.000->0.000  ok
+failure-message-delayed                       N=500   memcpy 60.000->60.000 memmove 0.000->0.000  ok
+failure-styled-message                        N=500   memcpy 45.000->45.000 memmove 0.000->0.000  ok
+failure-tag-fallback                          N=500   memcpy 18.000->18.000 memmove 0.000->0.000  ok
+enclose-message-handler                       N=481   memcpy 64.000->64.000 memmove 0.000->0.000  ok
+confirm-failure-message                       N=386   memcpy 86.000->87.000 memmove 0.000->0.000  ABOVE memcpy
+      +1.000/iter  memcpy  from rum_runtime::runtime::kernel_data::control_data::status::<impl rum_runtime::runtime::model::session::Session>::failure_property_value
+labels 178, copy count above base: 1
+ABOVE: confirm-failure-message
+
+```
+
+Whole-program counts above base: `[('confirm-failure-message', ['N/memcpy', '2N/memcpy'])]`. Changed-function prologue and store inspection follows in the stack evidence.
+
+### Gate: c1-copy-comparison
+
+Command: `python3 .temp/brief-619/continuation-1/compare-copies.py`. Exit 0. Full raw output: `logs/c1-copy-comparison.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-function-self-profiles
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/run-callgrind.py labels 1 downvalue-exact-miss downvalue-pattern-miss downvalue-exact-miss-repeat downvalue-pattern-miss-repeat subvalue-unguarded-miss default-unguarded-miss function-slot-apply`. Exit 0. Full raw output: `logs/c1-function-self-profiles.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-residual-profiles
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/run-callgrind.py labels 6 block-local confirm-failure-message`. Exit 0. Full raw output: `logs/c1-residual-profiles.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-function-self-analysis
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/analyze-ordinary-fns.py`. Exit 0. Full raw output: `logs/c1-function-self-analysis.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-residual-function-analysis
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/analyze-ordinary.py`. Exit 0. Full raw output: `logs/c1-residual-function-analysis.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-ordinary-disassembly
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-619/continuation-1/dump-ordinary-functions.py`. Exit 0. Full raw output: `logs/c1-ordinary-disassembly.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-final-residual-attribution
+
+Command: `python3 .temp/brief-619/continuation-1/report-residuals.py`. Exit 1. Full raw output: `logs/c1-final-residual-attribution.log`.
+
+```text
+No diagnostics.
+```
+
+Attribution-tool correction: the first reporting helper asserted that the base property helper made zero memcpy calls. The raw profiles show one existing call per iteration on the base and two on the candidate, at `0x614031` and `0x614026`. The helper assertion is corrected to those exact six-sample counts, preserving the measured +1 difference. No runtime, harness, binary, or profile changed. The failed helper log is retained as `logs/c1-final-residual-attribution.log`; the corrected result follows.
+
+### Final address-level residual attribution
+
+All 76 callgrind processes completed with the expected result: one N/2N pair per arm on the six misses and Function-slot control, plus six N/2N pairs per arm on each residual (12 processes per arm per residual). Every function and every instruction address is diffed per sample, with no size filter, in `continuation-1/ordinary-callgrind/per-label/{block-local,confirm-failure-message}.json`. The ordinary analyzer prints zero *driver* copy sites because this campaign does not analyze resume-driver transfers; that line is not a claim that these binaries contain no memcpy sites.
+
+Function-stage own costs, verbatim:
+
+```text
+downvalue-exact-miss         try_apply_function                         base self 0.00 calls 0.00 N/A (no observed call slope) | cand self 0.00 calls 0.00 N/A (no observed call slope)
+downvalue-pattern-miss       try_apply_function                         base self 0.00 calls 0.00 N/A (no observed call slope) | cand self 0.00 calls 0.00 N/A (no observed call slope)
+downvalue-exact-miss-repeat  try_apply_function                         base self 0.00 calls 0.00 N/A (no observed call slope) | cand self 0.00 calls 0.00 N/A (no observed call slope)
+downvalue-pattern-miss-repeat try_apply_function                         base self 0.00 calls 0.00 N/A (no observed call slope) | cand self 0.00 calls 0.00 N/A (no observed call slope)
+subvalue-unguarded-miss      try_apply_function                         base self 0.00 calls 0.00 N/A (no observed call slope) | cand self 0.00 calls 0.00 N/A (no observed call slope)
+default-unguarded-miss       try_apply_function                         base self 0.00 calls 0.00 N/A (no observed call slope) | cand self 0.00 calls 0.00 N/A (no observed call slope)
+function-slot-apply          try_apply_function                         base self 121.00 calls 1.00 121.00/call | cand self 119.00 calls 1.00 119.00/call
+WROTE /home/remi/dev/rum/.temp/brief-619/continuation-1/ordinary-callgrind/function-self.json rows 7
+
+```
+The six misses again observe zero Function-stage calls, so their per-call quotient is N/A; the unchanged dispatch planner skips that stage for these programs. The Function-slot control observes one call per iteration and drops from 121 to 119 self instructions/call.
+
+Confirm remains 86→87 memcpy calls/iteration. Across all six pairs, the property-string copy in `failure_property_value` runs once per iteration at base `0x614031` and twice at final `0x614026`: exactly one additional call. The enclosing consumer already used this helper on the base. The additional final caller passes length 7 at `0x601e70` and literal address `0x888da8` at `0x601e64`; the fresh ELF data dump reads `Message`. In the base, `0x601df9` / `0x601e00` store the overlapping `sage` / `Mess` immediates inline. This is the same seven-byte literal copy accepted by the director, with the same −22 instruction effect across the affected functions:
+
+| Function | Base self/iteration | Final self/iteration | Delta in every sample |
+| --- | ---: | ---: | ---: |
+| `rum_runtime::runtime::kernel_data::control_data::status::<impl rum_runtime::runtime::model::session::Session>::status_object_projection_value` | 184 | 0 | -184 |
+| `rum_runtime::runtime::kernel_data::control_data::status::<impl rum_runtime::runtime::model::session::Session>::failure_property_value` | 49 | 212 | +163 |
+| `rum_runtime::runtime::kernel_data::control_data::confirmation::builtins::<impl rum_runtime::runtime::model::session::Session>::finish_confirm_failure` | 126 | 110 | -16 |
+| `__memcpy_avx_unaligned_erms` | 1720.17 | 1735.17 | +15 |
+
+The exact instruction and copy contexts are in `continuation-1/ordinary-callgrind/objdump/`; the per-call samples are in `confirm-copy-sites.json`.
+
+`block-local` remains the same libc short-string page-boundary layout effect. Fresh native instruction means differ by +8.911690000/iteration; callgrind memcmp self-cost differs by +8.914616498/iteration on average. The page-address test at `0x1b1505..0x1b1513` selects the 2–3-byte safe-load path. Six dispatcher instructions (`0x1b1540..0x1b154d`) replace six vector-path instructions (`0x1b1515..0x1b1528`); its twelve instructions (`0x1b1600..0x1b161e`) replace the three-instruction equal exit (`0x1b152e..0x1b1533`), adding nine instructions for the redirected comparison.
+
+The normal equal-exit slope is exactly 4→3 in all six pairs. The short safe-load path is 0→1 in five pairs and 0→(1+1/1382) in the third; the extra single call and other string-lookup variation prevent an exact +9 *whole-function* delta in every sample. No nonzero whole-function delta on this label is deterministic across all six pairs. This final report does not repeat the earlier claim of an exactly deterministic +9 sum across raw address deltas: all final variation and call sites are retained in `block-local-memcmp-address-deltas.json`, `block-memcmp-call-sites.json`, and the full per-label JSON. The underlying page-boundary mechanism and the director-accepted residual are unchanged.
+
+Raw final attribution receipt:
+
+```json
+{
+  "profiles": 76,
+  "residual_N_2N_pairs_per_arm": 6,
+  "confirm": {
+    "copies_per_iteration": [
+      86,
+      87
+    ],
+    "extra_copy_bytes": 7,
+    "extra_site": "0x614026",
+    "calls_per_iteration_by_sample": {
+      "base": {
+        "0x614031": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "candidate": {
+        "0x614026": [
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0
+        ]
+      }
+    },
+    "affected_instruction_delta": -22,
+    "deterministic_functions": [
+      {
+        "object": "main",
+        "function": "rum_runtime::runtime::kernel_data::control_data::status::<impl rum_runtime::runtime::model::session::Session>::status_object_projection_value",
+        "base_mean": 184.0,
+        "candidate_mean": 0.0,
+        "base_raw_deltas": [
+          71024,
+          71024,
+          71024,
+          71024,
+          71024,
+          71024
+        ],
+        "candidate_raw_deltas": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "per_process_deltas": [
+          -184.0,
+          -184.0,
+          -184.0,
+          -184.0,
+          -184.0,
+          -184.0
+        ],
+        "delta_mean": -184.0,
+        "delta_min": -184.0,
+        "delta_max": -184.0,
+        "deterministic": true
+      },
+      {
+        "object": "main",
+        "function": "rum_runtime::runtime::kernel_data::control_data::status::<impl rum_runtime::runtime::model::session::Session>::failure_property_value",
+        "base_mean": 49.0,
+        "candidate_mean": 212.0,
+        "base_raw_deltas": [
+          18914,
+          18914,
+          18914,
+          18914,
+          18914,
+          18914
+        ],
+        "candidate_raw_deltas": [
+          81832,
+          81832,
+          81832,
+          81832,
+          81832,
+          81832
+        ],
+        "per_process_deltas": [
+          163.0,
+          163.0,
+          163.0,
+          163.0,
+          163.0,
+          163.0
+        ],
+        "delta_mean": 163.0,
+        "delta_min": 163.0,
+        "delta_max": 163.0,
+        "deterministic": true
+      },
+      {
+        "object": "main",
+        "function": "rum_runtime::runtime::kernel_data::control_data::confirmation::builtins::<impl rum_runtime::runtime::model::session::Session>::finish_confirm_failure",
+        "base_mean": 126.0,
+        "candidate_mean": 110.0,
+        "base_raw_deltas": [
+          48636,
+          48636,
+          48636,
+          48636,
+          48636,
+          48636
+        ],
+        "candidate_raw_deltas": [
+          42460,
+          42460,
+          42460,
+          42460,
+          42460,
+          42460
+        ],
+        "per_process_deltas": [
+          -16.0,
+          -16.0,
+          -16.0,
+          -16.0,
+          -16.0,
+          -16.0
+        ],
+        "delta_mean": -16.0,
+        "delta_min": -16.0,
+        "delta_max": -16.0,
+        "deterministic": true
+      },
+      {
+        "object": "/usr/lib/libc.so.6",
+        "function": "__memcpy_avx_unaligned_erms",
+        "base_mean": 1720.1709844559584,
+        "candidate_mean": 1735.1709844559584,
+        "base_raw_deltas": [
+          663986,
+          663986,
+          663986,
+          663986,
+          663986,
+          663986
+        ],
+        "candidate_raw_deltas": [
+          669776,
+          669776,
+          669776,
+          669776,
+          669776,
+          669776
+        ],
+        "per_process_deltas": [
+          15.0,
+          15.0,
+          15.0,
+          15.0,
+          15.0,
+          15.0
+        ],
+        "delta_mean": 15.0,
+        "delta_min": 15.0,
+        "delta_max": 15.0,
+        "deterministic": true
+      }
+    ]
+  },
+  "block_local": {
+    "memcmp_self_delta_mean": 8.914616497829229,
+    "memcmp_self_per_process_deltas": [
+      8.871201157742405,
+      8.905209840810414,
+      9.051374819102762,
+      8.816208393632394,
+      8.968162083936335,
+      8.875542691751065
+    ],
+    "normal_equal_exit": {
+      "base": [
+        4.0,
+        4.0,
+        4.0,
+        4.0,
+        4.0,
+        4.0
+      ],
+      "candidate": [
+        3.0,
+        3.0,
+        3.0,
+        3.0,
+        3.0,
+        3.0
+      ]
+    },
+    "short_page_boundary_path": {
+      "base": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "candidate": [
+        1.0,
+        1.0,
+        1.0007235890014472,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "mechanism_instructions_per_redirected_equal_compare": 9,
+    "deterministic_function_totals": 0,
+    "note": "Five short-path slopes are exactly 1; one is 1+1/1382. All raw per-function and address variation is retained."
+  }
+}
+```
+
+### Gate: c1-final-residual-attribution-corrected
+
+Command: `python3 .temp/brief-619/continuation-1/report-residuals.py`. Exit 0. Full raw output: `logs/c1-final-residual-attribution-corrected.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-final-source-scope-audit
+
+Command: `python3 .temp/brief-619/continuation-1/final-scope-audit.py`. Exit 0. Full raw output: `logs/c1-final-source-scope-audit.log`.
+
+```text
+No diagnostics.
+```
+
+### Continuation 1 final disclosure and handoff
+
+Continuation 1 is complete. The final implementation consists of two `#[inline(never)]` attributes and the derived coordinate/hash updates below. The final reservation and Function-recursion bars pass in both profiles. All requested final reruns pass; accepted residuals remain named with fresh evidence. The director retains the full gate.
+
+The pre-continuation report above remains an evidence record. Its release Function growth of +80 B/level and status/message growth of +784 B/level are superseded: the final Function slope is **64 B/level below base**, and final status/message growth is **+1,056 B/level in both profiles**. Its exact deterministic-address +9 claim for `block-local` describes the earlier sample only; the final six-profile variation is disclosed in the final attribution section.
+
+#### Changed files in this continuation
+
+| File | Change | Lines before → final |
+| --- | --- | ---: |
+| `crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs` | Outline the session-free `classify_status_object_call`; its body and all other definitions are byte-identical. | 595 → 596 |
+| `crates/rum-runtime/src/runtime/scoping/callable/status_application.rs` | Outline `apply_status_function`; its body and all other definitions are byte-identical. | 108 → 109 |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv` | 3 pure coordinate moves; no row or meaning change. | 1515 → 1515 |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv` | 9 pure coordinate moves; no row or meaning change. | 2930 → 2930 |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv` | 13 pure coordinate moves; no row or meaning change. | 3107 → 3107 |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv` | 68 fingerprint cells copied from the canonical regeneration; every other cell unchanged. | 69 → 69 |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv` | 4 certificate cells copied from canonical discovery in both builds; every other cell unchanged. | 3 → 3 |
+
+No source file was added in this continuation. Across the whole brief, the original 18 existing files and six new modules remain the complete owned source set. The required report append is the only documentation edit. Every new module is below 10k characters. `status.rs` is 20,725 characters, within the existing split-plan range; a future pure-projection/classifier module remains the responsibility boundary recorded in the original assessment. This narrow continuation makes no cleanup change.
+
+The exact seven-file diff is `continuation-1/implementation.diff`. Before/final file hashes, line counts, canonical-cell transitions, gate-log hashes and final measurement counts are in `continuation-1/final-verification.json`. Ownership old → new rows are in `continuation-1/ownership-moves.json` and were pasted earlier in this continuation. No new `UnknownHostPayload`, mark, coverage or promotion was gained or lost. The 48,713-row rejection replay has 123 coordinate moves and zero unpaired or semantically changed rows, including citation fields.
+
+Canonical hash-cell transitions, taken from the actual before/final files (all other cells were checked equal):
+
+| Inventory | Row | Canonical column | Before | Final |
+| --- | ---: | --- | --- | --- |
+| `local-contracts.tsv` | 2 | fingerprint | `fnv1a64:a896eef2bf55f629` | `fnv1a64:fd76a8e9cc1a20ec` |
+| `local-contracts.tsv` | 3 | fingerprint | `fnv1a64:7b5c0216bd31de58` | `fnv1a64:94d8fbf3bab5dac1` |
+| `local-contracts.tsv` | 4 | fingerprint | `fnv1a64:153020959e70d02f` | `fnv1a64:e6334e935884d5ba` |
+| `local-contracts.tsv` | 5 | fingerprint | `fnv1a64:1b3d50b3668e4931` | `fnv1a64:b0711d348b43c614` |
+| `local-contracts.tsv` | 6 | fingerprint | `fnv1a64:0a9dff28040ddac4` | `fnv1a64:bcd8476091ad37a5` |
+| `local-contracts.tsv` | 7 | fingerprint | `fnv1a64:8c2dfde8d114b9cd` | `fnv1a64:8163acc57cd0cfe8` |
+| `local-contracts.tsv` | 8 | fingerprint | `fnv1a64:58e35ae00d6014d4` | `fnv1a64:ee9d05fed55ebe55` |
+| `local-contracts.tsv` | 9 | fingerprint | `fnv1a64:2554f91e8908052b` | `fnv1a64:ac4b06d1c345426e` |
+| `local-contracts.tsv` | 10 | fingerprint | `fnv1a64:e5a3e1f006ab33b5` | `fnv1a64:ad6ad84b5a58d3b0` |
+| `local-contracts.tsv` | 11 | fingerprint | `fnv1a64:c73b70077d6eb45e` | `fnv1a64:f25e5ecdaf64e74f` |
+| `local-contracts.tsv` | 12 | fingerprint | `fnv1a64:dc95021080826f31` | `fnv1a64:71c8ce91a537ec14` |
+| `local-contracts.tsv` | 13 | fingerprint | `fnv1a64:a4b061ebe2b3c8b5` | `fnv1a64:6c775847366168b0` |
+| `local-contracts.tsv` | 14 | fingerprint | `fnv1a64:8678d9f02c0deca9` | `fnv1a64:db5893e738d2176c` |
+| `local-contracts.tsv` | 15 | fingerprint | `fnv1a64:61df7cbbfc4462c4` | `fnv1a64:1419c4f489e3bfa5` |
+| `local-contracts.tsv` | 16 | fingerprint | `fnv1a64:9ebfa3b26fd63775` | `fnv1a64:b9d4326c4f2c67f0` |
+| `local-contracts.tsv` | 17 | fingerprint | `fnv1a64:9a7e9d64ec2f9af8` | `fnv1a64:d3d7bbd0b3d99261` |
+| `local-contracts.tsv` | 18 | fingerprint | `fnv1a64:6f21f43fe79d33ed` | `fnv1a64:1ac6ea867f1def88` |
+| `local-contracts.tsv` | 19 | fingerprint | `fnv1a64:99a7abc9b25ae8ce` | `fnv1a64:5ba6b58292f6b61f` |
+| `local-contracts.tsv` | 20 | fingerprint | `fnv1a64:446bf964c81cbe47` | `fnv1a64:55e2242c2c432c92` |
+| `local-contracts.tsv` | 21 | fingerprint | `fnv1a64:7037202c41dafa58` | `fnv1a64:89b41a093f5ef6c1` |
+| `local-contracts.tsv` | 22 | fingerprint | `fnv1a64:22b9469706e7fa19` | `fnv1a64:6a622ecfd3e1633c` |
+| `local-contracts.tsv` | 23 | fingerprint | `fnv1a64:f52f86bc6ee36235` | `fnv1a64:bcf67d17c2910230` |
+| `local-contracts.tsv` | 24 | fingerprint | `fnv1a64:2f7d22fe4d58dc35` | `fnv1a64:f7441959a1067c30` |
+| `local-contracts.tsv` | 25 | fingerprint | `fnv1a64:d3f368650a010f1e` | `fnv1a64:df118c2c9e43908f` |
+| `local-contracts.tsv` | 26 | fingerprint | `fnv1a64:5ba843aeb62e6618` | `fnv1a64:868482d6bbbad701` |
+| `local-contracts.tsv` | 27 | fingerprint | `fnv1a64:52a9ed68d4840a41` | `fnv1a64:092921f5740fe944` |
+| `local-contracts.tsv` | 28 | fingerprint | `fnv1a64:b066123e3a12f6d6` | `fnv1a64:fa283cdf94f52767` |
+| `local-contracts.tsv` | 29 | fingerprint | `fnv1a64:b15e176ac408754b` | `fnv1a64:c649d03bdfd7e78e` |
+| `local-contracts.tsv` | 30 | fingerprint | `fnv1a64:fcb0b43d3c13eed4` | `fnv1a64:926a5f5c04129855` |
+| `local-contracts.tsv` | 31 | fingerprint | `fnv1a64:dff9b1551f6ad1d0` | `fnv1a64:8b209a043045d0b9` |
+| `local-contracts.tsv` | 32 | fingerprint | `fnv1a64:422cdeb1aaf8c5b8` | `fnv1a64:723c6c9dbf9b4aa1` |
+| `local-contracts.tsv` | 33 | fingerprint | `fnv1a64:767417c48d5accf4` | `fnv1a64:06704c0b88e42175` |
+| `local-contracts.tsv` | 34 | fingerprint | `fnv1a64:39feebb0d86f1a55` | `fnv1a64:f464d785ee65ec50` |
+| `local-contracts.tsv` | 35 | fingerprint | `fnv1a64:87dbd908bf6d95ad` | `fnv1a64:5c3f91f7c1c89ac8` |
+| `local-contracts.tsv` | 36 | fingerprint | `fnv1a64:a869030b6f7693d6` | `fnv1a64:f22b2dacca58c467` |
+| `local-contracts.tsv` | 37 | fingerprint | `fnv1a64:08eee8b832a7f385` | `fnv1a64:ff3dbdf3da3e6a20` |
+| `local-contracts.tsv` | 38 | fingerprint | `fnv1a64:999ed01c9eb9e002` | `fnv1a64:dc6e40bb5297ae2b` |
+| `local-contracts.tsv` | 39 | fingerprint | `fnv1a64:b8e773199ce26ab1` | `fnv1a64:4e1b3f9ac197e794` |
+| `local-contracts.tsv` | 40 | fingerprint | `fnv1a64:b54ba8255ccf4c8d` | `fnv1a64:555f36bf09df5428` |
+| `local-contracts.tsv` | 41 | fingerprint | `fnv1a64:0796fd23d9e3698b` | `fnv1a64:cfb5851a7472b84e` |
+| `local-contracts.tsv` | 42 | fingerprint | `fnv1a64:1a3e917201b175cd` | `fnv1a64:0f74404ead6d8be8` |
+| `local-contracts.tsv` | 43 | fingerprint | `fnv1a64:2d7cc7fd00238568` | `fnv1a64:eff65103a5dc71f1` |
+| `local-contracts.tsv` | 44 | fingerprint | `fnv1a64:ce4f46625cba7807` | `fnv1a64:877c8b83e7bc97d2` |
+| `local-contracts.tsv` | 45 | fingerprint | `fnv1a64:43d975f55706879c` | `fnv1a64:7b70b943474cfabd` |
+| `local-contracts.tsv` | 46 | fingerprint | `fnv1a64:ed40091b299c9188` | `fnv1a64:53691890a226b691` |
+| `local-contracts.tsv` | 47 | fingerprint | `fnv1a64:cff26c1f698d5279` | `fnv1a64:fd7f0b8ea779611c` |
+| `local-contracts.tsv` | 48 | fingerprint | `fnv1a64:e097ae7315c57b60` | `fnv1a64:c5462069986221e9` |
+| `local-contracts.tsv` | 49 | fingerprint | `fnv1a64:a26cb3caba10d955` | `fnv1a64:5cd29f9fd007ab50` |
+| `local-contracts.tsv` | 50 | fingerprint | `fnv1a64:61830657bbb463f8` | `fnv1a64:9adc24c3835e5b61` |
+| `local-contracts.tsv` | 51 | fingerprint | `fnv1a64:369d9991d683e501` | `fnv1a64:febb4e06a6832184` |
+| `local-contracts.tsv` | 52 | fingerprint | `fnv1a64:da55c4e848467aaf` | `fnv1a64:ab58f2e6025a803a` |
+| `local-contracts.tsv` | 53 | fingerprint | `fnv1a64:695b1a32193a5926` | `fnv1a64:5237b03bdc90b757` |
+| `local-contracts.tsv` | 54 | fingerprint | `fnv1a64:0077f49c18d934cd` | `fnv1a64:f5ada378c4954ae8` |
+| `local-contracts.tsv` | 55 | fingerprint | `fnv1a64:e9ca71c4435c7298` | `fnv1a64:14a6b0ec48e8e381` |
+| `local-contracts.tsv` | 56 | fingerprint | `fnv1a64:7b2ac53b759eea1b` | `fnv1a64:b71422f3a2893dfe` |
+| `local-contracts.tsv` | 57 | fingerprint | `fnv1a64:0c96a1c3002d762a` | `fnv1a64:9972463ee1aefd53` |
+| `local-contracts.tsv` | 58 | fingerprint | `fnv1a64:0e9456bd702fdf41` | `fnv1a64:c5138b4a0fbbbe44` |
+| `local-contracts.tsv` | 59 | fingerprint | `fnv1a64:60d33aadf9a6d610` | `fnv1a64:22ad6051dccdb879` |
+| `local-contracts.tsv` | 60 | fingerprint | `fnv1a64:a639403984a53320` | `fnv1a64:ef278a0e32d7d629` |
+| `local-contracts.tsv` | 61 | fingerprint | `fnv1a64:a234fb99e5db4433` | `fnv1a64:55a81c226f91f1d6` |
+| `local-contracts.tsv` | 62 | fingerprint | `fnv1a64:e1df8459fed23073` | `fnv1a64:3177d545acad8e96` |
+| `local-contracts.tsv` | 63 | fingerprint | `fnv1a64:ab15bfa754e90c1f` | `fnv1a64:86a86eb64666b70a` |
+| `local-contracts.tsv` | 64 | fingerprint | `fnv1a64:6d01fbdeb134ca41` | `fnv1a64:2381306b50c0a944` |
+| `local-contracts.tsv` | 65 | fingerprint | `fnv1a64:e38b830431815f3d` | `fnv1a64:420e5111e0d4f978` |
+| `local-contracts.tsv` | 66 | fingerprint | `fnv1a64:ac4663e2c282727b` | `fnv1a64:c72c0b63449eebde` |
+| `local-contracts.tsv` | 67 | fingerprint | `fnv1a64:dac153296e21f7d0` | `fnv1a64:85e83bd87efcf6b9` |
+| `local-contracts.tsv` | 68 | fingerprint | `fnv1a64:23206afb23573fe0` | `fnv1a64:07cedcf1a5f3e669` |
+| `local-contracts.tsv` | 69 | fingerprint | `fnv1a64:0dd1fa2b0cfd13d3` | `fnv1a64:9f01addb88db1af6` |
+| `promoted.tsv` | 2 | hash=true certificates | `instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:03265d3e8582f2b4", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:6353433c6e9a106e;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>": "O0210@fnv1a64:0dd1fa2b0cfd13d3;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>": "O011@fnv1a64:23206afb23573fe0;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"} || instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::Unarmed", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:03265d3e8582f2b4", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:2a43cb5cd0908a60;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>": "O0200@fnv1a64:dac153296e21f7d0;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>": "O010@fnv1a64:ac4663e2c282727b;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}` | `instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:fecc0ea262066aab", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:3fa6372e6845cee6;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>": "O0210@fnv1a64:9f01addb88db1af6;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>": "O011@fnv1a64:07cedcf1a5f3e669;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"} || instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::Unarmed", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:fecc0ea262066aab", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:159c9ccce0628adc;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>": "O0200@fnv1a64:85e83bd87efcf6b9;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>": "O010@fnv1a64:c72c0b63449eebde;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}` |
+| `promoted.tsv` | 2 | hash=false certificates | `instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:946becd717009e33", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:8fe9740ecd272e39;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>": "O0210@fnv1a64:0dd1fa2b0cfd13d3;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>": "O011@fnv1a64:23206afb23573fe0;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"} || instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::Unarmed", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:946becd717009e33", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:272448549ff4c987;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>": "O0200@fnv1a64:dac153296e21f7d0;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>": "O010@fnv1a64:ac4663e2c282727b;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}` | `instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:c003288f57b03b36", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:44bbfe39c993ab1d;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>": "O0210@fnv1a64:9f01addb88db1af6;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>": "O011@fnv1a64:07cedcf1a5f3e669;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"} || instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::Unarmed", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:c003288f57b03b36", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:5ea9bb0a82afd1ef;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>": "O0200@fnv1a64:85e83bd87efcf6b9;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>": "O010@fnv1a64:c72c0b63449eebde;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}` |
+| `promoted.tsv` | 3 | hash=true certificates | `instance=Instance { body: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", key: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", mode: "runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "none (nongeneric C02)", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:d3ac466610f104ce", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:38cb1e49ab5b302d;direct-covered={};direct-contracts={"<rum_core::expr::SharedArgs as std::ops::Deref>::deref": "I01@fnv1a64:8678d9f02c0deca9;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=SharedArgs deref borrows the same Vec with pointer identity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<rum_core::expr::SharedExpr as std::ops::Deref>::deref": "I02@fnv1a64:61df7cbbfc4462c4;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=borrows same Expr with pointer identity; no owner or capacity receipt;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index": "I04@fnv1a64:9a7e9d64ec2f9af8;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec<Expr> indexing by usize borrows one element; bounds panic unwinds;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::clone_result": "R01@fnv1a64:2d7cc7fd00238568;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::evaluate_rule": "R02@fnv1a64:ce4f46625cba7807;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::expr_runtime_helpers::is_system_symbol_name": "B13@fnv1a64:1a3e917201b175cd;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=None=false; System matching name=true; different name or context=false; scalar result;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "std::vec::Vec<rum_core::expr::Expr>::len": "B05@fnv1a64:0a9dff28040ddac4;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec length reads initialized length even with spare capacity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}` | `instance=Instance { body: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", key: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", mode: "runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "none (nongeneric C02)", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:ffac2aca1193f3a9", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:aadf2866da9d78d2;direct-covered={};direct-contracts={"<rum_core::expr::SharedArgs as std::ops::Deref>::deref": "I01@fnv1a64:db5893e738d2176c;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=SharedArgs deref borrows the same Vec with pointer identity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<rum_core::expr::SharedExpr as std::ops::Deref>::deref": "I02@fnv1a64:1419c4f489e3bfa5;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=borrows same Expr with pointer identity; no owner or capacity receipt;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index": "I04@fnv1a64:d3d7bbd0b3d99261;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec<Expr> indexing by usize borrows one element; bounds panic unwinds;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::clone_result": "R01@fnv1a64:eff65103a5dc71f1;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::evaluate_rule": "R02@fnv1a64:877c8b83e7bc97d2;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::expr_runtime_helpers::is_system_symbol_name": "B13@fnv1a64:0f74404ead6d8be8;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=None=false; System matching name=true; different name or context=false; scalar result;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "std::vec::Vec<rum_core::expr::Expr>::len": "B05@fnv1a64:bcd8476091ad37a5;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec length reads initialized length even with spare capacity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}` |
+| `promoted.tsv` | 3 | hash=false certificates | `instance=Instance { body: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", key: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", mode: "runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "none (nongeneric C02)", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:1cff771c03708dc1", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:48405f1a31e15c20;direct-covered={};direct-contracts={"<rum_core::expr::SharedArgs as std::ops::Deref>::deref": "I01@fnv1a64:8678d9f02c0deca9;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=SharedArgs deref borrows the same Vec with pointer identity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<rum_core::expr::SharedExpr as std::ops::Deref>::deref": "I02@fnv1a64:61df7cbbfc4462c4;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=borrows same Expr with pointer identity; no owner or capacity receipt;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index": "I04@fnv1a64:9a7e9d64ec2f9af8;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec<Expr> indexing by usize borrows one element; bounds panic unwinds;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::clone_result": "R01@fnv1a64:2d7cc7fd00238568;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::evaluate_rule": "R02@fnv1a64:ce4f46625cba7807;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::expr_runtime_helpers::is_system_symbol_name": "B13@fnv1a64:1a3e917201b175cd;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=None=false; System matching name=true; different name or context=false; scalar result;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "std::vec::Vec<rum_core::expr::Expr>::len": "B05@fnv1a64:0a9dff28040ddac4;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec length reads initialized length even with spare capacity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}` | `instance=Instance { body: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", key: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", mode: "runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "none (nongeneric C02)", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:f793d8b58fdb5448", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:90bd14da7efe1a2d;direct-covered={};direct-contracts={"<rum_core::expr::SharedArgs as std::ops::Deref>::deref": "I01@fnv1a64:db5893e738d2176c;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=SharedArgs deref borrows the same Vec with pointer identity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<rum_core::expr::SharedExpr as std::ops::Deref>::deref": "I02@fnv1a64:1419c4f489e3bfa5;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=borrows same Expr with pointer identity; no owner or capacity receipt;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index": "I04@fnv1a64:d3d7bbd0b3d99261;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec<Expr> indexing by usize borrows one element; bounds panic unwinds;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::clone_result": "R01@fnv1a64:eff65103a5dc71f1;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::evaluate_rule": "R02@fnv1a64:877c8b83e7bc97d2;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::expr_runtime_helpers::is_system_symbol_name": "B13@fnv1a64:0f74404ead6d8be8;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=None=false; System matching name=true; different name or context=false; scalar result;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "std::vec::Vec<rum_core::expr::Expr>::len": "B05@fnv1a64:bcd8476091ad37a5;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec length reads initialized length even with spare capacity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}` |
+
+#### Final gate receipts
+
+The gate sections above contain every recorded test-result line, warning and fault-occurrence maximum verbatim, including the expected forced-red child failures. Their command records and complete stdout/stderr are retained in `logs/c1-*.command.json` and `logs/c1-*.log`; their hashes are in `continuation-1/final-verification.json`. The automated phrase “No diagnostics.” means no test-total or compiler-warning line was extracted; it does not mean the referenced script produced no output. The following are additional raw final receipts.
+
+`typed_slot_census`, default, first production receipt (the subsequent scratch-mutation negative controls are retained in the raw log):
+
+```text
+G15-A negative control: preflip refused: S54 completed receipt is required first; no zero-legacy claim
+G15-A CENSUS production frames=461 finalizers=50 implementations=608 typed=97 macros=542 result=343 insert=199
+G15-A CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+G15-A CENSUS test-support frames=7 finalizers=1 implementations=21 typed=13 macros=10 result=6 insert=4
+G15-A PARTITION implementations=624 macros=553
+G15-A FRAME FG15AProjection StatusFunctionProjectionFrame Expr -> Option<Expr>
+G15-A FRAME FG15AValue StatusFunctionValueFrame Expr -> Option<Expr>
+G15-A INSERTION MG15AProjection rum_runtime::runtime::scoping::callable::status_application::<Session as inherent>::apply_status_function#method2:suspend_status_function_projection:self
+G15-A INSERTION MG15AValue rum_runtime::runtime::scoping::callable::status_application::<Session as inherent>::evaluate_status_function_value#method2:suspend_status_function_value:self
+G15-A TOTAL implementations=608 typed=97 typed_macros=55 witnessed_sites=48; two new Expr -> Option<Expr> frames; global modes unchanged
+G15-A REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; typed evaluation uses unchanged global modes
+```
+
+`typed_slot_census`, no-default, first production receipt (the subsequent scratch-mutation negative controls are retained in the raw log):
+
+```text
+G15-A negative control: preflip refused: S54 completed receipt is required first; no zero-legacy claim
+G15-A CENSUS production frames=461 finalizers=50 implementations=608 typed=97 macros=542 result=343 insert=199
+G15-A CENSUS test-only frames=11 finalizers=5 implementations=16 typed=0 macros=11 result=3 insert=8
+G15-A CENSUS test-support frames=7 finalizers=1 implementations=21 typed=13 macros=10 result=6 insert=4
+G15-A PARTITION implementations=624 macros=553
+G15-A FRAME FG15AProjection StatusFunctionProjectionFrame Expr -> Option<Expr>
+G15-A FRAME FG15AValue StatusFunctionValueFrame Expr -> Option<Expr>
+G15-A INSERTION MG15AProjection rum_runtime::runtime::scoping::callable::status_application::<Session as inherent>::apply_status_function#method2:suspend_status_function_projection:self
+G15-A INSERTION MG15AValue rum_runtime::runtime::scoping::callable::status_application::<Session as inherent>::evaluate_status_function_value#method2:suspend_status_function_value:self
+G15-A TOTAL implementations=608 typed=97 typed_macros=55 witnessed_sites=48; two new Expr -> Option<Expr> frames; global modes unchanged
+G15-A REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; typed evaluation uses unchanged global modes
+```
+
+`c1-compile-controls-default`, full raw output:
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.34s
+     Running tests/typed_slot_compile_controls.rs (target/debug/deps/typed_slot_compile_controls-d6fbf6132444c3d1)
+
+running 1 test
+test typed_slot_compile_controls ... PAIR first-chain-input: positive PASS; negative E0271 at src/lib.rs:27:35
+PAIR chain-adjacency: positive PASS; negative E0271 at src/lib.rs:34:70
+PAIR unbound-chain-constructor: positive PASS; negative E0599 at src/lib.rs:40:41
+PAIR evaluate-input: positive PASS; negative E0271 at src/lib.rs:46:66
+PAIR evaluate-output: positive PASS; negative E0271 at src/lib.rs:52:66
+PAIR finalizer-output: positive PASS; negative E0271 at src/lib.rs:58:48
+PAIR opaque-action: positive PASS; negative E0599 at src/lib.rs:63:39
+PAIR token-no-clone: positive PASS; negative E0599 at src/lib.rs:69:18
+PAIR token-no-mint: positive PASS; negative E0599 at src/lib.rs:75:27
+PAIR token-no-escape: positive PASS; negative lifetime at src/lib.rs:81:1
+PAIR sealed-extension: positive PASS; negative E0277 at src/lib.rs:87:20
+PAIR codec-key-private: positive PASS; negative E0603 at src/lib.rs:93:18
+PAIR opaque-selector-pass: positive PASS; negative E0271 at src/lib.rs:100:35
+PAIR builtin-selector-producer: positive PASS; negative E0271 at src/lib.rs:110:68
+PAIR mode-not-frame-chosen: positive PASS; negative E0599 at src/lib.rs:118:65
+PAIR mode-private-selection: positive PASS; negative E0603 at src/lib.rs:124:18
+PAIR slot-mismatch-private: positive PASS; negative E0451 at src/lib.rs:136:95
+PAIR input: positive PASS; negative E0271 at src/lib.rs:143:41
+PAIR output-return: positive PASS; negative E0308 at src/lib.rs:150:1
+PAIR fallback-output: positive PASS; negative E0308 at src/lib.rs:157:1
+PAIR chain-last-output: positive PASS; negative E0308 at src/lib.rs:164:1
+PAIR token-fresh-type: positive PASS; negative E0308 at src/lib.rs:178:47
+PAIR token-witness-input: positive PASS; negative E0308 at src/lib.rs:186:17
+PAIR deferred-final-output: positive PASS; negative E0308 at src/lib.rs:193:5
+PAIR generic-frame: positive PASS; negative E0308 at src/lib.rs:199:1
+PAIR closure-return: positive PASS; negative E0308 at src/lib.rs:206:1
+PAIR sibling-erased-private: positive PASS; negative E0603 at crates/rum-runtime/src/runtime/mod.rs:135:47
+PAIR return-event-input: positive PASS; negative E0271 at crates/rum-runtime/src/runtime/mod.rs:166:60
+PAIR return-event-output: positive PASS; negative E0271 at crates/rum-runtime/src/runtime/mod.rs:169:60
+PAIR mode-expr-fixed: positive PASS; negative E0277 at crates/rum-runtime/src/runtime/suspension/typed/registry.rs:21:17
+PAIR mode-new-state-only: positive PASS; negative E0277 at crates/rum-runtime/src/runtime/suspension/typed.rs:82:40
+PAIR mode-one-associated-type: positive PASS; negative E0201 at crates/rum-runtime/src/runtime/suspension/typed/registry.rs:27:5
+PAIR mode-no-codec-override: positive PASS; negative E0407 at crates/rum-runtime/src/runtime/suspension/typed/registry.rs:27:5
+PAIR mode-legacy-provider-narrow: positive PASS; negative E0053 at crates/rum-runtime/src/runtime/suspension/typed.rs:90:19
+PAIR mode-state-provider-narrow: positive PASS; negative E0053 at crates/rum-runtime/src/runtime/suspension/typed.rs:95:15
+PAIR status-classifier-no-session: positive PASS; negative E0424 at crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:264:13
+COMPILE CONTROLS: 36 positive / 36 intended rejections (22 S1 + 7 S2 + opaque fault + token witness + fallback output + 2 G14 return-event constraints + S7 builtin-selector producer + G15-A session-free classifier); raw Cargo JSON and primary spans retained
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 33.27s
+```
+
+`c1-compile-controls-no-default`, full raw output:
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.33s
+     Running tests/typed_slot_compile_controls.rs (target/debug/deps/typed_slot_compile_controls-e5d376d145e23731)
+
+running 1 test
+test typed_slot_compile_controls ... PAIR first-chain-input: positive PASS; negative E0271 at src/lib.rs:27:35
+PAIR chain-adjacency: positive PASS; negative E0271 at src/lib.rs:34:70
+PAIR unbound-chain-constructor: positive PASS; negative E0599 at src/lib.rs:40:41
+PAIR evaluate-input: positive PASS; negative E0271 at src/lib.rs:46:66
+PAIR evaluate-output: positive PASS; negative E0271 at src/lib.rs:52:66
+PAIR finalizer-output: positive PASS; negative E0271 at src/lib.rs:58:48
+PAIR opaque-action: positive PASS; negative E0599 at src/lib.rs:63:39
+PAIR token-no-clone: positive PASS; negative E0599 at src/lib.rs:69:18
+PAIR token-no-mint: positive PASS; negative E0599 at src/lib.rs:75:27
+PAIR token-no-escape: positive PASS; negative lifetime at src/lib.rs:81:1
+PAIR sealed-extension: positive PASS; negative E0277 at src/lib.rs:87:20
+PAIR codec-key-private: positive PASS; negative E0603 at src/lib.rs:93:18
+PAIR opaque-selector-pass: positive PASS; negative E0271 at src/lib.rs:100:35
+PAIR builtin-selector-producer: positive PASS; negative E0271 at src/lib.rs:110:68
+PAIR mode-not-frame-chosen: positive PASS; negative E0599 at src/lib.rs:118:65
+PAIR mode-private-selection: positive PASS; negative E0603 at src/lib.rs:124:18
+PAIR slot-mismatch-private: positive PASS; negative E0451 at src/lib.rs:136:95
+PAIR input: positive PASS; negative E0271 at src/lib.rs:143:41
+PAIR output-return: positive PASS; negative E0308 at src/lib.rs:150:1
+PAIR fallback-output: positive PASS; negative E0308 at src/lib.rs:157:1
+PAIR chain-last-output: positive PASS; negative E0308 at src/lib.rs:164:1
+PAIR token-fresh-type: positive PASS; negative E0308 at src/lib.rs:178:47
+PAIR token-witness-input: positive PASS; negative E0308 at src/lib.rs:186:17
+PAIR deferred-final-output: positive PASS; negative E0308 at src/lib.rs:193:5
+PAIR generic-frame: positive PASS; negative E0308 at src/lib.rs:199:1
+PAIR closure-return: positive PASS; negative E0308 at src/lib.rs:206:1
+PAIR sibling-erased-private: positive PASS; negative E0603 at crates/rum-runtime/src/runtime/mod.rs:135:47
+PAIR return-event-input: positive PASS; negative E0271 at crates/rum-runtime/src/runtime/mod.rs:166:60
+PAIR return-event-output: positive PASS; negative E0271 at crates/rum-runtime/src/runtime/mod.rs:169:60
+PAIR mode-expr-fixed: positive PASS; negative E0277 at crates/rum-runtime/src/runtime/suspension/typed/registry.rs:21:17
+PAIR mode-new-state-only: positive PASS; negative E0277 at crates/rum-runtime/src/runtime/suspension/typed.rs:82:40
+PAIR mode-one-associated-type: positive PASS; negative E0201 at crates/rum-runtime/src/runtime/suspension/typed/registry.rs:27:5
+PAIR mode-no-codec-override: positive PASS; negative E0407 at crates/rum-runtime/src/runtime/suspension/typed/registry.rs:27:5
+PAIR mode-legacy-provider-narrow: positive PASS; negative E0053 at crates/rum-runtime/src/runtime/suspension/typed.rs:90:19
+PAIR mode-state-provider-narrow: positive PASS; negative E0053 at crates/rum-runtime/src/runtime/suspension/typed.rs:95:15
+PAIR status-classifier-no-session: positive PASS; negative E0424 at crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:264:13
+COMPILE CONTROLS: 36 positive / 36 intended rejections (22 S1 + 7 S2 + opaque fault + token witness + fallback output + 2 G14 return-event constraints + S7 builtin-selector producer + G15-A session-free classifier); raw Cargo JSON and primary spans retained
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 30.36s
+```
+
+`c1-acceptance-default`, full raw output:
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-5f7f08d1c3c3a0e1)
+
+running 1 test
+test tests::retention_closure::local::production::local_production_acceptance ... body	instance	rejections
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::Unarmed;R=rum_stdlib::option_consumers::OptionConsumer;hash=true	0
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=rum_stdlib::option_consumers::OptionConsumer;hash=true	0
+C02	rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr;M=runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=none (nongeneric C02);hash=true	0
+LeaseProbe538::probe	sealed modes	0
+LeaseProbe538::start	sealed modes	0
+LeaseProbe538::drive	sealed modes	0
+LeaseProbe538::resume	sealed modes	0
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 19.51s
+```
+
+`c1-acceptance-no-default`, full raw output:
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-c942ac40233a21b0)
+
+running 1 test
+test tests::retention_closure::local::production::local_production_acceptance ... body	instance	rejections
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::Unarmed;R=rum_stdlib::option_consumers::OptionConsumer;hash=false	0
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=rum_stdlib::option_consumers::OptionConsumer;hash=false	0
+C02	rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr;M=runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=none (nongeneric C02);hash=false	0
+LeaseProbe538::probe	sealed modes	0
+LeaseProbe538::start	sealed modes	0
+LeaseProbe538::drive	sealed modes	0
+LeaseProbe538::resume	sealed modes	0
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1155 filtered out; finished in 19.00s
+```
+
+`c1-ownership-replay`, full raw output:
+
+```text
+Ownership replay: 25 pure coordinate moves; no new or removed rows, no meaning changes, no new UnknownHostPayload.
+```
+
+`c1-rejection-replay`, full raw output:
+
+```text
+{
+  "before_rows": 48713,
+  "final_rows": 48713,
+  "pure_coordinate_moves": 123,
+  "unpaired_new": 0,
+  "unpaired_old": 0,
+  "moves": 123
+}
+```
+
+`c1-fixed-618`, full raw output:
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/.temp/brief-619/fixed-618/tree/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/.temp/brief-619/fixed-618/tree/crates/rum-stdlib)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.59s
+     Running tests/zz_brief618_probe.rs (.temp/brief-619/target-fixed-618/debug/deps/zz_brief618_probe-7a357ff08a0b72f2)
+
+running 2 tests
+test observable_tail_pairs ... continuation-slot fault-occurrence delta=0; observations=1620
+ok
+test source_census ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.68s
+```
+
+`c1-final-source-scope-audit`, full raw output:
+
+```text
+Final source audit: 2079 base files intact; 18 owned existing edits, 6 owned new files; 0 unowned changes.
+Both final candidate builds match current source; protected suspension files, S10 helpers, F0528 and non-status tail unchanged.
+New module character counts: {"crates/rum-runtime/src/runtime/scoping/callable/status_application.rs": 3956, "crates/rum-stdlib/tests/suspension_oracle/fixtures/status_function/controls.rs": 6534, "crates/rum-stdlib/tests/suspension_oracle/fixtures/status_function/guest_heads.rs": 4098, "crates/rum-stdlib/tests/suspension_oracle/fixtures/status_function/mod.rs": 1921, "crates/rum-stdlib/tests/suspension_oracle/fixtures/status_function/return_boundaries.rs": 1815, "crates/rum-stdlib/tests/typed_slot_census/g15a.rs": 2944}
+```
+
+Final handoff verification, raw output:
+
+```text
+Continuation source proof: 7 changed files; exactly 2 inline(never) attributes, 25 ownership moves, 68 fingerprint cells, 4 certificate cells.
+Frozen bases, supplied probes, candidate binaries and build source hashes verified.
+Required final gates passed; the 3 superseded discovery/analysis failures remain disclosed.
+Final measurements verified: {"ordinary_preflight": 1068, "instructions": 480, "resume_allocations": 32, "copies": 712, "callgrind": 76} 42 zero-residual stack fits / 504 successful probes / 42 prologue-slot rows.
+```
+
+All 53 status fixtures and all 422 oracle fixtures pass in each build; their maximum continuation-slot fault deltas are 0 (636 and 93,750 observations respectively). Both censuses pass 8 tests with one intentionally ignored test, and both compile-control runs pass all 36 positive/negative pairs. `frame_root_trace` passes 15 tests. Ownership passes 31 tests in each build; production acceptance passes in both with unchanged production/probe marks; rejection census passes. The fixed 136-pair set remains 109 SAME / 27 DIFF, with zero invalid pairs, zero SAME → DIFF and fault delta 0 over 1,620 observations.
+
+Only the existing three runtime-test helper dead-code warnings appeared in `frame_root_trace`; no new warning was introduced. The two certificate-discovery runs intentionally failed on stale C01 hashes before canonical values were installed, then both final acceptance runs passed. The census forced-red failures are expected child controls under passing outer tests.
+
+#### Final measurements and residual rulings
+
+| Measurement | Base | Before continuation | Final | Outcome |
+| --- | ---: | ---: | ---: | --- |
+| `try_apply_function` debug local reservation | 3,256 B | 2,808 B | 2,808 B | Pass |
+| `try_apply_function` release local reservation | `0x458` (1,112 B) | `0x4a8` (1,192 B) | `0x418` (1,048 B) | Pass; each release prologue also saves 48 B |
+| debug `function-body` slope | 49,760 B/level | 49,312 B/level | 49,312 B/level | −448 B/level vs base |
+| release `function-body` slope | 19,376 B/level | 19,456 B/level | 19,312 B/level | −64 B/level vs base |
+| debug `status-body` / `message-body` | 49,760 B/level | 50,816 B/level | 50,816 B/level | +1,056 B/level, owed to S13 |
+| release `status-body` / `message-body` | 19,376 B/level | 20,160 B/level | 20,432 B/level | +1,056 B/level, owed to S13 |
+
+All 21 shapes were measured in each profile at four heights with three samples: 42 zero-residual fits, 504 successful probes. The other 18 shapes are unchanged. All 42 changed-function/specialization prologue and complete stack-operand tables remain in `continuation-1/stack-evidence/`, including the final projected-result and finisher slots and the error-only 136-byte copy. The debug slot operands match the earlier candidate exactly.
+
+Five native N/2N instruction pairs per arm cover all 24 distinct requested labels (480 correct processes). Only `block-local` exceeds the existing noise/threshold rule: +8.911690000000817 native instructions/iteration, with +8.914616497829229 mean self instructions in libc `__memcmp_avx2_movbe` in six fresh callgrind pairs per arm. The same short-string page-boundary path accounts for +9 instructions per redirected equal comparison. Five final short-path slopes are exactly one; the sixth is 1 + 1/1382. No whole-function delta is deterministic across all six. These sample variations are retained, and the cause remains the director-accepted layout residual. `function-slot-apply` has one Function-stage call/iteration and 121 → 119 self instructions/call. The six miss controls have zero Function-stage calls; their per-call cost is N/A, because the planner skips that stage.
+
+The fresh calibrated 178-label copy census comprises 712 correct processes. `confirm-failure-message` remains 86 → 87 memcpy/iteration, with no memmove increase; the other 177 labels have no copy increase. The additional call copies the same seven-byte `Message` literal. Final attribution across six pairs per arm is −22 instructions/iteration in the four affected functions. The existing call at the helper site executes once/iteration in base and twice in the final candidate; the increment is one, not a new site with a zero baseline. All per-function/address evidence is retained.
+
+All eight resume-allocation comparisons were repeated at N and 2N in both arms (32 final processes) with matching executable-path lengths. Every raw count, byte total, slope and intercept equals its accepted pre-continuation comparison. The six Function workloads retain the accepted per-iteration increments: parameters/template/styled +5 allocations/+160 B; raw Failure/Success +4/+144 B; projection-plus-value +8/+312 B. Enclose and Confirm remain exact. Required resume counts pass, including the double-resume workload.
+
+All 178 ordinary workloads also passed single-check, N and 2N preflight in both arms (1,068 processes). Fresh residual/self attribution comprises 76 correct callgrind processes. Frozen base binaries, final candidate binary hashes, unchanged supplied probes and final build source hashes were checked again. All final CLI/resume measurements run through the equal-length `can1/` path, which resolves to the recorded final binaries.
+
+#### Failures, deviations, counters and remaining work
+
+Implementation attempt 1 outlined only the application helper and compiled, but left the release reservation at `0x4a8`; it made no progress against the failed bar, so the nonprogress counter became one. Attempt 2 also outlined the classifier, as conditionally directed, and passed both frame and recursion bars; the counter reset to zero. No function body or control flow changed.
+
+The first allocation probe used a candidate executable path 15 bytes longer than base. All eight candidate runs had exactly +15 fixed bytes at N and 2N, with unchanged counts/slopes, from the harness collecting `argv[0]`. The complete first raw results are preserved; the final comparison reran both arms through equal-length paths and restored exact accepted raw totals. No comparison was weakened.
+
+The first residual-reporting helper incorrectly asserted zero base/one candidate calls at the literal-copy helper site. It failed against the raw evidence; the actual slopes are one/two, still +1. The assertion was corrected and the analysis rerun on the same final profiles and binaries. The failed and corrected logs are both retained. During the final read-only audit, two signature anchors were corrected to match the actual restricted visibility and generic lifetime, and one exploratory read used a nonexistent coverage filename; these were audit-script/read errors with no source, build or measurement change. The corrected comprehensive verification passes.
+
+Continuation counters: 2 compiling implementation attempts; final nonprogress 0; owned semantic failures 0; compile-control failures 0; owned fixed-set differences 0. Recorded compile-command counter 38 → 61 (+23); recorded gate/test-command counter 76 → 135 (+59). These are the existing outer-command counters, not a count of every rustc process or nested negative-control invocation. The final handoff reads/analysis add no compilation or language test.
+
+Workspace and timing were **not rerun**, as the director explicitly directed; their previous results, including zero aligned-timing labels disjoint above base, remain historical accepted evidence. The broader original director probes and 103-workload resume campaign were also not rerun under this continuation; the requested fixed set and eight resume allocations were. The director owns the subsequent full gate. The prior nine native ZeroMQ skips remain historical, not fresh continuation results.
+
+The unchanged canonical tools wrote their fixed paths: `.temp/typed-slot-census/{default,no-default}/`, `.temp/typed-slot-compile-controls/`, `.temp/suspension-oracle/{gate-default,gate-no-default}.txt` and its temporary directory, `target/brief-544/local-contracts.tsv`, `.temp/brief-546/certificates/`, and `target/brief-535/EDGE_ALL/`. Copies needed for before/final replay are retained under `continuation-1/`. All executor-created scratch, generated `.rum` sources, helpers, binaries, reports and measurement artifacts are within `.temp/brief-619/`. No git command, network request, sub-agent, new unsafe code, dependency change or toolchain change was used. The tree is left uncommitted.
+
+Final durable handoff: `continuation-1/handoff-verification.json` records the hashes of this complete report, the brief containing it, the final source audit and the verified final candidate binaries. `state.json` has no pending or half-edited work; `PROGRESS.md` records completion. The accepted layout/literal-copy residuals and the S13 status-stack obligation above are the remaining reported limits.
+
+## Director gate record (2026-10-18) — G15-A accepted
+
+**Runs.** Run 1 (session `01a14d3e-…`, 1.19M tokens) implemented the step
+and reported four residuals. Continuation 1 (fork `01a14de9-…`, 2.0M
+tokens) outlined the status branch: `#[inline(never)]` on
+`apply_status_function` alone left the release reservation at `0x4a8`
+because the classifier stayed inlined; outlining `classify_status_object_call`
+as well brought it back.
+
+**Gate on the final tree** (`.temp/director/gate-619/`, `chain.txt`):
+- Formatting and units: `cargo fmt --check` clean; typed 24, frame_root_trace
+  15, resume_evaluation_context 11, depth 1.
+- Oracle: 422 in both builds, fault delta 0 (93 750 observations), no
+  warnings.
+- Census: 608 implementations, 97 typed, 55 typed macros, 48 witnessed
+  sites, in both builds (the two `FAILED` lines are the census's own
+  forced-red probes). Compile controls pass in both builds.
+- Inventories: the fingerprint and certificate replays leave every
+  inventory byte-identical; ownership 31; local acceptance in both builds;
+  rejection census.
+- Workspace: 3854/0/59, run natively with no skip variable, so the nine
+  ZeroMQ tests really ran. The four warnings are the three pre-existing
+  `test_builtins.rs` dead-code warnings and their summary line.
+- Builds: a no-op rebuild in the worker's own target directories recompiles
+  nothing and keeps `rum-cli` `4a712987…` and `resume-alloc` `d9465bc1…`.
+- Allocations (281 labels): 178 ordinary equal; exactly the six G15 resume
+  workloads differ, +5 / +4 / +8 allocations per iteration, as reported.
+- Stack, 21 shapes: the seventeen old shapes and `lhs-arg` equal base;
+  `function-body` −448 debug / −64 release; `status-body` and
+  `message-body` +1 056 in both profiles.
+- Probes: g15 14/14 SAME; s10 51 SAME, 7 DIFF (the information markers,
+  S10's); brief-618's fixed set 109 SAME / 27 DIFF, with exactly the eight
+  owned pairs fixed and no new DIFF; s9 61, s8 48, s7 32, s6 22 and g14 23,
+  all SAME.
+
+**Rulings.**
+- `status-body` / `message-body` +1 056 B per level: accepted for this step;
+  owed to S13, which types F0528 and can then share one value phase.
+- `block-local` +8.9 instructions per iteration in libc `__memcmp`: layout,
+  accepted.
+- `confirm-failure-message` 86 → 87 memcpy per iteration (the seven-byte
+  `"Message"` literal now copied by a libc call; the affected functions'
+  instructions −22): accepted as named.
+- Aligned timing (run 1), 0 labels disjoint above base: accepted.

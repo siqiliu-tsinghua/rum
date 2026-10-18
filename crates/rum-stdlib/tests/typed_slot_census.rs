@@ -1,4 +1,4 @@
-//! Source census and earned typing receipts. S9 deliberately refuses preflip.
+//! Source census and earned typing receipts. G15-A deliberately refuses preflip.
 use std::{fs, process::Command};
 
 // Reuse the real lexical resolver; the census does not invent a second trait
@@ -34,6 +34,8 @@ mod typed_slot_census {
 use typed_slot_census::{classify, scan};
 #[path = "typed_slot_census/discovery.rs"]
 mod discovery;
+#[path = "typed_slot_census/g15a.rs"]
+mod g15a;
 #[path = "typed_slot_census/receipts.rs"]
 mod receipts;
 #[path = "typed_slot_census/reporting.rs"]
@@ -81,13 +83,13 @@ fn preflip_no_legacy_transport_uses() {
     if let Some(slot) = FLIP_SLOT {
         preflip(&facts, &report, slot).unwrap();
     } else {
-        assert_eq!(stage::TYPING_RECEIPT, "S9");
+        assert_eq!(stage::TYPING_RECEIPT, "G15-A");
         let error = preflip(&facts, &report, "Option<Expr>").unwrap_err();
         assert_eq!(
             error,
             "preflip refused: S54 completed receipt is required first"
         );
-        println!("S9 negative control: {error}; no zero-legacy claim");
+        println!("G15-A negative control: {error}; no zero-legacy claim");
     }
 }
 
@@ -177,12 +179,12 @@ fn forced_red(remove_guard: bool) {
     )
     .unwrap();
     let marker = if remove_guard {
-        "production frames=472 finalizers=55 implementations=622"
+        "production frames=472 finalizers=55 implementations=624"
     } else {
-        "S9 PARTITION implementations=621"
+        "G15-A PARTITION implementations=623"
     };
     assert!(
-        !output.status.success() && log.contains(marker) && log.contains("S9 baseline requires"),
+        !output.status.success() && log.contains(marker) && log.contains("G15-A baseline requires"),
         "{log}"
     );
     println!("FORCED RED removed {kind} at {}:\n{log}", site.fields());

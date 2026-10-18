@@ -68,42 +68,18 @@ impl Session {
         self.status_object_projection_value(failure, &Expr::string(property), None)
     }
 
-    pub(in crate::runtime) fn apply_status_object_to_args(
+    pub(in crate::runtime) fn project_status_function_message(
         &mut self,
-        head: &Expr,
-        args: &[Expr],
-    ) -> Result<Option<Expr>, EvalError> {
-        let is_failure = is_failure_expr(head);
-        let is_success = is_success_expr(head);
-        if !is_failure && !is_success {
-            return Ok(None);
-        }
-
-        if is_failure && !failure_tag_supports_projection(head) {
-            return Ok(None);
-        }
-        if is_success && !success_tag_supports_projection(head) {
-            return Ok(None);
-        }
-
-        match args {
-            [
-                list @ Expr::Call {
-                    head: list_head,
-                    args: properties,
-                },
-            ] if is_system_symbol_name(list_head, heads::structure::LIST) => {
-                let mut values = Vec::with_capacity(properties.len());
-                for property in properties {
-                    values.push(self.status_object_projection_value(head, property, Some(list))?);
-                }
-                Ok(Some(Expr::call(system_expr("List"), values)))
-            }
-            [property] => Ok(Some(
-                self.status_object_projection_value(head, property, None)?,
-            )),
-            _ => Ok(None),
-        }
+        status: &Expr,
+        property: &Expr,
+        styled: bool,
+    ) -> Result<Expr, EvalError> {
+        let value = if styled {
+            self.failure_virtual_styled_message_value(status)?
+        } else {
+            self.failure_virtual_message_value(status)?
+        };
+        Ok(value.unwrap_or_else(|| status_object_missing_expr(status, property.clone())))
     }
 
     fn status_object_projection_value(
@@ -164,16 +140,11 @@ impl Session {
             }
         }
 
-        Ok(
-            status_object_property_value(status, property).unwrap_or_else(|| {
-                let missing_property = if is_failure_expr(status) {
-                    missing_property_context.unwrap_or(property)
-                } else {
-                    property
-                };
-                status_object_missing_expr(status, missing_property.clone())
-            }),
-        )
+        Ok(status_object_pure_property_value(
+            status,
+            property,
+            missing_property_context,
+        ))
     }
 
     fn failure_virtual_message_value(&mut self, status: &Expr) -> Result<Option<Expr>, EvalError> {
@@ -276,6 +247,102 @@ impl Session {
             suspend => FinishFailureMessageFromTemplateSuspensionFrame,
         )
     }
+}
+
+pub(in crate::runtime) enum StatusObjectProjection<'a> {
+    Pure(Expr),
+    VirtualMessage { property: &'a Expr, styled: bool },
+}
+
+// Selection and pure projection have no Session and cannot evaluate guest code.
+// Keep the head/arity/tag checks in the same order as status application.
+#[inline(never)]
+pub(in crate::runtime) fn classify_status_object_call<'a>(
+    head: &Expr,
+    args: &'a [Expr],
+) -> Option<StatusObjectProjection<'a>> {
+    let is_failure = is_failure_expr(head);
+    let is_success = is_success_expr(head);
+    if !is_failure && !is_success {
+        return None;
+    }
+    if is_failure && !failure_tag_supports_projection(head) {
+        return None;
+    }
+    if is_success && !success_tag_supports_projection(head) {
+        return None;
+    }
+
+    let property = match args {
+        [
+            list @ Expr::Call {
+                head: list_head,
+                args: properties,
+            },
+        ] if is_system_symbol_name(list_head, heads::structure::LIST) => {
+            let mut values = Vec::with_capacity(properties.len());
+            for property in properties {
+                values.push(status_object_pure_property_value(
+                    head,
+                    property,
+                    Some(list),
+                ));
+            }
+            return Some(StatusObjectProjection::Pure(Expr::call(
+                system_expr("List"),
+                values,
+            )));
+        }
+        [property] => property,
+        _ => return None,
+    };
+
+    let value = if is_failure {
+        if is_system_symbol_name(property, "All") {
+            status_object_all_value(head)
+        } else if let Expr::Atom(Atom::String(name)) = property {
+            match name.as_str() {
+                "Properties" => failure_properties_value(head),
+                "HeldMessageTemplate" => failure_virtual_held_message_template_value(head)
+                    .or_else(|| status_object_property_value(head, property)),
+                "Message" | "StyledMessage" => {
+                    return Some(StatusObjectProjection::VirtualMessage {
+                        property,
+                        styled: name == "StyledMessage",
+                    });
+                }
+                "MessageName" => failure_virtual_message_name_value(head)
+                    .or_else(|| status_object_property_value(head, property)),
+                "Tag" => status_object_property_value(head, property)
+                    .or_else(|| failure_virtual_tag_value(head)),
+                _ => status_object_property_value(head, property),
+            }
+        } else {
+            status_object_property_value(head, property)
+        }
+    } else if matches!(property, Expr::Atom(Atom::String(name)) if name == "Properties") {
+        status_object_properties_value(head)
+    } else {
+        status_object_property_value(head, property)
+    };
+    Some(StatusObjectProjection::Pure(value.unwrap_or_else(|| {
+        status_object_missing_expr(head, property.clone())
+    })))
+}
+
+fn status_object_pure_property_value(
+    status: &Expr,
+    property: &Expr,
+    missing_property_context: Option<&Expr>,
+) -> Expr {
+    status_object_property_value(status, property).unwrap_or_else(|| {
+        let missing_property = if is_failure_expr(status) {
+            missing_property_context.unwrap_or(property)
+        } else {
+            property
+        };
+        status_object_missing_expr(status, missing_property.clone())
+    })
 }
 
 pub(in crate::runtime) fn is_failure_expr(expr: &Expr) -> bool {
