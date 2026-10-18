@@ -533,36 +533,189 @@ Correct any earlier statement the fix makes stale: sections 1, 2 and 5
 describe the whole-`Result` finish. Checkpoint, and apply the stop-loss, as
 before.
 
+## Director continuation 2 (2026-10-19) — the frame holds only awaited work
+
+Continuation 1's stop was correct and its evidence is accepted. It refuted
+my prescription on both paths.
+
+- **The ordinary helper.** The error-only form (`Ok` passed through,
+  `Err` to the rule) grows the helper's release prologue from 280 to
+  424 B. Only the whole-`Result` pass-through keeps it machine-identical.
+- **The resumed path.** Every in-arm placement is worse than run 1's
+  single site before the match: the cold wrapper (1 864 B), the inline
+  rule (1 736 B), the borrowed form (1 800 B) and the explicit handoff
+  (1 896 B), against run 1's 1 576 B. Temporaries in the three arms do not
+  share slots.
+
+**Ruling.** Run 1's whole-`Result` finish, used once before the replacement
+match, stands. Continuation 1's error-only rule and in-arm placement are
+withdrawn.
+
+**What run 1 left open is a type, not a site.** Run 1 needs an impossible
+arm because `DefinitionLhsPreparationWork` holds two kinds of state in one
+enum:
+
+- the driver's own work (`Vacant`, `PrepareNode`, `PrepareCallArguments`,
+  `CompleteNode`);
+- the three `Await*` states, which exist only inside a suspended frame.
+
+Each consumer of the enum asserts away the half it cannot see. The driver
+loop does it for `Await*` (`:489-492`), and the resumed path does it for
+the rest: run 1's new arm, plus the replacement match's last arm. That is
+the shape nobody tried. Make the impossible states unrepresentable, and
+the compiler enforces what the arms assert.
+
+**The change.**
+
+1. **Restore run 1's source exactly.** Use
+   `continuation-1/run-1/crates/…/definition_lhs_preparation.rs`, SHA-256
+   `fa8a5f9d…`, and verify the hash before editing.
+2. **A new enum for awaited work.** Move the three `Await*` variants, with
+   their fields unchanged, into a new
+   `DefinitionLhsAwaitedWork { PatternAtom, CallHead, CallArgument }` in
+   `resume_frames.rs` (names free). Give it the same `Clone` and
+   `rum_derive::FrameRootTrace` derives, and add it to the module's
+   `assert_traces` list. `DefinitionLhsPreparationWork` keeps only the
+   driver's four variants.
+3. **The frame carries it.**
+   - `DefinitionLhsPreparationSuspensionFrame` becomes `{ state, awaited }`.
+   - The three suspend sites pass their awaited value to
+     `suspend_definition_lhs_preparation` instead of storing it in
+     `state.work`.
+   - `TypedFrame::resume` clones both, as it clones `state` today, and
+     passes both on.
+4. **Resume is total.**
+   - `resume_definition_lhs_preparation` takes the awaited value and
+     borrows its retained expression with a match total over three variants
+     (a method or an inline match): `source`, `source_head.as_ref()`,
+     `source`.
+   - It applies run 1's `finish(source, outcome)`, then
+     `.map_err(ResumeStop::failure)?`.
+   - It then converts the awaited value into the next driver work with a
+     second match, also total.
+   - Neither match has a wildcard or an `unreachable!`.
+5. **The driver's assertion goes.** The driver loop's `Await*` arm
+   disappears with the variants. The `Vacant` arm is the `mem::replace`
+   placeholder: it stays, untouched.
+6. **Nothing else changes.** F0257 stays `Expr` → `Expr`. Witnesses, routes,
+   `DefinitionResumeRoute`, the token, codecs and modes are unchanged.
+   M0260-M0262 are unchanged apart from passing the awaited value. Add no
+   new field elsewhere and no success-path clone.
+
+**Scope for this continuation.** It widens the brief's classes by
+exactly this change:
+
+- `definition_lhs_preparation/resume_frames.rs`, for the new enum, the
+  frame's field, `TypedFrame::resume` and the `assert_traces` entry;
+- `crates/rum-runtime/src/runtime/tests/frame_root_trace/derived_inventory.rs`,
+  for the new derive, and `frame_root_trace.rs`'s pin only if the test
+  counts it;
+- census files, only to pair moved sites. If any typing receipt would
+  change, STOP.
+
+Everything else in the Scope section stands.
+
+**Bars.**
+
+- **No impossible arm.** The diff against `HEAD` adds no `unreachable!`,
+  `panic!`, `expect`, `unwrap` or wildcard arm. Report the net count of
+  `unreachable!` in the file: it falls by one.
+- **Ordinary path.** The driver's state type shrinks, so its moves may
+  change. The bars are therefore *at or below base*, not *identical*:
+  - allocation counts and bytes exactly equal on all 187 ordinary labels;
+  - the calibrated copy census at or below base, at N and 2N, on every
+    ordinary label;
+  - all 21 stack shapes, debug and release, at or below base (`lhs-arg`
+    58 400 / 18 160);
+  - the prologue and slot tables of every changed function, including both
+    driver specializations and `evaluate_definition_lhs_active_expr`
+    (expected identical);
+  - the full native instruction panel as in run 1, with every flag cleared
+    by five runs or attributed by Callgrind, and own-function self
+    instructions per call for the helper and the drivers on the LHS labels.
+- **Resumed path.** Ruling: F0257's resume entry is a once-per-resume frame,
+  not a per-level cost, so run 1 is its ceiling.
+  - Prologue at or below run 1: 1 576 B release in the measured harness,
+    2 504 B for debug `resume_definition_lhs_preparation`.
+  - Local result copies per iteration at or below run 1's on all 11
+    workloads.
+  - Resume allocation counts equal run 1's on all 113 workloads. Bytes may
+    move with the frame's layout; name every changed size.
+- **Timing.** The aligned whole-program protocol as in run 1. Any row
+  disjoint above base goes to the report with its attribution.
+
+**Then rerun everything, on the final code**, as run 1 did:
+
+- **Correctness.**
+  - `cargo fmt --check`.
+  - The 50 `definition_lhs_cycle` tests in both builds.
+  - Three mutants, one per awaited variant, each red on exactly its owned
+    fixtures in both builds.
+  - The 28 ordinary controls.
+  - The full oracle in both builds: 472 tests, fault delta 0.
+- **Census and tests.**
+  - `typed_slot_census` (608/97/55/48) and the compile controls (36), both
+    builds.
+  - `frame_root_trace`: the new enum enters `derived_inventory.rs` as
+    exactly one entry. The named-frame count stays 565 unless the test
+    counts derives, and if it changes, say why.
+  - The runtime typed, resume-context and depth tests.
+- **Inventories.**
+  - `ownership_graph` and `local_production_acceptance` in both builds,
+    with fingerprints and certificates replayed.
+  - Reconcile rows against `HEAD`'s committed inventories, under the
+    template's derived-facts rules. New unknowns for the new derive are
+    expected; disclose them. A retired row must be one for code this step
+    deleted.
+  - `production_rejection_census_is_complete`.
+- **Probe sets.**
+  - The fixed set: 114 SAME / 22 DIFF.
+  - The director probes: G15-B 20, G15 14, S10 51 + 7, S9-S6.
+- **Measurements.** Every measurement above.
+
+I run the workspace at the gate.
+
+**Stop-loss.** As in the brief, keyed on progress. A failed bar is
+reported with its attribution, not tuned past two non-progress attempts.
+If the type split fails an ordinary bar outright, keep its snapshot,
+restore run 1's tree exactly, finish run 1's full rerun set on it, and
+report both. Then I rule between them.
+
+**Report.** Add a section *Continuation 2* at the end of the report, and
+make the opening summary describe the final tree. Checkpoint as before.
+
 ---
 
-# brief-620 — final G15-B report
+# brief-620 — G15-B report, stopped in Continuation 1
 
-The resumed definition-LHS path now keeps the ordinary path's exact same-symbol cycle recovery. All required correctness gates and measurement campaigns are complete. Every ordinary allocation, copy and recursive-stack row is exactly equal to the calibrated G15-A base; the ordinary helper and both driver bodies have identical normalized machine instructions and stores. Resumed-only result copies, prologue costs and any timing residuals below are submitted to the director under the brief's residual rule. No version-control command or network request was used; the tree is uncommitted.
+**Continuation 1 is not complete or green.** The error-only recovery shape is implemented and the duplicate state match is removed, but the selected continuation variant fails the ordinary machine-identity bar (helper prologue 424 versus 280 bytes) and the resumed release stack bar (1,736 versus 1,368 bytes). Two consecutive compiling attempts improved none of the measured bars, so the brief's required stop-loss ended further attempts. Final formatting also fails; inventories are stale and the full continuation rerun set is unexecuted. The accepted run-1 evidence below remains historical. No Git or network was used; the tree is uncommitted.
 
 ## 1. Files changed and derived-fact ripples
 
-| File | Semantic change | SHA-256 old → new |
+| File | Current semantic status | SHA-256 base → current |
 |---|---|---|
-| `crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs` | One pure shared cycle-recovery finish; ordinary helper invokes it after evaluation, and all three retained awaiting-source variants invoke it before error conversion and work replacement. Only this production file changes. | `d073ff287d2bad5570c5d9ac9f647e12154c1763108b61d79698f678a85100ad` → `fa8a5f9d12cb2d32d57b0d2d77e8362be93dafa85981e20ad925a72b17bcdbe4` |
-| `crates/rum-stdlib/tests/suspension_oracle/fixtures/definition_lhs_cycle.rs` | New 49 Checks::ALL equality/stored-definition fixtures plus one multi-phase lifecycle test; unconditional fault absence, exact pauses and request isolation. | `new file` → `35dedadd0876ab9904244da4f7cc67d7b82ce6b042415d7ee331f365fa176ccd` |
-| `crates/rum-stdlib/tests/suspension_oracle/fixtures/mod.rs` | Register the new fixture module without restructuring the manifest or descriptors. | `94c34c5bbf39e4c6c509d852c49aebcd1343604f70b1df77384de14d650ec3a3` → `e5c03a8b90998792fc623e5269f659b8d948e9d126c5ce16eee5cbb059183473` |
-| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv` | Replay two unchanged macro moves and one new scoped unreachable assertion; all remain unknown, with no new host payload. | `3954b07d1bcfa43f9b7f1db9a56c0eb7abcb10b113495c0e6a9ac117a839f5d0` → `f5e7558f323de65c5e9a5344dde1a48cd23befb5c03c7152f918395117371543` |
-| `crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv` | Copy 68 source-dependent fingerprint cells from the unchanged canonical generator; preserve every contract meaning. | `af39ef1f2c429140cabf721cea2ed0d008f1e43973cdc4ed0aa982c9995d6c33` → `f5868bd68bdc9981be6184e2c5a1df24b5b7aed7358f59403bb7727d962c1217` |
-| `crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv` | Copy four generated certificate cells across the two feature sets; no claim, mark, receipt or coverage change. | `ad2037b0aa719ca33fe4bbe2e342aa6a54d2848239fccc765aeaa3b85b83ca5e` → `84d8ad278e08b563ccfcf4f9dd108f59cc3933f1687cfbe4445368c95689b981` |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv` | Run-1 two pure moves plus added assertion row. STALE: the extra assertion was removed; no continuation discovery/replay ran. | `3954b07d1bcfa43f9b7f1db9a56c0eb7abcb10b113495c0e6a9ac117a839f5d0` → `f5e7558f323de65c5e9a5344dde1a48cd23befb5c03c7152f918395117371543` |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv` | Run-1 four generated certificate cells. STALE for the selected source; not regenerated after stop-loss. | `ad2037b0aa719ca33fe4bbe2e342aa6a54d2848239fccc765aeaa3b85b83ca5e` → `84d8ad278e08b563ccfcf4f9dd108f59cc3933f1687cfbe4445368c95689b981` |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv` | Run-1 68 canonical fingerprint cells. STALE for the selected source; not regenerated after stop-loss. | `af39ef1f2c429140cabf721cea2ed0d008f1e43973cdc4ed0aa982c9995d6c33` → `f5868bd68bdc9981be6184e2c5a1df24b5b7aed7358f59403bb7727d962c1217` |
+| `crates/rum-stdlib/tests/suspension_oracle/fixtures/mod.rs` | Run-1 fixture registration, unchanged in Continuation 1. | `94c34c5bbf39e4c6c509d852c49aebcd1343604f70b1df77384de14d650ec3a3` → `e5c03a8b90998792fc623e5269f659b8d948e9d126c5ce16eee5cbb059183473` |
+| `crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs` | Error-only shared recovery; ordinary Err branch and three awaiting Err branches use it. Duplicate state match/new assertion removed. Selected inline placement compiles but fails measured bars and formatting. | `d073ff287d2bad5570c5d9ac9f647e12154c1763108b61d79698f678a85100ad` → `1e7d793bba944bb298d90914e780ff36484f02bdcc9c0ea5d146fa3f3a2ed507` |
+| `crates/rum-stdlib/tests/suspension_oracle/fixtures/definition_lhs_cycle.rs` | Run-1 49 equality/state fixtures plus lifecycle test, unchanged in Continuation 1; not rerun on the selected source. | `new file` → `35dedadd0876ab9904244da4f7cc67d7b82ce6b042415d7ee331f365fa176ccd` |
 
-The only documentation edit is appending this complete report to this brief, preserving the original bytes. All executor scratch is under `.temp/brief-620/`; unchanged canonical tool outputs are individually disclosed below. The 2,086-file supplied export and all six supplied hashes remain unchanged. F0257's frame source is byte-identical. Cargo manifests, the lockfile, toolchain, core representations, AGENTS/TODO and other documentation remain unchanged.
+Continuation 1 changes only the production LHS file, from run-1 `fa8a5f9d12cb2d32d57b0d2d77e8362be93dafa85981e20ad925a72b17bcdbe4` to `1e7d793bba944bb298d90914e780ff36484f02bdcc9c0ea5d146fa3f3a2ed507`. The own-brief edit corrects these summary sections and appends the entire Continuation 1 report while preserving the director's full governing prefix and the historical run-1 evidence. No other documentation, manifest, lockfile, toolchain, core representation, frame, route, token or receipt changes. The supplied 2,086-file export and six base hashes are unchanged.
 
-Ownership moves are the old `526:22` unreachable assertion → `533:22`, and old `534:20` matches guard → `737:16`. The sole new unknown is the `508:18` unreachable assertion. Fingerprints (68 cells) and certificates (four cells) are canonical-generator copies, never hand-written. The rejection audit pairs 48,711 rows, moves 23, retires two changed operations and adds four changed operations (48,713 → 48,715 rows); meaning changes and marks/coverage gained or lost are zero. Every old/new field and citation is retained in the replay JSONs and the verbatim tables below. Production receipts and the typed census are unchanged.
+The run-1 derived transitions and every generated cell remain documented below. They have not been replayed for this source: the obsolete `:508` row must retire and the two base macro sites need canonical movement reconciliation (`:544` and `:748` in the selected source). Fingerprints and both certificate sets are stale. No row meaning, mark, receipt, coverage or generated hash was manually changed after stop-loss.
 
-The production file is 31,988 bytes, in the repository's split-plan range. This scoped finish extraction does not justify an unrelated split; its future responsibility boundary is pure LHS policy versus state-machine transitions. The new fixture module is 14,249 bytes, in the warning range and already separated by feature responsibility.
+The production file is 32,427 bytes, in the split-plan range. This bounded policy/state-transition change does not justify an unrelated module split; the future boundary remains pure LHS policy versus state-machine transitions and the existing sibling resume-frame module. The 14,249-byte fixture is within the preferred test-file threshold and stays unchanged.
 
 ## 2. Design as built
 
-`finish_definition_lhs_active_expr(&Expr, Result<Expr, EvalError>)` has no Session and holds exactly the old three-condition rule: cycle error, symbol source, exact source text. Only that case clones the source; all other outcomes pass through unchanged. `#[inline(always)]` is supported by measured ordinary instructions/copies and stack fits, rather than treated as evidence by itself.
+`recover_definition_lhs_cycle(&Expr, EvalError) -> Result<Expr, EvalError>` is Session-free and holds the rule once: only a cycle error, symbol source and exact source text recover via `Ok(source.clone())`; every other error returns unchanged. The ordinary helper evaluates once, passes the successful value through and sends an error to the rule. The selected alternate placement uses `#[inline(always)]` directly, without the cold wrapper; both the cold and inline placements are preserved and measured in Continuation 1. The attribute is not evidence of zero cost: all measured continuation variants grow the ordinary helper.
 
-The ordinary `evaluate_definition_lhs_active_expr` evaluates once and applies the finish. Its three evaluation sites, witnesses and routes are unchanged. On resume, AwaitPatternAtom and AwaitCallArgument borrow their retained `source`; AwaitCallHead borrows `source_head.as_ref()`. The finish runs before `map_err(ResumeStop::failure)` and before work replacement. The existing transitions then continue the driver. No re-evaluation, new field/frame/scaffold allocation, success-path clone, token change, codec override, Arc-bearing token or raw adapter is introduced. F0257 remains Expr → Expr, with M0260–M0262 and the existing later-pause capture route unchanged.
+The existing replacement match binds each retained source in its own awaiting arm. AwaitPatternAtom and AwaitCallArgument pass `&source`; AwaitCallHead passes `source_head.as_ref()`. Each Ok value is used directly; an Err goes through the recovery before `map_err(ResumeStop::failure)?` and before new work is built. There is one state match, no added impossible arm, no new successful-path clone or reevaluation, and no new frame, field, allocation scaffold, codec/mode or token change. F0257 remains Expr → Expr. The first 497 source lines, M0260–M0262 routes/witnesses, same-frame token and existing later-pause route are unchanged. This describes the source shape; the full semantic reruns did not execute after stop-loss.
 
-## 3. Fixtures, harnesses and semantic result
+## 3. Accepted run-1 fixtures, harnesses and semantic result
+
+All counts in this section describe the accepted run-1 source, not the selected continuation source.
 
 Both base feature builds are 37 red / 13 green: 22 argument, seven head and eight pattern failures; 12 controls and the lifecycle test already pass. Both candidate builds are 50 green. The 49 fixtures cover all 16 director DIFF cases, all five owned brief-618 cases, stored DownValues/UpValues/SubValues as appropriate, inner/earlier/later pauses in each awaiting state, repeated cycles and each definition/value-table form. The independent lifecycle test cancels and resets at both pauses across all three states, and checks pending ownership, overlap rejection, empty queues and a fresh request. Checks::ALL and unconditional fault absence are preserved.
 
@@ -572,39 +725,33 @@ The ten new harness workloads run at N=100 and 2N=200, check both final value an
 
 The unchanged brief-618 set is exactly 114 SAME / 22 DIFF out of 136, no invalid pair and no SAME→DIFF; all five owned LHS rows are fixed. Director probes: G15-B 20 SAME, G15 14 SAME, S10 51 SAME plus its identical seven DIFF, S9 61 SAME, S8 48 SAME, S7 32 SAME, S6 22 SAME (255 pairs total).
 
-## 4. Gates, faults, inventories and canonical outputs
+## 4. Accepted run-1 gates, faults, inventories and canonical outputs
 
-Every mandatory gate ran successfully on the final production source. Both full oracle builds pass 472 tests, zero warnings and fault delta 0 over 94,494 observations each. New fixtures have fault delta 0 on red bases and green candidates; all mutants and controls also preserve zero fault occurrences. Typed census totals remain 608 implementations / 97 typed / 55 typed macros / 48 witnessed sites. Compile controls verify 36 positive and 36 exact-span negative receipts per build. Ownership's final 31 tests and both production acceptances pass; marks, coverage and receipts do not change.
+Every mandatory gate ran successfully on run 1 (`fa8a5f9d…`). These results do not validate the selected continuation source (`1e7d793b…`); its reruns were stopped before execution. Both full oracle builds pass 472 tests, zero warnings and fault delta 0 over 94,494 observations each. New fixtures have fault delta 0 on red bases and green candidates; all mutants and controls also preserve zero fault occurrences. Typed census totals remain 608 implementations / 97 typed / 55 typed macros / 48 witnessed sites. Compile controls verify 36 positive and 36 exact-span negative receipts per build. Ownership's final 31 tests and both production acceptances pass; marks, coverage and receipts do not change.
 
 The workspace command exits 0. Its 53 verbatim Rust test-result lines total 3,904 passed / 0 failed / 59 ignored. Nine of those passed returns are explicitly reported as native ZeroMQ skips: 3,895 other passes + nine native skips + 59 ignored. The filtered diagnostic run records all nine permission-denied skip messages. The three test_builtins dead-code warnings and Cargo's summary are pre-existing; this diff introduces no compiler warning. Neither oracle build warns.
 
 All individual commands, actual test-result lines (including expected red bases, intentional forced-red child totals and discovery failures), warnings and fault observations are preserved verbatim in the evidence below and raw logs. Canonical-output roots and their exact written-file inventory are disclosed below; no output was hidden by weakening a check.
 
-## 5. Allocation, instructions, copies, stack, resume and timing
+## 5. Current measurements and accepted run-1 evidence
 
-All 1,574 preflight processes check their results. All 1,200 allocation runs are correct; all 187 ordinary raw counts/bytes and slopes/intercepts match exactly, with 108/113 resume rows also exact. Every count, size, byte and intercept difference in the five repaired cycle cases is reconciled to physical allocation sites and discrete hash-table capacity events, including the inlined one-byte input allocation. Twenty counted-binary profiles and twenty safe size-histogram runs independently match the authoritative raw totals.
+The selected continuation source has a measured F0257 release entry of **1,736 bytes** against base **1,368**. Its ordinary helper has a **424-byte** prologue and **704-byte** body against **280 / 680**, which disproves the required normalized-code identity. One `lhs-arg-value` N/2N pair per arm checks correct values and pause counts; its local 136/184/392-byte copy slopes are **3 / 1 / 1** against base **4 / 1 / 1**. This sample does not establish exact equality on the six unchanged-result controls. Full available prologue/slot and attempt tables are in Continuation 1 below.
 
-All 2,400 native instruction runs are correct. The 24 native flags plus nine required own-function labels receive 396 Callgrind processes; physical compiler symbols preserve generic specializations and show zero deterministic nonzero ordinary function deltas. The ordinary helper and both drivers have identical normalized instructions/stores, including cold recovery and unwind paths. Helper self cost is 35 instructions/call; driver self cost is 523 (828 for the pattern label); set-ownvalue invokes neither. The calibrated copy instrument names __memcpy_avx_unaligned_erms and has a nonzero 30/30 handler slope. All 748 ordinary copy processes are correct and every raw N/2N memcpy/memmove count is exactly equal.
+The cold placement, inline placement and two ownership refinements all compile without warnings. The last two improve none of the measured bars. No debug build, 42-shape stack campaign, full eleven-workload attribution, all-187 ordinary copy census or all-300 allocation comparison ran on the selected source. The conditional instruction/own-function/aligned-timing reruns triggered by the ordinary code change also did not run. The director's run-1 timing ruling cannot be carried forward under its machine-identity condition.
 
-All 42 calibrated base fits equal the supplied expected values; all 42 candidate fits equal those bases, with zero residual and 504 successful probes per arm. lhs-arg remains 58,400 bytes/level debug and 18,160 release. Every changed-function prologue and store is tabulated, including +672 debug / +208 release bytes in the resumed entry.
-
-All 1,356 resume Callgrind processes are correct. Every deterministic physical-function delta is named below with its addresses and three paired values. The full driver instruction sequence is unchanged; a unique pair of 136-byte sites matches every typed-adapter resume in all 113 workloads. All other driver-copy changes are exhaustively explained by avoided terminal errors and the second pause. The two extra local 136-byte result transfers per F0257 callback on unchanged-result controls belong to this repair, separately from R; the complete local-copy table also accounts for the cycle paths.
-
-Four full timing panels (base/candidate/base/candidate) each check all 120 labels. Fourteen initial disjoint-above rows trigger the prescribed alignment check. Both source-verified arms are rebuilt with one codegen unit and exactly `-C llvm-args=-align-all-functions=6`; ten runs per arm alternate the identical whole generated program, changing only reps 2→25. All 240 first-pair calibration ratios are within 0.5–2. The final aligned timing results and any residuals appear below.
+Run 1's 1,574 checked preflights, 1,200 allocation runs, 2,400 native instruction runs, 396 ordinary Callgrind runs, 748 ordinary copy runs, 42 equal stack fits, 1,356 resume Callgrind runs, four timing panels and ten aligned runs per arm remain accepted historical evidence. The five cycle allocation differences and the two historical layout timing residuals were accepted by the director; the historical extra local copies and resumed prologue growth were rejected. None of those run-1 campaign counts are claimed as a rerun on this selected source.
 
 ## 6. Stop-loss, deviations and open questions
 
-One productive production implementation attempt reduces the owned fixture failures 37→0 and the fixed set's owned differences five→0. Mutant survivals are zero; unproductive production attempts are zero. All ordinary allocation, instruction, copy and stack bars pass on the same final source. Resumed-only copies/prologues and timing are disclosed, not silently treated as zero-cost.
+Continuation 1 made four compiling production attempts and one harness-path setup failure. Attempts 3 and 4 improve neither the ordinary helper/frame nor the sampled resumed frame/copies: consecutive nonprogress count **2**, so the brief's Hard-rule stop-loss applies. The exact already compiled/measured inline placement 2 is restored as the best continuation release frame. This handoff is incomplete; no further source/performance attempt was made after stop-loss. The selected source fails the read-only final format check, and no formatting edit was made after stopping.
 
-Reducers were corrected to preserve physical generic specializations, recognize register-indirect memcpy calls and the directly inlined allocator callback, and use integer whole-count/intercept arithmetic. Raw binaries and profiles were unchanged; superseded aggregate passes and failed reducer logs remain in the scene. The inherited driver assertion that every non-R copy count stays equal was too strong for formerly terminated programs; the final exhaustive site proof replaces it and preserves the R requirement. No semantic, fault, rejection or receipt check was weakened.
+Unrun: both-build 50-fixture and full 472-test oracle gates/fault deltas, three mutants, ordinary controls, both-build census/compile controls, runtime checks, both-build ownership and acceptance replay, fingerprints/certificates, rejection census, fixed set, director probes and all full measurements named above. Current semantic-failure/mutant-survival counters are explicitly unmeasured, rather than inherited zero. The workspace rerun is waived by the director continuation. Current source/binary identity and scope are audited; all snapshots, raw logs and partial measurements remain reviewable under `.temp/brief-620/continuation-1/`.
 
-Two bounded read-only postprocessing commands (counted-site disassembly and driver-copy audit) briefly overlapped; no benchmark, timing, test gate or production build overlapped. Panel 3 had an unused TMPDIR typo (`.temp/brief-620tmp`, which does not exist); the explicit output directory was correct and the canonical script did not use its default mktemp path. The four panels were not silently repeated. Two delete/add-same-path scratch patch requests were rejected without mutation and corrected with updates. An early scope helper was corrected to allow the pre-existing own brief outside the supplied export; its original bytes were saved before the authorized append. These are executor/helper deviations, not undisclosed production changes.
-
-The director owns the final ruling and commit. The remaining questions are the disclosed resumed-only copy/prologue costs and any aligned timing residuals; no required measurement or correctness gate is left unrun.
+The cause of the compiler frame/copy regressions is unresolved. The initial symlinked harness manifest failed before compilation because relative dependencies resolved at the deeper path; the unchanged original manifest path fixed that setup error. All later builds used the exact original harness and one codegen unit. Source/profile variants and unsuccessful hypotheses are retained. No check was weakened, no new unsafe or impossible arm added, no Git or network used. The director owns the next design/attempt and eventual commit.
 
 ---
 
-The following is the accumulated evidence, with original commands, actual output, replay transitions and complete per-label/per-function tables.
+The following is **historical run-1 evidence**. Statements about its then-final source describe the preserved run-1 source and binaries. They do not validate the current continuation source. The complete Continuation 1 report is appended after this history.
 
 # brief-620 G15-B report
 
@@ -8519,3 +8666,516 @@ ALIGNED TIMING 10 base labels 120
 ALIGNED TIMING 10 candidate labels 120
 ALIGNED TIMING COMPLETE, disjoint above base: ['symbol-ownvalue-guarded-read', 'stringreplace-guarded-decline-fallback']
 ```
+
+
+---
+
+## Continuation 1
+
+The director continuation dated 2026-10-19 supersedes the whole-Result finish. Run 1 evidence is preserved at `continuation-1/run-1/`; its full original report remains historical evidence below the corrected opening summary. No Git or network is used.
+
+### Gate: c1-fmt-initial
+
+Command: `cargo fmt --check`. Exit 0. Full raw output: `logs/c1-fmt-initial.log`.
+
+```text
+No diagnostics.
+```
+
+### Change and first placement
+
+The shared rule now takes only `EvalError`; its three conditions exist once. The ordinary helper evaluates once, returns `Ok` directly, and calls the inline rule only on `Err`. Each existing awaited-work arm binds its own source, returns the `Ok` value directly, and sends `Err` through one cold, non-inlined wrapper before `map_err`. The first state match and its extra unreachable arm were deleted. Existing unreachable arms are byte-identical to base. Snapshot: `snapshots/placement-1-cold-wrapper.rs`. No new frame, field, successful-path clone, reevaluation or driver/token change.
+
+The LHS file remains in the split-plan range. A split would enlarge this tightly scoped semantic/ABI change; the existing driver/state-machine boundary and sibling `resume_frames.rs` remain the coherent future boundary. The 14,249-byte fixture stays within the test-file preferred threshold.
+
+### Harness-path correction
+
+The first build did not compile: the symlinked harness manifest resolved its relative dependency paths from the deeper continuation directory. The unchanged original harness manifest is now used directly, with continuation-owned build records and candidate binary; its source hashes remain identical to the base harness. The failed command and stderr are preserved in `builds/cand-resume-path-failure/`.
+
+```text
+error: failed to load manifest for dependency `rum-host`
+
+Caused by:
+  failed to read `/home/remi/dev/rum/.temp/crates/rum-host/Cargo.toml`
+
+Caused by:
+  No such file or directory (os error 2)
+```
+
+Built `cand/resume` with one codegen unit from the workspace cwd; source and harness hashes saved under `builds/cand-resume/`. SHA-256 `a51a00dd5f03d91174595287b3f67911ac98a601242b52803a3dc1fd0fde8152`. Build stderr:
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling brief608-resume v0.0.0 (/home/remi/dev/rum/.temp/brief-620/resume-harness)
+    Finished `release` profile [optimized] target(s) in 1m 15s
+```
+
+## F0257 resume prologues in the measured harness
+
+The runtime-only release stack binary does not link every F0257 resume entry. This additional table uses the actual measured resume harness binaries and retains every emitted F0257 TypedFrame/TypedAdapter resume entry, its complete assembly, stack operands and copy contexts. The inlined finish is assessed at its physical caller.
+
+| Arm | Physical function | Address | Prologue bytes | Full assembly |
+|---|---|---|---:|---|
+| base | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | `0x56f6b0` | 1368 | `resume-callgrind/prologues/base-56f6b0.txt` |
+| cand | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | `0x56f8e0` | 1864 | `resume-callgrind/prologues/cand-56f8e0.txt` |
+
+### Gate: c1-release-prologues
+
+Command: `python3 .temp/brief-620/continuation-1/resume-prologues.py`. Exit 0. Full raw output: `logs/c1-release-prologues.log`.
+
+```text
+No diagnostics.
+```
+
+### Placement 1 measurement and the other placement
+
+Placement 1 uses the prescribed cold, non-inlined wrapper. Its measured F0257 release entry is **1,864 bytes**, against base 1,368 and run 1 1,576; this fails the bar. The exact binary, source, assembly, slot operands and prologue records remain under `snapshots/placement-1-*`. Per the continuation, placement 2 inlines the same error-only rule directly into each awaiting error branch and deletes the wrapper. This is the one alternate inlining placement.
+
+Verbatim first measurement:
+
+```text
+base <rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume 0x56f6b0 1368
+cand <rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume 0x56f8e0 1864
+```
+
+Built `cand/resume` with one codegen unit from the workspace cwd; source and harness hashes saved under `builds/cand-resume/`. SHA-256 `b8244df38d1e5549b9f9165d78a356ccd1ad7763b702148c180766dcf5193e9f`. Build stderr:
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling brief608-resume v0.0.0 (/home/remi/dev/rum/.temp/brief-620/resume-harness)
+    Finished `release` profile [optimized] target(s) in 1m 15s
+```
+
+## F0257 resume prologues in the measured harness
+
+The runtime-only release stack binary does not link every F0257 resume entry. This additional table uses the actual measured resume harness binaries and retains every emitted F0257 TypedFrame/TypedAdapter resume entry, its complete assembly, stack operands and copy contexts. The inlined finish is assessed at its physical caller.
+
+| Arm | Physical function | Address | Prologue bytes | Full assembly |
+|---|---|---|---:|---|
+| base | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | `0x56f6b0` | 1368 | `resume-callgrind/prologues/base-56f6b0.txt` |
+| cand | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | `0x56f6a0` | 1736 | `resume-callgrind/prologues/cand-56f6a0.txt` |
+
+### Gate: c1-placement-2-release-prologues
+
+Command: `python3 .temp/brief-620/continuation-1/resume-prologues.py`. Exit 0. Full raw output: `logs/c1-placement-2-release-prologues.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-placement-2-copy-sample
+
+Command: `python3 .temp/brief-620/continuation-1/run-callgrind.py labels 1 lhs-arg-value`. Exit 0. Full raw output: `logs/c1-placement-2-copy-sample.log`.
+
+```text
+No diagnostics.
+```
+
+### Alternate placement measurement and arm ownership refinement
+
+Placement 2 release prologue is **1,736 bytes**, 128 below placement 1 but still above base. Its first N/2N `lhs-arg-value` pair has 3 local 136-byte copies versus base 4 (run 1 had 6); 184-byte and 392-byte copies remain 1 each. All four raw processes, binary, source and slot/assembly tables are preserved in `snapshots/placement-2-*`. Both requested inlining placements have now been measured.
+
+The direct-value form unnecessarily moved the two retained `Expr` fields into arm locals and gave each error branch its own `?` return before the common arm result. The next compiling attempt retains the first cold placement, borrows those source fields in place, and applies one `map_err` after the arm's `Ok`/error recovery match. It adds no closure, impossible arm or rule copy. This is a refinement of arm ownership/result placement, not a third inlining placement. Measured progress: the extra-copy bar drops from run 1 +2 per callback to no extra in the sample; the release excess drops 496 → 368 bytes. No two consecutive nonprogress attempts have occurred.
+
+```text
+base <rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume 0x56f6b0 1368
+cand <rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume 0x56f6a0 1736
+```
+
+Built `cand/resume` with one codegen unit from the workspace cwd; source and harness hashes saved under `builds/cand-resume/`. SHA-256 `c60b039125fcfd467bbe6249e041b93f1820af36506f55433e9b12f74c73410d`. Build stderr:
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling brief608-resume v0.0.0 (/home/remi/dev/rum/.temp/brief-620/resume-harness)
+    Finished `release` profile [optimized] target(s) in 1m 15s
+```
+
+## F0257 resume prologues in the measured harness
+
+The runtime-only release stack binary does not link every F0257 resume entry. This additional table uses the actual measured resume harness binaries and retains every emitted F0257 TypedFrame/TypedAdapter resume entry, its complete assembly, stack operands and copy contexts. The inlined finish is assessed at its physical caller.
+
+| Arm | Physical function | Address | Prologue bytes | Full assembly |
+|---|---|---|---:|---|
+| base | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | `0x56f6b0` | 1368 | `resume-callgrind/prologues/base-56f6b0.txt` |
+| cand | `rum_runtime::runtime::definitions::definition_lhs_preparation::recover_definition_lhs_cycle_after_pause` | `0xc4980` | 152 | `resume-callgrind/prologues/cand-c4980.txt` |
+| cand | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | `0x56f8e0` | 1800 | `resume-callgrind/prologues/cand-56f8e0.txt` |
+
+### Gate: c1-refined-release-prologues
+
+Command: `python3 .temp/brief-620/continuation-1/resume-prologues.py`. Exit 0. Full raw output: `logs/c1-refined-release-prologues.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-refined-copy-sample
+
+Command: `python3 .temp/brief-620/continuation-1/run-callgrind.py labels 1 lhs-arg-value`. Exit 0. Full raw output: `logs/c1-refined-copy-sample.log`.
+
+```text
+No diagnostics.
+```
+
+### Refined placement measurement and explicit work handoff
+
+Borrowing the retained source and putting `map_err` after the arm result gives release 1,800 bytes and 5 local 136-byte copies on `lhs-arg-value` versus base 4. This reduces none of the best measured bars: nonprogress count **1**. The full refinement snapshot, binary, slots and four raw sample profiles are retained under `snapshots/refined-*`.
+
+The next attempt changes only the existing match scrutinee to `std::mem::replace(&mut state.work, DefinitionLhsPreparationWork::Vacant)`. `Vacant` already exists and is used by this driver; this makes the work handoff explicit before an arm can return an error and avoids retaining a partially moved work field for cleanup. It adds no arm, type, field, clone, allocation or rule copy. The slot reduction is a hypothesis until measured.
+
+```text
+base <rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume 0x56f6b0 1368
+cand rum_runtime::runtime::definitions::definition_lhs_preparation::recover_definition_lhs_cycle_after_pause 0xc4980 152
+cand <rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume 0x56f8e0 1800
+```
+
+Built `cand/resume` with one codegen unit from the workspace cwd; source and harness hashes saved under `builds/cand-resume/`. SHA-256 `96da8a8211105befcdd83f37317dbd31ca2ed14077e944f24ca523383935f10e`. Build stderr:
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling brief608-resume v0.0.0 (/home/remi/dev/rum/.temp/brief-620/resume-harness)
+    Finished `release` profile [optimized] target(s) in 1m 15s
+```
+
+## F0257 resume prologues in the measured harness
+
+The runtime-only release stack binary does not link every F0257 resume entry. This additional table uses the actual measured resume harness binaries and retains every emitted F0257 TypedFrame/TypedAdapter resume entry, its complete assembly, stack operands and copy contexts. The inlined finish is assessed at its physical caller.
+
+| Arm | Physical function | Address | Prologue bytes | Full assembly |
+|---|---|---|---:|---|
+| base | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | `0x56f6b0` | 1368 | `resume-callgrind/prologues/base-56f6b0.txt` |
+| cand | `rum_runtime::runtime::definitions::definition_lhs_preparation::recover_definition_lhs_cycle_after_pause` | `0xc4980` | 152 | `resume-callgrind/prologues/cand-c4980.txt` |
+| cand | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | `0x56f8f0` | 1896 | `resume-callgrind/prologues/cand-56f8f0.txt` |
+
+### Gate: c1-work-take-release-prologues
+
+Command: `python3 .temp/brief-620/continuation-1/resume-prologues.py`. Exit 0. Full raw output: `logs/c1-work-take-release-prologues.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: c1-work-take-copy-sample
+
+Command: `python3 .temp/brief-620/continuation-1/run-callgrind.py labels 1 lhs-arg-value`. Exit 0. Full raw output: `logs/c1-work-take-copy-sample.log`.
+
+```text
+No diagnostics.
+```
+
+### Stop-loss and selected handoff
+
+The explicit Vacant handoff gives release **1,896 bytes**, 5 local 136-byte copies and 2 local 184-byte copies per iteration, against base 1,368 bytes, 4 and 1 respectively. This is the second consecutive compiling attempt that reduces none of the measured bars. **The Hard rules stop-loss is reached; further source/performance attempts stop.** All candidate code compiled without warnings.
+
+The handoff restores the already compiled and measured **placement 2**, the best measured release frame (1,736 bytes). Its source and binary hashes are matched to its saved build record. Restoring this exact snapshot adds no new implementation attempt. It has no first/duplicate state match, no new impossible arm, an error-only shared inline rule, and three direct-value error branches. It does **not** pass the release stack bar; its first value-control pair has 3 local 136-byte copies versus the required exact 4, and it does not establish the six-workload equality bar. No claim of final correctness or final ordinary-path equality is made from the accepted historical run-1 gates. Existing inventory pins/positions still describe run 1 and require replay.
+
+Stop-loss counters: four compiling production attempts, one harness-path setup failure, two consecutive nonprogress attempts; owned semantic failures and mutant survivals were not remeasured in this continuation. No new unsafe, frame, field, codec, mode, route, token or dependency change.
+
+Unrun work after stop-loss:
+
+- Both-build 50 fixtures, three mutants, 28 ordinary controls and full 472-test oracle not rerun.
+- Both-build typed census and compile controls; runtime typed/frame/resume-context/depth tests not rerun.
+- Both-build ownership discovery, fingerprint and certificate replay and production rejection census not rerun; existing inventories describe run 1 and are stale for this source.
+- Fixed 136-pair set and director probe families not rerun.
+- All-300-label allocations, all-187 ordinary copies, all-42 stack fits/debug prologues and full eleven-workload copy/Callgrind attribution not rerun.
+- Ordinary normalized code has not been rechecked; no current-source claim is made from run-1 machine identity.
+- Workspace rerun intentionally unnecessary per continuation; timing deferred by director ruling conditional on ordinary machine identity, which remains unchecked here.
+
+### Gate: c1-selected-fmt
+
+Command: `cargo fmt --check`. Exit 1. Full raw output: `logs/c1-selected-fmt.log`.
+
+```text
+No diagnostics.
+```
+
+### Selected-source formatting result
+
+The read-only final formatting check failed. The selected snapshot retains an unnecessary block around the head arm error expression; rustfmt requests its expression-arm form. No source edit or new build is performed after the stop-loss. The first placement's earlier formatting pass does not apply to this selected source. Verbatim final result:
+
+```text
+Diff in /home/remi/dev/rum/crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:518:
+                 } => {
+                     let value = match outcome {
+                         Ok(value) => value,
+[31m-                        Err(error) => {
+(B[m[31m-                            recover_definition_lhs_cycle(source_head.as_ref(), error)
+(B[m[31m-                                .map_err(ResumeStop::failure)?
+(B[m[31m-                        }
+(B[m[32m+                        Err(error) => recover_definition_lhs_cycle(source_head.as_ref(), error)
+(B[m[32m+                            .map_err(ResumeStop::failure)?,
+(B[m                     };
+                     let evaluated_head = reuse_definition_lhs_call_head(source_head, value);
+                     DefinitionLhsPreparationWork::PrepareCallArguments(
+```
+
+### Available prologue and slot tables
+
+This reads the six already built binaries, including both requested inlining placements and both unsuccessful ownership refinements. It runs no new guest program or build. Prologues include saved registers and exclude the return address. Every emitted changed function/affected driver specialization is retained with its full assembly, stack operands and every call setup context in `stopped-slots/all-slots.json`; absent/inlined functions are explicit. Debug was not rebuilt or measured in this continuation; the accepted historical debug values are base 1,832 and run 1 2,504 bytes and do not describe the selected snapshot. No final stack-bar pass is claimed.
+
+| Variant | Physical function | Address | Release prologue bytes | Complete assembly / stack operands |
+|---|---|---|---:|---|
+| base | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::drive_definition_lhs_preparation` | `0xbfb60` | 1816 | `stopped-slots/base-bfb60.txt` |
+| base | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::drive_definition_lhs_preparation` | `0xc22b0` | 1784 | `stopped-slots/base-c22b0.txt` |
+| base | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::evaluate_definition_lhs_active_expr` | `0x576a80` | 280 | `stopped-slots/base-576a80.txt` |
+| base | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | `0x56f6b0` | 1368 | `stopped-slots/base-56f6b0.txt` |
+| run-1 | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::drive_definition_lhs_preparation` | `0xbfb60` | 1816 | `stopped-slots/run-1-bfb60.txt` |
+| run-1 | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::drive_definition_lhs_preparation` | `0xc22b0` | 1784 | `stopped-slots/run-1-c22b0.txt` |
+| run-1 | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::evaluate_definition_lhs_active_expr` | `0x576e90` | 280 | `stopped-slots/run-1-576e90.txt` |
+| run-1 | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | `0x56f6b0` | 1576 | `stopped-slots/run-1-56f6b0.txt` |
+| placement-1 | `rum_runtime::runtime::definitions::definition_lhs_preparation::recover_definition_lhs_cycle_after_pause` | `0xc4980` | 152 | `stopped-slots/placement-1-c4980.txt` |
+| placement-1 | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::drive_definition_lhs_preparation` | `0xbfb60` | 1816 | `stopped-slots/placement-1-bfb60.txt` |
+| placement-1 | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::drive_definition_lhs_preparation` | `0xc22b0` | 1784 | `stopped-slots/placement-1-c22b0.txt` |
+| placement-1 | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::evaluate_definition_lhs_active_expr` | `0x5773d0` | 424 | `stopped-slots/placement-1-5773d0.txt` |
+| placement-1 | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | `0x56f8e0` | 1864 | `stopped-slots/placement-1-56f8e0.txt` |
+| placement-2-selected | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::drive_definition_lhs_preparation` | `0xbfb60` | 1816 | `stopped-slots/placement-2-selected-bfb60.txt` |
+| placement-2-selected | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::drive_definition_lhs_preparation` | `0xc22b0` | 1784 | `stopped-slots/placement-2-selected-c22b0.txt` |
+| placement-2-selected | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::evaluate_definition_lhs_active_expr` | `0x577ba0` | 424 | `stopped-slots/placement-2-selected-577ba0.txt` |
+| placement-2-selected | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | `0x56f6a0` | 1736 | `stopped-slots/placement-2-selected-56f6a0.txt` |
+| refined | `rum_runtime::runtime::definitions::definition_lhs_preparation::recover_definition_lhs_cycle_after_pause` | `0xc4980` | 152 | `stopped-slots/refined-c4980.txt` |
+| refined | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::drive_definition_lhs_preparation` | `0xbfb60` | 1816 | `stopped-slots/refined-bfb60.txt` |
+| refined | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::drive_definition_lhs_preparation` | `0xc22b0` | 1784 | `stopped-slots/refined-c22b0.txt` |
+| refined | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::evaluate_definition_lhs_active_expr` | `0x5771f0` | 424 | `stopped-slots/refined-5771f0.txt` |
+| refined | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | `0x56f8e0` | 1800 | `stopped-slots/refined-56f8e0.txt` |
+| work-take | `rum_runtime::runtime::definitions::definition_lhs_preparation::recover_definition_lhs_cycle_after_pause` | `0xc4980` | 152 | `stopped-slots/work-take-c4980.txt` |
+| work-take | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::drive_definition_lhs_preparation` | `0xbfb60` | 1816 | `stopped-slots/work-take-bfb60.txt` |
+| work-take | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::drive_definition_lhs_preparation` | `0xc22b0` | 1784 | `stopped-slots/work-take-c22b0.txt` |
+| work-take | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::evaluate_definition_lhs_active_expr` | `0x577160` | 424 | `stopped-slots/work-take-577160.txt` |
+| work-take | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | `0x56f8f0` | 1896 | `stopped-slots/work-take-56f8f0.txt` |
+
+### Final measured bars and remaining residuals
+
+| Variant | Resume release prologue | Ordinary helper release prologue / code bytes | Sampled local copy slopes (136 / 184 / 392 B) | Decision |
+|---|---:|---:|---|---|
+| G15-A base | 1,368 | 280 / 680 | 4 / 1 / 1 | Reference |
+| Run 1, historical | 1,576 | 280 / 680 | 6 / 1 / 1 (accepted run-1 table) | Resumed growth/copies rejected by director |
+| 1: cold wrapper, direct value | 1,864 | 424 / 704 | Not sampled | Release bar fails |
+| 2: inline rule, direct value — selected | 1,736 | 424 / 704 | 3 / 1 / 1 | Best continuation resume frame, still fails release and ordinary identity bars |
+| 3: cold wrapper, borrowed source/common map_err | 1,800 | 424 / 704 | 5 / 1 / 1 | No progress, consecutive count 1 |
+| 4: cold wrapper, explicit Vacant handoff | 1,896 | 424 / 704 | 5 / 2 / 1 | No progress, consecutive count 2; stop |
+
+The local-copy samples are one N=100 / 2N=200 pair per arm on `lhs-arg-value`, grouped by static memcpy-call byte size inside the physical F0257 entry. They are not the required six-process-per-arm, eleven-workload table. Twelve raw sample processes completed correctly; every expected 100/200-pause marker was checked. No cycle-workload attribution or all-label copy/allocation comparison was rerun. The selected sample has fewer 136-byte transfers, but does not establish the required exact equality on the six unchanged-result workloads.
+
+**Additional ordinary regression found by the final read-only assembly audit:** every continuation variant has a 424-byte ordinary-helper prologue and a 704-byte body, versus base/run 1 280 and 680. The prologue alone disproves the identical normalized instructions/stores bar. Both emitted driver prologues remain 1,816 / 1,784, but complete normalized driver identity was not established in this continuation. The conditional instruction and timing reruns are unexecuted because the required stop-loss has fired. The precise cause of the compiler frame/copy changes is not established; the ownership explanations above were hypotheses tested by the saved variants.
+
+The selected source compiles, but **Continuation 1 is not complete or green**. Residuals are ordinary machine identity/frame growth, resumed release frame growth, the unestablished full local-copy equality bar, final formatting failure, stale ownership/fingerprint/certificate inventories, and all named unrun gates. No debug prologue or recursive stack result for the selected source is available. The run-1 timing acceptance cannot be carried forward under its no-retiming condition.
+
+The governing Hard rule is: "Stop after two attempts on a compiling tree that reduce none of them." Attempts 3 and 4 improve neither the ordinary helper identity/frame nor the sampled resumed frame/copies. Source and performance tuning stopped at that point; selecting an already measured snapshot and read-only report/scope/assembly audits added no production attempt. All six binary/source variants remain reviewable.
+
+### Every executed continuation gate, verbatim
+
+All commands were serial and bounded at 900 seconds, with `CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-620/tmp`. Measurement runners remove `RUM_PROFILE_*` flags and use the existing offline debuginfo cache. There were five Cargo build invocations: four successful compiling source attempts and the initial manifest-path setup failure. There were nine gate-wrapper invocations (two format checks, four prologue analyses and three four-process local-copy samples), **zero unit/integration-test invocations** in this continuation. Thus there are no new `test result:` totals, oracle fault deltas, census totals or mutant results to report. Run-1 values remain historical evidence only. No compiler warning was emitted by the successful continuation builds; neither oracle feature build was rerun.
+
+#### c1-fmt-initial
+
+Command: `cargo fmt --check`. Exit 0. Full log: `.temp/brief-620/continuation-1/logs/c1-fmt-initial.log`.
+
+```text
+
+```
+
+#### c1-release-prologues
+
+Command: `python3 .temp/brief-620/continuation-1/resume-prologues.py`. Exit 0. Full log: `.temp/brief-620/continuation-1/logs/c1-release-prologues.log`.
+
+```text
+base <rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume 0x56f6b0 1368
+cand <rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume 0x56f8e0 1864
+
+```
+
+#### c1-placement-2-release-prologues
+
+Command: `python3 .temp/brief-620/continuation-1/resume-prologues.py`. Exit 0. Full log: `.temp/brief-620/continuation-1/logs/c1-placement-2-release-prologues.log`.
+
+```text
+base <rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume 0x56f6b0 1368
+cand <rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume 0x56f6a0 1736
+
+```
+
+#### c1-placement-2-copy-sample
+
+Command: `python3 .temp/brief-620/continuation-1/run-callgrind.py labels 1 lhs-arg-value`. Exit 0. Full log: `.temp/brief-620/continuation-1/logs/c1-placement-2-copy-sample.log`.
+
+```text
+CAMPAIGN labels labels 1 samples 1
+PROFILE 1 base lhs-arg-value 100 correct True
+PROFILE 1 candidate lhs-arg-value 100 correct True
+PROFILE 1 base lhs-arg-value 200 correct True
+PROFILE 1 candidate lhs-arg-value 200 correct True
+CAMPAIGN DONE labels
+
+```
+
+#### c1-refined-release-prologues
+
+Command: `python3 .temp/brief-620/continuation-1/resume-prologues.py`. Exit 0. Full log: `.temp/brief-620/continuation-1/logs/c1-refined-release-prologues.log`.
+
+```text
+base <rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume 0x56f6b0 1368
+cand rum_runtime::runtime::definitions::definition_lhs_preparation::recover_definition_lhs_cycle_after_pause 0xc4980 152
+cand <rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume 0x56f8e0 1800
+
+```
+
+#### c1-refined-copy-sample
+
+Command: `python3 .temp/brief-620/continuation-1/run-callgrind.py labels 1 lhs-arg-value`. Exit 0. Full log: `.temp/brief-620/continuation-1/logs/c1-refined-copy-sample.log`.
+
+```text
+CAMPAIGN labels labels 1 samples 1
+PROFILE 1 base lhs-arg-value 100 correct True
+PROFILE 1 candidate lhs-arg-value 100 correct True
+PROFILE 1 base lhs-arg-value 200 correct True
+PROFILE 1 candidate lhs-arg-value 200 correct True
+CAMPAIGN DONE labels
+
+```
+
+#### c1-work-take-release-prologues
+
+Command: `python3 .temp/brief-620/continuation-1/resume-prologues.py`. Exit 0. Full log: `.temp/brief-620/continuation-1/logs/c1-work-take-release-prologues.log`.
+
+```text
+base <rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume 0x56f6b0 1368
+cand rum_runtime::runtime::definitions::definition_lhs_preparation::recover_definition_lhs_cycle_after_pause 0xc4980 152
+cand <rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume 0x56f8f0 1896
+
+```
+
+#### c1-work-take-copy-sample
+
+Command: `python3 .temp/brief-620/continuation-1/run-callgrind.py labels 1 lhs-arg-value`. Exit 0. Full log: `.temp/brief-620/continuation-1/logs/c1-work-take-copy-sample.log`.
+
+```text
+CAMPAIGN labels labels 1 samples 1
+PROFILE 1 base lhs-arg-value 100 correct True
+PROFILE 1 candidate lhs-arg-value 100 correct True
+PROFILE 1 base lhs-arg-value 200 correct True
+PROFILE 1 candidate lhs-arg-value 200 correct True
+CAMPAIGN DONE labels
+
+```
+
+#### c1-selected-fmt
+
+Command: `cargo fmt --check`. Exit 1. Full log: `.temp/brief-620/continuation-1/logs/c1-selected-fmt.log`.
+
+```text
+Diff in /home/remi/dev/rum/crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:518:
+                 } => {
+                     let value = match outcome {
+                         Ok(value) => value,
+[31m-                        Err(error) => {
+(B[m[31m-                            recover_definition_lhs_cycle(source_head.as_ref(), error)
+(B[m[31m-                                .map_err(ResumeStop::failure)?
+(B[m[31m-                        }
+(B[m[32m+                        Err(error) => recover_definition_lhs_cycle(source_head.as_ref(), error)
+(B[m[32m+                            .map_err(ResumeStop::failure)?,
+(B[m                     };
+                     let evaluated_head = reuse_definition_lhs_call_head(source_head, value);
+                     DefinitionLhsPreparationWork::PrepareCallArguments(
+
+```
+
+#### Build: setup failure
+
+Exact command/environment, source hashes and compiler JSON: `continuation-1/builds/cand-resume-path-failure/`. Verbatim stderr:
+
+```text
+error: failed to load manifest for dependency `rum-host`
+
+Caused by:
+  failed to read `/home/remi/dev/rum/.temp/crates/rum-host/Cargo.toml`
+
+Caused by:
+  No such file or directory (os error 2)
+```
+
+#### Build: placement 1
+
+Exact command/environment, source hashes and compiler JSON: `continuation-1/snapshots/placement-1-build/`. Verbatim stderr:
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling brief608-resume v0.0.0 (/home/remi/dev/rum/.temp/brief-620/resume-harness)
+    Finished `release` profile [optimized] target(s) in 1m 15s
+```
+
+#### Build: placement 2, selected
+
+Exact command/environment, source hashes and compiler JSON: `continuation-1/snapshots/placement-2-build/`. Verbatim stderr:
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling brief608-resume v0.0.0 (/home/remi/dev/rum/.temp/brief-620/resume-harness)
+    Finished `release` profile [optimized] target(s) in 1m 15s
+```
+
+#### Build: refinement
+
+Exact command/environment, source hashes and compiler JSON: `continuation-1/snapshots/refined-build/`. Verbatim stderr:
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling brief608-resume v0.0.0 (/home/remi/dev/rum/.temp/brief-620/resume-harness)
+    Finished `release` profile [optimized] target(s) in 1m 15s
+```
+
+#### Build: explicit work handoff
+
+Exact command/environment, source hashes and compiler JSON: `continuation-1/snapshots/work-take-build/`. Verbatim stderr:
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling brief608-resume v0.0.0 (/home/remi/dev/rum/.temp/brief-620/resume-harness)
+    Finished `release` profile [optimized] target(s) in 1m 15s
+```
+
+### Scope, generated outputs and handoff
+
+Only `crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs` changed during this continuation; the fixture and all three inventory files retain their accepted run-1 bytes. The full tree still contains six owned source files changed against the supplied base, plus this report document. All 2,086 supplied source-export files and all six supplied base hashes are unchanged. F0257's frame, its Expr→Expr type, the first 497 source lines (ordinary sites/routes/witnesses), dependency manifests, lockfile and toolchain are unchanged. The selected source and binary exactly match the saved placement-2 build hashes. No new unsafe, unreachable/panic/expect/unwrap or impossible arm was added.
+
+The final ownership inventory remains stale: the run-1 added `:508` assertion no longer exists, the retained awaited-work assertion is now at `:544`, and the matches guard is at `:748`. Those are source observations, not a canonical replay. The two base macro moves still need discovery and reconciliation, and source-dependent fingerprints/certificates need regeneration. No hash/certificate cell, row meaning, mark, receipt or coverage was hand-edited to conceal this.
+
+All new scratch stays below `.temp/brief-620/continuation-1/`. The original resume manifest/harness is read directly to preserve its relative dependency paths and base hashes; its files remain unchanged. The existing `.temp/brief-620/target-cand-resume/` build directory was reused through a symlink; immutable run-1 `cand/resume`, base binaries, source export and measurement evidence are preserved. No canonical gate with fixed output paths outside `.temp/brief-620/` was rerun. Main `REPORT.md`, `state.json`, `PROGRESS.md` and `HANDOFF.json` are updated to this stopped handoff, with their original run-1 copies under `continuation-1/run-1/`. Prepared scratch scripts/harness links for unrun gates do not imply those gates ran.
+
+No Git or network was used. The tree is uncommitted.
+
+```json
+{
+  "continuation_source_edits": [
+    "crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs"
+  ],
+  "source_export_files_verified": 2086,
+  "supplied_base_hashes_unchanged": true,
+  "frame_unchanged": true,
+  "ordinary_sites_routes_witnesses_unchanged": true,
+  "no_new_unsafe": true,
+  "no_new_impossible_panic_expect_unwrap": true,
+  "selected_source_and_binary_match_saved_build": true,
+  "original_harness_unchanged": true,
+  "no_unowned_source_edits": true,
+  "inventories": "Run-1 fingerprints/certificates/ownership positions are stale; not replayed after stop-loss."
+}
+```
+
+### Execution deviations
+
+The first symlinked-manifest build failed before compilation, as recorded above. Attempt 3 changed source borrowing and the placement of map_err together; it measured their combined failed shape and does not isolate their individual compiler effects. Attempt 4 changed only the work handoff. The final selected snapshot retains a formatting failure; no post-stop source fix or inventory replay was attempted. Two scratch report-helper patch requests failed their context checks without writing and were corrected with a targeted patch. No compile/test/profile command overlapped another. The mandatory unrun set and all failed bars are explicit above.
