@@ -5,9 +5,10 @@ operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
 Status checkpoint: 2026-10-18, committed tree through G13 step S9 (brief-617,
-control and cleanup; gated, below). **Next: G15, a branch inserted before S10**
-(entry below, after S8; design brief-618 accepted). Sequence: brief-619
-G15-A (status), brief-620 G15-B (definition LHS), brief-621 G15-C (design:
+control and cleanup; gated, below), and G15-A (brief-619, `afdcd02f`).
+**Next: G15-B = brief-620 (definition LHS), from `.temp/brief-618/draft-G15-B.md`**
+(G15 entry below, after S8; design brief-618 accepted). Sequence: brief-619
+G15-A (status, done), brief-620 G15-B (definition LHS), brief-621 G15-C (design:
 settle brief-548's 495 `Unsettled` pairs and the oracle's contexts), its
 repairs, then `CHANGELOG.md` (user ruling), then S10 from
 `.temp/brief-606/draft-S10.md`. All on Codex (its quota reset early).
@@ -1464,6 +1465,20 @@ internal heads as state.
   observable context, and design an obligation-keyed oracle manifest; it
   precedes S10. The compiler-enforced coordinator is E2's subject, not G15's;
   its compile-fail controls become E2's acceptance criteria.
+- **G15-A DONE — `afdcd02f` (2026-10-18; brief-619, one run and one
+  continuation).** A Session-free status classifier, and the status branch
+  returning its whole stage through two typed frames (projection, value;
+  Expr → `Option<Expr>`), both outlined so non-status Function frames do not
+  grow. 53 fixtures (17 red on the base) pass; the fixed set falls 35 → 27
+  DIFF, none new; q8 promotes here. Census 608/97. Director gate: workspace
+  3854/0/59 native, oracle 422 ×2, 178 ordinary labels allocation-equal,
+  old stack shapes unchanged, `function-body` below base. Accepted
+  residuals: `status-body`/`message-body` +1 056 B per level, owed to S13
+  (one shared value phase once F0528 is typed); `block-local` +8.9 libc
+  `memcmp` instructions (layout); `confirm-failure-message` one extra
+  seven-byte literal memcpy. The continuation's lesson: outlining the
+  branch alone did not move the frame, because the classifier was still
+  inlined into it; measure the reservation, not the attribute.
 - The remaining DIFFs have owners: S10 the seven information markers (T0028),
   S13 the Function, composition, association and Failsafe markers and the six
   Fold/Nest rows (already reassigned at brief-609), S19 the three `cases.*`

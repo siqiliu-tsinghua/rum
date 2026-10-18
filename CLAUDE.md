@@ -253,9 +253,9 @@ Consequences for how I present and pick work:
   tail, so a `Return` escapes the body; its design (618) found a resumed
   LHS losing its cycle recovery too. Both were rows brief-548 left
   `Unsettled` (495 of them, never settled), and the oracle compared
-  top-level values, which the evaluator's fixed point repairs. G15-A (619),
-  G15-B (620), G15-C (621, settle the 495), then CHANGELOG, then S10, one
-  step per brief. *Unsettled is not a verdict*: an enumerated row nobody
+  top-level values, which the evaluator's fixed point repairs. G15-A (619)
+  is done (`afdcd02f`); next G15-B (620), G15-C (621, settle the 495), then
+  CHANGELOG, then S10, one step per brief. *Unsettled is not a verdict*: an enumerated row nobody
   settled is an open obligation, and a closed line that carries one is not
   closed;
   then E2 (a
