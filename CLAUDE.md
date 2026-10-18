@@ -247,8 +247,12 @@ Consequences for how I present and pick work:
   (616, ReplaceAll and the traversal collectors; the worker's run was cut by
   Codex's usage limit at its timing stage and I finished the gate) are
   done, and S9 (617, control and cleanup) is done. agy and grk were both cut
-  by their quotas, and I finished the gate by user ruling. **Now: S10
-  (618), on Codex after 2026-10-22 20:32, one step per brief**;
+  by their quotas, and I finished the gate by user ruling. **Now: G15
+  (618, design-only on Codex), inserted before S10 by my S10 pre-probe**: a
+  `Failure` property call that pauses resumes past the Function stage's
+  tail, so a `Return` escapes the body (`TODO.md`'s G15 entry). The census
+  swept builtins and the oracle compared top-level values, which the
+  evaluator's fixed point repairs. Then S10, one step per brief;
   then E2 (a
   may-suspend result type with no `Try`). From S5 the per-step stack bar is
   the named closure environment attributed per slot: S4 showed that an

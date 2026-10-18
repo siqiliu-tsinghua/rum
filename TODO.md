@@ -5,9 +5,10 @@ operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
 Status checkpoint: 2026-10-18, committed tree through G13 step S9 (brief-617,
-control and cleanup; gated, below). **Next: S10 = brief-618 from
-`.temp/brief-606/draft-S10.md`**, on Codex when its usage limit resets
-(2026-10-22 20:32).
+control and cleanup; gated, below). **Next: G15 = brief-618 (design-only,
+on Codex; its quota reset early, 2026-10-18), a branch inserted before S10**
+(entry below, after S8). Then G15's implementation, then S10 from
+`.temp/brief-606/draft-S10.md`.
 - S9 ran on two new workers. agy (Gemini 4 Argon) and grk (grok-4.7, under
   the `rum-worker` kernel profile in `~/.grok/sandbox.toml`) were both cut by
   their quotas, and the director finished the step by user ruling.
@@ -1426,6 +1427,30 @@ stay 606; typed 52 → 70; macro sites 566 → 558.
   - base sources proved equal to `a1359ba8` (2 066 files), and candidates
     fresh;
   - the probe gives 125 SAME and 0 DIFF (S8, S7, S6 and G14 shapes).
+
+**G15 — a status-object call resumes past the Function stage's tail (found
+2026-10-18 by the director's S10 pre-probe; design brief-618, inserted before
+S10).** `try_apply_function` (`scoping/callable.rs:33`) calls
+`apply_status_object_to_args(head, args)?` with no frame. When a `Failure`
+property's rendering pauses (a delayed `MessageParameters` or message
+definition), the resumed value skips the common tail, `evaluate(applied)` and
+`finish_function_application`, and lands in the stage loop's `Option<Expr>`
+slot (`eval_core/call.rs:430`), whose legacy decoder reads guest-written
+internal heads as state.
+- Witnesses (`.temp/director/g15-probe/`, 14 pairs, 6 DIFF):
+  `f[] := (Failure["t", <|"MessageTemplate" :> Return[3], "MessageParameters"
+  :> (InputString["w"]; {})|>]["Message"]; 7); f[]` gives `3` resumed and `7`
+  queued, and the same `Return` stops a `Do` early. The three q8 rows of round
+  5 (assigned to S10) are the same missing frame.
+- No census found it. brief-548 names this mechanism but swept builtins. The
+  E1 descriptors `Failure.propertyParameters`/`propertyTemplate` reach F0345
+  but compare a top-level string, and the evaluator's fixed point redoes the
+  skipped evaluation; only `Return` absorption shows. The design must settle
+  the class and the oracle context that makes a skipped tail observable.
+- The S10 pre-probe (`.temp/director/s10-probe/`, 58 pairs) is otherwise 48
+  SAME; its other 7 DIFF are `Confirm`-family information values misread
+  through the same `Option<Expr>` decoder (T0028), which S10's typing
+  removes.
 
 **Recorded, not in this branch — the gensym sweep does not see Rust-local
 values (found 2026-10-14 reviewing brief-605; Q3, queued behind the branch by
