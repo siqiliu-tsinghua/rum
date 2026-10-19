@@ -4,14 +4,14 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-18, committed tree through G13 step S9 (brief-617,
-control and cleanup; gated, below), and G15-A (brief-619, `afdcd02f`).
-**Next: G15-B = brief-620 (definition LHS), from `.temp/brief-618/draft-G15-B.md`**
-(G15 entry below, after S8; design brief-618 accepted). Sequence: brief-619
-G15-A (status, done), brief-620 G15-B (definition LHS), brief-621 G15-C (design:
-settle brief-548's 495 `Unsettled` pairs and the oracle's contexts), its
-repairs, then `CHANGELOG.md` (user ruling), then S10 from
-`.temp/brief-606/draft-S10.md`. All on Codex (its quota reset early).
+Status checkpoint: 2026-10-19, committed tree through G13 step S9 (brief-617,
+control and cleanup; gated, below), G15-A (brief-619, `afdcd02f`) and G15-B
+(brief-620, `43a26c72`). **Next: G15-C = brief-621 (design-only)**, which
+re-verifies by execution every census verdict that rests on reading. Its
+draft is `.temp/director/brief-621-draft.md`; the G15 entry below, after S8,
+has the details. After it come its repairs and the manifest, then
+`CHANGELOG.md` (user ruling), then S10 from `.temp/brief-606/draft-S10.md`.
+All work goes to Codex (gpt-6.1-sol since 2026-10-18).
 - S9 ran on two new workers. agy (Gemini 4 Argon) and grk (grok-4.7, under
   the `rum-worker` kernel profile in `~/.grok/sandbox.toml`) were both cut by
   their quotas, and the director finished the step by user ruling.
@@ -1445,12 +1445,24 @@ internal heads as state.
   :> (InputString["w"]; {})|>]["Message"]; 7); f[]` gives `3` resumed and `7`
   queued, and the same `Return` stops a `Do` early. The three q8 rows of round
   5 (assigned to S10) are the same missing frame.
-- Why it survived: brief-548's census enumerated the edge (P1306, and P0686/
-  P0687 below it) and left it `Unsettled`, one of 495 pairs it said it had
-  not settled; nothing settled them since. The E1 descriptors
-  `Failure.propertyParameters`/`propertyTemplate` reach F0345 but compare a
-  top-level string, and the evaluator's fixed point redoes the skipped
-  evaluation; only control flow such as `Return` absorption shows.
+- **Why it survived** (corrected 2026-10-19; the earlier text said nothing
+  had settled the rows):
+  - brief-548's census enumerated the edge (P1306, with P0686 and P0687 below
+    it) and left it `Unsettled`, one of 495 such pairs.
+  - brief-583's re-census then resolved all 597 of its `Unsettled` rows by
+    source review. It found four Lost (G9, G10) and recorded 412 TailCorrect,
+    135 FrameCarries and 46 Boundary, with 14 probes in total
+    (`.temp/brief-583/unsettled-resolution.tsv`).
+  - This row (P1316) was among them, called TailCorrect because the
+    "fixed-point caller evaluates the final Expr". The LHS row (P0307) was
+    called FrameCarries "including own-symbol cycle handling". Both were
+    wrong for the same reason: re-evaluating a returned value, or having a
+    frame nearby, does not run a Rust continuation that disappeared.
+  - The E1 descriptors `Failure.propertyParameters` and
+    `Failure.propertyTemplate` reach F0345 but compare a top-level string,
+    and the evaluator's fixed point redoes the skipped evaluation. Only
+    control flow such as `Return` absorption shows the difference.
+  - **A verdict by reading is not a settlement.**
 - **Design brief-618 (accepted 2026-10-18, `808600a8`).** 136 pairs, 35 DIFF,
   reproduced 136/136 by the director. It found a second instance: a resumed
   definition LHS loses its matching-symbol cycle recovery
@@ -1460,11 +1472,17 @@ internal heads as state.
 - **The plan.** G15-A (619): a status classifier with no `Session`, the status
   branch returning its whole stage, two typed frames Expr → `Option<Expr>`;
   q8 promotes here. G15-B (620): one shared LHS finish on F0257's retained
-  source, no new frame. G15-C (621, design-only): rebase and settle all 495
-  `Unsettled` pairs and brief-618's screens with executed probes in an
-  observable context, and design an obligation-keyed oracle manifest; it
-  precedes S10. The compiler-enforced coordinator is E2's subject, not G15's;
-  its compile-fail controls become E2's acceptance criteria.
+  source, no new frame. G15-C (621, design-only) precedes S10:
+  - re-census the current tree with calibrated tools;
+  - settle by executed rum-vs-rum probes, in contexts that observe a
+    skipped tail, every row whose verdict rests on reading. That means
+    brief-583's review verdicts, every FrameCarries row, and brief-618's
+    screens;
+  - group what is lost;
+  - design the obligation-keyed oracle manifest.
+
+  The compiler-enforced coordinator is E2's subject, not G15's; its
+  compile-fail controls become E2's acceptance criteria.
 - **G15-A DONE — `afdcd02f` (2026-10-18; brief-619, one run and one
   continuation).** A Session-free status classifier, and the status branch
   returning its whole stage through two typed frames (projection, value;
@@ -1479,6 +1497,28 @@ internal heads as state.
   seven-byte literal memcpy. The continuation's lesson: outlining the
   branch alone did not move the frame, because the classifier was still
   inlined into it; measure the reservation, not the attribute.
+- **G15-B DONE — `43a26c72` (2026-10-19; brief-620, one run and three
+  continuations).**
+  - **The repair.** One Session-free finish holds the matching-symbol
+    cycle recovery. It is used by the ordinary helper and, on resume, on the
+    retained source of each awaited state.
+  - **The type split.** The three Await states moved into a frame-only
+    `DefinitionLhsAwaitedWork`, so both resume matches are total and
+    `unreachable!` falls 3 → 1.
+  - **Tests.** 50 fixtures (37 red on the base) pass, and three per-state
+    mutants each go red. The fixed set falls 27 → 22 DIFF, none new.
+  - **Director gate.** Workspace 3904/0/59 native, oracle 472 ×2, 187
+    ordinary labels allocation-equal. `lhs-arg` is −1 024 / −112 B per level,
+    and the other shapes are equal.
+  - **Accepted.** The resumed chain grows by a once-per-resume constant
+    (frame 392 → 528 B, chain about 2 KB). Four timing rows are layout, and
+    one calibration row is an instrument property.
+  - **Lessons.**
+    - Per-arm error handling costs more stack than one site before the
+      match.
+    - An impossible arm that survives every placement comes from the type.
+    - A stack bar bounds the chain of frames live at once, including the
+      helpers the entry calls, never one prologue.
 - The remaining DIFFs have owners: S10 the seven information markers (T0028),
   S13 the Function, composition, association and Failsafe markers and the six
   Fold/Nest rows (already reassigned at brief-609), S19 the three `cases.*`

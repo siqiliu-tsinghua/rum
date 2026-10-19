@@ -252,12 +252,20 @@ Consequences for how I present and pick work:
   `Failure` property call that pauses resumes past the Function stage's
   tail, so a `Return` escapes the body; its design (618) found a resumed
   LHS losing its cycle recovery too. Both were rows brief-548 left
-  `Unsettled` (495 of them, never settled), and the oracle compared
-  top-level values, which the evaluator's fixed point repairs. G15-A (619)
-  is done (`afdcd02f`); next G15-B (620), G15-C (621, settle the 495), then
-  CHANGELOG, then S10, one step per brief. *Unsettled is not a verdict*: an enumerated row nobody
-  settled is an open obligation, and a closed line that carries one is not
-  closed;
+  `Unsettled`. brief-583's re-census then "resolved" all 597 of its
+  `Unsettled` rows by reading, with 14 probes, and called these two
+  TailCorrect ("the fixed point evaluates the final Expr") and FrameCarries
+  ("including own-symbol cycle handling"). Both claims were false, and the
+  oracle compared top-level values, which the evaluator's fixed point
+  repairs. G15-A (619, `afdcd02f`) and G15-B (620, `43a26c72`) are done.
+  Next: G15-C (621, design-only), which settles every reading verdict and
+  every FrameCarries row by execution; then its repairs and the manifest,
+  then CHANGELOG, then S10, one step per brief. *Unsettled is not a
+  verdict, and neither is a verdict by reading*: a row settled only by an
+  argument is an open obligation, and a closed line that carries one is not
+  closed. G15-B's lesson on stack bars: bound the chain of frames live at
+  once, including the helpers the entry calls, never one function's
+  prologue (I set the wrong bar twice);
   then E2 (a
   may-suspend result type with no `Try`). From S5 the per-step stack bar is
   the named closure environment attributed per slot: S4 showed that an
