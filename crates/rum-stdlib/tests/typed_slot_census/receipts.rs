@@ -93,7 +93,7 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
         let result = macros.iter().filter(|s| s.receiver == "result").count();
         let insert = macros.iter().filter(|s| s.receiver == "insert").count();
         println!(
-            "G15-A CENSUS {} frames={frames} finalizers={finalizers} implementations={} typed={} macros={} result={result} insert={insert}",
+            "G15-C1 CENSUS {} frames={frames} finalizers={finalizers} implementations={} typed={} macros={} result={result} insert={insert}",
             population.label(),
             cohort.len(),
             cohort.len() - frames - finalizers,
@@ -109,13 +109,13 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
         ));
     }
     println!(
-        "G15-A PARTITION implementations={} macros={}",
+        "G15-C1 PARTITION implementations={} macros={}",
         counts[0].2 + counts[1].2,
         counts[0].3 + counts[1].3
     );
-    if counts[0] != (461, 50, 608, 542, 343, 199) || counts[1] != (11, 5, 16, 11, 3, 8) {
+    if counts[0] != (461, 50, 610, 542, 343, 199) || counts[1] != (11, 5, 16, 11, 3, 8) {
         return Err(
-            "G15-A baseline requires production 608/542 and test-only 16/11; combined 624/553"
+            "G15-C1 baseline requires production 610/542 and test-only 16/11; combined 626/553"
                 .into(),
         );
     }
@@ -149,11 +149,12 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
     super::s8::transitions(facts, report)?;
     super::s9::transitions(facts, report)?;
     super::g15a::transitions(facts, report)?;
+    super::g15c1::transitions(facts, report)?;
     let witnessed: BTreeSet<_> = rows(RECEIPTS)
         .into_iter()
         .filter(|r| {
             r[0] == "M"
-                && matches!(r[2], "S5" | "S6" | "S7" | "S8" | "S9" | "G15-A")
+                && matches!(r[2], "S5" | "S6" | "S7" | "S8" | "S9" | "G15-A" | "G15-C1")
                 && r[6] == "witnessed"
         })
         .map(|r| r[4])
@@ -177,8 +178,8 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
     )?;
     let receipts = rows(RECEIPTS);
     for (kind, count) in [
-        ("F", 627), // F0273 merged; F0275P splits the prepared consumer; F0248 has a retained removal receipt.
-        ("M", 605), // M0280 and M0288 are retained removals; M0250 has a retained removal receipt.
+        ("F", 629), // F0273 merged; F0275P splits the prepared consumer; F0248 has a retained removal receipt.
+        ("M", 607), // M0280 and M0288 are retained removals; M0250 has a retained removal receipt.
         // M0282S/M0283S complete the two looping stage consumers.
         ("Chain", 62),
         ("Obligation", 14),
@@ -344,7 +345,7 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
         ));
     }
     println!(
-        "G15-A REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; typed evaluation uses unchanged global modes"
+        "G15-C1 REGISTRY Value=1 Legacy=21; legacy whole-slot types=23; typed evaluation uses unchanged global modes"
     );
     Ok(())
 }

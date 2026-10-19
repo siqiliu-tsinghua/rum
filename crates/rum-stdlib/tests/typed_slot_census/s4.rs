@@ -46,7 +46,7 @@ pub(super) fn transitions(facts: &Facts, report: &Report) -> Result<(), String> 
         .iter()
         .filter(|r| {
             r[0] == "F"
-                && matches!(r[2], "S5" | "S6" | "S7" | "S8" | "S9" | "G15-A")
+                && matches!(r[2], "S5" | "S6" | "S7" | "S8" | "S9" | "G15-A" | "G15-C1")
                 && r[3] == "typed"
         })
         .map(|r| r[4])
@@ -55,7 +55,7 @@ pub(super) fn transitions(facts: &Facts, report: &Report) -> Result<(), String> 
         .iter()
         .filter(|r| {
             r[0] == "M"
-                && matches!(r[2], "S5" | "S6" | "S7" | "S8" | "S9" | "G15-A")
+                && matches!(r[2], "S5" | "S6" | "S7" | "S8" | "S9" | "G15-A" | "G15-C1")
                 && r[3] == "typed"
         })
         .map(|r| r[4])

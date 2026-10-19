@@ -1,4 +1,6 @@
+use super::all_application::{ReplaceAllApplicationFrame, ReplaceAllUnheldApplicationFrame};
 use super::*;
+use crate::runtime::kernel_api::{SlotWitness, slot_witness};
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
 impl Session {
@@ -56,7 +58,23 @@ impl Session {
             ));
         };
 
-        let replaced = self.apply_replace_all(target, &rules, RuleApplicationSource::ReplaceAll)?;
+        let replaced_result =
+            self.apply_replace_all(target, &rules, RuleApplicationSource::ReplaceAll);
+        let witness = slot_witness(&replaced_result);
+        match replaced_result {
+            Ok(replaced) => self.finish_replace_all_application(replaced),
+            Err(EvalError::InputRequired { request }) => {
+                self.suspend_replace_all_application(witness, request)
+            }
+            Err(error) => Err(error),
+        }
+    }
+
+    #[inline(always)]
+    pub(super) fn finish_replace_all_application(
+        &mut self,
+        replaced: Expr,
+    ) -> Result<Expr, EvalError> {
         if expr_is_self_evaluating_atom(&replaced) {
             return Ok(replaced);
         }
@@ -123,8 +141,23 @@ impl Session {
             ));
         };
 
-        let replaced =
-            self.apply_replace_all(target, &rules, RuleApplicationSource::ReplaceAllUnheld)?;
+        let replaced_result =
+            self.apply_replace_all(target, &rules, RuleApplicationSource::ReplaceAllUnheld);
+        let witness = slot_witness(&replaced_result);
+        match replaced_result {
+            Ok(replaced) => self.finish_replace_all_unheld_application(replaced),
+            Err(EvalError::InputRequired { request }) => {
+                self.suspend_replace_all_unheld_application(witness, request)
+            }
+            Err(error) => Err(error),
+        }
+    }
+
+    #[inline(always)]
+    pub(super) fn finish_replace_all_unheld_application(
+        &mut self,
+        replaced: Expr,
+    ) -> Result<Expr, EvalError> {
         if expr_is_self_evaluating_atom(&replaced) {
             return Ok(replaced);
         }
@@ -135,6 +168,26 @@ impl Session {
             ok(value) => Ok(value),
             suspend => ResumeReplaceAllUnheldAfterRulesSuspensionFrame,
         )
+    }
+
+    #[cold]
+    #[inline(never)]
+    pub(super) fn suspend_replace_all_application(
+        &mut self,
+        witness: SlotWitness<Expr>,
+        request: RuntimeInputRequest,
+    ) -> Result<Expr, EvalError> {
+        witness.suspend(self, request, ReplaceAllApplicationFrame)
+    }
+
+    #[cold]
+    #[inline(never)]
+    pub(super) fn suspend_replace_all_unheld_application(
+        &mut self,
+        witness: SlotWitness<Expr>,
+        request: RuntimeInputRequest,
+    ) -> Result<Expr, EvalError> {
+        witness.suspend(self, request, ReplaceAllUnheldApplicationFrame)
     }
 }
 

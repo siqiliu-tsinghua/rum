@@ -14,6 +14,7 @@ mod part_selectors_held_assignment;
 mod predicate_roles;
 pub mod preparation;
 pub mod primary;
+mod replaceall_application;
 mod replaceall_traversal_collectors;
 mod restore_boundary;
 use super::descriptors::{Fixture, Pause};
