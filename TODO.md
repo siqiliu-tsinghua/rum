@@ -4,18 +4,42 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-19, committed tree through G13 step S9 (brief-617,
+Status checkpoint: 2026-10-20, committed tree through G13 step S9 (brief-617,
 control and cleanup; gated, below), G15-A (brief-619, `afdcd02f`), G15-B
 (brief-620, `43a26c72`), the G15-C design (brief-621, accepted `8f77793c`)
 and G15-C1 (brief-622, `b4f81ebe`).
 
-**Next: G15-C2 = brief-623**, the settlement of the 1 024 census rows that no
-later step owns, from `.temp/brief-621/draft-G15-C2-settlement.md`. Then come
-the manifest (CM, `draft-G15-CM-obligation-manifest.md`), `CHANGELOG.md`
-(user ruling), and S10 from `.temp/brief-606/draft-S10.md`, which carries its
+G15-C2 (brief-623, three runs) has settled 679 of its 1 032 rows by
+execution or by mechanical rule:
+
+| Disposition | Rows |
+| --- | ---: |
+| `Transferred` (strict tails passed to their resolved callers) | 624 |
+| `Equal` | 10 |
+| `Identity` | 5 |
+| `Boundary` | 20 |
+| `Unreachable` | 3 |
+| `NoObservableTail` | 1 |
+| `Lost` | 16 |
+
+That leaves **353 residuals**. The 16 `Lost` rows are profiler counters, and
+they opened a new line.
+
+**User ruling 2026-10-20: the profiler counts logical calls across
+suspension.** A call that pauses records one final outcome, as on the queued
+path, and pauses become separate telemetry. The design is brief-624,
+accepted in `3906ac01`. It found no semantic loss; the resumed fixed point
+does the same work, only without its profiling hooks.
+
+**Next: LP01 = brief-625**, the contract and the counter oracle, with no
+counting change. LP02-LP08 follow from `.temp/brief-624/drafts/`, one per
+brief. Then come C2's remaining 353 rows on the final source, the manifest
+(CM, `.temp/brief-621/draft-G15-CM-obligation-manifest.md`), `CHANGELOG.md`
+(user ruling), and S10 from `.temp/brief-606/draft-S10.md`, with its
 owned-row table from `.temp/brief-621/draft-existing-owner-additions.md`. The
 G15 entry below, after S8, has the details. All work goes to Codex
-(gpt-6.1-sol since 2026-10-18).
+(gpt-6.1-sol since 2026-10-18). **User ruling 2026-10-19: if Codex's content
+filter cuts this census work a third time, switch workers.**
 - S9 ran on two new workers. agy (Gemini 4 Argon) and grk (grok-4.7, under
   the `rum-worker` kernel profile in `~/.grok/sandbox.toml`) were both cut by
   their quotas, and the director finished the step by user ruling.
