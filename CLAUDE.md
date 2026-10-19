@@ -257,10 +257,15 @@ Consequences for how I present and pick work:
   TailCorrect ("the fixed point evaluates the final Expr") and FrameCarries
   ("including own-symbol cycle handling"). Both claims were false, and the
   oracle compared top-level values, which the evaluator's fixed point
-  repairs. G15-A (619, `afdcd02f`) and G15-B (620, `43a26c72`) are done.
-  Next: G15-C (621, design-only), which settles every reading verdict and
-  every FrameCarries row by execution; then its repairs and the manifest,
-  then CHANGELOG, then S10, one step per brief. *Unsettled is not a
+  repairs. G15-A (619, `afdcd02f`) and G15-B (620, `43a26c72`) are done. The
+  G15-C design (621) is accepted: 2 186 rows, a 25-policy tail enum, and an
+  80k-probe corpus. A row is settled only when its tuples are SAME *and* its
+  own tail-skip mutant is caught. 198 rows are settled; the other 1 988 are
+  `OwnedObligation`s, 1 024 of them for G15-C2 and 964 for later G13 steps.
+  It found G15-C1, a ReplaceAll finish lost on resume and visible only in
+  the ordered trace, now done (622, `b4f81ebe`). Next: G15-C2 (623, settle
+  its 1 024), then the manifest, then CHANGELOG, then S10, one step per
+  brief. *Unsettled is not a
   verdict, and neither is a verdict by reading*: a row settled only by an
   argument is an open obligation, and a closed line that carries one is not
   closed. G15-B's lesson on stack bars: bound the chain of frames live at

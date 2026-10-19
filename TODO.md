@@ -5,13 +5,17 @@ operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
 Status checkpoint: 2026-10-19, committed tree through G13 step S9 (brief-617,
-control and cleanup; gated, below), G15-A (brief-619, `afdcd02f`) and G15-B
-(brief-620, `43a26c72`). **Next: G15-C = brief-621 (design-only)**, which
-re-verifies by execution every census verdict that rests on reading. Its
-draft is `.temp/director/brief-621-draft.md`; the G15 entry below, after S8,
-has the details. After it come its repairs and the manifest, then
-`CHANGELOG.md` (user ruling), then S10 from `.temp/brief-606/draft-S10.md`.
-All work goes to Codex (gpt-6.1-sol since 2026-10-18).
+control and cleanup; gated, below), G15-A (brief-619, `afdcd02f`), G15-B
+(brief-620, `43a26c72`), the G15-C design (brief-621, accepted `8f77793c`)
+and G15-C1 (brief-622, `b4f81ebe`).
+
+**Next: G15-C2 = brief-623**, the settlement of the 1 024 census rows that no
+later step owns, from `.temp/brief-621/draft-G15-C2-settlement.md`. Then come
+the manifest (CM, `draft-G15-CM-obligation-manifest.md`), `CHANGELOG.md`
+(user ruling), and S10 from `.temp/brief-606/draft-S10.md`, which carries its
+owned-row table from `.temp/brief-621/draft-existing-owner-additions.md`. The
+G15 entry below, after S8, has the details. All work goes to Codex
+(gpt-6.1-sol since 2026-10-18).
 - S9 ran on two new workers. agy (Gemini 4 Argon) and grk (grok-4.7, under
   the `rum-worker` kernel profile in `~/.grok/sandbox.toml`) were both cut by
   their quotas, and the director finished the step by user ruling.
@@ -1519,6 +1523,54 @@ internal heads as state.
     - An impossible arm that survives every placement comes from the type.
     - A stack bar bounds the chain of frames live at once, including the
       helpers the entry calls, never one prologue.
+- **G15-C design ACCEPTED — brief-621 (2026-10-19; one run, three
+  continuations; review `8f77793c`).**
+  - **The census.** It re-censused the tree with calibrated tools: 2 682
+    edges, with all historical Lost and G9-G15 reproduced. Both old tables
+    cross-walk completely. The population is the 2 186 rows whose verdicts
+    rested on reading, every FrameCarries row, and brief-618's screens.
+  - **The method.** An exhaustive 25-policy tail enum, then a corpus of
+    80 309 probes (2.79 M cells) in observable contexts.
+  - **Settlement by measurement.** A row is `Equal` only when its tuples
+    are SAME **and** that row's tail-skip mutant (one switchable copied-tree
+    build) is caught.
+  - **The result.**
+    - 198 rows settled: 43 Equal, 5 Lost, 140 Unreachable in five
+      call-site classes, and 10 Boundary.
+    - 1 988 rows are `OwnedObligation`s: 1 024 for G15-C2 and 964 for
+      future G13 steps, which settle them in their own gates.
+    - The 5 Lost are S10 T0028, S13 F0528, S19 F0358 and the new G15-C1.
+  - **The manifest design.**
+    - Obligation keys, three checked collections and receipts.
+    - An immutable loss ledger with named promotions.
+    - `OwnedObligation` entries, green only while their owner is open.
+    - Eleven ledger negatives, all red.
+  - **What it cost.** The run was cut once by Codex's content filter after
+    the internal-encoding batches. Those differences are classified by
+    script and owned by G13's transport steps.
+  - **Lessons.**
+    - A design brief that asks for settlement before defining what settles
+      a row stops early. Policy first, then settle by coverage.
+    - "Which effect goes wrong" is a reading claim; a caught mutant is the
+      measurement.
+    - A row in a finished step's code is not settled by that step's gate
+      unless its mutants reached it: C2 holds 310 such rows.
+- **G15-C1 DONE — `b4f81ebe` (2026-10-19; brief-622, one run).**
+  - **The defect.** `ReplaceAll` and `ReplaceAllUnheld` propagated a paused
+    rule application with a plain `?`. The resumed value skipped the
+    builtin's finish (the atom test and `evaluate(replaced)`), and the fixed
+    point repaired the value but not the ordered trace.
+  - **The repair.** A witnessed producer, a cold `(witness, request)`
+    helper, and two typed unit frames `Expr` → `Expr` that run the shared
+    finish.
+  - **Tests.** 24 fixtures (12 trace reds) pass, and four mutants are red
+    at equal values.
+  - **Director gate.** Workspace 3928/0/59 native, oracle 496 ×2, 192
+    ordinary labels allocation-equal. The ordinary shapes are equal or
+    −80 B.
+  - **Accepted.** The resumed chain grows +176 B per application, once per
+    resume.
+  - **Owed to S24.** S24 keeps the regression.
 - The remaining DIFFs have owners: S10 the seven information markers (T0028),
   S13 the Function, composition, association and Failsafe markers and the six
   Fold/Nest rows (already reassigned at brief-609), S19 the three `cases.*`
