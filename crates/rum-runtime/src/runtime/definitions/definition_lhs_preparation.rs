@@ -243,6 +243,7 @@ impl Session {
     >(
         &mut self,
         state: DefinitionLhsPreparationState,
+        awaited: DefinitionLhsAwaitedWork,
         witness: SlotWitness<Expr>,
         request: RuntimeInputRequest,
         route: Route,
@@ -251,7 +252,7 @@ impl Session {
             self,
             witness,
             request,
-            DefinitionLhsPreparationSuspensionFrame { state },
+            DefinitionLhsPreparationSuspensionFrame { state, awaited },
         )
     }
 
@@ -288,10 +289,12 @@ impl Session {
                                 state.work = DefinitionLhsPreparationWork::CompleteNode(value);
                             }
                             Err(EvalError::InputRequired { request }) => {
-                                state.work =
-                                    DefinitionLhsPreparationWork::AwaitPatternAtom { source };
                                 return self.suspend_definition_lhs_preparation(
-                                    state, witness, request, route,
+                                    state,
+                                    DefinitionLhsAwaitedWork::PatternAtom { source },
+                                    witness,
+                                    request,
+                                    route,
                                 );
                             }
                             Err(error) => return Err(Route::failure(error)),
@@ -352,13 +355,16 @@ impl Session {
                                     }
                                     Err(EvalError::InputRequired { request }) => {
                                         drop(head);
-                                        state.work = DefinitionLhsPreparationWork::AwaitCallHead {
-                                            source_head,
-                                            args,
-                                            capture_outer_call,
-                                        };
                                         return self.suspend_definition_lhs_preparation(
-                                            state, witness, request, route,
+                                            state,
+                                            DefinitionLhsAwaitedWork::CallHead {
+                                                source_head,
+                                                args,
+                                                capture_outer_call,
+                                            },
+                                            witness,
+                                            request,
+                                            route,
                                         );
                                     }
                                     Err(error) => {
@@ -417,13 +423,16 @@ impl Session {
                                         DefinitionLhsPreparationWork::PrepareCallArguments(call);
                                 }
                                 Err(EvalError::InputRequired { request }) => {
-                                    state.work = DefinitionLhsPreparationWork::AwaitCallArgument {
-                                        call,
-                                        argument,
-                                        source,
-                                    };
                                     return self.suspend_definition_lhs_preparation(
-                                        state, witness, request, route,
+                                        state,
+                                        DefinitionLhsAwaitedWork::CallArgument {
+                                            call,
+                                            argument,
+                                            source,
+                                        },
+                                        witness,
+                                        request,
+                                        route,
                                     );
                                 }
                                 Err(error) => return Err(Route::failure(error)),
@@ -486,28 +495,31 @@ impl Session {
                         }
                     }
                 }
-                DefinitionLhsPreparationWork::AwaitPatternAtom { .. }
-                | DefinitionLhsPreparationWork::AwaitCallHead { .. }
-                | DefinitionLhsPreparationWork::AwaitCallArgument { .. } => {
-                    unreachable!("only a suspension frame resumes awaited lhs preparation work")
-                }
             }
         }
     }
 
+    #[inline(never)]
     fn resume_definition_lhs_preparation(
         &mut self,
         mut state: DefinitionLhsPreparationState,
+        awaited: DefinitionLhsAwaitedWork,
         outcome: Result<Expr, EvalError>,
         token: ContinueToken<'_, DefinitionLhsPreparationSuspensionFrame>,
     ) -> Result<Expr, ResumeStop<Expr>> {
-        let value = outcome.map_err(ResumeStop::failure)?;
+        let source = match &awaited {
+            DefinitionLhsAwaitedWork::PatternAtom { source }
+            | DefinitionLhsAwaitedWork::CallArgument { source, .. } => source,
+            DefinitionLhsAwaitedWork::CallHead { source_head, .. } => source_head.as_ref(),
+        };
+        let value =
+            finish_definition_lhs_active_expr(source, outcome).map_err(ResumeStop::failure)?;
         state.work =
-            match state.work {
-                DefinitionLhsPreparationWork::AwaitPatternAtom { .. } => {
+            match awaited {
+                DefinitionLhsAwaitedWork::PatternAtom { .. } => {
                     DefinitionLhsPreparationWork::CompleteNode(value)
                 }
-                DefinitionLhsPreparationWork::AwaitCallHead {
+                DefinitionLhsAwaitedWork::CallHead {
                     source_head,
                     args,
                     capture_outer_call,
@@ -517,26 +529,18 @@ impl Session {
                         self.definition_lhs_call_state(evaluated_head, args, capture_outer_call),
                     )
                 }
-                DefinitionLhsPreparationWork::AwaitCallArgument {
+                DefinitionLhsAwaitedWork::CallArgument {
                     mut call, argument, ..
                 } => {
                     self.merge_definition_lhs_call_argument(&mut call, argument, value);
                     DefinitionLhsPreparationWork::PrepareCallArguments(call)
                 }
-                _ => unreachable!("a definition-lhs frame stores awaited work"),
             };
         self.drive_definition_lhs_preparation(state, token)
     }
 
     fn evaluate_definition_lhs_active_expr(&mut self, source: &Expr) -> Result<Expr, EvalError> {
-        match self.evaluate_atom_fast_path(source.clone()) {
-            Err(EvalError::EvaluationCycleDetected { expr })
-                if matches!(source, Expr::Atom(Atom::Symbol(_))) && expr == source.to_string() =>
-            {
-                Ok(source.clone())
-            }
-            result => result,
-        }
+        finish_definition_lhs_active_expr(source, self.evaluate_atom_fast_path(source.clone()))
     }
 
     fn definition_lhs_call_state(
@@ -724,6 +728,21 @@ impl Session {
             None => call.args,
         };
         state.work = DefinitionLhsPreparationWork::CompleteNode(Expr::call_shared(call.head, args));
+    }
+}
+
+#[inline(always)]
+fn finish_definition_lhs_active_expr(
+    source: &Expr,
+    outcome: Result<Expr, EvalError>,
+) -> Result<Expr, EvalError> {
+    match outcome {
+        Err(EvalError::EvaluationCycleDetected { expr })
+            if matches!(source, Expr::Atom(Atom::Symbol(_))) && expr == source.to_string() =>
+        {
+            Ok(source.clone())
+        }
+        result => result,
     }
 }
 

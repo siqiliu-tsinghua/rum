@@ -6,6 +6,7 @@ mod control_cleanup;
 mod control_roles;
 mod debug_roles;
 mod definition_application;
+mod definition_lhs_cycle;
 mod definition_storage;
 mod functional_roles;
 mod guards_binding_completion;

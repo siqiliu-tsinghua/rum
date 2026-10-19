@@ -128,6 +128,7 @@ pub(super) const DERIVED_FRAME_ROOT_TRACE_TYPES: &[&str] = &[
     "crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:PreparedDefinitionOuterCall",
     "crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:PreparedDefinitionUnevaluatedRestore",
     "crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/prepared_store.rs:PreparedDefinitionStore",
+    "crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:DefinitionLhsAwaitedWork",
     "crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:DefinitionLhsCallArgumentContinuation",
     "crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:DefinitionLhsCallState",
     "crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:DefinitionLhsParentContext",

@@ -25,21 +25,25 @@ pub(super) enum DefinitionLhsPreparationWork {
         expr: Expr,
         region: DefinitionLhsRegion,
     },
-    AwaitPatternAtom {
+    PrepareCallArguments(DefinitionLhsCallState),
+    CompleteNode(Expr),
+}
+
+#[derive(Clone, rum_derive::FrameRootTrace)]
+pub(super) enum DefinitionLhsAwaitedWork {
+    PatternAtom {
         source: Expr,
     },
-    AwaitCallHead {
+    CallHead {
         source_head: SharedExpr,
         args: SharedArgs,
         capture_outer_call: bool,
     },
-    PrepareCallArguments(DefinitionLhsCallState),
-    AwaitCallArgument {
+    CallArgument {
         call: DefinitionLhsCallState,
         argument: DefinitionLhsCallArgumentContinuation,
         source: Expr,
     },
-    CompleteNode(Expr),
 }
 
 #[derive(Clone, Default, rum_derive::FrameRootTrace)]
@@ -151,6 +155,7 @@ impl DefinitionLhsStructuralSelection {
 pub(super) struct DefinitionLhsPreparationSuspensionFrame {
     pub(super) state:
         crate::runtime::definitions::definition_lhs_preparation::DefinitionLhsPreparationState,
+    pub(super) awaited: DefinitionLhsAwaitedWork,
 }
 
 impl crate::runtime::kernel_api::TypedFrame for DefinitionLhsPreparationSuspensionFrame {
@@ -165,7 +170,8 @@ impl crate::runtime::kernel_api::TypedFrame for DefinitionLhsPreparationSuspensi
     ) -> crate::runtime::kernel_api::TypedAction<Expr> {
         #[allow(unused_mut)]
         let mut state = self.state.clone();
-        let resumed = session.resume_definition_lhs_preparation(state, outcome, token);
+        let awaited = self.awaited.clone();
+        let resumed = session.resume_definition_lhs_preparation(state, awaited, outcome, token);
         crate::runtime::kernel_api::TypedAction::complete_work(resumed)
     }
 }
@@ -173,6 +179,7 @@ impl crate::runtime::kernel_api::TypedFrame for DefinitionLhsPreparationSuspensi
 #[cfg(test)]
 const _: fn() = || {
     fn assert_traces<T: FrameRootTrace>() {}
+    assert_traces::<DefinitionLhsAwaitedWork>();
     assert_traces::<DefinitionLhsCallArgumentContinuation>();
     assert_traces::<DefinitionLhsCallState>();
     assert_traces::<DefinitionLhsParentContext>();

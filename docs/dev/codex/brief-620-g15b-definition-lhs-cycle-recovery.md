@@ -788,6 +788,91 @@ Checkpoint, and apply the stop-loss, as before.
 
 ---
 
+# brief-620 — G15-B final report, Continuation 3
+
+**Continuation 3 is complete with the mandated fallback.** The single requested attribute deletion was tested. Its copy-byte condition passes all 11 LHS workloads, but its executed resume chain is **1,864 + 8 + 280 = 2,152 B**, above the strict **1,992-B** boundary: `DefinitionLhsCallState::clone` runs below the entry while its full prologue remains live. Continuation 2 is restored exactly, including `#[inline(never)]`; main LHS SHA-256 is `7660f155cf67d9773cc90003601ee4633bfd73f6d399413b49a607f30fab19ce`. No tuning followed the failed condition.
+
+All correctness and inventory reruns required by Continuation 3 pass on that final source. Both full oracle builds pass472 with zero warnings and fault delta0 over94,494 observations each. The rebuilt resume, CLI and allocation-instrumented resume binaries are byte-identical to Continuation 2. All113 resumed allocation rows match Continuation 2 in whole counts and bytes, and all11 final local-copy byte rows stay below run1. Ordinary instructions and stores are identical in the helper and both driver specializations, so the director's identity branch carries forward the ordinary measurements and the Continuation 3 residual rulings.
+
+No Git, network, sub-agent, unsafe, dependency, lockfile or toolchain change was used. The tree remains uncommitted; the director owns the workspace gate. Sections1–6 describe the final tree. Older reports are preserved below as history, and the final *Continuation 3* section contains this continuation's evidence and every rerun result.
+
+## 1. Final files and derived facts
+
+The final11 source files are exactly Continuation 2's. Continuation 3 leaves **zero implementation, fixture or inventory delta** relative to its entry. The own brief receives this final report; scratch is under `.temp/brief-620/continuation-3/`. The file table below is against the supplied committed export, read without Git. Full unified review diff: `continuation-3/review.diff`.
+
+| File | Final semantic change | Supplied base SHA-256 → final SHA-256 |
+|---|---|---|
+| `crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs` | Shared whole-Result finish and ordinary helper; separated awaited work; total resume matches and four-state driver. Private resume inline(never) restored exactly under Continuation 3 fallback after the inlined chain fails the fixed bound. | `d073ff287d2bad5570c5d9ac9f647e12154c1763108b61d79698f678a85100ad` → `7660f155cf67d9773cc90003601ee4633bfd73f6d399413b49a607f30fab19ce` |
+| `crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs` | Move three Await variants and unchanged fields to private DefinitionLhsAwaitedWork; existing F0257 owns state+awaited, clones both on resume, and traces the new enum. Input/Output remain Expr. | `8eda2f1ea9a7f6374f3336a263ccefd185dc4eb54d72f7faae945dedc207fcbe` → `20e1f69d1161623644c5e574ee8339eff202b377597c0f80937e8941808ef69b` |
+| `crates/rum-runtime/src/runtime/tests/frame_root_trace/derived_inventory.rs` | Exactly one new derived-type entry. Named-frame pin remains565; frame_root_trace.rs is unchanged. | `c8aa89e73ceb4996d71801d7e208a97a56f45b43bbf529a9f081706ccce69c78` → `3ff2fc5535020ec8f0dfc1830d5108e4b2523ddbd49e790788b34180bcf7c858` |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/self_reaching.tsv` | Pure citation move of DefinitionLhsParentNode; self-reaching meaning and all59 rows preserved. | `927929e04c558a85a9f3cc9efafab8247de6b76ed6b42117a86950dc2ef48814` → `2e7ef7740a370c357256d18a4b523e74b7934ccca373a558207a4afb56793635` |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv` | Pure line moves plus one discovered UnknownConstruct for the new enum derive; no mark or host-payload gain. | `a79ec08132b8d931a243e69f1524fd5ae835dc9c8c7270d5cb870c6ebaf02362` → `bb22d5e384af599664bfe24d71e782c1b15df54ada4e04cb120d65d6a7472cba` |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv` | Pure source-coordinate and end-citation moves; captures remain unknown. | `42bf374eb8310a2b4bcf5a7a643c9204671f6c8a09b0e74765f943a3f8a34e3e` → `81387bd824648dc78d7f73531442623cf9bf1ab590dae54aec6b6dbace3813cf` |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv` | Pure moves, retire the two deleted base assertions, omit run1’s additional now-deleted assertion. Remaining macros stay unknown. | `3954b07d1bcfa43f9b7f1db9a56c0eb7abcb10b113495c0e6a9ac117a839f5d0` → `73d6785ca6e657aaf4ac6a2022899987ff322f33cbe5cb33c73ce324e60857cb` |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv` | Canonical generated fingerprint replay;68 hash cells changed from the run1 inventory; every non-hash cell fixed. | `af39ef1f2c429140cabf721cea2ed0d008f1e43973cdc4ed0aa982c9995d6c33` → `10440b8d3814cbea44973ba10e328c232ba2e1288d1bd190eb9670aec978542a` |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv` | Canonical generated certificate replay;4 hash cells across both feature sets; meaning, chains and marks unchanged. | `ad2037b0aa719ca33fe4bbe2e342aa6a54d2848239fccc765aeaa3b85b83ca5e` → `1810af3840cff1c2b467e70db06d322339aa3e63dc03f2529d3a62a60f0ffd68` |
+| `crates/rum-stdlib/tests/suspension_oracle/fixtures/definition_lhs_cycle.rs` | Run1’s50 Checks::ALL fixtures retained: all awaiting states, definition forms, prior/repeated pauses, stored definitions, precise negative controls, lifecycle and unconditional fault absence. | `None` → `35dedadd0876ab9904244da4f7cc67d7b82ce6b042415d7ee331f365fa176ccd` |
+| `crates/rum-stdlib/tests/suspension_oracle/fixtures/mod.rs` | Register the retained definition_lhs_cycle fixture module. | `94c34c5bbf39e4c6c509d852c49aebcd1343604f70b1df77384de14d650ec3a3` → `e5c03a8b90998792fc623e5269f659b8d948e9d126c5ce16eee5cbb059183473` |
+
+
+Ownership replay again establishes24 pure source moves,2 retired deleted assertions and1 new unknown derive against the supplied export. Nothing acquires a mark, coverage, new host payload or changed meaning. This continuation installs0 fingerprint cells and0 certificate cells because exact restoration reproduces Continuation 2's generated values; its historical68/4 canonical cell changes remain disclosed below. Rejection census: 48713 base →48712 final rows, 48705 paired, 131 moves, 8 retired changed operations and 7 new operations, all still rejected. Population is exact and roots/witnesses differ only by source citations and the owned helper move. One trace-derived entry remains added, named frames stay565, and no typing receipt changes.
+
+The LHS implementation is31,856 B, in the split-plan band. This one-line experiment and exact restoration do not justify an unrelated split. Its future boundary remains pure LHS policy versus driver transitions, with resume-frame representation already in its sibling module. The14,249-B fixture stays cohesive and unchanged.
+
+## 2. Final design and call paths
+
+The Session-free shared `finish_definition_lhs_active_expr(&Expr, Result<Expr, EvalError>)` holds exactly the original three conditions: cycle error, symbol source and matching symbol text. Only recovery clones the retained source. The ordinary helper evaluates once then applies the finish. Awaited PatternAtom and CallArgument borrow `source`; CallHead borrows `source_head.as_ref()`. Resume applies the same finish before `map_err(ResumeStop::failure)?` and before rebuilding work.
+
+The private awaited enum has exactly those three variants and their unchanged fields. The driver has Vacant/PrepareNode/PrepareCallArguments/CompleteNode; both resume matches are total and only the existing Vacant placeholder assertion remains (`unreachable!` count1). F0257 remains Expr → Expr, cloning its state and awaited value as directed. Its three witnesses, M0260–M0262, DefinitionResumeRoute, sealed modes/codecs and same-frame token remain unchanged. The existing frame's authorized awaited field remains; no frame implementation or allocation count is added. Work136 B, State344 B, Awaited184 B, frame528 B and requested ArcInner544 B remain Continuation 2's layouts.
+
+## 3. Fixtures, harnesses and accepted historical controls
+
+The final source passes all50 LHS fixtures in each feature build, fault delta0/744 observations each. They cover every awaiting state, definition/value-table form, matching-symbol cycle recovery, prior/repeated pauses, exact stored definitions, negative controls and lifecycle behavior. Both full oracle builds pass472; their per-feature fault totals and verbatim test results are in section4 and the final Continuation 3 section.
+
+The unchanged harness checks final values, exact stored definitions and exact resume counts. This continuation captures132 successful inlined-decision Callgrind processes and132 fresh final-source processes (11 workloads ×3 pairs ×N/2N ×2 arms), plus226 final allocation runs across113 workloads. Original harness source and all baseline artifacts stay immutable.
+
+The accepted historical base is37 red/13 green in each build; the final candidate is50 green in each. Continuation 2's six mutants (argument22, head7, pattern8 owned reds per build; zero survivals),28 ordinary controls per build, fixed136-pair set (114 SAME/22 DIFF, all five owned rows fixed) and director probes remain accepted evidence on the exact restored source. They were not rerun because Continuation 3 explicitly narrows the rerun list. Probe results remain G15-B20 SAME, G1514 SAME, S1051 SAME with the same7 DIFF, S961, S848, S732 and S622 SAME.
+
+## 4. Final correctness, inventories and canonical outputs
+
+| Rerun | Final result |
+|---|---|
+| Formatting | pass |
+| Runtime typed / root trace / resume context / depth |24 /15 /11 /1 pass |
+| Compile controls, both builds |36 positive and36 intended rejection cases each; both outer tests pass |
+| Owned LHS fixtures, both builds |50 pass each;fault delta0/744 each |
+| Full oracle, both builds |472 pass each;fault delta0/94,494 each;warnings0 |
+| Census, both builds |8 pass,1 ignored each;2 intended child reds each;608/97/55/48 |
+| Ownership, both builds |31 pass each;59 self-reaching/79 host payload/7645 unknown constructs |
+| Canonical fingerprints / both acceptance and certificate sets |pass;0 new C3 cell changes |
+| Rejection census and committed-export reconciliation |pass;no meaning, mark, coverage or population change |
+| Source/base/scope audit |2086 supplied files and6 base artifacts verified;11 final source hashes equal C2 |
+
+Every `test result:` line, including expected child reds, is reproduced verbatim in the final Continuation 3 section. Both full canonical oracle logs are preserved under `continuation-3/oracle-final/`. The standalone runtime tests carry exactly the three pre-existing unused-helper warnings from Continuation 2; no warning is introduced and neither oracle build warns. All canonical gate tools are unchanged. `8` fixed output roots and every written file are disclosed in `continuation-3/canonical-output-paths.json`, in addition to normal Cargo target artifacts. Executor scratch remains inside brief620.
+
+## 5. Final measurements and residual rulings
+
+The ordinary helper and **both physical driver specializations** have identical normalized instructions, branch targets, stack operands and stores against Continuation 2's final binary. All three rebuilt binaries have the same SHA-256 as their preserved C2 counterparts. Under Continuation 3's explicit identity branch, the21 debug/release stack shapes,187-label calibrated copy census, native instruction panel and timing stand. Their accepted facts include lhs-arg −1024 B/level debug and−112 release with every other shape equal, driver523→520 self instructions/call, helper35→35, and ordinary whole allocation counts/bytes exact versus G15-A. These ordinary campaigns were not redundantly rerun.
+
+The unchanged-base association-width4000 calibration row is excluded as an instrument property, as the director rules; it is not claimed as a passing calibrated comparison. The matcher-single-tiny (+2.52%) and ReplacePart guarded-decline (+1.54%) timing residuals are accepted as layout. The four nondeterministic ordinary instruction ranges on unchanged physical code are also accepted. No new timing protocol is run or fabricated.
+
+Fresh resumed allocations: all113 workloads,226 correct N/2N processes; **every whole count and requested-byte total equals Continuation 2**, hence all slopes do too. Fresh resume Callgrind attribution covers all11 LHS workloads, naming every physical-function and address delta: 0 deterministic and 186 nondeterministic function deltas. R's136-B driver/adapter transfers stay R's. All11 final local-copy byte rows pass against the hash-verified run1 candidate and profiles; the expanded retained-helper scope includes shared helper uses on both arms. The original narrower C2 table is preserved as history, rather than conflating accounting scopes.
+
+The tested inlined entry is1864 B, but the observed entry→retained-call-state clone chain is1864+8+280=**2152 B** (2160 B if also counting the common incoming return address). This fails<1992 under either convention, even before any deeper generic/runtime work. Its copy-byte condition passes independently. The exact C2 fallback's nominal entry+private-method chain is1432+552+8=1992 B. The complete directly connected retained-helper graph also exposes a largest local prologue chain of**2072 B**; all physical prologues and chain parts are disclosed, with tail-call epilogues accounted for. These are local direct-call chain sums, not a claim to bound arbitrary runtime/ordinary continuation work. The fallback is retained because the director explicitly mandates that exact source when either inlined condition fails; no attempt is made to tune these charges.
+
+## 6. Counters, deviations and director handoff
+
+One implementation candidate tested; one mandated exact restoration; no further tuning. Owned semantic failures0, mutant survivals0 (accepted C2 evidence), consecutive non-progress counter1; the two-attempt stop-loss is not reached. The independent precommitted failed stack condition ends the implementation experiment. The exploratory raw instruction-header slopes from the already captured inlined profiles are preserved and do not override that decision.
+
+This continuation records44 gate commands and20 top-level Cargo build/test invocations (including builds driven by build.py, not individual rustc processes). One scratch summary-reducer assertion was corrected: it confused intermediate cumulative oracle observations with the final94,494. Its failure and both unchanged canonical logs remain preserved. No canonical check, contract, fault assertion, receipt or scope was weakened.
+
+The workspace is left to the director, as Continuation 2 explicitly requires. No C3 rerun of mutants, ordinary controls, fixed/probe sets or ordinary measurement campaigns is claimed. The inlined source, binary, build records,132 profiles, every prologue, observed stack witness and both local-copy tables remain under `continuation-3/inlined/`. The final-source evidence, immutable entry scene, complete gate logs and source diff remain under `continuation-3/`. The requested reruns and report are complete; the failed inlined stack condition and deeper fallback helper charges are reported for the director without another design attempt.
+
+
+## Historical reports before Continuation 3 (verbatim)
+
+The following entry report records earlier trees and failed intermediate attempts. Its current/stale labels are historical. The opening above and final Continuation 3 section describe the final tree.
+
 # brief-620 — G15-B final report, Continuation 2
 
 The final tree implements **Continuation 2’s awaited-work type split**, with run1’s shared whole-Result finish restored. The three awaiting cases recover the same symbol cycle before error conversion and work reconstruction. Both resume matches are total; the driver has four work states. F0257 remains Expr → Expr, with the existing witnessed routes, sealed modes/codecs and same-frame token. The existing frame gains the explicitly authorized awaited field; no frame implementation or allocation count is added. Its requested Arc layout grows408 →544 B.
@@ -15754,3 +15839,3117 @@ No source implementation changed after the frozen second attempt. Final source c
 Stop-loss:2 implementation attempts,0 non-progress,0 owned semantic failures,0 mutant survivals. No ordinary allocation/copy/stack failure or deterministic instruction regression triggered the run1 fallback. Timing’s repeated baseline-only calibration failure is reported rather than tuned further. No new unsafe, dependency/lock/toolchain edit, typing receipt, mark, coverage change, new host-payload unknown, external comparison, Git/network command or out-of-class production edit occurred.
 
 All final gate outputs, warnings, expected reds, counts and canonical output paths appear above verbatim or in the linked raw logs. Machine-readable current state:`continuation-2/state.json`; source review:`continuation-2/review.diff`; final source/ripple hashes:`continuation-2/final-file-manifest.json`. The whole report is appended to the governing brief, preserving all instructions and history. The tree remains uncommitted.
+
+
+## Continuation 3
+
+The director accepts Continuation 2 except for the private resume method's `#[inline(never)]`. This continuation removes that single line and changes no other implementation. The precommitted decision is strict: keep the inlined form only if the simultaneous F0257-owned resume chain, including return addresses between its emitted functions, is below 1,992 B and all 11 local-copy byte slopes are at or below run 1. Otherwise restore the exact Continuation 2 source without further tuning.
+
+Entry source, all four Continuation 2 binaries, the report and governing brief are preserved under `continuation-3/entry/` and `continuation-3/base/`. No Git or network used.
+
+### Exact implementation delta
+
+Deleted only `    #[inline(never)]` immediately before `resume_definition_lhs_preparation`; exact whole-file comparison proves this is the sole implementation edit relative to Continuation 2. Final candidate SHA-256 `9f82e142d3da3e0c306193d0d87f578300e986916bdeb622a85ba98d1d0aae9c`. One compiling implementation attempt is authorized; no tuning will follow the precommitted decision.
+
+Built `cand/resume` with one codegen unit from the workspace cwd; source and harness hashes saved under `builds/cand-resume/`. SHA-256 `3b794891fff559dbde3ae2301c518a4a48a33269d1496895a5dcff6a298ca5c6`. Build stderr:
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling brief608-resume v0.0.0 (/home/remi/dev/rum/.temp/brief-620/resume-harness)
+    Finished `release` profile [optimized] target(s) in 1m 15s
+```
+
+### Gate: build-resume
+
+Command: `python3 .temp/brief-620/continuation-3/build.py cand resume`. Exit 0. Full raw output: `logs/build-resume.log`.
+
+```text
+No diagnostics.
+```
+
+## F0257 resume prologues in the measured harness
+
+The runtime-only release stack binary does not link every F0257 resume entry. This additional table uses the actual measured resume harness binaries and retains every emitted F0257 TypedFrame/TypedAdapter resume entry, its complete assembly, stack operands and copy contexts. The inlined finish is assessed at its physical caller.
+
+| Arm | Physical function | Address | Prologue bytes | Full assembly |
+|---|---|---|---:|---|
+| base | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::resume_definition_lhs_preparation` | `0x576770` | 552 | `resume-callgrind/prologues/base-576770.txt` |
+| base | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | `0x56f880` | 1432 | `resume-callgrind/prologues/base-56f880.txt` |
+| cand | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | `0x56f880` | 1864 | `resume-callgrind/prologues/cand-56f880.txt` |
+
+### Gate: resume-entry-prologues
+
+Command: `python3 .temp/brief-620/continuation-3/resume-prologues.py`. Exit 0. Full raw output: `logs/resume-entry-prologues.log`.
+
+```text
+No diagnostics.
+```
+
+### Every emitted LHS prologue and simultaneous resume chains
+
+The actual measured harness binaries are used. The full retained call-state clone is charged because it executes beneath the entry during frame-state cloning; sharing its implementation with ordinary code does not remove its simultaneously live stack. A single concrete chain above the strict bound suffices to fail the condition. All emitted named LHS helpers, including drop/trace and both driver specializations, are retained below; shared ordinary implementation is explicitly identified. Full assembly, stack operands and call sites remain in `resume-callgrind/owned-prologues/comparison.json`.
+
+| Arm | Role | Function | Address | Prologue B |
+|---|---|---|---|---:|
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::prepare_definition_lhs` | `0xbf960` | 344 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::prepare_definition_lhs_for_consumer` | `0xbfa00` | 120 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::suspend_definition_lhs_preparation` | `0xbfa30` | 680 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::suspend_definition_lhs_preparation` | `0xbfb30` | 584 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::drive_definition_lhs_preparation` | `0xbfbf0` | 1736 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::drive_definition_lhs_preparation` | `0xc2320` | 1752 |
+| base | shared ordinary LHS implementation | `<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionLhs as core::clone::Clone>::clone` | `0x15fa40` | 248 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionLhs>` | `0x165f10` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<core::option::Option<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionOuterCall>>` | `0x16e580` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<core::option::Option<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionUnevaluatedRestore>>` | `0x16fe90` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionLhs>` | `0x3fc570` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionOuterCall>` | `0x3ff860` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::DefinitionLhsPreparationContinuation>` | `0x403c20` | 24 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsCallState>` | `0x404590` | 40 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentNode>` | `0x404d90` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedDefinitionStore>` | `0x405350` | 24 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsAwaitedWork>` | `0x4053e0` | 24 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentContext>` | `0x4063a0` | 0 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationWork>` | `0x407480` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedDefinitionAssignment>` | `0x408080` | 24 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationState>` | `0x408200` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedUnsetDefinitionTarget>` | `0x408880` | 24 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralCallState>` | `0x409400` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<[rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedDefinitionStore]>` | `0x409f70` | 40 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame>` | `0x40b330` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<alloc::vec::Vec<rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedDefinitionStore>>` | `0x40d210` | 24 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<alloc::sync::ArcInner<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentNode>>` | `0x40e080` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<alloc::vec::into_iter::IntoIter<rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedDefinitionStore>>` | `0x40fa80` | 24 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<alloc::sync::ArcInner<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame>>` | `0x40fe70` | 24 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::suspension::typed::adapter::TypedAdapter<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame>>` | `0x411780` | 0 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::<impl rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionLhs>::into_assignment` | `0x5698b0` | 120 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::<impl rum_runtime::runtime::model::session::Session>::protected_or_known_prepared_definition_target_symbol` | `0x569a60` | 120 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::<impl rum_runtime::runtime::model::session::Session>::store_prepared_definition_lhs_immediate` | `0x569b30` | 184 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::<impl rum_runtime::runtime::model::session::Session>::store_immediate_symbol_own_value` | `0x569ca0` | 72 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::<impl rum_runtime::runtime::model::session::Session>::remove_prepared_definition` | `0x569cf0` | 184 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::store` | `0x56a8f0` | 1000 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::definition_specificity` | `0x56f320` | 56 |
+| base | retained frame data/helper | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::push` | `0x56f530` | 200 |
+| base | retained frame data/helper | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::pop` | `0x56f610` | 264 |
+| base | F0257 typed resume entry | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | `0x56f880` | 1432 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::syntax_policy::definition_lhs_syntax_call_plan` | `0x5705a0` | 40 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::syntax_policy::definition_lhs_contains_pattern_syntax` | `0x570880` | 88 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::syntax_policy::definition_lhs_blank_head` | `0x570b30` | 0 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::DefinitionLhsPreparationContinuation::resume` | `0x570b70` | 1208 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::evaluate_prepared_definition_lhs` | `0x576550` | 168 |
+| base | F0257 private resume method | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::resume_definition_lhs_preparation` | `0x576770` | 552 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::evaluate_definition_lhs_active_expr` | `0x577050` | 280 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::definition_lhs_call_state` | `0x577300` | 200 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::merge_definition_lhs_call_argument` | `0x5774e0` | 168 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::record_definition_lhs_unevaluated_restore` | `0x577900` | 104 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::finish_definition_lhs_call` | `0x577be0` | 488 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::continue_definition_lhs_structural_call` | `0x578300` | 312 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::reuse_definition_lhs_call_head` | `0x578840` | 72 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node` | `0x578940` | 152 |
+| base | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationState as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x7995e0` | 40 |
+| base | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationWork as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x799700` | 72 |
+| base | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsAwaitedWork as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x799860` | 56 |
+| base | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentNode as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x799a00` | 24 |
+| base | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentContext as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x799a40` | 56 |
+| base | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsCallState as core::clone::Clone>::clone` | `0x799c10` | 280 |
+| base | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x799ff0` | 24 |
+| base | shared ordinary LHS implementation | `<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionLhs as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x79a020` | 40 |
+| base | shared ordinary LHS implementation | `<rum_runtime::runtime::definitions::definition_lhs_preparation::DefinitionLhsPreparationContinuation as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x79a130` | 56 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::prepare_definition_lhs` | `0xbf960` | 344 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::prepare_definition_lhs_for_consumer` | `0xbfa00` | 120 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::suspend_definition_lhs_preparation` | `0xbfa30` | 680 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::suspend_definition_lhs_preparation` | `0xbfb30` | 584 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::drive_definition_lhs_preparation` | `0xbfbf0` | 1736 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::drive_definition_lhs_preparation` | `0xc2320` | 1752 |
+| cand | shared ordinary LHS implementation | `<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionLhs as core::clone::Clone>::clone` | `0x15fa40` | 248 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionLhs>` | `0x165f10` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<core::option::Option<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionOuterCall>>` | `0x16e580` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<core::option::Option<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionUnevaluatedRestore>>` | `0x16fe90` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionLhs>` | `0x3fc570` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionOuterCall>` | `0x3ff860` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::DefinitionLhsPreparationContinuation>` | `0x403c20` | 24 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsCallState>` | `0x404590` | 40 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentNode>` | `0x404d90` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedDefinitionStore>` | `0x405350` | 24 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsAwaitedWork>` | `0x4053e0` | 24 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentContext>` | `0x4063a0` | 0 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationWork>` | `0x407480` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedDefinitionAssignment>` | `0x408080` | 24 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationState>` | `0x408200` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedUnsetDefinitionTarget>` | `0x408880` | 24 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralCallState>` | `0x409400` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<[rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedDefinitionStore]>` | `0x409f70` | 40 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame>` | `0x40b330` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<alloc::vec::Vec<rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedDefinitionStore>>` | `0x40d210` | 24 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<alloc::sync::ArcInner<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentNode>>` | `0x40e080` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<alloc::vec::into_iter::IntoIter<rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedDefinitionStore>>` | `0x40fa80` | 24 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<alloc::sync::ArcInner<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame>>` | `0x40fe70` | 24 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::suspension::typed::adapter::TypedAdapter<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame>>` | `0x411780` | 0 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::<impl rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionLhs>::into_assignment` | `0x5698b0` | 120 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::<impl rum_runtime::runtime::model::session::Session>::protected_or_known_prepared_definition_target_symbol` | `0x569a60` | 120 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::<impl rum_runtime::runtime::model::session::Session>::store_prepared_definition_lhs_immediate` | `0x569b30` | 184 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::<impl rum_runtime::runtime::model::session::Session>::store_immediate_symbol_own_value` | `0x569ca0` | 72 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::<impl rum_runtime::runtime::model::session::Session>::remove_prepared_definition` | `0x569cf0` | 184 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::store` | `0x56a8f0` | 1000 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::definition_specificity` | `0x56f320` | 56 |
+| cand | retained frame data/helper | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::push` | `0x56f530` | 200 |
+| cand | retained frame data/helper | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::pop` | `0x56f610` | 264 |
+| cand | F0257 typed resume entry | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | `0x56f880` | 1864 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::syntax_policy::definition_lhs_syntax_call_plan` | `0x571010` | 40 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::syntax_policy::definition_lhs_contains_pattern_syntax` | `0x5712f0` | 88 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::syntax_policy::definition_lhs_blank_head` | `0x5715a0` | 0 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::DefinitionLhsPreparationContinuation::resume` | `0x5715e0` | 1208 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::evaluate_prepared_definition_lhs` | `0x576fc0` | 168 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::evaluate_definition_lhs_active_expr` | `0x5771e0` | 280 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::definition_lhs_call_state` | `0x577490` | 200 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::merge_definition_lhs_call_argument` | `0x577670` | 168 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::record_definition_lhs_unevaluated_restore` | `0x577a90` | 104 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::finish_definition_lhs_call` | `0x577d70` | 488 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::continue_definition_lhs_structural_call` | `0x578490` | 312 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::reuse_definition_lhs_call_head` | `0x5789d0` | 72 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node` | `0x578ad0` | 152 |
+| cand | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationState as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x799770` | 40 |
+| cand | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationWork as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x799890` | 72 |
+| cand | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsAwaitedWork as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x7999f0` | 56 |
+| cand | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentNode as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x799b90` | 24 |
+| cand | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentContext as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x799bd0` | 56 |
+| cand | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsCallState as core::clone::Clone>::clone` | `0x799da0` | 280 |
+| cand | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x79a180` | 24 |
+| cand | shared ordinary LHS implementation | `<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionLhs as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x79a1b0` | 40 |
+| cand | shared ordinary LHS implementation | `<rum_runtime::runtime::definitions::definition_lhs_preparation::DefinitionLhsPreparationContinuation as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x79a2c0` | 56 |
+
+Concrete chain sums (common incoming return address excluded, each extra live return address included):
+
+```json
+[
+  {
+    "arm": "base",
+    "kind": "retained call-state clone",
+    "functions": [
+      "<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume",
+      "<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsCallState as core::clone::Clone>::clone"
+    ],
+    "prologues": [
+      1432,
+      280
+    ],
+    "interfunction_return_addresses": 8,
+    "sum_bytes": 1720,
+    "call_sites": [
+      "0x56f908",
+      "0x570303"
+    ],
+    "explanation": "The full entry prologue remains reserved across the direct call; the callee prologue is simultaneously live. This is a concrete lower bound on the complete resume peak."
+  },
+  {
+    "arm": "base",
+    "kind": "entry plus private resume method",
+    "functions": [
+      "<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume",
+      "rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::resume_definition_lhs_preparation"
+    ],
+    "prologues": [
+      1432,
+      552
+    ],
+    "interfunction_return_addresses": 8,
+    "sum_bytes": 1992
+  },
+  {
+    "arm": "cand",
+    "kind": "retained call-state clone",
+    "functions": [
+      "<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume",
+      "<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsCallState as core::clone::Clone>::clone"
+    ],
+    "prologues": [
+      1864,
+      280
+    ],
+    "interfunction_return_addresses": 8,
+    "sum_bytes": 2152,
+    "call_sites": [
+      "0x56f909",
+      "0x57036d"
+    ],
+    "explanation": "The full entry prologue remains reserved across the direct call; the callee prologue is simultaneously live. This is a concrete lower bound on the complete resume peak."
+  }
+]
+```
+
+### Gate: inline-owned-prologues
+
+Command: `python3 .temp/brief-620/continuation-3/owned-prologues.py`. Exit 0. Full raw output: `logs/inline-owned-prologues.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: inline-lhs-callgrind
+
+Command: `python3 .temp/brief-620/continuation-3/run-callgrind.py labels 3 lhs-arg-cycle lhs-arg-value lhs-head-cycle lhs-head-value lhs-pattern-cycle lhs-pattern-value lhs-after-prior-cycle lhs-after-prior-value lhs-twice-cycle lhs-twice-value resume-s5-lhs-twice`. Exit 0. Full raw output: `logs/inline-lhs-callgrind.log`.
+
+```text
+No diagnostics.
+```
+
+### LHS copies against run 1
+
+Six processes per arm per label: three independent N/2N pairs. The baseline is the accepted run-1 candidate binary/profiles, hash-verified, so cycle workloads complete on both arms. Counts include the typed frame entry, the separately emitted resume method and any emitted clone/drop/trace helpers for driver state/work and awaited work; R-owned driver/adapter copies are excluded from this local table. All three pairs agree exactly. Every physical call address, raw count, static byte size (or explicit dynamic size), caller and register-setup context is in `resume-callgrind/lhs-copies/comparison.json`.
+
+| Workload | Run-1 local copies / iteration by bytes | Candidate (entry + method + owned helpers) | Delta | 136-B bar |
+|---|---|---|---|---|
+| resume-s5-lhs-twice | {'184': 2.0, '392': 2.0, '144': 1.0, '136': 12.0} | {'344': 4.0, '136': 8.0, '144': 1.0} | {'392': -2.0, '344': 4.0, '136': -4.0, '184': -2.0} | True |
+| lhs-arg-cycle | {'184': 1.0, '392': 1.0, '136': 6.0} | {'344': 2.0, '136': 4.0} | {'392': -1.0, '136': -2.0, '344': 2.0, '184': -1.0} | True |
+| lhs-arg-value | {'184': 1.0, '392': 1.0, '136': 6.0} | {'344': 2.0, '136': 4.0} | {'392': -1.0, '136': -2.0, '344': 2.0, '184': -1.0} | True |
+| lhs-head-cycle | {'184': 1.0, '392': 1.0, '136': 4.0} | {'344': 2.0, '136': 2.0} | {'392': -1.0, '136': -2.0, '344': 2.0, '184': -1.0} | True |
+| lhs-head-value | {'184': 1.0, '392': 1.0, '136': 4.0} | {'344': 2.0, '136': 2.0} | {'392': -1.0, '136': -2.0, '344': 2.0, '184': -1.0} | True |
+| lhs-pattern-cycle | {'184': 1.0, '392': 1.0, '136': 3.0} | {'344': 2.0, '136': 2.0} | {'392': -1.0, '136': -1.0, '344': 2.0, '184': -1.0} | True |
+| lhs-pattern-value | {'184': 1.0, '392': 1.0, '136': 3.0} | {'344': 2.0, '136': 2.0} | {'392': -1.0, '136': -1.0, '344': 2.0, '184': -1.0} | True |
+| lhs-after-prior-cycle | {'184': 2.0, '392': 2.0, '144': 1.0, '136': 12.0} | {'344': 4.0, '136': 8.0, '144': 1.0} | {'392': -2.0, '344': 4.0, '136': -4.0, '184': -2.0} | True |
+| lhs-after-prior-value | {'184': 2.0, '392': 2.0, '144': 1.0, '136': 12.0} | {'344': 4.0, '136': 8.0, '144': 1.0} | {'392': -2.0, '344': 4.0, '136': -4.0, '184': -2.0} | True |
+| lhs-twice-cycle | {'184': 2.0, '392': 2.0, '144': 1.0, '136': 12.0} | {'344': 4.0, '136': 8.0, '144': 1.0} | {'392': -2.0, '344': 4.0, '136': -4.0, '184': -2.0} | True |
+| lhs-twice-value | {'184': 2.0, '392': 2.0, '144': 1.0, '136': 12.0} | {'344': 4.0, '136': 8.0, '144': 1.0} | {'392': -2.0, '344': 4.0, '136': -4.0, '184': -2.0} | True |
+
+### Gate: inline-local-copies
+
+Command: `python3 .temp/brief-620/continuation-3/lhs-copies.py`. Exit 0. Full raw output: `logs/inline-local-copies.log`.
+
+```text
+No diagnostics.
+```
+
+### Observed stack-chain witness
+
+All three measured N/2N pairs of `lhs-arg-value`, `lhs-arg-cycle` and `lhs-twice-value` execute the entry → `DefinitionLhsCallState::clone` call. Raw physical PCs, callee identities and exact call counts are preserved in `resume-callgrind/owned-prologues/call-witness.json`. This is an executed 1,864 + 8 + 280 = **2,152 B** chain, 160 B above the strict 1,992-B threshold; it is not merely an unreachable assembly path. The common incoming return address is excluded consistently with the director’s 1,432 + 552 + 8 convention.
+
+### LHS copies against run 1
+
+Six processes per arm per label: three independent N/2N pairs. The baseline is the accepted run-1 candidate binary/profiles, hash-verified, so cycle workloads complete on both arms. Counts include the typed frame entry, the separately emitted resume method and any emitted clone/drop/trace helpers for driver state/work and awaited work; R-owned driver/adapter copies are excluded from this local table. All three pairs agree exactly. Every physical call address, raw count, static byte size (or explicit dynamic size), caller and register-setup context is in `resume-callgrind/lhs-copies/comparison.json`.
+
+| Workload | Run-1 local copies / iteration by bytes | Candidate (entry + method + owned helpers) | Delta | 136-B bar |
+|---|---|---|---|---|
+| resume-s5-lhs-twice | {'184': 2.0, '392': 2.0, '136': 12.0, '144': 1.0} | {'136': 8.0, '144': 1.0, '344': 4.0} | {'184': -2.0, '136': -4.0, '344': 4.0, '392': -2.0} | True |
+| lhs-arg-cycle | {'184': 1.0, '392': 1.0, '136': 6.0} | {'136': 4.0, '344': 2.0} | {'184': -1.0, '344': 2.0, '392': -1.0, '136': -2.0} | True |
+| lhs-arg-value | {'184': 1.0, '392': 1.0, '136': 6.0} | {'136': 4.0, '344': 2.0} | {'184': -1.0, '344': 2.0, '392': -1.0, '136': -2.0} | True |
+| lhs-head-cycle | {'184': 1.0, '392': 1.0, '136': 4.0} | {'136': 2.0, '344': 2.0} | {'184': -1.0, '344': 2.0, '392': -1.0, '136': -2.0} | True |
+| lhs-head-value | {'184': 1.0, '392': 1.0, '136': 4.0} | {'136': 2.0, '344': 2.0} | {'184': -1.0, '344': 2.0, '392': -1.0, '136': -2.0} | True |
+| lhs-pattern-cycle | {'184': 1.0, '392': 1.0, '136': 3.0, '152': 2.0, '176': 2.0} | {'136': 2.0, '344': 2.0, '176': 2.0, '152': 2.0} | {'184': -1.0, '136': -1.0, '344': 2.0, '392': -1.0} | True |
+| lhs-pattern-value | {'184': 1.0, '392': 1.0, '136': 3.0, '152': 2.0, '176': 2.0} | {'136': 2.0, '344': 2.0, '176': 2.0, '152': 2.0} | {'184': -1.0, '136': -1.0, '344': 2.0, '392': -1.0} | True |
+| lhs-after-prior-cycle | {'184': 2.0, '392': 2.0, '136': 12.0, '144': 1.0} | {'136': 8.0, '144': 1.0, '344': 4.0} | {'184': -2.0, '136': -4.0, '344': 4.0, '392': -2.0} | True |
+| lhs-after-prior-value | {'184': 2.0, '392': 2.0, '136': 12.0, '144': 1.0} | {'136': 8.0, '144': 1.0, '344': 4.0} | {'184': -2.0, '136': -4.0, '344': 4.0, '392': -2.0} | True |
+| lhs-twice-cycle | {'184': 2.0, '392': 2.0, '136': 12.0, '144': 1.0} | {'136': 8.0, '144': 1.0, '344': 4.0} | {'184': -2.0, '136': -4.0, '344': 4.0, '392': -2.0} | True |
+| lhs-twice-value | {'184': 2.0, '392': 2.0, '136': 12.0, '144': 1.0} | {'136': 8.0, '144': 1.0, '344': 4.0} | {'184': -2.0, '136': -4.0, '344': 4.0, '392': -2.0} | True |
+
+### Gate: inline-complete-local-copies
+
+Command: `python3 .temp/brief-620/continuation-3/lhs-copies.py`. Exit 0. Full raw output: `logs/inline-complete-local-copies.log`.
+
+```text
+No diagnostics.
+```
+
+### Complete local-copy bar
+
+All 11 workloads also reduce total local transfer calls and total statically sized bytes, counting both resume functions and owned generated helpers. There are no dynamic-size local copy sites. This supplements the 136-byte result table rather than moving a charge to the new method.
+
+```json
+[
+  {
+    "label": "resume-s5-lhs-twice",
+    "calls_per_iteration": {
+      "base": 17.0,
+      "candidate": 13.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 2928.0,
+      "candidate": 2608.0
+    }
+  },
+  {
+    "label": "lhs-arg-cycle",
+    "calls_per_iteration": {
+      "base": 8.0,
+      "candidate": 6.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 1392.0,
+      "candidate": 1232.0
+    }
+  },
+  {
+    "label": "lhs-arg-value",
+    "calls_per_iteration": {
+      "base": 8.0,
+      "candidate": 6.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 1392.0,
+      "candidate": 1232.0
+    }
+  },
+  {
+    "label": "lhs-head-cycle",
+    "calls_per_iteration": {
+      "base": 6.0,
+      "candidate": 4.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 1120.0,
+      "candidate": 960.0
+    }
+  },
+  {
+    "label": "lhs-head-value",
+    "calls_per_iteration": {
+      "base": 6.0,
+      "candidate": 4.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 1120.0,
+      "candidate": 960.0
+    }
+  },
+  {
+    "label": "lhs-pattern-cycle",
+    "calls_per_iteration": {
+      "base": 9.0,
+      "candidate": 8.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 1640.0,
+      "candidate": 1616.0
+    }
+  },
+  {
+    "label": "lhs-pattern-value",
+    "calls_per_iteration": {
+      "base": 9.0,
+      "candidate": 8.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 1640.0,
+      "candidate": 1616.0
+    }
+  },
+  {
+    "label": "lhs-after-prior-cycle",
+    "calls_per_iteration": {
+      "base": 17.0,
+      "candidate": 13.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 2928.0,
+      "candidate": 2608.0
+    }
+  },
+  {
+    "label": "lhs-after-prior-value",
+    "calls_per_iteration": {
+      "base": 17.0,
+      "candidate": 13.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 2928.0,
+      "candidate": 2608.0
+    }
+  },
+  {
+    "label": "lhs-twice-cycle",
+    "calls_per_iteration": {
+      "base": 17.0,
+      "candidate": 13.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 2928.0,
+      "candidate": 2608.0
+    }
+  },
+  {
+    "label": "lhs-twice-value",
+    "calls_per_iteration": {
+      "base": 17.0,
+      "candidate": 13.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 2928.0,
+      "candidate": 2608.0
+    }
+  }
+]
+```
+
+### Gate: inline-local-copy-byte-bar
+
+Command: `python3 .temp/brief-620/continuation-3/check-local-copy-bars.py`. Exit 0. Full raw output: `logs/inline-local-copy-byte-bar.log`.
+
+```text
+No diagnostics.
+```
+
+### Precommitted decision
+
+**Restore Continuation 2’s final source exactly.** The inlined variant fails the simultaneous-stack condition: the executed entry → retained-call-state clone chain sums **1,864 + 8 + 280 = 2,152 B**, which is 160 B above the strict 1,992-B boundary. The full peak can only be higher. Its independent copy-byte condition **passes all 11 workloads**, including the retained data helpers as well as the typed entry, private method and state/work/awaited helpers. No dynamic-size local sites occur; all three measured pairs agree.
+
+The deleted attribute is restored next; no tuning is attempted. The inlined binary, source, build record, all 132 successful profiles, every prologue and both copy tables are preserved under `inlined/`. Artifact references captured before relocation with `resume-callgrind/`, `cand/` or `builds/cand-resume/` refer to the corresponding `inlined/` subtree. Every subsequent measurement and correctness gate uses the restored final source.
+
+| Workload | Run-1 local bytes/iteration | Inlined local bytes/iteration |
+|---|---:|---:|
+| resume-s5-lhs-twice | 2928.0 | 2608.0 |
+| lhs-arg-cycle | 1392.0 | 1232.0 |
+| lhs-arg-value | 1392.0 | 1232.0 |
+| lhs-head-cycle | 1120.0 | 960.0 |
+| lhs-head-value | 1120.0 | 960.0 |
+| lhs-pattern-cycle | 1640.0 | 1616.0 |
+| lhs-pattern-value | 1640.0 | 1616.0 |
+| lhs-after-prior-cycle | 2928.0 | 2608.0 |
+| lhs-after-prior-value | 2928.0 | 2608.0 |
+| lhs-twice-cycle | 2928.0 | 2608.0 |
+| lhs-twice-value | 2928.0 | 2608.0 |
+
+Exact restoration verified: all 11 source files match the preserved Continuation 2 entry hashes. Main LHS SHA-256 is `7660f155cf67d9773cc90003601ee4633bfd73f6d399413b49a607f30fab19ce`. No C3 implementation or inventory delta remains. One candidate was tested; one mandated restoration; no tuning.
+
+Built `cand/resume` with one codegen unit from the workspace cwd; source and harness hashes saved under `builds/cand-resume/`. SHA-256 `3b6fcd9e853d42ae564cbec2046ac5b4b4ea15b35485348c2267e8b7c1246a7c`. Build stderr:
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling brief608-resume v0.0.0 (/home/remi/dev/rum/.temp/brief-620/resume-harness)
+    Finished `release` profile [optimized] target(s) in 1m 15s
+```
+
+### Gate: final-build-resume
+
+Command: `python3 .temp/brief-620/continuation-3/build.py cand resume`. Exit 0. Full raw output: `logs/final-build-resume.log`.
+
+```text
+No diagnostics.
+```
+
+Built `cand/rum-cli` with one codegen unit from the workspace cwd; source and harness hashes saved under `builds/cand-rum-cli/`. SHA-256 `e6e9dfb1b088dbcaabd2b4e82b46018de2802224247c17619c0b82a792b08dfa`. Build stderr:
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling rum-terminal v0.2.0 (/home/remi/dev/rum/crates/rum-terminal)
+   Compiling rum-repl v0.2.0 (/home/remi/dev/rum/crates/rum-repl)
+   Compiling rum-cli v0.2.0 (/home/remi/dev/rum/crates/rum-cli)
+    Finished `release` profile [optimized] target(s) in 1m 17s
+```
+
+### Gate: final-build-cli
+
+Command: `python3 .temp/brief-620/continuation-3/build.py cand rum-cli`. Exit 0. Full raw output: `logs/final-build-cli.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: final-ordinary-disassembly
+
+Command: `python3 .temp/brief-620/continuation-3/dump-ordinary-functions.py`. Exit 0. Full raw output: `logs/final-ordinary-disassembly.log`.
+
+```text
+No diagnostics.
+```
+
+### Final ordinary machine instructions and stores against Continuation 2
+
+All instructions, internal branch targets, stack operands and stores are identical in the helper and both separately retained physical driver specializations. Only external code/data relocation addresses are normalized; each external direct target retains its function identity. Full normalized instruction lists are retained in `ordinary-callgrind/assembly-comparison.json`. The director’s identity branch therefore carries forward Continuation 2’s 21 debug/release stack shapes, native instruction panel, calibrated ordinary copy census and timing evidence with its Continuation 3 rulings. No additional ordinary campaign is required.
+
+- `evaluate_definition_lhs_active_expr` specialization 1: 0x59a3b0 → 0x59a3b0, 680 → 680 B; normalized instructions/stores identical: True.
+- `drive_definition_lhs_preparation` specialization 1: 0xc21a0 → 0xc21a0, 10026 → 10026 B; normalized instructions/stores identical: True.
+- `drive_definition_lhs_preparation` specialization 2: 0xc48d0 → 0xc48d0, 10057 → 10057 B; normalized instructions/stores identical: True.
+
+### Gate: final-ordinary-identity
+
+Command: `python3 .temp/brief-620/continuation-3/compare-ordinary-assembly.py`. Exit 0. Full raw output: `logs/final-ordinary-identity.log`.
+
+```text
+No diagnostics.
+```
+
+Built `cand/resume-alloc` with one codegen unit from the workspace cwd; source and harness hashes saved under `builds/cand-resume-alloc/`. SHA-256 `8dd74d7fc71692648fea1ca8625e106912f175c28a18de7dda88b389c33230bd`. Build stderr:
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling brief608-resume v0.0.0 (/home/remi/dev/rum/.temp/brief-620/resume-harness)
+    Finished `release` profile [optimized] target(s) in 1m 15s
+```
+
+### Gate: final-build-resume-alloc
+
+Command: `python3 .temp/brief-620/continuation-3/build.py cand resume-alloc`. Exit 0. Full raw output: `logs/final-build-resume-alloc.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: final-fmt
+
+Command: `cargo fmt --check`. Exit 0. Full raw output: `logs/final-fmt.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: runtime-typed
+
+Command: `cargo test -p rum-runtime --lib suspension::typed::tests`. Exit 0. Full raw output: `logs/runtime-typed.log`.
+
+```text
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 0.50s
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+```
+
+### Gate: runtime-frame-trace
+
+Command: `cargo test -p rum-runtime --lib frame_root_trace`. Exit 0. Full raw output: `logs/runtime-frame-trace.log`.
+
+```text
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1172 filtered out; finished in 1.36s
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+```
+
+### Gate: runtime-resume-context
+
+Command: `cargo test -p rum-runtime --lib resume_evaluation_context`. Exit 0. Full raw output: `logs/runtime-resume-context.log`.
+
+```text
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 1176 filtered out; finished in 0.16s
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+```
+
+### Gate: runtime-depth
+
+Command: `cargo test -p rum-runtime --lib runtime::tests::holding_and_control_part2::bounded_recursive_definition_below_native_stack_limit_succeeds -- --exact`. Exit 0. Full raw output: `logs/runtime-depth.log`.
+
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1186 filtered out; finished in 0.01s
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+```
+
+### Gate: compile-controls-default
+
+Command: `cargo test -p rum-stdlib --test typed_slot_compile_controls -- --nocapture`. Exit 0. Full raw output: `logs/compile-controls-default.log`.
+
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 31.49s
+```
+
+### Gate: compile-controls-no-default
+
+Command: `cargo test -p rum-stdlib --no-default-features --test typed_slot_compile_controls -- --nocapture`. Exit 0. Full raw output: `logs/compile-controls-no-default.log`.
+
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 30.96s
+```
+
+### Gate: final-fixtures-default
+
+Command: `cargo test -p rum-stdlib --test suspension_oracle definition_lhs_cycle -- --nocapture`. Exit 0. Full raw output: `logs/final-fixtures-default.log`.
+
+```text
+test result: ok. 50 passed; 0 failed; 0 ignored; 0 measured; 422 filtered out; finished in 0.46s
+continuation-slot fault-occurrence delta=0; observations=744
+```
+
+The four standalone rum-runtime reruns carry exactly the same warning lines as Continuation 2: the three unused test helpers `register_test_if_builtin`, `register_test_return_builtin` and `register_test_vm_template_builtins`, plus Cargo’s existing three-warning summary. No introduced warning. The two compile-control gates pass their 36 positive and 36 intended rejection cases, with complete child compiler evidence retained at the canonical output paths.
+
+### Gate: final-fixtures-no-default
+
+Command: `cargo test -p rum-stdlib --no-default-features --test suspension_oracle definition_lhs_cycle -- --nocapture`. Exit 0. Full raw output: `logs/final-fixtures-no-default.log`.
+
+```text
+test result: ok. 50 passed; 0 failed; 0 ignored; 0 measured; 422 filtered out; finished in 0.46s
+continuation-slot fault-occurrence delta=0; observations=744
+```
+
+Compile controls `default`, verbatim:
+
+```text
+COMPILE CONTROLS: 36 positive / 36 intended rejections (22 S1 + 7 S2 + opaque fault + token witness + fallback output + 2 G14 return-event constraints + S7 builtin-selector producer + G15-A session-free classifier); raw Cargo JSON and primary spans retained
+```
+
+Compile controls `no-default`, verbatim:
+
+```text
+COMPILE CONTROLS: 36 positive / 36 intended rejections (22 S1 + 7 S2 + opaque fault + token witness + fallback output + 2 G14 return-event constraints + S7 builtin-selector producer + G15-A session-free classifier); raw Cargo JSON and primary spans retained
+```
+
+### Gate: final-oracle
+
+Command: `scripts/check-suspension-oracle.sh 1500`. Exit 0. Full raw output: `logs/final-oracle.log`.
+
+```text
+test result: ok. 472 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 36.65s
+test result: ok. 472 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 33.48s
+continuation-slot fault-occurrence delta=0; observations=94494
+```
+
+### Full final-source oracle per feature build
+
+The unchanged canonical script ran both builds with a 1,500-second bound each. Complete canonical logs are copied under `oracle-final/`. Per-build results, verbatim:
+
+`default`:
+
+```text
+test result: ok. 472 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 36.65s
+continuation-slot fault-occurrence delta=0; observations=94494
+```
+
+Compiler warnings: 0.
+
+`no-default`:
+
+```text
+test result: ok. 472 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 33.48s
+continuation-slot fault-occurrence delta=0; observations=94494
+```
+
+Compiler warnings: 0.
+
+Scratch reducer failure retained at `oracle-final/first-reducer-failure.txt`: the first summary parser incorrectly expected every intermediate cumulative observation count to equal the final count. It was corrected to require every delta zero and final observations94,494, preserving both canonical logs and all assertions. No canonical test or production source was changed.
+
+### Gate: census-default
+
+Command: `cargo test -p rum-stdlib --test typed_slot_census -- --nocapture`. Exit 0. Full raw output: `logs/census-default.log`.
+
+```text
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 19.57s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 19.44s
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 274.21s
+```
+
+### Progress counter for the single tested variant
+
+No additional profiling process was run. The already captured profile header totals give the three raw N/2N instruction slopes below. They are retained for the stop-loss counter, independently of the failed stack decision; full per-function attribution is required and performed on the restored final source. No claim that the inlined variant is accepted follows from a lower instruction total.
+
+```json
+[
+  {
+    "label": "resume-s5-lhs-twice",
+    "instruction_slopes": {
+      "base": [
+        98399.6,
+        98129.11,
+        98410.86
+      ],
+      "candidate": [
+        98053.26,
+        98077.76,
+        98370.27
+      ]
+    },
+    "deltas": [
+      -346.34000000001106,
+      -51.35000000000582,
+      -40.58999999999651
+    ]
+  },
+  {
+    "label": "lhs-arg-cycle",
+    "instruction_slopes": {
+      "base": [
+        274461.45,
+        274040.84,
+        274167.92
+      ],
+      "candidate": [
+        274094.9,
+        274034.72,
+        274396.05
+      ]
+    },
+    "deltas": [
+      -366.54999999998836,
+      -6.120000000053551,
+      228.13000000000466
+    ]
+  },
+  {
+    "label": "lhs-arg-value",
+    "instruction_slopes": {
+      "base": [
+        278617.02,
+        278455.48,
+        278892.5
+      ],
+      "candidate": [
+        278631.59,
+        278460.12,
+        278839.79
+      ]
+    },
+    "deltas": [
+      14.570000000006985,
+      4.64000000001397,
+      -52.710000000020955
+    ]
+  },
+  {
+    "label": "lhs-head-cycle",
+    "instruction_slopes": {
+      "base": [
+        301418.76,
+        301942.32,
+        303216.79
+      ],
+      "candidate": [
+        301602.6,
+        301834.26,
+        301639.59
+      ]
+    },
+    "deltas": [
+      183.8399999999674,
+      -108.05999999999767,
+      -1577.1999999999534
+    ]
+  },
+  {
+    "label": "lhs-head-value",
+    "instruction_slopes": {
+      "base": [
+        303094.31,
+        303768.4,
+        303250.87
+      ],
+      "candidate": [
+        303301.71,
+        302870.43,
+        303617.31
+      ]
+    },
+    "deltas": [
+      207.40000000002328,
+      -897.9700000000303,
+      366.4400000000023
+    ]
+  },
+  {
+    "label": "lhs-pattern-cycle",
+    "instruction_slopes": {
+      "base": [
+        286308.66,
+        285738.8,
+        285878.74
+      ],
+      "candidate": [
+        285720.51,
+        285688.28,
+        285974.27
+      ]
+    },
+    "deltas": [
+      -588.1499999999651,
+      -50.51999999996042,
+      95.53000000002794
+    ]
+  },
+  {
+    "label": "lhs-pattern-value",
+    "instruction_slopes": {
+      "base": [
+        291154.03,
+        291120.0,
+        291177.26
+      ],
+      "candidate": [
+        290911.35,
+        290613.01,
+        290777.33
+      ]
+    },
+    "deltas": [
+      -242.68000000005122,
+      -506.9899999999907,
+      -399.929999999993
+    ]
+  },
+  {
+    "label": "lhs-after-prior-cycle",
+    "instruction_slopes": {
+      "base": [
+        319956.55,
+        320034.64,
+        319592.64
+      ],
+      "candidate": [
+        320391.36,
+        319722.25,
+        320360.06
+      ]
+    },
+    "deltas": [
+      434.8099999999977,
+      -312.39000000001397,
+      767.4199999999837
+    ]
+  },
+  {
+    "label": "lhs-after-prior-value",
+    "instruction_slopes": {
+      "base": [
+        323635.17,
+        324152.63,
+        323656.56
+      ],
+      "candidate": [
+        323657.25,
+        323414.52,
+        323348.29
+      ]
+    },
+    "deltas": [
+      22.080000000016298,
+      -738.109999999986,
+      -308.2700000000186
+    ]
+  },
+  {
+    "label": "lhs-twice-cycle",
+    "instruction_slopes": {
+      "base": [
+        318412.83,
+        320689.22,
+        318801.42
+      ],
+      "candidate": [
+        318429.7,
+        318344.56,
+        318633.39
+      ]
+    },
+    "deltas": [
+      16.869999999995343,
+      -2344.6599999999744,
+      -168.02999999996973
+    ]
+  },
+  {
+    "label": "lhs-twice-value",
+    "instruction_slopes": {
+      "base": [
+        323988.51,
+        324168.76,
+        323896.46
+      ],
+      "candidate": [
+        323770.18,
+        324125.52,
+        324081.23
+      ]
+    },
+    "deltas": [
+      -218.3300000000163,
+      -43.23999999999069,
+      184.76999999996042
+    ]
+  }
+]
+```
+
+Consecutive non-progress attempts: 0. The precommitted failed condition mandates restoration without another implementation attempt.
+
+### Gate: census-no-default
+
+Command: `cargo test -p rum-stdlib --no-default-features --test typed_slot_census -- --nocapture`. Exit 0. Full raw output: `logs/census-no-default.log`.
+
+```text
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 19.80s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 19.49s
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 273.76s
+```
+
+### Final typed census totals
+
+Both unchanged gates pass with 608 implementations / 97 typed / 55 typed macros / 48 witnessed sites. Their two child `FAILED` results per build are the required forced-red controls; both outer gates pass8 with1 ignored. No typing receipt or global mode changes. Verbatim canonical count lines:
+
+`default`:
+
+```text
+G15-A TOTAL implementations=608 typed=97 typed_macros=55 witnessed_sites=48; two new Expr -> Option<Expr> frames; global modes unchanged
+```
+
+`no-default`:
+
+```text
+G15-A TOTAL implementations=608 typed=97 typed_macros=55 witnessed_sites=48; two new Expr -> Option<Expr> frames; global modes unchanged
+```
+
+### Gate: ownership-discovery-default
+
+Command: `cargo test -p rum-stdlib --lib ownership_graph -- --nocapture`. Exit 0. Full raw output: `logs/ownership-discovery-default.log`.
+
+```text
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 1131 filtered out; finished in 71.40s
+```
+
+### Ownership replay against the committed base
+
+Discovery, without inventory input, supplies every new unknown row. The unchanged exact-comparison gate supplies its complete cycle-row difference; applying that difference to the compiled inventory reconstructs the discovered cycle set. All unchanged rows pair by exact construct text and coordinates (including macro end citations and the parent-node self-reaching line). Exactly the two old unreachable operations deleted by the type split retire against base; run 1's extra selector assertion is also absent from the resulting table. The only new unknown is the new enum's derive. No new host payload, meaning, mark, coverage or receipt change. Every full old/new row is disclosed below.
+
+```json
+{
+  "baseline": "supplied committed base-source, not continuation inventories",
+  "pure_moves": [
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/self_reaching.tsv",
+      "old": "rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentNode\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t51\trum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentNode.previous/rum_runtime::runtime::accumulator_chain::AccumulatorChain<arg0> via 0/std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0 -> rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentNode",
+      "new": "rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentNode\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t55\trum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentNode.previous/rum_runtime::runtime::accumulator_chain::AccumulatorChain<arg0> via 0/std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0 -> rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentNode",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t45\t1\tunresolved attribute/expansion derive (Clone , Default , rum_derive :: FrameRootTrace)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t49\t1\tunresolved attribute/expansion derive (Clone , Default , rum_derive :: FrameRootTrace)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t50\t1\tunresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: AccumulatorChainNode)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t54\t1\tunresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: AccumulatorChainNode)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t52\t5\tunresolved attribute/expansion accumulator_link",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t56\t5\tunresolved attribute/expansion accumulator_link",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t72\t1\tunresolved attribute/expansion derive (Clone , rum_derive :: FrameRootTrace)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t76\t1\tunresolved attribute/expansion derive (Clone , rum_derive :: FrameRootTrace)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t84\t1\tunresolved attribute/expansion derive (Clone , rum_derive :: FrameRootTrace)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t88\t1\tunresolved attribute/expansion derive (Clone , rum_derive :: FrameRootTrace)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t95\t1\tunresolved attribute/expansion derive (Clone , Copy , rum_derive :: FrameRootTrace)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t99\t1\tunresolved attribute/expansion derive (Clone , Copy , rum_derive :: FrameRootTrace)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t101\t1\tunresolved attribute/expansion derive (Clone , rum_derive :: FrameRootTrace)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t105\t1\tunresolved attribute/expansion derive (Clone , rum_derive :: FrameRootTrace)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t110\t1\tunresolved attribute/expansion derive (Clone , Copy , rum_derive :: FrameRootTrace)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t114\t1\tunresolved attribute/expansion derive (Clone , Copy , rum_derive :: FrameRootTrace)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t116\t1\tunresolved attribute/expansion derive (Clone , Copy , rum_derive :: FrameRootTrace)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t120\t1\tunresolved attribute/expansion derive (Clone , Copy , rum_derive :: FrameRootTrace)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t150\t1\tunresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: PureFrameAbandon)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t154\t1\tunresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: PureFrameAbandon)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t386\t27\tclosure captures: || (capture types/modes unresolved)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t392\t27\tclosure captures: || (capture types/modes unresolved)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t552\t22\tclosure captures: |index| (capture types/modes unresolved)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t556\t22\tclosure captures: |index| (capture types/modes unresolved)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t555\t44\tclosure captures: || (capture types/modes unresolved)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t559\t44\tclosure captures: || (capture types/modes unresolved)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t631\t44\tclosure captures: |prepared| (capture types/modes unresolved)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t635\t44\tclosure captures: |prepared| (capture types/modes unresolved)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t648\t22\tclosure captures: |wrappers| (capture types/modes unresolved)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t652\t22\tclosure captures: |wrappers| (capture types/modes unresolved)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t655\t18\tclosure captures: |plan| (capture types/modes unresolved)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t659\t18\tclosure captures: |plan| (capture types/modes unresolved)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t134\t25\tclosure captures: |index| (capture types/modes unresolved)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t138\t25\tclosure captures: |index| (capture types/modes unresolved)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t271\t21\tunexpanded macro unreachable! (ends at 271:98)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t272\t21\tunexpanded macro unreachable! (ends at 272:98)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t275\t28\tunexpanded macro matches! (ends at 278:26)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t276\t28\tunexpanded macro matches! (ends at 279:26)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t320\t36\tunexpanded macro matches! (ends at 320:85)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t323\t36\tunexpanded macro matches! (ends at 323:85)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t335\t37\tunexpanded macro matches! (ends at 335:80)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t338\t37\tunexpanded macro matches! (ends at 338:80)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t433\t32\tunexpanded macro matches! (ends at 433:90)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t442\t32\tunexpanded macro matches! (ends at 442:90)",
+      "case": "pure source move"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t534\t20\tunexpanded macro matches! (ends at 534:65)",
+      "new": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t741\t16\tunexpanded macro matches! (ends at 741:61)",
+      "case": "pure source move"
+    }
+  ],
+  "retired_operations": [
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t492\t21\tunexpanded macro unreachable! (ends at 492:97)",
+      "case": "deleted operation; no mark"
+    },
+    {
+      "file": "crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv",
+      "old": "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs\t526\t22\tunexpanded macro unreachable! (ends at 526:80)",
+      "case": "deleted operation; no mark"
+    }
+  ],
+  "new_operations": [
+    "UnknownConstruct\tcrates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs\t32\t1\tunresolved attribute/expansion derive (Clone , rum_derive :: FrameRootTrace)"
+  ],
+  "changed_files": [],
+  "self_reaching": 59,
+  "host_payloads": 79,
+  "unknown_constructs": 7645,
+  "new_host_payloads": 0,
+  "meaning_changes": [],
+  "marks_gained_or_lost": 0
+}
+```
+
+### Gate: ownership-replay
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-620/continuation-3/replay-ownership.py`. Exit 0. Full raw output: `logs/ownership-replay.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: ownership-final-no-default
+
+Command: `cargo test -p rum-stdlib --no-default-features --lib ownership_graph -- --nocapture`. Exit 0. Full raw output: `logs/ownership-final-no-default.log`.
+
+```text
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 1125 filtered out; finished in 69.50s
+```
+
+### Gate: generate-fingerprints
+
+Command: `cargo test -p rum-stdlib --lib regenerate_local_contract_fingerprints -- --ignored --nocapture`. Exit 0. Full raw output: `logs/generate-fingerprints.log`.
+
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 0.22s
+```
+
+## Canonical fingerprints replay
+
+Destination: `crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv`. Canonical output paths: `target/brief-544/local-contracts.tsv`. Non-derived fields are identical. No handwritten hashes, marks or ledger cells.
+
+```text
+```
+
+### Gate: install-fingerprints
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-620/continuation-3/install-canonical.py fingerprints`. Exit 0. Full raw output: `logs/install-fingerprints.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: acceptance-default
+
+Command: `cargo test -p rum-stdlib --lib local_production_acceptance -- --nocapture`. Exit 0. Full raw output: `logs/acceptance-default.log`.
+
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 18.48s
+```
+
+### Gate: acceptance-no-default
+
+Command: `cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance -- --nocapture`. Exit 0. Full raw output: `logs/acceptance-no-default.log`.
+
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1155 filtered out; finished in 18.34s
+```
+
+## Canonical certificates replay
+
+Destination: `crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv`. Canonical output paths: `.temp/brief-546/certificates/promoted-hash-true.tsv`, `.temp/brief-546/certificates/promoted-hash-false.tsv`. Non-derived fields are identical. No handwritten hashes, marks or ledger cells.
+
+```text
+```
+
+### Gate: install-certificates
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-620/continuation-3/install-canonical.py certificates`. Exit 0. Full raw output: `logs/install-certificates.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: rejection-census
+
+Command: `cargo test -p rum-stdlib --lib production_rejection_census_is_complete -- --nocapture`. Exit 0. Full raw output: `logs/rejection-census.log`.
+
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 25.59s
+```
+
+## Rejection census derived facts
+
+All unchanged source diagnostics retain their kind, target, reason and class. Moved recovery operations are paired into the new pure finish. Deleted/added expressions remain rejected and confer no mark or coverage. Every old/new field, including root/witness citations and provenance-only changes, is in `rejection-replay.json`. Canonical output: `target/brief-535/EDGE_ALL/`.
+
+```json
+{
+  "base_rows": 48713,
+  "candidate_rows": 48712,
+  "paired": 48705,
+  "moves": 131,
+  "provenance_only": 0,
+  "retired": 8,
+  "new_operations": 7,
+  "meaning_changes": 0,
+  "marks_gained_or_lost": 0
+}
+```
+
+| Case | Before | After | Kind / reason |
+|---|---|---|---|
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:744:12-744:30` | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:763:12-763:30` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:744:12-744:40` | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:763:12-763:40` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:750:19-750:51` | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:769:19-769:51` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:750:28-750:51` | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:769:28-769:51` | RET002: implicit Index/Deref/bounds exceptional effects not proved |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:751:8-751:31` | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:770:8-770:31` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:751:8-751:42` | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:770:8-770:42` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:753:13-753:38` | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:772:13-772:38` | RET002: implicit Index/Deref/bounds exceptional effects not proved |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:753:13-753:47` | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:772:13-772:47` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:757:29-757:49` | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:776:29-776:49` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::pop@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:66:20-66:36` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::pop@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:70:20-70:36` | RET002: method syntax: method instance is not in the finite scalar substitution set |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::pop@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:66:20-66:49` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::pop@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:70:20-70:49` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::pop@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:66:20-66:50` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::pop@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:70:20-70:50` | RET002: implicit Try/FromResidual/error ownership not modeled |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::pop@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:67:21-67:42` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::pop@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:71:21-71:42` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::pop@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:68:14-68:34` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::pop@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:72:14-72:34` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::push@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:59:21-62:13` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::push@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:63:21-66:13` | RET002: ambiguous or conditional function rum_runtime::runtime::accumulator_chain::AccumulatorChain::new |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::push@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:59:48-62:11` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::push@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:63:48-66:11` | RET002: not a resolved function definition: std::sync::Arc::new |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::push@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:60:23-60:40` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::push@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:64:23-64:40` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:126:37-126:44` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:130:37-130:44` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:126:37-126:50` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:130:37-130:50` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:127:29-127:36` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:131:29-131:36` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:128:17-128:24` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:132:17-132:24` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:128:17-128:29` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:132:17-132:29` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:129:22-129:68` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:133:22-133:68` | RET002: not a resolved function definition: rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSource::Argument |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:132:36-133:24` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:136:36-137:24` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:132:36-134:46` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:136:36-138:46` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:132:36-135:62` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:136:36-139:62` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:134:25-134:45` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:138:25-138:45` | RET002: closure capture/callback effects unresolved; closure body is a rejected boundary |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:136:51-136:64` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:140:51-140:64` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:137:17-137:30` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:141:17-141:30` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:140:45-140:52` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:144:45-144:52` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:140:45-140:58` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:144:45-144:58` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:141:29-141:36` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:145:29-145:36` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:142:17-142:24` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:146:17-146:24` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:142:17-142:29` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:146:17-146:29` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:143:22-143:68` | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection::next@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:147:22-147:68` | RET002: not a resolved function definition: rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSource::Argument |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::reuse_definition_lhs_call_head@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:731:8-731:28` | `rum_runtime::runtime::definitions::definition_lhs_preparation::reuse_definition_lhs_call_head@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:750:8-750:28` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| moved | `rum_runtime::runtime::definitions::definition_lhs_preparation::reuse_definition_lhs_call_head@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:731:8-731:42` | `rum_runtime::runtime::definitions::definition_lhs_preparation::reuse_definition_lhs_call_head@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:750:8-750:42` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:693:31-693:67` | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:697:31-697:67` | RET002: method syntax: prelude trait candidate next cannot be excluded at rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralSelection |
+| moved | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:693:51-693:66` | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:697:51-697:66` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| moved | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:695:56-695:74` | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:699:56-699:74` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| moved | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:695:56-695:82` | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:699:56-699:82` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:697:21-697:44` | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:701:21-701:44` | RET002: implicit Index/Deref/bounds exceptional effects not proved |
+| moved | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:697:21-697:52` | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:701:21-701:52` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:701:13-703:83` | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:705:13-707:83` | RET002: method syntax: opaque imported trait candidate std::sync::Arc |
+| moved | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:713:17-721:18` | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:717:17-725:18` | RET002: implicit IntoIterator/next/iterator Drop not modeled |
+| moved | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:713:31-713:56` | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:717:31-717:56` | RET002: implicit Index/Deref/bounds exceptional effects not proved |
+| moved | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:716:25-716:38` | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:720:25-720:38` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:726:22-726:100` | `rum_runtime::runtime::model::session::Session::continue_definition_lhs_structural_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:730:22-730:100` | RET002: not a resolved function definition: rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationWork::CompleteNode |
+| moved | `rum_runtime::runtime::model::session::Session::definition_lhs_call_state@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:551:41-552:87` | `rum_runtime::runtime::model::session::Session::definition_lhs_call_state@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:555:41-556:87` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::model::session::Session::definition_lhs_call_state@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:551:45-551:55` | `rum_runtime::runtime::model::session::Session::definition_lhs_call_state@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:555:45-555:55` | RET002: method syntax: prelude trait candidate len cannot be excluded at rum_runtime::runtime::session::session_state::CallDispatchPlan |
+| moved | `rum_runtime::runtime::model::session::Session::definition_lhs_call_state@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:552:22-552:86` | `rum_runtime::runtime::model::session::Session::definition_lhs_call_state@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:556:22-556:86` | RET002: closure capture/callback effects unresolved; closure body is a rejected boundary |
+| moved | `rum_runtime::runtime::model::session::Session::definition_lhs_call_state@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:555:17-555:69` | `rum_runtime::runtime::model::session::Session::definition_lhs_call_state@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:559:17-559:69` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::model::session::Session::definition_lhs_call_state@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:555:44-555:68` | `rum_runtime::runtime::model::session::Session::definition_lhs_call_state@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:559:44-559:68` | RET002: closure capture/callback effects unresolved; closure body is a rejected boundary |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:268:24-268:96` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:269:24-269:96` | RET002: not a resolved function definition: std::mem::replace |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:271:21-271:98` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:272:21-272:98` | RET003: unexpanded macro; contents are not resolved Rust |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:275:28-278:26` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:276:28-279:26` | RET003: unexpanded macro; contents are not resolved Rust |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:280:38-280:86` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:281:38-281:86` | RET002: not a resolved function definition: rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationWork::CompleteNode |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:288:46-288:95` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:289:46-289:95` | RET002: not a resolved function definition: rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationWork::CompleteNode |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:297:54-297:75` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:300:54-300:75` | RET002: path Route::failure has 0 exact bindings |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:301:70-301:80` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:304:70-304:80` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:303:46-305:34` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:306:46-308:34` | RET002: not a resolved function definition: rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationWork::CompleteNode |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:311:33-317:34` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:314:33-320:34` | RET002: method syntax: opaque imported trait candidate std::sync::Arc |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:320:36-320:85` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:323:36-323:85` | RET003: unexpanded macro; contents are not resolved Rust |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:322:33-331:34` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:325:33-334:34` | RET002: method syntax: opaque imported trait candidate std::sync::Arc |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:335:37-335:80` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:338:37-338:80` | RET003: unexpanded macro; contents are not resolved Rust |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:335:37-336:84` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:338:37-339:84` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:336:44-336:84` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:339:44-339:84` | RET002: method syntax: opaque imported trait candidate std::sync::Arc |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:337:51-337:63` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:340:51-340:63` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:345:45-351:46` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:348:45-354:46` | RET002: not a resolved function definition: rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationWork::PrepareCallArguments |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:354:41-354:51` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:357:41-357:51` | RET002: path drop has 0 exact bindings |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:365:41-365:51` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:371:41-371:51` | RET002: path drop has 0 exact bindings |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:366:52-366:73` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:372:52-372:73` | RET002: path Route::failure has 0 exact bindings |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:374:41-374:67` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:380:41-380:67` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:374:41-374:76` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:380:41-380:76` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:375:51-375:88` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:381:51-381:88` | RET002: method syntax: opaque imported trait candidate std::sync::Arc |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:379:38-379:87` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:385:38-385:87` | RET002: not a resolved function definition: rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationWork::CompleteNode |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:384:43-386:46` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:390:43-392:46` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:384:44-384:78` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:390:44-390:78` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:384:44-385:71` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:390:44-391:71` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:385:28-385:71` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:391:28-391:71` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:386:27-386:45` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:392:27-392:45` | RET002: closure capture/callback effects unresolved; closure body is a rejected boundary |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:389:21-389:37` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:395:21-395:37` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:399:29-401:99` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:405:29-407:99` | RET002: method syntax: opaque imported trait candidate std::sync::Arc |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:413:37-415:38` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:419:37-421:38` | RET002: method syntax: opaque imported trait candidate std::sync::Arc |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:417:41-417:97` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:423:41-423:97` | RET002: not a resolved function definition: rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationWork::PrepareCallArguments |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:429:58-429:79` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:438:58-438:79` | RET002: path Route::failure has 0 exact bindings |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:433:32-433:90` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:442:32-442:90` | RET003: unexpanded macro; contents are not resolved Rust |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:435:37-437:38` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:444:37-446:38` | RET002: method syntax: opaque imported trait candidate std::sync::Arc |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:440:29-440:100` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:449:29-449:100` | RET002: method syntax: opaque imported trait candidate std::sync::Arc |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:441:42-441:98` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:450:42-450:98` | RET002: not a resolved function definition: rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationWork::PrepareCallArguments |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:446:40-446:59` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:455:40-455:59` | RET002: method syntax: opaque imported trait candidate std::sync::Arc |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:450:29-450:61` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:459:29-459:61` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:452:31-455:53` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:461:31-464:53` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:452:31-455:54` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:461:31-464:54` | RET002: implicit Try/FromResidual/error ownership not modeled |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:469:46-469:81` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:478:46-478:81` | RET002: path DefinitionLhsParentStack::default has 0 exact bindings |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:480:29-480:96` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:489:29-489:96` | RET002: method syntax: opaque imported trait candidate std::sync::Arc |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:481:42-481:98` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:490:42-490:98` | RET002: not a resolved function definition: rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationWork::PrepareCallArguments |
+| moved | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:485:29-485:91` | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:494:29-494:91` | RET002: method syntax: opaque imported trait candidate std::sync::Arc |
+| moved | `rum_runtime::runtime::model::session::Session::finish_definition_lhs_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:647:13-651:19` | `rum_runtime::runtime::model::session::Session::finish_definition_lhs_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:651:13-655:19` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| moved | `rum_runtime::runtime::model::session::Session::finish_definition_lhs_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:648:22-651:18` | `rum_runtime::runtime::model::session::Session::finish_definition_lhs_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:652:22-655:18` | RET002: closure capture/callback effects unresolved; closure body is a rejected boundary |
+| moved | `rum_runtime::runtime::model::session::Session::finish_definition_lhs_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:653:26-660:15` | `rum_runtime::runtime::model::session::Session::finish_definition_lhs_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:657:26-664:15` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| moved | `rum_runtime::runtime::model::session::Session::finish_definition_lhs_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:655:18-660:14` | `rum_runtime::runtime::model::session::Session::finish_definition_lhs_call@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:659:18-664:14` | RET002: closure capture/callback effects unresolved; closure body is a rejected boundary |
+| moved | `rum_runtime::runtime::model::session::Session::merge_definition_lhs_call_argument@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:582:29-587:14` | `rum_runtime::runtime::model::session::Session::merge_definition_lhs_call_argument@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:586:29-591:14` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::model::session::Session::merge_definition_lhs_call_argument@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:588:23-588:47` | `rum_runtime::runtime::model::session::Session::merge_definition_lhs_call_argument@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:592:23-592:47` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::model::session::Session::merge_definition_lhs_call_argument@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:588:23-588:92` | `rum_runtime::runtime::model::session::Session::merge_definition_lhs_call_argument@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:592:23-592:92` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::model::session::Session::merge_definition_lhs_call_argument@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:588:51-588:92` | `rum_runtime::runtime::model::session::Session::merge_definition_lhs_call_argument@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:592:51-592:92` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::model::session::Session::merge_definition_lhs_call_argument@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:588:60-588:92` | `rum_runtime::runtime::model::session::Session::merge_definition_lhs_call_argument@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:592:60-592:92` | RET002: implicit Index/Deref/bounds exceptional effects not proved |
+| moved | `rum_runtime::runtime::model::session::Session::merge_definition_lhs_call_argument@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:590:12-590:35` | `rum_runtime::runtime::model::session::Session::merge_definition_lhs_call_argument@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:594:12-594:35` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| moved | `rum_runtime::runtime::model::session::Session::merge_definition_lhs_call_argument@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:590:12-590:46` | `rum_runtime::runtime::model::session::Session::merge_definition_lhs_call_argument@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:594:12-594:46` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::model::session::Session::merge_definition_lhs_call_argument@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:592:17-592:51` | `rum_runtime::runtime::model::session::Session::merge_definition_lhs_call_argument@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:596:17-596:51` | RET002: implicit Index/Deref/bounds exceptional effects not proved |
+| moved | `rum_runtime::runtime::model::session::Session::merge_definition_lhs_call_argument@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:592:17-592:60` | `rum_runtime::runtime::model::session::Session::merge_definition_lhs_call_argument@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:596:17-596:60` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::model::session::Session::merge_definition_lhs_call_argument@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:596:33-596:53` | `rum_runtime::runtime::model::session::Session::merge_definition_lhs_call_argument@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:600:33-600:53` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| moved | `rum_runtime::runtime::model::session::Session::record_definition_lhs_unevaluated_restore@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:614:29-614:60` | `rum_runtime::runtime::model::session::Session::record_definition_lhs_unevaluated_restore@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:618:29-618:60` | RET002: method syntax: selected receiver would move through a borrowed place |
+| moved | `rum_runtime::runtime::model::session::Session::record_definition_lhs_unevaluated_restore@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:618:29-623:14` | `rum_runtime::runtime::model::session::Session::record_definition_lhs_unevaluated_restore@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:622:29-627:14` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::model::session::Session::record_definition_lhs_unevaluated_restore@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:624:12-624:36` | `rum_runtime::runtime::model::session::Session::record_definition_lhs_unevaluated_restore@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:628:12-628:36` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::model::session::Session::record_definition_lhs_unevaluated_restore@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:628:24-630:22` | `rum_runtime::runtime::model::session::Session::record_definition_lhs_unevaluated_restore@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:632:24-634:22` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| moved | `rum_runtime::runtime::model::session::Session::record_definition_lhs_unevaluated_restore@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:628:24-631:68` | `rum_runtime::runtime::model::session::Session::record_definition_lhs_unevaluated_restore@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:632:24-635:68` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::model::session::Session::record_definition_lhs_unevaluated_restore@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:631:44-631:67` | `rum_runtime::runtime::model::session::Session::record_definition_lhs_unevaluated_restore@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:635:44-635:67` | RET002: closure capture/callback effects unresolved; closure body is a rejected boundary |
+| moved | `rum_runtime::runtime::model::session::Session::record_definition_lhs_unevaluated_restore@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:632:9-633:42` | `rum_runtime::runtime::model::session::Session::record_definition_lhs_unevaluated_restore@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:636:9-637:42` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| moved | `rum_runtime::runtime::model::session::Session::record_definition_lhs_unevaluated_restore@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:632:9-634:39` | `rum_runtime::runtime::model::session::Session::record_definition_lhs_unevaluated_restore@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:636:9-638:39` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| moved | `rum_runtime::runtime::model::session::Session::resume_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:508:21-508:70` | `rum_runtime::runtime::model::session::Session::resume_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:520:21-520:70` | RET002: not a resolved function definition: rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationWork::CompleteNode |
+| moved | `rum_runtime::runtime::model::session::Session::resume_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:516:21-518:22` | `rum_runtime::runtime::model::session::Session::resume_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:528:21-530:22` | RET002: not a resolved function definition: rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationWork::PrepareCallArguments |
+| moved | `rum_runtime::runtime::model::session::Session::resume_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:523:21-523:88` | `rum_runtime::runtime::model::session::Session::resume_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:535:21-535:88` | RET002: method syntax: opaque imported trait candidate std::sync::Arc |
+| moved | `rum_runtime::runtime::model::session::Session::resume_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:524:21-524:77` | `rum_runtime::runtime::model::session::Session::resume_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:536:21-536:77` | RET002: not a resolved function definition: rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationWork::PrepareCallArguments |
+| moved | `rum_runtime::runtime::model::session::Session::resume_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:528:9-528:60` | `rum_runtime::runtime::model::session::Session::resume_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:539:9-539:60` | RET002: method syntax: method instance has unknown bounds or argument arity |
+| moved | `rum_runtime::runtime::model::session::Session::evaluate_definition_lhs_active_expr@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:532:44-532:58` | `rum_runtime::runtime::model::session::Session::evaluate_definition_lhs_active_expr@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:543:80-543:94` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| moved | `rum_runtime::runtime::model::session::Session::evaluate_definition_lhs_active_expr@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:534:20-534:65` | `rum_runtime::runtime::definitions::definition_lhs_preparation::finish_definition_lhs_active_expr@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:741:16-741:61` | RET003: unexpanded macro; contents are not resolved Rust |
+| moved | `rum_runtime::runtime::model::session::Session::evaluate_definition_lhs_active_expr@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:534:20-534:95` | `rum_runtime::runtime::definitions::definition_lhs_preparation::finish_definition_lhs_active_expr@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:741:16-741:91` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::model::session::Session::evaluate_definition_lhs_active_expr@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:534:69-534:95` | `rum_runtime::runtime::definitions::definition_lhs_preparation::finish_definition_lhs_active_expr@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:741:65-741:91` | RET002: primitive operand proof or exact operator/conversion impl required |
+| moved | `rum_runtime::runtime::model::session::Session::evaluate_definition_lhs_active_expr@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:534:77-534:95` | `rum_runtime::runtime::definitions::definition_lhs_preparation::finish_definition_lhs_active_expr@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:741:73-741:91` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| moved | `rum_runtime::runtime::model::session::Session::evaluate_definition_lhs_active_expr@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:536:20-536:34` | `rum_runtime::runtime::definitions::definition_lhs_preparation::finish_definition_lhs_active_expr@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:743:16-743:30` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| retired changed operation | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:293:40-295:34` | — | RET002: method syntax: method instance has unknown bounds or argument arity |
+| retired changed operation | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:360:48-362:42` | — | RET002: method syntax: method instance has unknown bounds or argument arity |
+| retired changed operation | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:425:44-427:38` | — | RET002: method syntax: method instance has unknown bounds or argument arity |
+| retired changed operation | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:492:21-492:97` | — | RET003: unexpanded macro; contents are not resolved Rust |
+| retired changed operation | `rum_runtime::runtime::model::session::Session::resume_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:504:21-504:57` | — | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| retired changed operation | `rum_runtime::runtime::model::session::Session::resume_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:504:21-504:58` | — | RET002: implicit Try/FromResidual/error ownership not modeled |
+| retired changed operation | `rum_runtime::runtime::model::session::Session::resume_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:526:22-526:80` | — | RET003: unexpanded macro; contents are not resolved Rust |
+| retired changed operation | `rum_runtime::runtime::model::session::Session::suspend_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:250:9-255:10` | — | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| new operation, still rejected | — | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:292:40-298:34` | RET002: method syntax: method instance has unknown bounds or argument arity |
+| new operation, still rejected | — | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:358:48-368:42` | RET002: method syntax: method instance has unknown bounds or argument arity |
+| new operation, still rejected | — | `rum_runtime::runtime::model::session::Session::drive_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:426:44-436:38` | RET002: method syntax: method instance has unknown bounds or argument arity |
+| new operation, still rejected | — | `rum_runtime::runtime::model::session::Session::resume_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:513:71-513:91` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| new operation, still rejected | — | `rum_runtime::runtime::model::session::Session::resume_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:516:13-516:92` | RET002: method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched |
+| new operation, still rejected | — | `rum_runtime::runtime::model::session::Session::resume_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:516:13-516:93` | RET002: implicit Try/FromResidual/error ownership not modeled |
+| new operation, still rejected | — | `rum_runtime::runtime::model::session::Session::suspend_definition_lhs_preparation@crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:251:9-256:10` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+
+### Gate: rejection-replay
+
+Command: `python3 /home/remi/dev/rum/.temp/brief-620/continuation-3/audit-rejections.py`. Exit 0. Full raw output: `logs/rejection-replay.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: final-resume-allocations
+
+Command: `python3 .temp/brief-620/continuation-3/run-perf.py alloc candidate 1 resume`. Exit 0. Full raw output: `logs/final-resume-allocations.log`.
+
+```text
+No diagnostics.
+```
+
+### Final resume allocations: all 113 workloads
+
+All 226 N/2N runs have correct final values, stored definitions and exact pause counts. Whole-program allocation counts **and requested bytes** equal Continuation 2 on every run; therefore every count and byte slope is equal as well. The unchanged argv0 and file-argument convention is preserved. Frame layouts remain Work136, State344, Awaited184, F0257 frame528 and requested ArcInner544 B; no new frame/layout change follows restoration. Peak-live diagnostics are retained separately, not substituted for count/byte requirements.
+
+```text
+PASS: 113 workloads; 226 correct N/2N runs; every allocation count and requested-byte total exactly equals Continuation 2.
+```
+
+Full whole-program values: `perf/resume-allocation-comparison.json`.
+
+### Gate: final-resume-allocation-comparison
+
+Command: `python3 .temp/brief-620/continuation-3/compare-resume-alloc.py`. Exit 0. Full raw output: `logs/final-resume-allocation-comparison.log`.
+
+```text
+No diagnostics.
+```
+
+### Every emitted LHS prologue and simultaneous resume chains
+
+The actual measured harness binaries are used. The full retained call-state clone is charged because it executes beneath the entry during frame-state cloning; sharing its implementation with ordinary code does not remove its simultaneously live stack. A single concrete chain above the strict bound suffices to fail the condition. All emitted named LHS helpers, including drop/trace and both driver specializations, are retained below; shared ordinary implementation is explicitly identified. Full assembly, stack operands and call sites remain in `resume-callgrind/owned-prologues/comparison.json`.
+
+| Arm | Role | Function | Address | Prologue B |
+|---|---|---|---|---:|
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::prepare_definition_lhs` | `0xbf960` | 344 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::prepare_definition_lhs_for_consumer` | `0xbfa00` | 120 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::suspend_definition_lhs_preparation` | `0xbfa30` | 680 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::suspend_definition_lhs_preparation` | `0xbfb30` | 584 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::drive_definition_lhs_preparation` | `0xbfbf0` | 1736 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::drive_definition_lhs_preparation` | `0xc2320` | 1752 |
+| base | shared ordinary LHS implementation | `<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionLhs as core::clone::Clone>::clone` | `0x15fa40` | 248 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionLhs>` | `0x165f10` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<core::option::Option<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionOuterCall>>` | `0x16e580` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<core::option::Option<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionUnevaluatedRestore>>` | `0x16fe90` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionLhs>` | `0x3fc570` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionOuterCall>` | `0x3ff860` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::DefinitionLhsPreparationContinuation>` | `0x403c20` | 24 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsCallState>` | `0x404590` | 40 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentNode>` | `0x404d90` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedDefinitionStore>` | `0x405350` | 24 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsAwaitedWork>` | `0x4053e0` | 24 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentContext>` | `0x4063a0` | 0 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationWork>` | `0x407480` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedDefinitionAssignment>` | `0x408080` | 24 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationState>` | `0x408200` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedUnsetDefinitionTarget>` | `0x408880` | 24 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralCallState>` | `0x409400` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<[rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedDefinitionStore]>` | `0x409f70` | 40 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame>` | `0x40b330` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<alloc::vec::Vec<rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedDefinitionStore>>` | `0x40d210` | 24 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<alloc::sync::ArcInner<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentNode>>` | `0x40e080` | 24 |
+| base | shared ordinary LHS implementation | `core::ptr::drop_in_place<alloc::vec::into_iter::IntoIter<rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedDefinitionStore>>` | `0x40fa80` | 24 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<alloc::sync::ArcInner<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame>>` | `0x40fe70` | 24 |
+| base | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::suspension::typed::adapter::TypedAdapter<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame>>` | `0x411780` | 0 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::<impl rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionLhs>::into_assignment` | `0x5698b0` | 120 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::<impl rum_runtime::runtime::model::session::Session>::protected_or_known_prepared_definition_target_symbol` | `0x569a60` | 120 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::<impl rum_runtime::runtime::model::session::Session>::store_prepared_definition_lhs_immediate` | `0x569b30` | 184 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::<impl rum_runtime::runtime::model::session::Session>::store_immediate_symbol_own_value` | `0x569ca0` | 72 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::<impl rum_runtime::runtime::model::session::Session>::remove_prepared_definition` | `0x569cf0` | 184 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::store` | `0x56a8f0` | 1000 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::definition_specificity` | `0x56f320` | 56 |
+| base | retained frame data/helper | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::push` | `0x56f530` | 200 |
+| base | retained frame data/helper | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::pop` | `0x56f610` | 264 |
+| base | F0257 typed resume entry | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | `0x56f880` | 1432 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::syntax_policy::definition_lhs_syntax_call_plan` | `0x5705a0` | 40 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::syntax_policy::definition_lhs_contains_pattern_syntax` | `0x570880` | 88 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::syntax_policy::definition_lhs_blank_head` | `0x570b30` | 0 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::DefinitionLhsPreparationContinuation::resume` | `0x570b70` | 1208 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::evaluate_prepared_definition_lhs` | `0x576550` | 168 |
+| base | F0257 private resume method | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::resume_definition_lhs_preparation` | `0x576770` | 552 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::evaluate_definition_lhs_active_expr` | `0x577050` | 280 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::definition_lhs_call_state` | `0x577300` | 200 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::merge_definition_lhs_call_argument` | `0x5774e0` | 168 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::record_definition_lhs_unevaluated_restore` | `0x577900` | 104 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::finish_definition_lhs_call` | `0x577be0` | 488 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::continue_definition_lhs_structural_call` | `0x578300` | 312 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::reuse_definition_lhs_call_head` | `0x578840` | 72 |
+| base | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node` | `0x578940` | 152 |
+| base | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationState as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x7995e0` | 40 |
+| base | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationWork as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x799700` | 72 |
+| base | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsAwaitedWork as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x799860` | 56 |
+| base | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentNode as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x799a00` | 24 |
+| base | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentContext as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x799a40` | 56 |
+| base | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsCallState as core::clone::Clone>::clone` | `0x799c10` | 280 |
+| base | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x799ff0` | 24 |
+| base | shared ordinary LHS implementation | `<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionLhs as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x79a020` | 40 |
+| base | shared ordinary LHS implementation | `<rum_runtime::runtime::definitions::definition_lhs_preparation::DefinitionLhsPreparationContinuation as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x79a130` | 56 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::prepare_definition_lhs` | `0xbf960` | 344 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::prepare_definition_lhs_for_consumer` | `0xbfa00` | 120 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::suspend_definition_lhs_preparation` | `0xbfa30` | 680 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::suspend_definition_lhs_preparation` | `0xbfb30` | 584 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::drive_definition_lhs_preparation` | `0xbfbf0` | 1736 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::drive_definition_lhs_preparation` | `0xc2320` | 1752 |
+| cand | shared ordinary LHS implementation | `<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionLhs as core::clone::Clone>::clone` | `0x15fa40` | 248 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionLhs>` | `0x165f10` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<core::option::Option<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionOuterCall>>` | `0x16e580` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<core::option::Option<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionUnevaluatedRestore>>` | `0x16fe90` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionLhs>` | `0x3fc570` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionOuterCall>` | `0x3ff860` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::DefinitionLhsPreparationContinuation>` | `0x403c20` | 24 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsCallState>` | `0x404590` | 40 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentNode>` | `0x404d90` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedDefinitionStore>` | `0x405350` | 24 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsAwaitedWork>` | `0x4053e0` | 24 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentContext>` | `0x4063a0` | 0 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationWork>` | `0x407480` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedDefinitionAssignment>` | `0x408080` | 24 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationState>` | `0x408200` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedUnsetDefinitionTarget>` | `0x408880` | 24 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsStructuralCallState>` | `0x409400` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<[rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedDefinitionStore]>` | `0x409f70` | 40 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame>` | `0x40b330` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<alloc::vec::Vec<rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedDefinitionStore>>` | `0x40d210` | 24 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<alloc::sync::ArcInner<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentNode>>` | `0x40e080` | 24 |
+| cand | shared ordinary LHS implementation | `core::ptr::drop_in_place<alloc::vec::into_iter::IntoIter<rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::PreparedDefinitionStore>>` | `0x40fa80` | 24 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<alloc::sync::ArcInner<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame>>` | `0x40fe70` | 24 |
+| cand | retained frame data/helper | `core::ptr::drop_in_place<rum_runtime::runtime::suspension::typed::adapter::TypedAdapter<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame>>` | `0x411780` | 0 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::<impl rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionLhs>::into_assignment` | `0x5698b0` | 120 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::<impl rum_runtime::runtime::model::session::Session>::protected_or_known_prepared_definition_target_symbol` | `0x569a60` | 120 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::<impl rum_runtime::runtime::model::session::Session>::store_prepared_definition_lhs_immediate` | `0x569b30` | 184 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::<impl rum_runtime::runtime::model::session::Session>::store_immediate_symbol_own_value` | `0x569ca0` | 72 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::<impl rum_runtime::runtime::model::session::Session>::remove_prepared_definition` | `0x569cf0` | 184 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::store` | `0x56a8f0` | 1000 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::prepared_store::definition_specificity` | `0x56f320` | 56 |
+| cand | retained frame data/helper | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::push` | `0x56f530` | 200 |
+| cand | retained frame data/helper | `rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentStack::pop` | `0x56f610` | 264 |
+| cand | F0257 typed resume entry | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume` | `0x56f880` | 1432 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::syntax_policy::definition_lhs_syntax_call_plan` | `0x5705a0` | 40 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::syntax_policy::definition_lhs_contains_pattern_syntax` | `0x570880` | 88 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::syntax_policy::definition_lhs_blank_head` | `0x570b30` | 0 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::DefinitionLhsPreparationContinuation::resume` | `0x570b70` | 1208 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::evaluate_prepared_definition_lhs` | `0x576550` | 168 |
+| cand | F0257 private resume method | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::resume_definition_lhs_preparation` | `0x576770` | 552 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::evaluate_definition_lhs_active_expr` | `0x577050` | 280 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::definition_lhs_call_state` | `0x577300` | 200 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::merge_definition_lhs_call_argument` | `0x5774e0` | 168 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::record_definition_lhs_unevaluated_restore` | `0x577900` | 104 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::finish_definition_lhs_call` | `0x577be0` | 488 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::continue_definition_lhs_structural_call` | `0x578300` | 312 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::reuse_definition_lhs_call_head` | `0x578840` | 72 |
+| cand | shared ordinary LHS implementation | `rum_runtime::runtime::definitions::definition_lhs_preparation::merge_definition_lhs_structural_node` | `0x578940` | 152 |
+| cand | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationState as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x7995e0` | 40 |
+| cand | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationWork as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x799700` | 72 |
+| cand | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsAwaitedWork as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x799860` | 56 |
+| cand | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentNode as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x799a00` | 24 |
+| cand | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsParentContext as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x799a40` | 56 |
+| cand | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsCallState as core::clone::Clone>::clone` | `0x799c10` | 280 |
+| cand | retained frame data/helper | `<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x799ff0` | 24 |
+| cand | shared ordinary LHS implementation | `<rum_runtime::runtime::definitions::definition_lhs_preparation::PreparedDefinitionLhs as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x79a020` | 40 |
+| cand | shared ordinary LHS implementation | `<rum_runtime::runtime::definitions::definition_lhs_preparation::DefinitionLhsPreparationContinuation as rum_runtime::runtime::suspension::trace::FrameRootTrace>::trace_roots` | `0x79a130` | 56 |
+
+Concrete chain sums (common incoming return address excluded, each extra live return address included):
+
+```json
+[
+  {
+    "arm": "base",
+    "kind": "retained call-state clone",
+    "functions": [
+      "<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume",
+      "<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsCallState as core::clone::Clone>::clone"
+    ],
+    "prologues": [
+      1432,
+      280
+    ],
+    "interfunction_return_addresses": 8,
+    "sum_bytes": 1720,
+    "call_sites": [
+      "0x56f908",
+      "0x570303"
+    ],
+    "explanation": "The full entry prologue remains reserved across the direct call; the callee prologue is simultaneously live. This is a concrete lower bound on the complete resume peak."
+  },
+  {
+    "arm": "base",
+    "kind": "entry plus private resume method",
+    "functions": [
+      "<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume",
+      "rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::resume_definition_lhs_preparation"
+    ],
+    "prologues": [
+      1432,
+      552
+    ],
+    "interfunction_return_addresses": 8,
+    "sum_bytes": 1992
+  },
+  {
+    "arm": "cand",
+    "kind": "retained call-state clone",
+    "functions": [
+      "<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume",
+      "<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsCallState as core::clone::Clone>::clone"
+    ],
+    "prologues": [
+      1432,
+      280
+    ],
+    "interfunction_return_addresses": 8,
+    "sum_bytes": 1720,
+    "call_sites": [
+      "0x56f908",
+      "0x570303"
+    ],
+    "explanation": "The full entry prologue remains reserved across the direct call; the callee prologue is simultaneously live. This is a concrete lower bound on the complete resume peak."
+  },
+  {
+    "arm": "cand",
+    "kind": "entry plus private resume method",
+    "functions": [
+      "<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume",
+      "rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::resume_definition_lhs_preparation"
+    ],
+    "prologues": [
+      1432,
+      552
+    ],
+    "interfunction_return_addresses": 8,
+    "sum_bytes": 1992
+  }
+]
+```
+
+### Gate: final-owned-prologues
+
+Command: `python3 .temp/brief-620/continuation-3/owned-prologues.py`. Exit 0. Full raw output: `logs/final-owned-prologues.log`.
+
+```text
+No diagnostics.
+```
+
+### Final simultaneous chain sums
+
+All directly connected F0257 entry/private-method/retained-data helper prologues are combined. Each nested call adds its return address, and a tail call after an epilogue replaces the retired frame rather than double-counting it. Ordinary driver/evaluation frames and generic allocator/Expr internals are outside these local sums. Every emitted named LHS function remains individually inventoried. These direct local chains are physical sums; the maximum over the entire runtime, including indirect calls and arbitrary ordinary continuation work, is not claimed. `chain-sums.json` retains every chain and call site.
+
+Arm `base` largest direct local chain: **2072 B**.
+
+```json
+{
+  "sum_bytes": 2072,
+  "functions": [
+    "<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume",
+    "rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::resume_definition_lhs_preparation",
+    "core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsAwaitedWork>",
+    "core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsCallState>"
+  ],
+  "parts": [
+    {
+      "function": "<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume",
+      "live_bytes": 1432,
+      "return_address_bytes": 8,
+      "call_pc": "0x57046e",
+      "tail": false
+    },
+    {
+      "function": "rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::resume_definition_lhs_preparation",
+      "live_bytes": 552,
+      "return_address_bytes": 8,
+      "call_pc": "0x576a3b",
+      "tail": false
+    },
+    {
+      "function": "core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsAwaitedWork>",
+      "live_bytes": 24,
+      "return_address_bytes": 8,
+      "call_pc": "0x40544a",
+      "tail": false
+    },
+    {
+      "function": "core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsCallState>",
+      "live_bytes": 40
+    }
+  ]
+}
+```
+
+Arm `cand` largest direct local chain: **2072 B**.
+
+```json
+{
+  "sum_bytes": 2072,
+  "functions": [
+    "<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume",
+    "rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::resume_definition_lhs_preparation",
+    "core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsAwaitedWork>",
+    "core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsCallState>"
+  ],
+  "parts": [
+    {
+      "function": "<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume",
+      "live_bytes": 1432,
+      "return_address_bytes": 8,
+      "call_pc": "0x57046e",
+      "tail": false
+    },
+    {
+      "function": "rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::resume_definition_lhs_preparation",
+      "live_bytes": 552,
+      "return_address_bytes": 8,
+      "call_pc": "0x576a3b",
+      "tail": false
+    },
+    {
+      "function": "core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsAwaitedWork>",
+      "live_bytes": 24,
+      "return_address_bytes": 8,
+      "call_pc": "0x40544a",
+      "tail": false
+    },
+    {
+      "function": "core::ptr::drop_in_place<rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsCallState>",
+      "live_bytes": 40
+    }
+  ]
+}
+```
+
+### Gate: final-chain-sums
+
+Command: `python3 .temp/brief-620/continuation-3/chain-sums.py`. Exit 0. Full raw output: `logs/final-chain-sums.log`.
+
+```text
+No diagnostics.
+```
+
+### Inlined versus separately emitted F0257 helpers
+
+The source-level finish and generated State/Work/Awaited clones have no separate function prologue in the final measured harness; their work is included in the physical callers. The retained call-state clone is separately emitted at280 B and is included in the simultaneous-chain accounting. Generic typed adapters and the request driver remain R-owned framework code. The prologue table does not silently count absent inlined functions as independent frames.
+
+```json
+[
+  {
+    "function": "shared pure finish",
+    "emitted_prologues": [],
+    "assessment": "no separately emitted function; inline work charged in physical callers"
+  },
+  {
+    "function": "State::clone",
+    "emitted_prologues": [],
+    "assessment": "no separately emitted function; inline work charged in physical callers"
+  },
+  {
+    "function": "Work::clone",
+    "emitted_prologues": [],
+    "assessment": "no separately emitted function; inline work charged in physical callers"
+  },
+  {
+    "function": "AwaitedWork::clone",
+    "emitted_prologues": [],
+    "assessment": "no separately emitted function; inline work charged in physical callers"
+  },
+  {
+    "function": "CallState::clone",
+    "emitted_prologues": [
+      280
+    ],
+    "assessment": "separately emitted"
+  }
+]
+```
+
+### Gate: final-lhs-callgrind
+
+Command: `python3 .temp/brief-620/continuation-3/run-callgrind.py labels 3 lhs-arg-cycle lhs-arg-value lhs-head-cycle lhs-head-value lhs-pattern-cycle lhs-pattern-value lhs-after-prior-cycle lhs-after-prior-value lhs-twice-cycle lhs-twice-value resume-s5-lhs-twice`. Exit 0. Full raw output: `logs/final-lhs-callgrind.log`.
+
+```text
+No diagnostics.
+```
+
+### Eleven-workload resume Callgrind attribution
+
+Three independent N/2N pairs per arm, with exact output and pause counts asserted in every process. Baseline is the hash-preserved Continuation 2 final harness. Each physical ELF symbol remains separate, including specializations and one-sided functions. Every deterministic function delta, every per-address delta and all raw samples remain in `resume-callgrind/per-label/`. No R-owned transfer is charged as a local F0257 copy.
+
+| Workload | Continuation 2 Ir/iteration | Selected Ir/iteration | Deterministic deltas | Nondeterministic deltas |
+|---|---:|---:|---:|---:|
+| resume-s5-lhs-twice | 98350.52999999998 | 98243.69333333334 | 0 | 26 |
+| lhs-arg-cycle | 274440.0966666667 | 274062.5833333333 | 0 | 10 |
+| lhs-arg-value | 278557.04333333333 | 279162.41333333333 | 0 | 9 |
+| lhs-head-cycle | 301605.6533333333 | 301318.5466666667 | 0 | 12 |
+| lhs-head-value | 302852.14999999997 | 303411.02999999997 | 0 | 26 |
+| lhs-pattern-cycle | 285714.8333333333 | 286228.36666666664 | 0 | 24 |
+| lhs-pattern-value | 291709.4066666667 | 291129.55 | 0 | 26 |
+| lhs-after-prior-cycle | 319906.19 | 320730.08 | 0 | 9 |
+| lhs-after-prior-value | 323550.0633333333 | 323834.6866666667 | 0 | 10 |
+| lhs-twice-cycle | 318630.8466666667 | 318890.47 | 0 | 9 |
+| lhs-twice-value | 324234.14999999997 | 324039.2766666667 | 0 | 25 |
+
+#### resume-s5-lhs-twice
+
+| Physical function | Object | Δ Ir/iteration | Deterministic |
+|---|---|---:|---|
+| `rum_core::expr::intern_text [ELF h6266cee86e4e23af; copy 1]` | main | -217.2933333333333 [-705.6299999999999, 61.289999999999964] | False |
+| `rum_core::expr::Symbol::system [ELF hb108e2dd350e0465; copy 1]` | main | 141.2066666666667 [-6.680000000000064, 356.3700000000001] | False |
+| `rum_core::expr::intern_symbol_text [ELF h0d85dc0ed9d0286f; copy 1]` | main | -37.71333333333333 [-77.0, 4.230000000000018] | False |
+| `__memcmp_avx2_movbe` | /usr/lib/libc.so.6 | 15.669999999999959 [1.599999999999909, 42.24000000000001] | False |
+| `hashbrown::map::HashMap<K,V,S,A>::insert [ELF h8df1afa6e8b4b2be; copy 1]` | main | -8.129999999999995 [-19.42999999999995, 6.6200000000000045] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF h3380b3447eb43892; copy 1]` | main | 1.28 [-0.12, 2.52] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF ha3165b7ba598b0bb; copy 1]` | main | -0.61 [-1.07, -0.29999999999999993] | False |
+| `_mi_os_alloc [ELF _mi_os_alloc; copy 1]` | main | -0.27666666666666667 [-0.83, 0.0] | False |
+| `_mi_prim_alloc [ELF _mi_prim_alloc; copy 1]` | main | -0.21666666666666667 [-0.65, 0.0] | False |
+| `rum_runtime::runtime::builtin_catalog::default_builtin_dispatch_spec_for_symbol [ELF hf6a23a5dbe6c0c7c; copy 1]` | main | -0.11333333333333334 [-0.86, 0.41] | False |
+| `__mi_stat_increase_mt [ELF __mi_stat_increase_mt; copy 1]` | main | -0.10000000000000002 [-0.30000000000000004, 0.0] | False |
+| `pthread_mutex_lock@@GLIBC_2.2.5` | /usr/lib/libc.so.6 | -0.09666666666666666 [-0.29, 0.0] | False |
+| `mi_page_map_set_range_prim [ELF mi_page_map_set_range_prim; copy 1]` | main | -0.09000000000000001 [-0.27, 0.0] | False |
+| `_mi_os_zalloc [ELF _mi_os_zalloc; copy 1]` | main | -0.08333333333333333 [-0.25, 0.0] | False |
+| `mmap` | /usr/lib/libc.so.6 | -0.07666666666666667 [-0.23, 0.0] | False |
+| `_mi_subproc [ELF _mi_subproc; copy 1]` | main | -0.06999999999999999 [-0.21, 0.0] | False |
+| `pthread_mutex_unlock@@GLIBC_2.2.5` | /usr/lib/libc.so.6 | -0.06333333333333334 [-0.19, 0.0] | False |
+| `_mi_os_good_alloc_size [ELF _mi_os_good_alloc_size; copy 1]` | main | -0.06 [-0.18, 0.0] | False |
+| `rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom [ELF h43872a0fa250cc14; copy 1]` | main | 0.043333333333369715 [0.0, 0.13000000000010914] | False |
+| `hashbrown::map::HashMap<K,V,S,A>::insert [ELF h10e41cd9784045fa; copy 1]` | main | 0.04 [0.0, 0.12] | False |
+| `hashbrown::raw::RawTable<T,A>::reserve_rehash [ELF h91f57a3ae8abb5b9; copy 1]` | main | -0.02666666666666667 [-0.08, 0.0] | False |
+| `prctl` | /usr/lib/libc.so.6 | -0.023333333333333334 [-0.07, 0.0] | False |
+| `_mi_os_get_aligned_hint [ELF _mi_os_get_aligned_hint; copy 1]` | main | -0.013333333333333334 [-0.04, 0.0] | False |
+| `__mi_stat_counter_increase_mt [ELF __mi_stat_counter_increase_mt; copy 1]` | main | -0.006666666666666667 [-0.02, 0.0] | False |
+| `_mi_os_has_overcommit [ELF _mi_os_has_overcommit; copy 1]` | main | -0.006666666666666667 [-0.02, 0.0] | False |
+| `_mi_os_page_size [ELF _mi_os_page_size; copy 1]` | main | -0.006666666666666667 [-0.02, 0.0] | False |
+
+#### lhs-arg-cycle
+
+| Physical function | Object | Δ Ir/iteration | Deterministic |
+|---|---|---:|---|
+| `hashbrown::map::HashMap<K,V,S,A>::insert [ELF h8df1afa6e8b4b2be; copy 1]` | main | -283.1866666666665 [-842.5799999999999, 18.580000000000382] | False |
+| `rum_runtime::runtime::builtin_catalog::default_builtin_dispatch_spec_for_symbol [ELF hf6a23a5dbe6c0c7c; copy 1]` | main | -111.77999999999997 [-372.0, 69.59000000000003] | False |
+| `rum_core::expr::Symbol::system [ELF hb108e2dd350e0465; copy 1]` | main | 88.9033333333332 [0.5099999999997635, 134.57999999999993] | False |
+| `rum_core::expr::intern_text [ELF h6266cee86e4e23af; copy 1]` | main | -49.58666666666704 [-227.5600000000004, 222.22999999999956] | False |
+| `rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom [ELF h43872a0fa250cc14; copy 1]` | main | -16.29333333333352 [-24.830000000000382, -8.9699999999998] | False |
+| `rum_core::expr::intern_symbol_text [ELF h0d85dc0ed9d0286f; copy 1]` | main | -2.8299999999999272 [-97.65999999999985, 79.10000000000036] | False |
+| `__memcmp_avx2_movbe` | /usr/lib/libc.so.6 | -1.5933333333332484 [-5.489999999999782, 1.3699999999998909] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF ha3165b7ba598b0bb; copy 1]` | main | -0.7599999999999999 [-1.42, -0.31999999999999995] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF h3380b3447eb43892; copy 1]` | main | -0.36000000000000004 [-1.2000000000000002, 1.08] | False |
+| `hashbrown::raw::RawTable<T,A>::reserve_rehash [ELF h91f57a3ae8abb5b9; copy 1]` | main | -0.02666666666666667 [-0.08, 0.0] | False |
+
+#### lhs-arg-value
+
+| Physical function | Object | Δ Ir/iteration | Deterministic |
+|---|---|---:|---|
+| `hashbrown::map::HashMap<K,V,S,A>::insert [ELF h8df1afa6e8b4b2be; copy 1]` | main | 611.48 [-6.019999999999982, 1839.52] | False |
+| `rum_core::expr::Symbol::system [ELF hb108e2dd350e0465; copy 1]` | main | -88.4733333333332 [-303.9899999999998, 87.11999999999989] | False |
+| `rum_core::expr::intern_symbol_text [ELF h0d85dc0ed9d0286f; copy 1]` | main | 88.03666666666656 [-31.780000000000655, 175.90000000000055] | False |
+| `rum_runtime::runtime::builtin_catalog::default_builtin_dispatch_spec_for_symbol [ELF hf6a23a5dbe6c0c7c; copy 1]` | main | -39.19666666666668 [-138.22000000000003, 68.14999999999998] | False |
+| `rum_core::expr::intern_text [ELF h6266cee86e4e23af; copy 1]` | main | 31.74000000000039 [-5.260000000000218, 99.80000000000109] | False |
+| `rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom [ELF h43872a0fa250cc14; copy 1]` | main | 2.0799999999999272 [-3.769999999999982, 11.4399999999996] | False |
+| `__memcmp_avx2_movbe` | /usr/lib/libc.so.6 | -0.8233333333334182 [-3.019999999999982, 2.419999999999618] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF ha3165b7ba598b0bb; copy 1]` | main | 0.4066666666666667 [0.0, 0.8999999999999999] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF h3380b3447eb43892; copy 1]` | main | 0.1200000000000001 [-1.44, 1.2000000000000002] | False |
+
+#### lhs-head-cycle
+
+| Physical function | Object | Δ Ir/iteration | Deterministic |
+|---|---|---:|---|
+| `hashbrown::map::HashMap<K,V,S,A>::insert [ELF h8df1afa6e8b4b2be; copy 1]` | main | -275.53999999999996 [-832.9200000000001, 7.5] | False |
+| `rum_core::expr::Symbol::system [ELF hb108e2dd350e0465; copy 1]` | main | 36.589999999999996 [-195.95000000000027, 179.0999999999999] | False |
+| `rum_core::expr::intern_text [ELF h6266cee86e4e23af; copy 1]` | main | -29.97333333333366 [-148.77000000000044, 58.94999999999982] | False |
+| `rum_runtime::runtime::builtin_catalog::default_builtin_dispatch_spec_for_symbol [ELF hf6a23a5dbe6c0c7c; copy 1]` | main | -15.259999999999991 [-46.0, 11.0] | False |
+| `rum_core::expr::intern_symbol_text [ELF h0d85dc0ed9d0286f; copy 1]` | main | -2.1799999999999877 [-132.47000000000025, 121.82000000000062] | False |
+| `rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom [ELF h43872a0fa250cc14; copy 1]` | main | -1.0833333333330302 [-6.889999999999418, 5.460000000000036] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF h3380b3447eb43892; copy 1]` | main | 0.28 [-1.68, 1.44] | False |
+| `hashbrown::map::HashMap<K,V,S,A>::insert [ELF h10e41cd9784045fa; copy 1]` | main | 0.24999999999998104 [-0.7300000000000182, 1.0299999999999727] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF ha3165b7ba598b0bb; copy 1]` | main | -0.15666666666666668 [-0.27, 0.0] | False |
+| `hashbrown::raw::RawTable<T,A>::reserve_rehash [ELF h7b4ea9a650741ce6; copy 1]` | main | -0.02666666666666667 [-0.08, 0.0] | False |
+| `__memcmp_avx2_movbe` | /usr/lib/libc.so.6 | -0.019999999999830226 [-0.8799999999996544, 0.8099999999999454] | False |
+| `hashbrown::raw::RawTable<T,A>::reserve_rehash [ELF h91f57a3ae8abb5b9; copy 1]` | main | 0.013333333333333334 [0.0, 0.04] | False |
+
+#### lhs-head-value
+
+| Physical function | Object | Δ Ir/iteration | Deterministic |
+|---|---|---:|---|
+| `hashbrown::map::HashMap<K,V,S,A>::insert [ELF h8df1afa6e8b4b2be; copy 1]` | main | 322.5166666666667 [4.369999999999891, 645.2000000000003] | False |
+| `rum_core::expr::intern_text [ELF h6266cee86e4e23af; copy 1]` | main | 111.3733333333336 [-75.81999999999971, 407.8099999999995] | False |
+| `rum_runtime::runtime::builtin_catalog::default_builtin_dispatch_spec_for_symbol [ELF hf6a23a5dbe6c0c7c; copy 1]` | main | 52.22000000000003 [-60.14999999999998, 159.11] | False |
+| `rum_core::expr::Symbol::system [ELF hb108e2dd350e0465; copy 1]` | main | 51.26666666666673 [6.130000000000109, 84.5300000000002] | False |
+| `__memcmp_avx2_movbe` | /usr/lib/libc.so.6 | 44.326666666666675 [-3.3700000000003456, 136.51000000000022] | False |
+| `rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom [ELF h43872a0fa250cc14; copy 1]` | main | -9.359999999999976 [-15.990000000000691, -3.769999999999527] | False |
+| `rum_core::expr::intern_symbol_text [ELF h0d85dc0ed9d0286f; copy 1]` | main | -9.103333333333467 [-17.140000000000327, 2.0799999999999272] | False |
+| `hashbrown::map::HashMap<K,V,S,A>::insert [ELF h10e41cd9784045fa; copy 1]` | main | -2.2900000000000014 [-4.980000000000018, -0.14999999999997726] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF ha3165b7ba598b0bb; copy 1]` | main | -0.9733333333333333 [-1.35, -0.76] | False |
+| `_mi_os_alloc [ELF _mi_os_alloc; copy 1]` | main | -0.27666666666666667 [-0.83, 0.0] | False |
+| `_mi_prim_alloc [ELF _mi_prim_alloc; copy 1]` | main | -0.21666666666666667 [-0.65, 0.0] | False |
+| `__mi_stat_increase_mt [ELF __mi_stat_increase_mt; copy 1]` | main | -0.10000000000000002 [-0.30000000000000004, 0.0] | False |
+| `pthread_mutex_lock@@GLIBC_2.2.5` | /usr/lib/libc.so.6 | -0.09666666666666666 [-0.29, 0.0] | False |
+| `mi_page_map_set_range_prim [ELF mi_page_map_set_range_prim; copy 1]` | main | -0.08999999999999986 [-0.2699999999999996, 0.0] | False |
+| `_mi_os_zalloc [ELF _mi_os_zalloc; copy 1]` | main | -0.08333333333333333 [-0.25, 0.0] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF h3380b3447eb43892; copy 1]` | main | 0.07999999999999992 [-2.64, 2.88] | False |
+| `mmap` | /usr/lib/libc.so.6 | -0.07666666666666667 [-0.23, 0.0] | False |
+| `_mi_subproc [ELF _mi_subproc; copy 1]` | main | -0.06999999999999999 [-0.20999999999999996, 0.0] | False |
+| `pthread_mutex_unlock@@GLIBC_2.2.5` | /usr/lib/libc.so.6 | -0.06333333333333334 [-0.19, 0.0] | False |
+| `_mi_os_good_alloc_size [ELF _mi_os_good_alloc_size; copy 1]` | main | -0.06 [-0.18, 0.0] | False |
+| `prctl` | /usr/lib/libc.so.6 | -0.023333333333333334 [-0.07, 0.0] | False |
+| `hashbrown::raw::RawTable<T,A>::reserve_rehash [ELF h91f57a3ae8abb5b9; copy 1]` | main | 0.013333333333333334 [0.0, 0.04] | False |
+| `_mi_os_get_aligned_hint [ELF _mi_os_get_aligned_hint; copy 1]` | main | -0.013333333333333334 [-0.04, 0.0] | False |
+| `__mi_stat_counter_increase_mt [ELF __mi_stat_counter_increase_mt; copy 1]` | main | -0.006666666666666672 [-0.020000000000000018, 0.0] | False |
+| `_mi_os_has_overcommit [ELF _mi_os_has_overcommit; copy 1]` | main | -0.006666666666666668 [-0.020000000000000004, 0.0] | False |
+| `_mi_os_page_size [ELF _mi_os_page_size; copy 1]` | main | -0.006666666666666654 [-0.019999999999999962, 0.0] | False |
+
+#### lhs-pattern-cycle
+
+| Physical function | Object | Δ Ir/iteration | Deterministic |
+|---|---|---:|---|
+| `hashbrown::map::HashMap<K,V,S,A>::insert [ELF h8df1afa6e8b4b2be; copy 1]` | main | 216.07333333333358 [-2.8399999999996908, 652.5700000000002] | False |
+| `rum_core::expr::Symbol::system [ELF hb108e2dd350e0465; copy 1]` | main | 211.24333333333334 [-84.30999999999995, 423.75] | False |
+| `rum_core::expr::intern_symbol_text [ELF h0d85dc0ed9d0286f; copy 1]` | main | 135.6300000000001 [-36.909999999999854, 362.22000000000025] | False |
+| `rum_runtime::runtime::builtin_catalog::default_builtin_dispatch_spec_for_symbol [ELF hf6a23a5dbe6c0c7c; copy 1]` | main | -36.53000000000001 [-80.48000000000002, 17.110000000000014] | False |
+| `rum_core::expr::intern_text [ELF h6266cee86e4e23af; copy 1]` | main | -17.46666666666685 [-101.27999999999975, 25.30999999999949] | False |
+| `rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom [ELF h43872a0fa250cc14; copy 1]` | main | 4.246666666666594 [1.0399999999999636, 7.799999999999727] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF h3380b3447eb43892; copy 1]` | main | -1.28 [-2.04, -0.6] | False |
+| `__memcmp_avx2_movbe` | /usr/lib/libc.so.6 | 0.7166666666665454 [-1.4100000000003092, 2.1700000000000728] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF ha3165b7ba598b0bb; copy 1]` | main | -0.29 [-0.54, -0.020000000000000018] | False |
+| `_mi_os_alloc [ELF _mi_os_alloc; copy 1]` | main | 0.27666666666666667 [0.0, 0.83] | False |
+| `_mi_prim_alloc [ELF _mi_prim_alloc; copy 1]` | main | 0.21666666666666667 [0.0, 0.65] | False |
+| `__mi_stat_increase_mt [ELF __mi_stat_increase_mt; copy 1]` | main | 0.09999999999999999 [0.0, 0.3] | False |
+| `pthread_mutex_lock@@GLIBC_2.2.5` | /usr/lib/libc.so.6 | 0.09666666666666666 [0.0, 0.29] | False |
+| `mi_page_map_set_range_prim [ELF mi_page_map_set_range_prim; copy 1]` | main | 0.09000000000000001 [0.0, 0.27] | False |
+| `_mi_os_zalloc [ELF _mi_os_zalloc; copy 1]` | main | 0.08333333333333333 [0.0, 0.25] | False |
+| `mmap` | /usr/lib/libc.so.6 | 0.07666666666666667 [0.0, 0.23] | False |
+| `_mi_subproc [ELF _mi_subproc; copy 1]` | main | 0.06999999999999999 [0.0, 0.21] | False |
+| `pthread_mutex_unlock@@GLIBC_2.2.5` | /usr/lib/libc.so.6 | 0.06333333333333334 [0.0, 0.19] | False |
+| `_mi_os_good_alloc_size [ELF _mi_os_good_alloc_size; copy 1]` | main | 0.06 [0.0, 0.18] | False |
+| `prctl` | /usr/lib/libc.so.6 | 0.023333333333333334 [0.0, 0.07] | False |
+| `_mi_os_get_aligned_hint [ELF _mi_os_get_aligned_hint; copy 1]` | main | 0.013333333333333334 [0.0, 0.04] | False |
+| `__mi_stat_counter_increase_mt [ELF __mi_stat_counter_increase_mt; copy 1]` | main | 0.006666666666666667 [0.0, 0.02] | False |
+| `_mi_os_has_overcommit [ELF _mi_os_has_overcommit; copy 1]` | main | 0.006666666666666667 [0.0, 0.02] | False |
+| `_mi_os_page_size [ELF _mi_os_page_size; copy 1]` | main | 0.006666666666666667 [0.0, 0.02] | False |
+
+#### lhs-pattern-value
+
+| Physical function | Object | Δ Ir/iteration | Deterministic |
+|---|---|---:|---|
+| `hashbrown::map::HashMap<K,V,S,A>::insert [ELF h8df1afa6e8b4b2be; copy 1]` | main | -307.02666666666664 [-921.48, 1.3700000000003456] | False |
+| `rum_core::expr::Symbol::system [ELF hb108e2dd350e0465; copy 1]` | main | -200.34 [-429.0500000000002, -70.69999999999982] | False |
+| `rum_core::expr::intern_symbol_text [ELF h0d85dc0ed9d0286f; copy 1]` | main | -51.91333333333326 [-359.3699999999999, 138.4400000000005] | False |
+| `__memcmp_avx2_movbe` | /usr/lib/libc.so.6 | -45.51333333333332 [-139.50999999999976, 3.519999999999982] | False |
+| `rum_runtime::runtime::builtin_catalog::default_builtin_dispatch_spec_for_symbol [ELF hf6a23a5dbe6c0c7c; copy 1]` | main | 34.333333333333336 [-121.0, 290.0] | False |
+| `rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom [ELF h43872a0fa250cc14; copy 1]` | main | -4.549999999999879 [-14.039999999999964, 0.7800000000002001] | False |
+| `rum_core::expr::intern_text [ELF h6266cee86e4e23af; copy 1]` | main | -3.1933333333327028 [-114.96999999999935, 174.5500000000011] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF ha3165b7ba598b0bb; copy 1]` | main | -0.8500000000000001 [-2.62, 0.27] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF h3380b3447eb43892; copy 1]` | main | 0.44 [-1.32, 1.44] | False |
+| `_mi_os_alloc [ELF _mi_os_alloc; copy 1]` | main | -0.27666666666666667 [-0.83, 0.0] | False |
+| `_mi_prim_alloc [ELF _mi_prim_alloc; copy 1]` | main | -0.21666666666666667 [-0.65, 0.0] | False |
+| `mi_page_map_set_range_prim [ELF mi_page_map_set_range_prim; copy 1]` | main | -0.18333333333333335 [-0.55, 0.0] | False |
+| `__mi_stat_increase_mt [ELF __mi_stat_increase_mt; copy 1]` | main | -0.09999999999999999 [-0.3, 0.0] | False |
+| `pthread_mutex_lock@@GLIBC_2.2.5` | /usr/lib/libc.so.6 | -0.09666666666666666 [-0.29, 0.0] | False |
+| `_mi_os_zalloc [ELF _mi_os_zalloc; copy 1]` | main | -0.08333333333333333 [-0.25, 0.0] | False |
+| `mmap` | /usr/lib/libc.so.6 | -0.07666666666666667 [-0.23, 0.0] | False |
+| `_mi_subproc [ELF _mi_subproc; copy 1]` | main | -0.06999999999999999 [-0.21, 0.0] | False |
+| `pthread_mutex_unlock@@GLIBC_2.2.5` | /usr/lib/libc.so.6 | -0.06333333333333334 [-0.19, 0.0] | False |
+| `_mi_os_good_alloc_size [ELF _mi_os_good_alloc_size; copy 1]` | main | -0.06 [-0.18, 0.0] | False |
+| `hashbrown::raw::RawTable<T,A>::reserve_rehash [ELF h91f57a3ae8abb5b9; copy 1]` | main | 0.05333333333333334 [0.0, 0.16] | False |
+| `prctl` | /usr/lib/libc.so.6 | -0.023333333333333334 [-0.07, 0.0] | False |
+| `hashbrown::raw::RawTable<T,A>::reserve_rehash [ELF h7b4ea9a650741ce6; copy 1]` | main | -0.013333333333333334 [-0.04, 0.0] | False |
+| `_mi_os_get_aligned_hint [ELF _mi_os_get_aligned_hint; copy 1]` | main | -0.013333333333333334 [-0.04, 0.0] | False |
+| `__mi_stat_counter_increase_mt [ELF __mi_stat_counter_increase_mt; copy 1]` | main | -0.006666666666666667 [-0.02, 0.0] | False |
+| `_mi_os_has_overcommit [ELF _mi_os_has_overcommit; copy 1]` | main | -0.006666666666666667 [-0.02, 0.0] | False |
+| `_mi_os_page_size [ELF _mi_os_page_size; copy 1]` | main | -0.006666666666666667 [-0.02, 0.0] | False |
+
+#### lhs-after-prior-cycle
+
+| Physical function | Object | Δ Ir/iteration | Deterministic |
+|---|---|---:|---|
+| `rum_core::expr::Symbol::system [ELF hb108e2dd350e0465; copy 1]` | main | 332.49333333333334 [-79.92000000000007, 661.31] | False |
+| `hashbrown::map::HashMap<K,V,S,A>::insert [ELF h8df1afa6e8b4b2be; copy 1]` | main | 284.76333333333315 [-9.120000000000346, 853.56] | False |
+| `rum_runtime::runtime::builtin_catalog::default_builtin_dispatch_spec_for_symbol [ELF hf6a23a5dbe6c0c7c; copy 1]` | main | 153.35 [88.18999999999994, 252.37] | False |
+| `rum_core::expr::intern_text [ELF h6266cee86e4e23af; copy 1]` | main | 35.42333333333348 [-7.239999999999782, 120.52000000000044] | False |
+| `rum_core::expr::intern_symbol_text [ELF h0d85dc0ed9d0286f; copy 1]` | main | 19.993333333333187 [-118.75, 140.77999999999975] | False |
+| `__memcmp_avx2_movbe` | /usr/lib/libc.so.6 | -1.033333333333606 [-2.200000000000273, 0.27999999999974534] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF h3380b3447eb43892; copy 1]` | main | -0.84 [-1.44, 0.12] | False |
+| `rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom [ELF h43872a0fa250cc14; copy 1]` | main | -0.8233333333337214 [-4.030000000000655, 1.1700000000000728] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF ha3165b7ba598b0bb; copy 1]` | main | 0.5633333333333334 [-1.06, 1.48] | False |
+
+#### lhs-after-prior-value
+
+| Physical function | Object | Δ Ir/iteration | Deterministic |
+|---|---|---:|---|
+| `rum_core::expr::Symbol::system [ELF hb108e2dd350e0465; copy 1]` | main | 226.97999999999988 [-134.6600000000003, 769.7999999999997] | False |
+| `rum_runtime::runtime::builtin_catalog::default_builtin_dispatch_spec_for_symbol [ELF hf6a23a5dbe6c0c7c; copy 1]` | main | 155.55999999999997 [84.29999999999995, 246.18999999999994] | False |
+| `rum_core::expr::intern_text [ELF h6266cee86e4e23af; copy 1]` | main | -132.11666666666738 [-222.6900000000005, -0.2000000000007276] | False |
+| `__memcmp_avx2_movbe` | /usr/lib/libc.so.6 | 39.333333333333336 [2.630000000000109, 67.52000000000044] | False |
+| `rum_core::expr::intern_symbol_text [ELF h0d85dc0ed9d0286f; copy 1]` | main | -7.4099999999998545 [-208.21000000000004, 136.71000000000004] | False |
+| `rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom [ELF h43872a0fa250cc14; copy 1]` | main | 2.0366666666665574 [0.13000000000010914, 4.420000000000073] | False |
+| `hashbrown::map::HashMap<K,V,S,A>::insert [ELF h8df1afa6e8b4b2be; copy 1]` | main | 0.776666666666794 [-2.349999999999909, 4.869999999999891] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF h3380b3447eb43892; copy 1]` | main | -0.6 [-2.52, 0.6] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF ha3165b7ba598b0bb; copy 1]` | main | 0.04999999999999999 [-0.54, 0.42] | False |
+| `hashbrown::raw::RawTable<T,A>::reserve_rehash [ELF h91f57a3ae8abb5b9; copy 1]` | main | 0.013333333333333334 [0.0, 0.04] | False |
+
+#### lhs-twice-cycle
+
+| Physical function | Object | Δ Ir/iteration | Deterministic |
+|---|---|---:|---|
+| `hashbrown::map::HashMap<K,V,S,A>::insert [ELF h8df1afa6e8b4b2be; copy 1]` | main | 224.1566666666666 [-10.170000000000073, 683.79] | False |
+| `rum_core::expr::intern_symbol_text [ELF h0d85dc0ed9d0286f; copy 1]` | main | 127.91666666666636 [-160.09000000000015, 302.14999999999964] | False |
+| `rum_core::expr::Symbol::system [ELF hb108e2dd350e0465; copy 1]` | main | -50.42000000000007 [-202.26999999999998, 49.25999999999976] | False |
+| `rum_runtime::runtime::builtin_catalog::default_builtin_dispatch_spec_for_symbol [ELF hf6a23a5dbe6c0c7c; copy 1]` | main | -39.50333333333333 [-196.22000000000003, 99.56000000000006] | False |
+| `rum_core::expr::intern_text [ELF h6266cee86e4e23af; copy 1]` | main | -35.723333333332754 [-204.72999999999956, 103.86000000000058] | False |
+| `__memcmp_avx2_movbe` | /usr/lib/libc.so.6 | 30.02666666666649 [-2.850000000000364, 90.29999999999973] | False |
+| `rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom [ELF h43872a0fa250cc14; copy 1]` | main | 2.946666666666715 [-6.109999999999673, 11.699999999999818] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF h3380b3447eb43892; copy 1]` | main | 0.48 [-0.6, 1.32] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF ha3165b7ba598b0bb; copy 1]` | main | -0.2566666666666666 [-0.8599999999999999, 0.27] | False |
+
+#### lhs-twice-value
+
+| Physical function | Object | Δ Ir/iteration | Deterministic |
+|---|---|---:|---|
+| `rum_core::expr::Symbol::system [ELF hb108e2dd350e0465; copy 1]` | main | -174.38333333333335 [-375.84000000000015, -26.36999999999989] | False |
+| `rum_core::expr::intern_text [ELF h6266cee86e4e23af; copy 1]` | main | -142.03333333333285 [-292.0099999999984, -12.510000000000218] | False |
+| `rum_core::expr::intern_symbol_text [ELF h0d85dc0ed9d0286f; copy 1]` | main | 110.36666666666709 [4.430000000000291, 176.1900000000005] | False |
+| `rum_runtime::runtime::builtin_catalog::default_builtin_dispatch_spec_for_symbol [ELF hf6a23a5dbe6c0c7c; copy 1]` | main | 9.959999999999999 [-113.03999999999996, 244.51999999999998] | False |
+| `rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom [ELF h43872a0fa250cc14; copy 1]` | main | 4.116666666666788 [2.600000000000364, 5.329999999999927] | False |
+| `hashbrown::map::HashMap<K,V,S,A>::insert [ELF h8df1afa6e8b4b2be; copy 1]` | main | -2.5700000000000123 [-15.760000000000218, 7.889999999999873] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF ha3165b7ba598b0bb; copy 1]` | main | 0.9066666666666666 [0.29000000000000004, 1.3099999999999998] | False |
+| `_mi_os_alloc [ELF _mi_os_alloc; copy 1]` | main | -0.27666666666666667 [-0.83, 0.0] | False |
+| `_mi_prim_alloc [ELF _mi_prim_alloc; copy 1]` | main | -0.21666666666666667 [-0.65, 0.0] | False |
+| `mi_page_map_set_range_prim [ELF mi_page_map_set_range_prim; copy 1]` | main | -0.18333333333333335 [-0.55, 0.0] | False |
+| `__memcmp_avx2_movbe` | /usr/lib/libc.so.6 | 0.10000000000006064 [-1.1700000000000728, 1.4700000000002547] | False |
+| `__mi_stat_increase_mt [ELF __mi_stat_increase_mt; copy 1]` | main | -0.09999999999999999 [-0.3, 0.0] | False |
+| `pthread_mutex_lock@@GLIBC_2.2.5` | /usr/lib/libc.so.6 | -0.09666666666666666 [-0.29, 0.0] | False |
+| `_mi_os_zalloc [ELF _mi_os_zalloc; copy 1]` | main | -0.08333333333333333 [-0.25, 0.0] | False |
+| `std::sync::poison::once::Once::call_once_force::{{closure}} [ELF h3380b3447eb43892; copy 1]` | main | -0.07999999999999985 [-1.44, 2.4000000000000004] | False |
+| `mmap` | /usr/lib/libc.so.6 | -0.07666666666666667 [-0.23, 0.0] | False |
+| `_mi_subproc [ELF _mi_subproc; copy 1]` | main | -0.06999999999999999 [-0.21, 0.0] | False |
+| `pthread_mutex_unlock@@GLIBC_2.2.5` | /usr/lib/libc.so.6 | -0.06333333333333334 [-0.19, 0.0] | False |
+| `_mi_os_good_alloc_size [ELF _mi_os_good_alloc_size; copy 1]` | main | -0.06 [-0.18, 0.0] | False |
+| `hashbrown::raw::RawTable<T,A>::reserve_rehash [ELF h7b4ea9a650741ce6; copy 1]` | main | 0.02666666666666667 [0.0, 0.08] | False |
+| `prctl` | /usr/lib/libc.so.6 | -0.023333333333333334 [-0.07, 0.0] | False |
+| `_mi_os_get_aligned_hint [ELF _mi_os_get_aligned_hint; copy 1]` | main | -0.013333333333333334 [-0.04, 0.0] | False |
+| `__mi_stat_counter_increase_mt [ELF __mi_stat_counter_increase_mt; copy 1]` | main | -0.006666666666666667 [-0.02, 0.0] | False |
+| `_mi_os_has_overcommit [ELF _mi_os_has_overcommit; copy 1]` | main | -0.006666666666666667 [-0.02, 0.0] | False |
+| `_mi_os_page_size [ELF _mi_os_page_size; copy 1]` | main | -0.006666666666666667 [-0.02, 0.0] | False |
+
+### Gate: final-resume-attribution
+
+Command: `python3 .temp/brief-620/continuation-3/analyze-resume.py`. Exit 0. Full raw output: `logs/final-resume-attribution.log`.
+
+```text
+No diagnostics.
+```
+
+### LHS copies against run 1
+
+Six processes per arm per label: three independent N/2N pairs. The baseline is the accepted run-1 candidate binary/profiles, hash-verified, so cycle workloads complete on both arms. Counts include the typed frame entry, the separately emitted resume method and any emitted clone/drop/trace helpers for driver state/work and awaited work; R-owned driver/adapter copies are excluded from this local table. All three pairs agree exactly. Every physical call address, raw count, static byte size (or explicit dynamic size), caller and register-setup context is in `resume-callgrind/lhs-copies/comparison.json`.
+
+| Workload | Run-1 local copies / iteration by bytes | Candidate (entry + method + owned helpers) | Delta | 136-B bar |
+|---|---|---|---|---|
+| resume-s5-lhs-twice | {'184': 2.0, '136': 12.0, '144': 1.0, '392': 2.0} | {'136': 8.0, '344': 4.0, '144': 1.0} | {'392': -2.0, '344': 4.0, '184': -2.0, '136': -4.0} | True |
+| lhs-arg-cycle | {'184': 1.0, '136': 6.0, '392': 1.0} | {'136': 4.0, '344': 2.0} | {'344': 2.0, '184': -1.0, '392': -1.0, '136': -2.0} | True |
+| lhs-arg-value | {'184': 1.0, '136': 6.0, '392': 1.0} | {'136': 4.0, '344': 2.0} | {'344': 2.0, '184': -1.0, '392': -1.0, '136': -2.0} | True |
+| lhs-head-cycle | {'184': 1.0, '136': 4.0, '392': 1.0} | {'344': 2.0, '136': 2.0} | {'184': -1.0, '136': -2.0, '392': -1.0, '344': 2.0} | True |
+| lhs-head-value | {'184': 1.0, '136': 4.0, '392': 1.0} | {'344': 2.0, '136': 2.0} | {'184': -1.0, '136': -2.0, '392': -1.0, '344': 2.0} | True |
+| lhs-pattern-cycle | {'184': 1.0, '136': 3.0, '152': 2.0, '176': 2.0, '392': 1.0} | {'152': 2.0, '344': 2.0, '136': 2.0, '176': 2.0} | {'392': -1.0, '344': 2.0, '184': -1.0, '136': -1.0} | True |
+| lhs-pattern-value | {'184': 1.0, '136': 3.0, '152': 2.0, '176': 2.0, '392': 1.0} | {'152': 2.0, '344': 2.0, '136': 2.0, '176': 2.0} | {'392': -1.0, '344': 2.0, '184': -1.0, '136': -1.0} | True |
+| lhs-after-prior-cycle | {'184': 2.0, '136': 12.0, '144': 1.0, '392': 2.0} | {'136': 8.0, '344': 4.0, '144': 1.0} | {'392': -2.0, '344': 4.0, '184': -2.0, '136': -4.0} | True |
+| lhs-after-prior-value | {'184': 2.0, '136': 12.0, '144': 1.0, '392': 2.0} | {'136': 8.0, '344': 4.0, '144': 1.0} | {'392': -2.0, '344': 4.0, '184': -2.0, '136': -4.0} | True |
+| lhs-twice-cycle | {'184': 2.0, '136': 12.0, '144': 1.0, '392': 2.0} | {'136': 8.0, '344': 4.0, '144': 1.0} | {'392': -2.0, '344': 4.0, '184': -2.0, '136': -4.0} | True |
+| lhs-twice-value | {'184': 2.0, '136': 12.0, '144': 1.0, '392': 2.0} | {'136': 8.0, '344': 4.0, '144': 1.0} | {'392': -2.0, '344': 4.0, '184': -2.0, '136': -4.0} | True |
+
+### Gate: final-local-copies
+
+Command: `python3 .temp/brief-620/continuation-3/lhs-copies.py`. Exit 0. Full raw output: `logs/final-local-copies.log`.
+
+```text
+No diagnostics.
+```
+
+### Complete local-copy bar
+
+All 11 workloads also reduce total local transfer calls and total statically sized bytes, counting both resume functions and owned generated helpers. There are no dynamic-size local copy sites. This supplements the 136-byte result table rather than moving a charge to the new method.
+
+```json
+[
+  {
+    "label": "resume-s5-lhs-twice",
+    "calls_per_iteration": {
+      "base": 17.0,
+      "candidate": 13.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 2928.0,
+      "candidate": 2608.0
+    }
+  },
+  {
+    "label": "lhs-arg-cycle",
+    "calls_per_iteration": {
+      "base": 8.0,
+      "candidate": 6.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 1392.0,
+      "candidate": 1232.0
+    }
+  },
+  {
+    "label": "lhs-arg-value",
+    "calls_per_iteration": {
+      "base": 8.0,
+      "candidate": 6.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 1392.0,
+      "candidate": 1232.0
+    }
+  },
+  {
+    "label": "lhs-head-cycle",
+    "calls_per_iteration": {
+      "base": 6.0,
+      "candidate": 4.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 1120.0,
+      "candidate": 960.0
+    }
+  },
+  {
+    "label": "lhs-head-value",
+    "calls_per_iteration": {
+      "base": 6.0,
+      "candidate": 4.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 1120.0,
+      "candidate": 960.0
+    }
+  },
+  {
+    "label": "lhs-pattern-cycle",
+    "calls_per_iteration": {
+      "base": 9.0,
+      "candidate": 8.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 1640.0,
+      "candidate": 1616.0
+    }
+  },
+  {
+    "label": "lhs-pattern-value",
+    "calls_per_iteration": {
+      "base": 9.0,
+      "candidate": 8.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 1640.0,
+      "candidate": 1616.0
+    }
+  },
+  {
+    "label": "lhs-after-prior-cycle",
+    "calls_per_iteration": {
+      "base": 17.0,
+      "candidate": 13.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 2928.0,
+      "candidate": 2608.0
+    }
+  },
+  {
+    "label": "lhs-after-prior-value",
+    "calls_per_iteration": {
+      "base": 17.0,
+      "candidate": 13.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 2928.0,
+      "candidate": 2608.0
+    }
+  },
+  {
+    "label": "lhs-twice-cycle",
+    "calls_per_iteration": {
+      "base": 17.0,
+      "candidate": 13.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 2928.0,
+      "candidate": 2608.0
+    }
+  },
+  {
+    "label": "lhs-twice-value",
+    "calls_per_iteration": {
+      "base": 17.0,
+      "candidate": 13.0
+    },
+    "static_bytes_per_iteration": {
+      "base": 2928.0,
+      "candidate": 2608.0
+    }
+  }
+]
+```
+
+### Gate: final-local-copy-byte-bar
+
+Command: `python3 .temp/brief-620/continuation-3/check-local-copy-bars.py`. Exit 0. Full raw output: `logs/final-local-copy-byte-bar.log`.
+
+```text
+No diagnostics.
+```
+
+### Gate: final-scope-audit
+
+Command: `python3 .temp/brief-620/continuation-3/scope-audit.py`. Exit 0. Full raw output: `logs/final-scope-audit.log`.
+
+```text
+No diagnostics.
+```
+
+### Canonical output-path disclosure
+
+Executor scratch remains under `.temp/brief-620/continuation-3/`. The original unchanged resume harness and candidate target caches are reused through scene symlinks; TMPDIR is `.temp/brief-620/tmp/`. The supplied source export, original base artifacts and all four preserved Continuation 2 binaries remain immutable. Unchanged canonical gate tools wrote their own fixed paths below; every written file is listed in `canonical-output-paths.json`. Cargo also writes normal build artifacts under `target/debug/`, `target/tmp/`, target metadata and its target-local lock files. No generated artifact is a production source change.
+
+| Unchanged canonical tool output root | Files written since initial snapshot |
+|---|---:|
+| `.temp/typed-slot-census/default` | 15 |
+| `.temp/typed-slot-census/no-default` | 15 |
+| `.temp/typed-slot-census/forced-red` | 5858 |
+| `.temp/typed-slot-compile-controls` | 573 |
+| `.temp/suspension-oracle` | 2 |
+| `.temp/brief-546/certificates` | 12 |
+| `target/brief-544` | 1 |
+| `target/brief-535/EDGE_ALL` | 14 |
+
+### Gate: final-canonical-paths
+
+Command: `python3 .temp/brief-620/continuation-3/canonical-outputs.py`. Exit 0. Full raw output: `logs/final-canonical-paths.log`.
+
+```text
+No diagnostics.
+```
+
+### Final attribution and process-completeness audit
+
+Both profiling scenes contain exactly132 successful process records, with stdout equal to the expected value/definition/resume assertion. Final-source attribution names0 deterministic and186 nondeterministic function deltas across11 workloads. The baseline and final executable SHA-256 are exactly equal, so every physical machine-code body, beyond the three explicitly normalized ordinary functions, is also bit-identical. All observed per-address/count distributions are retained; no nondeterministic distribution is substituted for a source-cost regression or hidden as a zero. The final prologue inventory retains every named emitted LHS physical function in each arm, plus explicit absent/inlined helper accounting.
+
+### Conservative final stop-loss classification
+
+Consecutive non-progress attempts is **1**, for the single compiling inlined candidate; no second candidate was attempted. The earlier exploratory counter0 used lower raw total instruction-header samples. Those samples are retained verbatim but do not establish a cleared instruction bar, so they are not credited as progress. The copy-byte bar was already passing in C2 and is unchanged under the same expanded accounting scope; the measured stack condition fails. This counter correction changes neither the precommitted restoration nor any source, test, gate or measurement.
+
+
+### Complete Continuation 3 command-result index
+
+All commands used the full offline single-worker environment and the required process-group bounds. Complete raw logs and exact command/environment JSON are retained for every row.
+
+| Gate | Exit | Raw log SHA-256 |
+|---|---:|---|
+| `build-resume` | 0 | `b8a12e5da8395bc654e2d8ff96f151cdf24273dfe9451e2768b184e870d61c29` |
+| `resume-entry-prologues` | 0 | `47e48a1c8621dbc7f1d26386aeaabbb6ba8e9091455cd0f98bef770c87c10822` |
+| `inline-owned-prologues` | 0 | `577a01db0f12c2d4882bebf3c8dc20d55f5df3f42e0210484a260ac0a301de50` |
+| `inline-lhs-callgrind` | 0 | `0b290880aae64b36902f615f907e3fdd5ad843c53cdca15f72181877339e6ad6` |
+| `inline-local-copies` | 0 | `01e21e1702c94f28684dbde16c0aae9fef05204ad56d273663b035f5e7732b2a` |
+| `inline-complete-local-copies` | 0 | `da8be088a2b55bb41299dc17d27610fdee275307cd10bbf48897bc5c2c7eb74b` |
+| `inline-local-copy-byte-bar` | 0 | `3d31a94f11e8f04c3ee41c93aac5835584fed918cf9c416d03b9b28e9cbb7ca4` |
+| `final-build-resume` | 0 | `83ee375481e660f368f978e01b0372f4265ed80233dfe60de3cfea2983dcb0e1` |
+| `final-build-cli` | 0 | `ba843c5c18a1a1b29016bdaab249baae2e24760bd763b86cbfd3e3a0a5e0e43b` |
+| `final-ordinary-disassembly` | 0 | `acee811bf9ec35491b71145de2f6358955c1d5ba76905e8cc53cd3bafb0021e2` |
+| `final-ordinary-identity` | 0 | `420bc9c3eb9d1ec2131bb55c0bd95504aa2a1be9699e3cf45e8125ac0a6f5266` |
+| `final-build-resume-alloc` | 0 | `90bad3b27e625a5f4d2fa599197b156ad27e93309f35602c1a4220ebdc921431` |
+| `final-fmt` | 0 | `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `runtime-typed` | 0 | `5a4784c4e491bd2de331689f0a350ebb99cec0f8b4c99acd9a63c7e8eb5f3205` |
+| `runtime-frame-trace` | 0 | `5c0f97cad2a7f443c274cc198c0399c779b8958f4d0d04619cafd7c21e796012` |
+| `runtime-resume-context` | 0 | `88bc8a74f203b80042c69922b324358362a20b689cabbe1f1962c6e24dc41387` |
+| `runtime-depth` | 0 | `85d8f6fc9ddb2631cb71abece922d4af14aef8a973aa870ecda2df0f7eca1ecb` |
+| `compile-controls-default` | 0 | `6e99b6e09516e36b06dc9309a46d9c3f757f48a2e3586f4868de4ca1788e3e89` |
+| `compile-controls-no-default` | 0 | `0cbadda40ba7d68a9544ebe9b91e06a250ce9e9a6392690e3d8c4cbd97ade290` |
+| `final-fixtures-default` | 0 | `65acf753297d687947422d0e003a0a057b5f394ee0189402addcae8709c7f7aa` |
+| `final-fixtures-no-default` | 0 | `76261b89c0990c8836f08a0dcc45ab8862ca55772d5585188fbc0dd65b99c621` |
+| `final-oracle` | 0 | `bf8a585624fd5335f17579f3c7aca5c45790c6788e91339fc3abc6270c3652f5` |
+| `census-default` | 0 | `d1259f9f4dfc12af19fa4ef8693e5916e5aa72f80b3d2ca0b9c2d54df12ca733` |
+| `census-no-default` | 0 | `aa98943e4fc9001e64355f99392bd95389090478196c7df33c45d738e3248b38` |
+| `ownership-discovery-default` | 0 | `2f36e0752784d3a8a33a17d03c7c02747199e42a86123896e3c7ac84ffe78779` |
+| `ownership-replay` | 0 | `7d3a0fa421afd5cf3d0bfa1b254904ffb8559fc9311b33896793caea701d0182` |
+| `ownership-final-no-default` | 0 | `928ea16923f7e1faa81c0fe0f1868db08a19b8bad0de1cc6ec66447c5653c9b8` |
+| `generate-fingerprints` | 0 | `7c63e76a75e3dac2fc9f9166835405f3567d76875fbfefa659b4dba742ee34e2` |
+| `install-fingerprints` | 0 | `db943b1082be590724a9e49f7b8c3386ac7048d1ae6ddcaed834a1a3c8affe29` |
+| `acceptance-default` | 0 | `475f2f08bebee9b9462af1b7f89a91ba8578c1ddb14d8805ae1009161d86aa51` |
+| `acceptance-no-default` | 0 | `7d73405fbee6fffe403a6670f9b18da20ae6c0d2cba828e0952fb5cbb43876d7` |
+| `install-certificates` | 0 | `7637dc7a675cd2e7a125ab4546c5ad81a32a006a1ba0b0b2348252a1e389b8ed` |
+| `rejection-census` | 0 | `c3e39788aa52f35fe701f95b6a1f8b00eaf658a42d71fa1304b324bfa5e895a3` |
+| `rejection-replay` | 0 | `cab3d27fddc0036fa9f3e63db66a0ec641e461872938aa133765ea7812b2172e` |
+| `final-resume-allocations` | 0 | `70ae78b94ce33d9fc609addba409d24aebc554ce6102c846c42dde05854f335d` |
+| `final-resume-allocation-comparison` | 0 | `2e68978cd100d9afa58c0a07caa4c6b263ecbf426c986b768ec5ae6618f78d67` |
+| `final-owned-prologues` | 0 | `27a18aebea1ecae859ed67297ee6f381617a2ffe98a2b9a49e951068bc2818fb` |
+| `final-chain-sums` | 0 | `0388078751f910be00010cfdf4930f5bc7fddbcd26c8c544489085bafd5b7a8c` |
+| `final-lhs-callgrind` | 0 | `0b290880aae64b36902f615f907e3fdd5ad843c53cdca15f72181877339e6ad6` |
+| `final-resume-attribution` | 0 | `410ca0f6f77c8f08d00aef4a82506fc5c872feccd8f4591d9b8151731b0a75a6` |
+| `final-local-copies` | 0 | `416db38348dc83b90d37ea985f8f2d9054a511710567c08564d6a808b7a6552e` |
+| `final-local-copy-byte-bar` | 0 | `3d31a94f11e8f04c3ee41c93aac5835584fed918cf9c416d03b9b28e9cbb7ca4` |
+| `final-scope-audit` | 0 | `04c6bb092b231164a954195a3ddc7ad0425921831a2b02231ac1574db24ad602` |
+| `final-canonical-paths` | 0 | `d783072253941102ca1339c38d47cbfcc5135ea36be315caf3815799a5ed0ff1` |
+
+### Verbatim measurement, build and replay results
+
+#### build-resume
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling brief608-resume v0.0.0 (/home/remi/dev/rum/.temp/brief-620/resume-harness)
+    Finished `release` profile [optimized] target(s) in 1m 15s
+
+BUILT cand resume 3b794891fff559dbde3ae2301c518a4a48a33269d1496895a5dcff6a298ca5c6
+```
+
+#### resume-entry-prologues
+
+```text
+base rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::resume_definition_lhs_preparation 0x576770 552
+base <rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume 0x56f880 1432
+cand <rum_runtime::runtime::definitions::definition_lhs_preparation::resume_frames::DefinitionLhsPreparationSuspensionFrame as rum_runtime::runtime::suspension::typed::TypedFrame>::resume 0x56f880 1864
+```
+
+#### inline-owned-prologues
+
+```text
+base retained call-state clone [1432, 280] + return addresses 8 = 1720
+base entry plus private resume method [1432, 552] + return addresses 8 = 1992
+cand retained call-state clone [1864, 280] + return addresses 8 = 2152
+```
+
+#### inline-lhs-callgrind
+
+```text
+CAMPAIGN labels labels 11 samples 3
+PROFILE 1 base lhs-arg-cycle 100 correct True
+PROFILE 1 candidate lhs-arg-cycle 100 correct True
+PROFILE 1 base lhs-arg-cycle 200 correct True
+PROFILE 1 candidate lhs-arg-cycle 200 correct True
+PROFILE 1 base lhs-arg-value 100 correct True
+PROFILE 1 candidate lhs-arg-value 100 correct True
+PROFILE 1 base lhs-arg-value 200 correct True
+PROFILE 1 candidate lhs-arg-value 200 correct True
+PROFILE 1 base lhs-head-cycle 100 correct True
+PROFILE 1 candidate lhs-head-cycle 100 correct True
+PROFILE 1 base lhs-head-cycle 200 correct True
+PROFILE 1 candidate lhs-head-cycle 200 correct True
+PROFILE 1 base lhs-head-value 100 correct True
+PROFILE 1 candidate lhs-head-value 100 correct True
+PROFILE 1 base lhs-head-value 200 correct True
+PROFILE 1 candidate lhs-head-value 200 correct True
+PROFILE 1 base lhs-pattern-cycle 100 correct True
+PROFILE 1 candidate lhs-pattern-cycle 100 correct True
+PROFILE 1 base lhs-pattern-cycle 200 correct True
+PROFILE 1 candidate lhs-pattern-cycle 200 correct True
+PROFILE 1 base lhs-pattern-value 100 correct True
+PROFILE 1 candidate lhs-pattern-value 100 correct True
+PROFILE 1 base lhs-pattern-value 200 correct True
+PROFILE 1 candidate lhs-pattern-value 200 correct True
+PROFILE 1 base lhs-after-prior-cycle 100 correct True
+PROFILE 1 candidate lhs-after-prior-cycle 100 correct True
+PROFILE 1 base lhs-after-prior-cycle 200 correct True
+PROFILE 1 candidate lhs-after-prior-cycle 200 correct True
+PROFILE 1 base lhs-after-prior-value 100 correct True
+PROFILE 1 candidate lhs-after-prior-value 100 correct True
+PROFILE 1 base lhs-after-prior-value 200 correct True
+PROFILE 1 candidate lhs-after-prior-value 200 correct True
+PROFILE 1 base lhs-twice-cycle 100 correct True
+PROFILE 1 candidate lhs-twice-cycle 100 correct True
+PROFILE 1 base lhs-twice-cycle 200 correct True
+PROFILE 1 candidate lhs-twice-cycle 200 correct True
+PROFILE 1 base lhs-twice-value 100 correct True
+PROFILE 1 candidate lhs-twice-value 100 correct True
+PROFILE 1 base lhs-twice-value 200 correct True
+PROFILE 1 candidate lhs-twice-value 200 correct True
+PROFILE 1 base resume-s5-lhs-twice 100 correct True
+PROFILE 1 candidate resume-s5-lhs-twice 100 correct True
+PROFILE 1 base resume-s5-lhs-twice 200 correct True
+PROFILE 1 candidate resume-s5-lhs-twice 200 correct True
+PROFILE 2 base lhs-arg-cycle 100 correct True
+PROFILE 2 candidate lhs-arg-cycle 100 correct True
+PROFILE 2 base lhs-arg-cycle 200 correct True
+PROFILE 2 candidate lhs-arg-cycle 200 correct True
+PROFILE 2 base lhs-arg-value 100 correct True
+PROFILE 2 candidate lhs-arg-value 100 correct True
+PROFILE 2 base lhs-arg-value 200 correct True
+PROFILE 2 candidate lhs-arg-value 200 correct True
+PROFILE 2 base lhs-head-cycle 100 correct True
+PROFILE 2 candidate lhs-head-cycle 100 correct True
+PROFILE 2 base lhs-head-cycle 200 correct True
+PROFILE 2 candidate lhs-head-cycle 200 correct True
+PROFILE 2 base lhs-head-value 100 correct True
+PROFILE 2 candidate lhs-head-value 100 correct True
+PROFILE 2 base lhs-head-value 200 correct True
+PROFILE 2 candidate lhs-head-value 200 correct True
+PROFILE 2 base lhs-pattern-cycle 100 correct True
+PROFILE 2 candidate lhs-pattern-cycle 100 correct True
+PROFILE 2 base lhs-pattern-cycle 200 correct True
+PROFILE 2 candidate lhs-pattern-cycle 200 correct True
+PROFILE 2 base lhs-pattern-value 100 correct True
+PROFILE 2 candidate lhs-pattern-value 100 correct True
+PROFILE 2 base lhs-pattern-value 200 correct True
+PROFILE 2 candidate lhs-pattern-value 200 correct True
+PROFILE 2 base lhs-after-prior-cycle 100 correct True
+PROFILE 2 candidate lhs-after-prior-cycle 100 correct True
+PROFILE 2 base lhs-after-prior-cycle 200 correct True
+PROFILE 2 candidate lhs-after-prior-cycle 200 correct True
+PROFILE 2 base lhs-after-prior-value 100 correct True
+PROFILE 2 candidate lhs-after-prior-value 100 correct True
+PROFILE 2 base lhs-after-prior-value 200 correct True
+PROFILE 2 candidate lhs-after-prior-value 200 correct True
+PROFILE 2 base lhs-twice-cycle 100 correct True
+PROFILE 2 candidate lhs-twice-cycle 100 correct True
+PROFILE 2 base lhs-twice-cycle 200 correct True
+PROFILE 2 candidate lhs-twice-cycle 200 correct True
+PROFILE 2 base lhs-twice-value 100 correct True
+PROFILE 2 candidate lhs-twice-value 100 correct True
+PROFILE 2 base lhs-twice-value 200 correct True
+PROFILE 2 candidate lhs-twice-value 200 correct True
+PROFILE 2 base resume-s5-lhs-twice 100 correct True
+PROFILE 2 candidate resume-s5-lhs-twice 100 correct True
+PROFILE 2 base resume-s5-lhs-twice 200 correct True
+PROFILE 2 candidate resume-s5-lhs-twice 200 correct True
+PROFILE 3 base lhs-arg-cycle 100 correct True
+PROFILE 3 candidate lhs-arg-cycle 100 correct True
+PROFILE 3 base lhs-arg-cycle 200 correct True
+PROFILE 3 candidate lhs-arg-cycle 200 correct True
+PROFILE 3 base lhs-arg-value 100 correct True
+PROFILE 3 candidate lhs-arg-value 100 correct True
+PROFILE 3 base lhs-arg-value 200 correct True
+PROFILE 3 candidate lhs-arg-value 200 correct True
+PROFILE 3 base lhs-head-cycle 100 correct True
+PROFILE 3 candidate lhs-head-cycle 100 correct True
+PROFILE 3 base lhs-head-cycle 200 correct True
+PROFILE 3 candidate lhs-head-cycle 200 correct True
+PROFILE 3 base lhs-head-value 100 correct True
+PROFILE 3 candidate lhs-head-value 100 correct True
+PROFILE 3 base lhs-head-value 200 correct True
+PROFILE 3 candidate lhs-head-value 200 correct True
+PROFILE 3 base lhs-pattern-cycle 100 correct True
+PROFILE 3 candidate lhs-pattern-cycle 100 correct True
+PROFILE 3 base lhs-pattern-cycle 200 correct True
+PROFILE 3 candidate lhs-pattern-cycle 200 correct True
+PROFILE 3 base lhs-pattern-value 100 correct True
+PROFILE 3 candidate lhs-pattern-value 100 correct True
+PROFILE 3 base lhs-pattern-value 200 correct True
+PROFILE 3 candidate lhs-pattern-value 200 correct True
+PROFILE 3 base lhs-after-prior-cycle 100 correct True
+PROFILE 3 candidate lhs-after-prior-cycle 100 correct True
+PROFILE 3 base lhs-after-prior-cycle 200 correct True
+PROFILE 3 candidate lhs-after-prior-cycle 200 correct True
+PROFILE 3 base lhs-after-prior-value 100 correct True
+PROFILE 3 candidate lhs-after-prior-value 100 correct True
+PROFILE 3 base lhs-after-prior-value 200 correct True
+PROFILE 3 candidate lhs-after-prior-value 200 correct True
+PROFILE 3 base lhs-twice-cycle 100 correct True
+PROFILE 3 candidate lhs-twice-cycle 100 correct True
+PROFILE 3 base lhs-twice-cycle 200 correct True
+PROFILE 3 candidate lhs-twice-cycle 200 correct True
+PROFILE 3 base lhs-twice-value 100 correct True
+PROFILE 3 candidate lhs-twice-value 100 correct True
+PROFILE 3 base lhs-twice-value 200 correct True
+PROFILE 3 candidate lhs-twice-value 200 correct True
+PROFILE 3 base resume-s5-lhs-twice 100 correct True
+PROFILE 3 candidate resume-s5-lhs-twice 100 correct True
+PROFILE 3 base resume-s5-lhs-twice 200 correct True
+PROFILE 3 candidate resume-s5-lhs-twice 200 correct True
+CAMPAIGN DONE labels
+```
+
+#### inline-local-copies
+
+```text
+resume-s5-lhs-twice run-1 {'184': 2.0, '392': 2.0, '144': 1.0, '136': 12.0} candidate {'344': 4.0, '136': 8.0, '144': 1.0} delta {'392': -2.0, '344': 4.0, '136': -4.0, '184': -2.0} 136-bar True
+lhs-arg-cycle run-1 {'184': 1.0, '392': 1.0, '136': 6.0} candidate {'344': 2.0, '136': 4.0} delta {'392': -1.0, '136': -2.0, '344': 2.0, '184': -1.0} 136-bar True
+lhs-arg-value run-1 {'184': 1.0, '392': 1.0, '136': 6.0} candidate {'344': 2.0, '136': 4.0} delta {'392': -1.0, '136': -2.0, '344': 2.0, '184': -1.0} 136-bar True
+lhs-head-cycle run-1 {'184': 1.0, '392': 1.0, '136': 4.0} candidate {'344': 2.0, '136': 2.0} delta {'392': -1.0, '136': -2.0, '344': 2.0, '184': -1.0} 136-bar True
+lhs-head-value run-1 {'184': 1.0, '392': 1.0, '136': 4.0} candidate {'344': 2.0, '136': 2.0} delta {'392': -1.0, '136': -2.0, '344': 2.0, '184': -1.0} 136-bar True
+lhs-pattern-cycle run-1 {'184': 1.0, '392': 1.0, '136': 3.0} candidate {'344': 2.0, '136': 2.0} delta {'392': -1.0, '136': -1.0, '344': 2.0, '184': -1.0} 136-bar True
+lhs-pattern-value run-1 {'184': 1.0, '392': 1.0, '136': 3.0} candidate {'344': 2.0, '136': 2.0} delta {'392': -1.0, '136': -1.0, '344': 2.0, '184': -1.0} 136-bar True
+lhs-after-prior-cycle run-1 {'184': 2.0, '392': 2.0, '144': 1.0, '136': 12.0} candidate {'344': 4.0, '136': 8.0, '144': 1.0} delta {'392': -2.0, '344': 4.0, '136': -4.0, '184': -2.0} 136-bar True
+lhs-after-prior-value run-1 {'184': 2.0, '392': 2.0, '144': 1.0, '136': 12.0} candidate {'344': 4.0, '136': 8.0, '144': 1.0} delta {'392': -2.0, '344': 4.0, '136': -4.0, '184': -2.0} 136-bar True
+lhs-twice-cycle run-1 {'184': 2.0, '392': 2.0, '144': 1.0, '136': 12.0} candidate {'344': 4.0, '136': 8.0, '144': 1.0} delta {'392': -2.0, '344': 4.0, '136': -4.0, '184': -2.0} 136-bar True
+lhs-twice-value run-1 {'184': 2.0, '392': 2.0, '144': 1.0, '136': 12.0} candidate {'344': 4.0, '136': 8.0, '144': 1.0} delta {'392': -2.0, '344': 4.0, '136': -4.0, '184': -2.0} 136-bar True
+```
+
+#### inline-complete-local-copies
+
+```text
+resume-s5-lhs-twice run-1 {'184': 2.0, '392': 2.0, '136': 12.0, '144': 1.0} candidate {'136': 8.0, '144': 1.0, '344': 4.0} delta {'184': -2.0, '136': -4.0, '344': 4.0, '392': -2.0} 136-bar True
+lhs-arg-cycle run-1 {'184': 1.0, '392': 1.0, '136': 6.0} candidate {'136': 4.0, '344': 2.0} delta {'184': -1.0, '344': 2.0, '392': -1.0, '136': -2.0} 136-bar True
+lhs-arg-value run-1 {'184': 1.0, '392': 1.0, '136': 6.0} candidate {'136': 4.0, '344': 2.0} delta {'184': -1.0, '344': 2.0, '392': -1.0, '136': -2.0} 136-bar True
+lhs-head-cycle run-1 {'184': 1.0, '392': 1.0, '136': 4.0} candidate {'136': 2.0, '344': 2.0} delta {'184': -1.0, '344': 2.0, '392': -1.0, '136': -2.0} 136-bar True
+lhs-head-value run-1 {'184': 1.0, '392': 1.0, '136': 4.0} candidate {'136': 2.0, '344': 2.0} delta {'184': -1.0, '344': 2.0, '392': -1.0, '136': -2.0} 136-bar True
+lhs-pattern-cycle run-1 {'184': 1.0, '392': 1.0, '136': 3.0, '152': 2.0, '176': 2.0} candidate {'136': 2.0, '344': 2.0, '176': 2.0, '152': 2.0} delta {'184': -1.0, '136': -1.0, '344': 2.0, '392': -1.0} 136-bar True
+lhs-pattern-value run-1 {'184': 1.0, '392': 1.0, '136': 3.0, '152': 2.0, '176': 2.0} candidate {'136': 2.0, '344': 2.0, '176': 2.0, '152': 2.0} delta {'184': -1.0, '136': -1.0, '344': 2.0, '392': -1.0} 136-bar True
+lhs-after-prior-cycle run-1 {'184': 2.0, '392': 2.0, '136': 12.0, '144': 1.0} candidate {'136': 8.0, '144': 1.0, '344': 4.0} delta {'184': -2.0, '136': -4.0, '344': 4.0, '392': -2.0} 136-bar True
+lhs-after-prior-value run-1 {'184': 2.0, '392': 2.0, '136': 12.0, '144': 1.0} candidate {'136': 8.0, '144': 1.0, '344': 4.0} delta {'184': -2.0, '136': -4.0, '344': 4.0, '392': -2.0} 136-bar True
+lhs-twice-cycle run-1 {'184': 2.0, '392': 2.0, '136': 12.0, '144': 1.0} candidate {'136': 8.0, '144': 1.0, '344': 4.0} delta {'184': -2.0, '136': -4.0, '344': 4.0, '392': -2.0} 136-bar True
+lhs-twice-value run-1 {'184': 2.0, '392': 2.0, '136': 12.0, '144': 1.0} candidate {'136': 8.0, '144': 1.0, '344': 4.0} delta {'184': -2.0, '136': -4.0, '344': 4.0, '392': -2.0} 136-bar True
+```
+
+#### inline-local-copy-byte-bar
+
+```text
+PASS all11 local copy calls, static bytes, and136-byte result transfers at or below run1.
+```
+
+#### final-build-resume
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling brief608-resume v0.0.0 (/home/remi/dev/rum/.temp/brief-620/resume-harness)
+    Finished `release` profile [optimized] target(s) in 1m 15s
+
+BUILT cand resume 3b6fcd9e853d42ae564cbec2046ac5b4b4ea15b35485348c2267e8b7c1246a7c
+```
+
+#### final-build-cli
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling rum-terminal v0.2.0 (/home/remi/dev/rum/crates/rum-terminal)
+   Compiling rum-repl v0.2.0 (/home/remi/dev/rum/crates/rum-repl)
+   Compiling rum-cli v0.2.0 (/home/remi/dev/rum/crates/rum-cli)
+    Finished `release` profile [optimized] target(s) in 1m 17s
+
+BUILT cand rum-cli e6e9dfb1b088dbcaabd2b4e82b46018de2802224247c17619c0b82a792b08dfa
+```
+
+#### final-ordinary-disassembly
+
+```text
+Retained emitted ordinary functions, absent functions explicitly recorded
+```
+
+#### final-ordinary-identity
+
+```text
+PASS helper and BOTH driver specializations: every normalized instruction/store identical to Continuation 2.
+```
+
+#### final-build-resume-alloc
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling brief608-resume v0.0.0 (/home/remi/dev/rum/.temp/brief-620/resume-harness)
+    Finished `release` profile [optimized] target(s) in 1m 15s
+
+BUILT cand resume-alloc 8dd74d7fc71692648fea1ca8625e106912f175c28a18de7dda88b389c33230bd
+```
+
+#### ownership-replay
+
+```text
+Ownership replay: 24 pure moves; 2 retired base operations; 1 new derive; 0 inventory files changed.
+```
+
+#### install-fingerprints
+
+```text
+fingerprints 0 canonical changes installed
+```
+
+#### install-certificates
+
+```text
+certificates 0 canonical changes installed
+```
+
+#### rejection-replay
+
+```text
+{
+  "base_rows": 48713,
+  "candidate_rows": 48712,
+  "paired": 48705,
+  "moves": 131,
+  "provenance_only": 0,
+  "retired": 8,
+  "new_operations": 7,
+  "meaning_changes": 0,
+  "marks_gained_or_lost": 0
+}
+```
+
+#### final-resume-allocations
+
+```text
+{"label": "resume-table", "N": 1000, "exit": 0, "elapsed_seconds": 0.09272346200305037, "correct": true, "actual_resumes": 1000, "count": 35549, "bytes_total": 3207107, "peak_live_bytes": 409170}
+{"label": "resume-table", "N": 2000, "exit": 0, "elapsed_seconds": 0.08880586300801951, "correct": true, "actual_resumes": 2000, "count": 69552, "bytes_total": 5989563, "peak_live_bytes": 569362}
+{"label": "resume-do-chain", "N": 1000, "exit": 0, "elapsed_seconds": 0.09258290599973407, "correct": true, "actual_resumes": 1000, "count": 31538, "bytes_total": 2803994, "peak_live_bytes": 316950}
+{"label": "resume-do-chain", "N": 2000, "exit": 0, "elapsed_seconds": 0.09302542499790434, "correct": true, "actual_resumes": 2000, "count": 61538, "bytes_total": 5181994, "peak_live_bytes": 380950}
+{"label": "resume-call-repeat", "N": 1000, "exit": 0, "elapsed_seconds": 0.0942134509969037, "correct": true, "actual_resumes": 1000, "count": 48570, "bytes_total": 5013767, "peak_live_bytes": 1622936}
+{"label": "resume-call-repeat", "N": 2000, "exit": 0, "elapsed_seconds": 0.08960662499885075, "correct": true, "actual_resumes": 2000, "count": 95577, "bytes_total": 9607791, "peak_live_bytes": 2998760}
+{"label": "resume-cleanup", "N": 1000, "exit": 0, "elapsed_seconds": 0.0921635620034067, "correct": true, "actual_resumes": 1000, "count": 30620, "bytes_total": 2905038, "peak_live_bytes": 260143}
+{"label": "resume-cleanup", "N": 2000, "exit": 0, "elapsed_seconds": 0.09117074699315708, "correct": true, "actual_resumes": 2000, "count": 59620, "bytes_total": 5371038, "peak_live_bytes": 260143}
+{"label": "resume-fold", "N": 1000, "exit": 0, "elapsed_seconds": 0.08906435899552889, "correct": true, "actual_resumes": 1000, "count": 50578, "bytes_total": 4096975, "peak_live_bytes": 352197}
+{"label": "resume-fold", "N": 2000, "exit": 0, "elapsed_seconds": 0.08874208499037195, "correct": true, "actual_resumes": 2000, "count": 99578, "bytes_total": 7761975, "peak_live_bytes": 448197}
+{"label": "resume-argument-twice", "N": 1000, "exit": 0, "elapsed_seconds": 0.13080832400009967, "correct": true, "actual_resumes": 2000, "count": 165695, "bytes_total": 12352780, "peak_live_bytes": 265996}
+{"label": "resume-argument-twice", "N": 2000, "exit": 0, "elapsed_seconds": 0.125689947992214, "correct": true, "actual_resumes": 4000, "count": 329695, "bytes_total": 24256780, "peak_live_bytes": 265996}
+{"label": "resume-rewrite-exprs", "N": 1000, "exit": 0, "elapsed_seconds": 0.09274192700104322, "correct": true, "actual_resumes": 1000, "count": 76601, "bytes_total": 7475245, "peak_live_bytes": 404683}
+{"label": "resume-rewrite-exprs", "N": 2000, "exit": 0, "elapsed_seconds": 0.12433108600089327, "correct": true, "actual_resumes": 2000, "count": 151604, "bytes_total": 14519509, "peak_live_bytes": 556683}
+{"label": "resume-rewrite-compiled", "N": 1000, "exit": 0, "elapsed_seconds": 0.09105900599388406, "correct": true, "actual_resumes": 1000, "count": 59598, "bytes_total": 5947173, "peak_live_bytes": 404580}
+{"label": "resume-rewrite-compiled", "N": 2000, "exit": 0, "elapsed_seconds": 0.0868985439883545, "correct": true, "actual_resumes": 2000, "count": 117601, "bytes_total": 11463437, "peak_live_bytes": 556580}
+{"label": "resume-cases-spec", "N": 1000, "exit": 0, "elapsed_seconds": 0.12385166699823458, "correct": true, "actual_resumes": 1000, "count": 103624, "bytes_total": 9444103, "peak_live_bytes": 1362190}
+{"label": "resume-cases-spec", "N": 2000, "exit": 0, "elapsed_seconds": 0.1251780649909051, "correct": true, "actual_resumes": 2000, "count": 205628, "bytes_total": 18456655, "peak_live_bytes": 2474574}
+{"label": "resume-cases-traversal", "N": 1000, "exit": 0, "elapsed_seconds": 0.12841358900186606, "correct": true, "actual_resumes": 1000, "count": 113623, "bytes_total": 9064122, "peak_live_bytes": 979210}
+{"label": "resume-cases-traversal", "N": 2000, "exit": 0, "elapsed_seconds": 0.12623481299669947, "correct": true, "actual_resumes": 2000, "count": 225627, "bytes_total": 17696826, "peak_live_bytes": 1708170}
+{"label": "resume-position-traversal", "N": 1000, "exit": 0, "elapsed_seconds": 0.08804002399847377, "correct": true, "actual_resumes": 1000, "count": 116624, "bytes_total": 9809010, "peak_live_bytes": 1578643}
+{"label": "resume-position-traversal", "N": 2000, "exit": 0, "elapsed_seconds": 0.12382335599977523, "correct": true, "actual_resumes": 2000, "count": 231628, "bytes_total": 19186562, "peak_live_bytes": 2907027}
+{"label": "resume-count-traversal", "N": 1000, "exit": 0, "elapsed_seconds": 0.12910247899708338, "correct": true, "actual_resumes": 1000, "count": 99613, "bytes_total": 7696385, "peak_live_bytes": 405307}
+{"label": "resume-count-traversal", "N": 2000, "exit": 0, "elapsed_seconds": 0.1356949210021412, "correct": true, "actual_resumes": 2000, "count": 197616, "bytes_total": 14959649, "peak_live_bytes": 557307}
+{"label": "resume-cases-shared", "N": 1000, "exit": 0, "elapsed_seconds": 0.1256795340013923, "correct": true, "actual_resumes": 2000, "count": 181666, "bytes_total": 14968272, "peak_live_bytes": 1362760}
+{"label": "resume-cases-shared", "N": 2000, "exit": 0, "elapsed_seconds": 0.12487065099412575, "correct": true, "actual_resumes": 4000, "count": 361670, "bytes_total": 29497824, "peak_live_bytes": 2475144}
+{"label": "resume-s5-down-rhs", "N": 100, "exit": 0, "elapsed_seconds": 0.09592009198968299, "correct": true, "actual_resumes": 100, "count": 9019, "bytes_total": 1106063, "peak_live_bytes": 276545}
+{"label": "resume-s5-down-rhs", "N": 200, "exit": 0, "elapsed_seconds": 0.09564258099999279, "correct": true, "actual_resumes": 200, "count": 16322, "bytes_total": 1765571, "peak_live_bytes": 294945}
+{"label": "resume-s5-down-guard", "N": 100, "exit": 0, "elapsed_seconds": 0.08995280400267802, "correct": true, "actual_resumes": 200, "count": 21541, "bytes_total": 2559995, "peak_live_bytes": 369678}
+{"label": "resume-s5-down-guard", "N": 200, "exit": 0, "elapsed_seconds": 0.09218310700089205, "correct": true, "actual_resumes": 400, "count": 40044, "bytes_total": 4496903, "peak_live_bytes": 379278}
+{"label": "resume-s5-sub-rhs", "N": 100, "exit": 0, "elapsed_seconds": 0.09078964799118694, "correct": true, "actual_resumes": 100, "count": 9341, "bytes_total": 1130436, "peak_live_bytes": 277336}
+{"label": "resume-s5-sub-rhs", "N": 200, "exit": 0, "elapsed_seconds": 0.09364312399702612, "correct": true, "actual_resumes": 200, "count": 16944, "bytes_total": 1811544, "peak_live_bytes": 295736}
+{"label": "resume-s5-sub-guard", "N": 100, "exit": 0, "elapsed_seconds": 0.09087918300065212, "correct": true, "actual_resumes": 200, "count": 20880, "bytes_total": 2426239, "peak_live_bytes": 280533}
+{"label": "resume-s5-sub-guard", "N": 200, "exit": 0, "elapsed_seconds": 0.09174808399984613, "correct": true, "actual_resumes": 400, "count": 39983, "bytes_total": 4399947, "peak_live_bytes": 296465}
+{"label": "resume-s5-up-rhs", "N": 100, "exit": 0, "elapsed_seconds": 0.09323462400061544, "correct": true, "actual_resumes": 100, "count": 9957, "bytes_total": 1261479, "peak_live_bytes": 276546}
+{"label": "resume-s5-up-rhs", "N": 200, "exit": 0, "elapsed_seconds": 0.10810284099716228, "correct": true, "actual_resumes": 200, "count": 18160, "bytes_total": 2074587, "peak_live_bytes": 294946}
+{"label": "resume-s5-up-guard", "N": 100, "exit": 0, "elapsed_seconds": 0.0939621699944837, "correct": true, "actual_resumes": 200, "count": 24508, "bytes_total": 2777803, "peak_live_bytes": 279788}
+{"label": "resume-s5-up-guard", "N": 200, "exit": 0, "elapsed_seconds": 0.09084765199804679, "correct": true, "actual_resumes": 400, "count": 47211, "bytes_total": 5103911, "peak_live_bytes": 296078}
+{"label": "resume-s5-default-rhs", "N": 100, "exit": 0, "elapsed_seconds": 0.09082891199795995, "correct": true, "actual_resumes": 100, "count": 19400, "bytes_total": 2141230, "peak_live_bytes": 322035}
+{"label": "resume-s5-default-rhs", "N": 200, "exit": 0, "elapsed_seconds": 0.0961511669884203, "correct": true, "actual_resumes": 200, "count": 37004, "bytes_total": 3831706, "peak_live_bytes": 387891}
+{"label": "resume-s5-default-guard", "N": 100, "exit": 0, "elapsed_seconds": 0.09192701400024816, "correct": true, "actual_resumes": 200, "count": 18043, "bytes_total": 1909892, "peak_live_bytes": 278313}
+{"label": "resume-s5-default-guard", "N": 200, "exit": 0, "elapsed_seconds": 0.09014736699464265, "correct": true, "actual_resumes": 400, "count": 34346, "bytes_total": 3370800, "peak_live_bytes": 294796}
+{"label": "resume-s5-default-fallback-rhs", "N": 100, "exit": 0, "elapsed_seconds": 0.09130396001273766, "correct": true, "actual_resumes": 100, "count": 10914, "bytes_total": 1242134, "peak_live_bytes": 275654}
+{"label": "resume-s5-default-fallback-rhs", "N": 200, "exit": 0, "elapsed_seconds": 0.08960470600868575, "correct": true, "actual_resumes": 200, "count": 20117, "bytes_total": 2038042, "peak_live_bytes": 294054}
+{"label": "resume-s5-set", "N": 100, "exit": 0, "elapsed_seconds": 0.09356213700084481, "correct": true, "actual_resumes": 100, "count": 8745, "bytes_total": 1056962, "peak_live_bytes": 273379}
+{"label": "resume-s5-set", "N": 200, "exit": 0, "elapsed_seconds": 0.09178329499263782, "correct": true, "actual_resumes": 200, "count": 15848, "bytes_total": 1677670, "peak_live_bytes": 291779}
+{"label": "resume-s5-upset", "N": 100, "exit": 0, "elapsed_seconds": 0.09367083500546869, "correct": true, "actual_resumes": 100, "count": 10748, "bytes_total": 1219952, "peak_live_bytes": 275142}
+{"label": "resume-s5-upset", "N": 200, "exit": 0, "elapsed_seconds": 0.09048077400075272, "correct": true, "actual_resumes": 200, "count": 19851, "bytes_total": 2002260, "peak_live_bytes": 293542}
+{"label": "resume-s5-tagset", "N": 100, "exit": 0, "elapsed_seconds": 0.09138258900202345, "correct": true, "actual_resumes": 100, "count": 10566, "bytes_total": 1208910, "peak_live_bytes": 275175}
+{"label": "resume-s5-tagset", "N": 200, "exit": 0, "elapsed_seconds": 0.09091108699794859, "correct": true, "actual_resumes": 200, "count": 19469, "bytes_total": 1975218, "peak_live_bytes": 293575}
+{"label": "resume-s5-rule-rhs", "N": 100, "exit": 0, "elapsed_seconds": 0.09432204299082514, "correct": true, "actual_resumes": 100, "count": 11280, "bytes_total": 1228937, "peak_live_bytes": 303292}
+{"label": "resume-s5-rule-rhs", "N": 200, "exit": 0, "elapsed_seconds": 0.09254464299010579, "correct": true, "actual_resumes": 200, "count": 20884, "bytes_total": 2015913, "peak_live_bytes": 351356}
+{"label": "resume-s5-rule-lhs", "N": 100, "exit": 0, "elapsed_seconds": 0.09324811800615862, "correct": true, "actual_resumes": 100, "count": 13745, "bytes_total": 1463435, "peak_live_bytes": 277914}
+{"label": "resume-s5-rule-lhs", "N": 200, "exit": 0, "elapsed_seconds": 0.0995984749897616, "correct": true, "actual_resumes": 200, "count": 25748, "bytes_total": 2477467, "peak_live_bytes": 295012}
+{"label": "resume-s5-destructure", "N": 100, "exit": 0, "elapsed_seconds": 0.09381171800487209, "correct": true, "actual_resumes": 100, "count": 12964, "bytes_total": 1502235, "peak_live_bytes": 285999}
+{"label": "resume-s5-destructure", "N": 200, "exit": 0, "elapsed_seconds": 0.0939883910032222, "correct": true, "actual_resumes": 200, "count": 24167, "bytes_total": 2555915, "peak_live_bytes": 318991}
+{"label": "resume-s5-lhs-twice", "N": 100, "exit": 0, "elapsed_seconds": 0.08967212599236518, "correct": true, "actual_resumes": 200, "count": 14390, "bytes_total": 1717763, "peak_live_bytes": 275636}
+{"label": "resume-s5-lhs-twice", "N": 200, "exit": 0, "elapsed_seconds": 0.09562788299808744, "correct": true, "actual_resumes": 400, "count": 27093, "bytes_total": 2991471, "peak_live_bytes": 294036}
+{"label": "resume-s5-own-rhs", "N": 100, "exit": 0, "elapsed_seconds": 0.09125967099680565, "correct": true, "actual_resumes": 100, "count": 8274, "bytes_total": 1054415, "peak_live_bytes": 274447}
+{"label": "resume-s5-own-rhs", "N": 200, "exit": 0, "elapsed_seconds": 0.09745904900773894, "correct": true, "actual_resumes": 200, "count": 14877, "bytes_total": 1670323, "peak_live_bytes": 292847}
+{"label": "resume-s5-destructure-twice", "N": 100, "exit": 0, "elapsed_seconds": 0.0963942149974173, "correct": true, "actual_resumes": 200, "count": 20882, "bytes_total": 2079415, "peak_live_bytes": 285958}
+{"label": "resume-s5-destructure-twice", "N": 200, "exit": 0, "elapsed_seconds": 0.09253834999981336, "correct": true, "actual_resumes": 400, "count": 39985, "bytes_total": 3707895, "peak_live_bytes": 318950}
+{"label": "resume-s5-rule-lhs-twice", "N": 100, "exit": 0, "elapsed_seconds": 0.09041665299446322, "correct": true, "actual_resumes": 200, "count": 18580, "bytes_total": 1943510, "peak_live_bytes": 278947}
+{"label": "resume-s5-rule-lhs-twice", "N": 200, "exit": 0, "elapsed_seconds": 0.0905453960003797, "correct": true, "actual_resumes": 400, "count": 35383, "bytes_total": 3435342, "peak_live_bytes": 295459}
+{"label": "resume-s6-rhs-single", "N": 100, "exit": 0, "elapsed_seconds": 0.09352273900003638, "correct": true, "actual_resumes": 100, "count": 13245, "bytes_total": 1534930, "peak_live_bytes": 277899}
+{"label": "resume-s6-rhs-single", "N": 200, "exit": 0, "elapsed_seconds": 0.09308358699490782, "correct": true, "actual_resumes": 200, "count": 24748, "bytes_total": 2621238, "peak_live_bytes": 295353}
+{"label": "resume-s6-rhs-twice", "N": 100, "exit": 0, "elapsed_seconds": 0.09201003599446267, "correct": true, "actual_resumes": 200, "count": 17681, "bytes_total": 1977841, "peak_live_bytes": 279282}
+{"label": "resume-s6-rhs-twice", "N": 200, "exit": 0, "elapsed_seconds": 0.0938917410094291, "correct": true, "actual_resumes": 400, "count": 33584, "bytes_total": 3504349, "peak_live_bytes": 296005}
+{"label": "resume-s6-cross-type", "N": 100, "exit": 0, "elapsed_seconds": 0.09143403900088742, "correct": true, "actual_resumes": 200, "count": 23682, "bytes_total": 2668618, "peak_live_bytes": 280019}
+{"label": "resume-s6-cross-type", "N": 200, "exit": 0, "elapsed_seconds": 0.0916671890008729, "correct": true, "actual_resumes": 400, "count": 45585, "bytes_total": 4885926, "peak_live_bytes": 295832}
+{"label": "resume-s6-readonly-twice", "N": 100, "exit": 0, "elapsed_seconds": 0.09154633100843057, "correct": true, "actual_resumes": 400, "count": 32350, "bytes_total": 3571064, "peak_live_bytes": 315722}
+{"label": "resume-s6-readonly-twice", "N": 200, "exit": 0, "elapsed_seconds": 0.09113413099839818, "correct": true, "actual_resumes": 800, "count": 62954, "bytes_total": 6692088, "peak_live_bytes": 378378}
+{"label": "resume-s6-string", "N": 100, "exit": 0, "elapsed_seconds": 0.09112887000082992, "correct": true, "actual_resumes": 100, "count": 15590, "bytes_total": 1462858, "peak_live_bytes": 276646}
+{"label": "resume-s6-string", "N": 200, "exit": 0, "elapsed_seconds": 0.09052106199669652, "correct": true, "actual_resumes": 200, "count": 29493, "bytes_total": 2479566, "peak_live_bytes": 294317}
+{"label": "resume-s7-list-part", "N": 100, "exit": 0, "elapsed_seconds": 0.09201814798871055, "correct": true, "actual_resumes": 100, "count": 13324, "bytes_total": 1291934, "peak_live_bytes": 295970}
+{"label": "resume-s7-list-part", "N": 200, "exit": 0, "elapsed_seconds": 0.09014106800896116, "correct": true, "actual_resumes": 200, "count": 24928, "bytes_total": 2138686, "peak_live_bytes": 336034}
+{"label": "resume-s7-assoc-part", "N": 100, "exit": 0, "elapsed_seconds": 0.09176107800158206, "correct": true, "actual_resumes": 100, "count": 13631, "bytes_total": 1494468, "peak_live_bytes": 356290}
+{"label": "resume-s7-assoc-part", "N": 200, "exit": 0, "elapsed_seconds": 0.09178823800175451, "correct": true, "actual_resumes": 200, "count": 25535, "bytes_total": 2543848, "peak_live_bytes": 456518}
+{"label": "resume-s7-assoc-call", "N": 100, "exit": 0, "elapsed_seconds": 0.09156506200088188, "correct": true, "actual_resumes": 100, "count": 11121, "bytes_total": 1228406, "peak_live_bytes": 325745}
+{"label": "resume-s7-assoc-call", "N": 200, "exit": 0, "elapsed_seconds": 0.09126422999543138, "correct": true, "actual_resumes": 200, "count": 20525, "bytes_total": 2012486, "peak_live_bytes": 395573}
+{"label": "resume-s7-assoc-call-thrice", "N": 100, "exit": 0, "elapsed_seconds": 0.09083143199677579, "correct": true, "actual_resumes": 300, "count": 26328, "bytes_total": 2829280, "peak_live_bytes": 559948}
+{"label": "resume-s7-assoc-call-thrice", "N": 200, "exit": 0, "elapsed_seconds": 0.0898788279882865, "correct": true, "actual_resumes": 600, "count": 50832, "bytes_total": 5198728, "peak_live_bytes": 863174}
+{"label": "resume-s7-held-twice", "N": 100, "exit": 0, "elapsed_seconds": 0.0912347889970988, "correct": true, "actual_resumes": 200, "count": 20790, "bytes_total": 1881556, "peak_live_bytes": 326266}
+{"label": "resume-s7-held-twice", "N": 200, "exit": 0, "elapsed_seconds": 0.0930449030129239, "correct": true, "actual_resumes": 400, "count": 39794, "bytes_total": 3303036, "peak_live_bytes": 394394}
+{"label": "resume-s7-held-rhs", "N": 100, "exit": 0, "elapsed_seconds": 0.09376617599627934, "correct": true, "actual_resumes": 100, "count": 15163, "bytes_total": 1445605, "peak_live_bytes": 297711}
+{"label": "resume-s7-held-rhs", "N": 200, "exit": 0, "elapsed_seconds": 0.08895417499297764, "correct": true, "actual_resumes": 200, "count": 28567, "bytes_total": 2441157, "peak_live_bytes": 337775}
+{"label": "resume-s7-associate-argument", "N": 100, "exit": 0, "elapsed_seconds": 0.09113477199571207, "correct": true, "actual_resumes": 100, "count": 11811, "bytes_total": 1336605, "peak_live_bytes": 356033}
+{"label": "resume-s7-associate-argument", "N": 200, "exit": 0, "elapsed_seconds": 0.0919927729992196, "correct": true, "actual_resumes": 200, "count": 21915, "bytes_total": 2229285, "peak_live_bytes": 456261}
+{"label": "resume-s7-keydrop-argument", "N": 100, "exit": 0, "elapsed_seconds": 0.09398925700224936, "correct": true, "actual_resumes": 100, "count": 11619, "bytes_total": 1286170, "peak_live_bytes": 297515}
+{"label": "resume-s7-keydrop-argument", "N": 200, "exit": 0, "elapsed_seconds": 0.09127396201074589, "correct": true, "actual_resumes": 200, "count": 21523, "bytes_total": 2127722, "peak_live_bytes": 339179}
+{"label": "resume-s7-associate-target", "N": 100, "exit": 0, "elapsed_seconds": 0.09135233701090328, "correct": true, "actual_resumes": 100, "count": 16067, "bytes_total": 2184914, "peak_live_bytes": 513364}
+{"label": "resume-s7-associate-target", "N": 200, "exit": 0, "elapsed_seconds": 0.08987793899723329, "correct": true, "actual_resumes": 200, "count": 30773, "bytes_total": 4322146, "peak_live_bytes": 763972}
+{"label": "resume-s7-keydrop-target", "N": 100, "exit": 0, "elapsed_seconds": 0.09113525800057687, "correct": true, "actual_resumes": 100, "count": 16073, "bytes_total": 2122781, "peak_live_bytes": 469584}
+{"label": "resume-s7-keydrop-target", "N": 200, "exit": 0, "elapsed_seconds": 0.08935402499628253, "correct": true, "actual_resumes": 200, "count": 30779, "bytes_total": 4197557, "peak_live_bytes": 675595}
+{"label": "resume-s7-associate-held", "N": 100, "exit": 0, "elapsed_seconds": 0.09008076299505774, "correct": true, "actual_resumes": 100, "count": 16874, "bytes_total": 1758328, "peak_live_bytes": 518795}
+{"label": "resume-s7-associate-held", "N": 200, "exit": 0, "elapsed_seconds": 0.09182933799456805, "correct": true, "actual_resumes": 200, "count": 31978, "bytes_total": 3068576, "peak_live_bytes": 780099}
+{"label": "resume-s7-keydrop-held", "N": 100, "exit": 0, "elapsed_seconds": 0.0914660140115302, "correct": true, "actual_resumes": 100, "count": 17794, "bytes_total": 1681106, "peak_live_bytes": 405387}
+{"label": "resume-s7-keydrop-held", "N": 200, "exit": 0, "elapsed_seconds": 0.09113208400958683, "correct": true, "actual_resumes": 200, "count": 33798, "bytes_total": 2910142, "peak_live_bytes": 552243}
+{"label": "resume-s8-replaceall-node", "N": 100, "exit": 0, "elapsed_seconds": 0.09166098899731878, "correct": true, "actual_resumes": 100, "count": 18834, "bytes_total": 1841002, "peak_live_bytes": 319482}
+{"label": "resume-s8-replaceall-node", "N": 200, "exit": 0, "elapsed_seconds": 0.09177338899462484, "correct": true, "actual_resumes": 200, "count": 35938, "bytes_total": 3234578, "peak_live_bytes": 385338}
+{"label": "resume-s8-replaceall-atom", "N": 100, "exit": 0, "elapsed_seconds": 0.09074249900004361, "correct": true, "actual_resumes": 100, "count": 16411, "bytes_total": 1694340, "peak_live_bytes": 277489}
+{"label": "resume-s8-replaceall-atom", "N": 200, "exit": 0, "elapsed_seconds": 0.09067023800162133, "correct": true, "actual_resumes": 200, "count": 31114, "bytes_total": 2941448, "peak_live_bytes": 294395}
+{"label": "resume-s8-replaceall-twice", "N": 100, "exit": 0, "elapsed_seconds": 0.09063425401109271, "correct": true, "actual_resumes": 200, "count": 28328, "bytes_total": 2768966, "peak_live_bytes": 322602}
+{"label": "resume-s8-replaceall-twice", "N": 200, "exit": 0, "elapsed_seconds": 0.09074790301383473, "correct": true, "actual_resumes": 400, "count": 54932, "bytes_total": 5090790, "peak_live_bytes": 391658}
+{"label": "resume-s8-repeated-guard", "N": 100, "exit": 0, "elapsed_seconds": 0.09228714100026991, "correct": true, "actual_resumes": 100, "count": 17728, "bytes_total": 1762089, "peak_live_bytes": 284672}
+{"label": "resume-s8-repeated-guard", "N": 200, "exit": 0, "elapsed_seconds": 0.08984697099367622, "correct": true, "actual_resumes": 200, "count": 33731, "bytes_total": 3074121, "peak_live_bytes": 314464}
+{"label": "resume-s8-replace-decline", "N": 100, "exit": 0, "elapsed_seconds": 0.09352456999476999, "correct": true, "actual_resumes": 100, "count": 17127, "bytes_total": 1853528, "peak_live_bytes": 278529}
+{"label": "resume-s8-replace-decline", "N": 200, "exit": 0, "elapsed_seconds": 0.09556776500539854, "correct": true, "actual_resumes": 200, "count": 32530, "bytes_total": 3258336, "peak_live_bytes": 294916}
+{"label": "resume-s8-replace-both", "N": 100, "exit": 0, "elapsed_seconds": 0.09357273900241125, "correct": true, "actual_resumes": 200, "count": 25362, "bytes_total": 2620734, "peak_live_bytes": 279855}
+{"label": "resume-s8-replace-both", "N": 200, "exit": 0, "elapsed_seconds": 0.09143266700266395, "correct": true, "actual_resumes": 400, "count": 48965, "bytes_total": 4790142, "peak_live_bytes": 295502}
+{"label": "resume-s8-replaceat-guard", "N": 100, "exit": 0, "elapsed_seconds": 0.09267946300678886, "correct": true, "actual_resumes": 100, "count": 18634, "bytes_total": 1891286, "peak_live_bytes": 320915}
+{"label": "resume-s8-replaceat-guard", "N": 200, "exit": 0, "elapsed_seconds": 0.09223091800231487, "correct": true, "actual_resumes": 200, "count": 35538, "bytes_total": 3335310, "peak_live_bytes": 388371}
+{"label": "resume-s8-count-target", "N": 100, "exit": 0, "elapsed_seconds": 0.07083936900016852, "correct": true, "actual_resumes": 100, "count": 9355, "bytes_total": 1130081, "peak_live_bytes": 273848}
+{"label": "resume-s8-count-target", "N": 200, "exit": 0, "elapsed_seconds": 0.09168403899820987, "correct": true, "actual_resumes": 200, "count": 17058, "bytes_total": 1817189, "peak_live_bytes": 292248}
+{"label": "resume-s8-count-pattern", "N": 100, "exit": 0, "elapsed_seconds": 0.09310790299787186, "correct": true, "actual_resumes": 100, "count": 9355, "bytes_total": 1193898, "peak_live_bytes": 274139}
+{"label": "resume-s8-count-pattern", "N": 200, "exit": 0, "elapsed_seconds": 0.09471724199829623, "correct": true, "actual_resumes": 200, "count": 17058, "bytes_total": 1944306, "peak_live_bytes": 292539}
+{"label": "resume-s8-memberq-target", "N": 100, "exit": 0, "elapsed_seconds": 0.07500599800550845, "correct": true, "actual_resumes": 100, "count": 9357, "bytes_total": 1130489, "peak_live_bytes": 274178}
+{"label": "resume-s8-memberq-target", "N": 200, "exit": 0, "elapsed_seconds": 0.09380127998883836, "correct": true, "actual_resumes": 200, "count": 17060, "bytes_total": 1817321, "peak_live_bytes": 292578}
+{"label": "resume-s8-memberq-pattern", "N": 100, "exit": 0, "elapsed_seconds": 0.07519262499408796, "correct": true, "actual_resumes": 100, "count": 9356, "bytes_total": 1193634, "peak_live_bytes": 274141}
+{"label": "resume-s8-memberq-pattern", "N": 200, "exit": 0, "elapsed_seconds": 0.0926081169891404, "correct": true, "actual_resumes": 200, "count": 17059, "bytes_total": 1943766, "peak_live_bytes": 292541}
+{"label": "resume-s8-freeq-target", "N": 100, "exit": 0, "elapsed_seconds": 0.09483953799644951, "correct": true, "actual_resumes": 100, "count": 9357, "bytes_total": 1131077, "peak_live_bytes": 274176}
+{"label": "resume-s8-freeq-target", "N": 200, "exit": 0, "elapsed_seconds": 0.09177363700291608, "correct": true, "actual_resumes": 200, "count": 17060, "bytes_total": 1818509, "peak_live_bytes": 292576}
+{"label": "resume-s8-freeq-pattern", "N": 100, "exit": 0, "elapsed_seconds": 0.07095255200692918, "correct": true, "actual_resumes": 100, "count": 9356, "bytes_total": 1194222, "peak_live_bytes": 274139}
+{"label": "resume-s8-freeq-pattern", "N": 200, "exit": 0, "elapsed_seconds": 0.09126716399623547, "correct": true, "actual_resumes": 200, "count": 17059, "bytes_total": 1944954, "peak_live_bytes": 292539}
+{"label": "resume-s8-count-level", "N": 100, "exit": 0, "elapsed_seconds": 0.09060771600343287, "correct": true, "actual_resumes": 100, "count": 12975, "bytes_total": 1266692, "peak_live_bytes": 274880}
+{"label": "resume-s8-count-level", "N": 200, "exit": 0, "elapsed_seconds": 0.09224293500301428, "correct": true, "actual_resumes": 200, "count": 24278, "bytes_total": 2089300, "peak_live_bytes": 293280}
+{"label": "resume-s8-count-guard-twice", "N": 100, "exit": 0, "elapsed_seconds": 0.09440734100644477, "correct": true, "actual_resumes": 200, "count": 22994, "bytes_total": 2343249, "peak_live_bytes": 275218}
+{"label": "resume-s8-count-guard-twice", "N": 200, "exit": 0, "elapsed_seconds": 0.09022410400211811, "correct": true, "actual_resumes": 400, "count": 44297, "bytes_total": 4241157, "peak_live_bytes": 293038}
+{"label": "resume-s8-position-target", "N": 100, "exit": 0, "elapsed_seconds": 0.07069685599708464, "correct": true, "actual_resumes": 100, "count": 11059, "bytes_total": 1307456, "peak_live_bytes": 368758}
+{"label": "resume-s8-position-target", "N": 200, "exit": 0, "elapsed_seconds": 0.09246748599980492, "correct": true, "actual_resumes": 200, "count": 20463, "bytes_total": 2174308, "peak_live_bytes": 485878}
+{"label": "resume-s8-position-pattern", "N": 100, "exit": 0, "elapsed_seconds": 0.09187247800582554, "correct": true, "actual_resumes": 100, "count": 11259, "bytes_total": 1326661, "peak_live_bytes": 368760}
+{"label": "resume-s8-position-pattern", "N": 200, "exit": 0, "elapsed_seconds": 0.09325610499945469, "correct": true, "actual_resumes": 200, "count": 20863, "bytes_total": 2212713, "peak_live_bytes": 485880}
+{"label": "resume-s8-position-level", "N": 100, "exit": 0, "elapsed_seconds": 0.09156449799775146, "correct": true, "actual_resumes": 100, "count": 14679, "bytes_total": 1441660, "peak_live_bytes": 369332}
+{"label": "resume-s8-position-level", "N": 200, "exit": 0, "elapsed_seconds": 0.09105487899796572, "correct": true, "actual_resumes": 200, "count": 27683, "bytes_total": 2441612, "peak_live_bytes": 486452}
+{"label": "resume-s8-position-guard-twice", "N": 100, "exit": 0, "elapsed_seconds": 0.09156992699718103, "correct": true, "actual_resumes": 200, "count": 27603, "bytes_total": 2947239, "peak_live_bytes": 438267}
+{"label": "resume-s8-position-guard-twice", "N": 200, "exit": 0, "elapsed_seconds": 0.09492388200305868, "correct": true, "actual_resumes": 400, "count": 53507, "bytes_total": 5450843, "peak_live_bytes": 624315}
+{"label": "resume-s9-checkabort-option", "N": 100, "exit": 0, "elapsed_seconds": 0.09163075299875345, "correct": true, "actual_resumes": 100, "count": 9471, "bytes_total": 1116004, "peak_live_bytes": 273946}
+{"label": "resume-s9-checkabort-option", "N": 200, "exit": 0, "elapsed_seconds": 0.09179626700642984, "correct": true, "actual_resumes": 200, "count": 17274, "bytes_total": 1788712, "peak_live_bytes": 292346}
+{"label": "resume-s9-checkabort-primary", "N": 100, "exit": 0, "elapsed_seconds": 0.09226936899358407, "correct": true, "actual_resumes": 100, "count": 9448, "bytes_total": 1114422, "peak_live_bytes": 273385}
+{"label": "resume-s9-checkabort-primary", "N": 200, "exit": 0, "elapsed_seconds": 0.09160585899371654, "correct": true, "actual_resumes": 200, "count": 17251, "bytes_total": 1791930, "peak_live_bytes": 291785}
+{"label": "resume-s9-checkabort-abort", "N": 100, "exit": 0, "elapsed_seconds": 0.0926725840108702, "correct": true, "actual_resumes": 100, "count": 9353, "bytes_total": 1124662, "peak_live_bytes": 273889}
+{"label": "resume-s9-checkabort-abort", "N": 200, "exit": 0, "elapsed_seconds": 0.09179809200577438, "correct": true, "actual_resumes": 200, "count": 17056, "bytes_total": 1806970, "peak_live_bytes": 292289}
+{"label": "resume-s9-abortprotect-body", "N": 100, "exit": 0, "elapsed_seconds": 0.07257367500278633, "correct": true, "actual_resumes": 100, "count": 8941, "bytes_total": 1076671, "peak_live_bytes": 273418}
+{"label": "resume-s9-abortprotect-body", "N": 200, "exit": 0, "elapsed_seconds": 0.09137007599929348, "correct": true, "actual_resumes": 200, "count": 16244, "bytes_total": 1716579, "peak_live_bytes": 291818}
+{"label": "resume-s9-checkabort-pending-fallback", "N": 100, "exit": 0, "elapsed_seconds": 0.09411364900006447, "correct": true, "actual_resumes": 100, "count": 11181, "bytes_total": 1215813, "peak_live_bytes": 275715}
+{"label": "resume-s9-checkabort-pending-fallback", "N": 200, "exit": 0, "elapsed_seconds": 0.09337623200553935, "correct": true, "actual_resumes": 200, "count": 20684, "bytes_total": 1984521, "peak_live_bytes": 294102}
+{"label": "resume-s9-checkabort-fallback", "N": 100, "exit": 0, "elapsed_seconds": 0.09254310200049076, "correct": true, "actual_resumes": 100, "count": 9653, "bytes_total": 1136669, "peak_live_bytes": 273894}
+{"label": "resume-s9-checkabort-fallback", "N": 200, "exit": 0, "elapsed_seconds": 0.0923544649995165, "correct": true, "actual_resumes": 200, "count": 17656, "bytes_total": 1830977, "peak_live_bytes": 292294}
+{"label": "resume-s9-assert-function-lookup", "N": 100, "exit": 0, "elapsed_seconds": 0.09173169200948905, "correct": true, "actual_resumes": 100, "count": 10003, "bytes_total": 1384567, "peak_live_bytes": 277549}
+{"label": "resume-s9-assert-function-lookup", "N": 200, "exit": 0, "elapsed_seconds": 0.09003721899352968, "correct": true, "actual_resumes": 200, "count": 18306, "bytes_total": 2320599, "peak_live_bytes": 295949}
+{"label": "resume-s9-assert-test", "N": 100, "exit": 0, "elapsed_seconds": 0.09166746799019165, "correct": true, "actual_resumes": 100, "count": 9279, "bytes_total": 1094990, "peak_live_bytes": 274702}
+{"label": "resume-s9-assert-test", "N": 200, "exit": 0, "elapsed_seconds": 0.09399198899336625, "correct": true, "actual_resumes": 200, "count": 16882, "bytes_total": 1745422, "peak_live_bytes": 293102}
+{"label": "resume-s9-assert-handler", "N": 100, "exit": 0, "elapsed_seconds": 0.07368519699957687, "correct": true, "actual_resumes": 100, "count": 10395, "bytes_total": 1163859, "peak_live_bytes": 305500}
+{"label": "resume-s9-assert-handler", "N": 200, "exit": 0, "elapsed_seconds": 0.09234509798989166, "correct": true, "actual_resumes": 200, "count": 19099, "bytes_total": 1884135, "peak_live_bytes": 355164}
+{"label": "resume-s9-check-body", "N": 100, "exit": 0, "elapsed_seconds": 0.07285899500129744, "correct": true, "actual_resumes": 100, "count": 8847, "bytes_total": 1065561, "peak_live_bytes": 273371}
+{"label": "resume-s9-check-body", "N": 200, "exit": 0, "elapsed_seconds": 0.09362153000256512, "correct": true, "actual_resumes": 200, "count": 16050, "bytes_total": 1694269, "peak_live_bytes": 291771}
+{"label": "resume-s9-quiet-body", "N": 100, "exit": 0, "elapsed_seconds": 0.09504738800751511, "correct": true, "actual_resumes": 100, "count": 10971, "bytes_total": 1137640, "peak_live_bytes": 274379}
+{"label": "resume-s9-quiet-body", "N": 200, "exit": 0, "elapsed_seconds": 0.0935494530131109, "correct": true, "actual_resumes": 200, "count": 20274, "bytes_total": 1830548, "peak_live_bytes": 292779}
+{"label": "resume-s9-quiet-check-fallback", "N": 100, "exit": 0, "elapsed_seconds": 0.09475542999280151, "correct": true, "actual_resumes": 100, "count": 14383, "bytes_total": 1265643, "peak_live_bytes": 276063}
+{"label": "resume-s9-quiet-check-fallback", "N": 200, "exit": 0, "elapsed_seconds": 0.09517686799517833, "correct": true, "actual_resumes": 200, "count": 27086, "bytes_total": 2082751, "peak_live_bytes": 294463}
+{"label": "resume-s9-cleanup-init", "N": 100, "exit": 0, "elapsed_seconds": 0.09600769200187642, "correct": true, "actual_resumes": 100, "count": 8857, "bytes_total": 1070910, "peak_live_bytes": 273791}
+{"label": "resume-s9-cleanup-init", "N": 200, "exit": 0, "elapsed_seconds": 0.09258625599613879, "correct": true, "actual_resumes": 200, "count": 16060, "bytes_total": 1699618, "peak_live_bytes": 292191}
+{"label": "resume-s9-cleanup-primary", "N": 100, "exit": 0, "elapsed_seconds": 0.0909224950009957, "correct": true, "actual_resumes": 100, "count": 8849, "bytes_total": 1065881, "peak_live_bytes": 273800}
+{"label": "resume-s9-cleanup-primary", "N": 200, "exit": 0, "elapsed_seconds": 0.09376828400127124, "correct": true, "actual_resumes": 200, "count": 16052, "bytes_total": 1693789, "peak_live_bytes": 292200}
+{"label": "resume-s9-cleanup-finalizer", "N": 100, "exit": 0, "elapsed_seconds": 0.09490444899711292, "correct": true, "actual_resumes": 100, "count": 9049, "bytes_total": 1093083, "peak_live_bytes": 273802}
+{"label": "resume-s9-cleanup-finalizer", "N": 200, "exit": 0, "elapsed_seconds": 0.09804062999319285, "correct": true, "actual_resumes": 200, "count": 16452, "bytes_total": 1748191, "peak_live_bytes": 292202}
+{"label": "resume-s9-cleanup-three-phase", "N": 100, "exit": 0, "elapsed_seconds": 0.10420082800555974, "correct": true, "actual_resumes": 300, "count": 17906, "bytes_total": 1957273, "peak_live_bytes": 274679}
+{"label": "resume-s9-cleanup-three-phase", "N": 200, "exit": 0, "elapsed_seconds": 0.09254369900736492, "correct": true, "actual_resumes": 600, "count": 34109, "bytes_total": 3467981, "peak_live_bytes": 293079}
+{"label": "resume-s9-catchexceptions-body", "N": 100, "exit": 0, "elapsed_seconds": 0.09279317899199668, "correct": true, "actual_resumes": 100, "count": 12588, "bytes_total": 1211391, "peak_live_bytes": 338131}
+{"label": "resume-s9-catchexceptions-body", "N": 200, "exit": 0, "elapsed_seconds": 0.09402212900749873, "correct": true, "actual_resumes": 200, "count": 23491, "bytes_total": 1975159, "peak_live_bytes": 421823}
+{"label": "resume-s9-catchexceptions-guard", "N": 100, "exit": 0, "elapsed_seconds": 0.09258747199783102, "correct": true, "actual_resumes": 100, "count": 14864, "bytes_total": 1594708, "peak_live_bytes": 279222}
+{"label": "resume-s9-catchexceptions-guard", "N": 200, "exit": 0, "elapsed_seconds": 0.09131413299473934, "correct": true, "actual_resumes": 200, "count": 27967, "bytes_total": 2737916, "peak_live_bytes": 294795}
+{"label": "resume-s9-catchexceptions-match", "N": 100, "exit": 0, "elapsed_seconds": 0.09160660501220264, "correct": true, "actual_resumes": 100, "count": 15964, "bytes_total": 1698176, "peak_live_bytes": 279402}
+{"label": "resume-s9-catchexceptions-match", "N": 200, "exit": 0, "elapsed_seconds": 0.08997060199908447, "correct": true, "actual_resumes": 200, "count": 30167, "bytes_total": 2944984, "peak_live_bytes": 294795}
+{"label": "resume-s9-catchexceptions-suspended-match", "N": 100, "exit": 0, "elapsed_seconds": 0.09249878500122577, "correct": true, "actual_resumes": 200, "count": 20089, "bytes_total": 2111116, "peak_live_bytes": 278290}
+{"label": "resume-s9-catchexceptions-suspended-match", "N": 200, "exit": 0, "elapsed_seconds": 0.09185021300800145, "correct": true, "actual_resumes": 400, "count": 38392, "bytes_total": 3768524, "peak_live_bytes": 295421}
+{"label": "resume-s9-catchexceptions-suspended-guard", "N": 100, "exit": 0, "elapsed_seconds": 0.09444110699405428, "correct": true, "actual_resumes": 200, "count": 18989, "bytes_total": 2007651, "peak_live_bytes": 278328}
+{"label": "resume-s9-catchexceptions-suspended-guard", "N": 200, "exit": 0, "elapsed_seconds": 0.09508715799893253, "correct": true, "actual_resumes": 400, "count": 36192, "bytes_total": 3561459, "peak_live_bytes": 295423}
+{"label": "resume-s9-catchexceptions-rhs", "N": 100, "exit": 0, "elapsed_seconds": 0.09424299100646749, "correct": true, "actual_resumes": 100, "count": 12950, "bytes_total": 1424200, "peak_live_bytes": 277348}
+{"label": "resume-s9-catchexceptions-rhs", "N": 200, "exit": 0, "elapsed_seconds": 0.09363868199579883, "correct": true, "actual_resumes": 200, "count": 24153, "bytes_total": 2398608, "peak_live_bytes": 294597}
+{"label": "resume-s9-catch-body", "N": 100, "exit": 0, "elapsed_seconds": 0.09468313900288194, "correct": true, "actual_resumes": 100, "count": 8751, "bytes_total": 1071842, "peak_live_bytes": 273915}
+{"label": "resume-s9-catch-body", "N": 200, "exit": 0, "elapsed_seconds": 0.09171796101145446, "correct": true, "actual_resumes": 200, "count": 15854, "bytes_total": 1705350, "peak_live_bytes": 292315}
+{"label": "resume-s9-catch-form", "N": 100, "exit": 0, "elapsed_seconds": 0.09430548499221914, "correct": true, "actual_resumes": 100, "count": 9276, "bytes_total": 1108107, "peak_live_bytes": 274086}
+{"label": "resume-s9-catch-form", "N": 200, "exit": 0, "elapsed_seconds": 0.09310502700100187, "correct": true, "actual_resumes": 200, "count": 16879, "bytes_total": 1772815, "peak_live_bytes": 292486}
+{"label": "resume-s9-catch-form-guard", "N": 100, "exit": 0, "elapsed_seconds": 0.09140354799455963, "correct": true, "actual_resumes": 100, "count": 15245, "bytes_total": 1666794, "peak_live_bytes": 278553}
+{"label": "resume-s9-catch-form-guard", "N": 200, "exit": 0, "elapsed_seconds": 0.09077625400095712, "correct": true, "actual_resumes": 200, "count": 28748, "bytes_total": 2882702, "peak_live_bytes": 294943}
+{"label": "resume-s9-catch-bypassing-form", "N": 100, "exit": 0, "elapsed_seconds": 0.09703295399958733, "correct": true, "actual_resumes": 100, "count": 10638, "bytes_total": 1190258, "peak_live_bytes": 277416}
+{"label": "resume-s9-catch-bypassing-form", "N": 200, "exit": 0, "elapsed_seconds": 0.09251876000780612, "correct": true, "actual_resumes": 200, "count": 19541, "bytes_total": 1930166, "peak_live_bytes": 294512}
+{"label": "resume-s9-catch-bypassing-guard", "N": 100, "exit": 0, "elapsed_seconds": 0.09232389899261761, "correct": true, "actual_resumes": 100, "count": 14690, "bytes_total": 1894652, "peak_live_bytes": 281282}
+{"label": "resume-s9-catch-bypassing-guard", "N": 200, "exit": 0, "elapsed_seconds": 0.0935329490021104, "correct": true, "actual_resumes": 200, "count": 27593, "bytes_total": 3334560, "peak_live_bytes": 297456}
+{"label": "resume-g15-parameters", "N": 100, "exit": 0, "elapsed_seconds": 0.0923138329962967, "correct": true, "actual_resumes": 100, "count": 13707, "bytes_total": 1439078, "peak_live_bytes": 276048}
+{"label": "resume-g15-parameters", "N": 200, "exit": 0, "elapsed_seconds": 0.09054215099604335, "correct": true, "actual_resumes": 200, "count": 25710, "bytes_total": 2431610, "peak_live_bytes": 295248}
+{"label": "resume-g15-template", "N": 100, "exit": 0, "elapsed_seconds": 0.09055565799644683, "correct": true, "actual_resumes": 100, "count": 13792, "bytes_total": 1451423, "peak_live_bytes": 279302}
+{"label": "resume-g15-template", "N": 200, "exit": 0, "elapsed_seconds": 0.09180682399892248, "correct": true, "actual_resumes": 200, "count": 25795, "bytes_total": 2450055, "peak_live_bytes": 298100}
+{"label": "resume-g15-styled", "N": 100, "exit": 0, "elapsed_seconds": 0.09332604600058403, "correct": true, "actual_resumes": 100, "count": 15117, "bytes_total": 1526602, "peak_live_bytes": 317907}
+{"label": "resume-g15-styled", "N": 200, "exit": 0, "elapsed_seconds": 0.09271280899702106, "correct": true, "actual_resumes": 200, "count": 28521, "bytes_total": 2608322, "peak_live_bytes": 382763}
+{"label": "resume-g15-raw-failure", "N": 100, "exit": 0, "elapsed_seconds": 0.07157387799816206, "correct": true, "actual_resumes": 100, "count": 10578, "bytes_total": 1295982, "peak_live_bytes": 274832}
+{"label": "resume-g15-raw-failure", "N": 200, "exit": 0, "elapsed_seconds": 0.09154494700487703, "correct": true, "actual_resumes": 200, "count": 19481, "bytes_total": 2147390, "peak_live_bytes": 293232}
+{"label": "resume-g15-raw-success", "N": 100, "exit": 0, "elapsed_seconds": 0.09259191299497616, "correct": true, "actual_resumes": 100, "count": 9778, "bytes_total": 1180582, "peak_live_bytes": 274832}
+{"label": "resume-g15-raw-success", "N": 200, "exit": 0, "elapsed_seconds": 0.09342104200914036, "correct": true, "actual_resumes": 200, "count": 17881, "bytes_total": 1916590, "peak_live_bytes": 293232}
+{"label": "resume-g15-projection-value", "N": 100, "exit": 0, "elapsed_seconds": 0.09218988899374381, "correct": true, "actual_resumes": 200, "count": 16723, "bytes_total": 1851649, "peak_live_bytes": 276347}
+{"label": "resume-g15-projection-value", "N": 200, "exit": 0, "elapsed_seconds": 0.0901642700046068, "correct": true, "actual_resumes": 400, "count": 31726, "bytes_total": 3255257, "peak_live_bytes": 293956}
+{"label": "resume-g15-enclose", "N": 100, "exit": 0, "elapsed_seconds": 0.09224205899226945, "correct": true, "actual_resumes": 100, "count": 12548, "bytes_total": 1311517, "peak_live_bytes": 277047}
+{"label": "resume-g15-enclose", "N": 200, "exit": 0, "elapsed_seconds": 0.09279363299719989, "correct": true, "actual_resumes": 200, "count": 23351, "bytes_total": 2173249, "peak_live_bytes": 295722}
+{"label": "resume-g15-confirm", "N": 100, "exit": 0, "elapsed_seconds": 0.09228599599737208, "correct": true, "actual_resumes": 100, "count": 25229, "bytes_total": 2297027, "peak_live_bytes": 428731}
+{"label": "resume-g15-confirm", "N": 200, "exit": 0, "elapsed_seconds": 0.09136665098776575, "correct": true, "actual_resumes": 200, "count": 48733, "bytes_total": 4147987, "peak_live_bytes": 601287}
+{"label": "lhs-arg-cycle", "N": 100, "exit": 0, "elapsed_seconds": 0.09053785399009939, "correct": true, "actual_resumes": 100, "count": 45188, "bytes_total": 4432352, "peak_live_bytes": 267697}
+{"label": "lhs-arg-cycle", "N": 200, "exit": 0, "elapsed_seconds": 0.08906124500208534, "correct": true, "actual_resumes": 200, "count": 88888, "bytes_total": 8439252, "peak_live_bytes": 267697}
+{"label": "lhs-arg-value", "N": 100, "exit": 0, "elapsed_seconds": 0.08936713499133475, "correct": true, "actual_resumes": 100, "count": 45884, "bytes_total": 4460934, "peak_live_bytes": 267697}
+{"label": "lhs-arg-value", "N": 200, "exit": 0, "elapsed_seconds": 0.0910391899960814, "correct": true, "actual_resumes": 200, "count": 90284, "bytes_total": 8496434, "peak_live_bytes": 267697}
+{"label": "lhs-head-cycle", "N": 100, "exit": 0, "elapsed_seconds": 0.09028195799328387, "correct": true, "actual_resumes": 100, "count": 49296, "bytes_total": 5143832, "peak_live_bytes": 563215}
+{"label": "lhs-head-cycle", "N": 200, "exit": 0, "elapsed_seconds": 0.08851668200804852, "correct": true, "actual_resumes": 200, "count": 97097, "bytes_total": 9860772, "peak_live_bytes": 867319}
+{"label": "lhs-head-value", "N": 100, "exit": 0, "elapsed_seconds": 0.09169098999700509, "correct": true, "actual_resumes": 100, "count": 49196, "bytes_total": 5145832, "peak_live_bytes": 563215}
+{"label": "lhs-head-value", "N": 200, "exit": 0, "elapsed_seconds": 0.08985356999619398, "correct": true, "actual_resumes": 200, "count": 96897, "bytes_total": 9864772, "peak_live_bytes": 867319}
+{"label": "lhs-pattern-cycle", "N": 100, "exit": 0, "elapsed_seconds": 0.09066355899267364, "correct": true, "actual_resumes": 100, "count": 46988, "bytes_total": 4682556, "peak_live_bytes": 268133}
+{"label": "lhs-pattern-cycle", "N": 200, "exit": 0, "elapsed_seconds": 0.09001076300046407, "correct": true, "actual_resumes": 200, "count": 92488, "bytes_total": 8939656, "peak_live_bytes": 268133}
+{"label": "lhs-pattern-value", "N": 100, "exit": 0, "elapsed_seconds": 0.0892531429999508, "correct": true, "actual_resumes": 100, "count": 48184, "bytes_total": 4740738, "peak_live_bytes": 268133}
+{"label": "lhs-pattern-value", "N": 200, "exit": 0, "elapsed_seconds": 0.08919272899220232, "correct": true, "actual_resumes": 200, "count": 94884, "bytes_total": 9056038, "peak_live_bytes": 268133}
+{"label": "lhs-after-prior-cycle", "N": 100, "exit": 0, "elapsed_seconds": 0.09362115600379184, "correct": true, "actual_resumes": 200, "count": 51788, "bytes_total": 5129360, "peak_live_bytes": 267705}
+{"label": "lhs-after-prior-cycle", "N": 200, "exit": 0, "elapsed_seconds": 0.09457566299533937, "correct": true, "actual_resumes": 400, "count": 102088, "bytes_total": 9833260, "peak_live_bytes": 267705}
+{"label": "lhs-after-prior-value", "N": 100, "exit": 0, "elapsed_seconds": 0.09631458199874032, "correct": true, "actual_resumes": 200, "count": 51984, "bytes_total": 5128342, "peak_live_bytes": 267705}
+{"label": "lhs-after-prior-value", "N": 200, "exit": 0, "elapsed_seconds": 0.08968612499302253, "correct": true, "actual_resumes": 400, "count": 102484, "bytes_total": 9831242, "peak_live_bytes": 267705}
+{"label": "lhs-twice-cycle", "N": 100, "exit": 0, "elapsed_seconds": 0.09176849000505172, "correct": true, "actual_resumes": 200, "count": 51588, "bytes_total": 5094254, "peak_live_bytes": 267699}
+{"label": "lhs-twice-cycle", "N": 200, "exit": 0, "elapsed_seconds": 0.09006531300838105, "correct": true, "actual_resumes": 400, "count": 101688, "bytes_total": 9763054, "peak_live_bytes": 267699}
+{"label": "lhs-twice-value", "N": 100, "exit": 0, "elapsed_seconds": 0.08873368600325193, "correct": true, "actual_resumes": 200, "count": 52185, "bytes_total": 5130164, "peak_live_bytes": 268355}
+{"label": "lhs-twice-value", "N": 200, "exit": 0, "elapsed_seconds": 0.08859263299382292, "correct": true, "actual_resumes": 400, "count": 102885, "bytes_total": 9833564, "peak_live_bytes": 268355}
+```
+
+#### final-resume-allocation-comparison
+
+```text
+PASS: 113 workloads; 226 correct N/2N runs; every allocation count and requested-byte total exactly equals Continuation 2.
+```
+
+#### final-owned-prologues
+
+```text
+base retained call-state clone [1432, 280] + return addresses 8 = 1720
+base entry plus private resume method [1432, 552] + return addresses 8 = 1992
+cand retained call-state clone [1432, 280] + return addresses 8 = 1720
+cand entry plus private resume method [1432, 552] + return addresses 8 = 1992
+```
+
+#### final-chain-sums
+
+```text
+base largest direct F0257 local chain 2072 B
+cand largest direct F0257 local chain 2072 B
+```
+
+#### final-lhs-callgrind
+
+```text
+CAMPAIGN labels labels 11 samples 3
+PROFILE 1 base lhs-arg-cycle 100 correct True
+PROFILE 1 candidate lhs-arg-cycle 100 correct True
+PROFILE 1 base lhs-arg-cycle 200 correct True
+PROFILE 1 candidate lhs-arg-cycle 200 correct True
+PROFILE 1 base lhs-arg-value 100 correct True
+PROFILE 1 candidate lhs-arg-value 100 correct True
+PROFILE 1 base lhs-arg-value 200 correct True
+PROFILE 1 candidate lhs-arg-value 200 correct True
+PROFILE 1 base lhs-head-cycle 100 correct True
+PROFILE 1 candidate lhs-head-cycle 100 correct True
+PROFILE 1 base lhs-head-cycle 200 correct True
+PROFILE 1 candidate lhs-head-cycle 200 correct True
+PROFILE 1 base lhs-head-value 100 correct True
+PROFILE 1 candidate lhs-head-value 100 correct True
+PROFILE 1 base lhs-head-value 200 correct True
+PROFILE 1 candidate lhs-head-value 200 correct True
+PROFILE 1 base lhs-pattern-cycle 100 correct True
+PROFILE 1 candidate lhs-pattern-cycle 100 correct True
+PROFILE 1 base lhs-pattern-cycle 200 correct True
+PROFILE 1 candidate lhs-pattern-cycle 200 correct True
+PROFILE 1 base lhs-pattern-value 100 correct True
+PROFILE 1 candidate lhs-pattern-value 100 correct True
+PROFILE 1 base lhs-pattern-value 200 correct True
+PROFILE 1 candidate lhs-pattern-value 200 correct True
+PROFILE 1 base lhs-after-prior-cycle 100 correct True
+PROFILE 1 candidate lhs-after-prior-cycle 100 correct True
+PROFILE 1 base lhs-after-prior-cycle 200 correct True
+PROFILE 1 candidate lhs-after-prior-cycle 200 correct True
+PROFILE 1 base lhs-after-prior-value 100 correct True
+PROFILE 1 candidate lhs-after-prior-value 100 correct True
+PROFILE 1 base lhs-after-prior-value 200 correct True
+PROFILE 1 candidate lhs-after-prior-value 200 correct True
+PROFILE 1 base lhs-twice-cycle 100 correct True
+PROFILE 1 candidate lhs-twice-cycle 100 correct True
+PROFILE 1 base lhs-twice-cycle 200 correct True
+PROFILE 1 candidate lhs-twice-cycle 200 correct True
+PROFILE 1 base lhs-twice-value 100 correct True
+PROFILE 1 candidate lhs-twice-value 100 correct True
+PROFILE 1 base lhs-twice-value 200 correct True
+PROFILE 1 candidate lhs-twice-value 200 correct True
+PROFILE 1 base resume-s5-lhs-twice 100 correct True
+PROFILE 1 candidate resume-s5-lhs-twice 100 correct True
+PROFILE 1 base resume-s5-lhs-twice 200 correct True
+PROFILE 1 candidate resume-s5-lhs-twice 200 correct True
+PROFILE 2 base lhs-arg-cycle 100 correct True
+PROFILE 2 candidate lhs-arg-cycle 100 correct True
+PROFILE 2 base lhs-arg-cycle 200 correct True
+PROFILE 2 candidate lhs-arg-cycle 200 correct True
+PROFILE 2 base lhs-arg-value 100 correct True
+PROFILE 2 candidate lhs-arg-value 100 correct True
+PROFILE 2 base lhs-arg-value 200 correct True
+PROFILE 2 candidate lhs-arg-value 200 correct True
+PROFILE 2 base lhs-head-cycle 100 correct True
+PROFILE 2 candidate lhs-head-cycle 100 correct True
+PROFILE 2 base lhs-head-cycle 200 correct True
+PROFILE 2 candidate lhs-head-cycle 200 correct True
+PROFILE 2 base lhs-head-value 100 correct True
+PROFILE 2 candidate lhs-head-value 100 correct True
+PROFILE 2 base lhs-head-value 200 correct True
+PROFILE 2 candidate lhs-head-value 200 correct True
+PROFILE 2 base lhs-pattern-cycle 100 correct True
+PROFILE 2 candidate lhs-pattern-cycle 100 correct True
+PROFILE 2 base lhs-pattern-cycle 200 correct True
+PROFILE 2 candidate lhs-pattern-cycle 200 correct True
+PROFILE 2 base lhs-pattern-value 100 correct True
+PROFILE 2 candidate lhs-pattern-value 100 correct True
+PROFILE 2 base lhs-pattern-value 200 correct True
+PROFILE 2 candidate lhs-pattern-value 200 correct True
+PROFILE 2 base lhs-after-prior-cycle 100 correct True
+PROFILE 2 candidate lhs-after-prior-cycle 100 correct True
+PROFILE 2 base lhs-after-prior-cycle 200 correct True
+PROFILE 2 candidate lhs-after-prior-cycle 200 correct True
+PROFILE 2 base lhs-after-prior-value 100 correct True
+PROFILE 2 candidate lhs-after-prior-value 100 correct True
+PROFILE 2 base lhs-after-prior-value 200 correct True
+PROFILE 2 candidate lhs-after-prior-value 200 correct True
+PROFILE 2 base lhs-twice-cycle 100 correct True
+PROFILE 2 candidate lhs-twice-cycle 100 correct True
+PROFILE 2 base lhs-twice-cycle 200 correct True
+PROFILE 2 candidate lhs-twice-cycle 200 correct True
+PROFILE 2 base lhs-twice-value 100 correct True
+PROFILE 2 candidate lhs-twice-value 100 correct True
+PROFILE 2 base lhs-twice-value 200 correct True
+PROFILE 2 candidate lhs-twice-value 200 correct True
+PROFILE 2 base resume-s5-lhs-twice 100 correct True
+PROFILE 2 candidate resume-s5-lhs-twice 100 correct True
+PROFILE 2 base resume-s5-lhs-twice 200 correct True
+PROFILE 2 candidate resume-s5-lhs-twice 200 correct True
+PROFILE 3 base lhs-arg-cycle 100 correct True
+PROFILE 3 candidate lhs-arg-cycle 100 correct True
+PROFILE 3 base lhs-arg-cycle 200 correct True
+PROFILE 3 candidate lhs-arg-cycle 200 correct True
+PROFILE 3 base lhs-arg-value 100 correct True
+PROFILE 3 candidate lhs-arg-value 100 correct True
+PROFILE 3 base lhs-arg-value 200 correct True
+PROFILE 3 candidate lhs-arg-value 200 correct True
+PROFILE 3 base lhs-head-cycle 100 correct True
+PROFILE 3 candidate lhs-head-cycle 100 correct True
+PROFILE 3 base lhs-head-cycle 200 correct True
+PROFILE 3 candidate lhs-head-cycle 200 correct True
+PROFILE 3 base lhs-head-value 100 correct True
+PROFILE 3 candidate lhs-head-value 100 correct True
+PROFILE 3 base lhs-head-value 200 correct True
+PROFILE 3 candidate lhs-head-value 200 correct True
+PROFILE 3 base lhs-pattern-cycle 100 correct True
+PROFILE 3 candidate lhs-pattern-cycle 100 correct True
+PROFILE 3 base lhs-pattern-cycle 200 correct True
+PROFILE 3 candidate lhs-pattern-cycle 200 correct True
+PROFILE 3 base lhs-pattern-value 100 correct True
+PROFILE 3 candidate lhs-pattern-value 100 correct True
+PROFILE 3 base lhs-pattern-value 200 correct True
+PROFILE 3 candidate lhs-pattern-value 200 correct True
+PROFILE 3 base lhs-after-prior-cycle 100 correct True
+PROFILE 3 candidate lhs-after-prior-cycle 100 correct True
+PROFILE 3 base lhs-after-prior-cycle 200 correct True
+PROFILE 3 candidate lhs-after-prior-cycle 200 correct True
+PROFILE 3 base lhs-after-prior-value 100 correct True
+PROFILE 3 candidate lhs-after-prior-value 100 correct True
+PROFILE 3 base lhs-after-prior-value 200 correct True
+PROFILE 3 candidate lhs-after-prior-value 200 correct True
+PROFILE 3 base lhs-twice-cycle 100 correct True
+PROFILE 3 candidate lhs-twice-cycle 100 correct True
+PROFILE 3 base lhs-twice-cycle 200 correct True
+PROFILE 3 candidate lhs-twice-cycle 200 correct True
+PROFILE 3 base lhs-twice-value 100 correct True
+PROFILE 3 candidate lhs-twice-value 100 correct True
+PROFILE 3 base lhs-twice-value 200 correct True
+PROFILE 3 candidate lhs-twice-value 200 correct True
+PROFILE 3 base resume-s5-lhs-twice 100 correct True
+PROFILE 3 candidate resume-s5-lhs-twice 100 correct True
+PROFILE 3 base resume-s5-lhs-twice 200 correct True
+PROFILE 3 candidate resume-s5-lhs-twice 200 correct True
+CAMPAIGN DONE labels
+```
+
+#### final-resume-attribution
+
+```text
+136 sites base 0 candidate 0 all memcpy base 0 candidate 0
+pending 11 of 11
+LABEL resume-s5-lhs-twice N=100 functions=26 det=0 adapter_base=[2000, 2000, 2000] adapter_cand=[2000, 2000, 2000] 1.9s
+LABEL lhs-arg-cycle N=100 functions=10 det=0 adapter_base=[1200, 1200, 1200] adapter_cand=[1200, 1200, 1200] 1.9s
+LABEL lhs-arg-value N=100 functions=9 det=0 adapter_base=[1200, 1200, 1200] adapter_cand=[1200, 1200, 1200] 1.9s
+LABEL lhs-head-cycle N=100 functions=12 det=0 adapter_base=[1200, 1200, 1200] adapter_cand=[1200, 1200, 1200] 1.9s
+LABEL lhs-head-value N=100 functions=26 det=0 adapter_base=[1200, 1200, 1200] adapter_cand=[1200, 1200, 1200] 2.1s
+LABEL lhs-pattern-cycle N=100 functions=24 det=0 adapter_base=[1200, 1200, 1200] adapter_cand=[1200, 1200, 1200] 2.0s
+LABEL lhs-pattern-value N=100 functions=26 det=0 adapter_base=[1200, 1200, 1200] adapter_cand=[1200, 1200, 1200] 1.9s
+LABEL lhs-after-prior-cycle N=100 functions=9 det=0 adapter_base=[2100, 2100, 2100] adapter_cand=[2100, 2100, 2100] 1.9s
+LABEL lhs-after-prior-value N=100 functions=10 det=0 adapter_base=[2100, 2100, 2100] adapter_cand=[2100, 2100, 2100] 1.9s
+LABEL lhs-twice-cycle N=100 functions=9 det=0 adapter_base=[2100, 2100, 2100] adapter_cand=[2100, 2100, 2100] 1.9s
+LABEL lhs-twice-value N=100 functions=25 det=0 adapter_base=[2100, 2100, 2100] adapter_cand=[2100, 2100, 2100] 1.9s
+COMPLETE RESUME ATTRIBUTION 11 labels 0 deterministic deltas
+```
+
+#### final-local-copies
+
+```text
+resume-s5-lhs-twice run-1 {'184': 2.0, '136': 12.0, '144': 1.0, '392': 2.0} candidate {'136': 8.0, '344': 4.0, '144': 1.0} delta {'392': -2.0, '344': 4.0, '184': -2.0, '136': -4.0} 136-bar True
+lhs-arg-cycle run-1 {'184': 1.0, '136': 6.0, '392': 1.0} candidate {'136': 4.0, '344': 2.0} delta {'344': 2.0, '184': -1.0, '392': -1.0, '136': -2.0} 136-bar True
+lhs-arg-value run-1 {'184': 1.0, '136': 6.0, '392': 1.0} candidate {'136': 4.0, '344': 2.0} delta {'344': 2.0, '184': -1.0, '392': -1.0, '136': -2.0} 136-bar True
+lhs-head-cycle run-1 {'184': 1.0, '136': 4.0, '392': 1.0} candidate {'344': 2.0, '136': 2.0} delta {'184': -1.0, '136': -2.0, '392': -1.0, '344': 2.0} 136-bar True
+lhs-head-value run-1 {'184': 1.0, '136': 4.0, '392': 1.0} candidate {'344': 2.0, '136': 2.0} delta {'184': -1.0, '136': -2.0, '392': -1.0, '344': 2.0} 136-bar True
+lhs-pattern-cycle run-1 {'184': 1.0, '136': 3.0, '152': 2.0, '176': 2.0, '392': 1.0} candidate {'152': 2.0, '344': 2.0, '136': 2.0, '176': 2.0} delta {'392': -1.0, '344': 2.0, '184': -1.0, '136': -1.0} 136-bar True
+lhs-pattern-value run-1 {'184': 1.0, '136': 3.0, '152': 2.0, '176': 2.0, '392': 1.0} candidate {'152': 2.0, '344': 2.0, '136': 2.0, '176': 2.0} delta {'392': -1.0, '344': 2.0, '184': -1.0, '136': -1.0} 136-bar True
+lhs-after-prior-cycle run-1 {'184': 2.0, '136': 12.0, '144': 1.0, '392': 2.0} candidate {'136': 8.0, '344': 4.0, '144': 1.0} delta {'392': -2.0, '344': 4.0, '184': -2.0, '136': -4.0} 136-bar True
+lhs-after-prior-value run-1 {'184': 2.0, '136': 12.0, '144': 1.0, '392': 2.0} candidate {'136': 8.0, '344': 4.0, '144': 1.0} delta {'392': -2.0, '344': 4.0, '184': -2.0, '136': -4.0} 136-bar True
+lhs-twice-cycle run-1 {'184': 2.0, '136': 12.0, '144': 1.0, '392': 2.0} candidate {'136': 8.0, '344': 4.0, '144': 1.0} delta {'392': -2.0, '344': 4.0, '184': -2.0, '136': -4.0} 136-bar True
+lhs-twice-value run-1 {'184': 2.0, '136': 12.0, '144': 1.0, '392': 2.0} candidate {'136': 8.0, '344': 4.0, '144': 1.0} delta {'392': -2.0, '344': 4.0, '184': -2.0, '136': -4.0} 136-bar True
+```
+
+#### final-local-copy-byte-bar
+
+```text
+PASS all11 local copy calls, static bytes, and136-byte result transfers at or below run1.
+```
+
+#### final-scope-audit
+
+```text
+PASS scope: 11 owned sources; 2086 supplied source files and six bases unchanged.
+Helper/finish equal run 1; Expr->Expr; one new derive entry; named frames 565; unreachable count 1.
+```
+
+#### final-canonical-paths
+
+```text
+Canonical fixed output roots written: 8
+.temp/typed-slot-census/default 15
+.temp/typed-slot-census/no-default 15
+.temp/typed-slot-census/forced-red 5858
+.temp/typed-slot-compile-controls 573
+.temp/suspension-oracle 2
+.temp/brief-546/certificates 12
+target/brief-544 1
+target/brief-535/EDGE_ALL 14
+```
+
+
+Final decision: **restore C2 exactly; inlined stack condition fails2152≥1992; copy-byte condition passes all11. No further tuning.**
+
+## Director gate record (2026-10-19) — G15-B accepted
+
+**Runs.**
+
+| Run | Session | Tokens | Result |
+| --- | --- | ---: | --- |
+| Run 1 | `01a14f80-…` | 1.22M | Repaired the defect with a whole-`Result` finish before the resume match. It added an impossible arm and two 136-B copies per resume. |
+| Continuation 1 | fork `01a1508c-…` | 1.87M | Stopped on the stop-loss, correctly. It refuted my in-arm, error-only prescription on both paths. |
+| Continuation 2 | fork `01a150a6-…` | 3.10M | Split the three awaited states into a frame-only enum, which made the impossible arms unrepresentable. |
+| Continuation 3 | fork `01a1519d-…` | 3.66M | Tested deleting `#[inline(never)]`. The inlined chain is 1 864 B plus a 280-B clone helper, 2 152 B in total, so the pre-committed rule restored continuation 2 exactly. |
+
+**Gate on the final tree** (`.temp/director/gate-620/`, `chain.txt`):
+
+- **Formatting and units.** `cargo fmt --check` is clean. typed 24,
+  frame_root_trace 15, resume_evaluation_context 11, depth 1.
+- **Oracle.** 472 tests in both builds, fault delta 0 (94 494 observations),
+  no warnings.
+- **Census.** 608 implementations, 97 typed, 55 typed macros, 48 witnessed
+  sites, in both builds. The `FAILED` lines are the census's own forced-red
+  probes. Compile controls pass in both builds.
+- **Inventories.** The fingerprint and certificate replays leave every
+  inventory byte-identical. ownership 31, local acceptance in both builds,
+  rejection census.
+- **Workspace.** 3904/0/59, run natively with no skip variable, so all nine
+  ZeroMQ tests really ran. The warnings are the three pre-existing
+  `test_builtins.rs` dead-code warnings and their summary line.
+- **Builds.** Rebuilding in the worker's own target directories keeps all
+  four candidate hashes (`rum-cli` `e6e9dfb1…`, `resume` `3b6fcd9e…`,
+  `resume-alloc` `8dd74d7f…`, `rum-cli-alloc` `67bf4f04…`).
+- **Allocations (300 labels).** All 187 ordinary labels are equal.
+  - On the six unchanged-result resume workloads, counts are equal and bytes
+    rise by 136 per resume: the frame grows from 392 to 528 B.
+  - The five cycle workloads differ because the base terminates them. This
+    was accepted in run 1.
+- **Stack, 21 shapes.** `lhs-arg` is −1 024 B debug and −112 B release per
+  level. All 40 other shape-profile pairs equal base.
+- **Probes.**
+  - s-g15b 20/20 SAME; g15 14/14 SAME.
+  - s10: 51 SAME and 7 DIFF (the information markers, S10's).
+  - brief-618's fixed set: 114 SAME / 22 DIFF, with the five owned rows
+    fixed and no new DIFF.
+  - s9 61, s8 48, s7 32, s6 22 and g14 23, all SAME.
+
+**Rulings.**
+
+- **The type split is accepted.** `unreachable!` falls from 3 to 1, leaving
+  only the `Vacant` placeholder. The ordinary depth contract improves, and
+  the driver costs 520 instructions per call instead of 523.
+- **The resumed chain is accepted.** F0257's chain is 1 432 + 552 B plus a
+  return address, with a deepest measured local chain of 2 072 B, against
+  run 1's 1 576 B. It is paid once per resume, and the ordinary path repays
+  it per level. `#[inline(never)]` stays: with the clone helper counted, it
+  is the lower chain.
+- **Timing.**
+  - `association-part-key-read-width4000` fails calibration on the
+    unchanged base, including run 1's exact binary. It is excluded as an
+    instrument property.
+  - `matcher-single-tiny` (+2.52%) and
+    `replacepart-guarded-decline-fallback` (+1.54%) are accepted as layout.
+  - Run 1's `symbol-ownvalue-guarded-read` and
+    `stringreplace-guarded-decline-fallback` are accepted as layout.
+
+**Lessons.**
+
+- In a large match, per-arm error handling costs more stack than one site
+  before the match, because the arms' temporaries do not share slots.
+- An impossible arm that persists across placements comes from the type.
+- A stack bar bounds the chain of frames live at once: every helper the
+  entry calls while its frame is live, never one function's prologue. I set
+  the wrong bar twice, first on the entry alone and then on a chain that
+  left out the clone helper.
