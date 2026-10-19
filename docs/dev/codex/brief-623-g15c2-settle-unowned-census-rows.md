@@ -247,3 +247,49 @@ Each must be red.
 5. **The residual list.**
 6. **The port tables.**
 7. **Open questions**, each with a recommendation.
+
+## Director continuation 1 (2026-10-19) — resume from the checkpoint
+
+Run 1 ran for about 72 minutes, then ended on an upstream service
+interruption. Its log is kept as `cdx_brief_623.filter-1.log`. Its scene is
+intact and accepted as checkpointed in `.temp/brief-623/PROGRESS.md`,
+`state.json` and `batches.jsonl`:
+
+- 1 032 rows (the 1 024 plus eight new graph edges) with 75 120 frozen
+  tuples;
+- calibration passing: 32/32 parity, and the four controls plus C1's shape
+  red;
+- 20 `Boundary`, 3 `Unreachable` and 3 `NoObservableTail` proposals;
+- every batch through `revisit-adapters`.
+
+This is a fresh session. Read this brief, then the checkpoint, and continue
+from it. Do not regenerate completed batches.
+
+**Two rulings from the director's look at the scene.**
+
+1. **The 21 real-build "DIFF" rows in `batches/survived/real.jsonl` are
+   not losses.**
+   - All of them are `phase_observation.trace` probes on timing
+     descriptors (`AbsoluteTiming.body`, `TestReport.*`, report capture).
+     They differ only in elapsed durations inside the trace (for example
+     `60521/500000000` against `21779/250000000`).
+   - brief-618's observation model, which this line accepted, excludes
+     elapsed durations from comparison.
+   - Mask them in the trace comparison as the plans' `duration_paths` intend,
+     rerun those 21, and record the result. Only a difference that survives
+     the mask is a loss candidate.
+2. **Report the armed-and-survived class by mechanism.**
+   - In the `survived` batch, 16 734 of 23 145 armed tuples survived, and
+     only 2 rows were caught. That is this brief's central finding so far.
+   - Group the proposals by the tail's mechanism, for example:
+     - an `Arc`-sharing rebuild of an equal value;
+     - an `evaluate` the fixed point redoes with an identical trace;
+     - an identity wrapper;
+     - a profiling label.
+   - Each group gets one source argument, the rows it covers, and its
+     strongest context attempt.
+   - Do not write per-row narratives. I rule by group.
+
+Everything else in the brief stands, including the stop-loss and the
+prohibition on new internal-encoding probes.
+
