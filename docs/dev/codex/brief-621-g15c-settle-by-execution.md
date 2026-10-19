@@ -380,6 +380,49 @@ stop-loss.
 
 Checkpoint after each batch.
 
+## Director continuation 2 (2026-10-19) — resume from the checkpoint
+
+Continuation 1 ran for about 30 minutes and then ended on an upstream
+service interruption. Its log is kept as `cdx_brief_621.filter-1.log`. Its
+scene is intact, and its work is accepted as checkpointed in
+`.temp/brief-621/PROGRESS.md` and `continuation1/batches.jsonl`:
+
+- policies for all 2 186 rows (batches A1-A2);
+- about 2.2 million coverage cells across the value, trace, log,
+  Return-boundary, Throw, Return-propagation, internal-encoding,
+  held-and-splice and consumer-route batches;
+- 73 `Unreachable`, 4 `Equal` and 5 `Lost`, with the rest pending.
+
+This is a fresh session. Read continuation 1 above and the checkpoint, then
+continue from it. Do not regenerate completed batches.
+
+**One change to scope.** Generate and run no further probes in the
+internal-encoding context families: the batches named
+`e1-guest_heads.*` in `batches.jsonl`, in which a guest program's value has
+the shape of an internal continuation encoding. All eight are complete.
+
+- **What their differences mean.** A difference in those batches, where the
+  queued run keeps the value as written and the resumed run interprets it,
+  has one mechanism: a lenient legacy decoder at an `Option` slot, reached
+  because a typed completion (usually `Some`) did not run on the resumed
+  path. That mechanism is G13's subject. The remaining typing steps and
+  their flips (F1-F23), and the decoder's removal (R), remove it
+  structurally.
+- **How to settle them.** Classify those differences **by script only**,
+  from the recorded observations, as a table of row, frame or slot identity
+  from attribution, the owning G13 step (from `.temp/brief-606/`
+  partitions), and count. Owner `G13-transport` is a valid owner for this
+  context. Do not minimize or discuss them individually.
+- **Escalate anything else.** A difference in those batches that does
+  *not* have that signature (the queued and resumed values differ in some
+  other way) is a skipped-tail candidate. Settle it through the other
+  context families.
+- **What a row still needs.** A row still needs its other required contexts
+  before it is `Equal`.
+
+Everything else in continuation 1 stands: settle by coverage, targeted
+families ordered by leverage, parked rows, D-F, and the batch stop-loss.
+
 ---
 
 ## Execution report — brief-621 (stopped under the prescribed stop-loss)
