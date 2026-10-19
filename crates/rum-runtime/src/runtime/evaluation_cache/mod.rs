@@ -59,3 +59,6 @@ fn symbol_has_generated_dollar_name(symbol: &Symbol) -> bool {
     };
     !suffix.is_empty() && suffix.bytes().all(|byte| byte.is_ascii_digit())
 }
+
+#[cfg(any(test, feature = "test-continuation-slots"))]
+pub(crate) use profile::observe_logical_profile;

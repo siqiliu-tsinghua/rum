@@ -7,3 +7,14 @@
 mod runtime;
 
 pub use runtime::*;
+
+#[cfg(any(test, feature = "test-continuation-slots"))]
+#[doc(hidden)]
+pub fn test_logical_profile_snapshot() -> LogicalProfileSnapshot {
+    runtime::logical_profile_snapshot()
+}
+#[cfg(any(test, feature = "test-continuation-slots"))]
+#[doc(hidden)]
+pub fn test_logical_profile_reset() {
+    runtime::logical_profile_reset();
+}

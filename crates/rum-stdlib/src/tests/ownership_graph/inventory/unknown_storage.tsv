@@ -4,6 +4,8 @@ UnknownConstruct	crates/rum-core/src/expr.rs	44	12	rum_core::expr::SymbolInterne
 UnknownConstruct	crates/rum-core/src/expr.rs	331	9	rum_core::expr::IntValue.Big.0/std::boxed::Box[Own]/arg0: foreign representation num_bigint::BigInt: BigInt
 UnknownConstruct	crates/rum-core/src/expr.rs	406	16	rum_core::expr::Rational.numerator: foreign representation num_bigint::BigInt: BigInt
 UnknownConstruct	crates/rum-core/src/expr.rs	407	18	rum_core::expr::Rational.denominator: foreign representation num_bigint::BigInt: BigInt
+UnknownConstruct	crates/rum-runtime/src/lib.rs	13	5	conditional public input signature test_logical_profile_snapshot
+UnknownConstruct	crates/rum-runtime/src/lib.rs	18	5	conditional public input signature test_logical_profile_reset
 UnknownConstruct	crates/rum-runtime/src/runtime/accounting_mode/bridge.rs	13	14	rum_runtime::runtime::accounting_mode::bridge::CallbackValue.receipt: unresolved/ambiguous type (): M :: Receipt
 UnknownConstruct	crates/rum-runtime/src/runtime/accounting_mode/counter.rs	22	13	rum_runtime::runtime::accounting_mode::counter::Counter.pushes: foreign representation std::sync::atomic::AtomicUsize: AtomicUsize
 UnknownConstruct	crates/rum-runtime/src/runtime/accounting_mode/counter.rs	23	11	rum_runtime::runtime::accounting_mode::counter::Counter.pops: foreign representation std::sync::atomic::AtomicUsize: AtomicUsize
@@ -57,6 +59,11 @@ UnknownConstruct	crates/rum-runtime/src/runtime/model/session.rs	126	43	rum_runt
 UnknownConstruct	crates/rum-runtime/src/runtime/options/tests/resume.rs	1	1	source file is not reachable from a production or test module declaration
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	465	12	rum_runtime::runtime::profiling::BuiltinTimingToken.start: foreign representation std::time::Instant: Instant
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	470	12	rum_runtime::runtime::profiling::RuntimePathTimingToken.start: foreign representation std::time::Instant: Instant
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/logical_contract.rs	11	18	rum_runtime::runtime::profiling::logical_contract::LogicalProfileSnapshot.logical: unresolved conditional storage: BTreeMap < String , Vec < u64 > >
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/logical_contract.rs	12	20	rum_runtime::runtime::profiling::logical_contract::LogicalProfileSnapshot.durations: unresolved conditional storage: BTreeMap < String , Vec < u64 > >
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/logical_contract.rs	13	20	rum_runtime::runtime::profiling::logical_contract::LogicalProfileSnapshot.telemetry: unresolved conditional storage: BTreeMap < String , String >
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/logical_contract.rs	14	16	rum_runtime::runtime::profiling::logical_contract::LogicalProfileSnapshot.flags: unresolved conditional storage: BTreeMap < String , u8 >
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/logical_contract.rs	16	15	rum_runtime::runtime::profiling::logical_contract::LogicalProfileSnapshot.maps: unresolved conditional storage: BTreeMap < String , usize >
 UnknownConstruct	crates/rum-runtime/src/runtime/session/batch_file.rs	9	11	rum_runtime::runtime::session::batch_file::PublicFileRollbackFrame.path: foreign representation std::path::PathBuf: PathBuf
 UnknownConstruct	crates/rum-runtime/src/runtime/session/guest_loading/file.rs	5	22	rum_runtime::runtime::session::guest_loading::file::GuestFileSource.path: foreign representation std::path::PathBuf: PathBuf
 UnknownConstruct	crates/rum-runtime/src/runtime/session/guest_loading/scope.rs	42	20	rum_runtime::runtime::session::guest_loading::scope::GuestFormEnvironment.eval_deadline/std::option::Option[Own]/arg0: foreign representation std::time::Instant: Instant

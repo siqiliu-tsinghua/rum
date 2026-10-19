@@ -552,3 +552,11 @@ pub(super) struct LexicalProfileArgSiteGuard {
 pub(super) struct ExpressionRebuildSourceGuard {
     active: bool,
 }
+
+#[cfg(any(test, feature = "test-continuation-slots"))]
+#[path = "tests/logical_contract.rs"]
+mod logical_contract;
+#[cfg(any(test, feature = "test-continuation-slots"))]
+pub use logical_contract::LogicalProfileSnapshot;
+#[cfg(any(test, feature = "test-continuation-slots"))]
+pub(crate) use logical_contract::snapshot as logical_profile_snapshot;

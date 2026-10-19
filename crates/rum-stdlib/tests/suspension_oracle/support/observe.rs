@@ -101,3 +101,88 @@ pub fn prefix(previous: &Observation, next: &Observation) -> Result<(), Rejectio
     }
     Ok(())
 }
+
+// The frozen timing fixtures declare only duration leaves. Preserve all other
+// trace data and ordering while normalizing their recorded timing results.
+use rum_core::Atom;
+fn named(expr: &Expr, name: &str) -> bool {
+    matches!(expr, Expr::Atom(Atom::Symbol(s)) if s.context()=="System`" && s.name()==name)
+}
+
+fn rewrite(expr: &Expr, outputs: &[(Expr, Expr)], report: bool, count: &mut usize) -> Expr {
+    if let Some((_, masked)) = outputs.iter().find(|(actual, _)| actual == expr) {
+        *count += 1;
+        return masked.clone();
+    }
+    let Expr::Call { head, args } = expr else {
+        return expr.clone();
+    };
+    if report
+        && named(head, "Rule")
+        && args.len() == 2
+        && matches!(&args[0], Expr::Atom(Atom::String(s)) if s=="Timing")
+    {
+        *count += 1;
+        return Expr::call(
+            head.as_ref().clone(),
+            vec![args[0].clone(), super::normalize::duration(&args[1], &[])],
+        );
+    }
+    Expr::call(
+        rewrite(head, outputs, report, count),
+        args.iter()
+            .map(|a| rewrite(a, outputs, report, count))
+            .collect::<Vec<_>>(),
+    )
+}
+
+pub fn normalize_profile_durations(out: &mut Observation, paths: &[Vec<usize>], report: bool) {
+    let mut outputs = Vec::new();
+    for event in &out.trace {
+        if let TraceEvent::EvaluationPass {
+            before: Expr::Call { head, .. },
+            after,
+        } = event
+        {
+            if ["Timing", "AbsoluteTiming", "RepeatedTiming"]
+                .iter()
+                .any(|n| named(head, n))
+                && !paths.is_empty()
+            {
+                let mut masked = after.clone();
+                for path in paths {
+                    masked = super::normalize::duration(&masked, path);
+                }
+                outputs.push((after.clone(), masked));
+            }
+        }
+    }
+    let mut count = 0;
+    for event in &mut out.trace {
+        match event {
+            TraceEvent::EvaluationPass { before, after } => {
+                *before = rewrite(before, &outputs, report, &mut count);
+                *after = rewrite(after, &outputs, report, &mut count);
+            }
+            TraceEvent::DefinitionStored { value, .. } => {
+                *value = rewrite(value, &outputs, report, &mut count)
+            }
+            TraceEvent::RuleApplied {
+                input,
+                rule,
+                result,
+                ..
+            } => {
+                *input = rewrite(input, &outputs, report, &mut count);
+                *rule = rewrite(rule, &outputs, report, &mut count);
+                *result = rewrite(result, &outputs, report, &mut count);
+            }
+        }
+    }
+    if count > 0 {
+        eprintln!(
+            "623_DURATION_MASK\tevents={}\treplacements={count}",
+            out.trace.len()
+        );
+    }
+}

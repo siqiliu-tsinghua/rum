@@ -378,3 +378,205 @@ pub(in crate::runtime) fn reset_evaluation_cache_profile_counters() {
     CALL_STABILITY_TIMING_STACK.with(|stack| stack.borrow_mut().clear());
     EVALUATION_CACHE_PROFILE_ACTIVE.store(1, Ordering::Relaxed);
 }
+
+#[cfg(any(test, feature = "test-continuation-slots"))]
+pub(crate) fn observe_logical_profile(out: &mut crate::runtime::profiling::LogicalProfileSnapshot) {
+    out.flags.insert(
+        "EVALUATION_CACHE_PROFILE_ENABLED".into(),
+        EVALUATION_CACHE_PROFILE_ENABLED.load(Ordering::Relaxed),
+    );
+    out.flags.insert(
+        "EVALUATION_CACHE_PROFILE_ACTIVE".into(),
+        EVALUATION_CACHE_PROFILE_ACTIVE.load(Ordering::Relaxed),
+    );
+    out.flags.insert(
+        "EVALUATION_CACHE_PROFILE_INCREMENTAL_ENABLED".into(),
+        EVALUATION_CACHE_PROFILE_INCREMENTAL_ENABLED.load(Ordering::Relaxed),
+    );
+    out.telemetry.insert(
+        "EPOCH_BUMP_COUNT".into(),
+        EPOCH_BUMP_COUNT.load(Ordering::Relaxed).to_string(),
+    );
+    out.telemetry.insert(
+        "CACHE_CLEAR_COUNT".into(),
+        CACHE_CLEAR_COUNT.load(Ordering::Relaxed).to_string(),
+    );
+    out.telemetry.insert(
+        "SYMBOL_INVALIDATION_COUNT".into(),
+        SYMBOL_INVALIDATION_COUNT
+            .load(Ordering::Relaxed)
+            .to_string(),
+    );
+    out.telemetry.insert(
+        "CALL_GENERATION_BUMP_COUNT".into(),
+        CALL_GENERATION_BUMP_COUNT
+            .load(Ordering::Relaxed)
+            .to_string(),
+    );
+    out.telemetry.insert(
+        "DIRTY_BLOOM_SATURATION_COUNT".into(),
+        DIRTY_BLOOM_SATURATION_COUNT
+            .load(Ordering::Relaxed)
+            .to_string(),
+    );
+    out.telemetry.insert(
+        "CALL_STABILITY_SIZE_CAP_CLEAR_COUNT".into(),
+        CALL_STABILITY_SIZE_CAP_CLEAR_COUNT
+            .load(Ordering::Relaxed)
+            .to_string(),
+    );
+    out.telemetry.insert(
+        "STABILITY_CHECK_COUNT".into(),
+        STABILITY_CHECK_COUNT.load(Ordering::Relaxed).to_string(),
+    );
+    out.telemetry.insert(
+        "CALL_STABILITY_HIT_COUNT".into(),
+        CALL_STABILITY_HIT_COUNT.load(Ordering::Relaxed).to_string(),
+    );
+    out.telemetry.insert(
+        "CALL_STABILITY_MISS_COUNT".into(),
+        CALL_STABILITY_MISS_COUNT
+            .load(Ordering::Relaxed)
+            .to_string(),
+    );
+    out.telemetry.insert(
+        "CALL_STABILITY_MISS_ABSENT_COUNT".into(),
+        CALL_STABILITY_MISS_ABSENT_COUNT
+            .load(Ordering::Relaxed)
+            .to_string(),
+    );
+    out.telemetry.insert(
+        "CALL_STABILITY_MISS_GENERATION_COUNT".into(),
+        CALL_STABILITY_MISS_GENERATION_COUNT
+            .load(Ordering::Relaxed)
+            .to_string(),
+    );
+    out.telemetry.insert(
+        "CALL_STABILITY_MISS_DIRTY_COUNT".into(),
+        CALL_STABILITY_MISS_DIRTY_COUNT
+            .load(Ordering::Relaxed)
+            .to_string(),
+    );
+    out.telemetry.insert(
+        "CALL_STABILITY_MISS_POINTER_COUNT".into(),
+        CALL_STABILITY_MISS_POINTER_COUNT
+            .load(Ordering::Relaxed)
+            .to_string(),
+    );
+    out.telemetry.insert(
+        "CALL_STABILITY_INSERT_COUNT".into(),
+        CALL_STABILITY_INSERT_COUNT
+            .load(Ordering::Relaxed)
+            .to_string(),
+    );
+    out.telemetry.insert(
+        "CALL_STABILITY_REWRITTEN_DIRTY_SKIP_COUNT".into(),
+        CALL_STABILITY_REWRITTEN_DIRTY_SKIP_COUNT
+            .load(Ordering::Relaxed)
+            .to_string(),
+    );
+    out.row(
+        "cache|EVALUATE_ENTRY_COUNT".into(),
+        vec![EVALUATE_ENTRY_COUNT.load(Ordering::Relaxed)],
+        vec![],
+    );
+    out.row(
+        "cache|DOWN_VALUE_SCAN_COUNT".into(),
+        vec![DOWN_VALUE_SCAN_COUNT.load(Ordering::Relaxed)],
+        vec![],
+    );
+    out.row(
+        "cache|DOWN_VALUE_APPLICATION_COUNT".into(),
+        vec![DOWN_VALUE_APPLICATION_COUNT.load(Ordering::Relaxed)],
+        vec![],
+    );
+    out.row(
+        "cache|SUB_VALUE_APPLICATION_COUNT".into(),
+        vec![SUB_VALUE_APPLICATION_COUNT.load(Ordering::Relaxed)],
+        vec![],
+    );
+    out.row(
+        "cache|BUILTIN_APPLICATION_COUNT".into(),
+        vec![BUILTIN_APPLICATION_COUNT.load(Ordering::Relaxed)],
+        vec![],
+    );
+    out.row(
+        "cache|EVAL_MODULE_ENTRY_COUNT".into(),
+        vec![EVAL_MODULE_ENTRY_COUNT.load(Ordering::Relaxed)],
+        vec![],
+    );
+    out.map(
+        "symbol_profile_counters",
+        &symbol_profile_counters().lock().unwrap(),
+    );
+    out.map(
+        "invalidation_site_profile_counters",
+        &invalidation_site_profile_counters().lock().unwrap(),
+    );
+    out.map(
+        "invalidation_family_profile_counters",
+        &invalidation_family_profile_counters().lock().unwrap(),
+    );
+    out.map(
+        "symbol_timing_profile_counters",
+        &symbol_timing_profile_counters().lock().unwrap(),
+    );
+    for ((name, symbol), count) in symbol_profile_counters().lock().unwrap().iter() {
+        if matches!(
+            *name,
+            "down_value_scans"
+                | "down_value_applications"
+                | "sub_value_applications"
+                | "builtin_applications"
+                | "eval_module_entries_by_source"
+        ) {
+            out.row(
+                format!("cache-symbol|{name}|{symbol}"),
+                vec![*count],
+                vec![],
+            );
+        }
+    }
+    for ((name, symbol), value) in symbol_timing_profile_counters().lock().unwrap().iter() {
+        out.durations.insert(
+            format!("cache-timing|{name}|{symbol}"),
+            vec![value.nanos, value.self_nanos],
+        );
+        if matches!(
+            *name,
+            "definition_rhs_eval_by_source" | "eval_module_by_source"
+        ) {
+            out.row(
+                format!("cache-source|{name}|{symbol}"),
+                vec![value.count],
+                vec![value.nanos, value.self_nanos],
+            );
+        }
+    }
+    CALL_STABILITY_SOURCE_HEAD_STATS
+        .with(|s| out.map("CALL_STABILITY_SOURCE_HEAD_STATS", &s.borrow()));
+    EVALUATION_PROFILE_SOURCE_STACK.with(|s| {
+        out.telemetry.insert(
+            "EVALUATION_PROFILE_SOURCE_STACK".into(),
+            format!("{:?}", s.borrow()),
+        );
+    });
+    EVALUATION_PROFILE_SOURCE_DEPTH.with(|s| {
+        out.telemetry.insert(
+            "EVALUATION_PROFILE_SOURCE_DEPTH".into(),
+            s.get().to_string(),
+        );
+    });
+    EVALUATION_PROFILE_TIMING_STACK.with(|s| {
+        out.telemetry.insert(
+            "EVALUATION_PROFILE_TIMING_STACK".into(),
+            format!("{:?}", s.borrow()),
+        );
+    });
+    CALL_STABILITY_TIMING_STACK.with(|s| {
+        out.telemetry.insert(
+            "CALL_STABILITY_TIMING_STACK".into(),
+            format!("{:?}", s.borrow()),
+        );
+    });
+}

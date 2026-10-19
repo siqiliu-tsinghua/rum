@@ -152,3 +152,46 @@ fn installed_catalog_and_descriptor_coverage_are_exact() {
         covered.len()
     );
 }
+
+/// The new counter context preserves the original requirement population and
+/// its G13 ownership; executable bindings live in a separate frozen collection.
+#[test]
+fn logical_counter_context_is_exact() {
+    let required = super::support::logical_profile::required(include_str!(
+        "inventory/logical-profile-required.tsv"
+    ))
+    .unwrap();
+    let bindings = super::support::logical_profile::rows(
+        include_str!("inventory/logical-profile-bindings.tsv"),
+        6,
+    )
+    .unwrap();
+    let original = required
+        .iter()
+        .map(|r| r[..16].join("\t"))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert_eq!(
+        super::support::logical_profile::fingerprint(&[&original]),
+        "fnv1a64:b41ac6a5dbf0e9a4"
+    );
+    assert_eq!(required.len(), 1115);
+    assert_eq!(bindings.len(), 875);
+    assert_eq!(required.iter().filter(|r| r[20] == "G13").count(), 240);
+    let active = required
+        .iter()
+        .filter(|r| r[20] == "-")
+        .map(|r| r[16].to_string())
+        .collect::<Vec<_>>();
+    super::support::logical_profile::exact(
+        &active,
+        &bindings
+            .iter()
+            .map(|b| b[0].to_string())
+            .collect::<Vec<_>>(),
+    )
+    .unwrap();
+    println!(
+        "COUNTER_CONTEXT phase_observation.counters required=1115 bound=875 encoding-owned=240"
+    );
+}

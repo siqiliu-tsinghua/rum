@@ -10,6 +10,7 @@ mod definition_lhs_cycle;
 mod definition_storage;
 mod functional_roles;
 mod guards_binding_completion;
+mod logical_profile;
 mod part_selectors_held_assignment;
 mod predicate_roles;
 pub mod preparation;

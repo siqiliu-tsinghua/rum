@@ -44,6 +44,9 @@ pub struct Fixture {
     pub files: Option<Vec<(String, String)>>,
     pub lifecycle_pauses: [usize; 2],
     pub configure: fn(&mut Session),
+    /// Native collection for the logical-profiler context, after setup only.
+    pub logical_profile: bool,
+    pub profile_trace: bool,
 }
 impl Fixture {
     pub fn new(id: &str, source: &str) -> Self {
@@ -66,6 +69,8 @@ impl Fixture {
             files: None,
             lifecycle_pauses: [0, 1],
             configure: |_| {},
+            logical_profile: false,
+            profile_trace: false,
         }
     }
     pub fn check_pause(&self, i: usize, observation: &Observation) -> Result<(), Rejection> {
@@ -110,6 +115,7 @@ pub struct ResultView {
     pub observation: Observation,
     pub log: Expr,
     pub projections: Vec<Expr>,
+    pub profile: Option<rum_runtime::LogicalProfileSnapshot>,
 }
 
 #[derive(Clone, Copy)]
@@ -130,6 +136,13 @@ impl Checks {
 
 pub fn run(f: &Fixture, queued: bool, checks: Checks) -> Result<ResultView, Rejection> {
     let mut s = f.session();
+    if f.logical_profile {
+        s.set_eval_timeout(Some(std::time::Duration::from_secs(2)));
+        if f.profile_trace {
+            s.enable_tracing(true);
+        }
+        rum_runtime::test_logical_profile_reset();
+    }
     let answers: Vec<_> = f.pauses.iter().map(|p| p.answer.as_str()).collect();
     let expected: Vec<_> = f
         .pauses
@@ -143,6 +156,10 @@ pub fn run(f: &Fixture, queued: bool, checks: Checks) -> Result<ResultView, Reje
         queued,
         checks.transcript.then_some(expected.as_slice()),
     )?;
+    // Native read immediately after the subject, before sentinels or projections.
+    let profile = f
+        .logical_profile
+        .then(rum_runtime::test_logical_profile_snapshot);
     if !queued && checks.transcript {
         if r.requests.len() != f.pauses.len() {
             return Err(Rejection::PauseCount {
@@ -170,6 +187,13 @@ pub fn run(f: &Fixture, queued: bool, checks: Checks) -> Result<ResultView, Reje
             *value = super::support::normalize::duration(value, path);
         }
     }
+    if f.logical_profile {
+        super::support::observe::normalize_profile_durations(
+            &mut observation,
+            &f.duration_paths,
+            f.source.contains("TestReport["),
+        );
+    }
     // Check before any guest-state projection could consume a spare answer.
     if checks.queue {
         session::empty_queue(&mut s)?;
@@ -185,6 +209,7 @@ pub fn run(f: &Fixture, queued: bool, checks: Checks) -> Result<ResultView, Reje
         observation,
         log,
         projections,
+        profile,
     })
 }
 
