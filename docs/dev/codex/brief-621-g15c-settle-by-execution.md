@@ -517,14 +517,25 @@ before.
 
 ---
 
-## Execution report — brief-621 (stopped under the prescribed stop-loss)
+## Execution report — brief-621 (final state after continuation 3)
 
+**198 of 2,186 rows are semantically settled: 43 Equal, 5 Lost, 140 Unreachable
+and 10 Boundary. The other 1,988 are explicit OwnedObligations, with 1,024
+assigned to G15-C2 and 964 to future G13 steps. No parked row lacks an owner.**
 
-**INCOMPLETE. 15 of 2,186 population members are settled: 4 Equal, 3 Lost and 8 Unreachable. The other 2,171 rows deliberately have blank verdicts in `.temp/brief-621/settled.tsv`. This fails the exhaustive-settlement deliverable. Neither the passing probe totals nor the source classifications are a claim that the census is settled.**
+Continuation 3 adds 39 measured Equal rows (29 C2, 10 S10), each with complete
+real SAME tuples and a caught source-row tail-skip mutant. It supplies the
+per-class proof review, per-step owner tables, four independent semantic
+controls, owner-lifetime ledger model and revised C1/C2/manifest drafts. C2
+remains Open; the production manifest gate, CHANGELOG and S10 cannot advance.
+See **Continuation 3** at the end and `.temp/brief-621/PROGRESS.md`.
 
-The stop-loss applies: “STOP and report if two consecutive work sessions of a reasonable size settle none.” After reaching 15 settlements, the contextual option session and the public retained-prefix fixture session each added zero complete row verdicts. The latter established a new producer route but did not finish its required context matrix. Work stopped there. Steps 5–6 were not reached; no implementation draft is ready for dispatch.
-
-All scratch, including the external Cargo crates, targets, copied source tree and its diagnostic edits, is under `.temp/brief-621/`. No git or network command ran. No scratch test was created under `crates/`, no original Rust/Python/TOML source was edited, and no unsafe was introduced. The only original-tree write is this appended report. Baseline hashing found 2,088 existing files unchanged before the append; the final check below excludes only this brief. The worktree was never queried through git.
+All experiments and drafts stay under `.temp/brief-621/`; no git/network or
+production source change occurred. The other 2,087 original files are byte
+unchanged. This brief's summary rewrite and report append are the only
+original-file edits. The sections immediately below preserve the initial
+15-settlement report as historical evidence; the later continuation sections
+record subsequent accepted work and corrections.
 
 ### 1. The re-census, calibration and cross-walk
 
@@ -6564,3 +6575,1885 @@ SOURCE INTEGRITY PASS: 2087 other baseline files unchanged; no original source c
 FINAL INCOMPLETE: 159/2186 settled; 2027 explicit parked records; source-obligation design and follow-up drafts written; exhaustive closure and full oracle gates not achieved.
 ```
 
+
+
+## Continuation 3
+
+**198 of 2,186 rows have semantic verdicts: 43 Equal, 5 Lost, 140 Unreachable
+and 10 Boundary. The other 1,988 are explicit OwnedObligations: 1,024 assigned
+to G15-C2 and 964 to future G13 steps. There is no ownerless parked row. An
+OwnedObligation is not Equal and is not an executed receipt. C2 remains Open.**
+
+This continuation adds 39 measured Equal rows (29 C2, 10 S10), using 2,140
+required tuple keys and a caught source-row mutant for every promotion. The
+four earlier LHS Equals remain accepted prior evidence; the production port
+also needs their individual mutation receipts. The other prior verdicts stand.
+All original crates/docs/scripts/root file hashes except this permitted brief
+are unchanged (2,087 files). All experiments, copies, binaries and drafts are
+under `.temp/brief-621/`. No git, network, unsafe addition, production patch,
+workspace scratch test or new encoding-family run occurred.
+
+The governing continuation is complete as a bounded prototype/design report,
+not as a full semantic closure of the remaining census. C1 is still a proposed
+repair. C2's exact residual has a settlement draft; S10 cannot proceed yet.
+
+### Final accounting and accepted foundation
+
+The calibrated census, both historical cross-walks, population, exclusion rule,
+and original comparator calibration were accepted and are reused unchanged.
+They were not regenerated. The full old calibration output follows verbatim;
+these are preserved results, not newly executed G1-G15 suites.
+
+```text
+G5 P0118 Repaired-control-SAME successors=P0126;P0130;P0131;P0127;S002 probes=548.Monitor-options;548.Monitor-EvaluationMonitor;548.Monitor-StepMonitor;548.Monitor-options-twice
+G5 P0119 Repaired-control-SAME successors=P0126;P0130;P0131;P0127;S002 probes=548.Monitor-options;548.Monitor-EvaluationMonitor;548.Monitor-StepMonitor;548.Monitor-options-twice
+G5 P0120 Repaired-control-SAME successors=P0126;P0130;P0131;P0127;S002 probes=548.Monitor-options;548.Monitor-EvaluationMonitor;548.Monitor-StepMonitor;548.Monitor-options-twice
+G5 P0122 Repaired-control-SAME successors=P0126;P0130;P0131;P0127;S002 probes=548.Monitor-options;548.Monitor-EvaluationMonitor;548.Monitor-StepMonitor;548.Monitor-options-twice
+G7 P0125 Repaired-control-SAME successors=P0145;P0146 probes=548.Sow-match;548.Sow-twice
+G5 P0157 Repaired-control-SAME successors=P0186;P0187;P0188;S004 probes=548.TestReport-option-SameTest;548.TestReport-option-TimeConstraint;548.TestReport-option-MemoryConstraint
+G5 P0158 Repaired-control-SAME successors=P0186;P0187;P0188;S004 probes=548.TestReport-option-SameTest;548.TestReport-option-TimeConstraint;548.TestReport-option-MemoryConstraint
+G5 P0159 Repaired-control-SAME successors=P0186;P0187;P0188;S004 probes=548.TestReport-option-SameTest;548.TestReport-option-TimeConstraint;548.TestReport-option-MemoryConstraint
+G5 P0161 Repaired-control-SAME successors=P0186;P0187;P0188;S004 probes=548.TestReport-option-SameTest;548.TestReport-option-TimeConstraint;548.TestReport-option-MemoryConstraint
+G5 P0167 Repaired-control-SAME successors=P0186;P0187;P0188;S004 probes=548.TestReport-two-args;548.TestReport-option-SameTest
+G5 P0168 Repaired-control-SAME successors=P0186;P0187;P0188;S004 probes=548.TestReport-two-args;548.TestReport-option-SameTest
+G5 P0193 Repaired-control-SAME successors=P0228;P1139;P1140;S009;S010 probes=548.Trace-Heads-option
+G7 P0199 Repaired-control-SAME successors=P0216;P0217;P0214 probes=548.Trace-pattern;548.TraceDetail-nested-pattern;548.TracePrint-nested-pattern;548.Trace-filter-levels;548.Trace-filter-heads;548.TraceDetail-filter-levels;548.TraceDetail-filter-heads;548.Trace-twice;548.TraceDetail-twice
+G7 P0200 Repaired-control-SAME successors=P0216;P0217;P0214 probes=548.Trace-pattern;548.TraceDetail-nested-pattern;548.TracePrint-nested-pattern;548.Trace-filter-levels;548.Trace-filter-heads;548.TraceDetail-filter-levels;548.TraceDetail-filter-heads;548.Trace-twice;548.TraceDetail-twice
+G7 P0201 Repaired-control-SAME successors=P0216;P0217;P0214 probes=548.Trace-pattern;548.TraceDetail-nested-pattern;548.TracePrint-nested-pattern;548.Trace-filter-levels;548.Trace-filter-heads;548.TraceDetail-filter-levels;548.TraceDetail-filter-heads;548.Trace-twice;548.TraceDetail-twice
+G7 P0202 Repaired-control-SAME successors=P0216;P0217;P0214 probes=548.Trace-pattern;548.TraceDetail-nested-pattern;548.TracePrint-nested-pattern;548.Trace-filter-levels;548.Trace-filter-heads;548.TraceDetail-filter-levels;548.TraceDetail-filter-heads;548.Trace-twice;548.TraceDetail-twice
+G7 P0203 Repaired-control-SAME successors=P0216;P0217;P0214 probes=548.Trace-pattern;548.TraceDetail-nested-pattern;548.TracePrint-nested-pattern;548.Trace-filter-levels;548.Trace-filter-heads;548.TraceDetail-filter-levels;548.TraceDetail-filter-heads;548.Trace-twice;548.TraceDetail-twice
+G7 P0204 Repaired-control-SAME successors=P0216;P0217;P0214 probes=548.Trace-pattern;548.TraceDetail-nested-pattern;548.TracePrint-nested-pattern;548.Trace-filter-levels;548.Trace-filter-heads;548.TraceDetail-filter-levels;548.TraceDetail-filter-heads;548.Trace-twice;548.TraceDetail-twice
+G7 P0205 Repaired-control-SAME successors=P0216;P0217;P0214 probes=548.Trace-pattern;548.TraceDetail-nested-pattern;548.TracePrint-nested-pattern;548.Trace-filter-levels;548.Trace-filter-heads;548.TraceDetail-filter-levels;548.TraceDetail-filter-heads;548.Trace-twice;548.TraceDetail-twice
+G7 P0206 Repaired-control-SAME successors=P0216;P0217;P0214 probes=548.Trace-pattern;548.TraceDetail-nested-pattern;548.TracePrint-nested-pattern;548.Trace-filter-levels;548.Trace-filter-heads;548.TraceDetail-filter-levels;548.TraceDetail-filter-heads;548.Trace-twice;548.TraceDetail-twice
+G7 P0208 Repaired-control-SAME successors=P0216;P0217;P0214 probes=548.Trace-pattern;548.TraceDetail-nested-pattern;548.TracePrint-nested-pattern;548.Trace-filter-levels;548.Trace-filter-heads;548.TraceDetail-filter-levels;548.TraceDetail-filter-heads;548.Trace-twice;548.TraceDetail-twice
+G7 P0209 Repaired-control-SAME successors=P0216;P0217;P0214 probes=548.Trace-pattern;548.TraceDetail-nested-pattern;548.TracePrint-nested-pattern;548.Trace-filter-levels;548.Trace-filter-heads;548.TraceDetail-filter-levels;548.TraceDetail-filter-heads;548.Trace-twice;548.TraceDetail-twice
+G7 P0210 Repaired-control-SAME successors=P0216;P0217;P0214 probes=548.Trace-pattern;548.TraceDetail-nested-pattern;548.TracePrint-nested-pattern;548.Trace-filter-levels;548.Trace-filter-heads;548.TraceDetail-filter-levels;548.TraceDetail-filter-heads;548.Trace-twice;548.TraceDetail-twice
+G7 P0211 Repaired-control-SAME successors=P0216;P0217;P0214 probes=548.Trace-pattern;548.TraceDetail-nested-pattern;548.TracePrint-nested-pattern;548.Trace-filter-levels;548.Trace-filter-heads;548.TraceDetail-filter-levels;548.TraceDetail-filter-heads;548.Trace-twice;548.TraceDetail-twice
+G7 P0213 Repaired-control-SAME successors=P0216;P0217;P0214 probes=548.Trace-pattern;548.TraceDetail-nested-pattern;548.TracePrint-nested-pattern;548.Trace-filter-levels;548.Trace-filter-heads;548.TraceDetail-filter-levels;548.TraceDetail-filter-heads;548.Trace-twice;548.TraceDetail-twice
+G4 P0342 Repaired-control-SAME successors=P0416;P0467;P0468;P0469 probes=548.Rule-plain;548.RuleDelayed-plain;548.Rule-pattern;548.RuleDelayed-pattern;548.Rule-Blank;548.Rule-PatternTest;548.Rule-Condition;548.Rule-wrapper;548.Rule-head;548.Rule-twice
+G4 P0344 Repaired-control-SAME successors=P0418;P0467;P0468;P0469 probes=548.Rule-plain;548.RuleDelayed-plain;548.Rule-pattern;548.RuleDelayed-pattern;548.Rule-Blank;548.Rule-PatternTest;548.Rule-Condition;548.Rule-wrapper;548.Rule-head;548.Rule-twice
+G4 P0350 Repaired-control-SAME successors=P0470;P0471 probes=548.Rule-plain;548.RuleDelayed-plain;548.Rule-pattern;548.RuleDelayed-pattern;548.Rule-Blank;548.Rule-PatternTest;548.Rule-Condition;548.Rule-wrapper;548.Rule-head;548.Rule-twice
+G4 P0351 Repaired-control-SAME successors=P0470;P0471 probes=548.Rule-plain;548.RuleDelayed-plain;548.Rule-pattern;548.RuleDelayed-pattern;548.Rule-Blank;548.Rule-PatternTest;548.Rule-Condition;548.Rule-wrapper;548.Rule-head;548.Rule-twice
+G4 P0352 Repaired-control-SAME successors=P0470;P0471 probes=548.Rule-plain;548.RuleDelayed-plain;548.Rule-pattern;548.RuleDelayed-pattern;548.Rule-Blank;548.Rule-PatternTest;548.Rule-Condition;548.Rule-wrapper;548.Rule-head;548.Rule-twice
+G4 P0353 Repaired-control-SAME successors=P0470;P0471 probes=548.Rule-plain;548.RuleDelayed-plain;548.Rule-pattern;548.RuleDelayed-pattern;548.Rule-Blank;548.Rule-PatternTest;548.Rule-Condition;548.Rule-wrapper;548.Rule-head;548.Rule-twice
+G4 P0354 Repaired-control-SAME successors=P0470;P0471 probes=548.Rule-plain;548.RuleDelayed-plain;548.Rule-pattern;548.RuleDelayed-pattern;548.Rule-Blank;548.Rule-PatternTest;548.Rule-Condition;548.Rule-wrapper;548.Rule-head;548.Rule-twice
+G4 P0355 Repaired-control-SAME successors=P0470;P0471 probes=548.Rule-plain;548.RuleDelayed-plain;548.Rule-pattern;548.RuleDelayed-pattern;548.Rule-Blank;548.Rule-PatternTest;548.Rule-Condition;548.Rule-wrapper;548.Rule-head;548.Rule-twice
+G4 P0356 Repaired-control-SAME successors=P0470;P0471 probes=548.Rule-plain;548.RuleDelayed-plain;548.Rule-pattern;548.RuleDelayed-pattern;548.Rule-Blank;548.Rule-PatternTest;548.Rule-Condition;548.Rule-wrapper;548.Rule-head;548.Rule-twice
+G4 P0357 Repaired-control-SAME successors=P0470;P0471 probes=548.Rule-plain;548.RuleDelayed-plain;548.Rule-pattern;548.RuleDelayed-pattern;548.Rule-Blank;548.Rule-PatternTest;548.Rule-Condition;548.Rule-wrapper;548.Rule-head;548.Rule-twice
+G5 P0452 Repaired-control-SAME successors=P0572;P1142;P1143;S011;S012 probes=548.CheckAbort-option
+G5 P0711 Repaired-control-SAME successors=P0865;P1139;P1140;S009;S010 probes=548.Cases-Heads-option;548.Cases-Heads-after-target
+G5 P0714 Repaired-control-SAME successors=P0866;P1139;P1140;S009;S010 probes=548.Cases-Heads-option;548.Cases-Heads-after-target
+G5 P0764 Repaired-control-SAME successors=P0920;P1139;P1140;S009;S010 probes=548.DeleteCases-Heads-option;548.DeleteCases-Heads-after-target
+G5 P0767 Repaired-control-SAME successors=P0921;P1139;P1140;S009;S010 probes=548.DeleteCases-Heads-option;548.DeleteCases-Heads-after-target
+G4 P0774 Repaired-control-SAME successors=P0936;P0937 probes=548.MatchQ-pattern-args;548.MatchQ-pattern-head;548.MatchQ-pattern-twice
+G4 P0776 Repaired-control-SAME successors=P0936;P0937 probes=548.MatchQ-pattern-args;548.MatchQ-pattern-head;548.MatchQ-pattern-twice
+G4 P0777 Repaired-control-SAME successors=P0936;P0937 probes=548.MatchQ-pattern-args;548.MatchQ-pattern-head;548.MatchQ-pattern-twice
+G4 P0779 Retired successors= probes=
+G5 P0848 Repaired-control-SAME successors=P1005;P1139;P1140;S009;S010 probes=548.Replace-Heads-option
+G8 P0882 Repaired-control-SAME successors=P1039;P0276 probes=548.ReplaceRepeated-predicate;548.ReplaceRepeated-twice
+G5 P0962 Repaired-control-SAME successors=P1124;S008 probes=548.Names-SpellingCorrection;548.Names-ResolveContextAliases;548.Names-IgnoreCase
+G5 P0963 Repaired-control-SAME successors=P1124;S008 probes=548.Names-SpellingCorrection;548.Names-ResolveContextAliases;548.Names-IgnoreCase
+G5 P0964 Repaired-control-SAME successors=P1124;S008 probes=548.Names-SpellingCorrection;548.Names-ResolveContextAliases;548.Names-IgnoreCase
+G6 P0973 Repaired-control-SAME successors=P1132;P1135;P1136 probes=548.OptionValue-many;548.OptionValue-twice
+G5 P0979 Repaired-control-SAME successors=P1142;P1149 probes=548.Cases-Heads-option;548.ArrayFilter-option;548.CheckAbort-option
+G5 P0997 Repaired-control-SAME successors=P1165;P1147;P1148;S013;S014;S015 probes=548.DumpSave-option
+G4 P1019 Retired successors= probes=
+G4 P1285 Retired successors= probes=
+G5 P1385 Repaired-control-SAME successors=P1603;P1139;P1140;S009;S010 probes=548.Count-Heads-option;548.MemberQ-Heads-option;548.FreeQ-Heads-option
+G5 P1389 Repaired-control-SAME successors=P1606;P1139;P1140;S009;S010 probes=548.Count-Heads-option;548.MemberQ-Heads-option;548.FreeQ-Heads-option
+G5 P1393 Repaired-control-SAME successors=P1609;P1139;P1140;S009;S010 probes=548.Count-Heads-option;548.MemberQ-Heads-option;548.FreeQ-Heads-option
+G5 P1401 Repaired-control-SAME successors=P1618;P1139;P1140;S009;S010 probes=548.Level-Heads-option
+G5 P1410 Repaired-control-SAME successors=P1635;P1139;P1140;S009;S010 probes=548.Position-Heads-option
+G2 P1483 Repaired-control-SAME successors=P1708;P2144 probes=548.LazyMap;548.LazyMap-twice
+G1 P1692 Repaired-control-SAME successors=P1921 probes=548.Scan;548.Scan-twice
+G8 P1707 Repaired-control-SAME successors=P1937;P1951 probes=548.Dot-chain;548.Dot-twice
+G5 P1708 Repaired-control-SAME successors=P1940;P1142;P1143;S011;S012 probes=548.ArrayFilter-option
+G2 P1898 Repaired-control-SAME successors=P2132;P2133;P2134;P2135;P2137 probes=548.LazyMap;548.LazyNestList;548.LazySelect;548.LazyFoldList;548.LazyDrop-inner;548.LazyMap-inner;548.LazySelect-inner;548.LazyFoldList-inner;548.LazyMap-twice;548.LazyNestList-twice;548.LazySelect-twice;548.LazyFoldList-twice;548.LazyDrop-twice
+G2 P1899 Repaired-control-SAME successors=P2132;P2133;P2134;P2135;P2137 probes=548.LazyMap;548.LazyNestList;548.LazySelect;548.LazyFoldList;548.LazyDrop-inner;548.LazyMap-inner;548.LazySelect-inner;548.LazyFoldList-inner;548.LazyMap-twice;548.LazyNestList-twice;548.LazySelect-twice;548.LazyFoldList-twice;548.LazyDrop-twice
+G2 P1901 Repaired-control-SAME successors=P2132;P2133;P2134;P2135;P2137 probes=548.LazyMap;548.LazyNestList;548.LazySelect;548.LazyFoldList;548.LazyDrop-inner;548.LazyMap-inner;548.LazySelect-inner;548.LazyFoldList-inner;548.LazyMap-twice;548.LazyNestList-twice;548.LazySelect-twice;548.LazyFoldList-twice;548.LazyDrop-twice
+G2 P1902 Repaired-control-SAME successors=P2132;P2133;P2134;P2135;P2137 probes=548.LazyMap;548.LazyNestList;548.LazySelect;548.LazyFoldList;548.LazyDrop-inner;548.LazyMap-inner;548.LazySelect-inner;548.LazyFoldList-inner;548.LazyMap-twice;548.LazyNestList-twice;548.LazySelect-twice;548.LazyFoldList-twice;548.LazyDrop-twice
+G2 P1904 Repaired-control-SAME successors=P2132;P2133;P2134;P2135;P2137 probes=548.LazyMap;548.LazyNestList;548.LazySelect;548.LazyFoldList;548.LazyDrop-inner;548.LazyMap-inner;548.LazySelect-inner;548.LazyFoldList-inner;548.LazyMap-twice;548.LazyNestList-twice;548.LazySelect-twice;548.LazyFoldList-twice;548.LazyDrop-twice
+G2 P1906 Repaired-control-SAME successors=P2132;P2133;P2134;P2135;P2137 probes=548.LazyMap;548.LazyNestList;548.LazySelect;548.LazyFoldList;548.LazyDrop-inner;548.LazyMap-inner;548.LazySelect-inner;548.LazyFoldList-inner;548.LazyMap-twice;548.LazyNestList-twice;548.LazySelect-twice;548.LazyFoldList-twice;548.LazyDrop-twice
+G2 P1907 Repaired-control-SAME successors=P2132;P2133;P2134;P2135;P2137 probes=548.LazyMap;548.LazyNestList;548.LazySelect;548.LazyFoldList;548.LazyDrop-inner;548.LazyMap-inner;548.LazySelect-inner;548.LazyFoldList-inner;548.LazyMap-twice;548.LazyNestList-twice;548.LazySelect-twice;548.LazyFoldList-twice;548.LazyDrop-twice
+G2 P1908 Repaired-control-SAME successors=P2141;P1472;P1473 probes=548.LazyTable-bound-1;548.LazyTable-bound-2;548.LazyTable-bound-3
+G2 P1909 Repaired-control-SAME successors=P2142;P1472;P1473 probes=548.LazyTable-bound-1;548.LazyTable-bound-2;548.LazyTable-bound-3
+G2 P1910 Repaired-control-SAME successors=P2143;P1472;P1473 probes=548.LazyTable-bound-1;548.LazyTable-bound-2;548.LazyTable-bound-3
+G2 P1913 Repaired-control-SAME successors=P2132;P2133;P2134;P2135;P2137 probes=548.LazyMap;548.LazyNestList;548.LazySelect;548.LazyFoldList;548.LazyDrop-inner;548.LazyMap-inner;548.LazySelect-inner;548.LazyFoldList-inner;548.LazyMap-twice;548.LazyNestList-twice;548.LazySelect-twice;548.LazyFoldList-twice;548.LazyDrop-twice
+G3 P2056 Repaired-control-SAME successors=P2287;P2288 probes=548.ConformSchema-leaf;548.ConformSchema-association;548.ConformSchema-default;548.ConformSchema-default-predicate;548.SchemaErrors-leaf;548.SchemaErrors-association;548.SchemaErrors-default;548.Schema-twice;548.Schema-defaults-twice
+G3 P2061 Repaired-control-SAME successors=P2287;P2288 probes=548.ConformSchema-leaf;548.ConformSchema-association;548.ConformSchema-default;548.ConformSchema-default-predicate;548.SchemaErrors-leaf;548.SchemaErrors-association;548.SchemaErrors-default;548.Schema-twice;548.Schema-defaults-twice
+G3 P2065 Repaired-control-SAME successors=P2287;P2288 probes=548.ConformSchema-leaf;548.ConformSchema-association;548.ConformSchema-default;548.ConformSchema-default-predicate;548.SchemaErrors-leaf;548.SchemaErrors-association;548.SchemaErrors-default;548.Schema-twice;548.Schema-defaults-twice
+G3 P2066 Repaired-control-SAME successors=P2287;P2288 probes=548.ConformSchema-leaf;548.ConformSchema-association;548.ConformSchema-default;548.ConformSchema-default-predicate;548.SchemaErrors-leaf;548.SchemaErrors-association;548.SchemaErrors-default;548.Schema-twice;548.Schema-defaults-twice
+G3 P2067 Repaired-control-SAME successors=P2287;P2288 probes=548.ConformSchema-leaf;548.ConformSchema-association;548.ConformSchema-default;548.ConformSchema-default-predicate;548.SchemaErrors-leaf;548.SchemaErrors-association;548.SchemaErrors-default;548.Schema-twice;548.Schema-defaults-twice
+G3 P2068 Repaired-control-SAME successors=P2287;P2288 probes=548.ConformSchema-leaf;548.ConformSchema-association;548.ConformSchema-default;548.ConformSchema-default-predicate;548.SchemaErrors-leaf;548.SchemaErrors-association;548.SchemaErrors-default;548.Schema-twice;548.Schema-defaults-twice
+G3 P2069 Repaired-control-SAME successors=P2287;P2288 probes=548.ConformSchema-leaf;548.ConformSchema-association;548.ConformSchema-default;548.ConformSchema-default-predicate;548.SchemaErrors-leaf;548.SchemaErrors-association;548.SchemaErrors-default;548.Schema-twice;548.Schema-defaults-twice
+G8 P2311 Repaired-control-SAME successors=P2544;P2547 probes=548.Differences;548.Differences-twice;548.Differences-order-two
+G8 P2312 Repaired-control-SAME successors=P2547;P2551 probes=548.Differences;548.Differences-twice;548.Differences-order-two
+G2 P2353 Repaired-control-SAME successors=P2591;P2145 probes=548.LazyTake-consumer;548.LazyPart-consumer
+G5 P2354 Repaired-control-SAME successors=P2592;P1139;P1140;S009;S010 probes=548.Depth-Heads-option
+G2 P2355 Repaired-control-SAME successors=P2593;P2145 probes=548.LazyFirst-consumer
+G10 P0226 Repaired-control-SAME successors=P0249 probes=583.default-decline-twice
+G9 P0354 Repaired-control-SAME successors=P0433 probes=583.destructure-result;583.destructure-suffix;583.destructure-twice;583.destructure-nested
+G9 P0355 Repaired-control-SAME successors=P0403 probes=583.destructure-result;583.destructure-suffix;583.destructure-twice;583.destructure-nested
+G9 P0356 Repaired-control-SAME successors=P0403 probes=583.destructure-result;583.destructure-suffix;583.destructure-twice;583.destructure-nested
+G11 capture Repaired-control-SAME successors=P0123 probes=G11.selector;G11.capture
+G11 C1 Repaired-control-SAME successors=P0181 probes=G11.report
+G11 C2 Repaired-control-SAME successors=P0553;P0554;P0555;P0556;P0557;P0558;P0559 probes=G11.assoc
+G11 C3 Repaired-control-SAME successors=P0899;P0900;P0901;P0902;P0903;P0904;P0905;P0906;P0907;P0908;P0909;P0910;P0911;P0912;P0913 probes=G11.delete
+G11 quiet Repaired-control-SAME successors=P0691 probes=G11.quiet
+G12 head Repaired-control-SAME successors=P2485 probes=G12.head
+G15A P1316 Repaired-control-SAME successors=P1477 probes=G15A.01;G15A.02;G15A.03
+G15B P0307 Repaired-control-SAME successors=P0368 probes=G15B.01;G15B.02;G15B.03;G15B.04;G15B.12
+CENSUS CALIBRATION PASS: 86 historical Lost + 4 G9/G10 + 8 G11/G12/G15 checks; no semantic Equal inferred from classification.
+Historical cross-walk: 2468/2468 brief-583 records and 495/495 brief-548 Unsettled records mapped; mappings do not inherit reading verdicts.
+```
+
+
+```text
+test result: total=34 SAME=12 DIFF=22 invalid=4
+base G15A total=14 SAME=8 DIFF=6 invalid=0
+base G15B total=20 SAME=4 DIFF=16 invalid=4
+base G15A.01 DIFF pauses=1 valid=True
+base G15A.02 DIFF pauses=1 valid=True
+base G15A.03 DIFF pauses=1 valid=True
+base G15A.04 DIFF pauses=1 valid=True
+base G15A.05 DIFF pauses=1 valid=True
+base G15A.06 DIFF pauses=1 valid=True
+base G15A.07 SAME pauses=1 valid=True
+base G15A.08 SAME pauses=1 valid=True
+base G15A.09 SAME pauses=1 valid=True
+base G15A.10 SAME pauses=1 valid=True
+base G15A.11 SAME pauses=1 valid=True
+base G15A.12 SAME pauses=1 valid=True
+base G15A.13 SAME pauses=1 valid=True
+base G15A.14 SAME pauses=1 valid=True
+base G15B.01 DIFF pauses=1 valid=True
+base G15B.02 DIFF pauses=1 valid=True
+base G15B.03 DIFF pauses=1 valid=True
+base G15B.04 DIFF pauses=1 valid=True
+base G15B.05 DIFF pauses=1 valid=True
+base G15B.06 DIFF pauses=1 valid=True
+base G15B.07 DIFF pauses=1 valid=True
+base G15B.08 DIFF pauses=1 valid=True
+base G15B.09 DIFF pauses=1 valid=True
+base G15B.10 DIFF pauses=1 valid=True
+base G15B.11 DIFF pauses=1 valid=True
+base G15B.12 DIFF pauses=1 valid=False
+base G15B.13 DIFF pauses=1 valid=False
+base G15B.14 DIFF pauses=2 valid=True
+base G15B.15 DIFF pauses=1 valid=False
+base G15B.16 DIFF pauses=1 valid=False
+base G15B.17 SAME pauses=1 valid=True
+base G15B.18 SAME pauses=1 valid=True
+base G15B.19 SAME pauses=1 valid=True
+base G15B.20 SAME pauses=1 valid=True
+test result: total=34 SAME=34 DIFF=0 invalid=0
+current G15A total=14 SAME=14 DIFF=0 invalid=0
+current G15B total=20 SAME=20 DIFF=0 invalid=0
+current G15A.01 SAME pauses=1 valid=True
+current G15A.02 SAME pauses=1 valid=True
+current G15A.03 SAME pauses=1 valid=True
+current G15A.04 SAME pauses=1 valid=True
+current G15A.05 SAME pauses=1 valid=True
+current G15A.06 SAME pauses=1 valid=True
+current G15A.07 SAME pauses=1 valid=True
+current G15A.08 SAME pauses=1 valid=True
+current G15A.09 SAME pauses=1 valid=True
+current G15A.10 SAME pauses=1 valid=True
+current G15A.11 SAME pauses=1 valid=True
+current G15A.12 SAME pauses=1 valid=True
+current G15A.13 SAME pauses=1 valid=True
+current G15A.14 SAME pauses=1 valid=True
+current G15B.01 SAME pauses=1 valid=True
+current G15B.02 SAME pauses=1 valid=True
+current G15B.03 SAME pauses=1 valid=True
+current G15B.04 SAME pauses=1 valid=True
+current G15B.05 SAME pauses=1 valid=True
+current G15B.06 SAME pauses=1 valid=True
+current G15B.07 SAME pauses=1 valid=True
+current G15B.08 SAME pauses=1 valid=True
+current G15B.09 SAME pauses=1 valid=True
+current G15B.10 SAME pauses=1 valid=True
+current G15B.11 SAME pauses=1 valid=True
+current G15B.12 SAME pauses=2 valid=True
+current G15B.13 SAME pauses=2 valid=True
+current G15B.14 SAME pauses=2 valid=True
+current G15B.15 SAME pauses=2 valid=True
+current G15B.16 SAME pauses=2 valid=True
+current G15B.17 SAME pauses=1 valid=True
+current G15B.18 SAME pauses=1 valid=True
+current G15B.19 SAME pauses=1 valid=True
+current G15B.20 SAME pauses=1 valid=True
+COMPARATOR CALIBRATION PASS: known Return/LHS failures red on the pre-repair export, every current-tree pair green; no Equal rows recorded yet.
+```
+
+Current graph edges remain 2,682. All 2,468 brief-583 rows and 495 old
+Unsettled rows are cross-walked in crosswalk-583.tsv and
+crosswalk-548-unsettled.tsv. The 513 excluded strict whole-result tails retain
+indexed caller links; 283 without an indexed caller remain roots in the
+2,186-row population. No Retired/Duplicate verdict was newly invented.
+
+Per-population totals below count memberships, so overlapping columns must
+not be added to obtain the union. `settled.tsv` is the current port index;
+`continuation3/ledger.jsonl` gives each row's explicit ledger kind and owner.
+Blank semantic verdicts occur only in explicitly owned, unclosed entries.
+| source | total | Equal | Lost | Unreachable | Boundary | OwnedObligation |
+| --- | --- | --- | --- | --- | --- | --- |
+| ALL | 2186 | 43 | 5 | 140 | 10 | 1988 |
+| frame_carries | 752 | 43 | 4 | 19 | 0 | 686 |
+| review_tail_correct | 437 | 3 | 1 | 36 | 0 | 397 |
+| screen_effect-questions | 33 | 0 | 1 | 1 | 0 | 31 |
+| screen_frameless-direct-evaluate | 56 | 2 | 1 | 0 | 3 | 50 |
+| screen_frameless-transforms | 209 | 2 | 1 | 13 | 1 | 192 |
+| screen_optional-source-helpers | 97 | 2 | 3 | 5 | 0 | 87 |
+| strict_tail_without_indexed_caller | 283 | 0 | 0 | 26 | 0 | 257 |
+| tool_unsettled | 1188 | 6 | 4 | 98 | 10 | 1070 |
+
+### Ownership — source-qualified partition links
+
+The assignment uses enclosing partition frame implementation, an M/T site in
+the same qualified function, the frame in the actual call suffix, or a
+distinctive helper invoked by that partition's resume body. File-wide scope is
+not an ownership proof. Exact frame file and resume_frames parent/child module
+qualification distinguish identically named guarded/rules string helpers.
+That final correction moved 16 interim C2 rows to S48/S49/S50; its full
+cross-walk is ownership-qualification-crosswalk.tsv. No observations or
+mutant results were changed. Codec method spelling alone is not a helper link.
+
+The final initial assignment is 974 future-G13 obligations and 1,053 C2 rows.
+C2 includes 742 without a partition site/frame link, 310 whose linked typing
+step is already Done, and one shared helper without a unique partition-site
+owner (its caller candidates are S26/S33). Caller references are retained as
+evidence, not treated as ownership of an unpartitioned helper site. C2 is the
+explicit conservative owner until its settlement/cross-walk resolves that row.
+Ten G13 rows and 29 C2 rows have now become measured Equal regressions.
+
+Every step table is below, S10 first. Empty S1-S9 tables mean no deferred row
+is owned by a completed step. Empty F/R owned tables do not erase their
+separate saved transport obligations. Per-step incorporation cards are in
+continuation3/owner-additions/; each table retains partition row/frame/slot/site
+identity and distinguishes open obligations, measured Equal and causal losses.
+| step | state | initial_owned | remaining_owned | measured_equal | known_loss | table |
+| --- | --- | --- | --- | --- | --- | --- |
+| S10 | Open | 38 | 28 | 10 | 1 | .temp/brief-621/continuation3/per-step-rows/S10.tsv |
+| S11 | Open | 66 | 66 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S11.tsv |
+| S12 | Open | 8 | 8 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S12.tsv |
+| S13 | Open | 13 | 13 | 0 | 1 | .temp/brief-621/continuation3/per-step-rows/S13.tsv |
+| S14 | Open | 22 | 22 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S14.tsv |
+| S15 | Open | 15 | 15 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S15.tsv |
+| S16 | Open | 17 | 17 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S16.tsv |
+| S17 | Open | 24 | 24 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S17.tsv |
+| S18 | Open | 20 | 20 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S18.tsv |
+| S19 | Open | 35 | 35 | 0 | 1 | .temp/brief-621/continuation3/per-step-rows/S19.tsv |
+| S20 | Open | 29 | 29 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S20.tsv |
+| S21 | Open | 36 | 36 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S21.tsv |
+| S22 | Open | 9 | 9 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S22.tsv |
+| S23 | Open | 11 | 11 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S23.tsv |
+| S24 | Open | 17 | 17 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S24.tsv |
+| S25 | Open | 39 | 39 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S25.tsv |
+| S26 | Open | 32 | 32 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S26.tsv |
+| S27 | Open | 14 | 14 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S27.tsv |
+| S28 | Open | 18 | 18 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S28.tsv |
+| S29 | Open | 14 | 14 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S29.tsv |
+| S30 | Open | 23 | 23 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S30.tsv |
+| S31 | Open | 17 | 17 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S31.tsv |
+| S32 | Open | 27 | 27 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S32.tsv |
+| S33 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S33.tsv |
+| S34 | Open | 26 | 26 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S34.tsv |
+| S35 | Open | 18 | 18 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S35.tsv |
+| S36 | Open | 18 | 18 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S36.tsv |
+| S37 | Open | 36 | 36 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S37.tsv |
+| S38 | Open | 18 | 18 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S38.tsv |
+| S39 | Open | 25 | 25 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S39.tsv |
+| S40 | Open | 10 | 10 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S40.tsv |
+| S41 | Open | 17 | 17 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S41.tsv |
+| S42 | Open | 32 | 32 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S42.tsv |
+| S43 | Open | 22 | 22 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S43.tsv |
+| S44 | Open | 8 | 8 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S44.tsv |
+| S45 | Open | 10 | 10 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S45.tsv |
+| S46 | Open | 35 | 35 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S46.tsv |
+| S47 | Open | 17 | 17 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S47.tsv |
+| S48 | Open | 23 | 23 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S48.tsv |
+| S49 | Open | 19 | 19 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S49.tsv |
+| S50 | Open | 46 | 46 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S50.tsv |
+| S51 | Open | 20 | 20 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S51.tsv |
+| S52 | Open | 19 | 19 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S52.tsv |
+| S53 | Open | 9 | 9 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S53.tsv |
+| S54 | Open | 2 | 2 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S54.tsv |
+| S1 | Done | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S1.tsv |
+| S2 | Done | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S2.tsv |
+| S3 | Done | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S3.tsv |
+| S4 | Done | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S4.tsv |
+| S5 | Done | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S5.tsv |
+| S6 | Done | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S6.tsv |
+| S7 | Done | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S7.tsv |
+| S8 | Done | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S8.tsv |
+| S9 | Done | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/S9.tsv |
+| F1 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F1.tsv |
+| F2 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F2.tsv |
+| F3 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F3.tsv |
+| F4 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F4.tsv |
+| F5 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F5.tsv |
+| F6 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F6.tsv |
+| F7 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F7.tsv |
+| F8 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F8.tsv |
+| F9 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F9.tsv |
+| F10 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F10.tsv |
+| F11 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F11.tsv |
+| F12 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F12.tsv |
+| F13 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F13.tsv |
+| F14 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F14.tsv |
+| F15 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F15.tsv |
+| F16 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F16.tsv |
+| F17 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F17.tsv |
+| F18 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F18.tsv |
+| F19 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F19.tsv |
+| F20 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F20.tsv |
+| F21 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F21.tsv |
+| F22 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F22.tsv |
+| F23 | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/F23.tsv |
+| R | Open | 0 | 0 | 0 | 0 | .temp/brief-621/continuation3/per-step-rows/R.tsv |
+
+S10 has 28 OwnedObligations, ten measured Equal regressions and its separate
+accepted P0755/T0028 loss. Its original base-red plus mutants/full gate remains
+mandatory. This prototype did not implement or promote S10. S13's P1489 and
+six one-answer replay witnesses, S19's P0883, S24's retention of C1 and E2's
+coordinator/static controls remain in the existing-owner additions.
+
+### Accepted Unreachable proofs, grouped for review
+
+All 140 previously supplied full proofs and strongest attempts remain in
+continuation2/all-unreachable-proofs.json and the preserved preceding report.
+No new Unreachable proof was introduced here. Their source constraints are
+unchanged. The five classes are: 8 concrete pure accounting bridges (graph
+false positives), 65 pure profile-label calls, 26 constant-selected arithmetic
+arms, 23 disconnected interpreted-matcher calls, and 18 concrete Some-options
+pure consumers. The exact module/chain/count breakdown is:
+| proof_class | module | callee_chain_shape | count | rows |
+| --- | --- | --- | --- | --- |
+| concrete Some-options consumer | crates/rum-stdlib/src/option_consumers.rs | OptionConsumer::resume(Some(options)) → concrete pure string/shape consumer; merged-options evaluator branch bypassed | 18 | P2181;P2184;P2186;P2188;P2189;P2190;P2191;P2192;P2193;P2194;P2195;P2197;P2198;P2199;P2200;P2203;P2204;P2205 |
+| concrete pure accounting bridge | crates/rum-runtime/src/runtime/accounting_mode/bridge.rs | sealed accounting mode → concrete pure closure / already successful value → reserve/clone/build/limit check; no Expr evaluation | 1 | P0003 |
+| concrete pure accounting bridge | crates/rum-runtime/src/runtime/accounting_mode/options/driver.rs | sealed accounting mode → concrete pure closure / already successful value → reserve/clone/build/limit check; no Expr evaluation | 1 | P0013 |
+| concrete pure accounting bridge | crates/rum-runtime/src/runtime/accounting_mode/rule.rs | sealed accounting mode → concrete pure closure / already successful value → reserve/clone/build/limit check; no Expr evaluation | 6 | P0023;P0024;P0029;P0040;P0041;P0042 |
+| constant-selected arithmetic | crates/rum-stdlib/src/arithmetic.rs | selected enum/dispatch arm → pure constant arithmetic finish; input expression excluded by that arm | 26 | P1645;P1646;P1647;P1648;P1649;P1650;P1651;P1652;P1653;P1654;P1655;P1656;P1657;P1658;P1659;P1660;P1663;P1664;P1665;P1666;P1667;P1668;P1669;P1670;P1671;P1672 |
+| disconnected interpreted matcher | crates/rum-runtime/src/runtime/pattern_matching_interpreted.rs | internal interpreted matcher island → pure syntax/match recursion; only internal Rust-test roots, no guest registration | 23 | P1437;P1438;P1439;P1440;P1441;P1442;P1443;P1444;P1445;P1446;P1447;P1449;P1450;P1451;P1452;P1454;P1455;P1464;P1465;P1466;P1467;P1468;P1469 |
+| pure profile label | crates/rum-runtime/src/runtime/definitions/application/down_values.rs | concrete borrowed Result → pure discriminant match → RuntimeProfileOutcome; no guest evaluation | 2 | P0250;P0261 |
+| pure profile label | crates/rum-runtime/src/runtime/definitions/application/mod.rs | concrete borrowed Result → pure discriminant match → RuntimeProfileOutcome; no guest evaluation | 2 | P0268;P0269 |
+| pure profile label | crates/rum-runtime/src/runtime/definitions/application/rhs.rs | concrete borrowed Result → pure discriminant match → RuntimeProfileOutcome; no guest evaluation | 6 | P0288;P0291;P0293;P0295;P0297;P0300 |
+| pure profile label | crates/rum-runtime/src/runtime/definitions/application/sub_values.rs | concrete borrowed Result → pure discriminant match → RuntimeProfileOutcome; no guest evaluation | 1 | P0306 |
+| pure profile label | crates/rum-runtime/src/runtime/definitions/definitions.rs | concrete borrowed Result → pure discriminant match → RuntimeProfileOutcome; no guest evaluation | 8 | P0411;P0412;P0414;P0422;P0424;P0427;P0429;P0432 |
+| pure profile label | crates/rum-runtime/src/runtime/eval_call_prepare.rs | concrete borrowed Result → pure discriminant match → RuntimeProfileOutcome; no guest evaluation | 3 | P0476;P0477;P0480 |
+| pure profile label | crates/rum-runtime/src/runtime/eval_core/call.rs | concrete borrowed Result → pure discriminant match → RuntimeProfileOutcome; no guest evaluation | 8 | P0486;P0488;P0490;P0491;P0493;P0495;P0497;P0499 |
+| pure profile label | crates/rum-runtime/src/runtime/eval_core/mod.rs | concrete borrowed Result → pure discriminant match → RuntimeProfileOutcome; no guest evaluation | 7 | P0510;P0512;P0513;P0514;P0516;P0517;P0518 |
+| pure profile label | crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops.rs | concrete borrowed Result → pure discriminant match → RuntimeProfileOutcome; no guest evaluation | 6 | P0663;P0664;P0666;P0667;P0674;P0675 |
+| pure profile label | crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs | concrete borrowed Result → pure discriminant match → RuntimeProfileOutcome; no guest evaluation | 6 | P0807;P0808;P0809;P0811;P0815;P0816 |
+| pure profile label | crates/rum-runtime/src/runtime/resolution.rs | concrete borrowed Result → pure discriminant match → RuntimeProfileOutcome; no guest evaluation | 2 | P1473;P1475 |
+| pure profile label | crates/rum-runtime/src/runtime/scoping/callable.rs | concrete borrowed Result → pure discriminant match → RuntimeProfileOutcome; no guest evaluation | 2 | P1490;P1492 |
+| pure profile label | crates/rum-runtime/src/runtime/scoping/callable/status_application.rs | concrete borrowed Result → pure discriminant match → RuntimeProfileOutcome; no guest evaluation | 1 | P1481 |
+| pure profile label | crates/rum-runtime/src/runtime/scoping/lexical/module.rs | concrete borrowed Result → pure discriminant match → RuntimeProfileOutcome; no guest evaluation | 11 | P1508;P1509;P1511;P1512;P1514;P1515;P1516;P1518;P1519;P1521;P1522 |
+
+### Lost groups remain owned
+
+No new valid real-build DIFF was discovered in this continuation. The five
+accepted causal losses remain P0755/S10, P1489/S13, P0883/S19, and
+P0941/P0946/G15-C1. The initial three full minimized observations are preserved
+in minimal-lost-results.jsonl and below verbatim; the C1 sources and ordered
+traces are in continuation1/new-lost-witnesses.json and below. These are saved
+accepted witnesses, not newly executed encoding programs. The full 140 proofs
+are already verbatim in the preceding report; the class table is the requested
+additional review view.
+
+```json
+{
+  "case": {
+    "id": "lost.function.some",
+    "setup": "",
+    "source": "Function[(InputString[\"w\"];System`InternalContinuationSome[5])][]",
+    "inputs": [
+      "1"
+    ],
+    "expected_pauses": 1,
+    "projections": [
+      "log"
+    ]
+  },
+  "observation": {
+    "id": "lost.function.some",
+    "pauses": [
+      "w"
+    ],
+    "queued": "Observation { final_outcome: Success(HostEvalSuccess { value: HostValue { text: \"InternalContinuationSome[5]\", typed: Other { head: \"InternalContinuationSome\", text: \"InternalContinuationSome[5]\" } }, termination: None, messages: [], prints: [], trace: [], outputs: [HostStructuredOutput { kind: Result, text: \"InternalContinuationSome[5]\" }] }), projections: [Success(HostEvalSuccess { value: HostValue { text: \"List[]\", typed: List([]) }, termination: None, messages: [], prints: [], trace: [], outputs: [HostStructuredOutput { kind: Result, text: \"List[]\" }] })], snapshot: Ok([83, 101, 116, 91, 108, 111, 103, 44, 32, 76, 105, 115, 116, 91, 93, 93, 10]), fresh: Success(HostEvalSuccess { value: HostValue { text: \"2\", typed: Integer(2) }, termination: None, messages: [], prints: [], trace: [], outputs: [HostStructuredOutput { kind: Result, text: \"2\" }] }), pending_cleared: true, queue_empty: true, prefix_ok: true, overlap_ok: true }",
+    "queued_pauses": [],
+    "resumed": "Observation { final_outcome: Success(HostEvalSuccess { value: HostValue { text: \"5\", typed: Integer(5) }, termination: None, messages: [], prints: [], trace: [], outputs: [HostStructuredOutput { kind: Result, text: \"5\" }] }), projections: [Success(HostEvalSuccess { value: HostValue { text: \"List[]\", typed: List([]) }, termination: None, messages: [], prints: [], trace: [], outputs: [HostStructuredOutput { kind: Result, text: \"List[]\" }] })], snapshot: Ok([83, 101, 116, 91, 108, 111, 103, 44, 32, 76, 105, 115, 116, 91, 93, 93, 10]), fresh: Success(HostEvalSuccess { value: HostValue { text: \"2\", typed: Integer(2) }, termination: None, messages: [], prints: [], trace: [], outputs: [HostStructuredOutput { kind: Result, text: \"2\" }] }), pending_cleared: true, queue_empty: true, prefix_ok: true, overlap_ok: true }",
+    "same": false,
+    "valid": true
+  }
+}
+```
+
+
+```json
+{
+  "case": {
+    "id": "lost.cases.some",
+    "setup": "",
+    "source": "Cases[{1},_ :> (InputString[\"w\"];System`InternalContinuationSome[5])]",
+    "inputs": [
+      "1"
+    ],
+    "expected_pauses": 1,
+    "projections": [
+      "log"
+    ]
+  },
+  "observation": {
+    "id": "lost.cases.some",
+    "pauses": [
+      "w"
+    ],
+    "queued": "Observation { final_outcome: Success(HostEvalSuccess { value: HostValue { text: \"List[InternalContinuationSome[5]]\", typed: List([Other { head: \"InternalContinuationSome\", text: \"InternalContinuationSome[5]\" }]) }, termination: None, messages: [], prints: [], trace: [], outputs: [HostStructuredOutput { kind: Result, text: \"List[InternalContinuationSome[5]]\" }] }), projections: [Success(HostEvalSuccess { value: HostValue { text: \"List[]\", typed: List([]) }, termination: None, messages: [], prints: [], trace: [], outputs: [HostStructuredOutput { kind: Result, text: \"List[]\" }] })], snapshot: Ok([83, 101, 116, 91, 108, 111, 103, 44, 32, 76, 105, 115, 116, 91, 93, 93, 10]), fresh: Success(HostEvalSuccess { value: HostValue { text: \"2\", typed: Integer(2) }, termination: None, messages: [], prints: [], trace: [], outputs: [HostStructuredOutput { kind: Result, text: \"2\" }] }), pending_cleared: true, queue_empty: true, prefix_ok: true, overlap_ok: true }",
+    "queued_pauses": [],
+    "resumed": "Observation { final_outcome: Success(HostEvalSuccess { value: HostValue { text: \"List[5]\", typed: List([Integer(5)]) }, termination: None, messages: [], prints: [], trace: [], outputs: [HostStructuredOutput { kind: Result, text: \"List[5]\" }] }), projections: [Success(HostEvalSuccess { value: HostValue { text: \"List[]\", typed: List([]) }, termination: None, messages: [], prints: [], trace: [], outputs: [HostStructuredOutput { kind: Result, text: \"List[]\" }] })], snapshot: Ok([83, 101, 116, 91, 108, 111, 103, 44, 32, 76, 105, 115, 116, 91, 93, 93, 10]), fresh: Success(HostEvalSuccess { value: HostValue { text: \"2\", typed: Integer(2) }, termination: None, messages: [], prints: [], trace: [], outputs: [HostStructuredOutput { kind: Result, text: \"2\" }] }), pending_cleared: true, queue_empty: true, prefix_ok: true, overlap_ok: true }",
+    "same": false,
+    "valid": true
+  }
+}
+```
+
+
+```json
+{
+  "case": {
+    "id": "lost.confirm.info.2",
+    "setup": "",
+    "source": "Enclose[Confirm[$Failed, (InputString[\"i\"]; System`InternalContinuationSome[5])]]",
+    "inputs": [
+      "1"
+    ],
+    "expected_pauses": 1,
+    "projections": [
+      "log"
+    ]
+  },
+  "observation": {
+    "id": "lost.confirm.info.2",
+    "pauses": [
+      "i"
+    ],
+    "queued": "Observation { final_outcome: Success(HostEvalSuccess { value: HostValue { text: \"Failure[\\\"ConfirmationFailed\\\", Association[Rule[\\\"MessageTemplate\\\", \\\"`` encountered.\\\"], RuleDelayed[\\\"MessageParameters\\\", List[$Failed]], Rule[\\\"ConfirmationType\\\", \\\"Confirm\\\"], RuleDelayed[\\\"Expression\\\", $Failed], Rule[\\\"Information\\\", InternalContinuationSome[5]]]]\", typed: Other { head: \"Failure\", text: \"Failure[\\\"ConfirmationFailed\\\", Association[Rule[\\\"MessageTemplate\\\", \\\"`` encountered.\\\"], RuleDelayed[\\\"MessageParameters\\\", List[$Failed]], Rule[\\\"ConfirmationType\\\", \\\"Confirm\\\"], RuleDelayed[\\\"Expression\\\", $Failed], Rule[\\\"Information\\\", InternalContinuationSome[5]]]]\" } }, termination: None, messages: [], prints: [], trace: [], outputs: [HostStructuredOutput { kind: Result, text: \"Failure[\\\"ConfirmationFailed\\\", Association[Rule[\\\"MessageTemplate\\\", \\\"`` encountered.\\\"], RuleDelayed[\\\"MessageParameters\\\", List[$Failed]], Rule[\\\"ConfirmationType\\\", \\\"Confirm\\\"], RuleDelayed[\\\"Expression\\\", $Failed], Rule[\\\"Information\\\", InternalContinuationSome[5]]]]\" }] }), projections: [Success(HostEvalSuccess { value: HostValue { text: \"List[]\", typed: List([]) }, termination: None, messages: [], prints: [], trace: [], outputs: [HostStructuredOutput { kind: Result, text: \"List[]\" }] })], snapshot: Ok([83, 101, 116, 91, 108, 111, 103, 44, 32, 76, 105, 115, 116, 91, 93, 93, 10]), fresh: Success(HostEvalSuccess { value: HostValue { text: \"2\", typed: Integer(2) }, termination: None, messages: [], prints: [], trace: [], outputs: [HostStructuredOutput { kind: Result, text: \"2\" }] }), pending_cleared: true, queue_empty: true, prefix_ok: true, overlap_ok: true }",
+    "queued_pauses": [],
+    "resumed": "Observation { final_outcome: Success(HostEvalSuccess { value: HostValue { text: \"Failure[\\\"ConfirmationFailed\\\", Association[Rule[\\\"MessageTemplate\\\", \\\"`` encountered.\\\"], RuleDelayed[\\\"MessageParameters\\\", List[$Failed]], Rule[\\\"ConfirmationType\\\", \\\"Confirm\\\"], RuleDelayed[\\\"Expression\\\", $Failed], Rule[\\\"Information\\\", 5]]]\", typed: Other { head: \"Failure\", text: \"Failure[\\\"ConfirmationFailed\\\", Association[Rule[\\\"MessageTemplate\\\", \\\"`` encountered.\\\"], RuleDelayed[\\\"MessageParameters\\\", List[$Failed]], Rule[\\\"ConfirmationType\\\", \\\"Confirm\\\"], RuleDelayed[\\\"Expression\\\", $Failed], Rule[\\\"Information\\\", 5]]]\" } }, termination: None, messages: [], prints: [], trace: [], outputs: [HostStructuredOutput { kind: Result, text: \"Failure[\\\"ConfirmationFailed\\\", Association[Rule[\\\"MessageTemplate\\\", \\\"`` encountered.\\\"], RuleDelayed[\\\"MessageParameters\\\", List[$Failed]], Rule[\\\"ConfirmationType\\\", \\\"Confirm\\\"], RuleDelayed[\\\"Expression\\\", $Failed], Rule[\\\"Information\\\", 5]]]\" }] }), projections: [Success(HostEvalSuccess { value: HostValue { text: \"List[]\", typed: List([]) }, termination: None, messages: [], prints: [], trace: [], outputs: [HostStructuredOutput { kind: Result, text: \"List[]\" }] })], snapshot: Ok([83, 101, 116, 91, 108, 111, 103, 44, 32, 76, 105, 115, 116, 91, 93, 93, 10]), fresh: Success(HostEvalSuccess { value: HostValue { text: \"2\", typed: Integer(2) }, termination: None, messages: [], prints: [], trace: [], outputs: [HostStructuredOutput { kind: Result, text: \"2\" }] }), pending_cleared: true, queue_empty: true, prefix_ok: true, overlap_ok: true }",
+    "same": false,
+    "valid": true
+  }
+}
+```
+
+
+```json
+[
+  {
+    "id": "P0941",
+    "probe": "min.ReplaceAll.atom",
+    "source": "ReplaceAll[1,(x_Integer /; (InputString[\"p\"];True)) :> (x+1)]",
+    "inputs": "[\"1\"]",
+    "pauses": [
+      "p"
+    ],
+    "resumed_trace": "[EvaluationPass { before: \"InputString[\\\"p\\\"]\", after: \"\\\"1\\\"\" }, EvaluationPass { before: \"CompoundExpression[InputString[\\\"p\\\"], True]\", after: \"True\" }, RuleApplied { source: \"ReplaceAll\", input: \"1\", rule: \"Condition[Pattern[x, Blank[Integer]], CompoundExpression[InputString[\\\"p\\\"], True]]\", result: \"Plus[1, 1]\" }, EvaluationPass { before: \"ReplaceAll[1, RuleDelayed[Condition[Pattern[x, Blank[Integer]], CompoundExpression[InputString[\\\"p\\\"], True]], Plus[x, 1]]]\", after: \"Plus[1, 1]\" }, EvaluationPass { before: \"Plus[1, 1]\", after: \"2\" }]",
+    "queued_trace": "[EvaluationPass { before: \"InputString[\\\"p\\\"]\", after: \"\\\"1\\\"\" }, EvaluationPass { before: \"CompoundExpression[InputString[\\\"p\\\"], True]\", after: \"True\" }, RuleApplied { source: \"ReplaceAll\", input: \"1\", rule: \"Condition[Pattern[x, Blank[Integer]], CompoundExpression[InputString[\\\"p\\\"], True]]\", result: \"Plus[1, 1]\" }, EvaluationPass { before: \"Plus[1, 1]\", after: \"2\" }, EvaluationPass { before: \"ReplaceAll[1, RuleDelayed[Condition[Pattern[x, Blank[Integer]], CompoundExpression[InputString[\\\"p\\\"], True]], Plus[x, 1]]]\", after: \"2\" }]",
+    "mechanism": "kernel_data/rewrite_data/replace/all.rs:59 uses ? on apply_replace_all with no caller frame for the remaining tail. After a rule guard/pattern test pauses, the typed apply_replace_all frames complete with an unevaluated replacement Expr. The caller's self-evaluating-atom test and evaluate(replaced) at :60-70 disappeared. The outer fixed point eventually evaluates Plus and repairs the scalar value, but its public EvaluationPass for the enclosing ReplaceAll call has already been emitted. Queued execution evaluates Plus first; resumed execution reports ReplaceAll -> Plus then Plus -> 2. The copied-tree frame restoring this tail makes the complete public-trace comparison SAME, with the same final scalar 2.",
+    "owner": "G15-C1 (proposed); S24 must retain regression after later conversion",
+    "ownership": "draft-S24.md:31 scopes this file; :101-104 and :115-118 list existing input/final-evaluation frames only. The missing post-apply producer insertion has no F/M/T row there; use a pre-S10 repair and retain it in S24."
+  },
+  {
+    "id": "P0946",
+    "probe": "min.ReplaceAllUnheld.atom",
+    "source": "ReplaceAllUnheld[1,(x_Integer /; (InputString[\"p\"];True)) :> (x+1)]",
+    "inputs": "[\"1\"]",
+    "pauses": [
+      "p"
+    ],
+    "resumed_trace": "[EvaluationPass { before: \"InputString[\\\"p\\\"]\", after: \"\\\"1\\\"\" }, EvaluationPass { before: \"CompoundExpression[InputString[\\\"p\\\"], True]\", after: \"True\" }, RuleApplied { source: \"ReplaceAllUnheld\", input: \"1\", rule: \"Condition[Pattern[x, Blank[Integer]], CompoundExpression[InputString[\\\"p\\\"], True]]\", result: \"Plus[1, 1]\" }, EvaluationPass { before: \"ReplaceAllUnheld[1, RuleDelayed[Condition[Pattern[x, Blank[Integer]], CompoundExpression[InputString[\\\"p\\\"], True]], Plus[x, 1]]]\", after: \"Plus[1, 1]\" }, EvaluationPass { before: \"Plus[1, 1]\", after: \"2\" }]",
+    "queued_trace": "[EvaluationPass { before: \"InputString[\\\"p\\\"]\", after: \"\\\"1\\\"\" }, EvaluationPass { before: \"CompoundExpression[InputString[\\\"p\\\"], True]\", after: \"True\" }, RuleApplied { source: \"ReplaceAllUnheld\", input: \"1\", rule: \"Condition[Pattern[x, Blank[Integer]], CompoundExpression[InputString[\\\"p\\\"], True]]\", result: \"Plus[1, 1]\" }, EvaluationPass { before: \"Plus[1, 1]\", after: \"2\" }, EvaluationPass { before: \"ReplaceAllUnheld[1, RuleDelayed[Condition[Pattern[x, Blank[Integer]], CompoundExpression[InputString[\\\"p\\\"], True]], Plus[x, 1]]]\", after: \"2\" }]",
+    "mechanism": "kernel_data/rewrite_data/replace/all.rs:127 uses ? on apply_replace_all with no caller frame for the remaining tail. After a rule guard/pattern test pauses, the typed apply_replace_all frames complete with an unevaluated replacement Expr. The caller's self-evaluating-atom test and evaluate(replaced) at :128-138 disappeared. The outer fixed point eventually evaluates Plus and repairs the scalar value, but its public EvaluationPass for the enclosing ReplaceAll call has already been emitted. Queued execution evaluates Plus first; resumed execution reports ReplaceAll -> Plus then Plus -> 2. The copied-tree frame restoring this tail makes the complete public-trace comparison SAME, with the same final scalar 2.",
+    "owner": "G15-C1 (proposed); S24 must retain regression after later conversion",
+    "ownership": "draft-S24.md:31 scopes this file; :101-104 and :115-118 list existing input/final-evaluation frames only. The missing post-apply producer insertion has no F/M/T row there; use a pre-S10 repair and retain it in S24."
+  }
+]
+```
+
+C1's missing post-application atom/evaluate finish remains at replace/all.rs:
+59 and 127, with tails at 60-70 and 128-138. It precedes S10; S24's future file
+conversion retains its regression rather than deferring the repair. The
+script-classified internal-encoding differences remain G13 transport work.
+None of the eight completed encoding families was replayed, extended,
+individually minimized or reclassified by anecdote in this continuation.
+
+### One copied-tree mutant schema and measured settlement
+
+The copied tree is continuation3/mutant-source, generated from unchanged
+originals. It contains exact census-span guards, 61 armed frame pass-through
+switches and 659 ordinary-success pass-through switches. One runtime row
+selector chooses a mutation; 387 schema records are unsupported. This build
+has 1,107 source IDs: all 1,091 finally assigned C2/S10 rows plus 16 string rows
+subsequently source-qualified to other G13 steps. Their extra evidence is
+retained, not counted as C2 ownership. The finally assigned C2 schema is 42
+framed, 647 ordinary and 364 unsupported; S10 is 19, 4 and 15 respectively.
+
+A frame switch arms only when its designated producer row is on a real pause
+stack, then forwards the actual incoming outcome without the tail. An ordinary
+success switch returns the actual queued producer value before the consumer
+tail. Errors keep the original path in that generic success schema; exclusively
+error tails need specific mutations. Unlike carriers, adapters and local
+closure return mismatches remain explicit unsupported work. Mutations stop at
+subject completion: setup, projections, queue sentinels and fresh requests
+cannot accidentally activate them. Heavy guards/getenv checks stay in copies.
+
+Compiler experiments rejected 19 attempted FrameAction returns inside Result
+closures; those rows are explicitly unsupported. The failed compiler logs and
+source generation corrections are saved. No unsafe cast/default value or
+fabricated panic was used to force a mutation to compile or kill a test.
+
+Per-policy shapes and limitations are exhaustive (25 policies, no default):
+| policy | frame_shape | frameless_shape | no_generic_shape |
+| --- | --- | --- | --- |
+| DefinitionLhsPreparation | Pass the child outcome before updating the awaited work and driving/committing the prepared LHS. | Return the actual prepared child before the rebuild/store tail. | Typed Expr→Expr permits pass-through; state/PreparedDefinitionLhs outputs need a specific phase omission. |
+| MatchingSymbolCycleRecovery | Bypass finish_definition_lhs_active_expr in exactly one awaited variant; forward its Err/Ok unchanged. | Bypass the same finish after evaluate_atom_fast_path, before its recovery match. | Error-specific; success-only identity mutations cannot measure matching-cycle recovery. SEM.G15B is the concrete instance. |
+| OptionalStage | For equal Option input/output, forward the Option unchanged; for a legacy Expr→Option stage omit its Some encoding. | Skip the actual Some completion/optional normalization at the producer seam. | No universal type-correct Expr→Option pass-through. The prototype Some control inspects the actual native slot before the lenient decoder. Never manufacture None. |
+| FunctionResult | At the value-stage frame bypass Return absorption, retaining the required Some output; projection errors keep their distinct phase. | Skip finish_function_application for the same stage while retaining the slot conversion. | Projection and value phases are distinct. Expr→Option requires the explicit conversion; SEM.G15A is the value-stage instance. |
+| ReturnBoundary | Forward the complete incoming outcome before the Return absorption/tag boundary. | Return the producer outcome before the Return finish. | Input/output and error types must agree; otherwise omit only the concrete Return match arm in a shared finish. |
+| ErrorTransform | Forward the error before the frame maps/captures/normalizes it. | Return the producer error before the matching error-transform tail. | No generic conversion between unlike error/result carriers. Success-only pass-through is insufficient for an exclusively error tail. |
+| PrefixLoop | Forward the current child before appending it, advancing the cursor, resuming siblings or rebuilding the prefix. | Return the child before the loop suffix/adoption. | Expr→Vec/aggregate outputs require a specific append/cursor/finish omission; no fabricated empty prefix. |
+| DefinitionStore | Forward the prepared result before installing the definition or completing the update. | Return the actual prepared child/RHS before its store tail. | Expr→Expr is generic; compare stored definitions/projections and ordered update effects. |
+| PrepareArgumentsRestore | Omit the concrete Unevaluated/Sequence restore or prepared-argument finish while preserving the carrier type. | Skip that same restore after the actual producer returns. | No universal Expr→PreparedArguments pass-through; mutate a real state/restore transition, never invent a prepared object. |
+| OptionReader | Bypass the reader/adoption/consumer tail at its actual Option/merged-options stage. | Return a compatible actual child before option consumption. | No universal Expr→MergedOptions/borrowed RetainedOptions mutation. Keep each reentry type/route distinct. |
+| ScopeCleanup | Forward the outcome before the explicit scope restore/pop epilogue. | Return before the matching explicit epilogue. | RAII may perform equivalent cleanup: that is a surviving mutant, not evidence. Heterogeneous scope slots need a specific epilogue omission. |
+| CaptureOutput | Forward before capturing/draining/restoring messages, prints, trace or the saved output prefix. | Skip the matching capture finish after the producer. | CapturedOutcome is heterogeneous; no generic Expr pass-through across it. Preserve real prefix data instead of injecting defaults. |
+| PhaseOwnership | Omit the actual phase-finalization/release transition, forwarding a compatible outcome. | Return before that same phase epilogue. | No universal mutation for RAII/resource/duration owners. Use native phase receipts, never wall-clock differences or invented counters. |
+| MatchDecision | Forward before the matcher decision/guard/result normalization or resumed branch continuation. | Return a compatible actual match outcome before decision consumption. | Expr/CompiledMatchOutcome/maps are distinct carriers. Cross-carrier cases need a branch-specific omission, not truth substitution. |
+| RebuildTraversal | Forward the child before rebuilding its parent, consuming the saved work list or continuing siblings. | Return the child before the matching rebuild/traversal tail. | Expr→Expr is generic. Traversal-state/Vec outputs require a concrete finish omission. |
+| ShapeDecode | Forward the encoded outcome before the decoder/shape finish. | Return before the ordinary decode/shape tail. | Legacy Expr→Expr permits a native slot/shape observer. Typed unlike carriers have no generic pass-through and require a specific phase or compile control. |
+| ScalarFinish | Forward the produced scalar before coercion/formatting/Boolean/numeric finish. | Return the compatible scalar before that same finish. | No universal string/bool/number→Expr pass-through; retain the true type or mutate the concrete finishing branch. |
+| ConditionalBranch | Forward the condition/child before selecting and running its consumer branch. | Return the child before branch selection. | Generic only for equal carriers. Other cases omit the actual branch phase; do not invent a condition. |
+| NativeCallbackBridge | Bypass the real bridge adoption/continuation finish, forwarding only when lifetimes/carriers permit. | Return the compatible producer before bridge completion. | No generic mutation for branded CallbackValue/RetainedResult/receipts. Native retained-prefix fixtures and row-specific safe omissions are required. |
+| GuestLoading | Forward before the loader completion/registration/cleanup phase. | Return before that loader finish after the real provider call. | No generic EvalOutcome→Expr/request-response mutation; keep provider/capability configuration and use the concrete loading phase. |
+| HostRequestDriver | Skip the actual request response/delivery/retirement finish at the adapter frame. | Return before the corresponding request-driver tail. | No generic kernel→Host/CLI/REPL/Jupyter response conversion. Each adapter needs its real driver and request ownership observer. |
+| ForwardResult | When an actual tail exists, bypass it at the inherited consumer frame. | A strict whole-result return has no local tail to omit; follow its source-indexed consumer transfer. | No useful local mutant for a genuine identity tail. A surviving identity does not become Equal; prove/reconcile its inherited obligation or retain C2 ownership. |
+| NonSuspending | Not applicable: the concrete constrained producer cannot suspend. | Not applicable. | Reviewed Unreachable proof and strongest attempted producer pause count remain required; no Equal shortcut. |
+| HostBatchBoundary | Not applicable to the documented non-resumable batch boundary. | Not applicable. | Documented Boundary and its boundary tests, never a fake resume mutant. |
+| RetiredBoundary | Not applicable to retired source. | Not applicable. | Exact cross-walk/retirement evidence; no live tuple or mutation to fabricate. |
+
+The required source-site matrix was frozen before outcome selection:
+79,350 planned keys, with fixture selection based on source placement and
+stable catalog/probe order, not SAME. Missing/invalid/differing entries stayed
+red. The first matrix had two complete rows. Correcting 286 Error/Do answer
+plans preserved the exact source and all error/effect/state observations:
+the first iteration throws out of Do, so its unreachable second iteration's
+answers must not remain queued. Both builds passed 286/286. A final parsed-Input
+answer family filled further non-encoding phase gaps without rewriting hidden
+or delayed callback source. Of its 66 programs, 64 passed and two were invalid
+on both arms after a non-association Return reentered a held target call;
+they are not baselined or promoted. No valid real DIFF was hidden.
+
+The mutation baseline re-executed 1,017 selected programs on real and disabled
+copies: all SAME, exact public-observation parity. All 1,547 selected row/tuple
+bindings had fresh actual producer pauses. Three bounded families executed
+1,547 single-row mutation comparisons across 520 rows. The historical family
+labels include eight string rows later qualified to S48-S50. Final C2-only
+figures: 499 rows reached, 49 mutants caught, 29 complete settlements.
+
+Four site-level promotions were withdrawn at the final route check. Their
+passing 240 fragments and caught mutants do not enumerate the concrete generic
+Route, accounting Mode or continuation types. They remain owned; the new model
+rejects this omission independently. No passing evidence was erased.
+| row | generic_parameter | missing_source_routes | evidence |
+| --- | --- | --- | --- |
+| P0403 | Route: DefinitionResumeRoute | ordinary witness versus resumed continuation-token route | definitions/definitions/destructuring.rs:98; prototype keyed the source site rather than both consuming error/continuation routes |
+| P0508 | M: AccountingMode | concrete armed and unarmed accounting modes | eval_core/mod.rs:28; site-only guard does not identify the concrete accounting mode |
+| P1147 | C: OptionReadContinuation&lt;Option&lt;Expr&gt;&gt; | each concrete next.finish continuation type | options/core.rs:175; source-site route cannot substitute for the continuation-type inventory |
+| P1155 | C: OptionReadContinuation&lt;Expr&gt; | each concrete next.finish continuation type | options/read_phase.rs:87; source-site route cannot substitute for the continuation-type inventory |
+
+The 39 new Equal rows below have 2,140 complete required keys and their own
+caught mutants. Independent verification checked 2,075 distinct saved raw
+programs on both builds, fresh producer attribution, disabled parity, exact
+source hit and the actual red mutation JSON. (The verbatim verification below
+is authoritative for the program count.) The observer column is the actual
+mutant's description, not a source-reading observability certificate.
+| row | owner | policy | required_tuples | mutant_probes | mutation_description |
+| --- | --- | --- | --- | --- | --- |
+| P0031 | G15-C2 | NativeCallbackBridge;OptionalStage | 80 | E1.2356.phase_observation.trace;E1.2356.prefix_and_tail.log;E1H.2356.held_and_splice.held-evaluate | After this producer returns Ok in the queued arm, return that same value immediately; omit the consumer tail. Errors still take the original path. The source hit and red public comparison measure this omission. |
+| P0343 | G15-C2 | MatchDecision | 75 | E1.0833.prefix_and_tail.log;E1H.0833.held_and_splice.held-evaluate;E1T.0833.held_and_splice.tail-sequence | At DriveRewriteRulesOwnedSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0343 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0400 | G15-C2 | DefinitionStore | 70 | E1.0317.prefix_and_tail.log;E1H.0317.held_and_splice.held-evaluate;E1T.0317.held_and_splice.tail-sequence | At FinishHeldUpdateSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0400 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0418 | G15-C2 | DefinitionStore | 70 | E1.0473.prefix_and_tail.log;E1H.0473.held_and_splice.held-evaluate;E1T.0473.held_and_splice.tail-sequence | At RuleLhsCompletionFrame::resume, forward the incoming outcome without its tail; arm only when P0418 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0420 | G15-C2 | DefinitionStore | 70 | E1.0684.prefix_and_tail.log;E1H.0684.held_and_splice.held-evaluate;E1T.0684.held_and_splice.tail-sequence | At EvalRuleSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0420 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0556 | G15-C2 | RebuildTraversal | 70 | E1.2675.prefix_and_tail.log;E1H.2675.held_and_splice.held-evaluate;E1T.2675.held_and_splice.tail-sequence | At ResumeAssociationSetLvalueSelectorEvaluationSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0556 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0563 | G15-C2 | OptionalStage;ScopeCleanup | 80 | E1.0990.phase_observation.trace;E1.0990.prefix_and_tail.log;E1H.0990.held_and_splice.held-evaluate | At EvalCheckAbortSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0563 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0573 | G15-C2 | ScopeCleanup | 55 | E1.0980.phase_observation.trace;E1.0980.prefix_and_tail.log;E1H.0980.held_and_splice.held-evaluate | At ResumeCheckAbortWithPropagationSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0573 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0576 | G15-C2 | ScopeCleanup | 55 | E1.0935.phase_observation.trace;E1.0935.prefix_and_tail.log;E1H.0935.held_and_splice.held-evaluate | At EvalAbortProtectSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0576 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0578 | G15-C2 | PhaseOwnership;ScopeCleanup | 55 | E1.1225.phase_observation.trace;E1.1225.prefix_and_tail.log;E1H.1225.held_and_splice.held-evaluate | At ResumeCheckAbortAfterPrimarySuspensionFrame1::resume, forward the incoming outcome without its tail; arm only when P0578 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0582 | G15-C2 | ReturnBoundary | 30 | E1.1190.phase_observation.trace;E1.1190.prefix_and_tail.log;E1.1190.return_boundary.loop-store-reset | At EvalAssertSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0582 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0585 | G15-C2 | OptionalStage;ReturnBoundary | 80 | E1.0950.phase_observation.trace;E1.0950.prefix_and_tail.log;E1H.0950.held_and_splice.held-evaluate | At ResumeAssertAfterFunctionSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0585 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0589 | G15-C2 | ReturnBoundary | 30 | E1.0945.phase_observation.trace;E1.0945.prefix_and_tail.log;E1.0945.return_boundary.loop-store-reset | At FinishAssertFunctionSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0589 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0687 | G15-C2 | CaptureOutput | 50 | E1.2046.phase_observation.trace;E1.2046.prefix_and_tail.log;E1.2046.return_boundary.loop-store-reset | At EvalCheckSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0687 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0691 | G15-C2 | CaptureOutput | 50 | E1.2051.phase_observation.trace;E1.2051.prefix_and_tail.log;E1.2051.return_boundary.loop-store-reset | At EvalQuietSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0691 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0699 | G15-C2 | ScopeCleanup | 55 | E1.1230.phase_observation.trace;E1.1230.prefix_and_tail.log;E1H.1230.held_and_splice.held-evaluate | At EvalWithCleanupSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0699 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0706 | G15-C2 | ScopeCleanup | 55 | E1.1180.phase_observation.trace;E1.1180.prefix_and_tail.log;E1H.1180.held_and_splice.held-evaluate | After this producer returns Ok in the queued arm, return that same value immediately; omit the consumer tail. Errors still take the original path. The source hit and red public comparison measure this omission. |
+| P0726 | S10 | ReturnBoundary | 30 | E1.1000.phase_observation.trace;E1.1000.prefix_and_tail.log;E1.1000.return_boundary.loop-store-reset | At EvalEncloseSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0726 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0728 | S10 | ReturnBoundary | 30 | E1.1000.phase_observation.trace;E1.1000.prefix_and_tail.log;E1.1000.return_boundary.loop-store-reset | At EvalConfirmSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0728 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0730 | S10 | ReturnBoundary | 30 | E1.1015.phase_observation.trace;E1.1015.prefix_and_tail.log;E1.1015.return_boundary.loop-store-reset | At EvalConfirmBySuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0730 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0732 | S10 | ReturnBoundary | 30 | E1.1025.phase_observation.trace;E1.1025.prefix_and_tail.log;E1.1025.return_boundary.loop-store-reset | At EvalConfirmMatchSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0732 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0734 | S10 | ReturnBoundary | 30 | E1.1030.phase_observation.trace;E1.1030.prefix_and_tail.log;E1.1030.return_boundary.loop-store-reset | At EvalConfirmQuietSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0734 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0736 | S10 | ReturnBoundary | 30 | E1.1005.phase_observation.trace;E1.1005.prefix_and_tail.log;E1.1005.return_boundary.loop-store-reset | At EvalConfirmAssertSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0736 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0747 | S10 | ReturnBoundary | 30 | E1.1010.phase_observation.trace;E1.1010.prefix_and_tail.log;E1.1010.return_boundary.loop-store-reset | At ResumeConfirmByAfterValueSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0747 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0750 | S10 | ReturnBoundary | 30 | E1.1020.phase_observation.trace;E1.1020.prefix_and_tail.log;E1.1020.return_boundary.loop-store-reset | At ResumeConfirmMatchAfterValueSuspensionFrame1::resume, forward the incoming outcome without its tail; arm only when P0750 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0761 | G15-C2 | ReturnBoundary | 30 | E1.0970.phase_observation.trace;E1.0970.prefix_and_tail.log;E1.0970.return_boundary.loop-store-reset | At EvalCatchExceptionsSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0761 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0810 | G15-C2 | ReturnBoundary | 30 | E1.0960.phase_observation.trace;E1.0960.prefix_and_tail.log;E1.0960.return_boundary.loop-store-reset | At EvalCatchSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0810 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0841 | S10 | OptionalStage;ScalarFinish | 70 | E1.1235.prefix_and_tail.log;E1H.1235.held_and_splice.held-evaluate;E1T.1235.held_and_splice.tail-sequence | At FailureVirtualStyledMessageValueSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0841 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0843 | S10 | OptionalStage;ScalarFinish | 70 | E1.1050.prefix_and_tail.log;E1H.1050.held_and_splice.held-evaluate;E1T.1050.held_and_splice.tail-sequence | At FailureMessageFromTemplateSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P0843 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P0937 | G15-C2 | OptionalStage;RebuildTraversal | 70 | E1.0710.prefix_and_tail.log;E1H.0710.held_and_splice.held-evaluate;E1T.0710.held_and_splice.tail-sequence | After this producer returns Ok in the queued arm, return that same value immediately; omit the consumer tail. Errors still take the original path. The source hit and red public comparison measure this omission. |
+| P1474 | G15-C2 | PhaseOwnership | 30 | E1.0935.phase_observation.trace | At EvaluateProfiledFixedPointSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P1474 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P1601 | G15-C2 | RebuildTraversal | 70 | E1.0363.prefix_and_tail.log;E1H.0363.held_and_splice.held-evaluate;E1T.0363.held_and_splice.tail-sequence | At ResumeCountAfterTargetSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P1601 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P1604 | G15-C2 | RebuildTraversal | 70 | E1.0462.prefix_and_tail.log;E1H.0462.held_and_splice.held-evaluate;E1T.0462.held_and_splice.tail-sequence | At ResumeMemberQAfterTargetSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P1604 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P1607 | G15-C2 | RebuildTraversal | 70 | E1.0415.prefix_and_tail.log;E1H.0415.held_and_splice.held-evaluate;E1T.0415.held_and_splice.tail-sequence | At ResumeFreeQAfterTargetSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P1607 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P1631 | G15-C2 | RebuildTraversal | 70 | E1.0499.prefix_and_tail.log;E1H.0499.held_and_splice.held-evaluate;E1T.0499.held_and_splice.tail-sequence | At EvalPositionSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P1631 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P1633 | G15-C2 | RebuildTraversal | 70 | E1.0509.prefix_and_tail.log;E1H.0509.held_and_splice.held-evaluate;E1T.0509.held_and_splice.tail-sequence | At ResumePositionAfterTargetSuspensionFrame::resume, forward the incoming outcome without its tail; arm only when P1633 was on the real pause stack. The source hit and red public comparison measure this omission. |
+| P2141 | G15-C2 | PhaseOwnership;PrefixLoop | 75 | E1.1901.phase_observation.trace;E1.1901.prefix_and_tail.log;E1H.1901.held_and_splice.held-evaluate | After this producer returns Ok in the queued arm, return that same value immediately; omit the consumer tail. Errors still take the original path. The source hit and red public comparison measure this omission. |
+| P2142 | G15-C2 | PhaseOwnership;PrefixLoop | 75 | E1.1921.phase_observation.trace;E1.1921.prefix_and_tail.log;E1H.1921.held_and_splice.held-evaluate | After this producer returns Ok in the queued arm, return that same value immediately; omit the consumer tail. Errors still take the original path. The source hit and red public comparison measure this omission. |
+| P2143 | G15-C2 | PrefixLoop | 70 | E1.1926.phase_observation.trace;E1.1926.prefix_and_tail.log;E1H.1926.held_and_splice.held-evaluate | After this producer returns Ok in the queued arm, return that same value immediately; omit the consumer tail. Errors still take the original path. The source hit and red public comparison measure this omission. |
+
+All Equal rows by policy/context, including the four previously accepted
+LHS rows, are indexed below. The earlier four's accepted 97-binding/49-case
+evidence remains in continuation2/accepted-lhs-tuple-bindings.json; it was not
+relabeled as 39 newly mutated rows.
+| row | policy | contexts | basis |
+| --- | --- | --- | --- |
+| P0031 | NativeCallbackBridge;OptionalStage | consumer_routes.route-original;error_before_tail.last-pause-throw;guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0343 | MatchDecision | consumer_routes.route-original;error_before_tail.last-pause-throw;guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0360 | DefinitionLhsPreparation | value;error_before_tail;same_type_error_finish;prefix_and_tail;guest_heads;held_and_splice | accepted earlier LHS evidence; individual mutation port required |
+| P0362 | DefinitionLhsPreparation | value;error_before_tail;same_type_error_finish;prefix_and_tail;guest_heads;held_and_splice | accepted earlier LHS evidence; individual mutation port required |
+| P0364 | DefinitionLhsPreparation | value;error_before_tail;same_type_error_finish;prefix_and_tail;guest_heads;held_and_splice | accepted earlier LHS evidence; individual mutation port required |
+| P0368 | MatchingSymbolCycleRecovery | value;error_before_tail;same_type_error_finish;prefix_and_tail | accepted earlier LHS evidence; individual mutation port required |
+| P0400 | DefinitionStore | consumer_routes.route-original;guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0418 | DefinitionStore | consumer_routes.route-original;guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0420 | DefinitionStore | consumer_routes.route-original;guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0556 | RebuildTraversal | consumer_routes.route-original;guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0563 | OptionalStage;ScopeCleanup | consumer_routes.route-original;error_before_tail.last-pause-throw;guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0573 | ScopeCleanup | error_before_tail.last-pause-throw;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0576 | ScopeCleanup | error_before_tail.last-pause-throw;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0578 | PhaseOwnership;ScopeCleanup | error_before_tail.last-pause-throw;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0582 | ReturnBoundary | error_before_tail.last-pause-throw;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0585 | OptionalStage;ReturnBoundary | consumer_routes.route-original;error_before_tail.last-pause-throw;guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0589 | ReturnBoundary | error_before_tail.last-pause-throw;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0687 | CaptureOutput | error_before_tail.last-pause-throw;guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0691 | CaptureOutput | error_before_tail.last-pause-throw;guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0699 | ScopeCleanup | error_before_tail.last-pause-throw;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0706 | ScopeCleanup | error_before_tail.last-pause-throw;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0726 | ReturnBoundary | error_before_tail.last-pause-throw;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0728 | ReturnBoundary | error_before_tail.last-pause-throw;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0730 | ReturnBoundary | error_before_tail.last-pause-throw;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0732 | ReturnBoundary | error_before_tail.last-pause-throw;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0734 | ReturnBoundary | error_before_tail.last-pause-throw;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0736 | ReturnBoundary | error_before_tail.last-pause-throw;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0747 | ReturnBoundary | error_before_tail.last-pause-throw;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0750 | ReturnBoundary | error_before_tail.last-pause-throw;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0761 | ReturnBoundary | error_before_tail.last-pause-throw;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0810 | ReturnBoundary | error_before_tail.last-pause-throw;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0841 | OptionalStage;ScalarFinish | consumer_routes.route-original;guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0843 | OptionalStage;ScalarFinish | consumer_routes.route-original;guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P0937 | OptionalStage;RebuildTraversal | consumer_routes.route-original;guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P1474 | PhaseOwnership | error_before_tail.last-pause-throw;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P1601 | RebuildTraversal | consumer_routes.route-original;guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P1604 | RebuildTraversal | consumer_routes.route-original;guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P1607 | RebuildTraversal | consumer_routes.route-original;guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P1631 | RebuildTraversal | consumer_routes.route-original;guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P1633 | RebuildTraversal | consumer_routes.route-original;guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P2141 | PhaseOwnership;PrefixLoop | error_before_tail.last-pause-throw;guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P2142 | PhaseOwnership;PrefixLoop | error_before_tail.last-pause-throw;guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+| P2143 | PrefixLoop | guest_heads.tail-nested;guest_heads.tail-none;guest_heads.tail-some-empty;guest_heads.tail-some5;held_and_splice.held-evaluate;held_and_splice.tail-hold;held_and_splice.tail-nothing;held_and_splice.tail-sequence;held_and_splice.unevaluated;phase_observation.trace;prefix_and_tail.log;return_boundary.last-pause-return;return_boundary.loop-store-reset;value.base | new measured mutant |
+
+### Four independent semantic controls
+
+All four compiled in the same copied-tree schema and ran independently with
+final-result comparison disabled. Some uses an ordinary guest value 5 and
+checks the actual native Option output before the lenient decoder: its public
+pair remains SAME while the slot contract turns red. G15-A/B and C1 turn red
+through trace/state/effects. C1 still has scalar 2. Some and C1 start with
+optional experimental completions because those stages are already Lost on
+the real tree; those repairs are OFF in every C2/S10 run and never touch the
+workspace. G15-A's first value-frame-only switch did not fire on its projection
+pause; the corrected switch also skips the shared value finish reached after
+that resume. The guest probe was unchanged and both attempts are retained.
+
+```json
+[
+  {
+    "mutant": "Some",
+    "baseline_same": 1,
+    "mutant_hit": true,
+    "oracle_red_with_final_value_disabled": true,
+    "public_mutant_same": 1,
+    "native_slot_observer": true,
+    "observer": "actual native Option-slot output receipt, before the lenient decoder; no guest encoding value",
+    "repaired_experimental_completion": true,
+    "cases": [
+      "semantic.Some"
+    ],
+    "baseline_log": "semantic-Some-baseline.log",
+    "mutant_log": "semantic-Some-mutant.log"
+  },
+  {
+    "mutant": "G15A",
+    "baseline_same": 1,
+    "mutant_hit": true,
+    "oracle_red_with_final_value_disabled": true,
+    "public_mutant_same": 0,
+    "native_slot_observer": false,
+    "observer": "messages/prints/ordered trace/stored state/projections/request lifecycle, with final outcome value and output Result omitted",
+    "repaired_experimental_completion": false,
+    "cases": [
+      "semantic.G15A"
+    ],
+    "baseline_log": "semantic-G15A-baseline.log",
+    "mutant_log": "semantic-G15A-mutant-r2.log"
+  },
+  {
+    "mutant": "G15B",
+    "baseline_same": 1,
+    "mutant_hit": true,
+    "oracle_red_with_final_value_disabled": true,
+    "public_mutant_same": 0,
+    "native_slot_observer": false,
+    "observer": "messages/prints/ordered trace/stored state/projections/request lifecycle, with final outcome value and output Result omitted",
+    "repaired_experimental_completion": false,
+    "cases": [
+      "semantic.G15B"
+    ],
+    "baseline_log": "semantic-G15B-baseline.log",
+    "mutant_log": "semantic-G15B-mutant.log"
+  },
+  {
+    "mutant": "C1",
+    "baseline_same": 2,
+    "mutant_hit": true,
+    "oracle_red_with_final_value_disabled": true,
+    "public_mutant_same": 0,
+    "native_slot_observer": false,
+    "observer": "messages/prints/ordered trace/stored state/projections/request lifecycle, with final outcome value and output Result omitted",
+    "repaired_experimental_completion": true,
+    "cases": [
+      "min.ReplaceAll.atom",
+      "min.ReplaceAllUnheld.atom"
+    ],
+    "baseline_log": "semantic-C1-baseline.log",
+    "mutant_log": "semantic-C1-mutant.log"
+  }
+]
+```
+
+### Ledger change, exactness and drafts
+
+MANIFEST-DESIGN.md and the CM draft now require complete real SAME tuples AND
+a caught row mutant. The ledger covers every source identity exactly once.
+OwnedObligation entries may defer their full required plan only while their
+exact partition owner is Open. Owner-deferred keys are never executed/SAME
+receipts. Active required/bound/actually-executed multisets must match with
+multiplicity one; existing standing comparisons and known-loss baselines still
+run for open owners. No OwnedObligation hides a new difference in them.
+
+An owner promotion activates/passes every owned tuple set, catches each row's
+mutant, removes exactly those owned entries, retains their regressions and
+only then sets Done. Done with a residual is red. Changing to another Open
+owner without the source assignment is red too. New required rows, duplicates,
+unexecuted declarations and wrong-phase/missing pauses remain red. E2 keeps
+the no-Try coordinator/static controls; no second Pending type is proposed.
+
+The real-data ledger model covers all 2,186 identities, treats the 159 prior
+settlements as accepted opaque inputs, checks all 2,140 active keys for the
+39 new Equals, and rejects eleven negatives. It is an executed design model,
+not the production oracle or a certificate for every deferred key. Its full
+output, and the earlier seven-negative/97-tuple model, are retained.
+
+```text
+LEDGER MODEL green: {"active_rows": 39, "bound": 2140, "executed": 2140, "owned": 1988, "required": 2140, "source_identities": 2186}; owned entries allowed only with Open owners.
+LEDGER NEGATIVE owner-S10-done-with-owned-rows: RED (OwnedObligation owner is not Open: S10)
+LEDGER NEGATIVE owner-C2-done-with-owned-rows: RED (OwnedObligation owner is not Open: G15-C2)
+LEDGER NEGATIVE delete-owned-row: RED (source ledger identities differ from population)
+LEDGER NEGATIVE duplicate-owned-row: RED (duplicate ledger identity)
+LEDGER NEGATIVE reassign-to-completed-step: RED (OwnedObligation owner is not Open: S9; owner differs from source partition assignment: P0001)
+LEDGER NEGATIVE reassign-to-a-different-open-step: RED (owner differs from source partition assignment: P0001)
+LEDGER NEGATIVE promote-complete-SAME-but-surviving-identity-mutant: RED (no authentic caught row mutant: P0107)
+LEDGER NEGATIVE borrow-another-rows-caught-mutant: RED (no authentic caught row mutant: P0107)
+LEDGER NEGATIVE promote-caught-mutant-with-incomplete-real-matrix: RED (real tuple not SAME: P0410)
+LEDGER NEGATIVE promote-site-matrix-with-unbound-concrete-consumer-routes: RED (source consumer-route inventory incomplete: P1147)
+LEDGER NEGATIVE declare-but-do-not-execute-one-active-tuple: RED (required/executed tuple multisets differ)
+test result: ledger model positive=1 negatives=11 rejected=11 failures=0; full production oracle NOT run
+{"baseline_files_unchanged": 2087, "batch": "C3-design-ledger-model", "model": {"active_rows": 39, "bound": 2140, "executed": 2140, "owned": 1988, "required": 2140, "source_identities": 2186}, "negative_controls": 11, "next_action": "Revise CM/C2 briefs and each owner table; append report and verify original-tree integrity.", "verdicts": {"Boundary": 10, "Equal": 43, "Lost": 5, "OwnedObligation": 1988, "Unreachable": 140}}
+```
+
+Revised raw drafts in TEMPLATE shape:
+
+- draft-G15-C1-rewrite-output-tail.md: accepted typed post-apply finish repair;
+  retain both equal-scalar trace witnesses and independent finish bypass.
+- draft-G15-C2-settlement.md: exact 1,024-row residual, 364 initially unsupported
+  shapes, adapter/native drivers, concrete type-route gaps, identity transfers,
+  full tuples plus mutants, bounded work and exact residual ownership.
+- draft-G15-CM-obligation-manifest.md: source discovery, exact active/deferred
+  inventory, owner-state/atomic promotions, measured observer criterion,
+  immutable known losses and all negative controls; production cost gate.
+- draft-existing-owner-additions.md: 78 exact G13 tables, S10 first, with one
+  incorporation card per S10-S54. It retains the existing causal/transport
+  witnesses and marks the ten newly measured S10 rows as regressions.
+
+Required sequence: **C1, completed C2, the manifest, CHANGELOG, then S10**.
+The model's Open-owned green state does not authorize bypassing C2. Newly
+discovered repairs needed for C2 closure must also precede that gate.
+
+### Remaining C2 composition and recommendations
+
+The exact list is remaining-owned-rows/G15-C2.tsv, with initial partition
+evidence in owned-obligations.tsv and the complete current rows in settled.tsv.
+The 1,024 remaining rows break down as follows:
+
+```json
+[
+  {
+    "owner": "G15-C2",
+    "initial": 1053,
+    "remaining": 1024,
+    "classes": {
+      "unsupported schema": 364,
+      "survived or no mutation hit": 450,
+      "compiled but no valid binding reached": 190,
+      "caught mutant; incomplete real tuples": 20
+    }
+  },
+  {
+    "owner": "S10",
+    "initial": 38,
+    "remaining": 28,
+    "classes": {
+      "unsupported schema": 15,
+      "compiled but no valid binding reached": 10,
+      "survived or no mutation hit": 3
+    }
+  }
+]
+```
+
+Policy counts are memberships (policies overlap):
+
+| policy | count |
+| --- | --- |
+| CaptureOutput | 13 |
+| ConditionalBranch | 40 |
+| DefinitionLhsPreparation | 12 |
+| DefinitionStore | 52 |
+| ErrorTransform | 43 |
+| ForwardResult | 325 |
+| FunctionResult | 10 |
+| GuestLoading | 3 |
+| HostRequestDriver | 95 |
+| MatchDecision | 174 |
+| NativeCallbackBridge | 32 |
+| OptionReader | 45 |
+| OptionalStage | 264 |
+| PhaseOwnership | 49 |
+| PrefixLoop | 55 |
+| PrepareArgumentsRestore | 33 |
+| RebuildTraversal | 267 |
+| ReturnBoundary | 46 |
+| ScalarFinish | 31 |
+| ScopeCleanup | 37 |
+| ShapeDecode | 139 |
+
+Exact module/file composition (counts sum to 1,024):
+
+| module | count |
+| --- | --- |
+| crates/rum-cli/src/eval_tests.rs | 8 |
+| crates/rum-cli/src/input_retirement.rs | 1 |
+| crates/rum-cli/src/main.rs | 22 |
+| crates/rum-host/src/session.rs | 11 |
+| crates/rum-jupyter/src/adapter/execute.rs | 3 |
+| crates/rum-jupyter/src/adapter/input_retirement.rs | 1 |
+| crates/rum-jupyter/src/adapter/worker.rs | 6 |
+| crates/rum-repl/src/lib.rs | 5 |
+| crates/rum-repl/src/request.rs | 7 |
+| crates/rum-runtime/src/runtime/accounting_mode/bridge.rs | 3 |
+| crates/rum-runtime/src/runtime/accounting_mode/mod.rs | 3 |
+| crates/rum-runtime/src/runtime/accounting_mode/options.rs | 2 |
+| crates/rum-runtime/src/runtime/accounting_mode/options/driver.rs | 6 |
+| crates/rum-runtime/src/runtime/accounting_mode/retained.rs | 3 |
+| crates/rum-runtime/src/runtime/accounting_mode/rule.rs | 15 |
+| crates/rum-runtime/src/runtime/arithmetic/parts.rs | 1 |
+| crates/rum-runtime/src/runtime/builtin_adapters.rs | 62 |
+| crates/rum-runtime/src/runtime/builtins_context_loader.rs | 1 |
+| crates/rum-runtime/src/runtime/debug_tools/monitor/options.rs | 4 |
+| crates/rum-runtime/src/runtime/debug_tools/reap/sow.rs | 3 |
+| crates/rum-runtime/src/runtime/debug_tools/test_report/options.rs | 5 |
+| crates/rum-runtime/src/runtime/debug_tools/test_report/report.rs | 3 |
+| crates/rum-runtime/src/runtime/debug_tools/trace/filter.rs | 2 |
+| crates/rum-runtime/src/runtime/debug_tools/trace/filter/leaf.rs | 1 |
+| crates/rum-runtime/src/runtime/debug_tools/trace/options.rs | 2 |
+| crates/rum-runtime/src/runtime/definitions/application/default_values.rs | 16 |
+| crates/rum-runtime/src/runtime/definitions/application/down_values.rs | 17 |
+| crates/rum-runtime/src/runtime/definitions/application/down_values/default_fallback.rs | 2 |
+| crates/rum-runtime/src/runtime/definitions/application/replace_all.rs | 10 |
+| crates/rum-runtime/src/runtime/definitions/application/replace_all/resume_frames.rs | 5 |
+| crates/rum-runtime/src/runtime/definitions/application/rhs.rs | 10 |
+| crates/rum-runtime/src/runtime/definitions/application/sub_values.rs | 9 |
+| crates/rum-runtime/src/runtime/definitions/application/up_values.rs | 11 |
+| crates/rum-runtime/src/runtime/definitions/definition_catalog/arguments.rs | 5 |
+| crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs | 16 |
+| crates/rum-runtime/src/runtime/definitions/definition_catalog/traversal.rs | 4 |
+| crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs | 11 |
+| crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs | 1 |
+| crates/rum-runtime/src/runtime/definitions/definition_tags.rs | 6 |
+| crates/rum-runtime/src/runtime/definitions/definition_updates.rs | 8 |
+| crates/rum-runtime/src/runtime/definitions/definition_updates/resume_frames.rs | 3 |
+| crates/rum-runtime/src/runtime/definitions/definitions.rs | 12 |
+| crates/rum-runtime/src/runtime/definitions/definitions/destructuring.rs | 6 |
+| crates/rum-runtime/src/runtime/definitions/definitions/resume_frames.rs | 1 |
+| crates/rum-runtime/src/runtime/definitions/incremental_append.rs | 1 |
+| crates/rum-runtime/src/runtime/definitions/part_assignment.rs | 2 |
+| crates/rum-runtime/src/runtime/definitions/part_assignment/resume_frames.rs | 1 |
+| crates/rum-runtime/src/runtime/definitions/rhs_guards.rs | 18 |
+| crates/rum-runtime/src/runtime/definitions/rhs_guards/resume_frames.rs | 5 |
+| crates/rum-runtime/src/runtime/definitions/rule_lhs.rs | 5 |
+| crates/rum-runtime/src/runtime/definitions/rule_lhs/continuation.rs | 3 |
+| crates/rum-runtime/src/runtime/definitions/value_table_assignment.rs | 1 |
+| crates/rum-runtime/src/runtime/eval_call_prepare.rs | 4 |
+| crates/rum-runtime/src/runtime/eval_call_prepare/resume_frames.rs | 1 |
+| crates/rum-runtime/src/runtime/eval_core/call.rs | 14 |
+| crates/rum-runtime/src/runtime/eval_core/mod.rs | 6 |
+| crates/rum-runtime/src/runtime/eval_core/symbol.rs | 13 |
+| crates/rum-runtime/src/runtime/eval_dispatch/mod.rs | 12 |
+| crates/rum-runtime/src/runtime/hold_thread.rs | 1 |
+| crates/rum-runtime/src/runtime/kernel_data/association_data.rs | 6 |
+| crates/rum-runtime/src/runtime/kernel_data/association_data/resume_frames.rs | 5 |
+| crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup.rs | 5 |
+| crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/options.rs | 2 |
+| crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs | 6 |
+| crates/rum-runtime/src/runtime/kernel_data/control_data/assertions.rs | 7 |
+| crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/driver.rs | 2 |
+| crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/spec.rs | 2 |
+| crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/table_fast_path.rs | 1 |
+| crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration_aggregate.rs | 4 |
+| crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs | 5 |
+| crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs | 12 |
+| crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs | 14 |
+| crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions/resume_frames.rs | 5 |
+| crates/rum-runtime/src/runtime/kernel_data/control_data/mod.rs | 4 |
+| crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs | 20 |
+| crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs | 7 |
+| crates/rum-runtime/src/runtime/kernel_data/evaluated_part_selectors.rs | 1 |
+| crates/rum-runtime/src/runtime/kernel_data/rewrite_data/cases/collect/options.rs | 1 |
+| crates/rum-runtime/src/runtime/kernel_data/rewrite_data/cases/delete/options.rs | 1 |
+| crates/rum-runtime/src/runtime/kernel_data/rewrite_data/cases/delete/traversal.rs | 1 |
+| crates/rum-runtime/src/runtime/kernel_data/rewrite_data/cases/pattern_resolution.rs | 2 |
+| crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/list.rs | 1 |
+| crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/once.rs | 1 |
+| crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/once/options.rs | 2 |
+| crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/repeated.rs | 2 |
+| crates/rum-runtime/src/runtime/kernel_data/structure_data/replace/guarded.rs | 1 |
+| crates/rum-runtime/src/runtime/kernel_data/structure_data/replace/replace_at.rs | 1 |
+| crates/rum-runtime/src/runtime/kernel_data/structure_data/replace/replace_part.rs | 3 |
+| crates/rum-runtime/src/runtime/kernel_data/structure_data/selectors.rs | 1 |
+| crates/rum-runtime/src/runtime/lowering.rs | 1 |
+| crates/rum-runtime/src/runtime/namespace_tools/names.rs | 1 |
+| crates/rum-runtime/src/runtime/namespace_tools/names/options.rs | 3 |
+| crates/rum-runtime/src/runtime/options/builtins.rs | 3 |
+| crates/rum-runtime/src/runtime/options/core.rs | 18 |
+| crates/rum-runtime/src/runtime/options/read_phase.rs | 2 |
+| crates/rum-runtime/src/runtime/options/resume_frames.rs | 3 |
+| crates/rum-runtime/src/runtime/package_tools.rs | 1 |
+| crates/rum-runtime/src/runtime/package_tools/persist_options.rs | 1 |
+| crates/rum-runtime/src/runtime/pattern_matching/core.rs | 2 |
+| crates/rum-runtime/src/runtime/pattern_matching/sequence/entry.rs | 2 |
+| crates/rum-runtime/src/runtime/pattern_matching/sequence/optional_sequence/choices.rs | 3 |
+| crates/rum-runtime/src/runtime/pattern_matching/sequence/optional_sequence/optional.rs | 6 |
+| crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/collect.rs | 2 |
+| crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/entry.rs | 4 |
+| crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/match_choices.rs | 5 |
+| crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/optional.rs | 2 |
+| crates/rum-runtime/src/runtime/resolution.rs | 2 |
+| crates/rum-runtime/src/runtime/resolution/resume_frames.rs | 2 |
+| crates/rum-runtime/src/runtime/scoping/callable/status_application.rs | 10 |
+| crates/rum-runtime/src/runtime/scoping/lexical/block.rs | 2 |
+| crates/rum-runtime/src/runtime/scoping/lexical/block/continuation.rs | 1 |
+| crates/rum-runtime/src/runtime/scoping/lexical/module.rs | 1 |
+| crates/rum-runtime/src/runtime/scoping/lexical/with.rs | 3 |
+| crates/rum-runtime/src/runtime/scoping/packages.rs | 1 |
+| crates/rum-runtime/src/runtime/session/guest_loading/script.rs | 2 |
+| crates/rum-runtime/src/runtime/session/session_eval.rs | 9 |
+| crates/rum-runtime/src/runtime/session/session_requests.rs | 11 |
+| crates/rum-runtime/src/runtime/suspension/core.rs | 6 |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs | 2 |
+| crates/rum-runtime/src/runtime/suspension/core/fault.rs | 1 |
+| crates/rum-runtime/src/runtime/suspension/typed/adapter.rs | 2 |
+| crates/rum-runtime/src/runtime/test_builtins.rs | 1 |
+| crates/rum-runtime/src/runtime/tree_walkers/count_like.rs | 15 |
+| crates/rum-runtime/src/runtime/tree_walkers/count_like/options.rs | 1 |
+| crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs | 10 |
+| crates/rum-runtime/src/runtime/tree_walkers/level.rs | 1 |
+| crates/rum-runtime/src/runtime/tree_walkers/position.rs | 7 |
+| crates/rum-runtime/src/runtime/tree_walkers/position/options.rs | 5 |
+| crates/rum-runtime/src/runtime/tree_walkers/position/resume_frames.rs | 6 |
+| crates/rum-stdlib/src/arithmetic.rs | 1 |
+| crates/rum-stdlib/src/arithmetic/stats.rs | 1 |
+| crates/rum-stdlib/src/associations/aggregate.rs | 3 |
+| crates/rum-stdlib/src/associations/basic.rs | 2 |
+| crates/rum-stdlib/src/associations/grouping.rs | 8 |
+| crates/rum-stdlib/src/associations/grouping/association.rs | 1 |
+| crates/rum-stdlib/src/associations/grouping/list.rs | 3 |
+| crates/rum-stdlib/src/associations/key_reshape.rs | 2 |
+| crates/rum-stdlib/src/associations/missing.rs | 2 |
+| crates/rum-stdlib/src/associations/missing/target.rs | 7 |
+| crates/rum-stdlib/src/associations/mutation.rs | 7 |
+| crates/rum-stdlib/src/associations/resumable/aggregate.rs | 2 |
+| crates/rum-stdlib/src/associations/resumable/aggregate/merge_nested.rs | 2 |
+| crates/rum-stdlib/src/associations/resumable/key_select.rs | 1 |
+| crates/rum-stdlib/src/associations/resumable/key_sort.rs | 2 |
+| crates/rum-stdlib/src/associations/resumable/map.rs | 2 |
+| crates/rum-stdlib/src/associations/transforms.rs | 1 |
+| crates/rum-stdlib/src/associations/transforms/key_collections.rs | 1 |
+| crates/rum-stdlib/src/control_flow.rs | 38 |
+| crates/rum-stdlib/src/functional_ops/apply_map/mod.rs | 3 |
+| crates/rum-stdlib/src/functional_ops/arrays/filter.rs | 1 |
+| crates/rum-stdlib/src/functional_ops/arrays/generators.rs | 2 |
+| crates/rum-stdlib/src/functional_ops/arrays/mod.rs | 5 |
+| crates/rum-stdlib/src/functional_ops/arrays/options.rs | 1 |
+| crates/rum-stdlib/src/functional_ops/arrays/tensor.rs | 3 |
+| crates/rum-stdlib/src/functional_ops/callable/head_ops.rs | 3 |
+| crates/rum-stdlib/src/functional_ops/iteration.rs | 16 |
+| crates/rum-stdlib/src/functional_ops/sequence/fold/mod.rs | 15 |
+| crates/rum-stdlib/src/functional_ops/sequence/fold/while_loop.rs | 2 |
+| crates/rum-stdlib/src/functional_ops/sequence/select.rs | 4 |
+| crates/rum-stdlib/src/functional_ops/sequence/window.rs | 5 |
+| crates/rum-stdlib/src/functional_ops/targeted_map.rs | 2 |
+| crates/rum-stdlib/src/integer_digits.rs | 2 |
+| crates/rum-stdlib/src/lazy.rs | 3 |
+| crates/rum-stdlib/src/lazy/machine.rs | 4 |
+| crates/rum-stdlib/src/lazy/realization.rs | 1 |
+| crates/rum-stdlib/src/lazy/source.rs | 1 |
+| crates/rum-stdlib/src/logic/truth.rs | 4 |
+| crates/rum-stdlib/src/number_theory.rs | 5 |
+| crates/rum-stdlib/src/option_consumers.rs | 7 |
+| crates/rum-stdlib/src/predicates/arrays.rs | 2 |
+| crates/rum-stdlib/src/predicates/collections.rs | 8 |
+| crates/rum-stdlib/src/predicates/ordering.rs | 3 |
+| crates/rum-stdlib/src/predicates/truth.rs | 3 |
+| crates/rum-stdlib/src/random.rs | 1 |
+| crates/rum-stdlib/src/rewrite_builtins.rs | 8 |
+| crates/rum-stdlib/src/schema.rs | 1 |
+| crates/rum-stdlib/src/schema/machine.rs | 2 |
+| crates/rum-stdlib/src/strings/encoding.rs | 1 |
+| crates/rum-stdlib/src/strings/patterns/search.rs | 24 |
+| crates/rum-stdlib/src/strings/patterns/search/guarded/cases.rs | 3 |
+| crates/rum-stdlib/src/strings/patterns/search/guarded/replace.rs | 6 |
+| crates/rum-stdlib/src/strings/patterns/search/rules.rs | 15 |
+| crates/rum-stdlib/src/strings/patterns/search/rules/cases.rs | 10 |
+| crates/rum-stdlib/src/strings/scripting/args.rs | 2 |
+| crates/rum-stdlib/src/strings/scripting/html.rs | 2 |
+| crates/rum-stdlib/src/strings/scripting/text_shape.rs | 6 |
+| crates/rum-stdlib/src/strings/scripting/url.rs | 6 |
+| crates/rum-stdlib/src/strings/template.rs | 4 |
+| crates/rum-stdlib/src/structure_ops/collection_stats.rs | 11 |
+| crates/rum-stdlib/src/structure_ops/dedup.rs | 3 |
+| crates/rum-stdlib/src/structure_ops/list_lookup.rs | 2 |
+| crates/rum-stdlib/src/structure_ops/list_plumbing.rs | 3 |
+| crates/rum-stdlib/src/structure_ops/mod.rs | 1 |
+| crates/rum-stdlib/src/structure_ops/ordering_sets.rs | 13 |
+| crates/rum-stdlib/src/structure_ops/sequence/take_drop.rs | 2 |
+| crates/rum-stdlib/src/structure_ops/surface.rs | 2 |
+
+Source-population memberships (overlapping):
+
+| source | count |
+| --- | --- |
+| frame_carries | 182 |
+| review_tail_correct | 261 |
+| screen_effect-questions | 16 |
+| screen_frameless-direct-evaluate | 42 |
+| screen_frameless-transforms | 158 |
+| screen_optional-source-helpers | 61 |
+| strict_tail_without_indexed_caller | 249 |
+| tool_unsettled | 604 |
+
+Recommendations for the director's C2 rewrite: start with caught mutants
+whose remaining gaps are concrete routes/non-encoding phases; retain the
+encoding restriction unless explicitly changed. Add row-specific native and
+adapter mutations where generic carrier conversion is impossible. Resolve
+genuine identity/no-tail roots through exact inherited source transfers or a
+reviewed disposition; never invent an unrelated destructive mutant to force
+P0107-like identities red. Keep C2 Open until its whole required disposition
+is approved. The current data does not justify a blanket identity exemption.
+
+### Verbatim execution results, cost and scope
+
+Raw coverage is exposure evidence, not the settled tuple count:
+
+```text
+FINAL COVERAGE {"attributed_rows": 1309, "cells": 2805392, "distinct_probes": 80661, "results": {"DIFF": 23220, "SAME": 2580635, "invalid": 201537}, "unattributed_rows": 877}
+POPULATION {"Boundary": 10, "Equal": 43, "Lost": 5, "OwnedObligation": 1988, "Unreachable": 140, "source": "ALL", "total": 2186}
+POPULATION {"Boundary": 0, "Equal": 43, "Lost": 4, "OwnedObligation": 686, "Unreachable": 19, "source": "frame_carries", "total": 752}
+POPULATION {"Boundary": 0, "Equal": 3, "Lost": 1, "OwnedObligation": 397, "Unreachable": 36, "source": "review_tail_correct", "total": 437}
+POPULATION {"Boundary": 0, "Equal": 0, "Lost": 1, "OwnedObligation": 31, "Unreachable": 1, "source": "screen_effect-questions", "total": 33}
+POPULATION {"Boundary": 3, "Equal": 2, "Lost": 1, "OwnedObligation": 50, "Unreachable": 0, "source": "screen_frameless-direct-evaluate", "total": 56}
+POPULATION {"Boundary": 1, "Equal": 2, "Lost": 1, "OwnedObligation": 192, "Unreachable": 13, "source": "screen_frameless-transforms", "total": 209}
+POPULATION {"Boundary": 0, "Equal": 2, "Lost": 3, "OwnedObligation": 87, "Unreachable": 5, "source": "screen_optional-source-helpers", "total": 97}
+POPULATION {"Boundary": 0, "Equal": 0, "Lost": 0, "OwnedObligation": 257, "Unreachable": 26, "source": "strict_tail_without_indexed_caller", "total": 283}
+POPULATION {"Boundary": 10, "Equal": 6, "Lost": 4, "OwnedObligation": 1070, "Unreachable": 98, "source": "tool_unsettled", "total": 1188}
+REMAINING {"classes": {"caught mutant; incomplete real tuples": 20, "compiled but no valid binding reached": 190, "survived or no mutation hit": 450, "unsupported schema": 364}, "initial": 1053, "owner": "G15-C2", "remaining": 1024}
+REMAINING {"classes": {"compiled but no valid binding reached": 10, "survived or no mutation hit": 3, "unsupported schema": 15}, "initial": 38, "owner": "S10", "remaining": 28}
+```
+
+The original 80,309-probe matrix was reused; 352 new context programs add
+12,680 cells. Selected baseline replays exist solely to calibrate and exercise
+the new mutation schema, not to regenerate completed corpus batches.
+`continuation3/c3-calibration-real.log`
+
+```text
+test result: total=30 SAME=30 DIFF=0 invalid=0
+```
+
+`continuation3/c3-calibration-disabled.log`
+
+```text
+test result: total=30 SAME=30 DIFF=0 invalid=0
+```
+
+`continuation3/semantic-Some-baseline.log`
+
+```text
+test result: total=1 SAME=1 DIFF=0 invalid=0
+```
+
+`continuation3/semantic-Some-mutant.log`
+
+```text
+test result: total=1 SAME=1 DIFF=0 invalid=0
+```
+
+`continuation3/semantic-G15A-baseline.log`
+
+```text
+test result: total=1 SAME=1 DIFF=0 invalid=0
+```
+
+`continuation3/semantic-G15A-mutant.log`
+
+```text
+test result: total=1 SAME=1 DIFF=0 invalid=0
+```
+
+`continuation3/semantic-G15A-mutant-r2.log`
+
+```text
+test result: total=1 SAME=0 DIFF=1 invalid=0
+```
+
+`continuation3/semantic-G15B-baseline.log`
+
+```text
+test result: total=1 SAME=1 DIFF=0 invalid=0
+```
+
+`continuation3/semantic-G15B-mutant.log`
+
+```text
+test result: total=1 SAME=0 DIFF=1 invalid=0
+```
+
+`continuation3/semantic-C1-baseline.log`
+
+```text
+test result: total=2 SAME=2 DIFF=0 invalid=0
+```
+
+`continuation3/semantic-C1-mutant.log`
+
+```text
+test result: total=2 SAME=0 DIFF=2 invalid=0
+```
+
+`continuation3/loop-error-current.log`
+
+```text
+test result: total=286 SAME=286 DIFF=0 invalid=0 boundary=0
+```
+
+`continuation3/loop-error-attribution.log`
+
+```text
+test result: total=286 SAME=286 DIFF=0 invalid=0 boundary=0
+```
+
+`continuation3/mutation-baseline-real.log`
+
+```text
+test result: total=1017 SAME=1017 DIFF=0 invalid=0 boundary=3
+```
+
+`continuation3/mutation-baseline-disabled.log`
+
+```text
+test result: total=1017 SAME=1017 DIFF=0 invalid=0 boundary=3
+```
+
+`continuation3/closure-current.log`
+
+```text
+test result: total=66 SAME=64 DIFF=2 invalid=2 boundary=0
+```
+
+`continuation3/closure-attribution.log`
+
+```text
+test result: total=66 SAME=64 DIFF=2 invalid=2 boundary=0
+```
+
+`continuation3/mutants-S10-run.log`
+
+```text
+ROW MUTANTS S10: rows=13 tuples=39 caught=10 hit=13 unobserved=3
+```
+
+`continuation3/mutants-C2-frames-run.log`
+
+```text
+ROW MUTANTS C2-frames: rows=36 tuples=107 caught=30 hit=35 unobserved=6
+```
+
+`continuation3/mutants-C2-ordinary-run.log`
+
+```text
+ROW MUTANTS C2-ordinary: rows=471 tuples=1401 caught=19 hit=440 unobserved=452
+```
+
+
+```text
+INDEPENDENT EVIDENCE new Equal=39 required keys=2140 distinct raw programs=2075; real+attribution raw JSON all SAME/valid.
+INDEPENDENT EVIDENCE each row: actual producer pause + disabled exact parity + own source hit + public mutant red = PASS (39/39).
+INDEPENDENT ACCOUNTING source rows=2186 closed=198 owned=1988 ownerless=0; C2=1024 G13=964.
+INDEPENDENT SCOPE original files unchanged=2087; no production source changes.
+```
+
+Every individual row runner's own test-result line is preserved here;
+the corresponding full JSON/logs remain in continuation3/row-mutants/:
+| row | test_result |
+| --- | --- |
+| P0008 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0012 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0015 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0031 | test result: total=3 SAME=0 DIFF=3 invalid=1 boundary=0 |
+| P0046 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0050 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0051 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0052 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0053 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0054 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0055 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0056 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0057 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0058 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0059 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0060 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0061 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0062 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0063 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0064 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0065 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0066 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0067 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0068 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0069 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0070 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0071 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0072 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0073 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0074 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0075 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0076 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0077 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0078 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0079 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0080 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0081 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0082 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0083 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0084 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0085 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0086 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0087 | test result: total=1 SAME=1 DIFF=0 invalid=0 boundary=1 |
+| P0088 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0089 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0090 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0091 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0093 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0094 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0095 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0096 | test result: total=1 SAME=1 DIFF=0 invalid=0 boundary=1 |
+| P0097 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0098 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0099 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0100 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0101 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0102 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0103 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0104 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0105 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0106 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0107 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0108 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0109 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0110 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0114 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0126 | test result: total=1 SAME=1 DIFF=0 invalid=0 boundary=1 |
+| P0128 | test result: total=1 SAME=1 DIFF=0 invalid=0 boundary=1 |
+| P0144 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0186 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0187 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0188 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0193 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0203 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0219 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0232 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0233 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0234 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0236 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0249 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0252 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0254 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0255 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0256 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0259 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0262 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0266 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0277 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0283 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0287 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0313 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0314 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0315 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0330 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0331 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0332 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0333 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0334 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0335 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0343 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0355 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0358 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0367 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0376 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0377 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0388 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0395 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0399 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0400 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0402 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0403 | test result: total=3 SAME=0 DIFF=3 invalid=3 boundary=0 |
+| P0407 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0410 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0413 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0416 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0417 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0418 | test result: total=3 SAME=0 DIFF=3 invalid=2 boundary=0 |
+| P0420 | test result: total=3 SAME=0 DIFF=3 invalid=2 boundary=0 |
+| P0423 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0431 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0447 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0448 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0465 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0468 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0470 | test result: total=3 SAME=0 DIFF=3 invalid=3 boundary=0 |
+| P0478 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0484 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0485 | test result: total=3 SAME=0 DIFF=3 invalid=3 boundary=0 |
+| P0487 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0489 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0506 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0507 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0508 | test result: total=3 SAME=2 DIFF=1 invalid=0 boundary=0 |
+| P0509 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0511 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0515 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0524 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0526 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0530 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0536 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0538 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0539 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0541 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0542 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0545 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0547 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0556 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0558 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0560 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0563 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0573 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0575 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0576 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0578 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0580 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0582 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0584 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0585 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0587 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0589 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0599 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0600 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0622 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0624 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0625 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0626 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0687 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0691 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0699 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0706 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0708 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0709 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0726 | test result: total=3 SAME=0 DIFF=3 invalid=1 boundary=0 |
+| P0728 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0730 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0732 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0734 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0736 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0738 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0743 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0747 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0750 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0761 | test result: total=3 SAME=0 DIFF=3 invalid=1 boundary=0 |
+| P0763 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0770 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0774 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0776 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0777 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0790 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0795 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0798 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0801 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0810 | test result: total=3 SAME=0 DIFF=3 invalid=1 boundary=0 |
+| P0814 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0817 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0818 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0820 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0821 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0822 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0825 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0826 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0828 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0840 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0841 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0843 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P0846 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0904 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0934 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0937 | test result: total=3 SAME=0 DIFF=3 invalid=3 boundary=0 |
+| P0975 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P0983 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1005 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1037 | test result: total=3 SAME=0 DIFF=3 invalid=3 boundary=0 |
+| P1038 | test result: total=3 SAME=0 DIFF=3 invalid=3 boundary=0 |
+| P1085 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1101 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1102 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1107 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1116 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1124 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1132 | test result: total=3 SAME=0 DIFF=3 invalid=3 boundary=0 |
+| P1136 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1142 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P1144 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1146 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1147 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P1149 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1155 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P1165 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1187 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1231 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1232 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1238 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1239 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1267 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1275 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1283 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1284 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1310 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1323 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1324 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1326 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1333 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1335 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1354 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1472 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1474 | test result: total=3 SAME=2 DIFF=1 invalid=0 boundary=0 |
+| P1476 | test result: total=2 SAME=2 DIFF=0 invalid=0 boundary=0 |
+| P1496 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1497 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1507 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1526 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1535 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1544 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1547 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1556 | test result: total=1 SAME=1 DIFF=0 invalid=0 boundary=1 |
+| P1558 | test result: total=1 SAME=0 DIFF=1 invalid=1 boundary=1 |
+| P1562 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1567 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1601 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P1602 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1603 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1604 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P1605 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1606 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1607 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P1608 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1609 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1611 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1617 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1618 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1619 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1622 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1631 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P1633 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P1634 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1635 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1639 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1642 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1661 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1679 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1680 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1681 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1704 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1729 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1758 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1759 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1760 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1768 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1770 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1771 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1772 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1773 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1774 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1779 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1780 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1812 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1813 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1814 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P1815 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1816 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1817 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P1819 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1823 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1833 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1834 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1841 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1847 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1848 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1859 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1860 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1873 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1877 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1879 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1880 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1881 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1882 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1883 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1884 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1885 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1886 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1887 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1888 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1889 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1890 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1893 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1894 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1895 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1897 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1898 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1899 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1900 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1901 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1902 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1903 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1908 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1909 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1917 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1918 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1919 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1923 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1928 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1929 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1940 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1941 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1950 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1955 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1962 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1963 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1973 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1974 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1977 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1978 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1982 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1984 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P1996 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2009 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2010 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2011 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2013 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2015 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2017 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2018 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2020 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2022 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2023 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2025 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2070 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2080 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2082 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2083 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2096 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2098 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2099 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2100 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2117 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2118 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2136 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2141 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P2142 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P2143 | test result: total=3 SAME=0 DIFF=3 invalid=0 boundary=0 |
+| P2144 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2145 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2155 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2156 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2157 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2158 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2182 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2183 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2185 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2187 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2196 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2201 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2202 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2206 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2207 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2223 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2224 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2225 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2226 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2227 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2228 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2236 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2245 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2250 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2263 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2264 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2265 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2266 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2275 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2277 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2278 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2279 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2280 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2281 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2282 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2283 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2284 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2287 | test result: total=3 SAME=0 DIFF=3 invalid=3 boundary=0 |
+| P2288 | test result: total=3 SAME=0 DIFF=3 invalid=3 boundary=0 |
+| P2299 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2302 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2312 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2329 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2333 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2339 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2347 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2364 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2368 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2369 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2374 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2377 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2380 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2388 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2391 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2397 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2406 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2407 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2410 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2413 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2419 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2422 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2423 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2428 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2429 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2430 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2431 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2432 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2433 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2434 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2435 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2436 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2437 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2438 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2439 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2440 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2446 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2452 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2453 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2454 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2455 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2456 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2457 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2458 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2459 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2460 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2461 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2462 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2463 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2464 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2465 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2466 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2467 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2468 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2469 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2470 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2471 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2472 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2473 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2474 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2475 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2476 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2477 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2478 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2479 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2480 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2481 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2482 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2483 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2501 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2505 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2506 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2507 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2508 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2509 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2510 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2511 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2512 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2513 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2514 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2524 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2525 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2526 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2537 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2551 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2552 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2565 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2566 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2567 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2568 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2569 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2570 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2571 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2572 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2573 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2574 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2575 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2576 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2590 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+| P2592 | test result: total=3 SAME=3 DIFF=0 invalid=0 boundary=0 |
+
+No full production oracle, default/no-default oracle gate, workspace test
+suite, formatter gate, retention replay, timing/instruction/stack work or
+microbench A/B was run in this source-unchanged design continuation. The
+expanded production oracle cost remains unmeasured. CM retains <=1,500 seconds
+per complete build (target <=900), sharing actual program executions without
+sampling requirements. Any future production hot-path change needs its full
+rum-vs-rum A/B and explicit source scope.
+
+No unexplained calibration failure, content-filter interruption or two-zero
+probe-batch stop-loss occurred. Each executed family added measured coverage;
+the prototype's bounded attempts are complete and resistant rows remain owned.
+Model/draft/qualification checks are design steps, not fictitious probe batches.
+The only original-file changes are this report append and the opening-summary
+rewrite expressly required by continuation 3. The source scene stays intact.
+
+## Director review (2026-10-19) — accepted as a design; C1, C2, CM, then CHANGELOG, then S10
+
+**Runs.**
+
+| Run | Session | Tokens | Result |
+| --- | --- | ---: | --- |
+| Run 1 | `01a151f9-…` | 408k | Stopped under my stop-loss at 15 of 2 186 rows. My brief demanded per-row policy contexts before the policies existed (step 3 before step 5), and taken in ID order the hardest rows came first. Both faults are mine. |
+| Continuation 1 | fork `01a15222-…` | 986k | Policies for every row, then about 2.2 M coverage cells. Cut by Codex's content filter after the internal-encoding batches (log `cdx_brief_621.filter-1.log`). |
+| Continuation 2 | fresh `01a1523d-…` | 416k | Resumed from the checkpoint and classified the internal-encoding differences by script. 159 rows settled and 2 027 parked. Found G15-C1. |
+| Continuation 3 | fork `01a15267-…` | 1.23M | Measured observation by tail-skip mutants in one switchable copied-tree build. 198 rows settled and the other 1 988 assigned to owners: 1 024 to G15-C2 and 964 to future G13 steps. The ledger model and the drafts. |
+
+**Accepted.**
+
+- **The foundation.**
+  - The calibrated re-census: 2 682 edges, all 86 historical Lost and the
+    G9-G15 controls reproduce.
+  - Both cross-walks: 2 468/2 468 and 495/495.
+  - The 2 186-row population.
+  - The exhaustive 25-policy enum with every row assigned.
+  - The corpus: 80 309 probes, 2.79 M cells.
+  - The comparator calibrated on the pre-G15 export.
+- **The verdicts.**
+  - 43 `Equal`, each with a caught row mutant.
+  - 5 `Lost`, in four owned groups: S10 (T0028), S13 (F0528), S19 (F0358)
+    and the new G15-C1.
+  - 140 `Unreachable`, in five classes that each pin a concrete call site:
+    accounting bridges 8, profile labels 65, constant-selected arithmetic
+    arms 26, the interpreted-matcher island 23, pure options consumers 18.
+  - 10 `Boundary`.
+- **The design.** The obligation-keyed manifest:
+  - an `ObligationKey` that is not a span;
+  - three checked collections and receipts;
+  - an immutable known-loss ledger with named promotions;
+  - `OwnedObligation` entries that are green only while their owner is
+    open;
+  - eleven ledger negatives, all red.
+- **The four drafts** under `.temp/brief-621/`.
+
+**G15-C1, re-probed by the director.** I used this brief's comparator
+(`.temp/director/c1-probe/`), whose cases add a log, a Return and a list
+target. The ordered trace differs in three cases: `ReplaceAll` on an atom,
+`ReplaceAllUnheld` on an atom, and `ReplaceAll` on `{1}`. Without trace, with
+a log projection and with a Return in the replacement, the cases are SAME.
+The resumed path skips the post-apply atom test and `evaluate(replaced)` at
+`replace/all.rs:59,127`. The fixed point repairs the value, but the builtin's
+evaluation pass has already been reported. It is a real lost tail, of G15's
+class.
+
+**Rulings.**
+
+- **Sequence.** C1 (brief-622), then C2's settlement, then the manifest,
+  then `CHANGELOG.md`, then S10. C2 precedes S10 because no later step owns
+  its rows.
+- **C2's 310 rows in finished steps' code.** These lie in the scope of
+  S3-S9, whose gates did not settle them. C2 owns them now. Each finished
+  step's gate settled its own frames by fixtures and mutants, not the
+  census rows around them; that is the gap this line closes.
+- **C2's 450 "survived or no mutation hit" rows are its most important
+  class.** C2's brief separates them:
+  - a mutant that was **never armed** is missing coverage, and C2 must reach
+    it;
+  - a mutant that was **armed and survived**, across every required context
+    including phase observation, is either a tail with no observable effect
+    or a blind spot. C2 must decide which, by a stronger context or by a
+    stated equivalence. I rule on each such class.
+- **Owned rows of future G13 steps.** Each step's brief carries its table
+  from `draft-existing-owner-additions.md`. Its promotion requires every
+  owned row settled under the mutant rule.
+
+**Lessons.**
+
+- A design brief that asks for settlement before it defines what settles a
+  row produces bespoke work per row and stops early. Define the policy
+  first and settle by coverage.
+- "Which effect goes wrong if this tail is omitted" is a reading claim.
+  A caught mutant is the measurement.
+- A row that a finished step's code contains is not settled by that step's
+  gate unless the gate's mutants reached it.
