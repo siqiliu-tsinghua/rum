@@ -18630,3 +18630,950 @@ and any other test the gates show reading moved code. The conditions:
 Everything else stands. Stop-loss as before.
 
 ---
+
+
+## Executor report — continuation 7 (2026-10-26): source gates pass; STOP on accumulator participation
+
+**STOP under continuation 7's explicit actual-invariant rule.** The unchanged
+ownership gate `every_self_reaching_arc_chain_participates` reports two
+uncovered self-reaching `Option<Arc<_>>` links. They are actual LP02 fields,
+correctly discovered at their current files, and neither link carries the
+required `AccumulatorChain` wrapper:
+
+| Type | Actual field | Declaration / field location |
+| --- | --- | --- |
+| `profiling::logical::record::RecordPath` | `parent: Option<Arc<RecordPath>>` | `profiling/logical/record.rs:108` / `:110` |
+| `profiling::logical::source_stack::Node<T>` | `parent: Option<Arc<Node<T>>>` | `profiling/logical/source_stack.rs:5` / `:7` |
+
+The mandatory ownership suite finishes **30 passed, 1 failed**. This is a
+participation failure in the code itself, not a stale source location.
+Continuation 7 says: **“STOP if an invariant fails on the code itself, not
+merely on where the code sits.”** No exception, gate weakening, runtime
+replacement or wrapper change was applied after that failure.
+
+The source-reading gate repair is complete and green: frame-root 15/15,
+resume-context 11/11, and the full runtime suite 1,212 passed/5 ignored plus
+22 doctests. All code remains compiling. The final campaign is incomplete.
+
+### 1. Files changed, assertion disclosure and inventories
+
+Exactly these files change relative to the C7 entry snapshot:
+
+| File | Purpose |
+| --- | --- |
+| `crates/rum-runtime/src/runtime/tests/frame_root_trace.rs` | Follow the accepted driver module and the shared generic abandonment body, preserving every source invariant and restricting the raw-owner exemption to `core.rs` and `core/driver.rs`. |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv` | Replay the 68 generated fingerprint cells after the source-test edit; preserve every other field. |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv` | Copy freshly earned C01/C02 certificate cells for both builds; preserve all noncertificate fields. |
+| This brief | Append this report only. |
+
+No production Rust source, existing frame field, phase counter, manifest,
+lockfile, public host type, other brief, ownership assertion or ownership
+inventory changes during C7. The named source-reading tests outside
+`frame_root_trace.rs` need no edit: the complete runtime suite passes them.
+
+The five changed old assertion texts and their seven updated/added assertion
+texts follow verbatim. The unchanged resume/pop/drop/finalize ordering
+assertions now receive offsets from the driver file. The full selector and
+sole-file-exemption changes are disclosed immediately after the assertions.
+
+Assertion population in this test file: 45 → 47; no assertion is discarded without its preserved or expanded check.
+
+**Before, verbatim.**
+
+`frame_root_trace.rs:388`
+
+```rust
+assert!(
+        !compact_core.contains("Box<dynFn") && !compact_core.contains("Arc<dynFn"),
+        "the suspension protocol must not contain a runtime closure factory"
+    );
+```
+
+`frame_root_trace.rs:460`
+
+```rust
+assert!(
+        legacy_decode
+            < compact_core
+                .find("letaction=frame.resume(self,input);")
+                .unwrap()
+    );
+```
+
+`frame_root_trace.rs:487`
+
+```rust
+assert!(drain_body.contains("frame.abandon("));
+```
+
+`frame_root_trace.rs:488`
+
+```rust
+assert!(
+        !abandon_driver_body.contains(".resume(") && !drain_body.contains(".resume("),
+        "abandonment must never invoke ordinary frame resumption"
+    );
+```
+
+`frame_root_trace.rs:540`
+
+```rust
+assert_eq!(
+        raw_live_owner_replacement_hits, 0,
+        "raw live-owner replacement escaped suspension/core.rs"
+    );
+```
+
+**After, verbatim.**
+
+`frame_root_trace.rs:392`
+
+```rust
+assert!(
+        [&compact_core, &compact_driver]
+            .iter()
+            .all(|source| !source.contains("Box<dynFn") && !source.contains("Arc<dynFn")),
+        "the suspension protocol must not contain a runtime closure factory"
+    );
+```
+
+`frame_root_trace.rs:466`
+
+```rust
+assert!(
+        legacy_decode
+            < compact_driver
+                .find("letaction=frame.resume(self,input);")
+                .unwrap()
+    );
+```
+
+`frame_root_trace.rs:494`
+
+```rust
+assert!(drain_body.contains(&format!(
+            "self.abandon_frames::<profile_mode::{mode}>(suspension,reason);"
+        )));
+```
+
+`frame_root_trace.rs:498`
+
+```rust
+assert_eq!(compact_abandon.matches("fnabandon_frames<").count(), 1);
+```
+
+`frame_root_trace.rs:505`
+
+```rust
+assert!(shared_body.contains("frame.abandon("));
+```
+
+`frame_root_trace.rs:506`
+
+```rust
+assert!(
+        !abandon_driver_body.contains(".resume(")
+            && !drain_body.contains(".resume(")
+            && !shared_body.contains(".resume("),
+        "abandonment must never invoke ordinary frame resumption"
+    );
+```
+
+`frame_root_trace.rs:560`
+
+```rust
+assert_eq!(
+        raw_live_owner_replacement_hits, 0,
+        "raw live-owner replacement escaped suspension/core.rs or core/driver.rs"
+    );
+```
+
+**All changed selectors, exemptions and assertions, with context:**
+
+```diff
+--- C7-entry/crates/rum-runtime/src/runtime/tests/frame_root_trace.rs
++++ C7-result/crates/rum-runtime/src/runtime/tests/frame_root_trace.rs
+@@ -132,16 +132,17 @@
+     }
+     assert!(
+         cancellation_lane_violations.is_empty(),
+         "deleted cancellation lane names returned:\n{}",
+         cancellation_lane_violations.join("\n")
+     );
+ 
+     let core_path = workspace.join("crates/rum-runtime/src/runtime/suspension/core.rs");
++    let driver_path = workspace.join("crates/rum-runtime/src/runtime/suspension/core/driver.rs");
+     let abandon_path = workspace.join("crates/rum-runtime/src/runtime/suspension/core/abandon.rs");
+     let cleanup_path =
+         workspace.join("crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs");
+     let banned_legacy_names = [
+         "ClosureFrame",
+         "suspend_with_frame",
+         "suspend_with_result_frame",
+         "drive_evaluated_value",
+@@ -179,17 +180,17 @@
+     let mut raw_live_owner_clear_hits = 0usize;
+     let mut raw_live_owner_replacement_hits = 0usize;
+ 
+     for path in &files {
+         let source = fs::read_to_string(path).expect("source gate should read Rust source");
+         let compact = remove_ascii_whitespace(&source);
+ 
+         raw_live_owner_clear_hits += source.matches(raw_clear_name.as_str()).count();
+-        if path != &core_path {
++        if path != &core_path && path != &driver_path {
+             raw_live_owner_replacement_hits += compact.matches(raw_owner_option.as_str()).count();
+             for replacement in &raw_owner_replacements {
+                 raw_live_owner_replacement_hits += compact.matches(replacement.as_str()).count();
+             }
+         }
+ 
+         for banned in banned_legacy_names {
+             assert!(
+@@ -379,19 +380,24 @@
+                     "PureFrameFinalizer {type_name} contains forbidden capability {forbidden} in {}",
+                     path.display()
+                 );
+             }
+         }
+     }
+ 
+     let core = fs::read_to_string(&core_path).expect("source gate should read suspension core");
++    let driver =
++        fs::read_to_string(&driver_path).expect("source gate should read suspension driver");
+     let compact_core = remove_ascii_whitespace(&core);
++    let compact_driver = remove_ascii_whitespace(&driver);
+     assert!(
+-        !compact_core.contains("Box<dynFn") && !compact_core.contains("Arc<dynFn"),
++        [&compact_core, &compact_driver]
++            .iter()
++            .all(|source| !source.contains("Box<dynFn") && !source.contains("Arc<dynFn")),
+         "the suspension protocol must not contain a runtime closure factory"
+     );
+     assert!(compact_core.contains(
+         "pubtraitSuspensionFrame:FrameRootTrace+FrameAbandon+Send+Sync+'static{fnresume(self:Arc<Self>,session:&mutSession,outcome:Result<Expr,EvalError>,)->FrameAction;"
+     ));
+     assert!(compact_core.contains(
+         "pubtraitFrameAbandon{fnabandon(self:Arc<Self>,context:&mutAbandonmentContext<'_>)->FrameAbandonAction;"
+     ));
+@@ -431,40 +437,40 @@
+             "FrameAction::Finalize(finalizer)=>finalizer.finish().map(Slot::Value)",
+         ),
+         (
+             "letaction=frame.resume(self,&mutoutcome);drop(frame);ifletAction::DecodeFailure(failure)=action{returnErr(self.record_slot_fault(failure));}",
+             ".pop_front();",
+             "Action::Finalize(finalizer)=>outcome=finalizer.finish()",
+         ),
+     ] {
+-        let resume_index = compact_core
++        let resume_index = compact_driver
+             .find(resume)
+             .expect("driver should invoke the still-rooted front frame directly");
+-        let pop_index = compact_core[resume_index..]
++        let pop_index = compact_driver[resume_index..]
+             .find(pop)
+             .map(|offset| offset + resume_index)
+             .expect("driver should pop the consumer only after successful exact decoding");
+-        let drop_index = compact_core[resume_index..]
++        let drop_index = compact_driver[resume_index..]
+             .find("drop(completed_frame);")
+             .map(|offset| offset + resume_index)
+             .expect("driver should explicitly drop the rooted completed frame");
+         assert!(resume_index < pop_index && pop_index < drop_index);
+-        let finalize_index = compact_core[resume_index..]
++        let finalize_index = compact_driver[resume_index..]
+             .find(finalizer)
+             .map(|offset| offset + resume_index)
+             .expect("driver should invoke each pure finalizer after releasing the frame");
+         assert!(drop_index < finalize_index);
+     }
+-    let legacy_decode = compact_core
++    let legacy_decode = compact_driver
+         .find("Ok(Slot::Value(value))=>Ok(value)")
+         .expect("legacy frames accept only a Value slot");
+     assert!(
+         legacy_decode
+-            < compact_core
++            < compact_driver
+                 .find("letaction=frame.resume(self,input);")
+                 .unwrap()
+     );
+ 
+     let compact_abandon = remove_ascii_whitespace(
+         &fs::read_to_string(abandon_path).expect("source gate should read abandonment core"),
+     );
+     let abandon_driver = compact_abandon
+@@ -479,19 +485,33 @@
+     let abandon_driver_body = &compact_abandon[abandon_driver_open + 1..abandon_driver_close];
+     assert!(abandon_driver_body.contains("self.drain_abandonment_worklist(reason)"));
+     let drain = compact_abandon
+         .find("fndrain_abandonment_worklist(")
+         .expect("cancellation and faults should share the accounted worklist");
+     let drain_open = drain + compact_abandon[drain..].find('{').unwrap();
+     let drain_close = matching_brace(&compact_abandon, drain_open).unwrap();
+     let drain_body = &compact_abandon[drain_open + 1..drain_close];
+-    assert!(drain_body.contains("frame.abandon("));
++    for mode in ["Ordinary", "Profiled"] {
++        assert!(drain_body.contains(&format!(
++            "self.abandon_frames::<profile_mode::{mode}>(suspension,reason);"
++        )));
++    }
++    assert_eq!(compact_abandon.matches("fnabandon_frames<").count(), 1);
++    let shared_abandon = compact_abandon
++        .find("fnabandon_frames<M:profile_mode::Mode>(")
++        .expect("both modes should use the single abandonment body");
++    let shared_open = shared_abandon + compact_abandon[shared_abandon..].find('{').unwrap();
++    let shared_close = matching_brace(&compact_abandon, shared_open).unwrap();
++    let shared_body = &compact_abandon[shared_open + 1..shared_close];
++    assert!(shared_body.contains("frame.abandon("));
+     assert!(
+-        !abandon_driver_body.contains(".resume(") && !drain_body.contains(".resume("),
++        !abandon_driver_body.contains(".resume(")
++            && !drain_body.contains(".resume(")
++            && !shared_body.contains(".resume("),
+         "abandonment must never invoke ordinary frame resumption"
+     );
+ 
+     pure_abandon_frames.sort();
+     stateful_abandon_frames.sort();
+     assert!(
+         PURE_FRAME_ABANDON_TYPES
+             .windows(2)
+@@ -534,17 +554,17 @@
+     }
+     println!("evaluate_cleanup_allowlist=WithCleanup owner frames (2)");
+     assert_eq!(
+         raw_live_owner_clear_hits, 0,
+         "the deleted raw live-owner clear API returned"
+     );
+     assert_eq!(
+         raw_live_owner_replacement_hits, 0,
+-        "raw live-owner replacement escaped suspension/core.rs"
++        "raw live-owner replacement escaped suspension/core.rs or core/driver.rs"
+     );
+     println!("raw_live_owner_clears={raw_live_owner_clear_hits}");
+     println!("raw_live_owner_replacements={raw_live_owner_replacement_hits}");
+     println!(
+         "removed_cancellation_lane_hits={}",
+         cancellation_lane_violations.len()
+     );
+     assert!(
+```
+
+
+The closure-factory ban checks both files that now contain the former core
+code. Raw-owner replacement is allowed only in those exact two files. The
+source check still requires resume before pop before drop before finalize,
+and exact Value decoding before the legacy resume call. Abandonment must
+dispatch both Ordinary and Profiled to exactly one generic body; that body
+must call `frame.abandon`. The no-`.resume(` check covers the entry, the
+worklist and the shared body. The raw-owner-clear ban, closed protocol shapes,
+named-frame count and all other invariants remain unchanged.
+
+`frame_root_trace.rs` is a roughly 37k test file, below the 45k test-file debt
+line. This change keeps its related protocol source checks together. A future
+split boundary is repository protocol/source checks versus derive inventory
+and root-visitation support. No split was attempted after the mandatory STOP.
+
+Ownership replay was performed against the supplied committed LP01 export,
+as continuation 6 requires. Fresh discovery and reconciliation reproduce the
+C6 ownership inventories byte for byte: **no ownership row changes in C7**.
+Every committed identity and disposition remains preserved; no new
+UnknownHostPayload appears. Exact replay output:
+
+```text
+Preflight: 162 position moves; 141 new UnknownConstruct; missing=0; unmappable=0; new HostPayload=0
+Ownership replay: 162 position moves; 141 new UnknownConstruct; 6 ledger position moves; new HostPayload=0
+New self-reaching rows: 2 all old59 preserved exactly; source witnesses from unchanged discovery:
+rum_runtime::runtime::profiling::logical::record::RecordPath	crates/rum-runtime/src/runtime/profiling/logical/record.rs	108	rum_runtime::runtime::profiling::logical::record::RecordPath.parent/std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0 -> rum_runtime::runtime::profiling::logical::record::RecordPath
+rum_runtime::runtime::profiling::logical::source_stack::Node	crates/rum-runtime/src/runtime/profiling/logical/source_stack.rs	5	rum_runtime::runtime::profiling::logical::source_stack::Node.parent/std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0 -> rum_runtime::runtime::profiling::logical::source_stack::Node
+```
+
+All changed retention rows, including full certificate cells, are in [inventory-row-changes-vs-entry.json](../../../.temp/brief-626/continuation-7/inventory-row-changes-vs-entry.json) and [inventory-row-changes-vs-entry.patch](../../../.temp/brief-626/continuation-7/inventory-row-changes-vs-entry.patch).
+
+
+Every one of the 68 local-contract rows changes only its final fingerprint
+cell. All other row fields were checked byte-equal during replay:
+
+| Contract | C7 entry fingerprint | Replayed fingerprint |
+| --- | --- | --- |
+| `B01` | `fnv1a64:f546bc396ac3e95c` | `fnv1a64:6289258cb614cf8b` |
+| `B02` | `fnv1a64:d00bc92d244bc7d9` | `fnv1a64:5af097cb69e4822a` |
+| `B03` | `fnv1a64:7a5bfb12a01a0202` | `fnv1a64:2ae04247fc82c59d` |
+| `B04` | `fnv1a64:4ada122c0f1d8c64` | `fnv1a64:6d119d7aad8be8e3` |
+| `B05` | `fnv1a64:649632f6657e948d` | `fnv1a64:80029924a227d986` |
+| `B06` | `fnv1a64:621383daa7626398` | `fnv1a64:eff3706500408caf` |
+| `B07` | `fnv1a64:1e435ed5abc61e5d` | `fnv1a64:f62dc22ceb0ab6d6` |
+| `B08` | `fnv1a64:1b35fdd284356866` | `fnv1a64:6d687e434e3f4369` |
+| `B09` | `fnv1a64:baa9b3e8603bd700` | `fnv1a64:a32e2d62965f58e7` |
+| `B10` | `fnv1a64:6194418f42d4a59f` | `fnv1a64:4ad3b36316f20c04` |
+| `B11` | `fnv1a64:0c31c3892911b264` | `fnv1a64:2e694ed7c7800ee3` |
+| `B12` | `fnv1a64:79b633e43c446c00` | `fnv1a64:623aad5e7267ede7` |
+| `I01` | `fnv1a64:d328a736d77bdfdc` | `fnv1a64:406b108a22ccc60b` |
+| `I02` | `fnv1a64:bbd7b08a5db51c8d` | `fnv1a64:d74416b89a5e6186` |
+| `I03` | `fnv1a64:e002cd3f681dd8c0` | `fnv1a64:33b88cf552ecfea7` |
+| `I04` | `fnv1a64:e5a6e02e4cd29e79` | `fnv1a64:b87e746e21b723ca` |
+| `P01` | `fnv1a64:5bca783dc90eef38` | `fnv1a64:946be6846aa5b54f` |
+| `P02` | `fnv1a64:b7ff55aaa715a4cf` | `fnv1a64:38af5a5a227d4a34` |
+| `P03` | `fnv1a64:8f2346993e4f8d5a` | `fnv1a64:76d34318f56ea445` |
+| `P04` | `fnv1a64:c4e6e742a8f4e3d9` | `fnv1a64:4fcbb5e0ee8d9e2a` |
+| `P05` | `fnv1a64:0822dba2236b950c` | `fnv1a64:716d95075aae933b` |
+| `P06` | `fnv1a64:ca3558b4c8740580` | `fnv1a64:b2b9d22efe978767` |
+| `P070` | `fnv1a64:0482f4f6a6e97f80` | `fnv1a64:ed076e70dd0d0167` |
+| `P080` | `fnv1a64:36c95ae06cbfca5f` | `fnv1a64:650d78c20919a3c4` |
+| `P090` | `fnv1a64:42eb31e4b209ec99` | `fnv1a64:bda757093c6cd0ea` |
+| `P100` | `fnv1a64:d034a00ffec1ef74` | `fnv1a64:28bd60716297baf3` |
+| `P110` | `fnv1a64:298df18ae55af4b7` | `fnv1a64:80c3b5185c4615ec` |
+| `P120` | `fnv1a64:308c2a108ff40686` | `fnv1a64:d12339319bded389` |
+| `P130` | `fnv1a64:c210b832da79f85d` | `fnv1a64:99fb1b8a19be90d6` |
+| `P140` | `fnv1a64:cbbb939370fae3b1` | `fnv1a64:16ae89d2943ba132` |
+| `P150` | `fnv1a64:9ebf0d41de9aaf39` | `fnv1a64:dc8446c36506e48a` |
+| `P071` | `fnv1a64:3d348a343d0b527d` | `fnv1a64:169ff93e7653acf6` |
+| `P081` | `fnv1a64:a4ba307dbdd00d20` | `fnv1a64:4a1900514879a487` |
+| `P091` | `fnv1a64:f5f611233efda8f8` | `fnv1a64:8273fcc1c0ba820f` |
+| `P101` | `fnv1a64:2190e2581abe91b7` | `fnv1a64:78c6a5e591a9b2ec` |
+| `P111` | `fnv1a64:2783d71be2e45890` | `fnv1a64:c9a375d44e1d48b7` |
+| `P121` | `fnv1a64:e11f6da1a8d9112b` | `fnv1a64:4a3b07c8e5f45988` |
+| `P131` | `fnv1a64:e88434924571ade4` | `fnv1a64:0abbbfe0e3e00a63` |
+| `P141` | `fnv1a64:a75cf78c7ee86358` | `fnv1a64:f176925e9099b26f` |
+| `P151` | `fnv1a64:3c5503eb968769c6` | `fnv1a64:a1eef2e2c346bfc9` |
+| `B13` | `fnv1a64:f0241763d7ff1f98` | `fnv1a64:7e0403ee30dd48af` |
+| `R01` | `fnv1a64:df13b5ddf4325ba9` | `fnv1a64:395eeca8883c3b3a` |
+| `R02` | `fnv1a64:f22c64b66a7b901a` | `fnv1a64:804f3ce9150ad905` |
+| `R03` | `fnv1a64:426037d5eb6c1805` | `fnv1a64:948ac6eee27b6d2e` |
+| `R040` | `fnv1a64:de4b836abb126649` | `fnv1a64:25955a950553a1da` |
+| `R050` | `fnv1a64:45f0ae390182e26c` | `fnv1a64:8ce9c414aa4fa09b` |
+| `R060` | `fnv1a64:51c4d60e1c7ba841` | `fnv1a64:29d375e1478c48c2` |
+| `R070` | `fnv1a64:0d27f8979f71cc20` | `fnv1a64:b286c86b2a1b6387` |
+| `R080` | `fnv1a64:acab49211c576779` | `fnv1a64:7f82dd60f13becca` |
+| `R090` | `fnv1a64:d80be939e572cd34` | `fnv1a64:1bfbd0d1590ab1b3` |
+| `R100` | `fnv1a64:3f819f6549efac82` | `fnv1a64:f005e69aa658701d` |
+| `R110` | `fnv1a64:d9424491d0649dc7` | `fnv1a64:cc7a9628e7ece4bc` |
+| `R041` | `fnv1a64:d65d7a8def26de98` | `fnv1a64:643d6718480507af` |
+| `R051` | `fnv1a64:d10d5ffa3f37f919` | `fnv1a64:4bc9851ec99add6a` |
+| `R061` | `fnv1a64:c57a00f9b045ae96` | `fnv1a64:a7d274cfbdcdbd99` |
+| `R071` | `fnv1a64:95e9a2f611eb69b3` | `fnv1a64:6de8cb25ce9c3240` |
+| `R081` | `fnv1a64:8c1f09649a6dc474` | `fnv1a64:e4a7c9c5fe438ff3` |
+| `R091` | `fnv1a64:cbfe44264c997cf1` | `fnv1a64:5a9c8b68fd798472` |
+| `R101` | `fnv1a64:d9dd5c540b306601` | `fnv1a64:c490e45d5ccf7682` |
+| `R111` | `fnv1a64:573de08b28b5294e` | `fnv1a64:d4a90f1ec9099dc1` |
+| `R12` | `fnv1a64:c1dab0aad4e6da8e` | `fnv1a64:e33957371a25bb01` |
+| `R13` | `fnv1a64:b1e9045c20ba8b72` | `fnv1a64:3e408f9bad74bb8d` |
+| `R14` | `fnv1a64:ea8cae85db72af74` | `fnv1a64:43156ee73f487af3` |
+| `R15` | `fnv1a64:b276fe32accd1208` | `fnv1a64:d2aeb9390f15cc5f` |
+| `O010` | `fnv1a64:76871d0b35d24ef6` | `fnv1a64:00d85a746dfa4df9` |
+| `O0200` | `fnv1a64:c6833567bfb209b1` | `fnv1a64:11762ba6e2f2c732` |
+| `O011` | `fnv1a64:944d92962a0d6cc1` | `fnv1a64:6c5c3269551e0d42` |
+| `O0210` | `fnv1a64:fb0fd80de28f1a6e` | `fnv1a64:09b036247ef0ba61` |
+
+The two promoted body rows retain all noncertificate columns. Both review
+builds earn two production bodies, three production instance marks and four
+probe marks with zero body rejections. Their first runs reject the stale
+recorded certificates, then the newly generated cells are copied. Post-replay
+acceptance has **not** run because ownership acceptance reaches the mandatory
+STOP first. Every changed certificate cell is identified below; the linked
+full-row disclosure preserves its exact before/after text.
+
+| Body | Build cell | Old cell SHA-256 | Replayed cell SHA-256 |
+| --- | --- | --- | --- |
+| `C01` | default | `b19771b645ca94611a795cea04ba7d8e0068f1f23420aae647fa013bc79cf4fd` | `2baed4490913ff00a625b7ef0e46d1b77a7e142bd97e707f4b0437ef42d280f6` |
+| `C01` | no-default | `6b6688d38fd6937bc10c4561b6b25dc3c25deadefc93cea93a7ae5733bf84da5` | `98739f5f5eafa4f15afcc09667f7d5ea5fc4dbf20cd722deed827d0ec98d8e09` |
+| `C02` | default | `602c071ca0bf034782b6e511007f15202bfbb2b39f60859551a0f74871405247` | `9ae2f8defca6d89b1f3c884c3d67671b552dd394e7d868c5dfe79acddddca013` |
+| `C02` | no-default | `0e59110e973c4e4b590767f3e2325125a4f69febddaae9dfcd08174f866db94b` | `40cc40bb9e87724d74574fe51ef6ed434c07196ca98dd412ea6dacb9faf3754f` |
+
+### 2. Engine and entry; the actual invariant failure
+
+C7 changes no engine or queue code. The accepted marker-free guest queue,
+private diagnostic cells, single generic drivers, innermost-only timer,
+late-child settlement and diagnostic budget remain as they were at entry.
+
+The failing test in `ownership_graph/accumulator_coverage.rs:7-43` discovers
+the production ownership graph independently. It examines both the canonical
+cycle witness and every direct self-edge. An owning `Option<Arc<_>>` self-link
+without an `AccumulatorChain` ownership projection is uncovered. The gate is
+byte-identical to the committed baseline, and its fresh-name/additional-edge
+falsifier passes in the same suite.
+
+Both diagnostic links actually use the uncovered raw shape. `RecordPath::drop`
+and `SourceStack::drop` have bespoke iterative `Arc::try_unwrap` loops. Those
+loops do not establish the required shared-mechanism participation. The
+existing `accumulator_chain.rs` documents that its private link and node bound
+attach destruction to every link, and its drain uses `Arc::into_inner`.
+No stack-overflow manifestation or new concurrency failure was probed in C7;
+the measured failure here is precisely the structural participation invariant.
+
+The C6 inventory acceptance is preserved: both LP02-owned self-reaching rows
+are present and correctly discovered. Inventory presence does not discharge
+this separate participation gate. Changing a path reader cannot make this
+gate pass faithfully. No row exclusion, renamed type, hand-written inventory
+exception, runtime refactor or test modification was applied after the STOP.
+
+Exact code-level blocker: [accumulator-participation-stop.json](../../../.temp/brief-626/continuation-7/accumulator-participation-stop.json).
+
+
+### 3. Route proofs
+
+The final Rust source passes the full runtime suite: **1,212 passed, 5 ignored,
+0 failed**, plus **22 doctests passed**. Explicit source-gate filters pass
+**15 frame-root** and **11 resume-context** tests. The final explicit profiling
+filter passes **26 tests, 2 ignored**, and typed frames pass **24 tests**.
+
+The native lifecycle and nested-pause test functions pass on this same runtime
+source. Their structural checks report zero pending children, retained
+terminal parents, open records, context leases and faults at all 16 printed
+native teardown checkpoints. The inherited 19-route population and both
+nested-pause cases are retained. No native assertion value changes in C7;
+C5's authorized cleanup pauses 2→3 remains the only changed receipt in this
+continuation line. Nested-pause totals stay 2/4/4 and 2/3/3. The C6 structural
+red falsifier is accepted and was not recalibrated; its caught-red/settled-green
+unit control runs in the runtime suite.
+
+Native receipt output, verbatim:
+
+```text
+test logical_native_lifecycle ... LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE second-pause success closed-once pauses=2
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE error return throw closed-once
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE cancellation closed-once
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE session-reset abandoned-once
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE session-drop abandoned-once
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE interleaved moved-session closed-once
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE profile-reset active-call closed-once
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE failed-restore abandoned-once
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE rollback helper-discard abandoned-once
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE nested-cleanup re-suspended abandoned-once
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE typed-collection resumed completion
+test logical_native_nested_pause_counts ... LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE nested-pause source=LpSpan[LpSpan[InputString["one"]; InputString["two"]]] pauses=2,4,4
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE nested-pause source=LpSpan[LpSpan[InputString["one"]]; InputString["two"]] pauses=2,3,3
+```
+
+
+### 4. Oracle, finite modes and census
+
+LP01 receipts executed in C7: **0 / 8,750**. The pinned oracle files remain
+unchanged, but the oracle did not run before the mandatory ownership STOP.
+No new parity or loss-cell acceptance is claimed.
+
+C6's accepted finite-mode/census reconciliation remains unchanged: both
+`abandon_frames` instances are reached, all 960 accepted rows are accounted,
+and the derived frontier is 952 (10/915/27), with guard operations at 41/42/85.
+C7 changes neither the analyzer nor the census test. Full rejection-census
+acceptance and the rustc method oracle have **not** run in C7, so there is no
+new method-oracle agreement count.
+
+The two certificate-generation runs are disclosed below as expected stale-cell
+failures with freshly earned replacement cells. Their successful replay wrapper
+is not described as green post-replay acceptance.
+
+### 5. Executed gates, verbatim
+
+Commands ran serially through `scripts/run-bounded.py --timeout 900`, with
+`CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true
+TMPDIR=/home/remi/dev/rum/.temp/brief-626/tmp`. The command blocks show the
+captured inner command. Raw logs retain complete output. The ownership
+failure is reproduced in full; other excerpts retain exact count, warning and
+receipt lines. Both nested certificate-generation commands had their own
+900-second bound.
+
+**`c7-format` — exit 0.** [c7-format.log](../../../.temp/brief-626/logs/c7-format.log)
+
+```text
+rustfmt --edition 2024 crates/rum-runtime/src/runtime/tests/frame_root_trace.rs
+```
+
+```text
+No output; exit 0.
+```
+
+**`c7-frame-root` — exit 0.** [c7-frame-root.log](../../../.temp/brief-626/logs/c7-frame-root.log)
+
+```text
+cargo test --offline -p rum-runtime --lib frame_root_trace
+```
+
+```text
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 16.84s
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1202 filtered out; finished in 1.48s
+```
+
+**`c7-resume-context` — exit 0.** [c7-resume-context.log](../../../.temp/brief-626/logs/c7-resume-context.log)
+
+```text
+cargo test --offline -p rum-runtime --lib resume_evaluation_context
+```
+
+```text
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 1206 filtered out; finished in 0.17s
+```
+
+**`c7-runtime` — exit 0.** [c7-runtime.log](../../../.temp/brief-626/logs/c7-runtime.log)
+
+```text
+cargo test --offline -p rum-runtime
+```
+
+```text
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.42s
+test result: ok. 1212 passed; 0 failed; 5 ignored; 0 measured; 0 filtered out; finished in 32.21s
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.83s
+```
+
+**`c7-ownership-discovery` — exit 0.** [c7-ownership-discovery.log](../../../.temp/brief-626/logs/c7-ownership-discovery.log)
+
+```text
+cargo test --offline -p rum-stdlib --lib discovery_report_without_inventory_input -- --nocapture
+```
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.57s
+test tests::ownership_graph::discovery_report_without_inventory_input ... UnknownHostPayload count: 79
+UnknownConstruct count: 7905
+Self-reaching type count: 61
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 5.90s
+```
+
+**`c7-ownership-preflight` — exit 0.** [c7-ownership-preflight.log](../../../.temp/brief-626/logs/c7-ownership-preflight.log)
+
+```text
+python3 .temp/brief-626/continuation-7/preflight-ownership.py
+```
+
+```text
+Preflight: 162 position moves; 141 new UnknownConstruct; missing=0; unmappable=0; new HostPayload=0
+```
+
+**`c7-ownership-replay` — exit 0.** [c7-ownership-replay.log](../../../.temp/brief-626/logs/c7-ownership-replay.log)
+
+```text
+python3 .temp/brief-626/continuation-7/replay-ownership.py
+```
+
+```text
+Ownership replay: 162 position moves; 141 new UnknownConstruct; 6 ledger position moves; new HostPayload=0
+New self-reaching rows: 2 all old59 preserved exactly; source witnesses from unchanged discovery:
+rum_runtime::runtime::profiling::logical::record::RecordPath	crates/rum-runtime/src/runtime/profiling/logical/record.rs	108	rum_runtime::runtime::profiling::logical::record::RecordPath.parent/std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0 -> rum_runtime::runtime::profiling::logical::record::RecordPath
+rum_runtime::runtime::profiling::logical::source_stack::Node	crates/rum-runtime/src/runtime/profiling/logical/source_stack.rs	5	rum_runtime::runtime::profiling::logical::source_stack::Node.parent/std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0 -> rum_runtime::runtime::profiling::logical::source_stack::Node
+```
+
+**`c7-fingerprints-generate` — exit 0.** [c7-fingerprints-generate.log](../../../.temp/brief-626/logs/c7-fingerprints-generate.log)
+
+```text
+cargo test --offline -p rum-stdlib --lib regenerate_local_contract_fingerprints -- --ignored --nocapture
+```
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 0.17s
+```
+
+**`c7-certificates-review` — exit 0.** [c7-certificates-review.log](../../../.temp/brief-626/logs/c7-certificates-review.log)
+
+```text
+python3 .temp/brief-626/continuation-7/review-certificates.py
+```
+
+```text
+default review generated; rejected=0; exit 101
+no-default review generated; rejected=0; exit 101
+Replayed C01/C02 certificate cells for both builds, preserving all other fields.
+```
+
+**`c7-final-fmt` — exit 0.** [c7-final-fmt.log](../../../.temp/brief-626/logs/c7-final-fmt.log)
+
+```text
+cargo fmt --check
+```
+
+```text
+No output; exit 0.
+```
+
+**`c7-final-profiling` — exit 0.** [c7-final-profiling.log](../../../.temp/brief-626/logs/c7-final-profiling.log)
+
+```text
+cargo test --offline -p rum-runtime --lib profiling
+```
+
+```text
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+test result: ok. 26 passed; 0 failed; 2 ignored; 0 measured; 1189 filtered out; finished in 0.33s
+```
+
+**`c7-final-typed` — exit 0.** [c7-final-typed.log](../../../.temp/brief-626/logs/c7-final-typed.log)
+
+```text
+cargo test --offline -p rum-runtime --lib suspension::typed::tests
+```
+
+```text
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 1193 filtered out; finished in 0.49s
+```
+
+**`c7-final-native` — exit 0.** [c7-final-native.log](../../../.temp/brief-626/logs/c7-final-native.log)
+
+```text
+cargo test --offline -p rum-host --test logical_profile_lifecycle -- --nocapture
+```
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.03s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.01s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+```
+
+**`c7-final-ownership` — exit 101.** [c7-final-ownership.log](../../../.temp/brief-626/logs/c7-final-ownership.log)
+
+```text
+cargo test --offline -p rum-stdlib --lib ownership_graph
+```
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.02s
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-5f7f08d1c3c3a0e1)
+
+running 31 tests
+test tests::ownership_graph::accumulator_coverage::every_self_reaching_arc_chain_participates ... FAILED
+test tests::ownership_graph::accumulator_coverage::fresh_names_and_additional_self_edges_are_checked ... ok
+test tests::ownership_graph::discovery_report_without_inventory_input ... ok
+test tests::ownership_graph::fixtures::coverage_is_not_inferred_from_test_like_filenames ... ok
+test tests::ownership_graph::fixtures::fresh_names_cross_module_pair_and_recursion_after_comma ... ok
+test tests::ownership_graph::fixtures::inline_module_path_attribute_and_super_imports_resolve ... ok
+test tests::ownership_graph::fixtures::manually_checked_definition_counts ... ok
+test tests::ownership_graph::fixtures::named_generic_public_inputs_are_opaque_but_borrowed_inputs_are_not ... ok
+test tests::ownership_graph::fixtures::opaque_constructs_are_located_and_inventory_removal_fails ... ok
+test tests::ownership_graph::fixtures::owning_ports_and_nonowning_storage_do_not_mix_instantiations ... ok
+test tests::ownership_graph::fixtures::rediscovery_and_each_missing_mutual_member ... ok
+test tests::ownership_graph::fixtures::resolution_uses_declarations_not_container_spellings ... ok
+test tests::ownership_graph::fixtures::unknown_configuration_cannot_invent_an_unconditional_cycle ... ok
+test tests::ownership_graph::fixtures::unmodeled_lexical_modules_and_async_captures_are_explicit_unknowns ... ok
+test tests::ownership_graph::host_payload_ledger::ownership::attribution_resolves_alias_scopes_and_excludes_nonowning_paths ... ok
+test tests::ownership_graph::host_payload_ledger::production_host_payload_ledger_is_complete_and_attributed ... ok
+test tests::ownership_graph::host_payload_ledger::tests::adapter_concrete_instantiation_invalidates_interim_witness ... ok
+test tests::ownership_graph::host_payload_ledger::tests::adapter_extra_implementation_obligations_are_not_discarded ... ok
+test tests::ownership_graph::host_payload_ledger::tests::adapter_phantom_parameter_cannot_supply_ownership ... ok
+test tests::ownership_graph::host_payload_ledger::tests::adapter_private_bound_cannot_supply_interim_witness ... ok
+test tests::ownership_graph::host_payload_ledger::tests::adapter_production_witnesses_are_computed ... ok
+test tests::ownership_graph::host_payload_ledger::tests::blanket_checks_every_erased_implementor ... ok
+test tests::ownership_graph::host_payload_ledger::tests::blanket_concrete_hop_and_implementation_form ... ok
+test tests::ownership_graph::host_payload_ledger::tests::blanket_expression_path_and_interim_limits ... ok
+test tests::ownership_graph::host_payload_ledger::tests::blanket_extra_or_generic_bounds_are_rejected ... ok
+test tests::ownership_graph::host_payload_ledger::tests::blanket_public_erased_trait_is_rejected ... ok
+test tests::ownership_graph::host_payload_ledger::tests::blanket_self_must_be_the_bare_parameter ... ok
+test tests::ownership_graph::host_payload_ledger::tests::metadata_duplicates_and_witnesses_are_enforced ... ok
+test tests::ownership_graph::host_payload_ledger::tests::missing_stale_and_unrelated_expression_debt_are_rejected ... ok
+test tests::ownership_graph::production_inventory_is_exact ... ok
+test tests::ownership_graph::source::root_set::syntax_root_discovers_added_recursive_type_and_restores_source ... ok
+
+failures:
+
+---- tests::ownership_graph::accumulator_coverage::every_self_reaching_arc_chain_participates stdout ----
+uncovered accumulator ownership paths: 2
+
+thread 'tests::ownership_graph::accumulator_coverage::every_self_reaching_arc_chain_participates' panicked at crates/rum-stdlib/src/tests/ownership_graph/accumulator_coverage.rs:39:5:
+self-reaching Option<Arc<_>> chains must carry AccumulatorChain:
+rum_runtime::runtime::profiling::logical::record::RecordPath at crates/rum-runtime/src/runtime/profiling/logical/record.rs:108: ownership path: rum_runtime::runtime::profiling::logical::record::RecordPath.parent/std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0 -> rum_runtime::runtime::profiling::logical::record::RecordPath
+rum_runtime::runtime::profiling::logical::source_stack::Node at crates/rum-runtime/src/runtime/profiling/logical/source_stack.rs:5: ownership path: rum_runtime::runtime::profiling::logical::source_stack::Node.parent/std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0 -> rum_runtime::runtime::profiling::logical::source_stack::Node
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    tests::ownership_graph::accumulator_coverage::every_self_reaching_arc_chain_participates
+
+test result: FAILED. 30 passed; 1 failed; 0 ignored; 0 measured; 1133 filtered out; finished in 72.25s
+
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+
+**Certificate generation, default — inner cargo exit 101 (stale cell).** [acceptance-review-default-final.log](../../../.temp/brief-626/continuation-7/acceptance-review-default-final.log)
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.63s
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::Unarmed;R=rum_stdlib::option_consumers::OptionConsumer;hash=true	0
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=rum_stdlib::option_consumers::OptionConsumer;hash=true	0
+C02	rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr;M=runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=none (nongeneric C02);hash=true	0
+LeaseProbe538::probe	sealed modes	0
+LeaseProbe538::start	sealed modes	0
+LeaseProbe538::drive	sealed modes	0
+LeaseProbe538::resume	sealed modes	0
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+called `Result::unwrap()` on an `Err` value: "stale or omitted instance certificate C01 hash=true"
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 18.89s
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+
+**Certificate generation, no-default — inner cargo exit 101 (stale cell).** [acceptance-review-no-default-final.log](../../../.temp/brief-626/continuation-7/acceptance-review-no-default-final.log)
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.97s
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::Unarmed;R=rum_stdlib::option_consumers::OptionConsumer;hash=false	0
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=rum_stdlib::option_consumers::OptionConsumer;hash=false	0
+C02	rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr;M=runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=none (nongeneric C02);hash=false	0
+LeaseProbe538::probe	sealed modes	0
+LeaseProbe538::start	sealed modes	0
+LeaseProbe538::drive	sealed modes	0
+LeaseProbe538::resume	sealed modes	0
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+called `Result::unwrap()` on an `Err` value: "stale or omitted instance certificate C01 hash=false"
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1157 filtered out; finished in 18.64s
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+
+
+No new warning appeared in the executed builds; the runtime lib-test build
+retains its three inherited unused-test-helper warnings. Full warning bar 4
+is incomplete because the native workspace was not run.
+
+Not run before the STOP: post-replay production acceptance in either build,
+both typed-slot censuses, full rejection census, rustc method oracle, the
+8,750-receipt oracle, workspace and native ZeroMQ gates. There are no new C7
+native ZeroMQ skip receipts; the director's nine native tests remain pending.
+
+### 6. Measurements
+
+No C7 final performance measurement ran. The strong-owner falsifier passes in
+the runtime/profile suite at push, widen, append and marker insertion; its
+original red calibration remains preserved. C5's accepted engine and context
+scaling results are preserved, but are not relabelled as new C7 measurements.
+
+Unrun: all 313 allocation, instruction/attribution and copy labels; 44 stack
+fits and resumed chains; 789 final layouts; four timing panels and aligned
+timing; final candidate engine/context probes. No C7 candidate binary was
+built. Fresh measurement/replay scaffolding under `continuation-7/final/` and
+`scripts/` is preparation only, with empty candidate result directories and
+explicit probe caps. Baseline inputs/binaries and earlier raw evidence remain
+unchanged. All 1,522 frozen C7 source hashes still match the current tree.
+
+### 7. Stop-loss, deviations and next action
+
+- One compiling C7 source-test repair; **0 attempts without progress**.
+- The source-reading frame-root blocker is removed: **15/15 pass**, with
+  every edited assertion disclosed verbatim and all required invariants kept.
+- Full runtime and native route proofs pass; ownership discovery and exact
+  inventory reconciliation pass; ownership acceptance is **30 passed/1 failed**.
+- Fingerprints and both builds' certificate cells are replayed. Acceptance
+  after replay remains pending.
+- C7 LP01 receipts: **0 / 8,750**. Method-oracle claims checked: **0**.
+  Final performance campaigns newly run: **0**.
+- No git command, network access, new unsafe, phase adoption, extra receipt
+  change, weakened ownership gate or runtime workaround occurred.
+
+This is the explicit actual-invariant STOP in continuation 7, not the
+two-attempt stop-loss. The director must rule on the two diagnostic chains'
+required `AccumulatorChain` participation before work resumes. `state.json`
+and `PROGRESS.md` preserve the compiling source, exact failed gate and pending
+campaign. No gate or child process remains running. Prior brief contents are
+preserved byte for byte; the working tree is left uncommitted.
+
+---
+
+## Director ruling and continuation 8 (2026-10-26) — the two diagnostic chains join `AccumulatorChain`
+
+**The stop is correct, and the gate is right.** Accepted: the source-reading
+repair (frame-root 15/15, resume-context 11/11), and the runtime suite at
+1 212 passed with 22 doctests.
+
+**Why the bespoke loops are not enough.**
+
+- **The class.** The ownership line closed it with one mechanism
+  (`runtime/accumulator_chain.rs`) and a participation gate. A second,
+  hand-written destructor is a convention that the next chain will not
+  follow. The gate exists so that cannot happen silently.
+- **The bespoke loops also have a real hole.**
+  - `RecordPath::drop` and `SourceStack::drop` drain with `Arc::try_unwrap`.
+  - Records and their contexts can cross threads, because an owner may
+    resume its `Session` on another thread. When two holders release a
+    shared node concurrently, both `try_unwrap` calls can fail, and the
+    last decrement then destroys the node by ordinary drop glue.
+  - `source_stack::Node<T>` has no `Drop` of its own, so that glue recurses
+    down `parent`. On a deep stack this is the native-stack abort the
+    ownership line removed.
+  - `drain` uses `Arc::into_inner`, which is exactly the race-free form.
+
+**What to do.**
+
+1. **Make both links `AccumulatorChain`.**
+   - `RecordPath.parent` and `source_stack::Node<T>.parent` become
+     `AccumulatorChain<_>` with `#[derive(AccumulatorChainNode)]` and one
+     `#[accumulator_link]` field. The derive supports generics.
+   - Delete both bespoke `Drop` loops.
+   - Nodes keep no production `Drop`, as the trait requires. `SourceStack`
+     no longer needs one either.
+2. **Revisit the drain's payload policy, as its own comment requires.**
+   - The policy says release is immediate because no payload in the family
+     has an observable destructor. These nodes add three that do: the
+     diagnostic `Storage` release, the `Owner` (the request-control `Arc`)
+     release, and the `Mutex<State>` drop.
+   - Show that release order is unobservable for each of them. `Storage`,
+     for example, is commutative budget arithmetic.
+   - Then extend the comment to name them. If any one of them is
+     order-observable, STOP and report it.
+3. **Falsifier, in the ownership line's style.**
+   - Write a unit test that builds a `RecordPath` chain and a `SourceStack`
+     each deep enough to abort under recursive drop on the ruled 2 MiB
+     stack (use the ownership line's depth convention), and drops each
+     from a 2 MiB thread.
+   - Show it abort or fail on the current bespoke `SourceStack` shape. If
+     the current shape cannot be made to fail deterministically, show the
+     raw recursive shape failing instead, and say which one you used.
+   - Show it green after the conversion.
+   - Add a concurrent-release case: two threads release the last two
+     holders of a shared deep suffix. It must finish without recursion.
+4. **Run the participation gate.** `every_self_reaching_arc_chain_participates`
+   must pass unchanged.
+   - The `self_reaching.tsv` rows 26 and 27 are LP02's own; they are absent
+     from HEAD. Replay replaces them under continuation 6's rule, and you
+     disclose them.
+   - If the participation-gated member count is pinned, it moves by
+     derivation only. Disclose the old and new values.
+
+**Scope.** In addition to what is already granted:
+
+- the two chain modules;
+- `runtime/accumulator_chain.rs`, for the policy comment only;
+- the ownership inventories, by replay;
+- new tests under `profiling/tests/`.
+
+**Then the final campaign**, unchanged from continuation 7.
+
+Everything else stands. Stop-loss as before.
+
+---
