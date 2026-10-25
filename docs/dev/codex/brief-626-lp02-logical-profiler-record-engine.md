@@ -19781,3 +19781,404 @@ Everything else stands. Stop-loss as before: progress is flags attributed
 or removed.
 
 ---
+
+## Executing-agent report — continuations 8 and 9 — STOP at the two-attempt stop-loss (2026-10-26)
+
+Continuation 8 completed the chain conversion and a substantial initial campaign, then found disabled-path work. Continuation 9 removed the calibrated guard costs and restored both resume wrappers to inline form, but the last two queue attempts advanced no route, receipt, or measurement bar. **The hard two-attempt stop-loss has fired.** The source is restored to the better attempt 5, not presented as a completed LP02 candidate, and the final campaign on that source was not run.
+
+### 1. Files changed and every inventory row change
+
+This report covers continuations 8 and 9. Earlier continuation reports already disclose their own file sets. A read-only audit against continuation 8's entry found **22 changed files and one new test file**, with zero missing files, zero out-of-scope files, zero new `unsafe`, and zero parent-traversal `#[path]` attributes. Exact purposes and the full source patch are in [stop-file-purposes.tsv](../../../.temp/brief-626/continuation-9/stop-file-purposes.tsv) and [stop-source-changes.patch](../../../.temp/brief-626/continuation-9/stop-source-changes.patch).
+
+| File | Purpose |
+|---|---|
+| `crates/rum-runtime/src/runtime/accumulator_chain.rs` | Document why diagnostic chain payload release order is unobservable. |
+| `crates/rum-runtime/src/runtime/debug_tools/resources/occurrence/suspension.rs` | Preserve independent guest queue accounting across flattened diagnostic dispatch. |
+| `crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs` | Inline the disabled source-guard test and cold-outline enabled TLS/stack work. |
+| `crates/rum-runtime/src/runtime/profiling/logical/epoch.rs` | Follow chain accessors in the bounded open-record registry. |
+| `crates/rum-runtime/src/runtime/profiling/logical/epoch/snapshot.rs` | Follow `AccumulatorChain` accessors in immutable epoch snapshots. |
+| `crates/rum-runtime/src/runtime/profiling/logical/record.rs` | Use `AccumulatorChain` for record ancestry; remove bespoke drop traversal. |
+| `crates/rum-runtime/src/runtime/profiling/logical/segments.rs` | Time only the innermost active record and follow chain accessors. |
+| `crates/rum-runtime/src/runtime/profiling/logical/source_stack.rs` | Use `AccumulatorChain` for source ancestry and cold-outline enabled push/pop. |
+| `crates/rum-runtime/src/runtime/profiling/logical/totals.rs` | Retain terminal parents until late children settle and follow chain accessors. |
+| `crates/rum-runtime/src/runtime/profiling/scopes.rs` | Inline three disabled guards and cold-outline their enabled bodies. |
+| `crates/rum-runtime/src/runtime/profiling/tests/mod.rs` | Declare the chain-destruction tests from their own parent. |
+| `crates/rum-runtime/src/runtime/profiling/tests/chain_drop.rs` **(new)** | Prove 66,000-node drops and concurrent last-holder release on 2 MiB threads. |
+| `crates/rum-runtime/src/runtime/suspension/core.rs` | Restore both resume wrappers to their inline LP01 shape. |
+| `crates/rum-runtime/src/runtime/suspension/core/profile_queue.rs` | Keep private diagnostic metadata separate from guest frames; cold-outline diagnostic access. |
+| `crates/rum-runtime/src/runtime/suspension/core/queue.rs` | Keep the guest-only queue and share the mixed-legacy pop helper. |
+| `crates/rum-runtime/src/runtime/suspension/core/storage.rs` | Fold diagnostic dispatch into Legacy/Mixed tags; keep Mixed zero and one guest owner. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/self_reaching.tsv` | Replay two LP02 `AccumulatorChain` witnesses while preserving all 59 committed rows. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv` | Replay exact discovery and the new chain derives. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv` | Replay exact discovery and source positions. |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv` | Replay all 68 generated fingerprint cells; preserve every other field. |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv` | Replay the two C01/C02 body rows' four certificate cells only. |
+| `crates/rum-stdlib/tests/typed_slot_census/routes.rs` | Point I0009 at the one generic driver without changing receipt strength. |
+| `docs/dev/codex/brief-626-lp02-logical-profiler-record-engine.md` | Append this combined continuation 8/9 report; preserve all prior text. |
+
+The complete, mechanical inventory disclosure is [inventory-row-changes-vs-entry.json](../../../.temp/brief-626/continuation-8/inventory-row-changes-vs-entry.json), with every old and new row preserved. It is not a hand-written summary. The row operations are:
+
+| Inventory | Operations and rows |
+|---|---|
+| `self_reaching.tsv` | One replacement: two old LP02-owned rows replaced by the two wrapped witnesses below. All 59 committed rows remain exactly. Wrapped participation-gated members moved 29 to 31; no count pin exists. |
+| `unknown_attributes.tsv` | Two operations: nine rows replaced and four new `UnknownConstruct` rows inserted, all remaining unknown. |
+| `unknown_captures.tsv` | Two operations: five rows replaced with replayed positions. |
+| `local-contracts.tsv` | One operation: all 68 generated fingerprint cells replaced; all other cells retained. |
+| `promoted.tsv` | One operation: the two production body rows replaced only in their default/no-default certificate cells (four cells total). |
+
+The two self-reaching replacements are verbatim:
+
+```text
+rum_runtime::runtime::profiling::logical::record::RecordPath	crates/rum-runtime/src/runtime/profiling/logical/record.rs	110	rum_runtime::runtime::profiling::logical::record::RecordPath.parent/rum_runtime::runtime::accumulator_chain::AccumulatorChain<arg0> via 0/std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0 -> rum_runtime::runtime::profiling::logical::record::RecordPath
+rum_runtime::runtime::profiling::logical::source_stack::Node	crates/rum-runtime/src/runtime/profiling/logical/source_stack.rs	7	rum_runtime::runtime::profiling::logical::source_stack::Node.parent/rum_runtime::runtime::accumulator_chain::AccumulatorChain<arg0> via 0/std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0 -> rum_runtime::runtime::profiling::logical::source_stack::Node
+```
+
+There are no new `UnknownHostPayload` rows and no removed committed rows. Continuation 9 changed no inventory bytes: the audit reports `INVENTORY_C9_UNCHANGED=25/25`. Its source edits do require a fresh replay before acceptance; that replay was **not run** after the stop, so the inventories are not claimed valid for the final source.
+
+### 2. The engine and the entry, as built
+
+Continuation 8 converted both diagnostic parent links to derived `AccumulatorChain` nodes and deleted the bespoke `Drop` loops. The payload policy is preserved in [payload-policy.json](../../../.temp/brief-626/continuation-8/payload-policy.json): `Storage` release is commutative budget arithmetic; `Owner` drops only an atomic request-control allocation with no callback or cancellation write; final `Mutex<State>` drop has no live borrower and no outcome effect; source-stack values are `Copy`. Thus release order is unobservable for the named payloads.
+
+The queue remains a marker-free guest queue plus private diagnostic metadata. There is no nested profile representation, one generic driver and one generic abandonment body, representation-selected modes, one owner per guest frame, and no new panic on a type-admitted state. The occurrence oracle keeps independent guest-capacity arithmetic. No existing phase was adopted and no existing frame gained a field.
+
+Continuation 9 made all four source guards retain only their inactive flag test on the disabled path; enabled TLS access, stack mutation, capture construction, and depth updates are cold and out of line. It folded diagnostic dispatch into the Legacy/Mixed representation tags, kept `Entry` private through a zero-cost `MixedQueue` wrapper, restored `resume_suspended_slot` and `resume_suspended_evaluation` to `#[inline(always)]`, and made `Mixed` the zero discriminant. Attempt 2's cold annotations on `SourceStack::{push,pop}` and diagnostic `ProfileQueue` access are retained. Attempt 4's match-only reorder and attempt 6's early-return helper were reverted. Attempt 7's forced-inline pop was also reverted because it made the combined driver/pop cost worse than attempt 5.
+
+### 3. Route proofs
+
+Continuation 8 retained the 19 original native routes plus two nested-pause cases. The native lifecycle logs contain three suite results and 16 structural teardown receipts:
+
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.03s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.01s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+```
+
+All 16 checkpoints print exactly:
+
+```text
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+```
+
+The four chain-destruction tests use 66,000 nodes on 2 MiB threads, including concurrent release of the last two holders:
+
+```text
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 1217 filtered out; finished in 0.12s
+```
+
+The original bespoke race did not reproduce deterministically. The red control is therefore the raw recursive `SourceStack` shape, which aborts with stack overflow in [raw-recursive.log](../../../.temp/brief-626/continuation-8/falsifiers/raw-recursive.log); no deterministic failure of the bespoke shape is claimed.
+
+The unchanged participation gate passed with zero uncovered paths:
+
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 5.93s
+```
+
+Continuation 9's targeted enabled-lifecycle coverage was not extended. Its 32-process resume-harness runs are performance-correctness checks, not replacements for the native route suite on the final source.
+
+### 4. The oracle result
+
+Continuation 8 executed both LP01 oracle builds and independently compared all ten JSON collections with the accepted LP01 artifacts:
+
+```text
+test result: ok. 499 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 100.71s
+test result: ok. 499 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 100.49s
+```
+
+That is **8,750 executed receipts**, **118,991 pinned loss cells per build**, all five modes in both feature builds, all ten collections exactly equal, and all fault deltas zero. Every pinned LP03-LP07 cell stayed as pinned because no phase was adopted. The later scratch verifier checkpoint-key error was repaired without rerunning or changing the oracle receipts. Generated LP01 artifacts were restored afterward.
+
+Continuation 9 did not rerun the oracle after its source edits; the 8,750-receipt result is continuation 8 evidence, not a final-source claim.
+
+### 5. All gates, verbatim
+
+The following gates passed on continuation 8's frozen initial source (1,557 inputs after the I0009 source lookup repair):
+
+```text
+cargo fmt --check
+# exit 0, no output
+
+cargo test -p rum-runtime
+test result: ok. 1216 passed; 0 failed; 5 ignored; 0 measured; 0 filtered out; finished in 32.07s
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.62s
+
+cargo test -p rum-runtime --lib profiling
+test result: ok. 30 passed; 0 failed; 2 ignored; 0 measured; 1189 filtered out; finished in 0.45s
+
+cargo test -p rum-runtime --lib suspension::typed::tests
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 1197 filtered out; finished in 0.43s
+
+cargo test -p rum-runtime --lib frame_root_trace
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1206 filtered out; finished in 1.53s
+
+cargo test -p rum-runtime --lib resume_evaluation_context
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 1210 filtered out; finished in 0.17s
+
+cargo test -p rum-stdlib --lib ownership_graph
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 1133 filtered out; finished in 72.33s
+
+cargo test -p rum-stdlib --lib local_production_acceptance
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 18.71s
+
+cargo test -p rum-stdlib --no-default-features --lib local_production_acceptance
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1157 filtered out; finished in 18.64s
+
+cargo test -p rum-stdlib --lib production_rejection_census_is_complete
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 26.57s
+# Derived frontier: 952 (10/915/27).
+
+cargo test -p rum-stdlib --lib inherent_method_claims_match_rustc
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 57.96s
+# 3,617/3,617 AGREEMENT: 3,601 production + 16 fixture; zero disagreements.
+
+cargo test -p rum-stdlib --test typed_slot_census
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 280.89s
+
+cargo test -p rum-stdlib --no-default-features --test typed_slot_census
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 283.26s
+```
+
+The first default census run found I0009 still reading the old driver location and failed unchanged:
+
+```text
+test result: FAILED. 7 passed; 1 failed; 1 ignored; 0 measured; 0 filtered out; finished in 284.04s
+```
+
+Only the source file/function tuple moved under continuation 7's grant; the focused receipt and both final censuses then passed. No assertion, guard, or receipt was weakened.
+
+The workspace passed on that source with `RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1`:
+
+```text
+result_lines=54
+libtest_passed=3967
+failed=0
+ignored=61
+test result: ok. 1216 passed; 0 failed; 5 ignored; 0 measured; 0 filtered out; finished in 29.24s
+test result: ok. 1111 passed; 0 failed; 53 ignored; 0 measured; 0 filtered out; finished in 1362.53s
+```
+
+The 3,967 libtest passes comprise 3,958 executed passes and nine operational native socket skips. The nine skip receipts name:
+
+```text
+native_zeromq_backend_echoes_heartbeat_over_loopback_req_socket
+native_zeromq_backend_round_trips_execute_over_loopback_sockets
+native_zeromq_backend_frontend_style_control_interrupt_round_trip
+native_zeromq_backend_shutdown_stops_shell_work_and_reports_pending_shell_messages
+native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_metadata
+native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts_and_shutdown
+native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_reply
+native_zeromq_backend_rejects_tampered_signed_requests_end_to_end
+native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages
+```
+
+The production release build had no new warning. The lib-test build retained only the three inherited unused-test-helper warnings. Continuation 9's first flattened enum did produce a new private-interface warning; the `MixedQueue` private-field wrapper removed it. Its focused gate then passed:
+
+```text
+warning: `rum-runtime` (lib test) generated 3 warnings
+test result: ok. 30 passed; 0 failed; 2 ignored; 0 measured; 1189 filtered out; finished in 0.43s
+```
+
+**Not run on continuation 9's final source because of the stop-loss:** final `cargo fmt --check`; full runtime and native route suites; frame-root and resume-context gates; both typed-slot censuses; the suspension oracle and all 8,750 receipts; ownership and participation gates; inventory replay and both post-replay acceptance builds; the 952-row rejection census; the rustc method oracle; the workspace and fresh nine-skip receipts. No green result is claimed for these on the restored attempt 5 source.
+
+### 6. Measurements
+
+Continuation 8 built four one-codegen-unit candidates from its initial frozen source:
+
+```text
+rum-cli        base 46137abe2e63c59203ef987effb3ca5eb1f78540c9a88200ae51220041b845fd  candidate fd8ac131964b8dca74a41a34e45fdcd24c62ffe70466e3f88a32c4c1d2fa0039
+resume         base 6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5  candidate 4277d8ef3b9d57bdb604cbbe0d81c329f98e96f7be550eafb25094c717a44e25
+rum-cli-alloc  base 5cf3e4b67b750e904731977d4618c9aa2796e170781243f9ac3451760ec5a843  candidate b123d7522bd97f4e52542f3582b0e58fda29427389d3d254589d3dd51c70f425
+resume-alloc   base f305fd523786f8b4a7e658e4ca99cbdab87bae8e92fab5bfce9cc7137a85515c  candidate a4be2e1d20acff1c8aa3648cfdcc2f8965e0d39d03dedb2d7a6b297e3fcb975a
+```
+
+On that initial source:
+
+- Correctness: all **1,636 processes** on 313 labels passed exact output and resume-count checks.
+- Allocations: **313/313** labels raw exact at N and 2N, including 192 ordinary and 121 resume labels; all 1,252 processes were correct and both counts and total bytes were equal.
+- Copies: **313/313** labels at or below base in slopes and whole N/2N counts; all 1,252 profiles passed.
+- Layouts: **789/789** equal, zero changed and zero missing; all nine compiler header assertions passed and all 96 `ContinueToken` instantiations remained zero-sized.
+- Instructions: all **2,504** initial hardware runs were correct, but the bar failed. There were 211 rising labels; 66 ordinary and 78 resume labels were flagged. The exact label lists are [all-initial-flags.json](../../../.temp/brief-626/continuation-8/final/all-initial-flags.json) and [resume-initial-flags.json](../../../.temp/brief-626/continuation-8/final/resume-initial-flags.json).
+
+The instruction summary computed from the raw comparison is:
+
+```text
+C8 INSTRUCTIONS labels=313 processes=2504 rising=211 ordinary_flags=66 resume_flags=78
+C8 median_all=0.058322% median_flagged=0.263008% largest=1.044504%
+C8 ALLOC raw_exact=313/313; COPY above_slope=0 above_whole=0 labels=313; LAYOUTS=789 changed=0 missing=0
+```
+
+Continuation 8 did not finish instruction attribution to the required bar and did not reach the 44 stack fits, resumed chains, four timing panels, or aligned whole-program timing. Those remain unmeasured, not passed.
+
+Continuation 9 first calibrated the attribution on the preserved pre-cure candidate:
+
+```text
+ENTRY SOURCE 1557/1557 hashes match
+CALIBRATION evaluation: base=0.0 candidate=7.0 delta=7.0 calls=[2001, 4001]
+CALIBRATION rebuild: base=0.0 candidate=7.0 delta=7.0 calls=[2001, 4001]
+GUARD SCRIPT CALIBRATION PASS: both disabled-path drops are exactly +7 instructions/iteration
+```
+
+After the guard/queue repair, all 64 targeted profiles were correct and both former guard costs disappeared:
+
+```text
+TARGETED CALLGRIND 64/64 correct; 16 labels; source frozen.
+POST-CURE CALIBRATION PASS: both former +7 guard drops have zero candidate self cost
+OFF-PATH GUARD/DIAGNOSTIC SELF COST: 0 violations across 64 profiles
+TARGET downvalue-exact-hit main=-10.990500 libc=-0.080000
+```
+
+The raw-name aggregation was independently calibrated on the old data and reproduced both +7 rows. It avoids treating added/retired ELF copies as new semantic work without changing total deltas.
+
+After restoring both resume wrappers, the best attempt 5 kept both wrappers and all diagnostic functions out of the disabled profiles. Its 32 fresh resume profiles passed, with these raw per-function total deltas:
+
+```text
+RAW REVIEW PASS: 8 labels, 32 correct profiles
+DISABLED GUARD/DIAGNOSTIC SELF COST: 0 positive rows
+OUT-OF-LINE RESUME WRAPPERS: 0 positive rows
+RAW resume-table main=-88.627000 libc=-12.527000
+RAW resume-do-chain main=-126.629000 libc=-1.470000
+RAW resume-cleanup main=-56.347000 libc=-0.875000
+RAW resume-fold main=-301.271787 libc=-40.666174
+RAW resume-cases-shared main=-673.005682 libc=-96.136364
+RAW resume-g15-raw-success main=-522.640000 libc=-70.790000
+RAW c1-all-guard main=-779.350000 libc=-18.740000
+RAW c1-all-two-guards main=-1018.880000 libc=-220.800000
+```
+
+These are targeted Callgrind results, not the required 313-label two-pair hardware gate. The named pop residual is still present: candidate `FrameStorage::pop_front` costs 81 versus LP01 `FrameQueue::pop_front` 78 over the same `[3003, 6003]` calls. Attempt 5 reduced it from 87 to 81 (six instructions/resume), leaving one instruction per pop call. Disassembly shows the residual tag-register load against LP01's single byte test.
+
+Attempt 6's early return produced the same pop body and the same 81 cost, so it advanced no bar and was reverted. Attempt 7 removed the standalone pop symbol but moved cost into the driver: attempt 5's candidate driver/pop total was 1,354 + 81 = 1,435 versus base 1,400 + 78 = 1,478, while attempt 7's driver was 1,443 against the same base total. Attempt 7 was therefore eight instructions worse than attempt 5, advanced no bar, and was reverted.
+
+The restored attempt 5 source has the exact resume binary:
+
+```text
+acda6aa9e291de4a40bbf8b25777edef22d0e662c139ebf05ec3e79c9d38300a  .temp/brief-626/continuation-9/attempt-5/cand/resume
+```
+
+No rum-cli binary was rebuilt from the restored source. Layouts, allocations, copies, stacks, chains, the full 313-label instruction campaign, timing, engine/context final probes, and aligned timing were **not run** on the restored source. The fresh continuation 9 final scaffold has zero candidate result rows and is preparation only.
+
+### 7. Stop-loss counters, deviations and open questions
+
+- Continuation 8 prior progress: 21 route cases, 8,750 receipts kept, four deep-drop cases, 789 layouts, 313 allocation labels, and 313 copy labels met on its initial candidate. Instruction, stack, chain, and timing bars were not met or not reached.
+- Continuation 9 implementation attempts: seven. The guard-delta and inline-wrapper repairs advanced bars. Attempt 4 was byte-identical and reverted; attempt 5 then made measurable pop progress and reset the counter.
+- Attempt 6 advanced no route, receipt, or measurement bar: pop stayed 81; reverted.
+- Attempt 7 advanced no route, receipt, or measurement bar: combined driver/pop was eight instructions worse than attempt 5; reverted. **Two consecutive no-progress attempts triggered the required STOP.**
+- Restored state: attempt 5's manifest matches all **1,557** build inputs. The source audit prints `CHANGED=22 NEW=1 MISSING=0 OUTSIDE=0 UNSAFE=0 PARENT_PATH=0` and `PURPOSES=23`.
+- No git command, network access, new `unsafe`, phase adoption, frame-field addition, guest internal-encoding probe, weakened oracle, or inventory hand-edit occurred. All scratch remains under `.temp/brief-626/`; the tree is uncommitted.
+- Open defect: the restored source still has the one-instruction-per-pop residual described above. There is no final disabled-path verdict, no final gate suite, and no final measurement campaign. A later continuation must decide the next mechanism rather than silently treating the targeted negative main deltas as proof of the full bar.
+
+---
+
+## Director ruling and continuation 10 (2026-10-26) — the representation test is the gate; everything else is zero
+
+**The stop was correct.** Two attempts in a row moved no bar, and the source
+was put back to attempt 5. I have read the disassembly in
+`continuation-9/attempt-5/disassembly/` myself.
+
+**What remains in `FrameStorage::pop_front`.**
+
+- LP01's `FrameQueue::pop_front` has two variants. It dispatches with one
+  bit test: `testb $0x1,(%rsi); je`.
+- The candidate has three variants.
+  - It reaches `Mixed` with `mov (%rsi),%rax; test %rax,%rax; je`.
+  - Before `Legacy` it adds `cmp $0x1,%eax; jne <cold>`.
+  - `Profiled` is one tail jump.
+- So per pop, the `Mixed` arm pays one instruction (the tag load). The
+  `Legacy` arm pays three: the load, one compare and one branch.
+
+**My ruling: this residual is the gate, and it stays.**
+
+- **It cannot be removed.** A representation that carries the mode has
+  three states. Every operation on it must exclude `Profiled` before it
+  runs LP01's code, and that costs at least one compare and branch on one
+  arm. Codegen cannot remove it.
+- **Each way to remove it gives up a continuation 3 guarantee.**
+  - One way is a side field that every push site must remember to update.
+    That is a convention, and the push sites (`insert_typed_erased_frame`
+    and the rest) run outside the driver, where there is no mode.
+  - The other is a global gate that must agree with the representation.
+    Continuation 3 point 1 forbids that.
+  - The house rule: a guarantee the types enforce beats one that relies on
+    people remembering.
+- **The hard line permits exactly this.** A diagnostic behind the cold-load
+  `AtomicU8` pays its inline flag test at every call site. The
+  representation test is that same test for the queue. It is cheaper,
+  because the tag sits in the cache line the operation touches anyway.
+- **This corrects my own bars.** Two of my earlier bars asked for less cost
+  than the shape I also demanded can deliver:
+  - continuation 2's "the existing cold-load enabled check, once" per
+    resume;
+  - continuation 9's "pays nothing for the representation".
+
+  The bar below replaces both.
+
+### The bar, restated
+
+1. **Per drive:** the mode selection, which is one representation test.
+2. **Per queue operation**, meaning every `FrameStorage` method and its
+   drop, the off path pays the *representation exclusion* and nothing more:
+   - the discriminant load;
+   - at most one compare and one branch that exclude `Profiled`;
+   - the `Profiled` arm as one cold out-of-line call or tail jump.
+
+   That is at most three instructions per operation. An ordinary label that
+   performs no queue operation has an allowance of zero.
+3. **Everything else is zero.** Any other positive rum-function instruction
+   delta is work, and must be removed, unless it is attributed by
+   instruction as one of:
+   - layout, under the libc page-cross rule;
+   - seed variance, from three or more runs per arm with overlapping
+     ranges.
+
+   A falling label total does not excuse a per-function increase.
+   Compensation elsewhere is not a cure.
+4. **Do not chase codegen inside the exclusion.** The `Mixed` arm's tag
+   load is within the allowance. Do not retry attempts 6 and 7.
+
+### What to do
+
+1. **Attribute every positive rum-function delta, by instruction, on
+   attempt 5's source.**
+   - **Where inlining differs between the arms,** compare the smallest set
+     of functions that holds the same source on both sides, and attribute
+     that set's delta. For example:
+     - the driver plus pop;
+     - `drop_in_place<SuspendedEvaluation>` plus the queue's drop.
+   - **The deltas from attempt 5's raw diffs that are still unattributed:**
+     - `drive_input_request`: 80 → 87 per iteration in `resume-table` and
+       `c1-all-guard`.
+     - `drop_in_place<SuspendedEvaluation>`: 19 → 23. Pair it with base's
+       `drop_in_place<FrameQueue>`, 44 → 0.
+     - **The push path:** `FrameStorage::{push_back,
+       push_back_typed_legacy, widen_legacy, append_mixed,
+       pop_front_legacy}`.
+       - Pair each with its LP01 counterpart:
+         `FrameQueue::{push_back, widen, append_mixed, pop_front_legacy}`.
+       - Include `insert_typed_erased_frame` (173 → 117) in the
+         comparison.
+   - Classify each instruction as one of four:
+     - exclusion (name the instructions);
+     - layout;
+     - seed variance;
+     - work.
+2. **Remove the work.**
+   - Continuation 9's grant stands.
+   - The shape guarantees are still not negotiable.
+   - If a work residual cannot be removed without giving one up, STOP and
+     report it per instruction, as before.
+3. **Then run the full campaign on the final source.** This is continuation
+   9 point 4, unchanged:
+   - all 313 labels, with point 1's attribution;
+   - the parts never reached: the 44 stack fits, the resumed chains, the
+     four timing panels, and aligned timing.
+
+   The final instruction table gets one extra column per resume label: the
+   exclusion budget, computed as the queue-operation call counts times
+   three. Put it beside the label's measured rum-function residual, so the
+   allowance is shown to be no more than it claims.
+
+**Report.**
+
+- Append a continuation 10 report in the seven sections. It may refer to
+  the continuation 8/9 report for anything unchanged.
+- Keep `.temp/brief-626/state.json` current.
+
+Stop-loss as before: progress is deltas attributed or removed.
