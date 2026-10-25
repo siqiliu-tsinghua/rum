@@ -17689,3 +17689,944 @@ continuation 5 item 5:
 Everything else stands. Stop-loss as before.
 
 ---
+
+
+## Executor report — continuation 6 (2026-10-26): inventories replayed; STOP at the source-layout gate
+
+**STOP under the Scope rule in `TEMPLATE.md`.** The mandatory final
+`frame_root_trace` gate reports **14 passed, 1 failed**. Its unchanged
+`suspension_protocol_repository_invariants_hold` test reads the resume driver
+from `suspension/core.rs`; continuation 3 moved the accepted single generic
+driver into `suspension/core/driver.rs`. At `frame_root_trace.rs:441`, it fails
+with `driver should invoke the still-rooted front frame directly`.
+
+This test also retains two later source-layout assumptions: at line 487 it
+requires `frame.abandon(` directly inside `drain_abandonment_worklist`, while
+the accepted shared `abandon_frames<M>` now owns that operation; at line 542
+its raw-owner placement check exempts only `core.rs`, so the same pending-owner
+take now in `core/driver.rs` lies outside that sole-file exemption. Those later
+failures are identified by read-only source inspection, not claimed as later
+executed test failures.
+
+`TEMPLATE.md` says: **“Do NOT modify files outside Scope. If you believe you
+must, STOP and write that in the report instead.”** The allowed exhaustive
+matches, new profiling tests, retention-closure tests and standing frame
+inventory duty do not include this existing source-layout test: no new frame
+or derive is being added. The failing test remains byte-identical to the
+supplied committed LP01 export. No assertion was removed, weakened, or edited,
+and no runtime rearrangement was introduced to satisfy an obsolete textual
+location. The tree compiles; the full final campaign is incomplete.
+
+### 1. Files changed and every inventory row change
+
+Continuation 6 changes the following files relative to its entry checkpoint.
+The earlier LP02 implementation and prior reports are preserved. Full before
+and after SHA-256 values are in `continuation-6/source-changes.json`.
+
+| File | Purpose |
+| --- | --- |
+| `crates/rum-host/tests/logical_profile_lifecycle.rs` | Add the five structural teardown assertions at every existing closed native checkpoint and both nested-pause cases; retain every existing receipt. |
+| `crates/rum-runtime/src/runtime/profiling/logical/epoch/snapshot.rs` | Test/native-observer-only registry scan for pending children, retained terminal parents and open records, followed by context-lease and fault checks. |
+| `crates/rum-runtime/src/runtime/profiling/logical/mod.rs` | Expose the hidden test-feature teardown assertion through the existing Session test-support surface; no public host type or production phase adoption. |
+| `crates/rum-runtime/src/runtime/profiling/tests/logical_totals.rs` | Add the red unsettled-child control and its completed green control; assert quiescence after every close order, bulk retirement and context restore. |
+| `crates/rum-runtime/src/runtime/profiling/tests/queue_boundaries.rs` | Add structural teardown checks to the existing non-instrumentation-fault queue/lifecycle routes, preserving all existing assertions. |
+| `crates/rum-runtime/src/runtime/profiling/tests/slot_boundary.rs` | Check quiescence after the identity-preserving valid slot and each closed-channel case; retain the separate intentional wrong-channel fault control. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/self_reaching.tsv` | Replay the LP02-owned RecordPath source-position change; all 59 committed self-reaching identities remain unchanged. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv` | Replay discovery positions and LP02-owned conditional test-support attributes; unknowns remain unknown. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv` | Replay moved/new/removed LP02-owned closures, including removal of the obsolete ancestor-vector depth capture. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv` | Replay exact macro positions and LP02-owned assertions, including the structural teardown assertion. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_storage.tsv` | Replay LP02-owned storage identities, including Active.start/Option[Own]/arg0; no committed identity changes. |
+| `crates/rum-stdlib/src/tests/retention_closure/census/tests.rs` | Pair the three guarded operations at 41/42/85 and update only the authorized LP02 comment, total 952 and map 10/915/27, in place with the same line count. |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv` | Copy all 68 freshly generated fingerprint cells; all other contract fields remain exact. |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv` | Copy freshly earned C01/C02 certificate cells for both builds; all identity, precondition, strength, exclusion and coverage fields stay exact. |
+| `crates/rum-stdlib/src/tests/retention_closure/local/type_tests.rs` | Write independently discovered frontier artifacts to a stable brief-626 scratch path instead of overwriting the accepted C5 archive. |
+| `docs/dev/codex/brief-626-lp02-logical-profiler-record-engine.md` | Append this report only. |
+
+No existing frame field, semantic codec, `Expr`/`Symbol`, public host type,
+manifest, lockfile, AGENTS file, TODO, other brief or source-layout assertion
+changed. The enabled runtime algorithm is unchanged from the accepted C5
+implementation; the runtime additions here are under the existing test/native
+observer configuration.
+
+The committed inventory baseline is the director-supplied `base-source/`
+export of LP01 `3fd1885c`, byte-equal to the original entry snapshot for every
+ownership inventory. No git access was used. Replay protects that baseline,
+not LP02's intermediate generated rows, as continuation 6 rules.
+
+Discovery/replay result, verbatim:
+
+```text
+Preflight: 162 position moves; 141 new UnknownConstruct; missing=0; unmappable=0; new HostPayload=0
+Ownership replay: 162 position moves; 141 new UnknownConstruct; 6 ledger position moves; new HostPayload=0
+New self-reaching rows: 2 all old59 preserved exactly; source witnesses from unchanged discovery:
+rum_runtime::runtime::profiling::logical::record::RecordPath	crates/rum-runtime/src/runtime/profiling/logical/record.rs	108	rum_runtime::runtime::profiling::logical::record::RecordPath.parent/std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0 -> rum_runtime::runtime::profiling::logical::record::RecordPath
+rum_runtime::runtime::profiling::logical::source_stack::Node	crates/rum-runtime/src/runtime/profiling/logical/source_stack.rs	5	rum_runtime::runtime::profiling::logical::source_stack::Node.parent/std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0 -> rum_runtime::runtime::profiling::logical::source_stack::Node
+```
+
+Committed-baseline proof: [inventory-baseline.json](../../../.temp/brief-626/continuation-6/inventory-baseline.json), [ownership-position-preflight.json](../../../.temp/brief-626/continuation-6/ownership-position-preflight.json), [ownership-replay.json](../../../.temp/brief-626/continuation-6/ownership-replay.json).
+
+
+All committed identities and dispositions survive. There is no new
+UnknownHostPayload and no new construct at untouched source. The replay
+replaces LP02-owned intermediate rows, including the timer ownership
+projection that stopped C5. `host_payloads.tsv` and `host_payload_ledger.tsv`
+do not change during C6; their already-replayed source positions still match
+fresh discovery. Every changed C6 ownership row follows verbatim (`-` is the
+entry row, `+` the replayed row); the complete row patch and full certificate
+rows are also retained in the linked machine-readable disclosure.
+
+[inventory-row-changes-vs-entry.json](../../../.temp/brief-626/continuation-6/inventory-row-changes-vs-entry.json); [inventory-row-changes-vs-entry.patch](../../../.temp/brief-626/continuation-6/inventory-row-changes-vs-entry.patch).
+
+**`crates/rum-stdlib/src/tests/ownership_graph/inventory/self_reaching.tsv` — 1 old rows, 1 replayed rows.**
+
+```text
+- line 26: rum_runtime::runtime::profiling::logical::record::RecordPath	crates/rum-runtime/src/runtime/profiling/logical/record.rs	109	rum_runtime::runtime::profiling::logical::record::RecordPath.parent/std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0 -> rum_runtime::runtime::profiling::logical::record::RecordPath
++ line 26: rum_runtime::runtime::profiling::logical::record::RecordPath	crates/rum-runtime/src/runtime/profiling/logical/record.rs	108	rum_runtime::runtime::profiling::logical::record::RecordPath.parent/std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0 -> rum_runtime::runtime::profiling::logical::record::RecordPath
+```
+
+**`crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv` — 6 old rows, 10 replayed rows.**
+
+```text
+- line 755: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	13	1	unresolved attribute/expansion derive (Default)
+- line 756: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	234	5	unresolved attribute/expansion cfg (any (test , feature = "test-builtin-memory-growth" , feature = "test-continuation-slots"))
+- line 757: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/index.rs	289	5	unresolved attribute/expansion cfg (any (test , feature = "test-builtin-memory-growth" , feature = "test-continuation-slots"))
+- line 758: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	70	1	unresolved attribute/expansion derive (Clone)
+- line 759: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	88	1	unresolved attribute/expansion cfg (any (test , feature = "test-builtin-memory-growth" , feature = "test-continuation-slots"))
+- line 768: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	128	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
++ line 755: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	10	1	unresolved attribute/expansion cfg (any (test , feature = "test-builtin-memory-growth" , feature = "test-continuation-slots"))
++ line 756: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	20	1	unresolved attribute/expansion derive (Default)
++ line 757: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/index.rs	290	5	unresolved attribute/expansion cfg (any (test , feature = "test-builtin-memory-growth" , feature = "test-continuation-slots"))
++ line 758: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	71	1	unresolved attribute/expansion derive (Clone)
++ line 759: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	89	1	unresolved attribute/expansion cfg (any (test , feature = "test-builtin-memory-growth" , feature = "test-continuation-slots"))
++ line 768: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	130	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
++ line 769: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	262	1	unresolved attribute/expansion cfg (any (test , feature = "test-builtin-memory-growth" , feature = "test-continuation-slots"))
++ line 770: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/totals.rs	4	1	unresolved attribute/expansion derive (Clone , Copy , Default)
++ line 771: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/totals.rs	29	1	unresolved attribute/expansion derive (Clone , Copy)
++ line 772: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/totals.rs	36	1	unresolved attribute/expansion derive (Default)
+```
+
+**`crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv` — 51 old rows, 64 replayed rows.**
+
+```text
+- line 1318: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	64	53	closure captures: |p| (capture types/modes unresolved)
+- line 1319: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	85	30	closure captures: |s| (capture types/modes unresolved)
+- line 1320: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	87	51	closure captures: |s| (capture types/modes unresolved)
+- line 1321: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	89	54	closure captures: |s| (capture types/modes unresolved)
+- line 1322: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	90	46	closure captures: |d| (capture types/modes unresolved)
+- line 1323: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	91	36	closure captures: |d| (capture types/modes unresolved)
+- line 1324: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	92	39	closure captures: |d| (capture types/modes unresolved)
+- line 1325: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	120	46	closure captures: |d| (capture types/modes unresolved)
+- line 1326: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	121	36	closure captures: |d| (capture types/modes unresolved)
+- line 1327: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	122	39	closure captures: |d| (capture types/modes unresolved)
+- line 1328: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	123	57	closure captures: |s| (capture types/modes unresolved)
+- line 1329: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	124	47	closure captures: |s| (capture types/modes unresolved)
+- line 1330: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	125	50	closure captures: |s| (capture types/modes unresolved)
+- line 1331: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	134	65	closure captures: |n| (capture types/modes unresolved)
+- line 1332: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	23	25	closure captures: || (capture types/modes unresolved)
+- line 1333: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	93	31	closure captures: |id| (capture types/modes unresolved)
+- line 1334: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	93	70	closure captures: |r| (capture types/modes unresolved)
+- line 1335: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	104	43	closure captures: |id| (capture types/modes unresolved)
+- line 1336: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	104	73	closure captures: |r| (capture types/modes unresolved)
+- line 1337: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	115	51	closure captures: |p| (capture types/modes unresolved)
+- line 1338: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	159	18	closure captures: |r| (capture types/modes unresolved)
+- line 1339: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	168	18	closure captures: |r| (capture types/modes unresolved)
+- line 1340: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	173	53	closure captures: |r| (capture types/modes unresolved)
+- line 1341: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	184	53	closure captures: |r| (capture types/modes unresolved)
+- line 1342: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	200	27	closure captures: |id| (capture types/modes unresolved)
+- line 1343: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	227	47	closure captures: |r| (capture types/modes unresolved)
+- line 1344: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	245	18	closure captures: |(key , counts)| (capture types/modes unresolved)
+- line 1348: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/index.rs	295	38	closure captures: |s| (capture types/modes unresolved)
+- line 1349: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	32	26	closure captures: |(owner , _ , _)| (capture types/modes unresolved)
+- line 1350: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	54	45	closure captures: |(_ , _ , p)| (capture types/modes unresolved)
+- line 1351: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	130	18	closure captures: |e| (capture types/modes unresolved)
+- line 1352: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	133	26	closure captures: |(key , c)| (capture types/modes unresolved)
+- line 1353: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	158	18	closure captures: |e| (capture types/modes unresolved)
+- line 1354: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	183	18	closure captures: |e| (capture types/modes unresolved)
+- line 1355: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	183	42	closure captures: |(_ , c)| (capture types/modes unresolved)
+- line 1359: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	147	27	closure captures: |state| (capture types/modes unresolved)
+- line 1360: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	191	27	closure captures: |state| (capture types/modes unresolved)
+- line 1361: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	206	24	closure captures: |stack| (capture types/modes unresolved)
+- line 1362: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	208	44	closure captures: || (capture types/modes unresolved)
+- line 1363: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	217	24	closure captures: |stack| (capture types/modes unresolved)
+- line 1364: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	221	19	closure captures: || (capture types/modes unresolved)
+- line 1365: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	234	24	closure captures: |stack| (capture types/modes unresolved)
+- line 1366: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	238	43	closure captures: |p| (capture types/modes unresolved)
+- line 1367: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	243	13	closure captures: |stack| (capture types/modes unresolved)
+- line 1368: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	243	47	closure captures: |i| (capture types/modes unresolved)
+- line 1369: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	262	43	closure captures: |stack| (capture types/modes unresolved)
+- line 1370: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	265	31	closure captures: |state| (capture types/modes unresolved)
+- line 1371: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	286	32	closure captures: |stack| (capture types/modes unresolved)
+- line 1372: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	309	54	closure captures: |i| (capture types/modes unresolved)
+- line 1373: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	316	38	closure captures: |p| (capture types/modes unresolved)
+- line 1374: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	333	36	closure captures: |stack| (capture types/modes unresolved)
++ line 1318: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	66	23	closure captures: |path| (capture types/modes unresolved)
++ line 1319: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	72	30	closure captures: |s| (capture types/modes unresolved)
++ line 1320: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	74	51	closure captures: |s| (capture types/modes unresolved)
++ line 1321: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	76	54	closure captures: |s| (capture types/modes unresolved)
++ line 1322: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	77	46	closure captures: |d| (capture types/modes unresolved)
++ line 1323: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	78	36	closure captures: |d| (capture types/modes unresolved)
++ line 1324: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	79	39	closure captures: |d| (capture types/modes unresolved)
++ line 1325: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	104	46	closure captures: |d| (capture types/modes unresolved)
++ line 1326: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	105	36	closure captures: |d| (capture types/modes unresolved)
++ line 1327: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	106	39	closure captures: |d| (capture types/modes unresolved)
++ line 1328: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	107	57	closure captures: |s| (capture types/modes unresolved)
++ line 1329: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	108	47	closure captures: |s| (capture types/modes unresolved)
++ line 1330: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	109	50	closure captures: |s| (capture types/modes unresolved)
++ line 1331: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	118	65	closure captures: |n| (capture types/modes unresolved)
++ line 1332: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	30	25	closure captures: || (capture types/modes unresolved)
++ line 1333: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	100	31	closure captures: |id| (capture types/modes unresolved)
++ line 1334: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	104	30	closure captures: |r| (capture types/modes unresolved)
++ line 1335: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	116	43	closure captures: |id| (capture types/modes unresolved)
++ line 1336: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	116	73	closure captures: |r| (capture types/modes unresolved)
++ line 1337: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	127	51	closure captures: |p| (capture types/modes unresolved)
++ line 1338: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	159	51	closure captures: |r| (capture types/modes unresolved)
++ line 1339: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	166	43	closure captures: |id| (capture types/modes unresolved)
++ line 1340: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	181	21	closure captures: |r| (capture types/modes unresolved)
++ line 1341: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	182	18	closure captures: |r| (capture types/modes unresolved)
++ line 1342: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	191	18	closure captures: |r| (capture types/modes unresolved)
++ line 1343: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	214	47	closure captures: |_| (capture types/modes unresolved)
++ line 1344: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	216	54	closure captures: |_| (capture types/modes unresolved)
++ line 1345: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	238	47	closure captures: |r| (capture types/modes unresolved)
++ line 1346: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	240	54	closure captures: |_| (capture types/modes unresolved)
++ line 1347: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch/snapshot.rs	33	34	closure captures: |(k , c)| (capture types/modes unresolved)
++ line 1348: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch/snapshot.rs	37	18	closure captures: |(id , r)| (capture types/modes unresolved)
++ line 1352: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/index.rs	296	38	closure captures: |s| (capture types/modes unresolved)
++ line 1353: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	33	26	closure captures: |(owner , _ , _)| (capture types/modes unresolved)
++ line 1354: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	55	45	closure captures: |(_ , _ , p)| (capture types/modes unresolved)
++ line 1355: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	131	18	closure captures: |e| (capture types/modes unresolved)
++ line 1356: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	134	26	closure captures: |(key , c)| (capture types/modes unresolved)
++ line 1357: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	159	18	closure captures: |e| (capture types/modes unresolved)
++ line 1358: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	191	18	closure captures: |e| (capture types/modes unresolved)
++ line 1359: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	191	42	closure captures: |(_ , c)| (capture types/modes unresolved)
++ line 1363: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	71	24	closure captures: |stack| (capture types/modes unresolved)
++ line 1364: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	73	44	closure captures: || (capture types/modes unresolved)
++ line 1365: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	82	24	closure captures: |stack| (capture types/modes unresolved)
++ line 1366: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	86	19	closure captures: || (capture types/modes unresolved)
++ line 1367: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	99	24	closure captures: |stack| (capture types/modes unresolved)
++ line 1368: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	103	43	closure captures: |p| (capture types/modes unresolved)
++ line 1369: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	108	13	closure captures: |stack| (capture types/modes unresolved)
++ line 1370: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	108	47	closure captures: |i| (capture types/modes unresolved)
++ line 1371: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	135	25	closure captures: |id| (capture types/modes unresolved)
++ line 1372: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	145	43	closure captures: |stack| (capture types/modes unresolved)
++ line 1373: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	148	31	closure captures: |s| (capture types/modes unresolved)
++ line 1374: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	166	32	closure captures: |stack| (capture types/modes unresolved)
++ line 1375: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	179	31	closure captures: |cursor| (capture types/modes unresolved)
++ line 1376: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	188	30	closure captures: |p| (capture types/modes unresolved)
++ line 1377: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	197	32	closure captures: |stack| (capture types/modes unresolved)
++ line 1378: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	221	54	closure captures: |i| (capture types/modes unresolved)
++ line 1379: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	272	24	closure captures: |stack| (capture types/modes unresolved)
++ line 1380: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	276	25	closure captures: |slot| (capture types/modes unresolved)
++ line 1381: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	283	54	closure captures: |start| (capture types/modes unresolved)
++ line 1382: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments/stack.rs	63	45	closure captures: |id| (capture types/modes unresolved)
++ line 1383: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments/stack.rs	104	27	closure captures: |state| (capture types/modes unresolved)
++ line 1384: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments/stack.rs	105	27	closure captures: |p| (capture types/modes unresolved)
++ line 1385: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments/stack.rs	130	49	closure captures: |index| (capture types/modes unresolved)
++ line 1386: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments/stack.rs	131	39	closure captures: |a| (capture types/modes unresolved)
++ line 1387: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments/stack.rs	149	27	closure captures: |state| (capture types/modes unresolved)
+```
+
+**`crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv` — 6 old rows, 7 replayed rows.**
+
+```text
+- line 1504: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	209	9	unexpanded macro eprintln! (ends at 212:10)
+- line 1505: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	263	13	unexpanded macro eprintln! (ends at 266:14)
+- line 1506: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	292	9	unexpanded macro eprintln! (ends at 298:10)
+- line 1507: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	300	9	unexpanded macro eprintln! (ends at 303:10)
+- line 1508: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	135	29	unexpanded macro format! (ends at 135:47)
+- line 1509: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	35	1	unexpanded macro thread_local! (ends at 41:2)
++ line 1504: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	220	9	unexpanded macro eprintln! (ends at 223:10)
++ line 1505: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	258	13	unexpanded macro eprintln! (ends at 261:14)
++ line 1506: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	287	9	unexpanded macro eprintln! (ends at 293:10)
++ line 1507: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	295	9	unexpanded macro eprintln! (ends at 298:10)
++ line 1508: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch/snapshot.rs	17	9	unexpanded macro assert_eq! (ends at 27:10)
++ line 1509: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	136	29	unexpanded macro format! (ends at 136:47)
++ line 1510: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	46	1	unexpanded macro thread_local! (ends at 56:2)
+```
+
+**`crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_storage.tsv` — 10 old rows, 12 replayed rows.**
+
+```text
+- line 62: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	28	35	rum_runtime::runtime::profiling::logical::epoch::Epoch.valid: foreign representation std::sync::atomic::AtomicBool: AtomicBool
+- line 63: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	29	38	rum_runtime::runtime::profiling::logical::epoch::Epoch.contexts: foreign representation std::sync::atomic::AtomicUsize: AtomicUsize
+- line 64: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	30	36	rum_runtime::runtime::profiling::logical::epoch::Epoch.faults: foreign representation std::sync::atomic::AtomicU64: AtomicU64
+- line 65: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	96	9	conditional public input signature logical_profile_test_span
+- line 66: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	128	9	conditional public input signature logical_profile_test_rows
+- line 67: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	156	9	conditional public input signature logical_profile_test_leases
+- line 68: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	163	9	conditional public input signature logical_profile_test_reset
+- line 69: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	168	9	conditional public input signature logical_profile_test_reasons
+- line 70: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	181	9	conditional public input signature logical_profile_test_pauses
+- line 71: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	14	12	rum_runtime::runtime::profiling::logical::segments::Active.start: foreign representation std::time::Instant: Instant
++ line 62: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	35	35	rum_runtime::runtime::profiling::logical::epoch::Epoch.valid: foreign representation std::sync::atomic::AtomicBool: AtomicBool
++ line 63: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	36	38	rum_runtime::runtime::profiling::logical::epoch::Epoch.contexts: foreign representation std::sync::atomic::AtomicUsize: AtomicUsize
++ line 64: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	37	36	rum_runtime::runtime::profiling::logical::epoch::Epoch.faults: foreign representation std::sync::atomic::AtomicU64: AtomicU64
++ line 65: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	97	9	conditional public input signature logical_profile_test_span
++ line 66: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	129	9	conditional public input signature logical_profile_test_rows
++ line 67: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	157	9	conditional public input signature logical_profile_test_leases
++ line 68: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	164	9	conditional public input signature logical_profile_test_assert_quiescent
++ line 69: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	171	9	conditional public input signature logical_profile_test_reset
++ line 70: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	176	9	conditional public input signature logical_profile_test_reasons
++ line 71: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	189	9	conditional public input signature logical_profile_test_pauses
++ line 72: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	13	12	rum_runtime::runtime::profiling::logical::segments::Active.start/std::option::Option[Own]/arg0: foreign representation std::time::Instant: Instant
++ line 73: UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/totals.rs	31	17	rum_runtime::runtime::profiling::logical::totals::ActiveId.thread: foreign representation std::thread::ThreadId: std :: thread :: ThreadId
+```
+
+
+All 68 local-contract rows change only their final fingerprint cell. Every
+other byte in each row is checked equal during replay. Each changed cell:
+
+| Contract row | Old fingerprint | Replayed fingerprint |
+| --- | --- | --- |
+| `B01` | `fnv1a64:6bf3d9d0b0fec720` | `fnv1a64:f546bc396ac3e95c` |
+| `B02` | `fnv1a64:c7879cb55b54928d` | `fnv1a64:d00bc92d244bc7d9` |
+| `B03` | `fnv1a64:879f8ba0c053ee8a` | `fnv1a64:7a5bfb12a01a0202` |
+| `B04` | `fnv1a64:4569116471c071a8` | `fnv1a64:4ada122c0f1d8c64` |
+| `B05` | `fnv1a64:b31fb25601e0ee59` | `fnv1a64:649632f6657e948d` |
+| `B06` | `fnv1a64:1ea593e06a096184` | `fnv1a64:621383daa7626398` |
+| `B07` | `fnv1a64:4256320e30a58d89` | `fnv1a64:1e435ed5abc61e5d` |
+| `B08` | `fnv1a64:781ef08794f5cef6` | `fnv1a64:1b35fdd284356866` |
+| `B09` | `fnv1a64:28cbb80f1574160c` | `fnv1a64:baa9b3e8603bd700` |
+| `B10` | `fnv1a64:11efcb0506f699af` | `fnv1a64:6194418f42d4a59f` |
+| `B11` | `fnv1a64:06c0c2c18bb497a8` | `fnv1a64:0c31c3892911b264` |
+| `B12` | `fnv1a64:e7d8380af17cab0c` | `fnv1a64:79b633e43c446c00` |
+| `I01` | `fnv1a64:49d5c4ce1db6bda0` | `fnv1a64:d328a736d77bdfdc` |
+| `I02` | `fnv1a64:0a612fe9fa177659` | `fnv1a64:bbd7b08a5db51c8d` |
+| `I03` | `fnv1a64:f6b70701ac95c64c` | `fnv1a64:e002cd3f681dd8c0` |
+| `I04` | `fnv1a64:3f538ca5540412ad` | `fnv1a64:e5a6e02e4cd29e79` |
+| `P01` | `fnv1a64:6e4d07ded28dc824` | `fnv1a64:5bca783dc90eef38` |
+| `P02` | `fnv1a64:250c610e407a793f` | `fnv1a64:b7ff55aaa715a4cf` |
+| `P03` | `fnv1a64:6a70e9c10d3f8842` | `fnv1a64:8f2346993e4f8d5a` |
+| `P04` | `fnv1a64:bc62bacadffdae8d` | `fnv1a64:c4e6e742a8f4e3d9` |
+| `P05` | `fnv1a64:b170cd19be5a4530` | `fnv1a64:0822dba2236b950c` |
+| `P06` | `fnv1a64:38575cdb7dac448c` | `fnv1a64:ca3558b4c8740580` |
+| `P070` | `fnv1a64:72a4f91d5c21be8c` | `fnv1a64:0482f4f6a6e97f80` |
+| `P080` | `fnv1a64:68a7cf7d69fc01ef` | `fnv1a64:36c95ae06cbfca5f` |
+| `P090` | `fnv1a64:e85b7dcd6bb8f7cd` | `fnv1a64:42eb31e4b209ec99` |
+| `P100` | `fnv1a64:494735ed9cf26058` | `fnv1a64:d034a00ffec1ef74` |
+| `P110` | `fnv1a64:dbe86b1e897c77c7` | `fnv1a64:298df18ae55af4b7` |
+| `P120` | `fnv1a64:502cfb4a0939fe16` | `fnv1a64:308c2a108ff40686` |
+| `P130` | `fnv1a64:e6238b6b5f596789` | `fnv1a64:c210b832da79f85d` |
+| `P140` | `fnv1a64:5fbd9b7762405805` | `fnv1a64:cbbb939370fae3b1` |
+| `P150` | `fnv1a64:fe560e4c6c6ea5ed` | `fnv1a64:9ebf0d41de9aaf39` |
+| `P071` | `fnv1a64:15fa81905d50ef29` | `fnv1a64:3d348a343d0b527d` |
+| `P081` | `fnv1a64:a3221c8e8c86432c` | `fnv1a64:a4ba307dbdd00d20` |
+| `P091` | `fnv1a64:5a4f2b567955b564` | `fnv1a64:f5f611233efda8f8` |
+| `P101` | `fnv1a64:d3eb5bebbee014c7` | `fnv1a64:2190e2581abe91b7` |
+| `P111` | `fnv1a64:e53fba1a2aae67fc` | `fnv1a64:2783d71be2e45890` |
+| `P121` | `fnv1a64:a8cc8342fd968873` | `fnv1a64:e11f6da1a8d9112b` |
+| `P131` | `fnv1a64:e31333caa8149328` | `fnv1a64:e88434924571ade4` |
+| `P141` | `fnv1a64:75d86945dbe32fc4` | `fnv1a64:a75cf78c7ee86358` |
+| `P151` | `fnv1a64:b84b2d5b1b7e3cd6` | `fnv1a64:3c5503eb968769c6` |
+| `B13` | `fnv1a64:acb627699aa61d84` | `fnv1a64:f0241763d7ff1f98` |
+| `R01` | `fnv1a64:7d628c79b2badc7d` | `fnv1a64:df13b5ddf4325ba9` |
+| `R02` | `fnv1a64:764f85a23e4ee882` | `fnv1a64:f22c64b66a7b901a` |
+| `R03` | `fnv1a64:b02f850bbd8df891` | `fnv1a64:426037d5eb6c1805` |
+| `R040` | `fnv1a64:4c70aa19ba92771d` | `fnv1a64:de4b836abb126649` |
+| `R050` | `fnv1a64:7b2ccf1148330a10` | `fnv1a64:45f0ae390182e26c` |
+| `R060` | `fnv1a64:4d9e30cbb51d3135` | `fnv1a64:51c4d60e1c7ba841` |
+| `R070` | `fnv1a64:0b8fe4a86e28022c` | `fnv1a64:0d27f8979f71cc20` |
+| `R080` | `fnv1a64:0657f5982388dbad` | `fnv1a64:acab49211c576779` |
+| `R090` | `fnv1a64:34af6b93bd529f98` | `fnv1a64:d80be939e572cd34` |
+| `R100` | `fnv1a64:4cc52ff36a29990a` | `fnv1a64:3f819f6549efac82` |
+| `R110` | `fnv1a64:963f60a25148f577` | `fnv1a64:d9424491d0649dc7` |
+| `R041` | `fnv1a64:92ef8a93b1cddc84` | `fnv1a64:d65d7a8def26de98` |
+| `R051` | `fnv1a64:767dabe2f8e7044d` | `fnv1a64:d10d5ffa3f37f919` |
+| `R061` | `fnv1a64:6b84e8df7a10ac86` | `fnv1a64:c57a00f9b045ae96` |
+| `R071` | `fnv1a64:7058ff9c4ae24b7b` | `fnv1a64:95e9a2f611eb69b3` |
+| `R081` | `fnv1a64:05319f42389e3558` | `fnv1a64:8c1f09649a6dc474` |
+| `R091` | `fnv1a64:3f2e90b3a70ba4c5` | `fnv1a64:cbfe44264c997cf1` |
+| `R101` | `fnv1a64:8a3a064690344c75` | `fnv1a64:d9dd5c540b306601` |
+| `R111` | `fnv1a64:e197e18471745a7e` | `fnv1a64:573de08b28b5294e` |
+| `R12` | `fnv1a64:324b4c7529f71b3e` | `fnv1a64:c1dab0aad4e6da8e` |
+| `R13` | `fnv1a64:cae01fffc641a99a` | `fnv1a64:b1e9045c20ba8b72` |
+| `R14` | `fnv1a64:639f446379a32058` | `fnv1a64:ea8cae85db72af74` |
+| `R15` | `fnv1a64:a1281c8a27f632d4` | `fnv1a64:b276fe32accd1208` |
+| `O010` | `fnv1a64:7f38cab49c7c27e6` | `fnv1a64:76871d0b35d24ef6` |
+| `O0200` | `fnv1a64:5a853d4bb0f77e05` | `fnv1a64:c6833567bfb209b1` |
+| `O011` | `fnv1a64:9026ed53c2aef5b5` | `fnv1a64:944d92962a0d6cc1` |
+| `O0210` | `fnv1a64:c9b2bdf935db849e` | `fnv1a64:fb0fd80de28f1a6e` |
+
+For `promoted.tsv`, both C01 and C02 retain every noncertificate field. Both
+active builds freshly earned the same two body rows, three production instance
+marks and four probe marks, with zero body rejections. The initial review
+tests each failed only because the old recorded certificate was stale; the
+new certificate cells were then copied. **Acceptance after that replay was
+not rerun before the scope STOP.** Full review rows are preserved in
+`promoted-review-default.tsv` and `promoted-review-no-default.tsv`.
+
+| Body | Certificate build | Old cell SHA-256 | Replayed cell SHA-256 |
+| --- | --- | --- | --- |
+| `C01` | default | `db8db41bcd5a10e374bb1a9ebe9cf4816b484249c55fbdcd35f9a58bf05767cd` | `b19771b645ca94611a795cea04ba7d8e0068f1f23420aae647fa013bc79cf4fd` |
+| `C01` | no-default | `fd13dbbf305cc7256ac9d02721ef2f465fd13c894da57bd44a1462a2fc30499b` | `6b6688d38fd6937bc10c4561b6b25dc3c25deadefc93cea93a7ae5733bf84da5` |
+| `C02` | default | `e7d663638966998bc9821b8b53f9bc05fe677e6982fdf6fefc5c2f9665247d9f` | `602c071ca0bf034782b6e511007f15202bfbb2b39f60859551a0f74871405247` |
+| `C02` | no-default | `40deb3febb83e999715dbf25dad69e1839464f5ce776c12bb784d22a376be14f` | `0e59110e973c4e4b590767f3e2325125a4f69febddaae9dfcd08174f866db94b` |
+
+Organization assessment: `logical/mod.rs` is 10,056 characters including its
+conditional native test-support block; it remains a cohesive entry/lifecycle
+facade. A future split boundary is that test-support API, leaving the runtime
+entry and boundary machinery together. No runtime algorithm was moved in C6.
+The new observer code is in the existing snapshot module (2,418 characters).
+The touched test files remain under 15k. `core.rs` remains 24,422 characters,
+and the shared driver remains 8,822; C4's accepted split assessment still
+applies.
+
+### 2. The engine and the entry, as built
+
+Continuation 6 preserves the accepted innermost-only engine, child-to-parent
+settlement, finite mode registry, marker-free guest queue and one generic body
+per driver. It adds no production timer, field, allocation, diagnostic gate,
+unsafe block, panic site or phase adoption.
+
+`Epoch::assert_quiescent` is a test/native observer. It scans the registry,
+sums each node's pending-child count, counts closed-but-unsettled nodes and
+open nodes, then checks those three numbers plus context leases and faults
+against zero. Its scan is per teardown observation, outside per-call/context
+work. The data lock is released before the assertion, so a caught failing
+control does not poison the epoch mutex.
+
+The scope blocker does not demonstrate a rooted-consumer ordering failure.
+Read-only inspection verifies both actual driver branches preserve
+`resume < pop < drop(completed_frame) < finalizer`; exact byte offsets and
+source-gate assumptions are in `source-gate-stop.json`. The worklist dispatches
+both `Ordinary` and `Profiled` to the same `abandon_frames<M>`, which calls
+`frame.abandon` and never `.resume`. The existing source test has not followed
+those accepted module/body boundaries.
+
+Concrete continuation scope needed: `suspension_protocol_repository_invariants_hold`
+in `crates/rum-runtime/src/runtime/tests/frame_root_trace.rs`, limited to
+following the driver module for resume/decode/pop/drop/finalizer checks,
+recognizing that specific core module in the pending-owner placement check,
+and following both mode dispatches to the single generic abandonment body.
+The no-resume check must cover the entry, worklist and shared body; all frame
+counts, closed protocols and other assertions remain intact. No such edit was
+made during this run.
+
+### 3. Route proofs and the structural falsifier
+
+The initial unfinished-child control closes the parent while its two
+descendants remain unsettled. The teardown check fails red with
+`(2, 1, 2, 0, 0)` instead of zero. The retained test catches that exact
+diagnostic, closes the descendants, and runs the same assertion green.
+Every existing six-order settlement test, bulk retirement case and single-record
+restore also ends with that structural check.
+
+The runtime `logical_` filter passes **30 tests, 2 ignored scaling probes**.
+The native host lifecycle and nested-pause test functions pass. The inherited
+19-route population and the two nested-pause cases are covered by the existing
+runtime/native tests; the native log has **16 explicit zero-teardown
+checkpoints** (14 lifecycle checkpoints, including combined interleaved-owner
+teardown, plus the two nested cases). Valid slot and structural queue routes
+also assert zeroes. Separate intentional instrumentation-fault controls keep
+their existing required-fault assertions.
+
+No receipt value changes in C6. The only value moved over the whole
+continuation line remains C5's authorized nested-cleanup pauses 2→3. Native
+nested-pause totals remain 2/4/4 and 2/3/3.
+
+Native receipts and teardown observations, verbatim:
+
+```text
+test logical_native_lifecycle ... LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE second-pause success closed-once pauses=2
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE error return throw closed-once
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE cancellation closed-once
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE session-reset abandoned-once
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE session-drop abandoned-once
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE interleaved moved-session closed-once
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE profile-reset active-call closed-once
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE failed-restore abandoned-once
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE rollback helper-discard abandoned-once
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE nested-cleanup re-suspended abandoned-once
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE typed-collection resumed completion
+test logical_native_nested_pause_counts ... LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE nested-pause source=LpSpan[LpSpan[InputString["one"]; InputString["two"]]] pauses=2,4,4
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+LP02_NATIVE nested-pause source=LpSpan[LpSpan[InputString["one"]]; InputString["two"]] pauses=2,3,3
+```
+
+
+### 4. Oracle and census
+
+LP01 oracle receipts executed in C6: **0 / 8,750**. The oracle did not run
+before the mandatory scope stop; no new parity or loss-cell result is claimed.
+All frozen oracle files remain unchanged. The method oracle likewise did not
+run, so there is no new rustc agreement count.
+
+Independent frontier discovery passes both finite-mode tests, reaches both
+explicit `abandon_frames` instances, and derives **952 = 10 RET001 + 915 RET002
++ 27 RET003**. All 960 accepted rows are accounted: 939 exact site/kind/reason
+pairs, 11 moved operation pairs, and 10 duplicate-loop removals, plus two new
+rejected mode-dispatch operations. The two receiver diagnostics whose reasons
+become more specific remain rejected. No coverage or retention mark is earned.
+
+Complete accounting of all 960 rows: [frontier/accepted-960-reconciliation.json](../../../.temp/brief-626/continuation-6/frontier/accepted-960-reconciliation.json).
+
+| Old site | New or surviving site | Disposition |
+| --- | --- | --- |
+| `crates/rum-runtime/src/runtime/suspension/core.rs:502:23-502:66` | `crates/rum-runtime/src/runtime/suspension/core.rs:488:23-488:66` | same take_for_abandon operation moved with module split |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:48:40-48:63` | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:69:30-69:53` | same ordinary operation moved into generic abandon_frames body; still rejected: method syntax: method receiver lacks checked nominal/place provenance → method syntax: opaque imported trait candidate std::sync::Arc |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:51:50-51:73` | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:74:42-74:65` | same ordinary operation moved into generic abandon_frames body |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:52:34-55:23` | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:75:26-78:15` | same ordinary operation moved into generic abandon_frames body |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:60:32-60:54` | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:83:24-83:46` | same ordinary operation moved into generic abandon_frames body |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:60:33-60:54` | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:83:25-83:46` | same ordinary operation moved into generic abandon_frames body; still rejected: method syntax: method receiver lacks checked nominal/place provenance → method syntax: prelude trait candidate is_empty cannot be excluded at rum_runtime::runtime::suspension::core::SuspendedEvaluation |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:61:59-61:88` | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:84:51-84:80` | same ordinary operation moved into generic abandon_frames body |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:63:37-63:74` | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:85:61-85:98` | same ordinary operation moved into generic abandon_frames body |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:64:33-64:75` | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:86:25-86:67` | same ordinary operation moved into generic abandon_frames body |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:73:37-73:75` | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:93:29-93:67` | same ordinary operation moved into generic abandon_frames body |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:69:32-69:95` | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:91:24-91:87` | same ordinary operation moved into generic abandon_frames body |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:105:52-105:88` | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:69:30-69:53` | duplicate enabled-loop operation coalesced into the one shared generic body; surviving operation remains rejected |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:108:42-108:65` | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:74:42-74:65` | duplicate enabled-loop operation coalesced into the one shared generic body; surviving operation remains rejected |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:109:26-112:15` | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:75:26-78:15` | duplicate enabled-loop operation coalesced into the one shared generic body; surviving operation remains rejected |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:117:24-117:46` | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:83:24-83:46` | duplicate enabled-loop operation coalesced into the one shared generic body; surviving operation remains rejected |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:117:25-117:46` | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:83:25-83:46` | duplicate enabled-loop operation coalesced into the one shared generic body; surviving operation remains rejected |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:118:51-118:80` | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:84:51-84:80` | duplicate enabled-loop operation coalesced into the one shared generic body; surviving operation remains rejected |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:119:61-119:98` | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:85:61-85:98` | duplicate enabled-loop operation coalesced into the one shared generic body; surviving operation remains rejected |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:120:25-120:67` | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:86:25-86:67` | duplicate enabled-loop operation coalesced into the one shared generic body; surviving operation remains rejected |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:127:29-127:67` | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:93:29-93:67` | duplicate enabled-loop operation coalesced into the one shared generic body; surviving operation remains rejected |
+| `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:125:24-125:87` | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:91:24-91:87` | duplicate enabled-loop operation coalesced into the one shared generic body; surviving operation remains rejected |
+| New | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:45:16-45:47` | RET002: method syntax: method receiver lacks checked nominal/place provenance |
+| New | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:68:36-68:71` | RET002: path M::abandon has 0 exact bindings |
+
+The guard follows environment take at 41, environment install at 42 and
+`capture_guest_form_environment` at 85. The third is LP01's actual line-60
+capture operation; it is not the later, accidentally coincident line-60
+`is_empty` rejection. The comment, total and per-kind map are updated in place
+without changing the census test's line count. The 28 sites newly seen versus
+the incomplete C3 frontier are the already-disclosed C5 set; this run accounts
+against the accepted 960, rather than treating that incomplete 926 as baseline.
+**The full `production_rejection_census_is_complete` acceptance test did not
+run before the scope stop.**
+
+### 5. All executed gates, verbatim
+
+Heavy commands ran serially through `scripts/run-bounded.py`, with a 900-second
+bound and `CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true
+TMPDIR=/home/remi/dev/rum/.temp/brief-626/tmp`. Each command below is the exact
+inner command captured by the gate wrapper. Raw logs contain the complete
+output; excerpts below preserve actual diagnostic, count and receipt lines.
+The certificate review's two expected stale-certificate failures are disclosed
+separately from its successful replay wrapper.
+
+**`c6-teardown-red` — exit 101.** [c6-teardown-red.log](../../../.temp/brief-626/logs/c6-teardown-red.log)
+
+```text
+cargo test --offline -p rum-runtime --lib logical_teardown_rejects_an_unsettled_child -- --nocapture
+```
+
+```text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+warning: function `register_test_if_builtin` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:320:27
+    |
+320 | pub(in crate::runtime) fn register_test_if_builtin(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` on by default
+
+warning: function `register_test_return_builtin` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:330:27
+    |
+330 | pub(in crate::runtime) fn register_test_return_builtin(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `register_test_vm_template_builtins` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:358:27
+    |
+358 | pub(in crate::runtime) fn register_test_vm_template_builtins(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `rum-runtime` (lib test) generated 3 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 23.32s
+     Running unittests src/lib.rs (target/debug/deps/rum_runtime-95cd5fbb46da4f1c)
+
+running 1 test
+test runtime::profiling::tests::logical_totals::logical_teardown_rejects_an_unsettled_child ... 
+thread 'runtime::profiling::tests::logical_totals::logical_teardown_rejects_an_unsettled_child' panicked at crates/rum-runtime/src/runtime/profiling/logical/epoch/snapshot.rs:17:9:
+assertion `left == right` failed: logical teardown: pending children, retained terminal parents, open records, context leases, faults
+  left: (2, 1, 2, 0, 0)
+ right: (0, 0, 0, 0, 0)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    runtime::profiling::tests::logical_totals::logical_teardown_rejects_an_unsettled_child
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1216 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p rum-runtime --lib`
+```
+
+**`c6-format` — exit 0.** [c6-format.log](../../../.temp/brief-626/logs/c6-format.log)
+
+```text
+rustfmt --edition 2024 crates/rum-runtime/src/runtime/profiling/logical/epoch/snapshot.rs crates/rum-runtime/src/runtime/profiling/logical/mod.rs crates/rum-runtime/src/runtime/profiling/tests/logical_totals.rs crates/rum-runtime/src/runtime/profiling/tests/queue_boundaries.rs crates/rum-runtime/src/runtime/profiling/tests/slot_boundary.rs crates/rum-host/tests/logical_profile_lifecycle.rs crates/rum-stdlib/src/tests/retention_closure/types/modes/projections.rs
+```
+
+```text
+No output; exit 0.
+```
+
+**`c6-logical-teardown` — exit 0.** [c6-logical-teardown.log](../../../.temp/brief-626/logs/c6-logical-teardown.log)
+
+```text
+cargo test --offline -p rum-runtime --lib logical_ -- --nocapture
+```
+
+```text
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 20.43s
+test result: ok. 30 passed; 0 failed; 2 ignored; 0 measured; 1185 filtered out; finished in 0.40s
+```
+
+**`c6-native-teardown` — exit 0.** [c6-native-teardown.log](../../../.temp/brief-626/logs/c6-native-teardown.log)
+
+```text
+cargo test --offline -p rum-host --test logical_profile_lifecycle -- --nocapture
+```
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 28.12s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.02s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.01s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+```
+
+**`c6-finite-frontier` — exit 0.** [c6-finite-frontier.log](../../../.temp/brief-626/logs/c6-finite-frontier.log)
+
+```text
+cargo test --offline -p rum-stdlib --lib finite_profile_ -- --nocapture
+```
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 46.54s
+test tests::retention_closure::local::type_tests::finite_profile_frontier_discovery ... LP02_FRONTIER_INSTANCE rum_runtime::runtime::model::session::Session::abandon_frames::<rum_runtime::runtime::suspension::core::profile_mode::Ordinary>
+LP02_FRONTIER_INSTANCE rum_runtime::runtime::model::session::Session::abandon_frames::<rum_runtime::runtime::suspension::core::profile_mode::Profiled>
+LP02_FRONTIER total=952 kinds={RET001: 10, RET002: 915, RET003: 27}
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1162 filtered out; finished in 24.71s
+```
+
+**`c6-ownership-discovery` — exit 0.** [c6-ownership-discovery.log](../../../.temp/brief-626/logs/c6-ownership-discovery.log)
+
+```text
+cargo test --offline -p rum-stdlib --lib discovery_report_without_inventory_input -- --nocapture
+```
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s
+test tests::ownership_graph::discovery_report_without_inventory_input ... UnknownHostPayload count: 79
+UnknownConstruct count: 7905
+Self-reaching type count: 61
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 6.02s
+```
+
+**`c6-ownership-preflight` — exit 0.** [c6-ownership-preflight.log](../../../.temp/brief-626/logs/c6-ownership-preflight.log)
+
+```text
+python3 .temp/brief-626/continuation-6/preflight-ownership.py
+```
+
+```text
+Preflight: 162 position moves; 141 new UnknownConstruct; missing=0; unmappable=0; new HostPayload=0
+```
+
+**`c6-ownership-replay` — exit 0.** [c6-ownership-replay.log](../../../.temp/brief-626/logs/c6-ownership-replay.log)
+
+```text
+python3 .temp/brief-626/continuation-6/replay-ownership.py
+```
+
+```text
+Ownership replay: 162 position moves; 141 new UnknownConstruct; 6 ledger position moves; new HostPayload=0
+New self-reaching rows: 2 all old59 preserved exactly; source witnesses from unchanged discovery:
+rum_runtime::runtime::profiling::logical::record::RecordPath	crates/rum-runtime/src/runtime/profiling/logical/record.rs	108	rum_runtime::runtime::profiling::logical::record::RecordPath.parent/std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0 -> rum_runtime::runtime::profiling::logical::record::RecordPath
+rum_runtime::runtime::profiling::logical::source_stack::Node	crates/rum-runtime/src/runtime/profiling/logical/source_stack.rs	5	rum_runtime::runtime::profiling::logical::source_stack::Node.parent/std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0 -> rum_runtime::runtime::profiling::logical::source_stack::Node
+```
+
+**`c6-fingerprints-generate` — exit 0.** [c6-fingerprints-generate.log](../../../.temp/brief-626/logs/c6-fingerprints-generate.log)
+
+```text
+cargo test --offline -p rum-stdlib --lib regenerate_local_contract_fingerprints -- --ignored --nocapture
+```
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.66s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 0.17s
+```
+
+**`c6-certificates-review` — exit 0.** [c6-certificates-review.log](../../../.temp/brief-626/logs/c6-certificates-review.log)
+
+```text
+python3 .temp/brief-626/continuation-6/review-certificates.py
+```
+
+```text
+default review generated; rejected=0; exit 101
+no-default review generated; rejected=0; exit 101
+Replayed C01/C02 certificate cells for both builds, preserving all other fields.
+```
+
+**`c6-final-fmt` — exit 0.** [c6-final-fmt.log](../../../.temp/brief-626/logs/c6-final-fmt.log)
+
+```text
+cargo fmt --check
+```
+
+```text
+No output; exit 0.
+```
+
+**`c6-final-profiling` — exit 0.** [c6-final-profiling.log](../../../.temp/brief-626/logs/c6-final-profiling.log)
+
+```text
+cargo test --offline -p rum-runtime --lib profiling
+```
+
+```text
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+test result: ok. 26 passed; 0 failed; 2 ignored; 0 measured; 1189 filtered out; finished in 0.32s
+```
+
+**`c6-final-typed` — exit 0.** [c6-final-typed.log](../../../.temp/brief-626/logs/c6-final-typed.log)
+
+```text
+cargo test --offline -p rum-runtime --lib suspension::typed::tests
+```
+
+```text
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 1193 filtered out; finished in 0.48s
+```
+
+**`c6-final-roots` — exit 101.** [c6-final-roots.log](../../../.temp/brief-626/logs/c6-final-roots.log)
+
+```text
+cargo test --offline -p rum-runtime --lib frame_root_trace
+```
+
+```text
+warning: function `register_test_if_builtin` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:320:27
+    |
+320 | pub(in crate::runtime) fn register_test_if_builtin(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` on by default
+
+warning: function `register_test_return_builtin` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:330:27
+    |
+330 | pub(in crate::runtime) fn register_test_return_builtin(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `register_test_vm_template_builtins` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:358:27
+    |
+358 | pub(in crate::runtime) fn register_test_vm_template_builtins(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `rum-runtime` (lib test) generated 3 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running unittests src/lib.rs (target/debug/deps/rum_runtime-95cd5fbb46da4f1c)
+
+running 15 tests
+test runtime::definitions::application::replace_all::plan::frame_root_trace_tests::rewrite_rule_plan_visits_the_exact_rule_roots ... ok
+test runtime::tests::frame_root_trace::derived_frame_root_trace_inventory_matches_the_closed_capture_graph ... ok
+test runtime::tests::frame_root_trace::manual_frame_root_trace_implementations_match_sorted_allowlist ... ok
+test runtime::tests::frame_root_trace::root_visitation::association_entry_form_visits_key_and_value_roots_in_field_order ... ok
+test runtime::tests::frame_root_trace::root_visitation::block_symbol_state_map_visits_the_bare_symbol_key ... ok
+test runtime::tests::frame_root_trace::root_visitation::container_implementations_visit_keys_values_and_elements ... ok
+test runtime::tests::frame_root_trace::root_visitation::enum_shapes_and_generic_arrays_trace_without_special_cases ... ok
+test runtime::tests::frame_root_trace::root_visitation::expr_is_one_whole_root_and_bare_symbol_is_an_independent_root ... ok
+test runtime::tests::frame_root_trace::root_visitation::file_io_error_is_the_zero_root_negative_calibration_target ... ok
+test runtime::tests::frame_root_trace::root_visitation::matcher_binding_table_visits_the_exact_symbol_and_expression_roots ... ok
+test runtime::tests::frame_root_trace::root_visitation::nested_derived_fields_are_all_traversed ... ok
+test runtime::tests::frame_root_trace::root_visitation::recursive_matcher_arg_visits_every_nested_root_exactly_once ... ok
+test runtime::tests::frame_root_trace::root_visitation::shared_expression_types_borrow_their_expression_roots ... ok
+test runtime::tests::frame_root_trace::suspension_oracle_fixture_population_is_exact ... ok
+test runtime::tests::frame_root_trace::suspension_protocol_repository_invariants_hold ... FAILED
+
+failures:
+
+---- runtime::tests::frame_root_trace::suspension_protocol_repository_invariants_hold stdout ----
+
+thread 'runtime::tests::frame_root_trace::suspension_protocol_repository_invariants_hold' panicked at crates/rum-runtime/src/runtime/tests/frame_root_trace.rs:441:14:
+driver should invoke the still-rooted front frame directly
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    runtime::tests::frame_root_trace::suspension_protocol_repository_invariants_hold
+
+test result: FAILED. 14 passed; 1 failed; 0 ignored; 0 measured; 1202 filtered out; finished in 1.52s
+
+error: test failed, to rerun pass `-p rum-runtime --lib`
+```
+
+**Certificate generation, default — inner cargo exit 101 (stale recorded cell).** [acceptance-review-default-final.log](../../../.temp/brief-626/continuation-6/acceptance-review-default-final.log)
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.87s
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::Unarmed;R=rum_stdlib::option_consumers::OptionConsumer;hash=true	0
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=rum_stdlib::option_consumers::OptionConsumer;hash=true	0
+C02	rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr;M=runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=none (nongeneric C02);hash=true	0
+LeaseProbe538::probe	sealed modes	0
+LeaseProbe538::start	sealed modes	0
+LeaseProbe538::drive	sealed modes	0
+LeaseProbe538::resume	sealed modes	0
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+called `Result::unwrap()` on an `Err` value: "stale or omitted instance certificate C01 hash=true"
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 18.90s
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+
+**Certificate generation, no-default — inner cargo exit 101 (stale recorded cell).** [acceptance-review-no-default-final.log](../../../.temp/brief-626/continuation-6/acceptance-review-no-default-final.log)
+
+```text
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 47.32s
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::Unarmed;R=rum_stdlib::option_consumers::OptionConsumer;hash=false	0
+C01	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>;M=rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=rum_stdlib::option_consumers::OptionConsumer;hash=false	0
+C02	rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr;M=runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow;R=none (nongeneric C02);hash=false	0
+LeaseProbe538::probe	sealed modes	0
+LeaseProbe538::start	sealed modes	0
+LeaseProbe538::drive	sealed modes	0
+LeaseProbe538::resume	sealed modes	0
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+called `Result::unwrap()` on an `Err` value: "stale or omitted instance certificate C01 hash=false"
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1157 filtered out; finished in 18.80s
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+
+
+Final focused results reached: fmt passes; profiling 26 passed/2 ignored;
+typed-frame tests 24 passed; frame-root tests 14 passed/1 failed. The first
+failing mandatory source-layout test ends the campaign. No new production
+warning appeared; the runtime lib-test build emitted only the three inherited
+unused test-builtin warnings. Full bar-4 coverage is not claimed because the
+workspace and remaining feature gates were not run.
+
+Not run after this STOP: resume-evaluation-context, both typed-slot censuses,
+ownership acceptance, local-production acceptance after certificate replay in
+both builds, full rejection census, rustc method oracle, LP01 oracle, workspace
+and native ZeroMQ tests. Consequently there are no new C6 native ZeroMQ skip
+receipts. The nine remain the director's native obligation.
+
+### 6. Measurements
+
+No C6 final performance campaign ran before the mandatory scope stop. The
+accepted C5 context probe (all three transitions within 1.001x) and engine API
+probe (maximum O(log n) ratio 1.98x; O(1) within 1.25x) were not recalibrated or
+represented as new final-source measurements. No C6 candidate binary was built
+or measured.
+
+The existing strong-owner falsifier does pass as part of the 30-test logical
+suite, checking push, widen, append and marker insertion. Its original red
+calibration remains preserved. The remaining final bars are unrun: all 313
+allocation/instruction/attribution/copy labels, 44 stack fits and resumed
+chains, 789 layouts, four timing panels, aligned timing, and candidate
+engine/context probe reruns.
+
+Fresh C6 measurement scaffolding is under `continuation-6/final/`, with original
+inputs and immutable baseline links and empty candidate/output directories.
+`probe-budget.json` states the bounded run populations. The frozen source
+manifest contains 1,522 input hashes. These are preparation artifacts, not
+measurement results; all prior accepted binaries and raw evidence remain
+preserved.
+
+### 7. Stop-loss counters, deviations and remaining work
+
+- One compiling C6 implementation attempt; **0 attempts without progress**.
+- Structural teardown falsifier: red demonstrated, then green with completed
+  children. Runtime 30 selected tests and both native test functions passed.
+- All 960 accepted frontier rows accounted; both finite-mode instances reached;
+  authorized guard/comment/total/map updates completed.
+- Ownership replay against the committed baseline completed, preserving all
+  identities/dispositions. All 68 fingerprints and both builds' C01/C02 cells
+  replayed; post-replay acceptance remains unrun.
+- C6 LP01 receipts: **0 / 8,750**. C6 method-oracle claims checked: **0**.
+- Final measurements newly run: **0**. The stop is the explicit scope rule,
+  not the progress-based two-attempt stop-loss.
+- No git command, network access, new unsafe, weakened assertion, phase
+  adoption, extra receipt change, semantic frame field or unapproved source
+  edit occurred.
+
+`source-gate-stop.json` identifies the actual failure and two later source
+assumptions. `state.json` and `PROGRESS.md` preserve the compiling scene and
+the exact next action: a director ruling on that existing source-layout test,
+then its faithful update and the still-outstanding final campaign. No gate or
+child process remains running. Earlier brief contents are preserved byte for
+byte, and the tree is left uncommitted.
+
+---
+
+## Director ruling and continuation 7 (2026-10-26) — source-reading gates follow the code they check
+
+**The stop is correct, and the miss is mine.** Continuation 3 let you split
+`core.rs` into `suspension/core/driver.rs` and its siblings, and let you
+write `abandon_frames<M>` once. I did not grant the tests that read those
+files as text. Also accepted from this run:
+
+- the inventories, replayed against HEAD;
+- the census reconciled, with all 960 rows accounted for, and 952 derived;
+- the structural teardown falsifier, first red and then green.
+
+**Grant, by class.** Any test under `crates/` that reads production source
+by path to check a textual invariant may follow the code it checks to the
+new file or function. That covers `tests/frame_root_trace.rs`,
+`tests/resume_evaluation_context.rs`, `tests/mod.rs`,
+`tests/session_requests/batch_boundary.rs`, `session/guest_loading/tests.rs`,
+and any other test the gates show reading moved code. The conditions:
+
+- **Every assertion keeps its strength.**
+  - The same ordering checks: resume, then pop, then drop, then finalize.
+  - The same forbidden patterns: no `.resume(` in abandonment, no raw
+    owner clear.
+  - The same required calls: `frame.abandon(` inside the single
+    abandonment body, and `drain_abandonment_worklist` reaching that body.
+- **Exemptions widen only to the files that replaced the one named.** For
+  example, the raw-owner placement exemption may name `core.rs` and
+  `core/driver.rs`, and nothing else.
+- **Disclose every edited assertion**, before and after, verbatim.
+- **STOP if an invariant fails on the code itself**, not merely on where
+  the code sits. Do not move runtime code to satisfy a textual check.
+
+**Then the final campaign**, unchanged from continuation 6:
+
+- the oracle with all 8 750 receipts;
+- the 19 native routes;
+- allocations, instructions with attribution, and copies on 313 labels;
+- the 44 stack fits and the resumed chains;
+- the 789 layouts;
+- timing and aligned timing;
+- bars 3 to 5;
+- the rustc method oracle, with its count;
+- the rejection census;
+- every remaining gate, including frame-root and post-replay acceptance.
+
+Everything else stands. Stop-loss as before.
+
+---
