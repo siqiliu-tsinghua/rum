@@ -3919,3 +3919,11413 @@ The only measurement orchestration error was a bookkeeping helper started before
 Own scratch is under `.temp/brief-626/`. Mandated pre-existing gates additionally write their fixed `target/brief-*` and `.temp/brief-*` artifact directories; those automatic paths were not repurposed as new scratch. The LP01 and canonical shell-gate artifacts were specifically backed up and restored. The seven-section report, all raw logs, hashes, per-label tables and exact next state are retained here.
 
 No git command or network operation was run, and no new unsafe was introduced. Manifests, lockfile, Expr/Symbol, public host types, all existing frame fields, AGENTS.md, TODO.md and other briefs remain unchanged. The tree is left uncommitted. The final scope/hash/unsafe audit is [final-audit.json](../../../.temp/brief-626/final-audit.json) and [continuation-scope-audit.json](../../../.temp/brief-626/continuation-scope-audit.json). Large existing core/queue files retain their responsibilities; new diagnostics, context/budget/segment code and insertion APIs are split into logical modules.
+
+---
+
+## Executing-agent continuation 2 report — final source attempt 3
+
+The record engine remains unadopted by every existing phase. The final source restores the private suspension namespaces, uses narrow runtime-only data re-exports, and keeps engine/test modules under their own parents. **The required gate set remains red on the pinned legacy rejection frontier.** The aligned timing probe also retains a 4.29% latency regression on deletecases-leaf-delete-small. Its native instruction control agrees within the unchanged variance gate and Callgrind rum work decreases; the cause of the latency regression remains unproved. The exact failures and every measured bar follow; no assertion was relaxed. This report supersedes earlier candidate verdicts without changing their text.
+
+### 1. Files changed and every inventory row change
+
+24 changed + 14 new = 38 authorized files; missing 0; outside scope 0. All earlier brief text is preserved.
+
+
+| File | Purpose |
+|---|---|
+| [crates/rum-runtime/src/runtime/profiling/mod.rs](../../../crates/rum-runtime/src/runtime/profiling/mod.rs) | Declare the inert logical engine. |
+| [crates/rum-runtime/src/runtime/profiling/reset.rs](../../../crates/rum-runtime/src/runtime/profiling/reset.rs) | Retire the logical epoch inside the existing enabled reset path. |
+| [crates/rum-runtime/src/runtime/profiling/summary.rs](../../../crates/rum-runtime/src/runtime/profiling/summary.rs) | Close session owners before enabled summary and expose epoch validity. |
+| [crates/rum-runtime/src/runtime/session/session_state.rs](../../../crates/rum-runtime/src/runtime/session/session_state.rs) | Pass the dropping session into enabled profiling teardown. |
+| [crates/rum-runtime/src/runtime/model/request_cancellation.rs](../../../crates/rum-runtime/src/runtime/model/request_cancellation.rs) | Expose enabled-only control generation without adding fields. |
+| [crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs](../../../crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs) | Cold capture/swap of source scopes for diagnostic leases. |
+| [crates/rum-runtime/src/runtime/suspension/typed/entry.rs](../../../crates/rum-runtime/src/runtime/suspension/typed/entry.rs) | Thin ProfileBoundary variant with explicit identity, projection, root, output, abandonment and no-guest-storage arms; raw observation lives under logical. |
+| [crates/rum-runtime/src/runtime/suspension/core.rs](../../../crates/rum-runtime/src/runtime/suspension/core.rs) | Preserve the ordinary driver and abandonment loops behind one enabled gate; outline the diagnostic driver and retain enabled frontier, slot and lifecycle proofs. |
+| [crates/rum-runtime/src/runtime/suspension/core/queue.rs](../../../crates/rum-runtime/src/runtime/suspension/core/queue.rs) | Keep ordinary queue algorithms and add enabled-only diagnostic representation/projections. |
+| [crates/rum-runtime/src/runtime/suspension/core/abandon.rs](../../../crates/rum-runtime/src/runtime/suspension/core/abandon.rs) | Restore the per-cell diagnostic context through the existing structural cleanup worklist. |
+| [crates/rum-runtime/src/runtime/debug_tools/resources/occurrence/suspension.rs](../../../crates/rum-runtime/src/runtime/debug_tools/resources/occurrence/suspension.rs) | Director-authorized independent guest-capacity projection and no-guest-storage marker arm. |
+| [crates/rum-runtime/src/runtime/profiling/logical/mod.rs](../../../crates/rum-runtime/src/runtime/profiling/logical/mod.rs) | Native call handle, thin marker lease, owner-pinned frontier and isolated test hooks. |
+| [crates/rum-runtime/src/runtime/profiling/logical/budget.rs](../../../crates/rum-runtime/src/runtime/profiling/logical/budget.rs) | Process/epoch diagnostic reservations, release accounting, initial-cap and TLS-lifetime tests. |
+| [crates/rum-runtime/src/runtime/profiling/logical/record.rs](../../../crates/rum-runtime/src/runtime/profiling/logical/record.rs) | Immutable identities, keys, owners, policies, terminal classes and reason counts. |
+| [crates/rum-runtime/src/runtime/profiling/logical/epoch.rs](../../../crates/rum-runtime/src/runtime/profiling/logical/epoch.rs) | Bounded open-record registry, aggregate rows, idempotent closes, invalidation and failed-allocation latch. |
+| [crates/rum-runtime/src/runtime/profiling/logical/segments.rs](../../../crates/rum-runtime/src/runtime/profiling/logical/segments.rs) | Thread-bound executing intervals, strict identity/LIFO checks, retained TLS reservation and idle non-allocating lookup. |
+| [crates/rum-runtime/src/runtime/profiling/logical/context.rs](../../../crates/rum-runtime/src/runtime/profiling/logical/context.rs) | Value-free ancestry/source leases, restoration, resumed segments and inherited pause telemetry. |
+| [crates/rum-runtime/src/runtime/profiling/logical/queue.rs](../../../crates/rum-runtime/src/runtime/profiling/logical/queue.rs) | Diagnostic cell deque plus original semantic guest queue preserving marker-free capacity history. |
+| [crates/rum-runtime/src/runtime/profiling/logical/queue_api.rs](../../../crates/rum-runtime/src/runtime/profiling/logical/queue_api.rs) | Explicit producer/consumer/return frontier insertion with owner/generation checks. |
+| [crates/rum-runtime/src/runtime/profiling/tests/engine_support.rs](../../../crates/rum-runtime/src/runtime/profiling/tests/engine_support.rs) | Serial isolated enabled-state support and bounded test accessors. |
+| [crates/rum-runtime/src/runtime/profiling/tests/record_engine.rs](../../../crates/rum-runtime/src/runtime/profiling/tests/record_engine.rs) | Idempotence, repeated-key identity, reset isolation, cap, strict marker peer and active-abandon interval proofs. |
+| [crates/rum-runtime/src/runtime/profiling/tests/slot_boundary.rs](../../../crates/rum-runtime/src/runtime/profiling/tests/slot_boundary.rs) | Raw Slot identity/channel/policy and Entry/EntryRef size proofs without codecs. |
+| [crates/rum-runtime/src/runtime/profiling/tests/queue_boundaries.rs](../../../crates/rum-runtime/src/runtime/profiling/tests/queue_boundaries.rs) | Real driver frontiers, six structural reasons, fault/resource-error and guest-capacity/cap proofs. |
+| [crates/rum-host/tests/logical_profile_lifecycle.rs](../../../crates/rum-host/tests/logical_profile_lifecycle.rs) | Native spans cover terminal routes, repeated pause counts, thread movement, reset/restore/helper/rollback/cleanup/typed-collection lifecycles. |
+| [crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payloads.tsv](../../../crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payloads.tsv) | Replay exact discovery: source coordinates and new touched-code UnknownConstructs; preserve old identities/statuses. |
+| [crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv](../../../crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv) | Replay exact discovery: source coordinates and new touched-code UnknownConstructs; preserve old identities/statuses. |
+| [crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv](../../../crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv) | Replay exact discovery: source coordinates and new touched-code UnknownConstructs; preserve old identities/statuses. |
+| [crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv](../../../crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv) | Replay exact discovery: source coordinates and new touched-code UnknownConstructs; preserve old identities/statuses. |
+| [crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_storage.tsv](../../../crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_storage.tsv) | Replay exact discovery: source coordinates and new touched-code UnknownConstructs; preserve old identities/statuses. |
+| [crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payload_ledger.tsv](../../../crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payload_ledger.tsv) | Replay eight corresponding source-coordinate fields; preserve all disposition/witness/exclusion/coverage fields. |
+| [crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv](../../../crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv) | Replay all68 generated fingerprint cells; preserve all other fields. |
+| [crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv](../../../crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv) | Replay generated C01/C02 default/no-default certificate cells only. |
+| [docs/dev/codex/brief-626-lp02-logical-profiler-record-engine.md](../../../docs/dev/codex/brief-626-lp02-logical-profiler-record-engine.md) | Append this execution report after final evidence; preserve all prior text. |
+| [crates/rum-runtime/src/runtime/suspension.rs](../../../crates/rum-runtime/src/runtime/suspension.rs) | Continuation2 module-tree cure with narrow runtime-only data re-exports while core and typed module parents stay private; preserve codec/adapter sealing. |
+| [crates/rum-runtime/src/runtime/suspension/typed.rs](../../../crates/rum-runtime/src/runtime/suspension/typed.rs) | Continuation 2 module-tree cure: runtime-only raw slot/state/entry re-exports, with codecs and adapter unchanged. |
+| [crates/rum-runtime/src/runtime/suspension/core/evaluation_context.rs](../../../crates/rum-runtime/src/runtime/suspension/core/evaluation_context.rs) | Continuation 2 module-tree cure: runtime-only queue-context access from the logical engine. |
+| [crates/rum-runtime/src/runtime/profiling/tests/mod.rs](../../../crates/rum-runtime/src/runtime/profiling/tests/mod.rs) | Declare the isolated engine tests from their own profiling/tests parent. |
+| [crates/rum-stdlib/src/tests/ownership_graph/inventory/self_reaching.tsv](../../../crates/rum-stdlib/src/tests/ownership_graph/inventory/self_reaching.tsv) | Standing replay: two newly resolved conservative type-cycle witnesses for the in-scope FrameQueue/ProfileQueue representation; all59 original rows unchanged. |
+
+
+All inventories were regenerated from discovery. Existing identities, statuses, dispositions and exclusions were preserved; new touched-code unknowns stay unknown. The 59 original self-reaching rows remain byte-identical; the two new conservative FrameQueue/ProfileQueue type-cycle witnesses describe a finite owned Box representation, not a registry/marker ownership cycle. The full replay, source coordinates, fingerprints and certificate evidence are retained under [continuation-2](../../../.temp/brief-626/continuation-2).
+
+<details>
+<summary>Every original-to-final inventory row change</summary>
+
+````diff
+--- original/crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payloads.tsv
++++ candidate/crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payloads.tsv
+@@ -52,6 +52,6 @@
+-UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	124	21	rum_runtime::runtime::suspension::core::FrameAction.Evaluate.next_frame/std::sync::Arc[LastStrongHolder]/arg0/alias(rum_runtime::runtime::suspension::core::DynSuspensionFrame): opaque owned payload dyn SuspensionFrame
+-UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	126	14	rum_runtime::runtime::suspension::core::FrameAction.Finalize.0/std::boxed::Box[Own]/arg0: opaque owned payload dyn PureFrameFinalizer
+-UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	136	48	public input rum_runtime::runtime::suspension::core::impl(FrameAction)@129::evaluate(next_frame): opaque owned generic parameter F where F : SuspensionFrame ,
+-UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	147	35	public input rum_runtime::runtime::suspension::core::impl(FrameAction)@129::finalize(finalizer): opaque owned generic parameter F where F : PureFrameFinalizer ,
+-UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	520	57	public input rum_runtime::runtime::suspension::core::impl(Session)@464::insert_suspension_frame(frame): opaque owned generic parameter F where F : SuspensionFrame ,
+-UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core/queue.rs	6	12	rum_runtime::runtime::suspension::core::queue::FrameQueue.Legacy.0/std::collections::VecDeque[Own]/arg0/rum_runtime::runtime::suspension::core::evaluation_context::Queued<arg0> via payload/std::sync::Arc[LastStrongHolder]/arg0/alias(rum_runtime::runtime::suspension::core::DynSuspensionFrame): opaque owned payload dyn SuspensionFrame
++UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	130	21	rum_runtime::runtime::suspension::core::FrameAction.Evaluate.next_frame/std::sync::Arc[LastStrongHolder]/arg0/alias(rum_runtime::runtime::suspension::core::DynSuspensionFrame): opaque owned payload dyn SuspensionFrame
++UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	132	14	rum_runtime::runtime::suspension::core::FrameAction.Finalize.0/std::boxed::Box[Own]/arg0: opaque owned payload dyn PureFrameFinalizer
++UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	142	48	public input rum_runtime::runtime::suspension::core::impl(FrameAction)@135::evaluate(next_frame): opaque owned generic parameter F where F : SuspensionFrame ,
++UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	153	35	public input rum_runtime::runtime::suspension::core::impl(FrameAction)@135::finalize(finalizer): opaque owned generic parameter F where F : PureFrameFinalizer ,
++UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	547	57	public input rum_runtime::runtime::suspension::core::impl(Session)@482::insert_suspension_frame(frame): opaque owned generic parameter F where F : SuspensionFrame ,
++UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core/queue.rs	7	12	rum_runtime::runtime::suspension::core::queue::FrameQueue.Legacy.0/std::collections::VecDeque[Own]/arg0/rum_runtime::runtime::suspension::core::evaluation_context::Queued<arg0> via payload/std::sync::Arc[LastStrongHolder]/arg0/alias(rum_runtime::runtime::suspension::core::DynSuspensionFrame): opaque owned payload dyn SuspensionFrame
+@@ -67,2 +67,2 @@
+-UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	10	12	rum_runtime::runtime::suspension::typed::entry::Entry.Legacy.0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn SuspensionFrame
+-UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	11	11	rum_runtime::runtime::suspension::typed::entry::Entry.Typed.0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame
++UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	11	12	rum_runtime::runtime::suspension::typed::entry::Entry.Legacy.0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn SuspensionFrame
++UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	12	11	rum_runtime::runtime::suspension::typed::entry::Entry.Typed.0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame
+--- original/crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv
++++ candidate/crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv
+@@ -755,51 +755,62 @@
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	108	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	114	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	124	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	130	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	136	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	143	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	149	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	156	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	166	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	172	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	178	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	185	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	193	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	202	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	208	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	219	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	229	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	241	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	250	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	257	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	269	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	277	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	284	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	296	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	304	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	312	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	319	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	325	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	333	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	339	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	345	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	351	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	359	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	366	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	374	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	381	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	395	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	402	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	411	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	417	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	431	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	442	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	452	1	unresolved attribute/expansion derive (Clone , Copy , Debug)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	458	1	unresolved attribute/expansion derive (Clone , Copy , Debug)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	474	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	483	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	510	1	unresolved attribute/expansion derive (Clone , Copy , Debug)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	520	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	530	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	556	1	unresolved attribute/expansion cfg (any (test , feature = "test-continuation-slots"))
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	559	1	unresolved attribute/expansion cfg (any (test , feature = "test-continuation-slots"))
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	12	1	unresolved attribute/expansion derive (Default)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	226	5	unresolved attribute/expansion cfg (any (test , feature = "test-builtin-memory-growth" , feature = "test-continuation-slots"))
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	70	1	unresolved attribute/expansion derive (Clone)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	88	1	unresolved attribute/expansion cfg (any (test , feature = "test-builtin-memory-growth" , feature = "test-continuation-slots"))
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	4	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	6	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	8	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	11	1	unresolved attribute/expansion derive (Clone)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	26	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	49	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	60	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	71	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	110	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	113	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	119	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	129	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	135	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	141	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	148	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	154	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	161	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	171	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	177	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	183	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	190	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	198	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	207	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	213	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	224	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	234	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	246	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	255	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	262	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	274	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	282	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	289	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	301	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	309	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	317	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	324	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	330	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	338	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	344	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	350	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	356	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	364	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	371	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	379	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	386	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	400	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	407	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	416	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	422	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	436	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	447	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	457	1	unresolved attribute/expansion derive (Clone , Copy , Debug)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	463	1	unresolved attribute/expansion derive (Clone , Copy , Debug)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	479	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	488	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	515	1	unresolved attribute/expansion derive (Clone , Copy , Debug)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	525	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	535	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
+@@ -806,0 +818,2 @@
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	564	1	unresolved attribute/expansion cfg (any (test , feature = "test-continuation-slots"))
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	566	1	unresolved attribute/expansion cfg (any (test , feature = "test-continuation-slots"))
+@@ -933 +946 @@
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	238	13	unresolved attribute/expansion cfg (any (test , feature = "test-continuation-slots"))
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	256	13	unresolved attribute/expansion cfg (any (test , feature = "test-continuation-slots"))
+@@ -945 +958 @@
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	8	1	unresolved attribute/expansion derive (Clone)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	9	1	unresolved attribute/expansion derive (Clone)
+--- original/crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv
++++ candidate/crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv
+@@ -552,15 +552,18 @@
+-UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	39	46	closure captures: |stack| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	42	46	closure captures: |depth| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	54	42	closure captures: |stack| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	57	42	closure captures: |depth| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	71	42	closure captures: |stack| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	122	42	closure captures: |stack| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	134	60	closure captures: |stack| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	142	21	closure captures: |frame| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	143	18	closure captures: |frame| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	200	43	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	239	38	closure captures: |stack| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	264	51	closure captures: |stack| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	281	43	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	323	43	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	346	43	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	35	53	closure captures: |s| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	41	46	closure captures: |d| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	42	57	closure captures: |s| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	52	46	closure captures: |stack| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	55	46	closure captures: |depth| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	67	42	closure captures: |stack| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	70	42	closure captures: |depth| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	84	42	closure captures: |stack| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	135	42	closure captures: |stack| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	147	60	closure captures: |stack| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	155	21	closure captures: |frame| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	156	18	closure captures: |frame| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	213	43	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	252	38	closure captures: |stack| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	277	51	closure captures: |stack| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	294	43	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	336	43	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	359	43	closure captures: |stats| (capture types/modes unresolved)
+@@ -1313,0 +1317,68 @@
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/budget.rs	22	61	closure captures: |old| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/budget.rs	23	43	closure captures: |new| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	32	59	closure captures: |s| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	33	49	closure captures: |s| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	34	52	closure captures: |s| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	45	23	closure captures: |(e , r)| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	45	50	closure captures: |(owner , _ , _)| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	48	21	closure captures: |(e , r)| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	50	51	closure captures: |owner| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	52	42	closure captures: |(candidate , _ , _)| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	55	18	closure captures: |(_ , r)| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	89	30	closure captures: |s| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	91	51	closure captures: |s| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	93	54	closure captures: |s| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	94	46	closure captures: |d| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	95	36	closure captures: |d| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	96	39	closure captures: |d| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	123	46	closure captures: |d| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	124	36	closure captures: |d| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	125	39	closure captures: |d| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	126	57	closure captures: |s| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	127	47	closure captures: |s| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	128	50	closure captures: |s| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	137	65	closure captures: |n| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	22	25	closure captures: || (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	93	22	closure captures: |r| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	103	23	closure captures: |r| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	149	56	closure captures: |r| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	167	19	closure captures: |r| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	168	18	closure captures: |r| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	173	53	closure captures: |r| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	173	73	closure captures: |r| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	183	53	closure captures: |r| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	183	73	closure captures: |r| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	237	18	closure captures: |r| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	32	26	closure captures: |(owner , _ , _)| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	54	45	closure captures: |(_ , _ , p)| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	130	18	closure captures: |e| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	133	26	closure captures: |(key , c)| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	158	18	closure captures: |e| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	183	18	closure captures: |e| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	183	42	closure captures: |(_ , c)| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/queue.rs	36	21	closure captures: |entry| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/queue.rs	87	18	closure captures: |n| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/queue.rs	94	23	closure captures: |n| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/queue.rs	139	58	closure captures: |c| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/queue_api.rs	35	46	closure captures: |f| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/queue_api.rs	47	18	closure captures: |f| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/queue_api.rs	48	29	closure captures: || (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	42	24	closure captures: |stack| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	46	18	closure captures: |s| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	56	24	closure captures: |stack| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	57	38	closure captures: |s| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	59	55	closure captures: || (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	73	24	closure captures: |stack| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	73	56	closure captures: |s| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	81	28	closure captures: |stack| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	101	43	closure captures: |stack| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	104	31	closure captures: |state| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	131	27	closure captures: |state| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	150	32	closure captures: |stack| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	151	60	closure captures: |s| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	160	35	closure captures: |state| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	164	31	closure captures: |state| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	171	34	closure captures: |(_ , id , _)| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	194	36	closure captures: |stack| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	199	19	closure captures: |s| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	200	18	closure captures: |s| (capture types/modes unresolved)
+@@ -1459,7 +1530,5 @@
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	64	31	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	65	33	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	66	39	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	67	34	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	68	33	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	69	38	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	70	32	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	66	31	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	67	33	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	68	39	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	69	34	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	70	33	closure captures: |stats| (capture types/modes unresolved)
+@@ -1467,24 +1536,26 @@
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	72	45	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	73	44	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	74	31	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	75	37	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	76	43	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	77	35	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	78	41	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	79	38	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	80	32	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	81	39	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	82	36	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	83	31	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	84	31	closure captures: |stack| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	85	36	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	86	36	closure captures: |stack| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	87	46	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	88	41	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	89	36	closure captures: |stats| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	90	32	closure captures: |stack| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	91	32	closure captures: |depth| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	92	35	closure captures: |stack| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	93	35	closure captures: |depth| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	94	42	closure captures: |stack| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	95	42	closure captures: |depth| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	72	32	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	73	38	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	74	45	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	75	44	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	76	31	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	77	37	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	78	43	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	79	35	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	80	41	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	81	38	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	82	32	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	83	39	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	84	36	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	85	31	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	86	31	closure captures: |stack| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	87	36	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	88	36	closure captures: |stack| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	89	46	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	90	41	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	91	36	closure captures: |stats| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	92	32	closure captures: |stack| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	93	32	closure captures: |depth| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	94	35	closure captures: |stack| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	95	35	closure captures: |depth| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	96	42	closure captures: |stack| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	97	42	closure captures: |depth| (capture types/modes unresolved)
+@@ -1789,11 +1860,23 @@
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	215	27	closure captures: |frame| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	220	27	closure captures: |frame| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	261	33	closure captures: |owner| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	708	22	closure captures: |cell| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	711	30	closure captures: |failure| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	742	48	closure captures: |value| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	742	73	closure captures: |()| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	776	43	closure captures: |()| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	787	48	closure captures: |value| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	787	73	closure captures: |()| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	825	43	closure captures: |()| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	217	62	closure captures: |c| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	218	31	closure captures: |cell| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	233	27	closure captures: |frame| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	238	27	closure captures: |frame| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	279	33	closure captures: |owner| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	748	22	closure captures: |cell| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	751	30	closure captures: |failure| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	783	48	closure captures: |value| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	783	73	closure captures: |()| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	817	43	closure captures: |()| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	828	48	closure captures: |value| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	828	73	closure captures: |()| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	866	43	closure captures: |()| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	915	27	closure captures: |s| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	916	27	closure captures: |context| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	921	22	closure captures: |cell| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	924	30	closure captures: |failure| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	962	48	closure captures: |value| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	962	73	closure captures: |()| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	996	43	closure captures: |()| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	1007	48	closure captures: |value| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	1007	73	closure captures: |()| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	1045	43	closure captures: |()| (capture types/modes unresolved)
+@@ -1801,5 +1884,10 @@
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	21	47	closure captures: |cell| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	82	56	closure captures: |cell| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	86	55	closure captures: |cell| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	96	60	closure captures: |cell| (capture types/modes unresolved)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	207	68	closure captures: |cell| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	47	53	closure captures: |c| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	59	23	closure captures: |c| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	60	22	closure captures: |c| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	68	59	closure captures: |c| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	181	56	closure captures: |cell| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	185	55	closure captures: |cell| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	196	60	closure captures: |cell| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	325	68	closure captures: |cell| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	366	43	closure captures: |cell| (capture types/modes unresolved)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	419	29	closure captures: |c| (capture types/modes unresolved)
+--- original/crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv
++++ candidate/crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv
+@@ -1019,2 +1019,2 @@
+-UnknownConstruct	crates/rum-runtime/src/runtime/model/request_cancellation.rs	190	9	unexpanded macro matches! (ends at 193:10)
+-UnknownConstruct	crates/rum-runtime/src/runtime/model/request_cancellation.rs	219	5	unexpanded macro debug_assert! (ends at 219:62)
++UnknownConstruct	crates/rum-runtime/src/runtime/model/request_cancellation.rs	196	9	unexpanded macro matches! (ends at 199:10)
++UnknownConstruct	crates/rum-runtime/src/runtime/model/request_cancellation.rs	225	5	unexpanded macro debug_assert! (ends at 225:62)
+@@ -1502,0 +1503,11 @@
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/budget.rs	58	9	unexpanded macro debug_assert_eq! (ends at 58:66)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	153	9	unexpanded macro debug_assert_eq! (ends at 153:64)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	198	9	unexpanded macro eprintln! (ends at 201:10)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	255	13	unexpanded macro eprintln! (ends at 258:14)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	284	9	unexpanded macro eprintln! (ends at 290:10)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	292	9	unexpanded macro eprintln! (ends at 295:10)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	135	29	unexpanded macro format! (ends at 135:47)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/queue.rs	62	40	unexpanded macro unreachable! (ends at 62:88)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/queue.rs	182	13	unexpanded macro matches! (ends at 182:67)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/queue.rs	187	13	unexpanded macro debug_assert! (ends at 187:75)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	21	1	unexpanded macro thread_local! (ends at 28:2)
+@@ -1537,2 +1548,2 @@
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	8	5	unexpanded macro macro_rules! (ends at 12:6)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	14	5	unexpanded macro reset! (ends at 62:6)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	10	5	unexpanded macro macro_rules! (ends at 14:6)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/reset.rs	16	5	unexpanded macro reset! (ends at 64:6)
+@@ -1540,13 +1551,13 @@
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	27	9	unexpanded macro eprintln! (ends at 27:64)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	40	5	unexpanded macro eprintln! (ends at 48:6)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	52	5	unexpanded macro eprintln! (ends at 57:6)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	58	5	unexpanded macro eprintln! (ends at 63:6)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	64	5	unexpanded macro eprintln! (ends at 68:6)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	69	5	unexpanded macro eprintln! (ends at 77:6)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	78	5	unexpanded macro eprintln! (ends at 86:6)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	87	5	unexpanded macro eprintln! (ends at 96:6)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	97	5	unexpanded macro eprintln! (ends at 106:6)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	107	5	unexpanded macro eprintln! (ends at 114:6)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	115	5	unexpanded macro eprintln! (ends at 125:6)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	126	5	unexpanded macro eprintln! (ends at 138:6)
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	139	5	unexpanded macro eprintln! (ends at 148:6)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	30	9	unexpanded macro eprintln! (ends at 30:64)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	43	5	unexpanded macro eprintln! (ends at 51:6)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	56	5	unexpanded macro eprintln! (ends at 61:6)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	62	5	unexpanded macro eprintln! (ends at 67:6)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	68	5	unexpanded macro eprintln! (ends at 72:6)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	73	5	unexpanded macro eprintln! (ends at 81:6)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	82	5	unexpanded macro eprintln! (ends at 90:6)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	91	5	unexpanded macro eprintln! (ends at 100:6)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	101	5	unexpanded macro eprintln! (ends at 110:6)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	111	5	unexpanded macro eprintln! (ends at 118:6)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	119	5	unexpanded macro eprintln! (ends at 129:6)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	130	5	unexpanded macro eprintln! (ends at 142:6)
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/summary.rs	143	5	unexpanded macro eprintln! (ends at 152:6)
+@@ -1796 +1806,0 @@
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	265	9	unexpanded macro assert! (ends at 268:10)
+@@ -1798,7 +1808,11 @@
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	584	9	unexpanded macro debug_assert! (ends at 584:57)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	592	9	unexpanded macro assert! (ends at 595:10)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	617	9	unexpanded macro debug_assert! (ends at 620:10)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	682	17	unexpanded macro debug_assert! (ends at 682:66)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	806	21	unexpanded macro debug_assert! (ends at 806:76)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	810	29	unexpanded macro unreachable! (ends at 810:79)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	869	1	unexpanded macro macro_rules! (ends at 886:2)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	301	9	unexpanded macro assert! (ends at 304:10)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	611	9	unexpanded macro debug_assert! (ends at 611:57)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	619	9	unexpanded macro assert! (ends at 622:10)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	644	9	unexpanded macro debug_assert! (ends at 647:10)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	709	17	unexpanded macro debug_assert! (ends at 709:66)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	765	49	unexpanded macro unreachable! (ends at 765:99)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	847	21	unexpanded macro debug_assert! (ends at 847:76)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	851	29	unexpanded macro unreachable! (ends at 851:79)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	1026	21	unexpanded macro debug_assert! (ends at 1026:76)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	1030	29	unexpanded macro unreachable! (ends at 1030:79)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	1092	1	unexpanded macro macro_rules! (ends at 1109:2)
+@@ -1806 +1820,2 @@
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	66	28	unexpanded macro matches! (ends at 66:91)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	69	32	unexpanded macro matches! (ends at 69:95)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	125	24	unexpanded macro matches! (ends at 125:87)
+@@ -1808,2 +1823,21 @@
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	25	13	unexpanded macro unreachable! (ends at 25:27)
+-UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	124	17	unexpanded macro unreachable! (ends at 124:76)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	16	12	unexpanded macro matches! (ends at 16:45)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	28	13	unexpanded macro matches! (ends at 28:46)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	32	13	unexpanded macro unreachable! (ends at 32:27)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	59	27	unexpanded macro matches! (ends at 59:87)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	99	13	unexpanded macro unreachable! (ends at 99:27)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	214	22	unexpanded macro unreachable! (ends at 214:81)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	229	17	unexpanded macro unreachable! (ends at 229:76)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	319	12	unexpanded macro matches! (ends at 319:45)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	319	49	unexpanded macro matches! (ends at 319:84)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	327	34	unexpanded macro unreachable! (ends at 327:87)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	334	12	unexpanded macro matches! (ends at 334:68)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	337	12	unexpanded macro matches! (ends at 337:70)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	340	13	unexpanded macro matches! (ends at 340:46)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	340	51	unexpanded macro matches! (ends at 340:86)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	346	18	unexpanded macro unreachable! (ends at 346:32)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	363	13	unexpanded macro unreachable! (ends at 363:27)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	389	13	unexpanded macro unreachable! (ends at 389:27)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	397	42	unexpanded macro unreachable! (ends at 397:88)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	399	33	unexpanded macro matches! (ends at 399:73)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	417	13	unexpanded macro unreachable! (ends at 417:27)
++UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	429	13	unexpanded macro unreachable! (ends at 429:27)
+--- original/crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_storage.tsv
++++ candidate/crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_storage.tsv
+@@ -60,2 +60,14 @@
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	465	12	rum_runtime::runtime::profiling::BuiltinTimingToken.start: foreign representation std::time::Instant: Instant
+-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	470	12	rum_runtime::runtime::profiling::RuntimePathTimingToken.start: foreign representation std::time::Instant: Instant
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/budget.rs	11	12	rum_runtime::runtime::profiling::logical::budget::Budget.bytes: foreign representation std::sync::atomic::AtomicUsize: AtomicUsize
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	12	16	rum_runtime::runtime::profiling::logical::context::Context.executing: foreign representation std::sync::atomic::AtomicBool: AtomicBool
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	27	35	rum_runtime::runtime::profiling::logical::epoch::Epoch.valid: foreign representation std::sync::atomic::AtomicBool: AtomicBool
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	28	38	rum_runtime::runtime::profiling::logical::epoch::Epoch.contexts: foreign representation std::sync::atomic::AtomicUsize: AtomicUsize
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	29	36	rum_runtime::runtime::profiling::logical::epoch::Epoch.faults: foreign representation std::sync::atomic::AtomicU64: AtomicU64
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	96	9	conditional public input signature logical_profile_test_span
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	128	9	conditional public input signature logical_profile_test_rows
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	156	9	conditional public input signature logical_profile_test_leases
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	163	9	conditional public input signature logical_profile_test_reset
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	168	9	conditional public input signature logical_profile_test_reasons
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	181	9	conditional public input signature logical_profile_test_pauses
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	12	12	rum_runtime::runtime::profiling::logical::segments::Active.start: foreign representation std::time::Instant: Instant
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	470	12	rum_runtime::runtime::profiling::BuiltinTimingToken.start: foreign representation std::time::Instant: Instant
++UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	475	12	rum_runtime::runtime::profiling::RuntimePathTimingToken.start: foreign representation std::time::Instant: Instant
+--- original/crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payload_ledger.tsv
++++ candidate/crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payload_ledger.tsv
+@@ -53,6 +53,6 @@
+-UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core/queue.rs	6	12	rum_runtime::runtime::suspension::core::queue::FrameQueue.Legacy.0/std::collections::VecDeque[Own]/arg0/rum_runtime::runtime::suspension::core::evaluation_context::Queued<arg0> via payload/std::sync::Arc[LastStrongHolder]/arg0/alias(rum_runtime::runtime::suspension::core::DynSuspensionFrame): opaque owned payload dyn SuspensionFrame	Unbounded	rum_runtime::runtime::suspension::core::SuspensionFrame => rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame (impl at crates/rum-runtime/src/runtime/accounting_mode/continuation.rs:12:1); rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame.args -> rum_core::expr::SharedArgs	TODO.md#standing-engineering-debt	unresolved
+-UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	124	21	rum_runtime::runtime::suspension::core::FrameAction.Evaluate.next_frame/std::sync::Arc[LastStrongHolder]/arg0/alias(rum_runtime::runtime::suspension::core::DynSuspensionFrame): opaque owned payload dyn SuspensionFrame	Unbounded	rum_runtime::runtime::suspension::core::SuspensionFrame => rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame (impl at crates/rum-runtime/src/runtime/accounting_mode/continuation.rs:12:1); rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame.args -> rum_core::expr::SharedArgs	TODO.md#standing-engineering-debt	unresolved
+-UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	126	14	rum_runtime::runtime::suspension::core::FrameAction.Finalize.0/std::boxed::Box[Own]/arg0: opaque owned payload dyn PureFrameFinalizer	Unbounded	rum_runtime::runtime::suspension::core::PureFrameFinalizer => rum_runtime::runtime::debug_tools::reap::FinishReapBucketsFinalizer (impl at crates/rum-runtime/src/runtime/debug_tools/reap.rs:284:1); rum_runtime::runtime::debug_tools::reap::FinishReapBucketsFinalizer.rendered -> rum_runtime::runtime::debug_tools::reap_state::ReapRenderAccumulator ; rum_runtime::runtime::debug_tools::reap_state::ReapRenderAccumulator.prefix -> rum_core::expr::SharedArgs	TODO.md#standing-engineering-debt	unresolved
+-UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	136	48	public input rum_runtime::runtime::suspension::core::impl(FrameAction)@129::evaluate(next_frame): opaque owned generic parameter F where F : SuspensionFrame ,	PublicInput	public by-value input; owning storage sites are separate rows	-	-
+-UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	147	35	public input rum_runtime::runtime::suspension::core::impl(FrameAction)@129::finalize(finalizer): opaque owned generic parameter F where F : PureFrameFinalizer ,	PublicInput	public by-value input; owning storage sites are separate rows	-	-
+-UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	520	57	public input rum_runtime::runtime::suspension::core::impl(Session)@464::insert_suspension_frame(frame): opaque owned generic parameter F where F : SuspensionFrame ,	PublicInput	public by-value input; owning storage sites are separate rows	-	-
++UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core/queue.rs	7	12	rum_runtime::runtime::suspension::core::queue::FrameQueue.Legacy.0/std::collections::VecDeque[Own]/arg0/rum_runtime::runtime::suspension::core::evaluation_context::Queued<arg0> via payload/std::sync::Arc[LastStrongHolder]/arg0/alias(rum_runtime::runtime::suspension::core::DynSuspensionFrame): opaque owned payload dyn SuspensionFrame	Unbounded	rum_runtime::runtime::suspension::core::SuspensionFrame => rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame (impl at crates/rum-runtime/src/runtime/accounting_mode/continuation.rs:12:1); rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame.args -> rum_core::expr::SharedArgs	TODO.md#standing-engineering-debt	unresolved
++UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	130	21	rum_runtime::runtime::suspension::core::FrameAction.Evaluate.next_frame/std::sync::Arc[LastStrongHolder]/arg0/alias(rum_runtime::runtime::suspension::core::DynSuspensionFrame): opaque owned payload dyn SuspensionFrame	Unbounded	rum_runtime::runtime::suspension::core::SuspensionFrame => rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame (impl at crates/rum-runtime/src/runtime/accounting_mode/continuation.rs:12:1); rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame.args -> rum_core::expr::SharedArgs	TODO.md#standing-engineering-debt	unresolved
++UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	132	14	rum_runtime::runtime::suspension::core::FrameAction.Finalize.0/std::boxed::Box[Own]/arg0: opaque owned payload dyn PureFrameFinalizer	Unbounded	rum_runtime::runtime::suspension::core::PureFrameFinalizer => rum_runtime::runtime::debug_tools::reap::FinishReapBucketsFinalizer (impl at crates/rum-runtime/src/runtime/debug_tools/reap.rs:284:1); rum_runtime::runtime::debug_tools::reap::FinishReapBucketsFinalizer.rendered -> rum_runtime::runtime::debug_tools::reap_state::ReapRenderAccumulator ; rum_runtime::runtime::debug_tools::reap_state::ReapRenderAccumulator.prefix -> rum_core::expr::SharedArgs	TODO.md#standing-engineering-debt	unresolved
++UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	142	48	public input rum_runtime::runtime::suspension::core::impl(FrameAction)@135::evaluate(next_frame): opaque owned generic parameter F where F : SuspensionFrame ,	PublicInput	public by-value input; owning storage sites are separate rows	-	-
++UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	153	35	public input rum_runtime::runtime::suspension::core::impl(FrameAction)@135::finalize(finalizer): opaque owned generic parameter F where F : PureFrameFinalizer ,	PublicInput	public by-value input; owning storage sites are separate rows	-	-
++UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	547	57	public input rum_runtime::runtime::suspension::core::impl(Session)@482::insert_suspension_frame(frame): opaque owned generic parameter F where F : SuspensionFrame ,	PublicInput	public by-value input; owning storage sites are separate rows	-	-
+@@ -77,2 +77,2 @@
+-UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	10	12	rum_runtime::runtime::suspension::typed::entry::Entry.Legacy.0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn SuspensionFrame	Unbounded	rum_runtime::runtime::suspension::core::SuspensionFrame => rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame (impl at crates/rum-runtime/src/runtime/accounting_mode/continuation.rs:12:1); rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame.args -> rum_core::expr::SharedArgs	TODO.md#standing-engineering-debt	unresolved
+-UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	11	11	rum_runtime::runtime::suspension::typed::entry::Entry.Typed.0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame	Unbounded	rum_runtime::runtime::suspension::typed::adapter::ErasedFrame => rum_runtime::runtime::suspension::typed::adapter::TypedAdapter.inner (impl at crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:33:1) => rum_runtime::runtime::suspension::typed::TypedFrame => rum_runtime::runtime::definitions::application::default_values::EvaluateFirstExactDefaultValueFromCursorSuspensionFrame (impl at crates/rum-runtime/src/runtime/definitions/application/default_values.rs:292:1); rum_runtime::runtime::definitions::application::default_values::EvaluateFirstExactDefaultValueFromCursorSuspensionFrame.state -> rum_runtime::runtime::definitions::application::default_values::SuspendedExactDefaultValueScan ; rum_runtime::runtime::definitions::application::default_values::SuspendedExactDefaultValueScan.lookup_order -> rum_core::expr::SharedArgs	TODO.md#standing-engineering-debt	unresolved
++UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	11	12	rum_runtime::runtime::suspension::typed::entry::Entry.Legacy.0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn SuspensionFrame	Unbounded	rum_runtime::runtime::suspension::core::SuspensionFrame => rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame (impl at crates/rum-runtime/src/runtime/accounting_mode/continuation.rs:12:1); rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame.args -> rum_core::expr::SharedArgs	TODO.md#standing-engineering-debt	unresolved
++UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	12	11	rum_runtime::runtime::suspension::typed::entry::Entry.Typed.0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame	Unbounded	rum_runtime::runtime::suspension::typed::adapter::ErasedFrame => rum_runtime::runtime::suspension::typed::adapter::TypedAdapter.inner (impl at crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:33:1) => rum_runtime::runtime::suspension::typed::TypedFrame => rum_runtime::runtime::definitions::application::default_values::EvaluateFirstExactDefaultValueFromCursorSuspensionFrame (impl at crates/rum-runtime/src/runtime/definitions/application/default_values.rs:292:1); rum_runtime::runtime::definitions::application::default_values::EvaluateFirstExactDefaultValueFromCursorSuspensionFrame.state -> rum_runtime::runtime::definitions::application::default_values::SuspendedExactDefaultValueScan ; rum_runtime::runtime::definitions::application::default_values::SuspendedExactDefaultValueScan.lookup_order -> rum_core::expr::SharedArgs	TODO.md#standing-engineering-debt	unresolved
+--- original/crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv
++++ candidate/crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv
+@@ -2,68 +2,68 @@
+-B01	rum_runtime::runtime::model::session::Session::option_rule_exprs_for_symbol	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	brief-537 finite domain; undischarged	Pending: caller ownership and exact adapter proof	Pending: no guarantee available to callers	charge snapshot capacity and cloned occurrences including overlap	existing occurrence metric; capacity not length; checked overflow; no RSS bound	Pending: no ownership transfer permission	Pending: callbacks and exit cleanup unproved	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	Pending: brief-537 observation set not installed	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	Pending: brief-537 report section 6	Pending: specified mutation has not been discharged	Pending	fnv1a64:6bf3d9d0b0fec720
+-B02	rum_runtime::runtime::model::session::Session::resume_merged_option_exprs	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	brief-537 finite domain; undischarged	Pending: caller ownership and exact adapter proof	Pending: no guarantee available to callers	charge prefix and defaults across callbacks and suspension	existing occurrence metric; capacity not length; checked overflow; no RSS bound	Pending: no ownership transfer permission	Pending: callbacks and exit cleanup unproved	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	Pending: brief-537 observation set not installed	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	Pending: brief-537 report section 6	Pending: specified mutation has not been discharged	Pending	fnv1a64:c7879cb55b54928d
+-B03	rum_runtime::runtime::options::reentry::OptionReentry::resume	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	kernel checked entry/resume only; registered external behavior excluded	kernel guard has approved TypeId; direct external resume calls excluded	kernel option entry and resume refuse unregistered concrete TypeId	kernel option entry and resume refuse unregistered concrete TypeId	existing occurrence metric; capacity not length; checked overflow; no RSS bound	B12: root transfer plus spare-capacity complement; B09: no output receipt; B03: membership only	normal/error/suspend/resume/abandon/unwind per named runtime controls; abort has no return	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	cargo test --workspace; named runtime falsifier and local stale/Pending controls	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	crates/rum-runtime/src/runtime/options/tests/resume.rs#option_reentry_registration_does_not_mint_certification	remove check_option_reentry refusal; negative becomes List[17] instead of $Failed	Discharged	fnv1a64:879f8ba0c053ee8a
+-B04	<rum_core::expr::Expr as std::clone::Clone>::clone	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	produces-owned;inert	fieldwise Expr clone produces an unleased occurrence	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	borrows source; new occurrence must transfer before a hazardous call	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:4569116471c071a8
+-B05	std::vec::Vec<rum_core::expr::Expr>::len	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	borrows;inert	Vec length reads initialized length even with spare capacity	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	shared borrow only; no owner or capacity transfer	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:b31fb25601e0ee59
+-B06	std::option::Option<&rum_core::expr::Symbol>::map<bool,literal>	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	brief-537 finite domain; undischarged	Pending: caller ownership and exact adapter proof	Pending: no guarantee available to callers	None calls zero times; Some once; exact borrowed capture; nonescape pending	existing occurrence metric; capacity not length; checked overflow; no RSS bound	Pending: no ownership transfer permission	Pending: callbacks and exit cleanup unproved	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	Pending: brief-537 observation set not installed	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	Pending: brief-537 report section 6	Pending: specified mutation has not been discharged	Pending	fnv1a64:1ea593e06a096184
+-B07	std::option::Option<bool>::unwrap_or	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	brief-537 finite domain; undischarged	Pending: caller ownership and exact adapter proof	Pending: no guarantee available to callers	complete scalar None/Some false/Some true table pending	existing occurrence metric; capacity not length; checked overflow; no RSS bound	Pending: no ownership transfer permission	Pending: callbacks and exit cleanup unproved	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	Pending: brief-537 observation set not installed	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	Pending: brief-537 report section 6	Pending: specified mutation has not been discharged	Pending	fnv1a64:4256320e30a58d89
+-B08	rum_core::expr::Symbol::is_system_name	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	brief-537 finite domain; undischarged	Pending: caller ownership and exact adapter proof	Pending: no guarantee available to callers	borrowed context/name predicate; allocation observations pending	existing occurrence metric; capacity not length; checked overflow; no RSS bound	Pending: no ownership transfer permission	Pending: callbacks and exit cleanup unproved	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	Pending: brief-537 observation set not installed	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	Pending: brief-537 report section 6	Pending: specified mutation has not been discharged	Pending	fnv1a64:781ef08794f5cef6
+-B09	rum_runtime::runtime::model::session::Session::evaluate	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	actual armed resource checkpoints only; no between-checkpoint peak bound	caller prefix already exposed by typed bridge; bare evaluate creates no receipt	armed checkpoints check maintained S plus R and visible expression W	armed checkpoints check maintained S plus R and visible expression W	existing occurrence metric; capacity not length; checked overflow; no RSS bound	B12: root transfer plus spare-capacity complement; B09: no output receipt; B03: membership only	normal/error/suspend/resume/abandon/unwind per named runtime controls; abort has no return	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	cargo test --workspace; named runtime falsifier and local stale/Pending controls	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	crates/rum-runtime/src/runtime/accounting_mode/tests/mod.rs#retention_r_is_separate_from_s_and_both_admission_entries_see_it	remove retention contribution from expression admission; limit-crossing control must fail	Discharged	fnv1a64:28cbb80f1574160c
+-B10	rum_core::expr::Expr::call	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_core::expr::Expr::call; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	only rule::finish_rule; adopted RHS; charged cloned name; exact Rule head; shell and actual child Vec capacity checked; unchanged indexed adapter	may-run-guest-or-grow	consumes charged head and two children; outgoing RetainedResult owns receipt until scope return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:11efcb0506f699af
+-B11	rum_runtime::runtime::expr_helpers::system_expr	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::expr_helpers::system_expr; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	literal Rule only in unchanged rule::finish_rule; no arbitrary name or interner bound	produces-owned;inert	System Rule identity; OwnedUnleased until head receipt resized; cold/warm observations	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:06c0c2c18bb497a8
+-B12	rum_runtime::runtime::model::session::Session::insert_suspension_frame	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	private lease-bearing RetentionFrame protocol only; legacy raw frames excluded	initialized InputRequired; typed suspend reserves frame and owns frozen prefix	lease-bearing RetentionFrame transfers once; roots plus frozen complement charged	lease-bearing RetentionFrame transfers once; roots plus frozen complement charged	existing occurrence metric; capacity not length; checked overflow; no RSS bound	B12: root transfer plus spare-capacity complement; B09: no output receipt; B03: membership only	normal/error/suspend/resume/abandon/unwind per named runtime controls; abort has no return	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	cargo test --workspace; named runtime falsifier and local stale/Pending controls	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	crates/rum-runtime/src/runtime/accounting_mode/tests/mod.rs#retention_suspension_transfers_once_resumes_twice_and_abandons	omit transfer; transfer-count assertion fails; resume and abandon are controls	Discharged	fnv1a64:e7d8380af17cab0c
+-I01	<rum_core::expr::SharedArgs as std::ops::Deref>::deref	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	borrows;inert	SharedArgs deref borrows the same Vec with pointer identity	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	shared borrow only; no owner transfer	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:49d5c4ce1db6bda0
+-I02	<rum_core::expr::SharedExpr as std::ops::Deref>::deref	concrete option-read instance only	fn deref(&SharedExpr)->&Expr; exact Target=Expr and preserved input lifetime	exact pinned helper or SharedExpr Deref; no general dispatch	shared immutable input; exact declaration and compiler selection checked	borrows;inert	borrows same Expr with pointer identity; no owner or capacity receipt	no owned output; no quantitative clone or capacity claim	input remains borrowed; no field move or ownership transfer	no guest callbacks; borrowed locals need no owned cleanup on return or unwind	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_option_read_contract_controls; local_option_read_claims_match_stable_rustc; invariant types and same-name negatives	contracts.rs::DEPENDENCIES plus all crate Rust/Python/TOML; nineteen-field record; direct index-time declaration checks	crates/rum-stdlib/src/tests/retention_closure/local/reads/tests.rs#local_option_read_contract_controls	changed concrete declaration or stale/Pending mark rejects; current borrowed read passes; helper truth table and pointer controls	Discharged	fnv1a64:0a612fe9fa177659
+-I03	<std::vec::Vec<rum_core::expr::Expr> as std::ops::Deref>::deref	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	brief-537 finite domain; undischarged	Pending: caller ownership and exact adapter proof	Pending: no guarantee available to callers	borrow initialized Vec elements as slice; do not clone capacity	existing occurrence metric; capacity not length; checked overflow; no RSS bound	Pending: no ownership transfer permission	Pending: callbacks and exit cleanup unproved	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	Pending: brief-537 observation set not installed	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	Pending: brief-537 report section 6	Pending: specified mutation has not been discharged	Pending	fnv1a64:f6b70701ac95c64c
+-I04	<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	borrows;inert	Vec<Expr> indexing by usize borrows one element; bounds panic unwinds	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	shared borrow only; no clone or owner transfer	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:3f538ca5540412ad
+-P01	<rum_core::expr::Expr as std::cmp::PartialEq>::eq	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	borrows;inert	Expr equality borrows both operands; no guest or retained growth	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	shared borrows only; no owner transfer	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:6e4d07ded28dc824
+-P02	rum_core::expr::Expr::small_integer	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	produces-owned;inert	small_integer constructs an inline Expr from exactly i64	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	inline result; no retention receipt	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:250c610e407a793f
+-P03	rum_core::expr::Expr::string::<std::string::String>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	produces-owned;inert	String input moves into Expr; raw payload state is preserved	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	String owner moves into Expr; no retention receipt	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:6a70e9c10d3f8842
+-P04	str::repeat	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	produces-owned;inert	str repeat produces a fresh raw String from usize count	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	borrows str; caller owns returned String; no retention receipt	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:bc62bacadffdae8d
+-P05	<rum_core::expr::SharedArgs as std::clone::Clone>::clone	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	produces-owned;inert	SharedArgs clone shares the same allocation with pointer identity	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	new shared handle; no deep copy or retention receipt	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:b170cd19be5a4530
+-P06	std::option::Option<usize>::is_some	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	borrows;inert	Option<usize> is_some reads discriminant without callbacks	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	shared borrow; false for None and true for Some	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:38575cdb7dac448c
+-P070	rum_runtime::runtime::accounting_mode::retained::RetentionContext::reserve::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	reserve accounts vector capacity in the selected mode	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	mutable values borrow; owner remains charged	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:72a4f91d5c21be8c
+-P080	rum_runtime::runtime::accounting_mode::retained::RetentionContext::push::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	push consumes input and charges occurrence plus capacity before guest reentry	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	moves Expr into charged values before hazardous work	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:68a7cf7d69fc01ef
+-P090	rum_runtime::runtime::accounting_mode::retained::RetentionContext::evaluate::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	evaluate exposes prefix before guest and returns typed callback bridge	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	moves prefix and guest input into bridge; guest result has no implicit receipt	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:e85b7dcd6bb8f7cd
+-P100	rum_runtime::runtime::accounting_mode::retained::RetentionContext::finish_list::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	finish_list transfers charged prefix into typed result	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	consumes prefix and context; cleanup releases on failure	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:494735ed9cf26058
+-P110	rum_runtime::runtime::accounting_mode::retained::RetentionContext::resume_values::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	resume_values restores frozen prefix plus capacity into mode-specific values	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	consumes empty values; borrows frozen prefix; avoids duplicate transfer	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:dbe86b1e897c77c7
+-P120	rum_runtime::runtime::accounting_mode::bridge::CallbackValue::adopt::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	adopt reconstitutes typed context and charged values from successful bridge	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	consumes CallbackValue once; failures preserve typed ownership	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:502cfb4a0939fe16
+-P130	rum_runtime::runtime::accounting_mode::bridge::CallbackFailure::suspend::<rum_runtime::runtime::accounting_mode::tests::ProbeContinuation,literal>::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	suspend invokes immediate literal once to construct exact ProbeContinuation	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	moves failure into frozen prefix/frame; frame roots plus spare complement charged	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:e6238b6b5f596789
+-P140	rum_runtime::runtime::accounting_mode::retained::scoped::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	scoped calls immediate literal once with branded context and values	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	borrowed Session; result consumed at exit; no brand or closure escape	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:5fbd9b7762405805
+-P150	std::result::Result::and_then::<CallbackValue::adopt>::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	and_then calls exact adopt item once on Ok and never on Err	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	Result consumes receiver; both branches preserve exact failure mode	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:fe560e4c6c6ea5ed
+-P071	rum_runtime::runtime::accounting_mode::retained::RetentionContext::reserve::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	reserve accounts vector capacity in the selected mode	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	mutable values borrow; owner remains charged	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:15fa81905d50ef29
+-P081	rum_runtime::runtime::accounting_mode::retained::RetentionContext::push::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	push consumes input and charges occurrence plus capacity before guest reentry	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	moves Expr into charged values before hazardous work	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:a3221c8e8c86432c
+-P091	rum_runtime::runtime::accounting_mode::retained::RetentionContext::evaluate::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	evaluate exposes prefix before guest and returns typed callback bridge	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	moves prefix and guest input into bridge; guest result has no implicit receipt	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:5a4f2b567955b564
+-P101	rum_runtime::runtime::accounting_mode::retained::RetentionContext::finish_list::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	finish_list transfers charged prefix into typed result	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	consumes prefix and context; cleanup releases on failure	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:d3eb5bebbee014c7
+-P111	rum_runtime::runtime::accounting_mode::retained::RetentionContext::resume_values::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	resume_values restores frozen prefix plus capacity into mode-specific values	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	consumes empty values; borrows frozen prefix; avoids duplicate transfer	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:e53fba1a2aae67fc
+-P121	rum_runtime::runtime::accounting_mode::bridge::CallbackValue::adopt::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	adopt reconstitutes typed context and charged values from successful bridge	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	consumes CallbackValue once; failures preserve typed ownership	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:a8cc8342fd968873
+-P131	rum_runtime::runtime::accounting_mode::bridge::CallbackFailure::suspend::<rum_runtime::runtime::accounting_mode::tests::ProbeContinuation,literal>::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	suspend invokes immediate literal once to construct exact ProbeContinuation	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	moves failure into frozen prefix/frame; frame roots plus spare complement charged	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:e31333caa8149328
+-P141	rum_runtime::runtime::accounting_mode::retained::scoped::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	scoped calls immediate literal once with branded context and values	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	borrowed Session; result consumed at exit; no brand or closure escape	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:75d86945dbe32fc4
+-P151	std::result::Result::and_then::<CallbackValue::adopt>::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	and_then calls exact adopt item once on Ok and never on Err	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	Result consumes receiver; both branches preserve exact failure mode	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:b84b2d5b1b7e3cd6
+-B13	rum_runtime::runtime::expr_runtime_helpers::is_system_symbol_name	concrete option-read instance only	fn is_system_symbol_name(&Expr,&str)->bool	exact pinned helper or SharedExpr Deref; no general dispatch	shared immutable input; exact declaration and compiler selection checked	borrows;inert	None=false; System matching name=true; different name or context=false; scalar result	no owned output; no quantitative clone or capacity claim	input remains borrowed; no field move or ownership transfer	no guest callbacks; borrowed locals need no owned cleanup on return or unwind	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_option_read_contract_controls; local_option_read_claims_match_stable_rustc; invariant types and same-name negatives	contracts.rs::DEPENDENCIES plus all crate Rust/Python/TOML; nineteen-field record; direct index-time declaration checks	crates/rum-stdlib/src/tests/retention_closure/local/reads/tests.rs#local_option_read_contract_controls	changed concrete declaration or stale/Pending mark rejects; current borrowed read passes; helper truth table and pointer controls	Discharged	fnv1a64:acb627699aa61d84
+-R01	rum_runtime::runtime::accounting_mode::rule::clone_result	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::clone_result; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records	may-run-guest-or-grow	clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:7d628c79b2badc7d
+-R02	rum_runtime::runtime::accounting_mode::rule::evaluate_rule	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::evaluate_rule; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records	may-run-guest-or-grow	clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:764f85a23e4ee882
+-R03	rum_runtime::runtime::accounting_mode::rule::resume_rule	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::resume_rule; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records	may-run-guest-or-grow	clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:b02f850bbd8df891
+-R040	rum_runtime::runtime::accounting_mode::rule::clone_owned::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::clone_owned::<rum_runtime::runtime::accounting_mode::counter::Unarmed>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private Unarmed instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:4c70aa19ba92771d
+-R050	rum_runtime::runtime::accounting_mode::rule::clone_child::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::clone_child::<rum_runtime::runtime::accounting_mode::counter::Unarmed>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private Unarmed instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:7b2ccf1148330a10
+-R060	rum_runtime::runtime::accounting_mode::rule::finish_rule::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::finish_rule::<rum_runtime::runtime::accounting_mode::counter::Unarmed>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private Unarmed instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:4d9e30cbb51d3135
+-R070	rum_runtime::runtime::accounting_mode::rule::evaluate_in::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::evaluate_in::<rum_runtime::runtime::accounting_mode::counter::Unarmed>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private Unarmed instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:0b8fe4a86e28022c
+-R080	rum_runtime::runtime::accounting_mode::rule::resume_in::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::resume_in::<rum_runtime::runtime::accounting_mode::counter::Unarmed>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private Unarmed instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:0657f5982388dbad
+-R090	rum_runtime::runtime::accounting_mode::retained::RetentionContext::adopt_outcome::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::retained::RetentionContext::adopt_outcome::<rum_runtime::runtime::accounting_mode::counter::Unarmed>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private Unarmed instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:34af6b93bd529f98
+-R100	rum_runtime::runtime::accounting_mode::bridge::CallbackValue::into_rule::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::bridge::CallbackValue::into_rule::<rum_runtime::runtime::accounting_mode::counter::Unarmed>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private Unarmed instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:4cc52ff36a29990a
+-R110	rum_runtime::runtime::accounting_mode::bridge::CallbackFailure::suspend_rule::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::bridge::CallbackFailure::suspend_rule::<rum_runtime::runtime::accounting_mode::counter::Unarmed>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private Unarmed instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:963f60a25148f577
+-R041	rum_runtime::runtime::accounting_mode::rule::clone_owned::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::clone_owned::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private AccountingShadow instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:92ef8a93b1cddc84
+-R051	rum_runtime::runtime::accounting_mode::rule::clone_child::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::clone_child::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private AccountingShadow instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:767dabe2f8e7044d
+-R061	rum_runtime::runtime::accounting_mode::rule::finish_rule::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::finish_rule::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private AccountingShadow instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:6b84e8df7a10ac86
+-R071	rum_runtime::runtime::accounting_mode::rule::evaluate_in::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::evaluate_in::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private AccountingShadow instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:7058ff9c4ae24b7b
+-R081	rum_runtime::runtime::accounting_mode::rule::resume_in::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::resume_in::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private AccountingShadow instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:05319f42389e3558
+-R091	rum_runtime::runtime::accounting_mode::retained::RetentionContext::adopt_outcome::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::retained::RetentionContext::adopt_outcome::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private AccountingShadow instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:3f2e90b3a70ba4c5
+-R101	rum_runtime::runtime::accounting_mode::bridge::CallbackValue::into_rule::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::bridge::CallbackValue::into_rule::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private AccountingShadow instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:8a3a064690344c75
+-R111	rum_runtime::runtime::accounting_mode::bridge::CallbackFailure::suspend_rule::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::bridge::CallbackFailure::suspend_rule::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private AccountingShadow instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:e197e18471745a7e
+-R12	rum_runtime::runtime::accounting_mode::frozen::FrozenValues::rule_name	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::frozen::FrozenValues::rule_name; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	one-name FrozenValues from private rule suspension; immutable borrow	may-run-guest-or-grow	borrow frozen name without consuming shared frame or cancelling complement	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:324b4c7529f71b3e
+-R13	rum_runtime::runtime::options::resume_frames::RuntimeOptionSuspensionFrame::resume	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::options::resume_frames::RuntimeOptionSuspensionFrame::resume; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	exact rootless descriptor inside private RetentionFrame; frozen name alive; raw outcome admitted by resume_rule before growth	may-run-guest-or-grow	shared frame remains owner; result independently adopted and charged; Err payload forwarded; no second frame transfer	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:cae01fffc641a99a
+-R14	rum_runtime::runtime::accounting_mode::rule::finish_armed	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::finish_armed; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	Unarmed callback left current limit armed; empty prefix; terminal incoming Expr adopted before growth	may-run-guest-or-grow	nested AccountingShadow scope charges callback and rule; outgoing W forwarded directly	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:639f446379a32058
+-R15	rum_runtime::runtime::accounting_mode::rule::suspend_armed	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::suspend_armed; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	Unarmed callback left actual pending InputRequired and a new active limit	may-run-guest-or-grow	reselect AccountingShadow before name clone or vector growth; freeze once; terminal error preserves request	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:a1281c8a27f632d4
+-O010	rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	exact mode and descriptor arguments in identity; hash={false,true} builds reconciled separately	exact private function signature and reborrows checked by local_option_contract_controls	repository declaration build only; host-minted declarations and outside types excluded	entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor	may-run-guest-or-grow	B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged	existing occurrence metric, capacity not length, shared control bytes, checked overflow; unarmed receipts are unit	one original owner across guest calls; frozen S roots and R complement; separately charged working copy; copied consumer outputs outside scope	success/error/unwind, actual repeated input and abandon; nested guest late arm retains original; no returning guarantee for process abort	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	runtime option_owner and frozen option controls; outside public API test; seven compiled charge/domain omission controls; local_option_contract_controls	flat option_boundaries FILES; reconciled declaration/installer/impl/runtime/feature keys; B03 B04 B09 B12 and R records; no traversal	crates/rum-stdlib/src/tests/retention_closure/local/option_contract_tests.rs#local_option_contract_controls	defaults/capacity/adoption/complement/copy/handoff/membership omissions red then restored green; stale Pending body schema raw and outside-R reject	Discharged	fnv1a64:7f38cab49c7c27e6
+-O0200	rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>	exact mode and descriptor arguments in identity; hash={false,true} builds reconciled separately	exact private function signature and reborrows checked by local_option_contract_controls	repository declaration build only; host-minted declarations and outside types excluded	entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor	may-run-guest-or-grow	B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence	existing occurrence metric, capacity not length, shared control bytes, checked overflow; unarmed receipts are unit	one original owner across guest calls; frozen S roots and R complement; separately charged working copy; copied consumer outputs outside scope	success/error/unwind, actual repeated input and abandon; nested guest late arm retains original; no returning guarantee for process abort	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	runtime option_owner and frozen option controls; outside public API test; seven compiled charge/domain omission controls; local_option_contract_controls	flat option_boundaries FILES; reconciled declaration/installer/impl/runtime/feature keys; B03 B04 B09 B12 and R records; no traversal	crates/rum-stdlib/src/tests/retention_closure/local/option_contract_tests.rs#local_option_contract_controls	defaults/capacity/adoption/complement/copy/handoff/membership omissions red then restored green; stale Pending body schema raw and outside-R reject	Discharged	fnv1a64:5a853d4bb0f77e05
+-O011	rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	exact mode and descriptor arguments in identity; hash={false,true} builds reconciled separately	exact private function signature and reborrows checked by local_option_contract_controls	repository declaration build only; host-minted declarations and outside types excluded	entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor	may-run-guest-or-grow	B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged	existing occurrence metric, capacity not length, shared control bytes, checked overflow; unarmed receipts are unit	one original owner across guest calls; frozen S roots and R complement; separately charged working copy; copied consumer outputs outside scope	success/error/unwind, actual repeated input and abandon; nested guest late arm retains original; no returning guarantee for process abort	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	runtime option_owner and frozen option controls; outside public API test; seven compiled charge/domain omission controls; local_option_contract_controls	flat option_boundaries FILES; reconciled declaration/installer/impl/runtime/feature keys; B03 B04 B09 B12 and R records; no traversal	crates/rum-stdlib/src/tests/retention_closure/local/option_contract_tests.rs#local_option_contract_controls	defaults/capacity/adoption/complement/copy/handoff/membership omissions red then restored green; stale Pending body schema raw and outside-R reject	Discharged	fnv1a64:9026ed53c2aef5b5
+-O0210	rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>	exact mode and descriptor arguments in identity; hash={false,true} builds reconciled separately	exact private function signature and reborrows checked by local_option_contract_controls	repository declaration build only; host-minted declarations and outside types excluded	entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor	may-run-guest-or-grow	B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence	existing occurrence metric, capacity not length, shared control bytes, checked overflow; unarmed receipts are unit	one original owner across guest calls; frozen S roots and R complement; separately charged working copy; copied consumer outputs outside scope	success/error/unwind, actual repeated input and abandon; nested guest late arm retains original; no returning guarantee for process abort	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	runtime option_owner and frozen option controls; outside public API test; seven compiled charge/domain omission controls; local_option_contract_controls	flat option_boundaries FILES; reconciled declaration/installer/impl/runtime/feature keys; B03 B04 B09 B12 and R records; no traversal	crates/rum-stdlib/src/tests/retention_closure/local/option_contract_tests.rs#local_option_contract_controls	defaults/capacity/adoption/complement/copy/handoff/membership omissions red then restored green; stale Pending body schema raw and outside-R reject	Discharged	fnv1a64:c9b2bdf935db849e
++B01	rum_runtime::runtime::model::session::Session::option_rule_exprs_for_symbol	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	brief-537 finite domain; undischarged	Pending: caller ownership and exact adapter proof	Pending: no guarantee available to callers	charge snapshot capacity and cloned occurrences including overlap	existing occurrence metric; capacity not length; checked overflow; no RSS bound	Pending: no ownership transfer permission	Pending: callbacks and exit cleanup unproved	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	Pending: brief-537 observation set not installed	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	Pending: brief-537 report section 6	Pending: specified mutation has not been discharged	Pending	fnv1a64:10f0f460abf748cd
++B02	rum_runtime::runtime::model::session::Session::resume_merged_option_exprs	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	brief-537 finite domain; undischarged	Pending: caller ownership and exact adapter proof	Pending: no guarantee available to callers	charge prefix and defaults across callbacks and suspension	existing occurrence metric; capacity not length; checked overflow; no RSS bound	Pending: no ownership transfer permission	Pending: callbacks and exit cleanup unproved	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	Pending: brief-537 observation set not installed	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	Pending: brief-537 report section 6	Pending: specified mutation has not been discharged	Pending	fnv1a64:95aff4b068946f6c
++B03	rum_runtime::runtime::options::reentry::OptionReentry::resume	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	kernel checked entry/resume only; registered external behavior excluded	kernel guard has approved TypeId; direct external resume calls excluded	kernel option entry and resume refuse unregistered concrete TypeId	kernel option entry and resume refuse unregistered concrete TypeId	existing occurrence metric; capacity not length; checked overflow; no RSS bound	B12: root transfer plus spare-capacity complement; B09: no output receipt; B03: membership only	normal/error/suspend/resume/abandon/unwind per named runtime controls; abort has no return	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	cargo test --workspace; named runtime falsifier and local stale/Pending controls	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	crates/rum-runtime/src/runtime/options/tests/resume.rs#option_reentry_registration_does_not_mint_certification	remove check_option_reentry refusal; negative becomes List[17] instead of $Failed	Discharged	fnv1a64:dd27397c03dd87ab
++B04	<rum_core::expr::Expr as std::clone::Clone>::clone	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	produces-owned;inert	fieldwise Expr clone produces an unleased occurrence	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	borrows source; new occurrence must transfer before a hazardous call	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:2b97c5598f5c6fc5
++B05	std::vec::Vec<rum_core::expr::Expr>::len	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	borrows;inert	Vec length reads initialized length even with spare capacity	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	shared borrow only; no owner or capacity transfer	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:f7cd13082085a248
++B06	std::option::Option<&rum_core::expr::Symbol>::map<bool,literal>	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	brief-537 finite domain; undischarged	Pending: caller ownership and exact adapter proof	Pending: no guarantee available to callers	None calls zero times; Some once; exact borrowed capture; nonescape pending	existing occurrence metric; capacity not length; checked overflow; no RSS bound	Pending: no ownership transfer permission	Pending: callbacks and exit cleanup unproved	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	Pending: brief-537 observation set not installed	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	Pending: brief-537 report section 6	Pending: specified mutation has not been discharged	Pending	fnv1a64:6c0c3210a0c7e7b1
++B07	std::option::Option<bool>::unwrap_or	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	brief-537 finite domain; undischarged	Pending: caller ownership and exact adapter proof	Pending: no guarantee available to callers	complete scalar None/Some false/Some true table pending	existing occurrence metric; capacity not length; checked overflow; no RSS bound	Pending: no ownership transfer permission	Pending: callbacks and exit cleanup unproved	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	Pending: brief-537 observation set not installed	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	Pending: brief-537 report section 6	Pending: specified mutation has not been discharged	Pending	fnv1a64:ad1a85125e0454b8
++B08	rum_core::expr::Symbol::is_system_name	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	brief-537 finite domain; undischarged	Pending: caller ownership and exact adapter proof	Pending: no guarantee available to callers	borrowed context/name predicate; allocation observations pending	existing occurrence metric; capacity not length; checked overflow; no RSS bound	Pending: no ownership transfer permission	Pending: callbacks and exit cleanup unproved	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	Pending: brief-537 observation set not installed	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	Pending: brief-537 report section 6	Pending: specified mutation has not been discharged	Pending	fnv1a64:64d27c81734e8be7
++B09	rum_runtime::runtime::model::session::Session::evaluate	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	actual armed resource checkpoints only; no between-checkpoint peak bound	caller prefix already exposed by typed bridge; bare evaluate creates no receipt	armed checkpoints check maintained S plus R and visible expression W	armed checkpoints check maintained S plus R and visible expression W	existing occurrence metric; capacity not length; checked overflow; no RSS bound	B12: root transfer plus spare-capacity complement; B09: no output receipt; B03: membership only	normal/error/suspend/resume/abandon/unwind per named runtime controls; abort has no return	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	cargo test --workspace; named runtime falsifier and local stale/Pending controls	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	crates/rum-runtime/src/runtime/accounting_mode/tests/mod.rs#retention_r_is_separate_from_s_and_both_admission_entries_see_it	remove retention contribution from expression admission; limit-crossing control must fail	Discharged	fnv1a64:6481b87f7dd9c6a9
++B10	rum_core::expr::Expr::call	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_core::expr::Expr::call; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	only rule::finish_rule; adopted RHS; charged cloned name; exact Rule head; shell and actual child Vec capacity checked; unchanged indexed adapter	may-run-guest-or-grow	consumes charged head and two children; outgoing RetainedResult owns receipt until scope return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:aeb55ec6bd1aa1e2
++B11	rum_runtime::runtime::expr_helpers::system_expr	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::expr_helpers::system_expr; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	literal Rule only in unchanged rule::finish_rule; no arbitrary name or interner bound	produces-owned;inert	System Rule identity; OwnedUnleased until head receipt resized; cold/warm observations	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:ecef76b6a95095c5
++B12	rum_runtime::runtime::model::session::Session::insert_suspension_frame	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	private lease-bearing RetentionFrame protocol only; legacy raw frames excluded	initialized InputRequired; typed suspend reserves frame and owns frozen prefix	lease-bearing RetentionFrame transfers once; roots plus frozen complement charged	lease-bearing RetentionFrame transfers once; roots plus frozen complement charged	existing occurrence metric; capacity not length; checked overflow; no RSS bound	B12: root transfer plus spare-capacity complement; B09: no output receipt; B03: membership only	normal/error/suspend/resume/abandon/unwind per named runtime controls; abort has no return	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	cargo test --workspace; named runtime falsifier and local stale/Pending controls	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	crates/rum-runtime/src/runtime/accounting_mode/tests/mod.rs#retention_suspension_transfers_once_resumes_twice_and_abandons	omit transfer; transfer-count assertion fails; resume and abandon are controls	Discharged	fnv1a64:238e387b59e25ba9
++I01	<rum_core::expr::SharedArgs as std::ops::Deref>::deref	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	borrows;inert	SharedArgs deref borrows the same Vec with pointer identity	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	shared borrow only; no owner transfer	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:eed2df5e18af3f4d
++I02	<rum_core::expr::SharedExpr as std::ops::Deref>::deref	concrete option-read instance only	fn deref(&SharedExpr)->&Expr; exact Target=Expr and preserved input lifetime	exact pinned helper or SharedExpr Deref; no general dispatch	shared immutable input; exact declaration and compiler selection checked	borrows;inert	borrows same Expr with pointer identity; no owner or capacity receipt	no owned output; no quantitative clone or capacity claim	input remains borrowed; no field move or ownership transfer	no guest callbacks; borrowed locals need no owned cleanup on return or unwind	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_option_read_contract_controls; local_option_read_claims_match_stable_rustc; invariant types and same-name negatives	contracts.rs::DEPENDENCIES plus all crate Rust/Python/TOML; nineteen-field record; direct index-time declaration checks	crates/rum-stdlib/src/tests/retention_closure/local/reads/tests.rs#local_option_read_contract_controls	changed concrete declaration or stale/Pending mark rejects; current borrowed read passes; helper truth table and pointer controls	Discharged	fnv1a64:4f0e909c18bc2a48
++I03	<std::vec::Vec<rum_core::expr::Expr> as std::ops::Deref>::deref	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	brief-537 finite domain; undischarged	Pending: caller ownership and exact adapter proof	Pending: no guarantee available to callers	borrow initialized Vec elements as slice; do not clone capacity	existing occurrence metric; capacity not length; checked overflow; no RSS bound	Pending: no ownership transfer permission	Pending: callbacks and exit cleanup unproved	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	Pending: brief-537 observation set not installed	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	Pending: brief-537 report section 6	Pending: specified mutation has not been discharged	Pending	fnv1a64:09b0caa5cdf6fbe9
++I04	<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index	exact domain only; no wildcard instance	signature and implementation pinned by dependency files	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	borrows;inert	Vec<Expr> indexing by usize borrows one element; bounds panic unwinds	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	shared borrow only; no clone or owner transfer	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; nineteen-field record excluding fingerprint	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:8ca25ec07826a20c
++P01	<rum_core::expr::Expr as std::cmp::PartialEq>::eq	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	borrows;inert	Expr equality borrows both operands; no guest or retained growth	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	shared borrows only; no owner transfer	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:46a89918c12eb851
++P02	rum_core::expr::Expr::small_integer	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	produces-owned;inert	small_integer constructs an inline Expr from exactly i64	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	inline result; no retention receipt	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:e0b395b8883f4df2
++P03	rum_core::expr::Expr::string::<std::string::String>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	produces-owned;inert	String input moves into Expr; raw payload state is preserved	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	String owner moves into Expr; no retention receipt	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:e48bffa1d0a6d693
++P04	str::repeat	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	produces-owned;inert	str repeat produces a fresh raw String from usize count	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	borrows str; caller owns returned String; no retention receipt	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:8a8b12c5ed3d8b6c
++P05	<rum_core::expr::SharedArgs as std::clone::Clone>::clone	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	produces-owned;inert	SharedArgs clone shares the same allocation with pointer identity	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	new shared handle; no deep copy or retention receipt	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:7ef7c65d5f4c54dd
++P06	std::option::Option<usize>::is_some	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	borrows;inert	Option<usize> is_some reads discriminant without callbacks	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	shared borrow; false for None and true for Some	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:740d5d4be611f529
++P070	rum_runtime::runtime::accounting_mode::retained::RetentionContext::reserve::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	reserve accounts vector capacity in the selected mode	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	mutable values borrow; owner remains charged	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:ae5af98dc4876f29
++P080	rum_runtime::runtime::accounting_mode::retained::RetentionContext::push::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	push consumes input and charges occurrence plus capacity before guest reentry	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	moves Expr into charged values before hazardous work	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:ac3306f3d5d85122
++P090	rum_runtime::runtime::accounting_mode::retained::RetentionContext::evaluate::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	evaluate exposes prefix before guest and returns typed callback bridge	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	moves prefix and guest input into bridge; guest result has no implicit receipt	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:c51796d6cb6b8bac
++P100	rum_runtime::runtime::accounting_mode::retained::RetentionContext::finish_list::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	finish_list transfers charged prefix into typed result	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	consumes prefix and context; cleanup releases on failure	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:137d7d79b2b971f5
++P110	rum_runtime::runtime::accounting_mode::retained::RetentionContext::resume_values::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	resume_values restores frozen prefix plus capacity into mode-specific values	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	consumes empty values; borrows frozen prefix; avoids duplicate transfer	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:4e3def6864abf40a
++P120	rum_runtime::runtime::accounting_mode::bridge::CallbackValue::adopt::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	adopt reconstitutes typed context and charged values from successful bridge	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	consumes CallbackValue once; failures preserve typed ownership	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:69f02ec6a4fddc07
++P130	rum_runtime::runtime::accounting_mode::bridge::CallbackFailure::suspend::<rum_runtime::runtime::accounting_mode::tests::ProbeContinuation,literal>::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	suspend invokes immediate literal once to construct exact ProbeContinuation	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	moves failure into frozen prefix/frame; frame roots plus spare complement charged	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:50e7de6f8cb82eb8
++P140	rum_runtime::runtime::accounting_mode::retained::scoped::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	scoped calls immediate literal once with branded context and values	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	borrowed Session; result consumed at exit; no brand or closure escape	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:423dc419162fe6b4
++P150	std::result::Result::and_then::<CallbackValue::adopt>::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	and_then calls exact adopt item once on Ok and never on Err	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	Result consumes receiver; both branches preserve exact failure mode	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:6b2f2fa8b636964c
++P071	rum_runtime::runtime::accounting_mode::retained::RetentionContext::reserve::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	reserve accounts vector capacity in the selected mode	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	mutable values borrow; owner remains charged	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:6ed4229afe6d7558
++P081	rum_runtime::runtime::accounting_mode::retained::RetentionContext::push::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	push consumes input and charges occurrence plus capacity before guest reentry	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	moves Expr into charged values before hazardous work	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:9b3e3104a9c05f49
++P091	rum_runtime::runtime::accounting_mode::retained::RetentionContext::evaluate::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	evaluate exposes prefix before guest and returns typed callback bridge	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	moves prefix and guest input into bridge; guest result has no implicit receipt	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:ca4b8b1d9ab02e91
++P101	rum_runtime::runtime::accounting_mode::retained::RetentionContext::finish_list::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	finish_list transfers charged prefix into typed result	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	consumes prefix and context; cleanup releases on failure	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:4640e0359a0f910a
++P111	rum_runtime::runtime::accounting_mode::retained::RetentionContext::resume_values::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	resume_values restores frozen prefix plus capacity into mode-specific values	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	consumes empty values; borrows frozen prefix; avoids duplicate transfer	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:d2ab3567ceb9d919
++P121	rum_runtime::runtime::accounting_mode::bridge::CallbackValue::adopt::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	adopt reconstitutes typed context and charged values from successful bridge	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	consumes CallbackValue once; failures preserve typed ownership	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:25fa0eee70e8bb06
++P131	rum_runtime::runtime::accounting_mode::bridge::CallbackFailure::suspend::<rum_runtime::runtime::accounting_mode::tests::ProbeContinuation,literal>::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	suspend invokes immediate literal once to construct exact ProbeContinuation	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	moves failure into frozen prefix/frame; frame roots plus spare complement charged	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:c941e7bfc5b09145
++P141	rum_runtime::runtime::accounting_mode::retained::scoped::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	scoped calls immediate literal once with branded context and values	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	borrowed Session; result consumed at exit; no brand or closure escape	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:8f2c1a22b0130ef1
++P151	std::result::Result::and_then::<CallbackValue::adopt>::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	concrete instance in identity	exact signature checked by invariant oracle	exact concrete instance only; no open dispatch	checked exact receiver and arguments; no inferred receipt	may-run-guest-or-grow	and_then calls exact adopt item once on Ok and never on Err	occurrence and spare-capacity accounting only in typed protocol; inert calls create no receipt	Result consumes receiver; both branches preserve exact failure mode	normal return and unwind release; typed Result errors preserve ownership; callbacks only where explicitly stated	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_concrete_contract_controls; local_probe_claims_match_stable_rustc; accounting_mode normal/error/drop/unwind/suspend/resume/abandon tests	contracts.rs::DEPENDENCIES; record fields	crates/rum-stdlib/src/tests/retention_closure/local/contract_tests.rs#local_concrete_contract_controls	stale fingerprint red then current green; exact type and resolution negative controls	Discharged	fnv1a64:c89cfb4fc6a7e9c7
++B13	rum_runtime::runtime::expr_runtime_helpers::is_system_symbol_name	concrete option-read instance only	fn is_system_symbol_name(&Expr,&str)->bool	exact pinned helper or SharedExpr Deref; no general dispatch	shared immutable input; exact declaration and compiler selection checked	borrows;inert	None=false; System matching name=true; different name or context=false; scalar result	no owned output; no quantitative clone or capacity claim	input remains borrowed; no field move or ownership transfer	no guest callbacks; borrowed locals need no owned cleanup on return or unwind	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Test-checked	local_option_read_contract_controls; local_option_read_claims_match_stable_rustc; invariant types and same-name negatives	contracts.rs::DEPENDENCIES plus all crate Rust/Python/TOML; nineteen-field record; direct index-time declaration checks	crates/rum-stdlib/src/tests/retention_closure/local/reads/tests.rs#local_option_read_contract_controls	changed concrete declaration or stale/Pending mark rejects; current borrowed read passes; helper truth table and pointer controls	Discharged	fnv1a64:fa1cc599d164a3b1
++R01	rum_runtime::runtime::accounting_mode::rule::clone_result	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::clone_result; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records	may-run-guest-or-grow	clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:96373f1ff3e44d1c
++R02	rum_runtime::runtime::accounting_mode::rule::evaluate_rule	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::evaluate_rule; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records	may-run-guest-or-grow	clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:d4104f349271bfd3
++R03	rum_runtime::runtime::accounting_mode::rule::resume_rule	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::resume_rule; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records	may-run-guest-or-grow	clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:022a70f0ea44b7b0
++R040	rum_runtime::runtime::accounting_mode::rule::clone_owned::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::clone_owned::<rum_runtime::runtime::accounting_mode::counter::Unarmed>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private Unarmed instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:ed9c7b32fd700dbc
++R050	rum_runtime::runtime::accounting_mode::rule::clone_child::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::clone_child::<rum_runtime::runtime::accounting_mode::counter::Unarmed>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private Unarmed instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:ecc5688fea3f86bd
++R060	rum_runtime::runtime::accounting_mode::rule::finish_rule::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::finish_rule::<rum_runtime::runtime::accounting_mode::counter::Unarmed>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private Unarmed instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:19803c09eb742224
++R070	rum_runtime::runtime::accounting_mode::rule::evaluate_in::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::evaluate_in::<rum_runtime::runtime::accounting_mode::counter::Unarmed>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private Unarmed instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:03abf91e8b621e49
++R080	rum_runtime::runtime::accounting_mode::rule::resume_in::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::resume_in::<rum_runtime::runtime::accounting_mode::counter::Unarmed>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private Unarmed instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:53a6c7b347ab6b0c
++R090	rum_runtime::runtime::accounting_mode::retained::RetentionContext::adopt_outcome::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::retained::RetentionContext::adopt_outcome::<rum_runtime::runtime::accounting_mode::counter::Unarmed>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private Unarmed instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:e52f61a5c516e535
++R100	rum_runtime::runtime::accounting_mode::bridge::CallbackValue::into_rule::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::bridge::CallbackValue::into_rule::<rum_runtime::runtime::accounting_mode::counter::Unarmed>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private Unarmed instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:a24cddceadb3322b
++R110	rum_runtime::runtime::accounting_mode::bridge::CallbackFailure::suspend_rule::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::bridge::CallbackFailure::suspend_rule::<rum_runtime::runtime::accounting_mode::counter::Unarmed>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private Unarmed instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:d28832c1094407ba
++R041	rum_runtime::runtime::accounting_mode::rule::clone_owned::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::clone_owned::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private AccountingShadow instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:e05628c3e88c62b1
++R051	rum_runtime::runtime::accounting_mode::rule::clone_child::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::clone_child::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private AccountingShadow instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:5339c4ec5899982c
++R061	rum_runtime::runtime::accounting_mode::rule::finish_rule::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::finish_rule::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private AccountingShadow instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:ec7c95f1cc61bff7
++R071	rum_runtime::runtime::accounting_mode::rule::evaluate_in::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::evaluate_in::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private AccountingShadow instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:c1e2b95ec45ca1de
++R081	rum_runtime::runtime::accounting_mode::rule::resume_in::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::resume_in::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private AccountingShadow instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:cf67e6ce4e6546f5
++R091	rum_runtime::runtime::accounting_mode::retained::RetentionContext::adopt_outcome::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::retained::RetentionContext::adopt_outcome::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private AccountingShadow instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:c914426736011174
++R101	rum_runtime::runtime::accounting_mode::bridge::CallbackValue::into_rule::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::bridge::CallbackValue::into_rule::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private AccountingShadow instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:3366eb6f3a098264
++R111	rum_runtime::runtime::accounting_mode::bridge::CallbackFailure::suspend_rule::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::bridge::CallbackFailure::suspend_rule::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	private AccountingShadow instance; source-pinned schema; branded live owner and exact empty or one-RHS state; no raw public extraction	may-run-guest-or-grow	actual clone/adopt/reserve/handoff or lazy freeze; error and unwind retire receipts; output owner preserves charged capacity until terminal return	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:cb120e60ab3c6d5f
++R12	rum_runtime::runtime::accounting_mode::frozen::FrozenValues::rule_name	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::frozen::FrozenValues::rule_name; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	one-name FrozenValues from private rule suspension; immutable borrow	may-run-guest-or-grow	borrow frozen name without consuming shared frame or cancelling complement	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:5f638546873dd01f
++R13	rum_runtime::runtime::options::resume_frames::RuntimeOptionSuspensionFrame::resume	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::options::resume_frames::RuntimeOptionSuspensionFrame::resume; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	exact rootless descriptor inside private RetentionFrame; frozen name alive; raw outcome admitted by resume_rule before growth	may-run-guest-or-grow	shared frame remains owner; result independently adopted and charged; Err payload forwarded; no second frame transfer	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:41d83a7bee261d7b
++R14	rum_runtime::runtime::accounting_mode::rule::finish_armed	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::finish_armed; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	Unarmed callback left current limit armed; empty prefix; terminal incoming Expr adopted before growth	may-run-guest-or-grow	nested AccountingShadow scope charges callback and rule; outgoing W forwarded directly	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:2dd58bef8f6a31f5
++R15	rum_runtime::runtime::accounting_mode::rule::suspend_armed	private delayed-option rule domain; stable Rust edition2024; both workspace features	rum_runtime::runtime::accounting_mode::rule::suspend_armed; exact compiled/indexed signature and body	flat private protocol; no arbitrary macro, trait, caller or generic admission	Unarmed callback left actual pending InputRequired and a new active limit	may-run-guest-or-grow	reselect AccountingShadow before name clone or vector growth; freeze once; terminal error preserves request	current occurrence proxy: actual clone capacity, numeric payload, child capacity, literal head and shell; no allocator/interner theorem	live source receipt -> destination -> outgoing W or private frozen frame; transfer once; shared frame keeps own receipt	ordinary Expr-bearing Err terminal; initialized InputRequired only; pure abandon/reset/drop; panic unwinds receipts	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	option_rule_* runtime controls; local_rule_contract_controls; local_rule_macro_definition_arms_hygiene_and_raw_frame_controls	explicit FILES, macro definition, fields, exact mode, source/body/signatures and full contract context; no graph	crates/rum-stdlib/src/tests/retention_closure/local/rule_tests.rs#local_rule_contract_controls	runtime omissions watched red then restored green; stale/Pending/missing dependency, bare B10/B11/B12, raw clone and result reject	Discharged	fnv1a64:b7db1de887d94601
++O010	rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	exact mode and descriptor arguments in identity; hash={false,true} builds reconciled separately	exact private function signature and reborrows checked by local_option_contract_controls	repository declaration build only; host-minted declarations and outside types excluded	entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor	may-run-guest-or-grow	B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged	existing occurrence metric, capacity not length, shared control bytes, checked overflow; unarmed receipts are unit	one original owner across guest calls; frozen S roots and R complement; separately charged working copy; copied consumer outputs outside scope	success/error/unwind, actual repeated input and abandon; nested guest late arm retains original; no returning guarantee for process abort	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	runtime option_owner and frozen option controls; outside public API test; seven compiled charge/domain omission controls; local_option_contract_controls	flat option_boundaries FILES; reconciled declaration/installer/impl/runtime/feature keys; B03 B04 B09 B12 and R records; no traversal	crates/rum-stdlib/src/tests/retention_closure/local/option_contract_tests.rs#local_option_contract_controls	defaults/capacity/adoption/complement/copy/handoff/membership omissions red then restored green; stale Pending body schema raw and outside-R reject	Discharged	fnv1a64:32bf03b91371d9d7
++O0200	rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>	exact mode and descriptor arguments in identity; hash={false,true} builds reconciled separately	exact private function signature and reborrows checked by local_option_contract_controls	repository declaration build only; host-minted declarations and outside types excluded	entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor	may-run-guest-or-grow	B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence	existing occurrence metric, capacity not length, shared control bytes, checked overflow; unarmed receipts are unit	one original owner across guest calls; frozen S roots and R complement; separately charged working copy; copied consumer outputs outside scope	success/error/unwind, actual repeated input and abandon; nested guest late arm retains original; no returning guarantee for process abort	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	runtime option_owner and frozen option controls; outside public API test; seven compiled charge/domain omission controls; local_option_contract_controls	flat option_boundaries FILES; reconciled declaration/installer/impl/runtime/feature keys; B03 B04 B09 B12 and R records; no traversal	crates/rum-stdlib/src/tests/retention_closure/local/option_contract_tests.rs#local_option_contract_controls	defaults/capacity/adoption/complement/copy/handoff/membership omissions red then restored green; stale Pending body schema raw and outside-R reject	Discharged	fnv1a64:3d0565ed64e70cb4
++O011	rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	exact mode and descriptor arguments in identity; hash={false,true} builds reconciled separately	exact private function signature and reborrows checked by local_option_contract_controls	repository declaration build only; host-minted declarations and outside types excluded	entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor	may-run-guest-or-grow	B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged	existing occurrence metric, capacity not length, shared control bytes, checked overflow; unarmed receipts are unit	one original owner across guest calls; frozen S roots and R complement; separately charged working copy; copied consumer outputs outside scope	success/error/unwind, actual repeated input and abandon; nested guest late arm retains original; no returning guarantee for process abort	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	runtime option_owner and frozen option controls; outside public API test; seven compiled charge/domain omission controls; local_option_contract_controls	flat option_boundaries FILES; reconciled declaration/installer/impl/runtime/feature keys; B03 B04 B09 B12 and R records; no traversal	crates/rum-stdlib/src/tests/retention_closure/local/option_contract_tests.rs#local_option_contract_controls	defaults/capacity/adoption/complement/copy/handoff/membership omissions red then restored green; stale Pending body schema raw and outside-R reject	Discharged	fnv1a64:5c08f891f905e6a4
++O0210	rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>	exact mode and descriptor arguments in identity; hash={false,true} builds reconciled separately	exact private function signature and reborrows checked by local_option_contract_controls	repository declaration build only; host-minted declarations and outside types excluded	entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor	may-run-guest-or-grow	B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence	existing occurrence metric, capacity not length, shared control bytes, checked overflow; unarmed receipts are unit	one original owner across guest calls; frozen S roots and R complement; separately charged working copy; copied consumer outputs outside scope	success/error/unwind, actual repeated input and abandon; nested guest late arm retains original; no returning guarantee for process abort	allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt	Runtime-enforced	runtime option_owner and frozen option controls; outside public API test; seven compiled charge/domain omission controls; local_option_contract_controls	flat option_boundaries FILES; reconciled declaration/installer/impl/runtime/feature keys; B03 B04 B09 B12 and R records; no traversal	crates/rum-stdlib/src/tests/retention_closure/local/option_contract_tests.rs#local_option_contract_controls	defaults/capacity/adoption/complement/copy/handoff/membership omissions red then restored green; stale Pending body schema raw and outside-R reject	Discharged	fnv1a64:d973e51a3c622e7f
+--- original/crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv
++++ candidate/crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv
+@@ -2,2 +2,2 @@
+-C01	LocalCovered	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol	crates/rum-runtime/src/runtime/options/core.rs:106:5-122:6	instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:a4ee626a726db962", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:327ac5e76d71910f;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>": "O0210@fnv1a64:c9b2bdf935db849e;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>": "O011@fnv1a64:9026ed53c2aef5b5;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"} || instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::Unarmed", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:a4ee626a726db962", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:9fbdafc9fe2d040d;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>": "O0200@fnv1a64:5a853d4bb0f77e05;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>": "O010@fnv1a64:7f38cab49c7c27e6;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}	instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:fbf744a051dec96e", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:ffa7b8fbc4a540cb;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>": "O0210@fnv1a64:c9b2bdf935db849e;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>": "O011@fnv1a64:9026ed53c2aef5b5;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"} || instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::Unarmed", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:fbf744a051dec96e", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:8851a548843c97c5;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>": "O0200@fnv1a64:5a853d4bb0f77e05;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>": "O010@fnv1a64:7f38cab49c7c27e6;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}	exact recorded build and instance; current own-body lint and direct marks; repository declaration equals compiled and installed runtime domain and registrations; sealed accounting modes; checked concrete Copy/FrameRootTrace descriptor; private typed owners and borrowed inputs; each direct contract caller precondition remains required	local retention across may-run-guest/may-grow calls and branch/error cleanup within admitted syntax; exact resolution and current direct marks; typed lease/frame transfer only at discharged boundaries; Runtime-enforced or Test-checked as recorded per contract; no inferred receipt from a return type	local only; callers and whole option consumer; arbitrary external R and host-installed declarations asserting host trust through the public certified-domain installer; guest-private and host-private allocation; process RSS and allocator overhead; interner storage; stack-safe destruction of deep Expr; universal allocation bounds derived from tests; between-checkpoint peaks; four escaping consumer copies; remaining N class; P bound unchanged
+-C02	LocalCovered	rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr	crates/rum-runtime/src/runtime/options/core.rs:224:5-238:6	instance=Instance { body: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", key: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", mode: "runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "none (nongeneric C02)", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:d4d9fc61b870e06c", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:7cfcb1b4a5a00e7a;direct-covered={};direct-contracts={"<rum_core::expr::SharedArgs as std::ops::Deref>::deref": "I01@fnv1a64:49d5c4ce1db6bda0;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=SharedArgs deref borrows the same Vec with pointer identity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<rum_core::expr::SharedExpr as std::ops::Deref>::deref": "I02@fnv1a64:0a612fe9fa177659;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=borrows same Expr with pointer identity; no owner or capacity receipt;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index": "I04@fnv1a64:3f538ca5540412ad;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec<Expr> indexing by usize borrows one element; bounds panic unwinds;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::clone_result": "R01@fnv1a64:7d628c79b2badc7d;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::evaluate_rule": "R02@fnv1a64:764f85a23e4ee882;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::expr_runtime_helpers::is_system_symbol_name": "B13@fnv1a64:acb627699aa61d84;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=None=false; System matching name=true; different name or context=false; scalar result;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "std::vec::Vec<rum_core::expr::Expr>::len": "B05@fnv1a64:b31fb25601e0ee59;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec length reads initialized length even with spare capacity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}	instance=Instance { body: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", key: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", mode: "runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "none (nongeneric C02)", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:5c08dcb6c6fde1f0", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:0b85ff70454fc652;direct-covered={};direct-contracts={"<rum_core::expr::SharedArgs as std::ops::Deref>::deref": "I01@fnv1a64:49d5c4ce1db6bda0;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=SharedArgs deref borrows the same Vec with pointer identity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<rum_core::expr::SharedExpr as std::ops::Deref>::deref": "I02@fnv1a64:0a612fe9fa177659;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=borrows same Expr with pointer identity; no owner or capacity receipt;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index": "I04@fnv1a64:3f538ca5540412ad;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec<Expr> indexing by usize borrows one element; bounds panic unwinds;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::clone_result": "R01@fnv1a64:7d628c79b2badc7d;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::evaluate_rule": "R02@fnv1a64:764f85a23e4ee882;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::expr_runtime_helpers::is_system_symbol_name": "B13@fnv1a64:acb627699aa61d84;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=None=false; System matching name=true; different name or context=false; scalar result;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "std::vec::Vec<rum_core::expr::Expr>::len": "B05@fnv1a64:b31fb25601e0ee59;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec length reads initialized length even with spare capacity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}	exact recorded build and instance; current own-body lint and direct marks; repository declaration equals compiled and installed runtime domain and registrations; sealed accounting modes; checked concrete Copy/FrameRootTrace descriptor; private typed owners and borrowed inputs; each direct contract caller precondition remains required	local retention across may-run-guest/may-grow calls and branch/error cleanup within admitted syntax; exact resolution and current direct marks; typed lease/frame transfer only at discharged boundaries; Runtime-enforced or Test-checked as recorded per contract; no inferred receipt from a return type	local only; callers and whole option consumer; arbitrary external R and host-installed declarations asserting host trust through the public certified-domain installer; guest-private and host-private allocation; process RSS and allocator overhead; interner storage; stack-safe destruction of deep Expr; universal allocation bounds derived from tests; between-checkpoint peaks; four escaping consumer copies; remaining N class; P bound unchanged
++C01	LocalCovered	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol	crates/rum-runtime/src/runtime/options/core.rs:106:5-122:6	instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:a7276c9f3ea6f3f1", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:98c6ddedd60205f9;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>": "O0210@fnv1a64:d973e51a3c622e7f;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>": "O011@fnv1a64:5c08f891f905e6a4;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"} || instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::Unarmed", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:a7276c9f3ea6f3f1", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:7047d30402bce457;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>": "O0200@fnv1a64:3d0565ed64e70cb4;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>": "O010@fnv1a64:32bf03b91371d9d7;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}	instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:fe455860213fd9c8", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:013b8d201979462a;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>": "O0210@fnv1a64:d973e51a3c622e7f;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>": "O011@fnv1a64:5c08f891f905e6a4;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"} || instance=Instance { body: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol", key: "rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>", mode: "rum_runtime::runtime::accounting_mode::counter::Unarmed", reentry: "rum_stdlib::option_consumers::OptionConsumer", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:fe455860213fd9c8", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:412a1d93c8723364;direct-covered={};direct-contracts={"rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>": "O0200@fnv1a64:3d0565ed64e70cb4;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B02 and I03 typed replacements: checked snapshot/prefix, callback adoption, retained borrowed consumer handoff, frozen complement and copied working occurrence;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>": "O010@fnv1a64:32bf03b91371d9d7;precondition=entry/resume TypeId membership and generation; private OptionState constructor; concrete fieldless Copy and FrameRootTrace descriptor;guarantee=B01 typed replacement: private checked default snapshot; one copied occurrence, actual capacity and Arc control charged;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}	exact recorded build and instance; current own-body lint and direct marks; repository declaration equals compiled and installed runtime domain and registrations; sealed accounting modes; checked concrete Copy/FrameRootTrace descriptor; private typed owners and borrowed inputs; each direct contract caller precondition remains required	local retention across may-run-guest/may-grow calls and branch/error cleanup within admitted syntax; exact resolution and current direct marks; typed lease/frame transfer only at discharged boundaries; Runtime-enforced or Test-checked as recorded per contract; no inferred receipt from a return type	local only; callers and whole option consumer; arbitrary external R and host-installed declarations asserting host trust through the public certified-domain installer; guest-private and host-private allocation; process RSS and allocator overhead; interner storage; stack-safe destruction of deep Expr; universal allocation bounds derived from tests; between-checkpoint peaks; four escaping consumer copies; remaining N class; P bound unchanged
++C02	LocalCovered	rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr	crates/rum-runtime/src/runtime/options/core.rs:224:5-238:6	instance=Instance { body: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", key: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", mode: "runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "none (nongeneric C02)", build: "target=x86_64-linux;pointer=64;debug=true;hash=true;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:947f2ba618a0a09f", domain_fingerprint: "fnv1a64:f1b1b5ec1f9ab7c9" };mark=fnv1a64:08435f4ff0a2aa87;direct-covered={};direct-contracts={"<rum_core::expr::SharedArgs as std::ops::Deref>::deref": "I01@fnv1a64:eed2df5e18af3f4d;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=SharedArgs deref borrows the same Vec with pointer identity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<rum_core::expr::SharedExpr as std::ops::Deref>::deref": "I02@fnv1a64:4f0e909c18bc2a48;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=borrows same Expr with pointer identity; no owner or capacity receipt;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index": "I04@fnv1a64:8ca25ec07826a20c;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec<Expr> indexing by usize borrows one element; bounds panic unwinds;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::clone_result": "R01@fnv1a64:96373f1ff3e44d1c;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::evaluate_rule": "R02@fnv1a64:d4104f349271bfd3;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::expr_runtime_helpers::is_system_symbol_name": "B13@fnv1a64:fa1cc599d164a3b1;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=None=false; System matching name=true; different name or context=false; scalar result;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "std::vec::Vec<rum_core::expr::Expr>::len": "B05@fnv1a64:f7cd13082085a248;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec length reads initialized length even with spare capacity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}	instance=Instance { body: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", key: "rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr", mode: "runtime dispatch via rule contracts: rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_runtime::runtime::accounting_mode::counter::AccountingShadow", reentry: "none (nongeneric C02)", build: "target=x86_64-linux;pointer=64;debug=true;hash=false;compiler=rustc 1.85.0 (4d91de4e4 2025-02-17);binary: rustc;commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688;commit-date: 2025-02-17;host: x86_64-unknown-linux-gnu;release: 1.85.0;LLVM version: 19.1.7;build-inputs=fnv1a64:ccc66d3e8285d9e5;rustflags=None", body_fingerprint: "fnv1a64:56f3472b3e8e831a", domain_fingerprint: "fnv1a64:ed48860e2b2c615f" };mark=fnv1a64:e6a6489ce259e0df;direct-covered={};direct-contracts={"<rum_core::expr::SharedArgs as std::ops::Deref>::deref": "I01@fnv1a64:eed2df5e18af3f4d;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=SharedArgs deref borrows the same Vec with pointer identity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<rum_core::expr::SharedExpr as std::ops::Deref>::deref": "I02@fnv1a64:4f0e909c18bc2a48;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=borrows same Expr with pointer identity; no owner or capacity receipt;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "<std::vec::Vec<rum_core::expr::Expr> as std::ops::Index<usize>>::index": "I04@fnv1a64:8ca25ec07826a20c;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec<Expr> indexing by usize borrows one element; bounds panic unwinds;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::clone_result": "R01@fnv1a64:96373f1ff3e44d1c;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::accounting_mode::rule::evaluate_rule": "R02@fnv1a64:d4104f349271bfd3;precondition=exact private borrowed Session/name inputs or terminal resume outcome; finite internal Unarmed/AccountingShadow modes; complete direct rule records;guarantee=clone/adopt or activation bridge; callback result charged before growth; lazy real InputRequired only; outgoing Expr/Err is caller-owned unleased W;strength=Runtime-enforced;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "rum_runtime::runtime::expr_runtime_helpers::is_system_symbol_name": "B13@fnv1a64:fa1cc599d164a3b1;precondition=shared immutable input; exact declaration and compiler selection checked;guarantee=None=false; System matching name=true; different name or context=false; scalar result;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt", "std::vec::Vec<rum_core::expr::Expr>::len": "B05@fnv1a64:f7cd13082085a248;precondition=checked exact receiver and arguments; no inferred receipt;guarantee=Vec length reads initialized length even with spare capacity;strength=Test-checked;exclusions=allocator-rss;stack-bounds;guest-host-private;no-implicit-receipt"}	exact recorded build and instance; current own-body lint and direct marks; repository declaration equals compiled and installed runtime domain and registrations; sealed accounting modes; checked concrete Copy/FrameRootTrace descriptor; private typed owners and borrowed inputs; each direct contract caller precondition remains required	local retention across may-run-guest/may-grow calls and branch/error cleanup within admitted syntax; exact resolution and current direct marks; typed lease/frame transfer only at discharged boundaries; Runtime-enforced or Test-checked as recorded per contract; no inferred receipt from a return type	local only; callers and whole option consumer; arbitrary external R and host-installed declarations asserting host trust through the public certified-domain installer; guest-private and host-private allocation; process RSS and allocator overhead; interner storage; stack-safe destruction of deep Expr; universal allocation bounds derived from tests; between-checkpoint peaks; four escaping consumer copies; remaining N class; P bound unchanged
+--- original/crates/rum-stdlib/src/tests/ownership_graph/inventory/self_reaching.tsv
++++ candidate/crates/rum-stdlib/src/tests/ownership_graph/inventory/self_reaching.tsv
+@@ -25,0 +26 @@
++rum_runtime::runtime::profiling::logical::queue::ProfileQueue	crates/rum-runtime/src/runtime/profiling/logical/queue.rs	8	rum_runtime::runtime::profiling::logical::queue::ProfileQueue.guest -> rum_runtime::runtime::suspension::core::queue::FrameQueue ; rum_runtime::runtime::suspension::core::queue::FrameQueue.Profiled.0/std::boxed::Box[Own]/arg0 -> rum_runtime::runtime::profiling::logical::queue::ProfileQueue
+@@ -32,0 +34 @@
++rum_runtime::runtime::suspension::core::queue::FrameQueue	crates/rum-runtime/src/runtime/suspension/core/queue.rs	6	rum_runtime::runtime::suspension::core::queue::FrameQueue.Profiled.0/std::boxed::Box[Own]/arg0 -> rum_runtime::runtime::profiling::logical::queue::ProfileQueue ; rum_runtime::runtime::profiling::logical::queue::ProfileQueue.guest -> rum_runtime::runtime::suspension::core::queue::FrameQueue
+````
+</details>
+
+### 2. The engine and the entry, as built
+
+The engine is inert for every existing profiled phase. Only isolated unit and native test spans create logical calls. `EpochId`, `RecordId` and `SegmentId` are distinct identities; aggregate keys remain immutable. An owner pins the request-control `Arc` together with its request generation and root identity. Session addresses and bare suspension generations are never owner identities. Equal recursive keys therefore remain separate records. A process-wide registry owns records and rows; markers and contexts own epoch references, while the registry owns neither markers nor contexts, avoiding a strong cycle.
+
+Each native interval owns an `Instant` only while executing. Pausing ends the interval before returning to the host. Value-free context leases retain ancestor record identities and saved evaluation/rebuild/source/argument-site scopes, restore them for resumed work, and unwind in reverse order. A second pause updates the same inherited records. Native segment guards are not `Send` or `Sync`; suspended leases are movable. Strict segment identity and LIFO checks invalidate a faulty epoch instead of popping an equal-key peer. Record closure is idempotent across markers, RAII fallback, reset, abandonment and last drop.
+
+`Entry::ProfileBoundary` carries a thin `Arc`. Its observer accepts the passing `&Result<Slot, EvalError>` and applies the frozen outcome policy directly to the borrowed channel. It calls no encoder or decoder, stores no guest value and constructs no continuation token. Tests retain the original slot and `SharedArgs` pointer identities. Wrong channels invalidate diagnostic state without altering the outcome. `InputRequired` is nonterminal. Success, error, `Return`, `Throw`, cancellation and structural abandonment remain separate outcomes.
+
+Explicit insertion APIs validate the request owner and generation, suspension generation, and stable queue-cell frontier. They support producer frontiers, after-consumer markers, deferred markers after `EvaluationReturn`, empty semantic queues, and spans begun after input was returned. The driver dispatches markers without consuming the outcome. The enabled mode restores per-cell logical contexts; abandonment restores the same contexts through the existing cleanup worklist, including cleanup that suspends again. No existing frame gained a field; no production phase adopted the engine.
+
+Diagnostic storage has a separate bounded budget: process-wide and epoch limits, storage reservations preceding growth, and visible epoch invalidation on exhaustion. An initial reservation failure remains latched until explicit profile reset. Queue metadata keeps a marker-free guest queue using the original capacity/widen/append history; diagnostic cells duplicate frame `Arc` ownership only until the same cell is popped, without copying guest trees or extending their semantic lifetime. Guest accounting uses the guest queue. The occurrence oracle independently counts its capacities and marker-free payloads; it does not call production accounting. Context/source buffers, record/row/key storage, queue boxes/cells, and TLS storage are charged separately. TLS metadata remains charged until thread exit, with a conservative 4,096-byte registration allowance. Idle queries avoid initializing the drop-bearing TLS stack.
+
+The ordinary resume loop now branches once on the enabled cold-load gate before entering its original algorithm. The enabled loop is a separate `#[cold] #[inline(never)]` function; the off loop constructs no `ContextGuard`. Structural abandonment likewise has separate ordinary and enabled loops. Diagnostic queue pushes, projections and growth are outlined; typed pushes and append use the existing queue match without a preceding diagnostic-mode check. No diagnostic field was added to a hot header. The measured instruction classification, including all raw positive and negative self costs, is in section 6.
+
+Engine modules are declared by `profiling/logical/mod.rs`, and isolated engine tests by `profiling/tests/mod.rs`. Suspension reaches them through `pub(in crate::runtime)` paths. The raw adapter and codecs remain unchanged. The independent method harness remains unchanged; its final results are in section 5.
+
+### 3. Route proofs
+
+The accepted route counter remains **19**. The final mandatory `profiling` filter passes 18 tests, and the native host lifecycle test passes in its parent and enabled child. Unit proofs cover raw Slot and argument-pointer identity, wrong channels, equal-key records with distinct identities, recursive-peer rejection, idempotent terminal classes, active abandonment, profile reset, bounded diagnostic storage, TLS reservation lifetime, producer/consumer/return frontiers, empty or already-returned queues, six structural reasons, slot fault, resource error, and foreign owner rejection. No existing frame gained a field, and no existing phase adopted the engine.
+
+The native host test installs its test span through the actual host builder. Its receipts cover two real pauses on one record (pause totals 1, 2, then 2), success/error/Return/Throw, cancellation, session reset/drop, interleaved requests, a moved session, active profile reset, failed restore, rollback, helper discard, cleanup that suspends again, and resumed typed collection. The tests assert exact terminal counts, no open records and no context leases after teardown. The enabled environment belongs to a child process; no unsafe environment mutation was added.
+
+The earlier retained red/green proofs for repeated-pause telemetry, strict active-peer handling and retained TLS metadata still apply; continuation 2 changes dispatch organization and module declarations. The final source leaves the newly exposed exact legacy-frontier conflict red rather than altering any rejection assertion.
+
+
+Native route receipts, verbatim:
+````text
+test logical_native_lifecycle ... LP02_NATIVE second-pause success closed-once pauses=2
+LP02_NATIVE error return throw closed-once
+LP02_NATIVE cancellation closed-once
+LP02_NATIVE session-reset abandoned-once
+LP02_NATIVE session-drop abandoned-once
+LP02_NATIVE interleaved moved-session closed-once
+LP02_NATIVE profile-reset active-call closed-once
+LP02_NATIVE failed-restore abandoned-once
+LP02_NATIVE rollback helper-discard abandoned-once
+LP02_NATIVE nested-cleanup re-suspended abandoned-once
+LP02_NATIVE typed-collection resumed completion
+````
+
+### 4. LP01 counter oracle
+
+All 8,750 receipts execute. Each build retains 118,991 pinned loss cells. All ten actual-JSON collections and execution lists equal the accepted LP01 artifacts in full. Every fault delta is zero. Fresh receipts and both canonical gate logs: [continuation-2/lp01-receipts](../../../.temp/brief-626/continuation-2/lp01-receipts), [continuation-2/suspension-oracle](../../../.temp/brief-626/continuation-2/suspension-oracle). All 30 old receipt paths and two old canonical shell-gate files were restored byte for byte.
+
+### 5. Gates and observed failures, verbatim
+
+Commands ran serially through `scripts/run-bounded.py` with `CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true TMPDIR=/home/remi/dev/rum/.temp/brief-626/tmp`; workspace bound 3,600 s, canonical oracle 1,500 s per build, other commands 900 s. The workspace used `RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1`.
+
+The previous workspace exposed two failures: the exact rejection frontier and an E0603 primary-span shift after widening `typed`. The final narrow facade fixes the latter with the unchanged 36 positive/negative compiler controls. `core` and `typed` remain private; the adapter, codecs and all compiler harnesses stay unchanged. Exhaustive final method agreement and workspace target counts are recorded below.
+
+
+````text
+test zeromq::tests::native::basic::native_zeromq_backend_echoes_heartbeat_over_loopback_req_socket ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::basic::native_zeromq_backend_round_trips_execute_over_loopback_sockets ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::control::native_zeromq_backend_frontend_style_control_interrupt_round_trip ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::control::native_zeromq_backend_shutdown_stops_shell_work_and_reports_pending_shell_messages ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::execute::native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_metadata ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::session_flow::native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts_and_shutdown ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::frontend::stdin::native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_reply ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::signed::native_zeromq_backend_rejects_tampered_signed_requests_end_to_end ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+test zeromq::tests::native::signed::native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages ... skipping native ZeroMQ test: loopback socket binding is not permitted; RUM_ALLOW_NATIVE_ZEROMQ_SKIP explicitly allows this skip
+````
+
+Those are nine operational native ZeroMQ skips. The Rust harness reports passed after its early return; native transport was not exercised. Two production `private_interfaces` warnings retain the sealed ErasedFrame trait; three runtime lib-test dead-code warnings name pre-existing helpers. The ledger gives every command, status and verbatim result lines; complete unabridged outputs are linked. Small stdout logs are embedded in full. Raw warnings, fixture failures, diagnostic controls and every rerun remain in the ledger.
+
+<details>
+<summary>Gate ledger by evidence campaign, including retained development failures</summary>
+
+
+**c2-compile-1: exit 101.** [logs/c2-compile-1.log](../../../.temp/brief-626/logs/c2-compile-1.log)
+
+````bash
+cargo check --offline -p rum-runtime --tests
+````
+
+
+````text
+error[E0603]: function `current` is private
+error[E0603]: function `active_count` is private
+error[E0603]: function `enter` is private
+error[E0603]: function `enter` is private
+error[E0603]: function `active_count` is private
+error[E0603]: function `active_count` is private
+error[E0603]: function `enter` is private
+error[E0603]: function `enter` is private
+error[E0603]: function `active_count` is private
+error[E0603]: function `active_count` is private
+error[E0603]: function `enter` is private
+error[E0603]: function `enter` is private
+error[E0603]: function `active_count` is private
+error[E0603]: function `active_count` is private
+error[E0603]: function `enter` is private
+error[E0603]: function `active_count` is private
+warning: unused import: `EvalError`
+error[E0624]: method `take_accounted_pending_suspension_for_resume` is private
+error[E0624]: method `unwind_continuation_fault` is private
+error[E0624]: associated function `new` is private
+error[E0624]: method `open` is private
+error[E0624]: associated function `new` is private
+error[E0624]: method `open` is private
+error[E0624]: associated function `new` is private
+error[E0624]: method `open` is private
+error[E0624]: method `open` is private
+error[E0624]: associated function `new` is private
+error[E0624]: method `open` is private
+error[E0624]: associated function `new` is private
+error[E0624]: method `open` is private
+error[E0624]: associated function `new` is private
+error[E0624]: method `open` is private
+error[E0624]: method `open` is private
+error[E0624]: associated function `new` is private
+error[E0624]: method `open` is private
+warning: `rum-runtime` (lib test) generated 1 warning
+error: could not compile `rum-runtime` (lib test) due to 34 previous errors; 1 warning emitted
+````
+
+
+**c2-engine-1: exit 101.** [logs/c2-engine-1.log](../../../.temp/brief-626/logs/c2-engine-1.log)
+
+````bash
+cargo test --offline -p rum-runtime --lib profiling
+````
+
+
+````text
+warning: type `fault::DriverFault` is more private than the item `runtime::suspension::core::evaluation_context::<impl runtime::model::session::Session>::complete_evaluation_return`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `runtime::suspension::core::queue::FrameQueue::push_back_typed`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `runtime::suspension::core::queue::FrameQueue::push_front_typed`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::EntryRef::Typed::0`
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+error[E0451]: field `control` of struct `runtime::profiling::logical::record::Owner` is private
+error[E0451]: field `generation` of struct `runtime::profiling::logical::record::Owner` is private
+error[E0451]: field `root` of struct `runtime::profiling::logical::record::Owner` is private
+error[E0451]: field `_storage` of struct `runtime::profiling::logical::ProfileBoundary` is private
+error[E0451]: field `_storage` of struct `runtime::profiling::logical::ProfileBoundary` is private
+warning: `rum-runtime` (lib test) generated 8 warnings
+error: could not compile `rum-runtime` (lib test) due to 5 previous errors; 8 warnings emitted
+````
+
+
+**c2-engine-2: exit 0.** [logs/c2-engine-2.log](../../../.temp/brief-626/logs/c2-engine-2.log)
+
+````bash
+cargo test --offline -p rum-runtime --lib profiling
+````
+
+
+````text
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::EntryRef::Typed::0`
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 5 warnings
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.03s
+````
+
+
+**c2-build-resume-1: exit 0.** [logs/c2-build-resume-1.log](../../../.temp/brief-626/logs/c2-build-resume-1.log)
+
+````bash
+python3 .temp/brief-626/build.py cand resume
+````
+
+
+````text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling brief608-resume v0.0.0 (/home/remi/dev/rum/.temp/brief-626/resume-harness)
+    Finished `release` profile [optimized] target(s) in 1m 20s
+
+BUILT cand resume 17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9
+````
+
+
+**c2-instructions-attempt-1: exit 0.** [logs/c2-instructions-attempt-1.log](../../../.temp/brief-626/logs/c2-instructions-attempt-1.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/measure-attempt.py attempt-1
+````
+
+
+````text
+resume-table prior 290.814 now -14.214 main -2.089 libc -12.125
+  164.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back_typed
+  54.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::widen_legacy
+  45.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back
+  26.0 main!core::ptr::drop_in_place<[rum_runtime::runtime::suspension::core::evaluation_context::Queued<rum_runtime::runtime::suspension::typed::entry::Entry>]>
+  25.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::append
+  22.0 main!rum_runtime::runtime::suspension::typed::witness::SlotWitness<I>::suspend
+  11.0 main!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend
+  9.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front
+resume-fold prior 552.173 now 33.213 main 74.22 libc -41.007
+  268.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back_typed
+  88.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back
+  64.787 main!rum_core::expr::Symbol::system
+  54.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::widen_legacy
+  33.0 main!rum_runtime::runtime::suspension::typed::witness::SlotWitness<I>::suspend
+  26.0 main!core::ptr::drop_in_place<[rum_runtime::runtime::suspension::core::evaluation_context::Queued<rum_runtime::runtime::suspension::typed::entry::Entry>]>
+  25.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::append
+  22.0 main!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend
+resume-cases-shared prior 1753.148 now -110.67 main 15.415 libc -126.085
+  1170.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back_typed
+  255.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back
+  190.0 main!rum_runtime::runtime::suspension::typed::witness::SlotWitness<I>::suspend
+  108.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::widen_legacy
+  107.443 main!rum_core::expr::intern_symbol_text
+  97.699 main!rum_core::expr::Symbol::system
+  66.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front
+  66.0 main!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend
+````
+
+
+**c2-hardware-resume-1: exit 0.** [logs/c2-hardware-resume-1.log](../../../.temp/brief-626/logs/c2-hardware-resume-1.log)
+
+````bash
+python3 .temp/brief-626/run-perf.py instructions candidate c2-a1-1 resume
+````
+
+
+**c2-residual-resume-1: exit 0.** [logs/c2-residual-resume-1.log](../../../.temp/brief-626/logs/c2-residual-resume-1.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/measure-attempt.py attempt-1-residual c1-all-test resume-g15-parameters resume-s5-destructure-twice resume-s6-cross-type resume-s8-count-guard-twice resume-s8-freeq-pattern resume-s8-position-pattern resume-s8-position-target resume-s9-assert-function-lookup resume-s9-cleanup-finalizer resume-table
+````
+
+
+````text
+c1-all-test prior 1125.34 now -87.72 main -91.43 libc 3.71
+  954.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back_typed
+  285.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back
+  135.0 main!rum_runtime::runtime::suspension::typed::witness::SlotWitness<I>::suspend
+  55.0 main!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend
+  54.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::widen_legacy
+  54.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front
+  49.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front_legacy
+  44.0 main!rum_runtime::runtime::session::session_requests::<impl rum_runtime::runtime::model::session::Session>::resume_eval_request_from_checkpoint
+resume-g15-parameters prior 643.6 now -272.61 main -223.68 libc -48.93
+  642.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back_typed
+  205.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back
+  77.0 main!rum_runtime::runtime::suspension::typed::witness::SlotWitness<I>::suspend
+  54.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::widen_legacy
+  44.0 main!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend
+  36.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front
+  35.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front_legacy
+  26.0 main!core::ptr::drop_in_place<[rum_runtime::runtime::suspension::core::evaluation_context::Queued<rum_runtime::runtime::suspension::typed::entry::Entry>]>
+resume-s5-destructure-twice prior 1435.0 now -284.61 main -245.22 libc -39.39
+  1383.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back_typed
+  210.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back
+  204.0 main!rum_runtime::runtime::suspension::typed::witness::SlotWitness<I>::suspend
+  108.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::widen_legacy
+  78.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front
+  66.0 main!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend
+  52.0 main!core::ptr::drop_in_place<rum_runtime::runtime::suspension::core::evaluation_context::Queued<rum_runtime::runtime::suspension::typed::entry::Entry>>
+  52.0 main!core::ptr::drop_in_place<[rum_runtime::runtime::suspension::core::evaluation_context::Queued<rum_runtime::runtime::suspension::typed::entry::Entry>]>
+resume-s6-cross-type prior 1616.85 now 25.75 main 136.78 libc -111.03
+  1123.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back_typed
+  410.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back
+  193.0 main!rum_runtime::runtime::suspension::typed::witness::SlotWitness<I>::suspend
+  135.74 main!rum_core::expr::Symbol::system
+  108.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::widen_legacy
+  70.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front_legacy
+  66.0 main!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend
+  63.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front
+resume-s8-count-guard-twice prior 1515.91 now -220.14 main -124.41 libc -95.73
+  1227.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back_typed
+  290.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back
+  204.0 main!rum_runtime::runtime::suspension::typed::witness::SlotWitness<I>::suspend
+  108.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::widen_legacy
+  69.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front
+  66.0 main!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend
+  52.0 main!core::ptr::drop_in_place<[rum_runtime::runtime::suspension::core::evaluation_context::Queued<rum_runtime::runtime::suspension::typed::entry::Entry>]>
+  50.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::append
+resume-s8-freeq-pattern prior 827.44 now -14.98 main 34.7 libc -49.68
+  528.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back_typed
+  170.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back
+  66.0 main!rum_runtime::runtime::suspension::typed::witness::SlotWitness<I>::suspend
+  54.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::widen_legacy
+  41.87 main!rum_core::expr::Symbol::system
+  33.0 main!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend
+  30.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front
+  28.7 main!rum_core::expr::intern_symbol_text
+resume-s8-position-pattern prior 1106.89 now -31.94 main 40.45 libc -72.39
+  694.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back_typed
+  205.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back
+  102.08 main!rum_core::expr::intern_symbol_text
+  88.0 main!rum_runtime::runtime::suspension::typed::witness::SlotWitness<I>::suspend
+  54.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::widen_legacy
+  44.0 main!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend
+  39.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front
+  35.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front_legacy
+resume-s8-position-target prior 1147.27 now 21.77 main 4.24 libc 17.53
+  694.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back_typed
+  165.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back
+  88.0 main!rum_runtime::runtime::suspension::typed::witness::SlotWitness<I>::suspend
+  54.56 main!rum_core::expr::intern_symbol_text
+  54.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::widen_legacy
+  44.0 main!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend
+  39.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front
+  28.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front_legacy
+resume-s9-assert-function-lookup prior 982.08 now 166.47 main 177.84 libc -11.37
+  798.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back_typed
+  165.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back
+  154.08 main!rum_core::expr::intern_text
+  88.44 main!rum_core::expr::Symbol::system
+  88.0 main!rum_runtime::runtime::suspension::typed::witness::SlotWitness<I>::suspend
+  55.0 main!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend
+  54.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::widen_legacy
+  45.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front
+resume-s9-cleanup-finalizer prior 921.77 now 39.34 main 36.09 libc 3.25
+  694.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back_typed
+  165.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back
+  88.0 main!rum_runtime::runtime::suspension::typed::witness::SlotWitness<I>::suspend
+  54.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::widen_legacy
+  53.43 main!rum_core::expr::Symbol::system
+  44.0 main!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend
+  39.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front
+  38.03 main!rum_core::expr::intern_symbol_text
+resume-table prior 290.814 now -16.431 main -4.127 libc -12.304
+  164.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back_typed
+  54.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::widen_legacy
+  45.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back
+  26.0 main!core::ptr::drop_in_place<[rum_runtime::runtime::suspension::core::evaluation_context::Queued<rum_runtime::runtime::suspension::typed::entry::Entry>]>
+  25.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::append
+  22.0 main!rum_runtime::runtime::suspension::typed::witness::SlotWitness<I>::suspend
+  11.0 main!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend
+  9.0 main!rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front
+````
+
+
+**c2-hardware-resume-base-1: exit 0.** [logs/c2-hardware-resume-base-1.log](../../../.temp/brief-626/logs/c2-hardware-resume-base-1.log)
+
+````bash
+python3 .temp/brief-626/run-perf.py instructions base c2-a1-1 resume
+````
+
+
+**c2-hardware-resume-candidate-2: exit 0.** [logs/c2-hardware-resume-candidate-2.log](../../../.temp/brief-626/logs/c2-hardware-resume-candidate-2.log)
+
+````bash
+python3 .temp/brief-626/run-perf.py instructions candidate c2-a1-2 resume
+````
+
+
+**c2-hardware-resume-base-2: exit 0.** [logs/c2-hardware-resume-base-2.log](../../../.temp/brief-626/logs/c2-hardware-resume-base-2.log)
+
+````bash
+python3 .temp/brief-626/run-perf.py instructions base c2-a1-2 resume
+````
+
+
+**c2-five-base-1: exit 0.** [logs/c2-five-base-1.log](../../../.temp/brief-626/logs/c2-five-base-1.log)
+
+````bash
+python3 .temp/brief-626/run-perf.py instructions base c2-a1-extra1 resume @.temp/brief-626/continuation-2/attempt-1/five-labels.json
+````
+
+
+````text
+{"label": "resume-table", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 1000, "exit": 0, "elapsed_seconds": 0.12359171500429511, "correct": true, "actual_resumes": 1000, "instructions": 23333143}
+{"label": "resume-table", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 2000, "exit": 0, "elapsed_seconds": 0.12818749601137824, "correct": true, "actual_resumes": 2000, "instructions": 43289133}
+{"label": "resume-do-chain", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 1000, "exit": 0, "elapsed_seconds": 0.0919181750214193, "correct": true, "actual_resumes": 1000, "instructions": 22560543}
+{"label": "resume-do-chain", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 2000, "exit": 0, "elapsed_seconds": 0.1318808869982604, "correct": true, "actual_resumes": 2000, "instructions": 41712633}
+{"label": "resume-s8-count-pattern", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 100, "exit": 0, "elapsed_seconds": 0.09287296500406228, "correct": true, "actual_resumes": 100, "instructions": 9685366}
+{"label": "resume-s8-count-pattern", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 200, "exit": 0, "elapsed_seconds": 0.09600577599485405, "correct": true, "actual_resumes": 200, "instructions": 15853399}
+{"label": "lhs-arg-value", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 100, "exit": 0, "elapsed_seconds": 0.131414331990527, "correct": true, "actual_resumes": 100, "instructions": 31292411}
+{"label": "lhs-arg-value", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 200, "exit": 0, "elapsed_seconds": 0.1270879200019408, "correct": true, "actual_resumes": 200, "instructions": 59164558}
+{"label": "lhs-twice-cycle", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 100, "exit": 0, "elapsed_seconds": 0.13055353600066155, "correct": true, "actual_resumes": 200, "instructions": 35288821}
+{"label": "lhs-twice-cycle", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 200, "exit": 0, "elapsed_seconds": 0.1244666819984559, "correct": true, "actual_resumes": 400, "instructions": 67154115}
+````
+
+
+**c2-five-candidate-1: exit 0.** [logs/c2-five-candidate-1.log](../../../.temp/brief-626/logs/c2-five-candidate-1.log)
+
+````bash
+python3 .temp/brief-626/run-perf.py instructions candidate c2-a1-extra1 resume @.temp/brief-626/continuation-2/attempt-1/five-labels.json
+````
+
+
+````text
+{"label": "resume-table", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 1000, "exit": 0, "elapsed_seconds": 0.13160319300368428, "correct": true, "actual_resumes": 1000, "instructions": 23341525}
+{"label": "resume-table", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 2000, "exit": 0, "elapsed_seconds": 0.12587847499526106, "correct": true, "actual_resumes": 2000, "instructions": 43297860}
+{"label": "resume-do-chain", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 1000, "exit": 0, "elapsed_seconds": 0.13078916299855337, "correct": true, "actual_resumes": 1000, "instructions": 22599148}
+{"label": "resume-do-chain", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 2000, "exit": 0, "elapsed_seconds": 0.13404667098075151, "correct": true, "actual_resumes": 2000, "instructions": 41789438}
+{"label": "resume-s8-count-pattern", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 100, "exit": 0, "elapsed_seconds": 0.09254003901151009, "correct": true, "actual_resumes": 100, "instructions": 9680950}
+{"label": "resume-s8-count-pattern", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 200, "exit": 0, "elapsed_seconds": 0.09613130800426006, "correct": true, "actual_resumes": 200, "instructions": 15856355}
+{"label": "lhs-arg-value", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 100, "exit": 0, "elapsed_seconds": 0.1287273579800967, "correct": true, "actual_resumes": 100, "instructions": 31269036}
+{"label": "lhs-arg-value", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 200, "exit": 0, "elapsed_seconds": 0.1272834459959995, "correct": true, "actual_resumes": 200, "instructions": 59100280}
+{"label": "lhs-twice-cycle", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 100, "exit": 0, "elapsed_seconds": 0.1310017119976692, "correct": true, "actual_resumes": 200, "instructions": 35266106}
+{"label": "lhs-twice-cycle", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 200, "exit": 0, "elapsed_seconds": 0.12888577999547124, "correct": true, "actual_resumes": 400, "instructions": 67046923}
+````
+
+
+**c2-five-base-2: exit 0.** [logs/c2-five-base-2.log](../../../.temp/brief-626/logs/c2-five-base-2.log)
+
+````bash
+python3 .temp/brief-626/run-perf.py instructions base c2-a1-extra2 resume @.temp/brief-626/continuation-2/attempt-1/five-labels.json
+````
+
+
+````text
+{"label": "resume-table", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 1000, "exit": 0, "elapsed_seconds": 0.0911848460091278, "correct": true, "actual_resumes": 1000, "instructions": 23344290}
+{"label": "resume-table", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 2000, "exit": 0, "elapsed_seconds": 0.12935853100498207, "correct": true, "actual_resumes": 2000, "instructions": 43206541}
+{"label": "resume-do-chain", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 1000, "exit": 0, "elapsed_seconds": 0.12865557600161992, "correct": true, "actual_resumes": 1000, "instructions": 22563054}
+{"label": "resume-do-chain", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 2000, "exit": 0, "elapsed_seconds": 0.13058390602236614, "correct": true, "actual_resumes": 2000, "instructions": 41691551}
+{"label": "resume-s8-count-pattern", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 100, "exit": 0, "elapsed_seconds": 0.12802345800446346, "correct": true, "actual_resumes": 100, "instructions": 9683614}
+{"label": "resume-s8-count-pattern", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 200, "exit": 0, "elapsed_seconds": 0.13167691801209003, "correct": true, "actual_resumes": 200, "instructions": 15856798}
+{"label": "lhs-arg-value", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 100, "exit": 0, "elapsed_seconds": 0.09487663800246082, "correct": true, "actual_resumes": 100, "instructions": 31277057}
+{"label": "lhs-arg-value", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 200, "exit": 0, "elapsed_seconds": 0.13517313500051387, "correct": true, "actual_resumes": 200, "instructions": 59161529}
+{"label": "lhs-twice-cycle", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 100, "exit": 0, "elapsed_seconds": 0.13271195799461566, "correct": true, "actual_resumes": 200, "instructions": 35276466}
+{"label": "lhs-twice-cycle", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 200, "exit": 0, "elapsed_seconds": 0.1297292220115196, "correct": true, "actual_resumes": 400, "instructions": 67083805}
+````
+
+
+**c2-five-candidate-2: exit 0.** [logs/c2-five-candidate-2.log](../../../.temp/brief-626/logs/c2-five-candidate-2.log)
+
+````bash
+python3 .temp/brief-626/run-perf.py instructions candidate c2-a1-extra2 resume @.temp/brief-626/continuation-2/attempt-1/five-labels.json
+````
+
+
+````text
+{"label": "resume-table", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 1000, "exit": 0, "elapsed_seconds": 0.12612045000423677, "correct": true, "actual_resumes": 1000, "instructions": 23343566}
+{"label": "resume-table", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 2000, "exit": 0, "elapsed_seconds": 0.13181671599159017, "correct": true, "actual_resumes": 2000, "instructions": 43224039}
+{"label": "resume-do-chain", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 1000, "exit": 0, "elapsed_seconds": 0.12890118299401365, "correct": true, "actual_resumes": 1000, "instructions": 22618982}
+{"label": "resume-do-chain", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 2000, "exit": 0, "elapsed_seconds": 0.1315741929865908, "correct": true, "actual_resumes": 2000, "instructions": 41741860}
+{"label": "resume-s8-count-pattern", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 100, "exit": 0, "elapsed_seconds": 0.10003329801838845, "correct": true, "actual_resumes": 100, "instructions": 9681799}
+{"label": "resume-s8-count-pattern", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 200, "exit": 0, "elapsed_seconds": 0.09557445099926554, "correct": true, "actual_resumes": 200, "instructions": 15834556}
+{"label": "lhs-arg-value", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 100, "exit": 0, "elapsed_seconds": 0.12933573601185344, "correct": true, "actual_resumes": 100, "instructions": 31262327}
+{"label": "lhs-arg-value", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 200, "exit": 0, "elapsed_seconds": 0.13054372399346903, "correct": true, "actual_resumes": 200, "instructions": 59070933}
+{"label": "lhs-twice-cycle", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 100, "exit": 0, "elapsed_seconds": 0.12808922401745804, "correct": true, "actual_resumes": 200, "instructions": 35255224}
+{"label": "lhs-twice-cycle", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 200, "exit": 0, "elapsed_seconds": 0.1316062350233551, "correct": true, "actual_resumes": 400, "instructions": 67049359}
+````
+
+
+**c2-five-base-3: exit 0.** [logs/c2-five-base-3.log](../../../.temp/brief-626/logs/c2-five-base-3.log)
+
+````bash
+python3 .temp/brief-626/run-perf.py instructions base c2-a1-extra3 resume @.temp/brief-626/continuation-2/attempt-1/five-labels.json
+````
+
+
+````text
+{"label": "resume-table", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 1000, "exit": 0, "elapsed_seconds": 0.1238485139911063, "correct": true, "actual_resumes": 1000, "instructions": 23350914}
+{"label": "resume-table", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 2000, "exit": 0, "elapsed_seconds": 0.13128235100884922, "correct": true, "actual_resumes": 2000, "instructions": 43267114}
+{"label": "resume-do-chain", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 1000, "exit": 0, "elapsed_seconds": 0.0912646499928087, "correct": true, "actual_resumes": 1000, "instructions": 22574482}
+{"label": "resume-do-chain", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 2000, "exit": 0, "elapsed_seconds": 0.12986302599892952, "correct": true, "actual_resumes": 2000, "instructions": 41666765}
+{"label": "resume-s8-count-pattern", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 100, "exit": 0, "elapsed_seconds": 0.09548469999572262, "correct": true, "actual_resumes": 100, "instructions": 9687563}
+{"label": "resume-s8-count-pattern", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 200, "exit": 0, "elapsed_seconds": 0.09759134802152403, "correct": true, "actual_resumes": 200, "instructions": 15842309}
+{"label": "lhs-arg-value", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 100, "exit": 0, "elapsed_seconds": 0.0942918410000857, "correct": true, "actual_resumes": 100, "instructions": 31279073}
+{"label": "lhs-arg-value", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 200, "exit": 0, "elapsed_seconds": 0.131394880998414, "correct": true, "actual_resumes": 200, "instructions": 59138708}
+{"label": "lhs-twice-cycle", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 100, "exit": 0, "elapsed_seconds": 0.1314742710092105, "correct": true, "actual_resumes": 200, "instructions": 35286179}
+{"label": "lhs-twice-cycle", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 200, "exit": 0, "elapsed_seconds": 0.12871576499310322, "correct": true, "actual_resumes": 400, "instructions": 67109852}
+````
+
+
+**c2-five-candidate-3: exit 0.** [logs/c2-five-candidate-3.log](../../../.temp/brief-626/logs/c2-five-candidate-3.log)
+
+````bash
+python3 .temp/brief-626/run-perf.py instructions candidate c2-a1-extra3 resume @.temp/brief-626/continuation-2/attempt-1/five-labels.json
+````
+
+
+````text
+{"label": "resume-table", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 1000, "exit": 0, "elapsed_seconds": 0.12697602700791322, "correct": true, "actual_resumes": 1000, "instructions": 23372681}
+{"label": "resume-table", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 2000, "exit": 0, "elapsed_seconds": 0.13949140801560134, "correct": true, "actual_resumes": 2000, "instructions": 43223656}
+{"label": "resume-do-chain", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 1000, "exit": 0, "elapsed_seconds": 0.092534766998142, "correct": true, "actual_resumes": 1000, "instructions": 22601649}
+{"label": "resume-do-chain", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 2000, "exit": 0, "elapsed_seconds": 0.1269693470094353, "correct": true, "actual_resumes": 2000, "instructions": 41822458}
+{"label": "resume-s8-count-pattern", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 100, "exit": 0, "elapsed_seconds": 0.09839435599860735, "correct": true, "actual_resumes": 100, "instructions": 9700520}
+{"label": "resume-s8-count-pattern", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 200, "exit": 0, "elapsed_seconds": 0.13533034099964425, "correct": true, "actual_resumes": 200, "instructions": 15834859}
+{"label": "lhs-arg-value", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 100, "exit": 0, "elapsed_seconds": 0.09156561098643579, "correct": true, "actual_resumes": 100, "instructions": 31265821}
+{"label": "lhs-arg-value", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 200, "exit": 0, "elapsed_seconds": 0.13394989201333374, "correct": true, "actual_resumes": 200, "instructions": 59119436}
+{"label": "lhs-twice-cycle", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 100, "exit": 0, "elapsed_seconds": 0.12943715800065547, "correct": true, "actual_resumes": 200, "instructions": 35243804}
+{"label": "lhs-twice-cycle", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 200, "exit": 0, "elapsed_seconds": 0.12490881700068712, "correct": true, "actual_resumes": 400, "instructions": 67121766}
+````
+
+
+**c2-five-base-4: exit 0.** [logs/c2-five-base-4.log](../../../.temp/brief-626/logs/c2-five-base-4.log)
+
+````bash
+python3 .temp/brief-626/run-perf.py instructions base c2-a1-extra4 resume @.temp/brief-626/continuation-2/attempt-1/five-labels.json
+````
+
+
+````text
+{"label": "resume-table", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 1000, "exit": 0, "elapsed_seconds": 0.12416438199579716, "correct": true, "actual_resumes": 1000, "instructions": 23336257}
+{"label": "resume-table", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 2000, "exit": 0, "elapsed_seconds": 0.127259122004034, "correct": true, "actual_resumes": 2000, "instructions": 43206013}
+{"label": "resume-do-chain", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 1000, "exit": 0, "elapsed_seconds": 0.09101374298916198, "correct": true, "actual_resumes": 1000, "instructions": 22621006}
+{"label": "resume-do-chain", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 2000, "exit": 0, "elapsed_seconds": 0.12868585498654284, "correct": true, "actual_resumes": 2000, "instructions": 41665087}
+{"label": "resume-s8-count-pattern", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 100, "exit": 0, "elapsed_seconds": 0.09932508500060067, "correct": true, "actual_resumes": 100, "instructions": 9699552}
+{"label": "resume-s8-count-pattern", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 200, "exit": 0, "elapsed_seconds": 0.1276799810002558, "correct": true, "actual_resumes": 200, "instructions": 15871634}
+{"label": "lhs-arg-value", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 100, "exit": 0, "elapsed_seconds": 0.13065897399792448, "correct": true, "actual_resumes": 100, "instructions": 31301772}
+{"label": "lhs-arg-value", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 200, "exit": 0, "elapsed_seconds": 0.12833968800259754, "correct": true, "actual_resumes": 200, "instructions": 59149073}
+{"label": "lhs-twice-cycle", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 100, "exit": 0, "elapsed_seconds": 0.1297195180086419, "correct": true, "actual_resumes": 200, "instructions": 35265230}
+{"label": "lhs-twice-cycle", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 200, "exit": 0, "elapsed_seconds": 0.13006660400424153, "correct": true, "actual_resumes": 400, "instructions": 67107089}
+````
+
+
+**c2-five-candidate-4: exit 0.** [logs/c2-five-candidate-4.log](../../../.temp/brief-626/logs/c2-five-candidate-4.log)
+
+````bash
+python3 .temp/brief-626/run-perf.py instructions candidate c2-a1-extra4 resume @.temp/brief-626/continuation-2/attempt-1/five-labels.json
+````
+
+
+````text
+{"label": "resume-table", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 1000, "exit": 0, "elapsed_seconds": 0.12560647202190012, "correct": true, "actual_resumes": 1000, "instructions": 23341506}
+{"label": "resume-table", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 2000, "exit": 0, "elapsed_seconds": 0.13119735597865656, "correct": true, "actual_resumes": 2000, "instructions": 43269842}
+{"label": "resume-do-chain", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 1000, "exit": 0, "elapsed_seconds": 0.12714761201641522, "correct": true, "actual_resumes": 1000, "instructions": 22600361}
+{"label": "resume-do-chain", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 2000, "exit": 0, "elapsed_seconds": 0.12751850299537182, "correct": true, "actual_resumes": 2000, "instructions": 41742945}
+{"label": "resume-s8-count-pattern", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 100, "exit": 0, "elapsed_seconds": 0.12834670601296239, "correct": true, "actual_resumes": 100, "instructions": 9683396}
+{"label": "resume-s8-count-pattern", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 200, "exit": 0, "elapsed_seconds": 0.09285781002836302, "correct": true, "actual_resumes": 200, "instructions": 15834514}
+{"label": "lhs-arg-value", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 100, "exit": 0, "elapsed_seconds": 0.12673483198159374, "correct": true, "actual_resumes": 100, "instructions": 31264506}
+{"label": "lhs-arg-value", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 200, "exit": 0, "elapsed_seconds": 0.13025258900597692, "correct": true, "actual_resumes": 200, "instructions": 59109955}
+{"label": "lhs-twice-cycle", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 100, "exit": 0, "elapsed_seconds": 0.12700568500440568, "correct": true, "actual_resumes": 200, "instructions": 35265702}
+{"label": "lhs-twice-cycle", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 200, "exit": 0, "elapsed_seconds": 0.12957960099447519, "correct": true, "actual_resumes": 400, "instructions": 67144277}
+````
+
+
+**c2-five-base-5: exit 0.** [logs/c2-five-base-5.log](../../../.temp/brief-626/logs/c2-five-base-5.log)
+
+````bash
+python3 .temp/brief-626/run-perf.py instructions base c2-a1-extra5 resume @.temp/brief-626/continuation-2/attempt-1/five-labels.json
+````
+
+
+````text
+{"label": "resume-table", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 1000, "exit": 0, "elapsed_seconds": 0.12715187898720615, "correct": true, "actual_resumes": 1000, "instructions": 23330651}
+{"label": "resume-table", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 2000, "exit": 0, "elapsed_seconds": 0.1274201149935834, "correct": true, "actual_resumes": 2000, "instructions": 43210248}
+{"label": "resume-do-chain", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 1000, "exit": 0, "elapsed_seconds": 0.09505596500821412, "correct": true, "actual_resumes": 1000, "instructions": 22579381}
+{"label": "resume-do-chain", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 2000, "exit": 0, "elapsed_seconds": 0.12999441198189743, "correct": true, "actual_resumes": 2000, "instructions": 41666455}
+{"label": "resume-s8-count-pattern", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 100, "exit": 0, "elapsed_seconds": 0.09457325297989883, "correct": true, "actual_resumes": 100, "instructions": 9687780}
+{"label": "resume-s8-count-pattern", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 200, "exit": 0, "elapsed_seconds": 0.09461146302055568, "correct": true, "actual_resumes": 200, "instructions": 15841767}
+{"label": "lhs-arg-value", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 100, "exit": 0, "elapsed_seconds": 0.1284667780273594, "correct": true, "actual_resumes": 100, "instructions": 31296723}
+{"label": "lhs-arg-value", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 200, "exit": 0, "elapsed_seconds": 0.13095186001737602, "correct": true, "actual_resumes": 200, "instructions": 59191002}
+{"label": "lhs-twice-cycle", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 100, "exit": 0, "elapsed_seconds": 0.12829837299068458, "correct": true, "actual_resumes": 200, "instructions": 35277296}
+{"label": "lhs-twice-cycle", "binary_sha256": "6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5", "N": 200, "exit": 0, "elapsed_seconds": 0.13223463299800642, "correct": true, "actual_resumes": 400, "instructions": 67108782}
+````
+
+
+**c2-five-candidate-5: exit 0.** [logs/c2-five-candidate-5.log](../../../.temp/brief-626/logs/c2-five-candidate-5.log)
+
+````bash
+python3 .temp/brief-626/run-perf.py instructions candidate c2-a1-extra5 resume @.temp/brief-626/continuation-2/attempt-1/five-labels.json
+````
+
+
+````text
+{"label": "resume-table", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 1000, "exit": 0, "elapsed_seconds": 0.12610282099922188, "correct": true, "actual_resumes": 1000, "instructions": 23339340}
+{"label": "resume-table", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 2000, "exit": 0, "elapsed_seconds": 0.1488668349920772, "correct": true, "actual_resumes": 2000, "instructions": 43222067}
+{"label": "resume-do-chain", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 1000, "exit": 0, "elapsed_seconds": 0.13352516799932346, "correct": true, "actual_resumes": 1000, "instructions": 22600820}
+{"label": "resume-do-chain", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 2000, "exit": 0, "elapsed_seconds": 0.13065253497916274, "correct": true, "actual_resumes": 2000, "instructions": 41779404}
+{"label": "resume-s8-count-pattern", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 100, "exit": 0, "elapsed_seconds": 0.09792576500331052, "correct": true, "actual_resumes": 100, "instructions": 9683587}
+{"label": "resume-s8-count-pattern", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 200, "exit": 0, "elapsed_seconds": 0.12630360899493098, "correct": true, "actual_resumes": 200, "instructions": 15839453}
+{"label": "lhs-arg-value", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 100, "exit": 0, "elapsed_seconds": 0.12646332901204005, "correct": true, "actual_resumes": 100, "instructions": 31263286}
+{"label": "lhs-arg-value", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 200, "exit": 0, "elapsed_seconds": 0.1317131569958292, "correct": true, "actual_resumes": 200, "instructions": 59108276}
+{"label": "lhs-twice-cycle", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 100, "exit": 0, "elapsed_seconds": 0.09517241999856196, "correct": true, "actual_resumes": 200, "instructions": 35256036}
+{"label": "lhs-twice-cycle", "binary_sha256": "17636e2d6541d5136f57a8c3d67ff864115c9bf868fa14c5fcb6c0e35571a9a9", "N": 200, "exit": 0, "elapsed_seconds": 0.1296963369823061, "correct": true, "actual_resumes": 400, "instructions": 67182339}
+````
+
+
+**c2-method-oracle: exit 0.** [logs/c2-method-oracle.log](../../../.temp/brief-626/logs/c2-method-oracle.log)
+
+````bash
+cargo test --offline -p rum-stdlib --lib inherent_method_claims_match_rustc -- --nocapture
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 50.58s
+````
+
+
+**c2-engine-3: exit 0.** [logs/c2-engine-3.log](../../../.temp/brief-626/logs/c2-engine-3.log)
+
+````bash
+cargo test --offline -p rum-runtime --lib profiling
+````
+
+
+````text
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::EntryRef::Typed::0`
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 5 warnings
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.03s
+````
+
+
+**c2-build-resume-2: exit 0.** [logs/c2-build-resume-2.log](../../../.temp/brief-626/logs/c2-build-resume-2.log)
+
+````bash
+python3 .temp/brief-626/build.py cand resume
+````
+
+
+````text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling brief608-resume v0.0.0 (/home/remi/dev/rum/.temp/brief-626/resume-harness)
+    Finished `release` profile [optimized] target(s) in 1m 25s
+
+BUILT cand resume dfcda2b1a3782a8aad748d4b0bfe000b6060b8cf52cfd6289246fc3f5d2950cf
+````
+
+
+**c2-build-cli-2: exit 0.** [logs/c2-build-cli-2.log](../../../.temp/brief-626/logs/c2-build-cli-2.log)
+
+````bash
+python3 .temp/brief-626/build.py cand rum-cli
+````
+
+
+````text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling rum-terminal v0.2.0 (/home/remi/dev/rum/crates/rum-terminal)
+   Compiling rum-repl v0.2.0 (/home/remi/dev/rum/crates/rum-repl)
+   Compiling rum-cli v0.2.0 (/home/remi/dev/rum/crates/rum-cli)
+    Finished `release` profile [optimized] target(s) in 1m 22s
+
+BUILT cand rum-cli 6c634b225fcf4d44bb6fa77164e2d6a437e1ca80f687d29591e99ef2d5d11ce7
+````
+
+
+**c2-final-ownership-discovery: exit 0.** [logs/c2-final-ownership-discovery.log](../../../.temp/brief-626/logs/c2-final-ownership-discovery.log)
+
+````bash
+cargo test --offline -p rum-stdlib --lib discovery_report_without_inventory_input -- --nocapture
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 6.01s
+````
+
+
+**c2-final-ownership-preflight: exit 0.** [logs/c2-final-ownership-preflight.log](../../../.temp/brief-626/logs/c2-final-ownership-preflight.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/preflight-ownership.py
+````
+
+
+````text
+Preflight: 156 position moves; 147 new UnknownConstruct; missing=0; unmappable=0; new HostPayload=0
+````
+
+
+**c2-final-ownership-replay: exit 1.** [logs/c2-final-ownership-replay.log](../../../.temp/brief-626/logs/c2-final-ownership-replay.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/replay-ownership.py
+````
+
+
+````text
+Traceback (most recent call last):
+  File "/home/remi/dev/rum/.temp/brief-626/continuation-2/replay-ownership.py", line 32, in <module>
+    assert cycles==oldcycles,'STOP self-reaching identity changed'
+           ^^^^^^^^^^^^^^^^^
+AssertionError: STOP self-reaching identity changed
+````
+
+
+**c2-final-inventories: exit 1.** [logs/c2-final-inventories.log](../../../.temp/brief-626/logs/c2-final-inventories.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/run-replays.py inventories
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 6.01s
+````
+
+
+**c2-final-ownership-discovery-retry2: exit 0.** [logs/c2-final-ownership-discovery-retry2.log](../../../.temp/brief-626/logs/c2-final-ownership-discovery-retry2.log)
+
+````bash
+cargo test --offline -p rum-stdlib --lib discovery_report_without_inventory_input -- --nocapture
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 6.12s
+````
+
+
+**c2-final-ownership-preflight-retry2: exit 0.** [logs/c2-final-ownership-preflight-retry2.log](../../../.temp/brief-626/logs/c2-final-ownership-preflight-retry2.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/preflight-ownership.py
+````
+
+
+````text
+Preflight: 156 position moves; 147 new UnknownConstruct; missing=0; unmappable=0; new HostPayload=0
+````
+
+
+**c2-final-ownership-replay-retry2: exit 0.** [logs/c2-final-ownership-replay-retry2.log](../../../.temp/brief-626/logs/c2-final-ownership-replay-retry2.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/replay-ownership.py
+````
+
+
+````text
+Ownership replay: 156 position moves; 147 new UnknownConstruct; 8 ledger position moves; new HostPayload=0
+New self-reaching rows: 2 all old59 preserved exactly; source witnesses from unchanged discovery:
+rum_runtime::runtime::profiling::logical::queue::ProfileQueue	crates/rum-runtime/src/runtime/profiling/logical/queue.rs	12	rum_runtime::runtime::profiling::logical::queue::ProfileQueue.guest -> rum_runtime::runtime::suspension::core::queue::FrameQueue ; rum_runtime::runtime::suspension::core::queue::FrameQueue.Profiled.0/std::boxed::Box[Own]/arg0 -> rum_runtime::runtime::profiling::logical::queue::ProfileQueue
+rum_runtime::runtime::suspension::core::queue::FrameQueue	crates/rum-runtime/src/runtime/suspension/core/queue.rs	6	rum_runtime::runtime::suspension::core::queue::FrameQueue.Profiled.0/std::boxed::Box[Own]/arg0 -> rum_runtime::runtime::profiling::logical::queue::ProfileQueue ; rum_runtime::runtime::profiling::logical::queue::ProfileQueue.guest -> rum_runtime::runtime::suspension::core::queue::FrameQueue
+````
+
+
+**c2-final-fingerprints-generate-retry2: exit 0.** [logs/c2-final-fingerprints-generate-retry2.log](../../../.temp/brief-626/logs/c2-final-fingerprints-generate-retry2.log)
+
+````bash
+cargo test --offline -p rum-stdlib --lib regenerate_local_contract_fingerprints -- --ignored --nocapture
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 0.27s
+````
+
+
+**c2-final-certificates-review-retry2: exit 0.** [logs/c2-final-certificates-review-retry2.log](../../../.temp/brief-626/logs/c2-final-certificates-review-retry2.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/review-certificates.py
+````
+
+
+````text
+default review generated; rejected=0; exit 101
+no-default review generated; rejected=0; exit 101
+Replayed C01/C02 certificate cells for both builds, preserving all other fields.
+````
+
+
+**c2-final-inventories-retry2: exit 0.** [logs/c2-final-inventories-retry2.log](../../../.temp/brief-626/logs/c2-final-inventories-retry2.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/run-replays.py inventories retry2
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 6.12s
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 0.27s
+````
+
+
+**c2-final-fmt: exit 0.** [logs/c2-final-fmt.log](../../../.temp/brief-626/logs/c2-final-fmt.log)
+
+````bash
+cargo fmt --check
+````
+
+
+````text
+
+````
+
+
+**c2-final-profiling: exit 0.** [logs/c2-final-profiling.log](../../../.temp/brief-626/logs/c2-final-profiling.log)
+
+````bash
+cargo test --offline -p rum-runtime --lib profiling
+````
+
+
+````text
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::EntryRef::Typed::0`
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 5 warnings
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.08s
+````
+
+
+**c2-final-typed: exit 0.** [logs/c2-final-typed.log](../../../.temp/brief-626/logs/c2-final-typed.log)
+
+````bash
+cargo test --offline -p rum-runtime --lib suspension::typed::tests
+````
+
+
+````text
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::EntryRef::Typed::0`
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 5 warnings
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 1181 filtered out; finished in 0.47s
+````
+
+
+**c2-final-roots: exit 0.** [logs/c2-final-roots.log](../../../.temp/brief-626/logs/c2-final-roots.log)
+
+````bash
+cargo test --offline -p rum-runtime --lib frame_root_trace
+````
+
+
+````text
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::EntryRef::Typed::0`
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 5 warnings
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1190 filtered out; finished in 1.79s
+````
+
+
+**c2-final-resume-context: exit 0.** [logs/c2-final-resume-context.log](../../../.temp/brief-626/logs/c2-final-resume-context.log)
+
+````bash
+cargo test --offline -p rum-runtime --lib resume_evaluation_context
+````
+
+
+````text
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::EntryRef::Typed::0`
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 5 warnings
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 1194 filtered out; finished in 0.16s
+````
+
+
+**c2-final-native: exit 0.** [logs/c2-final-native.log](../../../.temp/brief-626/logs/c2-final-native.log)
+
+````bash
+cargo test --offline -p rum-host --test logical_profile_lifecycle -- --nocapture
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+````
+
+
+**c2-final-ownership: exit 0.** [logs/c2-final-ownership.log](../../../.temp/brief-626/logs/c2-final-ownership.log)
+
+````bash
+cargo test --offline -p rum-stdlib --lib ownership_graph
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 1131 filtered out; finished in 71.11s
+````
+
+
+**c2-final-focused: exit 0.** [logs/c2-final-focused.log](../../../.temp/brief-626/logs/c2-final-focused.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/run-replays.py focused
+````
+
+
+````text
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::EntryRef::Typed::0`
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 5 warnings
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.08s
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::EntryRef::Typed::0`
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 5 warnings
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 1181 filtered out; finished in 0.47s
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::EntryRef::Typed::0`
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 5 warnings
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1190 filtered out; finished in 1.79s
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::EntryRef::Typed::0`
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 5 warnings
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 1194 filtered out; finished in 0.16s
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 1131 filtered out; finished in 71.11s
+````
+
+
+**c2-final-census-default: exit 0.** [logs/c2-final-census-default.log](../../../.temp/brief-626/logs/c2-final-census-default.log)
+
+````bash
+cargo test --offline -p rum-stdlib --test typed_slot_census
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 278.38s
+````
+
+
+**c2-final-census-no-default: exit 0.** [logs/c2-final-census-no-default.log](../../../.temp/brief-626/logs/c2-final-census-no-default.log)
+
+````bash
+cargo test --offline -p rum-stdlib --no-default-features --test typed_slot_census
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 277.29s
+````
+
+
+**c2-final-acceptance-default: exit 0.** [logs/c2-final-acceptance-default.log](../../../.temp/brief-626/logs/c2-final-acceptance-default.log)
+
+````bash
+cargo test --offline -p rum-stdlib --lib local_production_acceptance
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 18.67s
+````
+
+
+**c2-final-acceptance-no-default: exit 0.** [logs/c2-final-acceptance-no-default.log](../../../.temp/brief-626/logs/c2-final-acceptance-no-default.log)
+
+````bash
+cargo test --offline -p rum-stdlib --no-default-features --lib local_production_acceptance
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1155 filtered out; finished in 18.26s
+````
+
+
+**c2-final-rejection: exit 101.** [logs/c2-final-rejection.log](../../../.temp/brief-626/logs/c2-final-rejection.log)
+
+````bash
+cargo test --offline -p rum-stdlib --lib production_rejection_census_is_complete
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 18.29s
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+````
+
+
+**c2-rejection-diagnostic: exit 101.** [logs/c2-rejection-diagnostic.log](../../../.temp/brief-626/logs/c2-rejection-diagnostic.log)
+
+````bash
+cargo test --offline --manifest-path .temp/brief-626/continuation-2/rejection-diagnostic/tree/Cargo.toml -p rum-stdlib --lib production_rejection_census_is_complete -- --nocapture
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 17.53s
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+````
+
+
+**c2-final-oracle: exit 0.** [logs/c2-final-oracle.log](../../../.temp/brief-626/logs/c2-final-oracle.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/run-oracle.py
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 499 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 100.56s
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 499 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 99.90s
+````
+
+
+**c2-final-oracle-verify: exit 0.** [logs/c2-final-oracle-verify.log](../../../.temp/brief-626/logs/c2-final-oracle-verify.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/verify-oracle.py
+````
+
+
+````text
+ORACLE default 499 passed; last fault delta=0; observations=96248
+ORACLE no-default 499 passed; last fault delta=0; observations=96248
+LP01 {'build': 'true', 'mode': 'disabled', 'receipts': 875, 'loss_cells': 0, 'all_records': 1592, 'fault_observations': 9552, 'same_as_accepted_base': True}
+LP01 {'build': 'true', 'mode': 'lexical', 'receipts': 875, 'loss_cells': 18901, 'all_records': 20493, 'fault_observations': 9552, 'same_as_accepted_base': True}
+LP01 {'build': 'true', 'mode': 'timing', 'receipts': 875, 'loss_cells': 22906, 'all_records': 24498, 'fault_observations': 9552, 'same_as_accepted_base': True}
+LP01 {'build': 'true', 'mode': 'cache', 'receipts': 875, 'loss_cells': 35456, 'all_records': 37048, 'fault_observations': 9552, 'same_as_accepted_base': True}
+LP01 {'build': 'true', 'mode': 'all', 'receipts': 875, 'loss_cells': 41728, 'all_records': 43320, 'fault_observations': 9552, 'same_as_accepted_base': True}
+LP01 {'build': 'false', 'mode': 'disabled', 'receipts': 875, 'loss_cells': 0, 'all_records': 1592, 'fault_observations': 9552, 'same_as_accepted_base': True}
+LP01 {'build': 'false', 'mode': 'lexical', 'receipts': 875, 'loss_cells': 18901, 'all_records': 20493, 'fault_observations': 9552, 'same_as_accepted_base': True}
+LP01 {'build': 'false', 'mode': 'timing', 'receipts': 875, 'loss_cells': 22906, 'all_records': 24498, 'fault_observations': 9552, 'same_as_accepted_base': True}
+LP01 {'build': 'false', 'mode': 'cache', 'receipts': 875, 'loss_cells': 35456, 'all_records': 37048, 'fault_observations': 9552, 'same_as_accepted_base': True}
+LP01 {'build': 'false', 'mode': 'all', 'receipts': 875, 'loss_cells': 41728, 'all_records': 43320, 'fault_observations': 9552, 'same_as_accepted_base': True}
+LP01 executed flag/build receipts=8750; pinned loss cells=118991 per build; full accepted-base JSON equality=10/10
+````
+
+
+**c2-final-workspace: exit 101.** [logs/c2-final-workspace.log](../../../.temp/brief-626/logs/c2-final-workspace.log)
+
+````bash
+cargo test --offline --workspace --no-fail-fast
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+warning: `rum-runtime` (lib) generated 2 warnings (2 duplicates)
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::EntryRef::Typed::0`
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 5 warnings
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.89s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.62s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 58.15s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.27s
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.06s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+test result: ok. 151 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.71s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.38s
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+test result: ok. 1202 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 49.00s
+test result: FAILED. 1108 passed; 1 failed; 53 ignored; 0 measured; 0 filtered out; finished in 1366.90s
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+test result: ok. 47 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.06s
+test result: ok. 69 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 22.81s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s
+test result: ok. 100 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.93s
+test result: ok. 71 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.56s
+test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.13s
+test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.44s
+test result: ok. 499 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 102.25s
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 286.41s
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 43.22s
+error: test failed, to rerun pass `-p rum-stdlib --test typed_slot_compile_controls`
+test result: ok. 193 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.51s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.42s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.91s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.03s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+error: 2 targets failed:
+````
+
+
+**c2-attempt3-format: exit 0.** [logs/c2-attempt3-format.log](../../../.temp/brief-626/logs/c2-attempt3-format.log)
+
+````bash
+cargo fmt
+````
+
+
+````text
+
+````
+
+
+**c2-attempt3-compile-controls: exit 0.** [logs/c2-attempt3-compile-controls.log](../../../.temp/brief-626/logs/c2-attempt3-compile-controls.log)
+
+````bash
+cargo test --offline -p rum-stdlib --test typed_slot_compile_controls -- --nocapture
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 34.12s
+````
+
+
+**c2-final-ownership-discovery-attempt3: exit 0.** [logs/c2-final-ownership-discovery-attempt3.log](../../../.temp/brief-626/logs/c2-final-ownership-discovery-attempt3.log)
+
+````bash
+cargo test --offline -p rum-stdlib --lib discovery_report_without_inventory_input -- --nocapture
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 5.85s
+````
+
+
+**c2-final-ownership-preflight-attempt3: exit 0.** [logs/c2-final-ownership-preflight-attempt3.log](../../../.temp/brief-626/logs/c2-final-ownership-preflight-attempt3.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/preflight-ownership.py
+````
+
+
+````text
+Preflight: 156 position moves; 147 new UnknownConstruct; missing=0; unmappable=0; new HostPayload=0
+````
+
+
+**c2-final-ownership-replay-attempt3: exit 0.** [logs/c2-final-ownership-replay-attempt3.log](../../../.temp/brief-626/logs/c2-final-ownership-replay-attempt3.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/replay-ownership.py
+````
+
+
+````text
+Ownership replay: 156 position moves; 147 new UnknownConstruct; 8 ledger position moves; new HostPayload=0
+New self-reaching rows: 2 all old59 preserved exactly; source witnesses from unchanged discovery:
+rum_runtime::runtime::profiling::logical::queue::ProfileQueue	crates/rum-runtime/src/runtime/profiling/logical/queue.rs	8	rum_runtime::runtime::profiling::logical::queue::ProfileQueue.guest -> rum_runtime::runtime::suspension::core::queue::FrameQueue ; rum_runtime::runtime::suspension::core::queue::FrameQueue.Profiled.0/std::boxed::Box[Own]/arg0 -> rum_runtime::runtime::profiling::logical::queue::ProfileQueue
+rum_runtime::runtime::suspension::core::queue::FrameQueue	crates/rum-runtime/src/runtime/suspension/core/queue.rs	6	rum_runtime::runtime::suspension::core::queue::FrameQueue.Profiled.0/std::boxed::Box[Own]/arg0 -> rum_runtime::runtime::profiling::logical::queue::ProfileQueue ; rum_runtime::runtime::profiling::logical::queue::ProfileQueue.guest -> rum_runtime::runtime::suspension::core::queue::FrameQueue
+````
+
+
+**c2-final-fingerprints-generate-attempt3: exit 0.** [logs/c2-final-fingerprints-generate-attempt3.log](../../../.temp/brief-626/logs/c2-final-fingerprints-generate-attempt3.log)
+
+````bash
+cargo test --offline -p rum-stdlib --lib regenerate_local_contract_fingerprints -- --ignored --nocapture
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 0.32s
+````
+
+
+**c2-final-certificates-review-attempt3: exit 0.** [logs/c2-final-certificates-review-attempt3.log](../../../.temp/brief-626/logs/c2-final-certificates-review-attempt3.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/review-certificates.py
+````
+
+
+````text
+default review generated; rejected=0; exit 101
+no-default review generated; rejected=0; exit 101
+Replayed C01/C02 certificate cells for both builds, preserving all other fields.
+````
+
+
+**c2-final-fmt-attempt3: exit 0.** [logs/c2-final-fmt-attempt3.log](../../../.temp/brief-626/logs/c2-final-fmt-attempt3.log)
+
+````bash
+cargo fmt --check
+````
+
+
+````text
+
+````
+
+
+**c2-final-profiling-attempt3: exit 0.** [logs/c2-final-profiling-attempt3.log](../../../.temp/brief-626/logs/c2-final-profiling-attempt3.log)
+
+````bash
+cargo test --offline -p rum-runtime --lib profiling
+````
+
+
+````text
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::EntryRef::Typed::0`
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 5 warnings
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 1187 filtered out; finished in 0.03s
+````
+
+
+**c2-final-typed-attempt3: exit 0.** [logs/c2-final-typed-attempt3.log](../../../.temp/brief-626/logs/c2-final-typed-attempt3.log)
+
+````bash
+cargo test --offline -p rum-runtime --lib suspension::typed::tests
+````
+
+
+````text
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::EntryRef::Typed::0`
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 5 warnings
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 1181 filtered out; finished in 0.49s
+````
+
+
+**c2-final-roots-attempt3: exit 0.** [logs/c2-final-roots-attempt3.log](../../../.temp/brief-626/logs/c2-final-roots-attempt3.log)
+
+````bash
+cargo test --offline -p rum-runtime --lib frame_root_trace
+````
+
+
+````text
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::EntryRef::Typed::0`
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 5 warnings
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1190 filtered out; finished in 1.98s
+````
+
+
+**c2-final-resume-context-attempt3: exit 0.** [logs/c2-final-resume-context-attempt3.log](../../../.temp/brief-626/logs/c2-final-resume-context-attempt3.log)
+
+````bash
+cargo test --offline -p rum-runtime --lib resume_evaluation_context
+````
+
+
+````text
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::EntryRef::Typed::0`
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 5 warnings
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 1194 filtered out; finished in 0.16s
+````
+
+
+**c2-final-native-attempt3: exit 0.** [logs/c2-final-native-attempt3.log](../../../.temp/brief-626/logs/c2-final-native-attempt3.log)
+
+````bash
+cargo test --offline -p rum-host --test logical_profile_lifecycle -- --nocapture
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+````
+
+
+**c2-final-ownership-attempt3: exit 0.** [logs/c2-final-ownership-attempt3.log](../../../.temp/brief-626/logs/c2-final-ownership-attempt3.log)
+
+````bash
+cargo test --offline -p rum-stdlib --lib ownership_graph
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 1131 filtered out; finished in 70.54s
+````
+
+
+**c2-final-census-default-attempt3: exit 0.** [logs/c2-final-census-default-attempt3.log](../../../.temp/brief-626/logs/c2-final-census-default-attempt3.log)
+
+````bash
+cargo test --offline -p rum-stdlib --test typed_slot_census
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 293.02s
+````
+
+
+**c2-final-census-no-default-attempt3: exit 0.** [logs/c2-final-census-no-default-attempt3.log](../../../.temp/brief-626/logs/c2-final-census-no-default-attempt3.log)
+
+````bash
+cargo test --offline -p rum-stdlib --no-default-features --test typed_slot_census
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 295.63s
+````
+
+
+**c2-final-acceptance-default-attempt3: exit 0.** [logs/c2-final-acceptance-default-attempt3.log](../../../.temp/brief-626/logs/c2-final-acceptance-default-attempt3.log)
+
+````bash
+cargo test --offline -p rum-stdlib --lib local_production_acceptance
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 19.98s
+````
+
+
+**c2-final-acceptance-no-default-attempt3: exit 0.** [logs/c2-final-acceptance-no-default-attempt3.log](../../../.temp/brief-626/logs/c2-final-acceptance-no-default-attempt3.log)
+
+````bash
+cargo test --offline -p rum-stdlib --no-default-features --lib local_production_acceptance
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1155 filtered out; finished in 19.10s
+````
+
+
+**c2-final-rejection-attempt3: exit 101.** [logs/c2-final-rejection-attempt3.log](../../../.temp/brief-626/logs/c2-final-rejection-attempt3.log)
+
+````bash
+cargo test --offline -p rum-stdlib --lib production_rejection_census_is_complete
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 18.41s
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+````
+
+
+**c2-final-oracle-attempt3: exit 0.** [logs/c2-final-oracle-attempt3.log](../../../.temp/brief-626/logs/c2-final-oracle-attempt3.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/run-oracle.py
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 499 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 103.42s
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 499 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 106.52s
+````
+
+
+**c2-final-oracle-verify-attempt3: exit 0.** [logs/c2-final-oracle-verify-attempt3.log](../../../.temp/brief-626/logs/c2-final-oracle-verify-attempt3.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/verify-oracle.py
+````
+
+
+````text
+ORACLE default 499 passed; last fault delta=0; observations=96248
+ORACLE no-default 499 passed; last fault delta=0; observations=96248
+LP01 {'build': 'true', 'mode': 'disabled', 'receipts': 875, 'loss_cells': 0, 'all_records': 1592, 'fault_observations': 9552, 'same_as_accepted_base': True}
+LP01 {'build': 'true', 'mode': 'lexical', 'receipts': 875, 'loss_cells': 18901, 'all_records': 20493, 'fault_observations': 9552, 'same_as_accepted_base': True}
+LP01 {'build': 'true', 'mode': 'timing', 'receipts': 875, 'loss_cells': 22906, 'all_records': 24498, 'fault_observations': 9552, 'same_as_accepted_base': True}
+LP01 {'build': 'true', 'mode': 'cache', 'receipts': 875, 'loss_cells': 35456, 'all_records': 37048, 'fault_observations': 9552, 'same_as_accepted_base': True}
+LP01 {'build': 'true', 'mode': 'all', 'receipts': 875, 'loss_cells': 41728, 'all_records': 43320, 'fault_observations': 9552, 'same_as_accepted_base': True}
+LP01 {'build': 'false', 'mode': 'disabled', 'receipts': 875, 'loss_cells': 0, 'all_records': 1592, 'fault_observations': 9552, 'same_as_accepted_base': True}
+LP01 {'build': 'false', 'mode': 'lexical', 'receipts': 875, 'loss_cells': 18901, 'all_records': 20493, 'fault_observations': 9552, 'same_as_accepted_base': True}
+LP01 {'build': 'false', 'mode': 'timing', 'receipts': 875, 'loss_cells': 22906, 'all_records': 24498, 'fault_observations': 9552, 'same_as_accepted_base': True}
+LP01 {'build': 'false', 'mode': 'cache', 'receipts': 875, 'loss_cells': 35456, 'all_records': 37048, 'fault_observations': 9552, 'same_as_accepted_base': True}
+LP01 {'build': 'false', 'mode': 'all', 'receipts': 875, 'loss_cells': 41728, 'all_records': 43320, 'fault_observations': 9552, 'same_as_accepted_base': True}
+LP01 executed flag/build receipts=8750; pinned loss cells=118991 per build; full accepted-base JSON equality=10/10
+````
+
+
+**c2-final-workspace-attempt3: exit 101.** [logs/c2-final-workspace-attempt3.log](../../../.temp/brief-626/logs/c2-final-workspace-attempt3.log)
+
+````bash
+cargo test --offline --workspace --no-fail-fast
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+warning: `rum-runtime` (lib) generated 2 warnings (2 duplicates)
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::EntryRef::Typed::0`
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 5 warnings
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.36s
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.34s
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.11s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.85s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 48.74s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.28s
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.02s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+test result: ok. 151 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.86s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.40s
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+test result: ok. 1202 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 38.12s
+test result: FAILED. 1108 passed; 1 failed; 53 ignored; 0 measured; 0 filtered out; finished in 1375.49s
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+test result: ok. 47 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.09s
+test result: ok. 69 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 23.99s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.33s
+test result: ok. 100 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.03s
+test result: ok. 71 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.61s
+test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.00s
+test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.49s
+test result: ok. 499 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 107.36s
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 296.98s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 37.73s
+test result: ok. 193 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.56s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.45s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.78s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.25s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+error: 1 target failed:
+````
+
+
+**c2-final-native-zmq-skips-attempt3: exit 0.** [logs/c2-final-native-zmq-skips-attempt3.log](../../../.temp/brief-626/logs/c2-final-native-zmq-skips-attempt3.log)
+
+````bash
+cargo test --offline -p rum-jupyter zeromq::tests::native -- --nocapture
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 142 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+````
+
+
+**perf-instructions-base-1-part1: exit 0.** [continuation-2/final/logs/perf-instructions-base-1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/perf-instructions-base-1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final/run-perf.py instructions base 1 all
+````
+
+
+**perf-instructions-candidate-1-part1: exit 0.** [continuation-2/final/logs/perf-instructions-candidate-1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/perf-instructions-candidate-1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final/run-perf.py instructions candidate 1 all
+````
+
+
+**perf-instructions-base-2-part1: exit 0.** [continuation-2/final/logs/perf-instructions-base-2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/perf-instructions-base-2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final/run-perf.py instructions base 2 all
+````
+
+
+**perf-instructions-candidate-2-part1: exit 0.** [continuation-2/final/logs/perf-instructions-candidate-2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/perf-instructions-candidate-2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final/run-perf.py instructions candidate 2 all
+````
+
+
+**instructions-compare: exit 0.** [continuation-2/final/logs/instructions-compare.log](../../../.temp/brief-626/continuation-2/final/logs/instructions-compare.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/final/compare-performance.py instructions
+````
+
+
+````text
+Ordinary flags: ['lazy-map-realize-small', 'lazy-select-realize-small', 'lazy-foldlist-realize-small', 'lazy-first-small', 'lazy-table-construct-short', 'lazy-table-realize-small', 'optionvalue-three-no-input', 'dot-three-no-input', 'lazy-depth-map-first-8', 'lazy-depth-map-eight-8', 'lazy-depth-take-map-8', 'lazy-depth-fold-through-source-8', 'lazy-depth-nest-map-8', 'lazy-depth-map-first-64', 'lazy-depth-map-eight-64', 'lazy-depth-take-map-64', 'lazy-depth-fold-through-source-64', 'lazy-depth-map-eight-256', 'lazy-depth-take-map-256', 'lazy-depth-fold-through-source-256', 'downvalue-pattern-hit', 'module-local', 'block-local', 'deletecases-wide-association-no-match', 'appendto-part-outer1000-small', 'table-iterator-symbol', 'downvalue-exact-miss', 'downvalue-guarded-hit', 'subvalue-unguarded-hit', 'subvalue-guarded-hit', 'default-guarded-hit', 'downvalue-exact-miss-repeat', 'upvalue-candidates-tiny', 'keysort-default-wide', 'keysortby-default-wide', 'sort-symbol-default-width16000', 'stringreplace-guarded-hit', 'association-part-key-read-width32000', 'association-set-part-key-investigation', 'replace-rule-list-decline', 'replacerepeated-guarded-small', 'replaceat-small', 'position-small-match', 'catch-no-throw', 'catch-throw-untagged', 'checkabort-caught', 'abortprotect-clean', 'check-clean', 'check-message-fallback', 'quiet-clean', 'withcleanup-two-arg', 'catch-tagged-throw', 'checkabort-abort', 'withcleanup-init', 'catchexceptions-handler', 'function-slot-apply', 'function-named-apply', 'composition-apply', 'failure-list-property', 'failure-missing-property', 'failure-message-property', 'failure-message-delayed', 'c1-replaceall-unheld-atom']
+Ineligible: []
+Eligible resume rows: 121
+LEAF do-count-null delta -0.11345000000005712 flagged False base 535.111525 cand 534.998075
+LEAF do-iterator-null delta 0.08030000000007931 flagged False base 1151.958075 cand 1152.038375
+LEAF literal-integer delta -0.010575000000017099 flagged False base 291.943175 cand 291.9326
+````
+
+
+**copy-calibration: exit 0.** [continuation-2/final/logs/copy-calibration.log](../../../.temp/brief-626/continuation-2/final/logs/copy-calibration.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/final/calibrate-copies.py
+````
+
+
+````text
+base catchexceptions-handler 500 rc=0 Null
+CALIBRATION {"N": 500, "memcpy": 16011, "symbols": ["__memcpy_avx_unaligned_erms", "__memcpy_chk", "memcpy@@GLIBC_2.14"], "artifacts": {"/home/remi/dev/rum/.temp/brief-626/continuation-2/final/copy-census/calibration/base-catchexceptions-handler-500.out": "08de8cd5ea1f4f5a1b97cffdfa7f5bfdd4bcc8e4aae8f0391a319c08eb399f77", "/home/remi/dev/rum/.temp/brief-626/continuation-2/final/copy-census/calibration/base-catchexceptions-handler-500.stdout": "a002524d8279a757abff9705262271831c988b48b06dbee7e143b4179da4abde", "/home/remi/dev/rum/.temp/brief-626/continuation-2/final/copy-census/calibration/base-catchexceptions-handler-500.stderr": "b371dc240ad07c3751cd7a4134fb31b277993cd220bf41cc9cad65b8e421673b"}}
+base catchexceptions-handler 1000 rc=0 Null
+CALIBRATION {"N": 1000, "memcpy": 31011, "symbols": ["__memcpy_avx_unaligned_erms", "__memcpy_chk", "memcpy@@GLIBC_2.14"], "artifacts": {"/home/remi/dev/rum/.temp/brief-626/continuation-2/final/copy-census/calibration/base-catchexceptions-handler-1000.out": "5a643a9914010931dd607744817ed15c07860eff796d7642c5592bd92f1cdce2", "/home/remi/dev/rum/.temp/brief-626/continuation-2/final/copy-census/calibration/base-catchexceptions-handler-1000.stdout": "a002524d8279a757abff9705262271831c988b48b06dbee7e143b4179da4abde", "/home/remi/dev/rum/.temp/brief-626/continuation-2/final/copy-census/calibration/base-catchexceptions-handler-1000.stderr": "a691c636186c6a930cdba90f36a8ea667783683f02945f9591b9cfd052adff1d"}}
+base catchexceptions-handler 2000 rc=0 Null
+CALIBRATION {"N": 2000, "memcpy": 61011, "symbols": ["__memcpy_avx_unaligned_erms", "__memcpy_chk", "memcpy@@GLIBC_2.14"], "artifacts": {"/home/remi/dev/rum/.temp/brief-626/continuation-2/final/copy-census/calibration/base-catchexceptions-handler-2000.out": "f7c66fd01da68ea65d279ef99489ee4204c8c8c1981350478d583ff0a80f0125", "/home/remi/dev/rum/.temp/brief-626/continuation-2/final/copy-census/calibration/base-catchexceptions-handler-2000.stdout": "a002524d8279a757abff9705262271831c988b48b06dbee7e143b4179da4abde", "/home/remi/dev/rum/.temp/brief-626/continuation-2/final/copy-census/calibration/base-catchexceptions-handler-2000.stderr": "2bf2cd53ba2fd70dbc3dc7b001656b512951ba9592aaffb9ca30431634a0a0fc"}}
+PASS symbolized memcpy slopes 30.0 30.0
+````
+
+
+**copy-census-1: exit 0.** [continuation-2/final/logs/copy-census-1.log](../../../.temp/brief-626/continuation-2/final/logs/copy-census-1.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/final/run-copy.py
+````
+
+
+````text
+COPY CAMPAIGN DONE 192 labels
+````
+
+
+**copy-compare: exit 0.** [continuation-2/final/logs/copy-compare.log](../../../.temp/brief-626/continuation-2/final/logs/copy-compare.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/final/compare-copies.py
+````
+
+
+````text
+lazy-range-take-small                         N=477   memcpy 129.000->129.000 memmove 0.000->0.000  ok
+lazy-range-normal-small                       N=373   memcpy 143.000->143.000 memmove 0.000->0.000  ok
+lazy-map-realize-small                        N=113   memcpy 295.000->295.000 memmove 0.000->0.000  ok
+lazy-select-realize-small                     N=177   memcpy 221.000->221.000 memmove 0.000->0.000  ok
+lazy-select-scan-small                        N=25    memcpy 1351.000->1351.000 memmove 0.000->0.000  ok
+lazy-nestlist-realize-small                   N=139   memcpy 177.000->177.000 memmove 0.000->0.000  ok
+lazy-foldlist-realize-small                   N=180   memcpy 203.000->203.000 memmove 0.000->0.000  ok
+lazy-drop-realize-small                       N=106   memcpy 311.000->311.000 memmove 0.000->0.000  ok
+lazy-first-small                              N=492   memcpy 59.000->59.000 memmove 0.000->0.000  ok
+lazy-part-small                               N=228   memcpy 137.000->137.000 memmove 0.000->0.000  ok
+lazy-transparent-adapters-small               N=111   memcpy 285.000->285.000 memmove 0.000->0.000  ok
+lazy-table-construct-short                    N=857   memcpy 50.000->50.000 memmove 0.000->0.000  ok
+lazy-table-construct-full                     N=837   memcpy 51.000->51.000 memmove 0.000->0.000  ok
+lazy-table-realize-small                      N=172   memcpy 211.000->211.000 memmove 0.000->0.000  ok
+lazy-permutations-take-small                  N=718   memcpy 24.000->24.000 memmove 0.000->0.000  ok
+lazy-subsets-take-small                       N=799   memcpy 24.000->24.000 memmove 0.000->0.000  ok
+lazy-tuples-take-small                        N=762   memcpy 24.000->24.000 memmove 0.000->0.000  ok
+scan-no-input                                 N=690   memcpy 51.000->51.000 memmove 0.000->0.000  ok
+optionvalue-three-no-input                    N=2000  memcpy 7.000->7.000 memmove 0.000->0.000  ok
+replacerepeated-no-input                      N=514   memcpy 29.000->29.000 memmove 0.000->0.000  ok
+dot-three-no-input                            N=80    memcpy 465.000->465.000 memmove 0.000->0.000  ok
+differences-no-input                          N=2000  memcpy 9.000->9.000 memmove 0.000->0.000  ok
+do-count-null                                 N=2000  memcpy 1.000->1.000 memmove 0.000->0.000  ok
+do-iterator-null                              N=2000  memcpy 2.000->2.000 memmove 0.000->0.000  ok
+table-iterator-null                           N=2000  memcpy 0.000->0.000 memmove 0.000->0.000  ok
+replaceall-simple                             N=1771  memcpy 23.000->23.000 memmove 0.000->0.000  ok
+table-small                                   N=1376  memcpy 13.000->13.000 memmove 0.000->0.000  ok
+table-iterator-plus                           N=2000  memcpy 1.000->1.000 memmove 0.000->0.000  ok
+table-iterator-pair-list                      N=2000  memcpy 0.000->0.000 memmove 0.000->0.000  ok
+take-multispec-small                          N=402   memcpy 47.000->47.000 memmove 0.000->0.000  ok
+lazy-depth-map-build-8                        N=1000  memcpy 25.000->25.000 memmove 0.000->0.000  ok
+lazy-depth-map-first-8                        N=155   memcpy 172.000->172.000 memmove 0.000->0.000  ok
+lazy-depth-map-eight-8                        N=21    memcpy 1219.000->1219.000 memmove 0.000->0.000  ok
+lazy-depth-select-restart-8                   N=112   memcpy 281.000->281.000 memmove 0.000->0.000  ok
+lazy-depth-drop-all-one-8                     N=431   memcpy 155.000->155.000 memmove 0.000->0.000  ok
+lazy-depth-take-map-8                         N=146   memcpy 188.000->188.000 memmove 0.000->0.000  ok
+lazy-depth-fold-through-source-8              N=34    memcpy 696.000->696.000 memmove 0.000->0.000  ok
+lazy-depth-nest-map-8                         N=144   memcpy 178.000->178.000 memmove 0.000->0.000  ok
+lazy-depth-map-build-64                       N=670   memcpy 25.000->25.000 memmove 0.000->0.000  ok
+lazy-depth-map-first-64                       N=21    memcpy 1124.000->1124.000 memmove 0.000->0.000  ok
+lazy-depth-map-eight-64                       N=2     memcpy 8835.000->8835.000 memmove 0.000->0.000  ok
+lazy-depth-select-restart-64                  N=20    memcpy 1401.000->1401.000 memmove 0.000->0.000  ok
+lazy-depth-drop-all-one-64                    N=61    memcpy 995.000->995.000 memmove 0.000->0.000  ok
+lazy-depth-take-map-64                        N=20    memcpy 1252.000->1252.000 memmove 0.000->0.000  ok
+lazy-depth-fold-through-source-64             N=1     memcpy 37549.000->37549.000 memmove 0.000->0.000  ok
+lazy-depth-nest-map-64                        N=21    memcpy 1130.000->1130.000 memmove 0.000->0.000  ok
+lazy-depth-map-build-256                      N=283   memcpy 25.000->25.000 memmove 0.000->0.000  ok
+lazy-depth-map-first-256                      N=5     memcpy 4388.000->4388.000 memmove 0.000->0.000  ok
+lazy-depth-map-eight-256                      N=1     memcpy 34949.000->34949.000 memmove 0.000->0.000  ok
+lazy-depth-select-restart-256                 N=5     memcpy 5241.000->5241.000 memmove 0.000->0.000  ok
+lazy-depth-drop-all-one-256                   N=9     memcpy 3875.000->3875.000 memmove 0.000->0.000  ok
+lazy-depth-take-map-256                       N=5     memcpy 4900.000->4900.000 memmove 0.000->0.000  ok
+lazy-depth-fold-through-source-256            N=1     memcpy 592431.000->592431.000 memmove 0.000->0.000  ok
+lazy-depth-nest-map-256                       N=5     memcpy 4394.000->4394.000 memmove 0.000->0.000  ok
+literal-integer                               N=2000  memcpy 1.000->1.000 memmove 0.000->0.000  ok
+downvalue-pattern-hit                         N=1465  memcpy 17.000->17.000 memmove 0.000->0.000  ok
+module-local                                  N=891   memcpy 32.000->32.000 memmove 0.000->0.000  ok
+block-local                                   N=1382  memcpy 29.000->29.000 memmove 0.000->0.000  ok
+matcher-single-wide-small                     N=26    memcpy 15.000->15.000 memmove 0.000->0.000  ok
+cases-wide-no-match                           N=8     memcpy 37.000->37.000 memmove 0.000->0.000  ok
+count-wide-no-match                           N=9     memcpy 32.000->32.000 memmove 0.000->0.000  ok
+position-wide-no-match                        N=7     memcpy 41.000->41.000 memmove 0.000->0.000  ok
+deletecases-wide-no-match                     N=7     memcpy 22.000->22.000 memmove 0.000->0.000  ok
+deletecases-wide-association-no-match         N=2     memcpy 31.000->31.000 memmove 0.000->0.000  ok
+deletecases-leaf-delete-small                 N=316   memcpy 12.000->12.000 memmove 0.000->0.000  ok
+replace-wide-no-match                         N=17    memcpy 32.000->32.000 memmove 0.000->0.000  ok
+replace-leaf-rebuild-small                    N=271   memcpy 22.000->22.000 memmove 0.000->0.000  ok
+rewrite-guarded-hit                           N=379   memcpy 51.000->51.000 memmove 0.000->0.000  ok
+rewrite-guarded-decline-fallback              N=259   memcpy 78.000->78.000 memmove 0.000->0.000  ok
+rule-rhs-deep-small                           N=242   memcpy 77.000->77.000 memmove 0.000->0.000  ok
+part-list                                     N=2000  memcpy 15.000->15.000 memmove 0.000->0.000  ok
+appendto-part-outer1000-small                 N=8     memcpy 2842.000->2842.000 memmove 0.000->0.000  ok
+appendto-part-outer1000-large                 N=5     memcpy 4643.000->4643.000 memmove 0.000->0.000  ok
+set-part-fixed100-len100                      N=15    memcpy 1713.000->1713.000 memmove 0.000->0.000  ok
+set-part-fixed100-len800                      N=15    memcpy 1713.000->1713.000 memmove 0.000->0.000  ok
+set-part-fill-small                           N=7     memcpy 3813.000->3813.000 memmove 0.000->0.000  ok
+set-part-fill-large                           N=3     memcpy 7613.000->7613.000 memmove 0.000->0.000  ok
+table-iterator-symbol                         N=2000  memcpy 0.000->0.000 memmove 0.000->0.000  ok
+symbol-ownvalue-read                          N=2000  memcpy 4.000->4.000 memmove 0.000->0.000  ok
+symbol-ownvalue-guarded-read                  N=2000  memcpy 6.000->6.000 memmove 0.000->0.000  ok
+block-symbol-only-repeat                      N=1871  memcpy 24.000->24.000 memmove 0.000->0.000  ok
+downvalue-exact-hit                           N=2000  memcpy 8.000->8.000 memmove 0.000->0.000  ok
+downvalue-exact-miss                          N=2000  memcpy 2.000->2.000 memmove 0.000->0.000  ok
+downvalue-pattern-miss                        N=2000  memcpy 2.000->2.000 memmove 0.000->0.000  ok
+downvalue-guarded-hit                         N=725   memcpy 32.000->32.000 memmove 0.000->0.000  ok
+downvalue-guarded-decline-fallback            N=958   memcpy 21.000->21.000 memmove 0.000->0.000  ok
+upvalue-guarded-hit                           N=590   memcpy 35.000->35.000 memmove 0.000->0.000  ok
+subvalue-unguarded-hit                        N=996   memcpy 25.000->25.000 memmove 0.000->0.000  ok
+subvalue-unguarded-miss                       N=1773  memcpy 17.000->17.000 memmove 0.000->0.000  ok
+subvalue-guarded-hit                          N=567   memcpy 41.000->41.000 memmove 0.000->0.000  ok
+default-unguarded-hit                         N=1163  memcpy 14.000->14.000 memmove 0.000->0.000  ok
+default-unguarded-miss                        N=1564  memcpy 12.000->12.000 memmove 0.000->0.000  ok
+default-guarded-hit                           N=894   memcpy 15.000->15.000 memmove 0.000->0.000  ok
+downvalue-exact-miss-repeat                   N=2000  memcpy 2.000->2.000 memmove 0.000->0.000  ok
+downvalue-pattern-miss-repeat                 N=2000  memcpy 2.000->2.000 memmove 0.000->0.000  ok
+upvalue-candidates-tiny                       N=637   memcpy 41.000->41.000 memmove 0.000->0.000  ok
+upvalue-candidates-wide-small                 N=6     memcpy 1646.000->1646.000 memmove 0.000->0.000  ok
+upvalue-candidates-wide-large                 N=3     memcpy 3247.000->3247.000 memmove 0.000->0.000  ok
+sort-default-wide                             N=20    memcpy 12.000->12.000 memmove 0.000->0.000  ok
+sortby-default-wide                           N=2     memcpy 11222.000->11222.000 memmove 0.000->0.000  ok
+reversesort-default-wide                      N=20    memcpy 12.000->12.000 memmove 0.000->0.000  ok
+keysort-default-wide                          N=2     memcpy 1639.000->1639.000 memmove 0.000->0.000  ok
+keysortby-default-wide                        N=1     memcpy 12842.000->12842.000 memmove 0.000->0.000  ok
+sort-symbol-default-width4000                 N=3     memcpy 18.000->18.000 memmove 0.000->0.000  ok
+sort-symbol-default-width16000                N=1     memcpy 23.000->23.000 memmove 0.000->0.000  ok
+valueq-undefined-symbol-definitions-2000      N=20    memcpy 7.000->7.000 memmove 0.000->0.000  ok
+valueq-undefined-symbol-definitions-8000      N=20    memcpy 7.000->7.000 memmove 0.000->0.000  ok
+matcher-single-tiny                           N=1000  memcpy 8.000->8.000 memmove 0.000->0.000  ok
+matcher-single-wide-large                     N=13    memcpy 17.000->17.000 memmove 0.000->0.000  ok
+replacepart-deep-path-small                   N=489   memcpy 48.000->48.000 memmove 0.000->0.000  ok
+replacepart-wide-rule-list                    N=3     memcpy 4817.000->4817.000 memmove 0.000->0.000  ok
+replacepart-guarded-hit                       N=500   memcpy 24.000->24.000 memmove 0.000->0.000  ok
+replacepart-guarded-decline-fallback          N=500   memcpy 28.000->28.000 memmove 0.000->0.000  ok
+stringreplace-single-literal-unguarded        N=200   memcpy 34.000->34.000 memmove 0.000->0.000  ok
+stringreplace-pattern-unguarded               N=500   memcpy 37.000->37.000 memmove 0.000->0.000  ok
+stringreplace-guarded-hit                     N=500   memcpy 34.000->34.000 memmove 0.000->0.000  ok
+stringreplace-guarded-decline-fallback        N=500   memcpy 38.000->38.000 memmove 0.000->0.000  ok
+association-part-key-read-width4000           N=40    memcpy 21.000->21.000 memmove 0.000->0.000  ok
+association-part-positional-read-width4000    N=40    memcpy 16.000->16.000 memmove 0.000->0.000  ok
+association-part-key-read-width32000          N=40    memcpy 21.000->21.000 memmove 0.000->0.000  ok
+association-part-positional-read-width32000   N=40    memcpy 16.000->16.000 memmove 0.000->0.000  ok
+appendto-list-incremental-small               N=250   memcpy 12.004->12.004 memmove 0.000->0.000  ok
+appendto-list-incremental-large               N=500   memcpy 12.002->12.002 memmove 0.000->0.000  ok
+association-set-key-incremental-small         N=100   memcpy 14.030->14.030 memmove 0.000->0.000  ok
+association-set-key-incremental-large         N=200   memcpy 14.015->14.015 memmove 0.000->0.000  ok
+association-set-part-key-investigation        N=100   memcpy 21.000->21.000 memmove 0.000->0.000  ok
+table-count-null                              N=8     memcpy 10.000->10.000 memmove 0.000->0.000  ok
+replaceall-wide-no-match                      N=24    memcpy 35.000->35.000 memmove 0.000->0.000  ok
+replaceall-leaf-rebuild-small                 N=300   memcpy 35.000->35.000 memmove 0.000->0.000  ok
+replaceall-guarded-hit-small                  N=254   memcpy 82.000->82.000 memmove 0.000->0.000  ok
+replace-rule-list-decline                     N=393   memcpy 49.000->49.000 memmove 0.000->0.000  ok
+replacerepeated-guarded-small                 N=53    memcpy 484.000->484.000 memmove 0.000->0.000  ok
+replaceat-small                               N=500   memcpy 41.000->41.000 memmove 0.000->0.000  ok
+memberq-wide-no-match                         N=9     memcpy 28.000->28.000 memmove 0.000->0.000  ok
+freeq-wide-no-match                           N=8     memcpy 28.000->28.000 memmove 0.000->0.000  ok
+count-wide-match                              N=9     memcpy 31.000->31.000 memmove 0.000->0.000  ok
+count-guarded-small                           N=399   memcpy 44.000->44.000 memmove 0.000->0.000  ok
+position-small-match                          N=500   memcpy 11.000->11.000 memmove 0.000->0.000  ok
+catch-no-throw                                N=500   memcpy 9.000->9.000 memmove 0.000->0.000  ok
+catch-throw-untagged                          N=500   memcpy 20.000->20.000 memmove 0.000->0.000  ok
+catch-throw-tagged-hit                        N=500   memcpy 22.000->22.000 memmove 0.000->0.000  ok
+catch-throw-pattern-hit                       N=500   memcpy 25.000->25.000 memmove 0.000->0.000  ok
+checkabort-no-abort                           N=500   memcpy 7.000->7.000 memmove 0.000->0.000  ok
+checkabort-caught                             N=500   memcpy 17.000->17.000 memmove 0.000->0.000  ok
+abortprotect-clean                            N=500   memcpy 14.000->14.000 memmove 0.000->0.000  ok
+assert-disabled                               N=500   memcpy 7.000->7.000 memmove 0.000->0.000  ok
+assert-enabled-true                           N=500   memcpy 19.000->19.000 memmove 0.000->0.000  ok
+check-clean                                   N=500   memcpy 14.000->14.000 memmove 0.000->0.000  ok
+check-message-fallback                        N=500   memcpy 40.000->40.000 memmove 0.000->0.000  ok
+quiet-clean                                   N=500   memcpy 15.000->15.000 memmove 0.000->0.000  ok
+withcleanup-two-arg                           N=500   memcpy 23.000->23.000 memmove 0.000->0.000  ok
+catchexceptions-caught                        N=500   memcpy 41.000->41.000 memmove 0.000->0.000  ok
+catch-throw                                   N=500   memcpy 20.000->20.000 memmove 0.000->0.000  ok
+catch-tagged-throw                            N=500   memcpy 22.000->22.000 memmove 0.000->0.000  ok
+catch-form-pattern                            N=500   memcpy 25.000->25.000 memmove 0.000->0.000  ok
+checkabort-abort                              N=500   memcpy 17.000->17.000 memmove 0.000->0.000  ok
+abortprotect-small                            N=500   memcpy 7.000->7.000 memmove 0.000->0.000  ok
+withcleanup-small                             N=500   memcpy 11.000->11.000 memmove 0.000->0.000  ok
+withcleanup-init                              N=500   memcpy 12.000->12.000 memmove 0.000->0.000  ok
+check-no-message                              N=500   memcpy 7.000->7.000 memmove 0.000->0.000  ok
+quiet-no-message                              N=500   memcpy 8.000->8.000 memmove 0.000->0.000  ok
+catchexceptions-handler                       N=500   memcpy 30.000->30.000 memmove 0.000->0.000  ok
+catchexceptions-no-throw                      N=500   memcpy 7.000->7.000 memmove 0.000->0.000  ok
+assert-off                                    N=500   memcpy 7.000->7.000 memmove 0.000->0.000  ok
+function-slot-apply                           N=500   memcpy 18.000->18.000 memmove 0.000->0.000  ok
+function-named-apply                          N=500   memcpy 17.000->17.000 memmove 0.000->0.000  ok
+composition-apply                             N=500   memcpy 59.000->59.000 memmove 0.000->0.000  ok
+association-apply                             N=500   memcpy 15.000->15.000 memmove 0.000->0.000  ok
+failure-raw-property                          N=500   memcpy 23.000->23.000 memmove 0.000->0.000  ok
+failure-list-property                         N=500   memcpy 22.000->22.000 memmove 0.000->0.000  ok
+failure-missing-property                      N=500   memcpy 25.000->25.000 memmove 0.000->0.000  ok
+success-raw-property                          N=500   memcpy 19.000->19.000 memmove 0.000->0.000  ok
+failure-message-property                      N=500   memcpy 45.000->45.000 memmove 0.000->0.000  ok
+failure-message-delayed                       N=500   memcpy 60.000->60.000 memmove 0.000->0.000  ok
+failure-styled-message                        N=500   memcpy 45.000->45.000 memmove 0.000->0.000  ok
+failure-tag-fallback                          N=500   memcpy 18.000->18.000 memmove 0.000->0.000  ok
+enclose-message-handler                       N=480   memcpy 64.000->64.000 memmove 0.000->0.000  ok
+confirm-failure-message                       N=385   memcpy 87.000->87.000 memmove 0.000->0.000  ok
+lhs-set-literal                               N=1890  memcpy 18.000->18.000 memmove 0.000->0.000  ok
+lhs-set-ownvalue-arg                          N=1531  memcpy 22.000->22.000 memmove 0.000->0.000  ok
+lhs-set-head-eval                             N=1531  memcpy 22.000->22.000 memmove 0.000->0.000  ok
+lhs-setdelayed-pattern                        N=932   memcpy 24.000->24.000 memmove 0.000->0.000  ok
+lhs-upset                                     N=1559  memcpy 21.000->21.000 memmove 0.000->0.000  ok
+lhs-tagset                                    N=1588  memcpy 21.000->21.000 memmove 0.000->0.000  ok
+lhs-set-unset                                 N=800   memcpy 42.000->42.000 memmove 0.000->0.000  ok
+lhs-set-cycle-recovery                        N=1653  memcpy 21.000->21.000 memmove 0.000->0.000  ok
+set-ownvalue                                  N=2000  memcpy 6.000->6.000 memmove 0.000->0.000  ok
+c1-replaceall-atom                            N=500   memcpy 23.000->23.000 memmove 0.000->0.000  ok
+c1-replaceall-unheld-atom                     N=500   memcpy 23.000->23.000 memmove 0.000->0.000  ok
+c1-replaceall-rule-rhs-deep-small             N=272   memcpy 73.000->73.000 memmove 0.000->0.000  ok
+c1-replaceall-rewrite-guarded-hit             N=462   memcpy 45.000->45.000 memmove 0.000->0.000  ok
+c1-replaceall-rewrite-guarded-decline-fallback N=303   memcpy 69.000->69.000 memmove 0.000->0.000  ok
+labels 192, copy count above base: 0
+ABOVE: 
+WHOLE-PROGRAM copy counts above base: []
+````
+
+
+**flag-function-diffs: exit 0.** [continuation-2/final/logs/flag-function-diffs.log](../../../.temp/brief-626/continuation-2/final/logs/flag-function-diffs.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/final/diff-functions.py
+````
+
+
+````text
+lazy-map-realize-small total 193.23 main 55.664 libc 137.566 libcInstructionProofs 1
+lazy-select-realize-small total 36.554 main -63.073 libc 99.627 libcInstructionProofs 1
+lazy-foldlist-realize-small total 126.478 main 11.028 libc 115.45 libcInstructionProofs 1
+lazy-first-small total 0.232 main -8.396 libc 8.628 libcInstructionProofs 1
+lazy-table-construct-short total 11.191 main 45.688 libc -34.497 libcInstructionProofs 0
+lazy-table-realize-small total 56.052 main -32.337 libc 88.39 libcInstructionProofs 1
+optionvalue-three-no-input total 18.063 main 10.196 libc 7.867 libcInstructionProofs 1
+dot-three-no-input total 400.562 main 11.337 libc 389.225 libcInstructionProofs 1
+lazy-depth-map-first-8 total 545.006 main 418.335 libc 126.671 libcInstructionProofs 1
+lazy-depth-map-eight-8 total 2814.048 main 1792.524 libc 1021.524 libcInstructionProofs 1
+lazy-depth-take-map-8 total 171.37 main 45.185 libc 126.185 libcInstructionProofs 1
+lazy-depth-fold-through-source-8 total 1429.471 main 821.294 libc 608.176 libcInstructionProofs 1
+lazy-depth-nest-map-8 total -103.222 main -248.16 libc 144.938 libcInstructionProofs 1
+lazy-depth-map-first-64 total -2437.0 main -3460.952 libc 1023.952 libcInstructionProofs 1
+lazy-depth-map-eight-64 total -16625.0 main -24933.0 libc 8308.0 libcInstructionProofs 1
+lazy-depth-take-map-64 total 968.05 main -47.85 libc 1015.9 libcInstructionProofs 1
+lazy-depth-fold-through-source-64 total 35863.0 main 2362.0 libc 33501.0 libcInstructionProofs 1
+lazy-depth-map-eight-256 total 23558.0 main -8988.0 libc 32546.0 libcInstructionProofs 1
+lazy-depth-take-map-256 total -2717.6 main -6752.6 libc 4035.0 libcInstructionProofs 1
+lazy-depth-fold-through-source-256 total 580691.0 main 54164.0 libc 526527.0 libcInstructionProofs 1
+downvalue-pattern-hit total 19.517 main 3.515 libc 16.002 libcInstructionProofs 1
+module-local total 36.435 main 3.853 libc 32.582 libcInstructionProofs 1
+block-local total 13.959 main -1.963 libc 15.922 libcInstructionProofs 1
+deletecases-wide-association-no-match total 8595.5 main -4083.0 libc 12678.5 libcInstructionProofs 1
+appendto-part-outer1000-small total 1646.5 main 824.0 libc 822.5 libcInstructionProofs 1
+table-iterator-symbol total 2.389 main 2.239 libc 0.15 libcInstructionProofs 1
+downvalue-exact-miss total -1.726 main -1.475 libc -0.251 libcInstructionProofs 0
+downvalue-guarded-hit total 17.254 main 1.495 libc 15.759 libcInstructionProofs 1
+subvalue-unguarded-hit total 15.659 main -0.312 libc 15.971 libcInstructionProofs 1
+subvalue-guarded-hit total 16.7 main 0.009 libc 16.691 libcInstructionProofs 1
+default-guarded-hit total 0.141 main -0.057 libc 0.198 libcInstructionProofs 1
+downvalue-exact-miss-repeat total 0.711 main 0.7 libc 0.011 libcInstructionProofs 1
+upvalue-candidates-tiny total 31.978 main 15.403 libc 16.575 libcInstructionProofs 1
+keysort-default-wide total 14768.0 main 2033.5 libc 12734.5 libcInstructionProofs 1
+keysortby-default-wide total -6312.0 main -18812.0 libc 12500.0 libcInstructionProofs 1
+sort-symbol-default-width16000 total 79824.0 main 83654.0 libc -3830.0 libcInstructionProofs 0
+stringreplace-guarded-hit total 11.118 main 3.154 libc 7.964 libcInstructionProofs 1
+association-part-key-read-width32000 total 166.525 main 155.45 libc 11.075 libcInstructionProofs 1
+association-set-part-key-investigation total 31.39 main -2.36 libc 33.75 libcInstructionProofs 1
+replace-rule-list-decline total -21.059 main -3.476 libc -17.583 libcInstructionProofs 0
+replacerepeated-guarded-small total 245.774 main -14.472 libc 260.245 libcInstructionProofs 1
+replaceat-small total 39.204 main 24.02 libc 15.184 libcInstructionProofs 1
+position-small-match total -3.378 main -43.458 libc 40.08 libcInstructionProofs 1
+catch-no-throw total 8.106 main 8.28 libc -0.174 libcInstructionProofs 0
+catch-throw-untagged total 0.072 main 0.458 libc -0.386 libcInstructionProofs 0
+checkabort-caught total 19.706 main -2.462 libc 22.168 libcInstructionProofs 1
+abortprotect-clean total 15.546 main -0.188 libc 15.734 libcInstructionProofs 1
+check-clean total 14.362 main -1.706 libc 16.068 libcInstructionProofs 1
+check-message-fallback total -47.162 main -47.052 libc -0.11 libcInstructionProofs 0
+quiet-clean total 17.206 main 0.888 libc 16.318 libcInstructionProofs 1
+withcleanup-two-arg total 18.34 main 2.03 libc 16.31 libcInstructionProofs 1
+catch-tagged-throw total -20.552 main -20.058 libc -0.494 libcInstructionProofs 0
+checkabort-abort total -136.522 main -159.742 libc 23.22 libcInstructionProofs 1
+withcleanup-init total 22.116 main 21.676 libc 0.44 libcInstructionProofs 1
+catchexceptions-handler total -104.55 main -16.818 libc -87.732 libcInstructionProofs 0
+function-slot-apply total 7.612 main -7.242 libc 14.854 libcInstructionProofs 1
+function-named-apply total 18.778 main 2.952 libc 15.826 libcInstructionProofs 1
+composition-apply total 39.806 main 0.07 libc 39.736 libcInstructionProofs 1
+failure-list-property total 5.48 main -2.74 libc 8.22 libcInstructionProofs 1
+failure-missing-property total 8.818 main 0.612 libc 8.206 libcInstructionProofs 1
+failure-message-property total -86.158 main -85.63 libc -0.528 libcInstructionProofs 0
+failure-message-delayed total -21.336 main -37.136 libc 15.8 libcInstructionProofs 1
+c1-replaceall-unheld-atom total 23.052 main 11.374 libc 11.678 libcInstructionProofs 1
+FUNCTION DIFFS 63 / 63
+````
+
+
+**pointer-probe: exit 1.** [continuation-2/final/logs/pointer-probe.log](../../../.temp/brief-626/continuation-2/final/logs/pointer-probe.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/capture-pointers.py downvalue-pattern-hit
+````
+
+
+````text
+Traceback (most recent call last):
+  File "/home/remi/dev/rum/.temp/brief-626/continuation-2/capture-pointers.py", line 27, in <module>
+    assert r.returncode==0,(name,arm,r.returncode)
+           ^^^^^^^^^^^^^^^
+AssertionError: ('downvalue-pattern-hit', 'base', 1)
+````
+
+
+**pointer-remote-probe: exit 1.** [continuation-2/final/logs/pointer-remote-probe.log](../../../.temp/brief-626/continuation-2/final/logs/pointer-remote-probe.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/try-remote-pointers.py downvalue-pattern-hit base
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointer-remote-probe-retry2: exit 1.** [continuation-2/final/logs/pointer-remote-probe-retry2.log](../../../.temp/brief-626/continuation-2/final/logs/pointer-remote-probe-retry2.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/try-remote-pointers.py downvalue-pattern-hit base retry2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointer-remote-probe-retry3: exit 0.** [continuation-2/final/logs/pointer-remote-probe-retry3.log](../../../.temp/brief-626/continuation-2/final/logs/pointer-remote-probe-retry3.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/try-remote-pointers.py downvalue-pattern-hit base retry3
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointer-remote-candidate: exit 0.** [continuation-2/final/logs/pointer-remote-candidate.log](../../../.temp/brief-626/continuation-2/final/logs/pointer-remote-candidate.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/try-remote-pointers.py downvalue-pattern-hit cand retry3
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointer-list-n2-base: exit 0.** [continuation-2/final/logs/pointer-list-n2-base.log](../../../.temp/brief-626/continuation-2/final/logs/pointer-list-n2-base.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/try-remote-pointers.py downvalue-pattern-hit base retry3-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointer-list-n2-cand: exit 0.** [continuation-2/final/logs/pointer-list-n2-cand.log](../../../.temp/brief-626/continuation-2/final/logs/pointer-list-n2-cand.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/try-remote-pointers.py downvalue-pattern-hit cand retry3-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**five-base-1-part1: exit 0.** [continuation-2/final/logs/five-base-1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/five-base-1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final/run-perf.py instructions base extra-1 cli @/home/remi/dev/rum/.temp/brief-626/continuation-2/final/all-initial-flags.json
+````
+
+
+**five-candidate-1-part1: exit 0.** [continuation-2/final/logs/five-candidate-1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/five-candidate-1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final/run-perf.py instructions candidate extra-1 cli @/home/remi/dev/rum/.temp/brief-626/continuation-2/final/all-initial-flags.json
+````
+
+
+**five-base-2-part1: exit 0.** [continuation-2/final/logs/five-base-2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/five-base-2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final/run-perf.py instructions base extra-2 cli @/home/remi/dev/rum/.temp/brief-626/continuation-2/final/all-initial-flags.json
+````
+
+
+**five-candidate-2-part1: exit 0.** [continuation-2/final/logs/five-candidate-2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/five-candidate-2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final/run-perf.py instructions candidate extra-2 cli @/home/remi/dev/rum/.temp/brief-626/continuation-2/final/all-initial-flags.json
+````
+
+
+**five-base-3-part1: exit 0.** [continuation-2/final/logs/five-base-3-part1.log](../../../.temp/brief-626/continuation-2/final/logs/five-base-3-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final/run-perf.py instructions base extra-3 cli @/home/remi/dev/rum/.temp/brief-626/continuation-2/final/all-initial-flags.json
+````
+
+
+**all-five-controls-1: exit 0.** [continuation-2/final/logs/all-five-controls-1.log](../../../.temp/brief-626/continuation-2/final/logs/all-five-controls-1.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/final/run-five-flags.py
+````
+
+
+````text
+five-base-1-part1 exit 0
+
+FIVE-PAIR PROGRESS 1 base 126 / 126
+five-candidate-1-part1 exit 0
+
+FIVE-PAIR PROGRESS 1 candidate 126 / 126
+five-base-2-part1 exit 0
+
+FIVE-PAIR PROGRESS 2 base 126 / 126
+five-candidate-2-part1 exit 0
+
+FIVE-PAIR PROGRESS 2 candidate 126 / 126
+five-base-3-part1 exit 0
+
+FIVE-PAIR PROGRESS 3 base 126 / 126
+FIVE-PAIR CHUNK COMPLETE; resume same command
+````
+
+
+**five-candidate-3-part1: exit 0.** [continuation-2/final/logs/five-candidate-3-part1.log](../../../.temp/brief-626/continuation-2/final/logs/five-candidate-3-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final/run-perf.py instructions candidate extra-3 cli @/home/remi/dev/rum/.temp/brief-626/continuation-2/final/all-initial-flags.json
+````
+
+
+**five-base-4-part1: exit 0.** [continuation-2/final/logs/five-base-4-part1.log](../../../.temp/brief-626/continuation-2/final/logs/five-base-4-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final/run-perf.py instructions base extra-4 cli @/home/remi/dev/rum/.temp/brief-626/continuation-2/final/all-initial-flags.json
+````
+
+
+**five-candidate-4-part1: exit 0.** [continuation-2/final/logs/five-candidate-4-part1.log](../../../.temp/brief-626/continuation-2/final/logs/five-candidate-4-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final/run-perf.py instructions candidate extra-4 cli @/home/remi/dev/rum/.temp/brief-626/continuation-2/final/all-initial-flags.json
+````
+
+
+**five-base-5-part1: exit 0.** [continuation-2/final/logs/five-base-5-part1.log](../../../.temp/brief-626/continuation-2/final/logs/five-base-5-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final/run-perf.py instructions base extra-5 cli @/home/remi/dev/rum/.temp/brief-626/continuation-2/final/all-initial-flags.json
+````
+
+
+**five-candidate-5-part1: exit 0.** [continuation-2/final/logs/five-candidate-5-part1.log](../../../.temp/brief-626/continuation-2/final/logs/five-candidate-5-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final/run-perf.py instructions candidate extra-5 cli @/home/remi/dev/rum/.temp/brief-626/continuation-2/final/all-initial-flags.json
+````
+
+
+**all-five-controls-2: exit 0.** [continuation-2/final/logs/all-five-controls-2.log](../../../.temp/brief-626/continuation-2/final/logs/all-five-controls-2.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/final/run-five-flags.py
+````
+
+
+````text
+five-candidate-3-part1 exit 0
+
+FIVE-PAIR PROGRESS 3 candidate 126 / 126
+five-base-4-part1 exit 0
+
+FIVE-PAIR PROGRESS 4 base 126 / 126
+five-candidate-4-part1 exit 0
+
+FIVE-PAIR PROGRESS 4 candidate 126 / 126
+five-base-5-part1 exit 0
+
+FIVE-PAIR PROGRESS 5 base 126 / 126
+five-candidate-5-part1 exit 0
+
+FIVE-PAIR PROGRESS 5 candidate 126 / 126
+ALL FIVE-PAIR CONTROLS COMPLETE 63 labels
+````
+
+
+**five-compare: exit 0.** [continuation-2/final/logs/five-compare.log](../../../.temp/brief-626/continuation-2/final/logs/five-compare.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/final/compare-performance.py extra
+````
+
+
+````text
+Ordinary flags: ['optionvalue-three-no-input', 'dot-three-no-input', 'lazy-depth-map-eight-8', 'lazy-depth-take-map-8', 'lazy-depth-fold-through-source-8', 'lazy-depth-map-eight-64', 'lazy-depth-take-map-64', 'lazy-depth-fold-through-source-64', 'lazy-depth-map-eight-256', 'lazy-depth-take-map-256', 'lazy-depth-fold-through-source-256', 'downvalue-pattern-hit', 'block-local', 'deletecases-wide-association-no-match', 'downvalue-guarded-hit', 'subvalue-unguarded-hit', 'keysort-default-wide', 'keysortby-default-wide', 'replacerepeated-guarded-small', 'abortprotect-clean', 'check-clean', 'withcleanup-two-arg', 'function-named-apply', 'composition-apply']
+Ineligible: []
+Eligible resume rows: 0
+````
+
+
+**pointers-optionvalue-three-no-input-base-n1-part1: exit 0.** [continuation-2/final/logs/pointers-optionvalue-three-no-input-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-optionvalue-three-no-input-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py optionvalue-three-no-input base final-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-optionvalue-three-no-input-cand-n1-part1: exit 0.** [continuation-2/final/logs/pointers-optionvalue-three-no-input-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-optionvalue-three-no-input-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py optionvalue-three-no-input cand final-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-optionvalue-three-no-input-base-n2-part1: exit 0.** [continuation-2/final/logs/pointers-optionvalue-three-no-input-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-optionvalue-three-no-input-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py optionvalue-three-no-input base final-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-optionvalue-three-no-input-cand-n2-part1: exit 0.** [continuation-2/final/logs/pointers-optionvalue-three-no-input-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-optionvalue-three-no-input-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py optionvalue-three-no-input cand final-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-dot-three-no-input-base-n1-part1: exit 0.** [continuation-2/final/logs/pointers-dot-three-no-input-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-dot-three-no-input-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py dot-three-no-input base final-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-dot-three-no-input-cand-n1-part1: exit 0.** [continuation-2/final/logs/pointers-dot-three-no-input-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-dot-three-no-input-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py dot-three-no-input cand final-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-dot-three-no-input-base-n2-part1: exit 0.** [continuation-2/final/logs/pointers-dot-three-no-input-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-dot-three-no-input-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py dot-three-no-input base final-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-dot-three-no-input-cand-n2-part1: exit 0.** [continuation-2/final/logs/pointers-dot-three-no-input-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-dot-three-no-input-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py dot-three-no-input cand final-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-map-eight-8-base-n1-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-map-eight-8-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-map-eight-8-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-map-eight-8 base final-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-map-eight-8-cand-n1-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-map-eight-8-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-map-eight-8-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-map-eight-8 cand final-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-map-eight-8-base-n2-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-map-eight-8-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-map-eight-8-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-map-eight-8 base final-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-map-eight-8-cand-n2-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-map-eight-8-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-map-eight-8-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-map-eight-8 cand final-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-take-map-8-base-n1-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-take-map-8-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-take-map-8-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-take-map-8 base final-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-take-map-8-cand-n1-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-take-map-8-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-take-map-8-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-take-map-8 cand final-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-take-map-8-base-n2-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-take-map-8-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-take-map-8-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-take-map-8 base final-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-take-map-8-cand-n2-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-take-map-8-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-take-map-8-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-take-map-8 cand final-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-fold-through-source-8-base-n1-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-fold-through-source-8-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-fold-through-source-8-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-fold-through-source-8 base final-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-fold-through-source-8-cand-n1-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-fold-through-source-8-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-fold-through-source-8-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-fold-through-source-8 cand final-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-fold-through-source-8-base-n2-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-fold-through-source-8-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-fold-through-source-8-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-fold-through-source-8 base final-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-fold-through-source-8-cand-n2-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-fold-through-source-8-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-fold-through-source-8-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-fold-through-source-8 cand final-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-map-eight-64-base-n1-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-map-eight-64-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-map-eight-64-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-map-eight-64 base final-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-map-eight-64-cand-n1-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-map-eight-64-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-map-eight-64-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-map-eight-64 cand final-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-map-eight-64-base-n2-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-map-eight-64-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-map-eight-64-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-map-eight-64 base final-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-map-eight-64-cand-n2-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-map-eight-64-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-map-eight-64-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-map-eight-64 cand final-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-take-map-64-base-n1-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-take-map-64-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-take-map-64-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-take-map-64 base final-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-take-map-64-cand-n1-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-take-map-64-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-take-map-64-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-take-map-64 cand final-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-take-map-64-base-n2-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-take-map-64-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-take-map-64-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-take-map-64 base final-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-take-map-64-cand-n2-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-take-map-64-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-take-map-64-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-take-map-64 cand final-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-fold-through-source-64-base-n1-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-fold-through-source-64-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-fold-through-source-64-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-fold-through-source-64 base final-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-fold-through-source-64-cand-n1-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-fold-through-source-64-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-fold-through-source-64-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-fold-through-source-64 cand final-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-fold-through-source-64-base-n2-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-fold-through-source-64-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-fold-through-source-64-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-fold-through-source-64 base final-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-fold-through-source-64-cand-n2-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-fold-through-source-64-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-fold-through-source-64-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-fold-through-source-64 cand final-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-map-eight-256-base-n1-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-map-eight-256-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-map-eight-256-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-map-eight-256 base final-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-map-eight-256-cand-n1-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-map-eight-256-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-map-eight-256-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-map-eight-256 cand final-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-map-eight-256-base-n2-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-map-eight-256-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-map-eight-256-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-map-eight-256 base final-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**persistent-pointers-1: exit 0.** [continuation-2/final/logs/persistent-pointers-1.log](../../../.temp/brief-626/continuation-2/final/logs/persistent-pointers-1.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/capture-persistent-pointers.py
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-map-eight-256-cand-n2-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-map-eight-256-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-map-eight-256-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-map-eight-256 cand final-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-take-map-256-base-n1-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-take-map-256-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-take-map-256-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-take-map-256 base final-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-take-map-256-cand-n1-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-take-map-256-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-take-map-256-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-take-map-256 cand final-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-take-map-256-base-n2-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-take-map-256-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-take-map-256-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-take-map-256 base final-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointers-lazy-depth-take-map-256-cand-n2-part1: exit 0.** [continuation-2/final/logs/pointers-lazy-depth-take-map-256-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/pointers-lazy-depth-take-map-256-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/try-remote-pointers.py lazy-depth-take-map-256 cand final-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**rsp-calibrate-list-base1: exit 1.** [continuation-2/final/logs/rsp-calibrate-list-base1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-calibrate-list-base1.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/rsp-pointers.py downvalue-pattern-hit base 1 calibrate-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+Traceback (most recent call last):
+  File "/home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py", line 75, in <module>
+    assert rsp.raw('Hg0')=='OK'
+           ^^^^^^^^^^^^^^^^^^^^
+AssertionError
+````
+
+
+**rsp-calibrate-list-base1-retry2: exit 0.** [continuation-2/final/logs/rsp-calibrate-list-base1-retry2.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-calibrate-list-base1-retry2.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/rsp-pointers.py downvalue-pattern-hit base 1 calibrate2-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC9
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit base 1 calls 1407 groups 83
+````
+
+
+**rsp-calibrate-list-cand1: exit 0.** [continuation-2/final/logs/rsp-calibrate-list-cand1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-calibrate-list-cand1.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/rsp-pointers.py downvalue-pattern-hit cand 1 calibrate2-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC9
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit cand 1 calls 1403 groups 83
+````
+
+
+**rsp-calibrate-list-base2: exit 0.** [continuation-2/final/logs/rsp-calibrate-list-base2.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-calibrate-list-base2.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/rsp-pointers.py downvalue-pattern-hit base 2 calibrate2-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC10
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit base 2 calls 1412 groups 83
+````
+
+
+**rsp-calibrate-list-cand2: exit 0.** [continuation-2/final/logs/rsp-calibrate-list-cand2.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-calibrate-list-cand2.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/rsp-pointers.py downvalue-pattern-hit cand 2 calibrate2-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC17
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit cand 2 calls 1410 groups 83
+````
+
+
+**rsp-largest-base1: exit 1.** [continuation-2/final/logs/rsp-largest-base1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-largest-base1.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/rsp-pointers.py lazy-depth-fold-through-source-256 base 1 largest-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC7
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTER PROGRESS 40000
+RSP POINTER PROGRESS 50000
+RSP POINTER PROGRESS 60000
+RSP POINTER PROGRESS 70000
+RSP POINTER PROGRESS 80000
+RSP POINTER PROGRESS 90000
+RSP POINTER PROGRESS 100000
+RSP POINTER PROGRESS 110000
+RSP POINTER PROGRESS 120000
+RSP POINTER PROGRESS 130000
+RSP POINTER PROGRESS 140000
+Traceback (most recent call last):
+  File "/home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py", line 107, in <module>
+    progress.write_text(json.dumps(dict(calls=calls,packets=rsp.packets,elapsed=time.monotonic()-started))+'\n');print('RSP POINTER PROGRESS',calls,flush=True)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 809, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IsADirectoryError: [Errno 21] Is a directory: '/home/remi/dev/rum/.temp/brief-626/continuation-2/final/rsp-pointer-traces-largest-n1/base-lazy-depth-fold-through-source-256.progress.json'
+````
+
+
+**rsp-resume-calibration: exit 0.** [continuation-2/final/logs/rsp-resume-calibration.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-resume-calibration.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/rsp-pointers.py downvalue-pattern-hit base 1 resume-calibrate-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC7
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit base 1 calls 1401 groups 84
+````
+
+
+**rsp-resume-calibrate-cand1: exit 0.** [continuation-2/final/logs/rsp-resume-calibrate-cand1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-resume-calibrate-cand1.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/rsp-pointers.py downvalue-pattern-hit cand 1 resume-calibrate-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC9
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit cand 1 calls 1402 groups 82
+````
+
+
+**rsp-resume-calibrate-base2: exit 0.** [continuation-2/final/logs/rsp-resume-calibrate-base2.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-resume-calibrate-base2.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/rsp-pointers.py downvalue-pattern-hit base 2 resume-calibrate-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC10
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit base 2 calls 1414 groups 81
+````
+
+
+**rsp-resume-calibrate-cand2: exit 0.** [continuation-2/final/logs/rsp-resume-calibrate-cand2.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-resume-calibrate-cand2.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/rsp-pointers.py downvalue-pattern-hit cand 2 resume-calibrate-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC17
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit cand 2 calls 1417 groups 84
+````
+
+
+**rsp-largest-base1-fast: exit 1.** [continuation-2/final/logs/rsp-largest-base1-fast.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-largest-base1-fast.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/rsp-pointers.py lazy-depth-fold-through-source-256 base 1 largest-fast-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC7
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTER PROGRESS 40000
+RSP POINTER PROGRESS 50000
+RSP POINTER PROGRESS 60000
+RSP POINTER PROGRESS 70000
+RSP POINTER PROGRESS 80000
+RSP POINTER PROGRESS 90000
+RSP POINTER PROGRESS 100000
+RSP POINTER PROGRESS 110000
+RSP POINTER PROGRESS 120000
+RSP POINTER PROGRESS 130000
+RSP POINTER PROGRESS 140000
+RSP POINTER PROGRESS 150000
+RSP POINTER PROGRESS 160000
+RSP POINTER PROGRESS 170000
+RSP POINTER PROGRESS 180000
+RSP POINTER PROGRESS 190000
+RSP POINTER PROGRESS 200000
+RSP POINTER PROGRESS 210000
+RSP POINTER PROGRESS 220000
+Traceback (most recent call last):
+  File "/home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py", line 114, in <module>
+    progress.write_text(json.dumps(dict(calls=calls,packets=rsp.packets,elapsed=time.monotonic()-started))+'\n');print('RSP POINTER PROGRESS',calls,flush=True)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 809, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IsADirectoryError: [Errno 21] Is a directory: '/home/remi/dev/rum/.temp/brief-626/continuation-2/final/rsp-pointer-traces-largest-fast-n1/base-lazy-depth-fold-through-source-256.progress.json'
+````
+
+
+**rsp-buffer-calibration: exit 0.** [continuation-2/final/logs/rsp-buffer-calibration.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-buffer-calibration.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/rsp-pointers.py downvalue-pattern-hit base 1 buffered-calibrate-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC7
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit base 1 calls 1404 groups 82
+````
+
+
+**rsp-largest-base1-buffered: exit 0.** [continuation-2/final/logs/rsp-largest-base1-buffered.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-largest-base1-buffered.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/rsp-pointers.py lazy-depth-fold-through-source-256 base 1 largest-buffered-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC7
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTER PROGRESS 40000
+RSP POINTER PROGRESS 50000
+RSP POINTER PROGRESS 60000
+RSP POINTER PROGRESS 70000
+RSP POINTER PROGRESS 80000
+RSP POINTER PROGRESS 90000
+RSP POINTER PROGRESS 100000
+RSP POINTER PROGRESS 110000
+RSP POINTER PROGRESS 120000
+RSP POINTER PROGRESS 130000
+RSP POINTER PROGRESS 140000
+RSP POINTER PROGRESS 150000
+RSP POINTER PROGRESS 160000
+RSP POINTER PROGRESS 170000
+RSP POINTER PROGRESS 180000
+RSP POINTER PROGRESS 190000
+RSP POINTER PROGRESS 200000
+RSP POINTER PROGRESS 210000
+RSP POINTER PROGRESS 220000
+RSP POINTER PROGRESS 230000
+RSP POINTER PROGRESS 240000
+RSP POINTER PROGRESS 250000
+RSP POINTER PROGRESS 260000
+RSP POINTER PROGRESS 270000
+RSP POINTER PROGRESS 280000
+RSP POINTER PROGRESS 290000
+RSP POINTER PROGRESS 300000
+RSP POINTER PROGRESS 310000
+RSP POINTER PROGRESS 320000
+RSP POINTER PROGRESS 330000
+RSP POINTER PROGRESS 340000
+RSP POINTER PROGRESS 350000
+RSP POINTER PROGRESS 360000
+RSP POINTER PROGRESS 370000
+RSP POINTER PROGRESS 380000
+RSP POINTER PROGRESS 390000
+RSP POINTER PROGRESS 400000
+RSP POINTER PROGRESS 410000
+RSP POINTER PROGRESS 420000
+RSP POINTER PROGRESS 430000
+RSP POINTER PROGRESS 440000
+RSP POINTER PROGRESS 450000
+RSP POINTER PROGRESS 460000
+RSP POINTER PROGRESS 470000
+RSP POINTER PROGRESS 480000
+RSP POINTER PROGRESS 490000
+RSP POINTER PROGRESS 500000
+RSP POINTER PROGRESS 510000
+RSP POINTER PROGRESS 520000
+RSP POINTER PROGRESS 530000
+RSP POINTER PROGRESS 540000
+RSP POINTER PROGRESS 550000
+RSP POINTER PROGRESS 560000
+RSP POINTER PROGRESS 570000
+RSP POINTER PROGRESS 580000
+RSP POINTER PROGRESS 590000
+RSP POINTER PROGRESS 600000
+RSP POINTER PROGRESS 610000
+RSP POINTER PROGRESS 620000
+RSP POINTER PROGRESS 630000
+RSP POINTER PROGRESS 640000
+RSP POINTER PROGRESS 650000
+RSP POINTER PROGRESS 660000
+RSP POINTER PROGRESS 670000
+RSP POINTER PROGRESS 680000
+RSP POINTER PROGRESS 690000
+RSP POINTER PROGRESS 700000
+RSP POINTER PROGRESS 710000
+RSP POINTER PROGRESS 720000
+RSP POINTER PROGRESS 730000
+RSP POINTER PROGRESS 740000
+RSP POINTER PROGRESS 750000
+RSP POINTER PROGRESS 760000
+RSP POINTER PROGRESS 770000
+RSP POINTER PROGRESS 780000
+RSP POINTER PROGRESS 790000
+RSP POINTER PROGRESS 800000
+RSP POINTER PROGRESS 810000
+RSP POINTER PROGRESS 820000
+RSP POINTER PROGRESS 830000
+RSP POINTER PROGRESS 840000
+RSP POINTER PROGRESS 850000
+RSP POINTER PROGRESS 860000
+RSP POINTER PROGRESS 870000
+RSP POINTER PROGRESS 880000
+RSP POINTER PROGRESS 890000
+RSP POINTER PROGRESS 900000
+RSP POINTER PROGRESS 910000
+RSP POINTER PROGRESS 920000
+RSP POINTER PROGRESS 930000
+RSP POINTER PROGRESS 940000
+RSP POINTER PROGRESS 950000
+RSP POINTER PROGRESS 960000
+RSP POINTER PROGRESS 970000
+RSP POINTER PROGRESS 980000
+RSP POINTER PROGRESS 990000
+RSP POINTER PROGRESS 1000000
+RSP POINTER PROGRESS 1010000
+RSP POINTER PROGRESS 1020000
+RSP POINTER PROGRESS 1030000
+RSP POINTER PROGRESS 1040000
+RSP POINTER PROGRESS 1050000
+RSP POINTER PROGRESS 1060000
+RSP POINTER PROGRESS 1070000
+RSP POINTER PROGRESS 1080000
+RSP POINTER PROGRESS 1090000
+RSP POINTER PROGRESS 1100000
+RSP POINTER PROGRESS 1110000
+RSP POINTER PROGRESS 1120000
+RSP POINTER PROGRESS 1130000
+RSP POINTER PROGRESS 1140000
+RSP POINTER PROGRESS 1150000
+RSP POINTER PROGRESS 1160000
+RSP POINTER PROGRESS 1170000
+RSP POINTER PROGRESS 1180000
+RSP POINTER PROGRESS 1190000
+RSP POINTER PROGRESS 1200000
+RSP POINTER PROGRESS 1210000
+RSP POINTER PROGRESS 1220000
+RSP POINTER PROGRESS 1230000
+RSP POINTER PROGRESS 1240000
+RSP POINTER PROGRESS 1250000
+RSP POINTER PROGRESS 1260000
+RSP POINTER PROGRESS 1270000
+RSP POINTER PROGRESS 1280000
+RSP POINTER PROGRESS 1290000
+RSP POINTER PROGRESS 1300000
+RSP POINTER PROGRESS 1310000
+RSP POINTER PROGRESS 1320000
+RSP POINTER PROGRESS 1330000
+RSP POINTER PROGRESS 1340000
+RSP POINTER PROGRESS 1350000
+RSP POINTER PROGRESS 1360000
+RSP POINTER PROGRESS 1370000
+RSP POINTER PROGRESS 1380000
+RSP POINTER PROGRESS 1390000
+RSP POINTER PROGRESS 1400000
+RSP POINTER PROGRESS 1410000
+RSP POINTER PROGRESS 1420000
+RSP POINTER PROGRESS 1430000
+RSP POINTER PROGRESS 1440000
+RSP POINTER PROGRESS 1450000
+RSP POINTER PROGRESS 1460000
+RSP POINTER PROGRESS 1470000
+RSP POINTER PROGRESS 1480000
+RSP POINTER PROGRESS 1490000
+RSP POINTER PROGRESS 1500000
+RSP POINTER PROGRESS 1510000
+RSP POINTER PROGRESS 1520000
+RSP POINTER PROGRESS 1530000
+RSP POINTER PROGRESS 1540000
+RSP POINTER PROGRESS 1550000
+RSP POINTER PROGRESS 1560000
+RSP POINTER PROGRESS 1570000
+RSP POINTER PROGRESS 1580000
+RSP POINTERS COMPLETE lazy-depth-fold-through-source-256 base 1 calls 1583577 groups 83
+````
+
+
+**rsp-final-downvalue-pattern-hit-base-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-downvalue-pattern-hit-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-downvalue-pattern-hit-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py downvalue-pattern-hit base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC9
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit base 1 calls 1406 groups 81
+````
+
+
+**rsp-final-downvalue-pattern-hit-cand-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-downvalue-pattern-hit-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-downvalue-pattern-hit-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py downvalue-pattern-hit cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC11
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit cand 1 calls 1413 groups 83
+````
+
+
+**rsp-final-downvalue-pattern-hit-base-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-downvalue-pattern-hit-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-downvalue-pattern-hit-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py downvalue-pattern-hit base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC19
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit base 2 calls 1413 groups 80
+````
+
+
+**rsp-final-downvalue-pattern-hit-cand-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-downvalue-pattern-hit-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-downvalue-pattern-hit-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py downvalue-pattern-hit cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC21
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit cand 2 calls 1420 groups 83
+````
+
+
+**rsp-final-block-local-base-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-block-local-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-block-local-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py block-local base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC29
+SELECT THREAD OK
+RSP POINTERS COMPLETE block-local base 1 calls 1364 groups 81
+````
+
+
+**rsp-final-block-local-cand-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-block-local-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-block-local-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py block-local cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC31
+SELECT THREAD OK
+RSP POINTERS COMPLETE block-local cand 1 calls 1372 groups 82
+````
+
+
+**rsp-final-block-local-base-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-block-local-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-block-local-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py block-local base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC39
+SELECT THREAD OK
+RSP POINTERS COMPLETE block-local base 2 calls 1377 groups 84
+````
+
+
+**rsp-final-block-local-cand-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-block-local-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-block-local-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py block-local cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC41
+SELECT THREAD OK
+RSP POINTERS COMPLETE block-local cand 2 calls 1370 groups 82
+````
+
+
+**rsp-final-deletecases-wide-association-no-match-base-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-deletecases-wide-association-no-match-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-deletecases-wide-association-no-match-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py deletecases-wide-association-no-match base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC49
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTERS COMPLETE deletecases-wide-association-no-match base 1 calls 26985 groups 86
+````
+
+
+**rsp-final-deletecases-wide-association-no-match-cand-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-deletecases-wide-association-no-match-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-deletecases-wide-association-no-match-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py deletecases-wide-association-no-match cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC51
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTERS COMPLETE deletecases-wide-association-no-match cand 1 calls 26970 groups 85
+````
+
+
+**rsp-final-deletecases-wide-association-no-match-base-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-deletecases-wide-association-no-match-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-deletecases-wide-association-no-match-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py deletecases-wide-association-no-match base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC59
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTERS COMPLETE deletecases-wide-association-no-match base 2 calls 34995 groups 85
+````
+
+
+**rsp-final-deletecases-wide-association-no-match-cand-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-deletecases-wide-association-no-match-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-deletecases-wide-association-no-match-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py deletecases-wide-association-no-match cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC61
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTERS COMPLETE deletecases-wide-association-no-match cand 2 calls 34980 groups 80
+````
+
+
+**rsp-final-downvalue-guarded-hit-base-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-downvalue-guarded-hit-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-downvalue-guarded-hit-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py downvalue-guarded-hit base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC69
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-guarded-hit base 1 calls 1374 groups 85
+````
+
+
+**rsp-final-downvalue-guarded-hit-cand-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-downvalue-guarded-hit-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-downvalue-guarded-hit-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py downvalue-guarded-hit cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC71
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-guarded-hit cand 1 calls 1379 groups 86
+````
+
+
+**rsp-final-downvalue-guarded-hit-base-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-downvalue-guarded-hit-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-downvalue-guarded-hit-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py downvalue-guarded-hit base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC79
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-guarded-hit base 2 calls 1374 groups 80
+````
+
+
+**rsp-final-downvalue-guarded-hit-cand-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-downvalue-guarded-hit-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-downvalue-guarded-hit-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py downvalue-guarded-hit cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC81
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-guarded-hit cand 2 calls 1376 groups 81
+````
+
+
+**rsp-final-subvalue-unguarded-hit-base-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-subvalue-unguarded-hit-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-subvalue-unguarded-hit-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py subvalue-unguarded-hit base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC89
+SELECT THREAD OK
+RSP POINTERS COMPLETE subvalue-unguarded-hit base 1 calls 1311 groups 84
+````
+
+
+**rsp-final-subvalue-unguarded-hit-cand-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-subvalue-unguarded-hit-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-subvalue-unguarded-hit-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py subvalue-unguarded-hit cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC91
+SELECT THREAD OK
+RSP POINTERS COMPLETE subvalue-unguarded-hit cand 1 calls 1305 groups 80
+````
+
+
+**rsp-final-subvalue-unguarded-hit-base-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-subvalue-unguarded-hit-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-subvalue-unguarded-hit-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py subvalue-unguarded-hit base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC99
+SELECT THREAD OK
+RSP POINTERS COMPLETE subvalue-unguarded-hit base 2 calls 1315 groups 81
+````
+
+
+**rsp-final-subvalue-unguarded-hit-cand-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-subvalue-unguarded-hit-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-subvalue-unguarded-hit-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py subvalue-unguarded-hit cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCa1
+SELECT THREAD OK
+RSP POINTERS COMPLETE subvalue-unguarded-hit cand 2 calls 1322 groups 80
+````
+
+
+**rsp-final-keysort-default-wide-base-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-keysort-default-wide-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-keysort-default-wide-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py keysort-default-wide base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCa9
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTERS COMPLETE keysort-default-wide base 1 calls 23739 groups 80
+````
+
+
+**rsp-final-keysort-default-wide-cand-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-keysort-default-wide-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-keysort-default-wide-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py keysort-default-wide cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCb1
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTERS COMPLETE keysort-default-wide cand 1 calls 23736 groups 84
+````
+
+
+**rsp-final-keysort-default-wide-base-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-keysort-default-wide-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-keysort-default-wide-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py keysort-default-wide base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCb9
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTERS COMPLETE keysort-default-wide base 2 calls 30141 groups 81
+````
+
+
+**rsp-final-keysort-default-wide-cand-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-keysort-default-wide-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-keysort-default-wide-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py keysort-default-wide cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCc1
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTERS COMPLETE keysort-default-wide cand 2 calls 30143 groups 84
+````
+
+
+**rsp-final-keysortby-default-wide-base-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-keysortby-default-wide-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-keysortby-default-wide-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py keysortby-default-wide base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCc9
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTERS COMPLETE keysortby-default-wide base 1 calls 23738 groups 81
+````
+
+
+**rsp-final-keysortby-default-wide-cand-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-keysortby-default-wide-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-keysortby-default-wide-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py keysortby-default-wide cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCd1
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTERS COMPLETE keysortby-default-wide cand 1 calls 23745 groups 83
+````
+
+
+**rsp-final-keysortby-default-wide-base-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-keysortby-default-wide-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-keysortby-default-wide-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py keysortby-default-wide base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCd9
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTERS COMPLETE keysortby-default-wide base 2 calls 30139 groups 84
+````
+
+
+**rsp-final-keysortby-default-wide-cand-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-keysortby-default-wide-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-keysortby-default-wide-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py keysortby-default-wide cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCe1
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTERS COMPLETE keysortby-default-wide cand 2 calls 30144 groups 82
+````
+
+
+**rsp-final-replacerepeated-guarded-small-base-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-replacerepeated-guarded-small-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-replacerepeated-guarded-small-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py replacerepeated-guarded-small base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCe9
+SELECT THREAD OK
+RSP POINTERS COMPLETE replacerepeated-guarded-small base 1 calls 1695 groups 85
+````
+
+
+**rsp-final-replacerepeated-guarded-small-cand-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-replacerepeated-guarded-small-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-replacerepeated-guarded-small-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py replacerepeated-guarded-small cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCf1
+SELECT THREAD OK
+RSP POINTERS COMPLETE replacerepeated-guarded-small cand 1 calls 1705 groups 84
+````
+
+
+**rsp-final-replacerepeated-guarded-small-base-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-replacerepeated-guarded-small-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-replacerepeated-guarded-small-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py replacerepeated-guarded-small base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCf9
+SELECT THREAD OK
+RSP POINTERS COMPLETE replacerepeated-guarded-small base 2 calls 1853 groups 82
+````
+
+
+**rsp-final-replacerepeated-guarded-small-cand-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-replacerepeated-guarded-small-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-replacerepeated-guarded-small-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py replacerepeated-guarded-small cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC101
+SELECT THREAD OK
+RSP POINTERS COMPLETE replacerepeated-guarded-small cand 2 calls 1855 groups 81
+````
+
+
+**rsp-final-abortprotect-clean-base-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-abortprotect-clean-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-abortprotect-clean-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py abortprotect-clean base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC109
+SELECT THREAD OK
+RSP POINTERS COMPLETE abortprotect-clean base 1 calls 1217 groups 81
+````
+
+
+**rsp-final-abortprotect-clean-cand-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-abortprotect-clean-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-abortprotect-clean-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py abortprotect-clean cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC111
+SELECT THREAD OK
+RSP POINTERS COMPLETE abortprotect-clean cand 1 calls 1217 groups 84
+````
+
+
+**rsp-final-abortprotect-clean-base-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-abortprotect-clean-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-abortprotect-clean-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py abortprotect-clean base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC119
+SELECT THREAD OK
+RSP POINTERS COMPLETE abortprotect-clean base 2 calls 1224 groups 77
+````
+
+
+**rsp-final-abortprotect-clean-cand-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-abortprotect-clean-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-abortprotect-clean-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py abortprotect-clean cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC121
+SELECT THREAD OK
+RSP POINTERS COMPLETE abortprotect-clean cand 2 calls 1220 groups 79
+````
+
+
+**rsp-final-check-clean-base-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-check-clean-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-check-clean-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py check-clean base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC129
+SELECT THREAD OK
+RSP POINTERS COMPLETE check-clean base 1 calls 1213 groups 82
+````
+
+
+**rsp-final-check-clean-cand-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-check-clean-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-check-clean-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py check-clean cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC131
+SELECT THREAD OK
+RSP POINTERS COMPLETE check-clean cand 1 calls 1217 groups 81
+````
+
+
+**rsp-final-check-clean-base-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-check-clean-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-check-clean-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py check-clean base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC139
+SELECT THREAD OK
+RSP POINTERS COMPLETE check-clean base 2 calls 1224 groups 78
+````
+
+
+**rsp-final-check-clean-cand-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-check-clean-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-check-clean-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py check-clean cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC141
+SELECT THREAD OK
+RSP POINTERS COMPLETE check-clean cand 2 calls 1224 groups 81
+````
+
+
+**rsp-final-withcleanup-two-arg-base-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-withcleanup-two-arg-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-withcleanup-two-arg-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py withcleanup-two-arg base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC149
+SELECT THREAD OK
+RSP POINTERS COMPLETE withcleanup-two-arg base 1 calls 1261 groups 82
+````
+
+
+**rsp-final-withcleanup-two-arg-cand-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-withcleanup-two-arg-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-withcleanup-two-arg-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py withcleanup-two-arg cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC151
+SELECT THREAD OK
+RSP POINTERS COMPLETE withcleanup-two-arg cand 1 calls 1264 groups 82
+````
+
+
+**rsp-final-withcleanup-two-arg-base-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-withcleanup-two-arg-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-withcleanup-two-arg-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py withcleanup-two-arg base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC159
+SELECT THREAD OK
+RSP POINTERS COMPLETE withcleanup-two-arg base 2 calls 1268 groups 84
+````
+
+
+**rsp-final-withcleanup-two-arg-cand-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-withcleanup-two-arg-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-withcleanup-two-arg-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py withcleanup-two-arg cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC161
+SELECT THREAD OK
+RSP POINTERS COMPLETE withcleanup-two-arg cand 2 calls 1265 groups 82
+````
+
+
+**rsp-final-function-named-apply-base-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-function-named-apply-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-function-named-apply-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py function-named-apply base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC169
+SELECT THREAD OK
+RSP POINTERS COMPLETE function-named-apply base 1 calls 1273 groups 78
+````
+
+
+**rsp-final-function-named-apply-cand-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-function-named-apply-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-function-named-apply-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py function-named-apply cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC171
+SELECT THREAD OK
+RSP POINTERS COMPLETE function-named-apply cand 1 calls 1280 groups 81
+````
+
+
+**rsp-final-function-named-apply-base-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-function-named-apply-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-function-named-apply-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py function-named-apply base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC179
+SELECT THREAD OK
+RSP POINTERS COMPLETE function-named-apply base 2 calls 1296 groups 79
+````
+
+
+**rsp-final-function-named-apply-cand-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-function-named-apply-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-function-named-apply-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py function-named-apply cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC181
+SELECT THREAD OK
+RSP POINTERS COMPLETE function-named-apply cand 2 calls 1300 groups 81
+````
+
+
+**rsp-final-composition-apply-base-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-composition-apply-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-composition-apply-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py composition-apply base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC189
+SELECT THREAD OK
+RSP POINTERS COMPLETE composition-apply base 1 calls 1227 groups 85
+````
+
+
+**rsp-final-composition-apply-cand-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-composition-apply-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-composition-apply-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py composition-apply cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC191
+SELECT THREAD OK
+RSP POINTERS COMPLETE composition-apply cand 1 calls 1227 groups 83
+````
+
+
+**rsp-final-composition-apply-base-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-composition-apply-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-composition-apply-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py composition-apply base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC199
+SELECT THREAD OK
+RSP POINTERS COMPLETE composition-apply base 2 calls 1228 groups 77
+````
+
+
+**rsp-final-composition-apply-cand-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-composition-apply-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-composition-apply-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py composition-apply cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC1a1
+SELECT THREAD OK
+RSP POINTERS COMPLETE composition-apply cand 2 calls 1235 groups 79
+````
+
+
+**rsp-final-lazy-depth-fold-through-source-256-cand-n1-part1: exit 0.** [continuation-2/final/logs/rsp-final-lazy-depth-fold-through-source-256-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-lazy-depth-fold-through-source-256-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py lazy-depth-fold-through-source-256 cand 1 largest-buffered-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC1a9
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTER PROGRESS 40000
+RSP POINTER PROGRESS 50000
+RSP POINTER PROGRESS 60000
+RSP POINTER PROGRESS 70000
+RSP POINTER PROGRESS 80000
+RSP POINTER PROGRESS 90000
+RSP POINTER PROGRESS 100000
+RSP POINTER PROGRESS 110000
+RSP POINTER PROGRESS 120000
+RSP POINTER PROGRESS 130000
+RSP POINTER PROGRESS 140000
+RSP POINTER PROGRESS 150000
+RSP POINTER PROGRESS 160000
+RSP POINTER PROGRESS 170000
+RSP POINTER PROGRESS 180000
+RSP POINTER PROGRESS 190000
+RSP POINTER PROGRESS 200000
+RSP POINTER PROGRESS 210000
+RSP POINTER PROGRESS 220000
+RSP POINTER PROGRESS 230000
+RSP POINTER PROGRESS 240000
+RSP POINTER PROGRESS 250000
+RSP POINTER PROGRESS 260000
+RSP POINTER PROGRESS 270000
+RSP POINTER PROGRESS 280000
+RSP POINTER PROGRESS 290000
+RSP POINTER PROGRESS 300000
+RSP POINTER PROGRESS 310000
+RSP POINTER PROGRESS 320000
+RSP POINTER PROGRESS 330000
+RSP POINTER PROGRESS 340000
+RSP POINTER PROGRESS 350000
+RSP POINTER PROGRESS 360000
+RSP POINTER PROGRESS 370000
+RSP POINTER PROGRESS 380000
+RSP POINTER PROGRESS 390000
+RSP POINTER PROGRESS 400000
+RSP POINTER PROGRESS 410000
+RSP POINTER PROGRESS 420000
+RSP POINTER PROGRESS 430000
+RSP POINTER PROGRESS 440000
+RSP POINTER PROGRESS 450000
+RSP POINTER PROGRESS 460000
+RSP POINTER PROGRESS 470000
+RSP POINTER PROGRESS 480000
+RSP POINTER PROGRESS 490000
+RSP POINTER PROGRESS 500000
+RSP POINTER PROGRESS 510000
+RSP POINTER PROGRESS 520000
+RSP POINTER PROGRESS 530000
+RSP POINTER PROGRESS 540000
+RSP POINTER PROGRESS 550000
+RSP POINTER PROGRESS 560000
+RSP POINTER PROGRESS 570000
+RSP POINTER PROGRESS 580000
+RSP POINTER PROGRESS 590000
+RSP POINTER PROGRESS 600000
+RSP POINTER PROGRESS 610000
+RSP POINTER PROGRESS 620000
+RSP POINTER PROGRESS 630000
+RSP POINTER PROGRESS 640000
+RSP POINTER PROGRESS 650000
+RSP POINTER PROGRESS 660000
+RSP POINTER PROGRESS 670000
+RSP POINTER PROGRESS 680000
+RSP POINTER PROGRESS 690000
+RSP POINTER PROGRESS 700000
+RSP POINTER PROGRESS 710000
+RSP POINTER PROGRESS 720000
+RSP POINTER PROGRESS 730000
+RSP POINTER PROGRESS 740000
+RSP POINTER PROGRESS 750000
+RSP POINTER PROGRESS 760000
+RSP POINTER PROGRESS 770000
+RSP POINTER PROGRESS 780000
+RSP POINTER PROGRESS 790000
+RSP POINTER PROGRESS 800000
+RSP POINTER PROGRESS 810000
+RSP POINTER PROGRESS 820000
+RSP POINTER PROGRESS 830000
+RSP POINTER PROGRESS 840000
+RSP POINTER PROGRESS 850000
+RSP POINTER PROGRESS 860000
+RSP POINTER PROGRESS 870000
+RSP POINTER PROGRESS 880000
+RSP POINTER PROGRESS 890000
+RSP POINTER PROGRESS 900000
+RSP POINTER PROGRESS 910000
+RSP POINTER PROGRESS 920000
+RSP POINTER PROGRESS 930000
+RSP POINTER PROGRESS 940000
+RSP POINTER PROGRESS 950000
+RSP POINTER PROGRESS 960000
+RSP POINTER PROGRESS 970000
+RSP POINTER PROGRESS 980000
+RSP POINTER PROGRESS 990000
+RSP POINTER PROGRESS 1000000
+RSP POINTER PROGRESS 1010000
+RSP POINTER PROGRESS 1020000
+RSP POINTER PROGRESS 1030000
+RSP POINTER PROGRESS 1040000
+RSP POINTER PROGRESS 1050000
+RSP POINTER PROGRESS 1060000
+RSP POINTER PROGRESS 1070000
+RSP POINTER PROGRESS 1080000
+RSP POINTER PROGRESS 1090000
+RSP POINTER PROGRESS 1100000
+RSP POINTER PROGRESS 1110000
+RSP POINTER PROGRESS 1120000
+RSP POINTER PROGRESS 1130000
+RSP POINTER PROGRESS 1140000
+RSP POINTER PROGRESS 1150000
+RSP POINTER PROGRESS 1160000
+RSP POINTER PROGRESS 1170000
+RSP POINTER PROGRESS 1180000
+RSP POINTER PROGRESS 1190000
+RSP POINTER PROGRESS 1200000
+RSP POINTER PROGRESS 1210000
+RSP POINTER PROGRESS 1220000
+RSP POINTER PROGRESS 1230000
+RSP POINTER PROGRESS 1240000
+RSP POINTER PROGRESS 1250000
+RSP POINTER PROGRESS 1260000
+RSP POINTER PROGRESS 1270000
+RSP POINTER PROGRESS 1280000
+RSP POINTER PROGRESS 1290000
+RSP POINTER PROGRESS 1300000
+RSP POINTER PROGRESS 1310000
+RSP POINTER PROGRESS 1320000
+RSP POINTER PROGRESS 1330000
+RSP POINTER PROGRESS 1340000
+RSP POINTER PROGRESS 1350000
+RSP POINTER PROGRESS 1360000
+RSP POINTER PROGRESS 1370000
+RSP POINTER PROGRESS 1380000
+RSP POINTER PROGRESS 1390000
+RSP POINTER PROGRESS 1400000
+RSP POINTER PROGRESS 1410000
+RSP POINTER PROGRESS 1420000
+RSP POINTER PROGRESS 1430000
+RSP POINTER PROGRESS 1440000
+RSP POINTER PROGRESS 1450000
+RSP POINTER PROGRESS 1460000
+RSP POINTER PROGRESS 1470000
+RSP POINTER PROGRESS 1480000
+RSP POINTER PROGRESS 1490000
+RSP POINTER PROGRESS 1500000
+RSP POINTER PROGRESS 1510000
+RSP POINTER PROGRESS 1520000
+RSP POINTER PROGRESS 1530000
+RSP POINTER PROGRESS 1540000
+RSP POINTER PROGRESS 1550000
+RSP POINTER PROGRESS 1560000
+RSP POINTER PROGRESS 1570000
+RSP POINTER PROGRESS 1580000
+RSP POINTERS COMPLETE lazy-depth-fold-through-source-256 cand 1 calls 1583579 groups 82
+````
+
+
+**rsp-final-lazy-depth-fold-through-source-256-base-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-lazy-depth-fold-through-source-256-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-lazy-depth-fold-through-source-256-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py lazy-depth-fold-through-source-256 base 2 largest-buffered-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC1b1
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTER PROGRESS 40000
+RSP POINTER PROGRESS 50000
+RSP POINTER PROGRESS 60000
+RSP POINTER PROGRESS 70000
+RSP POINTER PROGRESS 80000
+RSP POINTER PROGRESS 90000
+RSP POINTER PROGRESS 100000
+RSP POINTER PROGRESS 110000
+RSP POINTER PROGRESS 120000
+RSP POINTER PROGRESS 130000
+RSP POINTER PROGRESS 140000
+RSP POINTER PROGRESS 150000
+RSP POINTER PROGRESS 160000
+RSP POINTER PROGRESS 170000
+RSP POINTER PROGRESS 180000
+RSP POINTER PROGRESS 190000
+RSP POINTER PROGRESS 200000
+RSP POINTER PROGRESS 210000
+RSP POINTER PROGRESS 220000
+RSP POINTER PROGRESS 230000
+RSP POINTER PROGRESS 240000
+RSP POINTER PROGRESS 250000
+RSP POINTER PROGRESS 260000
+RSP POINTER PROGRESS 270000
+RSP POINTER PROGRESS 280000
+RSP POINTER PROGRESS 290000
+RSP POINTER PROGRESS 300000
+RSP POINTER PROGRESS 310000
+RSP POINTER PROGRESS 320000
+RSP POINTER PROGRESS 330000
+RSP POINTER PROGRESS 340000
+RSP POINTER PROGRESS 350000
+RSP POINTER PROGRESS 360000
+RSP POINTER PROGRESS 370000
+RSP POINTER PROGRESS 380000
+RSP POINTER PROGRESS 390000
+RSP POINTER PROGRESS 400000
+RSP POINTER PROGRESS 410000
+RSP POINTER PROGRESS 420000
+RSP POINTER PROGRESS 430000
+RSP POINTER PROGRESS 440000
+RSP POINTER PROGRESS 450000
+RSP POINTER PROGRESS 460000
+RSP POINTER PROGRESS 470000
+RSP POINTER PROGRESS 480000
+RSP POINTER PROGRESS 490000
+RSP POINTER PROGRESS 500000
+RSP POINTER PROGRESS 510000
+RSP POINTER PROGRESS 520000
+RSP POINTER PROGRESS 530000
+RSP POINTER PROGRESS 540000
+RSP POINTER PROGRESS 550000
+RSP POINTER PROGRESS 560000
+RSP POINTER PROGRESS 570000
+RSP POINTER PROGRESS 580000
+RSP POINTER PROGRESS 590000
+RSP POINTER PROGRESS 600000
+RSP POINTER PROGRESS 610000
+RSP POINTER PROGRESS 620000
+RSP POINTER PROGRESS 630000
+RSP POINTER PROGRESS 640000
+RSP POINTER PROGRESS 650000
+RSP POINTER PROGRESS 660000
+RSP POINTER PROGRESS 670000
+RSP POINTER PROGRESS 680000
+RSP POINTER PROGRESS 690000
+RSP POINTER PROGRESS 700000
+RSP POINTER PROGRESS 710000
+RSP POINTER PROGRESS 720000
+RSP POINTER PROGRESS 730000
+RSP POINTER PROGRESS 740000
+RSP POINTER PROGRESS 750000
+RSP POINTER PROGRESS 760000
+RSP POINTER PROGRESS 770000
+RSP POINTER PROGRESS 780000
+RSP POINTER PROGRESS 790000
+RSP POINTER PROGRESS 800000
+RSP POINTER PROGRESS 810000
+RSP POINTER PROGRESS 820000
+RSP POINTER PROGRESS 830000
+RSP POINTER PROGRESS 840000
+RSP POINTER PROGRESS 850000
+RSP POINTER PROGRESS 860000
+RSP POINTER PROGRESS 870000
+RSP POINTER PROGRESS 880000
+RSP POINTER PROGRESS 890000
+RSP POINTER PROGRESS 900000
+RSP POINTER PROGRESS 910000
+RSP POINTER PROGRESS 920000
+RSP POINTER PROGRESS 930000
+RSP POINTER PROGRESS 940000
+RSP POINTER PROGRESS 950000
+RSP POINTER PROGRESS 960000
+RSP POINTER PROGRESS 970000
+RSP POINTER PROGRESS 980000
+RSP POINTER PROGRESS 990000
+RSP POINTER PROGRESS 1000000
+RSP POINTER PROGRESS 1010000
+RSP POINTER PROGRESS 1020000
+RSP POINTER PROGRESS 1030000
+RSP POINTER PROGRESS 1040000
+RSP POINTER PROGRESS 1050000
+RSP POINTER PROGRESS 1060000
+RSP POINTER PROGRESS 1070000
+RSP POINTER PROGRESS 1080000
+RSP POINTER PROGRESS 1090000
+RSP POINTER PROGRESS 1100000
+RSP POINTER PROGRESS 1110000
+RSP POINTER PROGRESS 1120000
+RSP POINTER PROGRESS 1130000
+RSP POINTER PROGRESS 1140000
+RSP POINTER PROGRESS 1150000
+RSP POINTER PROGRESS 1160000
+RSP POINTER PROGRESS 1170000
+RSP POINTER PROGRESS 1180000
+RSP POINTER PROGRESS 1190000
+RSP POINTER PROGRESS 1200000
+RSP POINTER PROGRESS 1210000
+RSP POINTER PROGRESS 1220000
+RSP POINTER PROGRESS 1230000
+RSP POINTER PROGRESS 1240000
+RSP POINTER PROGRESS 1250000
+RSP POINTER PROGRESS 1260000
+RSP POINTER PROGRESS 1270000
+RSP POINTER PROGRESS 1280000
+RSP POINTER PROGRESS 1290000
+RSP POINTER PROGRESS 1300000
+RSP POINTER PROGRESS 1310000
+RSP POINTER PROGRESS 1320000
+RSP POINTER PROGRESS 1330000
+RSP POINTER PROGRESS 1340000
+RSP POINTER PROGRESS 1350000
+RSP POINTER PROGRESS 1360000
+RSP POINTER PROGRESS 1370000
+RSP POINTER PROGRESS 1380000
+RSP POINTER PROGRESS 1390000
+RSP POINTER PROGRESS 1400000
+RSP POINTER PROGRESS 1410000
+RSP POINTER PROGRESS 1420000
+RSP POINTER PROGRESS 1430000
+RSP POINTER PROGRESS 1440000
+RSP POINTER PROGRESS 1450000
+RSP POINTER PROGRESS 1460000
+RSP POINTER PROGRESS 1470000
+RSP POINTER PROGRESS 1480000
+RSP POINTER PROGRESS 1490000
+RSP POINTER PROGRESS 1500000
+RSP POINTER PROGRESS 1510000
+RSP POINTER PROGRESS 1520000
+RSP POINTER PROGRESS 1530000
+RSP POINTER PROGRESS 1540000
+RSP POINTER PROGRESS 1550000
+RSP POINTER PROGRESS 1560000
+RSP POINTER PROGRESS 1570000
+RSP POINTER PROGRESS 1580000
+RSP POINTER PROGRESS 1590000
+RSP POINTER PROGRESS 1600000
+RSP POINTER PROGRESS 1610000
+RSP POINTER PROGRESS 1620000
+RSP POINTER PROGRESS 1630000
+RSP POINTER PROGRESS 1640000
+RSP POINTER PROGRESS 1650000
+RSP POINTER PROGRESS 1660000
+RSP POINTER PROGRESS 1670000
+RSP POINTER PROGRESS 1680000
+RSP POINTER PROGRESS 1690000
+RSP POINTER PROGRESS 1700000
+RSP POINTER PROGRESS 1710000
+RSP POINTER PROGRESS 1720000
+RSP POINTER PROGRESS 1730000
+RSP POINTER PROGRESS 1740000
+RSP POINTER PROGRESS 1750000
+RSP POINTER PROGRESS 1760000
+RSP POINTER PROGRESS 1770000
+RSP POINTER PROGRESS 1780000
+RSP POINTER PROGRESS 1790000
+RSP POINTER PROGRESS 1800000
+RSP POINTER PROGRESS 1810000
+RSP POINTER PROGRESS 1820000
+RSP POINTER PROGRESS 1830000
+RSP POINTER PROGRESS 1840000
+RSP POINTER PROGRESS 1850000
+RSP POINTER PROGRESS 1860000
+RSP POINTER PROGRESS 1870000
+RSP POINTER PROGRESS 1880000
+RSP POINTER PROGRESS 1890000
+RSP POINTER PROGRESS 1900000
+RSP POINTER PROGRESS 1910000
+RSP POINTER PROGRESS 1920000
+RSP POINTER PROGRESS 1930000
+RSP POINTER PROGRESS 1940000
+RSP POINTER PROGRESS 1950000
+RSP POINTER PROGRESS 1960000
+RSP POINTER PROGRESS 1970000
+RSP POINTER PROGRESS 1980000
+RSP POINTER PROGRESS 1990000
+RSP POINTER PROGRESS 2000000
+RSP POINTER PROGRESS 2010000
+RSP POINTER PROGRESS 2020000
+RSP POINTER PROGRESS 2030000
+RSP POINTER PROGRESS 2040000
+RSP POINTER PROGRESS 2050000
+RSP POINTER PROGRESS 2060000
+RSP POINTER PROGRESS 2070000
+RSP POINTER PROGRESS 2080000
+RSP POINTER PROGRESS 2090000
+RSP POINTER PROGRESS 2100000
+RSP POINTER PROGRESS 2110000
+RSP POINTER PROGRESS 2120000
+RSP POINTER PROGRESS 2130000
+RSP POINTER PROGRESS 2140000
+RSP POINTER PROGRESS 2150000
+RSP POINTER PROGRESS 2160000
+RSP POINTER PROGRESS 2170000
+RSP POINTER PROGRESS 2180000
+RSP POINTER PROGRESS 2190000
+RSP POINTER PROGRESS 2200000
+RSP POINTER PROGRESS 2210000
+RSP POINTER PROGRESS 2220000
+RSP POINTER PROGRESS 2230000
+RSP POINTER PROGRESS 2240000
+RSP POINTER PROGRESS 2250000
+RSP POINTER PROGRESS 2260000
+RSP POINTER PROGRESS 2270000
+RSP POINTER PROGRESS 2280000
+RSP POINTER PROGRESS 2290000
+RSP POINTER PROGRESS 2300000
+RSP POINTER PROGRESS 2310000
+RSP POINTER PROGRESS 2320000
+RSP POINTER PROGRESS 2330000
+RSP POINTER PROGRESS 2340000
+RSP POINTER PROGRESS 2350000
+RSP POINTER PROGRESS 2360000
+RSP POINTER PROGRESS 2370000
+RSP POINTERS COMPLETE lazy-depth-fold-through-source-256 base 2 calls 2372586 groups 85
+````
+
+
+**rsp-final-lazy-depth-fold-through-source-256-cand-n2-part1: exit 0.** [continuation-2/final/logs/rsp-final-lazy-depth-fold-through-source-256-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final/logs/rsp-final-lazy-depth-fold-through-source-256-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/rsp-pointers.py lazy-depth-fold-through-source-256 cand 2 largest-buffered-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC9
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTER PROGRESS 40000
+RSP POINTER PROGRESS 50000
+RSP POINTER PROGRESS 60000
+RSP POINTER PROGRESS 70000
+RSP POINTER PROGRESS 80000
+RSP POINTER PROGRESS 90000
+RSP POINTER PROGRESS 100000
+RSP POINTER PROGRESS 110000
+RSP POINTER PROGRESS 120000
+RSP POINTER PROGRESS 130000
+RSP POINTER PROGRESS 140000
+RSP POINTER PROGRESS 150000
+RSP POINTER PROGRESS 160000
+RSP POINTER PROGRESS 170000
+RSP POINTER PROGRESS 180000
+RSP POINTER PROGRESS 190000
+RSP POINTER PROGRESS 200000
+RSP POINTER PROGRESS 210000
+RSP POINTER PROGRESS 220000
+RSP POINTER PROGRESS 230000
+RSP POINTER PROGRESS 240000
+RSP POINTER PROGRESS 250000
+RSP POINTER PROGRESS 260000
+RSP POINTER PROGRESS 270000
+RSP POINTER PROGRESS 280000
+RSP POINTER PROGRESS 290000
+RSP POINTER PROGRESS 300000
+RSP POINTER PROGRESS 310000
+RSP POINTER PROGRESS 320000
+RSP POINTER PROGRESS 330000
+RSP POINTER PROGRESS 340000
+RSP POINTER PROGRESS 350000
+RSP POINTER PROGRESS 360000
+RSP POINTER PROGRESS 370000
+RSP POINTER PROGRESS 380000
+RSP POINTER PROGRESS 390000
+RSP POINTER PROGRESS 400000
+RSP POINTER PROGRESS 410000
+RSP POINTER PROGRESS 420000
+RSP POINTER PROGRESS 430000
+RSP POINTER PROGRESS 440000
+RSP POINTER PROGRESS 450000
+RSP POINTER PROGRESS 460000
+RSP POINTER PROGRESS 470000
+RSP POINTER PROGRESS 480000
+RSP POINTER PROGRESS 490000
+RSP POINTER PROGRESS 500000
+RSP POINTER PROGRESS 510000
+RSP POINTER PROGRESS 520000
+RSP POINTER PROGRESS 530000
+RSP POINTER PROGRESS 540000
+RSP POINTER PROGRESS 550000
+RSP POINTER PROGRESS 560000
+RSP POINTER PROGRESS 570000
+RSP POINTER PROGRESS 580000
+RSP POINTER PROGRESS 590000
+RSP POINTER PROGRESS 600000
+RSP POINTER PROGRESS 610000
+RSP POINTER PROGRESS 620000
+RSP POINTER PROGRESS 630000
+RSP POINTER PROGRESS 640000
+RSP POINTER PROGRESS 650000
+RSP POINTER PROGRESS 660000
+RSP POINTER PROGRESS 670000
+RSP POINTER PROGRESS 680000
+RSP POINTER PROGRESS 690000
+RSP POINTER PROGRESS 700000
+RSP POINTER PROGRESS 710000
+RSP POINTER PROGRESS 720000
+RSP POINTER PROGRESS 730000
+RSP POINTER PROGRESS 740000
+RSP POINTER PROGRESS 750000
+RSP POINTER PROGRESS 760000
+RSP POINTER PROGRESS 770000
+RSP POINTER PROGRESS 780000
+RSP POINTER PROGRESS 790000
+RSP POINTER PROGRESS 800000
+RSP POINTER PROGRESS 810000
+RSP POINTER PROGRESS 820000
+RSP POINTER PROGRESS 830000
+RSP POINTER PROGRESS 840000
+RSP POINTER PROGRESS 850000
+RSP POINTER PROGRESS 860000
+RSP POINTER PROGRESS 870000
+RSP POINTER PROGRESS 880000
+RSP POINTER PROGRESS 890000
+RSP POINTER PROGRESS 900000
+RSP POINTER PROGRESS 910000
+RSP POINTER PROGRESS 920000
+RSP POINTER PROGRESS 930000
+RSP POINTER PROGRESS 940000
+RSP POINTER PROGRESS 950000
+RSP POINTER PROGRESS 960000
+RSP POINTER PROGRESS 970000
+RSP POINTER PROGRESS 980000
+RSP POINTER PROGRESS 990000
+RSP POINTER PROGRESS 1000000
+RSP POINTER PROGRESS 1010000
+RSP POINTER PROGRESS 1020000
+RSP POINTER PROGRESS 1030000
+RSP POINTER PROGRESS 1040000
+RSP POINTER PROGRESS 1050000
+RSP POINTER PROGRESS 1060000
+RSP POINTER PROGRESS 1070000
+RSP POINTER PROGRESS 1080000
+RSP POINTER PROGRESS 1090000
+RSP POINTER PROGRESS 1100000
+RSP POINTER PROGRESS 1110000
+RSP POINTER PROGRESS 1120000
+RSP POINTER PROGRESS 1130000
+RSP POINTER PROGRESS 1140000
+RSP POINTER PROGRESS 1150000
+RSP POINTER PROGRESS 1160000
+RSP POINTER PROGRESS 1170000
+RSP POINTER PROGRESS 1180000
+RSP POINTER PROGRESS 1190000
+RSP POINTER PROGRESS 1200000
+RSP POINTER PROGRESS 1210000
+RSP POINTER PROGRESS 1220000
+RSP POINTER PROGRESS 1230000
+RSP POINTER PROGRESS 1240000
+RSP POINTER PROGRESS 1250000
+RSP POINTER PROGRESS 1260000
+RSP POINTER PROGRESS 1270000
+RSP POINTER PROGRESS 1280000
+RSP POINTER PROGRESS 1290000
+RSP POINTER PROGRESS 1300000
+RSP POINTER PROGRESS 1310000
+RSP POINTER PROGRESS 1320000
+RSP POINTER PROGRESS 1330000
+RSP POINTER PROGRESS 1340000
+RSP POINTER PROGRESS 1350000
+RSP POINTER PROGRESS 1360000
+RSP POINTER PROGRESS 1370000
+RSP POINTER PROGRESS 1380000
+RSP POINTER PROGRESS 1390000
+RSP POINTER PROGRESS 1400000
+RSP POINTER PROGRESS 1410000
+RSP POINTER PROGRESS 1420000
+RSP POINTER PROGRESS 1430000
+RSP POINTER PROGRESS 1440000
+RSP POINTER PROGRESS 1450000
+RSP POINTER PROGRESS 1460000
+RSP POINTER PROGRESS 1470000
+RSP POINTER PROGRESS 1480000
+RSP POINTER PROGRESS 1490000
+RSP POINTER PROGRESS 1500000
+RSP POINTER PROGRESS 1510000
+RSP POINTER PROGRESS 1520000
+RSP POINTER PROGRESS 1530000
+RSP POINTER PROGRESS 1540000
+RSP POINTER PROGRESS 1550000
+RSP POINTER PROGRESS 1560000
+RSP POINTER PROGRESS 1570000
+RSP POINTER PROGRESS 1580000
+RSP POINTER PROGRESS 1590000
+RSP POINTER PROGRESS 1600000
+RSP POINTER PROGRESS 1610000
+RSP POINTER PROGRESS 1620000
+RSP POINTER PROGRESS 1630000
+RSP POINTER PROGRESS 1640000
+RSP POINTER PROGRESS 1650000
+RSP POINTER PROGRESS 1660000
+RSP POINTER PROGRESS 1670000
+RSP POINTER PROGRESS 1680000
+RSP POINTER PROGRESS 1690000
+RSP POINTER PROGRESS 1700000
+RSP POINTER PROGRESS 1710000
+RSP POINTER PROGRESS 1720000
+RSP POINTER PROGRESS 1730000
+RSP POINTER PROGRESS 1740000
+RSP POINTER PROGRESS 1750000
+RSP POINTER PROGRESS 1760000
+RSP POINTER PROGRESS 1770000
+RSP POINTER PROGRESS 1780000
+RSP POINTER PROGRESS 1790000
+RSP POINTER PROGRESS 1800000
+RSP POINTER PROGRESS 1810000
+RSP POINTER PROGRESS 1820000
+RSP POINTER PROGRESS 1830000
+RSP POINTER PROGRESS 1840000
+RSP POINTER PROGRESS 1850000
+RSP POINTER PROGRESS 1860000
+RSP POINTER PROGRESS 1870000
+RSP POINTER PROGRESS 1880000
+RSP POINTER PROGRESS 1890000
+RSP POINTER PROGRESS 1900000
+RSP POINTER PROGRESS 1910000
+RSP POINTER PROGRESS 1920000
+RSP POINTER PROGRESS 1930000
+RSP POINTER PROGRESS 1940000
+RSP POINTER PROGRESS 1950000
+RSP POINTER PROGRESS 1960000
+RSP POINTER PROGRESS 1970000
+RSP POINTER PROGRESS 1980000
+RSP POINTER PROGRESS 1990000
+RSP POINTER PROGRESS 2000000
+RSP POINTER PROGRESS 2010000
+RSP POINTER PROGRESS 2020000
+RSP POINTER PROGRESS 2030000
+RSP POINTER PROGRESS 2040000
+RSP POINTER PROGRESS 2050000
+RSP POINTER PROGRESS 2060000
+RSP POINTER PROGRESS 2070000
+RSP POINTER PROGRESS 2080000
+RSP POINTER PROGRESS 2090000
+RSP POINTER PROGRESS 2100000
+RSP POINTER PROGRESS 2110000
+RSP POINTER PROGRESS 2120000
+RSP POINTER PROGRESS 2130000
+RSP POINTER PROGRESS 2140000
+RSP POINTER PROGRESS 2150000
+RSP POINTER PROGRESS 2160000
+RSP POINTER PROGRESS 2170000
+RSP POINTER PROGRESS 2180000
+RSP POINTER PROGRESS 2190000
+RSP POINTER PROGRESS 2200000
+RSP POINTER PROGRESS 2210000
+RSP POINTER PROGRESS 2220000
+RSP POINTER PROGRESS 2230000
+RSP POINTER PROGRESS 2240000
+RSP POINTER PROGRESS 2250000
+RSP POINTER PROGRESS 2260000
+RSP POINTER PROGRESS 2270000
+RSP POINTER PROGRESS 2280000
+RSP POINTER PROGRESS 2290000
+RSP POINTER PROGRESS 2300000
+RSP POINTER PROGRESS 2310000
+RSP POINTER PROGRESS 2320000
+RSP POINTER PROGRESS 2330000
+RSP POINTER PROGRESS 2340000
+RSP POINTER PROGRESS 2350000
+RSP POINTER PROGRESS 2360000
+RSP POINTER PROGRESS 2370000
+RSP POINTERS COMPLETE lazy-depth-fold-through-source-256 cand 2 calls 2372581 groups 83
+````
+
+
+**complete-page-layout-attribution: exit 0.** [continuation-2/final/logs/complete-page-layout-attribution.log](../../../.temp/brief-626/continuation-2/final/logs/complete-page-layout-attribution.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/final/page-layout-attribution.py
+````
+
+
+````text
+optionvalue-three-no-input layout 8 native 9.02 residual 1.02 threshold 4.749 unequal 2 residual_flag False
+dot-three-no-input layout 384 native 384.027 residual 0.027 threshold 124.976 unequal 2 residual_flag False
+lazy-depth-map-eight-8 layout 1024 native 1021.556 residual -2.444 threshold 472.666 unequal 2 residual_flag False
+lazy-depth-take-map-8 layout 128 native 119.466 residual -8.534 threshold 68.424 unequal 4 residual_flag False
+lazy-depth-fold-through-source-8 layout 576 native 564.492 residual -11.508 threshold 290.374 unequal 1 residual_flag False
+lazy-depth-map-eight-64 layout 8192 native 8349.244 residual 157.244 threshold 3649.453 unequal 0 residual_flag False
+lazy-depth-take-map-64 layout 1024 native 1080.115 residual 56.115 threshold 496.522 unequal 2 residual_flag False
+lazy-depth-fold-through-source-64 layout 33280 native 33558.44 residual 278.44 threshold 16603.256 unequal 4 residual_flag False
+lazy-depth-map-eight-256 layout 32768 native 32707.039 residual -60.961 threshold 14546.151 unequal 1 residual_flag False
+lazy-depth-take-map-256 layout 4096 native 4169.262 residual 73.262 threshold 1962.933 unequal 4 residual_flag False
+lazy-depth-fold-through-source-256 layout 526336 native 517140.424 residual -9195.576 threshold 261660.342 unequal 2 residual_flag False
+downvalue-pattern-hit layout 16 native 16.042 residual 0.042 threshold 6.824 unequal 2 residual_flag False
+block-local layout 16 native 16.009 residual 0.009 threshold 7.231 unequal 1 residual_flag False
+deletecases-wide-association-no-match layout 12800 native 12575.372 residual -224.628 threshold 3751.088 unequal 3 residual_flag False
+downvalue-guarded-hit layout 16 native 16.384 residual 0.384 threshold 13.786 unequal 1 residual_flag False
+subvalue-unguarded-hit layout 16 native 15.933 residual -0.067 threshold 10.033 unequal 2 residual_flag False
+keysort-default-wide layout 12800 native 12644.48 residual -155.52 threshold 4132.754 unequal 4 residual_flag False
+keysortby-default-wide layout 12800 native 12827.73 residual 27.73 threshold 7723.678 unequal 4 residual_flag False
+replacerepeated-guarded-small layout 248 native 258.47 residual 10.47 threshold 185.942 unequal 0 residual_flag False
+abortprotect-clean layout 16 native 17.397 residual 1.397 threshold 8.798 unequal 3 residual_flag False
+check-clean layout 16 native 17.662 residual 1.662 threshold 8.094 unequal 1 residual_flag False
+withcleanup-two-arg layout 16 native 17.403 residual 1.403 threshold 9.124 unequal 3 residual_flag False
+function-named-apply layout 16 native 15.916 residual -0.084 threshold 7.672 unequal 0 residual_flag False
+composition-apply layout 40 native 41.879 residual 1.879 threshold 13.899 unequal 0 residual_flag False
+COMPLETE POINTER ATTRIBUTIONS 24 / 24
+````
+
+
+**build-cli-part1: exit 0.** [continuation-2/final3/logs/build-cli-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/build-cli-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/build.py cand rum-cli
+````
+
+
+````text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling rum-terminal v0.2.0 (/home/remi/dev/rum/crates/rum-terminal)
+   Compiling rum-repl v0.2.0 (/home/remi/dev/rum/crates/rum-repl)
+   Compiling rum-cli v0.2.0 (/home/remi/dev/rum/crates/rum-cli)
+    Finished `release` profile [optimized] target(s) in 1m 22s
+
+BUILT cand rum-cli eb618aa09434a80b6acc3d874385de1fac6a4bb2f84fbcb015eaf9d878abcfbb
+````
+
+
+**build-resume-part1: exit 0.** [continuation-2/final3/logs/build-resume-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/build-resume-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/build.py cand resume
+````
+
+
+````text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling brief608-resume v0.0.0 (/home/remi/dev/rum/.temp/brief-626/resume-harness)
+    Finished `release` profile [optimized] target(s) in 1m 16s
+
+BUILT cand resume 14da26ac361adc61432ea7c90fa3e3b1e4cc4a8cc163d028058e9781c330f7d6
+````
+
+
+**build-alloc-cli-part1: exit 0.** [continuation-2/final3/logs/build-alloc-cli-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/build-alloc-cli-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/build.py cand rum-cli-alloc
+````
+
+
+````text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling rum-terminal v0.2.0 (/home/remi/dev/rum/crates/rum-terminal)
+   Compiling rum-repl v0.2.0 (/home/remi/dev/rum/crates/rum-repl)
+   Compiling rum-cli v0.2.0 (/home/remi/dev/rum/crates/rum-cli)
+    Finished `release` profile [optimized] target(s) in 1m 17s
+
+BUILT cand rum-cli-alloc ed23e0f70b4eb68817c8232ebcb1f92482a5088f44ff2dfd3bd0852b4b6ed1ab
+````
+
+
+**build-alloc-resume-part1: exit 0.** [continuation-2/final3/logs/build-alloc-resume-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/build-alloc-resume-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/build.py cand resume-alloc
+````
+
+
+````text
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+   Compiling brief608-resume v0.0.0 (/home/remi/dev/rum/.temp/brief-626/resume-harness)
+    Finished `release` profile [optimized] target(s) in 1m 15s
+
+BUILT cand resume-alloc 64d5342507dd5adad4bd8baba131ca02bbc1b3b3e58342952be57de21edefaba
+````
+
+
+**perf-instructions-base-1-part1: exit 0.** [continuation-2/final3/logs/perf-instructions-base-1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/perf-instructions-base-1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-perf.py instructions base 1 all
+````
+
+
+**perf-instructions-candidate-1-part1: exit 0.** [continuation-2/final3/logs/perf-instructions-candidate-1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/perf-instructions-candidate-1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-perf.py instructions candidate 1 all
+````
+
+
+**perf-instructions-base-2-part1: exit 0.** [continuation-2/final3/logs/perf-instructions-base-2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/perf-instructions-base-2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-perf.py instructions base 2 all
+````
+
+
+**perf-instructions-candidate-2-part1: exit 0.** [continuation-2/final3/logs/perf-instructions-candidate-2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/perf-instructions-candidate-2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-perf.py instructions candidate 2 all
+````
+
+
+**five-base-1-part1: exit 0.** [continuation-2/final3/logs/five-base-1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/five-base-1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-perf.py instructions base extra-1 all @/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/all-initial-flags.json
+````
+
+
+**five-candidate-1-part1: exit 0.** [continuation-2/final3/logs/five-candidate-1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/five-candidate-1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-perf.py instructions candidate extra-1 all @/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/all-initial-flags.json
+````
+
+
+**five-base-2-part1: exit 0.** [continuation-2/final3/logs/five-base-2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/five-base-2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-perf.py instructions base extra-2 all @/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/all-initial-flags.json
+````
+
+
+**five-candidate-2-part1: exit 0.** [continuation-2/final3/logs/five-candidate-2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/five-candidate-2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-perf.py instructions candidate extra-2 all @/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/all-initial-flags.json
+````
+
+
+**five-pair-controls-part1: exit 0.** [continuation-2/final3/logs/five-pair-controls-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/five-pair-controls-part1.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/final3/run-five-flags.py
+````
+
+
+````text
+five-base-1-part1 exit 0
+
+FIVE-PAIR PROGRESS 1 base 136 / 136
+five-candidate-1-part1 exit 0
+
+FIVE-PAIR PROGRESS 1 candidate 136 / 136
+five-base-2-part1 exit 0
+
+FIVE-PAIR PROGRESS 2 base 136 / 136
+five-candidate-2-part1 exit 0
+
+FIVE-PAIR PROGRESS 2 candidate 136 / 136
+FIVE-PAIR CHUNK COMPLETE; resume same command
+````
+
+
+**five-base-3-part1: exit 0.** [continuation-2/final3/logs/five-base-3-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/five-base-3-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-perf.py instructions base extra-3 all @/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/all-initial-flags.json
+````
+
+
+**five-candidate-3-part1: exit 0.** [continuation-2/final3/logs/five-candidate-3-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/five-candidate-3-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-perf.py instructions candidate extra-3 all @/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/all-initial-flags.json
+````
+
+
+**five-base-4-part1: exit 0.** [continuation-2/final3/logs/five-base-4-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/five-base-4-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-perf.py instructions base extra-4 all @/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/all-initial-flags.json
+````
+
+
+**five-candidate-4-part1: exit 0.** [continuation-2/final3/logs/five-candidate-4-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/five-candidate-4-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-perf.py instructions candidate extra-4 all @/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/all-initial-flags.json
+````
+
+
+**five-pair-controls-part2: exit 0.** [continuation-2/final3/logs/five-pair-controls-part2.log](../../../.temp/brief-626/continuation-2/final3/logs/five-pair-controls-part2.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/final3/run-five-flags.py
+````
+
+
+````text
+five-base-3-part1 exit 0
+
+FIVE-PAIR PROGRESS 3 base 136 / 136
+five-candidate-3-part1 exit 0
+
+FIVE-PAIR PROGRESS 3 candidate 136 / 136
+five-base-4-part1 exit 0
+
+FIVE-PAIR PROGRESS 4 base 136 / 136
+five-candidate-4-part1 exit 0
+
+FIVE-PAIR PROGRESS 4 candidate 136 / 136
+FIVE-PAIR CHUNK COMPLETE; resume same command
+````
+
+
+**five-base-5-part1: exit 0.** [continuation-2/final3/logs/five-base-5-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/five-base-5-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-perf.py instructions base extra-5 all @/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/all-initial-flags.json
+````
+
+
+**five-candidate-5-part1: exit 0.** [continuation-2/final3/logs/five-candidate-5-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/five-candidate-5-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-perf.py instructions candidate extra-5 all @/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/all-initial-flags.json
+````
+
+
+**five-pair-controls-part3: exit 0.** [continuation-2/final3/logs/five-pair-controls-part3.log](../../../.temp/brief-626/continuation-2/final3/logs/five-pair-controls-part3.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/final3/run-five-flags.py
+````
+
+
+````text
+five-base-5-part1 exit 0
+
+FIVE-PAIR PROGRESS 5 base 136 / 136
+five-candidate-5-part1 exit 0
+
+FIVE-PAIR PROGRESS 5 candidate 136 / 136
+ALL FIVE-PAIR CONTROLS COMPLETE 68 labels
+````
+
+
+**five-pair-comparison: exit 0.** [continuation-2/final3/logs/five-pair-comparison.log](../../../.temp/brief-626/continuation-2/final3/logs/five-pair-comparison.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/final3/finalize-five.py
+````
+
+
+````text
+Ordinary flags: ['lazy-map-realize-small', 'lazy-nestlist-realize-small', 'lazy-drop-realize-small', 'optionvalue-three-no-input', 'dot-three-no-input', 'lazy-depth-map-eight-8', 'lazy-depth-take-map-8', 'lazy-depth-fold-through-source-8', 'lazy-depth-map-eight-64', 'lazy-depth-take-map-64', 'lazy-depth-fold-through-source-64', 'lazy-depth-map-eight-256', 'lazy-depth-take-map-256', 'lazy-depth-fold-through-source-256', 'downvalue-pattern-hit', 'module-local', 'block-local', 'deletecases-wide-association-no-match', 'downvalue-guarded-hit', 'upvalue-guarded-hit', 'subvalue-unguarded-hit', 'keysort-default-wide', 'keysortby-default-wide', 'replacerepeated-guarded-small', 'abortprotect-clean', 'check-clean', 'quiet-clean', 'withcleanup-two-arg', 'function-slot-apply', 'function-named-apply', 'composition-apply']
+Ineligible: []
+Eligible resume rows: 2
+FIVE PAIRS COMPLETE: 1360 correct processes; 37 flags cleared; 31 persistent; resume persistent []
+````
+
+
+**copy-calibration: exit 0.** [continuation-2/final3/logs/copy-calibration.log](../../../.temp/brief-626/continuation-2/final3/logs/copy-calibration.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/final3/calibrate-copies.py
+````
+
+
+````text
+base catchexceptions-handler 500 rc=0 Null
+CALIBRATION {"N": 500, "memcpy": 16011, "symbols": ["__memcpy_avx_unaligned_erms", "__memcpy_chk", "memcpy@@GLIBC_2.14"], "artifacts": {"/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/copy-census/calibration/base-catchexceptions-handler-500.out": "55aeb14b3a274f373b10ca5c0446dabd176a2ad3ee502b8f3843dd83d6cfc0f8", "/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/copy-census/calibration/base-catchexceptions-handler-500.stdout": "a002524d8279a757abff9705262271831c988b48b06dbee7e143b4179da4abde", "/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/copy-census/calibration/base-catchexceptions-handler-500.stderr": "1da2ad8ad7f63d07ca678854f06fc5a84bb426863c1338e9fefa9d67948ab650"}}
+base catchexceptions-handler 1000 rc=0 Null
+CALIBRATION {"N": 1000, "memcpy": 31011, "symbols": ["__memcpy_avx_unaligned_erms", "__memcpy_chk", "memcpy@@GLIBC_2.14"], "artifacts": {"/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/copy-census/calibration/base-catchexceptions-handler-1000.out": "a03fabca6887b035f6c79ac8dfc010656ca3f34df0dd3f56b196f7e9bff7c509", "/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/copy-census/calibration/base-catchexceptions-handler-1000.stdout": "a002524d8279a757abff9705262271831c988b48b06dbee7e143b4179da4abde", "/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/copy-census/calibration/base-catchexceptions-handler-1000.stderr": "d0e4d6977b4d1c31523bd6f772f91026dee7f369588b8b36535e25aff06d9e64"}}
+base catchexceptions-handler 2000 rc=0 Null
+CALIBRATION {"N": 2000, "memcpy": 61011, "symbols": ["__memcpy_avx_unaligned_erms", "__memcpy_chk", "memcpy@@GLIBC_2.14"], "artifacts": {"/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/copy-census/calibration/base-catchexceptions-handler-2000.out": "a426ff7f943bdeb8c59a7951f7cb9a2511e937672cae83c14ffcf910c09c2219", "/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/copy-census/calibration/base-catchexceptions-handler-2000.stdout": "a002524d8279a757abff9705262271831c988b48b06dbee7e143b4179da4abde", "/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/copy-census/calibration/base-catchexceptions-handler-2000.stderr": "81348b3611821ff6b73b3f89447051c883a8c4d23e5e05d897171f7b0fb4730c"}}
+PASS symbolized memcpy slopes 30.0 30.0
+````
+
+
+**copy-census-part1: exit 0.** [continuation-2/final3/logs/copy-census-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/copy-census-part1.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/final3/run-copy.py
+````
+
+
+````text
+COPY CAMPAIGN DONE 192 labels
+````
+
+
+**copy-comparison: exit 0.** [continuation-2/final3/logs/copy-comparison.log](../../../.temp/brief-626/continuation-2/final3/logs/copy-comparison.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/final3/compare-copies.py
+````
+
+
+````text
+lazy-range-take-small                         N=477   memcpy 129.000->129.000 memmove 0.000->0.000  ok
+lazy-range-normal-small                       N=373   memcpy 143.000->143.000 memmove 0.000->0.000  ok
+lazy-map-realize-small                        N=113   memcpy 295.000->295.000 memmove 0.000->0.000  ok
+lazy-select-realize-small                     N=177   memcpy 221.000->221.000 memmove 0.000->0.000  ok
+lazy-select-scan-small                        N=25    memcpy 1351.000->1351.000 memmove 0.000->0.000  ok
+lazy-nestlist-realize-small                   N=139   memcpy 177.000->177.000 memmove 0.000->0.000  ok
+lazy-foldlist-realize-small                   N=180   memcpy 203.000->203.000 memmove 0.000->0.000  ok
+lazy-drop-realize-small                       N=106   memcpy 311.000->311.000 memmove 0.000->0.000  ok
+lazy-first-small                              N=492   memcpy 59.000->59.000 memmove 0.000->0.000  ok
+lazy-part-small                               N=229   memcpy 137.000->137.000 memmove 0.000->0.000  ok
+lazy-transparent-adapters-small               N=111   memcpy 285.000->285.000 memmove 0.000->0.000  ok
+lazy-table-construct-short                    N=857   memcpy 50.000->50.000 memmove 0.000->0.000  ok
+lazy-table-construct-full                     N=838   memcpy 51.000->51.000 memmove 0.000->0.000  ok
+lazy-table-realize-small                      N=172   memcpy 211.000->211.000 memmove 0.000->0.000  ok
+lazy-permutations-take-small                  N=718   memcpy 24.000->24.000 memmove 0.000->0.000  ok
+lazy-subsets-take-small                       N=799   memcpy 24.000->24.000 memmove 0.000->0.000  ok
+lazy-tuples-take-small                        N=760   memcpy 24.000->24.000 memmove 0.000->0.000  ok
+scan-no-input                                 N=690   memcpy 51.000->51.000 memmove 0.000->0.000  ok
+optionvalue-three-no-input                    N=2000  memcpy 7.000->7.000 memmove 0.000->0.000  ok
+replacerepeated-no-input                      N=514   memcpy 29.000->29.000 memmove 0.000->0.000  ok
+dot-three-no-input                            N=80    memcpy 465.000->465.000 memmove 0.000->0.000  ok
+differences-no-input                          N=2000  memcpy 9.000->9.000 memmove 0.000->0.000  ok
+do-count-null                                 N=2000  memcpy 1.000->1.000 memmove 0.000->0.000  ok
+do-iterator-null                              N=2000  memcpy 2.000->2.000 memmove 0.000->0.000  ok
+table-iterator-null                           N=2000  memcpy 0.000->0.000 memmove 0.000->0.000  ok
+replaceall-simple                             N=1761  memcpy 23.000->23.000 memmove 0.000->0.000  ok
+table-small                                   N=1378  memcpy 13.000->13.000 memmove 0.000->0.000  ok
+table-iterator-plus                           N=2000  memcpy 1.000->1.000 memmove 0.000->0.000  ok
+table-iterator-pair-list                      N=2000  memcpy 0.000->0.000 memmove 0.000->0.000  ok
+take-multispec-small                          N=402   memcpy 47.000->47.000 memmove 0.000->0.000  ok
+lazy-depth-map-build-8                        N=1000  memcpy 25.000->25.000 memmove 0.000->0.000  ok
+lazy-depth-map-first-8                        N=155   memcpy 172.000->172.000 memmove 0.000->0.000  ok
+lazy-depth-map-eight-8                        N=21    memcpy 1219.000->1219.000 memmove 0.000->0.000  ok
+lazy-depth-select-restart-8                   N=112   memcpy 281.000->281.000 memmove 0.000->0.000  ok
+lazy-depth-drop-all-one-8                     N=431   memcpy 155.000->155.000 memmove 0.000->0.000  ok
+lazy-depth-take-map-8                         N=146   memcpy 188.000->188.000 memmove 0.000->0.000  ok
+lazy-depth-fold-through-source-8              N=34    memcpy 696.000->696.000 memmove 0.000->0.000  ok
+lazy-depth-nest-map-8                         N=144   memcpy 178.000->178.000 memmove 0.000->0.000  ok
+lazy-depth-map-build-64                       N=670   memcpy 25.000->25.000 memmove 0.000->0.000  ok
+lazy-depth-map-first-64                       N=21    memcpy 1124.000->1124.000 memmove 0.000->0.000  ok
+lazy-depth-map-eight-64                       N=2     memcpy 8835.000->8835.000 memmove 0.000->0.000  ok
+lazy-depth-select-restart-64                  N=20    memcpy 1401.000->1401.000 memmove 0.000->0.000  ok
+lazy-depth-drop-all-one-64                    N=61    memcpy 995.000->995.000 memmove 0.000->0.000  ok
+lazy-depth-take-map-64                        N=20    memcpy 1252.000->1252.000 memmove 0.000->0.000  ok
+lazy-depth-fold-through-source-64             N=1     memcpy 37549.000->37549.000 memmove 0.000->0.000  ok
+lazy-depth-nest-map-64                        N=21    memcpy 1130.000->1130.000 memmove 0.000->0.000  ok
+lazy-depth-map-build-256                      N=283   memcpy 25.000->25.000 memmove 0.000->0.000  ok
+lazy-depth-map-first-256                      N=5     memcpy 4388.000->4388.000 memmove 0.000->0.000  ok
+lazy-depth-map-eight-256                      N=1     memcpy 34949.000->34949.000 memmove 0.000->0.000  ok
+lazy-depth-select-restart-256                 N=5     memcpy 5241.000->5241.000 memmove 0.000->0.000  ok
+lazy-depth-drop-all-one-256                   N=9     memcpy 3875.000->3875.000 memmove 0.000->0.000  ok
+lazy-depth-take-map-256                       N=5     memcpy 4900.000->4900.000 memmove 0.000->0.000  ok
+lazy-depth-fold-through-source-256            N=1     memcpy 592431.000->592431.000 memmove 0.000->0.000  ok
+lazy-depth-nest-map-256                       N=5     memcpy 4394.000->4394.000 memmove 0.000->0.000  ok
+literal-integer                               N=2000  memcpy 1.000->1.000 memmove 0.000->0.000  ok
+downvalue-pattern-hit                         N=1465  memcpy 17.000->17.000 memmove 0.000->0.000  ok
+module-local                                  N=891   memcpy 32.000->32.000 memmove 0.000->0.000  ok
+block-local                                   N=1382  memcpy 29.000->29.000 memmove 0.000->0.000  ok
+matcher-single-wide-small                     N=26    memcpy 15.000->15.000 memmove 0.000->0.000  ok
+cases-wide-no-match                           N=8     memcpy 37.000->37.000 memmove 0.000->0.000  ok
+count-wide-no-match                           N=9     memcpy 32.000->32.000 memmove 0.000->0.000  ok
+position-wide-no-match                        N=7     memcpy 41.000->41.000 memmove 0.000->0.000  ok
+deletecases-wide-no-match                     N=7     memcpy 22.000->22.000 memmove 0.000->0.000  ok
+deletecases-wide-association-no-match         N=2     memcpy 31.000->31.000 memmove 0.000->0.000  ok
+deletecases-leaf-delete-small                 N=315   memcpy 12.000->12.000 memmove 0.000->0.000  ok
+replace-wide-no-match                         N=17    memcpy 32.000->32.000 memmove 0.000->0.000  ok
+replace-leaf-rebuild-small                    N=273   memcpy 22.000->22.000 memmove 0.000->0.000  ok
+rewrite-guarded-hit                           N=379   memcpy 51.000->51.000 memmove 0.000->0.000  ok
+rewrite-guarded-decline-fallback              N=259   memcpy 78.000->78.000 memmove 0.000->0.000  ok
+rule-rhs-deep-small                           N=242   memcpy 77.000->77.000 memmove 0.000->0.000  ok
+part-list                                     N=2000  memcpy 15.000->15.000 memmove 0.000->0.000  ok
+appendto-part-outer1000-small                 N=9     memcpy 2842.000->2842.000 memmove 0.000->0.000  ok
+appendto-part-outer1000-large                 N=5     memcpy 4643.000->4643.000 memmove 0.000->0.000  ok
+set-part-fixed100-len100                      N=15    memcpy 1713.000->1713.000 memmove 0.000->0.000  ok
+set-part-fixed100-len800                      N=15    memcpy 1713.000->1713.000 memmove 0.000->0.000  ok
+set-part-fill-small                           N=7     memcpy 3813.000->3813.000 memmove 0.000->0.000  ok
+set-part-fill-large                           N=3     memcpy 7613.000->7613.000 memmove 0.000->0.000  ok
+table-iterator-symbol                         N=2000  memcpy 0.000->0.000 memmove 0.000->0.000  ok
+symbol-ownvalue-read                          N=2000  memcpy 4.000->4.000 memmove 0.000->0.000  ok
+symbol-ownvalue-guarded-read                  N=2000  memcpy 6.000->6.000 memmove 0.000->0.000  ok
+block-symbol-only-repeat                      N=1871  memcpy 24.000->24.000 memmove 0.000->0.000  ok
+downvalue-exact-hit                           N=2000  memcpy 8.000->8.000 memmove 0.000->0.000  ok
+downvalue-exact-miss                          N=2000  memcpy 2.000->2.000 memmove 0.000->0.000  ok
+downvalue-pattern-miss                        N=2000  memcpy 2.000->2.000 memmove 0.000->0.000  ok
+downvalue-guarded-hit                         N=725   memcpy 32.000->32.000 memmove 0.000->0.000  ok
+downvalue-guarded-decline-fallback            N=958   memcpy 21.000->21.000 memmove 0.000->0.000  ok
+upvalue-guarded-hit                           N=590   memcpy 35.000->35.000 memmove 0.000->0.000  ok
+subvalue-unguarded-hit                        N=996   memcpy 25.000->25.000 memmove 0.000->0.000  ok
+subvalue-unguarded-miss                       N=1772  memcpy 17.000->17.000 memmove 0.000->0.000  ok
+subvalue-guarded-hit                          N=567   memcpy 41.000->41.000 memmove 0.000->0.000  ok
+default-unguarded-hit                         N=1163  memcpy 14.000->14.000 memmove 0.000->0.000  ok
+default-unguarded-miss                        N=1564  memcpy 12.000->12.000 memmove 0.000->0.000  ok
+default-guarded-hit                           N=894   memcpy 15.000->15.000 memmove 0.000->0.000  ok
+downvalue-exact-miss-repeat                   N=2000  memcpy 2.000->2.000 memmove 0.000->0.000  ok
+downvalue-pattern-miss-repeat                 N=2000  memcpy 2.000->2.000 memmove 0.000->0.000  ok
+upvalue-candidates-tiny                       N=637   memcpy 41.000->41.000 memmove 0.000->0.000  ok
+upvalue-candidates-wide-small                 N=6     memcpy 1646.000->1646.000 memmove 0.000->0.000  ok
+upvalue-candidates-wide-large                 N=3     memcpy 3247.000->3247.000 memmove 0.000->0.000  ok
+sort-default-wide                             N=20    memcpy 12.000->12.000 memmove 0.000->0.000  ok
+sortby-default-wide                           N=2     memcpy 11222.000->11222.000 memmove 0.000->0.000  ok
+reversesort-default-wide                      N=20    memcpy 12.000->12.000 memmove 0.000->0.000  ok
+keysort-default-wide                          N=2     memcpy 1639.000->1639.000 memmove 0.000->0.000  ok
+keysortby-default-wide                        N=1     memcpy 12842.000->12842.000 memmove 0.000->0.000  ok
+sort-symbol-default-width4000                 N=3     memcpy 18.000->18.000 memmove 0.000->0.000  ok
+sort-symbol-default-width16000                N=1     memcpy 23.000->23.000 memmove 0.000->0.000  ok
+valueq-undefined-symbol-definitions-2000      N=20    memcpy 7.000->7.000 memmove 0.000->0.000  ok
+valueq-undefined-symbol-definitions-8000      N=20    memcpy 7.000->7.000 memmove 0.000->0.000  ok
+matcher-single-tiny                           N=1000  memcpy 8.000->8.000 memmove 0.000->0.000  ok
+matcher-single-wide-large                     N=13    memcpy 17.000->17.000 memmove 0.000->0.000  ok
+replacepart-deep-path-small                   N=489   memcpy 48.000->48.000 memmove 0.000->0.000  ok
+replacepart-wide-rule-list                    N=3     memcpy 4817.000->4817.000 memmove 0.000->0.000  ok
+replacepart-guarded-hit                       N=500   memcpy 24.000->24.000 memmove 0.000->0.000  ok
+replacepart-guarded-decline-fallback          N=500   memcpy 28.000->28.000 memmove 0.000->0.000  ok
+stringreplace-single-literal-unguarded        N=200   memcpy 34.000->34.000 memmove 0.000->0.000  ok
+stringreplace-pattern-unguarded               N=500   memcpy 37.000->37.000 memmove 0.000->0.000  ok
+stringreplace-guarded-hit                     N=500   memcpy 34.000->34.000 memmove 0.000->0.000  ok
+stringreplace-guarded-decline-fallback        N=500   memcpy 38.000->38.000 memmove 0.000->0.000  ok
+association-part-key-read-width4000           N=40    memcpy 21.000->21.000 memmove 0.000->0.000  ok
+association-part-positional-read-width4000    N=40    memcpy 16.000->16.000 memmove 0.000->0.000  ok
+association-part-key-read-width32000          N=40    memcpy 21.000->21.000 memmove 0.000->0.000  ok
+association-part-positional-read-width32000   N=40    memcpy 16.000->16.000 memmove 0.000->0.000  ok
+appendto-list-incremental-small               N=250   memcpy 12.004->12.004 memmove 0.000->0.000  ok
+appendto-list-incremental-large               N=500   memcpy 12.002->12.002 memmove 0.000->0.000  ok
+association-set-key-incremental-small         N=100   memcpy 14.030->14.030 memmove 0.000->0.000  ok
+association-set-key-incremental-large         N=200   memcpy 14.015->14.015 memmove 0.000->0.000  ok
+association-set-part-key-investigation        N=100   memcpy 21.000->21.000 memmove 0.000->0.000  ok
+table-count-null                              N=8     memcpy 10.000->10.000 memmove 0.000->0.000  ok
+replaceall-wide-no-match                      N=24    memcpy 35.000->35.000 memmove 0.000->0.000  ok
+replaceall-leaf-rebuild-small                 N=301   memcpy 35.000->35.000 memmove 0.000->0.000  ok
+replaceall-guarded-hit-small                  N=254   memcpy 82.000->82.000 memmove 0.000->0.000  ok
+replace-rule-list-decline                     N=392   memcpy 49.000->49.000 memmove 0.000->0.000  ok
+replacerepeated-guarded-small                 N=53    memcpy 484.000->484.000 memmove 0.000->0.000  ok
+replaceat-small                               N=500   memcpy 41.000->41.000 memmove 0.000->0.000  ok
+memberq-wide-no-match                         N=9     memcpy 28.000->28.000 memmove 0.000->0.000  ok
+freeq-wide-no-match                           N=8     memcpy 28.000->28.000 memmove 0.000->0.000  ok
+count-wide-match                              N=9     memcpy 31.000->31.000 memmove 0.000->0.000  ok
+count-guarded-small                           N=399   memcpy 44.000->44.000 memmove 0.000->0.000  ok
+position-small-match                          N=500   memcpy 11.000->11.000 memmove 0.000->0.000  ok
+catch-no-throw                                N=500   memcpy 9.000->9.000 memmove 0.000->0.000  ok
+catch-throw-untagged                          N=500   memcpy 20.000->20.000 memmove 0.000->0.000  ok
+catch-throw-tagged-hit                        N=500   memcpy 22.000->22.000 memmove 0.000->0.000  ok
+catch-throw-pattern-hit                       N=500   memcpy 25.000->25.000 memmove 0.000->0.000  ok
+checkabort-no-abort                           N=500   memcpy 7.000->7.000 memmove 0.000->0.000  ok
+checkabort-caught                             N=500   memcpy 17.000->17.000 memmove 0.000->0.000  ok
+abortprotect-clean                            N=500   memcpy 14.000->14.000 memmove 0.000->0.000  ok
+assert-disabled                               N=500   memcpy 7.000->7.000 memmove 0.000->0.000  ok
+assert-enabled-true                           N=500   memcpy 19.000->19.000 memmove 0.000->0.000  ok
+check-clean                                   N=500   memcpy 14.000->14.000 memmove 0.000->0.000  ok
+check-message-fallback                        N=500   memcpy 40.000->40.000 memmove 0.000->0.000  ok
+quiet-clean                                   N=500   memcpy 15.000->15.000 memmove 0.000->0.000  ok
+withcleanup-two-arg                           N=500   memcpy 23.000->23.000 memmove 0.000->0.000  ok
+catchexceptions-caught                        N=500   memcpy 41.000->41.000 memmove 0.000->0.000  ok
+catch-throw                                   N=500   memcpy 20.000->20.000 memmove 0.000->0.000  ok
+catch-tagged-throw                            N=500   memcpy 22.000->22.000 memmove 0.000->0.000  ok
+catch-form-pattern                            N=500   memcpy 25.000->25.000 memmove 0.000->0.000  ok
+checkabort-abort                              N=500   memcpy 17.000->17.000 memmove 0.000->0.000  ok
+abortprotect-small                            N=500   memcpy 7.000->7.000 memmove 0.000->0.000  ok
+withcleanup-small                             N=500   memcpy 11.000->11.000 memmove 0.000->0.000  ok
+withcleanup-init                              N=500   memcpy 12.000->12.000 memmove 0.000->0.000  ok
+check-no-message                              N=500   memcpy 7.000->7.000 memmove 0.000->0.000  ok
+quiet-no-message                              N=500   memcpy 8.000->8.000 memmove 0.000->0.000  ok
+catchexceptions-handler                       N=500   memcpy 30.000->30.000 memmove 0.000->0.000  ok
+catchexceptions-no-throw                      N=500   memcpy 7.000->7.000 memmove 0.000->0.000  ok
+assert-off                                    N=500   memcpy 7.000->7.000 memmove 0.000->0.000  ok
+function-slot-apply                           N=500   memcpy 18.000->18.000 memmove 0.000->0.000  ok
+function-named-apply                          N=500   memcpy 17.000->17.000 memmove 0.000->0.000  ok
+composition-apply                             N=500   memcpy 59.000->59.000 memmove 0.000->0.000  ok
+association-apply                             N=500   memcpy 15.000->15.000 memmove 0.000->0.000  ok
+failure-raw-property                          N=500   memcpy 23.000->23.000 memmove 0.000->0.000  ok
+failure-list-property                         N=500   memcpy 22.000->22.000 memmove 0.000->0.000  ok
+failure-missing-property                      N=500   memcpy 25.000->25.000 memmove 0.000->0.000  ok
+success-raw-property                          N=500   memcpy 19.000->19.000 memmove 0.000->0.000  ok
+failure-message-property                      N=500   memcpy 45.000->45.000 memmove 0.000->0.000  ok
+failure-message-delayed                       N=500   memcpy 60.000->60.000 memmove 0.000->0.000  ok
+failure-styled-message                        N=500   memcpy 45.000->45.000 memmove 0.000->0.000  ok
+failure-tag-fallback                          N=500   memcpy 18.000->18.000 memmove 0.000->0.000  ok
+enclose-message-handler                       N=482   memcpy 64.000->64.000 memmove 0.000->0.000  ok
+confirm-failure-message                       N=385   memcpy 87.000->87.000 memmove 0.000->0.000  ok
+lhs-set-literal                               N=1890  memcpy 18.000->18.000 memmove 0.000->0.000  ok
+lhs-set-ownvalue-arg                          N=1531  memcpy 22.000->22.000 memmove 0.000->0.000  ok
+lhs-set-head-eval                             N=1531  memcpy 22.000->22.000 memmove 0.000->0.000  ok
+lhs-setdelayed-pattern                        N=932   memcpy 24.000->24.000 memmove 0.000->0.000  ok
+lhs-upset                                     N=1559  memcpy 21.000->21.000 memmove 0.000->0.000  ok
+lhs-tagset                                    N=1588  memcpy 21.000->21.000 memmove 0.000->0.000  ok
+lhs-set-unset                                 N=800   memcpy 42.000->42.000 memmove 0.000->0.000  ok
+lhs-set-cycle-recovery                        N=1653  memcpy 21.000->21.000 memmove 0.000->0.000  ok
+set-ownvalue                                  N=2000  memcpy 6.000->6.000 memmove 0.000->0.000  ok
+c1-replaceall-atom                            N=500   memcpy 23.000->23.000 memmove 0.000->0.000  ok
+c1-replaceall-unheld-atom                     N=500   memcpy 23.000->23.000 memmove 0.000->0.000  ok
+c1-replaceall-rule-rhs-deep-small             N=272   memcpy 73.000->73.000 memmove 0.000->0.000  ok
+c1-replaceall-rewrite-guarded-hit             N=462   memcpy 45.000->45.000 memmove 0.000->0.000  ok
+c1-replaceall-rewrite-guarded-decline-fallback N=303   memcpy 69.000->69.000 memmove 0.000->0.000  ok
+labels 192, copy count above base: 0
+ABOVE: 
+WHOLE-PROGRAM copy counts above base: []
+````
+
+
+**resume-attribution-part1: exit 1.** [continuation-2/final3/logs/resume-attribution-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/resume-attribution-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-resume-attribution.py
+````
+
+
+````text
+resume-table base 1000 0 PASS table resumes=1000
+resume-table cand 1000 0 PASS table resumes=1000
+resume-table base 2000 0 PASS table resumes=2000
+resume-table cand 2000 0 PASS table resumes=2000
+resume-do-chain base 1000 0 PASS do-chain resumes=1000
+resume-do-chain cand 1000 0 PASS do-chain resumes=1000
+resume-do-chain base 2000 0 PASS do-chain resumes=2000
+resume-do-chain cand 2000 0 PASS do-chain resumes=2000
+resume-call-repeat base 704 0 PASS call-repeat resumes=704
+resume-call-repeat cand 704 0 PASS call-repeat resumes=704
+resume-call-repeat base 1408 0 PASS call-repeat resumes=1408
+resume-call-repeat cand 1408 0 PASS call-repeat resumes=1408
+resume-cleanup base 1000 0 PASS cleanup resumes=1000
+resume-cleanup cand 1000 0 PASS cleanup resumes=1000
+resume-cleanup base 2000 0 PASS cleanup resumes=2000
+resume-cleanup cand 2000 0 PASS cleanup resumes=2000
+resume-fold base 676 0 PASS fold resumes=676
+resume-fold cand 676 0 PASS fold resumes=676
+resume-fold base 1352 0 PASS fold resumes=1352
+resume-fold cand 1352 0 PASS fold resumes=1352
+resume-argument-twice base 216 0 PASS argument-twice resumes=432
+resume-argument-twice cand 216 0 PASS argument-twice resumes=432
+resume-argument-twice base 432 0 PASS argument-twice resumes=864
+resume-argument-twice cand 432 0 PASS argument-twice resumes=864
+resume-rewrite-exprs base 372 0 PASS rewrite-exprs resumes=372
+resume-rewrite-exprs cand 372 0 PASS rewrite-exprs resumes=372
+resume-rewrite-exprs base 744 0 PASS rewrite-exprs resumes=744
+resume-rewrite-exprs cand 744 0 PASS rewrite-exprs resumes=744
+resume-rewrite-compiled base 480 0 PASS rewrite-compiled resumes=480
+resume-rewrite-compiled cand 480 0 PASS rewrite-compiled resumes=480
+resume-rewrite-compiled base 960 0 PASS rewrite-compiled resumes=960
+resume-rewrite-compiled cand 960 0 PASS rewrite-compiled resumes=960
+resume-cases-spec base 288 0 PASS cases-spec resumes=288
+resume-cases-spec cand 288 0 PASS cases-spec resumes=288
+resume-cases-spec base 576 0 PASS cases-spec resumes=576
+resume-cases-spec cand 576 0 PASS cases-spec resumes=576
+resume-cases-traversal base 297 0 PASS cases-traversal resumes=297
+resume-cases-traversal cand 297 0 PASS cases-traversal resumes=297
+resume-cases-traversal base 594 0 PASS cases-traversal resumes=594
+resume-cases-traversal cand 594 0 PASS cases-traversal resumes=594
+resume-position-traversal base 283 0 PASS position-traversal resumes=283
+resume-position-traversal cand 283 0 PASS position-traversal resumes=283
+resume-position-traversal base 566 0 PASS position-traversal resumes=566
+resume-position-traversal cand 566 0 PASS position-traversal resumes=566
+resume-count-traversal base 324 0 PASS count-traversal resumes=324
+resume-count-traversal cand 324 0 PASS count-traversal resumes=324
+resume-count-traversal base 648 0 PASS count-traversal resumes=648
+resume-count-traversal cand 648 0 PASS count-traversal resumes=648
+resume-cases-shared base 176 0 PASS cases-shared resumes=352
+resume-cases-shared cand 176 0 PASS cases-shared resumes=352
+resume-cases-shared base 352 0 PASS cases-shared resumes=704
+resume-cases-shared cand 352 0 PASS cases-shared resumes=704
+resume-s5-down-rhs base 100 0 PASS s5-down-rhs resumes=100
+resume-s5-down-rhs cand 100 0 PASS s5-down-rhs resumes=100
+resume-s5-down-rhs base 200 0 PASS s5-down-rhs resumes=200
+resume-s5-down-rhs cand 200 0 PASS s5-down-rhs resumes=200
+resume-s5-down-guard base 100 0 PASS s5-down-guard resumes=200
+resume-s5-down-guard cand 100 0 PASS s5-down-guard resumes=200
+resume-s5-down-guard base 200 0 PASS s5-down-guard resumes=400
+resume-s5-down-guard cand 200 0 PASS s5-down-guard resumes=400
+resume-s5-sub-rhs base 100 0 PASS s5-sub-rhs resumes=100
+resume-s5-sub-rhs cand 100 0 PASS s5-sub-rhs resumes=100
+resume-s5-sub-rhs base 200 0 PASS s5-sub-rhs resumes=200
+resume-s5-sub-rhs cand 200 0 PASS s5-sub-rhs resumes=200
+resume-s5-sub-guard base 100 0 PASS s5-sub-guard resumes=200
+resume-s5-sub-guard cand 100 0 PASS s5-sub-guard resumes=200
+resume-s5-sub-guard base 200 0 PASS s5-sub-guard resumes=400
+resume-s5-sub-guard cand 200 0 PASS s5-sub-guard resumes=400
+resume-s5-up-rhs base 100 0 PASS s5-up-rhs resumes=100
+resume-s5-up-rhs cand 100 0 PASS s5-up-rhs resumes=100
+resume-s5-up-rhs base 200 0 PASS s5-up-rhs resumes=200
+resume-s5-up-rhs cand 200 0 PASS s5-up-rhs resumes=200
+resume-s5-up-guard base 100 0 PASS s5-up-guard resumes=200
+resume-s5-up-guard cand 100 0 PASS s5-up-guard resumes=200
+resume-s5-up-guard base 200 0 PASS s5-up-guard resumes=400
+resume-s5-up-guard cand 200 0 PASS s5-up-guard resumes=400
+resume-s5-default-rhs base 100 0 PASS s5-default-rhs resumes=100
+resume-s5-default-rhs cand 100 0 PASS s5-default-rhs resumes=100
+resume-s5-default-rhs base 200 0 PASS s5-default-rhs resumes=200
+resume-s5-default-rhs cand 200 0 PASS s5-default-rhs resumes=200
+resume-s5-default-guard base 100 0 PASS s5-default-guard resumes=200
+resume-s5-default-guard cand 100 0 PASS s5-default-guard resumes=200
+resume-s5-default-guard base 200 0 PASS s5-default-guard resumes=400
+resume-s5-default-guard cand 200 0 PASS s5-default-guard resumes=400
+resume-s5-default-fallback-rhs base 100 0 PASS s5-default-fallback-rhs resumes=100
+resume-s5-default-fallback-rhs cand 100 0 PASS s5-default-fallback-rhs resumes=100
+resume-s5-default-fallback-rhs base 200 0 PASS s5-default-fallback-rhs resumes=200
+resume-s5-default-fallback-rhs cand 200 0 PASS s5-default-fallback-rhs resumes=200
+resume-s5-set base 100 0 PASS s5-set resumes=100
+resume-s5-set cand 100 0 PASS s5-set resumes=100
+resume-s5-set base 200 0 PASS s5-set resumes=200
+resume-s5-set cand 200 0 PASS s5-set resumes=200
+resume-s5-upset base 100 0 PASS s5-upset resumes=100
+resume-s5-upset cand 100 0 PASS s5-upset resumes=100
+resume-s5-upset base 200 0 PASS s5-upset resumes=200
+resume-s5-upset cand 200 0 PASS s5-upset resumes=200
+resume-s5-tagset base 100 0 PASS s5-tagset resumes=100
+resume-s5-tagset cand 100 0 PASS s5-tagset resumes=100
+resume-s5-tagset base 200 0 PASS s5-tagset resumes=200
+resume-s5-tagset cand 200 0 PASS s5-tagset resumes=200
+resume-s5-rule-rhs base 100 0 PASS s5-rule-rhs resumes=100
+resume-s5-rule-rhs cand 100 0 PASS s5-rule-rhs resumes=100
+resume-s5-rule-rhs base 200 0 PASS s5-rule-rhs resumes=200
+resume-s5-rule-rhs cand 200 0 PASS s5-rule-rhs resumes=200
+resume-s5-rule-lhs base 100 0 PASS s5-rule-lhs resumes=100
+resume-s5-rule-lhs cand 100 0 PASS s5-rule-lhs resumes=100
+resume-s5-rule-lhs base 200 0 PASS s5-rule-lhs resumes=200
+resume-s5-rule-lhs cand 200 0 PASS s5-rule-lhs resumes=200
+resume-s5-destructure base 100 0 PASS s5-destructure resumes=100
+resume-s5-destructure cand 100 0 PASS s5-destructure resumes=100
+resume-s5-destructure base 200 0 PASS s5-destructure resumes=200
+resume-s5-destructure cand 200 0 PASS s5-destructure resumes=200
+resume-s5-lhs-twice base 100 0 PASS s5-lhs-twice resumes=200
+resume-s5-lhs-twice cand 100 0 PASS s5-lhs-twice resumes=200
+resume-s5-lhs-twice base 200 0 PASS s5-lhs-twice resumes=400
+resume-s5-lhs-twice cand 200 0 PASS s5-lhs-twice resumes=400
+resume-s5-own-rhs base 100 0 PASS s5-own-rhs resumes=100
+resume-s5-own-rhs cand 100 0 PASS s5-own-rhs resumes=100
+resume-s5-own-rhs base 200 0 PASS s5-own-rhs resumes=200
+resume-s5-own-rhs cand 200 0 PASS s5-own-rhs resumes=200
+resume-s5-destructure-twice base 100 0 PASS s5-destructure-twice resumes=200
+resume-s5-destructure-twice cand 100 0 PASS s5-destructure-twice resumes=200
+resume-s5-destructure-twice base 200 0 PASS s5-destructure-twice resumes=400
+resume-s5-destructure-twice cand 200 0 PASS s5-destructure-twice resumes=400
+resume-s5-rule-lhs-twice base 100 0 PASS s5-rule-lhs-twice resumes=200
+resume-s5-rule-lhs-twice cand 100 0 PASS s5-rule-lhs-twice resumes=200
+resume-s5-rule-lhs-twice base 200 0 PASS s5-rule-lhs-twice resumes=400
+resume-s5-rule-lhs-twice cand 200 0 PASS s5-rule-lhs-twice resumes=400
+resume-s6-rhs-single base 100 0 PASS s6-rhs-single resumes=100
+Traceback (most recent call last):
+  File "/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-resume-attribution.py", line 54, in <module>
+    result_file.write_text(json.dumps({'correct': correct, 'exit': run.returncode,
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        'binary_sha256': hashes[arm], 'expected': expected, 'actual': actual}) + '\n')
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 809, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IsADirectoryError: [Errno 21] Is a directory: '/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/instruction-attribution/cand-resume-s6-rhs-single-100.result.json'
+````
+
+
+**resume-attribution-part2: exit 0.** [continuation-2/final3/logs/resume-attribution-part2.log](../../../.temp/brief-626/continuation-2/final3/logs/resume-attribution-part2.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-resume-attribution.py
+````
+
+
+**functions-all-part1: exit 0.** [continuation-2/final3/logs/functions-all-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/functions-all-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/diff-functions.py --all
+````
+
+
+````text
+FUNCTION DIFFS 313 / 313
+````
+
+
+**offpath-inertness-part1: exit 0.** [continuation-2/final3/logs/offpath-inertness-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/offpath-inertness-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/offpath-inertness.py
+````
+
+
+````text
+OFF-PATH DIAGNOSTIC SELF COST: labels 313 candidate profiles 626 positive diagnostic function rows 0
+````
+
+
+**rsp-final-lazy-map-realize-small-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-map-realize-small-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-map-realize-small-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-map-realize-small base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC9
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-map-realize-small base 1 calls 1650 groups 83
+````
+
+
+**rsp-final-lazy-map-realize-small-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-map-realize-small-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-map-realize-small-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-map-realize-small cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC11
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-map-realize-small cand 1 calls 1641 groups 82
+````
+
+
+**rsp-final-lazy-map-realize-small-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-map-realize-small-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-map-realize-small-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-map-realize-small base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC19
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-map-realize-small base 2 calls 1826 groups 83
+````
+
+
+**rsp-final-lazy-map-realize-small-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-map-realize-small-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-map-realize-small-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-map-realize-small cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC21
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-map-realize-small cand 2 calls 1823 groups 84
+````
+
+
+**rsp-final-lazy-nestlist-realize-small-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-nestlist-realize-small-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-nestlist-realize-small-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-nestlist-realize-small base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC29
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-nestlist-realize-small base 1 calls 1621 groups 82
+````
+
+
+**rsp-final-lazy-nestlist-realize-small-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-nestlist-realize-small-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-nestlist-realize-small-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-nestlist-realize-small cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC31
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-nestlist-realize-small cand 1 calls 1630 groups 85
+````
+
+
+**rsp-final-lazy-nestlist-realize-small-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-nestlist-realize-small-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-nestlist-realize-small-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-nestlist-realize-small base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC39
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-nestlist-realize-small base 2 calls 1790 groups 80
+````
+
+
+**rsp-final-lazy-nestlist-realize-small-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-nestlist-realize-small-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-nestlist-realize-small-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-nestlist-realize-small cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC41
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-nestlist-realize-small cand 2 calls 1792 groups 82
+````
+
+
+**rsp-final-lazy-drop-realize-small-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-drop-realize-small-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-drop-realize-small-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-drop-realize-small base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC49
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-drop-realize-small base 1 calls 1659 groups 80
+````
+
+
+**rsp-final-lazy-drop-realize-small-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-drop-realize-small-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-drop-realize-small-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-drop-realize-small cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC51
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-drop-realize-small cand 1 calls 1663 groups 82
+````
+
+
+**rsp-final-lazy-drop-realize-small-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-drop-realize-small-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-drop-realize-small-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-drop-realize-small base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC59
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-drop-realize-small base 2 calls 1849 groups 81
+````
+
+
+**rsp-final-lazy-drop-realize-small-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-drop-realize-small-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-drop-realize-small-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-drop-realize-small cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC61
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-drop-realize-small cand 2 calls 1854 groups 83
+````
+
+
+**rsp-final-optionvalue-three-no-input-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-optionvalue-three-no-input-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-optionvalue-three-no-input-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py optionvalue-three-no-input base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC69
+SELECT THREAD OK
+RSP POINTERS COMPLETE optionvalue-three-no-input base 1 calls 1467 groups 82
+````
+
+
+**rsp-final-optionvalue-three-no-input-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-optionvalue-three-no-input-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-optionvalue-three-no-input-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py optionvalue-three-no-input cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC71
+SELECT THREAD OK
+RSP POINTERS COMPLETE optionvalue-three-no-input cand 1 calls 1471 groups 83
+````
+
+
+**rsp-final-optionvalue-three-no-input-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-optionvalue-three-no-input-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-optionvalue-three-no-input-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py optionvalue-three-no-input base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC79
+SELECT THREAD OK
+RSP POINTERS COMPLETE optionvalue-three-no-input base 2 calls 1469 groups 84
+````
+
+
+**rsp-final-optionvalue-three-no-input-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-optionvalue-three-no-input-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-optionvalue-three-no-input-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py optionvalue-three-no-input cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC81
+SELECT THREAD OK
+RSP POINTERS COMPLETE optionvalue-three-no-input cand 2 calls 1461 groups 80
+````
+
+
+**rsp-final-dot-three-no-input-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-dot-three-no-input-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-dot-three-no-input-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py dot-three-no-input base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC89
+SELECT THREAD OK
+RSP POINTERS COMPLETE dot-three-no-input base 1 calls 1510 groups 87
+````
+
+
+**rsp-final-dot-three-no-input-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-dot-three-no-input-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-dot-three-no-input-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py dot-three-no-input cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC91
+SELECT THREAD OK
+RSP POINTERS COMPLETE dot-three-no-input cand 1 calls 1497 groups 82
+````
+
+
+**rsp-final-dot-three-no-input-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-dot-three-no-input-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-dot-three-no-input-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py dot-three-no-input base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC99
+SELECT THREAD OK
+RSP POINTERS COMPLETE dot-three-no-input base 2 calls 1598 groups 81
+````
+
+
+**rsp-final-dot-three-no-input-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-dot-three-no-input-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-dot-three-no-input-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py dot-three-no-input cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCa1
+SELECT THREAD OK
+RSP POINTERS COMPLETE dot-three-no-input cand 2 calls 1606 groups 86
+````
+
+
+**rsp-final-lazy-depth-map-eight-8-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-8-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-8-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-map-eight-8 base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCa9
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-depth-map-eight-8 base 1 calls 4029 groups 81
+````
+
+
+**rsp-final-lazy-depth-map-eight-8-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-8-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-8-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-map-eight-8 cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCb1
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-depth-map-eight-8 cand 1 calls 4044 groups 83
+````
+
+
+**rsp-final-lazy-depth-map-eight-8-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-8-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-8-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-map-eight-8 base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCb9
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-depth-map-eight-8 base 2 calls 5262 groups 81
+````
+
+
+**rsp-final-lazy-depth-map-eight-8-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-8-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-8-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-map-eight-8 cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCc1
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-depth-map-eight-8 cand 2 calls 5266 groups 83
+````
+
+
+**rsp-final-lazy-depth-take-map-8-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-take-map-8-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-take-map-8-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-take-map-8 base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCc9
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-depth-take-map-8 base 1 calls 2017 groups 83
+````
+
+
+**rsp-final-lazy-depth-take-map-8-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-take-map-8-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-take-map-8-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-take-map-8 cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCd1
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-depth-take-map-8 cand 1 calls 2025 groups 82
+````
+
+
+**rsp-final-lazy-depth-take-map-8-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-take-map-8-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-take-map-8-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-take-map-8 base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCd9
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-depth-take-map-8 base 2 calls 2178 groups 88
+````
+
+
+**rsp-final-lazy-depth-take-map-8-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-take-map-8-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-take-map-8-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-take-map-8 cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCe1
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-depth-take-map-8 cand 2 calls 2181 groups 84
+````
+
+
+**rsp-final-lazy-depth-fold-through-source-8-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-8-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-8-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-fold-through-source-8 base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCe9
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-depth-fold-through-source-8 base 1 calls 3326 groups 87
+````
+
+
+**rsp-final-lazy-depth-fold-through-source-8-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-8-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-8-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-fold-through-source-8 cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCf1
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-depth-fold-through-source-8 cand 1 calls 3320 groups 81
+````
+
+
+**rsp-final-lazy-depth-fold-through-source-8-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-8-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-8-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-fold-through-source-8 base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCf9
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-depth-fold-through-source-8 base 2 calls 4186 groups 84
+````
+
+
+**rsp-final-lazy-depth-fold-through-source-8-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-8-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-8-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-fold-through-source-8 cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC101
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-depth-fold-through-source-8 cand 2 calls 4181 groups 82
+````
+
+
+**rsp-final-lazy-depth-map-eight-64-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-64-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-64-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-map-eight-64 base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC109
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTERS COMPLETE lazy-depth-map-eight-64 base 1 calls 22069 groups 81
+````
+
+
+**rsp-final-lazy-depth-map-eight-64-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-64-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-64-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-map-eight-64 cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC111
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTERS COMPLETE lazy-depth-map-eight-64 cand 1 calls 22202 groups 82
+````
+
+
+**rsp-final-lazy-depth-map-eight-64-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-64-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-64-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-map-eight-64 base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC119
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTERS COMPLETE lazy-depth-map-eight-64 base 2 calls 31799 groups 83
+````
+
+
+**rsp-final-lazy-depth-map-eight-64-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-64-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-64-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-map-eight-64 cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC121
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTERS COMPLETE lazy-depth-map-eight-64 cand 2 calls 31813 groups 83
+````
+
+
+**rsp-final-lazy-depth-take-map-64-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-take-map-64-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-take-map-64-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-take-map-64 base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC129
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-depth-take-map-64 base 1 calls 5939 groups 81
+````
+
+
+**rsp-final-lazy-depth-take-map-64-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-take-map-64-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-take-map-64-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-take-map-64 cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC131
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-depth-take-map-64 cand 1 calls 5934 groups 80
+````
+
+
+**rsp-final-lazy-depth-take-map-64-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-take-map-64-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-take-map-64-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-take-map-64 base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC139
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-depth-take-map-64 base 2 calls 7161 groups 80
+````
+
+
+**rsp-final-lazy-depth-take-map-64-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-take-map-64-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-take-map-64-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-take-map-64 cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC141
+SELECT THREAD OK
+RSP POINTERS COMPLETE lazy-depth-take-map-64 cand 2 calls 7161 groups 83
+````
+
+
+**rsp-final-lazy-depth-fold-through-source-64-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-64-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-64-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-fold-through-source-64 base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC149
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTER PROGRESS 40000
+RSP POINTER PROGRESS 50000
+RSP POINTER PROGRESS 60000
+RSP POINTER PROGRESS 70000
+RSP POINTER PROGRESS 80000
+RSP POINTER PROGRESS 90000
+RSP POINTER PROGRESS 100000
+RSP POINTERS COMPLETE lazy-depth-fold-through-source-64 base 1 calls 102099 groups 82
+````
+
+
+**rsp-final-lazy-depth-fold-through-source-64-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-64-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-64-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-fold-through-source-64 cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC151
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTER PROGRESS 40000
+RSP POINTER PROGRESS 50000
+RSP POINTER PROGRESS 60000
+RSP POINTER PROGRESS 70000
+RSP POINTER PROGRESS 80000
+RSP POINTER PROGRESS 90000
+RSP POINTER PROGRESS 100000
+RSP POINTERS COMPLETE lazy-depth-fold-through-source-64 cand 1 calls 102108 groups 85
+````
+
+
+**rsp-final-lazy-depth-fold-through-source-64-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-64-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-64-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-fold-through-source-64 base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC159
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTER PROGRESS 40000
+RSP POINTER PROGRESS 50000
+RSP POINTER PROGRESS 60000
+RSP POINTER PROGRESS 70000
+RSP POINTER PROGRESS 80000
+RSP POINTER PROGRESS 90000
+RSP POINTER PROGRESS 100000
+RSP POINTER PROGRESS 110000
+RSP POINTER PROGRESS 120000
+RSP POINTER PROGRESS 130000
+RSP POINTER PROGRESS 140000
+RSP POINTER PROGRESS 150000
+RSP POINTERS COMPLETE lazy-depth-fold-through-source-64 base 2 calls 151919 groups 86
+````
+
+
+**rsp-final-lazy-depth-fold-through-source-64-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-64-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-64-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-fold-through-source-64 cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC161
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTER PROGRESS 40000
+RSP POINTER PROGRESS 50000
+RSP POINTER PROGRESS 60000
+RSP POINTER PROGRESS 70000
+RSP POINTER PROGRESS 80000
+RSP POINTER PROGRESS 90000
+RSP POINTER PROGRESS 100000
+RSP POINTER PROGRESS 110000
+RSP POINTER PROGRESS 120000
+RSP POINTER PROGRESS 130000
+RSP POINTER PROGRESS 140000
+RSP POINTER PROGRESS 150000
+RSP POINTERS COMPLETE lazy-depth-fold-through-source-64 cand 2 calls 151912 groups 86
+````
+
+
+**rsp-final-lazy-depth-map-eight-256-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-256-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-256-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-map-eight-256 base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC169
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTER PROGRESS 40000
+RSP POINTER PROGRESS 50000
+RSP POINTER PROGRESS 60000
+RSP POINTER PROGRESS 70000
+RSP POINTER PROGRESS 80000
+RSP POINTERS COMPLETE lazy-depth-map-eight-256 base 1 calls 83895 groups 83
+````
+
+
+**rsp-final-lazy-depth-map-eight-256-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-256-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-256-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-map-eight-256 cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC171
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTER PROGRESS 40000
+RSP POINTER PROGRESS 50000
+RSP POINTER PROGRESS 60000
+RSP POINTER PROGRESS 70000
+RSP POINTER PROGRESS 80000
+RSP POINTERS COMPLETE lazy-depth-map-eight-256 cand 1 calls 83896 groups 83
+````
+
+
+**rsp-final-lazy-depth-map-eight-256-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-256-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-256-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-map-eight-256 base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC179
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTER PROGRESS 40000
+RSP POINTER PROGRESS 50000
+RSP POINTER PROGRESS 60000
+RSP POINTER PROGRESS 70000
+RSP POINTER PROGRESS 80000
+RSP POINTER PROGRESS 90000
+RSP POINTER PROGRESS 100000
+RSP POINTER PROGRESS 110000
+RSP POINTER PROGRESS 120000
+RSP POINTERS COMPLETE lazy-depth-map-eight-256 base 2 calls 122831 groups 85
+````
+
+
+**rsp-final-lazy-depth-map-eight-256-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-256-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-map-eight-256-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-map-eight-256 cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC181
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTER PROGRESS 40000
+RSP POINTER PROGRESS 50000
+RSP POINTER PROGRESS 60000
+RSP POINTER PROGRESS 70000
+RSP POINTER PROGRESS 80000
+RSP POINTER PROGRESS 90000
+RSP POINTER PROGRESS 100000
+RSP POINTER PROGRESS 110000
+RSP POINTER PROGRESS 120000
+RSP POINTERS COMPLETE lazy-depth-map-eight-256 cand 2 calls 122825 groups 83
+````
+
+
+**rsp-final-lazy-depth-take-map-256-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-take-map-256-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-take-map-256-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-take-map-256 base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC189
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTERS COMPLETE lazy-depth-take-map-256 base 1 calls 19380 groups 83
+````
+
+
+**rsp-final-lazy-depth-take-map-256-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-take-map-256-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-take-map-256-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-take-map-256 cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC191
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTERS COMPLETE lazy-depth-take-map-256 cand 1 calls 19383 groups 87
+````
+
+
+**rsp-final-lazy-depth-take-map-256-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-take-map-256-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-take-map-256-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-take-map-256 base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC199
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTERS COMPLETE lazy-depth-take-map-256 base 2 calls 24245 groups 82
+````
+
+
+**rsp-final-lazy-depth-take-map-256-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-take-map-256-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-take-map-256-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-take-map-256 cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC1a1
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTERS COMPLETE lazy-depth-take-map-256 cand 2 calls 24248 groups 81
+````
+
+
+**rsp-final-downvalue-pattern-hit-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-downvalue-pattern-hit-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-downvalue-pattern-hit-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py downvalue-pattern-hit base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC1a9
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit base 1 calls 1408 groups 84
+````
+
+
+**rsp-final-downvalue-pattern-hit-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-downvalue-pattern-hit-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-downvalue-pattern-hit-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py downvalue-pattern-hit cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC1b1
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit cand 1 calls 1402 groups 81
+````
+
+
+**rsp-final-downvalue-pattern-hit-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-downvalue-pattern-hit-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-downvalue-pattern-hit-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py downvalue-pattern-hit base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC1b9
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit base 2 calls 1412 groups 83
+````
+
+
+**rsp-final-downvalue-pattern-hit-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-downvalue-pattern-hit-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-downvalue-pattern-hit-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py downvalue-pattern-hit cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC1c1
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit cand 2 calls 1427 groups 88
+````
+
+
+**rsp-final-module-local-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-module-local-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-module-local-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py module-local base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC1c9
+SELECT THREAD OK
+RSP POINTERS COMPLETE module-local base 1 calls 1293 groups 83
+````
+
+
+**rsp-final-module-local-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-module-local-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-module-local-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py module-local cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC1d1
+SELECT THREAD OK
+RSP POINTERS COMPLETE module-local cand 1 calls 1293 groups 83
+````
+
+
+**rsp-final-module-local-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-module-local-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-module-local-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py module-local base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC1d9
+SELECT THREAD OK
+RSP POINTERS COMPLETE module-local base 2 calls 1313 groups 84
+````
+
+
+**rsp-final-module-local-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-module-local-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-module-local-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py module-local cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC1e1
+SELECT THREAD OK
+RSP POINTERS COMPLETE module-local cand 2 calls 1308 groups 81
+````
+
+
+**rsp-final-block-local-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-block-local-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-block-local-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py block-local base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC1e9
+SELECT THREAD OK
+RSP POINTERS COMPLETE block-local base 1 calls 1361 groups 82
+````
+
+
+**rsp-final-block-local-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-block-local-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-block-local-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py block-local cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC1f1
+SELECT THREAD OK
+RSP POINTERS COMPLETE block-local cand 1 calls 1364 groups 82
+````
+
+
+**rsp-final-block-local-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-block-local-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-block-local-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py block-local base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC1f9
+SELECT THREAD OK
+RSP POINTERS COMPLETE block-local base 2 calls 1366 groups 81
+````
+
+
+**rsp-final-block-local-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-block-local-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-block-local-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py block-local cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC201
+SELECT THREAD OK
+RSP POINTERS COMPLETE block-local cand 2 calls 1369 groups 80
+````
+
+
+**rsp-final-deletecases-wide-association-no-match-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-deletecases-wide-association-no-match-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-deletecases-wide-association-no-match-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py deletecases-wide-association-no-match base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC209
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTERS COMPLETE deletecases-wide-association-no-match base 1 calls 26979 groups 84
+````
+
+
+**rsp-final-deletecases-wide-association-no-match-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-deletecases-wide-association-no-match-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-deletecases-wide-association-no-match-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py deletecases-wide-association-no-match cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC211
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTERS COMPLETE deletecases-wide-association-no-match cand 1 calls 26971 groups 84
+````
+
+
+**rsp-final-deletecases-wide-association-no-match-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-deletecases-wide-association-no-match-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-deletecases-wide-association-no-match-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py deletecases-wide-association-no-match base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC219
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTERS COMPLETE deletecases-wide-association-no-match base 2 calls 34983 groups 81
+````
+
+
+**rsp-final-deletecases-wide-association-no-match-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-deletecases-wide-association-no-match-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-deletecases-wide-association-no-match-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py deletecases-wide-association-no-match cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC221
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTERS COMPLETE deletecases-wide-association-no-match cand 2 calls 34981 groups 81
+````
+
+
+**rsp-final-downvalue-guarded-hit-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-downvalue-guarded-hit-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-downvalue-guarded-hit-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py downvalue-guarded-hit base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC229
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-guarded-hit base 1 calls 1382 groups 82
+````
+
+
+**rsp-final-downvalue-guarded-hit-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-downvalue-guarded-hit-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-downvalue-guarded-hit-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py downvalue-guarded-hit cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC231
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-guarded-hit cand 1 calls 1374 groups 83
+````
+
+
+**rsp-final-downvalue-guarded-hit-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-downvalue-guarded-hit-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-downvalue-guarded-hit-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py downvalue-guarded-hit base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC239
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-guarded-hit base 2 calls 1385 groups 81
+````
+
+
+**rsp-final-downvalue-guarded-hit-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-downvalue-guarded-hit-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-downvalue-guarded-hit-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py downvalue-guarded-hit cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC241
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-guarded-hit cand 2 calls 1388 groups 83
+````
+
+
+**rsp-final-upvalue-guarded-hit-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-upvalue-guarded-hit-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-upvalue-guarded-hit-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py upvalue-guarded-hit base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC249
+SELECT THREAD OK
+RSP POINTERS COMPLETE upvalue-guarded-hit base 1 calls 1369 groups 83
+````
+
+
+**rsp-final-upvalue-guarded-hit-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-upvalue-guarded-hit-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-upvalue-guarded-hit-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py upvalue-guarded-hit cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC251
+SELECT THREAD OK
+RSP POINTERS COMPLETE upvalue-guarded-hit cand 1 calls 1371 groups 82
+````
+
+
+**rsp-final-upvalue-guarded-hit-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-upvalue-guarded-hit-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-upvalue-guarded-hit-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py upvalue-guarded-hit base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC259
+SELECT THREAD OK
+RSP POINTERS COMPLETE upvalue-guarded-hit base 2 calls 1385 groups 83
+````
+
+
+**rsp-final-upvalue-guarded-hit-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-upvalue-guarded-hit-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-upvalue-guarded-hit-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py upvalue-guarded-hit cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC261
+SELECT THREAD OK
+RSP POINTERS COMPLETE upvalue-guarded-hit cand 2 calls 1384 groups 83
+````
+
+
+**rsp-final-subvalue-unguarded-hit-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-subvalue-unguarded-hit-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-subvalue-unguarded-hit-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py subvalue-unguarded-hit base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC269
+SELECT THREAD OK
+RSP POINTERS COMPLETE subvalue-unguarded-hit base 1 calls 1303 groups 82
+````
+
+
+**rsp-final-subvalue-unguarded-hit-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-subvalue-unguarded-hit-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-subvalue-unguarded-hit-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py subvalue-unguarded-hit cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC271
+SELECT THREAD OK
+RSP POINTERS COMPLETE subvalue-unguarded-hit cand 1 calls 1307 groups 80
+````
+
+
+**rsp-final-subvalue-unguarded-hit-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-subvalue-unguarded-hit-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-subvalue-unguarded-hit-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py subvalue-unguarded-hit base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC279
+SELECT THREAD OK
+RSP POINTERS COMPLETE subvalue-unguarded-hit base 2 calls 1312 groups 81
+````
+
+
+**rsp-final-subvalue-unguarded-hit-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-subvalue-unguarded-hit-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-subvalue-unguarded-hit-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py subvalue-unguarded-hit cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC281
+SELECT THREAD OK
+RSP POINTERS COMPLETE subvalue-unguarded-hit cand 2 calls 1327 groups 85
+````
+
+
+**rsp-final-keysort-default-wide-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-keysort-default-wide-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-keysort-default-wide-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py keysort-default-wide base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC289
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTERS COMPLETE keysort-default-wide base 1 calls 23747 groups 83
+````
+
+
+**rsp-final-keysort-default-wide-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-keysort-default-wide-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-keysort-default-wide-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py keysort-default-wide cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC291
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTERS COMPLETE keysort-default-wide cand 1 calls 23735 groups 80
+````
+
+
+**rsp-final-keysort-default-wide-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-keysort-default-wide-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-keysort-default-wide-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py keysort-default-wide base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC299
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTERS COMPLETE keysort-default-wide base 2 calls 30143 groups 82
+````
+
+
+**rsp-final-keysort-default-wide-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-keysort-default-wide-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-keysort-default-wide-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py keysort-default-wide cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC2a1
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTERS COMPLETE keysort-default-wide cand 2 calls 30145 groups 85
+````
+
+
+**rsp-final-keysortby-default-wide-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-keysortby-default-wide-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-keysortby-default-wide-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py keysortby-default-wide base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC2a9
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTERS COMPLETE keysortby-default-wide base 1 calls 23740 groups 85
+````
+
+
+**rsp-final-keysortby-default-wide-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-keysortby-default-wide-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-keysortby-default-wide-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py keysortby-default-wide cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC2b1
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTERS COMPLETE keysortby-default-wide cand 1 calls 23739 groups 82
+````
+
+
+**rsp-final-keysortby-default-wide-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-keysortby-default-wide-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-keysortby-default-wide-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py keysortby-default-wide base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC2b9
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTERS COMPLETE keysortby-default-wide base 2 calls 30151 groups 83
+````
+
+
+**rsp-final-keysortby-default-wide-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-keysortby-default-wide-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-keysortby-default-wide-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py keysortby-default-wide cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC2c1
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTERS COMPLETE keysortby-default-wide cand 2 calls 30145 groups 80
+````
+
+
+**rsp-final-replacerepeated-guarded-small-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-replacerepeated-guarded-small-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-replacerepeated-guarded-small-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py replacerepeated-guarded-small base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC2c9
+SELECT THREAD OK
+RSP POINTERS COMPLETE replacerepeated-guarded-small base 1 calls 1706 groups 87
+````
+
+
+**rsp-final-replacerepeated-guarded-small-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-replacerepeated-guarded-small-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-replacerepeated-guarded-small-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py replacerepeated-guarded-small cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC2d1
+SELECT THREAD OK
+RSP POINTERS COMPLETE replacerepeated-guarded-small cand 1 calls 1712 groups 88
+````
+
+
+**rsp-final-replacerepeated-guarded-small-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-replacerepeated-guarded-small-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-replacerepeated-guarded-small-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py replacerepeated-guarded-small base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC9
+SELECT THREAD OK
+RSP POINTERS COMPLETE replacerepeated-guarded-small base 2 calls 1859 groups 81
+````
+
+
+**rsp-final-replacerepeated-guarded-small-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-replacerepeated-guarded-small-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-replacerepeated-guarded-small-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py replacerepeated-guarded-small cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC11
+SELECT THREAD OK
+RSP POINTERS COMPLETE replacerepeated-guarded-small cand 2 calls 1859 groups 82
+````
+
+
+**rsp-final-abortprotect-clean-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-abortprotect-clean-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-abortprotect-clean-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py abortprotect-clean base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC19
+SELECT THREAD OK
+RSP POINTERS COMPLETE abortprotect-clean base 1 calls 1225 groups 81
+````
+
+
+**rsp-final-abortprotect-clean-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-abortprotect-clean-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-abortprotect-clean-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py abortprotect-clean cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC21
+SELECT THREAD OK
+RSP POINTERS COMPLETE abortprotect-clean cand 1 calls 1216 groups 78
+````
+
+
+**rsp-final-abortprotect-clean-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-abortprotect-clean-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-abortprotect-clean-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py abortprotect-clean base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC29
+SELECT THREAD OK
+RSP POINTERS COMPLETE abortprotect-clean base 2 calls 1226 groups 83
+````
+
+
+**rsp-final-abortprotect-clean-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-abortprotect-clean-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-abortprotect-clean-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py abortprotect-clean cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC31
+SELECT THREAD OK
+RSP POINTERS COMPLETE abortprotect-clean cand 2 calls 1224 groups 81
+````
+
+
+**rsp-final-check-clean-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-check-clean-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-check-clean-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py check-clean base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC39
+SELECT THREAD OK
+RSP POINTERS COMPLETE check-clean base 1 calls 1218 groups 80
+````
+
+
+**rsp-final-check-clean-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-check-clean-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-check-clean-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py check-clean cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC41
+SELECT THREAD OK
+RSP POINTERS COMPLETE check-clean cand 1 calls 1218 groups 79
+````
+
+
+**rsp-final-check-clean-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-check-clean-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-check-clean-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py check-clean base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC49
+SELECT THREAD OK
+RSP POINTERS COMPLETE check-clean base 2 calls 1217 groups 79
+````
+
+
+**rsp-final-check-clean-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-check-clean-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-check-clean-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py check-clean cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC51
+SELECT THREAD OK
+RSP POINTERS COMPLETE check-clean cand 2 calls 1230 groups 87
+````
+
+
+**rsp-final-quiet-clean-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-quiet-clean-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-quiet-clean-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py quiet-clean base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC59
+SELECT THREAD OK
+RSP POINTERS COMPLETE quiet-clean base 1 calls 1218 groups 79
+````
+
+
+**rsp-final-quiet-clean-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-quiet-clean-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-quiet-clean-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py quiet-clean cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC61
+SELECT THREAD OK
+RSP POINTERS COMPLETE quiet-clean cand 1 calls 1213 groups 79
+````
+
+
+**rsp-final-quiet-clean-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-quiet-clean-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-quiet-clean-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py quiet-clean base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC69
+SELECT THREAD OK
+RSP POINTERS COMPLETE quiet-clean base 2 calls 1218 groups 80
+````
+
+
+**rsp-final-quiet-clean-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-quiet-clean-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-quiet-clean-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py quiet-clean cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC71
+SELECT THREAD OK
+RSP POINTERS COMPLETE quiet-clean cand 2 calls 1226 groups 85
+````
+
+
+**rsp-final-withcleanup-two-arg-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-withcleanup-two-arg-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-withcleanup-two-arg-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py withcleanup-two-arg base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC79
+SELECT THREAD OK
+RSP POINTERS COMPLETE withcleanup-two-arg base 1 calls 1264 groups 82
+````
+
+
+**rsp-final-withcleanup-two-arg-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-withcleanup-two-arg-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-withcleanup-two-arg-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py withcleanup-two-arg cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC81
+SELECT THREAD OK
+RSP POINTERS COMPLETE withcleanup-two-arg cand 1 calls 1250 groups 80
+````
+
+
+**rsp-final-withcleanup-two-arg-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-withcleanup-two-arg-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-withcleanup-two-arg-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py withcleanup-two-arg base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC89
+SELECT THREAD OK
+RSP POINTERS COMPLETE withcleanup-two-arg base 2 calls 1260 groups 81
+````
+
+
+**rsp-final-withcleanup-two-arg-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-withcleanup-two-arg-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-withcleanup-two-arg-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py withcleanup-two-arg cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC91
+SELECT THREAD OK
+RSP POINTERS COMPLETE withcleanup-two-arg cand 2 calls 1263 groups 82
+````
+
+
+**rsp-final-function-slot-apply-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-function-slot-apply-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-function-slot-apply-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py function-slot-apply base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC99
+SELECT THREAD OK
+RSP POINTERS COMPLETE function-slot-apply base 1 calls 1228 groups 82
+````
+
+
+**rsp-final-function-slot-apply-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-function-slot-apply-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-function-slot-apply-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py function-slot-apply cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCa1
+SELECT THREAD OK
+RSP POINTERS COMPLETE function-slot-apply cand 1 calls 1228 groups 84
+````
+
+
+**rsp-final-function-slot-apply-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-function-slot-apply-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-function-slot-apply-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py function-slot-apply base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCa9
+SELECT THREAD OK
+RSP POINTERS COMPLETE function-slot-apply base 2 calls 1244 groups 84
+````
+
+
+**rsp-final-function-slot-apply-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-function-slot-apply-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-function-slot-apply-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py function-slot-apply cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCb1
+SELECT THREAD OK
+RSP POINTERS COMPLETE function-slot-apply cand 2 calls 1245 groups 80
+````
+
+
+**rsp-final-function-named-apply-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-function-named-apply-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-function-named-apply-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py function-named-apply base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCb9
+SELECT THREAD OK
+RSP POINTERS COMPLETE function-named-apply base 1 calls 1277 groups 84
+````
+
+
+**rsp-final-function-named-apply-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-function-named-apply-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-function-named-apply-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py function-named-apply cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCc1
+SELECT THREAD OK
+RSP POINTERS COMPLETE function-named-apply cand 1 calls 1276 groups 79
+````
+
+
+**rsp-final-function-named-apply-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-function-named-apply-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-function-named-apply-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py function-named-apply base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCc9
+SELECT THREAD OK
+RSP POINTERS COMPLETE function-named-apply base 2 calls 1304 groups 83
+````
+
+
+**rsp-final-function-named-apply-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-function-named-apply-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-function-named-apply-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py function-named-apply cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCd1
+SELECT THREAD OK
+RSP POINTERS COMPLETE function-named-apply cand 2 calls 1298 groups 83
+````
+
+
+**rsp-final-composition-apply-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-composition-apply-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-composition-apply-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py composition-apply base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCd9
+SELECT THREAD OK
+RSP POINTERS COMPLETE composition-apply base 1 calls 1238 groups 83
+````
+
+
+**rsp-final-composition-apply-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-composition-apply-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-composition-apply-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py composition-apply cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCe1
+SELECT THREAD OK
+RSP POINTERS COMPLETE composition-apply cand 1 calls 1225 groups 81
+````
+
+
+**rsp-final-composition-apply-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-composition-apply-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-composition-apply-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py composition-apply base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCe9
+SELECT THREAD OK
+RSP POINTERS COMPLETE composition-apply base 2 calls 1230 groups 78
+````
+
+
+**rsp-final-composition-apply-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-composition-apply-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-composition-apply-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py composition-apply cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCf1
+SELECT THREAD OK
+RSP POINTERS COMPLETE composition-apply cand 2 calls 1234 groups 79
+````
+
+
+**rsp-final-lazy-depth-fold-through-source-256-base-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-256-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-256-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-fold-through-source-256 base 1 largest-buffered-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCf9
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTER PROGRESS 40000
+RSP POINTER PROGRESS 50000
+RSP POINTER PROGRESS 60000
+RSP POINTER PROGRESS 70000
+RSP POINTER PROGRESS 80000
+RSP POINTER PROGRESS 90000
+RSP POINTER PROGRESS 100000
+RSP POINTER PROGRESS 110000
+RSP POINTER PROGRESS 120000
+RSP POINTER PROGRESS 130000
+RSP POINTER PROGRESS 140000
+RSP POINTER PROGRESS 150000
+RSP POINTER PROGRESS 160000
+RSP POINTER PROGRESS 170000
+RSP POINTER PROGRESS 180000
+RSP POINTER PROGRESS 190000
+RSP POINTER PROGRESS 200000
+RSP POINTER PROGRESS 210000
+RSP POINTER PROGRESS 220000
+RSP POINTER PROGRESS 230000
+RSP POINTER PROGRESS 240000
+RSP POINTER PROGRESS 250000
+RSP POINTER PROGRESS 260000
+RSP POINTER PROGRESS 270000
+RSP POINTER PROGRESS 280000
+RSP POINTER PROGRESS 290000
+RSP POINTER PROGRESS 300000
+RSP POINTER PROGRESS 310000
+RSP POINTER PROGRESS 320000
+RSP POINTER PROGRESS 330000
+RSP POINTER PROGRESS 340000
+RSP POINTER PROGRESS 350000
+RSP POINTER PROGRESS 360000
+RSP POINTER PROGRESS 370000
+RSP POINTER PROGRESS 380000
+RSP POINTER PROGRESS 390000
+RSP POINTER PROGRESS 400000
+RSP POINTER PROGRESS 410000
+RSP POINTER PROGRESS 420000
+RSP POINTER PROGRESS 430000
+RSP POINTER PROGRESS 440000
+RSP POINTER PROGRESS 450000
+RSP POINTER PROGRESS 460000
+RSP POINTER PROGRESS 470000
+RSP POINTER PROGRESS 480000
+RSP POINTER PROGRESS 490000
+RSP POINTER PROGRESS 500000
+RSP POINTER PROGRESS 510000
+RSP POINTER PROGRESS 520000
+RSP POINTER PROGRESS 530000
+RSP POINTER PROGRESS 540000
+RSP POINTER PROGRESS 550000
+RSP POINTER PROGRESS 560000
+RSP POINTER PROGRESS 570000
+RSP POINTER PROGRESS 580000
+RSP POINTER PROGRESS 590000
+RSP POINTER PROGRESS 600000
+RSP POINTER PROGRESS 610000
+RSP POINTER PROGRESS 620000
+RSP POINTER PROGRESS 630000
+RSP POINTER PROGRESS 640000
+RSP POINTER PROGRESS 650000
+RSP POINTER PROGRESS 660000
+RSP POINTER PROGRESS 670000
+RSP POINTER PROGRESS 680000
+RSP POINTER PROGRESS 690000
+RSP POINTER PROGRESS 700000
+RSP POINTER PROGRESS 710000
+RSP POINTER PROGRESS 720000
+RSP POINTER PROGRESS 730000
+RSP POINTER PROGRESS 740000
+RSP POINTER PROGRESS 750000
+RSP POINTER PROGRESS 760000
+RSP POINTER PROGRESS 770000
+RSP POINTER PROGRESS 780000
+RSP POINTER PROGRESS 790000
+RSP POINTER PROGRESS 800000
+RSP POINTER PROGRESS 810000
+RSP POINTER PROGRESS 820000
+RSP POINTER PROGRESS 830000
+RSP POINTER PROGRESS 840000
+RSP POINTER PROGRESS 850000
+RSP POINTER PROGRESS 860000
+RSP POINTER PROGRESS 870000
+RSP POINTER PROGRESS 880000
+RSP POINTER PROGRESS 890000
+RSP POINTER PROGRESS 900000
+RSP POINTER PROGRESS 910000
+RSP POINTER PROGRESS 920000
+RSP POINTER PROGRESS 930000
+RSP POINTER PROGRESS 940000
+RSP POINTER PROGRESS 950000
+RSP POINTER PROGRESS 960000
+RSP POINTER PROGRESS 970000
+RSP POINTER PROGRESS 980000
+RSP POINTER PROGRESS 990000
+RSP POINTER PROGRESS 1000000
+RSP POINTER PROGRESS 1010000
+RSP POINTER PROGRESS 1020000
+RSP POINTER PROGRESS 1030000
+RSP POINTER PROGRESS 1040000
+RSP POINTER PROGRESS 1050000
+RSP POINTER PROGRESS 1060000
+RSP POINTER PROGRESS 1070000
+RSP POINTER PROGRESS 1080000
+RSP POINTER PROGRESS 1090000
+RSP POINTER PROGRESS 1100000
+RSP POINTER PROGRESS 1110000
+RSP POINTER PROGRESS 1120000
+RSP POINTER PROGRESS 1130000
+RSP POINTER PROGRESS 1140000
+RSP POINTER PROGRESS 1150000
+RSP POINTER PROGRESS 1160000
+RSP POINTER PROGRESS 1170000
+RSP POINTER PROGRESS 1180000
+RSP POINTER PROGRESS 1190000
+RSP POINTER PROGRESS 1200000
+RSP POINTER PROGRESS 1210000
+RSP POINTER PROGRESS 1220000
+RSP POINTER PROGRESS 1230000
+RSP POINTER PROGRESS 1240000
+RSP POINTER PROGRESS 1250000
+RSP POINTER PROGRESS 1260000
+RSP POINTER PROGRESS 1270000
+RSP POINTER PROGRESS 1280000
+RSP POINTER PROGRESS 1290000
+RSP POINTER PROGRESS 1300000
+RSP POINTER PROGRESS 1310000
+RSP POINTER PROGRESS 1320000
+RSP POINTER PROGRESS 1330000
+RSP POINTER PROGRESS 1340000
+RSP POINTER PROGRESS 1350000
+RSP POINTER PROGRESS 1360000
+RSP POINTER PROGRESS 1370000
+RSP POINTER PROGRESS 1380000
+RSP POINTER PROGRESS 1390000
+RSP POINTER PROGRESS 1400000
+RSP POINTER PROGRESS 1410000
+RSP POINTER PROGRESS 1420000
+RSP POINTER PROGRESS 1430000
+RSP POINTER PROGRESS 1440000
+RSP POINTER PROGRESS 1450000
+RSP POINTER PROGRESS 1460000
+RSP POINTER PROGRESS 1470000
+RSP POINTER PROGRESS 1480000
+RSP POINTER PROGRESS 1490000
+RSP POINTER PROGRESS 1500000
+RSP POINTER PROGRESS 1510000
+RSP POINTER PROGRESS 1520000
+RSP POINTER PROGRESS 1530000
+RSP POINTER PROGRESS 1540000
+RSP POINTER PROGRESS 1550000
+RSP POINTER PROGRESS 1560000
+RSP POINTER PROGRESS 1570000
+RSP POINTER PROGRESS 1580000
+RSP POINTERS COMPLETE lazy-depth-fold-through-source-256 base 1 calls 1583583 groups 83
+````
+
+
+**rsp-final-lazy-depth-fold-through-source-256-cand-n1-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-256-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-256-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-fold-through-source-256 cand 1 largest-buffered-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC101
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTER PROGRESS 40000
+RSP POINTER PROGRESS 50000
+RSP POINTER PROGRESS 60000
+RSP POINTER PROGRESS 70000
+RSP POINTER PROGRESS 80000
+RSP POINTER PROGRESS 90000
+RSP POINTER PROGRESS 100000
+RSP POINTER PROGRESS 110000
+RSP POINTER PROGRESS 120000
+RSP POINTER PROGRESS 130000
+RSP POINTER PROGRESS 140000
+RSP POINTER PROGRESS 150000
+RSP POINTER PROGRESS 160000
+RSP POINTER PROGRESS 170000
+RSP POINTER PROGRESS 180000
+RSP POINTER PROGRESS 190000
+RSP POINTER PROGRESS 200000
+RSP POINTER PROGRESS 210000
+RSP POINTER PROGRESS 220000
+RSP POINTER PROGRESS 230000
+RSP POINTER PROGRESS 240000
+RSP POINTER PROGRESS 250000
+RSP POINTER PROGRESS 260000
+RSP POINTER PROGRESS 270000
+RSP POINTER PROGRESS 280000
+RSP POINTER PROGRESS 290000
+RSP POINTER PROGRESS 300000
+RSP POINTER PROGRESS 310000
+RSP POINTER PROGRESS 320000
+RSP POINTER PROGRESS 330000
+RSP POINTER PROGRESS 340000
+RSP POINTER PROGRESS 350000
+RSP POINTER PROGRESS 360000
+RSP POINTER PROGRESS 370000
+RSP POINTER PROGRESS 380000
+RSP POINTER PROGRESS 390000
+RSP POINTER PROGRESS 400000
+RSP POINTER PROGRESS 410000
+RSP POINTER PROGRESS 420000
+RSP POINTER PROGRESS 430000
+RSP POINTER PROGRESS 440000
+RSP POINTER PROGRESS 450000
+RSP POINTER PROGRESS 460000
+RSP POINTER PROGRESS 470000
+RSP POINTER PROGRESS 480000
+RSP POINTER PROGRESS 490000
+RSP POINTER PROGRESS 500000
+RSP POINTER PROGRESS 510000
+RSP POINTER PROGRESS 520000
+RSP POINTER PROGRESS 530000
+RSP POINTER PROGRESS 540000
+RSP POINTER PROGRESS 550000
+RSP POINTER PROGRESS 560000
+RSP POINTER PROGRESS 570000
+RSP POINTER PROGRESS 580000
+RSP POINTER PROGRESS 590000
+RSP POINTER PROGRESS 600000
+RSP POINTER PROGRESS 610000
+RSP POINTER PROGRESS 620000
+RSP POINTER PROGRESS 630000
+RSP POINTER PROGRESS 640000
+RSP POINTER PROGRESS 650000
+RSP POINTER PROGRESS 660000
+RSP POINTER PROGRESS 670000
+RSP POINTER PROGRESS 680000
+RSP POINTER PROGRESS 690000
+RSP POINTER PROGRESS 700000
+RSP POINTER PROGRESS 710000
+RSP POINTER PROGRESS 720000
+RSP POINTER PROGRESS 730000
+RSP POINTER PROGRESS 740000
+RSP POINTER PROGRESS 750000
+RSP POINTER PROGRESS 760000
+RSP POINTER PROGRESS 770000
+RSP POINTER PROGRESS 780000
+RSP POINTER PROGRESS 790000
+RSP POINTER PROGRESS 800000
+RSP POINTER PROGRESS 810000
+RSP POINTER PROGRESS 820000
+RSP POINTER PROGRESS 830000
+RSP POINTER PROGRESS 840000
+RSP POINTER PROGRESS 850000
+RSP POINTER PROGRESS 860000
+RSP POINTER PROGRESS 870000
+RSP POINTER PROGRESS 880000
+RSP POINTER PROGRESS 890000
+RSP POINTER PROGRESS 900000
+RSP POINTER PROGRESS 910000
+RSP POINTER PROGRESS 920000
+RSP POINTER PROGRESS 930000
+RSP POINTER PROGRESS 940000
+RSP POINTER PROGRESS 950000
+RSP POINTER PROGRESS 960000
+RSP POINTER PROGRESS 970000
+RSP POINTER PROGRESS 980000
+RSP POINTER PROGRESS 990000
+RSP POINTER PROGRESS 1000000
+RSP POINTER PROGRESS 1010000
+RSP POINTER PROGRESS 1020000
+RSP POINTER PROGRESS 1030000
+RSP POINTER PROGRESS 1040000
+RSP POINTER PROGRESS 1050000
+RSP POINTER PROGRESS 1060000
+RSP POINTER PROGRESS 1070000
+RSP POINTER PROGRESS 1080000
+RSP POINTER PROGRESS 1090000
+RSP POINTER PROGRESS 1100000
+RSP POINTER PROGRESS 1110000
+RSP POINTER PROGRESS 1120000
+RSP POINTER PROGRESS 1130000
+RSP POINTER PROGRESS 1140000
+RSP POINTER PROGRESS 1150000
+RSP POINTER PROGRESS 1160000
+RSP POINTER PROGRESS 1170000
+RSP POINTER PROGRESS 1180000
+RSP POINTER PROGRESS 1190000
+RSP POINTER PROGRESS 1200000
+RSP POINTER PROGRESS 1210000
+RSP POINTER PROGRESS 1220000
+RSP POINTER PROGRESS 1230000
+RSP POINTER PROGRESS 1240000
+RSP POINTER PROGRESS 1250000
+RSP POINTER PROGRESS 1260000
+RSP POINTER PROGRESS 1270000
+RSP POINTER PROGRESS 1280000
+RSP POINTER PROGRESS 1290000
+RSP POINTER PROGRESS 1300000
+RSP POINTER PROGRESS 1310000
+RSP POINTER PROGRESS 1320000
+RSP POINTER PROGRESS 1330000
+RSP POINTER PROGRESS 1340000
+RSP POINTER PROGRESS 1350000
+RSP POINTER PROGRESS 1360000
+RSP POINTER PROGRESS 1370000
+RSP POINTER PROGRESS 1380000
+RSP POINTER PROGRESS 1390000
+RSP POINTER PROGRESS 1400000
+RSP POINTER PROGRESS 1410000
+RSP POINTER PROGRESS 1420000
+RSP POINTER PROGRESS 1430000
+RSP POINTER PROGRESS 1440000
+RSP POINTER PROGRESS 1450000
+RSP POINTER PROGRESS 1460000
+RSP POINTER PROGRESS 1470000
+RSP POINTER PROGRESS 1480000
+RSP POINTER PROGRESS 1490000
+RSP POINTER PROGRESS 1500000
+RSP POINTER PROGRESS 1510000
+RSP POINTER PROGRESS 1520000
+RSP POINTER PROGRESS 1530000
+RSP POINTER PROGRESS 1540000
+RSP POINTER PROGRESS 1550000
+RSP POINTER PROGRESS 1560000
+RSP POINTER PROGRESS 1570000
+RSP POINTER PROGRESS 1580000
+RSP POINTERS COMPLETE lazy-depth-fold-through-source-256 cand 1 calls 1583584 groups 86
+````
+
+
+**rsp-final-lazy-depth-fold-through-source-256-base-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-256-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-256-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-fold-through-source-256 base 2 largest-buffered-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC9
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTER PROGRESS 40000
+RSP POINTER PROGRESS 50000
+RSP POINTER PROGRESS 60000
+RSP POINTER PROGRESS 70000
+RSP POINTER PROGRESS 80000
+RSP POINTER PROGRESS 90000
+RSP POINTER PROGRESS 100000
+RSP POINTER PROGRESS 110000
+RSP POINTER PROGRESS 120000
+RSP POINTER PROGRESS 130000
+RSP POINTER PROGRESS 140000
+RSP POINTER PROGRESS 150000
+RSP POINTER PROGRESS 160000
+RSP POINTER PROGRESS 170000
+RSP POINTER PROGRESS 180000
+RSP POINTER PROGRESS 190000
+RSP POINTER PROGRESS 200000
+RSP POINTER PROGRESS 210000
+RSP POINTER PROGRESS 220000
+RSP POINTER PROGRESS 230000
+RSP POINTER PROGRESS 240000
+RSP POINTER PROGRESS 250000
+RSP POINTER PROGRESS 260000
+RSP POINTER PROGRESS 270000
+RSP POINTER PROGRESS 280000
+RSP POINTER PROGRESS 290000
+RSP POINTER PROGRESS 300000
+RSP POINTER PROGRESS 310000
+RSP POINTER PROGRESS 320000
+RSP POINTER PROGRESS 330000
+RSP POINTER PROGRESS 340000
+RSP POINTER PROGRESS 350000
+RSP POINTER PROGRESS 360000
+RSP POINTER PROGRESS 370000
+RSP POINTER PROGRESS 380000
+RSP POINTER PROGRESS 390000
+RSP POINTER PROGRESS 400000
+RSP POINTER PROGRESS 410000
+RSP POINTER PROGRESS 420000
+RSP POINTER PROGRESS 430000
+RSP POINTER PROGRESS 440000
+RSP POINTER PROGRESS 450000
+RSP POINTER PROGRESS 460000
+RSP POINTER PROGRESS 470000
+RSP POINTER PROGRESS 480000
+RSP POINTER PROGRESS 490000
+RSP POINTER PROGRESS 500000
+RSP POINTER PROGRESS 510000
+RSP POINTER PROGRESS 520000
+RSP POINTER PROGRESS 530000
+RSP POINTER PROGRESS 540000
+RSP POINTER PROGRESS 550000
+RSP POINTER PROGRESS 560000
+RSP POINTER PROGRESS 570000
+RSP POINTER PROGRESS 580000
+RSP POINTER PROGRESS 590000
+RSP POINTER PROGRESS 600000
+RSP POINTER PROGRESS 610000
+RSP POINTER PROGRESS 620000
+RSP POINTER PROGRESS 630000
+RSP POINTER PROGRESS 640000
+RSP POINTER PROGRESS 650000
+RSP POINTER PROGRESS 660000
+RSP POINTER PROGRESS 670000
+RSP POINTER PROGRESS 680000
+RSP POINTER PROGRESS 690000
+RSP POINTER PROGRESS 700000
+RSP POINTER PROGRESS 710000
+RSP POINTER PROGRESS 720000
+RSP POINTER PROGRESS 730000
+RSP POINTER PROGRESS 740000
+RSP POINTER PROGRESS 750000
+RSP POINTER PROGRESS 760000
+RSP POINTER PROGRESS 770000
+RSP POINTER PROGRESS 780000
+RSP POINTER PROGRESS 790000
+RSP POINTER PROGRESS 800000
+RSP POINTER PROGRESS 810000
+RSP POINTER PROGRESS 820000
+RSP POINTER PROGRESS 830000
+RSP POINTER PROGRESS 840000
+RSP POINTER PROGRESS 850000
+RSP POINTER PROGRESS 860000
+RSP POINTER PROGRESS 870000
+RSP POINTER PROGRESS 880000
+RSP POINTER PROGRESS 890000
+RSP POINTER PROGRESS 900000
+RSP POINTER PROGRESS 910000
+RSP POINTER PROGRESS 920000
+RSP POINTER PROGRESS 930000
+RSP POINTER PROGRESS 940000
+RSP POINTER PROGRESS 950000
+RSP POINTER PROGRESS 960000
+RSP POINTER PROGRESS 970000
+RSP POINTER PROGRESS 980000
+RSP POINTER PROGRESS 990000
+RSP POINTER PROGRESS 1000000
+RSP POINTER PROGRESS 1010000
+RSP POINTER PROGRESS 1020000
+RSP POINTER PROGRESS 1030000
+RSP POINTER PROGRESS 1040000
+RSP POINTER PROGRESS 1050000
+RSP POINTER PROGRESS 1060000
+RSP POINTER PROGRESS 1070000
+RSP POINTER PROGRESS 1080000
+RSP POINTER PROGRESS 1090000
+RSP POINTER PROGRESS 1100000
+RSP POINTER PROGRESS 1110000
+RSP POINTER PROGRESS 1120000
+RSP POINTER PROGRESS 1130000
+RSP POINTER PROGRESS 1140000
+RSP POINTER PROGRESS 1150000
+RSP POINTER PROGRESS 1160000
+RSP POINTER PROGRESS 1170000
+RSP POINTER PROGRESS 1180000
+RSP POINTER PROGRESS 1190000
+RSP POINTER PROGRESS 1200000
+RSP POINTER PROGRESS 1210000
+RSP POINTER PROGRESS 1220000
+RSP POINTER PROGRESS 1230000
+RSP POINTER PROGRESS 1240000
+RSP POINTER PROGRESS 1250000
+RSP POINTER PROGRESS 1260000
+RSP POINTER PROGRESS 1270000
+RSP POINTER PROGRESS 1280000
+RSP POINTER PROGRESS 1290000
+RSP POINTER PROGRESS 1300000
+RSP POINTER PROGRESS 1310000
+RSP POINTER PROGRESS 1320000
+RSP POINTER PROGRESS 1330000
+RSP POINTER PROGRESS 1340000
+RSP POINTER PROGRESS 1350000
+RSP POINTER PROGRESS 1360000
+RSP POINTER PROGRESS 1370000
+RSP POINTER PROGRESS 1380000
+RSP POINTER PROGRESS 1390000
+RSP POINTER PROGRESS 1400000
+RSP POINTER PROGRESS 1410000
+RSP POINTER PROGRESS 1420000
+RSP POINTER PROGRESS 1430000
+RSP POINTER PROGRESS 1440000
+RSP POINTER PROGRESS 1450000
+RSP POINTER PROGRESS 1460000
+RSP POINTER PROGRESS 1470000
+RSP POINTER PROGRESS 1480000
+RSP POINTER PROGRESS 1490000
+RSP POINTER PROGRESS 1500000
+RSP POINTER PROGRESS 1510000
+RSP POINTER PROGRESS 1520000
+RSP POINTER PROGRESS 1530000
+RSP POINTER PROGRESS 1540000
+RSP POINTER PROGRESS 1550000
+RSP POINTER PROGRESS 1560000
+RSP POINTER PROGRESS 1570000
+RSP POINTER PROGRESS 1580000
+RSP POINTER PROGRESS 1590000
+RSP POINTER PROGRESS 1600000
+RSP POINTER PROGRESS 1610000
+RSP POINTER PROGRESS 1620000
+RSP POINTER PROGRESS 1630000
+RSP POINTER PROGRESS 1640000
+RSP POINTER PROGRESS 1650000
+RSP POINTER PROGRESS 1660000
+RSP POINTER PROGRESS 1670000
+RSP POINTER PROGRESS 1680000
+RSP POINTER PROGRESS 1690000
+RSP POINTER PROGRESS 1700000
+RSP POINTER PROGRESS 1710000
+RSP POINTER PROGRESS 1720000
+RSP POINTER PROGRESS 1730000
+RSP POINTER PROGRESS 1740000
+RSP POINTER PROGRESS 1750000
+RSP POINTER PROGRESS 1760000
+RSP POINTER PROGRESS 1770000
+RSP POINTER PROGRESS 1780000
+RSP POINTER PROGRESS 1790000
+RSP POINTER PROGRESS 1800000
+RSP POINTER PROGRESS 1810000
+RSP POINTER PROGRESS 1820000
+RSP POINTER PROGRESS 1830000
+RSP POINTER PROGRESS 1840000
+RSP POINTER PROGRESS 1850000
+RSP POINTER PROGRESS 1860000
+RSP POINTER PROGRESS 1870000
+RSP POINTER PROGRESS 1880000
+RSP POINTER PROGRESS 1890000
+RSP POINTER PROGRESS 1900000
+RSP POINTER PROGRESS 1910000
+RSP POINTER PROGRESS 1920000
+RSP POINTER PROGRESS 1930000
+RSP POINTER PROGRESS 1940000
+RSP POINTER PROGRESS 1950000
+RSP POINTER PROGRESS 1960000
+RSP POINTER PROGRESS 1970000
+RSP POINTER PROGRESS 1980000
+RSP POINTER PROGRESS 1990000
+RSP POINTER PROGRESS 2000000
+RSP POINTER PROGRESS 2010000
+RSP POINTER PROGRESS 2020000
+RSP POINTER PROGRESS 2030000
+RSP POINTER PROGRESS 2040000
+RSP POINTER PROGRESS 2050000
+RSP POINTER PROGRESS 2060000
+RSP POINTER PROGRESS 2070000
+RSP POINTER PROGRESS 2080000
+RSP POINTER PROGRESS 2090000
+RSP POINTER PROGRESS 2100000
+RSP POINTER PROGRESS 2110000
+RSP POINTER PROGRESS 2120000
+RSP POINTER PROGRESS 2130000
+RSP POINTER PROGRESS 2140000
+RSP POINTER PROGRESS 2150000
+RSP POINTER PROGRESS 2160000
+RSP POINTER PROGRESS 2170000
+RSP POINTER PROGRESS 2180000
+RSP POINTER PROGRESS 2190000
+RSP POINTER PROGRESS 2200000
+RSP POINTER PROGRESS 2210000
+RSP POINTER PROGRESS 2220000
+RSP POINTER PROGRESS 2230000
+RSP POINTER PROGRESS 2240000
+RSP POINTER PROGRESS 2250000
+RSP POINTER PROGRESS 2260000
+RSP POINTER PROGRESS 2270000
+RSP POINTER PROGRESS 2280000
+RSP POINTER PROGRESS 2290000
+RSP POINTER PROGRESS 2300000
+RSP POINTER PROGRESS 2310000
+RSP POINTER PROGRESS 2320000
+RSP POINTER PROGRESS 2330000
+RSP POINTER PROGRESS 2340000
+RSP POINTER PROGRESS 2350000
+RSP POINTER PROGRESS 2360000
+RSP POINTER PROGRESS 2370000
+RSP POINTERS COMPLETE lazy-depth-fold-through-source-256 base 2 calls 2372587 groups 82
+````
+
+
+**rsp-final-lazy-depth-fold-through-source-256-cand-n2-part1: exit 0.** [continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-256-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/rsp-final-lazy-depth-fold-through-source-256-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py lazy-depth-fold-through-source-256 cand 2 largest-buffered-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC11
+SELECT THREAD OK
+RSP POINTER PROGRESS 10000
+RSP POINTER PROGRESS 20000
+RSP POINTER PROGRESS 30000
+RSP POINTER PROGRESS 40000
+RSP POINTER PROGRESS 50000
+RSP POINTER PROGRESS 60000
+RSP POINTER PROGRESS 70000
+RSP POINTER PROGRESS 80000
+RSP POINTER PROGRESS 90000
+RSP POINTER PROGRESS 100000
+RSP POINTER PROGRESS 110000
+RSP POINTER PROGRESS 120000
+RSP POINTER PROGRESS 130000
+RSP POINTER PROGRESS 140000
+RSP POINTER PROGRESS 150000
+RSP POINTER PROGRESS 160000
+RSP POINTER PROGRESS 170000
+RSP POINTER PROGRESS 180000
+RSP POINTER PROGRESS 190000
+RSP POINTER PROGRESS 200000
+RSP POINTER PROGRESS 210000
+RSP POINTER PROGRESS 220000
+RSP POINTER PROGRESS 230000
+RSP POINTER PROGRESS 240000
+RSP POINTER PROGRESS 250000
+RSP POINTER PROGRESS 260000
+RSP POINTER PROGRESS 270000
+RSP POINTER PROGRESS 280000
+RSP POINTER PROGRESS 290000
+RSP POINTER PROGRESS 300000
+RSP POINTER PROGRESS 310000
+RSP POINTER PROGRESS 320000
+RSP POINTER PROGRESS 330000
+RSP POINTER PROGRESS 340000
+RSP POINTER PROGRESS 350000
+RSP POINTER PROGRESS 360000
+RSP POINTER PROGRESS 370000
+RSP POINTER PROGRESS 380000
+RSP POINTER PROGRESS 390000
+RSP POINTER PROGRESS 400000
+RSP POINTER PROGRESS 410000
+RSP POINTER PROGRESS 420000
+RSP POINTER PROGRESS 430000
+RSP POINTER PROGRESS 440000
+RSP POINTER PROGRESS 450000
+RSP POINTER PROGRESS 460000
+RSP POINTER PROGRESS 470000
+RSP POINTER PROGRESS 480000
+RSP POINTER PROGRESS 490000
+RSP POINTER PROGRESS 500000
+RSP POINTER PROGRESS 510000
+RSP POINTER PROGRESS 520000
+RSP POINTER PROGRESS 530000
+RSP POINTER PROGRESS 540000
+RSP POINTER PROGRESS 550000
+RSP POINTER PROGRESS 560000
+RSP POINTER PROGRESS 570000
+RSP POINTER PROGRESS 580000
+RSP POINTER PROGRESS 590000
+RSP POINTER PROGRESS 600000
+RSP POINTER PROGRESS 610000
+RSP POINTER PROGRESS 620000
+RSP POINTER PROGRESS 630000
+RSP POINTER PROGRESS 640000
+RSP POINTER PROGRESS 650000
+RSP POINTER PROGRESS 660000
+RSP POINTER PROGRESS 670000
+RSP POINTER PROGRESS 680000
+RSP POINTER PROGRESS 690000
+RSP POINTER PROGRESS 700000
+RSP POINTER PROGRESS 710000
+RSP POINTER PROGRESS 720000
+RSP POINTER PROGRESS 730000
+RSP POINTER PROGRESS 740000
+RSP POINTER PROGRESS 750000
+RSP POINTER PROGRESS 760000
+RSP POINTER PROGRESS 770000
+RSP POINTER PROGRESS 780000
+RSP POINTER PROGRESS 790000
+RSP POINTER PROGRESS 800000
+RSP POINTER PROGRESS 810000
+RSP POINTER PROGRESS 820000
+RSP POINTER PROGRESS 830000
+RSP POINTER PROGRESS 840000
+RSP POINTER PROGRESS 850000
+RSP POINTER PROGRESS 860000
+RSP POINTER PROGRESS 870000
+RSP POINTER PROGRESS 880000
+RSP POINTER PROGRESS 890000
+RSP POINTER PROGRESS 900000
+RSP POINTER PROGRESS 910000
+RSP POINTER PROGRESS 920000
+RSP POINTER PROGRESS 930000
+RSP POINTER PROGRESS 940000
+RSP POINTER PROGRESS 950000
+RSP POINTER PROGRESS 960000
+RSP POINTER PROGRESS 970000
+RSP POINTER PROGRESS 980000
+RSP POINTER PROGRESS 990000
+RSP POINTER PROGRESS 1000000
+RSP POINTER PROGRESS 1010000
+RSP POINTER PROGRESS 1020000
+RSP POINTER PROGRESS 1030000
+RSP POINTER PROGRESS 1040000
+RSP POINTER PROGRESS 1050000
+RSP POINTER PROGRESS 1060000
+RSP POINTER PROGRESS 1070000
+RSP POINTER PROGRESS 1080000
+RSP POINTER PROGRESS 1090000
+RSP POINTER PROGRESS 1100000
+RSP POINTER PROGRESS 1110000
+RSP POINTER PROGRESS 1120000
+RSP POINTER PROGRESS 1130000
+RSP POINTER PROGRESS 1140000
+RSP POINTER PROGRESS 1150000
+RSP POINTER PROGRESS 1160000
+RSP POINTER PROGRESS 1170000
+RSP POINTER PROGRESS 1180000
+RSP POINTER PROGRESS 1190000
+RSP POINTER PROGRESS 1200000
+RSP POINTER PROGRESS 1210000
+RSP POINTER PROGRESS 1220000
+RSP POINTER PROGRESS 1230000
+RSP POINTER PROGRESS 1240000
+RSP POINTER PROGRESS 1250000
+RSP POINTER PROGRESS 1260000
+RSP POINTER PROGRESS 1270000
+RSP POINTER PROGRESS 1280000
+RSP POINTER PROGRESS 1290000
+RSP POINTER PROGRESS 1300000
+RSP POINTER PROGRESS 1310000
+RSP POINTER PROGRESS 1320000
+RSP POINTER PROGRESS 1330000
+RSP POINTER PROGRESS 1340000
+RSP POINTER PROGRESS 1350000
+RSP POINTER PROGRESS 1360000
+RSP POINTER PROGRESS 1370000
+RSP POINTER PROGRESS 1380000
+RSP POINTER PROGRESS 1390000
+RSP POINTER PROGRESS 1400000
+RSP POINTER PROGRESS 1410000
+RSP POINTER PROGRESS 1420000
+RSP POINTER PROGRESS 1430000
+RSP POINTER PROGRESS 1440000
+RSP POINTER PROGRESS 1450000
+RSP POINTER PROGRESS 1460000
+RSP POINTER PROGRESS 1470000
+RSP POINTER PROGRESS 1480000
+RSP POINTER PROGRESS 1490000
+RSP POINTER PROGRESS 1500000
+RSP POINTER PROGRESS 1510000
+RSP POINTER PROGRESS 1520000
+RSP POINTER PROGRESS 1530000
+RSP POINTER PROGRESS 1540000
+RSP POINTER PROGRESS 1550000
+RSP POINTER PROGRESS 1560000
+RSP POINTER PROGRESS 1570000
+RSP POINTER PROGRESS 1580000
+RSP POINTER PROGRESS 1590000
+RSP POINTER PROGRESS 1600000
+RSP POINTER PROGRESS 1610000
+RSP POINTER PROGRESS 1620000
+RSP POINTER PROGRESS 1630000
+RSP POINTER PROGRESS 1640000
+RSP POINTER PROGRESS 1650000
+RSP POINTER PROGRESS 1660000
+RSP POINTER PROGRESS 1670000
+RSP POINTER PROGRESS 1680000
+RSP POINTER PROGRESS 1690000
+RSP POINTER PROGRESS 1700000
+RSP POINTER PROGRESS 1710000
+RSP POINTER PROGRESS 1720000
+RSP POINTER PROGRESS 1730000
+RSP POINTER PROGRESS 1740000
+RSP POINTER PROGRESS 1750000
+RSP POINTER PROGRESS 1760000
+RSP POINTER PROGRESS 1770000
+RSP POINTER PROGRESS 1780000
+RSP POINTER PROGRESS 1790000
+RSP POINTER PROGRESS 1800000
+RSP POINTER PROGRESS 1810000
+RSP POINTER PROGRESS 1820000
+RSP POINTER PROGRESS 1830000
+RSP POINTER PROGRESS 1840000
+RSP POINTER PROGRESS 1850000
+RSP POINTER PROGRESS 1860000
+RSP POINTER PROGRESS 1870000
+RSP POINTER PROGRESS 1880000
+RSP POINTER PROGRESS 1890000
+RSP POINTER PROGRESS 1900000
+RSP POINTER PROGRESS 1910000
+RSP POINTER PROGRESS 1920000
+RSP POINTER PROGRESS 1930000
+RSP POINTER PROGRESS 1940000
+RSP POINTER PROGRESS 1950000
+RSP POINTER PROGRESS 1960000
+RSP POINTER PROGRESS 1970000
+RSP POINTER PROGRESS 1980000
+RSP POINTER PROGRESS 1990000
+RSP POINTER PROGRESS 2000000
+RSP POINTER PROGRESS 2010000
+RSP POINTER PROGRESS 2020000
+RSP POINTER PROGRESS 2030000
+RSP POINTER PROGRESS 2040000
+RSP POINTER PROGRESS 2050000
+RSP POINTER PROGRESS 2060000
+RSP POINTER PROGRESS 2070000
+RSP POINTER PROGRESS 2080000
+RSP POINTER PROGRESS 2090000
+RSP POINTER PROGRESS 2100000
+RSP POINTER PROGRESS 2110000
+RSP POINTER PROGRESS 2120000
+RSP POINTER PROGRESS 2130000
+RSP POINTER PROGRESS 2140000
+RSP POINTER PROGRESS 2150000
+RSP POINTER PROGRESS 2160000
+RSP POINTER PROGRESS 2170000
+RSP POINTER PROGRESS 2180000
+RSP POINTER PROGRESS 2190000
+RSP POINTER PROGRESS 2200000
+RSP POINTER PROGRESS 2210000
+RSP POINTER PROGRESS 2220000
+RSP POINTER PROGRESS 2230000
+RSP POINTER PROGRESS 2240000
+RSP POINTER PROGRESS 2250000
+RSP POINTER PROGRESS 2260000
+RSP POINTER PROGRESS 2270000
+RSP POINTER PROGRESS 2280000
+RSP POINTER PROGRESS 2290000
+RSP POINTER PROGRESS 2300000
+RSP POINTER PROGRESS 2310000
+RSP POINTER PROGRESS 2320000
+RSP POINTER PROGRESS 2330000
+RSP POINTER PROGRESS 2340000
+RSP POINTER PROGRESS 2350000
+RSP POINTER PROGRESS 2360000
+RSP POINTER PROGRESS 2370000
+RSP POINTERS COMPLETE lazy-depth-fold-through-source-256 cand 2 calls 2372579 groups 80
+````
+
+
+**module-heap-base-n1: exit 0.** [continuation-2/final3/logs/module-heap-base-n1.log](../../../.temp/brief-626/continuation-2/final3/logs/module-heap-base-n1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/try-remote-pointers.py module-local base module-heap-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**module-heap-cand-n1: exit 0.** [continuation-2/final3/logs/module-heap-cand-n1.log](../../../.temp/brief-626/continuation-2/final3/logs/module-heap-cand-n1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/try-remote-pointers.py module-local cand module-heap-n1
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**module-heap-base-n2: exit 0.** [continuation-2/final3/logs/module-heap-base-n2.log](../../../.temp/brief-626/continuation-2/final3/logs/module-heap-base-n2.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/try-remote-pointers.py module-local base module-heap-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**module-heap-cand-n2: exit 0.** [continuation-2/final3/logs/module-heap-cand-n2.log](../../../.temp/brief-626/continuation-2/final3/logs/module-heap-cand-n2.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/try-remote-pointers.py module-local cand module-heap-n2
+````
+
+
+````text
+warning: remote target does not support file transfer, attempting to access files from local filesystem.
+````
+
+
+**pointer-attribution-final: exit 0.** [continuation-2/final3/logs/pointer-attribution-final.log](../../../.temp/brief-626/continuation-2/final3/logs/pointer-attribution-final.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/final3/page-layout-attribution.py
+````
+
+
+````text
+lazy-map-realize-small layout 128 native 133.805 residual 5.805 threshold 100.388 unequal 2 residual_flag False
+lazy-nestlist-realize-small layout 128 native 141.684 residual 13.684 threshold 80.221 unequal 1 residual_flag False
+lazy-drop-realize-small layout 128 native 149.206 residual 21.206 threshold 144.331 unequal 1 residual_flag False
+optionvalue-three-no-input layout 8 native 8.176 residual 0.176 threshold 4.749 unequal 1 residual_flag False
+dot-three-no-input layout 384 native 383.692 residual -0.308 threshold 124.976 unequal 2 residual_flag False
+lazy-depth-map-eight-8 layout 1024 native 1042.443 residual 18.443 threshold 472.657 unequal 1 residual_flag False
+lazy-depth-take-map-8 layout 128 native 120.612 residual -7.388 threshold 68.425 unequal 4 residual_flag False
+lazy-depth-fold-through-source-8 layout 576 native 554.467 residual -21.533 threshold 290.384 unequal 2 residual_flag False
+lazy-depth-map-eight-64 layout 8192 native 8510.353 residual 318.353 threshold 3649.375 unequal 4 residual_flag False
+lazy-depth-take-map-64 layout 1024 native 1011.104 residual -12.896 threshold 496.533 unequal 2 residual_flag False
+lazy-depth-fold-through-source-64 layout 33280 native 34510.226 residual 1230.226 threshold 16602.758 unequal 2 residual_flag False
+lazy-depth-map-eight-256 layout 32768 native 33085.6 residual 317.6 threshold 14546.27 unequal 1 residual_flag False
+lazy-depth-take-map-256 layout 4096 native 4099.812 residual 3.812 threshold 1962.856 unequal 0 residual_flag False
+lazy-depth-fold-through-source-256 layout 526336 native 542194.349 residual 15858.349 threshold 261656.48 unequal 3 residual_flag False
+downvalue-pattern-hit layout 16 native 16.065 residual 0.065 threshold 6.824 unequal 3 residual_flag False
+module-local layout 32 native 31.857 residual -0.143 threshold 11.219 unequal 1 residual_flag False
+block-local layout 16 native 15.956 residual -0.044 threshold 7.231 unequal 1 residual_flag False
+deletecases-wide-association-no-match layout 12800 native 12872.928 residual 72.928 threshold 3751.048 unequal 1 residual_flag False
+downvalue-guarded-hit layout 16 native 14.439 residual -1.561 threshold 13.786 unequal 1 residual_flag False
+upvalue-guarded-hit layout 16 native 17.429 residual 1.429 threshold 16.93 unequal 0 residual_flag False
+subvalue-unguarded-hit layout 16 native 15.918 residual -0.082 threshold 10.033 unequal 2 residual_flag False
+keysort-default-wide layout 12800 native 12475.97 residual -324.03 threshold 4132.548 unequal 1 residual_flag False
+keysortby-default-wide layout 12800 native 12499.57 residual -300.43 threshold 7723.721 unequal 2 residual_flag False
+replacerepeated-guarded-small layout 248 native 255.923 residual 7.923 threshold 185.938 unequal 2 residual_flag False
+abortprotect-clean layout 16 native 20.31 residual 4.31 threshold 8.562 unequal 2 residual_flag False
+check-clean layout 16 native 13.378 residual -2.622 threshold 13.244 unequal 1 residual_flag False
+quiet-clean layout 16 native 17.004 residual 1.004 threshold 9.644 unequal 1 residual_flag False
+withcleanup-two-arg layout 16 native 13.508 residual -2.492 threshold 12.468 unequal 0 residual_flag False
+function-slot-apply layout 16 native 10.884 residual -5.116 threshold 9.7 unequal 1 residual_flag False
+function-named-apply layout 16 native 14.712 residual -1.288 threshold 6.278 unequal 3 residual_flag False
+composition-apply layout 40 native 37.264 residual -2.736 threshold 13.901 unequal 2 residual_flag False
+COMPLETE POINTER ATTRIBUTIONS 31 / 31
+````
+
+
+**perf-check-base-1-part1: exit 0.** [continuation-2/final3/logs/perf-check-base-1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/perf-check-base-1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-perf.py check base 1 all
+````
+
+
+**check-base-part1: exit 0.** [continuation-2/final3/logs/check-base-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/check-base-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/perf-step.py check base 1 all
+````
+
+
+````text
+perf-check-base-1-part1 exit 0
+
+PERFORMANCE PROGRESS check base 1 818 / 818 COMPLETE
+````
+
+
+**perf-check-candidate-1-part1: exit 0.** [continuation-2/final3/logs/perf-check-candidate-1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/perf-check-candidate-1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-perf.py check candidate 1 all
+````
+
+
+**check-candidate-part1: exit 0.** [continuation-2/final3/logs/check-candidate-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/check-candidate-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/perf-step.py check candidate 1 all
+````
+
+
+````text
+perf-check-candidate-1-part1 exit 0
+
+PERFORMANCE PROGRESS check candidate 1 818 / 818 COMPLETE
+````
+
+
+**perf-alloc-base-1-part1: exit 0.** [continuation-2/final3/logs/perf-alloc-base-1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/perf-alloc-base-1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-perf.py alloc base 1 all
+````
+
+
+**alloc-base-part1: exit 0.** [continuation-2/final3/logs/alloc-base-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/alloc-base-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/perf-step.py alloc base 1 all
+````
+
+
+````text
+perf-alloc-base-1-part1 exit 0
+
+PERFORMANCE PROGRESS alloc base 1 626 / 626 COMPLETE
+````
+
+
+**perf-alloc-candidate-1-part1: exit 0.** [continuation-2/final3/logs/perf-alloc-candidate-1-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/perf-alloc-candidate-1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-perf.py alloc candidate 1 all
+````
+
+
+**alloc-candidate-part1: exit 0.** [continuation-2/final3/logs/alloc-candidate-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/alloc-candidate-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/perf-step.py alloc candidate 1 all
+````
+
+
+````text
+perf-alloc-candidate-1-part1 exit 0
+
+PERFORMANCE PROGRESS alloc candidate 1 626 / 626 COMPLETE
+````
+
+
+**alloc-compare-part1: exit 0.** [continuation-2/final3/logs/alloc-compare-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/alloc-compare-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/compare-performance.py alloc
+````
+
+
+````text
+Ordinary raw N/2N allocation and byte equality: 192 / 192
+Ineligible: []
+Ordinary differences: []
+Resume raw exact: 121 / 121
+````
+
+
+**alloc-record-part1: exit 0.** [continuation-2/final3/logs/alloc-record-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/alloc-record-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/record-performance-evidence.py alloc
+````
+
+
+````text
+alloc: 313/313 bars met; counters={'routes_proven': 19, 'receipts_kept': 8750, 'measurement_bars_met': 862, 'compiling_attempts_without_progress': 0}
+````
+
+
+**stack-build-part1: exit 0.** [continuation-2/final3/logs/stack-build-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/stack-build-part1.log)
+
+````bash
+bash /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/stack-candidate/build.sh
+````
+
+
+````text
+8b5181dd6cae7f2665a6681ffcc0247b6ad53acbdc7682eadb374e5d94ab33b3  /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/stack-candidate/debug/runtime-tests
+c479eed371f10b2f5070122b9575a36e3e6bb35078abff6c963c5fd676d505a0  /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/stack-candidate/release/runtime-tests
+````
+
+
+**stack-measure-part1: exit 0.** [continuation-2/final3/logs/stack-measure-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/stack-measure-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/stack-candidate/measure.py
+````
+
+
+````text
+debug peel 19024.0 resid 0.0 top 189848
+debug plus 34912.0 resid 0.0 top 313000
+debug sub 29376.0 resid 0.0 top 267128
+debug up 28064.0 resid 0.0 top 255320
+debug guarded 35840.0 resid 0.0 top 320424
+debug rhs-guard 49152.0 resid 0.0 top 445864
+debug replace-guard 64880.0 resid 0.0 top 552744
+debug replaceall-guard 63216.0 resid 0.0 top 539432
+debug count-guard 74064.0 resid 0.0 top 626216
+debug position-guard 85648.0 resid 0.0 top 718888
+debug catch-body 50528.0 resid 0.0 top 437928
+debug checkabort-body 52720.0 resid 0.0 top 455464
+debug abortprotect-body 49904.0 resid 0.0 top 432936
+debug cleanup-body 50880.0 resid 0.0 top 440744
+debug check-body 50432.0 resid 0.0 top 437160
+debug quiet-body 50304.0 resid 0.0 top 436136
+debug catchexceptions-body 49872.0 resid 0.0 top 432680
+debug function-body 49312.0 resid 0.0 top 428200
+debug status-body 50816.0 resid 0.0 top 440232
+debug message-body 50816.0 resid 0.0 top 440232
+debug lhs-arg 57376.0 resid 0.0 top 492712
+debug replaceall-rhs 52720.0 resid 0.0 top 455464
+release peel 7344.0 resid 0.0 top 159625
+release plus 13792.0 resid 0.0 top 287289
+release sub 13168.0 resid 0.0 top 275481
+release up 11456.0 resid 0.0 top 239529
+release guarded 14240.0 resid 0.0 top 296249
+release rhs-guard 17920.0 resid 0.0 top 375513
+release replace-guard 26768.0 resid 0.0 top 546809
+release replaceall-guard 24640.0 resid 0.0 top 504249
+release count-guard 28416.0 resid 0.0 top 579769
+release position-guard 33632.0 resid 0.0 top 684089
+release catch-body 19280.0 resid 0.0 top 397049
+release checkabort-body 20864.0 resid 0.0 top 428729
+release abortprotect-body 19280.0 resid 0.0 top 397049
+release cleanup-body 19280.0 resid 0.0 top 397049
+release check-body 18736.0 resid 0.0 top 386169
+release quiet-body 18688.0 resid 0.0 top 385209
+release catchexceptions-body 19472.0 resid 0.0 top 400889
+release function-body 19312.0 resid 0.0 top 397689
+release status-body 20432.0 resid 0.0 top 420089
+release message-body 20432.0 resid 0.0 top 420089
+release lhs-arg 18048.0 resid 0.0 top 372409
+release replaceall-rhs 21488.0 resid 0.0 top 441209
+````
+
+
+**stack-compare-part1: exit 0.** [continuation-2/final3/logs/stack-compare-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/stack-compare-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/compare-stack-candidate.py
+````
+
+
+````text
+debug/peel 19024.0 19024.0 0.0 0.0 PASS
+debug/plus 34912.0 34912.0 0.0 0.0 PASS
+debug/sub 29376.0 29376.0 0.0 0.0 PASS
+debug/up 28064.0 28064.0 0.0 0.0 PASS
+debug/guarded 35840.0 35840.0 0.0 0.0 PASS
+debug/rhs-guard 49152.0 49152.0 0.0 0.0 PASS
+debug/replace-guard 64880.0 64880.0 0.0 0.0 PASS
+debug/replaceall-guard 63216.0 63216.0 0.0 0.0 PASS
+debug/count-guard 74064.0 74064.0 0.0 0.0 PASS
+debug/position-guard 85648.0 85648.0 0.0 0.0 PASS
+debug/catch-body 50528.0 50528.0 0.0 0.0 PASS
+debug/checkabort-body 52720.0 52720.0 0.0 0.0 PASS
+debug/abortprotect-body 49904.0 49904.0 0.0 0.0 PASS
+debug/cleanup-body 50880.0 50880.0 0.0 0.0 PASS
+debug/check-body 50432.0 50432.0 0.0 0.0 PASS
+debug/quiet-body 50304.0 50304.0 0.0 0.0 PASS
+debug/catchexceptions-body 49872.0 49872.0 0.0 0.0 PASS
+debug/function-body 49312.0 49312.0 0.0 0.0 PASS
+debug/status-body 50816.0 50816.0 0.0 0.0 PASS
+debug/message-body 50816.0 50816.0 0.0 0.0 PASS
+debug/lhs-arg 57376.0 57376.0 0.0 0.0 PASS
+debug/replaceall-rhs 52720.0 52720.0 0.0 0.0 PASS
+release/peel 7344.0 7344.0 0.0 0.0 PASS
+release/plus 13792.0 13792.0 0.0 0.0 PASS
+release/sub 13168.0 13168.0 0.0 0.0 PASS
+release/up 11456.0 11456.0 0.0 0.0 PASS
+release/guarded 14240.0 14240.0 0.0 0.0 PASS
+release/rhs-guard 17920.0 17920.0 0.0 0.0 PASS
+release/replace-guard 26768.0 26768.0 0.0 0.0 PASS
+release/replaceall-guard 24640.0 24640.0 0.0 0.0 PASS
+release/count-guard 28416.0 28416.0 0.0 0.0 PASS
+release/position-guard 33632.0 33632.0 0.0 0.0 PASS
+release/catch-body 19280.0 19280.0 0.0 0.0 PASS
+release/checkabort-body 20864.0 20864.0 0.0 0.0 PASS
+release/abortprotect-body 19280.0 19280.0 0.0 0.0 PASS
+release/cleanup-body 19280.0 19280.0 0.0 0.0 PASS
+release/check-body 18736.0 18736.0 0.0 0.0 PASS
+release/quiet-body 18688.0 18688.0 0.0 0.0 PASS
+release/catchexceptions-body 19472.0 19472.0 0.0 0.0 PASS
+release/function-body 19312.0 19312.0 0.0 0.0 PASS
+release/status-body 20432.0 20432.0 0.0 0.0 PASS
+release/message-body 20432.0 20432.0 0.0 0.0 PASS
+release/lhs-arg 18048.0 18048.0 0.0 0.0 PASS
+release/replaceall-rhs 21488.0 21488.0 0.0 0.0 PASS
+STACK CANDIDATE 44 / 44 met; residuals 0
+````
+
+
+**layout-prepare-part1: exit 0.** [continuation-2/final3/logs/layout-prepare-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/layout-prepare-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/prepare-layout-check.py
+````
+
+
+````text
+Prepared production-only compiler layout assertions for eight unchanged headers; no guest code or token constructed.
+````
+
+
+**layout-check-part1: exit 0.** [continuation-2/final3/logs/layout-check-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/layout-check-part1.log)
+
+````bash
+cargo check --offline --manifest-path /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/layout-candidate/tree/Cargo.toml -p rum-runtime --lib --target-dir /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/target-layout-check
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+````
+
+
+**layout-build-part1: exit 0.** [continuation-2/final3/logs/layout-build-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/layout-build-part1.log)
+
+````bash
+cargo build --offline -p rum-cli --target-dir /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/target-layout
+````
+
+
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+warning: `rum-runtime` (lib) generated 2 warnings
+````
+
+
+**layout-collect-part1: exit 0.** [continuation-2/final3/logs/layout-collect-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/layout-collect-part1.log)
+
+````bash
+gdb -q -batch -x /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/collect-layouts.gdb /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/target-layout/debug/rum-cli
+````
+
+
+````text
+warning: Missing auto-load script at offset 0 in section .debug_gdb_scripts
+````
+
+
+**layout-compare-part1: exit 0.** [continuation-2/final3/logs/layout-compare-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/layout-compare-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/compare-layouts.py
+````
+
+
+````text
+PRODUCTION LAYOUTS 789 / 789 unchanged; missing=0; changed=0
+CONTINUE TOKEN zero-size base/candidate 96
+````
+
+
+**chains-profile-part1: exit 0.** [continuation-2/final3/logs/chains-profile-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/chains-profile-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-chains.py
+````
+
+
+````text
+CONTEXT64 base c1-all-guard True
+CONTEXT64 candidate c1-all-guard True
+CONTEXT64 base c1-all-test True
+CONTEXT64 candidate c1-all-test True
+CONTEXT64 base c1-all-guard-value True
+CONTEXT64 candidate c1-all-guard-value True
+CONTEXT64 base c1-all-two-guards True
+CONTEXT64 candidate c1-all-two-guards True
+CONTEXT64 base c1-unheld-guard True
+CONTEXT64 candidate c1-unheld-guard True
+CONTEXT64 base c1-unheld-test True
+CONTEXT64 candidate c1-unheld-test True
+CONTEXT64 base c1-unheld-guard-value True
+CONTEXT64 candidate c1-unheld-guard-value True
+CONTEXT64 base c1-unheld-two-guards True
+CONTEXT64 candidate c1-unheld-two-guards True
+CHAIN PROFILES DONE 16
+````
+
+
+**chain-prologues-base: exit 0.** [continuation-2/final3/logs/chain-prologues-base.log](../../../.temp/brief-626/continuation-2/final3/logs/chain-prologues-base.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/prologues.py base release /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/resume-chains/prologues/base /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/base/resume
+````
+
+
+````text
+base release function prologues 10079 stack-probe loops 0
+````
+
+
+**chain-prologues-candidate: exit 0.** [continuation-2/final3/logs/chain-prologues-candidate.log](../../../.temp/brief-626/continuation-2/final3/logs/chain-prologues-candidate.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/prologues.py candidate release /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/resume-chains/prologues/candidate /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/cand/resume
+````
+
+
+````text
+candidate release function prologues 10147 stack-probe loops 0
+````
+
+
+**stack-function-prologues: exit 0.** [continuation-2/final3/logs/stack-function-prologues.log](../../../.temp/brief-626/continuation-2/final3/logs/stack-function-prologues.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/stack-prologues.py
+````
+
+
+````text
+base debug function prologues 57177 stack-probe loops 0
+candidate debug function prologues 58236 stack-probe loops 0
+base release function prologues 9482 stack-probe loops 0
+candidate release function prologues 9604 stack-probe loops 0
+Wrote 123 prologue rows and full assembly/stack-store tables.
+debug core::ptr::drop_in_place<core::iter::adapters::map::Map<alloc::collections::vec_deque::drain::Drain<rum_runtime::runtime::suspension::core::evaluation_context::Queued<alloc::sync::Arc<dyn rum_runtime::runtime::suspension::core::SuspensionFrame>>>,rum_runtime::runtime::suspension::core::queue::FrameQueue::append_mixed::{{closure}}>> 1 8 -> None
+debug core::ptr::drop_in_place<core::iter::adapters::map::Map<alloc::collections::vec_deque::drain::Drain<rum_runtime::runtime::suspension::core::evaluation_context::Queued<alloc::sync::Arc<dyn rum_runtime::runtime::suspension::core::SuspensionFrame>>>,rum_runtime::runtime::suspension::core::queue::FrameQueue::append_other::{{closure}}>> 1 None -> 8
+debug core::ptr::drop_in_place<core::iter::adapters::map::Map<alloc::collections::vec_deque::drain::Drain<rum_runtime::runtime::suspension::core::evaluation_context::Queued<alloc::sync::Arc<dyn rum_runtime::runtime::suspension::core::SuspensionFrame>>>,rum_runtime::runtime::suspension::core::queue::FrameQueue::widen::{{closure}}>> 1 8 -> None
+debug core::ptr::drop_in_place<core::iter::adapters::map::Map<alloc::collections::vec_deque::drain::Drain<rum_runtime::runtime::suspension::core::evaluation_context::Queued<alloc::sync::Arc<dyn rum_runtime::runtime::suspension::core::SuspensionFrame>>>,rum_runtime::runtime::suspension::core::queue::FrameQueue::widen_legacy::{{closure}}>> 1 None -> 8
+debug core::ptr::drop_in_place<rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames<rum_core::expr::Expr>::{{closure}}::{{closure}}> 1 8 -> 8
+debug core::ptr::drop_in_place<rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames<rum_core::expr::Expr>::{{closure}}::{{closure}}> 2 8 -> 8
+debug core::ptr::drop_in_place<rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames<rum_core::expr::Expr>::{{closure}}> 1 8 -> 8
+debug core::ptr::drop_in_place<rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames<rum_core::expr::Expr>::{{closure}}> 2 8 -> 8
+debug core::ptr::drop_in_place<rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames<rum_core::expr::Expr>::{{closure}}> 3 8 -> 8
+debug core::ptr::drop_in_place<rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames<rum_core::expr::Expr>::{{closure}}> 4 8 -> 8
+debug core::ptr::drop_in_place<rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames<rum_runtime::runtime::suspension::typed::tests::fault_support::StateBool>::{{closure}}::{{closure}}> 1 8 -> 8
+debug core::ptr::drop_in_place<rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames<rum_runtime::runtime::suspension::typed::tests::fault_support::StateBool>::{{closure}}::{{closure}}> 2 8 -> 8
+debug core::ptr::drop_in_place<rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames<rum_runtime::runtime::suspension::typed::tests::fault_support::StateBool>::{{closure}}> 1 8 -> 8
+debug core::ptr::drop_in_place<rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames<rum_runtime::runtime::suspension::typed::tests::fault_support::StateBool>::{{closure}}> 2 8 -> 8
+debug core::ptr::drop_in_place<rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames<rum_runtime::runtime::suspension::typed::tests::fault_support::StateBool>::{{closure}}> 3 8 -> 8
+debug core::ptr::drop_in_place<rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames<rum_runtime::runtime::suspension::typed::tests::fault_support::StateBool>::{{closure}}> 4 8 -> 8
+debug core::ptr::drop_in_place<rum_runtime::runtime::suspension::core::SuspendedEvaluation::take_front_with_profile::{{closure}}> 1 None -> 8
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::begin_input_suspension 1 232 -> 296
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames 1 6872 -> 7080
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames 2 6872 -> 7080
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames::{{closure}} 1 0 -> 0
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames::{{closure}} 2 0 -> 0
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames::{{closure}} 3 24 -> 24
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames::{{closure}} 4 24 -> 24
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames::{{closure}} 5 296 -> 296
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames::{{closure}} 6 296 -> 296
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames::{{closure}} 7 56 -> 56
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames::{{closure}} 8 56 -> 56
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames::{{closure}} 9 296 -> 296
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames::{{closure}} 10 296 -> 296
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames::{{closure}} 11 56 -> 56
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames::{{closure}} 12 56 -> 56
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames::{{closure}}::{{closure}} 1 24 -> 24
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames::{{closure}}::{{closure}} 2 24 -> 24
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames::{{closure}}::{{closure}} 3 24 -> 24
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames::{{closure}}::{{closure}} 4 24 -> 24
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::resume_suspended_slot 1 2712 -> 2712
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::resume_suspended_slot 2 2648 -> 2648
+debug rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::resume_suspended_slot 3 2712 -> 2712
+debug rum_runtime::runtime::suspension::core::SuspendedEvaluation::take_front_with_profile 1 None -> 360
+debug rum_runtime::runtime::suspension::core::SuspendedEvaluation::take_front_with_profile::{{closure}} 1 None -> 40
+debug rum_runtime::runtime::suspension::core::SuspendedEvaluation::take_front_with_profile::{{closure}} 2 None -> 152
+debug rum_runtime::runtime::suspension::core::abandon::<impl rum_runtime::runtime::model::session::Session>::drain_abandonment_worklist 1 1432 -> 1528
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::append 1 72 -> 88
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::append_mixed 1 136 -> None
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::append_mixed::{{closure}} 1 24 -> None
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::append_other 1 None -> 216
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::append_other::{{closure}} 1 None -> 24
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::append_profiled 1 None -> 184
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::capacity 1 40 -> 56
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::consumer_frontier 1 None -> 104
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::consumer_frontier::{{closure}} 1 None -> 0
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::consumer_frontier::{{closure}} 2 None -> 0
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::deprofile 1 None -> 184
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::enable_profile 1 None -> 264
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::front 1 56 -> 56
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::front::{{closure}} 1 0 -> 0
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::front::{{closure}} 2 56 -> 56
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::front_profiled 1 None -> 40
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::front_profiled::{{closure}} 1 None -> 56
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::frontier 1 None -> 40
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::frontier::{{closure}} 1 None -> 0
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::is_empty 1 40 -> 56
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::len 1 None -> 56
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::new 1 56 -> 56
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front 1 88 -> 88
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front::{{closure}} 1 24 -> 24
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front_legacy 1 120 -> 296
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front_mixed_legacy 1 200 -> 200
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_profiled 1 None -> 40
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::profile_boundary 1 None -> 168
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::profile_context 1 None -> 40
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::profile_context::{{closure}} 1 None -> 24
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::projected_growth 1 264 -> 280
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back 1 200 -> 232
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back_typed 1 168 -> 216
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::push_evaluation_return 1 104 -> 184
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::push_front 1 200 -> 232
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::push_front_typed 1 168 -> 216
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::push_profiled 1 None -> 424
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::push_widened 1 None -> 168
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::storage_bytes 1 40 -> 56
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::visit 1 264 -> 392
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::visit 2 280 -> 392
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::visit 3 264 -> 392
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::visit 4 264 -> 392
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::visit 5 None -> 392
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::widen 1 264 -> 24
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::widen::{{closure}} 1 24 -> None
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::widen_legacy 1 None -> 248
+debug rum_runtime::runtime::suspension::core::queue::FrameQueue::widen_legacy::{{closure}} 1 None -> 24
+debug rum_runtime::runtime::suspension::typed::entry::Entry::Legacy 1 0 -> 0
+debug rum_runtime::runtime::suspension::typed::entry::Entry::abandon 1 88 -> 136
+debug rum_runtime::runtime::suspension::typed::entry::Entry::as_ref 1 0 -> 0
+debug rum_runtime::runtime::suspension::typed::entry::Entry::output_boundary 1 56 -> 56
+debug rum_runtime::runtime::suspension::typed::entry::Entry::same_identity 1 None -> 88
+release rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::begin_input_suspension 1 120 -> 120
+release rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames 1 1480 -> 1448
+release rum_runtime::runtime::suspension::core::SuspendedEvaluation::take_front_with_profile 1 None -> 504
+release rum_runtime::runtime::suspension::core::abandon::<impl rum_runtime::runtime::model::session::Session>::drain_abandonment_worklist 1 808 -> 856
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::append 1 None -> 104
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::append_mixed 1 184 -> None
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::append_other 1 None -> 184
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::append_profiled 1 None -> 40
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::consumer_frontier 1 None -> 0
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::deprofile 1 None -> 72
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::enable_profile 1 None -> 312
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::front_profiled 1 None -> 0
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::frontier 1 None -> 0
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front_legacy 1 None -> 120
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front_mixed_legacy 1 120 -> 120
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_profiled 1 None -> 232
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::profile_boundary 1 None -> 72
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::profile_context 1 None -> 0
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::projected_growth 1 None -> 0
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back 1 None -> 56
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::push_evaluation_return 1 None -> 56
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::push_front 1 None -> 56
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::push_front_typed 1 104 -> 56
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::push_profiled 1 None -> 216
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::push_widened 1 None -> 88
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::widen 1 200 -> None
+release rum_runtime::runtime::suspension::core::queue::FrameQueue::widen_legacy 1 None -> 200
+````
+
+
+**chains-prologues-part1: exit 0.** [continuation-2/final3/logs/chains-prologues-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/chains-prologues-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/prepare-prologues.py
+````
+
+
+````text
+chain-prologues-base exit 0
+
+chain-prologues-candidate exit 0
+
+stack-function-prologues exit 0
+
+ALL PROLOGUE/DISASSEMBLY EVIDENCE COMPLETE
+````
+
+
+**chains-analyze-part1: exit 1.** [continuation-2/final3/logs/chains-analyze-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/chains-analyze-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/analyze-chains.py
+````
+
+
+````text
+Traceback (most recent call last):
+  File "/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/analyze-chains.py", line 4, in <module>
+    from context_reader import read
+ModuleNotFoundError: No module named 'context_reader'
+````
+
+
+**chains-analyze-retry1: exit 0.** [continuation-2/final3/logs/chains-analyze-retry1.log](../../../.temp/brief-626/continuation-2/final3/logs/chains-analyze-retry1.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/final3/analyze-chains.py
+````
+
+
+````text
+c1-all-guard base root peak 6384 adapter prefix 256 full 6640 helpers 111 unknowns 0
+c1-all-guard candidate root peak 6384 adapter prefix 256 full 6640 helpers 111 unknowns 0
+c1-all-test base root peak 6384 adapter prefix 256 full 6640 helpers 111 unknowns 0
+c1-all-test candidate root peak 6384 adapter prefix 256 full 6640 helpers 111 unknowns 0
+c1-all-guard-value base root peak 13872 adapter prefix 256 full 14128 helpers 328 unknowns 0
+c1-all-guard-value candidate root peak 13872 adapter prefix 256 full 14128 helpers 324 unknowns 0
+c1-all-two-guards base root peak 11568 adapter prefix 256 full 11824 helpers 240 unknowns 0
+c1-all-two-guards candidate root peak 11568 adapter prefix 256 full 11824 helpers 240 unknowns 0
+c1-unheld-guard base root peak 6384 adapter prefix 256 full 6640 helpers 111 unknowns 0
+c1-unheld-guard candidate root peak 6384 adapter prefix 256 full 6640 helpers 111 unknowns 0
+c1-unheld-test base root peak 6384 adapter prefix 256 full 6640 helpers 111 unknowns 0
+c1-unheld-test candidate root peak 6384 adapter prefix 256 full 6640 helpers 111 unknowns 0
+c1-unheld-guard-value base root peak 13872 adapter prefix 256 full 14128 helpers 328 unknowns 0
+c1-unheld-guard-value candidate root peak 13872 adapter prefix 256 full 14128 helpers 324 unknowns 0
+c1-unheld-two-guards base root peak 11568 adapter prefix 256 full 11824 helpers 240 unknowns 0
+c1-unheld-two-guards candidate root peak 11568 adapter prefix 256 full 11824 helpers 240 unknowns 0
+STACK CONTEXTS 16 UNKNOWNS 0
+````
+
+
+**chains-compare-final: exit 0.** [continuation-2/final3/logs/chains-compare-final.log](../../../.temp/brief-626/continuation-2/final3/logs/chains-compare-final.log)
+
+````bash
+python3 .temp/brief-626/continuation-2/final3/compare-chains.py
+````
+
+
+````text
+c1-all-guard 6640 -> 6640 delta 0 PASS
+c1-all-test 6640 -> 6640 delta 0 PASS
+c1-all-guard-value 14128 -> 14128 delta 0 PASS
+c1-all-two-guards 11824 -> 11824 delta 0 PASS
+c1-unheld-guard 6640 -> 6640 delta 0 PASS
+c1-unheld-test 6640 -> 6640 delta 0 PASS
+c1-unheld-guard-value 14128 -> 14128 delta 0 PASS
+c1-unheld-two-guards 11824 -> 11824 delta 0 PASS
+CHAIN BARS 8 /8; comparable prologue increases 21
+````
+
+
+**aligned-build-base-part1: exit 0.** [continuation-2/final3/logs/aligned-build-base-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/aligned-build-base-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/build-aligned.py base
+````
+
+
+````text
+ALIGNED BUILD base 6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be
+````
+
+
+**aligned-build-candidate-part1: exit 0.** [continuation-2/final3/logs/aligned-build-candidate-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/aligned-build-candidate-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/build-aligned.py candidate
+````
+
+
+````text
+ALIGNED BUILD candidate 78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866
+````
+
+
+**timing-panels-part1: exit 0.** [continuation-2/final3/logs/timing-panels-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/timing-panels-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-timing-panels.py
+````
+
+
+````text
+PANEL 1 base labels 120 run records engine	status	exit_code	elapsed_seconds	stdout	stderr
+rum	ok	0	0.485132	/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/timing/panel1-base/raw/rum.stdout	/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/timing/panel1-base/raw/rum.stderr
+PANEL 2 candidate labels 120 run records engine	status	exit_code	elapsed_seconds	stdout	stderr
+rum	ok	0	0.475606	/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/timing/panel2-candidate/raw/rum.stdout	/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/timing/panel2-candidate/raw/rum.stderr
+PANEL 3 base labels 120 run records engine	status	exit_code	elapsed_seconds	stdout	stderr
+rum	ok	0	0.471465	/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/timing/panel3-base/raw/rum.stdout	/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/timing/panel3-base/raw/rum.stderr
+PANEL 4 candidate labels 120 run records engine	status	exit_code	elapsed_seconds	stdout	stderr
+rum	ok	0	0.459064	/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/timing/panel4-candidate/raw/rum.stdout	/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/timing/panel4-candidate/raw/rum.stderr
+PANELS DONE; disjoint candidate ranges above base: ['with-local', 'table-small', 'downvalue-pattern-hit', 'downvalue-guarded-hit', 'downvalue-guarded-decline-fallback', 'matcher-single-wide-small', 'replace-leaf-rebuild-small', 'stringtrim-literal-list-32000', 'stringtrim-single-literal-4000', 'stringtrim-whitespace-4000', 'stringtrim-whitespace-32000', 'stringreplace-single-literal-unguarded', 'association-small-literal-repeat', 'set-part-fixed100-len100', 'sort-callback-large', 'sortby-callback-large', 'reversesort-callback-small', 'reversesort-callback-large', 'keysort-callback-large', 'keysortby-default-wide']
+````
+
+
+**timing-aligned-part1: exit 0.** [continuation-2/final3/logs/timing-aligned-part1.log](../../../.temp/brief-626/continuation-2/final3/logs/timing-aligned-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/run-aligned-timing.py
+````
+
+
+````text
+ALIGNED TIMING 1 base labels 120
+ALIGNED TIMING 1 candidate labels 120
+CALIBRATION ratio range 0.6388674179244132 1.7138832094248435 outside small factor []
+ALIGNED TIMING 2 base labels 120
+ALIGNED TIMING 2 candidate labels 120
+ALIGNED TIMING 3 base labels 120
+ALIGNED TIMING 3 candidate labels 120
+ALIGNED TIMING 4 base labels 120
+ALIGNED TIMING 4 candidate labels 120
+ALIGNED TIMING 5 base labels 120
+ALIGNED TIMING 5 candidate labels 120
+ALIGNED TIMING 6 base labels 120
+ALIGNED TIMING 6 candidate labels 120
+ALIGNED TIMING 7 base labels 120
+ALIGNED TIMING 7 candidate labels 120
+ALIGNED TIMING 8 base labels 120
+ALIGNED TIMING 8 candidate labels 120
+ALIGNED TIMING 9 base labels 120
+ALIGNED TIMING 9 candidate labels 120
+ALIGNED TIMING 10 base labels 120
+ALIGNED TIMING 10 candidate labels 120
+ALIGNED TIMING COMPLETE, disjoint above base: ['deletecases-leaf-delete-small']
+````
+
+
+**final-audit-source-manifest-model-first: exit 1.** [continuation-2/final3/logs/final-audit-source-manifest-failure.log](../../../.temp/brief-626/continuation-2/final3/logs/final-audit-source-manifest-failure.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/audit-final.py
+````
+
+
+````text
+Traceback (most recent call last):
+  File "/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/audit-final.py", line 56, in <module>
+    source=load(image.parent/'source-hashes.json');assert source==load(f/'builds'/('source-'+arm+'.json'))
+                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+````
+
+
+**final-evidence-audit: exit 0.** [continuation-2/final3/logs/final-evidence-audit.log](../../../.temp/brief-626/continuation-2/final3/logs/final-evidence-audit.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/audit-final.py
+````
+
+
+````text
+FINAL EVIDENCE AUDIT VERIFIED: scope38; source hashes; four bases; six at-base measurement categories; timing120rows with1rawlatencyregression; rejectionRED960/950; LP018750; restored32; nine operational skips; no new unsafe.
+````
+
+
+**perf-instructions-base-1-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/perf-instructions-base-1-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/perf-instructions-base-1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/run-perf.py instructions base 1 all
+````
+
+
+````text
+{"label": "downvalue-pattern-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 20000, "exit": 0, "elapsed_seconds": 0.2225452539860271, "correct": true, "actual_resumes": null, "instructions": 277268063}
+{"label": "downvalue-pattern-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 40000, "exit": 0, "elapsed_seconds": 0.24136312198243104, "correct": true, "actual_resumes": null, "instructions": 550832899}
+{"label": "deletecases-leaf-delete-small", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 500, "exit": 0, "elapsed_seconds": 0.13563027401687577, "correct": true, "actual_resumes": null, "instructions": 35084906}
+{"label": "deletecases-leaf-delete-small", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 1000, "exit": 0, "elapsed_seconds": 0.13705610201577656, "correct": true, "actual_resumes": null, "instructions": 66684317}
+{"label": "replace-leaf-rebuild-small", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 500, "exit": 0, "elapsed_seconds": 0.1470765199919697, "correct": true, "actual_resumes": null, "instructions": 40388243}
+{"label": "replace-leaf-rebuild-small", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 1000, "exit": 0, "elapsed_seconds": 0.14061339199543, "correct": true, "actual_resumes": null, "instructions": 76740804}
+{"label": "downvalue-exact-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.1064632149937097, "correct": true, "actual_resumes": null, "instructions": 15131795}
+{"label": "downvalue-exact-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.14040414901683107, "correct": true, "actual_resumes": null, "instructions": 26635625}
+{"label": "downvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.13974535898887552, "correct": true, "actual_resumes": null, "instructions": 58831178}
+{"label": "downvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.13899880601093173, "correct": true, "actual_resumes": null, "instructions": 113975049}
+{"label": "downvalue-guarded-decline-fallback", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.1401574659976177, "correct": true, "actual_resumes": null, "instructions": 45323501}
+{"label": "downvalue-guarded-decline-fallback", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.14496135798981413, "correct": true, "actual_resumes": null, "instructions": 86926397}
+{"label": "upvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.14023905000067316, "correct": true, "actual_resumes": null, "instructions": 71459484}
+{"label": "upvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.13723745898460038, "correct": true, "actual_resumes": null, "instructions": 139169423}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.13967553299153224, "correct": true, "actual_resumes": null, "instructions": 43741415}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.13582467299420387, "correct": true, "actual_resumes": null, "instructions": 83813999}
+{"label": "default-unguarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.1401828759990167, "correct": true, "actual_resumes": null, "instructions": 38084323}
+{"label": "default-unguarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.13758041799883358, "correct": true, "actual_resumes": null, "instructions": 72472980}
+{"label": "default-unguarded-miss", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.1388614229799714, "correct": true, "actual_resumes": null, "instructions": 29245842}
+{"label": "default-unguarded-miss", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.13799055098206736, "correct": true, "actual_resumes": null, "instructions": 54829854}
+````
+
+
+**perf-instructions-candidate-1-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/perf-instructions-candidate-1-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/perf-instructions-candidate-1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/run-perf.py instructions candidate 1 all
+````
+
+
+````text
+{"label": "downvalue-pattern-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 20000, "exit": 0, "elapsed_seconds": 0.18559896500664763, "correct": true, "actual_resumes": null, "instructions": 277588106}
+{"label": "downvalue-pattern-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 40000, "exit": 0, "elapsed_seconds": 0.23896840898669325, "correct": true, "actual_resumes": null, "instructions": 551471924}
+{"label": "deletecases-leaf-delete-small", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 500, "exit": 0, "elapsed_seconds": 0.14072014298290014, "correct": true, "actual_resumes": null, "instructions": 35089917}
+{"label": "deletecases-leaf-delete-small", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 1000, "exit": 0, "elapsed_seconds": 0.13852193800266832, "correct": true, "actual_resumes": null, "instructions": 66663915}
+{"label": "replace-leaf-rebuild-small", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 500, "exit": 0, "elapsed_seconds": 0.1368253960099537, "correct": true, "actual_resumes": null, "instructions": 40187966}
+{"label": "replace-leaf-rebuild-small", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 1000, "exit": 0, "elapsed_seconds": 0.14060609898297116, "correct": true, "actual_resumes": null, "instructions": 76741669}
+{"label": "downvalue-exact-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.10292173401103355, "correct": true, "actual_resumes": null, "instructions": 15136022}
+{"label": "downvalue-exact-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.1397917559952475, "correct": true, "actual_resumes": null, "instructions": 26636712}
+{"label": "downvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.13996180999674834, "correct": true, "actual_resumes": null, "instructions": 58868479}
+{"label": "downvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.13894788501784205, "correct": true, "actual_resumes": null, "instructions": 114044149}
+{"label": "downvalue-guarded-decline-fallback", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.13589075699565, "correct": true, "actual_resumes": null, "instructions": 45323578}
+{"label": "downvalue-guarded-decline-fallback", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.1378853789938148, "correct": true, "actual_resumes": null, "instructions": 86931631}
+{"label": "upvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.1382843510073144, "correct": true, "actual_resumes": null, "instructions": 71491484}
+{"label": "upvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.13693908200366423, "correct": true, "actual_resumes": null, "instructions": 139232470}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.14372711602482013, "correct": true, "actual_resumes": null, "instructions": 43777272}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.1375300840009004, "correct": true, "actual_resumes": null, "instructions": 83880507}
+{"label": "default-unguarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.13846181897679344, "correct": true, "actual_resumes": null, "instructions": 38084926}
+{"label": "default-unguarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.13522249201196246, "correct": true, "actual_resumes": null, "instructions": 72471520}
+{"label": "default-unguarded-miss", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.13733308899099939, "correct": true, "actual_resumes": null, "instructions": 29246691}
+{"label": "default-unguarded-miss", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.14051862500491552, "correct": true, "actual_resumes": null, "instructions": 54831787}
+````
+
+
+**perf-instructions-base-2-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/perf-instructions-base-2-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/perf-instructions-base-2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/run-perf.py instructions base 2 all
+````
+
+
+````text
+{"label": "downvalue-pattern-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 20000, "exit": 0, "elapsed_seconds": 0.15099840197945014, "correct": true, "actual_resumes": null, "instructions": 277267934}
+{"label": "downvalue-pattern-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 40000, "exit": 0, "elapsed_seconds": 0.2404600070149172, "correct": true, "actual_resumes": null, "instructions": 550830668}
+{"label": "deletecases-leaf-delete-small", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 500, "exit": 0, "elapsed_seconds": 0.13927173099364154, "correct": true, "actual_resumes": null, "instructions": 35241636}
+{"label": "deletecases-leaf-delete-small", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 1000, "exit": 0, "elapsed_seconds": 0.14173726699664257, "correct": true, "actual_resumes": null, "instructions": 66701864}
+{"label": "replace-leaf-rebuild-small", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 500, "exit": 0, "elapsed_seconds": 0.14216822598245926, "correct": true, "actual_resumes": null, "instructions": 40180812}
+{"label": "replace-leaf-rebuild-small", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 1000, "exit": 0, "elapsed_seconds": 0.14183344101184048, "correct": true, "actual_resumes": null, "instructions": 76773076}
+{"label": "downvalue-exact-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.10907919198507443, "correct": true, "actual_resumes": null, "instructions": 15133246}
+{"label": "downvalue-exact-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.13808216201141477, "correct": true, "actual_resumes": null, "instructions": 26634446}
+{"label": "downvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.13862339401384816, "correct": true, "actual_resumes": null, "instructions": 58833987}
+{"label": "downvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.13651024899445474, "correct": true, "actual_resumes": null, "instructions": 113974480}
+{"label": "downvalue-guarded-decline-fallback", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.1389277529960964, "correct": true, "actual_resumes": null, "instructions": 45326675}
+{"label": "downvalue-guarded-decline-fallback", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.13856103798025288, "correct": true, "actual_resumes": null, "instructions": 86927227}
+{"label": "upvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.14077983400784433, "correct": true, "actual_resumes": null, "instructions": 71458170}
+{"label": "upvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.1380741710017901, "correct": true, "actual_resumes": null, "instructions": 139164571}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.1351192909933161, "correct": true, "actual_resumes": null, "instructions": 43742235}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.1393100690038409, "correct": true, "actual_resumes": null, "instructions": 83817822}
+{"label": "default-unguarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.14083336800104007, "correct": true, "actual_resumes": null, "instructions": 38086569}
+{"label": "default-unguarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.14277663599932566, "correct": true, "actual_resumes": null, "instructions": 72471307}
+{"label": "default-unguarded-miss", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.13967910900828429, "correct": true, "actual_resumes": null, "instructions": 29244547}
+{"label": "default-unguarded-miss", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.14653559698490426, "correct": true, "actual_resumes": null, "instructions": 54831940}
+````
+
+
+**perf-instructions-candidate-2-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/perf-instructions-candidate-2-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/perf-instructions-candidate-2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/run-perf.py instructions candidate 2 all
+````
+
+
+````text
+{"label": "downvalue-pattern-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 20000, "exit": 0, "elapsed_seconds": 0.18232566499500535, "correct": true, "actual_resumes": null, "instructions": 277589631}
+{"label": "downvalue-pattern-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 40000, "exit": 0, "elapsed_seconds": 0.2385745249921456, "correct": true, "actual_resumes": null, "instructions": 551470919}
+{"label": "deletecases-leaf-delete-small", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 500, "exit": 0, "elapsed_seconds": 0.13828710798406973, "correct": true, "actual_resumes": null, "instructions": 35094569}
+{"label": "deletecases-leaf-delete-small", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 1000, "exit": 0, "elapsed_seconds": 0.13690507801948115, "correct": true, "actual_resumes": null, "instructions": 66668490}
+{"label": "replace-leaf-rebuild-small", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 500, "exit": 0, "elapsed_seconds": 0.13895543001126498, "correct": true, "actual_resumes": null, "instructions": 40394078}
+{"label": "replace-leaf-rebuild-small", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 1000, "exit": 0, "elapsed_seconds": 0.14288042101543397, "correct": true, "actual_resumes": null, "instructions": 76788777}
+{"label": "downvalue-exact-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.10444591898703948, "correct": true, "actual_resumes": null, "instructions": 15134005}
+{"label": "downvalue-exact-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.13844667599187233, "correct": true, "actual_resumes": null, "instructions": 26635285}
+{"label": "downvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.1421348050062079, "correct": true, "actual_resumes": null, "instructions": 58866089}
+{"label": "downvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.13618117099395022, "correct": true, "actual_resumes": null, "instructions": 114041387}
+{"label": "downvalue-guarded-decline-fallback", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.13899900400429033, "correct": true, "actual_resumes": null, "instructions": 45323042}
+{"label": "downvalue-guarded-decline-fallback", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.14055925299180672, "correct": true, "actual_resumes": null, "instructions": 86929574}
+{"label": "upvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.14201404000050388, "correct": true, "actual_resumes": null, "instructions": 71490470}
+{"label": "upvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.13990222598658875, "correct": true, "actual_resumes": null, "instructions": 139232393}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.14030669099884108, "correct": true, "actual_resumes": null, "instructions": 43774580}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.13889520202064887, "correct": true, "actual_resumes": null, "instructions": 83879139}
+{"label": "default-unguarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.13851188801345415, "correct": true, "actual_resumes": null, "instructions": 38086806}
+{"label": "default-unguarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.13900054298574105, "correct": true, "actual_resumes": null, "instructions": 72471093}
+{"label": "default-unguarded-miss", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.13913797499844804, "correct": true, "actual_resumes": null, "instructions": 29246250}
+{"label": "default-unguarded-miss", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.1445033960044384, "correct": true, "actual_resumes": null, "instructions": 54831183}
+````
+
+
+**native-compare-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/native-compare-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/native-compare-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/compare-performance.py instructions
+````
+
+
+````text
+Ordinary flags: ['downvalue-pattern-hit', 'downvalue-guarded-hit', 'upvalue-guarded-hit', 'subvalue-unguarded-hit']
+Ineligible: []
+Eligible resume rows: 0
+````
+
+
+**five-base-1-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/five-base-1-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/five-base-1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/run-perf.py instructions base extra-1 all @/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/all-initial-flags.json
+````
+
+
+````text
+{"label": "downvalue-pattern-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 20000, "exit": 0, "elapsed_seconds": 0.18590074297389947, "correct": true, "actual_resumes": null, "instructions": 277267663}
+{"label": "downvalue-pattern-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 40000, "exit": 0, "elapsed_seconds": 0.2373747029923834, "correct": true, "actual_resumes": null, "instructions": 550830334}
+{"label": "downvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.13635530200554058, "correct": true, "actual_resumes": null, "instructions": 58834227}
+{"label": "downvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.13794055199832655, "correct": true, "actual_resumes": null, "instructions": 113977409}
+{"label": "upvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.13780839901301078, "correct": true, "actual_resumes": null, "instructions": 71459138}
+{"label": "upvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.13657665098435245, "correct": true, "actual_resumes": null, "instructions": 139165968}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.1385000919981394, "correct": true, "actual_resumes": null, "instructions": 43743963}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.13585752598010004, "correct": true, "actual_resumes": null, "instructions": 83817542}
+````
+
+
+**five-candidate-1-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/five-candidate-1-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/five-candidate-1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/run-perf.py instructions candidate extra-1 all @/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/all-initial-flags.json
+````
+
+
+````text
+{"label": "downvalue-pattern-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 20000, "exit": 0, "elapsed_seconds": 0.18826113600516692, "correct": true, "actual_resumes": null, "instructions": 277588552}
+{"label": "downvalue-pattern-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 40000, "exit": 0, "elapsed_seconds": 0.2385215259855613, "correct": true, "actual_resumes": null, "instructions": 551471464}
+{"label": "downvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.13661216001491994, "correct": true, "actual_resumes": null, "instructions": 58869273}
+{"label": "downvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.13781641199602745, "correct": true, "actual_resumes": null, "instructions": 114041000}
+{"label": "upvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.13940374401863664, "correct": true, "actual_resumes": null, "instructions": 71493785}
+{"label": "upvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.19215424999129027, "correct": true, "actual_resumes": null, "instructions": 139233339}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.13778841198654845, "correct": true, "actual_resumes": null, "instructions": 43773373}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.13990557999932207, "correct": true, "actual_resumes": null, "instructions": 83879073}
+````
+
+
+**five-base-2-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/five-base-2-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/five-base-2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/run-perf.py instructions base extra-2 all @/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/all-initial-flags.json
+````
+
+
+````text
+{"label": "downvalue-pattern-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 20000, "exit": 0, "elapsed_seconds": 0.17096560000209138, "correct": true, "actual_resumes": null, "instructions": 277267558}
+{"label": "downvalue-pattern-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 40000, "exit": 0, "elapsed_seconds": 0.23670578299788758, "correct": true, "actual_resumes": null, "instructions": 550830836}
+{"label": "downvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.13888407099875621, "correct": true, "actual_resumes": null, "instructions": 58836571}
+{"label": "downvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.18604186200536788, "correct": true, "actual_resumes": null, "instructions": 113974760}
+{"label": "upvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.1366697560006287, "correct": true, "actual_resumes": null, "instructions": 71460424}
+{"label": "upvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.138248649018351, "correct": true, "actual_resumes": null, "instructions": 139165542}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.14124271998298354, "correct": true, "actual_resumes": null, "instructions": 43742169}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.13727307197405025, "correct": true, "actual_resumes": null, "instructions": 83812528}
+````
+
+
+**five-candidate-2-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/five-candidate-2-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/five-candidate-2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/run-perf.py instructions candidate extra-2 all @/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/all-initial-flags.json
+````
+
+
+````text
+{"label": "downvalue-pattern-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 20000, "exit": 0, "elapsed_seconds": 0.18976414401549846, "correct": true, "actual_resumes": null, "instructions": 277589406}
+{"label": "downvalue-pattern-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 40000, "exit": 0, "elapsed_seconds": 0.239048905990785, "correct": true, "actual_resumes": null, "instructions": 551471362}
+{"label": "downvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.13928600898361765, "correct": true, "actual_resumes": null, "instructions": 58867824}
+{"label": "downvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.133433258975856, "correct": true, "actual_resumes": null, "instructions": 114041964}
+{"label": "upvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.13712581398431212, "correct": true, "actual_resumes": null, "instructions": 71493253}
+{"label": "upvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.13850585400359705, "correct": true, "actual_resumes": null, "instructions": 139231769}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.1381784709810745, "correct": true, "actual_resumes": null, "instructions": 43776259}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.13940269500017166, "correct": true, "actual_resumes": null, "instructions": 83881203}
+````
+
+
+**five-base-3-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/five-base-3-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/five-base-3-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/run-perf.py instructions base extra-3 all @/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/all-initial-flags.json
+````
+
+
+````text
+{"label": "downvalue-pattern-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 20000, "exit": 0, "elapsed_seconds": 0.16861284198239446, "correct": true, "actual_resumes": null, "instructions": 277268692}
+{"label": "downvalue-pattern-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 40000, "exit": 0, "elapsed_seconds": 0.2394996990042273, "correct": true, "actual_resumes": null, "instructions": 550828750}
+{"label": "downvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.1365186680050101, "correct": true, "actual_resumes": null, "instructions": 58834135}
+{"label": "downvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.13760520398500375, "correct": true, "actual_resumes": null, "instructions": 113975492}
+{"label": "upvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.13703898899257183, "correct": true, "actual_resumes": null, "instructions": 71458365}
+{"label": "upvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.14004845000454225, "correct": true, "actual_resumes": null, "instructions": 139167438}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.1383164900180418, "correct": true, "actual_resumes": null, "instructions": 43741232}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.13863189599942416, "correct": true, "actual_resumes": null, "instructions": 83816629}
+````
+
+
+**five-candidate-3-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/five-candidate-3-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/five-candidate-3-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/run-perf.py instructions candidate extra-3 all @/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/all-initial-flags.json
+````
+
+
+````text
+{"label": "downvalue-pattern-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 20000, "exit": 0, "elapsed_seconds": 0.18697225098730996, "correct": true, "actual_resumes": null, "instructions": 277589835}
+{"label": "downvalue-pattern-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 40000, "exit": 0, "elapsed_seconds": 0.23967312899185345, "correct": true, "actual_resumes": null, "instructions": 551471306}
+{"label": "downvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.13877116699586622, "correct": true, "actual_resumes": null, "instructions": 58867025}
+{"label": "downvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.1393658950109966, "correct": true, "actual_resumes": null, "instructions": 114040741}
+{"label": "upvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.13933808301226236, "correct": true, "actual_resumes": null, "instructions": 71494755}
+{"label": "upvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.18734224801301025, "correct": true, "actual_resumes": null, "instructions": 139232332}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.13783829301246442, "correct": true, "actual_resumes": null, "instructions": 43774785}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.13803981599630788, "correct": true, "actual_resumes": null, "instructions": 83879201}
+````
+
+
+**five-base-4-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/five-base-4-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/five-base-4-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/run-perf.py instructions base extra-4 all @/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/all-initial-flags.json
+````
+
+
+````text
+{"label": "downvalue-pattern-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 20000, "exit": 0, "elapsed_seconds": 0.185377789021004, "correct": true, "actual_resumes": null, "instructions": 277270040}
+{"label": "downvalue-pattern-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 40000, "exit": 0, "elapsed_seconds": 0.2370330260018818, "correct": true, "actual_resumes": null, "instructions": 550830514}
+{"label": "downvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.13644149401807226, "correct": true, "actual_resumes": null, "instructions": 58833756}
+{"label": "downvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.13615960199967958, "correct": true, "actual_resumes": null, "instructions": 113977497}
+{"label": "upvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.13649070099927485, "correct": true, "actual_resumes": null, "instructions": 71460106}
+{"label": "upvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.1370960859931074, "correct": true, "actual_resumes": null, "instructions": 139162645}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.1356526719755493, "correct": true, "actual_resumes": null, "instructions": 43742617}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.13830290900659747, "correct": true, "actual_resumes": null, "instructions": 83815152}
+````
+
+
+**five-candidate-4-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/five-candidate-4-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/five-candidate-4-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/run-perf.py instructions candidate extra-4 all @/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/all-initial-flags.json
+````
+
+
+````text
+{"label": "downvalue-pattern-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 20000, "exit": 0, "elapsed_seconds": 0.18487703500431962, "correct": true, "actual_resumes": null, "instructions": 277588899}
+{"label": "downvalue-pattern-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 40000, "exit": 0, "elapsed_seconds": 0.23678942400147207, "correct": true, "actual_resumes": null, "instructions": 551473540}
+{"label": "downvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.13720516799367033, "correct": true, "actual_resumes": null, "instructions": 58868198}
+{"label": "downvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.1392017400066834, "correct": true, "actual_resumes": null, "instructions": 114039998}
+{"label": "upvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.13691592201939784, "correct": true, "actual_resumes": null, "instructions": 71496510}
+{"label": "upvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.13833107199752703, "correct": true, "actual_resumes": null, "instructions": 139229229}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.13835233901045285, "correct": true, "actual_resumes": null, "instructions": 43776590}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.1380358320020605, "correct": true, "actual_resumes": null, "instructions": 83881727}
+````
+
+
+**five-base-5-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/five-base-5-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/five-base-5-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/run-perf.py instructions base extra-5 all @/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/all-initial-flags.json
+````
+
+
+````text
+{"label": "downvalue-pattern-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 20000, "exit": 0, "elapsed_seconds": 0.18664548100787215, "correct": true, "actual_resumes": null, "instructions": 277267763}
+{"label": "downvalue-pattern-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 40000, "exit": 0, "elapsed_seconds": 0.24158309499034658, "correct": true, "actual_resumes": null, "instructions": 550832624}
+{"label": "downvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.13753131998237222, "correct": true, "actual_resumes": null, "instructions": 58837603}
+{"label": "downvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.1390461410046555, "correct": true, "actual_resumes": null, "instructions": 113979628}
+{"label": "upvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.1346627900202293, "correct": true, "actual_resumes": null, "instructions": 71458736}
+{"label": "upvalue-guarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.13663696899311617, "correct": true, "actual_resumes": null, "instructions": 139167164}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 2000, "exit": 0, "elapsed_seconds": 0.14115236498764716, "correct": true, "actual_resumes": null, "instructions": 43741611}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be", "N": 4000, "exit": 0, "elapsed_seconds": 0.13776358199538663, "correct": true, "actual_resumes": null, "instructions": 83816623}
+````
+
+
+**five-candidate-5-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/five-candidate-5-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/five-candidate-5-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/run-perf.py instructions candidate extra-5 all @/home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/all-initial-flags.json
+````
+
+
+````text
+{"label": "downvalue-pattern-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 20000, "exit": 0, "elapsed_seconds": 0.18577975302468985, "correct": true, "actual_resumes": null, "instructions": 277589069}
+{"label": "downvalue-pattern-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 40000, "exit": 0, "elapsed_seconds": 0.2363392749975901, "correct": true, "actual_resumes": null, "instructions": 551471938}
+{"label": "downvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.13682970800437033, "correct": true, "actual_resumes": null, "instructions": 58864275}
+{"label": "downvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.14211549601168372, "correct": true, "actual_resumes": null, "instructions": 114044092}
+{"label": "upvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.1354041029990185, "correct": true, "actual_resumes": null, "instructions": 71493750}
+{"label": "upvalue-guarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.19076202300493605, "correct": true, "actual_resumes": null, "instructions": 139232448}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 2000, "exit": 0, "elapsed_seconds": 0.13828986100270413, "correct": true, "actual_resumes": null, "instructions": 43774868}
+{"label": "subvalue-unguarded-hit", "binary_sha256": "78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866", "N": 4000, "exit": 0, "elapsed_seconds": 0.13676941199810244, "correct": true, "actual_resumes": null, "instructions": 83879101}
+````
+
+
+**five-controls-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/five-controls-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/five-controls-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/run-five-flags.py
+````
+
+
+````text
+five-base-1-part1 exit 0
+
+FIVE-PAIR PROGRESS 1 base 8 / 8
+five-candidate-1-part1 exit 0
+
+FIVE-PAIR PROGRESS 1 candidate 8 / 8
+five-base-2-part1 exit 0
+
+FIVE-PAIR PROGRESS 2 base 8 / 8
+five-candidate-2-part1 exit 0
+
+FIVE-PAIR PROGRESS 2 candidate 8 / 8
+five-base-3-part1 exit 0
+
+FIVE-PAIR PROGRESS 3 base 8 / 8
+five-candidate-3-part1 exit 0
+
+FIVE-PAIR PROGRESS 3 candidate 8 / 8
+five-base-4-part1 exit 0
+
+FIVE-PAIR PROGRESS 4 base 8 / 8
+five-candidate-4-part1 exit 0
+
+FIVE-PAIR PROGRESS 4 candidate 8 / 8
+five-base-5-part1 exit 0
+
+FIVE-PAIR PROGRESS 5 base 8 / 8
+five-candidate-5-part1 exit 0
+
+FIVE-PAIR PROGRESS 5 candidate 8 / 8
+ALL FIVE-PAIR CONTROLS COMPLETE 4 labels
+````
+
+
+**five-compare-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/five-compare-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/five-compare-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/finalize-five.py
+````
+
+
+````text
+Ordinary flags: ['downvalue-pattern-hit', 'downvalue-guarded-hit', 'subvalue-unguarded-hit']
+Ineligible: []
+Eligible resume rows: 0
+FIVE PAIRS COMPLETE: 80 correct processes; 1 flags cleared; 3 persistent; resume persistent []
+````
+
+
+**all-selected-callgrind-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/all-selected-callgrind-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/all-selected-callgrind-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/run-copy.py
+````
+
+
+````text
+base downvalue-pattern-hit 1462 rc=0 Null
+cand downvalue-pattern-hit 1462 rc=0 Null
+base downvalue-pattern-hit 2924 rc=0 Null
+cand downvalue-pattern-hit 2924 rc=0 Null
+base deletecases-leaf-delete-small 317 rc=0 Null
+cand deletecases-leaf-delete-small 317 rc=0 Null
+base deletecases-leaf-delete-small 634 rc=0 Null
+cand deletecases-leaf-delete-small 634 rc=0 Null
+base replace-leaf-rebuild-small 274 rc=0 Null
+cand replace-leaf-rebuild-small 274 rc=0 Null
+base replace-leaf-rebuild-small 548 rc=0 Null
+cand replace-leaf-rebuild-small 548 rc=0 Null
+base downvalue-exact-hit 2000 rc=0 Null
+cand downvalue-exact-hit 2000 rc=0 Null
+base downvalue-exact-hit 4000 rc=0 Null
+cand downvalue-exact-hit 4000 rc=0 Null
+base downvalue-guarded-hit 725 rc=0 Null
+cand downvalue-guarded-hit 725 rc=0 Null
+base downvalue-guarded-hit 1450 rc=0 Null
+cand downvalue-guarded-hit 1450 rc=0 Null
+base downvalue-guarded-decline-fallback 961 rc=0 Null
+cand downvalue-guarded-decline-fallback 961 rc=0 Null
+base downvalue-guarded-decline-fallback 1922 rc=0 Null
+cand downvalue-guarded-decline-fallback 1922 rc=0 Null
+base upvalue-guarded-hit 590 rc=0 Null
+cand upvalue-guarded-hit 590 rc=0 Null
+base upvalue-guarded-hit 1180 rc=0 Null
+cand upvalue-guarded-hit 1180 rc=0 Null
+base subvalue-unguarded-hit 998 rc=0 Null
+cand subvalue-unguarded-hit 998 rc=0 Null
+base subvalue-unguarded-hit 1996 rc=0 Null
+cand subvalue-unguarded-hit 1996 rc=0 Null
+base default-unguarded-hit 1163 rc=0 Null
+cand default-unguarded-hit 1163 rc=0 Null
+base default-unguarded-hit 2326 rc=0 Null
+cand default-unguarded-hit 2326 rc=0 Null
+base default-unguarded-miss 1563 rc=0 Null
+cand default-unguarded-miss 1563 rc=0 Null
+base default-unguarded-miss 3126 rc=0 Null
+cand default-unguarded-miss 3126 rc=0 Null
+COPY CAMPAIGN DONE 10 labels
+````
+
+
+**all-selected-self-cost-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/all-selected-self-cost-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/all-selected-self-cost-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/diff-functions.py --all
+````
+
+
+````text
+downvalue-pattern-hit total 14.157 main -1.568 libc 15.725 libcInstructionProofs 1
+deletecases-leaf-delete-small total -834.297 main -837.864 libc 3.568 libcInstructionProofs 1
+replace-leaf-rebuild-small total 1907.427 main 1890.055 libc 17.372 libcInstructionProofs 1
+downvalue-exact-hit total -1.143 main -1.135 libc -0.008 libcInstructionProofs 0
+downvalue-guarded-hit total 10.937 main -4.766 libc 15.702 libcInstructionProofs 1
+downvalue-guarded-decline-fallback total -0.563 main -0.386 libc -0.177 libcInstructionProofs 0
+upvalue-guarded-hit total 14.436 main -2.068 libc 16.503 libcInstructionProofs 1
+subvalue-unguarded-hit total 16.689 main 1.043 libc 15.646 libcInstructionProofs 1
+default-unguarded-hit total 1.5 main 1.486 libc 0.014 libcInstructionProofs 1
+default-unguarded-miss total -1.31 main -1.472 libc 0.162 libcInstructionProofs 1
+FUNCTION DIFFS 10 / 10
+````
+
+
+**offpath-inertness-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/offpath-inertness-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/offpath-inertness-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/offpath-inertness.py
+````
+
+
+````text
+OFF-PATH DIAGNOSTIC SELF COST: labels 10 candidate profiles 20 positive diagnostic function rows 0
+````
+
+
+**rsp-final-downvalue-pattern-hit-base-n1-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/rsp-final-downvalue-pattern-hit-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/rsp-final-downvalue-pattern-hit-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py downvalue-pattern-hit base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QCc
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit base 1 calls 1407 groups 84
+````
+
+
+**rsp-final-downvalue-pattern-hit-cand-n1-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/rsp-final-downvalue-pattern-hit-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/rsp-final-downvalue-pattern-hit-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py downvalue-pattern-hit cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC14
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit cand 1 calls 1407 groups 85
+````
+
+
+**rsp-final-downvalue-pattern-hit-base-n2-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/rsp-final-downvalue-pattern-hit-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/rsp-final-downvalue-pattern-hit-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py downvalue-pattern-hit base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC1c
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit base 2 calls 1411 groups 83
+````
+
+
+**rsp-final-downvalue-pattern-hit-cand-n2-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/rsp-final-downvalue-pattern-hit-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/rsp-final-downvalue-pattern-hit-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py downvalue-pattern-hit cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC24
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-pattern-hit cand 2 calls 1408 groups 79
+````
+
+
+**rsp-final-downvalue-guarded-hit-base-n1-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/rsp-final-downvalue-guarded-hit-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/rsp-final-downvalue-guarded-hit-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py downvalue-guarded-hit base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC2c
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-guarded-hit base 1 calls 1377 groups 83
+````
+
+
+**rsp-final-downvalue-guarded-hit-cand-n1-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/rsp-final-downvalue-guarded-hit-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/rsp-final-downvalue-guarded-hit-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py downvalue-guarded-hit cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC34
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-guarded-hit cand 1 calls 1378 groups 82
+````
+
+
+**rsp-final-downvalue-guarded-hit-base-n2-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/rsp-final-downvalue-guarded-hit-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/rsp-final-downvalue-guarded-hit-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py downvalue-guarded-hit base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC3c
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-guarded-hit base 2 calls 1390 groups 84
+````
+
+
+**rsp-final-downvalue-guarded-hit-cand-n2-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/rsp-final-downvalue-guarded-hit-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/rsp-final-downvalue-guarded-hit-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py downvalue-guarded-hit cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC44
+SELECT THREAD OK
+RSP POINTERS COMPLETE downvalue-guarded-hit cand 2 calls 1382 groups 84
+````
+
+
+**rsp-final-subvalue-unguarded-hit-base-n1-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/rsp-final-subvalue-unguarded-hit-base-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/rsp-final-subvalue-unguarded-hit-base-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py subvalue-unguarded-hit base 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC4c
+SELECT THREAD OK
+RSP POINTERS COMPLETE subvalue-unguarded-hit base 1 calls 1308 groups 81
+````
+
+
+**rsp-final-subvalue-unguarded-hit-cand-n1-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/rsp-final-subvalue-unguarded-hit-cand-n1-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/rsp-final-subvalue-unguarded-hit-cand-n1-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py subvalue-unguarded-hit cand 1 supplemental-n1
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC54
+SELECT THREAD OK
+RSP POINTERS COMPLETE subvalue-unguarded-hit cand 1 calls 1306 groups 80
+````
+
+
+**rsp-final-subvalue-unguarded-hit-base-n2-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/rsp-final-subvalue-unguarded-hit-base-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/rsp-final-subvalue-unguarded-hit-base-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py subvalue-unguarded-hit base 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC5c
+SELECT THREAD OK
+RSP POINTERS COMPLETE subvalue-unguarded-hit base 2 calls 1322 groups 83
+````
+
+
+**rsp-final-subvalue-unguarded-hit-cand-n2-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/rsp-final-subvalue-unguarded-hit-cand-n2-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/rsp-final-subvalue-unguarded-hit-cand-n2-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/rsp-pointers.py subvalue-unguarded-hit cand 2 supplemental-n2
+````
+
+
+````text
+FEATURES PacketSize=3fff;binary-upload+;QStartNoAckMode+;QPassSignals+;QCatchSyscalls+;qXfer:auxv:read+;qXfer:features:read+;qXfer:exec-file:read+;qXfer:siginfo:read+
+THREAD QC64
+SELECT THREAD OK
+RSP POINTERS COMPLETE subvalue-unguarded-hit cand 2 calls 1310 groups 80
+````
+
+
+**persistent-pointers-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/persistent-pointers-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/persistent-pointers-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/finish-pointer-captures.py
+````
+
+
+````text
+rsp-final-downvalue-pattern-hit-base-n1-part1 exit 0
+
+EXACT STATIC POINTERS 1 /12 downvalue-pattern-hit base 1
+rsp-final-downvalue-pattern-hit-cand-n1-part1 exit 0
+
+EXACT STATIC POINTERS 2 /12 downvalue-pattern-hit cand 1
+rsp-final-downvalue-pattern-hit-base-n2-part1 exit 0
+
+EXACT STATIC POINTERS 3 /12 downvalue-pattern-hit base 2
+rsp-final-downvalue-pattern-hit-cand-n2-part1 exit 0
+
+EXACT STATIC POINTERS 4 /12 downvalue-pattern-hit cand 2
+rsp-final-downvalue-guarded-hit-base-n1-part1 exit 0
+
+EXACT STATIC POINTERS 5 /12 downvalue-guarded-hit base 1
+rsp-final-downvalue-guarded-hit-cand-n1-part1 exit 0
+
+EXACT STATIC POINTERS 6 /12 downvalue-guarded-hit cand 1
+rsp-final-downvalue-guarded-hit-base-n2-part1 exit 0
+
+EXACT STATIC POINTERS 7 /12 downvalue-guarded-hit base 2
+rsp-final-downvalue-guarded-hit-cand-n2-part1 exit 0
+
+EXACT STATIC POINTERS 8 /12 downvalue-guarded-hit cand 2
+rsp-final-subvalue-unguarded-hit-base-n1-part1 exit 0
+
+EXACT STATIC POINTERS 9 /12 subvalue-unguarded-hit base 1
+rsp-final-subvalue-unguarded-hit-cand-n1-part1 exit 0
+
+EXACT STATIC POINTERS 10 /12 subvalue-unguarded-hit cand 1
+rsp-final-subvalue-unguarded-hit-base-n2-part1 exit 0
+
+EXACT STATIC POINTERS 11 /12 subvalue-unguarded-hit base 2
+rsp-final-subvalue-unguarded-hit-cand-n2-part1 exit 0
+
+EXACT STATIC POINTERS 12 /12 subvalue-unguarded-hit cand 2
+ALL PERSISTENT POINTER CONTROLS COMPLETE 12 /12
+````
+
+
+**page-attribution-part1: exit 0.** [continuation-2/final3/aligned-attribution/logs/page-attribution-part1.log](../../../.temp/brief-626/continuation-2/final3/aligned-attribution/logs/page-attribution-part1.log)
+
+````bash
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-2/final3/aligned-attribution/page-layout-attribution.py
+````
+
+
+````text
+downvalue-pattern-hit layout 16 native 16.025 residual 0.025 threshold 6.839 unequal 3 residual_flag False
+downvalue-guarded-hit layout 16 native 16.271 residual 0.271 threshold 13.785 unequal 4 residual_flag False
+subvalue-unguarded-hit layout 16 native 15.755 residual -0.245 threshold 10.018 unequal 0 residual_flag False
+COMPLETE POINTER ATTRIBUTIONS 3 / 3
+````
+
+</details>
+
+Final exact-frontier gate output, verbatim:
+````text
+warning: trait `adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+  --> crates/rum-runtime/src/runtime/suspension/typed/entry.rs:12:11
+   |
+12 |     Typed(Arc<dyn ErasedFrame>),
+   |           ^^^^^^^^^^^^^^^^^^^^ field `typed::entry::Entry::Typed::0` is reachable at visibility `pub(runtime)`
+   |
+note: but trait `adapter::ErasedFrame` is only usable at visibility `pub(suspension)`
+  --> crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:13:1
+   |
+13 | / pub(in crate::runtime::suspension) trait ErasedFrame:
+14 | |     FrameRootTrace + FrameAbandon + Send + Sync
+   | |_______________________________________________^
+   = note: `#[warn(private_interfaces)]` on by default
+
+warning: trait `adapter::ErasedFrame` is more private than the item `EntryRef::Typed::0`
+  --> crates/rum-runtime/src/runtime/suspension/typed/entry.rs:19:11
+   |
+19 |     Typed(&'a Arc<dyn ErasedFrame>),
+   |           ^^^^^^^^^^^^^^^^^^^^^^^^ field `EntryRef::Typed::0` is reachable at visibility `pub(runtime)`
+   |
+note: but trait `adapter::ErasedFrame` is only usable at visibility `pub(suspension)`
+  --> crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:13:1
+   |
+13 | / pub(in crate::runtime::suspension) trait ErasedFrame:
+14 | |     FrameRootTrace + FrameAbandon + Send + Sync
+   | |_______________________________________________^
+
+warning: `rum-runtime` (lib) generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-5f7f08d1c3c3a0e1)
+
+running 1 test
+test tests::retention_closure::census::tests::production_rejection_census_is_complete ... FAILED
+
+failures:
+
+---- tests::retention_closure::census::tests::production_rejection_census_is_complete stdout ----
+EDGE_ALL roots=7489 definitions=7489 raw=49914 deduplicated=49914 resolved_sites=16428
+FIRST_FAILURE EDGE_ALL rejected=7486 returned_ok=3 (effects::check per root; not edge frequency or production coverage)
+population	kind	raw	deduplicated	reason
+EDGE_ALL	RET002	14573	14573	method syntax: method receiver lacks checked nominal/place provenance
+EDGE_ALL	RET002	8539	8539	primitive operand proof or exact operator/conversion impl required
+EDGE_ALL	RET002	5408	5408	method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched
+EDGE_ALL	RET003	2795	2795	unexpanded macro; contents are not resolved Rust
+EDGE_ALL	RET002	2411	2411	closure capture/callback effects unresolved; closure body is a rejected boundary
+EDGE_ALL	RET002	2081	2081	implicit Try/FromResidual/error ownership not modeled
+EDGE_ALL	RET002	1851	1851	not a resolved function definition: <target>
+EDGE_ALL	RET002	1836	1836	method syntax: method receiver lacks an exact nominal type
+EDGE_ALL	RET002	1670	1670	implicit Index/Deref/bounds exceptional effects not proved
+EDGE_ALL	RET002	1368	1368	method syntax: method lexical scope contains local items/imports
+EDGE_ALL	RET002	1205	1205	path <path> has <n> exact bindings
+EDGE_ALL	RET002	935	935	implicit IntoIterator/next/iterator Drop not modeled
+EDGE_ALL	RET001	911	911	not a resolved function definition: <target>
+EDGE_ALL	RET002	830	830	method syntax: opaque imported trait candidate <target>
+EDGE_ALL	RET002	654	654	ambiguous or conditional function <target>
+EDGE_ALL	RET002	573	573	method syntax: type is outside the admitted surface: impl Into < String >
+EDGE_ALL	RET002	536	536	method syntax: non-positional generic impl
+EDGE_ALL	RET002	442	442	method syntax: method instance is not in the finite scalar substitution set
+EDGE_ALL	RET002	313	313	method syntax: opaque or ambiguous type <type>
+EDGE_ALL	RET002	140	140	method syntax: method instance has unknown bounds or argument arity
+EDGE_ALL	RET002	111	111	trait projection or runtime callable local
+EDGE_ALL	RET002	101	101	method syntax: unresolved non-test cfg alternative or opaque import namespace
+EDGE_ALL	RET002	100	100	unresolved non-test cfg alternative or opaque import namespace
+EDGE_ALL	RET002	52	52	typed macro expansion: cold helper closure capture/move of witness, session, request and frame inputs; FnOnce call and closure drop unresolved
+EDGE_ALL	RET002	52	52	typed macro expansion: delegated InputRequired reconstruction and request/error ownership unresolved
+EDGE_ALL	RET002	52	52	typed macro expansion: owned Result match, Ok/InputRequired/error bindings, Err(error) forwarding and local drops unresolved
+EDGE_ALL	RET002	50	50	typed macro expansion: return through witness.suspend; typed insertion and frame ownership transfer unresolved
+EDGE_ALL	RET002	49	49	typed macro expansion: caller producer place and slot_witness(&($result)) borrow/call unresolved
+EDGE_ALL	RET002	40	40	method syntax: prelude trait candidate <method> at <receiver>
+EDGE_ALL	RET002	39	39	method syntax: method outside checked lexical scope
+EDGE_ALL	RET002	34	34	method syntax: unclassified attribute track_caller
+EDGE_ALL	RET002	33	33	method syntax: path <path> has <n> exact bindings
+EDGE_ALL	RET002	22	22	runtime callable expression
+EDGE_ALL	RET002	16	16	method syntax: selected receiver would move through a borrowed place
+EDGE_ALL	RET002	13	13	method syntax: trait <trait> has unmodeled supertraits or generated candidates
+EDGE_ALL	RET002	11	11	method syntax: method trait scope contains an unexpanded item
+EDGE_ALL	RET002	7	7	method syntax: type is outside the admitted surface: dyn FileIo
+EDGE_ALL	RET002	5	5	method syntax: type is outside the admitted surface: impl Into < HostEvalRequest >
+EDGE_ALL	RET002	5	5	method syntax: unclassified attribute cfg (not (test))
+EDGE_ALL	RET002	4	4	method syntax: type is outside the admitted surface: impl FnMut (EntryRef < '_ >)
+EDGE_ALL	RET002	4	4	method syntax: type is outside the admitted surface: impl Write
+EDGE_ALL	RET002	3	3	method syntax: type is outside the admitted surface: dyn SuspensionFrame
+EDGE_ALL	RET002	3	3	method syntax: type is outside the admitted surface: fn (& mut Session , & Expr , & SharedArgs) -> Result < Expr , EvalError >
+EDGE_ALL	RET002	3	3	method syntax: type is outside the admitted surface: impl Into < SharedExpr >
+EDGE_ALL	RET002	3	3	method syntax: type is outside the admitted surface: impl Iterator < Item = (& Expr , & Expr) >
+EDGE_ALL	RET002	3	3	method syntax: type is outside the admitted surface: impl Iterator < Item = (& Symbol , & Expr , bool) >
+EDGE_ALL	RET002	3	3	method syntax: type is outside the admitted surface: impl Iterator < Item = Attribute >
+EDGE_ALL	RET002	3	3	typed macro expansion: owned producer binding and slot_witness(&produced) borrow/call unresolved
+EDGE_ALL	RET002	2	2	method syntax: type is outside the admitted surface: dyn EntropySource
+EDGE_ALL	RET002	2	2	method syntax: type is outside the admitted surface: dyn ErasedFrame
+EDGE_ALL	RET002	2	2	method syntax: type is outside the admitted surface: impl AsRef < Path >
+EDGE_ALL	RET002	2	2	method syntax: type is outside the admitted surface: impl FnOnce () -> RunCallDispatchStageSuspensionFrame
+EDGE_ALL	RET002	2	2	method syntax: type is outside the admitted surface: impl Iterator < Item = & BuiltinSpec >
+EDGE_ALL	RET002	2	2	method syntax: unknown or blanket trait impl may supply rum_jupyter::bootstrap::KernelTransportBackend::transport_layout
+EDGE_ALL	RET002	2	2	typed macro expansion: inline evaluation-return event insertion before witnessed consumer; parent context and resource epilogue unresolved
+EDGE_ALL	RET002	2	2	typed macro expansion: return through private Expr witness.suspend_evaluation_return; frame ownership transfer unresolved
+EDGE_ALL	RET002	1	1	method syntax: type is outside the admitted surface: dyn FrameRootVisitor
+EDGE_ALL	RET002	1	1	method syntax: type is outside the admitted surface: dyn PrintSink
+EDGE_ALL	RET002	1	1	method syntax: type is outside the admitted surface: impl Fn (& mut Session) + Send + Sync + 'static
+EDGE_ALL	RET002	1	1	method syntax: type is outside the admitted surface: impl FnMut (Span) -> Span
+EDGE_ALL	RET002	1	1	method syntax: type is outside the admitted surface: impl Into < HostIsCompleteRequest >
+EDGE_ALL	RET002	1	1	method syntax: type is outside the admitted surface: impl Iterator < Item = & StringPatternMatchState >
+
+INDEPENDENT_AUDIT EDGE_ALL roots=7489 definitions=7489 raw=49914 deduplicated=49914 reason_classes=62 all_spans_read=true
+
+thread 'tests::retention_closure::census::tests::production_rejection_census_is_complete' panicked at crates/rum-stdlib/src/tests/retention_closure/census/tests.rs:227:5:
+assertion `left == right` failed: STOP: brief-545 exact legacy frontier inventory moved
+  left: 960
+ right: 950
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    tests::retention_closure::census::tests::production_rejection_census_is_complete
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 18.41s
+
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+````
+
+Final workspace result lines and failed-test names, verbatim:
+````text
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.36s
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.34s
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.11s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.85s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 48.74s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.28s
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.02s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+test result: ok. 151 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.86s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.40s
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+test result: ok. 1202 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 38.12s
+test result: FAILED. 1108 passed; 1 failed; 53 ignored; 0 measured; 0 filtered out; finished in 1375.49s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+test result: ok. 47 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.09s
+test result: ok. 69 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 23.99s
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.33s
+test result: ok. 100 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.03s
+test result: ok. 71 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.61s
+test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.00s
+test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.49s
+test result: ok. 499 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 107.36s
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 296.98s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 37.73s
+test result: ok. 193 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.56s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.45s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.78s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.25s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test tests::retention_closure::census::tests::production_rejection_census_is_complete ... FAILED
+````
+
+The unchanged method oracle records 3,536 agreements and zero disagreements. Full compiler artifacts: [continuation-2/method-oracle-final](../../../.temp/brief-626/continuation-2/method-oracle-final).
+
+### 6. Measurements on the final binaries, profiling off
+
+All four candidate binaries were rebuilt at the original target paths with one codegen unit. Source-attempt-2 evidence remains in `continuation-2/final/`; the final-source campaign is isolated in `continuation-2/final3/`. All 586 copied workload files are unchanged. Every result pins its binary hash.
+
+
+| Binary | Base SHA-256 | Final candidate SHA-256 |
+|---|---|---|
+| rum-cli | 46137abe2e63c59203ef987effb3ca5eb1f78540c9a88200ae51220041b845fd | eb618aa09434a80b6acc3d874385de1fac6a4bb2f84fbcb015eaf9d878abcfbb |
+| rum-cli-alloc | 5cf3e4b67b750e904731977d4618c9aa2796e170781243f9ac3451760ec5a843 | ed23e0f70b4eb68817c8232ebcb1f92482a5088f44ff2dfd3bd0852b4b6ed1ab |
+| resume | 6fdc74e0cb0027244941c2032ab480843eae87caa7b409d44e0caf86735743e5 | 14da26ac361adc61432ea7c90fa3e3b1e4cc4a8cc163d028058e9781c330f7d6 |
+| resume-alloc | f305fd523786f8b4a7e658e4ca99cbdab87bae8e92fab5bfce9cc7137a85515c | 64d5342507dd5adad4bd8baba131ca02bbc1b3b3e58342952be57de21edefaba |
+
+
+**Correctness and allocations.** Every one of the 818 correctness processes per arm and 626 allocation processes per arm passes. All 313 labels have exact raw N/2N allocation counts and bytes, hence equal slopes and intercepts. Full values: [continuation-2/final3/perf/allocation-comparison.tsv](../../../.temp/brief-626/continuation-2/final3/perf/allocation-comparison.tsv).
+
+**Instructions.** Two interleaved N/2N pairs cover all 313 labels. Initial ordinary flags: 66; initial resume flags: 2. Five-pair clears: 37; residual layout labels: 31; unresolved work labels: 0. Every initial flag has full self-cost differences including libc, and every residual layout flag has compared-pointer/page-predicate evidence at equal critical per-iteration comparison counts.
+
+Five-pair-cleared labels: `appendto-list-incremental-small`, `assert-enabled-true`, `assert-off`, `association-apply`, `association-part-key-read-width32000`, `association-part-positional-read-width32000`, `association-part-positional-read-width4000`, `association-set-key-incremental-large`, `association-set-part-key-investigation`, `c1-replaceall-unheld-atom`, `checkabort-abort`, `downvalue-exact-miss`, `enclose-message-handler`, `failure-list-property`, `failure-message-delayed`, `failure-message-property`, `failure-raw-property`, `failure-tag-fallback`, `lazy-depth-map-build-8`, `lazy-depth-map-first-256`, `lazy-depth-map-first-64`, `lazy-depth-nest-map-256`, `lazy-depth-nest-map-64`, `lazy-depth-nest-map-8`, `lazy-select-realize-small`, `lazy-table-construct-short`, `lazy-table-realize-small`, `lazy-transparent-adapters-small`, `lhs-arg-value`, `part-list`, `replaceall-guarded-hit-small`, `resume-s8-replace-both`, `reversesort-default-wide`, `rewrite-guarded-hit`, `subvalue-guarded-hit`, `table-small`, `upvalue-candidates-tiny`.
+Layout labels: `abortprotect-clean`, `block-local`, `check-clean`, `composition-apply`, `deletecases-wide-association-no-match`, `dot-three-no-input`, `downvalue-guarded-hit`, `downvalue-pattern-hit`, `function-named-apply`, `function-slot-apply`, `keysort-default-wide`, `keysortby-default-wide`, `lazy-depth-fold-through-source-256`, `lazy-depth-fold-through-source-64`, `lazy-depth-fold-through-source-8`, `lazy-depth-map-eight-256`, `lazy-depth-map-eight-64`, `lazy-depth-map-eight-8`, `lazy-depth-take-map-256`, `lazy-depth-take-map-64`, `lazy-depth-take-map-8`, `lazy-drop-realize-small`, `lazy-map-realize-small`, `lazy-nestlist-realize-small`, `module-local`, `optionvalue-three-no-input`, `quiet-clean`, `replacerepeated-guarded-small`, `subvalue-unguarded-hit`, `upvalue-guarded-hit`, `withcleanup-two-arg`.
+Work labels: none.
+
+Full signed self costs retain fixed startup costs and every positive/negative function row; exclusive sums reconcile to their totals. Hash-map startup variation and inline/outlining redistribution are visible rather than discarded. [continuation-2/final3/function-diffs-all](../../../.temp/brief-626/continuation-2/final3/function-diffs-all) contains all 313 labels; [continuation-2/final3/offpath-inertness.json](../../../.temp/brief-626/continuation-2/final3/offpath-inertness.json) records the absence of executed logical-engine/outlined diagnostic work in all candidate N/2N profiles. The unchanged established native threshold is max(0.05% of base, base range, candidate range); initial flags use maximum paired delta, five-pair controls use mean delta.
+
+
+| Label | Engine | Native N | Base slope | Candidate slope | Mean delta | Maximum paired delta | Threshold | Review | CG N | CG main delta | CG libc delta |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| lazy-range-take-small | cli | 20000 | 41879.783950 | 41875.194300 | -4.589650 | 0.910200 | 20.939892 | within gate | 477 | 72.742138 | 0.471698 |
+| lazy-range-normal-small | cli | 20000 | 53586.368800 | 53557.571925 | -28.796875 | -12.375800 | 47.210400 | within gate | 373 | -87.404826 | -0.056300 |
+| lazy-map-realize-small | cli | 20000 | 176385.262675 | 176481.321250 | 96.058575 | 166.913400 | 111.090350 | layout | 113 | -72.761062 | 135.026549 |
+| lazy-select-realize-small | cli | 20000 | 112435.584275 | 112586.123475 | 150.539200 | 176.147550 | 56.217792 | five-pair clear | 177 | -54.299435 | 98.796610 |
+| lazy-select-scan-small | cli | 20000 | 793420.544500 | 793692.850900 | 272.306400 | 274.985400 | 396.710272 | within gate | 25 | 71.240000 | 295.800000 |
+| lazy-nestlist-realize-small | cli | 20000 | 142996.845150 | 143197.512775 | 200.667625 | 236.990050 | 128.895000 | layout | 139 | 79.712230 | 128.280576 |
+| lazy-foldlist-realize-small | cli | 20000 | 110917.958875 | 110947.654200 | 29.695325 | 142.819150 | 148.827500 | within gate | 180 | 52.216667 | 117.205556 |
+| lazy-drop-realize-small | cli | 20000 | 188572.653275 | 188707.834225 | 135.180950 | 139.497400 | 94.286327 | layout | 106 | -130.584906 | 90.264151 |
+| lazy-first-small | cli | 20000 | 40589.845675 | 40542.183550 | -47.662125 | 3.388600 | 106.551900 | within gate | 492 | -3.658537 | 8.493902 |
+| lazy-part-small | cli | 20000 | 87236.710825 | 87092.629200 | -144.081625 | -63.625600 | 186.813150 | within gate | 229 | 115.864629 | 6.847162 |
+| lazy-transparent-adapters-small | cli | 20000 | 178583.429075 | 178807.200575 | 223.771500 | 263.847400 | 186.429650 | five-pair clear | 111 | -118.756757 | 103.729730 |
+| lazy-table-construct-short | cli | 20000 | 23331.737200 | 23401.266300 | 69.529100 | 107.913600 | 100.898300 | five-pair clear | 857 | 17.301050 | 7.667445 |
+| lazy-table-construct-full | cli | 20000 | 23843.451075 | 23847.862725 | 4.411650 | 24.248450 | 24.519450 | within gate | 838 | -21.809069 | 7.929594 |
+| lazy-table-realize-small | cli | 20000 | 115743.656025 | 115896.997400 | 153.341375 | 240.712500 | 151.947300 | five-pair clear | 172 | -39.837209 | 89.819767 |
+| lazy-permutations-take-small | cli | 20000 | 27852.535300 | 27834.930425 | -17.604875 | -6.251900 | 23.666250 | within gate | 718 | 59.168524 | -5.632312 |
+| lazy-subsets-take-small | cli | 20000 | 25009.610050 | 25009.639275 | 0.029225 | 0.030150 | 12.504805 | within gate | 799 | 1.254068 | 0.082603 |
+| lazy-tuples-take-small | cli | 20000 | 26282.064100 | 26248.716825 | -33.347275 | 54.200700 | 124.876600 | within gate | 760 | -9.209211 | 4.463158 |
+| scan-no-input | cli | 20000 | 28958.505675 | 28959.548200 | 1.042525 | 1.818750 | 14.479253 | within gate | 690 | 0.868116 | -0.298551 |
+| optionvalue-three-no-input | cli | 20000 | 9498.340700 | 9507.909425 | 9.568725 | 10.123400 | 4.749170 | layout | 2000 | -8.280500 | 8.277000 |
+| replacerepeated-no-input | cli | 20000 | 38864.425650 | 38877.347250 | 12.921600 | 25.782150 | 26.031500 | within gate | 514 | 3.305447 | 0.309339 |
+| dot-three-no-input | cli | 20000 | 249951.935875 | 250335.434700 | 383.498825 | 383.704150 | 124.975968 | layout | 80 | -32.925000 | 384.287500 |
+| differences-no-input | cli | 20000 | 9909.153650 | 9908.675950 | -0.477700 | 1.006950 | 4.954577 | within gate | 2000 | -3.761500 | 0.162500 |
+| do-count-null | cli | 20000 | 535.135775 | 535.143025 | 0.007250 | 0.015350 | 0.267568 | within gate | 2000 | -0.765500 | -0.016000 |
+| do-iterator-null | cli | 20000 | 1151.915850 | 1152.080225 | 0.164375 | 0.176850 | 0.575958 | within gate | 2000 | -2.371000 | -0.228000 |
+| table-iterator-null | cli | 20000 | 387.043300 | 387.104775 | 0.061475 | 0.106600 | 0.293600 | within gate | 2000 | 0.347000 | 0.174500 |
+| replaceall-simple | cli | 20000 | 11354.733000 | 11302.701275 | -52.031725 | -51.959300 | 5.677367 | within gate | 1761 | -50.270301 | -0.098807 |
+| table-small | cli | 20000 | 14507.809750 | 14523.708900 | 15.899150 | 16.061700 | 7.253905 | five-pair clear | 1378 | 15.674891 | 15.706821 |
+| table-iterator-plus | cli | 20000 | 563.280625 | 563.283625 | 0.003000 | 0.068350 | 0.281640 | within gate | 2000 | -0.308500 | -0.055000 |
+| table-iterator-pair-list | cli | 20000 | 1641.236575 | 1641.159475 | -0.077100 | -0.056350 | 0.820618 | within gate | 2000 | -1.952500 | -0.108500 |
+| take-multispec-small | cli | 20000 | 49710.915150 | 49711.190725 | 0.275575 | 0.353400 | 24.855458 | within gate | 402 | -16.281095 | 0.870647 |
+| lazy-depth-map-build-8 | cli | 1000 | 17788.519000 | 17811.649000 | 23.130000 | 27.067000 | 9.970000 | five-pair clear | 1000 | 26.892000 | -0.348000 |
+| lazy-depth-map-first-8 | cli | 1000 | 128511.386500 | 128427.036000 | -84.350500 | 108.315000 | 402.413000 | within gate | 155 | 619.025806 | 126.709677 |
+| lazy-depth-map-eight-8 | cli | 1000 | 945298.034500 | 946338.549000 | 1040.514500 | 1056.694000 | 472.649017 | layout | 21 | -89.095238 | 1003.666667 |
+| lazy-depth-select-restart-8 | cli | 1000 | 177958.789000 | 178221.857500 | 263.068500 | 578.821000 | 584.199000 | within gate | 112 | -24.321429 | -13.642857 |
+| lazy-depth-drop-all-one-8 | cli | 1000 | 46374.680000 | 46375.318500 | 0.638500 | 1.139000 | 23.187340 | within gate | 431 | -4.429234 | -0.032483 |
+| lazy-depth-take-map-8 | cli | 1000 | 136849.743500 | 136958.537500 | 108.794000 | 121.093000 | 68.424872 | layout | 146 | -46.157534 | 129.863014 |
+| lazy-depth-fold-through-source-8 | cli | 1000 | 580731.815000 | 581333.568000 | 601.753000 | 620.011000 | 290.365907 | layout | 34 | -99.264706 | 572.352941 |
+| lazy-depth-nest-map-8 | cli | 1000 | 138681.366500 | 139022.688000 | 341.321500 | 533.631000 | 386.084000 | five-pair clear | 144 | -192.993056 | 144.284722 |
+| lazy-depth-map-build-64 | cli | 1000 | 29821.553000 | 29822.932500 | 1.379500 | 16.604000 | 35.709000 | within gate | 670 | -3.585075 | -0.564179 |
+| lazy-depth-map-first-64 | cli | 1000 | 933219.563000 | 934241.980500 | 1022.417500 | 1023.715000 | 466.609782 | five-pair clear | 21 | 3517.666667 | 1008.285714 |
+| lazy-depth-map-eight-64 | cli | 1000 | 7298936.009000 | 7306657.243000 | 7721.234000 | 7884.682000 | 3649.468005 | layout | 2 | -3980.500000 | 7992.500000 |
+| lazy-depth-select-restart-64 | cli | 1000 | 970537.857500 | 970510.013500 | -27.844000 | -14.940000 | 485.268929 | within gate | 20 | -101.200000 | -18.150000 |
+| lazy-depth-drop-all-one-64 | cli | 1000 | 327364.494500 | 327354.773500 | -9.721000 | -2.665000 | 163.682247 | within gate | 61 | 133.704918 | 47.967213 |
+| lazy-depth-take-map-64 | cli | 1000 | 993073.828000 | 994071.083500 | 997.255500 | 1014.370000 | 496.536914 | layout | 20 | 377.600000 | 1030.400000 |
+| lazy-depth-fold-through-source-64 | cli | 1000 | 33206852.164500 | 33239053.233000 | 32201.068500 | 34501.184000 | 16603.426082 | layout | 1 | 100943.000000 | 33110.000000 |
+| lazy-depth-nest-map-64 | cli | 1000 | 943190.537500 | 947521.072000 | 4330.534500 | 5956.291000 | 1666.212000 | five-pair clear | 21 | 1623.952381 | 1037.238095 |
+| lazy-depth-map-build-256 | cli | 1000 | 70443.231500 | 70416.836500 | -26.395000 | -20.994000 | 35.221616 | within gate | 283 | 128.187279 | -0.215548 |
+| lazy-depth-map-first-256 | cli | 1000 | 3659223.758500 | 3673540.174000 | 14316.415500 | 17684.296000 | 13541.732000 | five-pair clear | 5 | -4540.000000 | 4059.200000 |
+| lazy-depth-map-eight-256 | cli | 1000 | 29091973.091000 | 29125133.922500 | 33160.831500 | 33552.369000 | 14545.986545 | layout | 1 | 68756.000000 | 32665.000000 |
+| lazy-depth-select-restart-256 | cli | 1000 | 3659021.991000 | 3651982.710500 | -7039.280500 | -916.523000 | 26083.328000 | within gate | 5 | 14321.800000 | 43.600000 |
+| lazy-depth-drop-all-one-256 | cli | 1000 | 2218608.771500 | 2218622.849500 | 14.078000 | 14.534000 | 1109.304386 | within gate | 9 | 1690.333333 | -11.555556 |
+| lazy-depth-take-map-256 | cli | 1000 | 3925711.828500 | 3929960.914500 | 4249.086000 | 4284.866000 | 1962.855914 | layout | 5 | -3027.800000 | 4113.600000 |
+| lazy-depth-fold-through-source-256 | cli | 1000 | 523301638.514500 | 523865338.631500 | 563700.117000 | 602730.698000 | 261650.819257 | layout | 1 | 33382.000000 | 526137.000000 |
+| lazy-depth-nest-map-256 | cli | 1000 | 3667990.438500 | 3678757.436000 | 10766.997500 | 10773.027000 | 1833.995219 | five-pair clear | 5 | -11823.800000 | 4115.000000 |
+| literal-integer | cli | 20000 | 291.970500 | 291.989000 | 0.018500 | 0.184250 | 0.197200 | within gate | 2000 | -0.079000 | -0.252000 |
+| downvalue-pattern-hit | cli | 20000 | 13647.207975 | 13663.063050 | 15.855075 | 15.993450 | 6.823604 | layout | 1465 | 0.301706 | 16.104437 |
+| module-local | cli | 20000 | 22438.206450 | 22470.123125 | 31.916675 | 32.182250 | 11.219103 | layout | 891 | -5.196409 | 33.428732 |
+| block-local | cli | 20000 | 14462.982000 | 14479.089950 | 16.107950 | 16.270800 | 7.231491 | layout | 1382 | 4.447902 | 16.031838 |
+| matcher-single-wide-small | cli | 1000 | 760072.449500 | 760080.793000 | 8.343500 | 41.667000 | 380.036225 | within gate | 26 | 121.076923 | -16.730769 |
+| resume-table | resume | 1000 | 19884.290000 | 19839.982000 | -44.308000 | -8.416000 | 47.676000 | within gate | 1000 | 15.216000 | -12.704000 |
+| resume-do-chain | resume | 1000 | 19117.275500 | 19106.501000 | -10.774500 | -8.718000 | 33.998000 | within gate | 1000 | 79.455000 | -1.268000 |
+| resume-call-repeat | resume | 1000 | 28385.736500 | 28299.826000 | -85.910500 | -70.194000 | 32.929000 | within gate | 704 | -2.518466 | -13.336648 |
+| resume-cleanup | resume | 1000 | 18630.857000 | 18563.464500 | -67.392500 | -57.683000 | 47.309000 | within gate | 1000 | -37.235000 | -1.151000 |
+| resume-fold | resume | 1000 | 29562.979500 | 29455.054000 | -107.925500 | -69.044000 | 96.536000 | within gate | 676 | -45.532544 | -41.004438 |
+| cases-wide-no-match | cli | 1600 | 2400980.176875 | 2401037.741875 | 57.565000 | 62.973750 | 1200.490088 | within gate | 8 | 788.875000 | 24.500000 |
+| count-wide-no-match | cli | 1600 | 2173016.881250 | 2172975.179688 | -41.701563 | 0.890000 | 1086.508441 | within gate | 9 | 599.888889 | -12.000000 |
+| position-wide-no-match | cli | 1600 | 2573913.121250 | 2573909.864687 | -3.256563 | 45.371250 | 1286.956561 | within gate | 7 | -313.000000 | -26.142857 |
+| deletecases-wide-no-match | cli | 1600 | 2670944.052188 | 2670978.760000 | 34.707812 | 65.561875 | 1335.472026 | within gate | 7 | -226.571429 | -17.285714 |
+| deletecases-wide-association-no-match | cli | 1600 | 7502215.983125 | 7515014.827187 | 12798.844062 | 13168.830625 | 3751.107992 | layout | 2 | -323.500000 | 12925.000000 |
+| deletecases-leaf-delete-small | cli | 500 | 63486.642000 | 63608.532000 | 121.890000 | 237.454000 | 850.732000 | within gate | 315 | -961.761905 | 3.977778 |
+| replace-wide-no-match | cli | 1600 | 1132307.996563 | 1132347.094375 | 39.097812 | 93.573750 | 566.153998 | within gate | 17 | 59.647059 | 9.235294 |
+| replace-leaf-rebuild-small | cli | 500 | 73252.127000 | 73059.573000 | -192.554000 | 0.764000 | 389.550000 | within gate | 273 | 112.542125 | 9.608059 |
+| rewrite-guarded-hit | cli | 500 | 52725.238000 | 52789.221000 | 63.983000 | 68.338000 | 26.362619 | five-pair clear | 379 | -142.591029 | 3.762533 |
+| rewrite-guarded-decline-fallback | cli | 500 | 76996.636000 | 76930.268000 | -66.368000 | -31.228000 | 69.612000 | within gate | 259 | 9.000000 | -32.849421 |
+| rule-rhs-deep-small | cli | 500 | 82414.807000 | 82403.373000 | -11.434000 | 33.826000 | 50.290000 | within gate | 242 | 84.735537 | -8.570248 |
+| part-list | cli | 2000 | 8303.273750 | 8309.954500 | 6.680750 | 13.452000 | 12.362000 | five-pair clear | 2000 | -12.210500 | -0.067000 |
+| appendto-part-outer1000-small | cli | 100 | 2221543.665000 | 2208381.370000 | -13162.295000 | 11705.720000 | 52216.900000 | within gate | 9 | 3539.444444 | 817.777778 |
+| appendto-part-outer1000-large | cli | 200 | 3593125.787500 | 3609440.460000 | 16314.672500 | 30158.250000 | 31228.535000 | within gate | 5 | -78.600000 | 1598.400000 |
+| set-part-fixed100-len100 | cli | 100 | 1264799.220000 | 1264905.315000 | 106.095000 | 744.740000 | 1241.950000 | within gate | 15 | -1572.933333 | 23.200000 |
+| set-part-fixed100-len800 | cli | 100 | 1265541.115000 | 1265271.620000 | -269.495000 | 374.500000 | 832.300000 | within gate | 15 | -2282.733333 | -0.066667 |
+| set-part-fill-small | cli | 200 | 2782272.125000 | 2775223.000000 | -7049.125000 | -618.610000 | 6931.340000 | within gate | 7 | -810.285714 | 14.428571 |
+| set-part-fill-large | cli | 100 | 5576177.180000 | 5576179.145000 | 1.965000 | 71.610000 | 9534.980000 | within gate | 3 | 431.666667 | -29.333333 |
+| resume-argument-twice | resume | 1000 | 92435.560000 | 92023.439500 | -412.120500 | -411.420000 | 91.733000 | within gate | 216 | -290.606481 | -81.995370 |
+| resume-rewrite-exprs | resume | 1000 | 53620.006500 | 52880.877500 | -739.129000 | -575.089000 | 455.967000 | within gate | 372 | -464.395161 | -58.166667 |
+| resume-rewrite-compiled | resume | 1000 | 41666.588000 | 41386.435500 | -280.152500 | -269.920000 | 53.820000 | within gate | 480 | -194.058333 | -49.152083 |
+| resume-cases-spec | resume | 1000 | 69279.739000 | 68756.046000 | -523.693000 | -225.235000 | 308.340000 | within gate | 288 | -184.746528 | -89.895833 |
+| resume-cases-traversal | resume | 1000 | 67165.320500 | 66773.674500 | -391.646000 | -291.364000 | 215.705000 | within gate | 297 | -320.491582 | -46.282828 |
+| resume-position-traversal | resume | 1000 | 70630.085500 | 70424.924000 | -205.161500 | -191.881000 | 47.456000 | within gate | 283 | -264.095406 | -55.328622 |
+| resume-count-traversal | resume | 1000 | 61692.050000 | 61226.722500 | -465.327500 | -388.948000 | 110.334000 | within gate | 324 | -481.685185 | 3.212963 |
+| resume-cases-shared | resume | 1000 | 113620.778000 | 113051.999000 | -568.779000 | -324.382000 | 398.904000 | within gate | 176 | -378.596591 | -105.250000 |
+| table-iterator-symbol | cli | 2000 | 332.244250 | 331.462000 | -0.782250 | -0.236000 | 0.694500 | within gate | 2000 | 2.151500 | 0.134000 |
+| symbol-ownvalue-read | cli | 2000 | 2207.371250 | 2208.273000 | 0.901750 | 2.654500 | 3.083500 | within gate | 2000 | -0.413500 | -0.076500 |
+| symbol-ownvalue-guarded-read | cli | 2000 | 3565.869500 | 3566.482250 | 0.612750 | 0.756000 | 1.782935 | within gate | 2000 | 1.543500 | 0.091500 |
+| block-symbol-only-repeat | cli | 2000 | 10686.779500 | 10687.812500 | 1.033000 | 1.610500 | 5.343390 | within gate | 1871 | 0.046499 | -0.042223 |
+| downvalue-exact-hit | cli | 2000 | 5748.938250 | 5748.026250 | -0.912000 | 0.005500 | 2.874469 | within gate | 2000 | 0.056500 | -0.164500 |
+| downvalue-exact-miss | cli | 2000 | 996.996250 | 998.871250 | 1.875000 | 2.473500 | 0.954500 | five-pair clear | 2000 | -0.129500 | 0.066000 |
+| downvalue-pattern-miss | cli | 2000 | 996.630000 | 994.873250 | -1.756750 | 0.015000 | 2.409500 | within gate | 2000 | 0.201000 | -0.090500 |
+| downvalue-guarded-hit | cli | 2000 | 27572.348500 | 27587.405250 | 15.056750 | 15.235500 | 13.786174 | layout | 725 | -1.063448 | 15.897931 |
+| downvalue-guarded-decline-fallback | cli | 2000 | 20872.127000 | 20863.666000 | -8.461000 | -8.041000 | 10.436064 | within gate | 958 | -3.997912 | -8.049061 |
+| upvalue-guarded-hit | cli | 2000 | 33861.201750 | 33877.536750 | 16.335000 | 17.297000 | 16.930601 | layout | 590 | 1.384746 | 16.161017 |
+| subvalue-unguarded-hit | cli | 2000 | 20066.847000 | 20083.619500 | 16.772500 | 18.800500 | 10.033424 | layout | 996 | 0.775100 | 15.954819 |
+| subvalue-unguarded-miss | cli | 2000 | 11281.875000 | 11281.762250 | -0.112750 | 0.474500 | 5.640937 | within gate | 1772 | -2.790632 | -0.081828 |
+| subvalue-guarded-hit | cli | 2000 | 35219.006250 | 35235.797750 | 16.791500 | 19.012000 | 17.609503 | five-pair clear | 567 | -1.525573 | 15.809524 |
+| default-unguarded-hit | cli | 2000 | 17194.081500 | 17193.202000 | -0.879500 | -0.388000 | 8.597041 | within gate | 1163 | 2.098022 | 0.023216 |
+| default-unguarded-miss | cli | 2000 | 12784.498250 | 12784.744000 | 0.245750 | 0.748500 | 6.392249 | within gate | 1564 | 1.758312 | -0.000639 |
+| default-guarded-hit | cli | 2000 | 22369.053750 | 22370.068000 | 1.014250 | 1.776500 | 11.184527 | within gate | 894 | -0.272931 | 0.243848 |
+| downvalue-exact-miss-repeat | cli | 2000 | 776.103250 | 774.987000 | -1.116250 | -0.718500 | 1.011500 | within gate | 2000 | -0.277000 | 0.146500 |
+| downvalue-pattern-miss-repeat | cli | 2000 | 775.882750 | 774.967500 | -0.915250 | -0.840500 | 1.583500 | within gate | 2000 | 2.478000 | 0.127000 |
+| upvalue-candidates-tiny | cli | 2000 | 31382.072500 | 31397.943000 | 15.870500 | 22.716000 | 15.691036 | five-pair clear | 637 | 27.547881 | 16.368917 |
+| upvalue-candidates-wide-small | cli | 20 | 3063778.600000 | 3064415.125000 | 636.525000 | 1277.900000 | 1531.889300 | within gate | 6 | 2717.000000 | -144.000000 |
+| upvalue-candidates-wide-large | cli | 20 | 6120786.700000 | 6120497.350000 | -289.350000 | -242.600000 | 3060.393350 | within gate | 3 | -15556.666667 | 322.333333 |
+| sort-default-wide | cli | 20 | 342466.125000 | 342455.350000 | -10.775000 | 13.900000 | 171.233063 | within gate | 20 | 196.950000 | -1.450000 |
+| sortby-default-wide | cli | 20 | 7428850.475000 | 7429178.350000 | 327.875000 | 584.300000 | 3714.425238 | within gate | 2 | 1196.500000 | 2.500000 |
+| reversesort-default-wide | cli | 20 | 340971.425000 | 341120.850000 | 149.425000 | 199.350000 | 170.485713 | five-pair clear | 20 | 129.950000 | 8.350000 |
+| keysort-default-wide | cli | 20 | 8264084.925000 | 8277484.725000 | 13399.800000 | 13674.350000 | 4132.042463 | layout | 2 | 3386.500000 | 12745.000000 |
+| keysortby-default-wide | cli | 20 | 15446431.500000 | 15460379.700000 | 13948.200000 | 14018.000000 | 7723.215750 | layout | 1 | -11438.000000 | 12690.000000 |
+| sort-symbol-default-width4000 | cli | 10 | 5883121.000000 | 5883679.900000 | 558.900000 | 2394.100000 | 3027.800000 | within gate | 3 | -18508.000000 | -1051.666667 |
+| sort-symbol-default-width16000 | cli | 10 | 23360114.300000 | 23364503.300000 | 4389.000000 | 7098.200000 | 13813.400000 | within gate | 1 | 32727.000000 | 3313.000000 |
+| valueq-undefined-symbol-definitions-2000 | cli | 20 | 5837.600000 | 3800.850000 | -2036.750000 | 153.250000 | 2415.100000 | within gate | 20 | 611.300000 | 11.150000 |
+| valueq-undefined-symbol-definitions-8000 | cli | 20 | 5379.100000 | 4703.225000 | -675.875000 | 8825.300000 | 18449.600000 | within gate | 20 | -14507.200000 | 47.700000 |
+| resume-s5-down-rhs | resume | 100 | 59661.755000 | 59276.975000 | -384.780000 | -218.630000 | 439.370000 | within gate | 100 | -171.070000 | -46.620000 |
+| resume-s5-down-guard | resume | 100 | 114703.365000 | 113853.130000 | -850.235000 | -793.940000 | 157.850000 | within gate | 100 | -685.150000 | -99.210000 |
+| resume-s5-sub-rhs | resume | 100 | 65180.195000 | 65013.085000 | -167.110000 | 99.910000 | 456.710000 | within gate | 100 | -30.500000 | 4.230000 |
+| resume-s5-sub-guard | resume | 100 | 122241.500000 | 121550.970000 | -690.530000 | -564.160000 | 279.960000 | within gate | 100 | -630.000000 | -172.330000 |
+| resume-s5-up-rhs | resume | 100 | 64631.400000 | 64187.525000 | -443.875000 | -302.400000 | 175.350000 | within gate | 100 | -188.870000 | -1.500000 |
+| resume-s5-up-guard | resume | 100 | 137831.575000 | 137557.395000 | -274.180000 | 50.240000 | 614.550000 | within gate | 100 | -553.460000 | -101.020000 |
+| resume-s5-default-rhs | resume | 100 | 109032.285000 | 108714.670000 | -317.615000 | -296.210000 | 54.516143 | within gate | 100 | -674.100000 | -68.860000 |
+| resume-s5-default-guard | resume | 100 | 103761.165000 | 103088.515000 | -672.650000 | -446.100000 | 412.810000 | within gate | 100 | -355.750000 | 53.920000 |
+| resume-s5-default-fallback-rhs | resume | 100 | 64296.295000 | 63936.345000 | -359.950000 | -269.870000 | 175.730000 | within gate | 100 | -165.340000 | -73.150000 |
+| resume-s5-set | resume | 100 | 56352.530000 | 56107.175000 | -245.355000 | -239.230000 | 115.330000 | within gate | 100 | -262.070000 | -43.930000 |
+| resume-s5-upset | resume | 100 | 67112.955000 | 66921.455000 | -191.500000 | -130.900000 | 212.430000 | within gate | 100 | -434.920000 | -45.240000 |
+| resume-s5-tagset | resume | 100 | 66962.440000 | 66492.740000 | -469.700000 | -402.660000 | 200.340000 | within gate | 100 | -569.030000 | -48.630000 |
+| resume-s5-rule-rhs | resume | 100 | 71416.015000 | 71027.470000 | -388.545000 | -298.170000 | 148.290000 | within gate | 100 | -705.220000 | -33.120000 |
+| resume-s5-rule-lhs | resume | 100 | 90446.650000 | 90036.565000 | -410.085000 | -376.740000 | 62.060000 | within gate | 100 | -478.780000 | -20.990000 |
+| resume-s5-destructure | resume | 100 | 76167.455000 | 75875.245000 | -292.210000 | -280.700000 | 181.190000 | within gate | 100 | -308.870000 | -58.600000 |
+| resume-s5-lhs-twice | resume | 100 | 98205.795000 | 97921.440000 | -284.355000 | -167.660000 | 465.560000 | within gate | 100 | -516.340000 | -69.500000 |
+| resume-s5-own-rhs | resume | 100 | 51668.855000 | 51324.880000 | -343.975000 | -315.040000 | 36.310000 | within gate | 100 | -389.470000 | -42.160000 |
+| resume-s5-destructure-twice | resume | 100 | 119011.350000 | 118371.515000 | -639.835000 | -553.040000 | 114.030000 | within gate | 100 | -601.220000 | -39.000000 |
+| resume-s5-rule-lhs-twice | resume | 100 | 122254.760000 | 121828.270000 | -426.490000 | -398.440000 | 135.880000 | within gate | 100 | -258.140000 | -45.920000 |
+| matcher-single-tiny | cli | 1000 | 11596.254500 | 11590.422000 | -5.832500 | 12.977000 | 28.498000 | within gate | 1000 | 16.401000 | -0.064000 |
+| matcher-single-wide-large | cli | 1000 | 1510897.821000 | 1510870.317000 | -27.504000 | -26.410000 | 755.448911 | within gate | 13 | 236.000000 | 19.615385 |
+| replacepart-deep-path-small | cli | 500 | 40847.071000 | 40854.492000 | 7.421000 | 10.972000 | 20.423535 | within gate | 489 | -8.216769 | 0.292434 |
+| replacepart-wide-rule-list | cli | 20 | 5972682.975000 | 5972653.525000 | -29.450000 | -27.000000 | 2986.341487 | within gate | 3 | 483.666667 | 5.000000 |
+| replacepart-guarded-hit | cli | 500 | 15781.701000 | 15789.912000 | 8.211000 | 17.234000 | 22.954000 | within gate | 500 | -22.108000 | -0.032000 |
+| replacepart-guarded-decline-fallback | cli | 500 | 18182.808000 | 18181.972000 | -0.836000 | 2.580000 | 9.091404 | within gate | 500 | 4.184000 | 0.224000 |
+| stringreplace-single-literal-unguarded | cli | 200 | 37210.632500 | 37178.645000 | -31.987500 | -3.340000 | 79.655000 | within gate | 200 | -11.050000 | 6.575000 |
+| stringreplace-pattern-unguarded | cli | 500 | 31674.727000 | 31645.617000 | -29.110000 | -4.776000 | 78.038000 | within gate | 500 | 30.596000 | 0.306000 |
+| stringreplace-guarded-hit | cli | 500 | 21617.114000 | 21618.958000 | 1.844000 | 22.108000 | 33.232000 | within gate | 500 | -5.676000 | 8.496000 |
+| stringreplace-guarded-decline-fallback | cli | 500 | 25873.772000 | 25872.843000 | -0.929000 | 13.304000 | 26.758000 | within gate | 500 | -22.634000 | 8.564000 |
+| resume-s6-rhs-single | resume | 100 | 74430.035000 | 74131.050000 | -298.985000 | -278.810000 | 139.830000 | within gate | 100 | -254.290000 | -28.490000 |
+| resume-s6-rhs-twice | resume | 100 | 105805.155000 | 105251.520000 | -553.635000 | -477.920000 | 254.790000 | within gate | 100 | -105.070000 | -41.010000 |
+| resume-s6-cross-type | resume | 100 | 124963.400000 | 124439.365000 | -524.035000 | -508.470000 | 62.481700 | within gate | 100 | 19.100000 | -112.760000 |
+| resume-s6-readonly-twice | resume | 100 | 215928.025000 | 214913.820000 | -1014.205000 | -799.790000 | 233.660000 | within gate | 92 | -836.467391 | -134.684783 |
+| resume-s6-string | resume | 100 | 85093.060000 | 84715.895000 | -377.165000 | -309.410000 | 240.990000 | within gate | 100 | -335.120000 | -90.060000 |
+| association-part-key-read-width4000 | cli | 40 | 14195.412500 | 14176.087500 | -19.325000 | 4.100000 | 63.925000 | within gate | 40 | 136.375000 | 7.150000 |
+| association-part-positional-read-width4000 | cli | 40 | 9962.387500 | 10102.212500 | 139.825000 | 211.550000 | 199.675000 | five-pair clear | 40 | -11.325000 | 2.950000 |
+| association-part-key-read-width32000 | cli | 40 | 14228.125000 | 14393.862500 | 165.737500 | 541.500000 | 512.550000 | five-pair clear | 40 | -11.850000 | 3.475000 |
+| association-part-positional-read-width32000 | cli | 40 | 10113.875000 | 10128.175000 | 14.300000 | 80.000000 | 72.550000 | five-pair clear | 40 | -220.025000 | 1.650000 |
+| appendto-list-incremental-small | cli | 250 | 10542.906000 | 10580.224000 | 37.318000 | 76.932000 | 75.220000 | five-pair clear | 250 | -58.372000 | 7.412000 |
+| appendto-list-incremental-large | cli | 500 | 10582.087000 | 10568.918000 | -13.169000 | -6.788000 | 8.388000 | within gate | 500 | 99.456000 | 8.524000 |
+| association-set-key-incremental-small | cli | 100 | 17250.290000 | 17262.420000 | 12.130000 | 13.370000 | 37.240000 | within gate | 100 | -8.700000 | 17.100000 |
+| association-set-key-incremental-large | cli | 200 | 17202.400000 | 17228.635000 | 26.235000 | 34.910000 | 20.900000 | five-pair clear | 200 | -15.800000 | 14.675000 |
+| resume-s7-list-part | resume | 100 | 84017.685000 | 83723.995000 | -293.690000 | -204.980000 | 155.370000 | within gate | 100 | -211.450000 | -97.530000 |
+| resume-s7-assoc-part | resume | 100 | 85812.445000 | 85467.940000 | -344.505000 | -164.720000 | 264.640000 | within gate | 100 | -385.740000 | -114.030000 |
+| resume-s7-assoc-call | resume | 100 | 75995.890000 | 75637.225000 | -358.665000 | -151.050000 | 242.980000 | within gate | 100 | -182.040000 | -32.100000 |
+| resume-s7-assoc-call-thrice | resume | 100 | 159808.725000 | 159021.280000 | -787.445000 | -717.880000 | 79.904363 | within gate | 100 | -345.450000 | -233.490000 |
+| resume-s7-held-twice | resume | 100 | 126220.165000 | 125501.510000 | -718.655000 | -633.500000 | 100.340000 | within gate | 100 | 21.280000 | -38.310000 |
+| resume-s7-held-rhs | resume | 100 | 96077.380000 | 95725.810000 | -351.570000 | -255.940000 | 128.200000 | within gate | 100 | -159.350000 | 4.470000 |
+| resume-s7-associate-argument | resume | 100 | 79210.335000 | 78822.170000 | -388.165000 | -312.340000 | 160.210000 | within gate | 100 | -315.630000 | -90.590000 |
+| resume-s7-keydrop-argument | resume | 100 | 76038.115000 | 75739.840000 | -298.275000 | -284.830000 | 90.000000 | within gate | 100 | -376.020000 | -22.290000 |
+| resume-s7-associate-target | resume | 100 | 265005.315000 | 264409.650000 | -595.665000 | -538.410000 | 132.502657 | within gate | 75 | -156.826667 | -133.893333 |
+| resume-s7-keydrop-target | resume | 100 | 264078.310000 | 263533.290000 | -545.020000 | -409.360000 | 163.840000 | within gate | 75 | -364.200000 | -70.333333 |
+| resume-s7-associate-held | resume | 100 | 100565.500000 | 99900.005000 | -665.495000 | -347.940000 | 573.640000 | within gate | 100 | -159.150000 | -132.400000 |
+| resume-s7-keydrop-held | resume | 100 | 107610.790000 | 107144.200000 | -466.590000 | -332.900000 | 139.500000 | within gate | 100 | -284.060000 | -103.780000 |
+| association-set-part-key-investigation | cli | 100 | 14578.950000 | 14612.840000 | 33.890000 | 39.410000 | 32.720000 | five-pair clear | 100 | 37.310000 | 32.420000 |
+| table-count-null | cli | 8 | 1946809.375000 | 1946430.812500 | -378.562500 | -335.250000 | 973.404688 | within gate | 8 | -261.875000 | 21.500000 |
+| replaceall-wide-no-match | cli | 400 | 826521.338750 | 826509.180000 | -12.158750 | -8.125000 | 413.260669 | within gate | 24 | -30.166667 | 0.000000 |
+| replaceall-leaf-rebuild-small | cli | 500 | 66356.557000 | 66502.396000 | 145.839000 | 297.914000 | 1090.976000 | within gate | 301 | -1078.574751 | 0.538206 |
+| replaceall-guarded-hit-small | cli | 500 | 78620.093000 | 78692.164000 | 72.071000 | 118.016000 | 88.536000 | five-pair clear | 254 | 41.653543 | 26.826772 |
+| replace-rule-list-decline | cli | 500 | 51002.660000 | 50937.263000 | -65.397000 | 38.336000 | 162.584000 | within gate | 392 | -77.673469 | -17.446429 |
+| replacerepeated-guarded-small | cli | 500 | 371900.045000 | 372206.601000 | 306.556000 | 339.448000 | 185.950023 | layout | 53 | 247.226415 | 254.660377 |
+| replaceat-small | cli | 500 | 35176.003000 | 35165.078000 | -10.925000 | 13.452000 | 35.424000 | within gate | 500 | -44.482000 | 15.924000 |
+| memberq-wide-no-match | cli | 400 | 2179340.603750 | 2179335.473750 | -5.130000 | -3.262500 | 1089.670302 | within gate | 9 | -242.666667 | 12.333333 |
+| freeq-wide-no-match | cli | 400 | 2245020.208750 | 2245085.517500 | 65.308750 | 113.620000 | 1122.510104 | within gate | 8 | 79.875000 | -6.875000 |
+| count-wide-match | cli | 400 | 2159852.697500 | 2159937.147500 | 84.450000 | 230.547500 | 1079.926349 | within gate | 9 | -278.333333 | -17.111111 |
+| count-guarded-small | cli | 500 | 50033.107000 | 50004.106000 | -29.001000 | 20.426000 | 91.724000 | within gate | 399 | 217.679198 | 20.182957 |
+| position-small-match | cli | 500 | 22917.753000 | 22926.341000 | 8.588000 | 74.762000 | 163.414000 | within gate | 500 | -168.156000 | 40.556000 |
+| resume-s8-replaceall-node | resume | 100 | 110148.525000 | 109470.960000 | -677.565000 | -448.150000 | 465.010000 | within gate | 100 | -473.270000 | -120.090000 |
+| resume-s8-replaceall-atom | resume | 100 | 97195.280000 | 96550.590000 | -644.690000 | -501.050000 | 189.360000 | within gate | 100 | -487.470000 | -115.410000 |
+| resume-s8-replaceall-twice | resume | 100 | 165647.180000 | 165277.480000 | -369.700000 | -313.350000 | 195.920000 | within gate | 100 | -386.250000 | -219.070000 |
+| resume-s8-repeated-guard | resume | 100 | 104043.275000 | 103823.985000 | -219.290000 | -191.010000 | 63.890000 | within gate | 100 | -47.290000 | -100.430000 |
+| resume-s8-replace-decline | resume | 100 | 112322.800000 | 112090.070000 | -232.730000 | -157.450000 | 128.860000 | within gate | 100 | -267.240000 | -31.840000 |
+| resume-s8-replace-both | resume | 100 | 157542.525000 | 157778.305000 | 235.780000 | 439.040000 | 424.470000 | five-pair clear | 100 | 121.600000 | -166.540000 |
+| resume-s8-replaceat-guard | resume | 100 | 109432.905000 | 109165.735000 | -267.170000 | -260.430000 | 54.716453 | within gate | 100 | -269.530000 | -62.590000 |
+| resume-s8-count-target | resume | 100 | 63007.480000 | 62730.875000 | -276.605000 | -154.880000 | 122.660000 | within gate | 100 | -616.680000 | -117.340000 |
+| resume-s8-count-pattern | resume | 100 | 61600.795000 | 61399.910000 | -200.885000 | -182.470000 | 30.800397 | within gate | 100 | -140.640000 | -34.880000 |
+| resume-s8-memberq-target | resume | 100 | 63742.945000 | 63544.840000 | -198.105000 | -90.440000 | 236.040000 | within gate | 100 | -216.130000 | -2.010000 |
+| resume-s8-memberq-pattern | resume | 100 | 62491.200000 | 62290.600000 | -200.600000 | -164.200000 | 162.640000 | within gate | 100 | -549.280000 | -42.100000 |
+| resume-s8-freeq-target | resume | 100 | 65186.020000 | 64929.550000 | -256.470000 | -200.330000 | 167.500000 | within gate | 100 | -261.940000 | -17.500000 |
+| resume-s8-freeq-pattern | resume | 100 | 63866.680000 | 63656.325000 | -210.355000 | -179.010000 | 129.320000 | within gate | 100 | -124.640000 | -48.870000 |
+| resume-s8-count-level | resume | 100 | 78986.915000 | 78351.510000 | -635.405000 | -521.350000 | 119.600000 | within gate | 100 | -360.650000 | -57.880000 |
+| resume-s8-count-guard-twice | resume | 100 | 130205.760000 | 129697.845000 | -507.915000 | -456.740000 | 466.650000 | within gate | 100 | -276.970000 | -51.990000 |
+| resume-s8-position-target | resume | 100 | 72936.195000 | 72767.905000 | -168.290000 | 36.090000 | 310.830000 | within gate | 100 | -155.190000 | -27.050000 |
+| resume-s8-position-pattern | resume | 100 | 74472.725000 | 74273.480000 | -199.245000 | -64.140000 | 550.200000 | within gate | 100 | -162.340000 | -115.420000 |
+| resume-s8-position-level | resume | 100 | 87486.150000 | 86947.190000 | -538.960000 | -381.150000 | 223.260000 | within gate | 100 | -238.960000 | -80.980000 |
+| resume-s8-position-guard-twice | resume | 100 | 157403.085000 | 156896.325000 | -506.760000 | -364.260000 | 142.590000 | within gate | 100 | -424.650000 | -255.920000 |
+| catch-no-throw | cli | 500 | 3979.106000 | 3981.155000 | 2.049000 | 17.544000 | 25.370000 | within gate | 500 | 4.844000 | 0.104000 |
+| catch-throw-untagged | cli | 500 | 7890.946000 | 7891.772000 | 0.826000 | 9.102000 | 15.804000 | within gate | 500 | -2.726000 | -0.204000 |
+| catch-throw-tagged-hit | cli | 500 | 9148.460000 | 9142.022000 | -6.438000 | 0.448000 | 9.004000 | within gate | 500 | -23.426000 | -0.132000 |
+| catch-throw-pattern-hit | cli | 500 | 16043.060000 | 16041.994000 | -1.066000 | 1.138000 | 8.021530 | within gate | 500 | 1.350000 | -0.466000 |
+| checkabort-no-abort | cli | 500 | 11037.326000 | 11052.664000 | 15.338000 | 24.952000 | 54.772000 | within gate | 500 | -128.684000 | 22.774000 |
+| checkabort-caught | cli | 500 | 14454.889000 | 14394.924000 | -59.965000 | -41.388000 | 60.590000 | within gate | 500 | -52.936000 | 22.284000 |
+| abortprotect-clean | cli | 500 | 9292.258000 | 9302.330000 | 10.072000 | 14.292000 | 7.212000 | layout | 500 | 3.372000 | 16.204000 |
+| assert-disabled | cli | 500 | 6764.171000 | 6755.142000 | -9.029000 | 50.350000 | 114.940000 | within gate | 500 | 8.310000 | 1.364000 |
+| assert-enabled-true | cli | 500 | 13581.513000 | 13617.590000 | 36.077000 | 71.936000 | 55.380000 | five-pair clear | 500 | 19.906000 | -0.306000 |
+| check-clean | cli | 500 | 9570.134000 | 9586.581000 | 16.447000 | 21.218000 | 7.952000 | layout | 500 | 6.616000 | 15.834000 |
+| check-message-fallback | cli | 500 | 17613.847000 | 17595.196000 | -18.651000 | -6.664000 | 16.214000 | within gate | 500 | -40.558000 | -0.218000 |
+| quiet-clean | cli | 500 | 9295.975000 | 9312.488000 | 16.513000 | 20.080000 | 4.647988 | layout | 500 | -4.622000 | 15.930000 |
+| withcleanup-two-arg | cli | 500 | 13316.260000 | 13326.357000 | 10.097000 | 11.072000 | 6.658130 | layout | 500 | 9.934000 | 16.904000 |
+| catchexceptions-caught | cli | 500 | 28408.866000 | 28379.630000 | -29.236000 | 36.372000 | 140.060000 | within gate | 500 | 101.768000 | 0.046000 |
+| resume-s9-checkabort-option | resume | 100 | 64542.010000 | 64310.035000 | -231.975000 | -119.060000 | 245.720000 | within gate | 100 | -79.170000 | -38.080000 |
+| resume-s9-checkabort-primary | resume | 100 | 63169.785000 | 62866.970000 | -302.815000 | -239.400000 | 73.200000 | within gate | 100 | -365.580000 | -13.310000 |
+| resume-s9-checkabort-abort | resume | 100 | 64746.570000 | 64590.210000 | -156.360000 | -73.870000 | 109.860000 | within gate | 100 | -271.740000 | -18.660000 |
+| resume-s9-abortprotect-body | resume | 100 | 56179.800000 | 56053.605000 | -126.195000 | -112.820000 | 141.700000 | within gate | 100 | -305.430000 | -1.300000 |
+| resume-s9-checkabort-pending-fallback | resume | 100 | 81550.285000 | 81016.420000 | -533.865000 | -476.550000 | 195.230000 | within gate | 100 | -746.050000 | -75.710000 |
+| resume-s9-checkabort-fallback | resume | 100 | 66392.135000 | 66005.090000 | -387.045000 | -289.000000 | 107.150000 | within gate | 100 | -304.700000 | -16.870000 |
+| resume-s9-assert-function-lookup | resume | 100 | 66058.730000 | 65743.420000 | -315.310000 | -233.950000 | 103.360000 | within gate | 100 | -489.530000 | -11.570000 |
+| resume-s9-assert-test | resume | 100 | 60822.505000 | 60442.070000 | -380.435000 | -308.920000 | 139.380000 | within gate | 100 | 12.770000 | -55.450000 |
+| resume-s9-assert-handler | resume | 100 | 65590.020000 | 65268.910000 | -321.110000 | -201.270000 | 207.380000 | within gate | 100 | -315.610000 | -28.390000 |
+| resume-s9-check-body | resume | 100 | 56289.185000 | 55984.495000 | -304.690000 | -235.810000 | 154.710000 | within gate | 100 | -316.400000 | -48.790000 |
+| resume-s9-quiet-body | resume | 100 | 66469.180000 | 66114.285000 | -354.895000 | -206.850000 | 156.350000 | within gate | 100 | -295.760000 | -75.110000 |
+| resume-s9-quiet-check-fallback | resume | 100 | 86135.745000 | 85294.385000 | -841.360000 | -721.850000 | 124.730000 | within gate | 100 | -470.920000 | -114.320000 |
+| resume-s9-cleanup-init | resume | 100 | 57483.285000 | 57379.240000 | -104.045000 | 98.200000 | 314.680000 | within gate | 100 | -144.310000 | -47.550000 |
+| resume-s9-cleanup-primary | resume | 100 | 57282.945000 | 56649.820000 | -633.125000 | -627.220000 | 46.560000 | within gate | 100 | -189.700000 | -46.920000 |
+| resume-s9-cleanup-finalizer | resume | 100 | 57418.365000 | 57036.505000 | -381.860000 | -308.980000 | 147.050000 | within gate | 100 | -122.710000 | 2.270000 |
+| resume-s9-cleanup-three-phase | resume | 100 | 116239.545000 | 115313.685000 | -925.860000 | -710.880000 | 434.290000 | within gate | 100 | -1318.480000 | -101.380000 |
+| resume-s9-catchexceptions-body | resume | 100 | 85790.515000 | 85378.740000 | -411.775000 | -201.650000 | 361.230000 | within gate | 100 | -294.680000 | 0.230000 |
+| resume-s9-catchexceptions-guard | resume | 100 | 89098.125000 | 88530.955000 | -567.170000 | -440.930000 | 326.210000 | within gate | 100 | -301.120000 | -31.410000 |
+| resume-s9-catchexceptions-match | resume | 100 | 94334.585000 | 93666.895000 | -667.690000 | -533.250000 | 164.090000 | within gate | 100 | -409.510000 | -98.960000 |
+| resume-s9-catchexceptions-suspended-match | resume | 100 | 121458.280000 | 120835.595000 | -622.685000 | -551.670000 | 96.940000 | within gate | 100 | -891.130000 | -105.710000 |
+| resume-s9-catchexceptions-suspended-guard | resume | 100 | 116143.915000 | 115636.635000 | -507.280000 | -479.570000 | 203.350000 | within gate | 100 | -302.830000 | -34.220000 |
+| resume-s9-catchexceptions-rhs | resume | 100 | 82110.855000 | 81671.330000 | -439.525000 | -410.130000 | 58.800000 | within gate | 100 | -218.170000 | -54.260000 |
+| resume-s9-catch-body | resume | 100 | 58248.130000 | 57937.600000 | -310.530000 | -298.790000 | 61.180000 | within gate | 100 | -385.110000 | -33.490000 |
+| resume-s9-catch-form | resume | 100 | 63145.825000 | 62874.240000 | -271.585000 | -238.090000 | 49.790000 | within gate | 100 | -177.200000 | -47.200000 |
+| resume-s9-catch-form-guard | resume | 100 | 91638.140000 | 91278.875000 | -359.265000 | -211.210000 | 509.250000 | within gate | 100 | -340.430000 | -98.160000 |
+| resume-s9-catch-bypassing-form | resume | 100 | 80519.485000 | 80115.325000 | -404.160000 | -344.860000 | 125.350000 | within gate | 100 | -130.330000 | -45.050000 |
+| resume-s9-catch-bypassing-guard | resume | 100 | 102121.260000 | 101527.080000 | -594.180000 | -470.500000 | 222.100000 | within gate | 100 | -358.650000 | -95.440000 |
+| catch-throw | cli | 500 | 7893.346000 | 7889.254000 | -4.092000 | -3.560000 | 5.020000 | within gate | 500 | -8.614000 | -0.482000 |
+| catch-tagged-throw | cli | 500 | 9144.704000 | 9117.485000 | -27.219000 | -15.108000 | 16.908000 | within gate | 500 | -43.660000 | -0.118000 |
+| catch-form-pattern | cli | 500 | 16035.041000 | 16039.257000 | 4.216000 | 4.780000 | 8.017520 | within gate | 500 | -4.764000 | 0.054000 |
+| checkabort-abort | cli | 500 | 14385.414000 | 14425.729000 | 40.315000 | 57.520000 | 32.930000 | five-pair clear | 500 | -82.100000 | 23.376000 |
+| abortprotect-small | cli | 500 | 3854.210000 | 3838.280000 | -15.930000 | -6.066000 | 35.100000 | within gate | 500 | 28.706000 | -0.614000 |
+| withcleanup-small | cli | 500 | 4702.640000 | 4686.832000 | -15.808000 | 0.674000 | 16.512000 | within gate | 500 | 24.448000 | 0.704000 |
+| withcleanup-init | cli | 500 | 5502.632000 | 5501.503000 | -1.129000 | 6.398000 | 49.054000 | within gate | 500 | 11.300000 | 0.180000 |
+| check-no-message | cli | 500 | 4039.483000 | 4055.056000 | 15.573000 | 21.844000 | 29.742000 | within gate | 500 | -14.828000 | -0.680000 |
+| quiet-no-message | cli | 500 | 3861.923000 | 3853.147000 | -8.776000 | -1.666000 | 19.010000 | within gate | 500 | 22.104000 | -0.698000 |
+| catchexceptions-handler | cli | 500 | 19652.039000 | 19659.276000 | 7.237000 | 16.962000 | 20.366000 | within gate | 500 | 47.708000 | 0.668000 |
+| catchexceptions-no-throw | cli | 500 | 3822.693000 | 3820.735000 | -1.958000 | 2.362000 | 9.734000 | within gate | 500 | 12.488000 | 0.614000 |
+| assert-off | cli | 500 | 6739.234000 | 6808.622000 | 69.388000 | 107.550000 | 59.924000 | five-pair clear | 500 | -0.692000 | 0.708000 |
+| function-slot-apply | cli | 500 | 10737.573000 | 10753.696000 | 16.123000 | 20.624000 | 10.112000 | layout | 500 | 3.156000 | 15.390000 |
+| function-named-apply | cli | 500 | 12556.314000 | 12577.429000 | 21.115000 | 25.294000 | 6.278157 | layout | 500 | 5.078000 | 15.644000 |
+| composition-apply | cli | 500 | 27799.329000 | 27845.196000 | 45.867000 | 47.678000 | 13.899665 | layout | 500 | 1.480000 | 39.828000 |
+| association-apply | cli | 500 | 6933.350000 | 6939.518000 | 6.168000 | 8.378000 | 4.580000 | five-pair clear | 500 | -0.108000 | -0.084000 |
+| failure-raw-property | cli | 500 | 12574.124000 | 12621.169000 | 47.045000 | 47.936000 | 23.062000 | five-pair clear | 500 | 46.032000 | -0.726000 |
+| failure-list-property | cli | 500 | 14430.618000 | 14438.335000 | 7.717000 | 10.852000 | 7.215309 | five-pair clear | 500 | -7.214000 | 7.518000 |
+| failure-missing-property | cli | 500 | 16155.354000 | 16148.943000 | -6.411000 | 5.934000 | 26.622000 | within gate | 500 | 44.344000 | 8.636000 |
+| success-raw-property | cli | 500 | 9177.698000 | 9154.468000 | -23.230000 | 4.692000 | 32.916000 | within gate | 500 | -23.212000 | 0.000000 |
+| failure-message-property | cli | 500 | 20852.462000 | 20888.391000 | 35.929000 | 53.720000 | 36.196000 | five-pair clear | 500 | -10.474000 | -0.766000 |
+| failure-message-delayed | cli | 500 | 33077.354000 | 33119.496000 | 42.142000 | 65.958000 | 41.504000 | five-pair clear | 500 | 20.180000 | 16.254000 |
+| failure-styled-message | cli | 500 | 24061.457000 | 24070.924000 | 9.467000 | 25.230000 | 27.528000 | within gate | 500 | -5.490000 | 0.060000 |
+| failure-tag-fallback | cli | 500 | 9515.299000 | 9522.057000 | 6.758000 | 10.270000 | 9.910000 | five-pair clear | 500 | 2.104000 | -0.278000 |
+| enclose-message-handler | cli | 500 | 41492.591000 | 41554.464000 | 61.873000 | 80.012000 | 28.106000 | five-pair clear | 482 | -17.547718 | 32.089212 |
+| confirm-failure-message | cli | 500 | 51841.747000 | 51833.656000 | -8.091000 | 37.534000 | 47.922000 | within gate | 385 | 18.898701 | 37.345455 |
+| resume-g15-parameters | resume | 100 | 72588.505000 | 72426.100000 | -162.405000 | -139.250000 | 313.080000 | within gate | 100 | -410.800000 | -49.310000 |
+| resume-g15-template | resume | 100 | 72366.615000 | 71914.000000 | -452.615000 | -440.570000 | 95.820000 | within gate | 100 | -433.840000 | -122.140000 |
+| resume-g15-styled | resume | 100 | 83055.955000 | 82740.380000 | -315.575000 | -180.190000 | 320.130000 | within gate | 100 | -185.010000 | -48.320000 |
+| resume-g15-raw-failure | resume | 100 | 62124.355000 | 61836.010000 | -288.345000 | -277.330000 | 84.580000 | within gate | 100 | -278.980000 | -82.790000 |
+| resume-g15-raw-success | resume | 100 | 58856.660000 | 58529.830000 | -326.830000 | -326.280000 | 29.428330 | within gate | 100 | 237.000000 | -45.220000 |
+| resume-g15-projection-value | resume | 100 | 97341.485000 | 96586.295000 | -755.190000 | -426.450000 | 729.930000 | within gate | 100 | -390.920000 | -68.850000 |
+| resume-g15-enclose | resume | 100 | 73398.555000 | 72974.075000 | -424.480000 | -374.830000 | 98.670000 | within gate | 100 | -214.490000 | -113.290000 |
+| resume-g15-confirm | resume | 100 | 119261.235000 | 118614.710000 | -646.525000 | -539.520000 | 111.310000 | within gate | 100 | -349.180000 | -220.500000 |
+| lhs-set-literal | cli | 2000 | 10581.110500 | 10580.907250 | -0.203250 | 0.250500 | 5.290555 | within gate | 1890 | -2.369841 | 0.001587 |
+| lhs-set-ownvalue-arg | cli | 2000 | 13057.333000 | 13055.937000 | -1.396000 | -1.343000 | 6.528667 | within gate | 1531 | 1.777923 | 0.187459 |
+| lhs-set-head-eval | cli | 2000 | 13061.444750 | 13061.464500 | 0.019750 | 0.028000 | 6.530722 | within gate | 1531 | -0.379491 | -0.258654 |
+| lhs-setdelayed-pattern | cli | 2000 | 21444.621750 | 21444.597250 | -0.024500 | 0.721500 | 10.722311 | within gate | 932 | -0.788627 | -0.035408 |
+| lhs-upset | cli | 2000 | 12822.049750 | 12823.343750 | 1.294000 | 1.308500 | 6.411025 | within gate | 1559 | -0.298910 | 0.127646 |
+| lhs-tagset | cli | 2000 | 12589.471500 | 12590.559250 | 1.087750 | 1.740000 | 6.294736 | within gate | 1588 | -0.165617 | 0.166877 |
+| lhs-set-unset | cli | 2000 | 24981.649500 | 24981.445000 | -0.204500 | -0.190500 | 12.490825 | within gate | 800 | 3.452500 | 0.011250 |
+| lhs-set-cycle-recovery | cli | 2000 | 12092.751250 | 12092.893500 | 0.142250 | 1.501000 | 6.046376 | within gate | 1653 | -3.090744 | 0.212341 |
+| set-ownvalue | cli | 2000 | 3968.176500 | 3967.828000 | -0.348500 | 2.094500 | 3.519000 | within gate | 2000 | -0.030500 | 0.001000 |
+| lhs-arg-cycle | resume | 100 | 274055.770000 | 273568.145000 | -487.625000 | -230.980000 | 314.090000 | within gate | 72 | -516.291667 | -45.555556 |
+| lhs-arg-value | resume | 100 | 278521.935000 | 279026.655000 | 504.720000 | 680.100000 | 550.050000 | five-pair clear | 71 | -265.014085 | -45.492958 |
+| lhs-head-cycle | resume | 100 | 301121.790000 | 301092.115000 | -29.675000 | 176.860000 | 214.230000 | within gate | 66 | -145.969697 | -123.393939 |
+| lhs-head-value | resume | 100 | 302857.070000 | 302632.610000 | -224.460000 | -132.890000 | 205.060000 | within gate | 66 | -694.984848 | -123.469697 |
+| lhs-pattern-cycle | resume | 100 | 285418.660000 | 285007.855000 | -410.805000 | -406.670000 | 142.709330 | within gate | 70 | -1.371429 | -49.185714 |
+| lhs-pattern-value | resume | 100 | 291171.330000 | 290490.515000 | -680.815000 | -485.060000 | 679.820000 | within gate | 68 | -246.838235 | -46.235294 |
+| lhs-after-prior-cycle | resume | 100 | 319754.905000 | 318937.215000 | -817.690000 | -70.010000 | 916.230000 | within gate | 62 | -794.403226 | -42.419355 |
+| lhs-after-prior-value | resume | 100 | 323295.450000 | 322506.365000 | -789.085000 | -586.210000 | 261.190000 | within gate | 61 | -1315.475410 | -45.918033 |
+| lhs-twice-cycle | resume | 100 | 318370.345000 | 317786.855000 | -583.490000 | -339.020000 | 413.550000 | within gate | 62 | -89.193548 | -48.241935 |
+| lhs-twice-value | resume | 100 | 323868.945000 | 323312.920000 | -556.025000 | -439.680000 | 215.440000 | within gate | 61 | -688.967213 | -47.245902 |
+| c1-all-guard | resume | 100 | 97140.760000 | 96600.990000 | -539.770000 | -539.180000 | 102.360000 | within gate | 100 | -518.780000 | -55.790000 |
+| c1-all-test | resume | 100 | 107654.905000 | 107233.110000 | -421.795000 | -320.190000 | 200.090000 | within gate | 100 | -872.610000 | 4.670000 |
+| c1-all-guard-value | resume | 100 | 127792.500000 | 127015.935000 | -776.565000 | -633.010000 | 357.800000 | within gate | 100 | -381.630000 | -145.700000 |
+| c1-all-two-guards | resume | 100 | 165840.265000 | 164833.890000 | -1006.375000 | -872.210000 | 255.330000 | within gate | 100 | -1098.650000 | -215.440000 |
+| c1-unheld-guard | resume | 100 | 96847.580000 | 96444.940000 | -402.640000 | -296.890000 | 230.220000 | within gate | 100 | -491.770000 | -61.760000 |
+| c1-unheld-test | resume | 100 | 107621.455000 | 107411.900000 | -209.555000 | -4.820000 | 445.020000 | within gate | 100 | -455.700000 | 4.150000 |
+| c1-unheld-guard-value | resume | 100 | 127515.055000 | 127198.400000 | -316.655000 | -170.920000 | 392.360000 | within gate | 100 | -579.240000 | -99.090000 |
+| c1-unheld-two-guards | resume | 100 | 165964.235000 | 165054.190000 | -910.045000 | -908.940000 | 175.350000 | within gate | 100 | -432.800000 | -215.280000 |
+| c1-replaceall-atom | cli | 500 | 22631.033000 | 22640.198000 | 9.165000 | 10.420000 | 11.315516 | within gate | 500 | 4.096000 | 12.370000 |
+| c1-replaceall-unheld-atom | cli | 500 | 22591.207000 | 22604.304000 | 13.097000 | 18.494000 | 11.295604 | five-pair clear | 500 | -2.808000 | 12.262000 |
+| c1-replaceall-rule-rhs-deep-small | cli | 500 | 73434.330000 | 73422.542000 | -11.788000 | -8.356000 | 36.717165 | within gate | 272 | -40.121324 | -3.974265 |
+| c1-replaceall-rewrite-guarded-hit | cli | 500 | 43289.696000 | 43293.424000 | 3.728000 | 5.096000 | 21.644848 | within gate | 462 | 6.896104 | 7.272727 |
+| c1-replaceall-rewrite-guarded-decline-fallback | cli | 500 | 65943.297000 | 65924.269000 | -19.028000 | -17.916000 | 32.971649 | within gate | 303 | 4.085809 | -23.689769 |
+
+
+Pointer controls execute the same hashed images under Valgrind with the locally selected libc implementation. Immutable operands are verified against read-only ELF offsets; interned operands are read at the comparison breakpoint. The independent native PMU controls supply the residual comparison. Heap addresses shown belong to those Valgrind executions, not a claimed native ptrace capture. The recorded low 12 address bits are actual argument bits, so the test is independent of ASLR high bits. The condition is `(p1 | p2) & 0xfff > 0xfe0`, for comparisons with 1 < length < 32. This OR heuristic can select the scalar fallback even when neither pointer individually approaches the page end. Complete offsets, bytes, counts and instruction PCs: [continuation-2/final3/page-layout-attribution](../../../.temp/brief-626/continuation-2/final3/page-layout-attribution) and [continuation-2/final3/function-diffs-all](../../../.temp/brief-626/continuation-2/final3/function-diffs-all).
+
+
+| Label | Predicted layout instructions/iteration | Native five-pair delta | Residual | Unchanged threshold |
+|---|---|---|---|---|
+| lazy-map-realize-small | 128 | 133.804690 | 5.804690 | 100.388300 |
+| lazy-nestlist-realize-small | 128 | 141.684120 | 13.684120 | 80.221150 |
+| lazy-drop-realize-small | 128 | 149.205780 | 21.205780 | 144.330600 |
+| optionvalue-three-no-input | 8 | 8.176280 | 0.176280 | 4.749193 |
+| dot-three-no-input | 384 | 383.691560 | -0.308440 | 124.975963 |
+| lazy-depth-map-eight-8 | 1024 | 1042.443000 | 18.443000 | 472.656844 |
+| lazy-depth-take-map-8 | 128 | 120.611600 | -7.388400 | 68.424769 |
+| lazy-depth-fold-through-source-8 | 576 | 554.466800 | -21.533200 | 290.384030 |
+| lazy-depth-map-eight-64 | 8192 | 8510.352800 | 318.352800 | 3649.375159 |
+| lazy-depth-take-map-64 | 1024 | 1011.103600 | -12.896400 | 496.533070 |
+| lazy-depth-fold-through-source-64 | 33280 | 34510.226000 | 1230.226000 | 16602.758096 |
+| lazy-depth-map-eight-256 | 32768 | 33085.600400 | 317.600400 | 14546.269977 |
+| lazy-depth-take-map-256 | 4096 | 4099.812400 | 3.812400 | 1962.856469 |
+| lazy-depth-fold-through-source-256 | 526336 | 542194.349000 | 15858.349000 | 261656.480173 |
+| downvalue-pattern-hit | 16 | 16.064860 | 0.064860 | 6.823565 |
+| module-local | 32 | 31.857050 | -0.142950 | 11.219222 |
+| block-local | 16 | 15.956140 | -0.043860 | 7.231464 |
+| deletecases-wide-association-no-match | 12800 | 12872.928125 | 72.928125 | 3751.048150 |
+| downvalue-guarded-hit | 16 | 14.438800 | -1.561200 | 13.786375 |
+| upvalue-guarded-hit | 16 | 17.429000 | 1.429000 | 16.929559 |
+| subvalue-unguarded-hit | 16 | 15.918400 | -0.081600 | 10.033373 |
+| keysort-default-wide | 12800 | 12475.970000 | -324.030000 | 4132.547520 |
+| keysortby-default-wide | 12800 | 12499.570000 | -300.430000 | 7723.721085 |
+| replacerepeated-guarded-small | 248 | 255.923200 | 7.923200 | 185.938463 |
+| abortprotect-clean | 16 | 20.310000 | 4.310000 | 8.562000 |
+| check-clean | 16 | 13.378400 | -2.621600 | 13.244000 |
+| quiet-clean | 16 | 17.003600 | 1.003600 | 9.644000 |
+| withcleanup-two-arg | 16 | 13.508400 | -2.491600 | 12.468000 |
+| function-slot-apply | 16 | 10.883600 | -5.116400 | 9.700000 |
+| function-named-apply | 16 | 14.711600 | -1.288400 | 6.278331 |
+| composition-apply | 40 | 37.264400 | -2.735600 | 13.901068 |
+
+<details>
+<summary>Every critical compared-pointer pair, on both final-source arms</summary>
+
+
+| Label | Bytes | Compared texts | Base pointers / predicate / counts | Candidate pointers / predicate / counts | Equal calls/iteration | Delta instructions/iteration |
+|---|---|---|---|---|---|---|
+| lazy-map-realize-small | 4 | List / List | N=1: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=2<br>N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=34<br>N=2: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=3<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=50 | N=1: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=2<br>N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=34<br>N=2: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=3<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=50 | 17 | 128 |
+| lazy-nestlist-realize-small | 4 | List / List | N=1: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=2<br>N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=34<br>N=2: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=3<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=50 | N=1: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=2<br>N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=34<br>N=2: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=3<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=50 | 17 | 128 |
+| lazy-drop-realize-small | 4 | List / List | N=1: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=2<br>N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=34<br>N=2: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=3<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=50 | N=1: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=2<br>N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=34<br>N=2: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=3<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=50 | 17 | 128 |
+| optionvalue-three-no-input | 4 | List / List | N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=8<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=9 | N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=8<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=9 | 1 | 8 |
+| dot-three-no-input | 4 | List / List | N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=116<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=164 | N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=116<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=164 | 48 | 384 |
+| lazy-depth-map-eight-8 | 4 | List / List | N=1: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=2<br>N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=262<br>N=2: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=3<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=390 | N=1: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=2<br>N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=262<br>N=2: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=3<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=390 | 129 | 1024 |
+| lazy-depth-take-map-8 | 4 | List / List | N=1: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=2<br>N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=38<br>N=2: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=3<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=54 | N=1: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=2<br>N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=38<br>N=2: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=3<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=54 | 17 | 128 |
+| lazy-depth-fold-through-source-8 | 4 | List / List | N=1: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=2<br>N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=152<br>N=2: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=3<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=224 | N=1: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=2<br>N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=152<br>N=2: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=3<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=224 | 73 | 576 |
+| lazy-depth-map-eight-64 | 4 | List / List | N=1: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=2<br>N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=2054<br>N=2: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=3<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=3078 | N=1: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=2<br>N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=2054<br>N=2: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=3<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=3078 | 1025 | 8192 |
+| lazy-depth-take-map-64 | 4 | List / List | N=1: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=2<br>N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=262<br>N=2: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=3<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=390 | N=1: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=2<br>N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=262<br>N=2: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=3<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=390 | 129 | 1024 |
+| lazy-depth-fold-through-source-64 | 4 | List / List | N=1: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=2<br>N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=8328<br>N=2: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=3<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=12488 | N=1: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=2<br>N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=8328<br>N=2: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=3<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=12488 | 4161 | 33280 |
+| lazy-depth-map-eight-256 | 4 | List / List | N=1: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=2<br>N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=8198<br>N=2: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=3<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=12294 | N=1: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=2<br>N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=8198<br>N=2: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=3<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=12294 | 4097 | 32768 |
+| lazy-depth-take-map-256 | 4 | List / List | N=1: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=2<br>N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=1030<br>N=2: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=3<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=1542 | N=1: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=2<br>N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=1030<br>N=2: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=3<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=1542 | 513 | 4096 |
+| lazy-depth-fold-through-source-256 | 4 | List / List | N=1: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=2<br>N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=131592<br>N=2: ELF+0x85da28, ELF+0x85da28; low12 0xa28/0xa28; OR=0xa28>0xfe0=False; count=3<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=197384 | N=1: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=2<br>N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=131592<br>N=2: ELF+0x849a78, ELF+0x849a78; low12 0xa78/0xa78; OR=0xa78>0xfe0=False; count=3<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=197384 | 65793 | 526336 |
+| downvalue-pattern-hit | 4 | List / List | N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=6<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=8 | N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=6<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=8 | 2 | 16 |
+| module-local | 4 | List / List | N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=8<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=10 | N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=8<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=10 | 2 | 16 |
+| module-local | 7 | Default / Default | N=1: memory@0x33104a20178, ELF+0x88bc8f; low12 0x178/0xc8f; OR=0xdff>0xfe0=False; count=4<br>N=2: memory@0x2f2ac220178, ELF+0x88bc8f; low12 0x178/0xc8f; OR=0xdff>0xfe0=False; count=6 | N=1: memory@0x487bb620178, ELF+0x877ef7; low12 0x178/0xef7; OR=0xfff>0xfe0=True; count=4<br>N=2: memory@0x44604220178, ELF+0x877ef7; low12 0x178/0xef7; OR=0xfff>0xfe0=True; count=6 | 2 | 16 |
+| block-local | 4 | List / List | N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=8<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=10 | N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=8<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=10 | 2 | 16 |
+| deletecases-wide-association-no-match | 4 | Rule / Rule | N=1: ELF+0x880cac, ELF+0x85da2c; low12 0xcac/0xa2c; OR=0xeac>0xfe0=False; count=6406<br>N=2: ELF+0x880cac, ELF+0x85da2c; low12 0xcac/0xa2c; OR=0xeac>0xfe0=False; count=8006 | N=1: ELF+0x86cd8c, ELF+0x849a7c; low12 0xd8c/0xa7c; OR=0xffc>0xfe0=True; count=6406<br>N=2: ELF+0x86cd8c, ELF+0x849a7c; low12 0xd8c/0xa7c; OR=0xffc>0xfe0=True; count=8006 | 1600 | 12800 |
+| downvalue-guarded-hit | 4 | List / List | N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=6<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=8 | N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=6<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=8 | 2 | 16 |
+| upvalue-guarded-hit | 4 | List / List | N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=6<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=8 | N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=6<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=8 | 2 | 16 |
+| subvalue-unguarded-hit | 4 | List / List | N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=6<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=8 | N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=6<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=8 | 2 | 16 |
+| keysort-default-wide | 4 | Rule / Rule | N=1: ELF+0x880cac, ELF+0x85da2c; low12 0xcac/0xa2c; OR=0xeac>0xfe0=False; count=6406<br>N=2: ELF+0x880cac, ELF+0x85da2c; low12 0xcac/0xa2c; OR=0xeac>0xfe0=False; count=8006 | N=1: ELF+0x86cd8c, ELF+0x849a7c; low12 0xd8c/0xa7c; OR=0xffc>0xfe0=True; count=6406<br>N=2: ELF+0x86cd8c, ELF+0x849a7c; low12 0xd8c/0xa7c; OR=0xffc>0xfe0=True; count=8006 | 1600 | 12800 |
+| keysortby-default-wide | 4 | Rule / Rule | N=1: ELF+0x880cac, ELF+0x85da2c; low12 0xcac/0xa2c; OR=0xeac>0xfe0=False; count=6406<br>N=2: ELF+0x880cac, ELF+0x85da2c; low12 0xcac/0xa2c; OR=0xeac>0xfe0=False; count=8006 | N=1: ELF+0x86cd8c, ELF+0x849a7c; low12 0xd8c/0xa7c; OR=0xffc>0xfe0=True; count=6406<br>N=2: ELF+0x86cd8c, ELF+0x849a7c; low12 0xd8c/0xa7c; OR=0xffc>0xfe0=True; count=8006 | 1600 | 12800 |
+| replacerepeated-guarded-small | 4 | List / List | N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=68<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=101 | N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=68<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=101 | 33 | 264 |
+| replacerepeated-guarded-small | 5 | False / False | N=1: ELF+0x8666e3, ELF+0x8a2b0a; low12 0x6e3/0xb0a; OR=0xfeb>0xfe0=True; count=2<br>N=1: ELF+0x88b78c, ELF+0x8a2b0a; low12 0x78c/0xb0a; OR=0xf8e>0xfe0=False; count=1<br>N=2: ELF+0x8666e3, ELF+0x8a2b0a; low12 0x6e3/0xb0a; OR=0xfeb>0xfe0=True; count=3<br>N=2: ELF+0x88b78c, ELF+0x8a2b0a; low12 0x78c/0xb0a; OR=0xf8e>0xfe0=False; count=1 | N=1: ELF+0x852773, ELF+0x88f192; low12 0x773/0x192; OR=0x7f3>0xfe0=False; count=2<br>N=1: ELF+0x8779f4, ELF+0x88f192; low12 0x9f4/0x192; OR=0x9f6>0xfe0=False; count=1<br>N=2: ELF+0x852773, ELF+0x88f192; low12 0x773/0x192; OR=0x7f3>0xfe0=False; count=3<br>N=2: ELF+0x8779f4, ELF+0x88f192; low12 0x9f4/0x192; OR=0x9f6>0xfe0=False; count=1 | 1 | -8 |
+| replacerepeated-guarded-small | 11 | RuleDelayed / RuleDelayed | N=1: ELF+0x8887ad, ELF+0x8a2bdc; low12 0x7ad/0xbdc; OR=0xffd>0xfe0=True; count=8<br>N=2: ELF+0x8887ad, ELF+0x8a2bdc; low12 0x7ad/0xbdc; OR=0xffd>0xfe0=True; count=10 | N=1: ELF+0x874a15, ELF+0x88f264; low12 0xa15/0x264; OR=0xa75>0xfe0=False; count=8<br>N=2: ELF+0x874a15, ELF+0x88f264; low12 0xa15/0x264; OR=0xa75>0xfe0=False; count=10 | 2 | -8 |
+| abortprotect-clean | 4 | List / List | N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=6<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=8 | N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=6<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=8 | 2 | 16 |
+| check-clean | 4 | List / List | N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=6<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=8 | N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=6<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=8 | 2 | 16 |
+| quiet-clean | 4 | List / List | N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=6<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=8 | N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=6<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=8 | 2 | 16 |
+| withcleanup-two-arg | 4 | List / List | N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=6<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=8 | N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=6<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=8 | 2 | 16 |
+| function-slot-apply | 4 | List / List | N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=6<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=8 | N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=6<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=8 | 2 | 16 |
+| function-named-apply | 4 | List / List | N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=6<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=8 | N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=6<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=8 | 2 | 16 |
+| composition-apply | 4 | List / List | N=1: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=10<br>N=2: ELF+0x880cb8, ELF+0x85da28; low12 0xcb8/0xa28; OR=0xeb8>0xfe0=False; count=14 | N=1: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=10<br>N=2: ELF+0x86cd98, ELF+0x849a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=14 | 4 | 32 |
+| composition-apply | 5 | Times / Times | N=1: ELF+0x8677d0, ELF+0x8a2b52; low12 0x7d0/0xb52; OR=0xfd2>0xfe0=False; count=1<br>N=1: ELF+0x883d3c, ELF+0x8a2b52; low12 0xd3c/0xb52; OR=0xf7e>0xfe0=False; count=3<br>N=2: ELF+0x8677d0, ELF+0x8a2b52; low12 0x7d0/0xb52; OR=0xfd2>0xfe0=False; count=1<br>N=2: ELF+0x883d3c, ELF+0x8a2b52; low12 0xd3c/0xb52; OR=0xf7e>0xfe0=False; count=4 | N=1: ELF+0x853860, ELF+0x88f1da; low12 0x860/0x1da; OR=0x9fa>0xfe0=False; count=1<br>N=1: ELF+0x86ffa4, ELF+0x88f1da; low12 0xfa4/0x1da; OR=0xffe>0xfe0=True; count=3<br>N=2: ELF+0x853860, ELF+0x88f1da; low12 0x860/0x1da; OR=0x9fa>0xfe0=False; count=1<br>N=2: ELF+0x86ffa4, ELF+0x88f1da; low12 0xfa4/0x1da; OR=0xffe>0xfe0=True; count=4 | 1 | 8 |
+
+</details>
+
+For module-local, the additional interned operand is read at the actual libc breakpoint. Its matching immutable literal is independently verified against the hashed ELF. The Default/Default seven-byte pair has counts4→6 in both arms: base low12 0x178/0xc8f gives OR0xdff (fast), candidate0x178/0xef7 gives OR0xfff (fallback). Eight extra instructions per comparison account for16/iteration, in addition to the16 from the literal List pair. The native five-pair delta31.85705 is covered by the exact32 prediction. Both actual memory addresses are retained above; their high ASLR bits differ between N controls.
+
+Whole-program libc call counts can differ by startup hash probes. The proof uses the exact critical comparison-pair N/2N increases; it does not falsely claim all whole-program call counts are equal. All raw counts and noncritical groups remain in the artifacts.
+
+**Copies.** The calibrated census completes 768 checked profiles across 192 ordinary labels. Both memcpy/memmove whole counts and slopes are at base. The positive calibration is 16,011 / 31,011 / 61,011 calls at 500 / 1,000 / 2,000, giving slopes 30 / 30 for `__memcpy_avx_unaligned_erms`. Full per-label data: [continuation-2/final3/copy-census/comparison.json](../../../.temp/brief-626/continuation-2/final3/copy-census/comparison.json).
+
+**Stack shapes.** All 44 debug/release fits meet base with zero residuals; 528 candidate invocations use the supplied 22-shape probe.
+
+
+| Shape | Base | Candidate | Delta | Maximum residual |
+|---|---|---|---|---|
+| debug/peel | 19024.0 | 19024.0 | 0.0 | 0.0 |
+| debug/plus | 34912.0 | 34912.0 | 0.0 | 0.0 |
+| debug/sub | 29376.0 | 29376.0 | 0.0 | 0.0 |
+| debug/up | 28064.0 | 28064.0 | 0.0 | 0.0 |
+| debug/guarded | 35840.0 | 35840.0 | 0.0 | 0.0 |
+| debug/rhs-guard | 49152.0 | 49152.0 | 0.0 | 0.0 |
+| debug/replace-guard | 64880.0 | 64880.0 | 0.0 | 0.0 |
+| debug/replaceall-guard | 63216.0 | 63216.0 | 0.0 | 0.0 |
+| debug/count-guard | 74064.0 | 74064.0 | 0.0 | 0.0 |
+| debug/position-guard | 85648.0 | 85648.0 | 0.0 | 0.0 |
+| debug/catch-body | 50528.0 | 50528.0 | 0.0 | 0.0 |
+| debug/checkabort-body | 52720.0 | 52720.0 | 0.0 | 0.0 |
+| debug/abortprotect-body | 49904.0 | 49904.0 | 0.0 | 0.0 |
+| debug/cleanup-body | 50880.0 | 50880.0 | 0.0 | 0.0 |
+| debug/check-body | 50432.0 | 50432.0 | 0.0 | 0.0 |
+| debug/quiet-body | 50304.0 | 50304.0 | 0.0 | 0.0 |
+| debug/catchexceptions-body | 49872.0 | 49872.0 | 0.0 | 0.0 |
+| debug/function-body | 49312.0 | 49312.0 | 0.0 | 0.0 |
+| debug/status-body | 50816.0 | 50816.0 | 0.0 | 0.0 |
+| debug/message-body | 50816.0 | 50816.0 | 0.0 | 0.0 |
+| debug/lhs-arg | 57376.0 | 57376.0 | 0.0 | 0.0 |
+| debug/replaceall-rhs | 52720.0 | 52720.0 | 0.0 | 0.0 |
+| release/peel | 7344.0 | 7344.0 | 0.0 | 0.0 |
+| release/plus | 13792.0 | 13792.0 | 0.0 | 0.0 |
+| release/sub | 13168.0 | 13168.0 | 0.0 | 0.0 |
+| release/up | 11456.0 | 11456.0 | 0.0 | 0.0 |
+| release/guarded | 14240.0 | 14240.0 | 0.0 | 0.0 |
+| release/rhs-guard | 17920.0 | 17920.0 | 0.0 | 0.0 |
+| release/replace-guard | 26768.0 | 26768.0 | 0.0 | 0.0 |
+| release/replaceall-guard | 24640.0 | 24640.0 | 0.0 | 0.0 |
+| release/count-guard | 28416.0 | 28416.0 | 0.0 | 0.0 |
+| release/position-guard | 33632.0 | 33632.0 | 0.0 | 0.0 |
+| release/catch-body | 19280.0 | 19280.0 | 0.0 | 0.0 |
+| release/checkabort-body | 20864.0 | 20864.0 | 0.0 | 0.0 |
+| release/abortprotect-body | 19280.0 | 19280.0 | 0.0 | 0.0 |
+| release/cleanup-body | 19280.0 | 19280.0 | 0.0 | 0.0 |
+| release/check-body | 18736.0 | 18736.0 | 0.0 | 0.0 |
+| release/quiet-body | 18688.0 | 18688.0 | 0.0 | 0.0 |
+| release/catchexceptions-body | 19472.0 | 19472.0 | 0.0 | 0.0 |
+| release/function-body | 19312.0 | 19312.0 | 0.0 | 0.0 |
+| release/status-body | 20432.0 | 20432.0 | 0.0 | 0.0 |
+| release/message-body | 20432.0 | 20432.0 | 0.0 | 0.0 |
+| release/lhs-arg | 18048.0 | 18048.0 | 0.0 | 0.0 |
+| release/replaceall-rhs | 21488.0 | 21488.0 | 0.0 | 0.0 |
+
+
+**Resumed chains.** All eight bounds start at the actual erased typed-adapter entry and include every live descendant, return address and a separate 128-byte redzone allowance. All 16 context64/recs64 profiles have finite helper graphs and zero unknown states. Every helper, actual PC/SP state and maximum chain is retained in [continuation-2/final3/resume-chains](../../../.temp/brief-626/continuation-2/final3/resume-chains).
+
+
+| Workload | Base bytes | Candidate bytes | Delta |
+|---|---|---|---|
+| c1-all-guard | 6640 | 6640 | 0 |
+| c1-all-test | 6640 | 6640 | 0 |
+| c1-all-guard-value | 14128 | 14128 | 0 |
+| c1-all-two-guards | 11824 | 11824 | 0 |
+| c1-unheld-guard | 6640 | 6640 | 0 |
+| c1-unheld-test | 6640 | 6640 | 0 |
+| c1-unheld-guard-value | 14128 | 14128 | 0 |
+| c1-unheld-two-guards | 11824 | 11824 | 0 |
+
+
+Matched emitted prologue rows that grew: 21. Complete concrete addresses, slots, stores and unmatched specializations are retained. Demangled-name/ordinal matching preserves duplicates but does not independently prove cross-build generic type identity. These outer/helper changes are reported separately from the specified stack bars.
+
+
+| Profile | Function / ordinal | Base bytes | Candidate bytes |
+|---|---|---|---|
+| debug | rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::begin_input_suspension #1 | 232 | 296 |
+| debug | rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames #1 | 6872 | 7080 |
+| debug | rum_runtime::runtime::suspension::core::<impl rum_runtime::runtime::model::session::Session>::drive_resuming_frames #2 | 6872 | 7080 |
+| debug | rum_runtime::runtime::suspension::core::abandon::<impl rum_runtime::runtime::model::session::Session>::drain_abandonment_worklist #1 | 1432 | 1528 |
+| debug | rum_runtime::runtime::suspension::core::queue::FrameQueue::append #1 | 72 | 88 |
+| debug | rum_runtime::runtime::suspension::core::queue::FrameQueue::capacity #1 | 40 | 56 |
+| debug | rum_runtime::runtime::suspension::core::queue::FrameQueue::is_empty #1 | 40 | 56 |
+| debug | rum_runtime::runtime::suspension::core::queue::FrameQueue::pop_front_legacy #1 | 120 | 296 |
+| debug | rum_runtime::runtime::suspension::core::queue::FrameQueue::projected_growth #1 | 264 | 280 |
+| debug | rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back #1 | 200 | 232 |
+| debug | rum_runtime::runtime::suspension::core::queue::FrameQueue::push_back_typed #1 | 168 | 216 |
+| debug | rum_runtime::runtime::suspension::core::queue::FrameQueue::push_evaluation_return #1 | 104 | 184 |
+| debug | rum_runtime::runtime::suspension::core::queue::FrameQueue::push_front #1 | 200 | 232 |
+| debug | rum_runtime::runtime::suspension::core::queue::FrameQueue::push_front_typed #1 | 168 | 216 |
+| debug | rum_runtime::runtime::suspension::core::queue::FrameQueue::storage_bytes #1 | 40 | 56 |
+| debug | rum_runtime::runtime::suspension::core::queue::FrameQueue::visit #1 | 264 | 392 |
+| debug | rum_runtime::runtime::suspension::core::queue::FrameQueue::visit #2 | 280 | 392 |
+| debug | rum_runtime::runtime::suspension::core::queue::FrameQueue::visit #3 | 264 | 392 |
+| debug | rum_runtime::runtime::suspension::core::queue::FrameQueue::visit #4 | 264 | 392 |
+| debug | rum_runtime::runtime::suspension::typed::entry::Entry::abandon #1 | 88 | 136 |
+| release | rum_runtime::runtime::suspension::core::abandon::<impl rum_runtime::runtime::model::session::Session>::drain_abandonment_worklist #1 | 808 | 856 |
+
+
+**Layouts.** All 789 recorded production types meet base, with no missing type. Eight compiler assertions prove Entry24, EntryRef16, queued mixed40, queued legacy32, FrameQueue40, ResumeContext16, SuspendedEvaluation80 and Session2032 bytes. All 96 recorded ContinueToken instantiations remain zero-sized. GDB may select an opaque Entry declaration of raw size0; the compiler assertion supplies its actual24-byte size. [continuation-2/final3/layout-candidate/comparison.json](../../../.temp/brief-626/continuation-2/final3/layout-candidate/comparison.json) retains the entire population.
+
+**Timing.** Four official 120-label panels precede ten interleaved aligned pairs. The only whole-program source change is `rumMicroReps = 2` to `25`; every statement body and iteration count stays fixed. Aligned builds use one codegen unit and exactly `-C llvm-args=-align-all-functions=6`, with source hashes equal to their unaligned arms. All 240 calibration cells lie within 0.5–2x (0.638867418–1.713883209). Timing comes from in-kernel monotonic AbsoluteTiming, with no simultaneous CPU-heavy task. Raw disjoint-above-base timing labels and their equal-instruction/layout/work split, including all ten prior regressions, remain explicit in [continuation-2/final3/aligned-attribution](../../../.temp/brief-626/continuation-2/final3/aligned-attribution).
+
+
+| Label | Base median seconds | Candidate median seconds | Candidate/base | Disjoint above base |
+|---|---|---|---|---|
+| association-part-key-read-width4000 | 0.001933959 | 0.0019778625 | 1.022701360 | False |
+| association-part-key-read-width32000 | 0.0097477545 | 0.009809088 | 1.006292064 | False |
+| association-part-positional-read-width4000 | 3.07435e-05 | 3.05065e-05 | 0.992291053 | False |
+| association-part-positional-read-width32000 | 3.0732e-05 | 3.0481e-05 | 0.991832617 | False |
+| loop-empty | 0.000255764 | 0.0002590885 | 1.012998311 | False |
+| do-count-null | 0.000252144 | 0.000249801 | 0.990707691 | False |
+| do-iterator-null | 5.5334e-05 | 5.69215e-05 | 1.028689413 | False |
+| table-count-null | 7.70515e-05 | 7.58215e-05 | 0.984036651 | False |
+| table-iterator-null | 1.75815e-05 | 1.76435e-05 | 1.003526434 | False |
+| table-iterator-symbol | 6.8225e-06 | 6.6265e-06 | 0.971271528 | False |
+| literal-integer | 8.7898e-05 | 8.975e-05 | 1.021069876 | False |
+| literal-string | 9.2673e-05 | 9.4339e-05 | 1.017977189 | False |
+| symbol-ownvalue-read | 0.00021976 | 0.000218289 | 0.993306334 | False |
+| symbol-ownvalue-guarded-read | 0.0001835765 | 0.0001821735 | 0.992357410 | False |
+| set-ownvalue | 0.0002674175 | 0.000270348 | 1.010958520 | False |
+| list-literal-small | 5.4904e-05 | 5.61605e-05 | 1.022885400 | False |
+| head-list | 0.000925669 | 0.0009283435 | 1.002889262 | False |
+| length-list | 0.0009214965 | 0.000919959 | 0.998331518 | False |
+| part-list | 0.001090193 | 0.001096331 | 1.005630196 | False |
+| sameq-integer | 0.000641566 | 0.000635553 | 0.990627621 | False |
+| sameq-list | 0.0006257255 | 0.0006255565 | 0.999729914 | False |
+| if-true | 0.000707847 | 0.000707854 | 1.000009889 | False |
+| module-local | 0.0007365725 | 0.0007337435 | 0.996159238 | False |
+| module-chain-escape-small | 4.86595e-05 | 4.8778e-05 | 1.002435290 | False |
+| module-chain-escape-large | 9.8951e-05 | 9.86875e-05 | 0.997337066 | False |
+| block-local | 0.000461543 | 0.000467103 | 1.012046548 | False |
+| block-symbol-only-repeat | 0.0003089115 | 0.0003123015 | 1.010974017 | False |
+| block-init-null-repeat | 0.000355638 | 0.000353935 | 0.995211423 | False |
+| block-init-read-repeat | 0.0004083245 | 0.000409867 | 1.003777633 | False |
+| with-local | 0.0004831525 | 0.000480995 | 0.995534536 | False |
+| with-deep-body-small | 0.0017889325 | 0.0018086435 | 1.011018303 | False |
+| table-small | 0.000183432 | 0.0001833635 | 0.999626565 | False |
+| table-iterator-plus | 3.70665e-05 | 3.7473e-05 | 1.010966776 | False |
+| table-iterator-pair-list | 5.97155e-05 | 5.9691e-05 | 0.999589721 | False |
+| do-small | 0.0009028365 | 0.00089732 | 0.993889813 | False |
+| d-nested-sin-small | 0.0053489945 | 0.0053650945 | 1.003009911 | False |
+| downvalue-exact-hit | 0.0007586305 | 0.0007540605 | 0.993975987 | False |
+| downvalue-exact-miss | 0.0005494225 | 0.0005432015 | 0.988677202 | False |
+| downvalue-pattern-hit | 0.000935119 | 0.00094463 | 1.010170898 | False |
+| downvalue-pattern-miss | 0.000285771 | 0.0002841815 | 0.994437854 | False |
+| downvalue-exact-miss-repeat | 0.001222811 | 0.001223769 | 1.000783441 | False |
+| downvalue-pattern-miss-repeat | 0.001270197 | 0.001261087 | 0.992827884 | False |
+| downvalue-guarded-hit | 0.001878752 | 0.00188949 | 1.005715496 | False |
+| downvalue-guarded-decline-fallback | 0.001421069 | 0.0014147805 | 0.995574810 | False |
+| upvalue-guarded-hit | 0.0023772675 | 0.002382949 | 1.002389929 | False |
+| subvalue-unguarded-hit | 0.0013865545 | 0.001412294 | 1.018563641 | False |
+| subvalue-unguarded-miss | 0.000777432 | 0.000769563 | 0.989878214 | False |
+| subvalue-guarded-hit | 0.0024311585 | 0.002432806 | 1.000677660 | False |
+| default-unguarded-hit | 0.0012914055 | 0.0012872915 | 0.996814324 | False |
+| default-unguarded-miss | 0.0010676975 | 0.0010658465 | 0.998266363 | False |
+| default-guarded-hit | 0.001656277 | 0.001647064 | 0.994437525 | False |
+| matchq-integer-success | 0.000290988 | 0.000286801 | 0.985611090 | False |
+| matchq-integer-fail | 0.0002963555 | 0.0002923405 | 0.986452082 | False |
+| matcher-single-tiny | 0.000688627 | 0.000692883 | 1.006180414 | False |
+| matcher-single-wide-small | 4.0377e-05 | 4.04405e-05 | 1.001572678 | False |
+| matcher-single-wide-large | 7.919e-05 | 7.94415e-05 | 1.003175906 | False |
+| replaceall-simple | 0.0003620715 | 0.0003604025 | 0.995390413 | False |
+| rule-rhs-deep-small | 0.0029474105 | 0.002950106 | 1.000914532 | False |
+| rewrite-guarded-hit | 0.0017902275 | 0.0018046405 | 1.008050932 | False |
+| rewrite-guarded-decline-fallback | 0.002566545 | 0.0025905895 | 1.009368431 | False |
+| cases-wide-no-match | 0.000147366 | 0.0001465985 | 0.994791879 | False |
+| count-wide-no-match | 0.000138281 | 0.0001379945 | 0.997928132 | False |
+| position-wide-no-match | 0.0001688575 | 0.0001690745 | 1.001285107 | False |
+| deletecases-wide-no-match | 0.0001722595 | 0.0001709455 | 0.992371974 | False |
+| deletecases-wide-association-no-match | 0.000421452 | 0.000418097 | 0.992039426 | False |
+| deletecases-leaf-delete-small | 0.0020951545 | 0.0021850735 | 1.042917599 | True |
+| replace-wide-no-match | 7.8675e-05 | 7.82625e-05 | 0.994756911 | False |
+| replace-leaf-rebuild-small | 0.002557371 | 0.0026625215 | 1.041116639 | False |
+| take-multispec-small | 0.001620338 | 0.001609763 | 0.993473584 | False |
+| replacepart-deep-path-small | 0.0013244445 | 0.001300532 | 0.981945261 | False |
+| replacepart-wide-rule-list | 0.0002895465 | 0.0002875075 | 0.992957953 | False |
+| replacepart-guarded-hit | 0.0005373645 | 0.000535677 | 0.996859673 | False |
+| replacepart-guarded-decline-fallback | 0.0005923245 | 0.000589281 | 0.994861769 | False |
+| string-repeat-small | 0.0001880085 | 0.000185997 | 0.989301016 | False |
+| character-range-small | 0.0001311445 | 0.000130878 | 0.997967890 | False |
+| stringtrim-literal-list-4000 | 0.0006583205 | 0.000664744 | 1.009757405 | False |
+| stringtrim-literal-list-32000 | 0.005074394 | 0.0051235575 | 1.009688546 | False |
+| stringtrim-single-literal-4000 | 0.000645286 | 0.0006372815 | 0.987595423 | False |
+| stringtrim-single-literal-32000 | 0.005088045 | 0.0050590705 | 0.994305377 | False |
+| stringtrim-whitespace-4000 | 0.000635098 | 0.000632819 | 0.996411577 | False |
+| stringtrim-whitespace-32000 | 0.0050365675 | 0.0050379155 | 1.000267643 | False |
+| stringreplace-single-literal-unguarded | 0.000381987 | 0.000386028 | 1.010578894 | False |
+| stringreplace-pattern-unguarded | 0.0010516595 | 0.0010540715 | 1.002293518 | False |
+| stringreplace-guarded-hit | 0.0007108115 | 0.000708801 | 0.997171543 | False |
+| stringreplace-guarded-decline-fallback | 0.0008494005 | 0.0008464195 | 0.996490466 | False |
+| appendto-list-incremental-small | 0.000512076 | 0.0004956135 | 0.967851452 | False |
+| appendto-list-incremental-large | 0.001542787 | 0.0015492355 | 1.004179773 | False |
+| appendto-part-outer1000-small | 0.0022324245 | 0.0021985265 | 0.984815612 | False |
+| appendto-part-outer1000-large | 0.0045044245 | 0.0044721925 | 0.992844369 | False |
+| association-set-key-incremental-small | 0.001439921 | 0.001430254 | 0.993286437 | False |
+| association-set-key-incremental-large | 0.00550957 | 0.005486002 | 0.995722352 | False |
+| association-small-literal-repeat | 0.0007225485 | 0.0007214745 | 0.998513595 | False |
+| merge-nested-small | 0.001092136 | 0.001106827 | 1.013451621 | False |
+| set-part-fixed100-len100 | 0.0001424535 | 0.0001368195 | 0.960450252 | False |
+| set-part-fixed100-len800 | 0.000600052 | 0.000541906 | 0.903098398 | False |
+| set-part-fill-small | 0.0004316395 | 0.00040563 | 0.939742540 | False |
+| set-part-fill-large | 0.00137791 | 0.0012713735 | 0.922682541 | False |
+| upvalue-candidates-tiny | 0.0019303785 | 0.0019322935 | 1.000992033 | False |
+| upvalue-candidates-wide-small | 0.000146302 | 0.0001471035 | 1.005478394 | False |
+| upvalue-candidates-wide-large | 0.00029113 | 0.0002925465 | 1.004865524 | False |
+| sort-callback-small | 0.0001633645 | 0.000163774 | 1.002506665 | False |
+| sort-callback-large | 0.000372302 | 0.0003750395 | 1.007352902 | False |
+| sortby-callback-small | 0.000193842 | 0.0001945905 | 1.003861392 | False |
+| sortby-callback-large | 0.0004338105 | 0.00043883 | 1.011570720 | False |
+| reversesort-callback-small | 0.00016037 | 0.000160581 | 1.001315707 | False |
+| reversesort-callback-large | 0.000358629 | 0.000362082 | 1.009628335 | False |
+| keysort-callback-small | 8.46165e-05 | 8.5347e-05 | 1.008633068 | False |
+| keysort-callback-large | 0.0001878665 | 0.0001892125 | 1.007164662 | False |
+| keysortby-callback-small | 4.5155e-05 | 4.52565e-05 | 1.002247813 | False |
+| keysortby-callback-large | 9.94595e-05 | 0.000100197 | 1.007415078 | False |
+| sort-default-wide | 1.7521e-05 | 1.78945e-05 | 1.021317276 | False |
+| sort-symbol-default-width4000 | 0.0002947565 | 0.0002919425 | 0.990453137 | False |
+| sort-symbol-default-width16000 | 0.001332725 | 0.0013242905 | 0.993671238 | False |
+| sortby-default-wide | 0.0004952575 | 0.000496782 | 1.003078197 | False |
+| reversesort-default-wide | 1.66565e-05 | 1.6857e-05 | 1.012037343 | False |
+| keysort-default-wide | 0.000364979 | 0.0003620855 | 0.992072147 | False |
+| keysortby-default-wide | 0.000868949 | 0.0008714975 | 1.002932853 | False |
+| valueq-undefined-symbol-definitions-2000 | 7.8835e-06 | 7.8315e-06 | 0.993403945 | False |
+| valueq-undefined-symbol-definitions-8000 | 7.825e-06 | 7.7995e-06 | 0.996741214 | False |
+| module-retained-gensym-gc-batch | 6.57535e-05 | 6.73345e-05 | 1.024044347 | False |
+
+Aligned-image instruction classification: 10 selected labels; 6 within the unchanged two-pair native gate; 1 further five-pair clears; 3 exact pointer-layout attributions; 0 unresolved work labels. Within-gate means measured agreement within the stated tolerance, not bitwise equality of stochastic whole-program startup counts. Every selected label has a full signed Callgrind self-cost table and resolved libc instruction PCs using the actual aligned binaries.
+
+
+| Aligned label | Base native slope | Candidate native slope | Maximum paired delta | Threshold | Five-pair delta / threshold | CG main delta | CG libc delta | Classification |
+|---|---|---|---|---|---|---|---|---|
+| downvalue-pattern-hit | 13678.189250 | 13694.127650 | 15.949100 | 6.839095 | 16.025070 / 6.839057 | -1.567715 | 15.725034 | layout |
+| deletecases-leaf-delete-small | 63059.639000 | 63147.919000 | 227.386000 | 278.366000 | not needed | -837.864353 | 3.567823 | within native gate |
+| replace-leaf-rebuild-small | 72944.825000 | 72948.402000 | 402.284000 | 479.406000 | not needed | 1890.054745 | 17.372263 | within native gate |
+| downvalue-exact-hit | 5751.257500 | 5750.492500 | 0.040000 | 2.875629 | not needed | -1.135000 | -0.008000 | within native gate |
+| downvalue-guarded-hit | 27571.091000 | 27587.742000 | 17.402500 | 13.785546 | 16.270600 / 13.785425 | -4.765517 | 15.702069 | layout |
+| downvalue-guarded-decline-fallback | 20800.862000 | 20803.646250 | 2.990000 | 10.400431 | not needed | -0.386056 | -0.176899 | within native gate |
+| upvalue-guarded-hit | 33854.085000 | 33870.727250 | 17.761000 | 16.927042 | 15.507600 / 16.926599 | -2.067797 | 16.503390 | five-pair clear |
+| subvalue-unguarded-hit | 20037.042750 | 20051.948500 | 15.325500 | 10.018521 | 15.754800 / 10.018344 | 1.043086 | 15.646293 | layout |
+| default-unguarded-hit | 17193.348750 | 17192.720250 | -0.225500 | 8.596674 | not needed | 1.485813 | 0.013758 | within native gate |
+| default-unguarded-miss | 12792.851250 | 12792.507250 | 0.542000 | 6.396426 | not needed | -1.472169 | 0.161868 | within native gate |
+
+Aligned binary hashes: base `6095291dffbd252e7413a375270d6bc37c18bcf8d3b64447b2e2cab00b57d5be`, cand `78c4ec249f8825e0bf5ad2c1b0a974449bf375ea7a175c761410dd2545478866`.
+
+
+| Aligned residual label | Layout prediction | Native five-pair delta | Adjusted residual | Unchanged threshold |
+|---|---|---|---|---|
+| downvalue-pattern-hit | 16 | 16.025070 | 0.025070 | 6.839057 |
+| downvalue-guarded-hit | 16 | 16.270600 | 0.270600 | 13.785425 |
+| subvalue-unguarded-hit | 16 | 15.754800 | -0.245200 | 10.018344 |
+
+
+| Aligned label | Bytes | Compared texts | Aligned base pointers / predicate / counts | Aligned candidate pointers / predicate / counts | Equal calls/iteration | Delta instructions/iteration |
+|---|---|---|---|---|---|---|
+| downvalue-pattern-hit | 4 | List / List | N=1: ELF+0x8b9e98, ELF+0x896a7c; low12 0xe98/0xa7c; OR=0xefc>0xfe0=False; count=6<br>N=2: ELF+0x8b9e98, ELF+0x896a7c; low12 0xe98/0xa7c; OR=0xefc>0xfe0=False; count=8 | N=1: ELF+0x8a4d98, ELF+0x881a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=6<br>N=2: ELF+0x8a4d98, ELF+0x881a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=8 | 2 | 16 |
+| downvalue-guarded-hit | 4 | List / List | N=1: ELF+0x8b9e98, ELF+0x896a7c; low12 0xe98/0xa7c; OR=0xefc>0xfe0=False; count=6<br>N=2: ELF+0x8b9e98, ELF+0x896a7c; low12 0xe98/0xa7c; OR=0xefc>0xfe0=False; count=8 | N=1: ELF+0x8a4d98, ELF+0x881a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=6<br>N=2: ELF+0x8a4d98, ELF+0x881a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=8 | 2 | 16 |
+| subvalue-unguarded-hit | 4 | List / List | N=1: ELF+0x8b9e98, ELF+0x896a7c; low12 0xe98/0xa7c; OR=0xefc>0xfe0=False; count=6<br>N=2: ELF+0x8b9e98, ELF+0x896a7c; low12 0xe98/0xa7c; OR=0xefc>0xfe0=False; count=8 | N=1: ELF+0x8a4d98, ELF+0x881a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=6<br>N=2: ELF+0x8a4d98, ELF+0x881a78; low12 0xd98/0xa78; OR=0xff8>0xfe0=True; count=8 | 2 | 16 |
+
+### 7. Stop-loss counters, deviations and open questions
+
+Campaign caps are recorded in [continuation-2/final3/measurement-caps.json](../../../.temp/brief-626/continuation-2/final3/measurement-caps.json). The native instruction campaign is two interleaved pairs for313 labels plus five further pairs for68 initial flags; no extra native pair is selected after seeing a result. The timing cap is four complete official panels and ten aligned pairs, with at most one whole-panel-set repeat if the first calibration fails. The aligned attribution selection is the union of the ten prior flags and all final raw disjoint timing flags, capped by the120-label panel, with two native pairs, at most five further pairs per initial flag, four Callgrind profiles per selected label, and four pointer controls per persistent label.
+
+
+| Progress counter | Final value |
+|---|---|
+| routes_proven | 19 |
+| receipts_kept | 8750 |
+| measurement_bars_met | 1778 |
+| measurement_categories_complete | 7 |
+| implementation_attempts | 3 |
+| compiling_attempts_without_progress | 0 |
+| measurement_evidence_rows | 1779 |
+
+Measurement evidence covers 1779 rows; 1778 meet their category bar. The one raw timing regression remains open, while all required instruction flags have been cleared or attributed. Accepted base calibration 44 is separate.
+
+Three compiling implementation attempts were made in continuation2: the module/driver separation, queue dispatch cleanup, and narrow-facade privacy repair. The first two removed or attributed instruction flags; the third restored all 36 paired compiler controls. No additional mechanism was adopted and no existing phase count, frame field, codec, adapter, public host type, manifest or lockfile changed. The final exact counters and audits are retained in [continuation-2/final-audit.json](../../../.temp/brief-626/continuation-2/final-audit.json) and [continuation-2/final3/state.json](../../../.temp/brief-626/continuation-2/final3/state.json).
+
+The rejection frontier remains a real red gate. The earlier shared abandonment loop returns to950, but also reinstates per-entry optional diagnostic-guard handling on the disabled path. The final source keeps separate loops and leaves the pinned assertion unchanged. The exact nine added RET002 sites and one added RET003 site, plus the scratch control that restores950 before failing the expected stale fingerprints, are in [continuation-2/rejection-difference.json](../../../.temp/brief-626/continuation-2/rejection-difference.json). No claim is made that this test passed.
+
+
+| Rejection kind | Source site | Source text | Reason |
+|---|---|---|---|
+| RET002 | crates/rum-runtime/src/runtime/suspension/core/abandon.rs:105:52 | while let Some((cell, _profile_context)) = suspension.take_front_with_profile() { | method syntax: opaque imported trait candidate std::sync::Arc |
+| RET002 | crates/rum-runtime/src/runtime/suspension/core/abandon.rs:108:42 | self.rollback_capture_output(frame.output_boundary()); | method syntax: method receiver lacks checked nominal/place provenance |
+| RET002 | crates/rum-runtime/src/runtime/suspension/core/abandon.rs:109:26 | let action = frame.abandon(&mut AbandonmentContext {                 session: self,                 reason,             }); | method syntax: method receiver lacks checked nominal/place provenance |
+| RET002 | crates/rum-runtime/src/runtime/suspension/core/abandon.rs:117:24 | if !suspension.is_empty() { | primitive operand proof or exact operator/conversion impl required |
+| RET002 | crates/rum-runtime/src/runtime/suspension/core/abandon.rs:117:25 | if !suspension.is_empty() { | method syntax: prelude trait candidate is_empty cannot be excluded at rum_runtime::runtime::suspension::core::SuspendedEvaluation |
+| RET002 | crates/rum-runtime/src/runtime/suspension/core/abandon.rs:118:51 | suspension.active_stack = self.evaluation_stack.clone(); | method syntax: method receiver lacks checked nominal/place provenance |
+| RET002 | crates/rum-runtime/src/runtime/suspension/core/abandon.rs:119:61 | suspension.guest_form_environment = self.capture_guest_form_environment(); | method syntax: opaque imported trait candidate std::sync::Arc |
+| RET002 | crates/rum-runtime/src/runtime/suspension/core/abandon.rs:120:25 | self.abandonment_worklist.push(suspension); | method syntax: method receiver lacks checked nominal/place provenance |
+| RET002 | crates/rum-runtime/src/runtime/suspension/core/abandon.rs:127:29 | self.abandonment_worklist.push(nested); | method syntax: method receiver lacks checked nominal/place provenance |
+| RET003 | crates/rum-runtime/src/runtime/suspension/core/abandon.rs:125:24 | if matches!(cleanup_outcome, Err(EvalError::InputRequired { .. })) { | unexpanded macro; contents are not resolved Rust |
+
+The detailed rejection-site dump was captured on source attempt2 before the facade-only privacy repair. The abandonment file is byte-identical in attempt3, and the final mandatory rejection test reconfirms960. Source hashes and this distinction are retained in [continuation-2/final3/rejection-continuity.json](../../../.temp/brief-626/continuation-2/final3/rejection-continuity.json).
+
+Native GDB ptrace was denied. Pointer capture used Valgrind local vgdb pipes, without network, register writes or injected guest code. Earlier virtual-PID/symbol/RSP-protocol mistakes, bounded large-trace timeouts and intentionally cancelled incomplete traces remain retained and are not counted as successful controls. Buffered RSP capture validates checksums and ELF literal bytes and collects every required comparison without truncation. The corrected initial-attempt comparison uses the established maximum-paired rule; the earlier mistaken mean-only result is not repeated as a pass. A copy-comparison parser briefly overlapped the first resume-attribution run because its live tool session was not awaited. The owned child was allowed to finish, the collector was intentionally stopped, the 129 valid receipts plus 130th started profile were archived and excluded, and the complete 484-profile resume census was repeated serially. This exceeded the planned 484-start cap by 130 corrective starts (614 actual starts, 484 adopted); the overrun is explicitly recorded in measurement-caps.json. No hardware-counter or timing process overlapped.
+
+The first final artifact audit incorrectly required the aligned candidate manifest to have exactly the unaligned manifest keys. The aligned build intentionally hashes the union with the accepted base manifest:27 extra entries are test TSV inventories and rust-toolchain.toml. Every common value matches. The audit now requires the exact union, verifies every extra file against the final tree, and checks the frozen Rust/manifest hashes unchanged. The original assertion failure is retained verbatim; no runtime oracle or documented gate was changed.
+
+Chain analysis initially stopped before reading any profile because context_reader.py had been omitted when preparing final3. The existing accepted parser was copied byte-for-byte (SHA25612f4083019aca5432a03a9c91d8bfeb580e6c204a635f09d0b73f4ed5d7fa337); only analysis was retried on the same16 profiles. The failed command/log remains in the ledger. No workload, profile or stack bound was altered for this correction.
+
+`suspension/core.rs` is in the architecture-debt size range because it retains separate ordinary and cold enabled driver bodies. That duplication is explicit; the bounded record/context/queue responsibilities remain split into logical modules. The source is compiling and no half-edited production file remains. The source-attempt-2 workspace, receipts, inventories, compiler metadata and runtime observations are preserved separately.
+
+Size assessment: core.rs remains41,988 characters (41,863 before its final test-only helper), with an explicit temporary exception for keeping the independently measured ordinary and cold enabled driver bodies visible in the scoped file. A follow-up split boundary is driver contracts versus ordinary resume versus cold profiled resume; creating sibling suspension driver files is outside this brief’s file fence. session_state.rs is24,334 characters (23,653 before its test block) and remains in the split-plan range: this step only adds enabled teardown, so its future boundaries are session field/state declarations, dispatch-state helpers, and lifecycle/default/drop. profiling/mod.rs, evaluation_cache/profile/source.rs and core/queue.rs remain in the10–20k warning range; engine, budget, contexts, segments, queue storage and insertion policy now live in separate cohesive logical modules under10k each. No unrelated organization change was made.
+
+No git command, network operation or new unsafe was introduced. All generated rum sources use `.rum`. Every old artifact specifically protected by the brief is restored or retained. The tree remains uncommitted for the director.
+
+## Director gate and continuation 3 (2026-10-25) — the types must admit only what the queue holds
+
+**What I reproduced on `final3/cand`, and accept.**
+
+- **Correctness.**
+  - The native workspace: 3 950 passed, 0 failed, 59 ignored. LP01 had
+    3 932.
+  - fmt; typed 24; frame-root 15; resume-context 11; depth 48.
+  - The oracle: 499 + 499, with every receipt executed.
+  - The census in both builds, the compile controls in both builds, and
+    ownership 31.
+  - The rejection census at 960. I updated the pin in place. The
+    derivation in your table is accepted.
+- **Freshness.** All four binaries rebuild hash-equal.
+- **Allocations.** 313 labels, 0 differing.
+- **Instructions.** An 11-label spot check: every delta is within ±0.75%,
+  and none is deterministic. `resume-table` is +50.8 of 19 872, where it
+  used to be +250 to +1 500.
+- **Stack.** All 44 fits equal the base.
+- **Probes.** 414 pairs, whose 29 DIFFs are the known ones (s10 7, f618
+  22). C1 is 6/6.
+
+**What fails.** I accepted the queue's shape in continuation 2. That was
+wrong. The code review finds six defects. The first five are the same kind
+of defect: the types allow a state, and the code relies on that state never
+occurring. S5's lesson applies: a shape that needs an `unreachable!` arm for
+a state the types allow points to the shape nobody tried.
+
+1. **A marker is a variant of the guest `Entry`, but no guest queue ever
+   holds one.**
+   - Markers live only in `ProfileQueue::cells`. They enter only through
+     `ProfileQueue::insert`, and `deprofile` drops them. A `Legacy` or
+     `Mixed` queue can never receive one.
+   - The variant is a leftover. It comes from brief-624's plan for
+     entries inline in the guest queue. Continuation 1's accounting ruling
+     replaced that plan with the marker-free guest queue.
+   - So every arm the compiler then required in guest code handles a state
+     that cannot occur:
+     - `suspension/core.rs:765`,
+       `unreachable!("markers require the enabled driver")`. Only an
+       argument from another module holds it: `LEXICAL_PROFILE_ACTIVE` is
+       never switched off in production. The test support does switch it
+       off.
+     - `core/queue.rs:397`, `unreachable!("markers use explicit insertion")`.
+     - The marker arm of `pop_front_mixed_legacy` (`core/queue.rs:229`).
+     - Seven `ProfileBoundary` arms in `typed/entry.rs`, plus the
+       occurrence oracle's.
+2. **A profiled queue can nest.** `ProfileQueue::guest` is a `FrameQueue`,
+   and `FrameQueue` has a `Profiled` variant. The code guards this in four
+   places:
+   - `profiling/logical/queue.rs:62`,
+     `unreachable!("profiled queues are never nested")`;
+   - `occurrence/suspension.rs:25`,
+     `unreachable!("guest accounting never nests diagnostics")`;
+   - `core/queue.rs:327`, the `Profiled` arm of `append_other`;
+   - `core/queue.rs:346`, in `append_profiled`.
+
+   Five let-else `unreachable!()` sit in `deprofile`, `push_profiled`,
+   `front_profiled` and `pop_profiled` (`:32`, `:363`, `:389`, `:417`,
+   `:429`). They are helpers that take `&mut FrameQueue` when they mean
+   `&mut ProfileQueue`.
+3. **Each driver exists twice, and the two copies agree only because
+   someone keeps them in step.**
+   - `drive_resuming_frames` is `core.rs:736-904`, and
+     `drive_profiled_frames` is `core.rs:907-1085`.
+   - `abandon.rs` likewise has an ordinary abandonment loop and a profiled
+     one.
+   - These copies are what put `core.rs` at 41 988 characters. That is
+     over the 35k architecture-debt line; HEAD has 31 587. Your exception
+     cites my file fence.
+   - Continuation 2 asked that the off path keep the ordinary algorithm
+     verbatim. It did not ask for a second copy of that algorithm. A
+     second copy is a convention that two bodies have to remember.
+4. **Every guest frame has two owners while profiling is on.**
+   - `ProfileQueue::new` clones each entry into a cell.
+   - `push_profiled` clones each frame into the guest queue.
+   - `pop` keeps the two halves paired with an `expect` and a
+     `debug_assert!`.
+   - Both fields are `pub(in crate::runtime)`, so any runtime code can move
+     one half without the other.
+   - As a result, while profiling is on, every queued frame has a
+     different strong count than it has on the off path.
+5. **There are two new compiler warnings.** `Entry` and `EntryRef` were
+   widened to `pub(in crate::runtime)` for the profiling module.
+   `ErasedFrame` is still `pub(in crate::runtime::suspension)`, so the
+   production library raises `private_interfaces` twice. It does so in the
+   lib build, the lib-test build and both feature sets. The oracle log has
+   six warning lines, and gate-625's had zero. The build was warning-free
+   before this step.
+6. **The enabled path costs time linear in a count, or worse, per call.**
+   - `Epoch::open` (`epoch.rs:103`) scans all aggregate rows, and then all
+     records to find the parent.
+   - When `records` is full, it grows by one element with
+     `try_reserve_exact` (`:117`), so nested calls copy quadratically.
+   - `close`, `inspect` and the outcome updates scan the records (`:149`,
+     `:173`, `:183`).
+   - `ProfileQueue::reserve` grows by one cell (`queue.rs:99`), and
+     `insert` scans the cells by id (`:139`).
+   - `return_inserted` calls `VecDeque::remove` inside a loop (`:170`),
+     which is quadratic when many cells are deferred.
+   - The segment stack scans from the bottom for what is normally its top
+     (`segments.rs:151`).
+   - The engine is inert today, but LP03-LP08 put it on every call. Its
+     bookkeeping runs while some interval is being timed, so its cost lands
+     in someone's self time, and that cost grows with recursion depth and
+     with the number of distinct keys. A profiler whose overhead grows with
+     what it measures distorts the measurement.
+
+**The bars.**
+
+1. **The types admit only what the queue holds.**
+   - The guest `Entry` and `EntryRef` return to their three HEAD variants.
+     A marker can be represented only inside the diagnostic structure.
+     Their visibility is only as wide as their users need.
+   - The diagnostic queue holds a guest queue type that has no profiled
+     variant, so nesting cannot be written. The ordinary queue algorithm
+     exists once.
+   - No `unreachable!`, `expect` or `panic!` that LP02 adds in production
+     code may guard a state the types allow. List every one that remains,
+     with the type-level reason it cannot occur. Those present at HEAD are
+     out of scope.
+   - The driver chooses its mode from the queue's representation, which is
+     the fact the types carry. It must not rely on a global gate agreeing
+     with that representation. If the design needs the gate as well, say
+     why, and say what happens when the two disagree.
+2. **One driver body and one abandonment loop.**
+   - Write each one once, generic over a zero-sized mode. The ordinary
+     instance's hooks are empty. The compiler produces the two instances,
+     so nobody has to keep them in step.
+   - The off-path bar from continuation 2 is unchanged: no ordinary or
+     resume label has a deterministic increase in rum-function
+     instructions.
+   - If one body cannot meet that bar, STOP. Report the residual per label,
+     attributed by continuation 2's method. Do not go back to two bodies.
+3. **Each guest frame has one owner.**
+   - The diagnostic structure holds no clone of a guest entry.
+   - Its per-cell metadata (context, id, deferred flag) and its markers are
+     private to one module. That module's methods are the only code that
+     changes either half.
+   - **Falsifier.** A test asserts that a queued frame's `Arc::strong_count`
+     is the same with profiling on and off. It checks at push, after
+     widening, after append, and after a marker insertion. Show it failing
+     on the current source first.
+4. **No new warnings, in any build.** That covers the lib, lib test, both
+   feature sets and the native workspace. No `#[allow]`.
+5. **Enabled-path complexity.**
+   - Every per-call engine operation, and every queue operation, is O(1)
+     amortized or O(log n). Here n is the number of open records,
+     aggregate rows or queued cells.
+   - Growth is geometric. The diagnostic budget is charged on what is
+     actually allocated.
+   - Report a table of operation, structure and complexity.
+   - **Falsifier.** A probe counts instructions per operation through the
+     engine API, with `perf stat`, at 16, 256 and 4 096 open records, and
+     at 16, 256 and 4 096 distinct keys.
+     - **Calibrate it first.** On the current source it must show the
+       growth.
+     - **The bar on the final source.** An O(1) operation stays within
+       1.25x from 16 to 4 096. An O(log n) operation grows at most in
+       proportion to log n.
+6. **`core.rs` goes back under 35k.** With one driver body it should fall.
+   If it is still in the split-plan range, give the split assessment. You
+   may create sibling files under `suspension/core/` for the driver.
+
+**Scope, by class.** Everything the brief and continuations 1-2 grant, plus
+the following:
+
+- new files under `crates/rum-runtime/src/runtime/suspension/core/` and
+  `profiling/logical/`;
+- any exhaustive match on `Entry`, `EntryRef`, `FrameQueue` or their
+  projections, anywhere in `crates/`:
+  - it may lose the marker arm or the nesting arm, and follow the new queue
+    shape, and nothing else;
+  - the compiler's error list is the inventory;
+  - disclose each site;
+- the occurrence oracle, only to follow the new shape, with the guest queue
+  inside the profiled one:
+  - its arithmetic stays independent of production accounting;
+  - every assertion it has stays;
+- the rejection census pin
+  (`crates/rum-stdlib/src/tests/retention_closure/census/tests.rs`: the
+  LP02 comment line, the total and the per-kind map):
+  - you may update it in place to the derived values, keeping the same line
+    count;
+  - list every site added and every site removed;
+- inventories, which are replayed and never hand-written.
+
+**STOP** if any of these happens:
+
+- a phase's counting would change;
+- an existing frame would need a field;
+- a layout bar moves: `Entry` at 24 B, the queued entry, `FrameQueue`,
+  `Session`, `ContinueToken`, or the 789 recorded rows;
+- one driver body cannot meet the off-path bar.
+
+**Rerun on the final code:**
+
+- every gate and every measurement of this brief: the workspace; the oracle
+  with all 8 750 receipts; the inventories; allocations; instructions with
+  attribution; copies; stacks and chains; layouts; timing;
+- bars 3 and 5;
+- the method oracle at 3 519 of 3 519.
+
+Stop-loss as before. Progress is counted as defects removed and bars met.
+
+---
