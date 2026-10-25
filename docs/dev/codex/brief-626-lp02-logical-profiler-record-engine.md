@@ -16455,3 +16455,539 @@ bars.
 Stop-loss as before. Progress is counted as defects removed and bars met.
 
 ---
+
+
+## Executor report — continuation 4 (2026-10-26): STOP on the nested-cleanup pause count
+
+**STOP under ruling 2: the prescribed propagation changes an existing reported
+count.** The native nested-cleanup receipt is `pauses=2`. Its cleanup span is
+a child of the suspended outer span. Both records pause once, then the child
+closes before the parent. Adding the child's pause to its parent makes the
+parent report 2 and the child report 1, so the aggregate becomes **3**.
+
+This conflict was established on the continuation-4 entry runtime before the
+accounting rewrite. No replacement rule was applied. The production runtime,
+the queue, and all existing lifecycle assertions remain unchanged relative
+to continuation-4 entry. Work is incomplete, and the final campaign did not
+run. The director's ruling says: “If propagation would change any reported
+count, STOP and name it.”
+
+### 1. Files changed and inventories
+
+This is the continuation-4 delta. The preceding reports retain the cumulative
+LP02 changes. The entry snapshot contains 1,582 files; its hashes are in
+`.temp/brief-626/continuation-4/entry-hashes.json`. The seven code/test changes
+and their before/after hashes are in
+`continuation-4/source-changes-before-report.json`.
+
+| File | Purpose |
+| --- | --- |
+| `crates/rum-runtime/src/runtime/profiling/tests/mod.rs` | Registers the ignored context operation probe. |
+| `crates/rum-runtime/src/runtime/profiling/tests/context_scaling.rs` | New test-only perf FIFO probe isolates context enter, pause and drop at nested depths; setup and other transitions are outside the counters. |
+| `crates/rum-host/tests/logical_profile_lifecycle.rs` | Adds an isolated nested-pause baseline test with exact 2/4/4 and 2/3/3 receipts. Every pre-existing lifecycle assertion is unchanged. |
+| `crates/rum-stdlib/src/tests/retention_closure/types.rs` | Reexports the finite registry and its argument checker. |
+| `crates/rum-stdlib/src/tests/retention_closure/types/modes.rs` | Draft finite trait registry, checked impl domains, exact mode arguments and ZST checks for the new profiling modes. |
+| `crates/rum-stdlib/src/tests/retention_closure/methods/mod.rs` | Passes source/module into bind; instantiates bounded arguments only through the registered domain check. Existing finite scalar admission stays in place. |
+| `crates/rum-stdlib/src/tests/retention_closure/local/type_tests.rs` | Proves selection of both explicit abandon_frames calls and rejects missing, third, generic and conditional impls in both domains, plus a cross-domain argument. |
+
+This brief receives only this appended report. **No inventory row changed in
+continuation 4.** The prior ownership inventory, local fingerprints, promoted
+certificates and rejection census are preserved as they stood at entry.
+Their outstanding final replay remains outstanding. The census guard, its
+comment, total and per-kind map have not been edited in this continuation.
+
+All scratch is under `.temp/brief-626/`. The context probe driver is
+`continuation-4/scripts/context-probe.py`; its raw data and binary manifests
+are under `continuation-4/falsifiers/`. The count investigation copied the
+entry snapshot to `continuation-4/count-probe-tree/`, inserted three trace
+prints in that copy's `logical/epoch.rs` (open, successful pause, successful
+close), and added one isolated copy of the existing native cleanup assertion
+to that copy's lifecycle test. Those trace edits are **only in scratch**.
+`continuation-4/count-probe-manifest.json` hashes both altered scratch files.
+This report's arithmetic replay and builder are retained under
+`continuation-4/pause-propagation-conflict.json` and
+`continuation-4/scripts/build-stop-report.py`.
+
+The registry draft preserves the existing accounting exception exactly:
+`AccountingShadow` contains an `Arc<Counter>` and is not zero-sized.
+The new `Ordinary` and `Profiled` entries are checked to be unconditional,
+nongeneric, fieldless nominal types. No accounting representation was
+changed to make the older exception zero-sized. The registry has a passing
+focused proof; it is not claimed to have passed the full analyzer campaign.
+
+### 2. Engine and entry as left
+
+Production runtime hashes equal continuation-4 entry. The accepted guest
+queue representation and single generic driver/abandonment bodies remain.
+`Context::enter_active` still restores all ancestors, and pause/drop still
+walk the restored segments. The O(1) bar is **not met**. The proposed
+innermost-only design is recorded as unimplemented in
+`continuation-4/logical-accounting-design.md`.
+
+The analyzer draft selects both explicit `abandon_frames` instances in its
+focused proof. Missing either implementation, adding a third, making an
+implementation conditional or generic, and using an accounting argument at
+the profiling bound all reject. General bounded generics are not admitted.
+Full frontier discovery, associated-type coverage, newly discovered-site
+enumeration, census pairing/repinning and the rustc method oracle were not
+completed before the count STOP. There is no claimed final method-oracle
+count or newly discovered frontier census.
+
+### 3. Route proofs and the exact conflict
+
+The new native test passed on the unchanged runtime for both sources:
+
+```text
+LP02_NATIVE nested-pause source=LpSpan[LpSpan[InputString["one"]; InputString["two"]]] pauses=2,4,4
+LP02_NATIVE nested-pause source=LpSpan[LpSpan[InputString["one"]]; InputString["two"]] pauses=2,3,3
+```
+
+The existing blocking route is:
+
+```rum
+ValueQ[LpSpan[WithCleanup[InputString["body"], LpSpan[InputString["cleanup"]]]]]
+```
+
+The trace-only scratch run retained the original assertions: two abandoned
+records, no successes, no open records, no context leases, and exactly two
+pauses. Its observed events, verbatim:
+
+```text
+LP02_COUNT_OPEN epoch=1 record=3 parent=None key=Runtime { phase: "native", source: None }
+LP02_COUNT_PAUSE epoch=1 record=3 row_pauses=1
+LP02_COUNT_OPEN epoch=1 record=24 parent=Some(3) key=Runtime { phase: "native", source: None }
+LP02_COUNT_PAUSE epoch=1 record=24 row_pauses=2
+LP02_COUNT_CLOSE epoch=1 record=24 outcome=Err(Structural(CheckpointRollbackDiscard))
+LP02_COUNT_CLOSE epoch=1 record=3 outcome=Err(Structural(CheckpointRollbackDiscard))
+LP02_COUNT_RECEIPT nested-cleanup abandoned=2 pauses=2 open=0 leases=0
+rum-profile logical epoch=1 valid=true faults=0 context_leases=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.01s
+```
+
+| Record | Parent | Existing own pauses | Pauses after required propagation |
+| --- | --- | ---: | ---: |
+| 3, outer body | none | 1 | 2 |
+| 24, cleanup | 3 | 1 | 1 |
+| Aggregate | | **2** | **3** |
+
+The body pause occurs before cleanup is opened, so these are two distinct
+pause events, not duplicate callbacks from one native unwind. During
+`abandon_frames`, the restored outer context executes the cleanup expression;
+the cleanup call pauses, but the abandonment driver does not call
+`Mode::pause` on the outer guard. The existing outer record therefore keeps
+one pause. Propagating the cleanup child's pause to it necessarily adds one.
+Suppressing that propagation would require a different rule from “Every
+ancestor receives it through that propagation”; it was not done.
+
+The arithmetic replay follows the recorded events and verifies the conflict;
+it is not presented as output from an implemented candidate. In this route
+the child closes **before** its parent. The route does not depend on a late
+child close. Other late-child routes were not investigated after the STOP.
+
+One existing native route was re-executed in isolation. The complete set of
+19 routes was not re-run in continuation 4.
+
+### 4. LP01 oracle
+
+The 8,750-receipt LP01 oracle was **not run in continuation 4**. No production
+phase, counter or receipt was edited. Earlier results are not reused as
+final-source verification. The exact nested-cleanup count conflict prevents
+the proposed implementation from reaching that gate.
+
+### 5. Gates and real output
+
+All eight gates below ran serially through `scripts/run-bounded.py`, with a
+900-second bound, `CARGO_BUILD_JOBS=1`, `RUST_TEST_THREADS=1`,
+`CARGO_NET_OFFLINE=true` and
+`TMPDIR=/home/remi/dev/rum/.temp/brief-626/tmp`. `run-gate.py` retained full
+stdout/stderr and checkpointed each exit. The build logs use Cargo JSON;
+the excerpts render compiler messages and retain the build-finished record,
+omitting artifact JSON. Test and probe output is copied verbatim below.
+
+**`c4-context-baseline-build` — exit 0.** Full log: `.temp/brief-626/logs/c4-context-baseline-build.log`.
+
+```text
+cargo test --offline --release -p rum-runtime --lib logical_context_instruction_probe --no-run --message-format=json
+   Compiling proc-macro2 v1.0.106
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.45
+   Compiling syn v2.0.117
+   Compiling autocfg v1.5.0
+   Compiling num-traits v0.2.19
+   Compiling serde_core v1.0.228
+   Compiling serde v1.0.228
+   Compiling serde_derive v1.0.228
+   Compiling thiserror v2.0.18
+   Compiling num-integer v0.1.46
+   Compiling thiserror-impl v2.0.18
+   Compiling num-bigint v0.4.6
+   Compiling rum-core v0.2.0 (/home/remi/dev/rum/crates/rum-core)
+   Compiling rum-syntax v0.2.0 (/home/remi/dev/rum/crates/rum-syntax)
+   Compiling rum-derive v0.2.0 (/home/remi/dev/rum/crates/rum-derive)
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+warning: function `register_test_if_builtin` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:320:27
+    |
+320 | pub(in crate::runtime) fn register_test_if_builtin(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` on by default
+
+
+warning: function `register_test_return_builtin` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:330:27
+    |
+330 | pub(in crate::runtime) fn register_test_return_builtin(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+warning: function `register_test_vm_template_builtins` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:358:27
+    |
+358 | pub(in crate::runtime) fn register_test_vm_template_builtins(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+{"reason":"build-finished","success":true}
+    Finished `release` profile [optimized] target(s) in 1m 28s
+```
+
+**`c4-context-control-smoke` — exit 1.** Full log: `.temp/brief-626/logs/c4-context-control-smoke.log`.
+
+```text
+python3 .temp/brief-626/continuation-4/scripts/context-probe.py baseline 1
+Traceback (most recent call last):
+  File "/home/remi/dev/rum/.temp/brief-626/continuation-4/scripts/context-probe.py", line 46, in <module>
+    assert process.returncode == 0 and 'test result: ok. 1 passed;' in log, (cmd, log)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (['taskset', '-c', '2', 'perf', 'stat', '-x,', '-D', '-1', '--control=fifo:/home/remi/dev/rum/.temp/brief-626/continuation-4/falsifiers/context-scaling-baseline/empty-16-64-1.control,/home/remi/dev/rum/.temp/brief-626/continuation-4/falsifiers/context-scaling-baseline/empty-16-64-1.ack', '-e', 'cpu_core/instructions/u', '-o', '/home/remi/dev/rum/.temp/brief-626/continuation-4/falsifiers/context-scaling-baseline/empty-16-64-1.csv', '--', '/home/remi/dev/rum/.temp/brief-626/continuation-4/falsifiers/context-baseline', '--ignored', '--exact', 'runtime::profiling::tests::context_scaling::logical_context_instruction_probe', '--nocapture'], "Events disabled\n\nrunning 1 test\ntest runtime::profiling::tests::context_scaling::logical_context_instruction_probe ... Events enabled\nEvents disabled\n\nthread 'runtime::profiling::tests::context_scaling::logical_context_instruction_probe' panicked at crates/rum-runtime/src/runtime/profiling/tests/context_scaling.rs:34:9:\nassertion `left == right` failed\n  left: [0, 97, 99, 107]\n right: [97, 99, 107, 10]\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\nFAILED\n\nfailures:\n\nfailures:\n    runtime::profiling::tests::context_scaling::logical_context_instruction_probe\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1211 filtered out; finished in 0.00s\n\n")
+```
+
+**`c4-context-baseline-build-ack` — exit 0.** Full log: `.temp/brief-626/logs/c4-context-baseline-build-ack.log`.
+
+```text
+cargo test --offline --release -p rum-runtime --lib logical_context_instruction_probe --no-run --message-format=json
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+warning: function `register_test_if_builtin` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:320:27
+    |
+320 | pub(in crate::runtime) fn register_test_if_builtin(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` on by default
+
+
+warning: function `register_test_return_builtin` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:330:27
+    |
+330 | pub(in crate::runtime) fn register_test_return_builtin(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+warning: function `register_test_vm_template_builtins` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:358:27
+    |
+358 | pub(in crate::runtime) fn register_test_vm_template_builtins(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+{"reason":"build-finished","success":true}
+    Finished `release` profile [optimized] target(s) in 1m 14s
+```
+
+**`c4-context-calibration` — exit 0.** Full log: `.temp/brief-626/logs/c4-context-calibration.log`.
+
+```text
+python3 .temp/brief-626/continuation-4/scripts/context-probe.py baseline
+CONTEXT PROBE COMPLETE baseline 48 perf processes; setup excluded; empty handshake control subtracted
+```
+
+**`c4-finite-profile-modes` — exit 101.** Full log: `.temp/brief-626/logs/c4-finite-profile-modes.log`.
+
+```text
+cargo test --offline -p rum-stdlib --lib finite_profile_modes_are_closed_and_selected_at_both_calls -- --nocapture
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+error[E0433]: failed to resolve: use of undeclared crate or module `regions`
+ --> crates/rum-stdlib/src/tests/retention_closure/local/type_tests.rs:9:48
+  |
+9 |     let target = format!("{}::abandon_frames", regions::SESSION);
+  |                                                ^^^^^^^ use of undeclared crate or module `regions`
+  |
+help: consider importing this module
+  |
+1 + use crate::tests::retention_closure::regions;
+  |
+
+error[E0433]: failed to resolve: use of undeclared crate or module `regions`
+  --> crates/rum-stdlib/src/tests/retention_closure/local/type_tests.rs:30:52
+   |
+30 |         &format!("{}::drain_abandonment_worklist", regions::SESSION),
+   |                                                    ^^^^^^^ use of undeclared crate or module `regions`
+   |
+help: consider importing this module
+   |
+1  + use crate::tests::retention_closure::regions;
+   |
+
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `rum-stdlib` (lib test) due to 2 previous errors
+```
+
+**`c4-finite-profile-modes-fixed` — exit 0.** Full log: `.temp/brief-626/logs/c4-finite-profile-modes-fixed.log`.
+
+```text
+cargo test --offline -p rum-stdlib --lib finite_profile_modes_are_closed_and_selected_at_both_calls -- --nocapture
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 33.93s
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-5f7f08d1c3c3a0e1)
+
+running 1 test
+test tests::retention_closure::local::type_tests::finite_profile_modes_are_closed_and_selected_at_both_calls ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1162 filtered out; finished in 13.80s
+
+```
+
+**`c4-native-nested-baseline` — exit 0.** Full log: `.temp/brief-626/logs/c4-native-nested-baseline.log`.
+
+```text
+cargo test --offline -p rum-host --test logical_profile_lifecycle logical_native_nested_pause_counts -- --nocapture
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/crates/rum-host)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 37.59s
+     Running tests/logical_profile_lifecycle.rs (target/debug/deps/logical_profile_lifecycle-8ace5c8eca339138)
+
+running 1 test
+test logical_native_nested_pause_counts ... 
+running 1 test
+test logical_native_nested_pause_counts ... LP02_NATIVE nested-pause source=LpSpan[LpSpan[InputString["one"]; InputString["two"]]] pauses=2,4,4
+LP02_NATIVE nested-pause source=LpSpan[LpSpan[InputString["one"]]; InputString["two"]] pauses=2,3,3
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.01s
+
+
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.01s
+
+```
+
+**`c4-cleanup-count-trace` — exit 0.** Full log: `.temp/brief-626/logs/c4-cleanup-count-trace.log`.
+
+```text
+cargo test --offline --manifest-path .temp/brief-626/continuation-4/count-probe-tree/Cargo.toml -p rum-host --test logical_profile_lifecycle logical_native_cleanup_propagation_probe -- --nocapture
+   Compiling proc-macro2 v1.0.106
+   Compiling quote v1.0.45
+   Compiling unicode-ident v1.0.24
+   Compiling syn v2.0.117
+   Compiling version_check v0.9.5
+   Compiling generic-array v0.14.7
+   Compiling typenum v1.20.1
+   Compiling autocfg v1.5.0
+   Compiling num-traits v0.2.19
+   Compiling serde_core v1.0.228
+   Compiling serde v1.0.228
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+   Compiling serde_derive v1.0.228
+   Compiling thiserror v2.0.18
+   Compiling cfg-if v1.0.4
+   Compiling digest v0.10.7
+   Compiling num-integer v0.1.46
+   Compiling thiserror-impl v2.0.18
+   Compiling num-bigint v0.4.6
+   Compiling cpufeatures v0.2.17
+   Compiling crc32fast v1.5.0
+   Compiling rum-core v0.2.0 (/home/remi/dev/rum/.temp/brief-626/continuation-4/count-probe-tree/crates/rum-core)
+   Compiling rum-syntax v0.2.0 (/home/remi/dev/rum/.temp/brief-626/continuation-4/count-probe-tree/crates/rum-syntax)
+   Compiling rum-derive v0.2.0 (/home/remi/dev/rum/.temp/brief-626/continuation-4/count-probe-tree/crates/rum-derive)
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/.temp/brief-626/continuation-4/count-probe-tree/crates/rum-runtime)
+   Compiling sha2 v0.10.9
+   Compiling sha1 v0.10.6
+   Compiling md-5 v0.10.6
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/.temp/brief-626/continuation-4/count-probe-tree/crates/rum-stdlib)
+   Compiling rum-host v0.2.0 (/home/remi/dev/rum/.temp/brief-626/continuation-4/count-probe-tree/crates/rum-host)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 53.37s
+     Running tests/logical_profile_lifecycle.rs (.temp/brief-626/continuation-4/target-count-probe/debug/deps/logical_profile_lifecycle-8ace5c8eca339138)
+
+running 1 test
+test logical_native_cleanup_propagation_probe ... LP02_COUNT_OPEN epoch=1 record=3 parent=None key=Runtime { phase: "native", source: None }
+LP02_COUNT_PAUSE epoch=1 record=3 row_pauses=1
+LP02_COUNT_OPEN epoch=1 record=24 parent=Some(3) key=Runtime { phase: "native", source: None }
+LP02_COUNT_PAUSE epoch=1 record=24 row_pauses=2
+LP02_COUNT_CLOSE epoch=1 record=24 outcome=Err(Structural(CheckpointRollbackDiscard))
+LP02_COUNT_CLOSE epoch=1 record=3 outcome=Err(Structural(CheckpointRollbackDiscard))
+LP02_COUNT_RECEIPT nested-cleanup abandoned=2 pauses=2 open=0 leases=0
+rum-profile logical epoch=1 valid=true faults=0 context_leases=0
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.01s
+
+```
+
+
+The first probe smoke failed because installed perf writes `ack\n\0`
+(five bytes), while the initial test reader consumed four. The failed binary
+and raw smoke output are archived in
+`continuation-4/falsifiers/context-control-failed-smoke/`. After consuming all
+five bytes, the full 48-process calibration passed. The first analyzer build
+failed on a missing test import of `regions`; adding that import produced
+the passing focused proof. Neither failure was hidden or counted as a
+runtime regression.
+
+The runtime lib-test builds emitted the same three pre-existing dead-code
+warnings shown above; the focused stdlib/host builds emitted no warning.
+No final warning inventory was claimed. Scoped rustfmt was used during
+editing, but the final workspace `cargo fmt --check` was **not run**.
+
+Also **not run in continuation 4**: the profiling/typed suspension/root trace/
+resume evaluation context suites, both typed-slot censuses, the full LP01
+oracle, ownership replay and ownership gate, both local-production acceptance
+gates, rejection census, rustc method oracle, workspace suite, complete
+19-route native run, and all final-source performance gates. The native
+ZeroMQ tests consequently produced no new skip/pass results in this
+continuation. This is a STOP report, not a green gate record.
+
+### 6. Measurements
+
+The required new probe was calibrated red on the unchanged production
+runtime before any accounting rewrite. It measures each transition separately
+using acknowledged `perf stat` enable/disable FIFOs, CPU 2,
+`cpu_core/instructions/u`, repeats 64 and 128, and two samples at each depth.
+The 48 processes include the empty control. Set-up and other transitions
+are outside the measured interval; the empty-control slope is subtracted.
+Raw CSVs, commands, environment settings, binary hashes and results are under
+`continuation-4/falsifiers/context-scaling-baseline/`.
+
+| Operation | Instructions/op at 16 | At 256 | At 4,096 | 4,096 / 16 |
+| --- | ---: | ---: | ---: | ---: |
+| empty | 221.992188 | 222.773438 | 222.000000 | 1.000035 |
+| context-enter | 24983.804688 | 599676.000000 | 13525554.617188 | 541.372893 |
+| context-pause | 3924.781250 | 81083.976562 | 1614141.500000 | 411.269163 |
+| context-drop | 16689.007812 | 384495.234375 | 8302549.203125 | 497.486088 |
+
+The empty control is flat; enter/pause/drop grow by roughly 541x/411x/497x.
+The probe therefore exposes the depth cost. There is **no final candidate
+context probe**, and no O(1) claim.
+
+Calibration binary SHA-256:
+`8858229fc6a0767a0dae9f47f337795f0c7bc36d7d385ab528c453cfa0a98cff`.
+Its full runtime source hashes are in
+`continuation-4/falsifiers/context-baseline-binary.json`.
+
+All 313-label allocation, instruction/attribution and copy measurements,
+44 stack fits and resumed chains, 789 production layouts, four timing panels
+and aligned timing remain **not run on continuation-4 final source**.
+Bars 3–5 have no new final acceptance claim. Earlier continuation evidence
+remains archived and is not substituted for these runs. Durations were not
+compared in the count investigation.
+
+### 7. Stop-loss counters, deviations and open question
+
+- Runtime accounting rewrite attempts: **0**. Production runtime changes: **0**.
+- Locally demonstrated analyzer admission defect removed: **1** (both explicit
+  mode calls now selected by the focused proof). Full analyzer acceptance:
+  **incomplete**.
+- New final performance/layout bars met: **0**.
+- Original native routes re-executed here: **1 in isolation**, the blocking
+  nested cleanup. New native nested-pause test: **1 passed, two cases**.
+- LP01 receipts executed here: **0 / 8,750**; full native route campaign:
+  **not run**.
+- Compiling attempts without progress: **0**. This stop is the explicit
+  count-contract condition, not the two-attempt stop-loss.
+- No git command, network operation, new unsafe, receipt weakening,
+  unrequested mechanism change or unrelated source edit occurred.
+
+The director must resolve whether a child pause during abandonment cleanup
+propagates to its suspended parent. Unconditional propagation changes the
+existing receipt from 2 to 3; retaining 2 needs a rule distinguishing that
+case. No such exception was invented. `state.json` and `PROGRESS.md` preserve
+the stopped state and partial files. The tree is left uncommitted.
+
+## Director ruling and continuation 5 (2026-10-26) — one pause rule for both drivers
+
+**The stop is correct.** You named the receipt and changed nothing.
+Accepted:
+
+- the scaling probe calibrated red: 541x, 411x and 497x from depth 16 to
+  4 096, with a flat empty control;
+- the registry draft's focused proof;
+- leaving the accounting exception exactly as it was. My word
+  "zero-sized" was meant for the new domain only. `AccountingShadow`
+  keeps its existing rule.
+
+**Ruling: the nested-cleanup route reports 3, not 2.**
+
+- **The pinned rule.** On the resume path, a pause counts once for every
+  open record on the paused chain. Your nested-pause test pins this as
+  2/4/4 and 2/3/3.
+- **This route.** `WithCleanup[...]` sits inside record 3's `LpSpan`, so the
+  cleanup's `InputString` pauses the computation while record 3 is still
+  open and on the chain. Record 3 was paused twice: once for its body and
+  once for its cleanup child.
+- **Where 2 came from.** The abandonment loop restores record 3's context
+  to run the cleanup. When that cleanup pauses, it never calls
+  `Mode::pause` on the restored guard, whereas the resume loop does. So two
+  loops applied two different pause rules. That is the same class of
+  defect as the duplicated bodies. Because the receipt was pinned from
+  that behaviour, it is not a contract.
+- **Under one rule, both mechanisms give 3.**
+  - The old rule, applied by both loops: record 3 gets 2.
+  - Recording at the innermost record and propagating at close: record 3
+    gets its own 1 plus its child's 1.
+
+  Record 24 gets 1 either way, so the aggregate is 3.
+- **Pauses are telemetry.** They are not logical parity (`profiling.md`,
+  *Execution telemetry*), and LP01's logical table excludes them. So the
+  8 750 receipts cannot move because of this ruling, and they must not.
+
+**What to do.**
+
+1. **Implement ruling 2 as written.**
+   - Only the innermost active record times a segment.
+   - When a record closes or is abandoned, its inclusive time and pause
+     count are added to its parent.
+   - The resume and abandonment paths apply that one rule, inside the one
+     generic body each already has.
+2. **Update the nested-cleanup receipt from 2 to 3.** Next to the
+   assertion, add a one-line comment giving the reason: the cleanup child's
+   pause reaches its open parent. Every other receipt stays exact, the 19
+   routes included. List each receipt whose value moves. If any receipt
+   other than this one moves, STOP and name it.
+3. **Late children.** Find every route, among the 19 and your new tests,
+   where a child record closes after its parent. For each one:
+   - name it;
+   - say what each record reports;
+   - say what happens to the late child's totals.
+
+   If any such route exists and it would lose a child's time or pause
+   count without a visible fault, STOP and report it.
+4. **Finish ruling 1.** That covers:
+   - full frontier discovery, with both `abandon_frames` instances
+     traversed;
+   - associated-type coverage for the new domain;
+   - every site the frontier sees for the first time;
+   - the census guard lines, paired by discovery, with the derived total
+     and map updated in place;
+   - the rustc method oracle, with zero disagreements and its count
+     reported.
+5. **Then rerun everything on the final source**, as continuation 4 lists:
+   - the oracle with all 8 750 receipts;
+   - the 19 native routes;
+   - the inventories;
+   - allocations;
+   - instructions with attribution;
+   - copies;
+   - stacks and chains;
+   - the 789 layouts;
+   - timing;
+   - bars 3 to 5, with the context probe on the candidate (enter, pause
+     and drop each within 1.25x from depth 16 to 4 096);
+   - the method oracle;
+   - the rejection census.
+
+Everything else stands. Stop-loss as before.
+
+---
