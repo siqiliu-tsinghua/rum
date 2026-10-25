@@ -19577,3 +19577,207 @@ repair (frame-root 15/15, resume-context 11/11), and the runtime suite at
 Everything else stands. Stop-loss as before.
 
 ---
+
+## Director ruling and continuation 9 (2026-10-26) — the off path pays nothing: guards and queue dispatch
+
+**Why this continuation exists.** Continuation 8's run was cut by Codex's
+usage limit (`You've hit your usage limit … try again at Nov 1st`) before it
+wrote its report. **This continuation runs on a different worker, in a fresh
+session.** Nothing it did is in your context. Your inputs are this brief, the
+working tree and the run's own artifacts on disk.
+
+**Read first, in this order.**
+
+1. The brief's opening sections, from the top to the first executor report:
+   the task, the scope, the performance bars and the pitfalls.
+2. Every `## Director ruling …` section in full, continuations 1 to 8. They
+   are binding and cumulative. Continuation 1 (point 1's layout method and
+   point 2's bar), continuation 3 (the shape guarantees), continuation 6
+   ("existing" means committed at HEAD) and continuation 7 (source-reading
+   gates follow the code) matter most here.
+3. Read the executor reports only as you need them.
+4. The run state: `.temp/brief-626/state.json` (keys `c8_*`),
+   `.temp/brief-626/continuation-8/final/state.json`, and
+   `.temp/brief-626/continuation-8/final/PROGRESS.md`.
+
+### What continuation 8 did before the cut
+
+All of the following comes from the run's artifacts. I have not
+reproduced it yet; I will at the gate.
+
+- **Steps 1–4 of continuation 8 are done.**
+  - Both parent links are `AccumulatorChain`, and both bespoke `Drop`
+    loops are gone.
+  - The payload policy is in `continuation-8/payload-policy.json`.
+  - The falsifier is `profiling/tests/chain_drop.rs`: four cases at
+    66 000 nodes on 2 MiB threads. The bespoke shape's race did not
+    reproduce deterministically, so the red control is the raw recursive
+    shape. It aborts with a stack overflow
+    (`continuation-8/falsifiers/raw-recursive.log`).
+  - The participation gate passes unchanged: 31 wrapped witnesses, up
+    from 29, and all 59 committed self-reaching rows preserved.
+  - Route I0009's census lookup was repaired under continuation 7's grant
+    (`typed_slot_census/routes.rs`).
+- **The final campaign ran, in full or in part, on a frozen source**
+  (`continuation-8/final-source-hashes.json`).
+  - These passed:
+    - runtime, 1 216 tests;
+    - the method oracle, 3 617/3 617;
+    - LP01's 8 750 receipts;
+    - the workspace, 3 967 passed, 0 failed, 61 ignored;
+    - 789 layouts;
+    - correctness, 1 636 processes;
+    - allocations on 313/313 labels;
+    - copies on 313/313 labels.
+  - **Instructions failed the bar.**
+  - Stacks (the 44 fits), resumed chains and timing were never reached.
+- **Then the run started a repair, "attempt 2", and was cut mid-way.**
+  - It added `#[cold] #[inline(never)]` to `SourceStack::{push, pop}` and to
+    `ProfileQueue::{is_empty, front, pop, pop_legacy}`.
+  - The before-files are in `continuation-8/attempt-2/before/` and the
+    patch in `continuation-8/attempt-2/source.patch`.
+  - It was measured on 16 labels only. The guard calls remained, and some
+    resume labels rose (`resume-fold` +101 → +133).
+  - **The working tree contains attempt 2.** It is an unmeasured
+    experiment. Keep it, change it or revert it as the final attribution
+    decides, and disclose which.
+
+### The finding (my own reading of `continuation-8/final/`)
+
+**Overall.**
+
+- 211 of 313 labels rose; the median over all labels is +0.06%.
+- 144 labels are flagged: 66 ordinary and 78 resume.
+- The flagged median is +0.26%; the largest is +1.05%.
+- This is the hard line: profiling is off, so any rise is a cost the off
+  path should not pay.
+
+**Ordinary labels: the source-scope guards.**
+
+- The four TLS scope stacks changed from `Vec` to `SourceStack`. Their
+  `push`/`pop` now carry `Arc` traffic, `Storage` and the chain drain.
+- So the guard bodies grew past the inliner's limit. The off path now pays
+  a call to reach a flag test.
+- Evidence:
+  - `LexicalProfileContextGuard::drop` and `LexicalProfileArgSiteGuard::drop`
+    appear as new out-of-line functions in 33 labels.
+  - Their constructors, `lexical_profile_context` and
+    `lexical_profile_arg_prefilter_site`, also rose.
+  - `ExpressionRebuildSourceGuard::drop` and
+    `EvaluationProfileSourceGuard::drop` are new out-of-line functions at 7
+    instructions per call. In `downvalue-exact-hit` they are 14 of the
+    label's +15.5.
+  - In `lazy-depth-fold-through-source-256` the drops add +2 171 136 per
+    iteration and the constructors +394 752, against a main delta of
+    +1 716 204.
+
+**Resume labels: the `FrameStorage` dispatch.**
+
+- The main delta is a median +205 rum instructions per resume, and at most
+  +471 (`resume-s5-default-rhs`).
+- The cause is that the `Profiled` arms are inlined into the ordinary
+  path, so functions grew and moved out of line. In
+  `resume-s5-default-rhs`:
+  - **Pop.** `SuspendedEvaluation::pop_front` is newly out of line at 559
+    instructions. LP01's `FrameQueue::pop_front` was 338.
+  - **Push.** `insert_typed_erased_frame`, `FrameStorage::push_back`,
+    `push_back_typed` and `widen` now total 1 301. LP01's total was 1 156.
+  - **Outlining.** `resume_suspended_slot` is now outlined out of
+    `resume_eval_request_from_checkpoint`, for +55.
+  - **Monomorphs.** Several `VecDeque` monomorphs moved.
+
+**Seed-dependent functions cannot be attributed from one profile.**
+
+- These include `hashbrown`, `intern_text`, `Symbol::system` and
+  `default_builtin_dispatch_spec_for_symbol`. Their deltas change sign
+  across labels.
+- For example, the dispatch-spec lookup sums to −1 507 over 84 labels, yet
+  shows +793 in `replaceall-leaf-rebuild-small`.
+- `std`'s hash seed is per process, and the campaign took one Callgrind
+  run per arm per N.
+
+### What to do
+
+1. **The guards: the off path keeps only the flag test, inline.**
+   - For all four guards, in both the `Drop` and the constructor, every
+     stack operation, TLS access and depth update moves into a
+     `#[cold] #[inline(never)]` helper.
+   - The shape already exists in this codebase:
+     `record_call_stability_source_head_outcome` and its `_enabled` helper
+     in `evaluation_cache/profile/source.rs`.
+   - Apply the same cure to any other off-path call into the four stacks
+     that the attribution shows.
+   - The guards' API does not change. A cure that needs a caller changed is
+     a STOP.
+2. **The queue: off path equals LP01.**
+   - On the off path, each `FrameStorage` operation runs LP01's
+     `FrameQueue` code and pays nothing for the representation. A branch
+     on every queue operation is the regression the hard line names.
+     - The representation test must fold into the `Legacy`/`Mixed` tag
+       test that LP01 already performs.
+     - Each `Profiled` arm is one cold, out-of-line call.
+   - A function that LP01 inlined and the candidate outlines is work until
+     shown otherwise. This covers `resume_suspended_slot` and
+     `SuspendedEvaluation::pop_front`, and any others the attribution
+     shows. Find what grew it, and remove that.
+   - **Continuation 3's shape guarantees are not negotiable.** They are:
+     - no nesting;
+     - markers private;
+     - one driver and one abandonment body;
+     - the mode chosen from the representation;
+     - no duplicated bodies;
+     - no new `unreachable!` or `expect` on a state the types allow.
+
+     If the bar cannot be met without giving one up, STOP. Report the
+     per-instruction evidence for what remains and the guarantee it would
+     cost. Do not trade silently in either direction.
+3. **Attribution method.**
+   - Per function first. Then, for every remaining rum-function delta, per
+     instruction.
+   - **Seed-dependent costs.** Where a function's cost depends on hashing
+     (any `HashMap`/`HashSet`, the interner, the builtin dispatch lookup),
+     take at least three Callgrind runs per arm and per N, and compare the
+     ranges.
+     - A delta inside the overlap is seed variance. Report the ranges.
+     - A delta outside the overlap is work.
+   - Continuation 1's libc page-cross rule stands.
+   - **Calibrate any new script first.** On the current candidate it must
+     show the guard drops' +7. After the cure it must show them gone.
+4. **Then the full campaign, on the final source.** Rerun everything,
+   because the source changes.
+   - The gates: the workspace, the oracle with all 8 750 receipts, the
+     method oracle, both typed-slot censuses, the rejection census (952),
+     and the inventories by replay with post-replay acceptance.
+   - The participation gate, and the chain-drop tests.
+   - The measurements: layouts, correctness, allocations, instructions with
+     point 3's attribution, and copies.
+   - **The parts the first campaign never reached:** the 44 stack fits,
+     the resumed chains, the four timing panels, and aligned whole-program
+     timing with continuation 1's layout-or-work split.
+   - The bar is continuation 1 point 2's: no ordinary or resume label has a
+     deterministic rum-function instruction increase, and every residual
+     flag is attributed as layout or as seed variance.
+
+**Scope.** In addition to everything already granted:
+
+- **Any file under `crates/rum-runtime/src/runtime/profiling/` and
+  `crates/rum-runtime/src/runtime/evaluation_cache/profile/`**, for
+  off-path shape only. That means an inline flag test, cold outlining, or
+  moving work out of a hot function.
+  - This is a class grant with a disclosure duty. For each file, name the
+    attribution row its change answers.
+  - It does not cover behaviour changes or API changes.
+- The ownership inventories, by replay (the standing duty).
+- Source-reading tests, under continuation 7's grant.
+
+**Report.** Append one executor report covering both continuations 8 and 9,
+because continuation 8 never wrote one.
+
+- Use the earlier reports' seven sections, with verbatim evidence.
+- Keep `.temp/brief-626/state.json` current as you go. A quota cut on this
+  worker is resumed from it.
+
+Everything else stands. Stop-loss as before: progress is flags attributed
+or removed.
+
+---
