@@ -15329,3 +15329,1129 @@ the following:
 Stop-loss as before. Progress is counted as defects removed and bars met.
 
 ---
+
+---
+
+## Executing-agent continuation 3 report — 2026-10-26 — STOP at the unchanged rejection witness guard
+
+The redesign compiles and the final production layout check is **789/789 unchanged**. Implementation stops at an explicit scope conflict in the mandatory rejection gate. The unchanged native test fails before the LP02 total/map pin: its guest-form guard requires a rejection at `suspension/core/abandon.rs:60`. The required single generic loop moves the capture operation to line 85, and the frontier rejects the two mode instances at lines 46 and 48 instead of traversing that loop. Changing the allowed total/map cannot repair this guard. The rejection test, its assertions, and the director's 960 pin remain byte-identical to the entry snapshot.
+
+Continuation 3 grants only “the LP02 comment line, the total and the per-kind map” in that test. The separate guard at `census/tests.rs:190–193` and the finite method-instance machinery are outside that grant. [TEMPLATE.md](TEMPLATE.md) requires: “Do NOT modify files outside Scope. If you believe you must, STOP and write that in the report instead.” I have stopped implementation and have not moved unrelated statements merely to satisfy a source-line assertion. This is a scope stop, not the two-attempt stop-loss.
+
+The full final-source gate and performance campaign is **incomplete**. In particular, the final off-path instruction bar and the full enabled queue-operation complexity bar have not been established. Intermediate scaling evidence below is not presented as a final-source result. All earlier reports and director text are preserved.
+
+### 1. Files changed and inventory replay
+
+This continuation changes **35 source/inventory files and removes one prior LP02 file**, relative to its preserved entry snapshot. The report appendix is the only documentation edit. Full snapshot audit: [.temp/brief-626/continuation-3/stop-scope-audit.json](../../../.temp/brief-626/continuation-3/stop-scope-audit.json); frozen source hashes: [.temp/brief-626/continuation-3/stop-source-hashes.json](../../../.temp/brief-626/continuation-3/stop-source-hashes.json). No new `unsafe` or `#[allow]` was added in this continuation. No git command or network operation was run.
+
+| File | Characters | Purpose |
+| --- | --- | --- |
+| crates/rum-runtime/src/runtime/debug_tools/resources/occurrence/suspension.rs | 3767 | Follow the outer storage and marker-free guest queue; retain independent capacity arithmetic and every assertion. |
+| crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs | 12300 | Cold source snapshots share a persistent diagnostic stack instead of cloning a Vec. |
+| crates/rum-runtime/src/runtime/profiling/logical/budget.rs | 5330 | Add the expired Weak arena allocation charging test. |
+| crates/rum-runtime/src/runtime/profiling/logical/context.rs | 5372 | Capture shared record ancestry and source scopes; retain exclusive execution leases and charged activation buffers. |
+| crates/rum-runtime/src/runtime/profiling/logical/epoch.rs | 9376 | Index records and aggregate keys; charge shared ancestry and the weak arena allocation without a strong cycle. |
+| crates/rum-runtime/src/runtime/profiling/logical/index.rs | 9874 | New budgeted AVL index with recycled slots and geometric capacity. |
+| crates/rum-runtime/src/runtime/profiling/logical/mod.rs | 9822 | Declare index/source stack modules; frontier handles use the opaque stable cell identity. |
+| crates/rum-runtime/src/runtime/profiling/logical/record.rs | 4847 | Ordered immutable keys and shared ancestry paths with iterative destruction. |
+| crates/rum-runtime/src/runtime/profiling/logical/segments.rs | 11094 | Stable linked active slots and an indexed per-record head replace bottom scans. |
+| crates/rum-runtime/src/runtime/profiling/logical/source_stack.rs | 3416 | New shared immutable source scopes with charged nodes and iterative destruction. |
+| crates/rum-runtime/src/runtime/profiling/state.rs | 10451 | Use shared source-scope snapshots for the three existing TLS stacks; phase counter bodies remain unchanged. |
+| crates/rum-runtime/src/runtime/profiling/tests/engine_scaling.rs | 4252 | Ignored, explicitly invoked perf-stat probe for six engine operations at three sizes on two axes. |
+| crates/rum-runtime/src/runtime/profiling/tests/index.rs | 1835 | Exercise index ordering, recycling, and removal under geometric growth. |
+| crates/rum-runtime/src/runtime/profiling/tests/mod.rs | 134 | Register the added test modules. |
+| crates/rum-runtime/src/runtime/profiling/tests/queue_boundaries.rs | 10679 | Four-checkpoint strong-owner falsifier and representation/global-gate disagreement tests. |
+| crates/rum-runtime/src/runtime/profiling/tests/slot_boundary.rs | 3228 | Inspect entry sizes through a test-only facade without widening Entry visibility. |
+| crates/rum-runtime/src/runtime/suspension.rs | 1067 | Narrow facades for the diagnostic arena and test-only storage type; Entry/EntryRef stay private. |
+| crates/rum-runtime/src/runtime/suspension/core.rs | 24422 | Declare the queue/driver modules and use FrameStorage; remove both copied driver bodies. |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs | 4482 | One generic abandonment loop, selected per suspension representation. |
+| crates/rum-runtime/src/runtime/suspension/core/driver.rs | 8822 | One generic resume driver with zero-sized modes and empty ordinary hooks. |
+| crates/rum-runtime/src/runtime/suspension/core/profile_mode.rs | 1648 | Zero-sized ordinary/profiled hooks; the profiled hooks are cold and representation-selected. |
+| crates/rum-runtime/src/runtime/suspension/core/profile_queue.rs | 10323 | Private metadata/marker ownership, one guest owner, weak shared arena, and context lifecycle. |
+| crates/rum-runtime/src/runtime/suspension/core/profile_queue/arena.rs | 13575 | Stable generational slots and an implicit AVL queue with parent links and subtree summaries. |
+| crates/rum-runtime/src/runtime/suspension/core/profile_queue/tests.rs | 5410 | Check balanced insert/cut/join, stale handles, and deferred marker ordering. |
+| crates/rum-runtime/src/runtime/suspension/core/queue.rs | 7515 | Keep the original guest FrameQueue identity and its single ordinary algorithm; a wrapper preserves private entry types. |
+| crates/rum-runtime/src/runtime/suspension/core/storage.rs | 7751 | New outer Guest/Profiled representation; cold diagnostic operations and ordinary delegation. |
+| crates/rum-runtime/src/runtime/suspension/typed.rs | 2465 | Restore suspension-private Entry/EntryRef re-exports. |
+| crates/rum-runtime/src/runtime/suspension/typed/entry.rs | 2654 | Restore the exact three LP01 variants and their original operations. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payload_ledger.tsv | 28887 | Replay discovery positions/unknown constructs; preserve original payload dispositions. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payloads.tsv | 17873 | Replay discovery positions/unknown constructs; preserve original payload dispositions. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/self_reaching.tsv | 24172 | Retain all 59 LP01 rows; replace the two removed LP02 nesting cycles with the two discovered ancestry/source-node rows. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv | 261893 | Replay discovery positions/unknown constructs; preserve original payload dispositions. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv | 434875 | Replay discovery positions/unknown constructs; preserve original payload dispositions. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv | 402990 | Replay discovery positions/unknown constructs; preserve original payload dispositions. |
+| crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_storage.tsv | 25419 | Replay discovery positions/unknown constructs; preserve original payload dispositions. |
+
+- Removed `crates/rum-runtime/src/runtime/profiling/logical/queue.rs`: diagnostic queue ownership now resides privately under `suspension/core/profile_queue/`.
+
+The compiler inventory for the queue/entry shape change was seven errors: the Entry/EntryRef test imports, four Legacy/Mixed matches in the independent occurrence oracle, its private guest projection, and its marker arm. The exact compiler list is retained in [.temp/brief-626/logs/c3-queue-shape-errors.log](../../../.temp/brief-626/logs/c3-queue-shape-errors.log). The later FrameStorage rename had three mechanical compiler errors, all corrected; its logs are included below.
+
+The first ownership preflight exposed an existing host-payload identity renamed from `core::queue::FrameQueue` to `GuestEntries`. No inventory was rewritten for that design. The final source keeps the original guest enum at its original module identity, places the new outer representation in `storage.rs`, and uses a private-field GuestQueue wrapper to keep Entry visibility narrow. The replay then found 162 original source-position moves, 121 new UnknownConstruct rows, six ledger-position moves, zero missing original rows, and zero new UnknownHostPayload rows. All 59 pre-LP02 self-reaching rows are retained exactly. The two continuation-2-only nested-queue cycle rows disappear with the expressly required redesign; the new discovered rows are RecordPath and SourceStack::Node.
+
+Replay provenance: [.temp/brief-626/continuation-3/ownership-position-preflight.json](../../../.temp/brief-626/continuation-3/ownership-position-preflight.json), [.temp/brief-626/continuation-3/ownership-replay.json](../../../.temp/brief-626/continuation-3/ownership-replay.json). Every row changed relative to the continuation-3 entry follows verbatim; a machine-readable copy and unified patch are [.temp/brief-626/continuation-3/inventory-row-changes-vs-entry.json](../../../.temp/brief-626/continuation-3/inventory-row-changes-vs-entry.json) and [.temp/brief-626/continuation-3/inventory-row-changes-vs-entry.patch](../../../.temp/brief-626/continuation-3/inventory-row-changes-vs-entry.patch). The local contract fingerprints and promoted certificates have **not** been refreshed after the scope stop, so those inventories remain stale.
+
+**`crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payload_ledger.tsv` — 8 removed row occurrences, 8 added row occurrences**
+
+```text
+- UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core/queue.rs	7	12	rum_runtime::runtime::suspension::core::queue::FrameQueue.Legacy.0/std::collections::VecDeque[Own]/arg0/rum_runtime::runtime::suspension::core::evaluation_context::Queued<arg0> via payload/std::sync::Arc[LastStrongHolder]/arg0/alias(rum_runtime::runtime::suspension::core::DynSuspensionFrame): opaque owned payload dyn SuspensionFrame	Unbounded	rum_runtime::runtime::suspension::core::SuspensionFrame => rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame (impl at crates/rum-runtime/src/runtime/accounting_mode/continuation.rs:12:1); rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame.args -> rum_core::expr::SharedArgs	TODO.md#standing-engineering-debt	unresolved
+- UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	130	21	rum_runtime::runtime::suspension::core::FrameAction.Evaluate.next_frame/std::sync::Arc[LastStrongHolder]/arg0/alias(rum_runtime::runtime::suspension::core::DynSuspensionFrame): opaque owned payload dyn SuspensionFrame	Unbounded	rum_runtime::runtime::suspension::core::SuspensionFrame => rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame (impl at crates/rum-runtime/src/runtime/accounting_mode/continuation.rs:12:1); rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame.args -> rum_core::expr::SharedArgs	TODO.md#standing-engineering-debt	unresolved
+- UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	132	14	rum_runtime::runtime::suspension::core::FrameAction.Finalize.0/std::boxed::Box[Own]/arg0: opaque owned payload dyn PureFrameFinalizer	Unbounded	rum_runtime::runtime::suspension::core::PureFrameFinalizer => rum_runtime::runtime::debug_tools::reap::FinishReapBucketsFinalizer (impl at crates/rum-runtime/src/runtime/debug_tools/reap.rs:284:1); rum_runtime::runtime::debug_tools::reap::FinishReapBucketsFinalizer.rendered -> rum_runtime::runtime::debug_tools::reap_state::ReapRenderAccumulator ; rum_runtime::runtime::debug_tools::reap_state::ReapRenderAccumulator.prefix -> rum_core::expr::SharedArgs	TODO.md#standing-engineering-debt	unresolved
+- UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	142	48	public input rum_runtime::runtime::suspension::core::impl(FrameAction)@135::evaluate(next_frame): opaque owned generic parameter F where F : SuspensionFrame ,	PublicInput	public by-value input; owning storage sites are separate rows	-	-
+- UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	153	35	public input rum_runtime::runtime::suspension::core::impl(FrameAction)@135::finalize(finalizer): opaque owned generic parameter F where F : PureFrameFinalizer ,	PublicInput	public by-value input; owning storage sites are separate rows	-	-
+- UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	547	57	public input rum_runtime::runtime::suspension::core::impl(Session)@482::insert_suspension_frame(frame): opaque owned generic parameter F where F : SuspensionFrame ,	PublicInput	public by-value input; owning storage sites are separate rows	-	-
+- UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	11	12	rum_runtime::runtime::suspension::typed::entry::Entry.Legacy.0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn SuspensionFrame	Unbounded	rum_runtime::runtime::suspension::core::SuspensionFrame => rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame (impl at crates/rum-runtime/src/runtime/accounting_mode/continuation.rs:12:1); rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame.args -> rum_core::expr::SharedArgs	TODO.md#standing-engineering-debt	unresolved
+- UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	12	11	rum_runtime::runtime::suspension::typed::entry::Entry.Typed.0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame	Unbounded	rum_runtime::runtime::suspension::typed::adapter::ErasedFrame => rum_runtime::runtime::suspension::typed::adapter::TypedAdapter.inner (impl at crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:33:1) => rum_runtime::runtime::suspension::typed::TypedFrame => rum_runtime::runtime::definitions::application::default_values::EvaluateFirstExactDefaultValueFromCursorSuspensionFrame (impl at crates/rum-runtime/src/runtime/definitions/application/default_values.rs:292:1); rum_runtime::runtime::definitions::application::default_values::EvaluateFirstExactDefaultValueFromCursorSuspensionFrame.state -> rum_runtime::runtime::definitions::application::default_values::SuspendedExactDefaultValueScan ; rum_runtime::runtime::definitions::application::default_values::SuspendedExactDefaultValueScan.lookup_order -> rum_core::expr::SharedArgs	TODO.md#standing-engineering-debt	unresolved
++ UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core/queue.rs	20	12	rum_runtime::runtime::suspension::core::queue::FrameQueue.Legacy.0/std::collections::VecDeque[Own]/arg0/rum_runtime::runtime::suspension::core::evaluation_context::Queued<arg0> via payload/std::sync::Arc[LastStrongHolder]/arg0/alias(rum_runtime::runtime::suspension::core::DynSuspensionFrame): opaque owned payload dyn SuspensionFrame	Unbounded	rum_runtime::runtime::suspension::core::SuspensionFrame => rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame (impl at crates/rum-runtime/src/runtime/accounting_mode/continuation.rs:12:1); rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame.args -> rum_core::expr::SharedArgs	TODO.md#standing-engineering-debt	unresolved
++ UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	128	21	rum_runtime::runtime::suspension::core::FrameAction.Evaluate.next_frame/std::sync::Arc[LastStrongHolder]/arg0/alias(rum_runtime::runtime::suspension::core::DynSuspensionFrame): opaque owned payload dyn SuspensionFrame	Unbounded	rum_runtime::runtime::suspension::core::SuspensionFrame => rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame (impl at crates/rum-runtime/src/runtime/accounting_mode/continuation.rs:12:1); rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame.args -> rum_core::expr::SharedArgs	TODO.md#standing-engineering-debt	unresolved
++ UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	130	14	rum_runtime::runtime::suspension::core::FrameAction.Finalize.0/std::boxed::Box[Own]/arg0: opaque owned payload dyn PureFrameFinalizer	Unbounded	rum_runtime::runtime::suspension::core::PureFrameFinalizer => rum_runtime::runtime::debug_tools::reap::FinishReapBucketsFinalizer (impl at crates/rum-runtime/src/runtime/debug_tools/reap.rs:284:1); rum_runtime::runtime::debug_tools::reap::FinishReapBucketsFinalizer.rendered -> rum_runtime::runtime::debug_tools::reap_state::ReapRenderAccumulator ; rum_runtime::runtime::debug_tools::reap_state::ReapRenderAccumulator.prefix -> rum_core::expr::SharedArgs	TODO.md#standing-engineering-debt	unresolved
++ UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	140	48	public input rum_runtime::runtime::suspension::core::impl(FrameAction)@133::evaluate(next_frame): opaque owned generic parameter F where F : SuspensionFrame ,	PublicInput	public by-value input; owning storage sites are separate rows	-	-
++ UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	151	35	public input rum_runtime::runtime::suspension::core::impl(FrameAction)@133::finalize(finalizer): opaque owned generic parameter F where F : PureFrameFinalizer ,	PublicInput	public by-value input; owning storage sites are separate rows	-	-
++ UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	533	57	public input rum_runtime::runtime::suspension::core::impl(Session)@468::insert_suspension_frame(frame): opaque owned generic parameter F where F : SuspensionFrame ,	PublicInput	public by-value input; owning storage sites are separate rows	-	-
++ UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	10	12	rum_runtime::runtime::suspension::typed::entry::Entry.Legacy.0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn SuspensionFrame	Unbounded	rum_runtime::runtime::suspension::core::SuspensionFrame => rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame (impl at crates/rum-runtime/src/runtime/accounting_mode/continuation.rs:12:1); rum_runtime::runtime::accounting_mode::continuation::AccountedCompoundFrame.args -> rum_core::expr::SharedArgs	TODO.md#standing-engineering-debt	unresolved
++ UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	11	11	rum_runtime::runtime::suspension::typed::entry::Entry.Typed.0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame	Unbounded	rum_runtime::runtime::suspension::typed::adapter::ErasedFrame => rum_runtime::runtime::suspension::typed::adapter::TypedAdapter.inner (impl at crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:33:1) => rum_runtime::runtime::suspension::typed::TypedFrame => rum_runtime::runtime::definitions::application::default_values::EvaluateFirstExactDefaultValueFromCursorSuspensionFrame (impl at crates/rum-runtime/src/runtime/definitions/application/default_values.rs:292:1); rum_runtime::runtime::definitions::application::default_values::EvaluateFirstExactDefaultValueFromCursorSuspensionFrame.state -> rum_runtime::runtime::definitions::application::default_values::SuspendedExactDefaultValueScan ; rum_runtime::runtime::definitions::application::default_values::SuspendedExactDefaultValueScan.lookup_order -> rum_core::expr::SharedArgs	TODO.md#standing-engineering-debt	unresolved
+```
+
+**`crates/rum-stdlib/src/tests/ownership_graph/inventory/host_payloads.tsv` — 8 removed row occurrences, 8 added row occurrences**
+
+```text
+- UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	130	21	rum_runtime::runtime::suspension::core::FrameAction.Evaluate.next_frame/std::sync::Arc[LastStrongHolder]/arg0/alias(rum_runtime::runtime::suspension::core::DynSuspensionFrame): opaque owned payload dyn SuspensionFrame
+- UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	132	14	rum_runtime::runtime::suspension::core::FrameAction.Finalize.0/std::boxed::Box[Own]/arg0: opaque owned payload dyn PureFrameFinalizer
+- UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	142	48	public input rum_runtime::runtime::suspension::core::impl(FrameAction)@135::evaluate(next_frame): opaque owned generic parameter F where F : SuspensionFrame ,
+- UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	153	35	public input rum_runtime::runtime::suspension::core::impl(FrameAction)@135::finalize(finalizer): opaque owned generic parameter F where F : PureFrameFinalizer ,
+- UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	547	57	public input rum_runtime::runtime::suspension::core::impl(Session)@482::insert_suspension_frame(frame): opaque owned generic parameter F where F : SuspensionFrame ,
+- UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core/queue.rs	7	12	rum_runtime::runtime::suspension::core::queue::FrameQueue.Legacy.0/std::collections::VecDeque[Own]/arg0/rum_runtime::runtime::suspension::core::evaluation_context::Queued<arg0> via payload/std::sync::Arc[LastStrongHolder]/arg0/alias(rum_runtime::runtime::suspension::core::DynSuspensionFrame): opaque owned payload dyn SuspensionFrame
+- UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	11	12	rum_runtime::runtime::suspension::typed::entry::Entry.Legacy.0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn SuspensionFrame
+- UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	12	11	rum_runtime::runtime::suspension::typed::entry::Entry.Typed.0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame
++ UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	128	21	rum_runtime::runtime::suspension::core::FrameAction.Evaluate.next_frame/std::sync::Arc[LastStrongHolder]/arg0/alias(rum_runtime::runtime::suspension::core::DynSuspensionFrame): opaque owned payload dyn SuspensionFrame
++ UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	130	14	rum_runtime::runtime::suspension::core::FrameAction.Finalize.0/std::boxed::Box[Own]/arg0: opaque owned payload dyn PureFrameFinalizer
++ UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	140	48	public input rum_runtime::runtime::suspension::core::impl(FrameAction)@133::evaluate(next_frame): opaque owned generic parameter F where F : SuspensionFrame ,
++ UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	151	35	public input rum_runtime::runtime::suspension::core::impl(FrameAction)@133::finalize(finalizer): opaque owned generic parameter F where F : PureFrameFinalizer ,
++ UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core.rs	533	57	public input rum_runtime::runtime::suspension::core::impl(Session)@468::insert_suspension_frame(frame): opaque owned generic parameter F where F : SuspensionFrame ,
++ UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core/queue.rs	20	12	rum_runtime::runtime::suspension::core::queue::FrameQueue.Legacy.0/std::collections::VecDeque[Own]/arg0/rum_runtime::runtime::suspension::core::evaluation_context::Queued<arg0> via payload/std::sync::Arc[LastStrongHolder]/arg0/alias(rum_runtime::runtime::suspension::core::DynSuspensionFrame): opaque owned payload dyn SuspensionFrame
++ UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	10	12	rum_runtime::runtime::suspension::typed::entry::Entry.Legacy.0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn SuspensionFrame
++ UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	11	11	rum_runtime::runtime::suspension::typed::entry::Entry.Typed.0/std::sync::Arc[LastStrongHolder]/arg0: opaque owned payload dyn ErasedFrame
+```
+
+**`crates/rum-stdlib/src/tests/ownership_graph/inventory/self_reaching.tsv` — 2 removed row occurrences, 2 added row occurrences**
+
+```text
+- rum_runtime::runtime::profiling::logical::queue::ProfileQueue	crates/rum-runtime/src/runtime/profiling/logical/queue.rs	8	rum_runtime::runtime::profiling::logical::queue::ProfileQueue.guest -> rum_runtime::runtime::suspension::core::queue::FrameQueue ; rum_runtime::runtime::suspension::core::queue::FrameQueue.Profiled.0/std::boxed::Box[Own]/arg0 -> rum_runtime::runtime::profiling::logical::queue::ProfileQueue
+- rum_runtime::runtime::suspension::core::queue::FrameQueue	crates/rum-runtime/src/runtime/suspension/core/queue.rs	6	rum_runtime::runtime::suspension::core::queue::FrameQueue.Profiled.0/std::boxed::Box[Own]/arg0 -> rum_runtime::runtime::profiling::logical::queue::ProfileQueue ; rum_runtime::runtime::profiling::logical::queue::ProfileQueue.guest -> rum_runtime::runtime::suspension::core::queue::FrameQueue
++ rum_runtime::runtime::profiling::logical::record::RecordPath	crates/rum-runtime/src/runtime/profiling/logical/record.rs	109	rum_runtime::runtime::profiling::logical::record::RecordPath.parent/std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0 -> rum_runtime::runtime::profiling::logical::record::RecordPath
++ rum_runtime::runtime::profiling::logical::source_stack::Node	crates/rum-runtime/src/runtime/profiling/logical/source_stack.rs	5	rum_runtime::runtime::profiling::logical::source_stack::Node.parent/std::option::Option[Own]/arg0/std::sync::Arc[LastStrongHolder]/arg0 -> rum_runtime::runtime::profiling::logical::source_stack::Node
+```
+
+**`crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv` — 12 removed row occurrences, 14 added row occurrences**
+
+```text
+- UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	7	1	unresolved attribute/expansion derive (Clone , Copy , Debug)
+- UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	14	1	unresolved attribute/expansion derive (Clone , Copy , Debug)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	12	1	unresolved attribute/expansion derive (Default)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	226	5	unresolved attribute/expansion cfg (any (test , feature = "test-builtin-memory-growth" , feature = "test-continuation-slots"))
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	6	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	26	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	110	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	28	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , PartialOrd , Ord)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	46	5	unresolved attribute/expansion cfg (any (test , feature = "test-continuation-slots"))
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	52	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	256	13	unresolved attribute/expansion cfg (any (test , feature = "test-continuation-slots"))
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	9	1	unresolved attribute/expansion derive (Clone)
++ UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	8	1	unresolved attribute/expansion derive (Clone , Copy , Debug)
++ UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	15	1	unresolved attribute/expansion derive (Clone , Copy , Debug)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	13	1	unresolved attribute/expansion derive (Default)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	234	5	unresolved attribute/expansion cfg (any (test , feature = "test-builtin-memory-growth" , feature = "test-continuation-slots"))
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/index.rs	289	5	unresolved attribute/expansion cfg (any (test , feature = "test-builtin-memory-growth" , feature = "test-continuation-slots"))
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	6	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , PartialOrd , Ord)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	26	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , PartialOrd , Ord)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	128	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	32	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , PartialOrd , Ord)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	50	5	unresolved attribute/expansion cfg (any (test , feature = "test-continuation-slots"))
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	56	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	242	13	unresolved attribute/expansion cfg (any (test , feature = "test-continuation-slots"))
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/profile_queue/arena.rs	4	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/typed/entry.rs	8	1	unresolved attribute/expansion derive (Clone)
+```
+
+**`crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv` — 88 removed row occurrences, 78 added row occurrences**
+
+```text
+- UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	35	53	closure captures: |s| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	32	59	closure captures: |s| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	33	49	closure captures: |s| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	34	52	closure captures: |s| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	45	23	closure captures: |(e , r)| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	45	50	closure captures: |(owner , _ , _)| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	48	21	closure captures: |(e , r)| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	50	51	closure captures: |owner| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	52	42	closure captures: |(candidate , _ , _)| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	55	18	closure captures: |(_ , r)| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	89	30	closure captures: |s| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	91	51	closure captures: |s| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	93	54	closure captures: |s| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	94	46	closure captures: |d| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	95	36	closure captures: |d| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	96	39	closure captures: |d| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	123	46	closure captures: |d| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	124	36	closure captures: |d| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	125	39	closure captures: |d| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	126	57	closure captures: |s| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	127	47	closure captures: |s| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	128	50	closure captures: |s| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	137	65	closure captures: |n| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	22	25	closure captures: || (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	93	22	closure captures: |r| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	103	23	closure captures: |r| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	149	56	closure captures: |r| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	167	19	closure captures: |r| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	173	73	closure captures: |r| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	183	53	closure captures: |r| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	183	73	closure captures: |r| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	237	18	closure captures: |r| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/queue.rs	36	21	closure captures: |entry| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/queue.rs	87	18	closure captures: |n| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/queue.rs	94	23	closure captures: |n| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/queue.rs	139	58	closure captures: |c| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	42	24	closure captures: |stack| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	46	18	closure captures: |s| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	56	24	closure captures: |stack| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	57	38	closure captures: |s| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	59	55	closure captures: || (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	73	24	closure captures: |stack| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	73	56	closure captures: |s| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	81	28	closure captures: |stack| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	101	43	closure captures: |stack| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	104	31	closure captures: |state| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	131	27	closure captures: |state| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	150	32	closure captures: |stack| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	151	60	closure captures: |s| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	160	35	closure captures: |state| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	164	31	closure captures: |state| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	171	34	closure captures: |(_ , id , _)| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	194	36	closure captures: |stack| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	199	19	closure captures: |s| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	200	18	closure captures: |s| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	217	62	closure captures: |c| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	218	31	closure captures: |cell| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	233	27	closure captures: |frame| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	238	27	closure captures: |frame| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	279	33	closure captures: |owner| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	748	22	closure captures: |cell| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	751	30	closure captures: |failure| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	783	48	closure captures: |value| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	783	73	closure captures: |()| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	817	43	closure captures: |()| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	828	48	closure captures: |value| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	828	73	closure captures: |()| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	866	43	closure captures: |()| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	915	27	closure captures: |s| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	916	27	closure captures: |context| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	921	22	closure captures: |cell| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	924	30	closure captures: |failure| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	962	48	closure captures: |value| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	962	73	closure captures: |()| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	996	43	closure captures: |()| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	1007	48	closure captures: |value| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	1007	73	closure captures: |()| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	1045	43	closure captures: |()| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	47	53	closure captures: |c| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	59	23	closure captures: |c| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	60	22	closure captures: |c| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	68	59	closure captures: |c| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	181	56	closure captures: |cell| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	185	55	closure captures: |cell| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	196	60	closure captures: |cell| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	325	68	closure captures: |cell| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	366	43	closure captures: |cell| (capture types/modes unresolved)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	419	29	closure captures: |c| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	64	53	closure captures: |p| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	85	30	closure captures: |s| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	87	51	closure captures: |s| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	89	54	closure captures: |s| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	90	46	closure captures: |d| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	91	36	closure captures: |d| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	92	39	closure captures: |d| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	120	46	closure captures: |d| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	121	36	closure captures: |d| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	122	39	closure captures: |d| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	123	57	closure captures: |s| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	124	47	closure captures: |s| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	125	50	closure captures: |s| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	134	65	closure captures: |n| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	23	25	closure captures: || (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	93	31	closure captures: |id| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	93	70	closure captures: |r| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	104	43	closure captures: |id| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	104	73	closure captures: |r| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	115	51	closure captures: |p| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	159	18	closure captures: |r| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	184	53	closure captures: |r| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	200	27	closure captures: |id| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	227	47	closure captures: |r| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	245	18	closure captures: |(key , counts)| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/index.rs	94	20	closure captures: |i| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/index.rs	94	48	closure captures: |n| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/index.rs	154	23	closure captures: |n| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/index.rs	295	38	closure captures: |s| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	147	27	closure captures: |state| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	191	27	closure captures: |state| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	206	24	closure captures: |stack| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	208	44	closure captures: || (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	217	24	closure captures: |stack| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	221	19	closure captures: || (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	234	24	closure captures: |stack| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	238	43	closure captures: |p| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	243	13	closure captures: |stack| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	243	47	closure captures: |i| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	262	43	closure captures: |stack| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	265	31	closure captures: |state| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	286	32	closure captures: |stack| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	309	54	closure captures: |i| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	316	38	closure captures: |p| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	333	36	closure captures: |stack| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/source_stack.rs	27	24	closure captures: |n| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/source_stack.rs	34	36	closure captures: |n| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/source_stack.rs	46	39	closure captures: |e| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/source_stack.rs	103	49	closure captures: |e| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	219	27	closure captures: |frame| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	224	27	closure captures: |frame| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	265	33	closure captures: |owner| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/driver.rs	13	26	closure captures: |s| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/driver.rs	30	22	closure captures: |cell| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/driver.rs	33	30	closure captures: |failure| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/driver.rs	64	48	closure captures: |value| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/driver.rs	64	73	closure captures: |()| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/driver.rs	98	43	closure captures: |()| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/driver.rs	109	48	closure captures: |value| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/driver.rs	109	73	closure captures: |()| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/driver.rs	147	43	closure captures: |()| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/profile_queue.rs	46	53	closure captures: |(weak , _)| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/profile_queue.rs	82	40	closure captures: |entry| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/profile_queue.rs	134	30	closure captures: |id| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/profile_queue.rs	231	26	closure captures: |c| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/profile_queue.rs	259	23	closure captures: |id| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/profile_queue.rs	260	26	closure captures: |c| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/profile_queue/arena.rs	89	21	closure captures: |i| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/profile_queue/arena.rs	89	49	closure captures: |n| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/profile_queue/arena.rs	92	21	closure captures: |i| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/profile_queue/arena.rs	92	49	closure captures: |n| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/profile_queue/arena.rs	95	21	closure captures: |i| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/profile_queue/arena.rs	95	49	closure captures: |n| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	42	47	closure captures: |cell| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	115	56	closure captures: |cell| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	119	55	closure captures: |cell| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	129	60	closure captures: |cell| (capture types/modes unresolved)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	240	68	closure captures: |cell| (capture types/modes unresolved)
+```
+
+**`crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv` — 46 removed row occurrences, 28 added row occurrences**
+
+```text
+- UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	20	1	unexpanded macro thread_local! (ends at 27:2)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	153	9	unexpanded macro debug_assert_eq! (ends at 153:64)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	198	9	unexpanded macro eprintln! (ends at 201:10)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	255	13	unexpanded macro eprintln! (ends at 258:14)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	284	9	unexpanded macro eprintln! (ends at 290:10)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	292	9	unexpanded macro eprintln! (ends at 295:10)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/queue.rs	62	40	unexpanded macro unreachable! (ends at 62:88)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/queue.rs	182	13	unexpanded macro matches! (ends at 182:67)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/queue.rs	187	13	unexpanded macro debug_assert! (ends at 187:75)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	21	1	unexpanded macro thread_local! (ends at 28:2)
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/state.rs	81	1	unexpanded macro thread_local! (ends at 138:2)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	283	9	unexpanded macro assert! (ends at 286:10)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	301	9	unexpanded macro assert! (ends at 304:10)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	611	9	unexpanded macro debug_assert! (ends at 611:57)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	619	9	unexpanded macro assert! (ends at 622:10)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	644	9	unexpanded macro debug_assert! (ends at 647:10)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	709	17	unexpanded macro debug_assert! (ends at 709:66)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	765	49	unexpanded macro unreachable! (ends at 765:99)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	847	21	unexpanded macro debug_assert! (ends at 847:76)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	851	29	unexpanded macro unreachable! (ends at 851:79)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	1026	21	unexpanded macro debug_assert! (ends at 1026:76)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	1030	29	unexpanded macro unreachable! (ends at 1030:79)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	1092	1	unexpanded macro macro_rules! (ends at 1109:2)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	69	32	unexpanded macro matches! (ends at 69:95)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	125	24	unexpanded macro matches! (ends at 125:87)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	16	12	unexpanded macro matches! (ends at 16:45)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	28	13	unexpanded macro matches! (ends at 28:46)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	32	13	unexpanded macro unreachable! (ends at 32:27)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	59	27	unexpanded macro matches! (ends at 59:87)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	99	13	unexpanded macro unreachable! (ends at 99:27)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	214	22	unexpanded macro unreachable! (ends at 214:81)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	229	17	unexpanded macro unreachable! (ends at 229:76)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	319	12	unexpanded macro matches! (ends at 319:45)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	319	49	unexpanded macro matches! (ends at 319:84)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	327	34	unexpanded macro unreachable! (ends at 327:87)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	334	12	unexpanded macro matches! (ends at 334:68)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	337	12	unexpanded macro matches! (ends at 337:70)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	340	13	unexpanded macro matches! (ends at 340:46)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	340	51	unexpanded macro matches! (ends at 340:86)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	346	18	unexpanded macro unreachable! (ends at 346:32)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	363	13	unexpanded macro unreachable! (ends at 363:27)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	389	13	unexpanded macro unreachable! (ends at 389:27)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	397	42	unexpanded macro unreachable! (ends at 397:88)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	399	33	unexpanded macro matches! (ends at 399:73)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	417	13	unexpanded macro unreachable! (ends at 417:27)
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	429	13	unexpanded macro unreachable! (ends at 429:27)
++ UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	21	1	unexpanded macro thread_local! (ends at 28:2)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	209	9	unexpanded macro eprintln! (ends at 212:10)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	263	13	unexpanded macro eprintln! (ends at 266:14)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	292	9	unexpanded macro eprintln! (ends at 298:10)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	300	9	unexpanded macro eprintln! (ends at 303:10)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	35	1	unexpanded macro thread_local! (ends at 41:2)
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/state.rs	82	1	unexpanded macro thread_local! (ends at 139:2)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	269	9	unexpanded macro assert! (ends at 272:10)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	287	9	unexpanded macro assert! (ends at 290:10)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	597	9	unexpanded macro debug_assert! (ends at 597:57)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	605	9	unexpanded macro assert! (ends at 608:10)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	630	9	unexpanded macro debug_assert! (ends at 633:10)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	695	17	unexpanded macro debug_assert! (ends at 695:66)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	727	1	unexpanded macro macro_rules! (ends at 744:2)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	91	24	unexpanded macro matches! (ends at 91:87)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/driver.rs	128	21	unexpanded macro debug_assert! (ends at 128:76)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/driver.rs	132	29	unexpanded macro unreachable! (ends at 132:79)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/profile_queue.rs	39	9	unexpanded macro matches! (ends at 39:60)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/profile_queue.rs	88	36	unexpanded macro matches! (ends at 88:79)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/profile_queue.rs	158	25	unexpanded macro matches! (ends at 158:65)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/profile_queue.rs	243	13	unexpanded macro matches! (ends at 243:81)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/profile_queue.rs	260	30	unexpanded macro matches! (ends at 260:65)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	46	13	unexpanded macro unreachable! (ends at 46:27)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/queue.rs	157	17	unexpanded macro unreachable! (ends at 157:76)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/storage.rs	19	9	unexpanded macro matches! (ends at 19:42)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/storage.rs	25	12	unexpanded macro matches! (ends at 25:45)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/storage.rs	198	12	unexpanded macro matches! (ends at 198:70)
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core/storage.rs	201	12	unexpanded macro matches! (ends at 201:72)
+```
+
+**`crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_storage.tsv` — 7 removed row occurrences, 7 added row occurrences**
+
+```text
+- UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	16	12	rum_runtime::runtime::evaluation_cache::profile::source::CallStabilityTimingFrame.start: foreign representation std::time::Instant: Instant
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	12	16	rum_runtime::runtime::profiling::logical::context::Context.executing: foreign representation std::sync::atomic::AtomicBool: AtomicBool
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	27	35	rum_runtime::runtime::profiling::logical::epoch::Epoch.valid: foreign representation std::sync::atomic::AtomicBool: AtomicBool
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	28	38	rum_runtime::runtime::profiling::logical::epoch::Epoch.contexts: foreign representation std::sync::atomic::AtomicUsize: AtomicUsize
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	29	36	rum_runtime::runtime::profiling::logical::epoch::Epoch.faults: foreign representation std::sync::atomic::AtomicU64: AtomicU64
+- UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	12	12	rum_runtime::runtime::profiling::logical::segments::Active.start: foreign representation std::time::Instant: Instant
+- UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	47	18	rum_runtime::runtime::suspension::core::SuspensionSlot.fault_probe: unresolved conditional storage: fault :: FaultProbe
++ UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	17	12	rum_runtime::runtime::evaluation_cache::profile::source::CallStabilityTimingFrame.start: foreign representation std::time::Instant: Instant
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	13	16	rum_runtime::runtime::profiling::logical::context::Context.executing: foreign representation std::sync::atomic::AtomicBool: AtomicBool
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	28	35	rum_runtime::runtime::profiling::logical::epoch::Epoch.valid: foreign representation std::sync::atomic::AtomicBool: AtomicBool
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	29	38	rum_runtime::runtime::profiling::logical::epoch::Epoch.contexts: foreign representation std::sync::atomic::AtomicUsize: AtomicUsize
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	30	36	rum_runtime::runtime::profiling::logical::epoch::Epoch.faults: foreign representation std::sync::atomic::AtomicU64: AtomicU64
++ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	14	12	rum_runtime::runtime::profiling::logical::segments::Active.start: foreign representation std::time::Instant: Instant
++ UnknownConstruct	crates/rum-runtime/src/runtime/suspension/core.rs	51	18	rum_runtime::runtime::suspension::core::SuspensionSlot.fault_probe: unresolved conditional storage: fault :: FaultProbe
+```
+
+### 2. Engine, queue representation, and remaining complexity work
+
+`Entry` and `EntryRef` are byte-for-byte the LP01 three-variant definitions. The semantic `FrameQueue` contains only Legacy/Mixed guest entries. `FrameStorage` contains Guest or Profiled; ProfileQueue owns a GuestQueue that cannot itself be profiled. Markers exist only in private diagnostic cells. Those cells retain context and flags but no guest entry or frame Arc. Only the owning profile_queue module mutates either half.
+
+There is one `drive_frames<O, M>` body and one `abandon_frames<M>` loop. Ordinary and Profiled are zero-sized mode types; ordinary hooks return unit and are always inlined. Mode selection uses the queue representation, including when the test gate is switched off after creating a profiled queue. The generic code has not been replaced with copied bodies. The no-cost off-path conclusion still requires the unrun measurements.
+
+Record and key lookups use a budgeted AVL index. Diagnostic queue metadata uses stable generational slots and an implicit AVL sequence; parent links prove handle membership after joins. Deferred cells are selected by subtree summaries and moved once. Active segments use stable slots, linked top/previous records, and an index. Context capture shares immutable record ancestry and persistent source stacks. No Instant is stored in a paused context. Buffer growth is geometric, charges old-plus-new during relocation, and then charges actual capacity. The weak arena allocation retains its charge until the Weak owner is dropped; its regression test passed.
+
+| Operation | Structure | Complexity and qualification |
+| --- | --- | --- |
+| Open / close / inspect / outcome update | Record/key AVL indexes | O(log n); record-path destruction amortized over nodes created and freed. |
+| Segment enter / finish / pause | Stable slots + record-head AVL index | O(log n); direct token removal O(1), no bottom scan or vector shifting. |
+| Context capture | Shared RecordPath + four persistent source stacks | O(1), excluding amortized destruction of previously allocated nodes. |
+| Source push / pop / snapshot | Persistent immutable nodes | O(1) per node; shared snapshots O(1). |
+| Cell insert / cut / frontier / consumer / deferred selection | Implicit AVL queue | O(log n). |
+| Deferred relocation | Subtree deferred counts | O(k log n) for k moved markers; each marker is moved at most once, amortized O(log n) per insertion. |
+| Metadata append | AVL join | O(log n); inherited semantic VecDeque append still moves m guest entries. |
+| Bulk close / owner teardown / queue destruction | Indexed records or stable queue cells | Output-sensitive traversal; O(log n) per record/cell removed. |
+| Context enter / pause / drop | Restarted ancestry segments | **Still O(k log n) for k active records.** A repeated queue resume cannot be called O(log n) independent of k. |
+
+**Bar 5 is not fully satisfied.** The probe covers the six named single-record/capture operations, not bulk context activation or inherited guest appends. `ProfileQueue::enter_front` invokes the O(k log n) context restart. That remaining per-queue-operation cost must be resolved or ruled on; the flat capture result does not prove a flat resume cost.
+
+The explicit production `expect`, `panic!`, and `unreachable!` audit found 28 remaining sites, each matched to the same pre-LP02 owner file (the moved driver matches core.rs). There are no newly introduced production sites in the engine or diagnostic queue; the new panic is test-only. The type-level nesting/marker panic arms from continuation 2 are removed. Every remaining inherited site is listed below and is outside continuation 3's new-site bar; this is not a claim that those older conditions have type-level proofs. Mutex poisoning unwraps also remain and are not representations of guest/marker variants.
+
+| Current site | Call | Pre-LP02 owner and line(s) |
+| --- | --- | --- |
+| crates/rum-runtime/src/runtime/suspension/core.rs:194 | .expect("the resumed suspension frame should remain queued") | crates/rum-runtime/src/runtime/suspension/core.rs:190 |
+| crates/rum-runtime/src/runtime/suspension/core.rs:276 | .expect("suspension generation should not wrap") | crates/rum-runtime/src/runtime/suspension/core.rs:272 |
+| crates/rum-runtime/src/runtime/suspension/core.rs:392 | .expect("abandoned OptionValue frame should own a scope") | crates/rum-runtime/src/runtime/suspension/core.rs:388 |
+| crates/rum-runtime/src/runtime/suspension/core.rs:401 | .expect("abandoned Reap frame should own a scope") | crates/rum-runtime/src/runtime/suspension/core.rs:397 |
+| crates/rum-runtime/src/runtime/suspension/core.rs:407 | .expect("abandoned Monitor frame should own a scope") | crates/rum-runtime/src/runtime/suspension/core.rs:403 |
+| crates/rum-runtime/src/runtime/suspension/core.rs:507 | .expect("just installed input owner") | crates/rum-runtime/src/runtime/suspension/core.rs:503 |
+| crates/rum-runtime/src/runtime/suspension/core.rs:541 | .expect("input suspension should be initialized before frames are pushed") | crates/rum-runtime/src/runtime/suspension/core.rs:528,562 |
+| crates/rum-runtime/src/runtime/suspension/core.rs:575 | .expect("input suspension should be initialized before frames are pushed") | crates/rum-runtime/src/runtime/suspension/core.rs:528,562 |
+| crates/rum-runtime/src/runtime/suspension/core.rs:601 | .expect("completed resumption should retain its owner until the queue is empty") | crates/rum-runtime/src/runtime/suspension/core.rs:588 |
+| crates/rum-runtime/src/runtime/suspension/core.rs:636 | .expect("resume requires a pending suspended evaluation") | crates/rum-runtime/src/runtime/suspension/core.rs:623 |
+| crates/rum-runtime/src/runtime/suspension/core.rs:645 | .expect("resuming suspension was just installed") | crates/rum-runtime/src/runtime/suspension/core.rs:632 |
+| crates/rum-runtime/src/runtime/suspension/core.rs:662 | .expect("resuming owner is installed") | crates/rum-runtime/src/runtime/suspension/core.rs:649 |
+| crates/rum-runtime/src/runtime/suspension/core/queue.rs:46 | unreachable!() | crates/rum-runtime/src/runtime/suspension/core/queue.rs:25 |
+| crates/rum-runtime/src/runtime/suspension/core/queue.rs:140 | .expect("the resumed suspension frame should remain queued") | crates/rum-runtime/src/runtime/suspension/core/queue.rs:107,119 |
+| crates/rum-runtime/src/runtime/suspension/core/queue.rs:152 | .expect("the resumed suspension frame should remain queued") | crates/rum-runtime/src/runtime/suspension/core/queue.rs:107,119 |
+| crates/rum-runtime/src/runtime/suspension/core/queue.rs:157 | unreachable!("legacy dispatch must pop its observed front") | crates/rum-runtime/src/runtime/suspension/core/queue.rs:124 |
+| crates/rum-runtime/src/runtime/suspension/core/driver.rs:41 | .expect("restoring context preserves the queue front") | crates/rum-runtime/src/runtime/suspension/core.rs:719 |
+| crates/rum-runtime/src/runtime/suspension/core/driver.rs:53 | .expect("the return event remains Session-rooted") | crates/rum-runtime/src/runtime/suspension/core.rs:731 |
+| crates/rum-runtime/src/runtime/suspension/core/driver.rs:79 | .expect("the active resumption remains Session-rooted") | crates/rum-runtime/src/runtime/suspension/core.rs:757,770,796,817 |
+| crates/rum-runtime/src/runtime/suspension/core/driver.rs:92 | .expect("the active resumption remains Session-rooted") | crates/rum-runtime/src/runtime/suspension/core.rs:757,770,796,817 |
+| crates/rum-runtime/src/runtime/suspension/core/driver.rs:118 | .expect("the active resumption remains Session-rooted") | crates/rum-runtime/src/runtime/suspension/core.rs:757,770,796,817 |
+| crates/rum-runtime/src/runtime/suspension/core/driver.rs:132 | unreachable!("decode failure returned before pop") | crates/rum-runtime/src/runtime/suspension/core.rs:810 |
+| crates/rum-runtime/src/runtime/suspension/core/driver.rs:139 | .expect("the active resumption remains Session-rooted") | crates/rum-runtime/src/runtime/suspension/core.rs:757,770,796,817 |
+| crates/rum-runtime/src/runtime/suspension/core/driver.rs:160 | .expect("nested input request should establish a fresh suspension") | crates/rum-runtime/src/runtime/suspension/core.rs:837 |
+| crates/rum-runtime/src/runtime/suspension/core/driver.rs:167 | .expect("the still-rooted suffix should remain in Session") | crates/rum-runtime/src/runtime/suspension/core.rs:844 |
+| crates/rum-runtime/src/runtime/suspension/core/evaluation_context.rs:64 | .expect("evaluation return belongs to a pending input owner") | crates/rum-runtime/src/runtime/suspension/core/evaluation_context.rs:64 |
+| crates/rum-runtime/src/runtime/suspension/core/fault.rs:95 | .expect("the boundary checked the continuation fault latch") | crates/rum-runtime/src/runtime/suspension/core/fault.rs:95 |
+| crates/rum-runtime/src/runtime/suspension/core/fault.rs:103 | .expect("a slot fault keeps the active owner until unwind") | crates/rum-runtime/src/runtime/suspension/core/fault.rs:103 |
+
+`core.rs` is **24,422 characters**, down from the entry's 41,988. The driver (8,822), queue (7,515), storage projection (7,751), and abandonment (4,482) now have separate responsibilities. Core remains in the split-plan range: a future split should separate owner installation/accounted state transitions from request/slot dispatch. This continuation extracts the requested driver and keeps the remaining owner transitions together; no TODO.md edit was authorized. The 13,575-character arena is a cohesive balance/join implementation, with tests already separate. The 10–13k source/segment/profile-queue modules remain warning-range files.
+
+### 3. Isolated proofs and the blocking rejection result
+
+The required strong-owner falsifier was executed before the redesign and failed at every checkpoint: profiled frames had two owners where ordinary frames had one. Verbatim calibration observations:
+
+```text
+strong-count push: ordinary=[1, 1, 1, 1] profiled=[2, 2, 2, 2]
+strong-count widen: ordinary=[1, 1, 1, 1] profiled=[2, 2, 2, 2]
+strong-count append: ordinary=[1, 1, 1, 1, 1, 1, 1, 1] profiled=[2, 2, 2, 2, 2, 2, 2, 2]
+strong-count marker: ordinary=[1, 1, 1, 1, 1, 1, 1, 1] profiled=[2, 2, 2, 2, 2, 2, 2, 2]
+```
+
+The implementation subsequently passed the four checkpoints. The logical suite reached **26 passed, zero failed, one ignored**; the ignored test is the explicitly run perf probe. It covers AVL order/recycling/balance, deferred-marker order, ownership, gate/representation mismatch on resume and abandonment, and expired weak-allocation charging in addition to the prior logical tests. The last logical run preceded the final privacy wrapper/import formatting repair; the final source was compiled by the discovery/native rejection builds and used by the 789-row layout run. A fresh full logical/native lifecycle pass is still required. The previously accepted 19 native routes have not been rerun for continuation 3.
+
+The unchanged native rejection gate fails at `census/tests.rs:191`, before the allowed LP02 total/map check. Scratch instrumentation adds one diagnostic print, retains every assertion, and reports **926 rows: RET001=10, RET002=891, RET003=25**. Its source guard finds the old lines 41 and 42, but not line 60. The capture remains in production at `abandon.rs:85`, inside `abandon_frames<M>`. Both calls to that generic method are retained as unresolved RET002 boundaries with reason `method instance is not in the finite scalar substitution set`; the frontier does not visit their body. No success or retention coverage was fabricated.
+
+| Current site | Kind | Source operation | Reason |
+| --- | --- | --- | --- |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:45:16 | RET002 | if suspension.frames.is_profiled() { | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:46:17 | RET002 | self.abandon_frames::<profile_mode::Profiled>(suspension, reason); | method syntax: method instance is not in the finite scalar substitution set |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:48:17 | RET002 | self.abandon_frames::<profile_mode::Ordinary>(suspension, reason); | method syntax: method instance is not in the finite scalar substitution set |
+
+The accepted 960-row dump pairs **923** unchanged or source-position-moved sites. **37** sites cease to be visited, and **3** appear, yielding 926. The 37 removals comprise 20 abandonment sites and 17 downstream maintained-stack/output/context sites. This is a frontier traversal change, not deletion of those downstream operations. Exact old/new records and witnesses: [.temp/brief-626/continuation-3/rejection-difference.json](../../../.temp/brief-626/continuation-3/rejection-difference.json). Every removed site follows.
+
+| Removed frontier site | Kind | Source operation | Reason |
+| --- | --- | --- | --- |
+| crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:175:9 | RET002 | self.evaluation_stack.pop(); | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:176:12 | RET002 | if self.current_memory_limit.is_some() { | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:177:25 | RET002 | let bytes = self                 .accounting_route                 .as_ref() | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:177:25 | RET002 | let bytes = self                 .accounting_route                 .as_ref()                 .expect("armed route") | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:177:25 | RET002 | let bytes = self                 .accounting_route                 .as_ref()                 .expect("armed route")                 .evaluation_stack_bytes                 .and_then(&#124;total&#124; total.checked_sub(payload)); | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:182:27 | RET002 | .and_then(&#124;total&#124; total.checked_sub(payload)); | closure capture/callback effects unresolved; closure body is a rejected boundary |
+| crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:192:38 | RET002 | expr_memory_proxy_bytes(&self.evaluation_stack.last().expect("active entry").expr); | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:192:38 | RET002 | expr_memory_proxy_bytes(&self.evaluation_stack.last().expect("active entry").expr); | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:211:12 | RET002 | if self.current_memory_limit.is_some() { | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:212:19 | RET002 | while self.evaluation_stack.len() > len { | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:212:19 | RET002 | while self.evaluation_stack.len() > len { | primitive operand proof or exact operator/conversion impl required |
+| crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:216:13 | RET002 | self.evaluation_stack.truncate(len); | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:48:40 | RET002 | while let Some(cell) = suspension.take_front() { | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:51:50 | RET002 | self.rollback_capture_output(frame.output_boundary()); | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:52:34 | RET002 | let action = frame.abandon(&mut AbandonmentContext {                         session: self,                         reason,                     }); | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:60:32 | RET002 | if !suspension.is_empty() { | primitive operand proof or exact operator/conversion impl required |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:60:33 | RET002 | if !suspension.is_empty() { | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:61:59 | RET002 | suspension.active_stack = self.evaluation_stack.clone(); | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:63:37 | RET002 | self.capture_guest_form_environment(); | method syntax: opaque imported trait candidate std::sync::Arc |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:64:33 | RET002 | self.abandonment_worklist.push(suspension); | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:73:37 | RET002 | self.abandonment_worklist.push(nested); | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:105:52 | RET002 | while let Some((cell, _profile_context)) = suspension.take_front_with_profile() { | method syntax: opaque imported trait candidate std::sync::Arc |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:108:42 | RET002 | self.rollback_capture_output(frame.output_boundary()); | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:109:26 | RET002 | let action = frame.abandon(&mut AbandonmentContext {                 session: self,                 reason,             }); | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:117:24 | RET002 | if !suspension.is_empty() { | primitive operand proof or exact operator/conversion impl required |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:117:25 | RET002 | if !suspension.is_empty() { | method syntax: prelude trait candidate is_empty cannot be excluded at rum_runtime::runtime::suspension::core::SuspendedEvaluation |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:118:51 | RET002 | suspension.active_stack = self.evaluation_stack.clone(); | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:119:61 | RET002 | suspension.guest_form_environment = self.capture_guest_form_environment(); | method syntax: opaque imported trait candidate std::sync::Arc |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:120:25 | RET002 | self.abandonment_worklist.push(suspension); | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:127:29 | RET002 | self.abandonment_worklist.push(nested); | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/suspension/output.rs:73:13 | RET002 | self.prints.truncate(checkpoint); | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/suspension/output.rs:77:13 | RET002 | self.messages.truncate(checkpoint); | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/suspension/output.rs:81:13 | RET002 | self.trace_events.truncate(checkpoint); | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/suspension/output.rs:83:13 | RET002 | self.trace_event_depths.truncate(checkpoint); | method syntax: method receiver lacks checked nominal/place provenance |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:69:32 | RET003 | if matches!(cleanup_outcome, Err(EvalError::InputRequired { .. })) { | unexpanded macro; contents are not resolved Rust |
+| crates/rum-runtime/src/runtime/suspension/core/abandon.rs:125:24 | RET003 | if matches!(cleanup_outcome, Err(EvalError::InputRequired { .. })) { | unexpanded macro; contents are not resolved Rust |
+| crates/rum-runtime/src/runtime/suspension/core/evaluation_context.rs:33:9 | RET003 | debug_assert!(             context.stack_len <= self.evaluation_stack.len(),             "continuation contexts unwind a saved prefix"         ); | unexpanded macro; contents are not resolved Rust |
+
+Only the existing total and per-kind map would be derivable as 926 / (10,891,25); they were **not updated**, because that would leave the earlier guest-form guard failing. Authorizing a different guard or expanding the finite generic-mode frontier is a director decision outside this implementation's scope. Full native gate output, verbatim:
+
+```text
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 14.97s
+     Running unittests src/lib.rs (target/debug/deps/rum_stdlib-5f7f08d1c3c3a0e1)
+
+running 1 test
+test tests::retention_closure::census::tests::production_rejection_census_is_complete ... EDGE_ALL roots=7573 definitions=7573 raw=50399 deduplicated=50399 resolved_sites=16491
+FIRST_FAILURE EDGE_ALL rejected=7570 returned_ok=3 (effects::check per root; not edge frequency or production coverage)
+population	kind	raw	deduplicated	reason
+EDGE_ALL	RET002	14759	14759	method syntax: method receiver lacks checked nominal/place provenance
+EDGE_ALL	RET002	8598	8598	primitive operand proof or exact operator/conversion impl required
+EDGE_ALL	RET002	5445	5445	method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched
+EDGE_ALL	RET003	2776	2776	unexpanded macro; contents are not resolved Rust
+EDGE_ALL	RET002	2409	2409	closure capture/callback effects unresolved; closure body is a rejected boundary
+EDGE_ALL	RET002	2274	2274	implicit Try/FromResidual/error ownership not modeled
+EDGE_ALL	RET002	1864	1864	not a resolved function definition: <target>
+EDGE_ALL	RET002	1836	1836	method syntax: method receiver lacks an exact nominal type
+EDGE_ALL	RET002	1665	1665	implicit Index/Deref/bounds exceptional effects not proved
+EDGE_ALL	RET002	1293	1293	method syntax: method lexical scope contains local items/imports
+EDGE_ALL	RET002	1224	1224	path <path> has <n> exact bindings
+EDGE_ALL	RET002	933	933	implicit IntoIterator/next/iterator Drop not modeled
+EDGE_ALL	RET001	912	912	not a resolved function definition: <target>
+EDGE_ALL	RET002	875	875	method syntax: opaque imported trait candidate <target>
+EDGE_ALL	RET002	685	685	ambiguous or conditional function <target>
+EDGE_ALL	RET002	573	573	method syntax: type is outside the admitted surface: impl Into < String >
+EDGE_ALL	RET002	536	536	method syntax: non-positional generic impl
+EDGE_ALL	RET002	444	444	method syntax: method instance is not in the finite scalar substitution set
+EDGE_ALL	RET002	315	315	method syntax: opaque or ambiguous type <type>
+EDGE_ALL	RET002	140	140	method syntax: method instance has unknown bounds or argument arity
+EDGE_ALL	RET002	110	110	trait projection or runtime callable local
+EDGE_ALL	RET002	101	101	method syntax: unresolved non-test cfg alternative or opaque import namespace
+EDGE_ALL	RET002	100	100	unresolved non-test cfg alternative or opaque import namespace
+EDGE_ALL	RET002	52	52	typed macro expansion: cold helper closure capture/move of witness, session, request and frame inputs; FnOnce call and closure drop unresolved
+EDGE_ALL	RET002	52	52	typed macro expansion: delegated InputRequired reconstruction and request/error ownership unresolved
+EDGE_ALL	RET002	52	52	typed macro expansion: owned Result match, Ok/InputRequired/error bindings, Err(error) forwarding and local drops unresolved
+EDGE_ALL	RET002	50	50	typed macro expansion: return through witness.suspend; typed insertion and frame ownership transfer unresolved
+EDGE_ALL	RET002	49	49	typed macro expansion: caller producer place and slot_witness(&($result)) borrow/call unresolved
+EDGE_ALL	RET002	39	39	method syntax: method outside checked lexical scope
+EDGE_ALL	RET002	39	39	method syntax: prelude trait candidate <method> at <receiver>
+EDGE_ALL	RET002	35	35	method syntax: path <path> has <n> exact bindings
+EDGE_ALL	RET002	34	34	method syntax: unclassified attribute track_caller
+EDGE_ALL	RET002	22	22	runtime callable expression
+EDGE_ALL	RET002	16	16	method syntax: selected receiver would move through a borrowed place
+EDGE_ALL	RET002	13	13	method syntax: trait <trait> has unmodeled supertraits or generated candidates
+EDGE_ALL	RET002	12	12	method syntax: method trait scope contains an unexpanded item
+EDGE_ALL	RET002	7	7	method syntax: type is outside the admitted surface: dyn FileIo
+EDGE_ALL	RET002	5	5	method syntax: type is outside the admitted surface: impl Into < HostEvalRequest >
+EDGE_ALL	RET002	5	5	method syntax: unclassified attribute cfg (not (test))
+EDGE_ALL	RET002	4	4	method syntax: type is outside the admitted surface: impl Write
+EDGE_ALL	RET002	3	3	method syntax: type is outside the admitted surface: dyn SuspensionFrame
+EDGE_ALL	RET002	3	3	method syntax: type is outside the admitted surface: fn (& mut Session , & Expr , & SharedArgs) -> Result < Expr , EvalError >
+EDGE_ALL	RET002	3	3	method syntax: type is outside the admitted surface: impl FnMut (EntryRef < '_ >)
+EDGE_ALL	RET002	3	3	method syntax: type is outside the admitted surface: impl Into < SharedExpr >
+EDGE_ALL	RET002	3	3	method syntax: type is outside the admitted surface: impl Iterator < Item = (& Expr , & Expr) >
+EDGE_ALL	RET002	3	3	method syntax: type is outside the admitted surface: impl Iterator < Item = (& Symbol , & Expr , bool) >
+EDGE_ALL	RET002	3	3	method syntax: type is outside the admitted surface: impl Iterator < Item = Attribute >
+EDGE_ALL	RET002	3	3	typed macro expansion: owned producer binding and slot_witness(&produced) borrow/call unresolved
+EDGE_ALL	RET002	2	2	method syntax: type is outside the admitted surface: dyn EntropySource
+EDGE_ALL	RET002	2	2	method syntax: type is outside the admitted surface: dyn ErasedFrame
+EDGE_ALL	RET002	2	2	method syntax: type is outside the admitted surface: impl AsRef < Path >
+EDGE_ALL	RET002	2	2	method syntax: type is outside the admitted surface: impl FnOnce () -> RunCallDispatchStageSuspensionFrame
+EDGE_ALL	RET002	2	2	method syntax: type is outside the admitted surface: impl Iterator < Item = & BuiltinSpec >
+EDGE_ALL	RET002	2	2	method syntax: unknown or blanket trait impl may supply rum_jupyter::bootstrap::KernelTransportBackend::transport_layout
+EDGE_ALL	RET002	2	2	typed macro expansion: inline evaluation-return event insertion before witnessed consumer; parent context and resource epilogue unresolved
+EDGE_ALL	RET002	2	2	typed macro expansion: return through private Expr witness.suspend_evaluation_return; frame ownership transfer unresolved
+EDGE_ALL	RET002	1	1	method syntax: type is outside the admitted surface: dyn FrameRootVisitor
+EDGE_ALL	RET002	1	1	method syntax: type is outside the admitted surface: dyn PrintSink
+EDGE_ALL	RET002	1	1	method syntax: type is outside the admitted surface: impl Fn (& mut Session) + Send + Sync + 'static
+EDGE_ALL	RET002	1	1	method syntax: type is outside the admitted surface: impl FnMut (Span) -> Span
+EDGE_ALL	RET002	1	1	method syntax: type is outside the admitted surface: impl Into < HostIsCompleteRequest >
+EDGE_ALL	RET002	1	1	method syntax: type is outside the admitted surface: impl Iterator < Item = & StringPatternMatchState >
+
+INDEPENDENT_AUDIT EDGE_ALL roots=7573 definitions=7573 raw=50399 deduplicated=50399 reason_classes=62 all_spans_read=true
+
+thread 'tests::retention_closure::census::tests::production_rejection_census_is_complete' panicked at crates/rum-stdlib/src/tests/retention_closure/census/tests.rs:191:9:
+assertion failed: options.rejected.iter().any(|row|
+        row.kind == Kind::RET002 &&
+                row.site.file.ends_with("suspension/core/abandon.rs") &&
+            row.site.start.0 == line)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    tests::retention_closure::census::tests::production_rejection_census_is_complete
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 17.79s
+
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+
+### 4. Counter oracle status
+
+The 8,750-receipt oracle was **not rerun in continuation 3**. Its pinned sources are unchanged in the snapshot audit, and no phase was adopted into the logical engine. The existing source-scope storage was changed, so only a fresh oracle run can establish receipt equality. The director's accepted 499+499 and all 8,750 receipts belong to the previous source and are not reused as evidence for this redesign.
+
+### 5. Gates and exact outputs
+
+All compilation/test/measurement processes were serial and bounded, with one Cargo job, one test thread, offline Cargo, and TMPDIR under this brief. The full raw logs are linked. These are the actual continuation-3 gate commands and verbatim result/warning lines, including failed intermediate compilation, the expected falsifier failure, and the final scope failure. The snapshot/discovery scripts did not run git.
+
+**c3-ownership-calibration** — exit 101; [.temp/brief-626/logs/c3-ownership-calibration.log](../../../.temp/brief-626/logs/c3-ownership-calibration.log)
+
+```text
+cargo test --offline -p rum-runtime --lib logical_queued_frames_have_one_owner_in_both_modes -- --nocapture
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::Entry::Typed::0`
+warning: trait `typed::adapter::ErasedFrame` is more private than the item `typed::entry::EntryRef::Typed::0`
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 5 warnings
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1206 filtered out; finished in 0.01s
+error: test failed, to rerun pass `-p rum-runtime --lib`
+```
+
+**c3-scaling-baseline-build** — exit 0; [.temp/brief-626/logs/c3-scaling-baseline-build.log](../../../.temp/brief-626/logs/c3-scaling-baseline-build.log)
+
+```text
+cargo test --offline --release -p rum-runtime --lib logical_engine_instruction_probe --no-run --message-format=json
+```
+
+**c3-engine-calibration** — exit 0; [.temp/brief-626/logs/c3-engine-calibration.log](../../../.temp/brief-626/logs/c3-engine-calibration.log)
+
+```text
+python3 .temp/brief-626/continuation-3/scripts/engine-probe.py baseline
+```
+
+**c3-queue-shape-errors** — exit 101; [.temp/brief-626/logs/c3-queue-shape-errors.log](../../../.temp/brief-626/logs/c3-queue-shape-errors.log)
+
+```text
+cargo check --offline -p rum-runtime --tests
+error[E0432]: unresolved imports `crate::runtime::suspension::Entry`, `crate::runtime::suspension::EntryRef`
+warning: unused imports: `Queued` and `ResumeContext`
+error[E0599]: no variant or associated item named `Legacy` found for enum `queue::FrameQueue` in the current scope
+error[E0599]: no variant or associated item named `Mixed` found for enum `queue::FrameQueue` in the current scope
+error[E0616]: field `guest` of struct `ProfileQueue` is private
+error[E0599]: no variant or associated item named `Legacy` found for enum `queue::FrameQueue` in the current scope
+error[E0599]: no variant or associated item named `Mixed` found for enum `queue::FrameQueue` in the current scope
+error[E0599]: no variant or associated item named `ProfileBoundary` found for enum `typed::entry::EntryRef` in the current scope
+warning: `rum-runtime` (lib test) generated 1 warning
+error: could not compile `rum-runtime` (lib test) due to 7 previous errors; 1 warning emitted
+```
+
+**c3-queue-profiling** — exit 0; [.temp/brief-626/logs/c3-queue-profiling.log](../../../.temp/brief-626/logs/c3-queue-profiling.log)
+
+```text
+cargo test --offline -p rum-runtime --lib profiling -- --nocapture
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+test result: ok. 19 passed; 0 failed; 1 ignored; 0 measured; 1187 filtered out; finished in 0.03s
+```
+
+**c3-layout-first** — exit 0; [.temp/brief-626/logs/c3-layout-first.log](../../../.temp/brief-626/logs/c3-layout-first.log)
+
+```text
+cargo check --offline --manifest-path .temp/brief-626/continuation-3/layout-first/tree/Cargo.toml -p rum-runtime --lib --target-dir .temp/brief-626/continuation-3/target-layout-first
+warning: unused import: `self::core::queue::FrameQueue`
+warning: `rum-runtime` (lib) generated 1 warning (run `cargo fix --lib -p rum-runtime` to apply 1 suggestion)
+```
+
+**c3-index-profiling** — exit 0; [.temp/brief-626/logs/c3-index-profiling.log](../../../.temp/brief-626/logs/c3-index-profiling.log)
+
+```text
+cargo test --offline -p rum-runtime --lib profiling
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+test result: ok. 19 passed; 0 failed; 1 ignored; 0 measured; 1187 filtered out; finished in 0.03s
+```
+
+**c3-arena-profiling** — exit 0; [.temp/brief-626/logs/c3-arena-profiling.log](../../../.temp/brief-626/logs/c3-arena-profiling.log)
+
+```text
+cargo test --offline -p rum-runtime --lib profiling
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+test result: ok. 19 passed; 0 failed; 1 ignored; 0 measured; 1187 filtered out; finished in 0.03s
+```
+
+**c3-index-sequence-stress** — exit 0; [.temp/brief-626/logs/c3-index-sequence-stress.log](../../../.temp/brief-626/logs/c3-index-sequence-stress.log)
+
+```text
+cargo test --offline -p rum-runtime --lib logical_
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+test result: ok. 23 passed; 0 failed; 1 ignored; 0 measured; 1185 filtered out; finished in 0.39s
+```
+
+**c3-segments-profiling** — exit 101; [.temp/brief-626/logs/c3-segments-profiling.log](../../../.temp/brief-626/logs/c3-segments-profiling.log)
+
+```text
+cargo test --offline -p rum-runtime --lib logical_
+error[E0063]: missing field `_storage` in initializer of `ContextGuard`
+error: could not compile `rum-runtime` (lib test) due to 1 previous error
+```
+
+**c3-context-profiling** — exit 0; [.temp/brief-626/logs/c3-context-profiling.log](../../../.temp/brief-626/logs/c3-context-profiling.log)
+
+```text
+cargo test --offline -p rum-runtime --lib logical_
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+test result: ok. 23 passed; 0 failed; 1 ignored; 0 measured; 1185 filtered out; finished in 0.36s
+```
+
+**c3-snapshot-queue-proofs** — exit 0; [.temp/brief-626/logs/c3-snapshot-queue-proofs.log](../../../.temp/brief-626/logs/c3-snapshot-queue-proofs.log)
+
+```text
+cargo test --offline -p rum-runtime --lib logical_
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+test result: ok. 24 passed; 0 failed; 1 ignored; 0 measured; 1185 filtered out; finished in 0.36s
+```
+
+**c3-fmt-before** — exit 1; [.temp/brief-626/logs/c3-fmt-before.log](../../../.temp/brief-626/logs/c3-fmt-before.log)
+
+```text
+cargo fmt --check
+```
+
+**c3-balanced-deferred-proofs** — exit 0; [.temp/brief-626/logs/c3-balanced-deferred-proofs.log](../../../.temp/brief-626/logs/c3-balanced-deferred-proofs.log)
+
+```text
+cargo test --offline -p rum-runtime --lib logical_
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+test result: ok. 25 passed; 0 failed; 1 ignored; 0 measured; 1185 filtered out; finished in 0.37s
+```
+
+**c3-expanded-baseline-build** — exit 0; [.temp/brief-626/logs/c3-expanded-baseline-build.log](../../../.temp/brief-626/logs/c3-expanded-baseline-build.log)
+
+```text
+cargo test --offline --release --manifest-path .temp/brief-626/continuation-3/falsifiers/baseline-expanded-tree/Cargo.toml -p rum-runtime --lib logical_engine_instruction_probe --no-run --message-format=json
+```
+
+**c3-expanded-calibration** — exit 0; [.temp/brief-626/logs/c3-expanded-calibration.log](../../../.temp/brief-626/logs/c3-expanded-calibration.log)
+
+```text
+python3 .temp/brief-626/continuation-3/scripts/engine-probe-expanded.py baseline-expanded
+```
+
+**c3-scaling-candidate-build** — exit 0; [.temp/brief-626/logs/c3-scaling-candidate-build.log](../../../.temp/brief-626/logs/c3-scaling-candidate-build.log)
+
+```text
+cargo test --offline --release -p rum-runtime --lib logical_engine_instruction_probe --no-run --message-format=json
+```
+
+**c3-engine-attempt3** — exit 0; [.temp/brief-626/logs/c3-engine-attempt3.log](../../../.temp/brief-626/logs/c3-engine-attempt3.log)
+
+```text
+python3 .temp/brief-626/continuation-3/scripts/engine-probe-expanded.py attempt3
+```
+
+**c3-final-logical** — exit 0; [.temp/brief-626/logs/c3-final-logical.log](../../../.temp/brief-626/logs/c3-final-logical.log)
+
+```text
+cargo test --offline -p rum-runtime --lib logical_ -- --nocapture
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+test result: ok. 26 passed; 0 failed; 1 ignored; 0 measured; 1185 filtered out; finished in 0.36s
+```
+
+**c3-ownership-discovery** — exit 0; [.temp/brief-626/logs/c3-ownership-discovery.log](../../../.temp/brief-626/logs/c3-ownership-discovery.log)
+
+```text
+cargo test --offline -p rum-stdlib --lib discovery_report_without_inventory_input -- --nocapture
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 5.99s
+```
+
+**c3-identity-compile** — exit 101; [.temp/brief-626/logs/c3-identity-compile.log](../../../.temp/brief-626/logs/c3-identity-compile.log)
+
+```text
+cargo check --offline -p rum-runtime --tests
+error[E0432]: unresolved imports `crate::runtime::suspension::FrameStorage`, `crate::runtime::suspension::FrameStorage`, `crate::runtime::suspension::FrameStorage`
+error[E0603]: module `storage` is private
+error[E0596]: cannot borrow `b` as mutable, as it is not declared as mutable
+error: could not compile `rum-runtime` (lib test) due to 3 previous errors
+```
+
+**c3-identity-logical** — exit 0; [.temp/brief-626/logs/c3-identity-logical.log](../../../.temp/brief-626/logs/c3-identity-logical.log)
+
+```text
+cargo test --offline -p rum-runtime --lib logical_
+warning: type `typed::entry::Entry` is more private than the item `runtime::suspension::core::queue::FrameQueue::Mixed::0`
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 4 warnings
+test result: ok. 26 passed; 0 failed; 1 ignored; 0 measured; 1185 filtered out; finished in 0.40s
+```
+
+**c3-identity-check** — exit 0; [.temp/brief-626/logs/c3-identity-check.log](../../../.temp/brief-626/logs/c3-identity-check.log)
+
+```text
+cargo check --offline -p rum-runtime --tests
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+```
+
+**c3-final-fmt** — exit 0; [.temp/brief-626/logs/c3-final-fmt.log](../../../.temp/brief-626/logs/c3-final-fmt.log)
+
+```text
+cargo fmt --check
+```
+
+**c3-ownership-discovery-identity** — exit 0; [.temp/brief-626/logs/c3-ownership-discovery-identity.log](../../../.temp/brief-626/logs/c3-ownership-discovery-identity.log)
+
+```text
+cargo test --offline -p rum-stdlib --lib discovery_report_without_inventory_input -- --nocapture
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 5.87s
+```
+
+**c3-rejection-diagnostic** — exit 101; [.temp/brief-626/logs/c3-rejection-diagnostic.log](../../../.temp/brief-626/logs/c3-rejection-diagnostic.log)
+
+```text
+cargo test --offline --manifest-path .temp/brief-626/continuation-3/rejection-diagnostic/tree/Cargo.toml -p rum-stdlib --lib production_rejection_census_is_complete -- --nocapture
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 17.98s
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+
+**c3-native-rejection-stop** — exit 101; [.temp/brief-626/logs/c3-native-rejection-stop.log](../../../.temp/brief-626/logs/c3-native-rejection-stop.log)
+
+```text
+cargo test --offline -p rum-stdlib --lib production_rejection_census_is_complete -- --nocapture
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1161 filtered out; finished in 17.79s
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+```
+
+**layout-prepare-part1** — exit 0; [.temp/brief-626/continuation-3/final/logs/layout-prepare-part1.log](../../../.temp/brief-626/continuation-3/final/logs/layout-prepare-part1.log)
+
+```text
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-3/final/prepare-layout-check.py
+```
+
+**layout-check-part1** — exit 0; [.temp/brief-626/continuation-3/final/logs/layout-check-part1.log](../../../.temp/brief-626/continuation-3/final/logs/layout-check-part1.log)
+
+```text
+cargo check --offline --manifest-path /home/remi/dev/rum/.temp/brief-626/continuation-3/final/layout-candidate/tree/Cargo.toml -p rum-runtime --lib --target-dir /home/remi/dev/rum/.temp/brief-626/continuation-3/final/target-layout-check
+```
+
+**layout-build-part1** — exit 0; [.temp/brief-626/continuation-3/final/logs/layout-build-part1.log](../../../.temp/brief-626/continuation-3/final/logs/layout-build-part1.log)
+
+```text
+cargo build --offline -p rum-cli --target-dir /home/remi/dev/rum/.temp/brief-626/continuation-3/final/target-layout
+```
+
+**layout-prepare-part2** — exit 0; [.temp/brief-626/continuation-3/final/logs/layout-prepare-part2.log](../../../.temp/brief-626/continuation-3/final/logs/layout-prepare-part2.log)
+
+```text
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-3/final/prepare-layout-check.py
+```
+
+**layout-check-part2** — exit 0; [.temp/brief-626/continuation-3/final/logs/layout-check-part2.log](../../../.temp/brief-626/continuation-3/final/logs/layout-check-part2.log)
+
+```text
+cargo check --offline --manifest-path /home/remi/dev/rum/.temp/brief-626/continuation-3/final/layout-candidate/tree/Cargo.toml -p rum-runtime --lib --target-dir /home/remi/dev/rum/.temp/brief-626/continuation-3/final/target-layout-check
+```
+
+**layout-build-part2** — exit 0; [.temp/brief-626/continuation-3/final/logs/layout-build-part2.log](../../../.temp/brief-626/continuation-3/final/logs/layout-build-part2.log)
+
+```text
+cargo build --offline -p rum-cli --target-dir /home/remi/dev/rum/.temp/brief-626/continuation-3/final/target-layout
+```
+
+**layout-collect-part1** — exit 0; [.temp/brief-626/continuation-3/final/logs/layout-collect-part1.log](../../../.temp/brief-626/continuation-3/final/logs/layout-collect-part1.log)
+
+```text
+gdb -q -batch -x /home/remi/dev/rum/.temp/brief-626/continuation-3/final/collect-layouts.gdb /home/remi/dev/rum/.temp/brief-626/continuation-3/final/target-layout/debug/rum-cli
+warning: Missing auto-load script at offset 0 in section .debug_gdb_scripts
+```
+
+**layout-compare-part1** — exit 0; [.temp/brief-626/continuation-3/final/logs/layout-compare-part1.log](../../../.temp/brief-626/continuation-3/final/logs/layout-compare-part1.log)
+
+```text
+python3 /home/remi/dev/rum/.temp/brief-626/continuation-3/final/compare-layouts.py
+```
+
+Three dead-code helper warnings occur in the focused rum-runtime lib-test configuration: register_test_if_builtin, register_test_return_builtin, and register_test_vm_template_builtins. Those same three warnings occur in the pre-redesign calibration. The two prior private_interfaces warnings are removed; one temporary privacy warning from the identity repair was fixed without an allow. The latest production/discovery and native rejection builds report no Rust warnings. The all-feature-set/native-workspace warning bar remains unrun. GDB's missing auto-load script warning is a debugger message, not a Rust compiler warning.
+
+### 6. Measurements and freshness
+
+The six-operation probe runs two N/2N pairs at 16, 256, and 4,096, on both open-record and distinct-key axes: **144 perf processes per expanded arm**. The initial four-operation baseline adds 96 calibration processes. Counts use `taskset -c 2 perf stat -x, -e cpu_core/instructions/u`; N/2N slopes remove setup. No timing decision was made while another heavy process ran.
+
+| Axis | Operation | Baseline 4096/16 | Candidate @16 | @256 | @4096 | Candidate ratio | Limit |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| records | open-close | 72.227812 | 2487.872070 | 3911.829834 | 5336.122559 | 2.144854 | 3× |
+| records | inspect | 134.049881 | 183.141113 | 255.266113 | 326.949219 | 1.785231 | 3× |
+| records | interval | 143.808105 | 319.009033 | 391.015503 | 462.856567 | 1.450920 | 3× |
+| records | pause | 154.507368 | 301.766479 | 373.847656 | 446.116577 | 1.478350 | 3× |
+| records | segment | 89.055235 | 5179.122192 | 8187.157227 | 11194.978638 | 2.161559 | 3× |
+| records | context-capture | 13982.977312 | 487.978638 | 488.128296 | 488.078735 | 1.000205 | 1.25× |
+| keys | open-close | 173.637177 | 2410.915283 | 3419.171265 | 4426.817017 | 1.836156 | 3× |
+| keys | inspect | 1.000395 | 111.091919 | 110.765869 | 110.900879 | 0.998280 | 3× |
+| keys | interval | 1.001954 | 582.909058 | 918.663574 | 1255.182007 | 2.153307 | 3× |
+| keys | pause | 1.002607 | 566.117798 | 902.166626 | 1237.983276 | 2.186794 | 3× |
+| keys | segment | 104.809658 | 4233.253784 | 5576.734863 | 6921.055542 | 1.634926 | 3× |
+| keys | context-capture | 0.999809 | 487.899048 | 487.924072 | 488.127075 | 1.000467 | 1.25× |
+
+All twelve measured cases meet their limits on that intermediate binary. The worst logarithmic ratio is 2.186795×; context capture is at most 1.000468×. The expanded baseline reproduces 89.055× segment growth and 13,982.977× context-capture growth on the record axis. Raw runs and binary/source hashes are retained in [.temp/brief-626/continuation-3/falsifiers](../../../.temp/brief-626/continuation-3/falsifiers). Verbatim candidate probe output:
+
+```text
+{"axis": "records", "operation": "open-close", "instructions_per_operation": {"16": 2487.8720703125, "256": 3911.829833984375, "4096": 5336.12255859375}, "ratio_4096_to_16": 2.1448540792226036}
+{"axis": "records", "operation": "inspect", "instructions_per_operation": {"16": 183.14111328125, "256": 255.26611328125, "4096": 326.94921875}, "ratio_4096_to_16": 1.785231141671088}
+{"axis": "records", "operation": "interval", "instructions_per_operation": {"16": 319.009033203125, "256": 391.0155029296875, "4096": 462.8565673828125}, "ratio_4096_to_16": 1.4509199402140265}
+{"axis": "records", "operation": "pause", "instructions_per_operation": {"16": 301.7664794921875, "256": 373.84765625, "4096": 446.1165771484375}, "ratio_4096_to_16": 1.4783503386431862}
+{"axis": "records", "operation": "segment", "instructions_per_operation": {"16": 5179.1221923828125, "256": 8187.1572265625, "4096": 11194.978637695312}, "ratio_4096_to_16": 2.1615590870129138}
+{"axis": "records", "operation": "context-capture", "instructions_per_operation": {"16": 487.9786376953125, "256": 488.1282958984375, "4096": 488.0787353515625}, "ratio_4096_to_16": 1.0002051271275374}
+{"axis": "keys", "operation": "open-close", "instructions_per_operation": {"16": 2410.915283203125, "256": 3419.1712646484375, "4096": 4426.8170166015625}, "ratio_4096_to_16": 1.8361561882506816}
+{"axis": "keys", "operation": "inspect", "instructions_per_operation": {"16": 111.0919189453125, "256": 110.765869140625, "4096": 110.90087890625}, "ratio_4096_to_16": 0.9982803426128903}
+{"axis": "keys", "operation": "interval", "instructions_per_operation": {"16": 582.9090576171875, "256": 918.66357421875, "4096": 1255.1820068359375}, "ratio_4096_to_16": 2.1533067473112593}
+{"axis": "keys", "operation": "pause", "instructions_per_operation": {"16": 566.1177978515625, "256": 902.1666259765625, "4096": 1237.9832763671875}, "ratio_4096_to_16": 2.186794481758706}
+{"axis": "keys", "operation": "segment", "instructions_per_operation": {"16": 4233.2537841796875, "256": 5576.73486328125, "4096": 6921.0555419921875}, "ratio_4096_to_16": 1.6349257320355381}
+{"axis": "keys", "operation": "context-capture", "instructions_per_operation": {"16": 487.8990478515625, "256": 487.924072265625, "4096": 488.1270751953125}, "ratio_4096_to_16": 1.0004673658306038}
+PROBE COMPLETE attempt3 144 perf processes; setup removed by N/2N slopes
+```
+
+**Freshness qualification:** the candidate probe predates the small queue fast-path/inline repair, failed-allocation charge release, and the final guest-queue identity/privacy repair. Its binary manifest contains the exact source hashes. It is not the final-source bar-5 result. The final 144-process rerun was not started after the scope stop. Caps and source-change rationale are retained in [.temp/brief-626/continuation-3/measurement-caps.json](../../../.temp/brief-626/continuation-3/measurement-caps.json).
+
+The final layout arm was rebuilt after the identity/privacy repair. Exact comparison output:
+
+```text
+PRODUCTION LAYOUTS 789 / 789 unchanged; missing=0; changed=0
+CONTINUE TOKEN zero-size base/candidate 96
+```
+
+All nine final compile-time header assertions pass, including Entry=24, EntryRef=16, queued entry=40, queued legacy=32, FrameQueue=40, FrameStorage=40, ResumeContext=16, SuspendedEvaluation=80, and Session=2032. The complete 789-row comparison is [.temp/brief-626/continuation-3/final/layout-candidate/comparison.json](../../../.temp/brief-626/continuation-3/final/layout-candidate/comparison.json).
+
+| Required measurement | Continuation-3 status |
+| --- | --- |
+| Four final C1 performance binaries | Not built; immutable LP01 bases remain preserved. |
+| 313-label allocations | Not run on final source. |
+| 313-label instruction pairs, repeats and Callgrind attribution | Not run on final source; no inertness/no-cost conclusion. |
+| Calibrated copies and all resume profiles | Not run on final source. |
+| 44 stack fits and resumed chains | Not run on final source. |
+| 789 layouts and production headers | 789/789 unchanged; nine final header assertions pass. |
+| Four timing panels and aligned whole-program probe | Not run on final source. |
+
+The isolated final-campaign directory contains copied tools and 586 hash-identical workload inputs, but no copied performance results from continuation 2. It was prepared for the required campaign and stopped before those runs. Previous reports' allocation/copy/instruction/stack/timing results do not validate this source.
+
+### 7. Stop-loss, deviations, and exact next action
+
+The preserved checkpoint records source_attempts=3 and consecutive_without_progress=0. Progress includes the failing-then-passing four-checkpoint owner falsifier, removal of guest marker/nesting states and copied drivers, original ownership identity preservation, the measured intermediate scaling improvement, 789 final layouts, and core.rs below 35k. The stop-loss did not fire. The native mandatory rejection guard created the explicit scope stop.
+
+No test assertion or Checks flag was weakened. No existing frame gained a field, no public host type/Expr/Symbol representation changed, and no semantic codec or continuation token was added. No production source was edited after confirmation of the native scope failure. The working tree compiles, but this is **not a gate-ready result**: ownership rows have been replayed, while local fingerprints/promoted certificates remain stale. All source remains uncommitted.
+
+The director must settle how the guest-form witness guard applies when its required generic mode calls are outside the frontier's finite scalar substitutions. The actual retained call boundaries and disappeared downstream witnesses are supplied above. After that decision, the executor must finish the bulk context/queue complexity requirement, replay fingerprints/certificates, rerun final unit/native tests and the full 8,750-receipt oracle, both census/configuration controls, workspace and method oracle, and every final performance measurement. The previous requested 3,519 method agreements were not rerun here; no count is asserted. Nine native ZeroMQ skips likewise were not rerun and are not reported as passes.
+
+Exact state and remaining work: [.temp/brief-626/state.json](../../../.temp/brief-626/state.json), [.temp/brief-626/PROGRESS.md](../../../.temp/brief-626/PROGRESS.md). The expanded scratch rejection test altered only a print before the guards; the native source stayed byte-identical. All new diagnostic artifacts are under `.temp/brief-626/`; the mandatory native rejection test also emits its normal target/brief-535/EDGE_ALL build artifacts, copied into [.temp/brief-626/continuation-3/native-rejection-census](../../../.temp/brief-626/continuation-3/native-rejection-census) for this report.
+
+
+## Director review and continuation 4 (2026-10-26) — let the analyzer see the mode, and charge only the innermost record
+
+**The stop is correct.** Changing the guard was outside your grant, and the
+scope rule required you to stop.
+
+**What I read and accept.**
+
+- `Entry` and `EntryRef` are LP01's three variants again.
+- The queue representation:
+  - `FrameQueue` holds guest entries only;
+  - `FrameStorage` is either `Guest` or `Profiled`;
+  - markers and per-cell metadata are private to `profile_queue`, and no
+    cell holds a guest frame `Arc`.
+- **One body each:** `drive_frames<O, M>` and `abandon_frames<M>`. Both
+  choose their mode from the queue's representation.
+- **The strong-count falsifier** failed first (2 against 1) and then passed.
+- **`core.rs` is down to 24 422 characters.**
+- **Panic sites.** No new production panic site was added. All 28 that
+  remain are inherited, and you listed them.
+- **Warnings.** I rebuilt: the `rum-runtime` library has no warnings, and
+  its lib-test build has only the three pre-existing ones.
+- **Complexity.**
+  - Your table is accepted for records, keys, segments, cells and deferred
+    relocation.
+  - It is also accepted for the guest `VecDeque` append. That is the
+    ordinary queue's own algorithm, unchanged from HEAD, which bar 1
+    requires.
+  - Bulk teardown is output-sensitive, and that is accepted.
+
+**Ruling 1: the analyzer learns the second finite mode.** The instrument
+follows correct code; the code is not bent to suit the instrument.
+
+- **The precedent.** In `retention_closure/types/modes.rs`, the sealed
+  accounting mode is already a finite exception:
+  - its domain is checked from the impl headers;
+  - a missing, third, generic or conditional impl closes enumeration
+    (`local/type_tests.rs:50-60`);
+  - associated types resolve per mode.
+- **What to build.** Generalize that exception into a registry of sealed
+  mode traits. Each entry holds:
+  - the trait's path;
+  - its exact zero-sized implementors;
+  - the same domain check from impl headers.
+
+  Register `suspension::core::profile_mode::Mode`, with `Ordinary` and
+  `Profiled`.
+- **What it admits.** A method-level type parameter whose only bound is one
+  registered trait. It is instantiated from an explicit turbofish argument,
+  or from the owner's arguments as today, and that argument must be a
+  member of the trait's domain. Everything else stays rejected, including
+  general generics.
+- **Falsifier.** For the new domain, check in the same proof that the
+  accounting mode has: a missing impl, and a third impl, each close
+  enumeration.
+- **The frontier.**
+  - It then traverses both instances of `abandon_frames`.
+  - The guard lines `[41, 42, 60]` follow the same operations to their new
+    lines, paired by discovery as brief-608 did.
+  - The totals are derived, not chosen.
+  - You may update, in place, the guard's line numbers, its comment, the
+    total and the per-kind map. You may not remove or loosen any
+    assertion.
+  - List every site the frontier sees for the first time.
+- **The method oracle.** Every claim must agree with rustc. Report the
+  count.
+- **Scope**, disclosed site by site:
+  - `crates/rum-stdlib/src/tests/retention_closure/types/modes.rs` and
+    `types.rs`;
+  - `methods/mod.rs` (`bind` and `instantiate`);
+  - the tests under `retention_closure/`;
+  - the census test, for the edits above.
+- **STOP** if admitting the mode needs anything more than a finite,
+  domain-checked registry.
+
+**Ruling 2: restoring a context is O(1). Charge only the innermost record.**
+
+- **Why.** Today `Context::enter_active` (`context.rs:62-104`):
+  - walks all k ancestors and inspects each one;
+  - starts k segments, which means k `Instant::now()` reads;
+  - allocates two vectors of length k.
+
+  `ContextGuard::pause` and its `Drop` then touch all k ancestors again.
+  The driver restores a context for every queue cell, so resuming n cells
+  at depth k costs O(n·k), with k clock reads per cell. That is quadratic
+  in depth, and the clock reads fall inside timed intervals. This is
+  bar 5's open row, and I rule it must be met.
+- **The shape.**
+  - Only the innermost active record has a running segment. Its intervals
+    are its self time.
+  - When a record closes or is abandoned, its inclusive time and pause
+    count are added to its parent.
+  - A pause is recorded once, at the innermost record. Every ancestor
+    receives it through that propagation.
+  - A snapshot taken while records are open may walk the open chain once
+    to report running totals. That cost is per snapshot, not per call.
+  - Some routes may let a child close after its parent. If any does, say
+    which, and what the parent then reports.
+- **The bar.**
+  - Entering, pausing and dropping a context are O(1) amortized, with one
+    clock read per transition.
+  - Extend the per-operation probe to those three at 16, 256 and 4 096
+    active records. Calibrate it red on the current source first.
+- **The contract stays exact.** That means:
+  - every LP01 receipt;
+  - every native lifecycle receipt, including pause totals 1, 2, 2;
+  - the 19 routes.
+
+  If propagation would change any reported count, STOP and name it.
+  Durations are not compared (user ruling).
+
+**Everything else stands**, including the STOP conditions and the layout
+bars.
+
+**Then rerun everything on the final source:**
+
+- all of this brief's gates and measurements. That includes the oracle
+  with all 8 750 receipts, the 19 native routes, the inventories,
+  allocations, instructions with attribution, copies, stacks and chains,
+  the 789 layouts and timing;
+- bars 3 to 5;
+- the method oracle;
+- the rejection census.
+
+Stop-loss as before. Progress is counted as defects removed and bars met.
+
+---
