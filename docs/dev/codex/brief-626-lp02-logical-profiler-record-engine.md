@@ -16991,3 +16991,701 @@ Accepted:
 Everything else stands. Stop-loss as before.
 
 ---
+
+
+## Executor report — continuation 5 (2026-10-26): runtime proofs pass; STOP on an existing inventory identity
+
+**STOP under the standing inventory duty in `TEMPLATE.md:80-82`.** Its rule
+is: “STOP instead if an existing row's identity, status, disposition or
+exclusion would change or a row would disappear”. The brief explicitly
+applies `TEMPLATE.md`, and continuation 5 leaves that rule in force.
+
+Implementing the ruled timer shape changes `Active.start: Instant` into
+`Active.start: Option<Instant>`, so an inactive ancestor holds no running
+clock. Independent ownership discovery changes the existing foreign-storage
+identity from `Active.start` to
+`Active.start/std::option::Option[Own]/arg0`. This is an identity change, not
+a source-coordinate move. No inventory row was edited, removed or given a
+different disposition. No alternative timer representation was introduced
+to evade that inventory rule.
+
+The runtime implementation and focused proofs are left in the compiling
+tree. Context transitions met the 1.25x bar, all measured engine operations
+met their bounds, the authorized cleanup count is 3, and both finite-mode
+frontier instances were discovered. The remaining final campaign did not
+run after this STOP. This is **not final acceptance**.
+
+### 1. Files changed, inventories and source organization
+
+The continuation-5 entry snapshot contains 1,583 files in
+`.temp/brief-626/continuation-5/entry-source/`, with hashes in
+`entry-hashes.json`. The following is this continuation's complete code/test
+delta; earlier reports preserve cumulative LP02 changes.
+
+| File | Purpose |
+| --- | --- |
+| `crates/rum-host/tests/logical_profile_lifecycle.rs` | Changes only the authorized existing cleanup pause assertion from 2 to 3, with its required one-line explanation; formats the previously added nested test. |
+| `crates/rum-runtime/src/runtime/profiling/logical/context.rs` | Restores one optional segment, with no ancestor vectors or scans; pauses/drops that one token and retains the existing source-scope swap. |
+| `crates/rum-runtime/src/runtime/profiling/logical/epoch.rs` | Creates budgeted record-local state, retains terminal parents until children settle, and routes terminal/bulk accounting through settlement. |
+| `crates/rum-runtime/src/runtime/profiling/logical/epoch/snapshot.rs` | New snapshot-only accumulation of unflushed descendant totals and currently running self intervals; terminal counts are reported immediately. |
+| `crates/rum-runtime/src/runtime/profiling/logical/index.rs` | Makes first_key test-only after bulk retirement stopped using it; its existing index tests remain. |
+| `crates/rum-runtime/src/runtime/profiling/logical/mod.rs` | Declares totals and records native pauses through the active segment before dropping it. |
+| `crates/rum-runtime/src/runtime/profiling/logical/record.rs` | Keeps shared record identity/ancestry and adds charged owner, key and mutex-protected accumulation state to the diagnostic node; removes the redundant key from Record. |
+| `crates/rum-runtime/src/runtime/profiling/logical/segments.rs` | Parks every non-innermost timer, uses one clock read per transition, suppresses duplicate native pause-unwind observers, and restores a held record directly. |
+| `crates/rum-runtime/src/runtime/profiling/logical/segments/stack.rs` | New child module for stable TLS slot/link operations and geometric storage; original Active/Stack type identities remain in segments.rs. Active heads live on record nodes, replacing the TLS AVL head lookup. |
+| `crates/rum-runtime/src/runtime/profiling/logical/totals.rs` | New self/inclusive accumulation and exactly-once child-to-parent settlement, including terminal parents waiting for late children. |
+| `crates/rum-runtime/src/runtime/profiling/tests/mod.rs` | Registers the three new totals/context tests. |
+| `crates/rum-runtime/src/runtime/profiling/tests/logical_totals.rs` | Tests all six terminal orders of a three-record chain, owner/epoch bulk retirement, and restoration of one active record with ancestor pause totals. |
+| `crates/rum-stdlib/src/tests/retention_closure/types.rs` | Normalizes only checked finite-mode associated projections before existing exact substitution. |
+| `crates/rum-stdlib/src/tests/retention_closure/types/modes.rs` | Declares the projection child module and reexports its normalizer; preserves the C4 registry and accounting exception. |
+| `crates/rum-stdlib/src/tests/retention_closure/types/modes/projections.rs` | New finite-domain associated-type resolution: checks trait/impl uniqueness and explicit assignments, rejecting missing, generic, conditional or wrong-trait projections. |
+| `crates/rum-stdlib/src/tests/retention_closure/local/type_tests.rs` | Adds Guard projection/negative controls, requires missing/third impls to close actual call enumeration, and discovers the full frontier with both mode instances. |
+
+This brief receives only this appended report. Hashes for every changed
+file are in `continuation-5/source-changes.json`. All scratch remains under
+`.temp/brief-626/`; the context and engine probe drivers, caps, hashes and
+raw data are in `continuation-5/scripts/`, `measurement-caps.json` and
+`falsifiers/`. Prior report/evidence files were preserved. The disposable
+C4 release target directory was reused for compilation; its separately
+archived baseline binary was not changed.
+
+**Inventory row edits: zero.** Independent discovery completed, but replay
+stopped before modifying any inventory. Exact evidence:
+
+```text
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	14	12	rum_runtime::runtime::profiling::logical::segments::Active.start: foreign representation std::time::Instant: Instant
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	13	12	rum_runtime::runtime::profiling::logical::segments::Active.start/std::option::Option[Own]/arg0: foreign representation std::time::Instant: Instant
+```
+
+The complete raw discovery is `.temp/brief-626/logs/c5-ownership-discovery.log`.
+`continuation-5/ownership-stop.json` records the old/new identity and rule.
+This first identity conflict is sufficient to stop; no claim is made that
+all remaining additions/removals have been reconciled. Contract fingerprints
+and promoted certificates remain stale and have not been replaced by hand.
+
+`continuation-5/SPLIT-MAP.md` was written before the module splits. Stable TLS
+slot operations, snapshot accumulation and finite associated projections
+were separated by responsibility. Original production type identities were
+kept in their original modules. Current implementation sizes:
+
+```text
+crates/rum-runtime/src/runtime/profiling/logical/context.rs: 4589 characters
+crates/rum-runtime/src/runtime/profiling/logical/epoch.rs: 9184 characters
+crates/rum-runtime/src/runtime/profiling/logical/epoch/snapshot.rs: 1456 characters
+crates/rum-runtime/src/runtime/profiling/logical/index.rs: 9891 characters
+crates/rum-runtime/src/runtime/profiling/logical/mod.rs: 9881 characters
+crates/rum-runtime/src/runtime/profiling/logical/record.rs: 4945 characters
+crates/rum-runtime/src/runtime/profiling/logical/segments.rs: 9011 characters
+crates/rum-runtime/src/runtime/profiling/logical/segments/stack.rs: 5212 characters
+crates/rum-runtime/src/runtime/profiling/logical/totals.rs: 3520 characters
+```
+
+No existing semantic frame, public host type, Expr/Symbol, manifest or lockfile
+was changed. The queue and the one generic driver/abandonment body were not
+edited in this continuation.
+
+### 2. Engine and entry as built
+
+Each record has a charged shared node containing identity, parent link,
+immutable owner/key, pending-child count, active-token identity and totals.
+There is no child-to-parent strong cycle: children own parent links, while a
+parent stores only the number of unsettled children. The epoch's existing
+AVL index retains a terminal parent until its children settle.
+
+Only the innermost TLS token has `Some(Instant)`. Starting a child parks the
+previous token with the same clock read that starts the child. Ending the
+child uses one clock read to accumulate its self interval and resume the
+previous token. Pausing parks the innermost timer with one read. A context
+restores only its held innermost record and the existing shared source
+snapshots; it allocates no ancestor vectors and performs no record-index
+lookup. Context pause/drop touch one token. Record-local active-head identity
+replaces the TLS record-head AVL lookup.
+
+Native callers observing the same InputRequired unwind advance a TLS parent
+cursor, so the innermost record emits one pause. New execution clears the
+cursor. Both resume and abandonment use this same segment accounting; child
+settlement carries the pause to the parent. The abandonment loop needs no
+second copy or extra pause rule.
+
+Terminal outcome counts change immediately and once. Inclusive time and
+pauses settle to the parent once all children have settled. A terminal parent
+remains charged and available for late totals. Snapshot-only accumulation
+walks pending records in reverse identity order, adding each unsettled child
+once, and includes the current thread's running self intervals. The old
+ancestor segment-count telemetry is represented by propagated restored-
+context counts; native child segments do not add a parent's segment count.
+
+Stale captured contexts and cross-thread active-token reuse produce a visible
+instrumentation fault. The existing equal-key, out-of-order and old-epoch
+token proofs passed. Exhaustive native late-child tracing remains unfinished;
+the new direct late-child tests are described below.
+
+| Operation | Structure | Complexity |
+| --- | --- | --- |
+| Open/inspect | Record and aggregate AVL indexes | O(log n), geometric capacity |
+| Close | Immediate terminal count; one-time settlement cascade | O(log n) amortized per record |
+| Native segment enter | Record lookup plus stable TLS slot | O(log n), slot growth amortized O(1) |
+| Context capture/enter | Shared record/source handles; stable slot | O(1) amortized |
+| Context pause/drop | Direct token and record-local state | O(1) amortized, one clock read per transition |
+| Inclusive propagation | Parent links and pending-child count | One settlement per record |
+| Snapshot | Ordered pending records and aggregate rows | O(n log n) per snapshot, one propagation per pending edge |
+| Owner/epoch bulk teardown | Existing matching removal plus settlement | Output-sensitive, O(capacity + m log n) |
+| Queue operations | Accepted C3/C4 guest/diagnostic structures | Unchanged in C5 |
+
+No O(1) claim is made for snapshots or bulk teardown. Per-record allocations,
+TLS buffers and reallocations use the existing diagnostic budget, including
+peak old/new buffer charges. Clock values stay in active TLS tokens; no
+Instant is stored in a waiting context or record totals.
+
+### 3. Route proofs, the one receipt change, and late children
+
+The first runtime gate passed all 26 selected tests (two probes ignored).
+That includes the existing terminal, identity, fault, diagnostic cap,
+structural-route, queue ownership and boundary assertions. The native file
+then passed both tests: the existing lifecycle routes and the two nested
+pause cases. These runs preceded the later source-only module splits and
+the addition of live-time snapshot accumulation; they are recorded as
+intermediate correctness results, not a final-source rerun.
+
+**The only existing receipt value edited is the one ruled by continuation 5:**
+
+| Receipt | Entry | Candidate | Authority |
+| --- | ---: | ---: | --- |
+| Native nested cleanup, aggregate pauses | 2 | 3 | Director continuation 5 |
+
+The assertion has the required explanation: “The cleanup child's pause reaches
+its open parent.” Every other pre-existing assertion is unchanged. The native
+root pause sequence remains 1/2/2, and the added nested cases remain 2/4/4 and
+2/3/3. Verbatim native output:
+
+```text
+test logical_native_lifecycle ... LP02_NATIVE second-pause success closed-once pauses=2
+LP02_NATIVE error return throw closed-once
+LP02_NATIVE cancellation closed-once
+LP02_NATIVE session-reset abandoned-once
+LP02_NATIVE session-drop abandoned-once
+LP02_NATIVE interleaved moved-session closed-once
+LP02_NATIVE profile-reset active-call closed-once
+LP02_NATIVE failed-restore abandoned-once
+LP02_NATIVE rollback helper-discard abandoned-once
+LP02_NATIVE nested-cleanup re-suspended abandoned-once
+LP02_NATIVE typed-collection resumed completion
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.02s
+test logical_native_nested_pause_counts ... LP02_NATIVE nested-pause source=LpSpan[LpSpan[InputString["one"]; InputString["two"]]] pauses=2,4,4
+LP02_NATIVE nested-pause source=LpSpan[LpSpan[InputString["one"]]; InputString["two"]] pauses=2,3,3
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.01s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+```
+
+Three new direct engine tests passed. `logical_late_child_totals_survive_every_terminal_order`
+exercises all six close orders of a three-record chain, including a parent
+closing before its child or grandchild. Each record gets one distinct pause
+while it is innermost and a synthetic interval of 1, 2 or 4 units. At every
+intermediate and final snapshot, the parent/middle/leaf report respectively:
+
+| Record | Inclusive synthetic total | Self total | Pauses |
+| --- | ---: | ---: | ---: |
+| Parent | 7 | 1 | 3 |
+| Middle child | 6 | 2 | 2 |
+| Leaf | 4 | 4 | 1 |
+
+These are arithmetic ledger inputs, not measured duration comparisons.
+Terminal calls/abandonment counts change once, and repeated closure cannot
+fabricate success. When a child closes late, its totals move into the retained
+parent; snapshots before and after settlement agree. The parent remains
+terminal throughout. There is no silent loss, and the explicit late-close
+tests finish with zero faults.
+
+`logical_bulk_retirement_preserves_late_child_totals` checks owner and epoch
+retirement with the same totals, exactly one abandonment per record and zero
+open records. `logical_context_restores_only_one_record` checks one active
+token after restoring a three-record context, then verifies that its one
+pause reaches all three records and teardown leaves zero active tokens and
+zero context leases.
+
+**The requested exhaustive late-child audit of all 19 routes is not complete.**
+No final trace campaign enumerating every native parent/child terminal order
+ran before the inventory STOP. The synthetic cases establish the retained-
+parent mechanism, not an exhaustive claim about all runtime routes.
+
+### 4. Oracle, finite modes and rejection frontier
+
+The full LP01 oracle was **not run in continuation 5**: no new claim of
+8,750 executed receipts is made. No LP01 phase or logical counter was edited.
+
+The finite-mode associated-type proof passed before and after the split.
+`M::Guard`, the qualified registered-trait projection and a borrowed guard
+resolve to `()` for Ordinary and `Option<ContextGuard>` for Profiled.
+Missing/generic associated names and missing assignments reject. Missing or
+third domain implementations close the actual method-call enumeration;
+generic and conditional impl headers and cross-domain arguments still reject.
+The existing stateful accounting exception was preserved as ruled.
+
+Full frontier discovery then traversed both instantiated abandonment bodies:
+
+```text
+test tests::retention_closure::local::type_tests::finite_profile_frontier_discovery ... LP02_FRONTIER_INSTANCE rum_runtime::runtime::model::session::Session::abandon_frames::<rum_runtime::runtime::suspension::core::profile_mode::Ordinary>
+LP02_FRONTIER_INSTANCE rum_runtime::runtime::model::session::Session::abandon_frames::<rum_runtime::runtime::suspension::core::profile_mode::Profiled>
+LP02_FRONTIER total=952 kinds={RET001: 10, RET002: 915, RET003: 27}
+```
+
+The derived result is **952 = RET001 10 + RET002 915 + RET003 27**.
+Relative to the C3 limited frontier (926), discovery adds 28 rows and removes
+the two unresolved calls now selected as finite instances: 926 + 28 - 2 = 952.
+The raw rows, bodies and comparison are in `continuation-5/frontier/`.
+Every row newly seen relative to C3 follows (all remain rejections):
+
+| Kind | Site | Rejection |
+| --- | --- | --- |
+| RET002 | `crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:175:9` | method syntax: method receiver lacks checked nominal/place provenance |
+| RET002 | `crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:176:12` | method syntax: method receiver lacks checked nominal/place provenance |
+| RET002 | `crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:177:25` | method syntax: method receiver lacks checked nominal/place provenance |
+| RET002 | `crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:177:25` | method syntax: method receiver lacks checked nominal/place provenance |
+| RET002 | `crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:177:25` | method syntax: method receiver lacks checked nominal/place provenance |
+| RET002 | `crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:182:27` | closure capture/callback effects unresolved; closure body is a rejected boundary |
+| RET002 | `crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:192:38` | method syntax: method receiver lacks checked nominal/place provenance |
+| RET002 | `crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:192:38` | method syntax: method receiver lacks checked nominal/place provenance |
+| RET002 | `crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:211:12` | method syntax: method receiver lacks checked nominal/place provenance |
+| RET002 | `crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:212:19` | method syntax: method receiver lacks checked nominal/place provenance |
+| RET002 | `crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:212:19` | primitive operand proof or exact operator/conversion impl required |
+| RET002 | `crates/rum-runtime/src/runtime/debug_tools/resources/maintained.rs:216:13` | method syntax: method receiver lacks checked nominal/place provenance |
+| RET002 | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:68:36` | path M::abandon has 0 exact bindings |
+| RET002 | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:69:30` | method syntax: opaque imported trait candidate std::sync::Arc |
+| RET002 | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:74:42` | method syntax: method receiver lacks checked nominal/place provenance |
+| RET002 | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:75:26` | method syntax: method receiver lacks checked nominal/place provenance |
+| RET002 | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:83:24` | primitive operand proof or exact operator/conversion impl required |
+| RET002 | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:83:25` | method syntax: prelude trait candidate is_empty cannot be excluded at rum_runtime::runtime::suspension::core::SuspendedEvaluation |
+| RET002 | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:84:51` | method syntax: method receiver lacks checked nominal/place provenance |
+| RET002 | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:85:61` | method syntax: opaque imported trait candidate std::sync::Arc |
+| RET002 | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:86:25` | method syntax: method receiver lacks checked nominal/place provenance |
+| RET003 | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:91:24` | unexpanded macro; contents are not resolved Rust |
+| RET002 | `crates/rum-runtime/src/runtime/suspension/core/abandon.rs:93:29` | method syntax: method receiver lacks checked nominal/place provenance |
+| RET003 | `crates/rum-runtime/src/runtime/suspension/core/evaluation_context.rs:33:9` | unexpanded macro; contents are not resolved Rust |
+| RET002 | `crates/rum-runtime/src/runtime/suspension/output.rs:73:13` | method syntax: method receiver lacks checked nominal/place provenance |
+| RET002 | `crates/rum-runtime/src/runtime/suspension/output.rs:77:13` | method syntax: method receiver lacks checked nominal/place provenance |
+| RET002 | `crates/rum-runtime/src/runtime/suspension/output.rs:81:13` | method syntax: method receiver lacks checked nominal/place provenance |
+| RET002 | `crates/rum-runtime/src/runtime/suspension/output.rs:83:13` | method syntax: method receiver lacks checked nominal/place provenance |
+
+The two now-resolved C3 call sites are:
+
+```text
+crates/rum-runtime/src/runtime/suspension/core/abandon.rs:46:17 method syntax: method instance is not in the finite scalar substitution set
+crates/rum-runtime/src/runtime/suspension/core/abandon.rs:48:17 method syntax: method instance is not in the finite scalar substitution set
+```
+
+The original guard operations are still discovered: environment take/install
+at lines 41/42, and `capture_guest_form_environment` at line 85. The original
+LP01 source at `.temp/brief-626/originals/.../core/abandon.rs:60` is that capture
+operation. The C3 entry's stale line 60 had drifted to `!suspension.is_empty()`;
+the operation, not that accidental line match, must guide the final pairing.
+
+The census guard/comment/960 pin/per-kind map were **not updated before the
+STOP**. Final pairing against all 960 accepted rows and the census gate remain
+unfinished. The rustc method oracle was **not run**, so no disagreement count
+or accepted total is claimed. Frontier traversal and projection unit proofs
+do not substitute for it.
+
+### 5. Gates and verbatim results
+
+All eleven logged C5 gates ran serially through `scripts/run-bounded.py`
+with a 900-second bound and `CARGO_BUILD_JOBS=1`, `RUST_TEST_THREADS=1`,
+`CARGO_NET_OFFLINE=true`, and
+`TMPDIR=/home/remi/dev/rum/.temp/brief-626/tmp`. The C1 probe build also set
+`CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1`. Scoped rustfmt ran only on the
+listed edited files, with `skip_children=true`.
+
+Full logs are retained at the paths below. Excerpts are verbatim diagnostics,
+test summaries and probe output. Cargo artifact JSON and the 8,056-line raw
+ownership discovery remain in their complete logs rather than being
+duplicated here. Both compile failures are disclosed.
+
+**`c5-engine-compile` — exit 101.** `.temp/brief-626/logs/c5-engine-compile.log`
+
+```text
+cargo check --offline -p rum-runtime --tests
+    Checking rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+error[E0063]: missing field `_storage` in initializer of `context::Context`
+  --> crates/rum-runtime/src/runtime/profiling/logical/context.rs:34:23
+   |
+34 |         Some(Arc::new(Self {
+   |                       ^^^^ missing `_storage`
+
+For more information about this error, try `rustc --explain E0063`.
+error: could not compile `rum-runtime` (lib test) due to 1 previous error
+```
+
+**`c5-logical-first` — exit 0.** `.temp/brief-626/logs/c5-logical-first.log`
+
+```text
+cargo test --offline -p rum-runtime --lib logical_ -- --nocapture
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 31.22s
+test result: ok. 26 passed; 0 failed; 2 ignored; 0 measured; 1185 filtered out; finished in 0.42s
+```
+
+**`c5-native-first` — exit 0.** `.temp/brief-626/logs/c5-native-first.log`
+
+```text
+cargo test --offline -p rum-host --test logical_profile_lifecycle -- --nocapture
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 34.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.02s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.01s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+```
+
+**`c5-late-child-totals` — exit 0.** `.temp/brief-626/logs/c5-late-child-totals.log`
+
+```text
+cargo test --offline -p rum-runtime --lib logical_totals -- --nocapture
+warning: function `register_test_if_builtin` is never used
+warning: function `register_test_return_builtin` is never used
+warning: function `register_test_vm_template_builtins` is never used
+warning: `rum-runtime` (lib test) generated 3 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 21.56s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 1213 filtered out; finished in 0.00s
+```
+
+**`c5-finite-mode-associated-types` — exit 0.** `.temp/brief-626/logs/c5-finite-mode-associated-types.log`
+
+```text
+cargo test --offline -p rum-stdlib --lib finite_profile_modes_are_closed_and_selected_at_both_calls -- --nocapture
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1162 filtered out; finished in 14.78s
+```
+
+**`c5-context-candidate-build` — exit 0.** `.temp/brief-626/logs/c5-context-candidate-build.log`
+
+```text
+cargo test --offline --release -p rum-runtime --lib logical_context_instruction_probe --no-run --message-format=json
+warning: function `register_test_if_builtin` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:320:27
+    |
+320 | pub(in crate::runtime) fn register_test_if_builtin(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` on by default
+
+
+warning: function `register_test_return_builtin` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:330:27
+    |
+330 | pub(in crate::runtime) fn register_test_return_builtin(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+warning: function `register_test_vm_template_builtins` is never used
+   --> crates/rum-runtime/src/runtime/test_builtins.rs:358:27
+    |
+358 | pub(in crate::runtime) fn register_test_vm_template_builtins(session: &mut Session) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+{"reason":"build-finished","success":true}
+    Finished `release` profile [optimized] target(s) in 1m 14s
+```
+
+**`c5-context-candidate1` — exit 0.** `.temp/brief-626/logs/c5-context-candidate1.log`
+
+```text
+python3 .temp/brief-626/continuation-5/scripts/context-probe.py candidate1
+{"operation": "empty", "instructions_per_operation": {"16": 222.765625, "256": 222.0, "4096": 221.9921875}, "handshake_corrected": {"16": 222.765625, "256": 222.0, "4096": 221.9921875}, "ratio_4096_to_16": 0.9965280213228589}
+{"operation": "context-enter", "instructions_per_operation": {"16": 962.765625, "256": 961.21875, "4096": 962.015625}, "handshake_corrected": {"16": 740.0, "256": 739.21875, "4096": 740.0234375}, "ratio_4096_to_16": 1.0000316722972973}
+{"operation": "context-pause", "instructions_per_operation": {"16": 484.0, "256": 484.0, "4096": 483.2265625}, "handshake_corrected": {"16": 261.234375, "256": 262.0, "4096": 261.234375}, "ratio_4096_to_16": 1.0}
+{"operation": "context-drop", "instructions_per_operation": {"16": 1124.0, "256": 1124.0078125, "4096": 1123.9921875}, "handshake_corrected": {"16": 901.234375, "256": 902.0078125, "4096": 902.0}, "ratio_4096_to_16": 1.0008495292914232}
+CONTEXT PROBE COMPLETE candidate1 48 perf processes; setup excluded; empty handshake control subtracted
+```
+
+**`c5-engine-candidate1` — exit 0.** `.temp/brief-626/logs/c5-engine-candidate1.log`
+
+```text
+python3 .temp/brief-626/continuation-5/scripts/engine-probe-expanded.py candidate1
+{"axis": "records", "operation": "open-close", "instructions_per_operation": {"16": 2800.9261474609375, "256": 4169.074951171875, "4096": 5536.8748779296875}, "ratio_4096_to_16": 1.9768014529583045}
+{"axis": "records", "operation": "inspect", "instructions_per_operation": {"16": 225.34619140625, "256": 292.7890625, "4096": 361.2730712890625}, "ratio_4096_to_16": 1.6031913787163414}
+{"axis": "records", "operation": "interval", "instructions_per_operation": {"16": 222.1278076171875, "256": 289.7984619140625, "4096": 358.203125}, "ratio_4096_to_16": 1.6125992006247283}
+{"axis": "records", "operation": "pause", "instructions_per_operation": {"16": 204.005126953125, "256": 272.1029052734375, "4096": 340.345703125}, "ratio_4096_to_16": 1.668319361420767}
+{"axis": "records", "operation": "segment", "instructions_per_operation": {"16": 3944.08544921875, "256": 5379.9693603515625, "4096": 6815.959228515625}, "ratio_4096_to_16": 1.7281469471879063}
+{"axis": "records", "operation": "context-capture", "instructions_per_operation": {"16": 492.8201904296875, "256": 493.2293701171875, "4096": 493.272705078125}, "ratio_4096_to_16": 1.000918214507492}
+{"axis": "keys", "operation": "open-close", "instructions_per_operation": {"16": 3346.050537109375, "256": 4930.1607666015625, "4096": 6514.44580078125}, "ratio_4096_to_16": 1.9469059802094397}
+{"axis": "keys", "operation": "inspect", "instructions_per_operation": {"16": 156.8248291015625, "256": 157.27294921875, "4096": 156.8958740234375}, "ratio_4096_to_16": 1.0004530208786582}
+{"axis": "keys", "operation": "interval", "instructions_per_operation": {"16": 154.1070556640625, "256": 153.8443603515625, "4096": 154.112548828125}, "ratio_4096_to_16": 1.000035645117213}
+{"axis": "keys", "operation": "pause", "instructions_per_operation": {"16": 135.8319091796875, "256": 135.937744140625, "4096": 135.9908447265625}, "ratio_4096_to_16": 1.0011700899135914}
+{"axis": "keys", "operation": "segment", "instructions_per_operation": {"16": 4438.0318603515625, "256": 6021.911376953125, "4096": 7605.8487548828125}, "ratio_4096_to_16": 1.7137886780020342}
+{"axis": "keys", "operation": "context-capture", "instructions_per_operation": {"16": 492.9488525390625, "256": 493.421875, "4096": 493.0081787109375}, "ratio_4096_to_16": 1.0001203495485778}
+PROBE COMPLETE candidate1 144 perf processes; setup removed by N/2N slopes
+```
+
+**`c5-frontier-discovery` — exit 101.** `.temp/brief-626/logs/c5-frontier-discovery.log`
+
+```text
+cargo test --offline -p rum-stdlib --lib finite_profile_ -- --nocapture
+   Compiling rum-runtime v0.2.0 (/home/remi/dev/rum/crates/rum-runtime)
+   Compiling rum-stdlib v0.2.0 (/home/remi/dev/rum/crates/rum-stdlib)
+error[E0425]: cannot find function `substitute` in module `super`
+  --> crates/rum-stdlib/src/tests/retention_closure/types/modes/projections.rs:17:28
+   |
+17 |         let owner = super::substitute(source, module, &q.ty, substitutions).ok()?;
+   |                            ^^^^^^^^^^ not found in `super`
+   |
+help: consider importing this function through its public re-export
+   |
+2  + use crate::tests::retention_closure::types::substitute;
+   |
+help: if you import `substitute`, refer to it directly
+   |
+17 -         let owner = super::substitute(source, module, &q.ty, substitutions).ok()?;
+17 +         let owner = substitute(source, module, &q.ty, substitutions).ok()?;
+   |
+
+error[E0425]: cannot find function `attributes` in module `super`
+  --> crates/rum-stdlib/src/tests/retention_closure/types/modes/projections.rs:62:16
+   |
+62 |         super::attributes(&declared.attrs)?;
+   |                ^^^^^^^^^^ not found in `super`
+   |
+help: consider importing this function
+   |
+2  + use crate::tests::retention_closure::types::attributes;
+   |
+help: if you import `attributes`, refer to it directly
+   |
+62 -         super::attributes(&declared.attrs)?;
+62 +         attributes(&declared.attrs)?;
+   |
+
+error[E0425]: cannot find function `exact` in module `super`
+  --> crates/rum-stdlib/src/tests/retention_closure/types/modes/projections.rs:72:26
+   |
+72 |             }) || super::exact(source, module, &item.self_ty)? != owner
+   |                          ^^^^^ not found in `super`
+   |
+help: consider importing this function through its public re-export
+   |
+2  + use crate::tests::retention_closure::types::exact;
+   |
+help: if you import `exact`, refer to it directly
+   |
+72 -             }) || super::exact(source, module, &item.self_ty)? != owner
+72 +             }) || exact(source, module, &item.self_ty)? != owner
+   |
+
+error[E0425]: cannot find function `attributes` in module `super`
+  --> crates/rum-stdlib/src/tests/retention_closure/types/modes/projections.rs:87:20
+   |
+87 |             super::attributes(&assignment.attrs)?;
+   |                    ^^^^^^^^^^ not found in `super`
+   |
+help: consider importing this function
+   |
+2  + use crate::tests::retention_closure::types::attributes;
+   |
+help: if you import `attributes`, refer to it directly
+   |
+87 -             super::attributes(&assignment.attrs)?;
+87 +             attributes(&assignment.attrs)?;
+   |
+
+error[E0425]: cannot find function `exact` in module `super`
+  --> crates/rum-stdlib/src/tests/retention_closure/types/modes/projections.rs:92:27
+   |
+92 |             return super::exact(source, module, &assignment.ty);
+   |                           ^^^^^ not found in `super`
+   |
+help: consider importing this function through its public re-export
+   |
+2  + use crate::tests::retention_closure::types::exact;
+   |
+help: if you import `exact`, refer to it directly
+   |
+92 -             return super::exact(source, module, &assignment.ty);
+92 +             return exact(source, module, &assignment.ty);
+   |
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `rum-stdlib` (lib test) due to 5 previous errors
+```
+
+**`c5-frontier-discovery-fixed` — exit 0.** `.temp/brief-626/logs/c5-frontier-discovery-fixed.log`
+
+```text
+cargo test --offline -p rum-stdlib --lib finite_profile_ -- --nocapture
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 40.42s
+LP02_FRONTIER_INSTANCE rum_runtime::runtime::model::session::Session::abandon_frames::<rum_runtime::runtime::suspension::core::profile_mode::Profiled>
+LP02_FRONTIER total=952 kinds={RET001: 10, RET002: 915, RET003: 27}
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1162 filtered out; finished in 24.21s
+```
+
+**`c5-ownership-discovery` — exit 0.** `.temp/brief-626/logs/c5-ownership-discovery.log`
+
+```text
+cargo test --offline -p rum-stdlib --lib discovery_report_without_inventory_input -- --nocapture
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s
+test tests::ownership_graph::discovery_report_without_inventory_input ... UnknownHostPayload count: 79
+UnknownConstruct count: 7903
+Self-reaching type count: 61
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 5.92s
+```
+
+
+The initial missing Context storage initializer was restored before the
+passing runtime gate. The projection-module split initially left five
+relative references one parent short; correcting those paths produced the
+passing full frontier/projection test. These were compile repairs, not
+changes to receipts or analyzer assertions. Runtime lib-test builds emitted
+only the three inherited dead-code warnings shown above; no allow was added.
+
+**Not run on final C5 source:** workspace fmt check; the complete mandatory
+profiling/typed/root-trace/resume-context suites; both typed-slot censuses;
+8,750-receipt oracle; ownership acceptance/replay; both local production
+acceptance builds and certificate replay; rejection census; method oracle;
+native workspace; final 19-route/late-child trace audit. Native ZeroMQ tests
+therefore have no new C5 skip/pass result. Earlier accepted campaigns are not
+reused as final-source results.
+
+### 6. Measurements
+
+The accepted C4 red calibration was not repeated. Candidate1 was built at C1
+and archived before probing. Its SHA-256 is
+`df7c805318a61ed1b626e485ee87620650245d957452bc27462ddf691d1db6f7`.
+Every current runtime source hash still matches
+`continuation-5/falsifiers/candidate1-binary.json`; subsequent edits were in
+stdlib analyzer tests only. The archived C4 baseline remains
+`8858229fc6a0767a0dae9f47f337795f0c7bc36d7d385ab528c453cfa0a98cff`.
+
+Context probe: 48 processes, two samples, 64/128 repeats, acknowledged perf
+FIFO control, CPU 2, `cpu_core/instructions/u`, setup excluded and empty
+control subtracted. Each transition is measured separately.
+
+| Operation | Instructions/op at 16 | At 256 | At 4,096 | Ratio |
+| --- | ---: | ---: | ---: | ---: |
+| empty | 222.765625 | 222.000000 | 221.992188 | 0.996528021 |
+| context-enter | 740.000000 | 739.218750 | 740.023438 | 1.000031672 |
+| context-pause | 261.234375 | 262.000000 | 261.234375 | 1.000000000 |
+| context-drop | 901.234375 | 902.007812 | 902.000000 | 1.000849529 |
+
+All three transitions are within 1.001x, below the required 1.25x bound.
+The separate engine API probe ran 144 processes, with two samples and
+4,096/8,192 repeats on the open-record and distinct-key axes. Every O(log n)
+operation was below the 3x logarithmic ratio bound; the maximum was
+1.976801453x. Every O(1) case met 1.25x. All per-operation values are copied
+verbatim in gate output above and retained with commands/raw CSVs under
+`continuation-5/falsifiers/`.
+
+These establish the enabled engine scaling bar on the hashed runtime. They
+do **not** establish the disabled-path performance gates. The all-313-label
+allocation/instruction/attribution/copy campaigns, 44 stack fits and resumed
+chains, 789 layouts, four timing panels and aligned timing were **not run on
+final C5 source**. No final layout or off-path acceptance is claimed.
+
+### 7. Stop-loss counters, deviations and remaining work
+
+- One compiling runtime implementation attempt; mechanical compile repairs
+  are listed above. Compiling attempts without progress: **0**.
+- Defects with new focused evidence: **2** — ancestor work removed from
+  context transitions, and finite-mode associated/frontier support completed
+  at the focused-proof level.
+- New measured bar met: **1**, enabled operation scaling (48 context plus
+  144 engine processes). Full final campaign remains outstanding.
+- Intermediate original route proofs passed, including the native lifecycle
+  file; new totals tests: **3 passed**. Only the authorized existing receipt
+  moves, nested-cleanup pauses 2→3.
+- LP01 receipts executed in C5: **0 / 8,750**. Final method-oracle claims
+  checked in C5: **0**.
+- No git command, network access, new unsafe, documented-assertion weakening,
+  inventory disposition change or unrelated source edit occurred.
+
+The stop is the explicit inventory identity rule, not lack of progress or the
+two-attempt stop-loss. The concrete unresolved identity is quoted in §1.
+The director must decide how that changed diagnostic timer storage identity
+is recorded; no inventory exception was inferred. The rest of the replay,
+exhaustive late-child route audit, accepted-960 census pairing/repin, method
+oracle, final correctness gates and full performance campaign remain to do.
+`state.json` and `PROGRESS.md` preserve the stopped, compiling state. The tree
+is left uncommitted.
+
+## Director ruling and continuation 6 (2026-10-26) — "existing" means committed at HEAD
+
+**Accepted.**
+
+- **Innermost-only timing.** Only one token holds `Some(Instant)`, and each
+  transition takes one clock read.
+- **Context probe on the candidate.** Enter, pause and drop all stay within
+  1.001x from depth 16 to 4 096. Against the red calibration (541x, 411x
+  and 497x), that meets bar 5 for contexts. The engine API probe is also
+  inside its bounds: at most 1.98x for O(log n), and 1.25x for O(1).
+- **One pause rule.** Settling a child carries its pause to the parent, on
+  both the resume and the abandonment path. The nested-cleanup receipt is
+  3, and it is the only receipt that moved.
+- **Late children.** A terminal parent is retained until its children
+  settle. All six close orders are covered, and so are bulk retirement and
+  the single-record context restore.
+- **The finite-mode registry.** It covers associated types, rejects a
+  missing, third, generic or conditional impl, and rejects a cross-domain
+  argument. Frontier discovery reaches both `abandon_frames` instances and
+  derives 952 (10/915/27).
+
+**Ruling: the inventory rule applies to rows committed at HEAD.**
+
+- **Why the STOP does not apply here.** `TEMPLATE.md`'s "STOP if an
+  existing row's identity, status, disposition or exclusion would change"
+  protects rows committed at HEAD. The row in question is
+  `unknown_storage.tsv:71`, `segments::Active.start`. It is not in HEAD's
+  inventory, and `profiling/logical/segments.rs` does not exist at HEAD.
+  LP02 added both the row and the file, so this brief owns the row. When
+  `start` becomes `Option<Instant>`, it becomes
+  `Active.start/std::option::Option[Own]/arg0`, and that is the template's
+  expected case: a new `UnknownConstruct` for code this brief added. Unknowns
+  stay unknown.
+- **The rule for the rest of this brief.**
+  - Compare every inventory against HEAD.
+  - A row absent from HEAD is this brief's own. Replay replaces it, and you
+    disclose it.
+  - A row present at HEAD keeps the template's STOP rule unchanged.
+  - The other STOP conditions are also unchanged: a new
+    `UnknownHostPayload`, or a new row pointing at code the brief did not
+    touch.
+
+**The census.** Pair the guard by operation, not by line number. The
+three operations are:
+
+- the environment take at line 41;
+- the environment install at line 42;
+- `capture_guest_form_environment`, which was LP01's line 60 and is now at
+  `abandon.rs:85`.
+
+Update the guard's lines, its comment, the total and the map in place to
+the derived values. Account for every one of the 960 accepted rows: paired,
+moved, or removed with its reason.
+
+**Late children.** Replace the route-by-route enumeration with a structural
+check. At teardown of every native route (all 19 and your two nested-pause
+cases), assert:
+
+- zero pending children;
+- zero retained terminal parents;
+- zero open records;
+- zero context leases;
+- zero faults.
+
+A child that never settles then fails the route that leaked it. Show the
+check red once, against a deliberately unsettled child in a unit test.
+
+**Then the final campaign on the final source**, unchanged from
+continuation 5 item 5:
+
+- replay every inventory against HEAD;
+- the oracle with all 8 750 receipts;
+- the 19 native routes;
+- allocations, instructions with attribution and copies on 313 labels;
+- 44 stack fits and the resumed chains;
+- the 789 layouts;
+- timing and aligned timing;
+- bars 3 to 5;
+- the rustc method oracle, with its count;
+- the rejection census.
+
+Everything else stands. Stop-loss as before.
+
+---
