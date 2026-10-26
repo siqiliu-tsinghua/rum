@@ -20639,3 +20639,57 @@ mechanism.**
 `state.json` current.
 
 Stop-loss as before.
+
+## Director amendment to continuation 12 (2026-10-26 20:10) — run the load-independent measurements in parallel
+
+**I interrupted your run with SIGINT at 11 h 20 min. Your session is kept.**
+
+- At the interrupt, the falsifier, the restore, the four inline repairs, the inventory replay, all 26 final gates and the bootstrap were done. `state.json` records each of them.
+- You were in "Complete final measurements and instruction attribution", with the heap pointer capture in flight.
+- I killed the one orphaned `valgrind` process left behind, which was running `association-part-key-read-width32000-cand-n2`.
+- The source has not changed.
+
+**Why I interrupted.**
+
+- The host has 32 logical CPUs: P-cores 0-15 per `/sys/devices/cpu_core/cpus`, and E-cores 16-31.
+- The load average was 2.4.
+- Every stage has run serially: `CARGO_BUILD_JOBS=1`, `RUST_TEST_THREADS=1`, and one Callgrind or gdb process at a time.
+- Only wall-clock timing needs a quiet machine. Instruction counts, addresses, stack high-water marks and allocation counts do not depend on load.
+
+**What changes: only how the remaining measurements are scheduled.** What is measured stays the same, and so does the bar.
+
+1. **Builds use the default `jobs`.**
+   - Drop `CARGO_BUILD_JOBS=1`. The job count decides how many rustc processes run, not the code they emit.
+   - Keep every profile, codegen-unit and `RUSTFLAGS` setting the campaign already uses.
+   - Calibrate before you trust this. The first default-jobs build of a binary already frozen in `state.json` (`rum-cli`, `resume`, `rum-cli-alloc`, `resume-alloc`) must reproduce its recorded SHA-256. If any hash differs, STOP and report it.
+2. **Load-independent measurements run concurrently, up to 24 processes at once.**
+   - This covers Callgrind (including seed runs), the valgrind/gdb pointer and heap captures, stack measurements, chain measurements, allocation counts, disassembly, and the analysis scripts.
+   - Each job writes only into its own directory. No two jobs write to one file.
+   - Every `vgdb` gets its own `--vgdb-prefix`.
+   - A receipt counts only with its completion marker.
+   - Split CPU-bound analysis across labels with a process pool. The seed comparison that ran past its 900-second bound is the model case.
+3. **`perf stat` follows its own rule.**
+   - Runs may be concurrent only if each run is pinned to its own logical CPU in 0-15 (`taskset -c <k>`). That allows at most 16 at once.
+   - Take the `cpu_core` row. A run that shows its instructions on `cpu_atom` is invalid and is rerun.
+4. **Calibrate concurrency before using it.**
+   - Pick three labels that already have serial receipts: one Callgrind, one `perf stat` and one heap capture.
+   - Rerun them under full concurrency.
+   - Each must match its serial receipt: inside the recorded seed range for Callgrind, and identical for the others.
+   - If any of them does not match, STOP.
+5. **Timing stays serial and comes last.**
+   - This covers the timing panels and the aligned-timing runs. The aligned builds may run in parallel, but they must finish before timing starts.
+   - While any timing run is going, nothing else runs: no build, no Callgrind, no gdb, no analysis.
+   - Keep `taskset -c 2` and `< /dev/null` as before.
+6. **Gates are not rerun unless the source changes.** If a gate must be rerun, use the default test threads unless a test itself needs serial execution.
+7. **Resuming the interrupted stage.**
+   - Keep each heap receipt that has its completion marker.
+   - Discard and rerun each one that does not.
+   - Redo no completed stage.
+   - Your Bash tool timeout must exceed each command's own bound.
+8. **Unchanged.**
+   - The source stays frozen.
+   - The bar is unchanged: continuation 11's full allowance, per-instruction attribution, and "a falling label total excuses nothing".
+   - The falsifier is unchanged.
+   - The stop-loss counters are unchanged. This amendment is not an implementation attempt.
+
+**Report.** In section 6, record each remaining stage's wall time and the concurrency it used.
