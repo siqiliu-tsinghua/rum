@@ -20182,3 +20182,318 @@ was put back to attempt 5. I have read the disassembly in
 - Keep `.temp/brief-626/state.json` current.
 
 Stop-loss as before: progress is deltas attributed or removed.
+
+---
+
+## Executing-agent report — continuation 10 — STOP at the required new host-payload disposition (2026-10-26)
+
+Continuation 10 removed all three director-named work residuals and then ran the standing inventory duty. Discovery, preflight, and the required gate stopped before replay because a new `UnknownHostPayload` appeared. **This is an actual-invariant STOP under `TEMPLATE.md`, not a performance-tuning stop-loss.** No inventory was edited, no final campaign ran, and the working tree is left uncommitted for director review.
+
+### 1. Files changed and every inventory row change
+
+The continuation 8/9 report covers the inherited implementation. Continuation 10 itself changed these files:
+
+| File | Purpose |
+|---|---|
+| `crates/rum-runtime/src/runtime/suspension/core.rs` | Remove the proactive seven-instruction profiling gate; retain lazy enabling at the explicit frontier/boundary path. |
+| `crates/rum-runtime/src/runtime/profiling/logical/context.rs` | Add registry-backed `capture_record` so guest-cell ancestry survives `Call::pause`; share the existing capture body. |
+| `crates/rum-runtime/src/runtime/profiling/logical/queue_api.rs` | Enable lazy profiling with the boundary's existing `RecordId`. |
+| `crates/rum-runtime/src/runtime/suspension/core/profile_queue.rs` | Accept optional record identity for guest cells; keep original marker-cell capture so no new segment is fabricated. |
+| `crates/rum-runtime/src/runtime/suspension/core/profile_queue/tests.rs` | Pass no explicit record in the existing deferred-order fixture. |
+| `crates/rum-runtime/src/runtime/suspension/core/storage.rs` | Add `enable_profile_record`, restore direct Mixed→Mixed `VecDeque::append`, and inline legacy `push_back`. |
+| `docs/dev/codex/brief-626-lp02-logical-profiler-record-engine.md` | Append this continuation 10 report. |
+
+No other production file was changed by continuation 10. The complete pre-change and measurement scaffolding is under `.temp/brief-626/continuation-10/`.
+
+**No inventory row was changed.** Discovery completed, but preflight failed before `replay-ownership.py`, fingerprint regeneration, or certificate review. Every proposed move, new construct, and unresolved row is preserved mechanically in [ownership-position-preflight.json](../../../.temp/brief-626/continuation-10/ownership-position-preflight.json). The mandatory stop is this exact new row:
+
+```text
+UnknownHostPayload	crates/rum-runtime/src/runtime/suspension/core/storage.rs	11	12	rum_runtime::runtime::suspension::core::storage::FrameStorage.Legacy.0/std::collections::VecDeque[Own]/arg0/rum_runtime::runtime::suspension::core::evaluation_context::Queued<arg0> via payload/std::sync::Arc[LastStrongHolder]/arg0/alias(rum_runtime::runtime::suspension::core::DynSuspensionFrame): opaque owned payload dyn SuspensionFrame
+```
+
+That is a new host-payload type identity, not an `UnknownConstruct` that can simply be replayed under the standing exception. A disposition decision is required. The same preflight also has six unmappable/missing closure rows; they were not hand-mapped or hidden:
+
+```text
+UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	39	46	closure captures: |stack| (capture types/modes unresolved)
+UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	54	42	closure captures: |stack| (capture types/modes unresolved)
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/scopes.rs	22	39	closure captures: |stack| (capture types/modes unresolved)
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/scopes.rs	35	46	closure captures: |stack| (capture types/modes unresolved)
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/scopes.rs	88	42	closure captures: |stack| (capture types/modes unresolved)
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/scopes.rs	9	36	closure captures: |stack| (capture types/modes unresolved)
+```
+
+The final source audit reports:
+
+```text
+STOP SOURCE: 1557 attempt-3 hashes match
+CHANGED=25 NEW=1 UNSAFE=0 PARENT_PATH=0
+NEW_HOST_PAYLOAD=1; UNMAPPABLE=6; MISSING=6
+```
+
+`CHANGED=25 NEW=1` is the continuation 8-entry comparison, including earlier LP02 files and this brief. No new `unsafe` or parent-traversal module attribute exists.
+
+### 2. The engine and the entry
+
+The continuation 8/9 engine and private-marker representation are unchanged except for the targeted continuation 10 repairs. The proactive `lexical_profile_enabled()` call was removed from `begin_input_suspension`. Lazy enable now uses the boundary's existing `(EpochId, RecordId)` to retrieve immutable ancestry from the registry after `Call::pause` has dropped the active segment. Guest-cell initialization uses that identity; marker cells retain the original `Context::capture`, so a boundary-only decision does not create another executing segment.
+
+The direct Mixed→Mixed append arm was restored, eliminating the accidental cold wrapper. Legacy `push_back` is `#[inline(always)]`. No public API, guest frame field, phase counter, `Entry` variant, codec, or host type changed. The representation's three-instruction exclusion remains within continuation 10's allowance.
+
+### 3. Route proofs
+
+The first naive lazy deletion passed the 30 profiling tests but failed both native tests: `logical_native_lifecycle` reported pauses 1 versus 2 and nested pause counts 3 versus 4. The cause was loss of ancestry before lazy capture, not an acceptable receipt change. After registry-backed guest-cell capture and restoration of original marker-cell capture, the same suites pass:
+
+```text
+test result: ok. 30 passed; 0 failed; 2 ignored; 0 measured; 1189 filtered out; finished in 0.42s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.01s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+```
+
+The nested receipts and teardown checkpoints are restored exactly:
+
+```text
+LP02_NATIVE second-pause success closed-once pauses=2
+LP02_NATIVE nested-pause source=LpSpan[LpSpan[InputString["one"]; InputString["two"]]] pauses=2,4,4
+LP02_NATIVE nested-pause source=LpSpan[LpSpan[InputString["one"]]; InputString["two"]] pauses=2,3,3
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+```
+
+These tests establish the lazy lifecycle, not the still-pending full workspace/oracle campaign.
+
+### 4. The oracle result
+
+Continuation 10 did not rerun the LP01 oracle after its source edits. The previous continuation 8 result remains the preserved evidence: both 499-test builds passed, all 8,750 receipts executed, all 118,991 pinned cells per build unchanged across ten JSON collections, and all fault deltas zero. No continuation 10 receipt claim is made.
+
+### 5. All gates, verbatim
+
+Discovery itself passed:
+
+```text
+c10-final-ownership-discovery exit 0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 5.96s
+```
+
+Preflight then failed unchanged:
+
+```text
+c10-final-ownership-preflight exit 1
+Traceback (most recent call last):
+  File "/home/remi/dev/rum/.temp/brief-626/continuation-10/preflight-ownership.py", line 58, in <module>
+    assert not unmappable and not missing,('STOP identity disappeared',len(unmappable),len(missing))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('STOP identity disappeared', 6, 6)
+```
+
+The additional `UnknownHostPayload` shown in section 1 independently requires the standing-duty STOP. No replay was attempted after it. The following were **not run** on the final source: final `cargo fmt --check`; full runtime and native workspace suites; frame-root and resume-context gates; both typed-slot censuses; the 8,750-receipt oracle; ownership and participation gates; inventory replay and both post-replay acceptance builds; the 952-row rejection census; the rustc method oracle; workspace and fresh native ZeroMQ skip receipts. The final measurement campaign likewise did not start.
+
+### 6. Measurements
+
+All performance work below is targeted Callgrind evidence, not the required 313-label two-pair hardware gate. Attempt 1 used two labels and eight correct processes; attempts 2 and 3 each used one label and four correct processes.
+
+The proactive-gate repair removed all seven instructions on both driver labels:
+
+```text
+TARGETED CALLGRIND 8/8 correct; 2 labels; source frozen.
+SET resume-table base=80.0 candidate=80.0 delta=0.0
+SET c1-all-guard base=80.0 candidate=80.0 delta=0.0
+```
+
+Attempt 1's release resume hash is:
+
+```text
+3a0461053bd3e568733e1b95c01246c09439cc657e1e135bfa23cc78d8047b2e
+```
+
+The direct-append repair removed all 28 wrapper instructions:
+
+```text
+TARGETED CALLGRIND 4/4 correct; 1 labels; source frozen.
+SET resume-table base=113.0 candidate=113.0 delta=0.0
+ALIGNED nonzero=363 delta_sum=0.0
+```
+
+Attempt 2's release resume hash is:
+
+```text
+9141a0e36d5d2ba40bb639af3cec40635831c80bc7651cf5fb277270bfe2eb65
+```
+
+The inline legacy-push repair removed the outlining residual:
+
+```text
+TARGETED CALLGRIND 4/4 correct; 1 labels; source frozen.
+SET resume-table base=92.0 candidate=91.0 delta=-1.0
+```
+
+Attempt 3's release resume hash is:
+
+```text
+acf15cc08fc25908579e8d019eea6e91973e80ba3fabad45818c6a0d225be87d
+```
+
+The other named sets on that same final source are:
+
+```text
+SET resume-table base=80.0 candidate=80.0 delta=0.0
+SET resume-table base=113.0 candidate=113.0 delta=0.0
+SET resume-table base=313.0 candidate=230.0 delta=-83.0
+SET resume-table base=63.0 candidate=23.0 delta=-40.0
+SET resume-table base=7.0 candidate=10.0 delta=3.0
+resume-table total -238.646 main -226.212 libc -12.434
+```
+
+Thus driver and append have zero residual, legacy push is one instruction better than base, typed push improves by 83, the drop set improves by 40, and only the allowed +3 representation exclusion remains. The per-instruction harness was calibrated before use: the old guard drop was exactly +7 and the cured guard drop was zero. No rum-cli binary was rebuilt from the final source. Layouts, allocations, copies, stack shapes and chains, all 313 labels, exclusion-budget columns, timing panels, aligned timing, and final engine/context scaling probes were not run.
+
+### 7. Stop-loss counters, deviations and open questions
+
+- Named work deltas removed: **3** (proactive gate, direct append wrapper, legacy-push outlining). All three attempts advanced a bar; there were no consecutive no-progress attempts.
+- Source manifest: all **1,557** inputs match `attempt-3/source-hashes.json`.
+- Route evidence: profiling 30 passed with 2 ignored; both native lifecycle tests passed with original pause counts and zero teardown checkpoints.
+- Oracle evidence executed in this continuation: **0 / 8,750**; the continuation 8 result is preserved but is not a final-source receipt.
+- Inventory replay: **not run** after preflight stopped. No inventory rows were edited.
+- Final gates and performance: **not run** after the required new-payload stop.
+- Open decision: the director must assign or reject the new `storage::FrameStorage.Legacy` host-payload disposition. The six closure mappings in section 1 also remain for review, but no runtime code was moved to satisfy them and no oracle or test was weakened.
+- No git command, network access, new `unsafe`, phase adoption, guest internal-encoding probe, or inventory hand-edit occurred. All scratch remains under `.temp/brief-626/` and all changes remain uncommitted.
+
+---
+
+## Director ruling and continuation 11 (2026-10-26) — one queue algorithm, the gate stays, and the allowance in full
+
+**The stop was correct.** But the new host payload does not get a
+disposition. It is the symptom of a shape defect, and that defect started
+with my own wording.
+
+### What I found
+
+1. **The flat `FrameStorage` duplicates the ordinary queue algorithm.**
+   - Continuation 9 attempt 1 replaced `FrameStorage{Guest(GuestQueue),
+     Profiled(Box<ProfileQueue>)}` with `{Mixed, Legacy, Profiled}`. It did
+     so in the same edit as the guard cure, so the nested form with cold
+     `Profiled` arms was never measured on its own.
+   - `storage.rs` now reimplements, arm for arm, the `FrameQueue` code that
+     `ProfileQueue`'s guest still runs:
+     - `projected_growth`, `storage_bytes` and `visit` are copied bodies;
+     - `widen_legacy` copies `FrameQueue::widen`;
+     - every push, pop and front arm is repeated.
+   - That breaks continuation 3's "the ordinary queue algorithm exists
+     once" and "no duplicated bodies". Two copies kept in step by hand is
+     the convention those guarantees exist to remove.
+   - The new `FrameStorage.Legacy.0 … dyn SuspensionFrame` row is that
+     duplication seen by discovery: a second direct owner of the payload
+     that `FrameQueue.Legacy.0` (committed, `Unbounded`) already owns.
+   - My continuation 9 wording ("fold into the Legacy/Mixed tag test")
+     invited this. The fold I meant is the compiler's niche: `GuestQueue`'s
+     tag byte has spare values, so the nested enum already has one tag.
+2. **The flat form's cold helpers re-match `self` and do nothing on the
+   other variant.**
+   - `push_back_profiled`, `push_back_typed_legacy` and their siblings
+     each begin `if let Self::… = self { … }`. On the type-allowed
+     mismatch they silently drop the frame.
+   - That is an `unreachable!` in disguise, and it is worse: a lost
+     continuation with no panic.
+3. **Continuation 10 removed a gate the hard line permits, and changed
+   enabled-path behaviour to do it.**
+   - The "proactive seven-instruction gate" is `begin_input_suspension`'s
+     cold-load `lexical_profile_enabled()` check. It runs once per
+     suspension, which is the house pattern.
+   - My continuation 10 bar ("everything else is zero") left out
+     continuation 2's allowance for that check. That was my error.
+   - **The lazy replacement changes what the profiler records.**
+     - Cells pushed before the first boundary used to capture their own
+       context at push time. That context holds the four source stacks
+       live at that moment.
+     - Now they share one context, captured at the boundary, after the
+       unwind has dropped the guards between the record and the pushing
+       frame.
+     - `enter_front` restores those stacks on resume. So resumed work runs
+       under shallower source scopes.
+   - The native pause receipts cannot see this. It is a behaviour change,
+     which continuation 9's grant excludes.
+
+### The off-path allowance, in full
+
+This list replaces every earlier statement of it. Each item is a delta
+against LP01. Nothing else is permitted.
+
+1. **Per suspension:** the existing cold-load enabled check at
+   `begin_input_suspension`, once.
+2. **Per drive:** the mode selection from the representation, once.
+3. **Per queue operation:** the representation exclusion.
+   - This applies to every `FrameStorage` method, and to its drop.
+   - It is the discriminant load, at most one compare and one branch, and
+     the `Profiled` arm as one cold call or tail jump.
+   - That is at most three instructions.
+4. **Per scope guard:** its inline flag test. This is the same as at HEAD,
+   so its delta is zero.
+
+Every other positive rum-function delta must be one of:
+
+- attributed by instruction as layout;
+- attributed by instruction as seed variance (three or more runs per arm);
+- or removed.
+
+A falling label total excuses nothing.
+
+### What to do
+
+1. **Restore the gate, and prove the lazy form wrong first.**
+   - **Write the falsifier first.** It is a native route test with
+     profiling on:
+     - a frame is pushed under a live source scope (a lexical context or
+       an evaluation-profile source);
+     - the scope is inside a record, and the push comes before that
+       record's boundary;
+     - the test asserts the resumed work is attributed under that scope.
+   - Show it **red on attempt 3's lazy source**, then green once the
+     proactive check is restored.
+   - **If it is green on the lazy source, STOP.** My reading is then
+     wrong, and the lazy form may stand.
+   - **Otherwise, restore the `begin_input_suspension` check verbatim.**
+     Then remove what the lazy form needed:
+     - `Context::capture_record`;
+     - `FrameStorage::enable_profile_record`;
+     - `ProfileQueue::new`'s `record` parameter;
+     - the fixture change.
+2. **Restore the nested representation:**
+   `FrameStorage{Guest(GuestQueue), Profiled(Box<ProfileQueue>)}`.
+   - **`Guest` arms delegate.** Each one calls `FrameQueue`'s method, the
+     single algorithm. Mark those methods `#[inline]` or `#[inline(always)]`
+     where the measurement asks for it.
+   - **`Profiled` arms are cold.** Each is one cold call that takes the
+     destructured `&mut ProfileQueue` and returns its outcome. The caller
+     deprofiles on failure. No helper re-matches `self`.
+   - **Show the niche, two ways.**
+     - The layout: `size_of::<FrameStorage>()` must equal HEAD's
+       `size_of::<FrameQueue>()`, with one tag.
+     - The disassembly: `pop_front`'s exclusion is within allowance item
+       3.
+   - **If the nested form cannot reach the allowance, STOP.** Give
+     per-instruction evidence, and do not flatten.
+   - **Revert what only the flat form needed:**
+     - `MixedQueue`;
+     - `widen_legacy`;
+     - the duplicated `projected_growth`, `storage_bytes` and `visit`;
+     - the occurrence oracle's flat-form edits.
+   - Keep continuation 10's direct Mixed→Mixed append and legacy-push
+     inlining only where they still apply. They live in `FrameQueue` now.
+   - Keep everything else: the guard cure, the inline resume wrappers, and
+     the `AccumulatorChain` conversion.
+3. **Inventories.**
+   - With nesting restored, discovery must show no new
+     `UnknownHostPayload`. If one remains, STOP.
+   - The six `|stack|` closure rows in `scopes.rs` and `source.rs` are the
+     guards' closures, moved into the cold helpers. Replay them as moves,
+     matched by construct text and enclosing guard. Disclose them
+     mechanically. Your preflight's "no identity disappears" assertion is
+     stricter than the standing duty. Change the script, not the rule.
+4. **Then attribute every positive delta against the allowance, and run
+   the full campaign on the final source.** This is continuation 9 point
+   4, plus continuation 10's exclusion-budget column.
+   - In that column, allowance item 1 is counted per suspension and item 2
+     per drive.
+
+**Report.** Append a continuation 11 report in the seven sections. Keep
+`.temp/brief-626/state.json` current.
+
+Stop-loss as before: progress is deltas attributed or removed, and shape
+restored.
