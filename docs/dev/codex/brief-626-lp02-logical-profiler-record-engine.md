@@ -20497,3 +20497,145 @@ A falling label total excuses nothing.
 
 Stop-loss as before: progress is deltas attributed or removed, and shape
 restored.
+
+---
+
+## Executing-agent report — continuation 11 — STOP because the lazy source-scope falsifier is green (2026-10-26)
+
+Continuation 11 began with the required native falsifier before any representation edit. On attempt 3's lazy source, the resumed native record retains `lp_scope`, two calls, zero open records, and zero context leases. **The director's explicit green-falsifier STOP applies.** The lazy form may stand; the proactive gate and nested representation were not restored, and no final campaign was started.
+
+### 1. Files changed and every inventory row change
+
+| File | Purpose |
+|---|---|
+| `crates/rum-runtime/src/runtime/profiling/logical/mod.rs` | Add a test-only source-scope helper using the existing public `evaluation_profile_definition_source` re-export. |
+| `crates/rum-host/tests/logical_profile_lifecycle.rs` | Register the `LpScope` probe and add `logical_native_source_scope_survives_resume`, printing both record sets and checking source, calls, open records, and leases. |
+| `docs/dev/codex/brief-626-lp02-logical-profiler-record-engine.md` | Append this stop report. |
+
+There were no representation, gate, queue, or inventory edits. `stop-source-audit.json` records 1,557 hashed inputs, the 12 files changed from continuation 8 attempt 2, zero new `unsafe`, zero parent-traversal attributes, and zero continuation 11 representation changes. No inventory replay was run and no inventory row was changed.
+
+### 2. The engine and the entry
+
+The attempt 3 lazy engine is unchanged. `LpScope` holds an evaluation-profile source guard while a native `LpSpan` record pauses on `InputString`. The frame is pushed inside that record before its boundary. On resume, a second `LpSpan` executes under the restored source scope. The aggregate key remains `Runtime { phase: "native", source: Some(... name: "lp_scope") }`, proving that the lazy source-stack capture did not lose the live scope in this route.
+
+No proactive gate, `MixedQueue`, `FrameStorage`, `ProfileQueue`, `Context::capture_record`, or `enable_profile_record` implementation was changed in this continuation.
+
+### 3. Route proofs
+
+The falsifier prints the open and resumed records verbatim:
+
+```text
+LP02_SCOPE before=[("Runtime { phase: \"native\", source: Some(Symbol { id: 663, identity: None, text: SymbolText { id: 663, context: \"Global`\", name: \"lp_scope\" } }) }", [0, 0, 0, 0, 0, 0, 0, 0, 0, 1])]
+LP02_SCOPE resumed=[("Runtime { phase: \"native\", source: Some(Symbol { id: 663, identity: None, text: SymbolText { id: 663, context: \"Global`\", name: \"lp_scope\" } }) }", [2, 2, 0, 0, 0, 0, 0, 0, 0, 0])]
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+```
+
+The first vector has one open record; the resumed vector has two calls and zero open records. Both carry `lp_scope`, and context leases are zero. The test passes in the child and parent invocations:
+
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.01s
+```
+
+Two test-development failures are disclosed rather than hidden. First, the helper initially used a private module path and rustc issued E0603; the public re-export fixed it. Next, the assertion incorrectly required two rows. The actual aggregate key has one row with two calls, so that was corrected without changing the source or weakening the contract. The final green test requires one aggregated row, two calls, `lp_scope`, and zero open records/leases.
+
+### 4. The oracle result
+
+No LP01 oracle run occurred in continuation 11. The brief stopped at the falsifier, before any later gate. Prior continuation 8 evidence remains preserved but is not a continuation 11 receipt.
+
+### 5. All gates, verbatim
+
+The successful falsifier gate is:
+
+```text
+running 1 test
+test logical_native_source_scope_survives_resume ... 
+running 1 test
+test logical_native_source_scope_survives_resume ... LP02_SCOPE before=[("Runtime { phase: \"native\", source: Some(Symbol { id: 663, identity: None, text: SymbolText { id: 663, context: \"Global`\", name: \"lp_scope\" } }) }", [0, 0, 0, 0, 0, 0, 0, 0, 0, 1])]
+LP02_SCOPE resumed=[("Runtime { phase: \"native\", source: Some(Symbol { id: 663, identity: None, text: SymbolText { id: 663, context: \"Global`\", name: \"lp_scope\" } }) }", [2, 2, 0, 0, 0, 0, 0, 0, 0, 0])]
+LP02_TEARDOWN pending_children=0 terminal_parents=0 open=0 leases=0 faults=0
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.01s
+
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.01s
+```
+
+The earlier E0603 and the incorrect row-count failure are described above, not presented as production failures. No final `cargo fmt --check`, full runtime/native workspace, typed-slot census, ownership replay or acceptance, rejection census, method oracle, LP01 oracle, native ZeroMQ skips, or final performance gate was run after the green-falsifier STOP.
+
+### 6. Measurements
+
+No performance measurement was taken in continuation 11. Layouts, allocations, copies, stacks, chains, all 313 labels, the exclusion-budget column, timing panels, aligned timing, and engine/context scaling probes were not run. The falsifier is a correctness proof only. The source audit is:
+
+```text
+C11 SOURCE: 1557 files hashed; 12 changed from C8 attempt 2
+UNSAFE=0 PARENT_PATH=0 REPRESENTATION_CHANGES=0
+```
+
+### 7. Stop-loss counters, deviations and open questions
+
+- Implementation attempts: zero beyond the test-only falsifier and its public-path/aggregate-key corrections.
+- Representation restoration: not attempted, because the lazy falsifier is green.
+- Deltas attributed or removed in this continuation: zero performance deltas.
+- Open records after resume: zero; context leases: zero; source scope: preserved.
+- Final restoration, inventory replay, gates, and measurements: not run, as required by the green-falsifier STOP.
+- No git command, network access, new `unsafe`, phase adoption, guest internal-encoding probe, or inventory hand-edit occurred. All scratch remains under `.temp/brief-626/` and the tree is uncommitted.
+
+---
+
+## Director ruling and continuation 12 (2026-10-26) — the falsifier put the scope outside the record; inside, the lazy form is red
+
+**Your stop followed the instruction, but the falsifier did not test the
+mechanism.**
+
+- The test evaluates `LpScope[LpSpan[InputString["one"]; LpSpan[2]]]`.
+  There the scope wraps the record, so it is still live when the record's
+  boundary triggers the lazy capture. Both forms capture it.
+- Continuation 11 asked for the scope *inside* the record, with the push
+  before that record's boundary. The scope's guard must have dropped by the
+  time the boundary arrives. My wording could have been clearer.
+
+**I ran both arrangements on both forms.**
+
+- The probe source is `.temp/director/probe-626/dir626_scope_probe.rs`.
+- The logs are `lazy-arm.log` (the current tree) and `proactive-arm.log`.
+  The proactive log comes from a copy of the tree with continuation 10's
+  six `before/` files restored.
+- Rows after resume (key source, calls):
+
+| Program | Lazy (current) | Proactive (c10 `before/`) | No-pause control |
+|---|---|---|---|
+| `LpSpan[LpScope[InputString["one"]; LpSpan[2]]]` | `None` ×2 | `None` ×1, `lp_scope` ×1 | `None` ×1, `lp_scope` ×1 (`LpSpan[LpScope[1; LpSpan[2]]]`) |
+| `LpScope[LpSpan[InputString["one"]; LpSpan[2]]]` | `lp_scope` ×2 | `lp_scope` ×2 | — |
+
+- With the scope inside the record, the lazy form resumes `LpSpan[2]`
+  without its source scope. The resumed run then differs from the run that
+  never paused.
+- The proactive form equals the no-pause run.
+- So continuation 11's reading stands. The lazy form is a behaviour change,
+  and it is reverted.
+
+### What to do
+
+1. **Make the falsifier the class-wide one.**
+   - In `logical_profile_lifecycle.rs`, assert that the rows after resume
+     equal the rows of the same program evaluated without the pause. The
+     control replaces `InputString["one"]` with `1`.
+   - Keep both arrangements: scope inside the record, and scope outside it.
+   - Show it red on the current lazy source for the inside arrangement,
+     green for the outside one, and then green for both after the restore.
+     The table above is the expected result.
+2. **Then continuation 11 points 1–4, unchanged:**
+   - restore the gate and remove the lazy form's pieces;
+   - restore the nested niche representation, with no duplicated queue
+     algorithm and no helper that re-matches `self`;
+   - replay the inventories, with no new `UnknownHostPayload`;
+   - attribute every delta against the allowance, then run the full
+     campaign on the final source.
+
+**Report.** Append a continuation 12 report in the seven sections. Keep
+`state.json` current.
+
+Stop-loss as before.
