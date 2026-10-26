@@ -20693,3 +20693,31 @@ Stop-loss as before.
    - The stop-loss counters are unchanged. This amendment is not an implementation attempt.
 
 **Report.** In section 6, record each remaining stage's wall time and the concurrency it used.
+
+## Director correction to the amendment (2026-10-26 20:14) — cargo stays serial; only non-cargo measurement runs in parallel
+
+**I interrupted you again two minutes into the resumed run, before any build.** Two of the amendment's points contradicted a standing user ruling, and I withdraw them.
+
+**The ruling (2026-09-30, after a background dispatch was killed under host memory pressure).**
+
+- Every cargo command runs with `CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1`.
+- Two cargo commands never run at once.
+- The reason: a transient memory peak during builds got the run killed, and the retention oracle compiles per claim, so parallel test threads spawn many rustc processes.
+- Your serial cargo runs followed this ruling and the brief's "How to run" line. They were right.
+
+**What changes from the amendment.**
+
+1. **Points 1 and 6 are withdrawn.**
+   - Builds and tests keep `CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1`.
+   - At most one cargo command runs at a time.
+   - The hash-reproduction calibration in point 1 is dropped with it.
+2. **The parallelism in points 2–4 applies only to non-cargo processes.** These are Callgrind, the valgrind/gdb pointer and heap captures, `perf stat`, the stack and chain measurements that run already-built binaries, disassembly, and the analysis scripts. The brief's "Serially, each command" was written for the cargo gates, not for these.
+3. **Memory sets the concurrency, not only the CPU count.**
+   - Before the first parallel batch, measure peak RSS (`VmHWM` from `/proc/<pid>/status`, or `/usr/bin/time -v`) of the heaviest job of each kind: the largest label under Callgrind, and the largest label under a vgdb heap capture together with its gdb.
+   - Set `k = min(24, floor((MemAvailable − 8 GiB) / peak))` for each kind.
+   - Read `MemAvailable` from `/proc/meminfo` before each batch. If it is below 8 GiB, run serially.
+   - Record each `k` and the RSS it came from in section 6.
+4. **No parallel batch runs while a cargo command runs.** A build or test runs alone, and the batches resume after it finishes.
+5. **Unchanged.**
+   - Points 3 (`perf stat` pinning), 4 (calibrating concurrency on three serially-measured labels), 5 (timing serial, last, alone), 7 (resume rules) and 8 (frozen source, unchanged bar) stand.
+   - The report line stands too.
