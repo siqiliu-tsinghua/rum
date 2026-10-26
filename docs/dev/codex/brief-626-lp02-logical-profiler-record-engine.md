@@ -43549,3 +43549,435 @@ Raw receipts are [perf-calibration.json](../../../.temp/brief-626/continuation-1
 4. Everything else in the amendment and its correction stands.
 
 **Report.** In section 6, record the perf numbers above as the reason `perf stat` is serial, together with both calibration results.
+
+
+## Director ruling and continuation 13 (2026-10-26 23:10) — the stack bar was already met; the repair copied the abandonment loop, and the copy loses the remainder's stack
+
+I stopped the run at 22:28, during prologue repair attempt 4 (production
+attempt 6). The log is archived as
+`.temp/logs/kimi_brief_626.continuation-12-run4.log`. Nothing measured after
+the 21:38 structures stage is carried forward, because the source changed
+after it.
+
+### What I found
+
+1. **The stack bar was met before any repair.**
+   - At 21:38, `final/stack-candidate/comparison.json` had 44/44 shape fits
+     at base with zero residual, and `chains-compare` had 8/8 chain bars.
+   - That is the whole bar. §Performance item 4 is the 22 shapes in debug
+     and release, plus the resumed chains.
+   - The driver stopped on `run-measurements.py:87`. That line asserts that
+     no emitted prologue row grows, which the brief never asked for. Since
+     G15-B the stack bar has been the chain of frames live at once, never
+     one function's prologue.
+   - It is continuation 11's preflight again: when a self-check is stricter
+     than the duty, change the script, not production.
+2. **The repair copied the abandonment loop.**
+   - From attempt 2 on, `drain_abandonment_worklist` keeps the ordinary
+     loop verbatim, and `abandon_frames_profiled` is a hand copy of it.
+   - That is a duplicated body, which continuation 3 forbade and
+     continuations 11 and 12 restated. The rule exists because two copies
+     kept in step by hand drift apart.
+   - This copy drifted within two attempts. Attempt 4 passes
+     `&mut SuspendedEvaluation` and re-queues the remainder like this:
+
+     ```rust
+     let mut nested = SuspendedEvaluation::new(
+         self.evaluation_stack.clone(),
+         suspension.generation,
+     );
+     nested.guest_form_environment = self.capture_guest_form_environment();
+     std::mem::swap(suspension, &mut nested);
+     self.abandonment_worklist.push(nested);
+     ```
+
+     After the swap, `nested` holds the original suspension. Its
+     `active_stack` and `guest_form_environment` were both taken at the top
+     of the worklist loop. The pushed remainder therefore carries an empty
+     stack and no environment. The stack clone and the captured environment
+     go into the placeholder, which is then dropped. The ordinary loop
+     writes both onto the original before pushing it.
+   - That changes what is captured. It is a behaviour change, not a cost
+     fix.
+   - Your own repository invariant would have caught the copy.
+     `frame_root_trace.rs` asserts "both modes should use the single
+     abandonment body", but your focused set did not run it.
+3. **My falsifier shows it, in both profiles.**
+   - The test is below. It compares the same program with profiling on and
+     off: the cleanups must run in the same order, see the same evaluation
+     stack, and the request must return the same value.
+   - Downvalues put evaluation-stack entries under the queue cells.
+   - Under `ValueQ` alone, every cell's `stack_len` is 0. That is why your
+     focused nested-cleanup case could not see the defect.
+   - My calibration, with `drain_abandonment_worklist`'s frame in the same
+     test binary (`.temp/director/probe-626-c12b/`, `measure.log`):
+
+     | `abandon.rs` | falsifier, debug | falsifier, release | frame bytes, debug / release |
+     |---|---|---|---|
+     | H: HEAD | green | green | 1432 / 856 |
+     | A: attempt 4 (now) | **red**: host caught panic `continuation contexts unwind a saved prefix`; outer cleanup never runs | **red**: outer cleanup runs on an empty stack and the request returns `True` | 1432 / 856 |
+     | B: your attempt 1 | green | green | 1688 / 888 |
+     | C: one body, `&mut`, correct `mem::replace` | green | green | 1640 / 920 |
+
+   - A reaches base only because the ordinary loop is a verbatim copy. B
+     is the shape I chose over C: its release frame is smaller, and it
+     builds no placeholder `SuspendedEvaluation`.
+   - Release is the silent arm. The evaluation stack is also the gensym
+     collector's root set (`scoping/gensym_gc.rs:182`).
+4. **The Callgrind and heap serial fallbacks were false failures, and the
+   criterion was mine.**
+   - I wrote "against the serial spread". It was implemented as "inside the
+     range of 4 serial runs" (Callgrind) and "raw fields vary only where
+     n1/n2 differ" (heap).
+   - Even with no effect at all, a fresh draw lands outside the range of 4
+     draws with probability 2/5. Your 16/24 is about that.
+   - On the candidate arm, the concurrent mean is within 184 of the serial
+     mean, on 16.1M.
+   - The heap's decision quantity agreed: the attributed delta was 375,
+     against {375, 387}. Its 12 "mismatches" are raw addresses (ASLR) and
+     `memcmp` rows from hash-bucket collisions. Both differ between any two
+     processes.
+   - For this continuation, both kinds stay serial. That is correct, and the
+     saving would be about an hour. A corrected calibration belongs to the
+     concurrency brief after LP02.
+   - Do not cite either fallback as evidence that concurrency perturbs
+     either instrument.
+
+### What to do
+
+1. **Insert the falsifier first.**
+   - Create `crates/rum-host/tests/logical_profile_abandonment.rs`,
+     verbatim from the block at the end of this section. Its SHA-256 is
+     `ebce16bd16f70d68f2bea1a8cc7de0be74100f15909a58adb27c5217549af081`.
+     The Scope gains exactly this file.
+   - Run it on the current tree, before any other edit:
+
+     ```
+     cargo test --offline -p rum-host --test logical_profile_abandonment -- --nocapture
+     ```
+
+   - It must fail. For both triggers, the profiled line must carry
+     `continuation contexts unwind a saved prefix`.
+   - **If it passes, STOP.**
+2. **Restore the single abandonment body.**
+   - Copy
+     `.temp/brief-626/continuation-12/prologue-repair-attempt2/before/crates/rum-runtime/src/runtime/suspension/core/abandon.rs`
+     over `crates/rum-runtime/src/runtime/suspension/core/abandon.rs`.
+   - Verify SHA-256 `21de136a12bad00c916a783afbd1ef7f6afe9615ad08464639f902bed2a364d4`.
+   - This is your attempt 1 file. The target shape is this, and nothing
+     else:
+
+     ```rust
+     if suspension.frames.is_profiled() {
+         self.abandon_frames_profiled(suspension, reason);
+     } else {
+         self.abandon_frames::<profile_mode::Ordinary>(suspension, reason);
+     }
+
+     #[cold]
+     #[inline(never)]
+     fn abandon_frames_profiled(&mut self, suspension: SuspendedEvaluation, reason: AbandonReason) {
+         self.abandon_frames::<profile_mode::Profiled>(suspension, reason);
+     }
+
+     #[inline(always)]
+     fn abandon_frames<M: profile_mode::Mode>(&mut self, mut suspension: SuspendedEvaluation, reason: AbandonReason) {
+         loop {
+             let _profile_context = M::abandon(&mut suspension, reason);
+             let Some(cell) = suspension.take_front() else { break };
+             // ... the body exactly as in that file; the remainder is
+             // `suspension` itself, with `active_stack` and
+             // `guest_form_environment` written before the push.
+         }
+     }
+     ```
+
+   - One algorithm, specialized over the empty ordinary hooks, as
+     `driver.rs` does for resume.
+   - **Update the repository invariant to this shape, and to nothing
+     looser.** In `crates/rum-runtime/src/runtime/tests/frame_root_trace.rs`,
+     replace the `for mode in ["Ordinary", "Profiled"]` loop over
+     `drain_body` with:
+
+     ```rust
+     assert!(
+         drain_body.contains("self.abandon_frames::<profile_mode::Ordinary>(suspension,reason);")
+     );
+     assert!(drain_body.contains("self.abandon_frames_profiled(suspension,reason);"));
+     let trampoline = compact_abandon
+         .find("fnabandon_frames_profiled(")
+         .expect("the profiled mode should enter the shared body through one cold call");
+     let trampoline_open = trampoline + compact_abandon[trampoline..].find('{').unwrap();
+     let trampoline_close = matching_brace(&compact_abandon, trampoline_open).unwrap();
+     assert_eq!(
+         &compact_abandon[trampoline_open + 1..trampoline_close],
+         "self.abandon_frames::<profile_mode::Profiled>(suspension,reason);"
+     );
+     ```
+
+   - Keep the `fnabandon_frames<` count of 1 and every other assertion
+     there.
+   - I ran it on this shape, single-threaded:
+     `runtime::tests::frame_root_trace` plus `runtime::profiling`, 44 passed
+     and 2 ignored.
+3. **The other repair edits.**
+   - Keep `enable_pending_profile` in `core.rs`: a cold body behind the
+     unchanged `lexical_profile_enabled()` gate.
+   - Keep HEAD's `self.widen().push_front(…)` and
+     `self.widen().push_back(…)` in `push_front_typed` and
+     `push_evaluation_return`.
+   - Revert both `cfg_attr(debug_assertions, …)` pairs.
+     `SuspendedEvaluation::push_back` returns to `#[inline]` and
+     `FrameStorage::push_back` to `#[inline(always)]`. No inline decision
+     keyed on `debug_assertions` exists anywhere at HEAD.
+   - Remove `#[cold] #[inline(never)]` from `ProfileQueue::drop`. Your
+     attempt 3 measured no effect from it.
+   - Nothing else in production changes in this continuation.
+4. **Then run the falsifier again.** It must pass for both triggers. Then
+   run the focused gates.
+5. **Change the script, not production.**
+   - Replace the assertion at `run-measurements.py:87` with a report table.
+     It gets one row per emitted prologue, with base and candidate bytes
+     and one column: can this function be live more than once in one
+     stack?
+   - The bar stays the 22 shapes and the chains.
+   - Growth in a function that can be live more than once (recursive or
+     re-entrant) is a STOP with evidence.
+   - Growth in a function that cannot is a disclosed constant.
+   - Expected from your attempt 1 measurement:
+     - `drain_abandonment_worklist` +256 debug, +80 release, live at most
+       once because `abandonment_active` makes it non-re-entrant;
+     - `SuspendedEvaluation::push_back` +272 debug again, called once per
+       frame insertion and never nested.
+6. **Then replay the inventories, run the gates, and run the full campaign
+   on this source**, in the reset scaffold. Use the order from the 20:50
+   ruling.
+
+### Must not change
+
+These hold beside every cost bar in this continuation. An edit that changes
+whether or when any of them happens is a STOP, never a cost fix.
+
+- For each abandoned suspension, the cells are processed in queue order.
+- `M::abandon` runs before each `take_front`. Its guard lives until that
+  cell's handling ends, including the cleanup evaluation.
+- When a cleanup runs while frames remain, the remainder is pushed before
+  the cleanup is evaluated. It carries the `evaluation_stack` clone and the
+  `capture_guest_form_environment()` of that moment.
+- A nested suspension raised by the cleanup is pushed after the remainder.
+  The worklist is LIFO.
+- Ordinary and profiled abandonment run one body. The falsifier asserts
+  that they agree.
+- The `begin_input_suspension` gate stays where continuation 12 restored
+  it.
+
+### Forbidden
+
+- A second copy of any loop or queue body, whatever the reason.
+- `std::mem::swap` or `std::mem::replace` on a `SuspendedEvaluation`.
+- An inline attribute keyed on `debug_assertions`.
+- Any production edit made because a per-function prologue row grew.
+- Any production edit after the campaign starts, except to repair a
+  STOP-class defect. Then STOP and report instead.
+
+### Concurrency for this continuation
+
+I measured this tonight on a copy of your tree. The logs are
+`.temp/director/probe-626-c12b/peak-*.log`, and the user journal records
+the scope results.
+
+- **Build.** `cargo test --workspace --no-run` at `CARGO_BUILD_JOBS=8` took
+  64 s, with a cgroup peak of 9.0 GiB including page cache.
+- **Tests at the default thread count failed in three ways.**
+  - The `rum_stdlib` test process reached 14.6 GB of anonymous memory. The
+    kernel OOM-killed it inside its 14 GiB scope, and nothing outside the
+    scope was touched. This is the likely mechanism of 2026-09-30.
+  - Eight LP02 profiling tests failed under parallel threads, because the
+    profiler's state is process-global.
+  - The rum-jupyter interrupt-lifecycle tests fail in 3 of 10 parallel runs
+    at HEAD as well. That is pre-existing and not this brief's.
+
+So, for this continuation:
+
+1. **Every cargo command runs alone, inside its own memory-capped scope:**
+
+   ```
+   systemd-run --user --scope --quiet -p MemoryMax=14G -p MemoryHigh=12G -p MemorySwapMax=0 \
+     env CARGO_BUILD_JOBS=8 RUST_TEST_THREADS=1 CARGO_NET_OFFLINE=true <the cargo command>
+   ```
+
+   - Builds use 8 jobs. Tests stay single-threaded.
+   - Keep `run-bounded.py`'s timeout outside the scope.
+   - No other cargo command, measurement or analysis runs while it does.
+   - If the scope ends with result `oom-kill` (exit 137, and the journal
+     line `Failed with result 'oom-kill'`), rerun that one command once with
+     `CARGO_BUILD_JOBS=1` and record both runs. That is not a STOP.
+   - If `systemd-run --user` itself is unavailable, use
+     `CARGO_BUILD_JOBS=1 RUST_TEST_THREADS=1` with no scope, and say so.
+2. **`perf stat`** stays serial on `taskset -c 2`, with nothing else
+   running, as the 20:50 ruling says.
+3. **Callgrind and heap captures** stay serial. See point 4 of what I
+   found.
+4. **Timing** stays serial, last, and alone.
+5. **Analysis scripts** may run only while nothing is being built or
+   measured.
+
+### The falsifier
+
+```rust
+//! Profiled abandonment re-queues the remainder exactly as ordinary abandonment does.
+use rum_core::{Expr, SharedArgs};
+use rum_host::{HostEvalOutcome, HostSession};
+use rum_runtime::kernel_api::{BuiltinSpec, EvalError, MemoryGrowthContract, Session};
+use std::sync::Mutex;
+
+static SEEN: Mutex<Vec<String>> = Mutex::new(Vec::new());
+
+fn install(session: &mut Session) {
+    session.register_builtin(BuiltinSpec::special(
+        "LpSpan",
+        "Native logical-profiler test span",
+        span,
+        MemoryGrowthContract::NonAmplifying,
+    ));
+    session.register_builtin(BuiltinSpec::special(
+        "LpSeen",
+        "Records its evaluated argument outside guest state",
+        seen,
+        MemoryGrowthContract::NonAmplifying,
+    ));
+}
+fn span(session: &mut Session, _: &Expr, args: &SharedArgs) -> Result<Expr, EvalError> {
+    session.logical_profile_test_span("native", args[0].clone())
+}
+fn seen(session: &mut Session, _: &Expr, args: &SharedArgs) -> Result<Expr, EvalError> {
+    let value = session.evaluate(args[0].clone())?;
+    SEEN.lock().unwrap().push(value.to_string());
+    Ok(Expr::string("seen"))
+}
+
+// The inner cleanup runs while frames remain, so the remainder is re-queued
+// with the stack and guest environment of that moment. The outer cleanup then
+// runs on the re-queued remainder. The downvalues put evaluation-stack entries
+// under the cells, so a remainder re-queued without its stack is visible.
+const SETUP: &str = "k[] := WithCleanup[InputString[\"p\"], LpSeen[{\"inner\", Stack[]}]]; \
+    m[] := WithCleanup[g[k[]], LpSeen[{\"outer\", Stack[]}]]";
+const PROGRAM: &str = "LpSpan[m[]]";
+
+fn run(trigger: &str) -> (String, Vec<[u64; 10]>) {
+    Session::logical_profile_test_reset();
+    SEEN.lock().unwrap().clear();
+    let mut s = HostSession::builder()
+        .with_builtin_installer(install)
+        .build();
+    let setup = s.eval(SETUP);
+    assert!(
+        !matches!(setup, HostEvalOutcome::InputRequired(_)),
+        "{setup:?}"
+    );
+    let outcome = match trigger {
+        "valueq" => s.eval(format!("ValueQ[{PROGRAM}]").as_str()),
+        "cancel" => {
+            let cancel = s.cancel_handle();
+            let paused = s.eval(PROGRAM);
+            assert!(
+                matches!(paused, HostEvalOutcome::InputRequired(_)),
+                "{paused:?}"
+            );
+            cancel.cancel();
+            s.resume_with_input("ignored")
+        }
+        _ => panic!("unknown trigger {trigger}"),
+    };
+    let value = match &outcome {
+        HostEvalOutcome::Success(success) => success.value.text.clone(),
+        other => format!("{other:?}"),
+    };
+    let rows = Session::logical_profile_test_rows()
+        .into_iter()
+        .filter(|(key, _)| key.contains("native"))
+        .map(|(_, counts)| counts)
+        .collect();
+    let seen = SEEN.lock().unwrap().join(" | ");
+    (format!("value={value} seen=[{seen}]"), rows)
+}
+
+fn child(profiled: bool) -> Vec<String> {
+    let mut command = std::process::Command::new(std::env::current_exe().unwrap());
+    command
+        .args([
+            "--exact",
+            "profiled_abandonment_requeues_like_ordinary",
+            "--nocapture",
+            "--test-threads=1",
+        ])
+        .env(
+            "LP02_ABANDON_CHILD",
+            if profiled { "profiled" } else { "ordinary" },
+        )
+        .env_remove("RUM_PROFILE_LEXICAL_SUBSTITUTION");
+    if profiled {
+        command.env("RUM_PROFILE_LEXICAL_SUBSTITUTION", "1");
+    }
+    let out = command.output().unwrap();
+    let stdout = String::from_utf8_lossy(&out.stdout).into_owned();
+    assert!(
+        out.status.success(),
+        "profiled={profiled}\n{stdout}\n{}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    stdout
+        .lines()
+        .filter_map(|line| {
+            line.split_once("LP02_ABANDON ")
+                .map(|(_, rest)| rest.to_owned())
+        })
+        .collect()
+}
+
+#[test]
+fn profiled_abandonment_requeues_like_ordinary() {
+    let Some(arm) = std::env::var_os("LP02_ABANDON_CHILD") else {
+        let ordinary = child(false);
+        let profiled = child(true);
+        for (o, p) in ordinary.iter().zip(&profiled) {
+            println!("LP02_ABANDON_ORDINARY {o}");
+            println!("LP02_ABANDON_PROFILED {p}");
+        }
+        assert_eq!(ordinary.len(), 2);
+        assert_eq!(profiled, ordinary);
+        return;
+    };
+    let profiled = arm == "profiled";
+    for trigger in ["valueq", "cancel"] {
+        let (observed, rows) = run(trigger);
+        // Arm checks: the profiled child opened one record before the pause,
+        // so its suspension was the profiled representation; the ordinary
+        // child opened none.
+        if profiled {
+            assert_eq!(rows.len(), 1, "{trigger}: {rows:?}");
+            assert_eq!(rows[0][0], 1, "{trigger}: {rows:?}");
+        } else {
+            assert!(rows.is_empty(), "{trigger}: {rows:?}");
+        }
+        // Control: the ordinary outer cleanup sees the saved stack under it,
+        // so a remainder re-queued without that stack cannot match.
+        if !profiled {
+            assert!(
+                observed
+                    .split_once("List[\"outer\", List[")
+                    .is_some_and(|(_, outer)| outer.contains("Hold[m[]]")),
+                "{trigger}: the control did not reach the re-queued remainder: {observed}"
+            );
+        }
+        println!("LP02_ABANDON {trigger} {observed}");
+    }
+}
+```
+
+**Report.** Append a continuation 13 report in the seven sections. In
+section 6, include the prologue table from point 5 and the perf numbers from
+the 20:50 ruling. Keep `state.json` current.
+
+Stop-loss as before. Progress means deltas attributed or removed, with the
+shape held.
