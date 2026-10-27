@@ -1586,3 +1586,301 @@ and the standing inventories by replay.
 
 Every quoted line must be copied from a file you name. Append
 "Executing-agent report — A3".
+
+## Executing-agent report — A3
+
+**STOP.** `production_rejection_census_is_complete` fails because the option frontier moved from 971 rejected edges to 972. Keyed by kind, file, callee and reason, no key was added or removed. One key's count went from 1 to 2: `Session::record_profile_evaluate_entry` is now rejected in both `Session::evaluate` and `evaluate_at_root`. Instruction measurement, the stack rescan, and the Jupyter pair were not run.
+
+### 1. The edit
+
+`evaluate_entered` is deleted. `Session::evaluate` keeps the base four statements after the depth-0 branch. `evaluate_at_root` holds the entry, calls `restore(0)`, then the same four statements. `evaluate_profiled_fixed_point` is `#[inline(always)]`. From `crates/rum-runtime/src/runtime/resolution.rs` lines 319–349:
+
+```text
+    pub fn evaluate(&mut self, expr: Expr) -> Result<Expr, EvalError> {
+        if self.evaluation_depth.get() == 0 {
+            return self.evaluate_at_root(expr);
+        }
+        self.record_profile_evaluate_entry();
+        let runtime_profile = runtime_path_timing_start("evaluate.total");
+        let result = self.evaluate_profiled_fixed_point(expr);
+        record_profile_runtime_path_timing(
+            runtime_profile,
+            runtime_profile_outcome_for_expr_result(&result),
+        );
+        result
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn evaluate_at_root(&mut self, expr: Expr) -> Result<Expr, EvalError> {
+        let _entry = NativeStackEntry::enter();
+        self.evaluation_depth.restore(0);
+        self.record_profile_evaluate_entry();
+        let runtime_profile = runtime_path_timing_start("evaluate.total");
+        let result = self.evaluate_profiled_fixed_point(expr);
+        record_profile_runtime_path_timing(
+            runtime_profile,
+            runtime_profile_outcome_for_expr_result(&result),
+        );
+        result
+    }
+
+    #[inline(always)]
+    fn evaluate_profiled_fixed_point(&mut self, expr: Expr) -> Result<Expr, EvalError> {
+```
+
+`native_check_due` and `enter_level` take the depth the evaluator already holds. From `crates/rum-runtime/src/runtime/model/evaluation_depth.rs` lines 33–57:
+
+```text
+    /// `depth` is this level's entry depth, read once by the evaluator.
+    /// Today's rule on that depth: `depth >= next` then `next = depth + STRIDE`.
+    #[inline(always)]
+    pub(in crate::runtime) fn native_check_due(&mut self, depth: usize) -> bool {
+        debug_assert_eq!(depth, self.depth);
+        if depth >= self.next_native_check {
+            self.next_native_check = depth.saturating_add(NATIVE_STACK_DEPTH_POLL_STRIDE);
+            true
+        } else {
+            false
+        }
+    }
+```
+
+```text
+    #[inline(always)]
+    pub(in crate::runtime) fn enter_level(&mut self, entered_at: usize) {
+        debug_assert_eq!(self.depth, entered_at);
+        self.depth = entered_at + 1;
+    }
+```
+
+`leave_level` is unchanged. In `crates/rum-runtime/src/runtime/eval_core/mod.rs` the two calls are `native_check_due(evaluation_depth)` (line 55) and `enter_level(evaluation_depth)` (line 73). The caller `next_check_depth` in `crates/rum-runtime/src/runtime/tests/resume_evaluation_context.rs` passes that depth. No other file under `crates/` was edited.
+
+### 2. Tests that passed
+
+`.temp/brief-629/logs/fmt-a3.log`:
+
+```text
+oom_kill_before=0
+EXIT:0
+oom_kill_after=0
+```
+
+`.temp/brief-629/logs/rum-runtime-lib-a3.log`:
+
+```text
+test result: ok. 1216 passed; 0 failed; 5 ignored; 0 measured; 0 filtered out; finished in 36.83s
+EXIT:0
+oom_kill_after=0
+```
+
+`.temp/brief-629/logs/rum-host-a3.log`, every target:
+
+```text
+test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.64s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 50.59s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.27s
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.04s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.89s
+EXIT:0
+oom_kill_after=0
+```
+
+`.temp/brief-629/logs/typed-slot-census-a3.log`:
+
+```text
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 284.09s
+EXIT:0
+oom_kill_after=0
+```
+
+The typed-slot receipt was not changed.
+
+### 3. LP01 replay
+
+120 required rows, 30 binding rows, and 1 interned producer string. Statement text was not changed. Disclosure `.temp/brief-629/logs/lp01-a3-replay.txt`:
+
+```text
+resolution.rs fingerprint fnv1a64:549fac7c5738681e -> fnv1a64:88ccfe43e85bb71f
+eval_core/mod.rs fingerprint fnv1a64:f3e98e033bd5b366 -> fnv1a64:1a30ade03c6fc95e
+```
+
+```text
+1. crates/rum-runtime/src/runtime/resolution.rs:338 -> :327
+   statement: let result = self.evaluate_profiled_fixed_point(expr);
+```
+
+```text
+required rows changed: 120
+bindings rows changed: 30
+losses.json producer strings changed: 1 ("crates/rum-runtime/src/runtime/resolution.rs:338" -> "...:327")
+```
+
+The inventory follows the copy in `Session::evaluate` (line 327). The same statement also stands at line 340 inside `evaluate_at_root`. `phase-sites.tsv` was not edited.
+
+`.temp/brief-629/logs/lp01-a3.log`:
+
+```text
+all: LP01 required=1115 bound=875 executed=875 encoding-owned=240 programs={"correctness": 48, "frozen": 650, "minimum": 16, "new": 82} counter-losses=41728
+all: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 498 filtered out; finished in 18.98s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 498 filtered out; finished in 66.54s
+EXIT:0
+oom_kill_after=0
+```
+
+### 4. The frontier — STOP
+
+Baseline `.temp/brief-629/logs/option-frontier-nocapture.log` line 6, the accepted Stage A dump:
+
+```text
+OPTION_FRONTIER resolved_bodies=219 resolved_files=44 rejected_edges=971 name_spelling_candidates=2633 candidate_files=349
+```
+
+Candidate `.temp/brief-629/logs/rejection-census-a3.log` line 20:
+
+```text
+OPTION_FRONTIER resolved_bodies=218 resolved_files=44 rejected_edges=972 name_spelling_candidates=2633 candidate_files=349
+```
+
+Public wrapper, same files, lines 1197 and 1211:
+
+```text
+PUBLIC_WRAPPER resolved_bodies=5 resolved_files=3 rejected_edges=16 comparison_C01_C02_name_spelling_candidates=2633 candidate_files=349
+```
+
+The census assertion, `.temp/brief-629/logs/rejection-census-a3.log` lines 1654–1657:
+
+```text
+thread 'tests::retention_closure::census::tests::production_rejection_census_is_complete' panicked at crates/rum-stdlib/src/tests/retention_closure/census/tests.rs:245:5:
+assertion `left == right` failed: STOP: brief-545 exact legacy frontier inventory moved
+  left: 972
+ right: 971
+```
+
+Keyed diff `.temp/brief-629/logs/frontier-keyed-diff-a3.txt` lines 3–11 and 18. Key is kind, file, callee, reason:
+
+```text
+base_rejected 971
+cand_rejected 972
+base_kinds {'RET001': 10, 'RET002': 933, 'RET003': 28}
+cand_kinds {'RET001': 10, 'RET002': 934, 'RET003': 28}
+keys_added 0
+keys_removed 0
+keys_count_changed 1
+keys_site_moved 17
+keys_witness_moved 203
+```
+
+```text
+COUNT	1->2	RET002	crates/rum-runtime/src/runtime/resolution.rs	rum_runtime::runtime::model::session::Session::record_profile_evaluate_entry	method syntax: opaque imported trait candidate std::sync::Arc
+```
+
+Sites for that key, same file lines 70–71:
+
+```text
+  BASE	{'crates/rum-runtime/src/runtime/resolution.rs:336:9-336:45': 1}
+  CAND	{'crates/rum-runtime/src/runtime/resolution.rs:323:9-323:45': 1, 'crates/rum-runtime/src/runtime/resolution.rs:338:9-338:45': 1}
+```
+
+The three rows, copied from the dumps:
+
+```text
+REJECTED	RET002	crates/rum-runtime/src/runtime/resolution.rs:336:9-336:45	rum_runtime::runtime::model::session::Session::record_profile_evaluate_entry	rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr -> rum_runtime::runtime::accounting_mode::rule::evaluate_rule -> rum_runtime::runtime::accounting_mode::rule::evaluate_unarmed -> rum_runtime::runtime::model::session::Session::evaluate -> rum_runtime::runtime::model::session::Session::evaluate_entered	method syntax: opaque imported trait candidate std::sync::Arc
+```
+
+from `.temp/brief-629/logs/option-frontier-nocapture.log` line 1075, and from `.temp/brief-629/logs/rejection-census-a3.log` lines 1087 and 1089:
+
+```text
+REJECTED	RET002	crates/rum-runtime/src/runtime/resolution.rs:323:9-323:45	rum_runtime::runtime::model::session::Session::record_profile_evaluate_entry	rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr -> rum_runtime::runtime::accounting_mode::rule::evaluate_rule -> rum_runtime::runtime::accounting_mode::rule::evaluate_unarmed -> rum_runtime::runtime::model::session::Session::evaluate	method syntax: opaque imported trait candidate std::sync::Arc
+REJECTED	RET002	crates/rum-runtime/src/runtime/resolution.rs:338:9-338:45	rum_runtime::runtime::model::session::Session::record_profile_evaluate_entry	rum_runtime::runtime::model::session::Session::evaluate_runtime_option_expr -> rum_runtime::runtime::accounting_mode::rule::evaluate_rule -> rum_runtime::runtime::accounting_mode::rule::evaluate_unarmed -> rum_runtime::runtime::model::session::Session::evaluate -> rum_runtime::runtime::model::session::Session::evaluate_at_root	method syntax: opaque imported trait candidate std::sync::Arc
+```
+
+Those two candidate sites are the two copies of `self.record_profile_evaluate_entry();` at `resolution.rs` lines 323 and 338. The base had that call once, inside `evaluate_entered`.
+
+Resolved bodies, same diff file lines 1137–1140:
+
+```text
+resolved_base 219 resolved_cand 218
+RESOLVED_ONLY_BASE
+  rum_runtime::runtime::model::session::Session::evaluate_entered
+RESOLVED_ONLY_CAND
+```
+
+Seventeen other keys in `resolution.rs` kept the same callee and reason and moved three lines down, with the duplicated body. Example, diff file lines 21–23:
+
+```text
+SITE_MOVE	RET001	crates/rum-runtime/src/runtime/resolution.rs	std::vec::Vec::new	not a resolved function definition: std::vec::Vec::new
+  BASE	{'crates/rum-runtime/src/runtime/resolution.rs:349:36-349:46': 1}
+  CAND	{'crates/rum-runtime/src/runtime/resolution.rs:352:36-352:46': 1}
+```
+
+203 keys kept the same kind, file, callee and reason, and lost `Session::evaluate_entered` from the witness chain. The full pairs are in the diff file. `census/tests.rs` was not edited.
+
+The same log also fails `production_obligations_are_exact` on stale contract fingerprints, lines 1563–1567. That test is not the named stop. The fingerprints were not replayed, because the frontier stop had already fired:
+
+```text
+thread 'tests::retention_closure::production_obligations_are_exact' panicked at crates/rum-stdlib/src/tests/retention_closure/local/promotion.rs:27:38:
+fresh certificate rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol: RET002	crates/rum-runtime/src/runtime/options/core.rs:118:13-118:92	rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol	stale contract fingerprint O011
+RET002	crates/rum-runtime/src/runtime/options/core.rs:118:13-118:92	rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol	stale contract fingerprint O010
+RET002	crates/rum-runtime/src/runtime/options/core.rs:119:9-121:10	rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol	stale contract fingerprint O0210
+RET002	crates/rum-runtime/src/runtime/options/core.rs:119:9-121:10	rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol	stale contract fingerprint O0200
+```
+
+### 5. Attempts
+
+| Attempt | Result | Log |
+|---|---|---|
+| `cargo fmt --check` | EXIT:0, oom_kill stayed 0 | `logs/fmt-a3.log` |
+| `cargo test -p rum-runtime --lib` | 1216 passed, EXIT:0, oom_kill stayed 0 | `logs/rum-runtime-lib-a3.log` |
+| `cargo test -p rum-host` | every target ok, EXIT:0, oom_kill stayed 0 | `logs/rum-host-a3.log` |
+| `cargo test -p rum-stdlib --test typed_slot_census` | 8 passed, EXIT:0, oom_kill stayed 0 | `logs/typed-slot-census-a3.log` |
+| `suspension_oracle -- logical_counter_port` | ok, EXIT:0, oom_kill stayed 0 | `logs/lp01-a3.log` |
+| census attempt 1, two test names in one `cargo test` | EXIT:1, `error: unexpected argument 'production_rejection_census_is_complete' found`, oom_kill stayed 0 | `logs/rejection-census-a3.log` lines 3–8 |
+| census attempt 2, obligations then census | both EXIT:101, oom_kill stayed 0. No signal 9 | `logs/rejection-census-a3.log` |
+
+No host OOM. `oom_kill` did not rise, and no command died with signal 9, so nothing was rerun for that rule.
+
+### 6. Not done
+
+Stopped at the frontier. The Jupyter pair was not run. `arms/cand/` was not rebuilt and still holds the Stage B binaries. `arms/base/` and `logs/bb.tsv` were not touched. `logs/bc-a3.tsv` does not exist. No callgrind attribution and no stack rescan. `cargo test --workspace` was not run.
+
+## Director ruling on A3, and continuation A4 (2026-10-28 03:10) — measurement
+
+**The frontier move is accepted.** No key was added or removed. One
+key's count went from 1 to 2: the `record_profile_evaluate_entry` receiver
+is rejected once in `Session::evaluate` and once in the copy that A3 gives
+the cold root entry. That is the direct consequence of my A3 shape.
+
+I updated `census/tests.rs` to 972 (10/934/28), with the reason. I
+replayed the contract fingerprints and both certificate builds, and
+`production_rejection_census_is_complete` passes. Your LP01 replay is
+accepted: it follows the copy in `Session::evaluate`, and the fixture
+passes.
+
+**A4 is measurement only.** Do not edit `crates/`. Run the rest of A3's
+bars:
+
+1. Rebuild `arms/cand/` (both binaries, one codegen unit), and run
+   `instr.py arms/base arms/cand logs/bc-a3.tsv` with the same floor
+   `logs/bb.tsv`.
+2. Name the mechanism of every label beyond its floor. An unattributed
+   positive residual is a STOP.
+3. Give the stack cycle per level, base and candidate, as A3 specified,
+   plus the two cold check leaves.
+4. Run the Jupyter pair 20 times at `--test-threads=2`.
+
+Append "Executing-agent report — A4". Every quoted line must be copied from
+a file you name.
