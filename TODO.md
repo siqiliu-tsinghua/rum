@@ -77,6 +77,21 @@ filter cuts this census work a third time, switch workers.**
   parallel test census, design-only, on grk) covers all 46 test targets,
   per-test memory, the root causes, and an enforced fix. It runs before LP03,
   because LP03-LP08 will add more profiler tests.
+- **The native stack guard measures against another thread's stack after
+  a Session moves threads (found by the director at brief-627's review).**
+  - Abandonment evaluates guest cleanup at a restored nonzero depth
+    (`restore_resume_context`), so `Session::evaluate` does not rebase.
+    `native_stack_base` is still the address recorded on the thread that
+    started the request.
+  - When the current stack lies below that base, the guard reports a false
+    `StackLimitExceeded`. Abandonment drops that error silently, so the
+    `WithCleanup` cleanup does not run, against "runs guest cleanup once".
+  - When the current stack lies above it, `saturating_sub` gives 0 and the
+    guard cannot fire at all. That is fail-open, and it was observed.
+  - Jupyter runs each execute on a fresh thread, which is how it surfaced, as
+    the interrupt "flake" below.
+  - brief-628 (design-only) owns the fix and the inventory of
+    thread-bound Session state.
 - **The `rum-jupyter` `execute_lifecycle` interrupt tests flake under
   parallel test threads.** They failed 3 of 10 workspace-parallel runs on the
   committed pre-LP02 source, and never single-threaded. Gates run tests
