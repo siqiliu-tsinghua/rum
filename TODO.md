@@ -66,7 +66,17 @@ filter cuts this census work a third time, switch workers.**
 - The director's gate found an ordinary-path copy that the worker's
   instrument could not see. The record is at the end of brief-617.
 
-**Opened by LP02's gate (2026-10-27), not yet briefed:**
+**Opened by LP02's gate (2026-10-27):**
+- **The standard `cargo test` is red at `17576575`.** At the default thread
+  count, `cargo test -p rum-runtime --lib profiling` failed 16, 13 and 14 of
+  30 tests in three runs, and all of the failures are LP02's tests. Single-threaded, all
+  30 pass. The logical profiler's epoch is process-wide by design, and the test
+  guard `test_support::enabled()` holds no lock. The director's gates have run
+  tests single-threaded since 2026-09-30, so they never saw it. I measured
+  this on 2026-10-26 and did not record it until 10-27. **brief-627** (the
+  parallel test census, design-only, on grk) covers all 46 test targets,
+  per-test memory, the root causes, and an enforced fix. It runs before LP03,
+  because LP03-LP08 will add more profiler tests.
 - **The `rum-jupyter` `execute_lifecycle` interrupt tests flake under
   parallel test threads.** They failed 3 of 10 workspace-parallel runs on the
   committed pre-LP02 source, and never single-threaded. Gates run tests
