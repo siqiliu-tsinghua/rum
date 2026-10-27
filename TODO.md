@@ -4,10 +4,13 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-20, committed tree through G13 step S9 (brief-617,
-control and cleanup; gated, below), G15-A (brief-619, `afdcd02f`), G15-B
-(brief-620, `43a26c72`), the G15-C design (brief-621, accepted `8f77793c`)
-and G15-C1 (brief-622, `b4f81ebe`).
+Status checkpoint: 2026-10-27. The committed tree runs through:
+- G13 step S9 (brief-617, control and cleanup; gated, below);
+- G15-A (brief-619, `afdcd02f`) and G15-B (brief-620, `43a26c72`);
+- the G15-C design (brief-621, accepted `8f77793c`) and G15-C1 (brief-622,
+  `b4f81ebe`);
+- the logical profiler's LP01 (brief-625, `3fd1885c`) and LP02 (brief-626,
+  `17576575`).
 
 G15-C2 (brief-623, three runs) has settled 679 of its 1 032 rows by
 execution or by mechanical rule:
@@ -31,9 +34,26 @@ path, and pauses become separate telemetry. The design is brief-624,
 accepted in `3906ac01`. It found no semantic loss; the resumed fixed point
 does the same work, only without its profiling hooks.
 
-**Next: LP01 = brief-625**, the contract and the counter oracle, with no
-counting change. LP02-LP08 follow from `.temp/brief-624/drafts/`, one per
-brief. Then come C2's remaining 353 rows on the final source, the manifest
+**Done:**
+- **LP01** (brief-625, `3fd1885c`): the contract and the counter oracle, with
+  no counting change.
+- **LP02** (brief-626, `17576575`): the record engine and the queue
+  boundaries, with no phase adopted.
+  - It took fourteen continuations; 9-14 ran on Kimi while Codex was out of
+    quota.
+  - The defects caught at the gate were a flattened queue with a
+    duplicated algorithm, a lazy enable, and a hand-copied abandonment loop
+    that re-queued the remainder without its stack.
+  - The director's falsifier `crates/rum-host/tests/logical_profile_abandonment.rs`
+    now pins that last one.
+
+**Next: LP03** from `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md`,
+on Codex (user ruling 2026-10-26: new briefs go back to Codex). Write it at
+the granularity `TEMPLATE.md` now records. **LP03 carries one shape item from
+LP02's gate:** `Session::enable_pending_profile` (`suspension/core.rs`)
+unwraps `pending_suspension`, a state the type allows. Its caller already
+holds the installed suspension, so pass `&mut FrameStorage` to the cold
+helper. LP04-LP08 follow, one per brief. Then come C2's remaining 353 rows on the final source, the manifest
 (CM, `.temp/brief-621/draft-G15-CM-obligation-manifest.md`), `CHANGELOG.md`
 (user ruling), and S10 from `.temp/brief-606/draft-S10.md`, with its
 owned-row table from `.temp/brief-621/draft-existing-owner-additions.md`. The
@@ -45,6 +65,29 @@ filter cuts this census work a third time, switch workers.**
   their quotas, and the director finished the step by user ruling.
 - The director's gate found an ordinary-path copy that the worker's
   instrument could not see. The record is at the end of brief-617.
+
+**Opened by LP02's gate (2026-10-27), not yet briefed:**
+- **The `rum-jupyter` `execute_lifecycle` interrupt tests flake under
+  parallel test threads.** They failed 3 of 10 workspace-parallel runs on the
+  committed pre-LP02 source, and never single-threaded. Gates run tests
+  single-threaded (`TEMPLATE.md` pitfall 9), so the flake stays unseen
+  there. Diagnose it before any brief proposes parallel tests.
+- **Three dead-code warnings in `crates/rum-runtime/src/runtime/test_builtins.rs`.**
+  `register_test_vm_template_builtins` has no caller, so the two
+  registrations reached only through it are dead too. They have been present
+  since at least brief-620, and are probably left over from the
+  `vm_rhs_template/` deletion (brief-244).
+- **A perf observation, rum against rum:**
+  - `default_system_attribute_set` binary-searches static builtin names by
+    string comparison.
+  - That is 324 `memcmp` calls per iteration on
+    `replace-leaf-rebuild-small`.
+  - Its cost moves with `.rodata` layout. Every LP02 rebuild flagged that
+    label and `deletecases-leaf-delete-small` through split loads, with the
+    same or fewer instructions.
+  - A lookup keyed on the interned symbol would remove both the comparisons
+    and the layout sensitivity.
+  - Not scheduled; it is a candidate for a performance lane.
 
 Owed, any
 time (no code): `CHANGELOG.md`'s `[Unreleased]` has not been updated since

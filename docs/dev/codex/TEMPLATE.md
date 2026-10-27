@@ -36,6 +36,28 @@ implementation briefs before dispatching them one at a time. Codex's drafts
 are raw material, never dispatched as-is. Trivial mechanical jobs may still go
 straight to an implementation brief.
 
+**How Claude writes an implementation brief (user ruling 2026-10-26: spend
+director tokens up front rather than worker hours on a wrong route).**
+
+- **Give the target shape as code**: types, signatures and the call
+  structure. The worker fills in the bodies. A departure from the given
+  shape is a STOP.
+- **Put a "must not change" list beside every cost bar.** It names what is
+  captured and when, the order of execution, and the observable rows. An
+  edit that changes *whether or when* something happens is a STOP, never a
+  cost fix.
+- **Name the tempting shortcuts as forbidden.** These include duplicated
+  bodies, flattening a representation, silent-drop helpers, lazy init, and
+  inline attributes keyed on `debug_assertions`.
+- **Ship the falsifier.** Claude writes it and calibrates it red and green
+  on both arms. The worker inserts it and must reproduce both results.
+- **Stage it.** The shape and its proofs form one stop. The measurement
+  campaign follows only after it.
+- **Hand over the instruments** with their standing exclusions and bounds
+  listed. An exclusion ruled once belongs to the instrument and is
+  restated in every brief that reuses it.
+- **State the concurrency plan** (pitfall 9).
+
 ---
 
 ## Goal
@@ -77,9 +99,10 @@ a reviewable plan plus the drafted follow-up briefs, still not a code change.
   Fingerprints, hashes and positions may move. **New `UnknownConstruct` rows
   for code this brief added or changed are expected** — a derive on a new
   frame, a new closure, a new macro call — and are added with each row's file
-  and line disclosed; unknowns stay unknown. **STOP instead** if an existing
-  row's identity, status, disposition or exclusion would change or a row would
-  disappear, if a new `UnknownHostPayload` row appears (that needs a
+  and line disclosed; unknowns stay unknown. **STOP instead** if a row
+  committed at HEAD would change its identity, status, disposition or
+  exclusion, or would disappear (a row this brief added earlier is not
+  "existing"), if a new `UnknownHostPayload` row appears (that needs a
   disposition decision), or if a new row points at code the brief did not
   touch. **A new suspension frame or `FrameRootTrace`/`PureFrameAbandon`
   type, in any crate, also enters rum-runtime's closed lists** —
@@ -138,6 +161,32 @@ produce; for implementation: code + tests + the before/after per-label rows).
    candidate with `CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1` (from the same
    source paths' exports, each into its own target directory) whenever the
    gate's threshold is finer than about 1%.
+9. **Concurrency is planned per stage, from measured resource profiles**
+   (user ruling 2026-10-26; it supersedes the 2026-09-30 all-serial cargo
+   rule).
+   - Run one cargo command at a time, inside a memory-capped scope:
+     `systemd-run --user --scope -p MemoryMax=14G -p MemoryHigh=12G -p MemorySwapMax=0`.
+   - Builds use `CARGO_BUILD_JOBS=8`, which peaked at about 9 GiB.
+   - Tests use `RUST_TEST_THREADS=1`, unless the brief states a measured
+     profile.
+     - rum-stdlib's tests at the default thread count peaked at 14.6 GB and
+       were OOM-killed.
+     - Profiling tests share process-global state.
+   - On an `oom-kill`, rerun that command once with one job.
+   - `perf stat`, timing, Callgrind and heap captures run serially and alone,
+     with nothing else running during them.
+   - A stage the brief does not name runs serially.
+10. **Your own self-check is a report row, not a bar.** If a check stricter
+    than the brief's bar fails, report it. It is never a reason to edit
+    production. After any production edit, the focused set also includes
+    the repository invariant tests (`frame_root_trace`, the inventories).
+11. **A measurement pipeline is re-entry safe.**
+    - Never rerun a reference stage (panels, a calibration, base receipts)
+      once a later stage has consumed it.
+    - A resumed block skips completed stages, on the evidence of their
+      receipts.
+    - The report lists every attempt of every stage with its result,
+      including the passes.
 
 ## Verification (MANDATORY — you run it; iterate to green / to evidence)
 
