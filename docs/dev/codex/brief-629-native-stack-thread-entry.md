@@ -1884,3 +1884,1365 @@ bars:
 
 Append "Executing-agent report — A4". Every quoted line must be copied from
 a file you name.
+
+## Executing-agent report — A4
+
+No STOP. Every positive residual has a named mechanism. The repeating stack level is under the base. Each cold-check leaf's reservation grew by 24 bytes. The Jupyter pair passed 20 times. No file under `crates/` was edited. `arms/base/` and `logs/bb.tsv` were not touched.
+
+### 1. Candidate arm
+
+Both release builds used one codegen unit, `CARGO_BUILD_JOBS=8`, and `CARGO_NET_OFFLINE=true`. The harness package is `brief608-resume`.
+
+From `.temp/brief-629/logs/build-cand-cli-a4.log` line 9, the text after the carriage return:
+
+```text
+    Finished `release` profile [optimized] target(s) in 48.47s
+```
+
+From `.temp/brief-629/logs/build-cand-cli-a4.log`:
+
+```text
+oom_kill_before=0
+oom_before=0
+```
+
+From `.temp/brief-629/logs/build-cand-cli-a4.log`:
+
+```text
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+From `.temp/brief-629/logs/build-cand-harness-a4.log` line 7, the text after the carriage return:
+
+```text
+    Finished `release` profile [optimized] target(s) in 47.66s
+```
+
+From `.temp/brief-629/logs/build-cand-harness-a4.log`:
+
+```text
+oom_kill_before=0
+oom_before=0
+```
+
+From `.temp/brief-629/logs/build-cand-harness-a4.log`:
+
+```text
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+From `.temp/brief-629/logs/copy-cand-a4.log`:
+
+```text
+=== before copy ===
+-- cand rum-cli --
+    Build ID: 56165200b1f3383b9ae0a7750d8fc2691f27cba3
+-- cand resume --
+    Build ID: 12459d4c99021164d36e0f1f6a6d584cc65fd69b
+-- new rum-cli --
+    Build ID: 7e03a5809abcd6ec5ee328eb37ea227e6a07c455
+-- new resume --
+    Build ID: d561a2158967a45f3e35fe204a4605586f70ba4e
+-- base rum-cli (not copied) --
+    Build ID: a24ca4234d25378c2fe50b45fcc83949c062f79a
+-- base resume (not copied) --
+    Build ID: e3b98f6dfe78f19fd1d6e13781850e07176f7f1f
+=== after copy ===
+-- cand rum-cli --
+    Build ID: 7e03a5809abcd6ec5ee328eb37ea227e6a07c455
+-- cand resume --
+    Build ID: d561a2158967a45f3e35fe204a4605586f70ba4e
+-rwxr-xr-x 1 remi remi 12704488 10月27日 22:26 .temp/brief-629/arms/base/resume
+-rwxr-xr-x 1 remi remi 13011536 10月27日 22:26 .temp/brief-629/arms/base/rum-cli
+-rwxr-xr-x 1 remi remi 12696888 10月28日 02:50 .temp/brief-629/arms/cand/resume
+-rwxr-xr-x 1 remi remi 13016224 10月28日 02:50 .temp/brief-629/arms/cand/rum-cli
+EXIT:0
+```
+
+The candidate `rum-cli` Build ID moved from `56165200b1f3383b9ae0a7750d8fc2691f27cba3` to `7e03a5809abcd6ec5ee328eb37ea227e6a07c455`. The candidate `resume` Build ID moved from `12459d4c99021164d36e0f1f6a6d584cc65fd69b` to `d561a2158967a45f3e35fe204a4605586f70ba4e`. Base Build IDs stayed `a24ca4234d25378c2fe50b45fcc83949c062f79a` and `e3b98f6dfe78f19fd1d6e13781850e07176f7f1f`. Measurement used these A4 binaries.
+
+### 2. Instruction gate
+
+`instr.py arms/base arms/cand logs/bc-a3.tsv` was attempted three times. The first two died before measuring. The third ran from `.temp/brief-629` and wrote 313 labels. `logs/bb.tsv` was the floor and was not rewritten.
+
+From `.temp/brief-629/logs/bc-a3-run.log`:
+
+```text
+oom_kill_before=0
+oom_before=0
+```
+
+From `.temp/brief-629/logs/bc-a3-run.log`:
+
+```text
+FileNotFoundError: [Errno 2] No such file or directory: 'logs/bc-a3.tsv'
+EXIT:1
+oom_kill_after=0
+oom_after=0
+=== attempt 2 cwd=.temp/brief-629 ===
+oom_kill_before=0
+oom_before=0
+python3: can't open file '/home/remi/dev/rum/instruments/instr.py': [Errno 2] No such file or directory
+EXIT:2
+oom_kill_after=0
+oom_after=0
+=== attempt 3 cwd=/home/remi/dev/rum/.temp/brief-629 ===
+oom_kill_before=0
+oom_before=0
+```
+
+From `.temp/brief-629/logs/bc-a3-run.log`:
+
+```text
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+Attempt 2's marker says `cwd=.temp/brief-629`, and the Python error names `/home/remi/dev/rum/instruments/instr.py`. The interpreter did not open `.temp/brief-629/instruments/instr.py` on that attempt. Attempt 3 did.
+
+From `.temp/brief-629/logs/bc-a3-summary.txt`:
+
+```text
+labels 313
+bb_rows 313
+bc_median_pct +0.0950
+bc_max_pct +21.4373
+bc_min_pct -16.3019
+flagged 191 positive 176 negative 15
+flagged_cli 70 of 192 median +0.0841
+flagged_resume 121 of 121 median +1.3498
+flagged_cli_positive 55
+flagged_resume_positive 121
+watch valueq-undefined-symbol-definitions-8000 engine=cli delta=-830.90 delta_pct=-16.3019 bb_delta_pct=+7.9327 floor=7.9327 beyond=yes
+watch valueq-undefined-symbol-definitions-2000 engine=cli delta=+863.45 delta_pct=+21.4373 bb_delta_pct=-8.1723 floor=8.1723 beyond=yes
+watch literal-integer engine=cli delta=+1.15 delta_pct=+0.3932 bb_delta_pct=-0.0450 floor=0.0500 beyond=yes
+```
+
+Floor for a label is `max(0.05, |bb delta_pct|)`. A label is beyond the floor when `|bc delta_pct|` is greater than that. 191 labels are beyond the floor: 176 positive, 15 negative. All 121 resume labels are positive. 55 of the 70 flagged CLI labels are positive. The median of all 313 labels is +0.0950%.
+
+### 3. Mechanisms
+
+Callgrind is exclusive Ir, six runs per arm per size, slope `(median(2N) - median(N)) / N`. Stage B profiles of `literal-integer` stay in `callgrind/stage-b-literal-integer` and `logs/attr-literal-integer-stage-b.tsv`. The A4 profiles are new. There is no hot `evaluate_profiled_fixed_point` slope in the A4 TSVs. `nm` on the A4 candidate shows only the pre-existing `::suspend` symbol.
+
+From `.temp/brief-629/logs/attr-literal-integer-stage-b.tsv`:
+
+```text
++25.9756	292.0209	317.9964	TOTAL
++69.0000	0.0000	69.0000	rum-cli!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point'2
+```
+
+From `.temp/brief-629/logs/stack-a4-calls.txt`:
+
+```text
+===== nm base /home/remi/dev/rum/.temp/brief-629/arms/base/rum-cli evaluate_profiled_fixed_point =====
+00000000001269a0 t rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend
+```
+
+From `.temp/brief-629/logs/stack-a4-calls.txt`:
+
+```text
+===== nm cand /home/remi/dev/rum/.temp/brief-629/arms/cand/rum-cli evaluate_profiled_fixed_point =====
+0000000000127d20 t rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend
+```
+
+From `.temp/brief-629/logs/attr-literal-integer-a4.log`:
+
+```text
+oom_kill_before=0
+oom_before=0
+```
+
+From `.temp/brief-629/logs/attr-literal-integer-a4.log`:
+
+```text
+TOTAL base=292.02 cand=293.02 delta=+1.00
+wrote /home/remi/dev/rum/.temp/brief-629/logs/attr-literal-integer.tsv
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+From `.temp/brief-629/logs/attr-literal-integer.tsv`:
+
+```text
+delta	base_slope	cand_slope	function
++1.0043	292.0185	293.0228	TOTAL
++1.0000	110.0000	111.0000	rum-cli!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate'2
+```
+
+From `.temp/brief-629/logs/attr-notes-a4.txt`:
+
+```text
+calls literal-integer needle=Session>::evaluate'2 base_per_iter=1.0000 cand_per_iter=1.0000 base_N=20008.0 base_2N=40008.0 cand_N=20008.0 cand_2N=40008.0
+calls literal-integer needle=evaluate_profiled_fixed_point'2 base_per_iter=0.0000 cand_per_iter=0.0000 base_N=0.0 base_2N=0.0 cand_N=0.0 cand_2N=0.0
+```
+
+`literal-integer` is beyond the 0.05 floor by +1.15 instructions (+0.3932%). Callgrind's TOTAL is +1.0043, and +1.0000 of that is `Session::evaluate'2` (110 to 111) at 1 call per iteration on both arms. The fixed-point outline from Stage B (+69 and evaluate falling by 43) is absent. The candidate prologue compares depth and jumps to the cold tail that calls `evaluate_at_root`.
+
+From `.temp/brief-629/logs/stack-a4-prologues.txt`:
+
+```text
+===== base rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate addr=0x750d30 size=4429 =====
+```
+
+From `.temp/brief-629/logs/stack-a4-prologues.txt`:
+
+```text
+0000000000750d30 <rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate>:
+  750d30:	push   %rbp
+  750d31:	push   %r15
+  750d33:	push   %r14
+  750d35:	push   %r13
+  750d37:	push   %r12
+  750d39:	push   %rbx
+  750d3a:	sub    $0x348,%rsp
+```
+
+From `.temp/brief-629/logs/stack-a4-prologues.txt`:
+
+```text
+  750d4a:	cmpq   $0x0,0x770(%rsi)
+  750d52:	je     750d64 <rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate+0x34>
+```
+
+From `.temp/brief-629/logs/stack-a4-prologues.txt`:
+
+```text
+===== cand rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate addr=0x751f40 size=4577 =====
+```
+
+From `.temp/brief-629/logs/stack-a4-prologues.txt`:
+
+```text
+0000000000751f40 <rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate>:
+  751f40:	push   %rbp
+  751f41:	push   %r15
+  751f43:	push   %r14
+  751f45:	push   %r13
+  751f47:	push   %r12
+  751f49:	push   %rbx
+  751f4a:	sub    $0x348,%rsp
+```
+
+From `.temp/brief-629/logs/stack-a4-prologues.txt`:
+
+```text
+  751f5a:	cmpq   $0x0,0x330(%rsi)
+  751f62:	je     752e79 <rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate+0xf39>
+```
+
+From `.temp/brief-629/logs/attr-lazy-depth-nest-map-256-a4.log`:
+
+```text
+oom_kill_before=0
+oom_before=0
+lazy-depth-nest-map-256 base N=1000 totals=[3671976825, 3671987983, 3678638990, 3671974225, 3671974820, 3671976455]
+lazy-depth-nest-map-256 base N=2000 totals=[7323562381, 7323564902, 7323565834, 7323574083, 7323566827, 7323574142]
+lazy-depth-nest-map-256 cand N=1000 totals=[3673861852, 3673879852, 3673885748, 3673866823, 3673864966, 3673864436]
+lazy-depth-nest-map-256 cand N=2000 totals=[7340645568, 7340645304, 7327327160, 7327327693, 7327328179, 7327336753]
+TOTAL base=3651589.69 cand=3653466.57 delta=+1876.88
+wrote /home/remi/dev/rum/.temp/brief-629/logs/attr-lazy-depth-nest-map-256.tsv
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+From `.temp/brief-629/logs/attr-lazy-depth-nest-map-256.tsv`:
+
+```text
++1876.8810	3651589.6905	3653466.5715	TOTAL
+-58768.0000	58768.0000	0.0000	rum-cli!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_unstable_after_input_check_with_cycle_tracking'2
++55403.0000	0.0000	55403.0000	rum-cli!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_in_accounting_mode'2
++4916.0000	177468.0000	182384.0000	rum-cli!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate'2
++355.4430	226.1910	581.6340	rum-cli!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::native_stack_budget_exhausted
+```
+
+From `.temp/brief-629/logs/attr-notes-a4.txt`:
+
+```text
+calls lazy-depth-nest-map-256 needle=Session>::evaluate'2 base_per_iter=774.0000 cand_per_iter=774.0000 base_N=777354.0 base_2N=1551354.0 cand_N=777354.0 cand_2N=1551354.0
+calls lazy-depth-nest-map-256 needle=native_stack_budget_exhausted base_per_iter=32.3130 cand_per_iter=32.3130 base_N=32538.0 base_2N=64851.0 cand_N=32538.0 cand_2N=64851.0
+calls lazy-depth-nest-map-256 needle=evaluate_once_unstable_after_input_check_with_cycle_tracking'2 base_per_iter=518.0000 cand_per_iter=0.0000 base_N=522117.0 base_2N=1040117.0 cand_N=0.0 cand_2N=0.0
+calls lazy-depth-nest-map-256 needle=evaluate_once_in_accounting_mode'2 base_per_iter=0.0000 cand_per_iter=518.0000 base_N=0.0 base_2N=0.0 cand_N=522117.0 cand_2N=1040117.0
+```
+
+From `.temp/brief-629/logs/attr-notes-a4.txt`:
+
+```text
+===== exclusive lazy-depth-nest-map-256 cand-2000-1.out minus cand-2000-3.out =====
+summary cand-2000-3.out=7327327160 cand-2000-1.out=7340645568 gap=13318408
+6664060	261292884	267956944	rum-cli!rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom
+6655987	109264016	115920003	rum-cli!rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom'2
+```
+
+From `.temp/brief-629/logs/attr-notes-a4.txt`:
+
+```text
+===== bloom calls cand-2000-3.out =====
+2585425	rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom
+1037621	rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom'2
+```
+
+From `.temp/brief-629/logs/attr-notes-a4.txt`:
+
+```text
+===== bloom calls cand-2000-1.out =====
+2585425	rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom
+1037621	rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom'2
+```
+
+From `.temp/brief-629/logs/bc-a3.tsv`:
+
+```text
+lazy-depth-nest-map-256	1000	3651508.47	3666700.45	+15191.98	+0.4160	3671824735,3671822150,3671836703	7323346910,7323329767,7323333201	3673713075,3673727673,3673710432	7340414213,7327094494,7340413523
+```
+
+On `lazy-depth-nest-map-256` the stable positive rows are `Session::evaluate'2` +4916 at 774 calls per iteration on both arms, and `native_stack_budget_exhausted` +355.4430 at 32.3130 calls per iteration on both arms. 355.4430 / 32.3130 and the base 226.1910 / 32.3130 are 18 and 7 instructions per call. The same 18/7 ratio is the candidate slope over the base slope: 581.6340 / 226.1910 = 18/7. The evaluator body left `evaluate_once_unstable_after_input_check_with_cycle_tracking'2` (58768 to 0) and appears as `evaluate_once_in_accounting_mode'2` (0 to 55403), at 518 calls per iteration. That body is cheaper, so it is a negative component. Perf's delta is +15191.98. Callgrind's median TOTAL is +1876.8810. Candidate N=2000 runs 1 and 2 are the high mode (7340645568 and 7340645304) and runs 3 through 6 are the low mode. The high-minus-low gap is 13318408 Ir, of which `cached_expr_stability_with_bloom` is +6664060 and its `'2` clone is +6655987. Those two functions have the same call counts on the high run and the low run (2585425 and 1037621). One base N=1000 run is the same kind of outlier (`attr-notes-a4.txt` lines 142–145). 13318408 / 1000 = 13318.408, and 1876.8810 + 13318.408 = 15195.289, next to the perf delta +15191.98. Perf's three-run median at 2N landed on the high mode (the `bc-a3.tsv` candidate 2N runs are 7340414213, 7327094494, 7340413523). The mechanism is a longer stability-bloom body at a fixed call count. It is also present on the base.
+
+From `.temp/brief-629/logs/attr-valueq-undefined-symbol-definitions-8000-a4.log`:
+
+```text
+oom_kill_before=0
+oom_before=0
+```
+
+From `.temp/brief-629/logs/attr-valueq-undefined-symbol-definitions-8000-a4.log`:
+
+```text
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+From `.temp/brief-629/logs/attr-valueq-undefined-symbol-definitions-8000.tsv`:
+
+```text
++709.1250	4038.5500	4747.6750	TOTAL
+-615.9750	330.8500	-285.1250	rum-cli!rum_runtime::runtime::builtin_catalog::default_builtin_dispatch_spec_for_symbol
++380.0000	-366.9250	13.0750	rum-cli!rum_core::expr::intern_text
++357.5000	-147.0250	210.4750	rum-cli!rum_core::expr::Symbol::system
++275.1250	-225.9250	49.2000	rum-cli!hashbrown::map::HashMap<K,V,S,A>::insert
+-133.0000	133.0000	0.0000	rum-cli!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_unstable_after_input_check_with_cycle_tracking'2
++127.0000	0.0000	127.0000	rum-cli!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_in_accounting_mode'2
+```
+
+From `.temp/brief-629/logs/attr-valueq-undefined-symbol-definitions-8000.tsv`:
+
+```text
++9.0000	306.0000	315.0000	rum-cli!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate'2
+```
+
+From `.temp/brief-629/logs/attr-valueq-undefined-symbol-definitions-8000.tsv`:
+
+```text
++1.1000	0.7000	1.8000	rum-cli!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::native_stack_budget_exhausted
+```
+
+From `.temp/brief-629/logs/attr-valueq-undefined-symbol-definitions-2000-a4.log`:
+
+```text
+oom_kill_before=0
+oom_before=0
+```
+
+From `.temp/brief-629/logs/attr-valueq-undefined-symbol-definitions-2000-a4.log`:
+
+```text
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+From `.temp/brief-629/logs/attr-valueq-undefined-symbol-definitions-2000.tsv`:
+
+```text
+-244.4250	5170.8000	4926.3750	TOTAL
+-133.0000	133.0000	0.0000	rum-cli!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_unstable_after_input_check_with_cycle_tracking'2
++127.0000	0.0000	127.0000	rum-cli!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_in_accounting_mode'2
+```
+
+From `.temp/brief-629/logs/attr-valueq-undefined-symbol-definitions-2000.tsv`:
+
+```text
++9.0000	306.0000	315.0000	rum-cli!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate'2
+```
+
+From `.temp/brief-629/logs/attr-valueq-undefined-symbol-definitions-2000.tsv`:
+
+```text
++1.1000	0.7000	1.8000	rum-cli!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::native_stack_budget_exhausted
+```
+
+From `.temp/brief-629/logs/attr-notes-a4.txt`:
+
+```text
+===== summaries valueq-undefined-symbol-definitions-8000 =====
+base-20-1.out	245222427	bytes=183802
+```
+
+From `.temp/brief-629/logs/attr-notes-a4.txt`:
+
+```text
+calls valueq-undefined-symbol-definitions-8000 needle=Session>::evaluate'2 base_per_iter=1.0000 cand_per_iter=1.0000 base_N=16029.0 base_2N=16049.0 cand_N=16029.0 cand_2N=16049.0
+calls valueq-undefined-symbol-definitions-8000 needle=native_stack_budget_exhausted base_per_iter=0.1000 cand_per_iter=0.1000 base_N=1001.0 base_2N=1003.0 cand_N=1001.0 cand_2N=1003.0
+```
+
+From `.temp/brief-629/logs/bc-a3.tsv`:
+
+```text
+valueq-undefined-symbol-definitions-2000	20	4027.80	4891.25	+863.45	+21.4373	62927017,62939104,62971680	63016267,63030964,63019660	63022259,63085044,63023878	63120895,63128297,63121703
+valueq-undefined-symbol-definitions-8000	20	5096.95	4266.05	-830.90	-16.3019	242526924,242516251,242691963	242816128,242628863,242604950	242884270,242902500,242896060	242981381,242952087,243351049
+```
+
+`valueq-undefined-symbol-definitions-8000` perf is -830.90 (-16.3019%) and `valueq-undefined-symbol-definitions-2000` perf is +863.45 (+21.4373%). Callgrind's stable rows are the same on both: the old body 133 to 0, the accounting body 0 to 127, `evaluate'2` 306 to 315 at 1 call per iteration, and the cold check 0.7000 to 1.8000 at 0.1000 calls per iteration (again 18/7). The large rows are `intern_text`, `Symbol::system`, `HashMap::insert`, and `default_builtin_dispatch_spec_for_symbol`, with slopes that change sign between the N and 2N setup. An N=20 run's summary is about 245e6 instructions (`base-20-1.out` is 245222427) against an iteration of a few thousand. Perf and callgrind disagree in sign. The mechanism is setup hash-seed noise around the same depth-0 branch and the same cold-check read.
+
+From `.temp/brief-629/logs/attr-set-part-fixed100-len100-a4.log`:
+
+```text
+oom_kill_before=0
+oom_before=0
+```
+
+From `.temp/brief-629/logs/attr-set-part-fixed100-len100-a4.log`:
+
+```text
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+From `.temp/brief-629/logs/attr-set-part-fixed100-len100.tsv`:
+
+```text
++1202.2350	1264493.1000	1265695.3350	TOTAL
+-27776.0000	27776.0000	0.0000	rum-cli!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_unstable_after_input_check_with_cycle_tracking'2
++26371.0000	0.0000	26371.0000	rum-cli!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_in_accounting_mode'2
++1910.0000	70776.0000	72686.0000	rum-cli!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate'2
++699.6200	15698.1500	16397.7700	libc.so.6!__memcmp_avx2_movbe
++70.7300	45.0100	115.7400	rum-cli!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::native_stack_budget_exhausted
+```
+
+From `.temp/brief-629/logs/attr-notes-a4.txt`:
+
+```text
+calls set-part-fixed100-len100 needle=Session>::evaluate'2 base_per_iter=302.0000 cand_per_iter=302.0000 base_N=30528.0 base_2N=60728.0 cand_N=30528.0 cand_2N=60728.0
+calls set-part-fixed100-len100 needle=native_stack_budget_exhausted base_per_iter=6.4300 cand_per_iter=6.4300 base_N=652.0 base_2N=1295.0 cand_N=652.0 cand_2N=1295.0
+calls set-part-fixed100-len100 needle=__memcmp_avx2_movbe base_per_iter=809.0050 cand_per_iter=808.9900 base_N=83115.0 base_2N=164015.5 cand_N=83116.5 cand_2N=164015.5
+```
+
+From `.temp/brief-629/logs/bc-a3.tsv`:
+
+```text
+set-part-fixed100-len100	100	1264520.24	1265878.18	+1357.94	+0.1074	130924036,130945155,130909075	257484697,257376060,257372882	131049228,131052643,131077251	257627688,257716590,257640461
+```
+
+`set-part-fixed100-len100` perf is +1357.94. Callgrind TOTAL is +1202.2350. The body move is -27776 + 26371 = -1405. `evaluate'2` is +1910 at 302 calls per iteration on both arms (about 6.3 Ir per call, the same hot clone as nest-map's 4916 / 774). The cold check is +70.7300 at 6.4300 calls per iteration, and 115.7400 / 45.0100 = 18/7. `__memcmp_avx2_movbe` is +699.6200 at 809.0050 base calls per iteration and 808.9900 candidate calls per iteration. That is a longer average compare at nearly the same call rate.
+
+The other positive CLI labels are the `sign=positive` CLI rows of `logs/bc-a3-flagged.tsv`. Their named mechanism is the one measured on `literal-integer`, `lazy-depth-nest-map-256`, and `set-part-fixed100-len100`: growth inside `Session::evaluate'2` from the depth-0 branch, and +11 instructions per `native_stack_budget_exhausted` call from the thread-record read, with the moved evaluator body cheaper. Where a perf percent and the callgrind median disagree by thousands of instructions, the named mechanism is the one measured on the valueq pair (setup hash noise) or on nest-map (the stability-bloom mode at a fixed call count). Flagged CLI median is +0.0841% (`bc-a3-summary.txt`).
+
+The 15 negative labels are net negative, so they are not a positive residual. Fourteen of them are the cheaper accounting body outweighing the depth-0 branch on that label. `valueq-undefined-symbol-definitions-8000` is the setup-noise case above, not that body savings (the body row there is only 133 to 127).
+
+From `.temp/brief-629/logs/bc-a3-flagged.tsv`:
+
+```text
+label	engine	N	a_slope	b_slope	delta	delta_pct	bb_delta_pct	floor_pct	sign
+lazy-range-take-small	cli	20000	41941.27	41879.22	-62.05	-0.1479	-0.1142	0.1142	negative
+```
+
+From `.temp/brief-629/logs/bc-a3-flagged.tsv`:
+
+```text
+lazy-table-construct-short	cli	20000	23403.06	23328.85	-74.21	-0.3171	-0.1284	0.1284	negative
+```
+
+From `.temp/brief-629/logs/bc-a3-flagged.tsv`:
+
+```text
+lazy-depth-map-first-64	cli	1000	930765.97	927913.11	-2852.86	-0.3065	-0.0003	0.0500	negative
+```
+
+From `.temp/brief-629/logs/bc-a3-flagged.tsv`:
+
+```text
+lazy-depth-map-build-256	cli	1000	70530.54	70429.36	-101.19	-0.1435	-0.0767	0.0767	negative
+lazy-depth-map-first-256	cli	1000	3639636.24	3634871.20	-4765.04	-0.1309	-0.0154	0.0500	negative
+```
+
+From `.temp/brief-629/logs/bc-a3-flagged.tsv`:
+
+```text
+appendto-part-outer1000-small	cli	100	2235648.60	2224194.05	-11454.55	-0.5124	0.0346	0.0500	negative
+```
+
+From `.temp/brief-629/logs/bc-a3-flagged.tsv`:
+
+```text
+set-part-fill-small	cli	200	2784948.60	2774325.54	-10623.07	-0.3814	-0.2733	0.2733	negative
+```
+
+From `.temp/brief-629/logs/bc-a3-flagged.tsv`:
+
+```text
+symbol-ownvalue-guarded-read	cli	2000	3574.95	3568.94	-6.01	-0.1681	0.0136	0.0500	negative
+```
+
+From `.temp/brief-629/logs/bc-a3-flagged.tsv`:
+
+```text
+valueq-undefined-symbol-definitions-8000	cli	20	5096.95	4266.05	-830.90	-16.3019	7.9327	7.9327	negative
+```
+
+From `.temp/brief-629/logs/bc-a3-flagged.tsv`:
+
+```text
+matcher-single-tiny	cli	1000	11607.74	11597.01	-10.73	-0.0925	0.0167	0.0500	negative
+```
+
+From `.temp/brief-629/logs/bc-a3-flagged.tsv`:
+
+```text
+replace-rule-list-decline	cli	500	51028.85	50931.24	-97.61	-0.1913	-0.1555	0.1555	negative
+```
+
+From `.temp/brief-629/logs/bc-a3-flagged.tsv`:
+
+```text
+checkabort-no-abort	cli	500	11083.03	11019.25	-63.78	-0.5755	-0.1300	0.1300	negative
+assert-disabled	cli	500	6807.05	6773.00	-34.06	-0.5003	0.0428	0.0500	negative
+assert-enabled-true	cli	500	13614.37	13601.86	-12.51	-0.0919	0.0129	0.0500	negative
+```
+
+From `.temp/brief-629/logs/bc-a3-flagged.tsv`:
+
+```text
+catchexceptions-handler	cli	500	19683.69	19668.63	-15.05	-0.0765	0.0239	0.0500	negative
+```
+
+### 3b. The 121 resume labels
+
+From `.temp/brief-629/logs/resume-span-a4.txt`:
+
+```text
+resume_by_name_rows=121
+resume_bc_rows=121
+missing_from_by_name=[]
+extra_in_by_name=[]
+min_delta resume-cleanup +220.47 +1.1843
+max_delta resume-s6-readonly-twice +2738.97 +1.2722
+min_per_resume resume-cleanup 220.4700 resumes_divisor_delta=+220.47
+max_per_resume lhs-head-cycle 1658.8000 resumes_divisor_delta=+1658.80
+```
+
+From `.temp/brief-629/logs/bc-a3-resume-by-name.tsv`:
+
+```text
+label	delta	delta_pct	mechanism
+c1-all-guard	+1371.53	+1.4166	resume entry: NativeStackEntry plus EvaluationDepth pair inside inlined resume_suspended_slot (resume_eval_request_from_checkpoint), cold-check thread-record read (+11 Ir per native_stack_budget_exhausted call), depth-0 evaluate branch, and evaluate_at_root when the resume re-enters Session::evaluate
+```
+
+Every resume row in `logs/bc-a3-resume-by-name.tsv` carries the same mechanism text: the resume entry (`NativeStackEntry` plus the `EvaluationDepth` pair inside inlined `resume_suspended_slot` / `resume_eval_request_from_checkpoint`), the cold-check thread-record read, the depth-0 evaluate branch, and `evaluate_at_root` when the resume re-enters `Session::evaluate`. Three labels were profiled.
+
+From `.temp/brief-629/logs/attr-resume-cleanup-a4.log`:
+
+```text
+oom_kill_before=0
+oom_before=0
+```
+
+From `.temp/brief-629/logs/attr-resume-cleanup-a4.log`:
+
+```text
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+From `.temp/brief-629/logs/attr-resume-cleanup.tsv`:
+
+```text
++221.3945	18611.9645	18833.3590	TOTAL
+-138.0000	138.0000	0.0000	resume!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_unstable_after_input_check_with_cycle_tracking
++130.0000	0.0000	130.0000	resume!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_in_accounting_mode
++120.0000	1052.9080	1172.9080	libc.so.6!__memcpy_avx_unaligned_erms
++60.0000	1436.0000	1496.0000	resume!rum_runtime::runtime::session::session_requests::<impl rum_runtime::runtime::model::session::Session>::resume_eval_request_from_checkpoint
++44.6930	28.4410	73.1340	resume!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::native_stack_budget_exhausted
++32.0000	0.0000	32.0000	resume!core::ptr::drop_in_place<rum_core::expr::Expr>
+```
+
+From `.temp/brief-629/logs/attr-resume-cleanup.tsv`:
+
+```text
++7.0000	231.0000	238.0000	resume!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate
+-4.0000	88.0000	84.0000	resume!rum_runtime::runtime::suspension::core::evaluation_context::<impl rum_runtime::runtime::model::session::Session>::poll_resumed_native_stack
+```
+
+From `.temp/brief-629/logs/attr-notes-a4.txt`:
+
+```text
+calls resume-cleanup needle=native_stack_budget_exhausted base_per_iter=4.0630 cand_per_iter=4.0630 base_N=4074.0 base_2N=8137.0 cand_N=4074.0 cand_2N=8137.0
+calls resume-cleanup needle=__memcpy_avx_unaligned_erms base_per_iter=37.0000 cand_per_iter=41.0000 base_N=37905.0 base_2N=74905.0 cand_N=41918.0 cand_2N=82918.0
+calls resume-cleanup needle=resume_eval_request_from_checkpoint base_per_iter=1.0000 cand_per_iter=1.0000 base_N=1000.0 base_2N=2000.0 cand_N=1000.0 cand_2N=2000.0
+calls resume-cleanup needle=evaluate_at_root base_per_iter=0.0000 cand_per_iter=0.0000 base_N=0.0 base_2N=0.0 cand_N=1.0 cand_2N=1.0
+```
+
+From `.temp/brief-629/logs/bc-a3.tsv`:
+
+```text
+resume-cleanup	1000	18616.13	18836.60	+220.47	+1.1843	22211169,22203368,22224416	40799155,40827304,40852012	22446337,22446632,22428748	41303872,41282939,41253530
+```
+
+`resume-cleanup` callgrind TOTAL +221.3945 matches perf +220.47. Per iteration the positive pieces are `__memcpy_avx_unaligned_erms` +120 at 37 base calls versus 41 candidate calls, `resume_eval_request_from_checkpoint` exclusive +60 at 1 call per iteration on both arms, the cold check +44.6930 at 4.0630 calls per iteration (73.1340 / 28.4410 = 18/7), and `drop_in_place<Expr>` +32. `evaluate_at_root`'s call slope is 0. The body move is -138 + 130.
+
+From `.temp/brief-629/logs/attr-lhs-head-cycle-a4.log`:
+
+```text
+oom_kill_before=0
+oom_before=0
+```
+
+From `.temp/brief-629/logs/attr-lhs-head-cycle-a4.log`:
+
+```text
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+From `.temp/brief-629/logs/attr-lhs-head-cycle.tsv`:
+
+```text
++1422.6200	301177.3600	302599.9800	TOTAL
+-1070.0000	1070.0000	0.0000	resume!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_unstable_after_input_check_with_cycle_tracking'2
++1003.0000	0.0000	1003.0000	resume!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_in_accounting_mode'2
++883.0000	0.0000	883.0000	resume!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_at_root
++747.2100	0.0000	747.2100	resume!core::ptr::drop_in_place<rum_core::expr::Expr>'2
+-719.0000	1040.0000	321.0000	resume!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate
++575.3900	49.0000	624.3900	resume!core::ptr::drop_in_place<rum_core::expr::Expr>
+```
+
+From `.temp/brief-629/logs/attr-lhs-head-cycle.tsv`:
+
+```text
++390.0000	10114.0800	10504.0800	libc.so.6!__memcpy_avx_unaligned_erms
++381.0000	0.0000	381.0000	resume!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_in_accounting_mode
++154.6600	98.4200	253.0800	resume!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::native_stack_budget_exhausted
++153.0000	3477.0000	3630.0000	resume!rum_runtime::runtime::session::session_requests::<impl rum_runtime::runtime::model::session::Session>::resume_eval_request_from_checkpoint
+```
+
+From `.temp/brief-629/logs/attr-lhs-head-cycle.tsv`:
+
+```text
++76.0000	2505.0000	2581.0000	resume!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate'2
+```
+
+From `.temp/brief-629/logs/attr-notes-a4.txt`:
+
+```text
+cand-200-1.out	64107032	bytes=200238
+cand-200-2.out	64361983	bytes=200288
+cand-200-3.out	64039350	bytes=200237
+```
+
+From `.temp/brief-629/logs/attr-notes-a4.txt`:
+
+```text
+calls lhs-head-cycle needle=evaluate_at_root base_per_iter=0.0000 cand_per_iter=3.0000 base_N=0.0 base_2N=0.0 cand_N=300.0 cand_2N=600.0
+calls lhs-head-cycle needle=native_stack_budget_exhausted base_per_iter=14.0600 cand_per_iter=14.0600 base_N=1406.0 base_2N=2812.0 cand_N=1406.0 cand_2N=2812.0
+calls lhs-head-cycle needle=Session>::evaluate'2 base_per_iter=10.0000 cand_per_iter=10.0000 base_N=1000.0 base_2N=2000.0 cand_N=1000.0 cand_2N=2000.0
+```
+
+From `.temp/brief-629/logs/bc-a3.tsv`:
+
+```text
+lhs-head-cycle	100	300821.50	302480.30	+1658.80	+0.5514	33617824,33589888,33600526	63786271,63682676,63665165	33741981,33734255,33737889	63985919,64062035,63959533
+```
+
+`lhs-head-cycle` is the largest per-resume delta, +1658.80. Callgrind TOTAL is +1422.6200. `evaluate_at_root` is +883 at 3 calls per iteration (0 on the base). The cold check is +154.6600 at 14.0600 calls per iteration (253.0800 / 98.4200 = 18/7). `resume_eval_request_from_checkpoint` is +153, memcpy is +390, and the `Expr` drops are +747.2100 and +575.3900. `evaluate` exclusive falls by 719 while `evaluate'2` rises by 76, at 10 calls per iteration on both arms. Candidate N=200 run 2 is high (64361983 against the other candidate N=200 runs near 6404xxxx); the six-run median stays on the low mode. The spread down to resume-cleanup's +220.47 is how heavy that cold root and the resume entry are on the label.
+
+From `.temp/brief-629/logs/attr-c1-all-guard-a4.log`:
+
+```text
+oom_kill_before=0
+oom_before=0
+```
+
+From `.temp/brief-629/logs/attr-c1-all-guard-a4.log`:
+
+```text
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+From `.temp/brief-629/logs/attr-c1-all-guard.tsv`:
+
+```text
++1286.5750	96819.0000	98105.5750	TOTAL
++660.0000	3445.7100	4105.7100	libc.so.6!__memcpy_avx_unaligned_erms
+-655.0000	655.0000	0.0000	resume!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_unstable_after_input_check_with_cycle_tracking'2
++614.0000	0.0000	614.0000	resume!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_in_accounting_mode'2
++399.0000	0.0000	399.0000	resume!core::ptr::drop_in_place<rum_core::expr::Expr>
++248.1600	157.9200	406.0800	resume!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::native_stack_budget_exhausted
++238.0000	5442.0000	5680.0000	resume!rum_runtime::runtime::session::session_requests::<impl rum_runtime::runtime::model::session::Session>::resume_eval_request_from_checkpoint
+```
+
+From `.temp/brief-629/logs/attr-c1-all-guard.tsv`:
+
+```text
++81.0000	0.0000	81.0000	resume!core::ptr::drop_in_place<rum_core::expr::Expr>'2
+```
+
+From `.temp/brief-629/logs/attr-c1-all-guard.tsv`:
+
+```text
++49.0000	1685.0000	1734.0000	resume!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate'2
+```
+
+From `.temp/brief-629/logs/attr-c1-all-guard.tsv`:
+
+```text
+-22.0000	484.0000	462.0000	resume!rum_runtime::runtime::suspension::core::evaluation_context::<impl rum_runtime::runtime::model::session::Session>::poll_resumed_native_stack
+```
+
+From `.temp/brief-629/logs/attr-notes-a4.txt`:
+
+```text
+calls c1-all-guard needle=native_stack_budget_exhausted base_per_iter=22.5600 cand_per_iter=22.5600 base_N=2260.0 base_2N=4516.0 cand_N=2260.0 cand_2N=4516.0
+calls c1-all-guard needle=__memcpy_avx_unaligned_erms base_per_iter=118.0300 cand_per_iter=140.0300 base_N=12732.0 base_2N=24535.0 cand_N=14937.0 cand_2N=28940.0
+calls c1-all-guard needle=evaluate_at_root base_per_iter=0.0000 cand_per_iter=0.0000 base_N=0.0 base_2N=0.0 cand_N=1.0 cand_2N=1.0
+calls c1-all-guard needle=poll_resumed_native_stack base_per_iter=22.0000 cand_per_iter=22.0000 base_N=2204.0 base_2N=4404.0 cand_N=2204.0 cand_2N=4404.0
+```
+
+From `.temp/brief-629/logs/bc-a3.tsv`:
+
+```text
+c1-all-guard	100	96816.38	98187.91	+1371.53	+1.4166	13335610,13322238,13321771	23004432,23002693,23003876	13454242,13462764,13459388	23264190,23278179,23300077
+```
+
+From `.temp/brief-629/logs/bc-a3.tsv`:
+
+```text
+resume-s6-readonly-twice	100	215293.04	218032.01	+2738.97	+1.2722	25178893,25173239,25186688	46738438,46708197,46705363	25438204,25438128,25438434	47241405,47237217,47253357
+```
+
+`c1-all-guard` perf is +1371.53 and callgrind TOTAL is +1286.5750. memcpy is +660 at 118.0300 base calls per iteration versus 140.0300 candidate. The resume function is +238. The cold check is +248.1600 at 22.5600 calls per iteration (406.0800 / 157.9200 = 18/7), and `poll_resumed_native_stack` stays at 22 calls per iteration. `evaluate_at_root`'s call slope is 0. `Expr` drops are +399 and +81. The span file ranks `resume-s6-readonly-twice` as the largest absolute delta and `lhs-head-cycle` as the largest per-resume delta.
+
+From `.temp/brief-629/logs/attr-notes-a4-run.log`:
+
+```text
+oom_kill_before=0
+oom_before=0
+wrote /home/remi/dev/rum/.temp/brief-629/logs/attr-notes-a4.txt lines=161
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+### 4. Stack cycle
+
+Reservations count every push (8 bytes) and every `sub $imm,%rsp`. `logs/stack-a4-run.log` records the scan. Direct calls are in `logs/stack-a4-calls.txt`. The first extract truncated demangled names at the first `>` (`logs/stack-a4-calls-run.log`, 88 lines). The second extract keeps the full symbol and is the file quoted here.
+
+From `.temp/brief-629/logs/stack-a4-run.log`:
+
+```text
+oom_kill_before=0
+oom_before=0
+symbols written, rows=70
+```
+
+From `.temp/brief-629/logs/stack-a4-run.log`:
+
+```text
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+From `.temp/brief-629/logs/stack-a4-calls-2-run.log`:
+
+```text
+oom_kill_before=0
+oom_before=0
+wrote /home/remi/dev/rum/.temp/brief-629/logs/stack-a4-calls.txt lines=97
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+From `.temp/brief-629/logs/stack-a4-reservations.tsv`:
+
+```text
+arm	function	addr	size	push_count	push_bytes	sub_count	sub_bytes	sum_bytes	subs	pushes
+base	rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::poll_native_stack_limit	0xd1570	41	0	0	0	0	0	-	-
+base	rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::native_stack_budget_exhausted	0xd15a0	21	0	0	0	0	0	-	-
+base	rum_runtime::runtime::native_stack_guard::NativeStackGuard::poll_native_stack_limit	0xdc090	37	0	0	0	0	0	-	-
+```
+
+From `.temp/brief-629/logs/stack-a4-reservations.tsv`:
+
+```text
+base	rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend	0x1269a0	491	6	48	1	136	184	136	push   %rbp | push   %r15 | push   %r14 | push   %r13 | push   %r12 | push   %rbx
+```
+
+From `.temp/brief-629/logs/stack-a4-reservations.tsv`:
+
+```text
+base	rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_unstable_after_input_check_with_cycle_tracking	0x5d05b0	4737	6	48	1	712	760	712	push   %rbp | push   %r15 | push   %r14 | push   %r13 | push   %r12 | push   %rbx
+base	rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_inner_unstable	0x5d1840	10700	6	48	1	1256	1304	1256	push   %rbp | push   %r15 | push   %r14 | push   %r13 | push   %r12 | push   %rbx
+```
+
+From `.temp/brief-629/logs/stack-a4-reservations.tsv`:
+
+```text
+base	rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate	0x750d30	4429	6	48	1	840	888	840	push   %rbp | push   %r15 | push   %r14 | push   %r13 | push   %r12 | push   %rbx
+```
+
+From `.temp/brief-629/logs/stack-a4-reservations.tsv`:
+
+```text
+cand	rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::poll_native_stack_limit	0xd1570	83	3	24	0	0	24	-	push   %r14 | push   %rbx | push   %rax
+cand	rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::native_stack_budget_exhausted	0xd15d0	61	1	8	1	16	24	16	push   %rbx
+cand	rum_runtime::runtime::native_stack_guard::NativeStackGuard::poll_native_stack_limit	0xdc0e0	67	1	8	1	16	24	16	push   %rbx
+cand	rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_at_root	0xe2890	4834	6	48	1	856	904	856	push   %rbp | push   %r15 | push   %r14 | push   %r13 | push   %r12 | push   %rbx
+```
+
+From `.temp/brief-629/logs/stack-a4-reservations.tsv`:
+
+```text
+cand	rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend	0x127d20	491	6	48	1	136	184	136	push   %rbp | push   %r15 | push   %r14 | push   %r13 | push   %r12 | push   %rbx
+```
+
+From `.temp/brief-629/logs/stack-a4-reservations.tsv`:
+
+```text
+cand	rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_in_accounting_mode	0x5d18e0	2632	6	48	1	536	584	536	push   %rbp | push   %r15 | push   %r14 | push   %r13 | push   %r12 | push   %rbx
+cand	rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_in_accounting_mode	0x5d2330	1882	6	48	1	520	568	520	push   %rbp | push   %r15 | push   %r14 | push   %r13 | push   %r12 | push   %rbx
+cand	rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_inner_unstable	0x5d2a90	10700	6	48	1	1256	1304	1256	push   %rbp | push   %r15 | push   %r14 | push   %r13 | push   %r12 | push   %rbx
+```
+
+From `.temp/brief-629/logs/stack-a4-reservations.tsv`:
+
+```text
+cand	rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate	0x751f40	4577	6	48	1	840	888	840	push   %rbp | push   %r15 | push   %r14 | push   %r13 | push   %r12 | push   %rbx
+```
+
+From `.temp/brief-629/logs/stack-a4-calls.txt`:
+
+```text
+call_instructions=82 indirect_calls=56
+last_ret=751a5f:	ret
+  751273:	call   5d05b0 <rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_unstable_after_input_check_with_cycle_tracking>
+  751c98:	call   1269a0 <rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend>
+```
+
+From `.temp/brief-629/logs/stack-a4-calls.txt`:
+
+```text
+call_instructions=0 indirect_calls=0
+last_ret=dc0b4:	ret
+(no direct call or external jmp to a cycle function)
+
+===== cand Session::evaluate addr=0x751f40 size=4577 =====
+call_instructions=87 indirect_calls=57
+last_ret=752cb6:	ret
+  75248c:	call   5d18e0 <rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_in_accounting_mode>
+  7524d3:	call   5d2330 <rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_in_accounting_mode>
+  752ea2:	call   e2890 <rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_at_root>
+  752f17:	call   127d20 <rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend>
+```
+
+From `.temp/brief-629/logs/stack-a4-calls.txt`:
+
+```text
+===== cand evaluate_at_root addr=0xe2890 size=4834 =====
+call_instructions=85 indirect_calls=57
+last_ret=e36d3:	ret
+   e2e4c:	call   5d18e0 <rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_in_accounting_mode>
+   e2e93:	call   5d2330 <rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_in_accounting_mode>
+   e3900:	call   127d20 <rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend>
+```
+
+From `.temp/brief-629/logs/stack-a4-calls.txt`:
+
+```text
+===== cand evaluate_once_in_accounting_mode addr=0x5d18e0 size=2632 =====
+call_instructions=43 indirect_calls=25
+last_ret=5d1fed:	ret
+  5d1b8a:	call   5d2a90 <rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_inner_unstable>
+  5d1de9:	call   5d2a90 <rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_inner_unstable>
+  5d2146:	call   d1570 <rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::poll_native_stack_limit>
+```
+
+From `.temp/brief-629/logs/stack-a4-calls.txt`:
+
+```text
+===== cand evaluate_once_in_accounting_mode addr=0x5d2330 size=1882 =====
+call_instructions=35 indirect_calls=19
+last_ret=5d297a:	ret
+  5d2569:	call   5d2a90 <rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_inner_unstable>
+  5d265e:	call   5d2a90 <rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_inner_unstable>
+  5d2920:	call   d1570 <rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::poll_native_stack_limit>
+```
+
+From `.temp/brief-629/logs/stack-a4-calls.txt`:
+
+```text
+===== cand evaluate_inner_unstable addr=0x5d2a90 size=10700 =====
+call_instructions=178 indirect_calls=131
+last_ret=5d503a:	ret
+  5d4702:	call   1253f0 <rum_runtime::runtime::eval_core::call::<impl rum_runtime::runtime::model::session::Session>::evaluate_call::{{closure}}::suspend>
+  5d4cd3:	call   5cf830 <rum_runtime::runtime::eval_core::symbol::<impl rum_runtime::runtime::model::session::Session>::evaluate_stored_own_value>
+  5d4da1:	call   5cfff0 <rum_runtime::runtime::eval_core::symbol::<impl rum_runtime::runtime::model::session::Session>::evaluate_symbol_after_stored_own_value>
+  5d5089:	call   5cf830 <rum_runtime::runtime::eval_core::symbol::<impl rum_runtime::runtime::model::session::Session>::evaluate_stored_own_value>
+```
+
+From `.temp/brief-629/logs/stack-a4-calls.txt`:
+
+```text
+===== cand Session::poll_native_stack_limit addr=0xd1570 size=83 =====
+call_instructions=0 indirect_calls=0
+last_ret=d15c2:	ret
+(no direct call or external jmp to a cycle function)
+```
+
+From `.temp/brief-629/logs/stack-a4-calls.txt`:
+
+```text
+===== cand native_stack_budget_exhausted addr=0xd15d0 size=61 =====
+call_instructions=0 indirect_calls=0
+last_ret=d160c:	ret
+(no direct call or external jmp to a cycle function)
+```
+
+From `.temp/brief-629/logs/stack-a4-calls.txt`:
+
+```text
+===== cand NativeStackGuard::poll_native_stack_limit addr=0xdc0e0 size=67 =====
+call_instructions=0 indirect_calls=0
+last_ret=dc122:	ret
+(no direct call or external jmp to a cycle function)
+```
+
+Repeating level, base. `Session::evaluate` holds 6 pushes (48 bytes) and one `sub` of 840, sum 888. It calls `evaluate_once_unstable_after_input_check_with_cycle_tracking`, which holds 6 pushes (48) and one `sub` of 712, sum 760. That function calls `poll_native_stack_limit` and returns from it, and it calls `evaluate_inner_unstable`. Per-level sum of the two frames the level holds across that call: 888 + 760 = 1648.
+
+Repeating level, candidate. There is no hot `evaluate_profiled_fixed_point` symbol, so there is no separate fixed-point frame. `Session::evaluate` is again 6 pushes and `sub` 840, sum 888. It calls two `evaluate_once_in_accounting_mode` clones, sums 584 and 568. A level takes one clone: 888 + 584 = 1472, or 888 + 568 = 1456. Both are under the base's 1648. Neither clone calls `Session::evaluate`. Both call `poll_native_stack_limit` and return. `evaluate_inner_unstable` is sum 1304 on both arms (sub 1256, 6 pushes) and has no direct call to `Session::evaluate` on either arm. `evaluate_profiled_fixed_point::suspend` is sum 184 on both arms (sub 136, 6 pushes). It is the suspension frame, present on both arms.
+
+Depth 0 is a separate entry. Candidate `Session::evaluate` calls `evaluate_at_root` from the depth-0 tail (`752ea2`). `evaluate_at_root` holds 6 pushes and `sub` 856, sum 904, and then calls one accounting clone. The caller's evaluate frame is still live across that call: 888 + 904 + 584 = 2376 on the larger clone. That composition runs once per request. The repeating level after it is evaluate plus one accounting frame, under the base. `evaluate_at_root` does not call `Session::evaluate`.
+
+Cold-check leaves. Each reservation grew from 0 to 24 bytes. 24 is within the 32-byte allowance. Each disassembly has `call_instructions=0` and ends in `ret`.
+
+From `.temp/brief-629/logs/stack-a4-prologues.txt`:
+
+```text
+===== base rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::poll_native_stack_limit addr=0xd1570 size=41 =====
+pushes=0 (0 bytes) subs=- sub_bytes=0 sum=0 adds=[]
+calls: (none of the cycle names)
+Disassembly of section .text:
+00000000000d1570 <rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::poll_native_stack_limit>:
+   d1570:	xor    %eax,%eax
+   d1572:	lea    -0x1(%rsp),%rcx
+   d1577:	sub    %rcx,%rdx
+   d157a:	cmovae %rdx,%rax
+   d157e:	cmp    %rsi,%rax
+   d1581:	jbe    d1590 <rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::poll_native_stack_limit+0x20>
+   d1583:	mov    %rsi,0x8(%rdi)
+   d1587:	mov    $0xd,%eax
+   d158c:	mov    %rax,(%rdi)
+   d158f:	ret
+   d1590:	mov    $0x21,%eax
+   d1595:	mov    %rax,(%rdi)
+   d1598:	ret
+```
+
+From `.temp/brief-629/logs/stack-a4-prologues.txt`:
+
+```text
+===== base rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::native_stack_budget_exhausted addr=0xd15a0 size=21 =====
+pushes=0 (0 bytes) subs=- sub_bytes=0 sum=0 adds=[]
+calls: (none of the cycle names)
+Disassembly of section .text:
+00000000000d15a0 <rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::native_stack_budget_exhausted>:
+   d15a0:	xor    %eax,%eax
+   d15a2:	lea    -0x1(%rsp),%rcx
+   d15a7:	sub    %rcx,%rsi
+   d15aa:	cmovae %rsi,%rax
+   d15ae:	cmp    %rdi,%rax
+   d15b1:	seta   %al
+   d15b4:	ret
+```
+
+From `.temp/brief-629/logs/stack-a4-prologues.txt`:
+
+```text
+===== base rum_runtime::runtime::native_stack_guard::NativeStackGuard::poll_native_stack_limit addr=0xdc090 size=37 =====
+pushes=0 (0 bytes) subs=- sub_bytes=0 sum=0 adds=[]
+calls: (none of the cycle names)
+Disassembly of section .text:
+00000000000dc090 <rum_runtime::runtime::native_stack_guard::NativeStackGuard::poll_native_stack_limit>:
+   dc090:	mov    (%rdi),%rdx
+   dc093:	mov    0x8(%rdi),%rax
+   dc097:	xor    %ecx,%ecx
+   dc099:	lea    -0x1(%rsp),%rsi
+   dc09e:	sub    %rsi,%rdx
+   dc0a1:	cmovae %rdx,%rcx
+   dc0a5:	cmp    %rax,%rcx
+   dc0a8:	jbe    dc0ae <rum_runtime::runtime::native_stack_guard::NativeStackGuard::poll_native_stack_limit+0x1e>
+   dc0aa:	movb   $0x1,0x10(%rdi)
+   dc0ae:	cmp    %rax,%rcx
+   dc0b1:	setbe  %al
+   dc0b4:	ret
+```
+
+From `.temp/brief-629/logs/stack-a4-prologues.txt`:
+
+```text
+===== cand rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::poll_native_stack_limit addr=0xd1570 size=83 =====
+pushes=3 (24 bytes) subs=- sub_bytes=0 sum=24 adds=[8]
+calls: (none of the cycle names)
+Disassembly of section .text:
+00000000000d1570 <rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::poll_native_stack_limit>:
+   d1570:	push   %r14
+   d1572:	push   %rbx
+   d1573:	push   %rax
+   d1574:	mov    %rsi,%r14
+   d1577:	mov    %rdi,%rbx
+   d157a:	mov    %fs:0x0,%rax
+   d1583:	lea    -0x6f8(%rax),%rax
+   d158a:	mov    (%rax),%rcx
+   d158d:	xor    %eax,%eax
+   d158f:	lea    0x7(%rsp),%rdx
+   d1594:	mov    %rcx,%rsi
+   d1597:	sub    %rdx,%rsi
+   d159a:	cmovae %rsi,%rax
+   d159e:	test   %rcx,%rcx
+   d15a1:	je     d15af <rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::poll_native_stack_limit+0x3f>
+   d15a3:	cmp    %r14,%rax
+   d15a6:	ja     d15af <rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::poll_native_stack_limit+0x3f>
+   d15a8:	mov    $0x21,%eax
+   d15ad:	jmp    d15b8 <rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::poll_native_stack_limit+0x48>
+   d15af:	mov    %r14,0x8(%rbx)
+   d15b3:	mov    $0xd,%eax
+   d15b8:	mov    %rax,(%rbx)
+   d15bb:	add    $0x8,%rsp
+   d15bf:	pop    %rbx
+   d15c0:	pop    %r14
+   d15c2:	ret
+```
+
+From `.temp/brief-629/logs/stack-a4-prologues.txt`:
+
+```text
+===== cand rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::native_stack_budget_exhausted addr=0xd15d0 size=61 =====
+pushes=1 (8 bytes) subs=16 sub_bytes=16 sum=24 adds=[16]
+calls: (none of the cycle names)
+Disassembly of section .text:
+00000000000d15d0 <rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::native_stack_budget_exhausted>:
+   d15d0:	push   %rbx
+   d15d1:	sub    $0x10,%rsp
+   d15d5:	mov    %rdi,%rbx
+   d15d8:	mov    %fs:0x0,%rax
+   d15e1:	lea    -0x6f8(%rax),%rax
+   d15e8:	mov    (%rax),%rax
+   d15eb:	test   %rax,%rax
+   d15ee:	sete   %cl
+   d15f1:	xor    %edx,%edx
+   d15f3:	lea    0xf(%rsp),%rsi
+   d15f8:	sub    %rsi,%rax
+   d15fb:	cmovae %rax,%rdx
+   d15ff:	cmp    %rbx,%rdx
+   d1602:	seta   %al
+   d1605:	or     %cl,%al
+   d1607:	add    $0x10,%rsp
+   d160b:	pop    %rbx
+   d160c:	ret
+```
+
+From `.temp/brief-629/logs/stack-a4-prologues.txt`:
+
+```text
+===== cand rum_runtime::runtime::native_stack_guard::NativeStackGuard::poll_native_stack_limit addr=0xdc0e0 size=67 =====
+pushes=1 (8 bytes) subs=16 sub_bytes=16 sum=24 adds=[16]
+calls: (none of the cycle names)
+Disassembly of section .text:
+00000000000dc0e0 <rum_runtime::runtime::native_stack_guard::NativeStackGuard::poll_native_stack_limit>:
+   dc0e0:	push   %rbx
+   dc0e1:	sub    $0x10,%rsp
+   dc0e5:	mov    %rdi,%rbx
+   dc0e8:	mov    %fs:0x0,%rax
+   dc0f1:	lea    -0x6f8(%rax),%rax
+   dc0f8:	mov    (%rax),%rax
+   dc0fb:	test   %rax,%rax
+   dc0fe:	setne  %cl
+   dc101:	xor    %edx,%edx
+   dc103:	lea    0xf(%rsp),%rsi
+   dc108:	sub    %rsi,%rax
+   dc10b:	cmovae %rax,%rdx
+   dc10f:	cmp    (%rbx),%rdx
+   dc112:	setbe  %al
+   dc115:	and    %cl,%al
+   dc117:	jne    dc11d <rum_runtime::runtime::native_stack_guard::NativeStackGuard::poll_native_stack_limit+0x3d>
+   dc119:	movb   $0x1,0x8(%rbx)
+   dc11d:	add    $0x10,%rsp
+   dc121:	pop    %rbx
+   dc122:	ret
+```
+
+`Session::poll_native_stack_limit` is the third leaf. It is called from the evaluator body and returns, so its 24 bytes are the check, not a frame held on the repeating level. `native_stack_budget_exhausted` and `NativeStackGuard::poll_native_stack_limit` are the other two leaves. All three read `%fs:0x0` and `lea -0x6f8(%rax)`. No other cycle frame grew. The repeating sums 1472 and 1456 are under the base sum 1648.
+
+### 5. Jupyter pair
+
+The pipe filter matches nothing on this libtest. Twenty runs wrote `logs/jupyter-pair-a4.log`. The two test names as two filters after `--`, with `--test-threads=2`, wrote `logs/jupyter-pair-a4-filters.log`. All 20 of those runs executed both tests.
+
+From `.temp/brief-629/logs/jupyter-pair-a4.log`:
+
+```text
+oom_kill_before=0
+oom_before=0
+```
+
+From `.temp/brief-629/logs/jupyter-pair-a4.log`:
+
+```text
+     Running unittests src/lib.rs (target/debug/deps/rum_jupyter-dd24b36d3edaa47a)
+```
+
+From `.temp/brief-629/logs/jupyter-pair-a4.log`:
+
+```text
+running 0 tests
+```
+
+From `.temp/brief-629/logs/jupyter-pair-a4.log`:
+
+```text
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 151 filtered out; finished in 0.00s
+```
+
+From `.temp/brief-629/logs/jupyter-pair-a4.log`:
+
+```text
+RUN_EXIT:0
+```
+
+From `.temp/brief-629/logs/jupyter-pair-a4.log`:
+
+```text
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+From `.temp/brief-629/logs/jupyter-pair-a4-filters.log`:
+
+```text
+oom_kill_before=0
+oom_before=0
+note: the pipe filter matched 0 tests on this libtest. Help text says multiple FILTERS run tests matching any of them. This run passes the two names as two filters.
+```
+
+From `.temp/brief-629/logs/jupyter-pair-a4-filters.log`:
+
+```text
+running 2 tests
+test tests::execute_lifecycle::interrupt::red_interrupt_while_waiting_finishes_request ... ok
+test tests::execute_lifecycle::interrupt::interrupt_at_second_prompt_finishes_original_request ... ok
+```
+
+From `.temp/brief-629/logs/jupyter-pair-a4-filters.log`:
+
+```text
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 149 filtered out; finished in 0.02s
+```
+
+From `.temp/brief-629/logs/jupyter-pair-a4-filters.log`:
+
+```text
+RUN_EXIT:0
+```
+
+From `.temp/brief-629/logs/jupyter-pair-a4-filters.log`:
+
+```text
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 149 filtered out; finished in 0.03s
+```
+
+From `.temp/brief-629/logs/jupyter-pair-a4-filters.log`:
+
+```text
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+Run 11's result line is the `finished in 0.03s` line. The other 19 result lines are `finished in 0.02s`. Each run's `RUN_EXIT` is 0. The wrapper `EXIT` is 0. `oom_kill` stayed 0.
+
+### 6. Attempts and what was left alone
+
+No command in this measurement died with signal 9. The quoted logs show `oom_kill_before=0` and `oom_kill_after=0`. Nothing was rerun for the host-OOM rule.
+
+`cargo test --workspace` was not run. `census/tests.rs`, `phase-sites.tsv`, and the instrument were not edited. `arms/base/` and `logs/bb.tsv` were not modified. Stage B callgrind files were not reused as A4 profiles. The A3 bars that the director already accepted (fmt, `rum-runtime`, `rum-host`, typed-slot census, LP01, and the census update) were not rerun as A4 work.
+
+## Director ruling on A4, and continuation A5 (2026-10-28 04:20) — grk
+
+**The stack bars pass, and the CLI side is accepted.** I checked
+`bc-a3.tsv`, the attribution TSVs and the reservations directly, and added
+three readings of my own.
+
+- **The level.** The per-level cycle is 888 + 584 = 1472 (or 1456), against
+  the base's 1648. `evaluate_at_root` (904) runs once per request.
+- **The leaves: +24 B and +11 instructions per call.** The rlib compiles the
+  thread-local read as a general-dynamic access. The rum-runtime object
+  holds `R_X86_64_TLSGD` and `call __tls_get_addr`, and the linker relaxes
+  that to the `%fs` load you quoted. Register allocation had already saved
+  `rdi` and aligned the frame for the call. Stable Rust gives no choice of
+  TLS model, so this is the expected thread-record read at its real price.
+- **The evaluator's inlining change is real.** Built at the candidate's
+  path, the base keeps `evaluate_once_unstable_after_input_check_with_cycle_tracking`.
+  The candidate has `evaluate_at_root` and two
+  `evaluate_once_in_accounting_mode`. A3's cold copy causes the change, and
+  the change shrinks the level.
+- **`literal-integer`'s +1.** A per-instruction callgrind of
+  `Session::evaluate'2` executes 110 instructions on the base and 111 on the
+  candidate. The extra one is a zero store, `movq $0x0,…`, that became
+  `xor` plus `mov`. That is register allocation.
+
+**The resume mechanism is not accepted.** The 121 rows named the expected
+mechanisms. Those cost about 25 instructions per resume, and
+`resume-cleanup` grew by 220. A mechanism has to account for the size, as
+count times cost per occurrence. "Function X grew" names a place, not a
+cause. I took the three largest parts apart with one-change variant builds
+(`.temp/director/629/exp/`).
+
+1. **Four copies per resume, caused by the shape.** Counted by caller,
+   `resume_eval_request_from_checkpoint` makes 10 memcpy calls per
+   iteration instead of 6. Each is a 136-byte (`0x88`) copy right after a
+   `poll_resumed_native_stack` call: 4 of its 8 call sites.
+   - **The cause.** That function is `#[cold] #[inline(never)]` and calls the
+     leaf, which now reads the thread local. LLVM infers that it may touch
+     global memory. It can then no longer build the 136-byte
+     `Result<(), EvalError>` in the caller's slot, so it builds it in a
+     temporary and copies it.
+   - **The variants.** Without the resume entry, 4 copies remain. With
+     `restore` reverted to a depth-only store, 4 remain. With a leaf that
+     does not read TLS, none remain.
+2. **The `Expr` drops are a path artifact, and the instrument is my fault.**
+   `drop_in_place<Expr>` moved out of an `Arc::drop_slow` in rum-core's
+   code, and this brief does not touch rum-core.
+   - My Stage B instrument built the base from `base-source/` and the
+     candidate from the repository root. That breaks my own rule that both
+     arms build at one path.
+   - The path enters every crate's id, so every symbol hash differed between
+     the two arms.
+   - Built at one path, the base has the same drop shape as the candidate:
+     18 `drop_slow` with 20 call sites, against 17 with 18 in `arms/base`.
+     The hashes then match.
+3. **The rest** gets measured again after 1 and 2 are fixed.
+
+The fix for 1, measured at one path on four resume labels:
+
+| label | A3 vs base | A5 shape vs base |
+|---|---|---|
+| resume-cleanup | +1.57% | +0.07% |
+| c1-all-guard | +1.16% | +0.22% |
+| c1-all-guard-value | +1.13% | +0.18% |
+| lhs-head-cycle | +0.24% | +0.09% |
+
+`c1-all-guard`'s remaining +214 is the leaf's +11 times 22.56 calls per
+iteration (248).
+
+### A5 — one edit, and the instrument at one path
+
+**The edit.** In `suspension/core/evaluation_context.rs`, replace the two
+attribute lines of `poll_resumed_native_stack`:
+
+```rust
+    // Runs once per resumed frame; the leaf it calls is the cold part.
+    #[inline(always)]
+    pub(in crate::runtime) fn poll_resumed_native_stack(&mut self) -> Result<(), EvalError> {
+```
+
+- The body stays as it is. The function was never cold: every resumed frame
+  runs it.
+- The leaf `native_stack_budget_exhausted` stays `#[cold] #[inline(never)]`.
+  It returns a `bool` in a register, so no result crosses the call.
+- The comment keeps the line count, so no line below moves.
+- Nothing else in `crates/` changes.
+
+**The instrument.** The scripts are in `.temp/brief-629/instruments/`;
+paths below are relative to `.temp/brief-629/`.
+
+1. **One source path.** Run `rsync -a --delete --exclude target --exclude .temp --exclude .git base-source/ same/src/`.
+   `same/harness/` is a copy of `harness-cand/`, with the rum-host path set
+   to `../src/crates/rum-host`.
+2. **The base.** Build rum-cli into `same/target-base` and the harness into
+   `same/target-base-harness`: one codegen unit, `CARGO_BUILD_JOBS=8`,
+   offline. Copy both binaries to `arms/base-same/`.
+3. **The candidate.** Run `rsync -a --delete --checksum --exclude target --exclude .temp --exclude .git`
+   from the repository into `same/src/`. Build into `same/target-cand` and
+   `same/target-cand-harness`, and copy to `arms/cand-same/`.
+4. **Calibrate before any measurement.** `path-calibration.sh` must print
+   PASS on the two `resume` binaries, and again on the two `rum-cli`
+   binaries. FAIL is a STOP.
+5. **The shape, statically.** Run `resume-shape.sh` on both `resume`
+   binaries and report both lines. My one-path variant read
+   `frame=0x848 memcpy_sites=19 poll_calls=0 leaf_calls=8` for the
+   candidate, and `frame=0x7f8 memcpy_sites=23 poll_calls=8 leaf_calls=0`
+   for the base.
+6. **The floor, then the gate.** Run
+   `instr.py arms/base-same arms/base-same logs/bb-same.tsv`, then
+   `instr.py arms/base-same arms/cand-same logs/bc-a5.tsv`. Leave
+   `arms/base/`, `arms/cand/`, `logs/bb.tsv` and `logs/bc-a3.tsv` as they
+   are.
+
+**The bars.**
+
+- **Instructions.** For each label beyond its floor, the callgrind
+  components must close. Give each component as its count per iteration
+  times its cost per occurrence, then their sum against callgrind's TOTAL
+  slope.
+  - `callers.py <dir> <callee> <N>` gives per-caller call counts, for any
+    library function that moved (memcpy, memcmp, drops).
+    `instr_slope.py <function> <N> <out-N> <out-2N>` gives a per-instruction
+    diff inside one function; it needs callgrind's `--dump-instr=yes`.
+  - **Expected components:**
+    - the leaf, +11 per call;
+    - the resume entry, per resume;
+    - the threshold store, per restore;
+    - the evaluator's inlining change (the body moves into `evaluate'2`,
+      and the accounting body is cheaper);
+    - `evaluate_at_root`, per root entry;
+    - register allocation inside `evaluate'2`;
+    - A4's two noise modes, the valueq setup hash and the nest-map bloom
+      bimodality, each with the same evidence as in A4.
+  - **STOP conditions.** A residual beyond the floor that no listed
+    component accounts for. A new memcpy call site. A library call whose
+    count per iteration moved, without a named call site.
+  - **Coverage.** Attribute at least the three largest resume labels by
+    delta, the three largest CLI labels, and every label above +0.3%.
+- **Stack.** Rerun A4's cycle table and the leaves on `arms/*-same`, with
+  A3's bars. The per-level cycle must stay at or below the base, and the
+  leaves may grow by at most 32 B. Any other growth on the cycle is a STOP.
+  Report `resume_eval_request_from_checkpoint`'s frame from step 5.
+- **Tests after the edit.**
+  - `cargo fmt --check`.
+  - `cargo test -p rum-runtime --lib`.
+  - `cargo test -p rum-host`, which includes `native_stack_thread_scope`.
+  - `production_rejection_census_is_complete` and the LP01 fixture. The
+    edit is designed to move neither; if one moves, STOP with the keyed
+    diff.
+  - `local_production_acceptance` in both builds. If a fingerprint moves,
+    report it and do not edit; I replay at my gate.
+  - The Jupyter pair, 20 times at `--test-threads=2`, with the two names as
+    two filters.
+  - The full workspace stays with my gate.
+
+**Scope.** Under `crates/`, only `suspension/core/evaluation_context.rs`.
+Scratch goes under `.temp/brief-629/`.
+
+Every quoted line must be copied from a file you name. Append
+"Executing-agent report — A5".
