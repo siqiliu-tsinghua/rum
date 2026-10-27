@@ -984,3 +984,605 @@ Do not rerun the workspace; my gate did.
 
 Every quoted line must be copied from a file you name. The raw TSVs stay
 on disk, and I check them directly.
+
+## Executing-agent report — Stage B
+
+**STOP.** The instruction residual on the measured hot path is the outline of `Session::evaluate_profiled_fixed_point`. The cold native-stack frames also reserve more stack. No file under `crates/`, `scripts/`, or `docs/` was modified except this appended report. `arms/base/` was left untouched.
+
+### 1. Candidate arm
+
+Both release builds used `CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1`, `CARGO_BUILD_JOBS=8`, `CARGO_NET_OFFLINE=true`.
+
+- `.temp/brief-629/logs/build-cand-cli.log`: `    Finished `release` profile [optimized] target(s) in 50.49s` then `EXIT:0` and `oom_kill 0`.
+- `.temp/brief-629/logs/build-cand-harness.log`: `    Finished `release` profile [optimized] target(s) in 49.99s` then `EXIT:0` and `oom_kill 0`.
+- Binaries copied to `.temp/brief-629/arms/cand/rum-cli` and `.temp/brief-629/arms/cand/resume` (the harness binary is `brief608-resume`).
+
+### 2. The two TSVs
+
+Floor command wrote `.temp/brief-629/logs/bb.tsv` (log `.temp/brief-629/logs/bb-run.log`). Gate command wrote `.temp/brief-629/logs/bc.tsv` (log `.temp/brief-629/logs/bc-run.log`). Each log ends `EXIT:0`. Each TSV has a header plus 313 data rows (`wc -l` is 314).
+
+Reduction in `.temp/brief-629/logs/gate-summary.txt`, copied here:
+
+```
+labels 313
+bb_median_pct -0.0001
+bc_median_pct +0.7964
+bc_max_pct +38.7486
+bc_min_pct -3.3007
+flagged 276 positive 276 negative 0
+flagged_cli 155 of 192 median +0.6674
+flagged_resume 121 of 121 median +1.6783
+literal_nonzero 3
+```
+
+Floor for a label is `max(0.05, |bb delta_pct|)`. A label is beyond the floor when `|bc delta_pct|` is greater than that floor. All 276 breaches are positive.
+
+Largest positive percent, from `.temp/brief-629/logs/bc.tsv`:
+
+```
+valueq-undefined-symbol-definitions-8000	20	3002.30	4165.65	+1163.35	+38.7486	242674475,242517986,242505870	242594475,242578032,242566332	243415032,243422145,243421854	243488225,243685044,243505167
+```
+
+Its floor is the base-vs-base row in `.temp/brief-629/logs/bb.tsv`:
+
+```
+valueq-undefined-symbol-definitions-8000	20	5576.95	6019.35	+442.40	+7.9327	242488660,242463201,242657276	242600199,242606577,242550811	242490912,242474989,242705327	242645409,242579724,242611299
+```
+
+Largest positive instruction delta, and the most negative instruction delta and percent, from `bc.tsv`:
+
+```
+lazy-depth-fold-through-source-256	1000	520360545.04	523455478.42	+3094933.38	+0.5948	521798560781,521789732938,521773382262	1042140425661,1042150277978,1042162749281	524893067848,524903372379,524914219132	1048357185801,1048358850797,1048369155604
+valueq-undefined-symbol-definitions-2000	20	5138.25	4968.65	-169.60	-3.3007	62924955,62924993,62917401	63027720,63027491,63035764	63166189,63164944,63159376	63256619,63264535,63264317
+```
+
+`valueq-undefined-symbol-definitions-2000` stays inside its floor. The matching `bb.tsv` percent is `-8.1723`. Median gate delta is `+0.7964` percent (`gate-summary.txt`).
+
+`literal-integer`, the label attributed below, from `bc.tsv`:
+
+```
+literal-integer	20000	292.01	317.99	+25.97	+8.8948	9457152,9457505,9459433	15297769,15298749,15297627	9979725,9977499,9978133	16336598,16339379,16337876
+```
+
+### 3. Attribution
+
+Debuginfo cache: `cp -a ~/.cache/debuginfod_client .temp/brief-629/debuginfod`. `cmp` of the libc debuginfo matched. Build-id of `/usr/lib/libc.so.6` and of that file is `e363db7c8fcc7c06c6f0d2839b2a8ad875b75406`.
+
+An empty `DEBUGINFOD_URLS` left the hot libc body unnamed. A closed localhost URL makes the client read the copied cache and fail fast on a miss. With `DEBUGINFOD_CACHE_PATH=.temp/brief-629/debuginfod`, `DEBUGINFOD_URLS=http://127.0.0.1:9`, and `DEBUGINFOD_TIMEOUT=1`, `.temp/brief-629/callgrind/calib-debuginfod.out` contains:
+
+```
+cfn=(4298) __memcpy_avx_unaligned_erms
+```
+
+`literal-integer` (`Do[123, {20000}]`) was callgrinded at N and 2N, six fresh processes per arm. Exclusive instruction sums match each profile's `summary:` line. Log `.temp/brief-629/logs/attr-literal-integer.log`:
+
+```
+literal-integer base N=20000 totals=[9529449, 9528560, 9527229, 9530434, 9529859, 9530549]
+literal-integer base N=40000 totals=[15368608, 15370242, 15370650, 15368581, 15371584, 15369901]
+literal-integer cand N=20000 totals=[10053208, 10050299, 10049072, 10050491, 10048670, 10051635]
+literal-integer cand N=40000 totals=[16409876, 16411018, 16409402, 16410620, 16410028, 16411632]
+TOTAL base=292.02 cand=318.00 delta=+25.98
+wrote /home/remi/dev/rum/.temp/brief-629/logs/attr-literal-integer.tsv
+EXIT:0
+```
+
+The callgrind total slope `+25.98` matches the perf slope `+25.97`. Every function whose exclusive slope moved by at least 0.05 instructions, from `.temp/brief-629/logs/attr-literal-integer.tsv`:
+
+```
++25.9756	292.0209	317.9964	TOTAL
++69.0000	0.0000	69.0000	rum-cli!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point'2
+-43.0000	110.0000	67.0000	rum-cli!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate'2
+```
+
+`+69 + (-43) = +26`, the whole residual. `libc.so.6!__memcpy_avx_unaligned_erms` is named and its slope is `30` on both arms (`delta +0.0000` in that TSV). No `native_stack_exhausted`, `NativeStackEntry`, or `EvaluationDepth::restore` symbol has a per-iteration slope on this label.
+
+Mechanism: `Session::evaluate_profiled_fixed_point` is a separate call. In the base arm its exclusive per-iteration slope is 0 and the fixed-point body is inside `Session::evaluate` (slope 110). In the candidate the body is `evaluate_profiled_fixed_point` (slope 69) and `evaluate` falls to 67. The brief's expected mechanisms are the thread-record read in the two cold checks, `NativeStackEntry` enter and exit per resume and per abandonment, and `restore`'s threshold store per resumed cell. This residual is the outline of the fixed-point function on every `Do` iteration. **STOP.**
+
+The other 275 labels beyond the floor were left unattributed because that stop had fired. Their rows are below and in `.temp/brief-629/logs/flagged.tsv`. An unattributed positive residual is the same stop.
+
+### 4. Stack
+
+`objdump -d -C --no-show-raw-insn` on both `rum-cli`s. First `sub $N,%rsp` in each `Session::evaluate*` symbol, plus `resume_call_after_head`, `resume_call_with_dispatch_plan`, and the native-stack poll functions. Full table: `.temp/brief-629/logs/stack-reservations.tsv`. Prologues: `.temp/brief-629/logs/stack-prologues.txt`.
+
+```
+function	base_sub	cand_sub	growth
+rum_runtime::runtime::debug_tools::test_report::evaluation::<impl rum_runtime::runtime::model::session::Session>::evaluate_test_case_input	744	744	
+rum_runtime::runtime::definitions::application::default_values::<impl rum_runtime::runtime::model::session::Session>::evaluate_first_exact_default_value	456	456	
+rum_runtime::runtime::definitions::application::rhs::<impl rum_runtime::runtime::model::session::Session>::evaluate_definition_application_rhs	840	840	
+rum_runtime::runtime::definitions::application::rhs::<impl rum_runtime::runtime::model::session::Session>::evaluate_definition_rhs	792	792	
+rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::evaluate_definition_lhs_active_expr	232	232	
+rum_runtime::runtime::definitions::definition_lhs_preparation::<impl rum_runtime::runtime::model::session::Session>::evaluate_prepared_definition_lhs	136	136	
+rum_runtime::runtime::definitions::rhs_guards::<impl rum_runtime::runtime::model::session::Session>::evaluate_owned_guards	392	392	
+rum_runtime::runtime::definitions::rhs_guards::<impl rum_runtime::runtime::model::session::Session>::evaluate_readonly_suspended_guards	392	392	
+rum_runtime::runtime::definitions::rhs_guards::<impl rum_runtime::runtime::model::session::Session>::evaluate_suspended_guards_deferred	488	488	
+rum_runtime::runtime::definitions::rule_lhs::<impl rum_runtime::runtime::model::session::Session>::evaluate_rule_lhs	64	64	
+rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_atom_fast_path	384	384	
+rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_inner_unstable	1256	1256	
+rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_in_accounting_mode		520	new-in-cand
+rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_unstable_after_input_check_with_cycle_tracking	712		absent-in-cand
+rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::native_stack_budget_exhausted	none	16	
+rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::poll_native_stack_limit	none	none	
+rum_runtime::runtime::eval_core::call::<impl rum_runtime::runtime::model::session::Session>::evaluate_call::{{closure}}::suspend	40	40	
+rum_runtime::runtime::eval_core::call::<impl rum_runtime::runtime::model::session::Session>::resume_call_after_head	568	568	
+rum_runtime::runtime::eval_core::call::<impl rum_runtime::runtime::model::session::Session>::resume_call_with_dispatch_plan	776	776	
+rum_runtime::runtime::eval_core::call::<impl rum_runtime::runtime::model::session::Session>::resume_call_with_dispatch_plan::suspend	240	240	
+rum_runtime::runtime::eval_core::symbol::<impl rum_runtime::runtime::model::session::Session>::evaluate_stored_own_value	520	520	
+rum_runtime::runtime::eval_core::symbol::<impl rum_runtime::runtime::model::session::Session>::evaluate_stored_own_value::suspend	152	152	
+rum_runtime::runtime::eval_core::symbol::<impl rum_runtime::runtime::model::session::Session>::evaluate_symbol_after_stored_own_value	176	176	
+rum_runtime::runtime::kernel_data::control_data::branching_loops::iteration::driver::<impl rum_runtime::runtime::model::session::Session>::evaluate_loop_iterator_body	1384	1384	
+rum_runtime::runtime::kernel_data::control_data::exceptions::<impl rum_runtime::runtime::model::session::Session>::evaluate_exception_handler_rhs	208	208	
+rum_runtime::runtime::kernel_data::control_data::exceptions::<impl rum_runtime::runtime::model::session::Session>::evaluate_exception_handler_rhs::suspend	40	40	
+rum_runtime::runtime::kernel_data::evaluated_part_selectors::<impl rum_runtime::runtime::model::session::Session>::evaluate_part_selectors_owned::suspend	40	40	
+rum_runtime::runtime::kernel_data::evaluated_part_selectors::<impl rum_runtime::runtime::model::session::Session>::evaluate_part_selectors_owned_for_builtin	184	184	
+rum_runtime::runtime::native_stack_guard::NativeStackGuard::poll_native_stack_limit	none	16	
+rum_runtime::runtime::options::core::<impl rum_runtime::runtime::model::session::Session>::evaluate_runtime_option_expr	1704	1704	
+rum_runtime::runtime::options::patterns::<impl rum_runtime::runtime::model::session::Session>::evaluate_with_option_value_scope	272	272	
+rum_runtime::runtime::pattern_matching::core::<impl rum_runtime::runtime::model::session::Session>::evaluate_pattern_test_owned	296	296	
+rum_runtime::runtime::pattern_matching::core::<impl rum_runtime::runtime::model::session::Session>::evaluate_sequence_pattern_checks_owned	664	664	
+rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate	840	360	
+rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_at_root		352	new-in-cand
+rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point		792	new-in-cand
+rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_profiled_fixed_point::suspend	136	136	
+rum_runtime::runtime::scoping::callable::status_application::<impl rum_runtime::runtime::model::session::Session>::evaluate_status_function_value	648	648	
+rum_runtime::runtime::session::session_api::<impl rum_runtime::runtime::model::session::Session>::evaluate_with_random_state_restored	312	312	
+```
+
+No symbol present on both sides with a numeric `sub` on both sides has a larger candidate `sub`. `Session::evaluate` itself goes from 840 to 360.
+
+These reservations grew, or appeared on the recursive cycle:
+
+| function | base `sub` | candidate `sub` |
+|---|---|---|
+| `Session::native_stack_budget_exhausted` | none | 16 |
+| `NativeStackGuard::poll_native_stack_limit` | none | 16 |
+| `Session::evaluate_profiled_fixed_point` | absent | 792 |
+| `Session::evaluate_at_root` | absent | 352 |
+| `Session::evaluate_once_in_accounting_mode` | absent | 520 |
+| `Session::evaluate_once_unstable_after_input_check_with_cycle_tracking` | 712 | absent |
+
+`native_stack_budget_exhausted`, from `stack-prologues.txt`. Base has no `sub`. Candidate is `sub $0x10,%rsp` and a `%fs` thread-record read:
+
+```
+d15a0:	xor    %eax,%eax
+d15a2:	lea    -0x1(%rsp),%rcx
+...
+d15d1:	sub    $0x10,%rsp
+d15d8:	mov    %fs:0x0,%rax
+```
+
+`NativeStackGuard::poll_native_stack_limit` likewise goes from no `sub` to `sub $0x10,%rsp` plus `mov %fs:0x0,%rax`.
+
+`Session::poll_native_stack_limit` has no `sub` on either arm. The candidate prologue pushes three registers where the base prologue pushes none (`stack-prologues.txt`):
+
+```
+d1570:	push   %r14
+d1572:	push   %rbx
+d1573:	push   %rax
+d157a:	mov    %fs:0x0,%rax
+```
+
+`Session::evaluate` and `Session::evaluate_profiled_fixed_point` (`stack-prologues.txt`):
+
+```
+750d3a:	sub    $0x348,%rsp
+750e06:	sub    $0x168,%rsp
+7510ba:	sub    $0x318,%rsp
+```
+
+`0x348` is 840, `0x168` is 360, `0x318` is 792. On a depth-above-0 evaluation the candidate holds `evaluate` (360) and `evaluate_profiled_fixed_point` (792) together. The base holds `evaluate` (840) alone. `nm -C --defined-only` on the candidate shows no `NativeStackEntry` symbol; the `%fs` read of the entry is inlined in `evaluate_at_root` (`sub $0x160`, 352), which is absent from the base.
+
+**STOP** on the stack as well: the two cold polls gained a 16-byte `sub`, and the recursive cycle gained a 792-byte frame under a caller that still reserves 360.
+
+### 5. One row per flagged label
+
+Copied from `.temp/brief-629/logs/flagged.tsv`. Columns: label, engine, base slope, candidate slope, instruction delta, percent, floor percent, base-vs-base percent, attribution.
+
+```
+label	engine	base_slope	cand_slope	delta	delta_pct	floor_pct	bb_pct	attribution
+lazy-range-take-small	cli	41869.48	41939.89	+70.41	+0.1682	0.1142	-0.1142	not attributed; stop fired on literal-integer
+lazy-range-normal-small	cli	53564.91	53828.31	+263.40	+0.4917	0.0500	-0.0410	not attributed; stop fired on literal-integer
+lazy-map-realize-small	cli	175630.18	176586.15	+955.96	+0.5443	0.0500	+0.0128	not attributed; stop fired on literal-integer
+lazy-select-realize-small	cli	112443.32	112851.03	+407.70	+0.3626	0.0500	+0.0439	not attributed; stop fired on literal-integer
+lazy-select-scan-small	cli	787423.56	791648.71	+4225.15	+0.5366	0.0500	-0.0043	not attributed; stop fired on literal-integer
+lazy-nestlist-realize-small	cli	142236.22	143126.26	+890.04	+0.6258	0.0807	+0.0807	not attributed; stop fired on literal-integer
+lazy-foldlist-realize-small	cli	110788.94	111180.83	+391.88	+0.3537	0.0500	-0.0188	not attributed; stop fired on literal-integer
+lazy-drop-realize-small	cli	187862.62	188825.64	+963.03	+0.5126	0.0500	-0.0108	not attributed; stop fired on literal-integer
+lazy-first-small	cli	40547.33	40836.64	+289.31	+0.7135	0.0500	+0.0035	not attributed; stop fired on literal-integer
+lazy-part-small	cli	86920.82	87408.50	+487.68	+0.5611	0.1242	+0.1242	not attributed; stop fired on literal-integer
+lazy-transparent-adapters-small	cli	177978.42	178948.93	+970.51	+0.5453	0.1329	-0.1329	not attributed; stop fired on literal-integer
+lazy-table-construct-short	cli	23341.56	23437.87	+96.31	+0.4126	0.1284	-0.1284	not attributed; stop fired on literal-integer
+lazy-table-construct-full	cli	23851.77	23983.82	+132.06	+0.5536	0.0500	-0.0001	not attributed; stop fired on literal-integer
+lazy-table-realize-small	cli	115304.02	115944.82	+640.81	+0.5558	0.0500	+0.0036	not attributed; stop fired on literal-integer
+lazy-permutations-take-small	cli	27871.89	27956.34	+84.46	+0.3030	0.0500	+0.0001	not attributed; stop fired on literal-integer
+lazy-subsets-take-small	cli	25011.58	25096.88	+85.30	+0.3410	0.1917	+0.1917	not attributed; stop fired on literal-integer
+lazy-tuples-take-small	cli	26236.22	26351.79	+115.57	+0.4405	0.0500	-0.0024	not attributed; stop fired on literal-integer
+scan-no-input	cli	28961.15	29214.48	+253.32	+0.8747	0.0500	+0.0060	not attributed; stop fired on literal-integer
+optionvalue-three-no-input	cli	9494.51	9528.84	+34.33	+0.3616	0.0500	-0.0009	not attributed; stop fired on literal-integer
+replacerepeated-no-input	cli	38842.36	39046.82	+204.47	+0.5264	0.0500	-0.0003	not attributed; stop fired on literal-integer
+dot-three-no-input	cli	249964.54	250887.61	+923.07	+0.3693	0.0500	-0.0001	not attributed; stop fired on literal-integer
+differences-no-input	cli	9910.47	9973.90	+63.44	+0.6401	0.0500	-0.0036	not attributed; stop fired on literal-integer
+do-count-null	cli	535.14	561.05	+25.91	+4.8412	0.0500	-0.0009	not attributed; stop fired on literal-integer
+do-iterator-null	cli	1152.06	1178.01	+25.96	+2.2530	0.0500	+0.0020	not attributed; stop fired on literal-integer
+replaceall-simple	cli	11301.85	11418.58	+116.73	+1.0328	0.0500	-0.0007	not attributed; stop fired on literal-integer
+table-small	cli	14524.31	14581.73	+57.42	+0.3953	0.0500	-0.0004	not attributed; stop fired on literal-integer
+take-multispec-small	cli	49734.90	50022.73	+287.83	+0.5787	0.0500	+0.0001	not attributed; stop fired on literal-integer
+lazy-depth-map-build-8	cli	17833.61	17898.87	+65.26	+0.3659	0.0824	-0.0824	not attributed; stop fired on literal-integer
+lazy-depth-map-first-8	cli	127575.42	128448.62	+873.20	+0.6845	0.0500	+0.0025	not attributed; stop fired on literal-integer
+lazy-depth-map-eight-8	cli	939554.53	945644.88	+6090.36	+0.6482	0.0500	-0.0001	not attributed; stop fired on literal-integer
+lazy-depth-select-restart-8	cli	177473.87	179337.74	+1863.86	+1.0502	0.0500	-0.0039	not attributed; stop fired on literal-integer
+lazy-depth-drop-all-one-8	cli	46372.65	46477.66	+105.01	+0.2265	0.0500	-0.0015	not attributed; stop fired on literal-integer
+lazy-depth-take-map-8	cli	136119.56	136979.16	+859.59	+0.6315	0.0500	-0.0116	not attributed; stop fired on literal-integer
+lazy-depth-fold-through-source-8	cli	578089.02	581543.84	+3454.82	+0.5976	0.0500	+0.0045	not attributed; stop fired on literal-integer
+lazy-depth-nest-map-8	cli	137849.16	138804.90	+955.74	+0.6933	0.0500	-0.0008	not attributed; stop fired on literal-integer
+lazy-depth-map-build-64	cli	29853.46	29916.57	+63.11	+0.2114	0.0500	+0.0053	not attributed; stop fired on literal-integer
+lazy-depth-map-first-64	cli	927443.08	933575.82	+6132.75	+0.6613	0.0500	-0.0003	not attributed; stop fired on literal-integer
+lazy-depth-map-eight-64	cli	7252557.67	7300943.95	+48386.27	+0.6672	0.0500	-0.0021	not attributed; stop fired on literal-integer
+lazy-depth-select-restart-64	cli	969668.74	978136.92	+8468.18	+0.8733	0.0742	-0.0742	not attributed; stop fired on literal-integer
+lazy-depth-take-map-64	cli	987269.86	993393.68	+6123.82	+0.6203	0.0500	+0.0005	not attributed; stop fired on literal-integer
+lazy-depth-fold-through-source-64	cli	33343765.41	33540375.06	+196609.64	+0.5896	0.0500	-0.0013	not attributed; stop fired on literal-integer
+lazy-depth-nest-map-64	cli	938083.15	944423.22	+6340.07	+0.6759	0.3543	-0.3543	not attributed; stop fired on literal-integer
+lazy-depth-map-first-256	cli	3639733.53	3664278.12	+24544.59	+0.6744	0.0500	-0.0154	not attributed; stop fired on literal-integer
+lazy-depth-map-eight-256	cli	28911261.10	29104214.57	+192953.47	+0.6674	0.0500	+0.0011	not attributed; stop fired on literal-integer
+lazy-depth-select-restart-256	cli	3645287.66	3688639.75	+43352.09	+1.1893	0.0500	-0.0072	not attributed; stop fired on literal-integer
+lazy-depth-take-map-256	cli	3902716.75	3927345.86	+24629.10	+0.6311	0.0500	-0.0106	not attributed; stop fired on literal-integer
+lazy-depth-fold-through-source-256	cli	520360545.04	523455478.42	+3094933.38	+0.5948	0.0500	-0.0013	not attributed; stop fired on literal-integer
+literal-integer	cli	292.01	317.99	+25.97	+8.8948	0.0500	-0.0450	callgrind 6x2x2: entire +25.98 is evaluate_profiled_fixed_point outline; logs/attr-literal-integer.tsv
+downvalue-pattern-hit	cli	13635.05	13698.31	+63.26	+0.4640	0.0500	-0.0001	not attributed; stop fired on literal-integer
+module-local	cli	22344.39	22470.90	+126.51	+0.5662	0.0500	-0.0043	not attributed; stop fired on literal-integer
+block-local	cli	14462.86	14590.16	+127.30	+0.8802	0.0500	+0.0001	not attributed; stop fired on literal-integer
+resume-table	resume	19811.45	20113.30	+301.85	+1.5236	0.2592	-0.2592	not attributed; stop fired on literal-integer
+resume-do-chain	resume	19102.01	19461.52	+359.50	+1.8820	0.2000	-0.2000	not attributed; stop fired on literal-integer
+resume-call-repeat	resume	28313.46	28572.47	+259.01	+0.9148	0.2153	+0.2153	not attributed; stop fired on literal-integer
+resume-cleanup	resume	18582.18	18882.88	+300.70	+1.6182	0.0500	+0.0085	not attributed; stop fired on literal-integer
+resume-fold	resume	29382.87	29927.22	+544.35	+1.8526	0.0500	+0.0095	not attributed; stop fired on literal-integer
+deletecases-leaf-delete-small	cli	63195.53	63340.09	+144.56	+0.2287	0.1554	-0.1554	not attributed; stop fired on literal-integer
+replace-leaf-rebuild-small	cli	73292.33	74271.04	+978.71	+1.3354	0.5821	+0.5821	not attributed; stop fired on literal-integer
+rewrite-guarded-hit	cli	52736.94	52960.10	+223.16	+0.4232	0.0887	-0.0887	not attributed; stop fired on literal-integer
+rewrite-guarded-decline-fallback	cli	76942.43	77419.06	+476.63	+0.6195	0.1164	+0.1164	not attributed; stop fired on literal-integer
+rule-rhs-deep-small	cli	82400.14	82756.93	+356.79	+0.4330	0.0500	+0.0004	not attributed; stop fired on literal-integer
+part-list	cli	8329.80	8415.18	+85.38	+1.0250	0.1535	-0.1535	not attributed; stop fired on literal-integer
+appendto-part-outer1000-small	cli	2222699.20	2255334.17	+32634.97	+1.4683	0.0500	+0.0346	not attributed; stop fired on literal-integer
+set-part-fixed100-len100	cli	1265382.42	1275456.06	+10073.64	+0.7961	0.0500	-0.0035	not attributed; stop fired on literal-integer
+set-part-fixed100-len800	cli	1265727.05	1275354.95	+9627.90	+0.7607	0.0500	+0.0005	not attributed; stop fired on literal-integer
+set-part-fill-small	cli	2776157.76	2802269.48	+26111.72	+0.9406	0.2733	-0.2733	not attributed; stop fired on literal-integer
+set-part-fill-large	cli	5571166.43	5622437.48	+51271.05	+0.9203	0.2448	+0.2448	not attributed; stop fired on literal-integer
+resume-argument-twice	resume	92451.72	94050.08	+1598.37	+1.7289	0.1420	+0.1420	not attributed; stop fired on literal-integer
+resume-rewrite-exprs	resume	53320.25	54100.51	+780.26	+1.4634	0.1995	+0.1995	not attributed; stop fired on literal-integer
+resume-rewrite-compiled	resume	41549.97	42380.43	+830.46	+1.9987	0.2262	-0.2262	not attributed; stop fired on literal-integer
+resume-cases-spec	resume	69089.07	70210.95	+1121.89	+1.6238	0.2544	+0.2544	not attributed; stop fired on literal-integer
+resume-cases-traversal	resume	67201.46	68228.59	+1027.13	+1.5284	0.1648	-0.1648	not attributed; stop fired on literal-integer
+resume-position-traversal	resume	70445.48	71503.32	+1057.83	+1.5016	0.0632	-0.0632	not attributed; stop fired on literal-integer
+resume-count-traversal	resume	61522.50	62568.62	+1046.11	+1.7004	0.1176	+0.1176	not attributed; stop fired on literal-integer
+resume-cases-shared	resume	113385.32	115456.97	+2071.64	+1.8271	0.0622	+0.0622	not attributed; stop fired on literal-integer
+symbol-ownvalue-read	cli	2207.09	2237.75	+30.66	+1.3893	0.0500	+0.0174	not attributed; stop fired on literal-integer
+symbol-ownvalue-guarded-read	cli	3573.41	3623.17	+49.77	+1.3927	0.0500	+0.0136	not attributed; stop fired on literal-integer
+block-symbol-only-repeat	cli	10688.79	10805.98	+117.19	+1.0963	0.0500	-0.0101	not attributed; stop fired on literal-integer
+downvalue-exact-hit	cli	5741.01	5774.02	+33.02	+0.5751	0.0500	-0.0252	not attributed; stop fired on literal-integer
+downvalue-exact-miss	cli	998.03	1023.75	+25.73	+2.5777	0.0500	+0.0215	not attributed; stop fired on literal-integer
+downvalue-pattern-miss	cli	997.82	1023.88	+26.06	+2.6113	0.1102	-0.1102	not attributed; stop fired on literal-integer
+downvalue-guarded-hit	cli	27568.94	27660.09	+91.15	+0.3306	0.0500	-0.0072	not attributed; stop fired on literal-integer
+downvalue-guarded-decline-fallback	cli	20853.50	20920.30	+66.80	+0.3203	0.0500	+0.0075	not attributed; stop fired on literal-integer
+upvalue-guarded-hit	cli	33861.67	33976.06	+114.39	+0.3378	0.0500	-0.0020	not attributed; stop fired on literal-integer
+subvalue-unguarded-hit	cli	20056.28	20149.71	+93.43	+0.4658	0.0500	+0.0016	not attributed; stop fired on literal-integer
+subvalue-unguarded-miss	cli	11282.00	11339.23	+57.23	+0.5073	0.0500	-0.0040	not attributed; stop fired on literal-integer
+subvalue-guarded-hit	cli	35221.51	35338.37	+116.86	+0.3318	0.0500	+0.0014	not attributed; stop fired on literal-integer
+default-unguarded-hit	cli	17184.08	17217.41	+33.33	+0.1939	0.0500	-0.0001	not attributed; stop fired on literal-integer
+default-unguarded-miss	cli	12782.61	12812.29	+29.68	+0.2322	0.0500	-0.0024	not attributed; stop fired on literal-integer
+default-guarded-hit	cli	22362.11	22415.60	+53.49	+0.2392	0.0500	+0.0038	not attributed; stop fired on literal-integer
+downvalue-exact-miss-repeat	cli	774.50	828.55	+54.05	+6.9787	0.0500	+0.0237	not attributed; stop fired on literal-integer
+downvalue-pattern-miss-repeat	cli	775.54	827.40	+51.86	+6.6865	0.0500	-0.0037	not attributed; stop fired on literal-integer
+upvalue-candidates-tiny	cli	31369.04	31580.03	+211.00	+0.6726	0.0500	-0.0178	not attributed; stop fired on literal-integer
+sortby-default-wide	cli	7428626.70	7479501.80	+50875.10	+0.6849	0.0500	-0.0007	not attributed; stop fired on literal-integer
+keysortby-default-wide	cli	15447495.65	15499507.10	+52011.45	+0.3367	0.0500	+0.0006	not attributed; stop fired on literal-integer
+valueq-undefined-symbol-definitions-8000	cli	3002.30	4165.65	+1163.35	+38.7486	7.9327	+7.9327	not attributed; stop fired on literal-integer
+resume-s5-down-rhs	resume	59434.94	60526.71	+1091.77	+1.8369	0.0500	+0.0375	not attributed; stop fired on literal-integer
+resume-s5-down-guard	resume	113990.43	116062.67	+2072.24	+1.8179	0.0500	+0.0420	not attributed; stop fired on literal-integer
+resume-s5-sub-rhs	resume	65212.89	66247.58	+1034.69	+1.5866	0.1485	+0.1485	not attributed; stop fired on literal-integer
+resume-s5-sub-guard	resume	122084.72	123802.98	+1718.26	+1.4074	0.1560	+0.1560	not attributed; stop fired on literal-integer
+resume-s5-up-rhs	resume	64588.26	65749.26	+1161.00	+1.7975	0.0500	-0.0473	not attributed; stop fired on literal-integer
+resume-s5-up-guard	resume	137830.07	139739.97	+1909.90	+1.3857	0.1402	-0.1402	not attributed; stop fired on literal-integer
+resume-s5-default-rhs	resume	108898.86	110338.66	+1439.80	+1.3221	0.1519	+0.1519	not attributed; stop fired on literal-integer
+resume-s5-default-guard	resume	103328.65	105070.45	+1741.80	+1.6857	0.0500	-0.0059	not attributed; stop fired on literal-integer
+resume-s5-default-fallback-rhs	resume	64239.92	65397.91	+1157.99	+1.8026	0.0500	-0.0474	not attributed; stop fired on literal-integer
+resume-s5-set	resume	56341.30	57439.05	+1097.75	+1.9484	0.0500	-0.0412	not attributed; stop fired on literal-integer
+resume-s5-upset	resume	66948.49	68215.28	+1266.79	+1.8922	0.0789	-0.0789	not attributed; stop fired on literal-integer
+resume-s5-tagset	resume	66797.58	68012.99	+1215.41	+1.8195	0.0632	-0.0632	not attributed; stop fired on literal-integer
+resume-s5-rule-rhs	resume	71487.12	72859.15	+1372.03	+1.9193	0.1151	+0.1151	not attributed; stop fired on literal-integer
+resume-s5-rule-lhs	resume	90258.32	91886.63	+1628.31	+1.8041	0.0864	+0.0864	not attributed; stop fired on literal-integer
+resume-s5-destructure	resume	75981.31	77373.77	+1392.46	+1.8326	0.1049	+0.1049	not attributed; stop fired on literal-integer
+resume-s5-lhs-twice	resume	97946.95	99766.82	+1819.87	+1.8580	0.0500	-0.0371	not attributed; stop fired on literal-integer
+resume-s5-own-rhs	resume	51601.52	52629.13	+1027.61	+1.9914	0.1076	-0.1076	not attributed; stop fired on literal-integer
+resume-s5-destructure-twice	resume	118832.14	120826.50	+1994.36	+1.6783	0.0711	-0.0711	not attributed; stop fired on literal-integer
+resume-s5-rule-lhs-twice	resume	121984.60	124266.91	+2282.31	+1.8710	0.1163	+0.1163	not attributed; stop fired on literal-integer
+matcher-single-tiny	cli	11597.61	11678.68	+81.07	+0.6990	0.0500	+0.0167	not attributed; stop fired on literal-integer
+replacepart-deep-path-small	cli	40829.83	40958.74	+128.91	+0.3157	0.0500	+0.0057	not attributed; stop fired on literal-integer
+replacepart-guarded-hit	cli	15788.00	15917.56	+129.56	+0.8206	0.0500	+0.0002	not attributed; stop fired on literal-integer
+replacepart-guarded-decline-fallback	cli	18171.45	18314.93	+143.49	+0.7896	0.0500	-0.0341	not attributed; stop fired on literal-integer
+stringreplace-single-literal-unguarded	cli	37184.16	37324.35	+140.18	+0.3770	0.0967	+0.0967	not attributed; stop fired on literal-integer
+stringreplace-pattern-unguarded	cli	31629.14	31808.13	+178.99	+0.5659	0.0500	-0.0099	not attributed; stop fired on literal-integer
+stringreplace-guarded-hit	cli	21620.77	21750.07	+129.31	+0.5981	0.2445	-0.2445	not attributed; stop fired on literal-integer
+stringreplace-guarded-decline-fallback	cli	25877.71	26012.66	+134.95	+0.5215	0.0811	+0.0811	not attributed; stop fired on literal-integer
+resume-s6-rhs-single	resume	74268.37	75642.62	+1374.25	+1.8504	0.0500	-0.0256	not attributed; stop fired on literal-integer
+resume-s6-rhs-twice	resume	105638.14	107384.29	+1746.15	+1.6530	0.0500	+0.0282	not attributed; stop fired on literal-integer
+resume-s6-cross-type	resume	124535.72	126667.29	+2131.57	+1.7116	0.0500	+0.0265	not attributed; stop fired on literal-integer
+resume-s6-readonly-twice	resume	215663.16	218543.84	+2880.68	+1.3357	0.0500	+0.0333	not attributed; stop fired on literal-integer
+resume-s6-string	resume	85123.48	86291.10	+1167.62	+1.3717	0.2511	+0.2511	not attributed; stop fired on literal-integer
+association-part-key-read-width4000	cli	14193.83	14297.40	+103.57	+0.7297	0.2824	-0.2824	not attributed; stop fired on literal-integer
+association-part-positional-read-width32000	cli	9922.85	10499.67	+576.82	+5.8131	0.5663	+0.5663	not attributed; stop fired on literal-integer
+appendto-list-incremental-small	cli	10590.93	10767.89	+176.96	+1.6709	0.0500	+0.0133	not attributed; stop fired on literal-integer
+appendto-list-incremental-large	cli	10574.45	10651.09	+76.64	+0.7248	0.0500	-0.0056	not attributed; stop fired on literal-integer
+association-set-key-incremental-small	cli	17265.59	17357.79	+92.20	+0.5340	0.1018	-0.1018	not attributed; stop fired on literal-integer
+association-set-key-incremental-large	cli	17225.38	17301.06	+75.68	+0.4394	0.0500	+0.0323	not attributed; stop fired on literal-integer
+resume-s7-list-part	resume	83873.01	85312.53	+1439.52	+1.7163	0.1225	-0.1225	not attributed; stop fired on literal-integer
+resume-s7-assoc-part	resume	85759.44	87059.57	+1300.13	+1.5160	0.0586	-0.0586	not attributed; stop fired on literal-integer
+resume-s7-assoc-call	resume	75803.80	77159.74	+1355.94	+1.7887	0.1257	-0.1257	not attributed; stop fired on literal-integer
+resume-s7-assoc-call-thrice	resume	159392.78	161937.89	+2545.11	+1.5968	0.0760	+0.0760	not attributed; stop fired on literal-integer
+resume-s7-held-twice	resume	126026.31	128021.80	+1995.49	+1.5834	0.1212	-0.1212	not attributed; stop fired on literal-integer
+resume-s7-held-rhs	resume	95815.34	97357.24	+1541.90	+1.6092	0.0981	+0.0981	not attributed; stop fired on literal-integer
+resume-s7-associate-argument	resume	78987.45	80436.52	+1449.07	+1.8346	0.0500	-0.0376	not attributed; stop fired on literal-integer
+resume-s7-keydrop-argument	resume	75877.16	77263.33	+1386.17	+1.8269	0.0694	-0.0694	not attributed; stop fired on literal-integer
+resume-s7-associate-target	resume	264744.20	266410.59	+1666.39	+0.6294	0.0500	-0.0361	not attributed; stop fired on literal-integer
+resume-s7-keydrop-target	resume	263725.87	265356.01	+1630.14	+0.6181	0.0500	-0.0477	not attributed; stop fired on literal-integer
+resume-s7-associate-held	resume	99993.46	101491.79	+1498.33	+1.4984	0.1741	+0.1741	not attributed; stop fired on literal-integer
+resume-s7-keydrop-held	resume	107264.28	108901.06	+1636.78	+1.5259	0.2226	-0.2226	not attributed; stop fired on literal-integer
+association-set-part-key-investigation	cli	14583.67	14701.19	+117.52	+0.8058	0.0500	-0.0433	not attributed; stop fired on literal-integer
+replaceall-guarded-hit-small	cli	78641.49	78987.51	+346.02	+0.4400	0.0500	-0.0023	not attributed; stop fired on literal-integer
+replace-rule-list-decline	cli	50950.88	51284.31	+333.43	+0.6544	0.1555	-0.1555	not attributed; stop fired on literal-integer
+replacerepeated-guarded-small	cli	371897.84	373119.65	+1221.81	+0.3285	0.0500	-0.0182	not attributed; stop fired on literal-integer
+replaceat-small	cli	35153.49	35317.94	+164.45	+0.4678	0.0500	-0.0308	not attributed; stop fired on literal-integer
+count-guarded-small	cli	50050.91	50184.52	+133.61	+0.2669	0.0500	+0.0041	not attributed; stop fired on literal-integer
+resume-s8-replaceall-node	resume	109590.70	111333.72	+1743.02	+1.5905	0.0532	-0.0532	not attributed; stop fired on literal-integer
+resume-s8-replaceall-atom	resume	96898.91	98428.82	+1529.91	+1.5789	0.0971	+0.0971	not attributed; stop fired on literal-integer
+resume-s8-replaceall-twice	resume	165433.64	167668.67	+2235.03	+1.3510	0.1059	-0.1059	not attributed; stop fired on literal-integer
+resume-s8-repeated-guard	resume	103847.29	105523.14	+1675.85	+1.6138	0.0587	+0.0587	not attributed; stop fired on literal-integer
+resume-s8-replace-decline	resume	112304.20	114014.62	+1710.42	+1.5230	0.0520	+0.0520	not attributed; stop fired on literal-integer
+resume-s8-replace-both	resume	157532.89	159735.66	+2202.77	+1.3983	0.1335	-0.1335	not attributed; stop fired on literal-integer
+resume-s8-replaceat-guard	resume	109056.95	110694.65	+1637.70	+1.5017	0.0500	+0.0474	not attributed; stop fired on literal-integer
+resume-s8-count-target	resume	63030.25	64048.69	+1018.44	+1.6158	0.0500	+0.0281	not attributed; stop fired on literal-integer
+resume-s8-count-pattern	resume	61513.55	62521.13	+1007.58	+1.6380	0.0592	+0.0592	not attributed; stop fired on literal-integer
+resume-s8-memberq-target	resume	63802.24	64933.43	+1131.19	+1.7730	0.1771	-0.1771	not attributed; stop fired on literal-integer
+resume-s8-memberq-pattern	resume	62413.13	63591.44	+1178.31	+1.8879	0.3204	+0.3204	not attributed; stop fired on literal-integer
+resume-s8-freeq-target	resume	65184.45	66233.41	+1048.96	+1.6092	0.1056	+0.1056	not attributed; stop fired on literal-integer
+resume-s8-freeq-pattern	resume	63756.56	64709.00	+952.44	+1.4939	0.0536	+0.0536	not attributed; stop fired on literal-integer
+resume-s8-count-level	resume	78553.31	79903.22	+1349.91	+1.7185	0.2211	-0.2211	not attributed; stop fired on literal-integer
+resume-s8-count-guard-twice	resume	130013.52	132035.08	+2021.56	+1.5549	0.1270	-0.1270	not attributed; stop fired on literal-integer
+resume-s8-position-target	resume	72956.21	74098.40	+1142.19	+1.5656	0.0500	-0.0298	not attributed; stop fired on literal-integer
+resume-s8-position-pattern	resume	74423.19	75919.41	+1496.22	+2.0104	0.2103	+0.2103	not attributed; stop fired on literal-integer
+resume-s8-position-level	resume	87123.98	88486.47	+1362.49	+1.5639	0.0833	-0.0833	not attributed; stop fired on literal-integer
+resume-s8-position-guard-twice	resume	156784.60	159043.62	+2259.02	+1.4408	0.0921	-0.0921	not attributed; stop fired on literal-integer
+catch-no-throw	cli	4005.98	4038.53	+32.55	+0.8126	0.1935	+0.1935	not attributed; stop fired on literal-integer
+catch-throw-untagged	cli	7890.67	7953.20	+62.53	+0.7925	0.0605	+0.0605	not attributed; stop fired on literal-integer
+catch-throw-tagged-hit	cli	9145.69	9216.61	+70.92	+0.7755	0.4208	+0.4208	not attributed; stop fired on literal-integer
+catch-throw-pattern-hit	cli	16033.20	16155.98	+122.78	+0.7658	0.0500	-0.0339	not attributed; stop fired on literal-integer
+checkabort-no-abort	cli	10997.76	11044.27	+46.51	+0.4229	0.1300	-0.1300	not attributed; stop fired on literal-integer
+abortprotect-clean	cli	9288.38	9362.36	+73.98	+0.7964	0.0500	+0.0273	not attributed; stop fired on literal-integer
+assert-disabled	cli	6767.86	6825.11	+57.25	+0.8459	0.0500	+0.0428	not attributed; stop fired on literal-integer
+assert-enabled-true	cli	13591.28	13698.03	+106.75	+0.7854	0.0500	+0.0129	not attributed; stop fired on literal-integer
+check-clean	cli	9570.17	9637.77	+67.59	+0.7063	0.0500	+0.0441	not attributed; stop fired on literal-integer
+check-message-fallback	cli	17555.57	17770.02	+214.45	+1.2215	0.1460	-0.1460	not attributed; stop fired on literal-integer
+quiet-clean	cli	9292.67	9357.13	+64.46	+0.6937	0.0500	-0.0117	not attributed; stop fired on literal-integer
+withcleanup-two-arg	cli	13317.78	13418.93	+101.15	+0.7595	0.0500	+0.0087	not attributed; stop fired on literal-integer
+catchexceptions-caught	cli	28347.97	28507.40	+159.44	+0.5624	0.0500	-0.0288	not attributed; stop fired on literal-integer
+resume-s9-checkabort-option	resume	64504.88	65680.13	+1175.25	+1.8220	0.0500	-0.0433	not attributed; stop fired on literal-integer
+resume-s9-checkabort-primary	resume	63131.95	64344.80	+1212.85	+1.9211	0.3775	-0.3775	not attributed; stop fired on literal-integer
+resume-s9-checkabort-abort	resume	64779.04	65885.29	+1106.25	+1.7077	0.0500	+0.0136	not attributed; stop fired on literal-integer
+resume-s9-abortprotect-body	resume	56253.76	57495.21	+1241.45	+2.2069	0.0578	-0.0578	not attributed; stop fired on literal-integer
+resume-s9-checkabort-pending-fallback	resume	81442.33	82855.78	+1413.45	+1.7355	0.1437	-0.1437	not attributed; stop fired on literal-integer
+resume-s9-checkabort-fallback	resume	66308.88	67480.58	+1171.70	+1.7670	0.0554	+0.0554	not attributed; stop fired on literal-integer
+resume-s9-assert-function-lookup	resume	66007.25	67303.06	+1295.81	+1.9631	0.0992	+0.0992	not attributed; stop fired on literal-integer
+resume-s9-assert-test	resume	60892.97	62032.74	+1139.77	+1.8718	0.3640	-0.3640	not attributed; stop fired on literal-integer
+resume-s9-assert-handler	resume	65580.16	66703.25	+1123.09	+1.7125	0.0500	-0.0170	not attributed; stop fired on literal-integer
+resume-s9-check-body	resume	56176.33	57520.21	+1343.88	+2.3923	0.0771	-0.0771	not attributed; stop fired on literal-integer
+resume-s9-quiet-body	resume	66267.32	67520.05	+1252.73	+1.8904	0.0500	-0.0011	not attributed; stop fired on literal-integer
+resume-s9-quiet-check-fallback	resume	85739.93	87240.31	+1500.38	+1.7499	0.0765	+0.0765	not attributed; stop fired on literal-integer
+resume-s9-cleanup-init	resume	57549.79	58680.77	+1130.98	+1.9652	0.0500	+0.0164	not attributed; stop fired on literal-integer
+resume-s9-cleanup-primary	resume	56888.07	58024.25	+1136.18	+1.9972	0.2949	+0.2949	not attributed; stop fired on literal-integer
+resume-s9-cleanup-finalizer	resume	57299.74	58414.44	+1114.70	+1.9454	0.0501	+0.0501	not attributed; stop fired on literal-integer
+resume-s9-cleanup-three-phase	resume	116113.32	118015.02	+1901.70	+1.6378	0.0500	-0.0376	not attributed; stop fired on literal-integer
+resume-s9-catchexceptions-body	resume	85557.61	86884.91	+1327.30	+1.5514	0.0644	-0.0644	not attributed; stop fired on literal-integer
+resume-s9-catchexceptions-guard	resume	88754.60	90234.99	+1480.39	+1.6680	0.0500	-0.0350	not attributed; stop fired on literal-integer
+resume-s9-catchexceptions-match	resume	93996.78	95365.88	+1369.10	+1.4565	0.0531	-0.0531	not attributed; stop fired on literal-integer
+resume-s9-catchexceptions-suspended-match	resume	121411.77	123126.89	+1715.12	+1.4126	0.0500	-0.0478	not attributed; stop fired on literal-integer
+resume-s9-catchexceptions-suspended-guard	resume	115838.43	117761.78	+1923.35	+1.6604	0.0500	+0.0053	not attributed; stop fired on literal-integer
+resume-s9-catchexceptions-rhs	resume	81966.39	83288.43	+1322.04	+1.6129	0.0500	+0.0333	not attributed; stop fired on literal-integer
+resume-s9-catch-body	resume	58217.29	59347.55	+1130.26	+1.9415	0.0500	-0.0137	not attributed; stop fired on literal-integer
+resume-s9-catch-form	resume	63173.62	64472.74	+1299.12	+2.0564	0.0787	+0.0787	not attributed; stop fired on literal-integer
+resume-s9-catch-form-guard	resume	91438.53	92792.75	+1354.22	+1.4810	0.0500	+0.0494	not attributed; stop fired on literal-integer
+resume-s9-catch-bypassing-form	resume	80565.44	82057.43	+1491.99	+1.8519	0.0500	-0.0105	not attributed; stop fired on literal-integer
+resume-s9-catch-bypassing-guard	resume	101955.77	103704.22	+1748.45	+1.7149	0.0694	+0.0694	not attributed; stop fired on literal-integer
+catch-throw	cli	7890.80	7955.07	+64.27	+0.8144	0.0500	+0.0056	not attributed; stop fired on literal-integer
+catch-tagged-throw	cli	9118.18	9207.73	+89.55	+0.9821	0.1199	-0.1199	not attributed; stop fired on literal-integer
+catch-form-pattern	cli	16036.29	16158.42	+122.13	+0.7616	0.0500	-0.0311	not attributed; stop fired on literal-integer
+checkabort-abort	cli	14378.31	14476.35	+98.04	+0.6818	0.5094	+0.5094	not attributed; stop fired on literal-integer
+abortprotect-small	cli	3860.51	3899.86	+39.35	+1.0192	0.2502	-0.2502	not attributed; stop fired on literal-integer
+withcleanup-small	cli	4691.67	4780.66	+88.99	+1.8968	0.2926	+0.2926	not attributed; stop fired on literal-integer
+withcleanup-init	cli	5521.78	5626.01	+104.23	+1.8876	0.0500	-0.0377	not attributed; stop fired on literal-integer
+check-no-message	cli	4056.51	4090.81	+34.30	+0.8457	0.7215	+0.7215	not attributed; stop fired on literal-integer
+quiet-no-message	cli	3846.73	3896.52	+49.80	+1.2945	0.0500	-0.0406	not attributed; stop fired on literal-integer
+catchexceptions-handler	cli	19647.29	19774.51	+127.21	+0.6475	0.0500	+0.0239	not attributed; stop fired on literal-integer
+catchexceptions-no-throw	cli	3846.19	3875.70	+29.50	+0.7671	0.4168	-0.4168	not attributed; stop fired on literal-integer
+function-slot-apply	cli	10739.84	10833.46	+93.62	+0.8717	0.0500	-0.0434	not attributed; stop fired on literal-integer
+function-named-apply	cli	12469.83	12569.08	+99.25	+0.7959	0.0500	-0.0428	not attributed; stop fired on literal-integer
+composition-apply	cli	27800.53	27921.04	+120.51	+0.4335	0.0500	-0.0012	not attributed; stop fired on literal-integer
+association-apply	cli	6937.24	7054.49	+117.24	+1.6901	0.0902	+0.0902	not attributed; stop fired on literal-integer
+failure-raw-property	cli	12622.18	12747.73	+125.54	+0.9946	0.0500	+0.0400	not attributed; stop fired on literal-integer
+failure-list-property	cli	14440.72	14609.78	+169.06	+1.1707	0.0500	+0.0071	not attributed; stop fired on literal-integer
+failure-missing-property	cli	16170.33	16309.97	+139.64	+0.8636	0.1325	+0.1325	not attributed; stop fired on literal-integer
+success-raw-property	cli	9162.07	9301.66	+139.59	+1.5236	0.0553	-0.0553	not attributed; stop fired on literal-integer
+failure-message-property	cli	20923.30	21064.55	+141.25	+0.6751	0.1217	+0.1217	not attributed; stop fired on literal-integer
+failure-message-delayed	cli	33068.94	33320.44	+251.49	+0.7605	0.0582	+0.0582	not attributed; stop fired on literal-integer
+failure-styled-message	cli	24116.64	24254.74	+138.11	+0.5727	0.0960	+0.0960	not attributed; stop fired on literal-integer
+failure-tag-fallback	cli	9531.88	9671.24	+139.36	+1.4620	0.0500	-0.0008	not attributed; stop fired on literal-integer
+enclose-message-handler	cli	41531.91	41679.08	+147.18	+0.3544	0.0500	-0.0219	not attributed; stop fired on literal-integer
+confirm-failure-message	cli	51869.43	51962.61	+93.17	+0.1796	0.0500	-0.0327	not attributed; stop fired on literal-integer
+resume-g15-parameters	resume	72478.59	73682.85	+1204.26	+1.6615	0.2181	-0.2181	not attributed; stop fired on literal-integer
+resume-g15-template	resume	72146.54	73448.22	+1301.68	+1.8042	0.2776	+0.2776	not attributed; stop fired on literal-integer
+resume-g15-styled	resume	82875.49	84268.03	+1392.54	+1.6803	0.3101	-0.3101	not attributed; stop fired on literal-integer
+resume-g15-raw-failure	resume	61956.57	63232.07	+1275.50	+2.0587	0.0500	+0.0113	not attributed; stop fired on literal-integer
+resume-g15-raw-success	resume	58745.65	59894.81	+1149.16	+1.9562	0.0500	-0.0494	not attributed; stop fired on literal-integer
+resume-g15-projection-value	resume	96957.79	98862.79	+1905.00	+1.9648	0.0713	+0.0713	not attributed; stop fired on literal-integer
+resume-g15-enclose	resume	73239.04	74671.34	+1432.30	+1.9557	0.2119	+0.2119	not attributed; stop fired on literal-integer
+resume-g15-confirm	resume	119100.32	120971.89	+1871.57	+1.5714	0.0500	-0.0290	not attributed; stop fired on literal-integer
+lhs-set-literal	cli	10580.27	10615.20	+34.92	+0.3301	0.0500	-0.0036	not attributed; stop fired on literal-integer
+lhs-set-ownvalue-arg	cli	13057.02	13121.69	+64.67	+0.4953	0.0500	+0.0021	not attributed; stop fired on literal-integer
+lhs-set-head-eval	cli	13061.24	13151.53	+90.28	+0.6912	0.0500	+0.0047	not attributed; stop fired on literal-integer
+lhs-setdelayed-pattern	cli	21452.42	21650.50	+198.08	+0.9233	0.0500	+0.0016	not attributed; stop fired on literal-integer
+lhs-upset	cli	12823.42	12909.43	+86.00	+0.6707	0.0500	+0.0003	not attributed; stop fired on literal-integer
+lhs-tagset	cli	12589.64	12676.71	+87.08	+0.6916	0.0500	-0.0082	not attributed; stop fired on literal-integer
+lhs-set-unset	cli	24990.43	25094.13	+103.70	+0.4150	0.0500	-0.0013	not attributed; stop fired on literal-integer
+lhs-set-cycle-recovery	cli	12093.43	12154.28	+60.86	+0.5032	0.0500	-0.0051	not attributed; stop fired on literal-integer
+set-ownvalue	cli	3969.33	4001.51	+32.18	+0.8107	0.0500	+0.0313	not attributed; stop fired on literal-integer
+lhs-arg-cycle	resume	273705.52	274826.32	+1120.80	+0.4095	0.1425	+0.1425	not attributed; stop fired on literal-integer
+lhs-arg-value	resume	277847.33	279436.93	+1589.60	+0.5721	0.0500	-0.0085	not attributed; stop fired on literal-integer
+lhs-head-cycle	resume	301190.91	302534.63	+1343.72	+0.4461	0.1096	-0.1096	not attributed; stop fired on literal-integer
+lhs-head-value	resume	302781.49	304329.41	+1547.92	+0.5112	0.2016	+0.2016	not attributed; stop fired on literal-integer
+lhs-pattern-cycle	resume	284877.39	286468.18	+1590.79	+0.5584	0.0500	-0.0168	not attributed; stop fired on literal-integer
+lhs-pattern-value	resume	290218.02	292005.54	+1787.52	+0.6159	0.0500	+0.0486	not attributed; stop fired on literal-integer
+lhs-after-prior-cycle	resume	319404.02	321750.49	+2346.47	+0.7346	0.0500	-0.0483	not attributed; stop fired on literal-integer
+lhs-after-prior-value	resume	322764.62	325755.93	+2991.31	+0.9268	0.1127	+0.1127	not attributed; stop fired on literal-integer
+lhs-twice-cycle	resume	317769.29	320193.57	+2424.28	+0.7629	0.0500	-0.0384	not attributed; stop fired on literal-integer
+lhs-twice-value	resume	323797.82	325648.17	+1850.35	+0.5715	0.0500	+0.0469	not attributed; stop fired on literal-integer
+c1-all-guard	resume	96822.76	98499.00	+1676.24	+1.7312	0.1082	+0.1082	not attributed; stop fired on literal-integer
+c1-all-test	resume	107348.80	109343.45	+1994.65	+1.8581	0.0510	+0.0510	not attributed; stop fired on literal-integer
+c1-all-guard-value	resume	127253.95	129462.96	+2209.01	+1.7359	0.1765	+0.1765	not attributed; stop fired on literal-integer
+c1-all-two-guards	resume	165338.70	167790.67	+2451.97	+1.4830	0.0500	+0.0161	not attributed; stop fired on literal-integer
+c1-unheld-guard	resume	96789.46	98378.17	+1588.71	+1.6414	0.0500	-0.0001	not attributed; stop fired on literal-integer
+c1-unheld-test	resume	107382.64	109219.46	+1836.82	+1.7105	0.0702	-0.0702	not attributed; stop fired on literal-integer
+c1-unheld-guard-value	resume	127137.64	129478.03	+2340.39	+1.8408	0.0500	-0.0377	not attributed; stop fired on literal-integer
+c1-unheld-two-guards	resume	165271.04	167721.25	+2450.21	+1.4825	0.1147	+0.1147	not attributed; stop fired on literal-integer
+c1-replaceall-atom	cli	22629.00	22780.64	+151.64	+0.6701	0.0500	-0.0374	not attributed; stop fired on literal-integer
+c1-replaceall-unheld-atom	cli	22585.12	22738.74	+153.61	+0.6802	0.0500	-0.0039	not attributed; stop fired on literal-integer
+c1-replaceall-rule-rhs-deep-small	cli	73415.57	73799.64	+384.07	+0.5231	0.0500	-0.0022	not attributed; stop fired on literal-integer
+c1-replaceall-rewrite-guarded-hit	cli	43279.85	43518.99	+239.14	+0.5525	0.0500	-0.0234	not attributed; stop fired on literal-integer
+c1-replaceall-rewrite-guarded-decline-fallback	cli	66189.69	66591.34	+401.64	+0.6068	0.0500	+0.0031	not attributed; stop fired on literal-integer
+```
+
+### 6. Attempts
+
+| Attempt | Result | Evidence |
+|---|---|---|
+| Candidate `rum-cli` release build, one codegen unit | exit 0, `oom_kill 0` | `logs/build-cand-cli.log` |
+| Candidate harness release build, one codegen unit | exit 0, `oom_kill 0` | `logs/build-cand-harness.log` |
+| Copy to `arms/cand/{rum-cli,resume}` | both files present | `arms/cand/` |
+| Five-label base-vs-base sizing run | `EXIT:0` | `logs/size-sample.log` |
+| Floor, 313 labels, bound 7200s | `EXIT:0` | `logs/bb-run.log`, `logs/bb.tsv` |
+| Gate, 313 labels, bound 3600s | `EXIT:0` | `logs/bc-run.log`, `logs/bc.tsv` |
+| Callgrind calibration, empty `DEBUGINFOD_URLS` | `memcpy` named; `__memcpy_avx_unaligned_erms` absent | `callgrind/calib-base-literal.out` |
+| Callgrind calibration with the copied cache | `cfn=(4298) __memcpy_avx_unaligned_erms` | `callgrind/calib-debuginfod.out` |
+| `literal-integer` attribution, first parser | `exclusive sum mismatch ... 9438191 vs 9529449`, `EXIT:1` | `logs/attr-literal-integer.log` was overwritten by the rerun; the mismatch line was the first run's stdout |
+| Parser recounts `+`/`-` cost lines; rerun reuses profiles | `EXIT:0`, total slope `+25.98` | `logs/attr-literal-integer.log`, `logs/attr-literal-integer.tsv` |
+| `objdump` prologue scan | 39 functions, numeric-sub growth count 0, cold-frame and new-frame growth as in §4 | `logs/stack-reservations.tsv`, `logs/stack-prologues.txt` |
+
+The first attribution log was replaced by the successful rerun, so the mismatch sentence above is the text that run printed (`exclusive sum mismatch in .../base-20000-1.out: 9438191 vs 9529449`). I am not quoting it from a surviving file.
+
+`cargo test --workspace` was not run. The director's gate already did.
+
+### 7. Open
+
+Stopped. The outline of `evaluate_profiled_fixed_point` and the larger cold-frame reservations are for the director. No production edit was made.
+
+## Director ruling on Stage B, and continuation A3 (2026-10-28 02:40) — grk
+
+**Your STOP is right, and the cause is my shape, not your code.** I checked
+`bc.tsv`, `attr-literal-integer.tsv` and `stack-reservations.tsv` directly.
+
+- **The instructions.** My shape put the body in an `#[inline(always)]`
+  `evaluate_entered` that is called from both `evaluate` and
+  `evaluate_at_root`. `evaluate_profiled_fixed_point` then has two call
+  sites. LLVM stopped inlining it into `evaluate`, which costs +69 −43 =
+  +26 instructions on every evaluation.
+- **The stack.** Each level on the recursive cycle now holds `evaluate`
+  (360) + `evaluate_profiled_fixed_point` (792) + `evaluate_once_in_accounting_mode`
+  (520). The base held `evaluate` (840) + `evaluate_once_unstable_after_input_check_with_cycle_tracking`
+  (712).
+- **The evaluator.** The `EvaluationDepth` methods read and write the field
+  where the base used the level's local `evaluation_depth`. That changed the
+  evaluator's IR enough to flip its inlining.
+
+### The corrected shape
+
+You may edit only `resolution.rs`, `model/evaluation_depth.rs`,
+`eval_core/mod.rs`, the callers of the changed `EvaluationDepth` methods,
+and the standing inventories by replay.
+
+1. **One body, forced inline at both call sites.** Delete
+   `evaluate_entered`. `Session::evaluate` keeps the base body, written
+   exactly as at `678e6be7`, after the depth-0 branch.
+   `evaluate_at_root` holds the entry, calls `restore(0)`, and then
+   contains the same body. Put `#[inline(always)]` on
+   `evaluate_profiled_fixed_point`, which has no other caller, so it
+   inlines into both. The cold copy in `evaluate_at_root` is the price, and
+   it runs once per request.
+
+   ```rust
+   pub fn evaluate(&mut self, expr: Expr) -> Result<Expr, EvalError> {
+       if self.evaluation_depth.get() == 0 {
+           return self.evaluate_at_root(expr);
+       }
+       self.record_profile_evaluate_entry();
+       let runtime_profile = runtime_path_timing_start("evaluate.total");
+       let result = self.evaluate_profiled_fixed_point(expr);
+       record_profile_runtime_path_timing(runtime_profile, runtime_profile_outcome_for_expr_result(&result));
+       result
+   }
+
+   #[cold]
+   #[inline(never)]
+   fn evaluate_at_root(&mut self, expr: Expr) -> Result<Expr, EvalError> {
+       let _entry = NativeStackEntry::enter();
+       self.evaluation_depth.restore(0);
+       // the same four statements as above
+   }
+
+   #[inline(always)]
+   fn evaluate_profiled_fixed_point(&mut self, expr: Expr) -> Result<Expr, EvalError>;
+   ```
+
+2. **The evaluator keeps its local.** The level methods take the depth the
+   evaluator already holds, so the IR matches the base. Each one
+   debug-asserts its precondition.
+
+   ```rust
+   /// `depth` is this level's entry depth, read once by the evaluator.
+   #[inline(always)] pub(in crate::runtime) fn native_check_due(&mut self, depth: usize) -> bool;
+   //   debug_assert_eq!(depth, self.depth); then today's base rule on `depth`
+   #[inline(always)] pub(in crate::runtime) fn enter_level(&mut self, entered_at: usize);
+   //   debug_assert_eq!(self.depth, entered_at); self.depth = entered_at + 1
+   #[inline(always)] pub(in crate::runtime) fn leave_level(&mut self, entered_at: usize); // unchanged
+   ```
+
+   In `eval_core/mod.rs` the calls become `native_check_due(evaluation_depth)`
+   and `enter_level(evaluation_depth)`. Nothing else in that function
+   changes.
+
+### The bars, restated
+
+- **Instructions.** Same instrument and floor. `arms/base/` and
+  `logs/bb.tsv` stay as they are. Rebuild `arms/cand/` and rerun
+  `instr.py arms/base arms/cand logs/bc-a3.tsv`. Every label beyond its
+  floor needs a named mechanism.
+  - Expected mechanisms: the thread-record read in the two cold checks, the
+    entry per resume and per abandonment, and `restore`'s threshold store.
+  - Attribute `valueq-undefined-symbol-definitions-8000` and the 121
+    resume labels by name if they are still flagged.
+  - An unattributed positive residual is a STOP.
+- **Stack.**
+  - The recursive cycle's per-level total must not exceed the base's. Give
+    the cycle as a list of the functions each level holds, base and
+    candidate, with every `sub` and push count, and their sums.
+  - The two cold checks may each grow by at most 32 bytes. They are leaves
+    that exist only while a check runs. Report their prologues.
+  - Any other growth on the cycle is a STOP.
+- **Tests after the edit.**
+  - `cargo fmt --check`.
+  - `cargo test -p rum-runtime --lib`, `cargo test -p rum-host`, and
+    `cargo test -p rum-stdlib --test typed_slot_census`.
+  - The LP01 fixture (`suspension_oracle -- logical_counter_port`). Its
+    producer lines move again: replay as in A2.
+  - `production_rejection_census_is_complete`: if the frontier moves,
+    STOP and give the keyed diff.
+  - The Jupyter pair 20 times at `--test-threads=2`.
+  - The full workspace stays with my gate.
+
+Every quoted line must be copied from a file you name. Append
+"Executing-agent report — A3".
