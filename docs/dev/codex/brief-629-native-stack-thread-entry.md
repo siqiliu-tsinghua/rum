@@ -3246,3 +3246,265 @@ Scratch goes under `.temp/brief-629/`.
 
 Every quoted line must be copied from a file you name. Append
 "Executing-agent report — A5".
+
+## Executing-agent report — A5
+
+**STOP.** `production_rejection_census_is_complete` fails because the edit changes the rot-guard context. That context is a hash of every Rust, Python and TOML file under `crates/`. All 68 stored contract fingerprints match the source with the two previous attribute lines restored, and none match the edited source. The 972 frontier assertion did not fire. Inventories were not edited. LP01, both `local_production_acceptance` builds, the Jupyter pair, and the same-path instrument were not run.
+
+### 1. The edit
+
+`poll_resumed_native_stack` is `#[inline(always)]`. The body is unchanged. The leaf stays `#[cold] #[inline(never)]`.
+
+From `crates/rum-runtime/src/runtime/suspension/core/evaluation_context.rs`:
+
+```text
+    /// Physical safety for the current native segment, not replay of its address.
+    // Runs once per resumed frame; the leaf it calls is the cold part.
+    #[inline(always)]
+    pub(in crate::runtime) fn poll_resumed_native_stack(&mut self) -> Result<(), EvalError> {
+```
+
+From `crates/rum-runtime/src/runtime/eval_core/mod.rs`:
+
+```text
+    #[cold]
+    #[inline(never)]
+    pub(in crate::runtime) fn native_stack_budget_exhausted(&self) -> bool {
+        let stack_marker = 0_u8;
+        let current_addr = (&stack_marker as *const u8) as usize;
+        native_stack_exhausted(current_addr, self.resource_limits.native_stack_limit)
+    }
+```
+
+### 2. Census
+
+The panic is in `verify_promotions`, which the census test calls after the frontier assertions.
+
+From `crates/rum-stdlib/src/tests/retention_closure/census/tests.rs`:
+
+```text
+    assert_eq!(
+        options.rejected.len(),
+        972,
+        "STOP: brief-545 exact legacy frontier inventory moved"
+    );
+    assert_eq!(
+        kinds,
+        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 934), (Kind::RET003, 28)])
+    );
+    let wrapper = regions::frontier(
+        source,
+        &[format!(
+            "{}::merged_option_exprs_for_system_symbol",
+            regions::SESSION
+        )],
+    );
+    // The registration guard and mode selection add public wrapper boundaries.
+    // All 16 remain rejected here; this census does not grant local coverage.
+    assert_eq!(wrapper.rejected.len(), 16, "STOP: PUBLIC_WRAPPER moved");
+    assert!(
+        wrapper.rejected.iter().any(|row| row.target.as_deref()
+            == Some(&format!("{}::check_option_reentry", regions::SESSION)))
+    );
+    super::super::local::verify_promotions(source);
+```
+
+From `.temp/brief-629/logs/rejection-census-a5.log`:
+
+```text
+thread 'tests::retention_closure::census::tests::production_rejection_census_is_complete' panicked at crates/rum-stdlib/src/tests/retention_closure/local/promotion.rs:27:38:
+fresh certificate rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol: RET002	crates/rum-runtime/src/runtime/options/core.rs:118:13-118:92	rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol	stale contract fingerprint O011
+RET002	crates/rum-runtime/src/runtime/options/core.rs:118:13-118:92	rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol	stale contract fingerprint O010
+RET002	crates/rum-runtime/src/runtime/options/core.rs:119:9-121:10	rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol	stale contract fingerprint O0210
+RET002	crates/rum-runtime/src/runtime/options/core.rs:119:9-121:10	rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol	stale contract fingerprint O0200
+```
+
+From `.temp/brief-629/logs/rejection-census-a5.log`:
+
+```text
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 26.68s
+
+error: test failed, to rerun pass `-p rum-stdlib --lib`
+EXIT:101
+oom_kill_after=0
+oom_after=0
+```
+
+The log does not contain `left: 972` or `STOP: brief-545 exact legacy frontier inventory moved`. `oom_kill` stayed 0. There was no signal 9.
+
+### 3. Keyed diff
+
+The census report's four rows, keyed by kind, file, callee and reason, are the panic text above. Each reason is a stale contract fingerprint. The same four rows are the A3 obligations failure, which ran before the director's replay:
+
+From `.temp/brief-629/logs/rejection-census-a3.log`:
+
+```text
+thread 'tests::retention_closure::production_obligations_are_exact' panicked at crates/rum-stdlib/src/tests/retention_closure/local/promotion.rs:27:38:
+fresh certificate rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol: RET002	crates/rum-runtime/src/runtime/options/core.rs:118:13-118:92	rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow>	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol	stale contract fingerprint O011
+RET002	crates/rum-runtime/src/runtime/options/core.rs:118:13-118:92	rum_runtime::runtime::accounting_mode::options::snapshot::<rum_runtime::runtime::accounting_mode::counter::Unarmed>	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol	stale contract fingerprint O010
+RET002	crates/rum-runtime/src/runtime/options/core.rs:119:9-121:10	rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::AccountingShadow,rum_stdlib::option_consumers::OptionConsumer>	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol	stale contract fingerprint O0210
+RET002	crates/rum-runtime/src/runtime/options/core.rs:119:9-121:10	rum_runtime::runtime::accounting_mode::options::driver::drive::<rum_runtime::runtime::accounting_mode::counter::Unarmed,rum_stdlib::option_consumers::OptionConsumer>	rum_runtime::runtime::model::session::Session::merged_option_exprs_for_symbol	stale contract fingerprint O0200
+```
+
+After that replay the stored fingerprints match the pre-edit source. The edit makes them stale again.
+
+`.temp/brief-629/logs/fp-compare-a5.py` recomputes `contracts::fingerprint` for the live tree and for the same tree with `NEW` replaced by `OLD` in `evaluation_context.rs` only:
+
+From `.temp/brief-629/logs/fp-compare-a5.py`:
+
+```text
+OLD = (
+    b"    #[cold]\n"
+    b"    #[inline(never)]\n"
+)
+NEW = (
+    b"    // Runs once per resumed frame; the leaf it calls is the cold part.\n"
+    b"    #[inline(always)]\n"
+)
+```
+
+Columns are `id`, `stored`, `base_stored`, `match_now`, `match_pre`, `now`, `pre`.
+
+From `.temp/brief-629/logs/fp-compare-a5.txt`:
+
+```text
+context_now=fnv1a64:ca06fc9ecab6a52a
+context_pre_a5=fnv1a64:f91f4b13c32e916d
+context_changed_by_edit=True
+id	stored	base_stored	match_now	match_pre	now	pre
+```
+
+From `.temp/brief-629/logs/fp-compare-a5.txt`:
+
+```text
+O010	fnv1a64:3e160f4df3a03068	fnv1a64:4868b78e10cd866c	no	yes	fnv1a64:ef6eb32e028e7427	fnv1a64:3e160f4df3a03068
+O0200	fnv1a64:aee6ab6cc947b127	fnv1a64:49f09292ba8427f3	no	yes	fnv1a64:070b9bfd958bc71c	fnv1a64:aee6ab6cc947b127
+O011	fnv1a64:c0298ab848f35957	fnv1a64:52277e76bfda25e3	no	yes	fnv1a64:342868ebfaefbb4c	fnv1a64:c0298ab848f35957
+O0210	fnv1a64:c33035c33fa95410	fnv1a64:99c6f6ed73f53014	no	yes	fnv1a64:c080feddf148d0df	fnv1a64:c33035c33fa95410
+rows=68 stored_eq_base=0 stored_eq_now=0 stored_eq_pre_a5=68
+```
+
+`match_pre` is yes and `match_now` is no for every row, including these four. `stored_eq_pre_a5=68` and `stored_eq_now=0`. The context hash moves from `fnv1a64:f91f4b13c32e916d` to `fnv1a64:ca06fc9ecab6a52a`.
+
+The rot-guard that produces `current`:
+
+From `crates/rum-stdlib/src/tests/retention_closure/local/contracts.rs`:
+
+```text
+pub(super) fn fingerprint(fields: &[&str]) -> String {
+    // Flat rot guard, computed once at indexing. Include all source and oracle
+    // inputs so a new imported trait or impl in another file expires contracts.
+    // This hashes bytes, never analyzes or follows another body's calls.
+    static CONTEXT: std::sync::OnceLock<String> = std::sync::OnceLock::new();
+    let context = CONTEXT.get_or_init(|| {
+        let mut parts = Vec::<Vec<u8>>::new();
+        for file in DEPENDENCIES {
+            parts.push(file.as_bytes().to_vec());
+            parts.push(fs::read(source::workspace().join(file)).unwrap());
+        }
+        fn collect(root: &std::path::Path, paths: &mut Vec<std::path::PathBuf>) {
+            for entry in fs::read_dir(root).unwrap() {
+                let path = entry.unwrap().path();
+                if path.is_dir() {
+                    collect(&path, paths);
+                } else if path
+                    .extension()
+                    .is_some_and(|s| s == "rs" || s == "py" || s == "toml")
+                {
+                    paths.push(path);
+                }
+            }
+        }
+        let root = source::workspace();
+        let mut paths = vec![];
+        collect(&root.join("crates"), &mut paths);
+        paths.sort();
+```
+
+`local-contracts.tsv` and `promoted.tsv` were not edited. The A5 scope forbids that edit.
+
+### 4. Tests that passed
+
+From `.temp/brief-629/logs/fmt-a5.log`:
+
+```text
+oom_kill_before=0
+oom_before=0
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+From `.temp/brief-629/logs/rum-runtime-lib-a5.log`:
+
+```text
+test result: ok. 1216 passed; 0 failed; 5 ignored; 0 measured; 0 filtered out; finished in 35.62s
+
+EXIT:0
+oom_kill_after=0
+```
+
+From `.temp/brief-629/logs/rum-host-a5.log`:
+
+```text
+     Running tests/native_stack_thread_scope.rs (target/debug/deps/native_stack_thread_scope-ea359a5a7ace3af4)
+
+running 8 tests
+test cross_thread_cancelled_cleanup_after_origin_exits_control ... ok
+test cross_thread_cancelled_cleanup_with_higher_stack_enforces_native_stack_limit ... ok
+test cross_thread_cancelled_cleanup_with_lower_stack_runs_cleanup ... ok
+test cross_thread_cancelled_cleanup_with_origin_alive_observation ... ok
+test nested_session_in_host_callback_shares_outermost_thread_stack_base ... ok
+test same_thread_cancelled_cleanup_after_deep_suspension_resets_check_threshold ... ok
+test same_thread_cancelled_cleanup_control ... ok
+test same_thread_deep_cleanup_enforces_native_stack_limit_control ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+```
+
+From `.temp/brief-629/logs/rum-host-a5.log`:
+
+```text
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.07s
+
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+### 5. Not done
+
+Stopped at the census. Not run: the LP01 fixture, `local_production_acceptance` in either build, the Jupyter pair, the same-path rsync and builds, path calibration, `resume-shape.sh`, `logs/bb-same.tsv`, `logs/bc-a5.tsv`, callgrind, and the stack rescan. `cargo test --workspace` was not run. `arms/base/`, `arms/cand/`, `logs/bb.tsv`, and `logs/bc-a3.tsv` were not modified.
+
+## Director ruling on A5's STOP, and continuation A5b (2026-10-28 04:45) — grk
+
+**Your STOP is right, and the cause is my brief.** The contract rot guard
+hashes every `.rs`, `.py` and `.toml` under `crates/`, so any edit expires
+all 68 fingerprints, and the census test reaches them through
+`verify_promotions`. TEMPLATE puts that replay in every brief's scope. My
+A5 text then said both "do not edit" and "STOP if the census moves", and
+that could only fire. Your keyed comparison shows what it needed to: the
+frontier is still 972, `stored_eq_pre_a5=68`, and the context moves from
+`f91f4b13c32e916d` to `ca06fc9ecab6a52a`.
+
+I replayed by the standing procedure (`.temp/director/gate-629a5/`):
+
+- The fingerprints were recomputed. The context is `fnv1a64:ca06fc9ecab6a52a`,
+  the same value you computed, over 68 rows, and the other 18 columns are
+  unchanged.
+- The four C01/C02 certificate cells were regenerated in both builds and
+  installed. Their non-fingerprint text is identical.
+- `local_production_acceptance` passes in the default and
+  `--no-default-features` builds, and `production_rejection_census_is_complete`
+  passes.
+
+**A5b: the rest of A5, with no edit under `crates/`.** Run, in order:
+
+1. The LP01 fixture.
+2. The Jupyter pair, 20 times at `--test-threads=2`.
+3. The instrument at one path, steps 1–6.
+4. The instruction, stack and attribution bars as A5 states them.
+
+If a standing inventory fails again, report it and continue; it is mine to
+replay. Append "Executing-agent report — A5b". Every quoted line must be
+copied from a file you name.
