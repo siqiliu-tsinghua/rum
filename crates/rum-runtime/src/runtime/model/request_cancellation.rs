@@ -153,6 +153,12 @@ pub(in crate::runtime) struct RequestInterruptState {
 }
 
 impl RequestInterruptState {
+    /// Called only after the logical profiler's enabled gate. The retained Arc,
+    /// together with this generation, identifies the owner across Session moves.
+    pub(in crate::runtime) fn logical_generation(&self) -> u64 {
+        self.phase.load(Ordering::Relaxed) >> 1
+    }
+
     pub(in crate::runtime) fn new() -> Self {
         Self {
             phase: AtomicU64::new(IDLE),

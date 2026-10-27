@@ -1,5 +1,6 @@
 use super::super::*;
 use super::*;
+use crate::runtime::profiling::logical::source_stack::SourceStack;
 use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
 use std::time::Instant;
@@ -18,7 +19,7 @@ pub(super) struct CallStabilityTimingFrame {
 }
 
 thread_local! {
-    pub(super) static EVALUATION_PROFILE_SOURCE_STACK: RefCell<Vec<Symbol>> = const { RefCell::new(Vec::new()) };
+    pub(super) static EVALUATION_PROFILE_SOURCE_STACK: RefCell<SourceStack<Symbol>> = const { RefCell::new(SourceStack::new()) };
     pub(super) static EVALUATION_PROFILE_SOURCE_DEPTH: Cell<usize> = const { Cell::new(0) };
     pub(super) static EVALUATION_PROFILE_TIMING_STACK: RefCell<Vec<SymbolTimingFrame>> = const { RefCell::new(Vec::new()) };
     pub(super) static CALL_STABILITY_SOURCE_HEAD_STATS: RefCell<HashMap<CallStabilitySourceHeadKey, CallStabilitySourceHeadStats>> =
@@ -30,17 +31,44 @@ pub(in crate::runtime) struct EvaluationProfileSourceGuard {
     active: bool,
 }
 
-impl Drop for EvaluationProfileSourceGuard {
-    fn drop(&mut self) {
-        if !self.active {
-            return;
-        }
-
-        EVALUATION_PROFILE_SOURCE_STACK.with(|stack| {
-            stack.borrow_mut().pop();
-        });
-        EVALUATION_PROFILE_SOURCE_DEPTH.with(|depth| depth.set(depth.get().saturating_sub(1)));
+impl Session {
+    pub(in crate::runtime) fn logical_capture_sources() -> SourceStack<Symbol> {
+        EVALUATION_PROFILE_SOURCE_STACK.with_borrow(Clone::clone)
     }
+    pub(in crate::runtime) fn logical_swap_sources(
+        sources: SourceStack<Symbol>,
+    ) -> SourceStack<Symbol> {
+        EVALUATION_PROFILE_SOURCE_DEPTH.with(|d| d.set(sources.len()));
+        EVALUATION_PROFILE_SOURCE_STACK.with_borrow_mut(|s| std::mem::replace(s, sources))
+    }
+}
+
+#[cold]
+#[inline(never)]
+fn evaluation_profile_source_drop_enabled() {
+    EVALUATION_PROFILE_SOURCE_STACK.with(|stack| {
+        stack.borrow_mut().pop();
+    });
+    EVALUATION_PROFILE_SOURCE_DEPTH.with(|depth| depth.set(depth.get().saturating_sub(1)));
+}
+
+impl Drop for EvaluationProfileSourceGuard {
+    #[inline(always)]
+    fn drop(&mut self) {
+        if self.active {
+            evaluation_profile_source_drop_enabled();
+        }
+    }
+}
+
+#[cold]
+#[inline(never)]
+fn evaluation_profile_definition_source_enabled(symbol: Symbol) -> EvaluationProfileSourceGuard {
+    EVALUATION_PROFILE_SOURCE_STACK.with(|stack| {
+        stack.borrow_mut().push(symbol);
+    });
+    EVALUATION_PROFILE_SOURCE_DEPTH.with(|depth| depth.set(depth.get().saturating_add(1)));
+    EvaluationProfileSourceGuard { active: true }
 }
 
 #[inline]
@@ -48,14 +76,10 @@ pub(in crate::runtime) fn evaluation_profile_definition_source(
     symbol: Symbol,
 ) -> EvaluationProfileSourceGuard {
     if !evaluation_cache_profile_enabled() {
-        return EvaluationProfileSourceGuard { active: false };
+        EvaluationProfileSourceGuard { active: false }
+    } else {
+        evaluation_profile_definition_source_enabled(symbol)
     }
-
-    EVALUATION_PROFILE_SOURCE_STACK.with(|stack| {
-        stack.borrow_mut().push(symbol);
-    });
-    EVALUATION_PROFILE_SOURCE_DEPTH.with(|depth| depth.set(depth.get().saturating_add(1)));
-    EvaluationProfileSourceGuard { active: true }
 }
 
 #[inline]

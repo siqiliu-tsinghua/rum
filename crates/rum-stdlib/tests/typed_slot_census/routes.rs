@@ -39,8 +39,8 @@ pub(super) fn compatible_driver(facts: &Facts) -> Result<(), String> {
         ),
         (
             "I0009",
-            "core.rs",
-            "drive_resuming_frames",
+            "core/driver.rs",
+            "drive_frames",
             "completion_exact_decode_and_probe_survive_rollback_and_replacement",
         ),
     ] {

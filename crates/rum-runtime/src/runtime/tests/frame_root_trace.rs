@@ -137,6 +137,7 @@ fn suspension_protocol_repository_invariants_hold() {
     );
 
     let core_path = workspace.join("crates/rum-runtime/src/runtime/suspension/core.rs");
+    let driver_path = workspace.join("crates/rum-runtime/src/runtime/suspension/core/driver.rs");
     let abandon_path = workspace.join("crates/rum-runtime/src/runtime/suspension/core/abandon.rs");
     let cleanup_path =
         workspace.join("crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs");
@@ -184,7 +185,7 @@ fn suspension_protocol_repository_invariants_hold() {
         let compact = remove_ascii_whitespace(&source);
 
         raw_live_owner_clear_hits += source.matches(raw_clear_name.as_str()).count();
-        if path != &core_path {
+        if path != &core_path && path != &driver_path {
             raw_live_owner_replacement_hits += compact.matches(raw_owner_option.as_str()).count();
             for replacement in &raw_owner_replacements {
                 raw_live_owner_replacement_hits += compact.matches(replacement.as_str()).count();
@@ -384,9 +385,14 @@ fn suspension_protocol_repository_invariants_hold() {
     }
 
     let core = fs::read_to_string(&core_path).expect("source gate should read suspension core");
+    let driver =
+        fs::read_to_string(&driver_path).expect("source gate should read suspension driver");
     let compact_core = remove_ascii_whitespace(&core);
+    let compact_driver = remove_ascii_whitespace(&driver);
     assert!(
-        !compact_core.contains("Box<dynFn") && !compact_core.contains("Arc<dynFn"),
+        [&compact_core, &compact_driver]
+            .iter()
+            .all(|source| !source.contains("Box<dynFn") && !source.contains("Arc<dynFn")),
         "the suspension protocol must not contain a runtime closure factory"
     );
     assert!(compact_core.contains(
@@ -436,30 +442,30 @@ fn suspension_protocol_repository_invariants_hold() {
             "Action::Finalize(finalizer)=>outcome=finalizer.finish()",
         ),
     ] {
-        let resume_index = compact_core
+        let resume_index = compact_driver
             .find(resume)
             .expect("driver should invoke the still-rooted front frame directly");
-        let pop_index = compact_core[resume_index..]
+        let pop_index = compact_driver[resume_index..]
             .find(pop)
             .map(|offset| offset + resume_index)
             .expect("driver should pop the consumer only after successful exact decoding");
-        let drop_index = compact_core[resume_index..]
+        let drop_index = compact_driver[resume_index..]
             .find("drop(completed_frame);")
             .map(|offset| offset + resume_index)
             .expect("driver should explicitly drop the rooted completed frame");
         assert!(resume_index < pop_index && pop_index < drop_index);
-        let finalize_index = compact_core[resume_index..]
+        let finalize_index = compact_driver[resume_index..]
             .find(finalizer)
             .map(|offset| offset + resume_index)
             .expect("driver should invoke each pure finalizer after releasing the frame");
         assert!(drop_index < finalize_index);
     }
-    let legacy_decode = compact_core
+    let legacy_decode = compact_driver
         .find("Ok(Slot::Value(value))=>Ok(value)")
         .expect("legacy frames accept only a Value slot");
     assert!(
         legacy_decode
-            < compact_core
+            < compact_driver
                 .find("letaction=frame.resume(self,input);")
                 .unwrap()
     );
@@ -484,9 +490,31 @@ fn suspension_protocol_repository_invariants_hold() {
     let drain_open = drain + compact_abandon[drain..].find('{').unwrap();
     let drain_close = matching_brace(&compact_abandon, drain_open).unwrap();
     let drain_body = &compact_abandon[drain_open + 1..drain_close];
-    assert!(drain_body.contains("frame.abandon("));
     assert!(
-        !abandon_driver_body.contains(".resume(") && !drain_body.contains(".resume("),
+        drain_body.contains("self.abandon_frames::<profile_mode::Ordinary>(suspension,reason);")
+    );
+    assert!(drain_body.contains("self.abandon_frames_profiled(suspension,reason);"));
+    let trampoline = compact_abandon
+        .find("fnabandon_frames_profiled(")
+        .expect("the profiled mode should enter the shared body through one cold call");
+    let trampoline_open = trampoline + compact_abandon[trampoline..].find('{').unwrap();
+    let trampoline_close = matching_brace(&compact_abandon, trampoline_open).unwrap();
+    assert_eq!(
+        &compact_abandon[trampoline_open + 1..trampoline_close],
+        "self.abandon_frames::<profile_mode::Profiled>(suspension,reason);"
+    );
+    assert_eq!(compact_abandon.matches("fnabandon_frames<").count(), 1);
+    let shared_abandon = compact_abandon
+        .find("fnabandon_frames<M:profile_mode::Mode>(")
+        .expect("both modes should use the single abandonment body");
+    let shared_open = shared_abandon + compact_abandon[shared_abandon..].find('{').unwrap();
+    let shared_close = matching_brace(&compact_abandon, shared_open).unwrap();
+    let shared_body = &compact_abandon[shared_open + 1..shared_close];
+    assert!(shared_body.contains("frame.abandon("));
+    assert!(
+        !abandon_driver_body.contains(".resume(")
+            && !drain_body.contains(".resume(")
+            && !shared_body.contains(".resume("),
         "abandonment must never invoke ordinary frame resumption"
     );
 
@@ -539,7 +567,7 @@ fn suspension_protocol_repository_invariants_hold() {
     );
     assert_eq!(
         raw_live_owner_replacement_hits, 0,
-        "raw live-owner replacement escaped suspension/core.rs"
+        "raw live-owner replacement escaped suspension/core.rs or core/driver.rs"
     );
     println!("raw_live_owner_clears={raw_live_owner_clear_hits}");
     println!("raw_live_owner_replacements={raw_live_owner_replacement_hits}");

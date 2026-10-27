@@ -28,7 +28,8 @@ pub(super) use action::Action;
 pub(super) use adapter::{
     DecodeFailure, ErasedFrame, allocation_bytes as typed_allocation_bytes, erase,
 };
-pub(super) use channel::{Slot, decode_completion};
+pub(super) use channel::decode_completion;
+pub(in crate::runtime) use channel::{ContinuationState, Slot};
 pub(super) use entry::{Entry, EntryRef};
 
 /// A runtime-registered continuation payload. External implementations are sealed.

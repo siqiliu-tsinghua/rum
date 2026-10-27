@@ -1,3 +1,4 @@
+use super::logical::source_stack::SourceStack;
 use super::*;
 
 pub(super) const LEXICAL_PROFILE_ENV: &str = "RUM_PROFILE_LEXICAL_SUBSTITUTION";
@@ -129,10 +130,10 @@ thread_local! {
         RefCell::new(HashMap::new());
     pub(super) static PRESENCE_PROVENANCE_STATS: RefCell<HashMap<PresenceProvenanceKey, PresenceShapeStats>> =
         RefCell::new(HashMap::new());
-    pub(super) static LEXICAL_CONTEXT_STACK: RefCell<Vec<&'static str>> = const { RefCell::new(Vec::new()) };
+    pub(super) static LEXICAL_CONTEXT_STACK: RefCell<SourceStack<&'static str>> = const { RefCell::new(SourceStack::new()) };
     pub(super) static LEXICAL_CONTEXT_DEPTH: Cell<usize> = const { Cell::new(0) };
-    pub(super) static ARG_PREFILTER_SITE_STACK: RefCell<Vec<PresenceArgSite>> = const { RefCell::new(Vec::new()) };
+    pub(super) static ARG_PREFILTER_SITE_STACK: RefCell<SourceStack<PresenceArgSite>> = const { RefCell::new(SourceStack::new()) };
     pub(super) static ARG_PREFILTER_SITE_DEPTH: Cell<usize> = const { Cell::new(0) };
-    pub(super) static EXPRESSION_REBUILD_SOURCE_STACK: RefCell<Vec<Symbol>> = const { RefCell::new(Vec::new()) };
+    pub(super) static EXPRESSION_REBUILD_SOURCE_STACK: RefCell<SourceStack<Symbol>> = const { RefCell::new(SourceStack::new()) };
     pub(super) static EXPRESSION_REBUILD_SOURCE_DEPTH: Cell<usize> = const { Cell::new(0) };
 }

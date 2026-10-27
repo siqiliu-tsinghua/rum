@@ -185,9 +185,10 @@ fn baseline(source: &Source) {
     // The direct unarmed guest entry reaches the evaluator in this historical
     // frontier. Guest-form abandonment adds exactly three rejected method sites:
     // taking/installing the paused environment and capturing it for cleanup
-    // in suspension/core/abandon.rs.
+    // in suspension/core/abandon.rs. The cold profiled trampoline moves the
+    // capture from line 85 to line 92 without changing the operation or kind.
     // These remain unresolved boundaries; the loader earns no retention mark.
-    for line in [41, 42, 60] {
+    for line in [41, 42, 92] {
         assert!(options.rejected.iter().any(|row| row.kind == Kind::RET002
             && row.site.file.ends_with("suspension/core/abandon.rs")
             && row.site.start.0 == line));
@@ -220,18 +221,24 @@ fn baseline(source: &Source) {
     // Fourteen new cold rejections cover twelve maintained-stack operations,
     // the return event and the context assertion. All remain rejected; the
     // frontier is 950 (10/913/27), with no new retention mark or coverage.
+    // LP02 (brief-626): finite modes traverse one abandonment body; 950 accepted
+    // rows pair, ten duplicate-loop rows merge, and two mode-dispatch sites
+    // remain rejected: 952 (10/915/27), no mark or coverage. The C13 cold
+    // profiled trampoline adds eleven witnessed occurrences (ten RET002 and one
+    // RET003) through the same shared body, with no removed operation: 963
+    // (10/925/28), still no mark or coverage.
     assert!(options.rejected.iter().any(|row| row.kind == Kind::RET002
         && row.site.file.ends_with("resolution.rs")
         && row.site.start == (35, 19)
         && row.reason == "path AccumulatorChain::default has 0 exact bindings"));
     assert_eq!(
         options.rejected.len(),
-        950,
+        963,
         "STOP: brief-545 exact legacy frontier inventory moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 913), (Kind::RET003, 27)])
+        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 925), (Kind::RET003, 28)])
     );
     let wrapper = regions::frontier(
         source,

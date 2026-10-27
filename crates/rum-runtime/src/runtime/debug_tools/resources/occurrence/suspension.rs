@@ -9,10 +9,14 @@ macro_rules! define_oracle {
 
         impl SuspendedEvaluation {
             pub(in crate::runtime) fn occurrence_bytes(&self) -> Bytes {
-                let queue = match &self.frames {
-                    FrameQueue::Legacy(frames) => Bytes::Exact(frames.capacity())
+                let guest = match &self.frames {
+                    FrameStorage::Guest(guest) => guest,
+                    FrameStorage::Profiled(profile) => profile.guest(),
+                };
+                let queue = match &guest.entries {
+                    queue::FrameQueue::Legacy(frames) => Bytes::Exact(frames.capacity())
                         .multiply(size_of::<Queued<Arc<DynSuspensionFrame>>>()),
-                    FrameQueue::Mixed(frames) => {
+                    queue::FrameQueue::Mixed(frames) => {
                         Bytes::Exact(frames.capacity()).multiply(size_of::<Queued<Entry>>())
                     }
                 };

@@ -1,10 +1,13 @@
 use super::*;
 
-pub(in crate::runtime) fn print_lexical_profile_summary_once() {
+pub(in crate::runtime) fn print_lexical_profile_summary_once(session: &crate::runtime::Session) {
     let lexical_enabled = lexical_profile_enabled();
     let repr_enabled = rum_core::repr_profile_enabled();
     if !lexical_enabled && !repr_enabled {
         return;
+    }
+    if lexical_enabled {
+        logical::drop_session(session);
     }
     if LEXICAL_PROFILE_SUMMARY_PRINTED.swap(1, Ordering::Relaxed) == 1 {
         return;
@@ -49,6 +52,7 @@ fn print_repr_profile_summary() {
 }
 
 fn print_lexical_profile_summary_body() {
+    logical::summary();
     eprintln!(
         "rum-profile lexical summary definition_rhs_eval_count={} definition_rhs_eval_total_ns={} definition_rhs_eval_avg_ns={}",
         load(&DEFINITION_RHS_EVAL_COUNT),

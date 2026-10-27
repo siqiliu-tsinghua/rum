@@ -9,6 +9,8 @@ mod config;
 mod counters;
 mod fingerprints;
 mod formatting;
+#[allow(dead_code)] // LP02 supplies infrastructure; later briefs adopt phases.
+pub(in crate::runtime) mod logical;
 mod presence;
 mod records;
 mod report_bindings;
@@ -22,6 +24,9 @@ mod scopes;
 mod state;
 mod summary;
 mod timing;
+
+#[cfg(test)]
+pub(in crate::runtime) mod tests;
 
 use config::{
     builtin_timing_enabled, definition_rule_timing_enabled, lexical_profile_bindings_enabled,

@@ -13,15 +13,19 @@ use super::typed::{
 use super::*;
 
 mod abandon;
-mod evaluation_context;
+mod driver;
+pub(in crate::runtime) mod evaluation_context;
 pub(super) mod fault;
-mod queue;
+mod profile_mode;
+pub(super) mod profile_queue;
+pub(in crate::runtime) mod queue;
+pub(super) mod storage;
 use crate::runtime::session::guest_loading::{
     GuestFileTransaction, GuestFormEnvironment, GuestFormScope,
 };
 use evaluation_context::{Queued, ResumeContext};
 use fault::DriverFault;
-use queue::FrameQueue;
+use storage::FrameStorage;
 
 type DynSuspensionFrame = dyn SuspensionFrame;
 
@@ -30,9 +34,9 @@ pub(in crate::runtime) struct SuspensionGeneration(u64);
 
 pub(in crate::runtime) struct SuspendedEvaluation {
     pub(in crate::runtime) active_stack: Vec<EvaluationStackEntry>,
-    generation: SuspensionGeneration,
+    pub(in crate::runtime) generation: SuspensionGeneration,
     guest_form_environment: Option<Box<GuestFormEnvironment>>,
-    pub(super) frames: FrameQueue,
+    pub(in crate::runtime) frames: FrameStorage,
 }
 
 /// Opaque owner slot for the one pending continuation.
@@ -164,7 +168,7 @@ impl SuspendedEvaluation {
             active_stack,
             generation,
             guest_form_environment: None,
-            frames: FrameQueue::new(),
+            frames: FrameStorage::new(),
         }
     }
 
@@ -183,7 +187,7 @@ impl SuspendedEvaluation {
         self.frames.front()
     }
 
-    #[inline]
+    #[inline(always)]
     fn pop_front(&mut self) -> Queued<Entry> {
         self.frames
             .pop_front()
@@ -244,7 +248,7 @@ impl SuspensionSlot {
         self.owner.as_ref()
     }
 
-    fn as_mut(&mut self) -> Option<&mut SuspendedEvaluation> {
+    pub(in crate::runtime) fn as_mut(&mut self) -> Option<&mut SuspendedEvaluation> {
         self.owner.as_mut()
     }
 
@@ -502,12 +506,27 @@ impl Session {
             .as_mut()
             .expect("just installed input owner")
             .guest_form_environment = guest_form_environment;
+        if crate::runtime::profiling::lexical_profile_enabled() {
+            self.enable_pending_profile();
+        }
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
         );
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::PendingSuspension,
         );
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn enable_pending_profile(&mut self) {
+        if let Some(epoch) = crate::runtime::profiling::logical::executing_epoch() {
+            self.pending_suspension
+                .as_mut()
+                .unwrap()
+                .frames
+                .enable_profile(epoch);
+        }
     }
 
     /// Inserts a named, traceable frame into the fresh pending suspension.
@@ -599,6 +618,7 @@ impl Session {
         );
     }
 
+    #[inline(always)]
     pub(in crate::runtime) fn resume_suspended_evaluation(
         &mut self,
         input: impl Into<String>,
@@ -606,6 +626,7 @@ impl Session {
         self.resume_suspended_slot::<Expr>(input)
     }
 
+    #[inline(always)]
     pub(in crate::runtime::suspension) fn resume_suspended_slot<O: SlotValue>(
         &mut self,
         input: impl Into<String>,
@@ -696,169 +717,14 @@ impl Session {
         self.pending_suspension.generation()
     }
 
-    fn drive_resuming_frames<O: SlotValue>(
-        &mut self,
-        mut outcome: Result<Slot, EvalError>,
-    ) -> Result<Result<O, EvalError>, DriverFault> {
-        loop {
-            let Some(context) = self
-                .resuming_suspension
-                .as_ref()
-                .and_then(SuspendedEvaluation::front)
-                .map(|cell| cell.context)
-            else {
-                return decode_completion::<O>(outcome)
-                    .map_err(|failure| self.record_slot_fault(failure));
-            };
-
-            self.restore_resume_context(context);
-            let dispatch_frame = self
-                .resuming_suspension
-                .as_ref()
-                .and_then(SuspendedEvaluation::front)
-                .expect("restoring context preserves the queue front")
-                .payload;
-
-            // Borrow the entry, then clone only its Arc. Exact decoding happens
-            // while the consumer remains rooted at the front of the queue.
-            match dispatch_frame {
-                EntryRef::EvaluationReturn => {
-                    #[cfg(test)]
-                    self.record_context_for_test("return");
-                    outcome = self.complete_evaluation_return(outcome)?;
-                    self.resuming_suspension
-                        .as_mut()
-                        .expect("the return event remains Session-rooted")
-                        .pop_front();
-                    self.refresh_memory_owner(
-                        crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
-                    );
-                }
-                EntryRef::Legacy(frame) => {
-                    let frame = Arc::clone(frame);
-                    #[cfg(test)]
-                    self.record_context_for_test("frame");
-                    let native_check = self.poll_resumed_native_stack();
-                    outcome = outcome.and_then(|value| native_check.map(|()| value));
-                    let input = match outcome {
-                        Ok(Slot::Value(value)) => Ok(value),
-                        Ok(actual) => {
-                            return Err(self.record_slot_fault(DecodeFailure {
-                                expected: std::any::type_name::<Expr>(),
-                                actual,
-                            }));
-                        }
-                        Err(error) => Err(error),
-                    };
-                    let action = frame.resume(self, input);
-                    let completed_frame = self
-                        .resuming_suspension
-                        .as_mut()
-                        .expect("the active resumption remains Session-rooted")
-                        .pop_front_legacy();
-                    self.refresh_memory_owner(
-                        crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
-                    );
-                    drop(completed_frame);
-
-                    outcome = match action {
-                        FrameAction::Complete(outcome) => outcome.map(Slot::Value),
-                        FrameAction::Evaluate { expr, next_frame } => {
-                            let context = self.resume_context();
-                            self.resuming_suspension
-                                .as_mut()
-                                .expect("the active resumption remains Session-rooted")
-                                .push_front(context, next_frame);
-                            self.refresh_memory_owner(
-                                crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
-                            );
-                            self.poll_resumed_native_stack()
-                                .and_then(|()| self.evaluate(expr))
-                                .map(Slot::Value)
-                        }
-                        FrameAction::Finalize(finalizer) => finalizer.finish().map(Slot::Value),
-                    };
-                }
-                EntryRef::Typed(frame) => {
-                    let frame = Arc::clone(frame);
-                    #[cfg(test)]
-                    self.record_context_for_test("frame");
-                    let native_check = self.poll_resumed_native_stack();
-                    outcome = outcome.and_then(|value| native_check.map(|()| value));
-                    let action = frame.resume(self, &mut outcome);
-                    drop(frame);
-                    if let Action::DecodeFailure(failure) = action {
-                        return Err(self.record_slot_fault(failure));
-                    }
-                    let completed_frame = self
-                        .resuming_suspension
-                        .as_mut()
-                        .expect("the active resumption remains Session-rooted")
-                        .pop_front();
-                    self.refresh_memory_owner(
-                        crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
-                    );
-                    drop(completed_frame);
-
-                    // The sole erased adapter takes the input and leaves Abort,
-                    // which owns no data. End that empty placeholder's lifetime
-                    // before extracting the next outcome from the action.
-                    debug_assert!(matches!(outcome, Err(EvalError::Abort)));
-                    std::mem::forget(outcome);
-                    match action {
-                        Action::DecodeFailure(_) => {
-                            unreachable!("decode failure returned before pop")
-                        }
-                        Action::Complete(next_outcome) => outcome = next_outcome,
-                        Action::Evaluate { expr, next } => {
-                            let context = self.resume_context();
-                            self.resuming_suspension
-                                .as_mut()
-                                .expect("the active resumption remains Session-rooted")
-                                .frames
-                                .push_front_typed(context, next);
-                            self.refresh_memory_owner(
-                                crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
-                            );
-                            outcome = self
-                                .poll_resumed_native_stack()
-                                .and_then(|()| self.evaluate(expr))
-                                .map(Slot::Value);
-                        }
-                        Action::Finalize(finalizer) => outcome = finalizer.finish(),
-                    }
-                }
-            };
-
-            if let Err(EvalError::InputRequired { request }) = &outcome {
-                let mut nested = self
-                    .pending_suspension
-                    .take()
-                    .expect("nested input request should establish a fresh suspension");
-                self.refresh_memory_owner(
-                    crate::runtime::debug_tools::resources::MemoryOwner::PendingSuspension,
-                );
-                let mut suffix = self
-                    .resuming_suspension
-                    .take()
-                    .expect("the still-rooted suffix should remain in Session");
-                self.refresh_memory_owner(
-                    crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
-                );
-                nested.append(&mut suffix);
-                self.pending_input_request = Some(request.clone());
-                self.refresh_memory_owner(
-                    crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
-                );
-                self.pending_suspension.restore_nested(nested);
-                self.refresh_memory_owner(
-                    crate::runtime::debug_tools::resources::MemoryOwner::PendingSuspension,
-                );
-                return Ok(Err(EvalError::InputRequired {
-                    request: request.clone(),
-                }));
-            }
-        }
+    #[cfg(test)]
+    pub(in crate::runtime) fn logical_slot_fault_for_test(&mut self) {
+        self.resuming_suspension = self.take_accounted_pending_suspension_for_resume();
+        self.record_slot_fault(DecodeFailure {
+            expected: "LP02 deliberately invalid carrier",
+            actual: Slot::Value(Expr::integer(1.into())),
+        });
+        self.unwind_continuation_fault();
     }
 }
 

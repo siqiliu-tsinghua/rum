@@ -42,43 +42,10 @@ impl Session {
                 environment.install(self);
             }
 
-            while let Some(cell) = suspension.take_front() {
-                self.restore_resume_context(cell.context);
-                let frame = cell.payload;
-                self.rollback_capture_output(frame.output_boundary());
-                let action = frame.abandon(&mut AbandonmentContext {
-                    session: self,
-                    reason,
-                });
-
-                match action {
-                    FrameAbandonAction::Discard => {}
-                    FrameAbandonAction::EvaluateCleanup(cleanup) => {
-                        if !suspension.is_empty() {
-                            suspension.active_stack = self.evaluation_stack.clone();
-                            suspension.guest_form_environment =
-                                self.capture_guest_form_environment();
-                            self.abandonment_worklist.push(suspension);
-                            self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::AbandonmentWorklist);
-                        }
-
-                        let cleanup_outcome = self.evaluate(cleanup.expr);
-                        if matches!(cleanup_outcome, Err(EvalError::InputRequired { .. })) {
-                            if let Some(nested) =
-                                self.take_accounted_pending_suspension_for_abandon()
-                            {
-                                self.abandonment_worklist.push(nested);
-                                self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::AbandonmentWorklist);
-                            }
-                            self.pending_eval_request = None;
-                            self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest);
-                        }
-
-                        self.clear_accounted_evaluation_stack();
-                        self.evaluation_depth = 0;
-                        break;
-                    }
-                }
+            if suspension.frames.is_profiled() {
+                self.abandon_frames_profiled(suspension, reason);
+            } else {
+                self.abandon_frames::<profile_mode::Ordinary>(suspension, reason);
             }
 
             self.clear_accounted_evaluation_stack();
@@ -90,5 +57,60 @@ impl Session {
         self.abandonment_active = false;
         self.guest_form = previous_guest_form;
         reason
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn abandon_frames_profiled(&mut self, suspension: SuspendedEvaluation, reason: AbandonReason) {
+        self.abandon_frames::<profile_mode::Profiled>(suspension, reason);
+    }
+
+    #[inline(always)]
+    fn abandon_frames<M: profile_mode::Mode>(
+        &mut self,
+        mut suspension: SuspendedEvaluation,
+        reason: AbandonReason,
+    ) {
+        loop {
+            let _profile_context = M::abandon(&mut suspension, reason);
+            let Some(cell) = suspension.take_front() else {
+                break;
+            };
+            self.restore_resume_context(cell.context);
+            let frame = cell.payload;
+            self.rollback_capture_output(frame.output_boundary());
+            let action = frame.abandon(&mut AbandonmentContext {
+                session: self,
+                reason,
+            });
+
+            match action {
+                FrameAbandonAction::Discard => {}
+                FrameAbandonAction::EvaluateCleanup(cleanup) => {
+                    if !suspension.is_empty() {
+                        suspension.active_stack = self.evaluation_stack.clone();
+                        suspension.guest_form_environment = self.capture_guest_form_environment();
+                        self.abandonment_worklist.push(suspension);
+                        self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::AbandonmentWorklist);
+                    }
+
+                    let cleanup_outcome = self.evaluate(cleanup.expr);
+                    if matches!(cleanup_outcome, Err(EvalError::InputRequired { .. })) {
+                        if let Some(nested) = self.take_accounted_pending_suspension_for_abandon() {
+                            self.abandonment_worklist.push(nested);
+                            self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::AbandonmentWorklist);
+                        }
+                        self.pending_eval_request = None;
+                        self.refresh_memory_owner(
+                            crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
+                        );
+                    }
+
+                    self.clear_accounted_evaluation_stack();
+                    self.evaluation_depth = 0;
+                    break;
+                }
+            }
+        }
     }
 }

@@ -2,18 +2,18 @@
 use super::*;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub(in crate::runtime::suspension) struct ResumeContext {
-    pub(in crate::runtime::suspension) stack_len: usize,
-    pub(in crate::runtime::suspension) depth: usize,
+pub(in crate::runtime) struct ResumeContext {
+    pub(in crate::runtime) stack_len: usize,
+    pub(in crate::runtime) depth: usize,
 }
 
-pub(in crate::runtime::suspension) struct Queued<P> {
-    pub(in crate::runtime::suspension) context: ResumeContext,
-    pub(in crate::runtime::suspension) payload: P,
+pub(in crate::runtime) struct Queued<P> {
+    pub(in crate::runtime) context: ResumeContext,
+    pub(in crate::runtime) payload: P,
 }
 
 impl<P> Queued<P> {
-    pub(super) fn map<Q>(self, map: impl FnOnce(P) -> Q) -> Queued<Q> {
+    pub(in crate::runtime) fn map<Q>(self, map: impl FnOnce(P) -> Q) -> Queued<Q> {
         Queued {
             context: self.context,
             payload: map(self.payload),
@@ -22,14 +22,14 @@ impl<P> Queued<P> {
 }
 
 impl Session {
-    pub(super) fn resume_context(&self) -> ResumeContext {
+    pub(in crate::runtime) fn resume_context(&self) -> ResumeContext {
         ResumeContext {
             stack_len: self.evaluation_stack.len(),
             depth: self.evaluation_depth,
         }
     }
 
-    pub(super) fn restore_resume_context(&mut self, context: ResumeContext) {
+    pub(in crate::runtime) fn restore_resume_context(&mut self, context: ResumeContext) {
         debug_assert!(
             context.stack_len <= self.evaluation_stack.len(),
             "continuation contexts unwind a saved prefix"
@@ -43,7 +43,7 @@ impl Session {
     /// Physical safety for the current native segment, not replay of its address.
     #[cold]
     #[inline(never)]
-    pub(super) fn poll_resumed_native_stack(&mut self) -> Result<(), EvalError> {
+    pub(in crate::runtime) fn poll_resumed_native_stack(&mut self) -> Result<(), EvalError> {
         self.native_stack_next_check_depth = self
             .evaluation_depth
             .saturating_add(NATIVE_STACK_DEPTH_POLL_STRIDE);
@@ -57,7 +57,7 @@ impl Session {
     }
 
     /// Called after a suspended native level has unwound, before its consumer.
-    pub(in crate::runtime::suspension) fn insert_evaluation_return(&mut self) {
+    pub(in crate::runtime) fn insert_evaluation_return(&mut self) {
         let context = self.resume_context();
         self.pending_suspension
             .as_mut()

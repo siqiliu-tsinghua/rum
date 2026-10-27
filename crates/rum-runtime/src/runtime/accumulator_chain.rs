@@ -84,10 +84,15 @@ impl<N: AccumulatorChainNode> Drop for AccumulatorChain<N> {
 
 /// Acquires and releases one detached node at a time, with O(1) auxiliary space.
 ///
-/// Immediate release is sound because no production payload in this accumulator
-/// family has an observable destructor: payload destruction is pure memory
-/// reclamation. Adding a payload with an observable destructor requires revisiting
-/// this policy; recursive payload release order is deliberately not preserved.
+/// Immediate release does not preserve recursive payload release order. Ordinary
+/// accumulator payloads only reclaim memory. The logical profiler's payloads also
+/// have order-independent release: Storage subtracts each claim from its budget
+/// and process counters (commutative arithmetic; no promised concurrent capacity
+/// schedule), Owner releases an Arc of an atomic request-control word without
+/// cancelling it, and Mutex<State> has no live borrower at final ownership and
+/// drops only scalar state. Production source-scope values are Copy. None invokes
+/// a guest callback or performs a record transition. A new payload with an
+/// order-observable destructor requires revisiting this policy.
 /// A shared node ends this drain, leaving its surviving strong holder responsible
 /// for the tail. Weak handles do not prevent acquisition.
 #[cold]

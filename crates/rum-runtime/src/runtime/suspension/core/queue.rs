@@ -1,6 +1,20 @@
-//! Every cell retains its logical context through widening and nested splicing.
+//! The guest queue holds only semantic continuation entries.
 use super::*;
+
 use crate::runtime::suspension::typed::{Entry, EntryRef};
+
+// The public diagnostic representation keeps the semantic entry type private.
+pub(in crate::runtime) struct GuestQueue {
+    pub(super) entries: FrameQueue,
+}
+impl GuestQueue {
+    #[inline(always)]
+    pub(super) fn new() -> Self {
+        Self {
+            entries: FrameQueue::new(),
+        }
+    }
+}
 
 pub(in crate::runtime::suspension) enum FrameQueue {
     Legacy(VecDeque<Queued<Arc<DynSuspensionFrame>>>),
@@ -8,7 +22,14 @@ pub(in crate::runtime::suspension) enum FrameQueue {
 }
 
 impl FrameQueue {
-    #[inline]
+    pub(super) fn len(&self) -> usize {
+        match self {
+            Self::Legacy(f) => f.len(),
+            Self::Mixed(f) => f.len(),
+        }
+    }
+
+    #[inline(always)]
     pub(super) fn new() -> Self {
         Self::Legacy(VecDeque::new())
     }
@@ -27,7 +48,7 @@ impl FrameQueue {
         frames
     }
 
-    #[inline]
+    #[inline(always)]
     pub(super) fn push_back(&mut self, context: ResumeContext, frame: Arc<DynSuspensionFrame>) {
         match self {
             Self::Legacy(frames) => frames.push_back(Queued {
@@ -55,8 +76,13 @@ impl FrameQueue {
         }
     }
 
+    #[inline(always)]
     pub(super) fn push_back_typed(&mut self, context: ResumeContext, frame: Arc<dyn ErasedFrame>) {
-        self.widen().push_back(Queued {
+        let frames = match self {
+            Self::Mixed(frames) => frames,
+            Self::Legacy(_) => self.widen(),
+        };
+        frames.push_back(Queued {
             context,
             payload: Entry::Typed(frame),
         });
@@ -113,7 +139,9 @@ impl FrameQueue {
 
     #[cold]
     #[inline(never)]
-    fn pop_front_mixed_legacy(frames: &mut VecDeque<Queued<Entry>>) -> Arc<DynSuspensionFrame> {
+    pub(super) fn pop_front_mixed_legacy(
+        frames: &mut VecDeque<Queued<Entry>>,
+    ) -> Arc<DynSuspensionFrame> {
         match frames
             .pop_front()
             .expect("the resumed suspension frame should remain queued")
@@ -190,13 +218,13 @@ impl FrameQueue {
         }
     }
 
-    #[inline]
+    #[inline(always)]
     pub(super) fn append(&mut self, suffix: &mut Self) {
-        if let (Self::Legacy(frames), Self::Legacy(rest)) = (&mut *self, &mut *suffix) {
-            frames.append(rest);
-            return;
+        match (&mut *self, &mut *suffix) {
+            (Self::Legacy(frames), Self::Legacy(rest)) => frames.append(rest),
+            (Self::Mixed(frames), Self::Mixed(rest)) => frames.append(rest),
+            _ => self.append_mixed(suffix),
         }
-        self.append_mixed(suffix);
     }
 
     #[cold]

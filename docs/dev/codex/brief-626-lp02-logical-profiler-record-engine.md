@@ -67389,3 +67389,85 @@ changes.
   calibration narrative.
 
 Keep `state.json` current. Stop-loss as before.
+
+---
+
+## Executing-agent report — continuation 14 — timing of record and final audit (2026-10-27)
+
+### 1. Files changed and every inventory row change
+### 2. The engine and the entry, as built
+### 3. The route proofs
+### 4. The oracle result
+### 5. All gates, verbatim
+
+Sections 1–5 stand as continuation 13 reported: the single generic abandonment body and cold profiled trampoline, the restored source scope and nested queue, 1,558 frozen inputs, 63 owned paths, 19 changed files plus one added C13 test, the falsifier, finite-mode proofs, 28 final-source gate stages, and the exact LP01 oracle result. The driver's source-manifest verification line is: `C13 FINAL SOURCE: 1558 hashed; 19 changed from C8 attempt 2; added=1; inline repairs=3 C13 repairs=5 replay changes=7`.
+
+### 6. Measurements
+
+#### Timing of record and calibration evaluations
+
+The timing of record is the ten aligned pairs per arm on 120 labels. Base binary SHA-256 is `db87e96632993c42928c3cda788ccca81c4ab9a798eb7b1a89b6971517cbb0ea`; candidate is `2d5b92fb8869daa42faead2fd60ca803ce3782627473bf43118110068bd54667`; the whole-panel program SHA-256 is `41c6f11d2308184c68dda0cca97192786400005d07fa63c738951adea10916cc`. The median candidate/base across all 120 labels is 1.0063. No label is disjoint below base; eight are disjoint above: `['table-small', 'downvalue-pattern-hit', 'deletecases-leaf-delete-small', 'replace-leaf-rebuild-small', 'replacepart-guarded-decline-fallback', 'merge-nested-small', 'upvalue-candidates-wide-small', 'upvalue-candidates-wide-large']`. The three required evidence hashes are unchanged from the C14 entry and no binary was rebuilt.
+
+The three calibration evaluations, including the successful first evaluation omitted by the C13 STOP narrative, are:
+
+```text
+06:35 against the probe's own panels: CALIBRATION ratio range 0.6731401689395249 1.3918263082591573 outside small factor []
+06:37 against panels rerun afterward: CALIBRATION ratio range 0.668371867959051 2.0919476466194387 outside small factor [{'label': 'association-part-key-read-width4000', 'arm': 'base', 'probe_over_panel': 2.0031009242769833}, {'label': 'association-part-key-read-width4000', 'arm': 'candidate', 'probe_over_panel': 2.0919476466194387}]
+06:38 against panels rerun afterward: CALIBRATION ratio range 0.6626984811195081 2.0858841165475956 outside small factor [{'label': 'association-part-key-read-width4000', 'arm': 'base', 'probe_over_panel': 2.017347211515741}, {'label': 'association-part-key-read-width4000', 'arm': 'candidate', 'probe_over_panel': 2.0858841165475956}]
+After restoring only brief-622's existing exclusion: CALIBRATION ratio range 0.6626984811195081 2.0858841165475956 outside small factor []
+ALIGNED TIMING COMPLETE, disjoint above base: ['table-small', 'downvalue-pattern-hit', 'deletecases-leaf-delete-small', 'replace-leaf-rebuild-small', 'replacepart-guarded-decline-fallback', 'merge-nested-small', 'upvalue-candidates-wide-small', 'upvalue-candidates-wide-large']
+```
+
+The 06:35 probe passed. The later comparisons evaluated that retained probe against different panels, so they were not valid calibrations of the retained probe. The bimodal `association-part-key-read-width4000` row remains excluded exactly as brief-620/brief-622 specified; every other calibration cell stays within 0.5–2. The direct script reused all ten pairs and launched no process, and `comparison.json`, `runs.json`, and `panel-comparison.json` remained byte-identical.
+
+#### Selected-label attribution
+
+Attribution used the prior ten labels plus all eight raw disjoint-above labels, for 15 distinct labels on the aligned images. Native attribution completed 120 correct processes and selected Callgrind completed 60 profiles. `merge-nested-small` uses the panel's own statement and N=200; its check, N, and 2N smoke tests return `Null` on both aligned images. Every selected label is within the native gate, so the five-pair follow-up and page-attribution candidate sets are empty. Full per-function and libc PC proofs are linked below; the empty page summary is [here](../../../.temp/brief-626/continuation-12/final/aligned-attribution/page-layout-attribution/summary.json).
+
+| Label | Aligned candidate/base | Aligned paired instruction delta | Five-pair result | Page attribution | Class | Proof |
+|---|---:|---:|---|---|---|---|
+| `default-unguarded-hit` | 0.9857 | -9.2075 | within initial two-pair gate; follow-up not selected | not selected (empty summary) | within native gate | [proof](../../../.temp/brief-626/continuation-12/final/aligned-attribution/function-diffs-all/default-unguarded-hit.json) |
+| `default-unguarded-miss` | 1.0007 | -2.05375 | within initial two-pair gate; follow-up not selected | not selected (empty summary) | within native gate | [proof](../../../.temp/brief-626/continuation-12/final/aligned-attribution/function-diffs-all/default-unguarded-miss.json) |
+| `deletecases-leaf-delete-small` | 1.0457 | -46.006 | within initial two-pair gate; follow-up not selected | not selected (empty summary) | within native gate | [proof](../../../.temp/brief-626/continuation-12/final/aligned-attribution/function-diffs-all/deletecases-leaf-delete-small.json) |
+| `downvalue-exact-hit` | 1.0147 | -9.9365 | within initial two-pair gate; follow-up not selected | not selected (empty summary) | within native gate | [proof](../../../.temp/brief-626/continuation-12/final/aligned-attribution/function-diffs-all/downvalue-exact-hit.json) |
+| `downvalue-guarded-decline-fallback` | 1.0131 | -11.659 | within initial two-pair gate; follow-up not selected | not selected (empty summary) | within native gate | [proof](../../../.temp/brief-626/continuation-12/final/aligned-attribution/function-diffs-all/downvalue-guarded-decline-fallback.json) |
+| `downvalue-guarded-hit` | 1.0243 | -10.32625 | within initial two-pair gate; follow-up not selected | not selected (empty summary) | within native gate | [proof](../../../.temp/brief-626/continuation-12/final/aligned-attribution/function-diffs-all/downvalue-guarded-hit.json) |
+| `downvalue-pattern-hit` | 1.0213 | -12.071075 | within initial two-pair gate; follow-up not selected | not selected (empty summary) | within native gate | [proof](../../../.temp/brief-626/continuation-12/final/aligned-attribution/function-diffs-all/downvalue-pattern-hit.json) |
+| `merge-nested-small` | 1.0165 | -29.1625 | within initial two-pair gate; follow-up not selected | not selected (empty summary) | within native gate | [proof](../../../.temp/brief-626/continuation-12/final/aligned-attribution/function-diffs-all/merge-nested-small.json) |
+| `replace-leaf-rebuild-small` | 1.0485 | -426.195 | within initial two-pair gate; follow-up not selected | not selected (empty summary) | within native gate | [proof](../../../.temp/brief-626/continuation-12/final/aligned-attribution/function-diffs-all/replace-leaf-rebuild-small.json) |
+| `replacepart-guarded-decline-fallback` | 1.0213 | -9.265 | within initial two-pair gate; follow-up not selected | not selected (empty summary) | within native gate | [proof](../../../.temp/brief-626/continuation-12/final/aligned-attribution/function-diffs-all/replacepart-guarded-decline-fallback.json) |
+| `subvalue-unguarded-hit` | 1.0093 | -11.06875 | within initial two-pair gate; follow-up not selected | not selected (empty summary) | within native gate | [proof](../../../.temp/brief-626/continuation-12/final/aligned-attribution/function-diffs-all/subvalue-unguarded-hit.json) |
+| `table-small` | 1.0208 | 11.295175 | within initial two-pair gate; follow-up not selected | not selected (empty summary) | within native gate | [proof](../../../.temp/brief-626/continuation-12/final/aligned-attribution/function-diffs-all/table-small.json) |
+| `upvalue-candidates-wide-large` | 1.0319 | -505 | within initial two-pair gate; follow-up not selected | not selected (empty summary) | within native gate | [proof](../../../.temp/brief-626/continuation-12/final/aligned-attribution/function-diffs-all/upvalue-candidates-wide-large.json) |
+| `upvalue-candidates-wide-small` | 1.0296 | -26.475 | within initial two-pair gate; follow-up not selected | not selected (empty summary) | within native gate | [proof](../../../.temp/brief-626/continuation-12/final/aligned-attribution/function-diffs-all/upvalue-candidates-wide-small.json) |
+| `upvalue-guarded-hit` | 1.0134 | -0.588 | within initial two-pair gate; follow-up not selected | not selected (empty summary) | within native gate | [proof](../../../.temp/brief-626/continuation-12/final/aligned-attribution/function-diffs-all/upvalue-guarded-hit.json) |
+
+`classification.json` has `work=[]`: 15 selected, 15 within native gate, 0 five-pair clear, 0 layout, and no unresolved row. The paired native instructions, five-pair outcomes, and page-attribution result are preserved in the aligned workspace.
+
+`timing-disposition.json` has `unresolved_regressions=[]`: [JSON](../../../.temp/brief-626/continuation-12/final/timing-disposition.json), [classification](../../../.temp/brief-626/continuation-12/final/aligned-attribution/classification.json).
+
+The disposition and performance-audit outputs are verbatim:
+
+```text
+ALIGNED CLASSIFICATION 15 selected; 15 within native gate; 0 five-pair clear; 0 layout; 0 work []
+ALIGNED ATTRIBUTION COMPLETE work= []
+C13 TIMING DISPOSITION {'raw_disjoint_above': ['table-small', 'downvalue-pattern-hit', 'deletecases-leaf-delete-small', 'replace-leaf-rebuild-small', 'replacepart-guarded-decline-fallback', 'merge-nested-small', 'upvalue-candidates-wide-small', 'upvalue-candidates-wide-large'], 'panel_disjoint_above': ['table-iterator-symbol', 'downvalue-pattern-hit', 'downvalue-pattern-miss', 'downvalue-exact-miss-repeat', 'downvalue-pattern-miss-repeat', 'downvalue-guarded-decline-fallback', 'upvalue-guarded-hit', 'matcher-single-wide-small', 'deletecases-leaf-delete-small', 'replace-leaf-rebuild-small', 'replacepart-guarded-hit', 'replacepart-guarded-decline-fallback', 'stringtrim-literal-list-4000', 'stringtrim-literal-list-32000', 'stringtrim-single-literal-32000', 'stringreplace-single-literal-unguarded', 'stringreplace-guarded-hit', 'stringreplace-guarded-decline-fallback', 'association-set-key-incremental-large', 'merge-nested-small', 'reversesort-callback-small', 'reversesort-callback-large', 'keysort-default-wide'], 'unresolved_regressions': [], 'aligned_classification': '.temp/brief-626/continuation-12/final/timing/aligned-attribution-classification.json', 'aligned_binary_sha256': {'base': 'db87e96632993c42928c3cda788ccca81c4ab9a798eb7b1a89b6971517cbb0ea', 'candidate': '2d5b92fb8869daa42faead2fd60ca803ce3782627473bf43118110068bd54667'}}
+C13 MEASUREMENT BLOCK timing-attribution COMPLETE
+C13 BLOCK audit-performance exit=0
+C13 PERFORMANCE AUDIT VERIFIED: 1636 correctness; 313 allocations; 2504 initial instructions; 136 heap; 136 static; 1252 copies; 44 stack; 789 layouts; 8 chains; timing 120 labels x10 aligned pairs; scaling 192; work=0
+C13 MEASUREMENT BLOCK performance-audit COMPLETE
+```
+
+#### Completed measurement counters
+
+Correctness processes: 1636. Allocation labels: 313 raw exact. Copy labels: 313 with no above-base slope or whole count. Initial instruction processes: 2504; five-pair processes: 2420; seed Callgrind processes: 3528. Pointer controls: 136 heap and 136 static. Layouts: 789 unchanged. Stack fits: 44; resumed chains: 8. Scaling processes: 192. Prologue rows: 132 with 3 disclosed constants and zero STOP-class growth. Unattributed instruction work: 0.
+
+`perf stat` remained serial on `taskset -c 2`; Callgrind and pointer captures remained serial. Cargo commands, where needed, ran alone in 14 GiB scopes with eight build jobs and one test thread. Analysis ran only while nothing was being measured.
+
+### 7. Stop-loss counters, deviations and open questions
+
+- Production attempts remain **6 overall**, with **0** consecutive compiling-tree attempts without progress. No production or test source changed in continuation 14, no measured binary was rebuilt, and no panel or aligned pair was rerun after the director's ruling. The three timing-of-record hashes are unchanged.
+- **Correction of continuation 13 §6:** the statement that the second evaluation was an instrument calibration failure was wrong. The 06:35 evaluation passed. The 06:37 and 06:38 evaluations compared the retained probe with panels rerun afterward and were not valid calibrations of that probe. The C13 STOP report also omitted that first successful evaluation. The correct action was to retain the timing of record and finish its attribution, not to declare an instrument STOP.
+- Final counters: 1,636 correctness processes; 313 exact allocation labels; 313 no-increase copy labels; 2,504 initial instruction processes; 2,420 five-pair processes; 3,528 seed processes; 136 heap and 136 static pointer receipts; 313 instruction decisions with 2,460 positive rows and `work=0`; 44 stack fits; 789 layouts; eight chains; 192 scaling processes; 15 aligned-attribution labels with 120 correct native processes and 60 selected Callgrind profiles; `work=[]` and `unresolved_regressions=[]`.
+- No git command, commit, branch, push, external network access, new `unsafe`, phase adoption, guest internal-encoding probe, hand-written inventory, or weakened oracle occurred. All changes remain uncommitted in the working tree, and all scratch is under `.temp/brief-626/`.
+

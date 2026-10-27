@@ -35,7 +35,9 @@ mod exact;
 mod modes;
 pub(super) use context::constructor_claims;
 pub(super) use exact::{arguments, exact, field, fields, substitute, variants};
-pub(super) use modes::{MODES, domain, is_mode, mode_parameter, with_mode};
+pub(super) use modes::{
+    MODE_DOMAINS, MODES, domain, is_mode, mode_argument, mode_parameter, with_mode,
+};
 
 pub(super) fn ownership(source: &Source, exact: &ExactTy) -> Ty {
     ownership_inner(source, exact, &mut BTreeSet::new())
@@ -113,7 +115,9 @@ pub(super) fn in_function(source: &Source, f: &Function, t: &syn::Type) -> Resul
             }
         }
     }
-    substitute(source, &f.module, t, &substitutions)
+    let mut t = t.clone();
+    modes::normalize_projections(source, &f.module, &mut t, &mut substitutions)?;
+    substitute(source, &f.module, &t, &substitutions)
 }
 
 pub(super) fn exact_output(source: &Source, f: &Function) -> Result<ExactTy, String> {

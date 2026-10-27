@@ -5,6 +5,8 @@ pub(in crate::runtime) fn reset_lexical_profile_counters() {
         return;
     }
 
+    logical::reset();
+
     macro_rules! reset {
         ($($counter:ident),+ $(,)?) => {
             $( $counter.store(0, Ordering::Relaxed); )+

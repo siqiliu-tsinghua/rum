@@ -65,11 +65,13 @@ pub(super) fn key(f: &Function) -> LeafKey {
     }
 }
 
-// Finite-instance rule: all generic parameters are unbounded scalar atoms from
-// ExactTy's fixed primitive vocabulary. No inferred type parameters, nominal
-// arguments, const/lifetime arguments, associated types, or growing terms.
+// Finite instances are scalar atoms or members of a checked sealed-mode domain.
+// No inferred parameters, open nominal arguments, const/lifetime arguments,
+// arbitrary trait bounds, or growing terms are admitted.
 // Instances are installed only at reached calls and keyed by all substitutions.
 fn bind(
+    source: &Source,
+    module: &str,
     generics: &syn::Generics,
     args: &[ExactTy],
     into: &mut BTreeMap<String, ExactTy>,
@@ -81,8 +83,9 @@ fn bind(
         let syn::GenericParam::Type(p) = param else {
             return Err("method instance has lifetime/const parameters".into());
         };
-        if !p.attrs.is_empty()
-            || !p.bounds.is_empty()
+        if !p.bounds.is_empty() {
+            types::mode_argument(source, module, p, arg)?;
+        } else if !p.attrs.is_empty()
             || p.default.is_some()
             || !matches!(arg, ExactTy::Scalar(id) if id != "str")
         {
@@ -130,7 +133,13 @@ fn instantiate(
         if a.args.len() != f.impl_generics.params.len() || !a.args.iter().zip(&f.impl_generics.params).all(|(a,p)| {
             matches!((a,p), (syn::GenericArgument::Type(syn::Type::Path(t)), syn::GenericParam::Type(p)) if t.qself.is_none() && t.path.is_ident(&p.ident))
         }) { return Err("non-positional generic impl".into()); }
-        bind(&f.impl_generics, args, &mut substitutions)?;
+        bind(
+            source,
+            &f.module,
+            &f.impl_generics,
+            args,
+            &mut substitutions,
+        )?;
     } else if f.impl_generics.where_clause.is_some() {
         return Err("impl bounds are not proved".into());
     }
@@ -159,7 +168,13 @@ fn instantiate(
         })
         .transpose()?
         .unwrap_or_default();
-    bind(&f.sig.generics, &arguments, &mut substitutions)?;
+    bind(
+        source,
+        &f.module,
+        &f.sig.generics,
+        &arguments,
+        &mut substitutions,
+    )?;
     substitutions.insert("Self".into(), owner.clone());
     result.substitutions = substitutions;
     result.sig.generics = syn::Generics::default();
