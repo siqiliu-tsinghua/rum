@@ -164,15 +164,24 @@ produce; for implementation: code + tests + the before/after per-label rows).
 9. **Concurrency is planned per stage, from measured resource profiles**
    (user ruling 2026-10-26; it supersedes the 2026-09-30 all-serial cargo
    rule).
-   - Run one cargo command at a time, inside a memory-capped scope:
-     `systemd-run --user --scope -p MemoryMax=14G -p MemoryHigh=12G -p MemorySwapMax=0`.
+   - Run one cargo command at a time. The dispatcher already runs you inside
+     a memory-capped scope (`scripts/memory-scope.sh`: `MemoryMax` 16G, no
+     swap, `OOMPolicy=continue`). A command that reaches the cap is killed on
+     its own with exit 137, and you keep running. `oom_kill` then rises in
+     your scope's `memory.events`, at
+     `/sys/fs/cgroup$(cut -d: -f3 /proc/self/cgroup)/memory.events`. Do not
+     call `systemd-run` yourself: the agy and grk sandboxes cannot reach the
+     user bus.
    - Builds use `CARGO_BUILD_JOBS=8`, which peaked at about 9 GiB.
    - Tests use `RUST_TEST_THREADS=1`, unless the brief states a measured
      profile.
      - rum-stdlib's tests at the default thread count peaked at 14.6 GB and
        were OOM-killed.
-     - Profiling tests share process-global state.
-   - On an `oom-kill`, rerun that command once with one job.
+     - At `17576575`, the logical profiler's tests fail under parallel
+       threads, 13–16 of 30 per run. That is an open defect (`TODO.md`), not
+       a property to rely on.
+   - On an `oom-kill` (exit 137 with `oom_kill` risen), rerun that command
+     once with one job.
    - `perf stat`, timing, Callgrind and heap captures run serially and alone,
      with nothing else running during them.
    - A stage the brief does not name runs serially.

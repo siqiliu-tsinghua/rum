@@ -160,6 +160,17 @@
 # workspace bound, and the role text tells the worker to wait for long commands rather
 # than end its turn.
 #
+# MEMORY SCOPE
+#
+# Every worker runs inside its own memory-capped systemd user scope
+# (scripts/memory-scope.sh): MemoryMax=BRIEF_MEMORY_MAX (default 16G), no swap,
+# OOMPolicy=continue. A command that hits the cap is OOM-killed alone (exit 137) and the
+# worker carries on; nothing outside the scope is touched, in particular not the
+# director's terminal cgroup the worker would otherwise share. The worker cannot make
+# scopes of its own: the agy and grk sandboxes hide the user bus. Inside, the worker reads
+# its scope's memory.peak and memory.events under /sys/fs/cgroup to see an OOM kill. The
+# log ends with a `# memory-scope:` line giving the scope's peak and OOM counts.
+#
 # DRY_RUN=1 prints the resolved brief/worker/log and exits WITHOUT dispatching (for testing).
 set -euo pipefail
 
@@ -180,6 +191,7 @@ usage() {
   echo "       GRK_EFFORT=<effort>      grk only: reasoning effort (default xhigh)" >&2
   echo "       GRK_RESUME=<session id>  grk only: continue that earlier session" >&2
   echo "       GROK_HOME=<dir>          grk only: grok config root (default ~/.grok)" >&2
+  echo "       BRIEF_MEMORY_MAX=<size>  the worker scope's MemoryMax (default 16G)" >&2
   exit 2
 }
 [[ $# -eq 1 ]] || usage
@@ -657,10 +669,21 @@ working tree. Report with verbatim evidence."
 --append-system-prompt '$role'"
 fi
 
+memory_max="${BRIEF_MEMORY_MAX:-16G}"
+scope_unit="brief-$num-$log_tag-$(date +%Y%m%d-%H%M%S)-$$"
+scope=("$repo_root/scripts/memory-scope.sh" "$scope_unit" "$memory_max")
+echo "memory-scope: $scope_unit MemoryMax=$memory_max"
+
 if [[ "${DRY_RUN:-0}" == "1" ]]; then
   echo "DRY_RUN: not dispatching"
   echo "would run: $cmd"
   exit 0
+fi
+
+# Refuse rather than run unbounded: the scope is what keeps an OOM inside the job.
+if ! "${scope[@]}" true 2>/dev/null; then
+  echo "error: cannot create a memory scope (systemd-run --user); nothing dispatched" >&2
+  exit 1
 fi
 
 set +e
@@ -672,7 +695,7 @@ if [[ "$worker" == kimi ]]; then
     echo "# git-fence: $fence_dir/git"
     [[ -n "${KIMI_RESUME:-}" ]] && echo "# resume-of: $KIMI_RESUME"
   } > "$log"
-  (cd "$repo_root" && "$worker_cmd" "${kimi_args[@]}") < /dev/null >> "$log" 2>&1
+  (cd "$repo_root" && "${scope[@]}" "$worker_cmd" "${kimi_args[@]}") < /dev/null >> "$log" 2>&1
   rc=$?
   # The stream names the session only in its last event, so an interrupted run
   # falls back to the newest session recorded for this directory.
@@ -693,7 +716,7 @@ elif [[ "$worker" == agy ]]; then
     echo "# git-fence: $fence_dir/git"
     [[ -n "${AGY_RESUME:-}" ]] && echo "# resume-of: $AGY_RESUME"
   } > "$log"
-  "$dispatch_shell" -ic "$cmd" < /dev/null >> "$log" 2>&1
+  "${scope[@]}" "$dispatch_shell" -ic "$cmd" < /dev/null >> "$log" 2>&1
   rc=$?
   # A denied action ends the run with exit 0; only the result event says so.
   summary=$(python3 - "$log" <<'PY'
@@ -818,7 +841,7 @@ PY
     echo "# grk-session: $grk_session"
     [[ -n "${GRK_RESUME:-}" ]] && echo "# resume-of: $GRK_RESUME"
   } > "$log"
-  "$dispatch_shell" -ic "$cmd" < /dev/null >> "$log" 2>&1
+  "${scope[@]}" "$dispatch_shell" -ic "$cmd" < /dev/null >> "$log" 2>&1
   rc=$?
   # A refused tool call does not end a headless run; only stderr names it.
   summary=$(python3 - "$log" <<'PY'
@@ -853,9 +876,10 @@ PY
     echo "hint: resume with GRK_RESUME=$grk_session BRIEF_WORKER=grk scripts/dispatch-brief.sh $num" >&2
   fi
 else
-  "$dispatch_shell" -ic "$cmd" < /dev/null > "$log" 2>&1
+  "${scope[@]}" "$dispatch_shell" -ic "$cmd" < /dev/null > "$log" 2>&1
   rc=$?
 fi
 set -e
+grep -a '^# memory-scope:' "$log" | tail -n 1 || true
 echo "$worker exit=$rc ; report in $log"
 exit $rc
