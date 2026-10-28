@@ -1332,3 +1332,504 @@ Same fence. Scratch goes in `.temp/brief-630/`.
 Write "Executing-agent report — A3" and STOP. Every quoted line must be
 copied from a file you name. Quote every verdict line your instruments
 print, and settle each flagged row.
+
+## Executing-agent report — A3
+
+No source under `crates/`, `scripts/`, or `docs/` was edited except this appendix. `TODO.md`, `Cargo.lock`, `.cargo/`, and `.temp/director/` were not edited. Stage B is not started.
+
+The convention is **cumulative**, one rule for every route. The kernel shape below is the design, not a patch. The A2 generation-panic fence is not revived, and neither is an admission mark stored on batches.
+
+### 1. Window under P1–P3
+
+#### Convention
+
+Cumulative, per request. Evidence:
+
+- `docs/guide/embedding.md:298-313` says the prints, messages, and raw trace arrays are cumulative for the request, the consumer takes only the new suffix, and output already exposed stays an ordered prefix. Cancellation discards provisional output and preserves the public prefix.
+- All three front ends already skip by count. `rum-cli` `input_retirement.rs:35-51` uses `(suspension.prints.len(), suspension.messages.len())` for `Cumulative` and `(0, 0)` for `CleanupOnly`. `rum-jupyter` `adapter/input_retirement.rs:27-46` always skips `suspension.messages.len()` (and the same for prints and trace). `rum-repl` `request.rs:95-120` skips `Delivered` and advances that count only as each line is written. Retirement is `resume_with_input("")` (`request.rs:250-252`). `omit_cancel_notice` (`request.rs:301-312`) pops a trailing General or System`General cancel only when `messages.len() > delivered.messages`.
+- P1 is the same rule: each outcome of a request extends what the earlier outcomes of that request reported. A session rollback changes the session list and `$MessageList`. It does not change the reported prefix.
+- `CleanupOnly` exists because a batch kernel outcome is a post-rollback suffix. With a cumulative reported log, prior `(0, 0)` would reprint the prefix. Deleting the mode is P3. An incremental kernel would make every front end stop skipping and would rewrite `embedding.md:298`. The REPL cursor stays valid only while the reported array never shrinks; the front end, not the kernel, owns that cursor.
+
+#### Kernel shape
+
+Two structures.
+
+The reported log is append-only for one request. Rollback never truncates it. Host outcomes clone it. Items carry an id minted at push. An id is not an index.
+
+```rust
+#[derive(Clone, Copy, Eq, PartialEq, Hash)]
+struct LogId(NonZeroU64);
+
+struct Logged<T> { id: LogId, value: T }
+
+struct Reported {
+    messages: Vec<Logged<RuntimeMessage>>,
+    prints: Vec<Logged<String>>,
+    trace: Vec<Logged<TraceEvent>>,
+    trace_depths: Vec<Logged<usize>>,
+    handled: Vec<Logged<RuntimeMessage>>,
+    seen: HashSet<LogId>,
+}
+
+fn publish<T: Clone>(reported: &mut Vec<Logged<T>>, seen: &mut HashSet<LogId>, live: &[Logged<T>]) {
+    for item in live {
+        if seen.insert(item.id) {
+            reported.push(item.clone());
+        }
+    }
+}
+```
+
+`publish` runs when a host outcome is packaged. It appends live session items whose ids are not yet reported. It does not walk ids that a rollback has already dropped from the session list. Those never reach this outcome (P2), unless an earlier outcome of this same request already published them (P1). `LoaderSnapshot`, `EvaluationRollbackSnapshot`, and `rollback_capture_output` replace or truncate the session vecs only. They do not touch `Reported`.
+
+The director's cell then works on the eval route. The input outcome publishes `probe::inside`. File rollback removes that id from the session list. The cleanup pushes `probe::outer` and the runtime pushes `General::cancel`. `publish` appends those two. The reported log is `[inside, outer, cancel]`. The front end's prior is 1, it pops the trailing cancel because `len > prior`, and `skip(1)` shows `probe::outer`.
+
+An index into a session list cannot outlive a restore of that list, by type. `Session` is one concrete struct, so the brand cannot be a type parameter of `Session`, and a `LogIndex<'g>` stored inside `Session` would be a self-borrow. The brand lives only inside a guard. Frames do not store a `usize` or a `LogIndex`. They store a `LogId` (`Copy`, `'static`). There is no `fn suffix(usize)` and no `fn cut(LogIndex)` a caller can apply after the guard ends. This is not a generation counter plus an assert. A stale id is absent from the restored vec; the cut is not retargeted onto a later item, and it does not panic.
+
+```rust
+struct LogIndex<'g> {
+    index: usize,
+    _brand: PhantomData<fn(&'g ()) -> &'g ()>,
+}
+
+struct LogsGuard<'g> { /* reborrow of the five vecs; 'g ends with the guard */ }
+
+impl Session {
+    fn with_logs(&mut self, body: impl for<'g> FnOnce(LogsGuard<'g>)) { /* ... */ }
+}
+
+// A frame field is LogId, never usize and never LogIndex<'g>.
+// Resolving an id:
+//   Some(index) => the item is still in this generation of the list
+//   None        => a restore already dropped it; do not truncate, do not panic
+```
+
+`RequestCheckpoint` (`session_requests.rs:4-8`) and `PendingEvalRequest` (`model/requests.rs:232-235`) stop being the host cut. `finish_cancelled_eval_response` (`session_requests.rs:712-714`) and the other `split_accounted_*` / `trace_events[checkpoint..]` host packagers read `Reported` instead. `Vec::split_off` panics when `at > len` (`diagnostics.rs:33` and `:70`). The trace slice panics the same way (`session_requests.rs:714`). Those panics cannot fire on the host cut once the host cut no longer indexes the session vec with a `usize` taken before a restore.
+
+Internal capture checkpoints become `LogId`s too, resolved only inside `with_logs`: `OutputBoundary` (`suspension/output.rs:9-13`), `GuestFormScope` (`guest_loading/scope.rs:148-150`), `GetCompleteFrame` (`file.rs:41-42`), `GuestScriptCursor` (`script.rs:21-24`), the evaluation-data checkpoint (`evaluation_data.rs:192-195`), the test-report capture frames, and the trace-capture frames (`debug_tools/trace.rs`). A local `let n = self.messages.len()` that dies before the next restore can stay a `usize`. A `usize` stored on a frame cannot.
+
+Do not store an admission mark on batches. The script loop stops using a live length as the retirement cut (the mechanism under the script rows below). The per-form outcome copies what it reports; the session list is not split down so that a nested `Get` snapshot loses the outer cleanup. P3's single skip is what stops a batch from printing earlier forms twice.
+
+#### Script rows are a stale cut, not the same skip
+
+On eval, abandon pops innermost first (`insert_suspension_frame` is `push_back`, `take_front` is `pop_front`; `suspension/core.rs:540-549` and `:204-206`). `GuestFileCloseFrame::abandon` rolls the loader snapshot back (`file.rs:32-36`, `LoaderSnapshot.messages` at `session_state.rs:317`) before `WithCleanup`'s cleanup pushes `probe::outer`. The eval route stored `pending_eval_request` at the start of the request (`finish_input_required_request`, `session_requests.rs:472`). The retirement split therefore starts before `probe::outer`, and the kernel outcome is `[probe::outer, General::cancel]`.
+
+`eval_script_request` (`session_requests.rs:389-399`) packages `InputRequired` through `finish_completed_request_failure` and `finish_accepted_value_request`'s early return (`:570-571`). That path does not store `pending_eval_request`. `finish_cancelled_pending_evaluation_request` (`:56-59`) then does `RequestCheckpoint::new(self)`, the live length, which still includes `probe::inside` (prior = 1). Abandon restores the file snapshot and then pushes `probe::outer`, and `finalize_top_level_eval_value` pushes `General::cancel` before the split (`:705-712`). `split_off` at the pre-rollback index returns only `[General::cancel]` and leaves `probe::outer` below the cut. `$MessageList` is `last_message_list`, assigned from that suffix (`:715`), so it also shows only the cancel. This is the stale `usize`, measured below. It is not `CleanupOnly`, and it is not the script `Err` splice (`session_eval.rs:360-376`), which does not run on this `Ok` cancellation break (`:352-357`).
+
+#### Access inventory
+
+The classifier is `.temp/brief-630/inventory.py`. The file:line list is `.temp/brief-630/access-inventory.md`. Its header counts, copied from that file:
+
+```text
+## messages
+81 accesses: 68 read, 13 mutate.
+## prints
+57 accesses: 47 read, 10 mutate.
+## trace_events
+42 accesses: 36 read, 6 mutate.
+## trace_event_depths
+16 accesses: 10 read, 6 mutate.
+## handled_non_loader_eval_errors
+52 accesses: 34 read, 18 mutate.
+```
+
+Four of those lines are not the session lists. Exclude them from the reach:
+
+- `metadata.rs:566` and `:582` assign `BuiltinSpec::messages` (`&'static [BuiltinMessageSpec]`).
+- `suspension/output.rs:45` and `:46` assign `OutputBoundary`'s `Option<usize>` checkpoints (`self.prints = earliest(...)`, `self.messages = earliest(...)`).
+
+The truncates at `output.rs:73`, `:77`, `:81`, and `:83` are session-list mutations (`rollback_capture_output`). Production session-list mutations in that file, after those exclusions:
+
+- messages: `check_quiet.rs:165` truncate, `confirmation.rs:84` truncate, `output.rs:77` truncate, `session_api.rs:286` `mem::take`, `session_helpers.rs:203` replace from snapshot, `session_eval.rs:361` splice, `diagnostics.rs:18` push, `diagnostics.rs:33` `split_off`. Test assigns: `session_memory_structures.rs:306-307`.
+- prints: `output.rs:73` truncate, `session_api.rs:296` `mem::take`, `session_helpers.rs:282` replace, `session_eval.rs:372` splice, `diagnostics.rs:58` push, `diagnostics.rs:70` `split_off`. Test assigns: `session_memory_oracle.rs:108-110`.
+- trace events: `output.rs:81` truncate, `session_api.rs:276` `mem::take`, `session_helpers.rs:193` replace, `diagnostics.rs:115` push. Test assign: `session_memory_structures.rs:312-313`.
+- trace depths: `output.rs:83` truncate, `session_api.rs:272` `clear`, `session_helpers.rs:195` replace, `diagnostics.rs:129` push. Test assign: `session_memory_oracle.rs:111-112`.
+- handled: `check_quiet.rs:118` and `:172` truncate, `session_requests.rs:250`, `:364`, `:518`, `:545`, `:719` truncate, `session_helpers.rs:284` replace, `session_eval.rs:267` and `:286` truncate, `guest_loading/scope.rs:90` and `:131` replace, `:115` `mem::take`, `evaluation_data.rs:83` truncate, `test_report/evaluation.rs:242` and `:264` truncate, `diagnostics.rs:95` push. Test assign: `guest_loading/tests.rs:336`.
+
+A broad `.messages` search also hits outcome copies. Those are not the session vecs. The inventory pattern is `(self|session|snapshot|s).<field>`.
+
+#### Front ends, and tests whose assertions change
+
+Front ends:
+
+- Delete `CancellationOutput`. `main.rs:234`, `:246`, `:258`, and `:343` all use the one skip-by-count of what that front end has already emitted. `:246` and `:258` stop passing `CleanupOnly`. `eval_tests.rs:65` and `:447` stop passing the enum. The queued-answer test (`eval_tests.rs:442-458`) does not compare message vectors; its expected input error and the later `"future"` value stay.
+- Jupyter and the REPL keep skip-by-count. No mode to delete. The REPL still advances `Delivered` only when the write succeeds.
+- `embedding.md:298-313` stays. Add one sentence: a prefix already reported for this request stays in later outcomes of that request after a rollback of the session message list and `$MessageList`.
+
+Existing expected values that were re-read and do not change:
+
+- `eval_tests.rs:161-202` `cleanup_output_appears_once_and_tail_never_runs`: prefix once except setup, cleanup once, no tail, no `cancel`.
+- `eval_tests.rs:389-438` `cleanup_messages_appear_once_with_original_input_reason`: `before-message` once, `cleanup` once, `cleanup-message` once except `file` where the count is 0, `input required` once, no `cancel`. The file count stays 0. That cleanup is inside the file, so `GuestFileCloseFrame` rolls it back after it was pushed and before packaging (P2). It was never in an earlier outcome, so `publish` does not resurrect it. A Stage B that publishes rolled-back in-file messages would break this assertion; that would be the wrong fix.
+
+No current test asserts the lost-outer cell. That cell is the probe below. Session-list and `$MessageList` rollback assertions stay, because the session list still rolls back.
+
+#### Merge matrix, red at HEAD
+
+Probe `.temp/brief-630/probe/src/a3_probe.rs`, test `a3_merge`. Program: `Inner.rum` is `probe::inside = "inside message"`, `Message[probe::inside]`, `InputString["in"]`. Outer is `WithCleanup[Get["Inner`"], Message[probe::outer]]` after `probe::outer = "outer message"`. Routes `eval` and `script`. Retire `eval("")` and `resume_with_input("")`. Three logs, same `A3MERGE` lines. `a3-merge-1.log` ( `a3-merge-2.log` and `a3-merge-3.log` repeat every `A3MERGE` line; each ends `test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 28 filtered out; finished in 0.02s` and `EXIT:0` ):
+
+```text
+A3MERGE route=eval retire=eval prior=1 input=["probe::inside"] kernel=["probe::outer", "General::cancel"] trace_in=0 trace_out=0 cli_cumulative=[] cli_cleanup_only=["probe::outer"] jupyter=[] repl=[] panic=false
+A3MERGE FLAG route=eval retire=eval rule=cli_cumulative RED lost-outer
+A3MERGE FLAG route=eval retire=eval rule=cli_cleanup_only kept-outer
+A3MERGE FLAG route=eval retire=eval rule=jupyter RED lost-outer
+A3MERGE FLAG route=eval retire=eval rule=repl RED lost-outer
+A3MERGE route=eval retire=eval message_list=List[probe::outer, General::cancel]
+A3MERGE route=eval retire=resume prior=1 input=["probe::inside"] kernel=["probe::outer", "General::cancel"] trace_in=0 trace_out=0 cli_cumulative=[] cli_cleanup_only=["probe::outer"] jupyter=[] repl=[] panic=false
+A3MERGE FLAG route=eval retire=resume rule=cli_cumulative RED lost-outer
+A3MERGE FLAG route=eval retire=resume rule=cli_cleanup_only kept-outer
+A3MERGE FLAG route=eval retire=resume rule=jupyter RED lost-outer
+A3MERGE FLAG route=eval retire=resume rule=repl RED lost-outer
+A3MERGE route=script retire=eval prior=1 input=["probe::inside"] kernel=["General::cancel"] trace_in=0 trace_out=0 cli_cumulative=[] cli_cleanup_only=[] jupyter=[] repl=[] panic=false
+A3MERGE FLAG route=script retire=eval rule=cli_cumulative RED lost-outer
+A3MERGE FLAG route=script retire=eval rule=cli_cleanup_only RED lost-outer
+A3MERGE FLAG route=script retire=eval rule=jupyter RED lost-outer
+A3MERGE FLAG route=script retire=eval rule=repl RED lost-outer
+A3MERGE route=script retire=eval message_list=List[General::cancel]
+A3MERGE route=script retire=resume prior=1 input=["probe::inside"] kernel=["General::cancel"] trace_in=0 trace_out=0 cli_cumulative=[] cli_cleanup_only=[] jupyter=[] repl=[] panic=false
+A3MERGE FLAG route=script retire=resume rule=cli_cumulative RED lost-outer
+A3MERGE FLAG route=script retire=resume rule=cli_cleanup_only RED lost-outer
+A3MERGE FLAG route=script retire=resume rule=jupyter RED lost-outer
+A3MERGE FLAG route=script retire=resume rule=repl RED lost-outer
+A3MERGE red-rule-rows=14
+```
+
+Settlement. The test asserts `red_rows > 0`, so `EXIT:0` means the cell stayed red. It is not a pass of the merge.
+
+- `eval`/`eval` and `eval`/`resume`, rules `cli_cumulative`, `jupyter`, and `repl`: RED lost-outer. This is the director's bug. The kernel still has `probe::outer` (`$MessageList` is `List[probe::outer, General::cancel]`). prior is 1, the cancel is popped, and `skip(1)` drops `probe::outer`.
+- `eval`/`eval` and `eval`/`resume`, rule `cli_cleanup_only`: kept-outer. Not red. prior is forced to 0, so the kernel suffix `[probe::outer, General::cancel]` keeps the outer message after the pop. This is why `CleanupOnly` cannot be the fix, and why an admission mark on batches would reprint earlier forms.
+- `script`/`eval` and `script`/`resume`, all four rules: RED lost-outer, including `CleanupOnly`. The kernel outcome itself is only `General::cancel`, so no skip rule can show `probe::outer`. That is the stale cut in the section above, in addition to the cumulative skip on the eval route. `red-rule-rows=14` is 16 flag rows minus the two kept-outer rows.
+
+The file route was not re-run. A2 already measured file rollback. This probe's `eval` route is the director's `Get` of a file.
+
+### 2. Drain
+
+#### Shape
+
+Do not stop the drain because cancel is visible. On a `CancelledRequest` drain that bit is the reason. A cleanup the drain reaches is entered, including one the drain creates (`public_cancelled_nested_with_cleanup_runs_cleanup_and_abandons_nested_input`).
+
+The retirement request stays the active accepted request until the drain returns. `take_active_accepted_request` moves to after `abandon_pending_suspension`. Today `finish_cancelled_pending_evaluation_request` (`session_requests.rs:60-63`) and the already-cancelled arm of `finish_accepted_value_request` (`:574-584`) take the ticket first. `resume_eval_request_with_input` (`:273-276`) calls `finish_cancelled_pending` first, so the REPL's `resume_with_input("")` is the same path. `begin_top_level_interrupt_budget` (`session_helpers.rs:30-38`) runs before the abandon, not after it. Today `eval_request` calls the drain at `:155` and the budget at `:159`. `eval_script_request` does not call the budget before its drain at all.
+
+```rust
+fn finish_cancelled_pending_evaluation_request(&mut self) -> Result<Option<SessionEvalResponse>, SessionRequestFailure> {
+    self.activate_pending_accepted_request()?;
+    if !self.active_accepted_request_is_cancelled() || self.pending_suspension_generation().is_none() {
+        return Ok(None);
+    }
+    // Ticket stays in active_accepted_request. Deadline is armed now.
+    self.begin_top_level_interrupt_budget();
+    self.abandon_pending_suspension(AbandonReason::CancelledRequest);
+    let accepted = self.take_active_accepted_request().expect("retirement keeps its ticket until the drain returns");
+    let cancellation_won = accepted.finish();
+    debug_assert!(cancellation_won);
+    // Package from Reported, not from a usize taken before the restore.
+    // ...
+}
+```
+
+The handle a host uses is the one `request_cancel_handle` returns while that ticket is active (`session_api.rs:211-214`): active, else pending, else reserve the next request. During the drain the ticket is active, so `cancel_handle()` returns it. Today `take_active` clears `active_accepted_request` and sets `interrupt_armed = eval_deadline.is_some()` (`session_helpers.rs:86-89`). The session looks idle, and a later `cancel_handle()` reserves the next generation.
+
+The director's instrument does not take the handle mid-`eval`. `.temp/director/gate-630a/probe/src/lib.rs:609-618` takes it after the original `cancel()` and before `eval("")` / `eval_with_timeout`, then the parent sleeps 1s and calls `second.cancel()`. At that pre-`eval` moment the cancelled ticket is still active, so the handle is that same generation. `RequestInterruptState::cancel` (`request_cancellation.rs:187-192`) is a `compare_exchange` from not-cancelled to cancelled. A second `cancel()` of an already-cancelled generation does not change the word. The A3 falsifier reproduces that order (`a3_probe.rs` `dirloop_case`). After this shape, that handle is still the retirement ticket, and the drain polls it. The second `cancel()` stays a no-op because the original `cancel()` already set the bit. A handle taken after `take_active`, which is what would reserve the next request, is not what this instrument does, and it is not reachable during the drain once the ticket stays put. `HostSession::eval` holds `&mut HostSession`, so another call on the same session cannot run until `eval` returns.
+
+`FailedSnapshotRestore` (`session_api.rs:102-103`) abandons and only then `finish_active_accepted_request`. The ticket is still installed. It is not the "ticket already taken" defect. Arm the same budget and the same poll rules before that abandon. If `eval_timeout` is `None`, the deadline stays `None`; `interrupt_armed` is already true because the accepted request is `Some`.
+
+Nothing else is a drain outside a live accepted request. Production `abandon_pending_suspension` sites:
+
+- `session_requests.rs:63` and `:581` — D2a, ticket taken first today.
+- `session_api.rs:102` — `FailedSnapshotRestore`, ticket still held.
+- `session_helpers.rs:249` — `CheckpointRollbackDiscard`, inside a live `ValueQ` restore. Ticket not taken. Not D2a.
+- `monitor.rs:85` and `:122` — `HelperBestEffortDiscard`, during the live request. D2b.
+- `builtins_input.rs:234` — `SupersededOrQueuedInputDiscard`, during `drive_input_request`. Ticket held.
+- `accounting_mode/bridge.rs:252`, `options.rs:219`, `frozen.rs:121` and `:153` — `HelperBestEffortDiscard` while retaining a live evaluation. Ticket held.
+- `suspension/core/fault.rs:126` — `drain_abandonment_worklist(ContinuationSlotMismatch)` from the resume driver. Ticket held.
+
+`eval_call_prepare.rs:142`, `value_table_assignment.rs:383`, and `iteration/mod.rs:299` are inside `#[cfg(test)]` / `#[test]`. Not routes.
+
+Those live-ticket drains do not get a new ticket. They do get the helper switch, the depth assert, and the `install` rule, so a captured environment cannot clear the live deadline.
+
+Helpers. While `abandonment_active`, `refresh_monitor_scope_display` and `run_monitor_callback_best_effort` return immediately. `handle_monitor_trace_event` already returns when `monitor_callbacks_enabled` is false (`monitor.rs:57-58`) and then sets it back to true (`:78`). `finish_monitor` calls `refresh_monitor_scope_display` without looking at that flag (`:51`). The flag is not enough. The check is `abandonment_active`. Check, Quiet, TimeConstrained, ValueQ, Reap, Catch, `$AssertFunction`, and delayed message text stay. They run only when the cleanup calls them.
+
+Poll. Two checks, because they are not the same signal.
+
+- The deadline is checked on every `poll_host_interrupt_if_due` call while `abandonment_active`, with no `INTERRUPT_POLL_MASK` (`eval_core/mod.rs:13`, poll at `:122-135`). A cleanup that is still running when the deadline passes returns `TimeConstraintExceeded` on the next poll. That is the f630 rule: stop at the first poll after the deadline, so `n630` falls below 20 instead of dying at the recursion bound of 340. The contract tests set no deadline, so this check is idle there.
+- The cancel bit stays on the existing mask (every 1024 calls). `While`'s own loop already calls `poll_host_interrupt_if_due` every iteration (`branching_loops.rs:150-151`). Once the ticket stays active, `While[True, Null]` returns at the first masked poll, which is a few thousand iterations and well under 8s. The bit is not checked on the cleanup's first `evaluate_once`. Doing that would return `Cancelled` before `hits630 = hits630 + 1` and before the nested-contract increments, and those tests would go from green to red. A straight-line cleanup is shorter than the stride, so it still runs to completion. That is "runs guest cleanup once". A looping cleanup is the one the masked poll cuts. The drain then continues to the next frame. Scopes and file rollback still run. A cleanup that has not started is still entered.
+
+Depth assert, where the nested suspension is requeued (`abandon.rs:100-104`), after `restore_resume_context` has stored the suspend depth:
+
+```rust
+let entry_depth = self.evaluation_depth.get();
+let cleanup_outcome = self.evaluate(cleanup.expr);
+if matches!(cleanup_outcome, Err(EvalError::InputRequired { .. })) {
+    if let Some(nested) = self.take_accounted_pending_suspension_for_abandon() {
+        debug_assert!(nested_front_depth(&nested) > entry_depth);
+        self.abandonment_worklist.push(nested);
+    }
+    // ...
+}
+```
+
+Once monitor display, step, and evaluation hooks are off, every frame the drain itself creates is that nested `InputRequired`, at a greater depth than the cleanup that created it. The recursion limit then bounds the chain the way it already bounds f630, `(limit − 4) / 3`. The assert is the checked property. It is not a panic on a bad host cut.
+
+`GuestFormEnvironment::install` (`scope.rs:126-136`) writes `eval_deadline`, `interrupt_poll_counter`, and `interrupt_armed` from the captured form. While `abandonment_active` those three writes do not happen. Message-list fields still install. The drain's values win: the deadline is the one `begin_top_level_interrupt_budget` installed before the first cleanup; `interrupt_armed` is true because the retirement ticket is active; the poll counter keeps the progress the drain has made, so a captured form cannot put the counter back mid-stride or clear a deadline that has already elapsed. The captured environment is the suspended form's old interrupt snapshot. `install_for_resume` calls `install`, so the same skip covers it. `DisplacedGuestFormEnvironment::restore` (`scope.rs:91-95`) writes the same three fields; the resume driver's restore at `suspension/core.rs:689` runs after the drain has cleared `abandonment_active`. A restore that runs while the flag is set must skip them too.
+
+#### Why the monitor chain is not recursion-bounded
+
+`abandon_pending_suspension` saves `evaluation_depth` and sets it to 0 (`abandon.rs:34-35`). After each suspension it sets it to 0 again (`:54`). After each cleanup it clears the stack and sets it to 0 (`:111-112`). f630 deepens because `restore_resume_context` (`evaluation_context.rs:32-38`) puts back the nested suspension's captured depth and `enter_level` adds one (`evaluation_depth.rs:55-57`). The display does not stay on that stack. `Monitor`'s second argument is the display (`monitor.rs:26-33`); the probe and the A2 program use `Monitor[1+2, WithCleanup[...]]`, so the body is `1+2` and the display is the `WithCleanup` that reaches `InputString`. `refresh_monitor_scope_display` evaluates that display (`:100-122`). `InputRequired` calls `abandon_pending_suspension(HelperBestEffortDiscard)`. While `abandonment_active` is set, `drain_abandonment_worklist` returns immediately (`abandon.rs:26-28`) after the new suspension is pushed. `EvalMonitorSuspensionFrame::abandon` only pops the scope and returns `Discard` (`monitor.rs:143-150`). The next drain iteration starts from depth 0. The recursion check (`eval_core/mod.rs:50`) sees a shallow depth every time, so the limit never fires.
+
+`evaluation_depth` is `pub(in crate::runtime)` (`model/session.rs:87`). There is no public getter. The probe prints `Length[Stack[]]` in the display, immediately before `InputString`. `Stack` (`debug_tools/basic.rs:96-108`) is `List` of `Hold[expr]` for `evaluation_stack` except the last entry. The numbers below are that length, not `evaluation_depth`.
+
+Test `a3_monitor_depth`. Three logs, each `EXIT:101`, cargo `error: test failed`, no `test result:` line. `process::exit(101)` is the falsifier.
+
+`a3-depth-1.log`:
+
+```text
+A3DEPTH did NOT return in 8s after the 2s sample
+A3DEPTH stack_len samples=96374 unique={2: 23224, 3: 35451, 4: 25875, 5: 9643, 6: 1983, 7: 193, 8: 5} head=[3, 2, 2, 4, 3, 3, 2, 2] tail_rev=[3, 3, 4, 4] ticks=91024 lines_at_2s=39114 lines_at_end=187398 early_head=["tick", "3", "tick", "2", "2", "tick"]
+A3DEPTH evaluation_depth unread; field is private
+A3DEPTH RED still-running
+```
+
+`a3-depth-2.log`:
+
+```text
+A3DEPTH did NOT return in 8s after the 2s sample
+A3DEPTH stack_len samples=96572 unique={2: 23290, 3: 35551, 4: 25912, 5: 9638, 6: 1983, 7: 193, 8: 5} head=[3, 2, 2, 4, 3, 3, 2, 2] tail_rev=[4, 4, 4, 4] ticks=91222 lines_at_2s=39209 lines_at_end=187794 early_head=["tick", "3", "tick", "2", "2", "tick"]
+A3DEPTH evaluation_depth unread; field is private
+A3DEPTH RED still-running
+```
+
+`a3-depth-3.log`:
+
+```text
+A3DEPTH did NOT return in 8s after the 2s sample
+A3DEPTH stack_len samples=96680 unique={2: 23357, 3: 35559, 4: 25896, 5: 9673, 6: 1996, 7: 194, 8: 5} head=[3, 2, 2, 4, 3, 3, 2, 2] tail_rev=[2, 2, 2, 2] ticks=91335 lines_at_2s=39481 lines_at_end=188015 early_head=["tick", "3", "tick", "2", "2", "tick"]
+A3DEPTH evaluation_depth unread; field is private
+A3DEPTH RED still-running
+```
+
+Settlement. All three are RED still-running. The chain does not stop. `Stack[]` length is not constant and it does not grow: across about 96k samples the only values are 2 through 8, the mass is 2, 3, and 4, and 8 occurs five times in each run. The head `[3, 2, 2, 4, 3, 3, 2, 2]` is the same in all three. Ticks keep climbing (91024, 91222, 91335) after the 2s sample. That is a shallow re-entry, consistent with the depth reset, not a chain the recursion limit will cut. `evaluation_depth` itself was not read.
+
+#### Director loop, red at HEAD
+
+Test `a3_dirloop`. Program `WithCleanup[InputString["x"], While[True, Null]]`, then `cancel()` and retire. `second-cancel` cancels the handle taken before `eval("")`, 1s later. `timeout-1s` uses `eval_with_timeout("", 1s)`. Three logs, the same five lines, each `EXIT:101`, cargo `error: test failed`, no `test result:` line. `a3-dirloop-1.log` (2 and 3 repeat it):
+
+```text
+A3LOOP plain: did NOT return in 8s
+A3LOOP second-cancel: did NOT return in 8s
+A3LOOP timeout-1s: did NOT return in 8s
+A3LOOP hung=3
+A3LOOP RED plain second-cancel timeout-1s
+```
+
+Settlement. All three cases are RED. They match `.temp/director/gate-630a/loop-1.log` (`DIRLOOP plain`, `second-cancel`, and `timeout-1s` each `did NOT return in 8s`). `process::exit(101)` is the falsifier, the same settlement as the A2 monitor logs. The design above makes each of these return: the ticket and the deadline are armed before `While` runs, `While` polls every iteration, and the 1s deadline is visible to every poll during the drain.
+
+#### f630 under a deadline, red at HEAD
+
+Test `a3_f630_deadline`. Same program as A2: `n630 = 0; f630[] := WithCleanup[InputString["x"], n630 = n630 + 1; Print[n630]; f630[]]; f630[]`, then `cancel()` and `eval_with_timeout("", 1ms)`. The test asserts `count >= 1` and `count < 20`. At HEAD the chain returns in about 45ms at `n630=340`, so the `< 20` assert panics. Three logs, each `test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 28 filtered out; finished in 0.05s` and `EXIT:101`.
+
+`a3-f630-1.log`:
+
+```text
+A3F630 deadline elapsed=46.867975ms first=InputRequired prompt="x" tags=[] retire=Success term=Some(Cancelled) tags=["General::cancel"] trace=0 prints=0 prints=340 n630=340 expected=first-poll-after-deadline
+thread 'a3_probe::a3_f630_deadline' panicked at src/a3_probe.rs:432:5:
+1ms deadline did not stop f630 at its first poll (n630=340, prints=340)
+```
+
+`a3-f630-2.log`:
+
+```text
+A3F630 deadline elapsed=43.481398ms first=InputRequired prompt="x" tags=[] retire=Success term=Some(Cancelled) tags=["General::cancel"] trace=0 prints=0 prints=340 n630=340 expected=first-poll-after-deadline
+thread 'a3_probe::a3_f630_deadline' panicked at src/a3_probe.rs:432:5:
+1ms deadline did not stop f630 at its first poll (n630=340, prints=340)
+```
+
+`a3-f630-3.log`:
+
+```text
+A3F630 deadline elapsed=43.397545ms first=InputRequired prompt="x" tags=[] retire=Success term=Some(Cancelled) tags=["General::cancel"] trace=0 prints=0 prints=340 n630=340 expected=first-poll-after-deadline
+thread 'a3_probe::a3_f630_deadline' panicked at src/a3_probe.rs:432:5:
+1ms deadline did not stop f630 at its first poll (n630=340, prints=340)
+```
+
+Settlement. All three are RED. The deadline does not stop the chain; the recursion bound does, at 340, in 43–47ms. Under the design the deadline is installed before the first cleanup and every drain poll looks at it, so the first poll after 1ms returns `TimeConstraintExceeded` and `n630` stays under 20. The `>= 1` clause is this falsifier's "the cleanup did run" check at HEAD. One millisecond at this rate still fits several increments before the deadline, so a green B1 run should keep `n630 >= 1` as well. If a B1 build stops before the increment, `n630=0` fails `>= 1` and the bound has to be re-calibrated; that is not the HEAD result.
+
+#### Controls, green at HEAD
+
+Test `a3_controls`. Three logs, the same four lines, each `test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 28 filtered out` and `EXIT:0`. `a3-controls-1.log` finished in 0.01s; log 2 in 0.01s; log 3 in 0.02s. `a3-controls-1.log` (2 and 3 repeat the `A3CTRL` lines):
+
+```text
+A3CTRL nested-contract retire=Success term=Some(Cancelled) tags=["General::cancel"] trace=0 prints=0 list=List[1, 1, 0, 0] pending=false
+A3CTRL runs-once retire=Success term=Some(Cancelled) tags=["General::cancel"] trace=0 prints=0 hits630=1 tail630=0
+A3CTRL file-rollback-returned retire=Success term=Some(Cancelled) tags=["General::cancel"] trace=0 prints=0 marker630=0 rolled630=0
+A3CTRL file-rollback-interrupted not in this test; the While[True, Null] retirement does not return, so the marker cannot be read
+```
+
+Settlement. No red rows. The nested program from `suspension_abandonment_contract.rs:599-604` returns `List[1, 1, 0, 0]` with no pending input. `WithCleanup[InputString["x"], hits630 = hits630 + 1]; tail630 = 1` leaves `hits630=1` and `tail630=0`. The file whose cleanup returns (`marker630 = 1` inside, `rolled630 = marker630` outside) rolls back to `marker630=0` and `rolled630=0`. The interrupted-cleanup marker is not claimed. That retirement is the director loop, and it does not return, so the marker cannot be read. Stage B must keep these three green.
+
+### 3. Error kinds, not a third design
+
+`ContinuationSlotMismatch` in the policy is the reason for a drain after a slot fault. `unwind_continuation_fault` (`fault.rs:99-127`) drains with `AbandonReason::ContinuationSlotMismatch`. Cleanup errors during that drain go through the same two emitters as any other cleanup error. The `EvalError::ContinuationSlotMismatch` variant is a different row. A guest cleanup's `evaluate` does not construct it. `SlotMismatch::new` is `pub(in crate::runtime::suspension)`. The only constructor of the variant is `DriverFault::into_error` (`fault.rs:38-41`). The legacy wire rejects it (`suspension/error.rs:271-274`, `unreachable`). The resume driver is what returns it: `drive_resuming_frames` on `Err` calls `unwind_continuation_fault` and then `Err(fault.into_error())` (`suspension/core.rs:679-692`). `continuation_fault_outcome` (`fault.rs:88-96`) is the request-boundary converter. Callers: `session_eval.rs:191` and `:245`, `session_requests.rs:229` and `:340`, plus the typed tests. `session_requests.rs:786-790` maps the variant to `SessionRequestError::ContinuationSlotMismatch` and does not build a `RuntimeMessage`. `evaluation_data.rs:127` and `test_report/evaluation.rs:193` and `:234` re-raise an existing value. They are not constructors.
+
+`Exit` is reported as `Exit::abandoned`, on `Exit`'s existing spec, next to `argt` and `intm` (`catalog/control.rs:143-159`). Template: `Exit[`1`] in a cleanup was not honored because its request was being abandoned.` Same place as `Throw::nocatch` (`control.rs:358-361`) and `Break::nofwd` (`control.rs:332-335`). It is not added to `runtime_message_for_non_loader_eval_error` (`session_helpers.rs:392-424`), and it is not a `General` message. Not implemented.
+
+### 4. Order for Stage B
+
+B1 the drain, B2 the window, B3 the cleanup-error arm. No dependency forces another order.
+
+B1 is first because a retirement that does not return never produces the message B3 would add, and it never produces the outcome B2 re-cuts. B3's new `Exit::abandoned` text is host-visible output. On today's eval route the cumulative skip drops `probe::outer` after a rollback even though the kernel still has it. Landing B3 before B2 would drop the new message the same way. That dependency is already B2 before B3.
+
+Stage B is not started.
+
+## Director ruling on A3, and Stage B1 (2026-10-28 11:25) — grk
+
+**A3 is accepted with three changes, and B1 starts now.** I checked your
+merge and depth probes against the code, and calibrated the B1 falsifiers
+myself (`.temp/director/gate-630a/b1-cal-{1,2,3}.log`).
+
+### The window (B2, briefed after B1's gate)
+
+The convention is accepted: cumulative for every route, `CancellationOutput`
+deleted, and Jupyter and the REPL unchanged. The shape changes. You do not
+need an id set and a lifetime brand. Use sequence-stamped lists:
+
+- Every push to the four lists (messages, prints, trace events with their
+  depths as one list of pairs, and handled errors) takes the next value of
+  one monotone session counter, stored with the item. Snapshots keep the
+  items with their stamps. A restore only removes items, and new items get
+  larger stamps, so every list stays sorted by stamp.
+- A mark is a stamp value, not a position. The only cut, suffix and
+  truncate operations take a mark: "items after mark" and "drop items after
+  mark". Nothing takes a position. With no positional cut API there is
+  nothing a stored `usize` can be used for, so no brand is needed. A mark
+  stays meaningful across any restore.
+- `Reported` is per request and append-only. Publishing appends the session
+  items stamped after the last published mark, then advances the mark. That
+  is a search in a sorted list, not a `HashSet`. Its memory is charged to a
+  `MemoryOwner`.
+
+### The drain (B1)
+
+Accepted:
+- the ticket stays installed until the drain returns, with the interrupt
+  budget armed before the first cleanup;
+- event-driven monitor hooks are off while `abandonment_active` is set;
+- the depth assertion where a nested suspension is requeued;
+- `GuestFormEnvironment::install` and `DisplacedGuestFormEnvironment::restore`
+  do not write the interrupt fields during a drain.
+
+**Not accepted: the masked cancel bit as a per-cleanup budget.** With the
+retiring ticket left cancelled, every cleanup longer than 1024 polls would
+be cut by the cancel that caused the retirement. It would be cut silently,
+because the arm does not report `Cancelled`. A finite cleanup of 20 000
+iterations completes today (control `d` below). It must keep completing.
+
+**Not accepted: the 1 ms retiring-call deadline.** `eval_with_timeout` on a
+session with a pending suspension does not change the timeout
+(`rum-host/src/session.rs:553-557`, and its doc comment). So no retiring
+call's timeout applies to a retirement. The deadline in force during
+retirement is the suspended request's own absolute deadline, as for resume,
+and that already bounds a looping cleanup today (control `b` below). Your
+`f630` falsifier rests on the wrong premise, and is dropped.
+
+The rule instead: **each cancel interrupts the guest work running when it
+arrives, and the cancel that causes a retirement is consumed by that
+retirement.**
+- On a retirement drain, cleanups start with no pending interrupt and run to
+  completion.
+- A further host interrupt during any drain ends the running cleanup with
+  that interrupt's error. There are two:
+  - another `cancel()` of the same generation, the handle the host already
+    holds (today that call is a no-op, `request_cancellation.rs:187-192`);
+  - the deadline.
+- After either one, the drain enters no further cleanups. Every structural
+  restoration still runs (scopes, file rollback, frame retirement). The
+  drain reports one message, `WithCleanup::skipped`, with template
+  "`1` pending cleanups did not run because a host interrupt stopped the
+  retirement."
+- On a drain inside a live request (helper, `ValueQ`, accounting), no
+  cancel has been consumed. A cancel there interrupts the drain the same
+  way, and then the request observes it at its next poll.
+
+So `RequestInterruptState` must record a cancel that arrives after the
+retirement consumed the first. Two things stay as they are: a stale
+generation's cancel has no effect, and the handle API does not change.
+
+**No cost on the ordinary path.**
+- Do not unmask `poll_host_interrupt_if_due`.
+- The drain itself checks for a new interrupt (an unconsumed cancel, or an
+  expired deadline) before it enters each cleanup. That check is cold, once
+  per frame.
+- Inside a cleanup, the existing masked poll observes the same "unconsumed
+  cancel". Change what `is_cancelled` means for a retirement ticket, not how
+  often the poll runs.
+
+### Stage B1 — the drain terminates under host control, then STOP
+
+**Falsifiers (calibrated by the director: red at HEAD 3 of 3, controls green
+3 of 3,** `.temp/director/gate-630a/probe/src/lib.rs`, `dir_b1_calibration`,
+`dir_retirement_cleanup_loop`, and your `a3_monitor_depth`):
+
+- **F1, escalation.** `WithCleanup[InputString["x"], While[True, Null]]`,
+  then `cancel()` and `eval("")`, with a second `cancel()` on the same handle
+  1 s later from another thread. HEAD: does not return in 8 s. After B1: it
+  returns `Cancelled` within 2 s of the second cancel, and the messages hold
+  one `General::cancel`.
+- **F2, the monitor display.** `markerD = 0; Monitor[1+2, WithCleanup[InputString["d"], markerD = markerD + 1]]`
+  under plain `eval`. HEAD: does not return. After B1: it returns `3`,
+  with no cancel needed.
+- **F3, escalation skips later cleanups.** Two nested cleanups. The inner
+  one loops and the outer one sets a marker, with a `Block` scope and a
+  nested `Get` around them. Escalate during the inner one. Expected: the
+  outer marker is unset, `WithCleanup::skipped` appears once with count 1,
+  the `Block` variable is restored, and the file's assignment is rolled
+  back. Write it and calibrate it red at HEAD (it hangs) before you change
+  code.
+- **Controls, green at HEAD and after:**
+  - `b`: the original request under `eval_with_timeout(…, 500 ms)`, then
+    cancel and retire. It returns at about 502 ms today, and must not get
+    slower.
+  - `d`: `k630 = 0; WithCleanup[InputString["x"], Do[k630 = k630 + 1, {20000}]]`,
+    then cancel and retire. `k630` is `20000`.
+  - your `nested-contract`, `runs-once` and `file-rollback-returned`;
+  - all of `suspension_abandonment_contract.rs` and
+    `native_stack_thread_scope.rs`.
+
+Put F1–F3 and the controls in a new `crates/rum-host/tests/retirement_interrupt.rs`.
+Each runs on a thread with a bounded receive, and a hang fails the test
+instead of hanging the binary.
+
+**Scope.**
+- **MAY modify:**
+  - in `crates/rum-runtime/src/runtime/`: `suspension/core/abandon.rs`,
+    `debug_tools/monitor.rs`, `session/session_requests.rs`,
+    `session/session_helpers.rs`, `session/session_api.rs`,
+    `model/request_cancellation.rs`, `session/guest_loading/scope.rs`, and
+    `eval_core/mod.rs` only if the poll's cancel test must call a new
+    predicate;
+  - the message registration in `crates/rum-stdlib/src/catalog/control.rs`,
+    and the regenerated `docs/reference/builtins.md`, produced by its
+    generator, not by hand;
+  - the new test file;
+  - the standing inventories, by replay (TEMPLATE).
+- **Disclosure duty:** any other file that must change, with its reason.
+  Anything beyond a mechanical change is a STOP.
+- **MUST NOT touch:** `rum-cli`, `rum-jupyter`, `rum-repl`, `docs/` other
+  than the generated reference, `TODO.md`, `Cargo.lock`. The cleanup-error
+  arm (B3) and the window (B2) are not in B1.
+
+**Run, single-threaded:**
+- `cargo fmt --check`;
+- F1–F3 and the controls, three runs each;
+- `cargo test -p rum-host` (all targets);
+- `cargo test -p rum-runtime --lib`;
+- `frame_root_trace`;
+- the standing inventories;
+- **the whole workspace** (TEMPLATE: every source stage runs it).
+
+Report the `test result:` lines verbatim.
+
+**Then STOP.** Measurement follows my gate. The resume panel holds cleanup
+labels; abandonment is a cold path, and the poll is unchanged.
+
+Append "Executing-agent report — B1". Every quoted line must be copied from
+a file you name. Quote every verdict line your instruments print, and settle
+each flagged row.
