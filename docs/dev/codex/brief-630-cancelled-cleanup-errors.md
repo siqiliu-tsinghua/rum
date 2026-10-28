@@ -4069,10 +4069,11 @@ or session list.
    `outerMarker630 = 0; WithCleanup[WithCleanup[InputString["x"], While[True, Null]], outerMarker630 = 1]`,
    with `cancel()`, retire, and a second `cancel()` 1 s later on another
    thread. Use B1's bounded-thread pattern (`retirement_interrupt.rs`, `on_thread`).
-   - Expected at HEAD and after: `outerMarker630` is 0, and the tags are
-     exactly `["WithCleanup::skipped", "General::cancel"]`.
-   - Run it at HEAD (stash nothing; copy the tree to `.temp/brief-630/` if you
-     need a HEAD build) and after, three runs each.
+   - Expected: `outerMarker630` is 0, and the tags are exactly
+     `["WithCleanup::skipped", "General::cancel"]`.
+   - Run it three times on the tree as it is. With the exclusion in place, the
+     arm does not report `Cancelled`, so HEAD gives the same list by
+     construction. No HEAD build is needed.
    - Then run the mutant that removes only the `Cancelled` arm from
      `escaped_cleanup_error`, once. My reading is that it gives
      `["General::cancel", "WithCleanup::skipped"]`. The arm pushes the cancel
