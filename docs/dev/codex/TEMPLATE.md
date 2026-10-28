@@ -111,6 +111,29 @@ a reviewable plan plus the drafted follow-up briefs, still not a code change.
   `crates/rum-runtime/src/runtime/tests/frame_root_trace.rs` — and that edit
   is in scope wherever the fence puts rum-runtime; add exactly the new types,
   nothing else.
+  - **Three more standing inventories pin source sites the same way**
+    (added 2026-10-28, after brief-629).
+    - *LP01.* `cargo test -p rum-stdlib --test suspension_oracle --
+      logical_counter_port` checks `logical-profile-required.tsv` (producer
+      site and hash, columns 17 and 19), `logical-profile-bindings.tsv`
+      (column 3) and the `producers` table in `logical-profile-losses.json`,
+      all under `crates/rum-stdlib/tests/suspension_oracle/inventory/`. A
+      producer may move; its statement text may not.
+    - *Typed-slot receipts.* `cargo test -p rum-stdlib --test
+      typed_slot_census` checks `typed-slot-stages.tsv`, whose receipts name
+      their insertion sites.
+    - *The rejection census.* Its counts are asserted with reasons in
+      `crates/rum-stdlib/src/tests/retention_closure/census/tests.rs`. If
+      they move, STOP with a comparison keyed by kind, file, callee and
+      reason; the director rules on it and updates the file.
+  - **A brief never forbids this replay.** Either the worker replays, or the
+    brief says the director replays and that the run continues past a
+    failing standing inventory. A brief that forbids the edit and also stops
+    on the failing test can only stop (brief-629 A5).
+  - **Any stage that changes source runs the whole workspace before it
+    reports.** A later measurement-only stage does not stand in for that run
+    (brief-629: the ownership rows went stale at A3 and surfaced at the
+    final gate).
 - Do NOT add unconditional cost to the default evaluation path. Any profiling
   counter or instrumentation MUST be behind an env-gated cold path (the
   existing `RUM_PROFILE_*` `AtomicU8` pattern); never a `Mutex`/allocation/
@@ -281,7 +304,11 @@ edits costs the director a reconstruction.
 1. What changed — per file, with line ranges and a one-line why (or
    "diagnostic only, no source change").
 2. Verification — each command run, with the exact verbatim output lines
-   (test counts, per-label rows, or attribution tables).
+   (test counts, per-label rows, or attribution tables). **Quote every
+   verdict line your own instruments print** (PASS, STOP, flagged), and
+   settle each flagged row in the text. A report that says "no STOP" while
+   its own closure file marks a row STOP hides the row from its reader, even
+   when the row turns out not to be one (brief-629 A5b).
 3. The finding / verdict — for diagnostic, the mechanism the numbers point to;
    for implementation, the before/after rows and any neighbor checked.
 4. Stop-loss / open questions — where you stopped and why, anything unsure
