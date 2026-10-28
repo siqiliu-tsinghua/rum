@@ -3898,3 +3898,208 @@ arm adds one mark read before each cleanup and, on an error, one cold call.
 Append "Executing-agent report — B3". Every quoted line must be copied from
 a file you name. Quote every verdict line your instruments print, and settle
 each flagged row.
+
+## Executing-agent report — B3
+
+STOP. `b3k7` stayed green when `CheckpointRollbackDiscard` was flipped to report. The mutant is reverted. Census pairing, `cargo fmt --check`, `frame_root_trace`, the docgen drift test, the standing inventories, and the workspace were not run.
+
+The arm is in `crates/rum-runtime/src/runtime/suspension/core/abandon.rs`, inserted after the capture at line 94. Lines 43, 44, and 94 are still the guest-form take, install, and capture. `Exit::abandoned` is registered on `Exit` in `crates/rum-stdlib/src/catalog/control.rs`. The generator rewrote `docs/reference/builtins.md`. The new tests are `crates/rum-host/tests/cleanup_errors.rs`, `b3_superseded_queued_input_does_not_report_the_cleanup_throw` in `crates/rum-runtime/src/runtime/tests/suspension_abandonment.rs`, and `b3_cleanup_throw_reports_nocatch_without_replacing_the_first_fault` in `crates/rum-runtime/src/runtime/suspension/typed/tests/driver_faults.rs`.
+
+### Red at HEAD, before the arm
+
+`.temp/brief-630/logs/b3-head-host-1.log` line 85: `test result: FAILED. 10 passed; 6 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.37s`
+`.temp/brief-630/logs/b3-head-host-1.log` line 90: `EXIT:101`
+`.temp/brief-630/logs/b3-head-host-2.log` line 76: `test result: FAILED. 10 passed; 6 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.38s`
+`.temp/brief-630/logs/b3-head-host-2.log` line 81: `EXIT:101`
+`.temp/brief-630/logs/b3-head-host-3.log` line 76: `test result: FAILED. 10 passed; 6 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.38s`
+`.temp/brief-630/logs/b3-head-host-3.log` line 81: `EXIT:101`
+
+Each falsifier panicked at its message-list assertion. From `b3-head-host-1.log`:
+
+- line 18: `  left: ["General::cancel"]`
+- line 19: ` right: ["General::reslim", "General::cancel"]`
+- line 26: `  left: ["General::cancel"]`
+- line 27: ` right: ["Throw::nocatch", "General::cancel"]`
+- line 33: `  left: ["General::cancel"]`
+- line 34: ` right: ["Exit::abandoned", "General::cancel"]`
+- line 40: `  left: ["probe::outside", "General::cancel"]`
+- line 41: ` right: ["probe::outside", "Throw::nocatch", "General::cancel"]`
+- line 47: `  left: ["General::cancel"]`
+- line 48: ` right: ["Throw::nocatch", "General::cancel"]`
+- line 54: `  left: ["General::cancel"]`
+- line 55: ` right: ["Throw::nocatch", "General::cancel"]`
+
+`b3-head-host-2.log` lines 9, 17, 24, 31, 38, and 45, and `b3-head-host-3.log` lines 9, 17, 24, 31, 38, and 45, are the same six `left:` lines. `b3f4` is the only falsifier whose HEAD list is `["probe::outside", "General::cancel"]`. The nine controls passed in each run.
+
+`b3p1` at HEAD, all three logs. `b3-head-host-1.log` line 71: `test b3p1_guest_deadline_on_the_drain ... B3P1VERDICT tc630=0 Success value=TerminatedEvaluation["Cancelled"] termination=Some(Cancelled) messages=["General::cancel:evaluation cancelled by host"] prints=[]`
+`b3-head-host-1.log` line 72: `B3P1TAGS ["General::cancel"]`
+`b3-head-host-2.log` line 62 and `b3-head-host-3.log` line 62 are the same `B3P1VERDICT` line. `tc630` is 0 and the only tag is `General::cancel`.
+
+In-crate, three runs, each `EXIT:101`. `.temp/brief-630/logs/b3-head-runtime-1.log` line 28: `test runtime::suspension::typed::tests::driver_faults::b3_cleanup_throw_reports_nocatch_without_replacing_the_first_fault ... B3SLOTVERDICT tags=[]`
+line 42: `test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 1223 filtered out; finished in 0.02s`
+line 47: `EXIT:101`
+The panic is at the message assertion, after the fault and the probe count. `.temp/brief-630/logs/b3-head-runtime-1.log` line 34: `test runtime::tests::suspension_abandonment::b3_superseded_queued_input_does_not_report_the_cleanup_throw ... B3QVERDICT tags=[]`
+line 35: `ok`
+Runs 2 and 3 print the same two verdicts (`tags=[]` and `tags=[]`) and `EXIT:101`. The queued-input control is green at HEAD. The slot falsifier is red at HEAD.
+
+### After the arm
+
+The first after-run, before `b3p1` was pinned, is `.temp/brief-630/logs/b3-after-host-1.log` line 40: `test b3p1_guest_deadline_on_the_drain ... B3P1VERDICT tc630=0 Success value=TerminatedEvaluation["Cancelled"] termination=Some(Cancelled) messages=["General::timelim:evaluation exceeded TimeConstrained limit", "General::cancel:evaluation cancelled by host"] prints=[]`
+line 41: `B3P1TAGS ["General::timelim", "General::cancel"]`
+line 44: `test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.37s`
+line 46: `EXIT:0`
+
+`tc630` stayed 0, so the cleanup did not complete. The escaped error is `TimeConstraintExceeded` and the host interrupt is not pending (the retirement has consumed the cancel, and this probe sets no `eval_deadline`). That is `General::timelim`, then `General::cancel`. The after-state follows the rule, so `b3p1` now asserts `tc630 == "0"` and `["General::timelim", "General::cancel"]`.
+
+Pinned runs, all `EXIT:0`:
+
+- `.temp/brief-630/logs/b3-green-host-1.log` line 33: `test b3p1_guest_deadline_on_the_drain ... B3P1VERDICT tc630=0 Success value=TerminatedEvaluation["Cancelled"] termination=Some(Cancelled) messages=["General::timelim:evaluation exceeded TimeConstrained limit", "General::cancel:evaluation cancelled by host"] prints=[]`
+- line 34: `B3P1TAGS ["General::timelim", "General::cancel"]`
+- line 37: `test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.38s`
+- line 39: `EXIT:0`
+- `.temp/brief-630/logs/b3-green-host-2.log` line 35: `test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.38s`
+- line 37: `EXIT:0`
+- `.temp/brief-630/logs/b3-green-host-3.log` line 35: `test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.38s`
+- line 37: `EXIT:0`
+
+Host runs 2 and 3 print the same `B3P1VERDICT` and `B3P1TAGS` lines. The six falsifiers and nine controls passed in each of the 16.
+
+`.temp/brief-630/logs/b3-green-runtime-1.log` line 26: `test runtime::suspension::typed::tests::driver_faults::b3_cleanup_throw_reports_nocatch_without_replacing_the_first_fault ... B3SLOTVERDICT tags=["Throw::nocatch"]`
+line 28: `test runtime::tests::suspension_abandonment::b3_superseded_queued_input_does_not_report_the_cleanup_throw ... B3QVERDICT tags=[]`
+line 31: `test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1223 filtered out; finished in 0.02s`
+line 33: `EXIT:0`
+`.temp/brief-630/logs/b3-green-runtime-2.log` line 31: `test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1223 filtered out; finished in 0.02s`
+line 33: `EXIT:0`
+`.temp/brief-630/logs/b3-green-runtime-3.log` line 31: `test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1223 filtered out; finished in 0.03s`
+line 33: `EXIT:0`
+
+Runs 2 and 3 print the same `B3SLOTVERDICT tags=["Throw::nocatch"]` and `B3QVERDICT tags=[]`. The first fault stays the slot mismatch; the failure's messages gained `Throw::nocatch`. The superseded-input control still has no `Throw::nocatch`.
+
+`b3f3`'s text is the registered sentence. `.temp/brief-630/logs/b3-after-host-1.log` line 18: `test b3f3_cancelled_cleanup_exit_is_reported_not_honored ... DIR630B3 "outerRan630 = 0; WithCleanup[WithCleanup[InputString[\"body\"], Exit[3]], outerRan630 = 1]": Success value=TerminatedEvaluation["Cancelled"] termination=Some(Cancelled) messages=["Exit::abandoned:Exit[3] in a cleanup was not honored because its request was being abandoned.", "General::cancel:evaluation cancelled by host"] prints=[]`
+
+`.temp/brief-630/logs/b3-builtins.log` line 9: `wrote 643 builtin entries to /home/remi/dev/rum/crates/rum-stdlib/../../docs/reference/builtins.md`
+line 10: `EXIT:0`
+`docs/reference/builtins.md` line 1663: `  - Exit::abandoned — Exit[`1`] in a cleanup was not honored because its request was being abandoned.`
+The generator's diff against the B2 gate copy of that file is that one added line.
+
+### Mutants, each once, then reverted
+
+1. `SupersededOrQueuedInputDiscard` flipped to `true`. `.temp/brief-630/logs/b3-mutant-queued.log` line 28: `test runtime::tests::suspension_abandonment::b3_superseded_queued_input_does_not_report_the_cleanup_throw ... B3QVERDICT tags=["Throw::nocatch"]`
+line 31: `superseded input must not report the cleanup throw: ["Throw::nocatch"]`
+line 40: `test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1224 filtered out; finished in 0.01s`
+line 45: `EXIT:101`
+Reverted.
+
+2. Both host-interrupt exclusions removed (`Cancelled`, and `TimeConstraintExceeded` when `interrupted`). `.temp/brief-630/logs/b3-mutant-interrupt.log` line 14: `test control_b_original_deadline_bounds_the_cleanup ... B1CTRL b Retired { elapsed_ms: 500, termination: Some(Cancelled), value: "TerminatedEvaluation[\"Cancelled\"]", tags: ["General::timelim", "General::cancel"], skipped: [] }`
+line 18: `  left: ["General::timelim", "General::cancel"]`
+line 19: ` right: ["General::cancel"]`
+line 32: `test f1_second_cancel_interrupts_retirement_cleanup ... B1F1 Retired { elapsed_ms: 1000, termination: Some(Cancelled), value: "TerminatedEvaluation[\"Cancelled\"]", tags: ["General::cancel"], skipped: [] }`
+line 44: `test result: FAILED. 8 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.10s`
+line 49: `EXIT:101`
+`control_b` went red with `General::timelim`, as specified. `f1` stayed green with one `General::cancel`. The other six tests in that file passed. A second `General::cancel` does not appear: `append_cancel_message` returns when one is already present (`crates/rum-runtime/src/runtime/session/session_requests.rs` lines 766–770):
+
+```
+    if messages
+        .iter()
+        .any(|message| message.symbol == "General" && message.tag == "cancel")
+    {
+        return;
+    }
+```
+
+Reverted. The `TimeConstraintExceeded` exclusion is what keeps `control_b` at `["General::cancel"]`.
+
+3. `CheckpointRollbackDiscard` flipped to `true`. `.temp/brief-630/logs/b3-mutant-k7.log` line 14: `test b3k7_checkpoint_rollback_discard_stays_silent ... ok`
+line 16: `test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 15 filtered out; finished in 0.00s`
+line 18: `EXIT:0`
+The cleanup did run: the passing test requires the print sink to have seen `valueq-cleanup`, and the message list stayed empty. `restore_evaluation_rollback_snapshot` abandons with `CheckpointRollbackDiscard` and then restores the loader snapshot. `crates/rum-runtime/src/runtime/session/session_helpers.rs` line 245: `self.abandon_pending_suspension(AbandonReason::CheckpointRollbackDiscard);`
+line 199: `self.messages = snapshot.messages;`
+A message pushed during that abandon is replaced by the pre-trial snapshot. The test stays green either way. The brief says that a green `b3k7` means the control does not reach the arm, and to STOP. Reverted.
+
+The reverted tree's host tests: `.temp/brief-630/logs/b3-reverted-host.log` line 31: `test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.38s`
+line 33: `EXIT:0`
+
+### Flagged rows
+
+- `b3f1`–`b3f3`, `b3f5`, `b3f6`: HEAD `["General::cancel"]`; after the arm, the lists in the brief's table. Settled by the green runs.
+- `b3f4`: HEAD `["probe::outside", "General::cancel"]`; after, `["probe::outside", "Throw::nocatch", "General::cancel"]`, and `fileRan630` is 0 (the assertion before the message list passed). Settled.
+- `b3k1`–`b3k6`, `b3k8`, `b3k9`: green at HEAD and after. Settled.
+- `b3k7`: green at HEAD and after, and still green when the policy reports `CheckpointRollbackDiscard`. Not settled. This is the stop.
+- `b3p1`: HEAD `tc630=0`, `["General::cancel"]`. After, `tc630=0`, `["General::timelim", "General::cancel"]`. The cleanup did not complete, and the escaped `TimeConstraintExceeded` has no host interrupt pending, so the message is `General::timelim`. Pinned. Settled.
+- Queued-input control: value `"drain"`, `queuedCleaned630` is 1, messages have no `Throw::nocatch` (`B3QVERDICT tags=[]`). The policy flip makes the same test fail with `["Throw::nocatch"]`. Settled.
+- Slot falsifier: first fault kept and the probe counts 1 both before and after (the message assertion is the one that failed at HEAD). Messages gain `Throw::nocatch`. Settled.
+
+No expected value outside the new tests was changed. `rum-cli`, `rum-jupyter`, `rum-repl`, and `docs/` other than the generated reference were not edited.
+
+## Director ruling on the B3 stop (2026-10-29 04:20) — the stop was my miscalibrated mutant; continue with the run list — grk
+
+**The stop is mine.** My third mutant assumed two outcomes: `b3k7` goes red,
+or the control never reaches the arm. You showed a third, with the line that
+decides it. The cleanup runs and the arm runs. Then
+`restore_evaluation_rollback_snapshot` (`session_helpers.rs:245`, then `:199`)
+replaces the session's messages with the pre-trial snapshot. Nothing on the
+host side sees a message live: there is no message sink.
+
+So `CheckpointRollbackDiscard`'s stance cannot be observed through any outcome
+or session list.
+- The stance stays "do not report". The trial is discarded, so a message
+  pushed into it would only be thrown away.
+- The exhaustive policy `match` is its record. `b3k7` stays as the outcome
+  control, unchanged: `ValueQ`'s outcome never carries the cleanup's error,
+  whatever the stance.
+- The mutant is withdrawn.
+
+**Accepted.**
+- The arm, `escaped_cleanup_error`, `report_abandoned_cleanup_error`, the
+  `Exit::abandoned` registration, and the regenerated reference line. They are
+  the shape as briefed. `push_message` checks `message_enabled`, so
+  `Off[Exit::abandoned]` silences it like any other message.
+- `b3p1` as pinned. The guest deadline that the guest-form environment
+  restores has passed, so the cleanup is cut before its assignment. At HEAD
+  that was silent (`tc630=0`, `["General::cancel"]`). Now it reads
+  `General::timelim`, by the rule.
+- Mutants 1 and 2, and your reading of mutant 2. `f1` stays green without the
+  `Cancelled` exclusion, because the final cancel dedups against the handled
+  record. So that exclusion does not prevent a second `General::cancel`. What
+  it fixes is the **order**, and nothing pins that yet.
+
+**Continue, in this order.**
+1. **Pin the order.** Add `b3k10_escalation_outside_a_file` to
+   `cleanup_errors.rs`. It is B1's F3 without the file:
+   `outerMarker630 = 0; WithCleanup[WithCleanup[InputString["x"], While[True, Null]], outerMarker630 = 1]`,
+   with `cancel()`, retire, and a second `cancel()` 1 s later on another
+   thread. Use B1's bounded-thread pattern (`retirement_interrupt.rs`, `on_thread`).
+   - Expected at HEAD and after: `outerMarker630` is 0, and the tags are
+     exactly `["WithCleanup::skipped", "General::cancel"]`.
+   - Run it at HEAD (stash nothing; copy the tree to `.temp/brief-630/` if you
+     need a HEAD build) and after, three runs each.
+   - Then run the mutant that removes only the `Cancelled` arm from
+     `escaped_cleanup_error`, once. My reading is that it gives
+     `["General::cancel", "WithCleanup::skipped"]`. The arm pushes the cancel
+     during the drain, before `finish_ordered_abandonment` pushes the skip
+     notice, and `finalize_top_level_eval_value` then dedups. Quote the
+     failing line, then revert.
+   - If the mutant leaves it green, do not stop. Report both lists and go on.
+     The exclusion then has no observable effect, and I will rule on it at
+     the gate.
+2. **Exact lists in the two in-crate tests.** Both values are known.
+   - The slot falsifier asserts `assert_eq!(tags, ["Throw::nocatch"])`.
+   - The queued-input control asserts that `tags` is empty.
+
+   Rerun each three times.
+3. **The rest of the run list, unchanged:**
+   - census pairing under the rule in Stage B3;
+   - `cargo fmt --check`;
+   - `frame_root_trace`;
+   - the docgen drift test;
+   - the standing inventories;
+   - `cargo test -p rum-host` (all targets);
+   - `cargo test -p rum-runtime --lib`;
+   - the whole workspace.
+
+The B3 stop conditions stand, except the withdrawn `b3k7` mutant. Report
+every `test result:` line verbatim.
+
+Append "Executing-agent report — B3, continued" and STOP. Every quoted line
+must be copied from a file you name. Quote every verdict line your instruments
+print, and settle each flagged row.
