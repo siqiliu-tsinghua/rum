@@ -102,7 +102,23 @@ filter cuts this census work a third time, switch workers.**
   settles which `AbandonReason`s emit, from an inventory of the message
   channel each retirement has. Raw material:
   `.temp/brief-628/drafts/brief-abandonment-cleanup-diagnostics.md` (its
-  target shape predates brief-629).
+  target shape predates brief-629). **brief-630**: Stage A done, policy
+  accepted (`ce95b440`); A2 inventories the two defects below; Stage B
+  then fixes the window, the drain's termination, and the arm, one per step.
+- **Found by brief-630 Stage A (2026-10-28): cancelling a public file that
+  emitted messages before its `InputString` corrupts the cancel window.**
+  The cancel path takes its checkpoint at the current length, after the
+  script loop spliced the earlier messages back. The file rollback then
+  shortens the list below that checkpoint. With one earlier message, the
+  outcome loses `General::cancel`. With two, `split_accounted_messages`
+  panics (`diagnostics.rs:33`), and the host reports `HostFailureCode::Panic`.
+- **Found by brief-630 Stage A, confirmed by the director: a drain that never
+  terminates.** `Monitor[1+2, WithCleanup[InputString["d"], cleanup]]` runs
+  its cleanup about 58k times per second, forever, at flat memory. A host
+  cancel and a 1 s `eval_with_timeout` both fail to stop it. Each cleanup's
+  evaluation refreshes the display, which suspends again and queues another
+  cleanup. It needs `Capability::Interactive`, so the sandboxed profiles
+  cannot reach it; the CLI and Jupyter can.
 - **Three dead-code warnings in `crates/rum-runtime/src/runtime/test_builtins.rs`.**
   `register_test_vm_template_builtins` has no caller, so the two
   registrations reached only through it are dead too. They have been present
