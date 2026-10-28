@@ -2585,3 +2585,375 @@ and each item grows by eight bytes.
 Append "Executing-agent report — B2". Every quoted line must be copied from
 a file you name. Quote every verdict line your instruments print, and settle
 each flagged row.
+
+## Executing-agent report — B2
+
+STOP at step 2. A consumer needs a cut a mark cannot express. Step 3 (`ReportedOutput`, admission publication, script route without the splice) was not started. Step 4 (the `rum-cli` `CancellationOutput` deletion) was not started. B3 was not started. Measurement panels were not run. Standing inventories were not replayed.
+
+The `OutputLog` conversion is in the working tree. Routes still package from the same checkpoints. The script error path still puts the earlier accumulator and the failed form back, in that order, with new stamps (`session_eval.rs:362-389`). That re-push is not what moved the W1 script cells: W1's script is one form, the accumulator is empty, and the splice does not run.
+
+### Compile and format
+
+`.temp/brief-630/logs/b2-step2-check-2.log` line 76: `Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.65s`. Line 77: `EXIT:0`.
+
+`.temp/brief-630/logs/b2-step2-fmt-2.log` line 1: `EXIT:0`. After the allowlist edit, `.temp/brief-630/logs/b2-step2-fmt-3.log` line 1: `EXIT:0`.
+
+### HEAD calibration, three runs, before this remeasure
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 25: `W1VERDICT cells=4 red=4 green=0`
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 97: `W2VERDICT cells=36 panic=10 lost-cancel=6 dropped-prefix=8 check=0 other=0 green=12`
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 106: `W3VERDICT green`
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 115: `test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s`
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 118: `EXIT:101`
+
+`.temp/brief-630/logs/b2-w-head-2.log` line 24: `W1VERDICT cells=4 red=4 green=0`
+
+`.temp/brief-630/logs/b2-w-head-2.log` line 96: `W2VERDICT cells=36 panic=10 lost-cancel=6 dropped-prefix=8 check=0 other=0 green=12`
+
+`.temp/brief-630/logs/b2-w-head-2.log` line 105: `W3VERDICT green`
+
+`.temp/brief-630/logs/b2-w-head-2.log` line 117: `EXIT:101`
+
+`.temp/brief-630/logs/b2-w-head-3.log` line 24: `W1VERDICT cells=4 red=4 green=0`
+
+`.temp/brief-630/logs/b2-w-head-3.log` line 96: `W2VERDICT cells=36 panic=10 lost-cancel=6 dropped-prefix=8 check=0 other=0 green=12`
+
+`.temp/brief-630/logs/b2-w-head-3.log` line 105: `W3VERDICT green`
+
+`.temp/brief-630/logs/b2-w-head-3.log` line 117: `EXIT:101`
+
+HEAD W1 cells, `.temp/brief-630/logs/b2-w-head-1.log` lines 21–24. Runs 2 and 3 repeat the same four cells at lines 20–23.
+
+```
+W1CELL route=eval retire=eval input=["probe::inside"] kernel=["probe::outer", "General::cancel"] message_list=List[probe::outer, General::cancel] cli=[] jupyter=[] repl=[] panic=false
+W1CELL route=eval retire=resume input=["probe::inside"] kernel=["probe::outer", "General::cancel"] message_list=List[probe::outer, General::cancel] cli=[] jupyter=[] repl=[] panic=false
+W1CELL route=script retire=eval input=["probe::inside"] kernel=["General::cancel"] message_list=List[General::cancel] cli=[] jupyter=[] repl=[] panic=false
+W1CELL route=script retire=resume input=["probe::inside"] kernel=["General::cancel"] message_list=List[General::cancel] cli=[] jupyter=[] repl=[] panic=false
+```
+
+### Step 2 remeasure is not cell-for-cell
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 75: `W1VERDICT cells=4 red=4 green=0`
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 118: `W2VERDICT cells=36 panic=0 lost-cancel=0 dropped-prefix=24 check=0 other=0 green=12`
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 66: `test w3_rolled_back_unreported_stays_out ... ok`
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 130: `test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s`
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 133: `EXIT:101`
+
+This log has no `W3VERDICT` line. The passing test is the one that prints it, and cargo kept that test's output. The harness counts 1 passed and 2 failed, and the passed name is `w3_rolled_back_unreported_stays_out`.
+
+Step 2 W1 cells, `.temp/brief-630/logs/b2-w-step2-1.log` lines 71–74:
+
+```
+W1CELL route=eval retire=eval input=["probe::inside"] kernel=["probe::outer", "General::cancel"] message_list=List[probe::outer, General::cancel] cli=[] jupyter=[] repl=[] panic=false
+W1CELL route=eval retire=resume input=["probe::inside"] kernel=["probe::outer", "General::cancel"] message_list=List[probe::outer, General::cancel] cli=[] jupyter=[] repl=[] panic=false
+W1CELL route=script retire=eval input=["probe::inside"] kernel=["probe::outer", "General::cancel"] message_list=List[probe::outer, General::cancel] cli=[] jupyter=[] repl=[] panic=false
+W1CELL route=script retire=resume input=["probe::inside"] kernel=["probe::outer", "General::cancel"] message_list=List[probe::outer, General::cancel] cli=[] jupyter=[] repl=[] panic=false
+```
+
+**W1 settlement.**
+
+- `eval` / `eval` and `eval` / `resume`: the step 2 lines are the same text as HEAD. Still red. The kernel is `["probe::outer", "General::cancel"]` (inside is gone) and `cli`, `jupyter`, and `repl` are empty.
+- `script` / `eval` and `script` / `resume`: moved. HEAD kernel `["General::cancel"]`, message list `List[General::cancel]`. Step 2 kernel `["probe::outer", "General::cancel"]`, message list `List[probe::outer, General::cancel]`. Still red, because the front-end merges are empty and the kernel is not `["probe::inside", "probe::outer", "General::cancel"]`. Input tags stay `["probe::inside"]`. `panic=false` on all four cells at HEAD and at step 2.
+
+**Why a mark cannot express the script cut.** `finish_cancelled_pending_evaluation_request` (`session_requests.rs:58-69`) takes the stored pending checkpoint, or `RequestCheckpoint::new(self)` when `pending_eval_request` is absent, and only then calls `abandon_pending_suspension`. The script request's `InputRequired` path is `finish_completed_request_failure` (`session_requests.rs:399`), which does not store `pending_eval_request`, so the retirement checkpoint is the live clock and, at HEAD, the live length, taken before abandonment. HEAD's W1 script cell shows what that length meant. The file rollback removed `probe::inside`, and the cleanup's `probe::outer` was pushed into that slot, so `split_off` at the stored length took an empty tail. The retirement outcome and `$MessageList` are only `General::cancel`, which is appended after the cut. The mark taken at that same moment means stamps after that clock. `probe::outer` is stamped during abandonment, so `split_after` / `after` include it. A mark has no reading that means "the tail of the current vec after a rollback reused an earlier index."
+
+**W2 settlement.** The verdict counts moved from `panic=10 lost-cancel=6 dropped-prefix=8 … green=12` to `panic=0 lost-cancel=0 dropped-prefix=24 … green=12`. The tuple assert records the same move.
+
+`.temp/brief-630/logs/b2-w-head-1.log` lines 100–102:
+
+```
+assertion `left == right` failed: window matrix is not the cumulative contract
+  left: (10, 6, 8, 0, 0, 12)
+ right: (0, 0, 0, 0, 0, 36)
+```
+
+`.temp/brief-630/logs/b2-w-step2-1.log` lines 121–123:
+
+```
+assertion `left == right` failed: window matrix is not the cumulative contract
+  left: (0, 0, 24, 0, 0, 12)
+ right: (0, 0, 0, 0, 0, 36)
+```
+
+Unchanged, still green: every `n=0` cell (12). HEAD `.temp/brief-630/logs/b2-w-head-1.log` lines 31–33, 52–54, 67–69, 76–78. Step 2 `.temp/brief-630/logs/b2-w-step2-1.log` lines 82–84, 91–93, 100–102, 109–111. Each line is `class=green` with `retire=["General::cancel"]`.
+
+Unchanged, still `dropped-prefix` (8): script `n=1` trace, script `n=2` trace, and eval-get `n=1` and `n=2` for messages, trace, and handled. HEAD lines 56, 62, 70–75. Step 2 lines 95, 98, 103–108. Each stays `class=dropped-prefix` with `retire=["General::cancel"]`.
+
+Panic at HEAD, `dropped-prefix` at step 2 (10). Both lines copied from the named logs.
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 38: `W2CELL route=file n=1 kind=trace class=panic suspended=true input=[] retire=[] trace_in=1 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 86: `W2CELL route=file n=1 kind=trace class=dropped-prefix suspended=true input=[] retire=["General::cancel"] trace_in=1 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 43: `W2CELL route=file n=2 kind=messages class=panic suspended=true input=["probe::e0", "probe::e1"] retire=[] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 88: `W2CELL route=file n=2 kind=messages class=dropped-prefix suspended=true input=["probe::e0", "probe::e1"] retire=["General::cancel"] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 47: `W2CELL route=file n=2 kind=trace class=panic suspended=true input=[] retire=[] trace_in=2 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 89: `W2CELL route=file n=2 kind=trace class=dropped-prefix suspended=true input=[] retire=["General::cancel"] trace_in=2 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 51: `W2CELL route=file n=2 kind=handled class=panic suspended=true input=["General::passlim", "General::passlim"] retire=[] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 90: `W2CELL route=file n=2 kind=handled class=dropped-prefix suspended=true input=["General::passlim", "General::passlim"] retire=["General::cancel"] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 61: `W2CELL route=script n=2 kind=messages class=panic suspended=true input=["probe::e0", "probe::e1"] retire=[] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 97: `W2CELL route=script n=2 kind=messages class=dropped-prefix suspended=true input=["probe::e0", "probe::e1"] retire=["General::cancel"] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 66: `W2CELL route=script n=2 kind=handled class=panic suspended=true input=["General::passlim", "General::passlim"] retire=[] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 99: `W2CELL route=script n=2 kind=handled class=dropped-prefix suspended=true input=["General::passlim", "General::passlim"] retire=["General::cancel"] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 83: `W2CELL route=nested n=1 kind=trace class=panic suspended=true input=[] retire=[] trace_in=1 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 113: `W2CELL route=nested n=1 kind=trace class=dropped-prefix suspended=true input=[] retire=["General::cancel"] trace_in=1 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 88: `W2CELL route=nested n=2 kind=messages class=panic suspended=true input=["probe::e0", "probe::e1"] retire=[] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 115: `W2CELL route=nested n=2 kind=messages class=dropped-prefix suspended=true input=["probe::e0", "probe::e1"] retire=["General::cancel"] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 91: `W2CELL route=nested n=2 kind=trace class=panic suspended=true input=[] retire=[] trace_in=2 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 116: `W2CELL route=nested n=2 kind=trace class=dropped-prefix suspended=true input=[] retire=["General::cancel"] trace_in=2 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 96: `W2CELL route=nested n=2 kind=handled class=panic suspended=true input=["General::passlim", "General::passlim"] retire=[] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 117: `W2CELL route=nested n=2 kind=handled class=dropped-prefix suspended=true input=["General::passlim", "General::passlim"] retire=["General::cancel"] trace_in=0 trace_out=0`
+
+Lost-cancel at HEAD, `dropped-prefix` at step 2 (6).
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 34: `W2CELL route=file n=1 kind=messages class=lost-cancel suspended=true input=["probe::e0"] retire=[] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 85: `W2CELL route=file n=1 kind=messages class=dropped-prefix suspended=true input=["probe::e0"] retire=["General::cancel"] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 39: `W2CELL route=file n=1 kind=handled class=lost-cancel suspended=true input=["General::passlim"] retire=[] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 87: `W2CELL route=file n=1 kind=handled class=dropped-prefix suspended=true input=["General::passlim"] retire=["General::cancel"] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 55: `W2CELL route=script n=1 kind=messages class=lost-cancel suspended=true input=["probe::e0"] retire=[] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 94: `W2CELL route=script n=1 kind=messages class=dropped-prefix suspended=true input=["probe::e0"] retire=["General::cancel"] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 57: `W2CELL route=script n=1 kind=handled class=lost-cancel suspended=true input=["General::passlim"] retire=[] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 96: `W2CELL route=script n=1 kind=handled class=dropped-prefix suspended=true input=["General::passlim"] retire=["General::cancel"] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 79: `W2CELL route=nested n=1 kind=messages class=lost-cancel suspended=true input=["probe::e0"] retire=[] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 112: `W2CELL route=nested n=1 kind=messages class=dropped-prefix suspended=true input=["probe::e0"] retire=["General::cancel"] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-head-1.log` line 84: `W2CELL route=nested n=1 kind=handled class=lost-cancel suspended=true input=["General::passlim"] retire=[] trace_in=0 trace_out=0`
+
+`.temp/brief-630/logs/b2-w-step2-1.log` line 114: `W2CELL route=nested n=1 kind=handled class=dropped-prefix suspended=true input=["General::passlim"] retire=["General::cancel"] trace_in=0 trace_out=0`
+
+`10 + 6 + 8 = 24` dropped-prefix. Green stays 12. No `check` and no `other`.
+
+**Why a mark cannot express those cuts.** HEAD's panics are the usize cuts. `.temp/brief-630/logs/b2-w-head-1.log` lines 36–37: `thread 'w2_window_matrix' panicked at crates/rum-runtime/src/runtime/session/session_requests.rs:714:38:` / `range start index 3 out of range for slice of length 2`. The same file, lines 41–42: `thread 'w2_window_matrix' panicked at crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:33:37:` / `` `at` split index (is 2) should be <= len (is 1) ``. Those sites repeat for the other panic cells (indices 3 and 4). `split_off` and the range slice panic when the stored index is past the restored length. `partition_point` on a stamp does not. After the rollback the input prefix is gone, and the retirement is `["General::cancel"]`, which the window records as `dropped-prefix`. The six `lost-cancel` cells had `retire=[]` because the cancel fell below the usize. The mark cut keeps the cancel and still loses the prefix, so those cells are `dropped-prefix` too.
+
+The site is `finish_cancelled_eval_response` (`session_requests.rs:698-710`): `split_accounted_messages`, `split_accounted_prints`, and `trace_values_after` on the stored checkpoint. At HEAD those were the `split_off(usize)` and the trace range slice the log panics in.
+
+**W3 settlement.** HEAD line 106 is `W3VERDICT green`. Step 2's `w3_rolled_back_unreported_stays_out` passed. It was not turned into a failing test. The two named controls were not re-run in this measurement.
+
+### Existing rum-runtime tests
+
+`.temp/brief-630/logs/b2-step2-runtime-lib.log` line 626: `test runtime::tests::frame_root_trace::manual_frame_root_trace_implementations_match_sorted_allowlist ... FAILED`
+
+`.temp/brief-630/logs/b2-step2-runtime-lib.log` line 1030: `test runtime::tests::session_memory::session_memory_field_decision_inventory_is_sorted_and_exhaustive ... ok`
+
+`.temp/brief-630/logs/b2-step2-runtime-lib.log` line 1271: `test result: FAILED. 1215 passed; 1 failed; 5 ignored; 0 measured; 0 filtered out; finished in 47.85s`
+
+`.temp/brief-630/logs/b2-step2-runtime-lib.log` line 1274: `EXIT:101`
+
+That one failure is the manual `FrameRootTrace` allowlist (`frame_root_trace.rs:102`). The scanned side contains `crate::runtime::model::OutputLog<T>`, `crate::runtime::model::OutputMark`, and `crate::runtime::model::OutputStamp`. The allowlist side did not. The full `left` and `right` lines are `.temp/brief-630/logs/b2-step2-runtime-lib.log` lines 1264 and 1265. No other test failed. No Quiet, Check, guest-checkpoint, or memory expected value moved in this run.
+
+Those three impls are the ones this conversion added so logs and marks inside frames trace. I added the three names to `MANUAL_FRAME_ROOT_TRACE_IMPLS`, in sorted order, after `char` and before `f32`. This is the closed inventory of manual impls, the same kind of pin as the schema cardinality below. It is not an evaluation result.
+
+`.temp/brief-630/logs/b2-step2-frame-root-trace.log` line 38: `test runtime::tests::frame_root_trace::manual_frame_root_trace_implementations_match_sorted_allowlist ... ok`
+
+`.temp/brief-630/logs/b2-step2-frame-root-trace.log` line 37: `test runtime::tests::frame_root_trace::derived_frame_root_trace_inventory_matches_the_closed_capture_graph ... ok`
+
+`.temp/brief-630/logs/b2-step2-frame-root-trace.log` line 52: `test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1206 filtered out; finished in 1.62s`
+
+`.temp/brief-630/logs/b2-step2-frame-root-trace.log` line 54: `EXIT:0`
+
+The session-memory pin is 52 accounted fields and 94 decisions (`session_memory.rs:22` and `:28`). `output_clock` is Exempt (`schema.rs:155`, between `options` and `package_search_paths`). The old accounted `trace_event_depths` row is gone. The test that pins 52 passed in the lib run (line 1030 above). Pair-slot byte formulas use `size_of::<(OutputStamp, T)>()`. That is the mandated eight-byte stamp, not a packaging change.
+
+`rum-host` (beyond this one `output_window` remeasure), `rum-cli`, `rum-jupyter`, `rum-repl`, the standing inventories, and the workspace were not run. The step-2 gate had already fired. I do not claim those expected values are unchanged.
+
+### Stop
+
+A mark cannot express two cuts that HEAD's `usize` expressed.
+
+1. `finish_cancelled_eval_response` (`session_requests.rs:708-710`). The stored index is "drop the first N items of the current vec." After a rollback shortens the list, `split_off` and the range slice panic (the 10 HEAD panics) or the cancel falls below the index (the 6 `lost-cancel` cells). A stamp partition does neither. Those 16 cells are now `dropped-prefix`.
+2. The script retirement checkpoint taken before abandonment (`session_requests.rs:58-62`, used by `finish_cancelled_eval_response`). The stored length counted `probe::inside`. Rollback removed it and `probe::outer` reused the slot, so the tail was empty and HEAD's script retirement was only `General::cancel`. The mark includes `probe::outer`. W1 script cells, both retire paths, are the two values.
+
+I did not fake the panics, and I did not special-case the script cut to recreate the `usize`. Step 3 would not make these step-2 cells match HEAD, and the brief says to record this and stop before step 3.
+
+## Director ruling on the B2 stop (2026-10-28 16:45) — continue: step 2b, then steps 3 and 4 — grk
+
+### The stop, settled
+
+You were right to stop. Step 2 said that any moved cell is a STOP, and cells
+moved. The checkpoint was mine, and it was miscalibrated. It treated HEAD's red
+as behaviour that a type change can keep. Part of HEAD's red *is* the positional
+cut:
+
+- a stored index past a restored length panics in `split_off` or in the trace
+  slice;
+- a stored length read after a rollback takes the slot of a removed item.
+
+A mark has no reading for either, as you said. No consumer needs those
+readings, though. They were the defect.
+
+I reran W1–W3 on your tree (`.temp/director/gate-630b2/logs/w-step2-1.log`), and
+the verdicts are yours line for line. Every cell that moved left a positional
+class: 10 panics, 6 lost cancels, and the two W1 script cells whose cut read
+through a reused slot. No cell left green. The 12 `n=0` cells are still green,
+and the 8 `dropped-prefix` cells are unchanged. The W1 script cells now give the
+kernel the contract's `$MessageList`. Every red cell that remains is the one
+class step 3 owns: the retirement outcome lacks items that the input outcome
+already reported.
+
+**The rule that replaces step 2's.** A conversion may move a falsifier cell only
+out of a positional class (a panic, a lost cancel, a cut through a reused slot).
+It may not move a cell out of green, and it may not move a cell into a new class.
+Every existing test keeps its expected values.
+
+**Existing tests on your step-2 tree.** My run: `cargo test --workspace
+--no-fail-fast`, single-threaded, in a 14G scope, logged to
+`.temp/director/gate-630b2/logs/ws-step2-nff.log`.
+
+- 58 binaries: 3967 passed, 22 failed, 61 ignored. That totals 3989, which is
+  B1's 3986 plus the three W tests.
+- Two of the 22 are W1 and W2.
+- The other 20 are standing inventories in `rum-stdlib`, and every one is drift:
+  - ownership rows and host-payload ledger rows whose lines moved;
+  - `stale contract fingerprint` cells for every contract that reaches
+    `Session`, whose field types changed;
+  - the census, at 998 instead of 1003. I have settled that one; see below.
+- No other test failed. In particular, nothing in `rum-host` outside
+  `output_window`, `rum-cli`, `rum-jupyter` or `rum-repl` failed.
+
+So no expected value moved at step 2. Replay the inventories at the end, as the
+run list says.
+
+**The census, with an instrument you can run without git.** All of these are
+in `.temp/director/gate-630b2/`:
+
+- `frontier-head.tsv`: HEAD's frontier at `9d833875`, 1003 rows (10/962/31).
+- `head-wt/`: HEAD's source tree. You may read it; do not build in it.
+- `census-dump.patch`: an env-gated dump in `census/tests.rs`.
+  - Apply it with `patch -p1 <`, run the census test with
+    `RUM_CENSUS_DUMP=<path>`, then remove it with `patch -R -p1 <`.
+  - With the patch applied, the census test fails after the dump with
+    `stale contract fingerprint` on `merged_option_exprs_for_symbol`, because
+    the patch edits `rum-stdlib`. That is expected. The dump is already written
+    by then.
+- `census-pair.py BASE CAND BASE_ROOT CAND_ROOT OUT`: pairs the rows through
+  `diff -U0`. I calibrated it three ways:
+  - HEAD against itself: 1003 paired;
+  - B1's known answer, `d1baa06a` against HEAD: 972 paired, 0 retired, 31 new,
+    all 31 in `abandon.rs`;
+  - your step-2 tree: `CENSUSPAIR base=1003 cand=998 paired=986 retired=17
+    new=12 base_only=0 cand_only=0`.
+
+  The 17 retired and 12 new rows are the removed
+  `push_accounted_trace_event_depths`, `rollback_capture_output`'s four
+  truncations becoming three, `next_output_stamp`, `OutputStamp(clock)`, and
+  the merged trace push.
+
+At the end, `base_only` and `cand_only` must both be 0, or you settle each such
+row by reading it. Put the final count and its row classes in the census
+assertion's comment, as B1 did.
+
+**A note on `target/debug`.** `cargo check --workspace --all-targets` failed for
+me with 320 errors (`rum_core::Symbol: Copy` not satisfied). Cargo had read a
+September `rum-core` rmeta: 28 check fingerprints in `target/debug` were 13 to 22
+days newer than their artifacts, so cargo counted the artifacts as fresh. I
+removed those 28 fingerprint directories, and the command now passes. Nothing
+in the tree changed. Run that command in your gate below.
+
+### Step 2b — the conversion's shape, before step 3
+
+1. **One mark per checkpoint.** One clock stamps all four lists, so a
+   checkpoint's per-channel fields always hold one value. Collapse each to a
+   single `OutputMark`:
+   - `RequestCheckpoint` and `PendingEvalRequest`;
+   - `DebugCaptureCheckpoint` and `EvalExprWithStreamCaptureSuspensionFrame`;
+   - `GuestFormScope`;
+   - `GuestScriptCursor`: one start and one completed end;
+   - `GetCompleteFrame`;
+   - the `Check`/`Quiet` frames and their locals;
+   - the locals in `session_eval.rs` and `test_report/evaluation.rs`.
+
+   `OutputBoundary` keeps one `Option<OutputMark>` per channel: its channels come
+   from different frames, and any of them can be absent. The published marks in
+   `ReportedOutput` stay per channel too, for the reason the shape gives.
+2. **Two assertions lost half their strength.**
+   - `typed/tests/driver_faults.rs:100`
+   - `tests/capture_output.rs:94`
+
+   `len() == end` meant two things: nothing after the boundary survives, and
+   nothing before it is lost. `after(end).len() == 0` keeps only the first.
+   Restore both, by content. When the pause is packaged, take the session trace
+   stamped at or before the boundary. After the unwind, assert that the session
+   trace equals it.
+3. **Dead pieces.**
+   - The `TraceEventDepths` owner: it renders 0 now. Remove the variant and its
+     rows.
+   - The `FrameRootTrace` impl for `OutputStamp`, with its allowlist row: no
+     frame holds a bare stamp.
+   - Three `debug_assert!`s that are always true, since a mark is never past the
+     clock: `guest_loading/file.rs:148-149` and `guest_loading/script.rs:148`.
+     Also `cursor.print_start <= cursor.completed_print_end`, once the cursor
+     holds one start mark.
+   - The warnings the conversion adds: `OutputMark::START`,
+     `OutputLog::with_capacity` and `is_empty`, `to_vec`, `trace_values`, and
+     `W2Cell`'s unread fields. Code that only tests use goes under `#[cfg(test)]`.
+     No target may gain a warning.
+
+After 2b: the existing tests are unchanged, apart from the two assertions in
+item 2, and W1–W3 match `w-step2-1.log` cell for cell. Record both in the report
+before step 3.
+
+### Front ends, added to step 3
+
+W1's `cli`, `jupyter` and `repl` fields apply one function three times. They
+test the kernel against a rule, not the front ends. Remove them from W1; W1 keeps
+the kernel and `$MessageList` assertions. Then add W1's shape to each front end's
+own retirement tests, through that front end's real path:
+
+- `rum-cli`, `eval_tests.rs`: for script, eval and setup, the inside message
+  appears once and the outer cleanup message once. For file it appears zero
+  times, because the file's rollback discards it, as in
+  `cleanup_messages_appear_once_with_original_input_reason` (P2). In every case
+  the input reason is the original one.
+- `rum-repl`, `tests/input_abandonment.rs`: the eval route; inside once, outer
+  once.
+- `rum-jupyter`, `src/tests/input_abandonment/`: the execute route; inside once,
+  outer once.
+
+Run each one on the 2b tree before step 3 and record its result. There, the eval
+route is still HEAD's packaging. I calibrate each at HEAD at the gate. After step
+4, all of them are green.
+
+**Scope, widened:**
+- **MAY modify:** the three test locations above.
+- **MUST NOT touch:** `rum-jupyter/src` outside `src/tests/`, and `rum-repl/src`.
+
+### Then
+
+Steps 3 and 4 as written, and the run list as written. Add
+`cargo check --workspace --all-targets` with no new warning, and add the three
+front-end tests. Then STOP. Append "Executing-agent report — B2, continued"
+under this ruling. Every quoted line must be copied from a file you name, and
+every verdict line your instruments print must be quoted.
