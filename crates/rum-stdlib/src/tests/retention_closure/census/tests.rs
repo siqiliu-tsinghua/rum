@@ -241,18 +241,28 @@ fn baseline(source: &Source) {
     // body as at the base and gives the cold root entry its own copy, so the
     // record_profile_evaluate_entry receiver is rejected in both: one key's
     // count goes from 1 to 2, nothing added or removed. 972 (10/934/28).
+    // brief-630 B1: the drain checks for a host interrupt before each cleanup
+    // and counts the cleanups it skips. Paired through the diff, all 34 of
+    // abandon.rs's rows at the base keep their kind, callee and reason, and
+    // no row retires anywhere. 31 rows appear, all on lines B1 added to
+    // abandon.rs: 15 primitive operands, 8 method receivers, 4 calls of the
+    // cold drain_host_interrupt_pending (opaque Arc candidate), the skipped
+    // message's push_message (impl Into<String>), and 3 unexpanded macros
+    // (the depth debug_assert and the message format!). The shared body's
+    // rows count once per mode witness. 1003 (10/962/31), still no mark or
+    // coverage.
     assert!(options.rejected.iter().any(|row| row.kind == Kind::RET002
         && row.site.file.ends_with("resolution.rs")
         && row.site.start == (36, 19)
         && row.reason == "path AccumulatorChain::default has 0 exact bindings"));
     assert_eq!(
         options.rejected.len(),
-        972,
+        1003,
         "STOP: brief-545 exact legacy frontier inventory moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 934), (Kind::RET003, 28)])
+        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 962), (Kind::RET003, 31)])
     );
     let wrapper = regions::frontier(
         source,

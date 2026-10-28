@@ -88,11 +88,13 @@ impl DisplacedGuestFormEnvironment {
         session.current_message_list_dirty = self.message_dirty;
         session.last_message_list = self.last_message_list;
         session.handled_non_loader_eval_errors = self.handled_errors;
-        session.eval_deadline = self.eval_deadline;
         session.current_time_deadline = self.time_deadline;
         session.current_memory_limit = self.memory_limit;
-        session.interrupt_poll_counter = self.interrupt_poll_counter;
-        session.interrupt_armed = self.interrupt_armed;
+        if !session.abandonment_active {
+            session.eval_deadline = self.eval_deadline;
+            session.interrupt_poll_counter = self.interrupt_poll_counter;
+            session.interrupt_armed = self.interrupt_armed;
+        }
         session.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
         );
@@ -129,11 +131,13 @@ impl GuestFormEnvironment {
         session.current_message_list_dirty = self.message_dirty;
         session.last_message_list = self.last_message_list;
         session.handled_non_loader_eval_errors = self.handled_errors;
-        session.eval_deadline = self.eval_deadline;
         session.current_time_deadline = self.time_deadline;
         session.current_memory_limit = self.memory_limit;
-        session.interrupt_poll_counter = self.interrupt_poll_counter;
-        session.interrupt_armed = self.interrupt_armed;
+        if !session.abandonment_active {
+            session.eval_deadline = self.eval_deadline;
+            session.interrupt_poll_counter = self.interrupt_poll_counter;
+            session.interrupt_armed = self.interrupt_armed;
+        }
         session.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
         );

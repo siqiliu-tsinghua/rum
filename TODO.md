@@ -103,8 +103,10 @@ filter cuts this census work a third time, switch workers.**
   channel each retirement has. Raw material:
   `.temp/brief-628/drafts/brief-abandonment-cleanup-diagnostics.md` (its
   target shape predates brief-629). **brief-630**: Stage A done, policy
-  accepted (`ce95b440`); A2 inventories the two defects below; Stage B
-  then fixes the window, the drain's termination, and the arm, one per step.
+  accepted (`ce95b440`); A2 inventoried the two defects below (`422211f5`)
+  and A3 designed both as code (`d1baa06a`). Stage B fixes them and the arm,
+  one per step. B1, the drain's termination, is done (2026-10-28). Next is B2,
+  the window, then B3, the arm.
 - **Found by brief-630 Stage A (2026-10-28): cancelling a public file that
   emitted messages before its `InputString` corrupts the cancel window.**
   The cancel path takes its checkpoint at the current length, after the
@@ -112,8 +114,8 @@ filter cuts this census work a third time, switch workers.**
   shortens the list below that checkpoint. With one earlier message, the
   outcome loses `General::cancel`. With two, `split_accounted_messages`
   panics (`diagnostics.rs:33`), and the host reports `HostFailureCode::Panic`.
-- **Found by brief-630 Stage A, confirmed by the director: a drain that never
-  terminates.** `Monitor[1+2, WithCleanup[InputString["d"], cleanup]]` runs
+- **Fixed by brief-630 B1 (2026-10-28). Found by Stage A and confirmed by
+  the director: a drain that never terminates.** `Monitor[1+2, WithCleanup[InputString["d"], cleanup]]` runs
   its cleanup about 58k times per second, forever, at flat memory. A host
   cancel and a 1 s `eval_with_timeout` both fail to stop it. Each cleanup's
   evaluation refreshes the display, which suspends again and queues another
@@ -124,6 +126,12 @@ filter cuts this census work a third time, switch workers.**
     then cancel and retire. The retirement never returns. A second cancel
     and a 1 s `eval_with_timeout` do not stop it either. The accepted ticket
     is taken before the drain, and the deadline is installed after it.
+  - **B1's repair.** The retirement consumes the cancel that caused it. The
+    ticket and the request's own deadline stay armed through the drain. A
+    second cancel or the deadline then stops the running cleanup and skips
+    the rest, with one `WithCleanup::skipped`, and `Monitor` callbacks do not
+    run during a drain. The pins are `crates/rum-host/tests/retirement_interrupt.rs`
+    and the contract is `embedding.md`'s Cancel And Timeout.
   - The window defect also covers trace (with tracing on, the file route
     panics at `session_requests.rs:714`) and the stdin script route. All
     three front ends merge retirement output by count, which a rollback
@@ -141,6 +149,12 @@ filter cuts this census work a third time, switch workers.**
   - Its cost moves with `.rodata` layout. Every LP02 rebuild flagged that
     label and `deletecases-leaf-delete-small` through split loads, with the
     same or fewer instructions.
+  - The layout also moves instruction counts. At the brief-630 B1 gate,
+    `Symbol::is_system_name` and `Symbol::system` made the same number of
+    `memcmp` calls in both arms. Each call cost 19 instructions at the base
+    and 27 in the candidate, because glibc's short path tests operand
+    addresses for a page cross. That came to +0.65–0.72% on three wide
+    Association labels.
   - A lookup keyed on the interned symbol would remove both the comparisons
     and the layout sensitivity.
   - Not scheduled; it is a candidate for a performance lane.

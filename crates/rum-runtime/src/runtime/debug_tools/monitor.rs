@@ -79,6 +79,9 @@ impl Session {
     }
 
     fn run_monitor_callback_best_effort(&mut self, callback: Expr) {
+        if self.abandonment_active {
+            return;
+        }
         match self.evaluate(callback) {
             Ok(_) => {}
             Err(EvalError::InputRequired { .. }) => {
@@ -89,6 +92,9 @@ impl Session {
     }
 
     fn refresh_monitor_scope_display(&mut self, index: usize) {
+        if self.abandonment_active {
+            return;
+        }
         let Some(display_expr) = self
             .monitor_scopes
             .get(index)

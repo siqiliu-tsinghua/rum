@@ -57,10 +57,10 @@ impl Session {
             .pending_eval_request
             .map(RequestCheckpoint::from)
             .unwrap_or_else(|| RequestCheckpoint::new(self));
+        self.abandon_pending_suspension(AbandonReason::CancelledRequest);
         let accepted = self
             .take_active_accepted_request()
             .expect("a qualified cancellation retains its accepted ticket");
-        self.abandon_pending_suspension(AbandonReason::CancelledRequest);
         let cancellation_won = accepted.finish();
         debug_assert!(cancellation_won);
 
@@ -575,10 +575,10 @@ impl Session {
                 .pending_eval_request
                 .map(RequestCheckpoint::from)
                 .unwrap_or_else(|| RequestCheckpoint::new(self));
+            self.abandon_pending_suspension(AbandonReason::CancelledRequest);
             let accepted = self
                 .take_active_accepted_request()
                 .expect("cancelled input suspension should retain its accepted ticket");
-            self.abandon_pending_suspension(AbandonReason::CancelledRequest);
             let cancellation_won = accepted.finish();
             debug_assert!(cancellation_won);
             let response = self.finish_cancelled_eval_response(checkpoint);

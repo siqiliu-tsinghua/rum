@@ -6090,6 +6090,7 @@ Evaluates cleanup code even when the main expression exits abnormally in the cur
 - Capability: `Pure`
 - Messages:
   - WithCleanup::argtu — expected between `1` and `2` argument(s), got `3`
+  - WithCleanup::skipped — Pending cleanups skipped because a host interrupt stopped the retirement: `1`.
 
 ### WordBoundary
 

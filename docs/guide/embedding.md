@@ -508,6 +508,17 @@ If a single-source request is waiting for input, call the handle and then
 or delivered, the continuation is structurally abandoned, and the returned
 success carries `HostTerminationReason::Cancelled`.
 
+Retiring a suspended request runs the `WithCleanup` cleanups its suspended
+work still owes, inner to outer, before the outcome returns. The cancel that
+retires the request does not stop them. A further `cancel()` on the same
+handle does, and so does the request's own deadline when it has one: the
+running cleanup stops at its next cooperative check, the cleanups after it do
+not run, and the outcome reports one `WithCleanup::skipped` message with their
+number before `General::cancel`. Nested file rollbacks complete either way,
+and `Monitor` callbacks do not run during a retirement. Because time spent
+waiting for input counts toward the deadline, a deadline that has already
+passed when the cancel arrives skips every cleanup.
+
 Use `eval_with_timeout(source, duration)` for a per-evaluation elapsed-time
 deadline backed by Rust's monotonic `Instant`. The original absolute deadline
 stays armed across `Input` and `InputString` suspensions and every

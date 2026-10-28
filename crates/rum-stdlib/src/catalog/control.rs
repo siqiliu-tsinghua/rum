@@ -206,6 +206,10 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
     )
     .with_messages(&[
         ARGTU,
+        BuiltinMessageSpec {
+            tag: "skipped",
+            template: "Pending cleanups skipped because a host interrupt stopped the retirement: `1`.",
+        },
     ]).protected(),
     BuiltinSpec::ordinary(
         "Failsafe",

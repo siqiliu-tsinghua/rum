@@ -490,10 +490,12 @@ fn suspension_protocol_repository_invariants_hold() {
     let drain_open = drain + compact_abandon[drain..].find('{').unwrap();
     let drain_close = matching_brace(&compact_abandon, drain_open).unwrap();
     let drain_body = &compact_abandon[drain_open + 1..drain_close];
-    assert!(
-        drain_body.contains("self.abandon_frames::<profile_mode::Ordinary>(suspension,reason);")
-    );
-    assert!(drain_body.contains("self.abandon_frames_profiled(suspension,reason);"));
+    assert!(drain_body.contains(
+        "self.abandon_frames::<profile_mode::Ordinary>(suspension,reason,&mutskip_cleanups,&mutskipped,);"
+    ));
+    assert!(drain_body.contains(
+        "self.abandon_frames_profiled(suspension,reason,&mutskip_cleanups,&mutskipped);"
+    ));
     let trampoline = compact_abandon
         .find("fnabandon_frames_profiled(")
         .expect("the profiled mode should enter the shared body through one cold call");
@@ -501,7 +503,7 @@ fn suspension_protocol_repository_invariants_hold() {
     let trampoline_close = matching_brace(&compact_abandon, trampoline_open).unwrap();
     assert_eq!(
         &compact_abandon[trampoline_open + 1..trampoline_close],
-        "self.abandon_frames::<profile_mode::Profiled>(suspension,reason);"
+        "self.abandon_frames::<profile_mode::Profiled>(suspension,reason,skip_cleanups,skipped);"
     );
     assert_eq!(compact_abandon.matches("fnabandon_frames<").count(), 1);
     let shared_abandon = compact_abandon

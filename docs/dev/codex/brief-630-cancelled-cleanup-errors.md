@@ -1833,3 +1833,560 @@ labels; abandonment is a cold path, and the poll is unchanged.
 Append "Executing-agent report — B1". Every quoted line must be copied from
 a file you name. Quote every verdict line your instruments print, and settle
 each flagged row.
+
+## Executing-agent report — B1
+
+Stage B1 is implemented and stopped on the rejection census. `census/tests.rs` was not edited. The workspace was not started. B2 and B3 were not started.
+
+The retirement consumes the first cancel and leaves the ticket installed. Cleanups then run with no pending interrupt. A later cancel of the same generation, or the suspended request's own absolute `eval_deadline`, ends the running cleanup. Later cleanups are not entered. Structural restoration still runs. One `WithCleanup::skipped` message is pushed when the skipped count is greater than zero. Monitor refresh and the monitor callback return immediately while `abandonment_active` is set. `GuestFormEnvironment::install` and `DisplacedGuestFormEnvironment::restore` skip `eval_deadline`, `interrupt_poll_counter`, and `interrupt_armed` while that flag is set. `eval_core/mod.rs` was not edited. The masked poll is unchanged.
+
+### Disclosure outside the MAY list
+
+`crates/rum-runtime/src/runtime/tests/frame_root_trace.rs` — mechanical. The source gate pins the whitespace-stripped call text of the one shared abandonment body. The skip counters are now arguments, so the three pinned strings include them. The gate still requires one `fn abandon_frames<`, the Ordinary and Profiled split, `frame.abandon(`, and no `.resume(`. No new frame type. `named_suspension_frames` stayed 567.
+
+### F3 at HEAD, before the crate edit
+
+`.temp/brief-630/logs/b1-f3-head-1.log`, `b1-f3-head-2.log`, and `b1-f3-head-3.log`. Each log:
+
+```
+B1F3 HEAD did NOT return in 8s
+B1F3 RED hung
+EXIT:101
+```
+
+No `test result:` line. Run 1 also has `Finished test profile ... in 4.26s`. Runs 2 and 3 have `Finished test profile ... in 0.02s`.
+
+### F1–F3 and the controls, three runs
+
+`.temp/brief-630/logs/b1-tests-1.log`:
+
+```
+B1CTRL b elapsed_ms=500 termination=Cancelled value=TerminatedEvaluation["Cancelled"] tags=["General::cancel"] cancels=1
+B1CTRL d elapsed_ms=221 termination=Cancelled k630=20000 tags=["General::cancel"] cancels=1
+B1CTRL file-rollback termination=Cancelled tags=["General::cancel"] marker=0 rolled=0
+B1CTRL nested termination=Cancelled tags=["General::cancel"] list=List[1, 1, 0, 0] pending=false
+B1CTRL runs-once termination=Cancelled tags=["General::cancel"] hits=1 tail=0
+B1F1 elapsed=1.000642913 termination=Cancelled value=TerminatedEvaluation["Cancelled"] tags=["General::cancel"] cancels=1 skipped=0|assert_ms=1000|term=Cancelled|cancels=1|skipped=0
+B1F2 value=3 termination=None tags=[]
+B1F3 elapsed_ms=1000 termination=Cancelled outer=0 block=9 file=0 skipped_n=1 skipped_text=["1 pending cleanups did not run because a host interrupt stopped the retirement."] cancels=1 tags=["WithCleanup::skipped", "General::cancel"]
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.75s
+EXIT:0
+```
+
+`.temp/brief-630/logs/b1-tests-2.log`:
+
+```
+B1CTRL b elapsed_ms=500 termination=Cancelled value=TerminatedEvaluation["Cancelled"] tags=["General::cancel"] cancels=1
+B1CTRL d elapsed_ms=281 termination=Cancelled k630=20000 tags=["General::cancel"] cancels=1
+B1CTRL file-rollback termination=Cancelled tags=["General::cancel"] marker=0 rolled=0
+B1CTRL nested termination=Cancelled tags=["General::cancel"] list=List[1, 1, 0, 0] pending=false
+B1CTRL runs-once termination=Cancelled tags=["General::cancel"] hits=1 tail=0
+B1F1 elapsed=1.000605607 termination=Cancelled value=TerminatedEvaluation["Cancelled"] tags=["General::cancel"] cancels=1 skipped=0|assert_ms=1000|term=Cancelled|cancels=1|skipped=0
+B1F2 value=3 termination=None tags=[]
+B1F3 elapsed_ms=1000 termination=Cancelled outer=0 block=9 file=0 skipped_n=1 skipped_text=["1 pending cleanups did not run because a host interrupt stopped the retirement."] cancels=1 tags=["WithCleanup::skipped", "General::cancel"]
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.81s
+EXIT:0
+```
+
+`.temp/brief-630/logs/b1-tests-3.log`:
+
+```
+B1CTRL b elapsed_ms=500 termination=Cancelled value=TerminatedEvaluation["Cancelled"] tags=["General::cancel"] cancels=1
+B1CTRL d elapsed_ms=277 termination=Cancelled k630=20000 tags=["General::cancel"] cancels=1
+B1CTRL file-rollback termination=Cancelled tags=["General::cancel"] marker=0 rolled=0
+B1CTRL nested termination=Cancelled tags=["General::cancel"] list=List[1, 1, 0, 0] pending=false
+B1CTRL runs-once termination=Cancelled tags=["General::cancel"] hits=1 tail=0
+B1F1 elapsed=1.000722313 termination=Cancelled value=TerminatedEvaluation["Cancelled"] tags=["General::cancel"] cancels=1 skipped=0|assert_ms=1000|term=Cancelled|cancels=1|skipped=0
+B1F2 value=3 termination=None tags=[]
+B1F3 elapsed_ms=1000 termination=Cancelled outer=0 block=9 file=0 skipped_n=1 skipped_text=["1 pending cleanups did not run because a host interrupt stopped the retirement."] cancels=1 tags=["WithCleanup::skipped", "General::cancel"]
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.81s
+EXIT:0
+```
+
+Settlement: F1 returns `Cancelled` at the second cancel (about 1.000 s), with one `General::cancel` and skipped count 0. It does not return before that cancel. F2 returns 3 with `termination=None` and no messages. F3 leaves the outer marker unset, restores the Block variable to 9, rolls the file assignment back to 0, and reports one skipped cleanup plus one `General::cancel`. Control b is 500 ms on all three runs, against the director's HEAD samples of about 502 ms. Control d finishes with `k630=20000` and one `General::cancel` (221 ms, 281 ms, 277 ms). Nested contract stays `List[1, 1, 0, 0]`. Runs-once stays `hits=1`. File rollback stays `marker=0 rolled=0`.
+
+### fmt, reference, host, runtime
+
+`.temp/brief-630/logs/b1-fmt.log` and `.temp/brief-630/logs/b1-fmt-2.log` are each `EXIT:0`. The second check is after the frame-root pin edit.
+
+`.temp/brief-630/logs/b1-builtins.log`:
+
+```
+wrote 643 builtin entries to /home/remi/dev/rum/crates/rum-stdlib/../../docs/reference/builtins.md
+EXIT:0
+```
+
+`docs/reference/builtins.md` line 6093, written by that generator:
+
+```
+  - WithCleanup::skipped — `1` pending cleanups did not run because a host interrupt stopped the retirement.
+```
+
+`.temp/brief-630/logs/b1-host.log`, `EXIT:0`. Every `test result:` line:
+
+```
+test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.74s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 50.24s
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.74s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.27s
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.97s
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.92s
+```
+
+Those are, in order: `rum_host` lib, `adapter_contract`, `batch_boundary_ownership`, `capture_output_lifecycle`, `guest_loading_resume`, `host_payload_destruction_contract`, `installer`, `lifecycle_buildout`, `lifecycle_contract`, `logical_profile_abandonment`, `logical_profile_lifecycle`, `native_stack_thread_scope` (8 passed), `random_password_policy`, `retirement_interrupt` (8 passed), `shared_accumulator_completion`, `stress`, `suspended_timeout_contract`, `suspension_abandonment_contract` (12 passed), and doc-tests.
+
+`.temp/brief-630/logs/b1-runtime-lib.log` failed the old call pin, then the pin was updated:
+
+```
+assertion failed: drain_body.contains("self.abandon_frames::<profile_mode::Ordinary>(suspension,reason);")
+test result: FAILED. 1215 passed; 1 failed; 5 ignored; 0 measured; 0 filtered out; finished in 32.08s
+EXIT:101
+```
+
+`.temp/brief-630/logs/b1-runtime-lib-2.log`:
+
+```
+test result: ok. 1216 passed; 0 failed; 5 ignored; 0 measured; 0 filtered out; finished in 29.47s
+EXIT:0
+```
+
+`.temp/brief-630/logs/b1-frame-root-trace.log`:
+
+```
+named_suspension_frames=567
+named_pure_finalizers=59
+pure_frame_abandon_derives=534
+handwritten_stateful_frame_abandons=33
+evaluate_cleanup_allowlist=WithCleanup owner frames (2)
+raw_live_owner_clears=0
+raw_live_owner_replacements=0
+removed_cancellation_lane_hits=0
+legacy_api_hits=0 direct_queue_mutation_hits=0 ownership_hits=0
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1206 filtered out; finished in 1.51s
+EXIT:0
+```
+
+The same log prints 33 `stateful_frame_abandon=` lines between the counts above. No new frame was added.
+
+### Standing inventories
+
+Contract fingerprints, 68 rows, last column only. Other columns unchanged. From `.temp/brief-630/logs/b1-fingerprints.log`: `Regenerated 68 fingerprints at /home/remi/dev/rum/target/brief-544/local-contracts.tsv`, `test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 0.17s`, `EXIT:0`. Installed into `inventory/local-contracts.tsv`. Every changed cell, from `.temp/brief-630/fingerprint-changes.tsv`:
+
+```
+B01	fnv1a64:0637085007c46d1d	fnv1a64:9850d078b060843d
+B02	fnv1a64:be7999858dddd664	fnv1a64:4c277aabc4353448
+B03	fnv1a64:1a9f2168f2f02f3b	fnv1a64:c476dd3bf63e5157
+B04	fnv1a64:b6d805f657c0d845	fnv1a64:3c2e9190fd4d62a5
+B05	fnv1a64:bc4deb0bb366eb60	fnv1a64:5dd98965c7844034
+B06	fnv1a64:275e07f943536671	fnv1a64:9a23ee0392ac5351
+B07	fnv1a64:7d7241ef50a3b310	fnv1a64:2978bf129d208fc4
+B08	fnv1a64:3e1707ed47900ef7	fnv1a64:386921c83607fb03
+B09	fnv1a64:b493a2b48b796519	fnv1a64:c554de29643a7c99
+B10	fnv1a64:a6089f400cd28e62	fnv1a64:ce47275c7d882cf2
+B11	fnv1a64:782fb75371b4fe45	fnv1a64:fd8642ee174188a5
+B12	fnv1a64:73a022b06781fa19	fnv1a64:84615e2540431199
+I01	fnv1a64:e418f34d747c639d	fnv1a64:7632bb761d187abd
+I02	fnv1a64:138f689fab9d7360	fnv1a64:b51b06f9bfbac834
+I03	fnv1a64:1ad31d53de965759	fnv1a64:286fd8c171b6eb59
+I04	fnv1a64:82e20d074c540604	fnv1a64:bf44659a06b8ebe8
+P01	fnv1a64:a3bc634ecdff6491	fnv1a64:8d15a4790402c0f1
+P02	fnv1a64:58ffb7a7cdfc5772	fnv1a64:5398c6a5b6f10022
+P03	fnv1a64:54486ad9c92ed5d3	fnv1a64:e5842285685fc46f
+P04	fnv1a64:b354b79b1286f264	fnv1a64:410298c148de5048
+P05	fnv1a64:5f617015938d4ded	fnv1a64:6d4f62044df78c2d
+P06	fnv1a64:c41f4780f3b19399	fnv1a64:d4e082f5cc72ab19
+P070	fnv1a64:fe6ce3c2d2270d99	fnv1a64:0f2e1f37aae82519
+P080	fnv1a64:f1af447c59a80ea2	fnv1a64:136fb242f8079bb2
+P090	fnv1a64:562197f3ab7670a4	fnv1a64:470d5c933c6a4708
+P100	fnv1a64:de4422e9504628f5	fnv1a64:4d5015a0e0ecc235
+P110	fnv1a64:2b16446112d6edba	fnv1a64:4c1cc1ebadc9248a
+P120	fnv1a64:214f1df32ebce417	fnv1a64:4ce62fbee54488a3
+P130	fnv1a64:213f9b4c7f578d10	fnv1a64:cd46186fcbd469c4
+P140	fnv1a64:0c43fa2946d4a11c	fnv1a64:70e74b6c7758b040
+P150	fnv1a64:ce1528d3e72b6744	fnv1a64:5f0acb6cecc750a8
+P071	fnv1a64:704f008c83ccc0b0	fnv1a64:0860a646793e6464
+P081	fnv1a64:ffae1d8ac5d95539	fnv1a64:d8d9cc49591bc339
+P091	fnv1a64:c7fc2c0db4bea0d1	fnv1a64:c4b1d9d7c7a510b1
+P101	fnv1a64:2319352e483a8aba	fnv1a64:441fb2b8e32cc18a
+P111	fnv1a64:6585c5d579a059c9	fnv1a64:803397b1af986969
+P121	fnv1a64:fed9ff3c02541906	fnv1a64:66a23b9c08ccb696
+P131	fnv1a64:5482285c8e14f9c5	fnv1a64:d9d8b3f733a18425
+P141	fnv1a64:e0e3c18fd43941b1	fnv1a64:c0e7b4e2d4679c11
+P151	fnv1a64:c77d9059597a77d7	fnv1a64:0d10b5501d3c94e3
+B13	fnv1a64:b56e9b8273f02271	fnv1a64:2834818cc3490f51
+R01	fnv1a64:9c6213914aaad954	fnv1a64:c1e540dd63326758
+R02	fnv1a64:fc983dc7698ff213	fnv1a64:b288df38e45fe22f
+R03	fnv1a64:34c717f43621e198	fnv1a64:93ffb28cc260b52c
+R040	fnv1a64:23a59ec9a4cbf474	fnv1a64:7950e8bc00cc68f8
+R050	fnv1a64:362d2feeadebdacd	fnv1a64:06f691c26747390d
+R060	fnv1a64:f19fac63ed5df6cc	fnv1a64:73c1970428a88dd0
+R070	fnv1a64:681be5a4a77b1439	fnv1a64:414794633abd8239
+R080	fnv1a64:49e675fa1bd8cf04	fnv1a64:8648ce8cd63db4e8
+R090	fnv1a64:c0bf9a9800adbe35	fnv1a64:ca5319b073f800f5
+R100	fnv1a64:dfc4c5bb9cc5d9bb	fnv1a64:899c818ea013fbd7
+R110	fnv1a64:aba2068072c374ea	fnv1a64:f81de1767a462a1a
+R041	fnv1a64:9ba7feac8b17e171	fnv1a64:0e6de4b6da70ce51
+R051	fnv1a64:e443c60938a47d24	fnv1a64:d52f8aa8c9985388
+R061	fnv1a64:1df3e29faf94d7c7	fnv1a64:0f9d87d7f9cf68b3
+R071	fnv1a64:3a2125f2abab884e	fnv1a64:1691230f815fc9be
+R081	fnv1a64:9a2e8c3debf1fdf5	fnv1a64:093a7ef57c989735
+R091	fnv1a64:9422cbd150aae2dc	fnv1a64:34eea25a0bea1480
+R101	fnv1a64:b7aa2f77562a470c	fnv1a64:9c2d18d44ba94c90
+R111	fnv1a64:5c5e60432c4c3ebf	fnv1a64:84a77b85381c440b
+R12	fnv1a64:7aa726d15d87717f	fnv1a64:d323bc79b109a74b
+R13	fnv1a64:c5d595e0e13b378b	fnv1a64:8d8e918eb21c1ac7
+R14	fnv1a64:f89c315f2cf6e8f5	fnv1a64:67a82416bd9d8235
+R15	fnv1a64:f9c0a5aad1a21701	fnv1a64:41a4d646ae020881
+O010	fnv1a64:ef6eb32e028e7427	fnv1a64:e803fcb338ddf993
+O0200	fnv1a64:070b9bfd958bc71c	fnv1a64:6baeed40c60fd640
+O011	fnv1a64:342868ebfaefbb4c	fnv1a64:b64a538c363a5250
+O0210	fnv1a64:c080feddf148d0df	fnv1a64:d26fc4e56e05c6ab
+```
+
+Certificate cells: status, identity, source anchor, preconditions, strength, and exclusions did not change. The hash=true and hash=false certificate columns did. Direct-contract ids are the same; their stamps are the new fingerprints above. Body fingerprints and marks moved. From `.temp/brief-630/certificate-hash-true-diff.txt`: C01 hash=true body `fnv1a64:92f9f9409d3e211f` to `fnv1a64:3649719a8374cc91`, marks `fnv1a64:7a42cfb70792ad9b` to `fnv1a64:a483d6bb9a9c7f59` and `fnv1a64:b4158dd3472c88f5` to `fnv1a64:89fc3a86a38213e7`. C02 hash=true body `fnv1a64:75afc5380cf7a3d5` to `fnv1a64:164ca566d9b8717f`, mark `fnv1a64:9ce09c2d2e22ef57` to `fnv1a64:222358e7827eccc4`. From `.temp/brief-630/certificate-hash-false-diff.txt`: C01 hash=false body `fnv1a64:a3ae9baa9b90ae86` to `fnv1a64:ec576d20120e35d4`, marks `fnv1a64:40ad50a7c3343912` to `fnv1a64:e97d19968bf93469` and `fnv1a64:a8b12227195a1c54` to `fnv1a64:db33297d7ca6523b`. C02 hash=false body `fnv1a64:f447ac0ccb5076d8` to `fnv1a64:11bb90772cdf912e`, mark `fnv1a64:a934e6a3bdd7473d` to `fnv1a64:47a3697b4c67926d`. Domain fingerprints did not change.
+
+The first acceptance runs failed on the stale cells and wrote the review files. `.temp/brief-630/logs/b1-accept-hash.log`: `PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0`, `stale or omitted instance certificate C01 hash=true`, `test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 18.88s`, `EXIT:101`. `.temp/brief-630/logs/b1-accept-nohash.log`: the same production line, `stale or omitted instance certificate C01 hash=false`, `test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1157 filtered out; finished in 18.87s`, `EXIT:101`.
+
+After copying only those certificate columns, `.temp/brief-630/logs/b1-accept-hash-2.log`:
+
+```
+PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0 PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 18.71s
+EXIT:0
+```
+
+`.temp/brief-630/logs/b1-accept-nohash-2.log`:
+
+```
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1157 filtered out; finished in 18.82s
+EXIT:0
+```
+
+Ownership. The first run (`.temp/brief-630/logs/b1-ownership.log`) printed `EXACT INVENTORY self-reaching types: 61 rows` and `EXACT INVENTORY UnknownHostPayload: 79 rows`, then failed on UnknownConstruct. After the replay, `.temp/brief-630/logs/b1-ownership-2.log`:
+
+```
+EXACT INVENTORY self-reaching types: 61 rows
+EXACT INVENTORY UnknownHostPayload: 79 rows
+EXACT INVENTORY UnknownConstruct: 7923 rows
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 6.03s
+EXIT:0
+```
+
+No new `UnknownHostPayload`. No row points at a file this brief did not edit. Paired by file and construct, 15 rows moved and 5 are new. Zero disappeared. The three macro rows whose description includes an end position moved with that end position; they are the same `matches!` and `debug_assert!`.
+
+From `.temp/brief-630/ownership-changes.tsv`, verbatim:
+
+```
+change	file	old_line	old_col	new_line	new_col	description
+move	crates/rum-runtime/src/runtime/debug_tools/monitor.rs	106	31	112	31	closure captures: |current| (capture types/modes unresolved)
+move	crates/rum-runtime/src/runtime/debug_tools/monitor.rs	107	35	113	35	closure captures: |current| (capture types/modes unresolved)
+move	crates/rum-runtime/src/runtime/debug_tools/monitor.rs	95	18	101	18	closure captures: |scope| (capture types/modes unresolved)
+move	crates/rum-runtime/src/runtime/debug_tools/monitor.rs	138	24	144	24	closure captures: || (capture types/modes unresolved)
+move	crates/rum-runtime/src/runtime/debug_tools/monitor.rs	129	1	135	1	unresolved attribute/expansion derive (rum_derive :: FrameRootTrace)
+move	crates/rum-runtime/src/runtime/model/request_cancellation.rs	38	17	48	17	rum_runtime::runtime::model::request_cancellation::AcceptedRequest.generation: foreign representation std::num::NonZeroU64: NonZeroU64
+move	crates/rum-runtime/src/runtime/model/request_cancellation.rs	96	17	114	17	rum_runtime::runtime::model::request_cancellation::RequestCancelHandle.generation: foreign representation std::num::NonZeroU64: NonZeroU64
+move	crates/rum-runtime/src/runtime/model/request_cancellation.rs	152	12	174	12	rum_runtime::runtime::model::request_cancellation::RequestInterruptState.phase: foreign representation std::sync::atomic::AtomicU64: AtomicU64
+move	crates/rum-runtime/src/runtime/model/request_cancellation.rs	225	5	274	5	unexpanded macro debug_assert! (ends at 274:62)
+move	crates/rum-runtime/src/runtime/model/request_cancellation.rs	196	9	250	9	unexpanded macro matches! (ends at 253:10)
+move	crates/rum-runtime/src/runtime/model/request_cancellation.rs	14	1	24	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq)
+move	crates/rum-runtime/src/runtime/model/request_cancellation.rs	93	1	111	1	unresolved attribute/expansion derive (Clone)
+move	crates/rum-runtime/src/runtime/model/request_cancellation.rs	122	1	142	1	unresolved attribute/expansion derive (Clone)
+move	crates/rum-runtime/src/runtime/session/guest_loading/scope.rs	146	1	150	1	unresolved attribute/expansion derive (Clone , rum_derive :: FrameRootTrace)
+move	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	100	24	107	24	unexpanded macro matches! (ends at 107:87)
+new	crates/rum-runtime/src/runtime/model/request_cancellation.rs			275	5	unexpanded macro debug_assert! (ends at 275:38)
+new	crates/rum-runtime/src/runtime/suspension/core/abandon.rs			189	22	closure captures: |cell| (capture types/modes unresolved)
+new	crates/rum-runtime/src/runtime/suspension/core/abandon.rs			181	26	closure captures: |deadline| (capture types/modes unresolved)
+new	crates/rum-runtime/src/runtime/suspension/core/abandon.rs			109	29	unexpanded macro debug_assert! (ends at 112:30)
+new	crates/rum-runtime/src/runtime/suspension/core/abandon.rs			163	17	unexpanded macro format! (ends at 165:18)
+```
+
+The five new rows are the second `encode` assert, the depth assert, the skipped-message `format!`, and the two cold closures.
+
+### Rejection census — STOP
+
+`.temp/brief-630/logs/b1-census.log`. The line pins for `abandon.rs` 43, 44, and 94 are before this assert, and the failure is the length assert, so those three sites are still present. Kind-map assert did not run. `census/tests.rs` was not left edited.
+
+```
+assertion `left == right` failed: STOP: brief-545 exact legacy frontier inventory moved
+  left: 1003
+  right: 972
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 18.35s
+EXIT:101
+```
+
+Current kinds, from the dump footer `# counts {RET001: 10, RET002: 962, RET003: 31} len 1003` in `.temp/brief-630/census-frontier-now.tsv`:
+
+| kind | asserted | actual | delta |
+| --- | --- | --- | --- |
+| RET001 | 10 | 10 | 0 |
+| RET002 | 934 | 962 | +28 |
+| RET003 | 28 | 31 | +3 |
+| total | 972 | 1003 | +31 |
+
+`request_cancellation.rs`, `scope.rs`, `session_requests.rs`, and `catalog/control.rs` contribute 0 rows to this frontier. The rows on statements B1 added or rewrote in `abandon.rs`, keyed by kind, file, callee, and reason. `raw_count` is the frontier set size at that line, witnesses included. Verbatim from `.temp/brief-630/census-comparison.tsv`:
+
+```
+kind	file	line	callee	reason	raw_count
+RET002	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	98	-	primitive operand proof or exact operator/conversion impl required	4
+RET002	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	98	rum_runtime::runtime::model::session::Session::drain_host_interrupt_pending	method syntax: opaque imported trait candidate std::sync::Arc	2
+RET002	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	99	-	primitive operand proof or exact operator/conversion impl required	4
+RET002	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	100	-	primitive operand proof or exact operator/conversion impl required	2
+RET003	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	107	-	unexpanded macro; contents are not resolved Rust	2
+RET003	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	109	-	unexpanded macro; contents are not resolved Rust	2
+RET002	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	121	rum_runtime::runtime::model::session::Session::drain_host_interrupt_pending	method syntax: opaque imported trait candidate std::sync::Arc	2
+RET002	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	122	-	primitive operand proof or exact operator/conversion impl required	2
+RET002	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	149	-	primitive operand proof or exact operator/conversion impl required	1
+RET002	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	150	-	method syntax: method receiver lacks checked nominal/place provenance	1
+RET002	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	151	-	method syntax: method receiver lacks checked nominal/place provenance	1
+RET002	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	154	-	method syntax: method receiver lacks checked nominal/place provenance	2
+RET002	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	154	-	primitive operand proof or exact operator/conversion impl required	1
+RET002	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	159	-	primitive operand proof or exact operator/conversion impl required	1
+RET002	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	160	rum_runtime::runtime::model::session::Session::push_message	method syntax: type is outside the admitted surface: impl Into < String >	1
+RET003	crates/rum-runtime/src/runtime/suspension/core/abandon.rs	163	-	unexpanded macro; contents are not resolved Rust	1
+```
+
+Those 16 keys are 29 raw rows. The asserted total moved by 31. This run did not have the previous 972-row set (git is not available), so the remaining 2 are not separated from rows that `begin_ordered_abandonment` already had. The full current frontier is `.temp/brief-630/census-frontier-now.tsv` (1003 data rows, 980 unique once identical dump lines are collapsed, 23 sites stored twice).
+
+LP01, `.temp/brief-630/logs/b1-lp01.log`:
+
+```
+test oracle::fixtures::logical_profile::logical_counter_port ... ok
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 498 filtered out; finished in 66.52s
+EXIT:0
+```
+
+Typed-slot census, `.temp/brief-630/logs/b1-typed-slot.log`:
+
+```
+test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 284.61s
+EXIT:0
+```
+
+### Workspace
+
+Not started. The rejection-census stop fired first. The director rules on the count and updates `census/tests.rs`.
+
+STOP.
+
+## Director gate of B1 (2026-10-28 15:00) — B1 accepted
+
+**Accepted, with four changes of mine.** The drain does what the ruling
+asked. I settled the census stop, made two small shape changes and added one
+pin, replayed the inventories after my edits, and ran the gate myself. My
+scripts and logs are in `.temp/director/gate-630b1/`.
+
+### The census stop, settled
+
+Your comparison had no base, so it could not separate every row. I built the
+base's frontier in a worktree at `d1baa06a`, with the same temporary dump
+(`frontier-head.tsv`: 972 rows, 10/934/28, equal to the assertion). Then I
+paired the two frontiers through the diff of `abandon.rs` (`pos.py`):
+
+- All 34 base rows in `abandon.rs` pair with a candidate row of the same
+  kind, column, callee and reason at their shifted line. No row retires,
+  in any file.
+- All 31 new rows sit on lines B1 added to `abandon.rs`: 15 primitive
+  operands, 8 method receivers, 4 calls of the cold
+  `drain_host_interrupt_pending` (opaque `Arc` candidate), the skipped
+  message's `push_message` (`impl Into<String>`), and 3 unexpanded macros
+  (the depth `debug_assert!` and the message's `format!`). Rows in the
+  shared body count once per mode witness, as since LP02.
+- Your list counted the `matches!` at line 107 as new. It is the base's
+  `matches!(cleanup_outcome, …)` moved from line 100. It also missed the
+  skip branch's two receivers at 102 and 105 (two witnesses each). That is
+  where your missing 2 went.
+
+`census/tests.rs` now asserts 1003 (10/962/31), with the comment.
+
+### My changes
+
+1. **`cancel()` without the wildcard.** The match listed all four flag values
+   and then `_ => return` for a value the masked word allows but never holds.
+   Setting the unconsumed bit is the same transition and is total: ACTIVE to
+   CANCELLED, CONSUMED to ESCALATED, and a word that already has the bit is
+   unchanged.
+2. **Typed assertions in `retirement_interrupt.rs`.** The tests formatted
+   their facts into a string and then parsed or searched it (`|assert_ms=`,
+   `detail.contains("cancels=1")`). They now return a `Retired` value and
+   assert on it: the exact tag list (`["General::cancel"]`, or
+   `["WithCleanup::skipped", "General::cancel"]`), the termination, the
+   value and the skipped text. F3 also asserts that the inner cleanup ran
+   until the second cancel (900 to 3000 ms), which is what shows the first
+   cancel was consumed. The controls now assert their termination and tags
+   too.
+3. **A pin for the expired deadline.** `eval_with_timeout` documents that
+   time spent waiting for input counts toward the timeout, and that resume
+   gets no fresh budget. So when the deadline has passed before the cancel
+   retires the suspension, the drain finds an interrupt before its first
+   cleanup and enters none. `expired_deadline_before_retirement_skips_every_cleanup`
+   pins that: 100 ms timeout, 250 ms wait, cancel, retire. The cleanup's
+   marker stays 0, and one `WithCleanup::skipped` is reported. At HEAD the
+   short cleanup ran (`marker=1`, no message) and a long one would have been
+   cut silently at its 1024th poll.
+
+The rewritten file at HEAD (copied into the worktree, one test per process,
+three runs each): F1, F2 and F3 hang past 8 s, 3 of 3; the expired-deadline
+pin fails with `left: "1" right: "0"`, 3 of 3; the five controls pass, 3 of 3.
+On the candidate all nine pass, three runs.
+
+### Review of the change
+
+- The phase word gains a second flag bit. The poll's frequency and its
+  caller are unchanged. Inside the masked poll, `is_cancelled` is now a
+  shift compare and a two-value test, once per 1024 polls.
+- Both retirement sites now take the ticket after the drain, so the drain
+  runs with the ticket installed. `finish()` still observes the cancel:
+  `close_and_observe` reports any flag value other than ACTIVE.
+- The depth assertion's entry depth is the cleanup frame's own context
+  depth, which `restore_resume_context` installs before the cleanup, so the
+  assertion compares real depths.
+- `CancellationObserver` (lazy pulls) follows the unconsumed bit. A lazy
+  pull inside a cleanup is stopped by an escalation and not by the consumed
+  cancel, as the poll is.
+- Every drain that can evaluate a cleanup runs inside a request or retires a
+  suspended one, so the deadline it reads is that request's own.
+
+### Inventories, replayed after my edits
+
+- Contract fingerprints: 68 last-column cells, every other column equal.
+- Certificates C01 and C02, hash=true and hash=false cells, from
+  `local_production_acceptance` in both builds; both pass after the copy.
+- Ownership: my `cancel()` edit moves three macro rows of
+  `request_cancellation.rs` up one line (`matches!` 250 → 249,
+  `debug_assert!` 274 → 273 and 275 → 274). Nothing else. 7923 rows exact.
+- Census: 1003, passes.
+
+### Gate
+
+- `cargo fmt --check` passes.
+- `retirement_interrupt`: all nine tests pass, three runs.
+- The whole workspace, single-threaded in a 14G scope: 56 of 57 test
+  binaries pass. The 57th, rum-stdlib's lib tests, lost its process to the
+  host-wide OOM killer, not to its scope (peak 10.1 GB of 14). `kswapd0`
+  invoked it with 21.9 GB free in the Normal zone. That is the MGLRU
+  `min_ttl_ms` valve the host memory notes describe. It killed the
+  `local_probe_claims_match_stable_rustc` oracle's rustc at 12:54 and then
+  the test binary itself at 12:57. Rerun alone: 1110 passed and 1 failed,
+  `local_option_read_claims_match_stable_rustc`, whose rustc the same valve
+  killed at 13:15 (its log ends in warnings, with no error). The two rustc
+  oracles then pass alone, 2 of 2, with no kill. In all: 3986 passed, 61
+  ignored, which is 629's 3977 plus the nine new tests.
+- After change 4, I reran everything that reads the text or the file:
+  - fingerprints regenerated (the same 68 last-column cells);
+  - C01 and C02 cells copied from both builds, and `local_production_acceptance`
+    passes in both;
+  - ownership 7923 rows exact, and the census 1003, passes;
+  - the reference drift test and the 20 message tests pass;
+  - `retirement_interrupt` 9 of 9, three runs;
+  - `rum-host` 191 passed, 0 failed, in 19 binaries.
+
+### Host documentation
+
+`docs/guide/embedding.md`, Cancel And Timeout, now says what a retirement
+does. It runs the `WithCleanup` cleanups that the suspended work still owes.
+The retiring cancel does not stop them. A further cancel, or the request's
+own deadline, stops the running cleanup and skips the rest, with one
+`WithCleanup::skipped` before `General::cancel`. Nested file rollbacks
+complete either way, `Monitor` callbacks do not run, and a deadline that
+passed while waiting for input skips every cleanup. `retirement_interrupt.rs`
+names that paragraph as its contract.
+
+### Measurement
+
+Both arms were built from one source path (`same/src`) with one codegen unit:
+the base at `d1baa06a`, and the candidate from the working tree
+(`CAND-SOURCE-EQUAL`). `path-calibration.sh` prints PASS for `resume` and for
+`rum-cli`. The arms carry the B1 text of the skipped message. Change 4 alters
+one string and no code, and I did not rerun the panels for it.
+
+**Structure.** I diffed the disassembly function by function. Absolute
+addresses and rip-relative offsets are normalized, and a `<sym+off>` data
+comment is reduced to its symbol, since data offsets move with layout.
+
+- `resume`: 18 of 10 124 common functions differ.
+- `rum-cli`: 24 of 10 504 common functions differ; 1 function exists only in
+  the base and 6 only in the candidate.
+
+Every differing function is one B1 changed, or one that inlines one: the
+drain and its worklist, the profiled abandonment body, the monitor's two
+early returns (`push_trace_with_depth` inlines the monitor's trace hook), the
+cancellation word and the drops of `AcceptedRequest`, the retirement and
+finish sites, the guest-form install, and `poll_host_interrupt_if_due`. The
+two mimalloc functions in the list differ only in the padding after their
+`ret`. No evaluator function changed. The poll gains five instructions
+(generation compare, mask, two-value test), and they run once per 1024
+polls.
+
+**Resume panel, 121 labels.**
+
+- Three reps: base against base reads median +0.002%, with 22 labels above
+  +0.1%. Base against candidate reads median −0.077%, with 15 above +0.1%;
+  the highest is `lhs-twice-cycle` at +0.40%.
+- Fifteen interleaved reps: median −0.074%, maximum +0.089%, and no label
+  above +0.1%. `lhs-twice-cycle` reads −0.05%.
+- Callgrind on three labels (`lhs-head-cycle`, `resume-s6-readonly-twice`,
+  `resume-s9-cleanup-three-phase`; six processes per arm at N and 2N): the
+  only deterministic delta is `resume_eval_request_from_checkpoint`, at −44,
+  −138 and −104 instructions per iteration (integer slopes). It is a site B1
+  changed, 4 668 → 4 643 static instructions. The rest is the interner's
+  per-process hash noise in `Symbol::system`, `intern_symbol_text` and
+  `intern_text`: non-integer medians, both signs.
+
+**CLI panel, 192 labels, fifteen interleaved reps.** Median −0.003%.
+30 labels read above +0.1%. Of those, 26 overlap the base per rep, e.g.
+`valueq-undefined-symbol-definitions-2000` at +2.8% over a base spread of
+2 733–5 790. The other four sit apart from the base in every rep, and they
+are one mechanism:
+
+| label | per iteration | base reps | candidate reps |
+|---|---|---|---|
+| `deletecases-wide-association-no-match` | +54 281 (+0.72%) | 7 502 217–7 502 852 | 7 556 188–7 556 893 |
+| `keysort-default-wide` | +53 551 (+0.65%) | 8 258 434–8 262 169 | 8 313 267–8 315 280 |
+| `keysortby-default-wide` | +53 624 (+0.35%) | 15 450 095–15 453 219 | 15 504 375–15 506 666 |
+| `association-set-key-incremental-large` | +49.6 (+0.29%) | 17 194–17 236 | 17 254–17 286 |
+
+Callgrind puts the whole delta in glibc's `__memcmp_avx2_movbe`.
+
+- On `keysort-default-wide` it is +53 763 of +55 615.
+- On `association-set-key-incremental-large` it is +47.7 of +45.1, so it is
+  larger than the total.
+
+Every caller makes the same number of calls in both arms. In the
+`keysort-default-wide` profile, for example, `Symbol::is_system_name` calls it
+140 870 times in each. Each call costs 19.0 instructions in the base and 27.0
+in the candidate. The same is true from `Symbol::system`.
+
+The program and its data are the same in both arms, so the per-call count of
+that routine can differ only through the addresses it compares. Its
+short-length path first checks whether either operand lies within one vector
+of a page end (`(s1 | s2) & 4095`) and takes a longer branch when it might.
+B1 adds strings to `.rodata` and one message registration to startup, and
+the operands' addresses moved across that check. This is the brief-629
+`.rodata` memcmp class, here in instructions rather than cycles. It is
+layout, not work B1 added: none of the four labels runs a function B1
+changed.
+
+`deletecases-wide-association-no-match` (N=1600, 7.5 M instructions per
+iteration) is too slow for six callgrind processes per arm. I did not
+attribute it separately. Its delta per association entry, 33.9 instructions,
+matches the two `keysort` labels' 33.5.
+
+On the other side, 38 labels sit below the base in every rep, from −0.02% to
+−0.56% (`lazy-tuples-take-small`). I did not attribute them.
+
+**Verdict.** There is no default-path cost: the only deterministic code
+delta is a saving at a retirement site, and the one rise above the noise is
+memcmp operand placement.
