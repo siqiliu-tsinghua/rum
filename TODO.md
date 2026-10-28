@@ -77,26 +77,32 @@ filter cuts this census work a third time, switch workers.**
   parallel test census, design-only, on grk) covers all 46 test targets,
   per-test memory, the root causes, and an enforced fix. It runs before LP03,
   because LP03-LP08 will add more profiler tests.
-- **The native stack guard measures against another thread's stack after
-  a Session moves threads (found by the director at brief-627's review).**
-  - Abandonment evaluates guest cleanup at a restored nonzero depth
-    (`restore_resume_context`), so `Session::evaluate` does not rebase.
-    `native_stack_base` is still the address recorded on the thread that
-    started the request.
-  - When the current stack lies below that base, the guard reports a false
-    `StackLimitExceeded`. Abandonment drops that error silently, so the
-    `WithCleanup` cleanup does not run, against "runs guest cleanup once".
-  - When the current stack lies above it, `saturating_sub` gives 0 and the
-    guard cannot fire at all. That is fail-open, and it was observed.
-  - Jupyter runs each execute on a fresh thread, which is how it surfaced, as
-    the interrupt "flake" below.
-  - brief-628 (design-only) owns the fix and the inventory of
-    thread-bound Session state.
-- **The `rum-jupyter` `execute_lifecycle` interrupt tests flake under
-  parallel test threads.** They failed 3 of 10 workspace-parallel runs on the
-  committed pre-LP02 source, and never single-threaded. Gates run tests
-  single-threaded (`TEMPLATE.md` pitfall 9), so the flake stays unseen
-  there. Diagnose it before any brief proposes parallel tests.
+- **DONE (brief-629, `60ca9585`): the native stack guard measured against
+  another thread's stack after a Session moved threads** (found by the
+  director at brief-627's review, designed in brief-628).
+  - Abandonment evaluated guest cleanup at a restored nonzero depth, so the
+    guard kept the base recorded on the thread that started the request.
+    Below it, a false `StackLimitExceeded` silently skipped the `WithCleanup`
+    cleanup; above it, `saturating_sub` gave 0 and the guard could not fire.
+  - The base now lives in a thread-local entry record under a `!Send` guard,
+    and `Session::native_stack_base` is gone. The depth and its check
+    threshold are one type (`EvaluationDepth`), so a stale threshold restore
+    cannot be written. The falsifiers are in
+    `crates/rum-host/tests/native_stack_thread_scope.rs`.
+- **The `rum-jupyter` `execute_lifecycle` interrupt "flake" was this
+  defect.** Jupyter runs each execute on a fresh thread. After brief-629 the
+  pair passes 40 of 40 at `--test-threads=2`, 20 by the worker and 20 by the
+  director. The default parallel `cargo test` is still red for brief-627's
+  test-isolation families, so I have not rerun the original
+  workspace-parallel reproduction (3 failures in 10).
+- **Next: the dropped cleanup error (user ruling 2026-10-27, Option A).** A
+  `WithCleanup` cleanup that fails while a cancelled request is abandoned is
+  dropped without a message. It should report its message, keep the outer
+  `Cancelled` outcome, and drain every remaining frame. The brief first
+  settles which `AbandonReason`s emit, from an inventory of the message
+  channel each retirement has. Raw material:
+  `.temp/brief-628/drafts/brief-abandonment-cleanup-diagnostics.md` (its
+  target shape predates brief-629).
 - **Three dead-code warnings in `crates/rum-runtime/src/runtime/test_builtins.rs`.**
   `register_test_vm_template_builtins` has no caller, so the two
   registrations reached only through it are dead too. They have been present
