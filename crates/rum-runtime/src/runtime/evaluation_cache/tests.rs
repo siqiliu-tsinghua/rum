@@ -122,6 +122,7 @@ fn session_with_stable_identity_list(name: &str, identity: u64) -> (Session, Sym
 
 #[test]
 fn association_stability_index_preserves_distinct_and_duplicate_verdicts() {
+    let _entry = crate::runtime::native_stack_guard::NativeStackEntry::enter();
     let mut session = Session::default();
     let indexed_len = ASSOCIATION_INDEX_THRESHOLD as i64 + 1;
     let distinct = association_with_integer_keys(0..indexed_len);
@@ -485,40 +486,41 @@ fn repeated_unrelated_writes_do_not_bump_call_stability_generation() {
 #[test]
 fn stability_native_stack_poll_is_strided_and_fails_closed() {
     let mut session = Session::empty();
-    session.native_stack_base = usize::MAX;
     session.resource_limits.native_stack_limit = 0;
     let ordinary_miss = Expr::call(system_expr("List"), vec![Expr::small_integer(1)]);
 
-    session.stability_native_stack_poll_counter = 0;
-    assert_eq!(
-        session.cached_expr_stability_with_bloom(&Expr::small_integer(1)),
-        (true, StabilityBloom::default()),
-        "an atom stability check must keep its ordinary verdict"
-    );
-    assert_eq!(session.stability_native_stack_poll_counter, 0);
-    let ordinary_verdict = session.cached_expr_stability_with_bloom(&ordinary_miss);
-    assert!(
-        ordinary_verdict.0,
-        "a non-polling call-cache miss must keep its ordinary verdict"
-    );
-    assert_eq!(session.stability_native_stack_poll_counter, 1);
-    assert_eq!(
-        session.cached_expr_stability_with_bloom(&ordinary_miss),
-        ordinary_verdict,
-        "a call-cache hit must keep its ordinary verdict"
-    );
-    assert_eq!(session.stability_native_stack_poll_counter, 1);
+    crate::runtime::native_stack_guard::with_thread_native_stack_base(usize::MAX, || {
+        session.stability_native_stack_poll_counter = 0;
+        assert_eq!(
+            session.cached_expr_stability_with_bloom(&Expr::small_integer(1)),
+            (true, StabilityBloom::default()),
+            "an atom stability check must keep its ordinary verdict"
+        );
+        assert_eq!(session.stability_native_stack_poll_counter, 0);
+        let ordinary_verdict = session.cached_expr_stability_with_bloom(&ordinary_miss);
+        assert!(
+            ordinary_verdict.0,
+            "a non-polling call-cache miss must keep its ordinary verdict"
+        );
+        assert_eq!(session.stability_native_stack_poll_counter, 1);
+        assert_eq!(
+            session.cached_expr_stability_with_bloom(&ordinary_miss),
+            ordinary_verdict,
+            "a call-cache hit must keep its ordinary verdict"
+        );
+        assert_eq!(session.stability_native_stack_poll_counter, 1);
 
-    session.stability_native_stack_poll_counter = u64::MAX;
-    assert_eq!(
-        session.cached_expr_stability_with_bloom(&Expr::call(
-            system_expr("List"),
-            vec![Expr::small_integer(2)],
-        )),
-        (false, StabilityBloom::default()),
-        "a polling call-cache miss must fail closed when the byte budget is exhausted"
-    );
-    assert_eq!(session.stability_native_stack_poll_counter, 0);
+        session.stability_native_stack_poll_counter = u64::MAX;
+        assert_eq!(
+            session.cached_expr_stability_with_bloom(&Expr::call(
+                system_expr("List"),
+                vec![Expr::small_integer(2)],
+            )),
+            (false, StabilityBloom::default()),
+            "a polling call-cache miss must fail closed when the byte budget is exhausted"
+        );
+        assert_eq!(session.stability_native_stack_poll_counter, 0);
+    });
 }
 
 const CALL_STABILITY_PROFILE_GATE_CHILD_ENV: &str = "RUM_CALL_STABILITY_PROFILE_GATE_CHILD";

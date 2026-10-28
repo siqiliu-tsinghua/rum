@@ -80,7 +80,7 @@ fn idle(s: &mut Session) {
     assert!(s.guest_form.is_none());
     assert!(s.load_stack.is_empty());
     assert!(s.evaluation_stack.is_empty());
-    assert_eq!(s.evaluation_depth, 0);
+    assert_eq!(s.evaluation_depth.get(), 0);
     assert_eq!(s.eval_request("1+1").unwrap().value.to_string(), "2");
 }
 const NESTED: &[(&str, &str)] = &[

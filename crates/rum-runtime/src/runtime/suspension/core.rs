@@ -20,6 +20,7 @@ mod profile_mode;
 pub(super) mod profile_queue;
 pub(in crate::runtime) mod queue;
 pub(super) mod storage;
+use crate::runtime::native_stack_guard::NativeStackEntry;
 use crate::runtime::session::guest_loading::{
     GuestFileTransaction, GuestFormEnvironment, GuestFormScope,
 };
@@ -631,10 +632,7 @@ impl Session {
         &mut self,
         input: impl Into<String>,
     ) -> Result<O, EvalError> {
-        let saved_native_base = self.native_stack_base;
-        let saved_native_threshold = self.native_stack_next_check_depth;
-        let stack_marker = 0_u8;
-        self.native_stack_base = (&stack_marker as *const u8) as usize;
+        let _entry = NativeStackEntry::enter();
         debug_assert!(
             self.resuming_suspension.is_none(),
             "a Session resumes only one suspended evaluation at a time"
@@ -685,8 +683,6 @@ impl Session {
 
         self.replace_accounted_evaluation_stack(saved_stack);
         self.evaluation_depth = saved_depth;
-        self.native_stack_base = saved_native_base;
-        self.native_stack_next_check_depth = saved_native_threshold;
 
         match result {
             Err(fault) => {

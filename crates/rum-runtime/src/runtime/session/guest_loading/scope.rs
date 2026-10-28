@@ -19,13 +19,13 @@ impl GuestCallerStack {
     pub(super) fn capture(session: &Session) -> Self {
         Self {
             entries: session.evaluation_stack.clone(),
-            depth: session.evaluation_depth,
+            depth: session.evaluation_depth.get(),
         }
     }
 
     fn restore(&self, session: &mut Session) {
         session.replace_accounted_evaluation_stack(self.entries.clone());
-        session.evaluation_depth = self.depth;
+        session.evaluation_depth.restore(self.depth);
     }
 }
 

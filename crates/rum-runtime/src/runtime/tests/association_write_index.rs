@@ -60,6 +60,7 @@ fn seed_direct_write_proof(session: &mut Session, target: &Symbol) {
     // Seed the proof exactly the way the evaluator's own stability check
     // would, then let the clone go so the only strong holders are the
     // definition and the proof the write path takes before mutating.
+    let _entry = crate::runtime::native_stack_guard::NativeStackEntry::enter();
     let current = current_own_value(session, target);
     assert!(session.cached_expr_is_evaluation_stable(&current));
 }
@@ -180,6 +181,7 @@ fn rewriting_an_appended_key_replaces_it_through_the_index() {
 /// the key through the index every time and never rebuilds it.
 #[test]
 fn repeated_replacement_writes_stay_indexed() {
+    let _entry = crate::runtime::native_stack_guard::NativeStackEntry::enter();
     let mut semantic_session = session_with_test_control_builtins();
     let semantic_target = install_association(&mut semantic_session, "replaceAssoc", 1..=32);
     seed_direct_write_proof(&mut semantic_session, &semantic_target);

@@ -6,6 +6,7 @@ use super::*;
 use crate::runtime::kernel_api::{
     AccumulatorChain, AccumulatorChainNode, FrameRootTrace, FrameRootVisitor,
 };
+use crate::runtime::native_stack_guard::NativeStackEntry;
 use std::sync::Arc;
 
 #[derive(Clone, FrameRootTrace)]
@@ -316,10 +317,8 @@ impl Session {
 
     /// Evaluates an expression to a fixed point under the current session state.
     pub fn evaluate(&mut self, expr: Expr) -> Result<Expr, EvalError> {
-        if self.evaluation_depth == 0 {
-            let stack_marker = 0_u8;
-            self.native_stack_base = (&stack_marker as *const u8) as usize;
-            self.native_stack_next_check_depth = NATIVE_STACK_DEPTH_POLL_STRIDE;
+        if self.evaluation_depth.get() == 0 {
+            return self.evaluate_at_root(expr);
         }
         self.record_profile_evaluate_entry();
         let runtime_profile = runtime_path_timing_start("evaluate.total");
@@ -331,6 +330,22 @@ impl Session {
         result
     }
 
+    #[cold]
+    #[inline(never)]
+    fn evaluate_at_root(&mut self, expr: Expr) -> Result<Expr, EvalError> {
+        let _entry = NativeStackEntry::enter();
+        self.evaluation_depth.restore(0);
+        self.record_profile_evaluate_entry();
+        let runtime_profile = runtime_path_timing_start("evaluate.total");
+        let result = self.evaluate_profiled_fixed_point(expr);
+        record_profile_runtime_path_timing(
+            runtime_profile,
+            runtime_profile_outcome_for_expr_result(&result),
+        );
+        result
+    }
+
+    #[inline(always)]
     fn evaluate_profiled_fixed_point(&mut self, expr: Expr) -> Result<Expr, EvalError> {
         let mut current = expr;
         let mut evaluation_passes = 0;

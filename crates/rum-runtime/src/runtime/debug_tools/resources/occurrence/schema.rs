@@ -142,8 +142,6 @@ session_memory_field_decisions! {
     monitor_callbacks_enabled => Exempt("fixed-size value already covered by size_of::<Session>()"),
     monitor_scopes => Accounted("MonitorScope expressions, display String, and Vec spare capacity") =
         sequence(monitor_scopes, monitor),
-    native_stack_base => Exempt("fixed-size value already covered by size_of::<Session>()"),
-    native_stack_next_check_depth => Exempt("fixed-size value already covered by size_of::<Session>()"),
     next_generated_symbol_id => Exempt("fixed-size value already covered by size_of::<Session>()"),
     next_request_generation => Exempt("fixed-size value already covered by size_of::<Session>()"),
     next_sealed_symbol_id => Exempt("fixed-size value already covered by size_of::<Session>()"),

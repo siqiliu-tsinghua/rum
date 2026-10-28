@@ -33,6 +33,7 @@ fn install_association(session: &mut Session, target: Symbol, keys: impl IntoIte
 }
 
 fn seed_association_stability_proof(session: &mut Session, target: &Symbol) {
+    let _entry = crate::runtime::native_stack_guard::NativeStackEntry::enter();
     let current = session
         .definitions
         .get(target)
@@ -84,6 +85,7 @@ fn association_incremental_writes_preserve_ordinary_symbol_semantics_past_the_ca
 /// brief; this compressed shape keeps the debug runtime tolerable.)
 #[test]
 fn association_incremental_writes_stay_direct_past_the_cache_size_cap() {
+    let _entry = crate::runtime::native_stack_guard::NativeStackEntry::enter();
     let mut session = session_with_test_control_builtins();
     let target = Symbol::with_identity(GLOBAL_CONTEXT, "generatedBigAssoc", 6);
     install_association(&mut session, target, 1..=16000);

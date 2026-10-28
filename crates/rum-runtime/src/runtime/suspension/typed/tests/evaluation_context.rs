@@ -9,7 +9,7 @@ fn context(s: &Session) -> Context {
             .iter()
             .map(|e| (e.expr.to_string(), e.epoch))
             .collect(),
-        s.evaluation_depth,
+        s.evaluation_depth.get(),
         s.evaluation_epoch,
     )
 }
@@ -24,7 +24,7 @@ fn seeded() -> Session {
             epoch: i as u64,
         })
         .collect();
-    s.evaluation_depth = 9;
+    s.evaluation_depth.restore(9);
     s.current_memory_limit = Some(1_000_000_000);
     s.note_accounting_arm();
     assert!(matches!(
@@ -35,7 +35,7 @@ fn seeded() -> Session {
 }
 fn unwind(s: &mut Session, length: usize, depth: usize) {
     s.truncate_accounted_evaluation_stack(length);
-    s.evaluation_depth = depth;
+    s.evaluation_depth.restore(depth);
     super::super::accounting::reconcile(s);
 }
 #[derive(Clone, Copy)]

@@ -1,5 +1,6 @@
 use super::*;
 use crate::runtime::accounting_mode::{AccountingMode, Unarmed};
+use crate::runtime::native_stack_guard::native_stack_exhausted;
 
 use std::time::Instant;
 
@@ -31,7 +32,7 @@ impl Session {
         track_cycle: bool,
         mode: M,
     ) -> Result<Expr, EvalError> {
-        let evaluation_depth = self.evaluation_depth;
+        let evaluation_depth = self.evaluation_depth.get();
         if self.interrupt_armed {
             self.poll_host_interrupt_if_due()?;
         }
@@ -51,9 +52,7 @@ impl Session {
                 limit: self.resource_limits.recursion_limit,
             });
         }
-        if evaluation_depth >= self.native_stack_next_check_depth {
-            self.native_stack_next_check_depth =
-                evaluation_depth.saturating_add(NATIVE_STACK_DEPTH_POLL_STRIDE);
+        if self.evaluation_depth.native_check_due(evaluation_depth) {
             self.poll_native_stack_limit()?;
         }
 
@@ -71,10 +70,10 @@ impl Session {
         } else {
             0
         };
-        self.evaluation_depth = evaluation_depth + 1;
+        self.evaluation_depth.enter_level(evaluation_depth);
         let shadow_stack = mode.stack_push(track_cycle);
         let result = self.evaluate_inner_unstable(expr);
-        self.evaluation_depth = evaluation_depth;
+        self.evaluation_depth.leave_level(evaluation_depth);
         if track_cycle {
             if M::ARMED {
                 self.pop_accounted_evaluation_entry(stack_payload);
@@ -102,8 +101,7 @@ impl Session {
     fn poll_native_stack_limit(&mut self) -> Result<(), EvalError> {
         let stack_marker = 0_u8;
         let current_addr = (&stack_marker as *const u8) as usize;
-        let consumed = self.native_stack_base.saturating_sub(current_addr);
-        if consumed > self.resource_limits.native_stack_limit {
+        if native_stack_exhausted(current_addr, self.resource_limits.native_stack_limit) {
             return Err(EvalError::StackLimitExceeded {
                 limit: self.resource_limits.native_stack_limit,
             });
@@ -116,8 +114,7 @@ impl Session {
     pub(in crate::runtime) fn native_stack_budget_exhausted(&self) -> bool {
         let stack_marker = 0_u8;
         let current_addr = (&stack_marker as *const u8) as usize;
-        let consumed = self.native_stack_base.saturating_sub(current_addr);
-        consumed > self.resource_limits.native_stack_limit
+        native_stack_exhausted(current_addr, self.resource_limits.native_stack_limit)
     }
 
     #[cold]

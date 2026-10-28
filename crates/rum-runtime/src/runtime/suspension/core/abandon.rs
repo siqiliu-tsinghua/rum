@@ -27,10 +27,12 @@ impl Session {
             return reason;
         }
 
+        let _entry = NativeStackEntry::enter();
         self.abandonment_active = true;
         let previous_guest_form = self.guest_form;
         let saved_stack = self.replace_accounted_evaluation_stack(Vec::new());
-        let saved_depth = std::mem::replace(&mut self.evaluation_depth, 0);
+        let saved_depth = self.evaluation_depth;
+        self.evaluation_depth.restore(0);
 
         while let Some(mut suspension) = self.abandonment_worklist.pop() {
             self.refresh_memory_owner(
@@ -49,7 +51,7 @@ impl Session {
             }
 
             self.clear_accounted_evaluation_stack();
-            self.evaluation_depth = 0;
+            self.evaluation_depth.restore(0);
         }
 
         self.replace_accounted_evaluation_stack(saved_stack);
@@ -107,7 +109,7 @@ impl Session {
                     }
 
                     self.clear_accounted_evaluation_stack();
-                    self.evaluation_depth = 0;
+                    self.evaluation_depth.restore(0);
                     break;
                 }
             }

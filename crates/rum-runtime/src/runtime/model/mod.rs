@@ -3,6 +3,7 @@ use super::*;
 mod cache;
 mod config;
 mod definitions;
+mod evaluation_depth;
 mod messages;
 mod request_cancellation;
 mod requests;
@@ -26,6 +27,7 @@ pub use definitions::{
     SymbolDefinition, SymbolInfo, UpValue,
 };
 pub(super) use definitions::{DownValueScan, LinearDownValueScan, expr_contains_pattern_syntax};
+pub(super) use evaluation_depth::EvaluationDepth;
 pub use messages::{
     DefinitionKind, RuleApplicationSource, RuntimeInputKind, RuntimeInputRequest, RuntimeMessage,
     TraceEvent,

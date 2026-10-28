@@ -3508,3 +3508,383 @@ I replayed by the standing procedure (`.temp/director/gate-629a5/`):
 If a standing inventory fails again, report it and continue; it is mine to
 replay. Append "Executing-agent report — A5b". Every quoted line must be
 copied from a file you name.
+
+## Executing-agent report — A5b
+
+No STOP. No file under `crates/` was edited in A5b. The A5 `#[inline(always)]` on `poll_resumed_native_stack` is unchanged, and the leaf stays `#[cold] #[inline(never)]`. The same-path instrument, the stack rescan, and callgrind of the coverage set are done. `cargo test --workspace` was not run.
+
+### 1. Tests
+
+LP01 passed. From `.temp/brief-629/logs/lp01-a5b.log`:
+
+```
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 498 filtered out; finished in 66.73s
+
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+The Jupyter pair passed 20 times. Each `test result:` line in `.temp/brief-629/logs/jupyter-pair-a5b.log` is the same, and the log ends:
+
+```
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 149 filtered out; finished in 0.02s
+
+RUN_EXIT:0
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+`fmt`, `rum-runtime` (1216), and `rum-host` (including `native_stack_thread_scope`) passed in A5 and were not rerun. The director replayed the rot-guard and both `local_production_acceptance` builds. A5b did not edit inventories.
+
+### 2. One path
+
+Calibration passed on both resume binaries and both rum-cli binaries. From `.temp/brief-629/logs/calibrate-a5b.log`:
+
+```
+=== resume ===
+a: 54968415bb2e57e7 5c761434403a0d87 a69b7b564caba688 f03877a538c7ca78 fc1f7bf9abd9a343
+b: 54968415bb2e57e7 5c761434403a0d87 a69b7b564caba688 f03877a538c7ca78 fc1f7bf9abd9a343
+PASS
+=== rum-cli ===
+a: 0cfd6ce0b10b3936 3bde438439d162a1 8fa2c193a24c1629 c15fb178da3fc520 ce0a78e75ec340cf
+b: 0cfd6ce0b10b3936 3bde438439d162a1 8fa2c193a24c1629 c15fb178da3fc520 ce0a78e75ec340cf
+PASS
+=== shape base ===
+size=24862 frame=0x7f8 memcpy_sites=23 poll_calls=8 leaf_calls=0
+=== shape cand ===
+size=25778 frame=0x848 memcpy_sites=19 poll_calls=0 leaf_calls=8
+EXIT:0
+oom_kill_after=0
+oom_after=0
+```
+
+`resume_eval_request_from_checkpoint`'s frame is `0x7f8` on the base and `0x848` on the candidate. Static memcpy sites went from 23 to 19. Poll calls went from 8 to 0 and the leaf calls went from 0 to 8, which is the inline: the checkpoint function calls the leaf directly.
+
+### 3. Instruction gate
+
+The floor and the gate are 313 labels, both `EXIT:0`, and `oom_kill` stayed 0. From `.temp/brief-629/logs/bc-a5-summary.txt`:
+
+```
+labels 313
+bb_rows 313
+bc_median_pct +0.0530
+bc_max_pct +1.2794
+bc_min_pct -20.1201
+flagged 162 positive 142 negative 20
+flagged_cli 75 of 192 median +0.0712
+flagged_resume 87 of 121 median +0.1803
+flagged_cli_positive 61
+flagged_resume_positive 81
+above_0_3_pct 21
+```
+
+The gate's three-run median for `resume-cleanup` is +90.60 (+0.4866%). A six-run recheck on the same binaries is inside the floor. From `.temp/brief-629/logs/perf-recheck-resume-cleanup-a5b.tsv`:
+
+```
+resume-cleanup	1000	18645.35	18658.84	+13.49	+0.0724	22219184,22239439,22237246,22242157,22220714,22220352	40920816,40844685,40842930,40873508,40940420,40875160	22281226,22260617,22259557,22257628,22275382,22256652	40917538,40965941,40917676,41007599,40918448,40919415
+```
+
++0.0724% is under that label's floor of 0.1954%. Two of the six candidate 2N runs sit in the high cluster (`40965941` and `41007599`); the other four sit near `40918k`. The gate's three candidate 2N runs all landed in the high cluster.
+
+### 4. Stack
+
+Not a STOP. Frame sums are push bytes plus sub bytes. The repeating level is `Session::evaluate` plus the callee it reaches on every iteration.
+
+From `.temp/brief-629/logs/stack-a5b-reservations.tsv`:
+
+```
+base	rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate	0x750d30	4429	6	48	1	840	888	840	push   %rbp | push   %r15 | push   %r14 | push   %r13 | push   %r12 | push   %rbx
+```
+
+```
+base	rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_unstable_after_input_check_with_cycle_tracking	0x5d05b0	4737	6	48	1	712	760	712	push   %rbp | push   %r15 | push   %r14 | push   %r13 | push   %r12 | push   %rbx
+```
+
+Base repeating level: 888 + 760 = 1648.
+
+```
+cand	rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate	0x751f00	4577	6	48	1	840	888	840	push   %rbp | push   %r15 | push   %r14 | push   %r13 | push   %r12 | push   %rbx
+```
+
+```
+cand	rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_in_accounting_mode	0x5d18a0	2632	6	48	1	536	584	536	push   %rbp | push   %r15 | push   %r14 | push   %r13 | push   %r12 | push   %rbx
+cand	rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_in_accounting_mode	0x5d22f0	1882	6	48	1	520	568	520	push   %rbp | push   %r15 | push   %r14 | push   %r13 | push   %r12 | push   %rbx
+cand	rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_inner_unstable	0x5d2a50	10700	6	48	1	1256	1304	1256	push   %rbp | push   %r15 | push   %r14 | push   %r13 | push   %r12 | push   %rbx
+```
+
+Candidate repeating level: 888 + 584 = 1472, or 888 + 568 = 1456. Both are under 1648. `evaluate_inner_unstable` is 1304 on both arms. `evaluate_at_root` is cold, sum 904:
+
+```
+cand	rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::poll_native_stack_limit	0xd1570	83	3	24	0	0	24	-	push   %r14 | push   %rbx | push   %rax
+cand	rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::native_stack_budget_exhausted	0xd15d0	65	1	8	1	16	24	16	push   %rbx
+cand	rum_runtime::runtime::native_stack_guard::NativeStackGuard::poll_native_stack_limit	0xdc0f0	67	1	8	1	16	24	16	push   %rbx
+cand	rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate_at_root	0xe28a0	4834	6	48	1	856	904	856	push   %rbp | push   %r15 | push   %r14 | push   %r13 | push   %r12 | push   %rbx
+```
+
+The three cold leaves are sum 0 on the base and sum 24 on the candidate. 24 is inside the 32-byte reservation allowance. A depth-0 entry still has the caller's evaluate frame live: 888 + 904 + 584 = 2376. That is one request, not the repeating level.
+
+From `.temp/brief-629/logs/stack-a5b-calls.txt`:
+
+```
+===== nm base hot evaluate_profiled_fixed_point =====
+(no hot defined symbol)
+```
+
+```
+===== nm cand hot evaluate_profiled_fixed_point =====
+(no hot defined symbol)
+```
+
+### 5. Attribution
+
+Callgrind is exclusive Ir, six runs per arm per size, on `arms/base-same` and `arms/cand-same`. Outputs are `callgrind/a5b-<label>/` and `logs/attr-a5b-<label>.tsv`. Stage B and A4 profiles were not reused. `oom_kill` stayed 0 on both batches (`logs/attr-a5b-batch1.log`, `logs/attr-a5b-batch2.log`).
+
+The components that close a label are the leaf at +11 per call, the inlined resume entry (the old `poll_resumed_native_stack` body moves into `resume_eval_request_from_checkpoint`, which is also where the threshold store lives), the evaluator body moving from `evaluate_once_unstable_after_input_check_with_cycle_tracking` into `evaluate_once_in_accounting_mode` and getting cheaper, `evaluate'2` and `Session::evaluate`, `evaluate_at_root` when a root entry runs, and the two A4 noise modes. Memcpy exclusive slope is 0 on every profiled label. Net memcpy call-count slope is 0 on every callers file. From `.temp/brief-629/logs/memcpy-net-a5b.txt`:
+
+```
+files=29 moved=0
+```
+
+On `resume-cleanup` the checkpoint function's memcpy calls stay 6. The only nonzero memcpy caller deltas are the evaluator body moving, +1 accounting and -1 `once_unstable`. That is not a new memcpy site. From `.temp/brief-629/logs/callers-a5b-resume-cleanup.txt`:
+
+```
++1.000	0.000	1.000	rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_in_accounting_mode
+-1.000	1.000	0.000	rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_unstable_after_input_check_with_cycle_tracking
+```
+
+```
++0.000	6.000	6.000	rum_runtime::runtime::session::session_requests::<impl rum_runtime::runtime::model::session::Session>::resume_eval_request_from_checkpoint
+```
+
+`resume-cleanup` callgrind TOTAL is +38.8370, against the six-run perf delta of +13.49. The difference, 25.3 instructions, is inside the 36.4-instruction floor. From `.temp/brief-629/logs/attr-a5b-resume-cleanup.tsv`:
+
+```
++38.8370	18608.9450	18647.7820	TOTAL
+-138.0000	138.0000	0.0000	resume!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_unstable_after_input_check_with_cycle_tracking
++130.0000	0.0000	130.0000	resume!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::evaluate_once_in_accounting_mode
+-88.0000	88.0000	0.0000	resume!rum_runtime::runtime::suspension::core::evaluation_context::<impl rum_runtime::runtime::model::session::Session>::poll_resumed_native_stack
++82.0000	1436.0000	1518.0000	resume!rum_runtime::runtime::session::session_requests::<impl rum_runtime::runtime::model::session::Session>::resume_eval_request_from_checkpoint
++44.6930	28.4410	73.1340	resume!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::native_stack_budget_exhausted
++7.0000	231.0000	238.0000	resume!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate
+```
+
+Leaf calls, from `.temp/brief-629/logs/callers-a5b-resume-cleanup.txt`:
+
+```
+-4.000	4.000	0.000	rum_runtime::runtime::suspension::core::evaluation_context::<impl rum_runtime::runtime::model::session::Session>::poll_resumed_native_stack
++4.000	0.000	4.000	rum_runtime::runtime::session::session_requests::<impl rum_runtime::runtime::model::session::Session>::resume_eval_request_from_checkpoint
++0.000	0.063	0.063	rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom
+```
+
+Count per iteration is 4 + 0.063 = 4.063 on both arms. Cost is 28.4410 / 4.063 = 7 and 73.1340 / 4.063 = 18, so the leaf is 4.063 × 11 = +44.693. The four direct calls moved from `poll_resumed_native_stack` into the checkpoint function because the poll was inlined. `poll_resumed_native_stack` exclusive −88 is those 4 calls at 22 instructions, and the checkpoint function's exclusive +82 is that inlined body at 1 call per iteration, 6 instructions cheaper. The evaluator body is −138 + 130 = −8. `Session::evaluate` is +7. The remaining rows in that TSV are hash and intern noise under 2 instructions. Their sum with the rows above is +39.109, against TOTAL +38.837. The 0.272 difference is rows smaller than 0.05.
+
+`c1-all-guard` is the director's leaf check, and it was attributed even though it is not in the +0.3% list. From `.temp/brief-629/logs/attr-a5b-c1-all-guard.tsv`:
+
+```
++248.1600	157.9200	406.0800	resume!rum_runtime::runtime::eval_core::<impl rum_runtime::runtime::model::session::Session>::native_stack_budget_exhausted
+```
+
+From `.temp/brief-629/logs/callers-a5b-c1-all-guard.txt`:
+
+```
+-22.000	22.000	0.000	rum_runtime::runtime::suspension::core::evaluation_context::<impl rum_runtime::runtime::model::session::Session>::poll_resumed_native_stack
++22.000	0.000	22.000	rum_runtime::runtime::session::session_requests::<impl rum_runtime::runtime::model::session::Session>::resume_eval_request_from_checkpoint
++0.000	0.440	0.440	rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom
++0.000	0.120	0.120	rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom'2
+```
+
+Call slope is 22 + 0.440 + 0.120 = 22.560 on both arms. 157.9200 / 22.560 = 7 and 406.0800 / 22.560 = 18, so the component is 22.560 × 11 = +248.160. Callgrind TOTAL for this label is +355.4150. The rest is the same inlining change plus `Symbol::system` (+121.130 in `logs/components-a5b-c1-all-guard.txt`). This candidate is the whole brief against the pre-brief base, so the total is not only the leaf.
+
+`literal-integer` is the register-allocation case. From `.temp/brief-629/logs/attr-a5b-literal-integer.tsv`:
+
+```
++0.9968	291.9180	292.9148	TOTAL
++1.0000	110.0000	111.0000	rum-cli!rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate'2
+```
+
+Dump-instr of one run per arm, hot instructions executed on every iteration, from `.temp/brief-629/logs/instr-literal-a5b.txt`:
+
+```
+base file base-20000-1.out positions 281 hot 110 missing 0 hot_count_min 20008 hot_count_max 20012
+```
+
+```
+cand file cand-20000-1.out positions 289 hot 111 missing 0 hot_count_min 20008 hot_count_max 20012
+```
+
+```
+mnemonic_delta cand-base
+-1 jne base 4 cand 3
+-1 movq base 6 cand 5
++1 mov base 17 cand 18
++1 xor base 2 cand 3
++1 je base 13 cand 14
+```
+
+Hot count is 110 versus 111. The net extra instruction is one `xor` plus one `mov` taking the place of one `movq`. The `je`/`jne` pair swaps and does not change the count.
+
+`lazy-depth-nest-map-64` perf is +3811.70 and callgrind TOTAL is +458.8590. The perf median picked the high bloom mode at 2N and the low mode at N. From `.temp/brief-629/logs/attr-a5b-batch1.log`:
+
+```
+lazy-depth-nest-map-64 cand N=1000 totals=[948439017, 946816814, 946785278, 946775989, 948442558, 946781774]
+```
+
+```
+lazy-depth-nest-map-64 cand N=2000 totals=[1885426678, 1885425944, 1885426074, 1888756765, 1888755482, 1885425836]
+```
+
+From `.temp/brief-629/logs/modes-a5b.txt`:
+
+```
+nest cand N=1000 rep=1 summary=948439017 bloom_ir=49305222
+nest cand N=1000 rep=2 summary=946816814 bloom_ir=47679377
+callers.py parse nest cand N=1000 rep=1 bloom_calls=465326
+callers.py parse nest cand N=1000 rep=2 bloom_calls=465326
+```
+
+The summary gap between those two runs is 1622203. The bloom IR gap is 1625845. Call count is the same. Holding the mode fixed, the low-mode perf slope is about +485, next to the callgrind slope of +458.86. The callgrind pieces are the body move (−15184 + 14315), `evaluate'2` (+1268), and the leaf (+91.443). That sum is +490.44, against TOTAL +458.86.
+
+Where the median of the totals and the sum of the median function slopes disagree, the instructions left outside the named functions do not move. From `.temp/brief-629/logs/modes-a5b.txt`:
+
+```
+unnamed_delta c1-all-guard -0.0400
+unnamed_delta lhs-pattern-cycle +0.0000
+unnamed_delta resume-s9-cleanup-init +0.0000
+unnamed_delta resume-s6-readonly-twice -0.0400
+```
+
+The three largest CLI labels:
+
+`lazy-depth-fold-through-source-64` callgrind TOTAL is +13389.86, perf is +16847.24. The floor is 0.05% of about 33.3e6, which is 16673 instructions, so the two slopes agree inside the floor. The pieces are the body move (+445525 and −472589, net −27064) at 4164 calls per iteration, `evaluate'2` at +39553, the leaf at 260.250 × 11 = +2862.75, and the bloom rows (−836.735 and −676). From `.temp/brief-629/logs/callers-a5b-lazy-depth-fold-through-source-64.txt`:
+
+```
++0.000	260.250	260.250	rum_runtime::runtime::evaluation_cache::stability::<impl rum_runtime::runtime::model::session::Session>::cached_expr_stability_with_bloom
+```
+
+```
++4164.000	0.000	4164.000	rum_runtime::runtime::resolution::<impl rum_runtime::runtime::model::session::Session>::evaluate'2
+```
+
+`lazy-depth-map-eight-256` callgrind TOTAL is +14694.06, perf is +15299.39. Same shape: body move +438677 and −465325, `evaluate'2` +38945, leaf +2818.75, bloom −318.66.
+
+`lazy-depth-fold-through-source-256` was callgrinded at 2 and 4 iterations, not at the label N of 1000. One N=1000 run of the 64-deep fold took 113.6 seconds. From `.temp/brief-629/logs/attr-a5b-batch2.log`:
+
+```
+ran base N=1000 rep=1 rc=0 elapsed=113.6s
+```
+
+The 256-deep fold's gate count at N is about 15 times that, so the 24-run set is about a day. The measured slope is still one iteration, because setup is in both sizes. From the same log:
+
+```
+out_dir /home/remi/dev/rum/.temp/brief-629/callgrind/a5b-lazy-depth-fold-through-source-256-n2 timeout 1800s measure_n 2 label_N 1000
+```
+
+```
+TOTAL base=517395131.25 cand=517647829.50 delta=+252698.25
+```
+
+Perf at N=1000 is +217216.80. The label is under the 0.05% floor (+0.0417%). The callgrind and perf slopes differ by 35481 instructions, and 0.05% of the callgrind base is about 258698, so they agree inside the floor. The pieces are the body move (+7040149 and −7467821), `evaluate'2` (+625057), the leaf (+45232), and bloom (+21335.5).
+
+### 6. Coverage
+
+Attributed, each with an `attr-a5b-*.tsv` and a `callers-a5b-*.txt`: the 21 labels above +0.3%, the three largest resume labels by delta (`lhs-twice-value`, `resume-s6-readonly-twice`, `lhs-pattern-cycle`), and the three largest CLI labels (`lazy-depth-fold-through-source-256`, `lazy-depth-fold-through-source-64`, `lazy-depth-map-eight-256`). `c1-all-guard` and `lhs-head-cycle` were attributed as well. `lhs-head-cycle` callgrind TOTAL is +279.61 and the gate perf delta is +288.17.
+
+### 7. Left alone
+
+`arms/base/`, `arms/cand/`, `logs/bb.tsv`, and `logs/bc-a3.tsv` were not modified. The instrument scripts were not edited. `census/tests.rs` and the phase-site inventories were not edited. The A5 report was not rewritten.
+
+## Director gate of A5b (2026-10-28 08:50) — brief-629 accepted
+
+**Accepted.** I checked the arms, the gate files and the attribution
+directly, and reran the measurements that decide. My scripts and outputs are
+in `.temp/director/gate-629a5b/`.
+
+**The arms are the right sources at one path.**
+- `base-source/` equals `678e6be7` (`git archive` diff, crates and
+  `Cargo.lock`). `same/src/` equals the working tree; the only difference is
+  this brief.
+- I reran `path-calibration.sh`: PASS on both pairs. I reran
+  `resume-shape.sh`: base `frame=0x7f8 memcpy_sites=23 poll_calls=8 leaf_calls=0`,
+  candidate `frame=0x848 memcpy_sites=19 poll_calls=0 leaf_calls=8`. The
+  copies that A4 traced to the cold poll's sret are gone.
+
+**The gate summary reproduces, and most of its flags are noise.** My own
+reading of `bc-a5.tsv` against `bb-same.tsv` gives the same 313 labels,
+median +0.0530%, max +1.2794%, 162 flagged and 21 above +0.3%. The floor
+comes from one base-against-base pair at three runs, which is too tight for
+the short labels. I reran the 25 largest labels interleaved (base N, cand N,
+base 2N, cand 2N, 15 times each, `recheck.tsv`). Perf then lands on the
+callgrind number:
+
+| label | gate | 15-run recheck | callgrind TOTAL |
+|---|---:|---:|---:|
+| `resume-s5-down-rhs` | +296.54 | +132.39 | +127.71 |
+| `resume-cleanup` | +90.60 | +46.14 | +38.84 |
+| `lhs-head-cycle` | +288.17 | +282.23 | +279.61 |
+| `association-part-key-read-width32000` | +181.62 | +9.65 | −88.96 |
+| `literal-integer` | +1.19 | +0.97 | +1.00 |
+
+**Every structural component closes as count × cost** (`decomp.txt`, from
+the callgrind call counts and exclusive costs, all 29 labels):
+- **The leaf**: exactly +11.00 per call on every label that calls it. This
+  is the general-dynamic thread-local read, as ruled in A4.
+- **The inlined resume poll**: saves 1.5 to 5.4 instructions per poll call
+  on every resume label. A resumed frame now costs about +6 net (leaf +11,
+  poll −5). `resume-cleanup` is +37.7 per iteration, against A4's +220.
+- **The evaluator**: +0.57 to +2.11 per `evaluate` call, and +1.00 on
+  `literal-integer`. I diffed `Session::evaluate` per instruction on
+  `lazy-depth-map-first-8` (`instr/`). Two changes make up all of its
+  +185. On a path taken 20 times per iteration, a tag check and a 32-byte
+  move after the body's call moved from the body into `evaluate`: the body
+  lost 5 instructions and `evaluate` gained 7. On a path taken 45 times, a
+  `movq $0` became `xor` plus `mov`, the register allocation seen on
+  `literal-integer`. This is the inlining change A4 accepted, which takes
+  the level from 1648 to 1472 bytes.
+- **The cold root entry**: +55 per root entry on the three `lhs-*` labels
+  (3 entries per iteration, +165). This is the A3 shape's price, once per
+  request. I measured its size and did not decompose it per instruction.
+
+**Your three STOP rows are not STOPs, but your report should have named
+them.** `close-a5b.txt` marks `c1-all-guard`, `lhs-pattern-cycle` and
+`resume-s9-cleanup-init` STOP. Your report says "No STOP" and answers them
+only through the `unnamed_delta` lines. I decomposed them per run
+(`perrun.py`, `modes.py`). The structural functions take one value per arm
+and size. Everything else has overlapping ranges in both arms, and its spread
+sits in `Symbol::system` and `intern_text`, the interner hash mode A4 found.
+**From now on, a report quotes every verdict line its own instrument prints
+and settles each flagged row in the text.**
+
+**Stack, tests and front ends.** The stack table is the one I accepted in
+A4: 1472 or 1456 against 1648 per level, `evaluate_at_root` 904 once per
+request, and 24 bytes in the cold leaves. `resume_eval_request_from_checkpoint`
+grows by 80 bytes, once per resume request and not per level. LP01 passes,
+and the Jupyter pair passes 20 of 20 in your log. My own gate:
+- `cargo fmt --check` passes.
+- `native_stack_thread_scope` passes 8 of 8, three times.
+- The Jupyter pair passes 20 of 20 at `--test-threads=2`.
+- `cargo test --workspace --no-fail-fast`, single-threaded in a 14G scope
+  (peak 11.3 GB, no OOM): 3976 passed, 1 failed, 61 ignored. The failure is
+  `ownership_graph::production_inventory_is_exact`.
+
+**The ownership inventory had been stale since A3, and that miss is mine.**
+A3 changed `resolution.rs` and `model/evaluation_depth.rs`. After A3 I
+replayed the contract fingerprints and the certificates, but not the
+ownership rows. No stage after it ran the whole workspace. I replayed the
+rows from the mismatch the test prints (`reconcile.py`), and nothing else
+moved:
+- **`resolution.rs`.** Four rows committed at HEAD shift by three lines and
+  keep their identity: the closures `|previous|` (372 → 375) and `|arg|`
+  (504 → 507), and two `resume_typed_or_suspend!` expansions (387 → 390 and
+  451 → 454).
+- **`model/evaluation_depth.rs`.** This file is new in this brief. Stage A's
+  single `debug_assert_eq!` row at line 61 becomes the three A3 assertions at
+  lines 37, 56 and 65 (`native_check_due`, `enter_level`, `leave_level`).
+  They stay unknown.
+- There is no new `UnknownHostPayload`, and no row points at code this brief
+  did not touch. The only reader of these files is `ownership_graph/mod.rs`.
+  `cargo test -p rum-stdlib --lib ownership_graph` then passes 31 of 31. The
+  TSVs are not hashed by the rot guard, so the contract fingerprints stand.
+
+brief-629 is done. The dropped cleanup error (Option A) is the next brief.

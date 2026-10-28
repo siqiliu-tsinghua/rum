@@ -186,9 +186,11 @@ fn baseline(source: &Source) {
     // frontier. Guest-form abandonment adds exactly three rejected method sites:
     // taking/installing the paused environment and capturing it for cleanup
     // in suspension/core/abandon.rs. The cold profiled trampoline moves the
-    // capture from line 85 to line 92 without changing the operation or kind.
-    // These remain unresolved boundaries; the loader earns no retention mark.
-    for line in [41, 42, 92] {
+    // capture from line 85 to line 92 without changing the operation or kind,
+    // and brief-629 shifts the three sites from lines 41, 42 and 92 to 43, 44
+    // and 94. These remain unresolved boundaries; the loader earns no retention
+    // mark.
+    for line in [43, 44, 94] {
         assert!(options.rejected.iter().any(|row| row.kind == Kind::RET002
             && row.site.file.ends_with("suspension/core/abandon.rs")
             && row.site.start.0 == line));
@@ -227,18 +229,30 @@ fn baseline(source: &Source) {
     // profiled trampoline adds eleven witnessed occurrences (ten RET002 and one
     // RET003) through the same shared body, with no removed operation: 963
     // (10/925/28), still no mark or coverage.
+    // brief-629: the native stack base moves to the thread's entry record and
+    // the depth gains its threshold type. Keyed by kind, file, callee and
+    // reason, three RET002 rows retire (two primitive operands of the old
+    // depth-0 rebase in resolution.rs, abandon.rs's mem::replace) and eleven
+    // RET002 rows appear (method receivers of EvaluationDepth in resolution.rs,
+    // abandon.rs and evaluation_context.rs; NativeStackEntry::enter's marker
+    // cast and TLS closure), all in files the brief changed. The added `use`
+    // shifts AccumulatorChain::default from line 35 to 36. 971 (10/933/28),
+    // still no mark or coverage. Continuation A3 keeps Session::evaluate's
+    // body as at the base and gives the cold root entry its own copy, so the
+    // record_profile_evaluate_entry receiver is rejected in both: one key's
+    // count goes from 1 to 2, nothing added or removed. 972 (10/934/28).
     assert!(options.rejected.iter().any(|row| row.kind == Kind::RET002
         && row.site.file.ends_with("resolution.rs")
-        && row.site.start == (35, 19)
+        && row.site.start == (36, 19)
         && row.reason == "path AccumulatorChain::default has 0 exact bindings"));
     assert_eq!(
         options.rejected.len(),
-        963,
+        972,
         "STOP: brief-545 exact legacy frontier inventory moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 925), (Kind::RET003, 28)])
+        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 934), (Kind::RET003, 28)])
     );
     let wrapper = regions::frontier(
         source,

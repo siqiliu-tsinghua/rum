@@ -6,6 +6,7 @@ fn value_q_session() -> Session {
 
 #[test]
 fn value_q_stability_shortcut_matches_the_trial_path_over_one_shared_corpus() {
+    let _entry = crate::runtime::native_stack_guard::NativeStackEntry::enter();
     let mut session = value_q_session();
     session
         .eval_text(

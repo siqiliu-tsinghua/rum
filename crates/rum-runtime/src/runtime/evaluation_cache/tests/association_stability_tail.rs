@@ -21,6 +21,7 @@ fn traced_stability(
     expr: &Expr,
     recursive_front_depth: usize,
 ) -> ((bool, StabilityBloom), Vec<CallStabilityCacheTraceEvent>) {
+    let _entry = crate::runtime::native_stack_guard::NativeStackEntry::enter();
     start_call_stability_cache_trace();
     let result =
         session.association_rooted_cached_expr_stability_with_bloom(expr, recursive_front_depth);

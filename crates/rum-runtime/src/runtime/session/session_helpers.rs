@@ -216,7 +216,7 @@ impl Session {
             option_value_scopes: self.option_value_scopes.clone(),
             module_activations: self.module_activations.clone(),
             load_stack: self.load_stack.clone(),
-            evaluation_depth: self.evaluation_depth,
+            evaluation_depth: self.evaluation_depth.get(),
             match_depth: self.match_depth,
             evaluation_stack: self.evaluation_stack.clone(),
             prints: self.prints.clone(),
@@ -275,7 +275,7 @@ impl Session {
         );
         self.load_stack = snapshot.load_stack;
         self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::LoadStack);
-        self.evaluation_depth = snapshot.evaluation_depth;
+        self.evaluation_depth.restore(snapshot.evaluation_depth);
         self.match_depth = snapshot.match_depth;
         self.current_memory_limit = snapshot.current_memory_limit;
         self.replace_accounted_evaluation_stack(snapshot.evaluation_stack);

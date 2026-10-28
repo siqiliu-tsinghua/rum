@@ -25,7 +25,7 @@ impl Session {
     pub(in crate::runtime) fn resume_context(&self) -> ResumeContext {
         ResumeContext {
             stack_len: self.evaluation_stack.len(),
-            depth: self.evaluation_depth,
+            depth: self.evaluation_depth.get(),
         }
     }
 
@@ -35,18 +35,16 @@ impl Session {
             "continuation contexts unwind a saved prefix"
         );
         self.truncate_accounted_evaluation_stack(context.stack_len);
-        self.evaluation_depth = context.depth;
+        self.evaluation_depth.restore(context.depth);
         // Entry epochs remain those of their original evaluations. In particular,
         // do not rewind the global epoch after resumed work changes definitions.
     }
 
     /// Physical safety for the current native segment, not replay of its address.
-    #[cold]
-    #[inline(never)]
+    // Runs once per resumed frame; the leaf it calls is the cold part.
+    #[inline(always)]
     pub(in crate::runtime) fn poll_resumed_native_stack(&mut self) -> Result<(), EvalError> {
-        self.native_stack_next_check_depth = self
-            .evaluation_depth
-            .saturating_add(NATIVE_STACK_DEPTH_POLL_STRIDE);
+        self.evaluation_depth.rearm_native_check();
         if self.native_stack_budget_exhausted() {
             Err(EvalError::StackLimitExceeded {
                 limit: self.resource_limits.native_stack_limit,
@@ -113,7 +111,7 @@ impl Session {
                         .iter()
                         .map(|e| (e.expr.to_string(), e.epoch))
                         .collect(),
-                    depth: self.evaluation_depth,
+                    depth: self.evaluation_depth.get(),
                     epoch: self.evaluation_epoch,
                 });
             }

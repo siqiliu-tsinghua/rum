@@ -3,6 +3,7 @@ use super::*;
 use crate::kernel_api::{
     ContinueToken, FrameRootTrace, FrameRootVisitor, TypedAction, TypedFrame, slot_witness,
 };
+use crate::runtime::native_stack_guard::{native_stack_exhausted, with_thread_native_stack_base};
 use crate::runtime::suspension::{
     AbandonmentContext, FrameAbandon, FrameAbandonAction, FrameAction, SuspensionFrame,
 };
@@ -15,9 +16,24 @@ fn observe(s: &Session) -> Observation {
             .iter()
             .map(|e| (e.expr.to_string(), e.epoch))
             .collect(),
-        s.evaluation_depth,
+        s.evaluation_depth.get(),
         s.evaluation_epoch,
     )
+}
+fn next_check_depth(mut depth: EvaluationDepth) -> usize {
+    let mut entered_at = depth.get();
+    while !depth.native_check_due(entered_at) {
+        depth.enter_level(entered_at);
+        entered_at += 1;
+    }
+    entered_at
+}
+fn set_high_water_check_depth(s: &mut Session, check_depth: usize) {
+    let entered = check_depth - NATIVE_STACK_DEPTH_POLL_STRIDE;
+    s.evaluation_depth.restore(entered);
+    for d in (0..entered).rev() {
+        s.evaluation_depth.leave_level(d);
+    }
 }
 struct Check {
     expected: Observation,
@@ -34,8 +50,8 @@ impl FrameAbandon for Check {
 impl Check {
     fn check(&self, s: &Session) {
         assert_eq!(
-            s.native_stack_next_check_depth,
-            s.evaluation_depth + NATIVE_STACK_DEPTH_POLL_STRIDE
+            next_check_depth(s.evaluation_depth),
+            s.evaluation_depth.get() + NATIVE_STACK_DEPTH_POLL_STRIDE
         );
         let actual = observe(s);
         self.seen.lock().unwrap().push(actual.clone());
@@ -75,7 +91,7 @@ fn seeded() -> Session {
             epoch: 14 + i as u64,
         })
         .collect();
-    s.evaluation_depth = 8;
+    s.evaluation_depth.restore(8);
     s.begin_input_suspension(RuntimeInputRequest {
         kind: RuntimeInputKind::InputString,
         prompt: "context".into(),
@@ -109,7 +125,7 @@ fn routes(typed: bool, armed: bool) {
         let mut entries = s.evaluation_stack.clone();
         entries.truncate(length);
         s.replace_accounted_evaluation_stack(entries);
-        s.evaluation_depth = depth;
+        s.evaluation_depth.restore(depth);
         let expected = observe(&s);
         let frame = Check {
             expected,
@@ -133,7 +149,7 @@ fn routes(typed: bool, armed: bool) {
         Expr::string("x")
     );
     assert_eq!(seen.lock().unwrap().len(), 3);
-    assert_eq!(s.evaluation_depth, 0);
+    assert_eq!(s.evaluation_depth.get(), 0);
     assert!(s.evaluation_stack.is_empty());
     if armed {
         s.assert_maintained_memory_accounting();
@@ -160,12 +176,18 @@ fn native_resume_restores_displaced_poll_state() {
         s.evaluate(expr),
         Err(EvalError::InputRequired { .. })
     ));
-    s.native_stack_base = 123;
-    s.native_stack_next_check_depth = 29;
-    s.resume_suspended_evaluation("x").unwrap();
+    set_high_water_check_depth(&mut s, 29);
+    with_thread_native_stack_base(123, || {
+        s.resume_suspended_evaluation("x").unwrap();
+        assert!(!native_stack_exhausted(123, 0));
+        assert!(native_stack_exhausted(122, 0));
+    });
     assert_eq!(
-        (s.native_stack_base, s.native_stack_next_check_depth),
-        (123, 29)
+        (
+            s.evaluation_depth.get(),
+            next_check_depth(s.evaluation_depth)
+        ),
+        (0, 29)
     );
 }
 
@@ -317,7 +339,7 @@ fn intervening_epoch_mutation_is_not_rewound() {
     s.insert_suspension_frame(Check { expected, seen });
     s.evaluation_epoch = 29;
     s.clear_accounted_evaluation_stack();
-    s.evaluation_depth = 0;
+    s.evaluation_depth.restore(0);
     s.resume_suspended_evaluation("x").unwrap();
     assert_eq!(s.evaluation_epoch, 29);
 }
@@ -402,8 +424,7 @@ fn resumed_frame_checks_native_headroom_without_entering_a_new_logical_level() {
         seen: seen.clone(),
     });
     s.resource_limits.native_stack_limit = 0;
-    s.native_stack_base = 123;
-    s.native_stack_next_check_depth = 29;
+    set_high_water_check_depth(&mut s, 29);
     assert!(matches!(
         s.resume_suspended_evaluation("x"),
         Err(EvalError::StackLimitExceeded { limit: 0 })
@@ -414,7 +435,10 @@ fn resumed_frame_checks_native_headroom_without_entering_a_new_logical_level() {
         "the error still unwinds the callable frame"
     );
     assert_eq!(
-        (s.native_stack_base, s.native_stack_next_check_depth),
-        (123, 29)
+        (
+            s.evaluation_depth.get(),
+            next_check_depth(s.evaluation_depth)
+        ),
+        (0, 29)
     );
 }

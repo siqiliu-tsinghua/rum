@@ -19,7 +19,7 @@ fn session_memory_field_decision_inventory_is_sorted_and_exhaustive() {
     let session = Session::empty();
     assert_session_memory_decisions_are_exhaustive(&session);
 
-    assert_eq!(SESSION_MEMORY_FIELD_DECISIONS.len(), 96);
+    assert_eq!(SESSION_MEMORY_FIELD_DECISIONS.len(), 94);
     assert_eq!(
         SESSION_MEMORY_FIELD_DECISIONS
             .iter()
