@@ -708,3 +708,627 @@ my ruling, one mechanism per step: the window, the drain's termination, and
 then the cleanup-error arm. Every quoted line must be copied from a file
 you name. Quote every verdict line your instruments print, and settle each
 flagged row.
+
+## Executing-agent report — A2
+
+No source change. Nothing under `crates/`, `scripts/`, `docs/` other than this appendix, `TODO.md`, `Cargo.lock`, or `.cargo/` was edited. `.temp/director/` was not edited. Stage B is not started.
+
+Probes are debug `HostSession` tests in `.temp/brief-630/probe/` (`src/a2_window.rs`, `src/a2_drain.rs`), run with `cargo test --offline` through `scripts/run-bounded.py`. This run did not rebuild the release `rum-cli`. The director's release figures (173 591 lines in 3 s, about 58k/s, RSS about 21 MB, and the CLI exiting 1) stay the director's measurements. The numbers below are this run's logs.
+
+### Part 1 — the request window
+
+#### 1. `RequestCheckpoint`
+
+`crates/rum-runtime/src/runtime/session/session_requests.rs:4-19`. Four fields, nothing else: `message_checkpoint`, `print_checkpoint`, `handled_error_checkpoint`, `trace_checkpoint`. `new` stores `session.messages.len()`, `prints.len()`, `handled_non_loader_eval_errors.len()`, and `trace_events.len()`. It converts both ways with `PendingEvalRequest` (`:22-41`).
+
+Where each route takes it:
+
+- `lower_request` (`:142`) takes one for a lowering failure. It does not suspend.
+- `eval_request` (`:151-172`) calls `finish_cancelled_pending_evaluation_request` first, then `begin_top_level_interrupt_budget`, then `RequestCheckpoint::new` at `:160`. That mark is passed to `eval_expr_request_from_checkpoint`. On `InputRequired` the same mark is stored by `finish_input_required_request` (`:238`, `:468-472`).
+- `eval_expr_request` (`:179-194`) is the same shape. The mark is `:188`.
+- `call` (`crates/rum-host/src/session.rs:442-485`) calls `finish_cancelled_pending_evaluation_request`, then `eval_expr_request`. A fresh call's mark is the `eval_expr_request` mark. A call that finds a cancelled suspension retires that suspension before building the new expression.
+- stdin script: `eval_script_request` (`:379-399`) takes `RequestCheckpoint::new` at `:387` after the overlap check. It does not call `begin_top_level_interrupt_budget`; each form's `eval_input_with_terminated_handling` does (`session_eval.rs:219`). On `Err`, including `InputRequired`, it calls `finish_completed_request_failure` (`:397`, `:532-556`). That copies messages, prints, and trace and truncates handled errors. It does not store `pending_eval_request`.
+- `eval_file_request` (`:412-442`) takes the mark at `:420` and on `Err` also uses `finish_completed_request_failure`. It does not store `pending_eval_request`. `finish_accepted_file_request` (`:596-608`) sends an `InputRequired` result through `finish_accepted_value_request`.
+- resume: `resume_eval_request_with_input` (`:269-289`) takes `pending_eval_request` and converts it. If it is missing, the error is `no suspended evaluation is waiting for host input`.
+- `finish_accepted_value_request` (`:559-585`), and `finish_cancelled_pending_evaluation_request` (`:56-59`), use `pending_eval_request` when it is set. Otherwise they call `RequestCheckpoint::new` at that moment. They then `take_active_accepted_request`, `abandon_pending_suspension(CancelledRequest)`, and `finish_cancelled_eval_response`.
+- slot-fault resume: `resume_eval_request_from_checkpoint` (`:339-354`) sees `has_continuation_fault`, replaces the outcome with `continuation_fault_outcome`, and cuts with `finish_request_failure` on the checkpoint resume already took. The drain runs inside `unwind_continuation_fault` (`suspension/core/fault.rs:99-126`), which clears `pending_eval_request` at `:116` and calls `drain_abandonment_worklist(ContinuationSlotMismatch)` at `:126`. The cut still uses the earlier mark.
+
+`finish_cancelled_eval_response` (`:702-736`) emits `General::cancel` through `finalize_top_level_eval_value(Err(Cancelled))`, then `split_accounted_messages` (`diagnostics.rs:28-33`, `split_off`), `split_accounted_prints` (`diagnostics.rs:68`), and `trace_events[checkpoint.trace_checkpoint..]` (`session_requests.rs:714`). `Vec::truncate` on the handled list does not panic when the index is past `len`.
+
+`eval` and `eval_expr` store the admission mark in `pending_eval_request` before any in-request messages. A `LoaderSnapshot` taken after that admission has `len >=` the mark, so a later restore stays at or above it and `split_off` is defined. `eval_file` and `eval_script` do not store that mark. Cancellation then builds `RequestCheckpoint::new` from the lengths after the body and before the rollback.
+
+#### 2. What can shorten a list between the mark and the cut
+
+- `restore_loader_snapshot` (`session_helpers.rs:130-208`) replaces `messages` (`:203`), `last_message_list` (`:205`), `trace_events` (`:193`), and `trace_event_depths` (`:195`), plus the definition and context fields captured at `:97-127`. It does not replace `prints` or `handled_non_loader_eval_errors`.
+- `restore_evaluation_rollback_snapshot` (`:239-316`) may first `abandon_pending_suspension(CheckpointRollbackDiscard)` (`:249`), then `restore_loader_snapshot` (`:267`). It also replaces `prints` (`:282`), `handled_non_loader_eval_errors` (`:284`), and `pending_eval_request` (`:307`).
+- `ValueQ` is the production caller (`messages/builtins_messages_inspect.rs:90-114`). It takes the print sink off before the trial (`:95`) and restores the snapshot at `:114`.
+- The script loop (`session_eval.rs:360-376`) on a later form's `Err` splices the earlier forms' messages and prints back at the script checkpoint. It inserts. It does not splice trace. A snapshot taken while those messages were split out of `session.messages` does not contain them, so a later restore deletes the spliced copy.
+- `rollback_capture_output` (`suspension/output.rs:71-86`) truncates prints, messages, and trace to a frame `OutputBoundary`. `abandon_frames` calls it before each frame (`abandon.rs:83`).
+- Guest-file close with rollback (`guest_loading/file.rs:117-135`) calls `restore_loader_snapshot`. Public-file close does the same (`batch_file.rs:64-66`), from `rollback_public_file` (`suspension/core.rs:327-334`).
+- `GuestFormEnvironment::install` (`guest_loading/scope.rs:126-136`) replaces `last_message_list`, `handled_non_loader_eval_errors`, `eval_deadline`, `current_time_deadline`, `current_memory_limit`, `interrupt_poll_counter`, and `interrupt_armed`. `GuestFormScope::restore` (`:182-191`) truncates `handled_non_loader_eval_errors` to the form checkpoint. It does not truncate messages or prints.
+- `Quiet` with no selectors truncates `messages` (`check_quiet.rs:165`). `Check` on a matched `Ok` truncates the handled list (`:118-119`).
+
+#### 3. Matrix
+
+One debug `HostSession` per cell. The handle is taken before the call. Retirement is `cancel()` then `eval("")`, the CLI re-entry. Routes: `eval_file` of `Outer.rum`; `eval_script` of the prefix plus `Get["Inner`"]` whose file is only `InputString`; `eval` of `Get["Inner`"]` whose file is the prefix plus `InputString`; nested `eval_file` of `Outer.rum` = `Get["Inner`"]` of that same body. Earlier entries 0, 1, 2. Kinds: `Message[probe::eN]`, `1 + 1` with tracing on, and `Check[Block[{$RecursionLimit = 4}, h630[] := h630[]; h630[]], 0]`. That `Check` records `General::passlim`. The host recursion limit is unchanged. The `again=` tag is a second `Check` in a new request after retirement, and only when retirement did not panic.
+
+The `A2WINDOW` lines and the panic-location lines are the same text in `.temp/brief-630/logs/a2-window-1.log`, `a2-window-2.log`, and `a2-window-3.log` (36 `A2WINDOW` lines, 57 lines with the panic locations). Quoted once from `a2-window-1.log`:
+
+```text
+test a2_window::a2_window_matrix ... A2WINDOW route=file n=0 kind=messages suspended=true first=InputRequired prompt="in" tags=[] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=["General::cancel"] cancel=1 trace=0 prints=0
+A2WINDOW route=file n=0 kind=trace suspended=true first=InputRequired prompt="in" tags=[] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=["General::cancel"] cancel=1 trace=0 prints=0
+A2WINDOW route=file n=0 kind=handled suspended=true first=InputRequired prompt="in" tags=[] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=["General::cancel"] cancel=1 trace=0 prints=0 again=["General::passlim"]
+A2WINDOW route=file n=1 kind=messages suspended=true first=InputRequired prompt="in" tags=["probe::e0"] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=[] cancel=0 trace=0 prints=0 lost-cancel
+
+thread 'a2_window::a2_window_matrix' panicked at /home/remi/dev/rum/crates/rum-runtime/src/runtime/session/session_requests.rs:714:38:
+range start index 3 out of range for slice of length 2
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+A2WINDOW route=file n=1 kind=trace suspended=true first=InputRequired prompt="in" tags=[] trace=1 prints=0 retire=Failure code=Panic msg="host session caught panic: range start index 3 out of range for slice of length 2" tags=[] trace=0 panic
+A2WINDOW route=file n=1 kind=handled suspended=true first=InputRequired prompt="in" tags=["General::passlim"] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=[] cancel=0 trace=0 prints=0 lost-cancel again=["General::passlim"]
+
+thread 'a2_window::a2_window_matrix' panicked at /home/remi/dev/rum/crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:33:37:
+`at` split index (is 2) should be <= len (is 1)
+A2WINDOW route=file n=2 kind=messages suspended=true first=InputRequired prompt="in" tags=["probe::e0", "probe::e1"] trace=0 prints=0 retire=Failure code=Panic msg="host session caught panic: `at` split index (is 2) should be <= len (is 1)" tags=[] trace=0 panic
+
+thread 'a2_window::a2_window_matrix' panicked at /home/remi/dev/rum/crates/rum-runtime/src/runtime/session/session_requests.rs:714:38:
+range start index 4 out of range for slice of length 2
+A2WINDOW route=file n=2 kind=trace suspended=true first=InputRequired prompt="in" tags=[] trace=2 prints=0 retire=Failure code=Panic msg="host session caught panic: range start index 4 out of range for slice of length 2" tags=[] trace=0 panic
+
+thread 'a2_window::a2_window_matrix' panicked at /home/remi/dev/rum/crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:33:37:
+`at` split index (is 2) should be <= len (is 1)
+A2WINDOW route=file n=2 kind=handled suspended=true first=InputRequired prompt="in" tags=["General::passlim", "General::passlim"] trace=0 prints=0 retire=Failure code=Panic msg="host session caught panic: `at` split index (is 2) should be <= len (is 1)" tags=[] trace=0 panic
+A2WINDOW route=script n=0 kind=messages suspended=true first=InputRequired prompt="in" tags=[] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=["General::cancel"] cancel=1 trace=0 prints=0
+A2WINDOW route=script n=0 kind=trace suspended=true first=InputRequired prompt="in" tags=[] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=["General::cancel"] cancel=1 trace=0 prints=0
+A2WINDOW route=script n=0 kind=handled suspended=true first=InputRequired prompt="in" tags=[] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=["General::cancel"] cancel=1 trace=0 prints=0 again=["General::passlim"]
+A2WINDOW route=script n=1 kind=messages suspended=true first=InputRequired prompt="in" tags=["probe::e0"] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=[] cancel=0 trace=0 prints=0 lost-cancel
+A2WINDOW route=script n=1 kind=trace suspended=true first=InputRequired prompt="in" tags=[] trace=1 prints=0 retire=Success term=Some(Cancelled) tags=["General::cancel"] cancel=1 trace=0 prints=0
+A2WINDOW route=script n=1 kind=handled suspended=true first=InputRequired prompt="in" tags=["General::passlim"] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=[] cancel=0 trace=0 prints=0 lost-cancel again=["General::passlim"]
+
+thread 'a2_window::a2_window_matrix' panicked at /home/remi/dev/rum/crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:33:37:
+`at` split index (is 2) should be <= len (is 1)
+A2WINDOW route=script n=2 kind=messages suspended=true first=InputRequired prompt="in" tags=["probe::e0", "probe::e1"] trace=0 prints=0 retire=Failure code=Panic msg="host session caught panic: `at` split index (is 2) should be <= len (is 1)" tags=[] trace=0 panic
+A2WINDOW route=script n=2 kind=trace suspended=true first=InputRequired prompt="in" tags=[] trace=2 prints=0 retire=Success term=Some(Cancelled) tags=["General::cancel"] cancel=1 trace=0 prints=0
+
+thread 'a2_window::a2_window_matrix' panicked at /home/remi/dev/rum/crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:33:37:
+`at` split index (is 2) should be <= len (is 1)
+A2WINDOW route=script n=2 kind=handled suspended=true first=InputRequired prompt="in" tags=["General::passlim", "General::passlim"] trace=0 prints=0 retire=Failure code=Panic msg="host session caught panic: `at` split index (is 2) should be <= len (is 1)" tags=[] trace=0 panic
+A2WINDOW route=eval-get n=0 kind=messages suspended=true first=InputRequired prompt="in" tags=[] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=["General::cancel"] cancel=1 trace=0 prints=0
+A2WINDOW route=eval-get n=0 kind=trace suspended=true first=InputRequired prompt="in" tags=[] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=["General::cancel"] cancel=1 trace=0 prints=0
+A2WINDOW route=eval-get n=0 kind=handled suspended=true first=InputRequired prompt="in" tags=[] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=["General::cancel"] cancel=1 trace=0 prints=0 again=["General::passlim"]
+A2WINDOW route=eval-get n=1 kind=messages suspended=true first=InputRequired prompt="in" tags=["probe::e0"] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=["General::cancel"] cancel=1 trace=0 prints=0
+A2WINDOW route=eval-get n=1 kind=trace suspended=true first=InputRequired prompt="in" tags=[] trace=1 prints=0 retire=Success term=Some(Cancelled) tags=["General::cancel"] cancel=1 trace=0 prints=0
+A2WINDOW route=eval-get n=1 kind=handled suspended=true first=InputRequired prompt="in" tags=["General::passlim"] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=["General::cancel"] cancel=1 trace=0 prints=0 again=["General::passlim"]
+A2WINDOW route=eval-get n=2 kind=messages suspended=true first=InputRequired prompt="in" tags=["probe::e0", "probe::e1"] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=["General::cancel"] cancel=1 trace=0 prints=0
+A2WINDOW route=eval-get n=2 kind=trace suspended=true first=InputRequired prompt="in" tags=[] trace=2 prints=0 retire=Success term=Some(Cancelled) tags=["General::cancel"] cancel=1 trace=0 prints=0
+A2WINDOW route=eval-get n=2 kind=handled suspended=true first=InputRequired prompt="in" tags=["General::passlim", "General::passlim"] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=["General::cancel"] cancel=1 trace=0 prints=0 again=["General::passlim"]
+A2WINDOW route=nested n=0 kind=messages suspended=true first=InputRequired prompt="in" tags=[] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=["General::cancel"] cancel=1 trace=0 prints=0
+A2WINDOW route=nested n=0 kind=trace suspended=true first=InputRequired prompt="in" tags=[] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=["General::cancel"] cancel=1 trace=0 prints=0
+A2WINDOW route=nested n=0 kind=handled suspended=true first=InputRequired prompt="in" tags=[] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=["General::cancel"] cancel=1 trace=0 prints=0 again=["General::passlim"]
+A2WINDOW route=nested n=1 kind=messages suspended=true first=InputRequired prompt="in" tags=["probe::e0"] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=[] cancel=0 trace=0 prints=0 lost-cancel
+
+thread 'a2_window::a2_window_matrix' panicked at /home/remi/dev/rum/crates/rum-runtime/src/runtime/session/session_requests.rs:714:38:
+range start index 3 out of range for slice of length 2
+A2WINDOW route=nested n=1 kind=trace suspended=true first=InputRequired prompt="in" tags=[] trace=1 prints=0 retire=Failure code=Panic msg="host session caught panic: range start index 3 out of range for slice of length 2" tags=[] trace=0 panic
+A2WINDOW route=nested n=1 kind=handled suspended=true first=InputRequired prompt="in" tags=["General::passlim"] trace=0 prints=0 retire=Success term=Some(Cancelled) tags=[] cancel=0 trace=0 prints=0 lost-cancel again=["General::passlim"]
+
+thread 'a2_window::a2_window_matrix' panicked at /home/remi/dev/rum/crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:33:37:
+`at` split index (is 2) should be <= len (is 1)
+A2WINDOW route=nested n=2 kind=messages suspended=true first=InputRequired prompt="in" tags=["probe::e0", "probe::e1"] trace=0 prints=0 retire=Failure code=Panic msg="host session caught panic: `at` split index (is 2) should be <= len (is 1)" tags=[] trace=0 panic
+
+thread 'a2_window::a2_window_matrix' panicked at /home/remi/dev/rum/crates/rum-runtime/src/runtime/session/session_requests.rs:714:38:
+range start index 4 out of range for slice of length 2
+A2WINDOW route=nested n=2 kind=trace suspended=true first=InputRequired prompt="in" tags=[] trace=2 prints=0 retire=Failure code=Panic msg="host session caught panic: range start index 4 out of range for slice of length 2" tags=[] trace=0 panic
+
+thread 'a2_window::a2_window_matrix' panicked at /home/remi/dev/rum/crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:33:37:
+`at` split index (is 2) should be <= len (is 1)
+A2WINDOW route=nested n=2 kind=handled suspended=true first=InputRequired prompt="in" tags=["General::passlim", "General::passlim"] trace=0 prints=0 retire=Failure code=Panic msg="host session caught panic: `at` split index (is 2) should be <= len (is 1)" tags=[] trace=0 panic
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 22 filtered out; finished in 0.08s
+```
+
+Harness lines, which differ only in the timing:
+
+- `a2-window-1.log`: `test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 22 filtered out; finished in 0.08s` and `EXIT:0`. A following doctest line says `test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s`.
+- `a2-window-2.log`: `test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 22 filtered out; finished in 0.07s` and `EXIT:0`. Same doctest line.
+- `a2-window-3.log`: `test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 22 filtered out; finished in 0.08s` and `EXIT:0`. Same doctest line.
+
+`test result: ok` means the harness caught the host panics. The `A2WINDOW` lines are the verdicts. No cell printed `early-kept` or `repeat-cancel`. Every `prints=` is 0.
+
+Settled cells. File and nested are the same shape. Script trace is the exception. `eval-get` is the healthy shape.
+
+- File and nested, n=0, all three kinds: `Success`, `cancel=1`, no panic. The retirement suffix is `General::cancel`. The input report is empty.
+- File and nested, n=1 messages: flagged `lost-cancel`. `first` tags are `["probe::e0"]`. Retirement tags are empty. The in-file message is in the input report and is absent from the suffix.
+- File and nested, n=1 trace: flagged panic at `session_requests.rs:714:38`, `range start index 3 out of range for slice of length 2`. `first` trace length is 1.
+- File and nested, n=1 handled: flagged `lost-cancel`. `first` tags are `["General::passlim"]`. Retirement tags are empty. `again=["General::passlim"]`. The handled truncate did not panic.
+- File and nested, n=2 messages: flagged panic at `diagnostics.rs:33:37`, `` `at` split index (is 2) should be <= len (is 1) ``. `first` tags are both probe symbols.
+- File and nested, n=2 trace: flagged panic at `session_requests.rs:714:38`, `range start index 4 out of range for slice of length 2`. `first` trace length is 2. Both failing trace panics restore a slice of length 2. The start index is 2+n. I am not naming the two surviving events.
+- File and nested, n=2 handled: flagged panic at `diagnostics.rs:33:37`, the same message split. `first` tags are two `General::passlim`. `again=` is absent because the cell panicked. This is the message split of the two `passlim` messages `Check` pushed. It is not a handled-index panic.
+- Script, n=0, all three kinds: `cancel=1`, no panic.
+- Script, n=1 messages: flagged `lost-cancel`. `first` tags `["probe::e0"]`. Retirement tags empty. The earlier message is in the input report.
+- Script, n=1 trace: not flagged. `cancel=1`, retirement trace length 0, `first` trace length 1, no panic. Trace is never split out of the session, so the inner `Get` snapshot includes the earlier trace and the restore stays at the cancel-time mark.
+- Script, n=1 handled: flagged `lost-cancel`, same shape as n=1 messages, with `again=["General::passlim"]`.
+- Script, n=2 messages: flagged panic at `diagnostics.rs:33:37`, split index 2 against len 1.
+- Script, n=2 trace: not flagged. `cancel=1`, retirement trace 0, `first` trace 2, no panic.
+- Script, n=2 handled: flagged panic at `diagnostics.rs:33:37`, the two `passlim` messages.
+- `eval-get`, all nine cells: `Success`, `cancel=1`, no panic, no `lost-cancel`. In-file messages and traces are in the input report (`first` tags / `first` trace) and the retirement suffix is only `General::cancel`.
+
+`again=["General::passlim"]` is also printed for n=0, where no earlier `Check` ran. The next request's dedup window starts at its own handled checkpoint (`emit_non_loader_eval_message` looks at `handled[checkpoint..]`, `session_helpers.rs:487-491`). Two `passlim` tags on an n=2 input report mean each `Check` also starts its window at the handled length at that `Check`. `again=` does not show that retirement cleared a handled record.
+
+Why the flagged cells happen. `eval_input` on `InputRequired` returns the error (`session_eval.rs:279-291`) and does not call `finish_input_required_request`, so `pending_eval_request` stays empty for the public file and the script. `finish_accepted_value_request` then takes `RequestCheckpoint::new` from the current lengths (`session_requests.rs:574-577`) and only then abandons. The public-file frame restores the loader snapshot taken at `eval_file` entry (`session_eval.rs:409`, `batch_file.rs:64-66`). For n=1 the restored message list is shorter than that cancel-time mark by enough that `finalize` appends `General::cancel` and `split_off` returns an empty suffix: the cancel stays in the session prefix and the outcome tags are empty. For n=2 the mark is still past `len` after that append, and `split_off` panics. The trace slice panics the same way (`session_requests.rs:714`). The script's earlier messages are spliced back (`session_eval.rs:360-366`) and then removed by the inner `Get` snapshot, which was taken while those messages were split out of `session.messages`. Traces were never split out, so the script trace cells do not panic. `eval-get` stored the admission mark, and the snapshot is after that mark, so every cell splits a defined suffix whose only new message is `General::cancel`.
+
+#### 4. What the guide requires
+
+`docs/guide/getting-started.md:168-182`. The CLI keeps the input-requirement messages and appends the retirement response's new messages, then pops one trailing runtime `General::cancel` (`crates/rum-cli/src/input_retirement.rs:23-51`). A host panic fails that function (`:32`).
+
+Each cell's outcome must be a cancellation the CLI can retire: `Success` with `termination == Cancelled`, or `Failure` `Cancelled`. The retirement suffix must contain the new cleanup messages and one runtime `General::cancel` when the split is defined, so the CLI can pop that trailing cancel. Messages already in the input report stay that report. In-file messages are rolled back with the file and stay out of the suffix. A stdin script's earlier forms stay visible in the input report, and an inner file snapshot must not destroy them in the session after they have been spliced back. Cleanup messages outside a file reach the retirement suffix once. No cell may panic, lose the cancellation outcome, or repeat an in-file message in the suffix.
+
+`eval-get` already has that shape: input report holds the in-file messages, suffix is `General::cancel`. File, nested, and script n=0 already retire. The flagged file, nested, and script cells do not: the panics abort the CLI, and the `lost-cancel` cells return `Success` `Cancelled` with an empty suffix, so the CLI would keep the input report and append nothing. The script n=1 message cell still shows `probe::e0` on the input report. The defect there is the session restore deleting the spliced prefix, which is also what drops `General::cancel` out of the suffix.
+
+#### 5. Proposed fix
+
+An index into a list must not be usable after a restore of that list. A per-site clamp does not do that. Give each indexed list a generation, and store the generation in the mark:
+
+```rust
+struct ListMark {
+    generation: u64,
+    index: usize,
+}
+
+struct Generated<T> {
+    generation: u64,
+    items: Vec<T>,
+}
+
+impl<T> Generated<T> {
+    fn mark(&self) -> ListMark {
+        ListMark { generation: self.generation, index: self.items.len() }
+    }
+
+    fn restore(&mut self, items: Vec<T>) {
+        self.generation = self.generation.wrapping_add(1);
+        self.items = items;
+    }
+
+    fn suffix(&mut self, mark: ListMark) -> Vec<T> {
+        assert_eq!(mark.generation, self.generation, "checkpoint outlived a restore of this list");
+        self.items.split_off(mark.index)
+    }
+}
+```
+
+`restore_loader_snapshot`, `restore_evaluation_rollback_snapshot`, and `rollback_capture_output` go through `restore` or an equivalent generation bump when they replace or truncate. `RequestCheckpoint` holds a `ListMark` per list. `split_off` and the trace slice refuse a stale generation. `Vec::truncate` on the handled list gets the same check. That is the fence. It still has to be the only way to cut, so a new cut site cannot bypass it.
+
+The generation check rejects the illegal cut. It does not by itself keep the script prefix. Two construction rules keep the mark inside the generation it names:
+
+- Every suspend path, including `eval_file` and `eval_script`, stores the admission mark in `pending_eval_request`, the way `finish_input_required_request` already does for `eval` and `eval_expr`. `finish_cancelled_pending_evaluation_request` and `finish_accepted_value_request` stop calling `RequestCheckpoint::new` at cancel time. A snapshot taken after admission has `len >=` that mark, and so does an `OutputBoundary` taken during the request.
+- The script loop stops splitting earlier forms out of `session.messages` before a nested `Get` can snapshot. The per-form outcome copies the suffix. The session list stays append-only above the admission mark, so the inner snapshot contains the earlier forms and a restore puts them back.
+
+### Part 2 — the drain must terminate
+
+#### 1. The five observations, on debug `HostSession`
+
+Programs, copied from `.temp/brief-630/probe/src/a2_drain.rs:10-14`. They are the director's programs (`n630` / `markerD` names):
+
+```text
+n630 = 0; f630[] := WithCleanup[InputString["x"], n630 = n630 + 1; Print[n630]; f630[]]; f630[]
+markerD = 0; Monitor[1+2, WithCleanup[InputString["d"], markerD = markerD + 1; Print[markerD]]]
+markerD = 0; Monitor[1+2, WithCleanup[InputString["d"], markerD = markerD + 1]]
+```
+
+The plain control is `Monitor[1 + 2, InputString["d"]]`. The recursive probe uses a 16 MB thread, a counting print sink, `cancel_handle` before `eval`, then `cancel()` and `eval("")` with a 30 s receive. The deadline cell uses `eval_with_timeout("", 1ms)` for the retirement. A 1 s deadline cannot be the bound on that cell: the uncapped chain already returns in about 45 ms. The limit cell sets `HostConfig.resource_limits.recursion_limit` to 32. The display cell samples the print program for 3 s, cancels, waits 2 s, then receives for 8 s (10 s after cancel), and runs the marker program under `eval_with_timeout` of 1 s while the parent waits 15 s. If either is still running it prints the red line and `process::exit(101)`.
+
+Safe cells, three runs. Logs `.temp/brief-630/logs/a2-drain-safe-1.log`, `a2-drain-safe-2.log`, `a2-drain-safe-3.log`.
+
+`a2-drain-safe-1.log`:
+
+```text
+A2DRAIN recursive-deadline elapsed=43.500812ms first=InputRequired prompt="x" retire=Success value=TerminatedEvaluation["Cancelled"] term=Some(Cancelled) tags=["General::cancel"] prints=0 prints=340 n630=340
+thread 'a2_drain::a2_f_recursive_cleanup_deadline' panicked at src/a2_drain.rs:171:13:
+1ms deadline did not stop the self-recursive cleanup (n630=340, prints=340)
+A2DRAIN plain-monitor elapsed=508.084µs Success value=3 term=None tags=[] prints=0
+A2DRAIN recursive-limit32 elapsed=1.990373ms first=InputRequired prompt="x" retire=Success value=TerminatedEvaluation["Cancelled"] term=Some(Cancelled) tags=["General::cancel"] prints=0 prints=9 n630=9
+A2DRAIN recursive-natural elapsed=41.129417ms first=InputRequired prompt="x" retire=Success value=TerminatedEvaluation["Cancelled"] term=Some(Cancelled) tags=["General::cancel"] prints=0 prints=340 n630=340
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 20 filtered out; finished in 0.10s
+EXIT:101
+```
+
+`a2-drain-safe-2.log`:
+
+```text
+A2DRAIN recursive-deadline elapsed=44.680991ms first=InputRequired prompt="x" retire=Success value=TerminatedEvaluation["Cancelled"] term=Some(Cancelled) tags=["General::cancel"] prints=0 prints=340 n630=340
+thread 'a2_drain::a2_f_recursive_cleanup_deadline' panicked at src/a2_drain.rs:171:13:
+1ms deadline did not stop the self-recursive cleanup (n630=340, prints=340)
+A2DRAIN plain-monitor elapsed=337.966µs Success value=3 term=None tags=[] prints=0
+A2DRAIN recursive-limit32 elapsed=2.417808ms first=InputRequired prompt="x" retire=Success value=TerminatedEvaluation["Cancelled"] term=Some(Cancelled) tags=["General::cancel"] prints=0 prints=9 n630=9
+A2DRAIN recursive-natural elapsed=49.043381ms first=InputRequired prompt="x" retire=Success value=TerminatedEvaluation["Cancelled"] term=Some(Cancelled) tags=["General::cancel"] prints=0 prints=340 n630=340
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 20 filtered out; finished in 0.12s
+EXIT:101
+```
+
+`a2-drain-safe-3.log`:
+
+```text
+A2DRAIN recursive-deadline elapsed=45.426108ms first=InputRequired prompt="x" retire=Success value=TerminatedEvaluation["Cancelled"] term=Some(Cancelled) tags=["General::cancel"] prints=0 prints=340 n630=340
+thread 'a2_drain::a2_f_recursive_cleanup_deadline' panicked at src/a2_drain.rs:171:13:
+1ms deadline did not stop the self-recursive cleanup (n630=340, prints=340)
+A2DRAIN plain-monitor elapsed=342.138µs Success value=3 term=None tags=[] prints=0
+A2DRAIN recursive-limit32 elapsed=1.225195ms first=InputRequired prompt="x" retire=Success value=TerminatedEvaluation["Cancelled"] term=Some(Cancelled) tags=["General::cancel"] prints=0 prints=9 n630=9
+A2DRAIN recursive-natural elapsed=47.136225ms first=InputRequired prompt="x" retire=Success value=TerminatedEvaluation["Cancelled"] term=Some(Cancelled) tags=["General::cancel"] prints=0 prints=340 n630=340
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 20 filtered out; finished in 0.11s
+EXIT:101
+```
+
+Display cells. `process::exit(101)` skips the harness, so there is no `test result:` line. Cargo still prints `error: test failed, to rerun pass --lib`.
+
+`a2-monitor-1.log`:
+
+```text
+A2DRAIN display-cancel did NOT return 10s after cancel; sample_after=3s prints=25949 prints_after_cancel=43557 rss_kb=29036
+A2DRAIN display-timeout did NOT return within 15s (eval_with_timeout 1s) rss_kb=37412
+A2DRAIN monitor-display RED still-running rate=true timeout=true
+EXIT:101
+```
+
+`a2-monitor-2.log`:
+
+```text
+A2DRAIN display-cancel did NOT return 10s after cancel; sample_after=3s prints=26720 prints_after_cancel=44766 rss_kb=28988
+A2DRAIN display-timeout did NOT return within 15s (eval_with_timeout 1s) rss_kb=37304
+A2DRAIN monitor-display RED still-running rate=true timeout=true
+EXIT:101
+```
+
+`a2-monitor-3.log`:
+
+```text
+A2DRAIN display-cancel did NOT return 10s after cancel; sample_after=3s prints=26550 prints_after_cancel=44353 rss_kb=28952
+A2DRAIN display-timeout did NOT return within 15s (eval_with_timeout 1s) rss_kb=37332
+A2DRAIN monitor-display RED still-running rate=true timeout=true
+EXIT:101
+```
+
+Settled:
+
+- Plain monitor: green. Three runs, `Success value=3`, tags empty. The control returns.
+- Natural recursive cleanup: green as a terminating control. Three runs, `prints=340 n630=340`, `Success` `TerminatedEvaluation["Cancelled"]`, only `General::cancel`. It matches the director's 340. It returns in 41–49 ms. Outcome `prints=0` because the sink consumes them. `n630=340` is the guest count.
+- Recursion limit 32: three runs, `prints=9 n630=9`, only `General::cancel`. The count moved with `HostConfig.resource_limits.recursion_limit`. This test does not assert the number 9. The log is the measurement.
+- 1 ms deadline: red at HEAD, three runs. The control fired (`n630=340`, the assertion requires `count >= 1` before the `< 20` check, `a2_drain.rs:167-174`). The panic `1ms deadline did not stop the self-recursive cleanup (n630=340, prints=340)` is the falsifier. `test result: FAILED. 3 passed; 1 failed` and `EXIT:101` are that red result. The count did not move off 340.
+- Display: red at HEAD, three runs. Both the cancel path and the 1 s `eval_with_timeout` were still running. Prints increased after cancel (25949 to 43557, 26720 to 44766, 26550 to 44353). RSS is one sample per path, about 29 MB at the 3 s cancel sample and about 37 MB at the 15 s timeout sample. That is not a series, and it is not the director's release 21 MB sample. `EXIT:101` is `process::exit`, not a harness panic.
+
+#### 2. Mechanism
+
+The display loop is inside the first `eval`, while the accepted request is still held.
+
+`start_monitor` (`debug_tools/monitor.rs:20-34`) evaluates the display in `refresh_monitor_scope_display` before the body, with `monitor_callbacks_enabled` still true. The display is `WithCleanup[InputString["d"], ...]`. `InputRequired` calls `abandon_pending_suspension(HelperBestEffortDiscard)` (`:121-122`). Every other error, including `Cancelled` and `TimeConstraintExceeded`, is dropped (`:124`, and the callback arm `:82-88`).
+
+`push_evaluation_pass_trace` runs when tracing is on or a monitor scope is active with callbacks enabled (`definitions/application/mod.rs:75-80`). `push_trace_with_depth` always calls `handle_monitor_trace_event` (`:96-102`). That sets callbacks false, refreshes every display, runs `StepMonitor`, and on `EvaluationPass` runs `EvaluationMonitor`, then sets callbacks true (`monitor.rs:56-78`).
+
+A new suspension reaches the worklist in `abandon_pending_suspension` at `abandon.rs:18`. If a drain is already active, `drain_abandonment_worklist` returns at `:26-28` and leaves that suspension queued. The outer `while` at `:37` later pops it. The cleanup arm requeues a nested `InputRequired` at `:100-104`. Other cleanup errors are not requeued. The worklist is a `Vec` and `pop` is LIFO.
+
+That is the live loop. The cleanup `Print` is an evaluation pass, the monitor scope is still installed, the refresh evaluates the display again, the new `InputString` is pushed because `abandonment_active` is true, and the outer drain evaluates that new cleanup.
+
+Why cancel and the deadline do not end that loop. `poll_host_interrupt_if_due` (`eval_core/mod.rs:122-135`) runs only when `interrupt_armed` (`:36-38`). It increments `interrupt_poll_counter` and returns `Ok` unless the low 10 bits are 0 (`INTERRUPT_POLL_MASK` is 1023, `:13`). On that 1024th call it returns `Cancelled` when the accepted request is cancelled, or `TimeConstraintExceeded` when `eval_deadline` is due. `RequestCancelHandle::cancel` is generation-exact (`model/request_cancellation.rs:102-104` and `:187-193`). The probe takes the handle before `eval` (`a2_drain.rs:219`), which is the reservation `begin_top_level_interrupt_budget` then sees.
+
+On this first `eval`, `begin_top_level_interrupt_budget` has already run (`session_requests.rs:159` before the body). It sets `eval_deadline` from `eval_timeout` and sets `interrupt_armed` when a deadline or an accepted request is present (`session_helpers.rs:30-38`). `eval_with_timeout` calls `set_eval_timeout` first (`rum-host` `session.rs:559`), and `set_eval_timeout` clears `eval_deadline` (`session_api.rs:227-231`), but the following `eval_request` installs the deadline in `begin_top_level` before the display runs. `take_active_accepted_request` has not run. `guest_form` is `None` for this top-level `eval`, so `capture_guest_form_environment` returns `None` (`scope.rs:52`) and `GuestFormEnvironment::install` at `abandon.rs:43-45` does not run. I did not print `interrupt_armed` inside the loop.
+
+The source that keeps the loop alive even when that poll returns is the drop. `monitor.rs:82-88` and `:121-125` discard `Cancelled` and `TimeConstraintExceeded`. `abandon.rs:100-109` requeues only `InputRequired`. The 1023 evaluations between polls still reach `InputString`, and each one pushes another cleanup at `abandon.rs:18`. One dropped observation does not empty the worklist. The measured fact is that cancel did not stop the prints and a 1 s `eval_with_timeout` did not return within 15 s. I did not log a poll return value.
+
+The retirement drain is a separate path, and it is why the 1 ms deadline still counts 340. `eval("")` enters `finish_cancelled_pending_evaluation_request` (`session_requests.rs:155-156`) before `begin_top_level_interrupt_budget` (`:159`). Inside it, `take_active_accepted_request` sets `interrupt_armed = eval_deadline.is_some()` (`session_helpers.rs:86-88`) and then the drain runs. `set_eval_timeout` has stored the 1 ms in `eval_timeout` and set `eval_deadline` to `None` (`session_api.rs:227-231`). `begin_top_level`, which would copy `eval_timeout` into `eval_deadline`, has not run. During that drain the poll is skipped. The chain runs until the recursion limit. The three 1 ms runs staying at 340, in 43–45 ms, is what that order produces. `GuestFormEnvironment::install` can also overwrite `eval_deadline`, `interrupt_armed`, and `interrupt_poll_counter` (`scope.rs:126-136`) when a suspension captured them. That does not run for this top-level recursive probe. It does run for a cleanup whose suspension captured a guest form.
+
+What bounds the self-recursive cleanup at 340. `DEFAULT_RECURSION_LIMIT` is 1024 (`metadata.rs:5`). `evaluate_once` returns `RecursionLimitExceeded` when `evaluation_depth >= resource_limits.recursion_limit` (`eval_core/mod.rs:50-53`). The drain restores each frame's depth in `restore_resume_context` (`abandon.rs:82`, `evaluation_context.rs:32-38`) and `enter_level` adds one (`evaluation_depth.rs:55-57`). The dropped `RecursionLimitExceeded` is not `InputRequired`, so the drain does not requeue, the worklist empties, and `finish_cancelled_eval_response` emits only `General::cancel`. There is no `General::reclim` in the outcome. Lowering the host limit to 32 produced 9. The two counts fit `(limit - 4) / 3` floored: `(1024 - 4) / 3 = 340` and `(32 - 4) / 3 = 9.333`, and the measured counts are 340 and 9. I did not print `evaluation_depth`. The guest `$RecursionLimit` was not what changed. The window probe's `Block[{$RecursionLimit = 4}, ...]` records `General::passlim`, which is a different limit. Native stack is not the bound: the 340 finishes in about 45 ms on a 16 MB thread and returns.
+
+#### 3. Guest evaluation from a helper, and the drain loops
+
+Event hooks that evaluate guest code:
+
+- Monitor display, `refresh_monitor_scope_display` (`monitor.rs:100`). Runs during a drain when a monitor scope is active and a trace event is delivered with callbacks enabled.
+- `StepMonitor` and `EvaluationMonitor`, `run_monitor_callback_best_effort` (`:67-74` and `:82`). Same condition. The only builtin options of those names are on `Monitor` (`monitor/options.rs:76`). `SetOptions` of `Monitor` still reaches this function. No other builtin registers them.
+- There is no separate user trace hook. `Trace` / `TracePrint` evaluate their argument as the body (`debug_tools/trace.rs:70`). During a drain that is ordinary cleanup code. If it suspends, the `InputRequired` arm extends the worklist.
+- `Check` and `Quiet` evaluate their body and fallback (`check_quiet.rs:29`, `:77`, `:125`, `:139`) and emit on `Err` before returning (`:131`, `:157`).
+- `TimeConstrained` and `MemoryConstrained` evaluate the limit, the body, and a fallback (`debug_tools/resources/constraints.rs:19`, `:53`, `:83`, `:117`, `:255`, `:281`).
+- `ValueQ` evaluates a trial and then restores an evaluation snapshot (`builtins_messages_inspect.rs:107` and `:114`). The restore's trial suspension uses `CheckpointRollbackDiscard`. If `abandonment_active` is already set, that inner `abandon_pending_suspension` queues onto the outer worklist and returns.
+- `Reap` evaluates its body and group function (`debug_tools/reap.rs:37`, `:199`, `:243`).
+- `Enclose` evaluates a handler (`kernel_data/control_data/confirmation/builtins.rs:269`). `Catch` evaluates a handler (`control_data/nonlocal.rs:342`).
+- Accounting continuation evaluates a suspended argument (`accounting_mode/continuation.rs:40`).
+- Assert failure evaluates `$AssertFunction` (`control_data/assertions.rs:11` and `:119`).
+- Message templates with delayed text evaluate that text (`messages/message_catalog.rs:132`).
+
+Any of these can run during a drain if the cleanup's `evaluate` reaches them. The monitor hooks are the ones that run because of an evaluation event rather than because the cleanup called them. The others are ordinary bodies. A suspension from any of them hits the `InputRequired` requeue.
+
+Drain loops and exits:
+
+- `drain_abandonment_worklist` (`abandon.rs:25-61`). If `abandonment_active`, return immediately (`:26-28`). Otherwise set the flag, and `while` `pop` (`:37`) until the vec is empty.
+- `abandon_frames` (`:76-116`). Break when the frame queue is empty (`:78-79`). On `EvaluateCleanup`, requeue the not-yet-abandoned frames (`:91-97`), evaluate the cleanup (`:99`), requeue a nested suspension only on `InputRequired` (`:100-104`), then `break` (`:113`). `Ok`, `Cancelled`, `TimeConstraintExceeded`, `RecursionLimitExceeded`, and every other error fall through that `if` and are dropped. The outer `while` then continues with whatever was pushed.
+- The monitor re-entry keeps the vec non-empty. The self-recursive cleanup keeps it non-empty until `RecursionLimitExceeded`, which does not requeue.
+
+#### 4. Invariant and the fix
+
+Invariant: every drain terminates, and a host cancel or a deadline ends it within a bounded amount of work. Each `WithCleanup` that was already queued when the drain began still runs its cleanup once. The guide's "runs guest cleanup once" stays. A cleanup is not skipped because a later cancel arrived. A cleanup that the drain itself creates after cancel or the deadline is visible is not run.
+
+```rust
+fn drain_abandonment_worklist(&mut self, reason: AbandonReason) -> AbandonReason {
+    if self.abandonment_active {
+        return reason;
+    }
+    self.abandonment_active = true;
+    let callbacks = self.monitor_callbacks_enabled;
+    self.monitor_callbacks_enabled = false;
+    // Install the retiring request's deadline before any cleanup.
+    // take_active must not clear a deadline that begin_top_level has not
+    // copied out of eval_timeout yet. Poll below does not read interrupt_armed.
+    self.arm_abandonment_interrupt();
+
+    while let Some(mut suspension) = self.abandonment_worklist.pop() {
+        // existing frame walk
+        let cleanup_outcome = self.evaluate(cleanup.expr);
+        let stop = self.abandonment_interrupt_due();
+        if matches!(cleanup_outcome, Err(EvalError::InputRequired { .. })) && !stop {
+            // push the nested suspension, as today
+        }
+        // do not push when stop is set; drop the nested suspension
+        // existing stack clear and break
+    }
+
+    self.monitor_callbacks_enabled = callbacks;
+    self.abandonment_active = false;
+    reason
+}
+```
+
+`handle_monitor_trace_event` and `refresh_monitor_scope_display` return immediately when `abandonment_active` is set, so a callback that was already inside `evaluate` cannot refresh the display. `GuestFormEnvironment::install` does not write `eval_deadline`, `interrupt_armed`, or `interrupt_poll_counter` while `abandonment_active` is set. `abandonment_interrupt_due` reads the cancel flag and `eval_deadline` directly, on a counter the guest-form install cannot reset. `eval_request` runs that arming before `finish_cancelled_pending_evaluation_request`'s drain, or `finish_cancelled_pending` copies `eval_timeout` into `eval_deadline` before `take_active`.
+
+The bound is the frames already queued, each cleaned up once, plus no monitor-driven frame, plus no nested `InputRequired` after the interrupt is due. The self-recursive `f630[]` stops pushing once the interrupt is due, instead of running to the recursion limit.
+
+#### 5. Falsifiers
+
+Scratch, not the repository. Full source: `.temp/brief-630/probe/src/a2_drain.rs` and `src/a2_window.rs`. The deadline falsifier and the display falsifier are red at HEAD. The plain monitor and the natural recursive cleanup are green. The limit-32 test records the count. Three runs each, quoted above. The deadline assertion, from `a2_drain.rs:160-174`:
+
+```rust
+fn a2_f_recursive_cleanup_deadline() {
+    match run_recursive(Some(Duration::from_millis(1)), None) {
+        Ok((first, retired, elapsed, prints, n)) => {
+            let count: u64 = n.parse().unwrap_or(prints);
+            assert!(count >= 1, "control did not fire: deadline cleanup count is {count}");
+            assert!(
+                count < 20,
+                "1ms deadline did not stop the self-recursive cleanup (n630={n}, prints={prints})"
+            );
+        }
+        Err(()) => std::process::exit(101),
+    }
+}
+```
+
+`run_recursive` evaluates the program on a 16 MB thread and bounds the receive at 30 s. `watch_display` does the same for the monitor programs, with the 3 s / 10 s cancel bound and the 15 s timeout bound in `a2_f_monitor_display_does_not_stop` (`a2_drain.rs:186-198`).
+
+### Part 3 — error-kind table
+
+The arm as drafted (this brief, the block under "Stage B shape") keeps the `InputRequired` requeue, skips `Err(Cancelled)`, and otherwise, when `abandonment_reports_cleanup_error` is true, calls `emit_non_loader_eval_message` and `emit_top_level_control_flow_messages`. It does not return the cleanup error. The request value stays the request's own status.
+
+`emit_non_loader_eval_message` (`session_helpers.rs:478-498`) only knows the tags in `runtime_message_for_non_loader_eval_error` (`:392-423`): `EvaluationCycleDetected` and `EvaluationPassLimitExceeded` → `General::passlim`; `RecursionLimitExceeded` → `reclim`; `MatchRecursionLimitExceeded` → `matchreclim`; `Cancelled` → `cancel`; `TimeConstraintExceeded` → `timelim`; `MemoryConstraintExceeded` → `memlim`; `StackLimitExceeded`, `IntegerWorkLimitExceeded`, `GeneratedElementLimitExceeded`, and `IterationWorkLimitExceeded` → `reslim`; `IterationLimitExceeded` → `iterlim`; `ExceptionThrown` → `ThrowException::nocatch`. Everything else returns `None`. `emit_top_level_control_flow_messages` (`:501-532`) adds `Throw::nocatch` for `Thrown` and two of them for `ThrownBypassingCatch`, `Break::nofwd`, and `Continue::nofwd`.
+
+Those two functions run at the request boundary (`session_eval.rs:280-281`, `finish_request_failure` at `session_requests.rs:508-509`, and `finalize_top_level_eval_value` at `session_eval.rs:45-54`). `Check` and `Quiet` also call `emit_non_loader_eval_message` inside `evaluate` (`check_quiet.rs:131` and `:157`). The arm's checkpoint is the handled length before `evaluate`, so a `Check` that already recorded the message dedups the arm's second call.
+
+Loader errors are pushed inside `evaluate`, and the builtin returns `Ok($Failed)`, so the drafted arm does not see an `Err`:
+
+- `Get` of a missing or unreadable target calls `emit_loader_message("Get", &err)` and returns `$Failed` (`builtins_context_loader.rs:282-283`). `FindFile` does the same for `LoadPathNotFound` (`:241-248`). No file provider emits `General::noio` and returns `$Failed` (`:233-235`, `:274-276`).
+- `finish_guest_get` calls `emit_loader_message_with_source` for a guest-file error and returns `$Failed` (`guest_loading/file.rs:159-162`), except `InputRequired`, `Exit`, `Cancelled`, `TimeConstraintExceeded`, and `MemoryConstraintExceeded`, which propagate (`:152-158`).
+- `emit_loader_message` (`session_helpers.rs:546-580`) pushes `symbol::notfound`, `symbol::io`, `symbol::syntax`, `General::noio`, or `symbol::load`.
+
+A cleanup `Get` of a missing file already has its message. A later file snapshot can roll that message back with the file, which is the same rule as any other in-file message. A cleanup that returns `Err(Io)`, `Err(Syntax)`, `Err(LoadPathNotFound)`, or `Err(NoFileIoProvider)` without that push gets nothing from the two emitters. The ordinary top-level `Err` path also pushes no `RuntimeMessage` for those four: `finish_request_failure` calls the same two emitters, and the signal is `SessionRequestError` (`session_requests.rs:792-818`). They are silent on both paths.
+
+Per variant, whether the drafted arm leaves a message:
+
+| `EvalError` | Ordinary message | Where it is pushed | Drafted arm |
+|---|---|---|---|
+| `ContinuationSlotMismatch` | no `RuntimeMessage`; `SessionRequestError::ContinuationSlotMismatch` (`session_requests.rs:786-790`) | request boundary, as the failure | no message. The ruling says this reason emits. The two emitters return nothing. |
+| `Syntax` | `Get::syntax` only through `emit_loader_message` | inside `evaluate`, then `Ok($Failed)` | already pushed on that path. A bare `Err` has no ordinary message either. |
+| `InvalidInteger` | none; request error (`:805-807`) | boundary | no message on either path |
+| `Io` | `symbol::io` only through the loader | inside `evaluate`, then `Ok($Failed)` | same as `Syntax` |
+| `NoFileIoProvider` | `General::noio` through `emit_no_file_io_message` | inside `evaluate`, then `Ok($Failed)` | already pushed on that path |
+| `LoadPathNotFound` | `symbol::notfound` through the loader | inside `evaluate`, then `Ok($Failed)` | already pushed on that path |
+| `EvaluationCycleDetected` | `General::passlim` | boundary, and `Check`/`Quiet` inside `evaluate` | arm emits; deduped if `Check` already recorded it |
+| `RecursionLimitExceeded` | `General::reclim` | boundary | arm emits |
+| `StackLimitExceeded` | `General::reslim` | boundary | arm emits |
+| `MatchRecursionLimitExceeded` | `General::matchreclim` | boundary | arm emits |
+| `Cancelled` | `General::cancel` | boundary. The cancel response already emits one (`finish_cancelled_eval_response`) | arm does not emit. That is the draft's `!Cancelled` guard |
+| `TimeConstraintExceeded` | `General::timelim` | boundary. `Get` propagates it with no loader message | arm emits |
+| `MemoryConstraintExceeded` | `General::memlim` | boundary. `Get` propagates it | arm emits |
+| `GeneratedElementLimitExceeded` | `General::reslim` | boundary | arm emits |
+| `IntegerWorkLimitExceeded` | `General::reslim` | boundary | arm emits |
+| `IterationWorkLimitExceeded` | `General::reslim` | boundary | arm emits |
+| `IterationLimitExceeded` | `General::iterlim` | boundary | arm emits |
+| `EvaluationPassLimitExceeded` | `General::passlim` | boundary | arm emits |
+| `Return` | none. Top level becomes the value (`session_eval.rs:31`) | boundary convert | no message on either path |
+| `Thrown` | `Throw::nocatch` | boundary | arm emits |
+| `ThrownBypassingCatch` | two `Throw::nocatch` | boundary | arm emits both |
+| `Abort` | none. Top level becomes `$Aborted` (`session_eval.rs:32`) | boundary convert | no message on either path |
+| `ProtectedAbort` | none. Same convert | boundary convert | no message on either path |
+| `Break` | `Break::nofwd` | boundary | arm emits |
+| `Continue` | `Continue::nofwd` | boundary | arm emits |
+| `Exit` | none. `SessionRequestError::Exit` (`session_requests.rs:851`), `Display` is `Exit[{code}]` (`session_state.rs:570`) | boundary status, no message | no message. Ruled below |
+| `InputRequired` | the input report, not a cleanup message | requeue | requeue kept |
+| `ExceptionThrown` | `ThrowException::nocatch` | boundary, and `finalize_top_level_eval_value` (`session_eval.rs:43-46`) | arm emits |
+
+No variant that has an ordinary `RuntimeMessage` is silent under the draft. The boundary tags are emitted by the two calls. The loader tags are pushed inside `evaluate` before the arm sees `Ok`.
+
+Two gaps are not "silent where the ordinary path leaves a message":
+
+- `ContinuationSlotMismatch`. The ordinary signal is the request error, which this arm does not return, because the slot-fault request already has its own failure and a cancelled request stays `Cancelled`. The ruling says the reason emits. The draft's two calls do not. Stage B's falsifier has to name the tag. I am not inventing one here; there is no catalog tag for it.
+- `Exit`. The ordinary path leaves no message. A dropped `Exit` is still the silence the ruling removes. The request stays `Cancelled` with the cancel status. Ordinary `Exit` process status stays a status with no message.
+
+`Exit` message, abandonment arm only. Register it on `General` in `INERT_HEAD_BUILTINS` (`builtin_catalog/inert_heads.rs:9-62`), next to `cancel`, so `push_message`'s debug assert (`session_helpers.rs:336-351`) and docgen see it. Do not add it to `runtime_message_for_non_loader_eval_error`, or a later ordinary `emit_non_loader` would start emitting it.
+
+- Symbol: `General`
+- Tag: `exit`
+- Catalog template: `Reports Exit[`1`] raised while abandoning a cleanup.`
+- Pushed text: the `Display`, `Exit[n]` for code `n` (`Exit[{code}]` at `session_state.rs:570`)
+
+```rust
+Err(EvalError::Exit { code }) => {
+    self.push_message("General", "exit", format!("Exit[{code}]"));
+}
+```
+
+That arm stays under the policy function, after the `InputRequired` requeue and the `Cancelled` skip. It does not return `SessionRequestError::Exit` and does not change the process status.
+
+Stage B is not started.
+
+## Director ruling on A2, and continuation A3 (2026-10-28 10:40) — grk
+
+**The inventories are accepted. Both proposed fixes are not.** The matrix
+and the mechanisms are the evidence for the rest of this line. Each fix
+misses one fact that decides its shape.
+
+### Part 1: the window
+
+The matrix stands. File and nested cells panic or lose `General::cancel` for
+messages, trace and handled errors. The script loses `General::cancel`
+through its spliced prefix. `eval-get` is healthy. The generation fence
+turns a wrong cut into a deliberate panic, which is not a fix. The second
+construction rule (store the admission mark on every route) breaks a
+consumer contract that the proposal does not mention:
+
+- All three front ends merge a retirement by count.
+  - `rum-cli` (`input_retirement.rs:23-51`) has two modes: `Cumulative` for
+    single-source requests and `CleanupOnly` for batches
+    (`main.rs:234,246,258,343`).
+  - `rum-jupyter` (`adapter/input_retirement.rs:27-46`) and `rum-repl`
+    (`request.rs:95-114`, "host outputs are cumulative across suspensions,
+    including cancellation") both skip by count.
+- With an admission mark on batches, `CleanupOnly` would print the earlier
+  forms twice.
+- The cumulative merge is already wrong under rollback, even on the healthy
+  `eval-get` route. Take a file that `Message`s before its `InputString`,
+  inside a `WithCleanup` whose cleanup is outside the file. The input report
+  holds the in-file message (prior = 1). The rollback removes it, so the
+  cumulative response is the outer cleanup's message plus `General::cancel`.
+  The CLI pops the cancel and skips 1, and the outer cleanup's message is
+  lost. Option A's messages would be lost the same way.
+
+The rule this has to satisfy is already in the guide: *messages already
+reported with the input requirement remain visible*. Reported output is
+never retracted. So:
+
+- **P1.** A request's host-visible output is append-only. Each outcome of a
+  request extends what the earlier outcomes of that request reported. A
+  session rollback (file transaction, `ValueQ`, evaluation rollback) changes
+  the session's message list and `$MessageList`. It never changes what was
+  already reported.
+- **P2.** An item pushed after the last report reaches the next outcome
+  unless a rollback removed it ("rolled back with their file").
+- **P3.** One convention for every route. A front end has one merge rule
+  and no mode, and the convention is stated in the host documentation.
+
+### Part 2: the drain
+
+The proposal stops the drain once "cancel is visible". On a
+`CancelledRequest` drain the cancellation is the drain's own reason, so it
+is visible from the first frame. It cannot be the stop signal: every cleanup
+the drain creates would be skipped at once. Also, the mechanism is wider than
+the monitor. I probed (`.temp/director/gate-630a/loop-1.log`):
+
+```text
+DIRLOOP plain: did NOT return in 8s
+DIRLOOP second-cancel: did NOT return in 8s
+DIRLOOP timeout-1s: did NOT return in 8s
+```
+
+The program is `WithCleanup[InputString["x"], While[True, Null]]`, then
+`cancel()` and `eval("")`. "second-cancel" cancels a fresh `cancel_handle()`
+1 s into the retirement. "timeout-1s" retires through
+`eval_with_timeout("", 1 s)`.
+
+The retirement drain runs guest code with no interrupt armed.
+`take_active_accepted_request` has already taken the ticket, and the
+deadline is installed after the drain (your mechanism, §2). So any cleanup
+that loops makes retirement endless, and the host has no control left. These
+are two defects:
+
+- **D2a, retirement has no interrupt.** It covers every drain that runs
+  outside a live accepted request: the cancel retirement on both routes, and
+  `FailedSnapshotRestore`. Check whether anything else belongs here.
+- **D2b, a helper generates frames during a drain.** The monitor hooks run
+  during a drain and reset what would otherwise bound the chain. Your
+  self-recursive control is bounded by the recursion limit, `(limit − 4)/3`,
+  because each nested cleanup runs deeper. The monitor chain is not bounded.
+  Find out why, and print `evaluation_depth` where the display suspends.
+
+The rules for the fix:
+- **"Runs guest cleanup once" stays.** Every cleanup that the drain reaches
+  starts, including one the drain itself creates, as today
+  (`public_cancelled_nested_with_cleanup_runs_cleanup_and_abandons_nested_input`,
+  `suspension_abandonment_contract.rs:591`). What changes is that the host
+  can interrupt one: a cleanup that is still running when a host interrupt
+  arrives ends with that interrupt's error, the drain goes on to the next
+  frame, and every structural restoration (scopes, file rollback) still
+  runs.
+- **Retirement is work done under a host request,** with that request's
+  cancel handle and deadline armed before the first cleanup. That request is
+  the `eval("")` or call that retires, or the `restore_from_bytes`. Say
+  which handle a host uses to interrupt a retirement, and make it the one
+  `cancel_handle()` returns during it.
+- **A drain does not run event-driven helpers.** The monitor display, step
+  and evaluation hooks are off while `abandonment_active` is set. The other
+  helper bodies in your inventory run only when the cleanup calls them, so
+  they stay.
+- **Termination is argued from structure.** Once helpers are off, every
+  frame a drain creates comes from a cleanup's nested `InputRequired`, at a
+  greater depth than that cleanup. Make that a checked property (a debug
+  assertion where the nested suspension is requeued), so the recursion limit
+  bounds every chain. After a host interrupt, each further cleanup ends at
+  its first poll.
+- **`GuestFormEnvironment::install` must not disarm a drain.** Say which
+  state wins while `abandonment_active` is set (deadline, armed flag, poll
+  counter), and why.
+
+### Part 3
+
+- **The table is accepted,** with one correction. `ContinuationSlotMismatch`
+  in the policy is the *reason* for a drain after a slot fault. The cleanup
+  errors during that drain are reported through the same two emitters. The
+  `EvalError::ContinuationSlotMismatch` variant returned by a cleanup is a
+  separate row: say whether a cleanup's `evaluate` can return it at all.
+- **`Exit` is reported as `Exit::abandoned`**, owned by `Exit` like
+  `Throw::nocatch` and `Break::nofwd`. The template is
+  "Exit[`1`] in a cleanup was not honored because its request was being
+  abandoned." Register it with `Exit`'s existing messages. Do not add it to
+  `runtime_message_for_non_loader_eval_error`.
+
+### A3 — two designs as code, no source change, then STOP
+
+Same fence. Scratch goes in `.temp/brief-630/`.
+
+1. **The window under P1–P3.**
+   - Choose the one convention, cumulative or incremental, with evidence
+     from the three front ends and `rum-host`'s documentation.
+   - Give the kernel shape as code. It must make an index into a list that
+     cannot outlive a restore of that list, by type, for messages, prints,
+     trace and its depths, and handled errors. It must also keep reported
+     output out of a rollback's reach.
+   - Inventory every access to those four lists (file:line, read or
+     mutate), so the reach is known before Stage B. List the front-end
+     changes, and every existing test whose assertion changes, with its
+     before and after.
+   - Extend your matrix with the cumulative-merge case above (cleanup
+     outside the file, message inside it) for all three front ends' merge
+     rules, red at HEAD.
+2. **The drain under the rules above.**
+   - Give the shape as code.
+   - Find the monitor chain's depth.
+   - Write falsifiers, calibrated three times each:
+     - mine above (`While[True, Null]`), for the plain, second-cancel and
+       timeout cases;
+     - the monitor display;
+     - `f630` under a deadline: it should now stop early, at its first poll
+       after the deadline;
+     - controls: the nested-cleanup contract test, "runs guest cleanup
+       once", and file rollback after an interrupted cleanup.
+3. **Order for Stage B.** I expect B1 to be the drain (the hang is the most
+   severe), B2 the window, and B3 the cleanup-error arm. Say if a
+   dependency forces another order.
+
+Write "Executing-agent report — A3" and STOP. Every quoted line must be
+copied from a file you name. Quote every verdict line your instruments
+print, and settle each flagged row.
