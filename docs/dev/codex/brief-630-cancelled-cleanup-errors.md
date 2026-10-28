@@ -3683,3 +3683,218 @@ cut that removes something.
 - The `failure-*` labels that are not apart move +16 to +41. Where
   attributed (`failure-tag-fallback`, `failure-message-property`), that is the
   growth helper and memcmp.
+
+## Stage B3 (2026-10-29 03:45) — the cleanup-error arm, then STOP — grk
+
+B2 is committed (`1c115117`) and its gate is above. B3 is the Option A arm,
+on the same session: you wrote its policy in Stage A, its error-kind table in
+A2, and the `Exit` message in A3.
+
+**The rule.** During abandonment, when the reason's policy is to report, an
+error that escapes a cleanup is reported as the message the top-level path
+gives that error. The one exception is the host's own interrupt. The frames
+around the cleanup are abandoned, not resumed. So a `Catch` or a
+`TimeConstrained` outside the `WithCleanup` cannot handle the cleanup's
+error, and the report says what became of it.
+
+- **Policy.** `abandonment_reports_cleanup_error`, as in Stage A §6: an
+  exhaustive `match` with no wildcard. `CancelledRequest` and
+  `ContinuationSlotMismatch` report. `FailedSnapshotRestore`,
+  `CheckpointRollbackDiscard`, `SupersededOrQueuedInputDiscard` and
+  `HelperBestEffortDiscard` do not.
+- **Host interrupts are not cleanup errors.** Under B1 the only interrupts a
+  cleanup can see on a drain are these two. Both end the drain, and the
+  request stays `Cancelled`.
+  - `Err(Cancelled)`: a further host cancel. `General::cancel` already
+    reports it.
+  - `Err(TimeConstraintExceeded)` when `drain_host_interrupt_pending()` holds
+    after the cleanup returns: the suspended request's own absolute deadline.
+
+  B1's `f1_second_cancel_interrupts_retirement_cleanup` and
+  `control_b_original_deadline_bounds_the_cleanup` pin both, with
+  `["General::cancel"]`, and they stay unchanged.
+- **`Exit`** is `Exit::abandoned` (A2 ruling). Its pushed text is exactly
+  `Exit[{code}] in a cleanup was not honored because its request was being abandoned.`
+  Register it on `Exit`'s spec in `catalog/control.rs`, next to `argt` and
+  `intm`, with the template
+  `` Exit[`1`] in a cleanup was not honored because its request was being abandoned. ``
+  Do not add it to `runtime_message_for_non_loader_eval_error`. The process
+  status does not change.
+- **Every other error** goes through the ordinary emitters:
+  `emit_non_loader_eval_message(mark, error)` and then
+  `emit_top_level_control_flow_messages(error)`. The `mark` is
+  `self.output_mark()`, taken before the cleanup's `evaluate`, so a `Check`
+  that already recorded the message dedups it. Kinds that neither emitter
+  knows (`Return`, `Abort`, `ProtectedAbort`, `Syntax`, `Io`, ...) give no
+  message, as on the top-level path (your A2 table).
+
+**The shape.** It goes in `suspension/core/abandon.rs`. Insert only after the
+capture at line 94, and put the new functions at the bottom of the file, so
+that the census's pinned lines 43, 44 and 94 stay where they are. Call
+`drain_host_interrupt_pending()` once, as now, and reuse its value.
+
+```rust
+let entry_depth = self.evaluation_depth.get();
+let report_mark = self.output_mark();
+let cleanup_outcome = self.evaluate(cleanup.expr);
+if matches!(cleanup_outcome, Err(EvalError::InputRequired { .. })) {
+    // the requeue, unchanged
+}
+let interrupted = self.drain_host_interrupt_pending();
+if abandonment_reports_cleanup_error(reason) {
+    if let Some(error) = escaped_cleanup_error(&cleanup_outcome, interrupted) {
+        self.report_abandoned_cleanup_error(report_mark, error);
+    }
+}
+if interrupted {
+    *skip_cleanups = true;
+}
+```
+
+```rust
+/// The error a cleanup let escape, or `None` for a value, a requeued input,
+/// or the host interrupt that ended it.
+fn escaped_cleanup_error(
+    outcome: &Result<Expr, EvalError>,
+    interrupted: bool,
+) -> Option<&EvalError> {
+    match outcome {
+        Ok(_) | Err(EvalError::InputRequired { .. }) | Err(EvalError::Cancelled) => None,
+        Err(EvalError::TimeConstraintExceeded) if interrupted => None,
+        Err(error) => Some(error),
+    }
+}
+
+#[cold]
+#[inline(never)]
+fn report_abandoned_cleanup_error(&mut self, mark: OutputMark, error: &EvalError) {
+    if let EvalError::Exit { code } = error {
+        self.push_message(
+            "Exit",
+            "abandoned",
+            format!("Exit[{code}] in a cleanup was not honored because its request was being abandoned."),
+        );
+        return;
+    }
+    self.emit_non_loader_eval_message(mark, error);
+    self.emit_top_level_control_flow_messages(error);
+}
+```
+
+**Falsifiers (calibrated by the director: red at HEAD 3 of 3, controls green
+3 of 3).** The probe crate is `.temp/director/630/probe-b3/` (`src/lib.rs`),
+with logs `calibration-{1,2,3}.log`. Copy it; do not edit it. Each falsifier
+passes every assertion before the message list and fails at that list. At
+HEAD every one of them reads `["General::cancel"]`, except `b3f4`, which reads
+`["probe::outside", "General::cancel"]`.
+
+| test | cleanup and route | after B3 |
+|---|---|---|
+| `b3f1` | `nested(REC)`, resume route | `["General::reslim", "General::cancel"]` |
+| `b3f2` | `nested("Throw[630]")` | `["Throw::nocatch", "General::cancel"]` |
+| `b3f3` | `nested("Exit[3]")` | `["Exit::abandoned", "General::cancel"]`, with the exact text above for code 3; a `Success` with `Cancelled`, and the session keeps evaluating |
+| `b3f4` | the cleanup outside a rolled-back `Get` | `["probe::outside", "Throw::nocatch", "General::cancel"]`, `fileRan630` is 0 |
+| `b3f5` | the print-sink cancel (`finish_accepted_value_request`) | `["Throw::nocatch", "General::cancel"]` |
+| `b3f6` | `Catch[WithCleanup[InputString["x"], (caught630 = 1; Throw[630])]]` | `["Throw::nocatch", "General::cancel"]`, `caught630` is 1 (`calibration-f6-{1,2,3}.log`) |
+
+The cleanup's message comes before `General::cancel`, because
+`finalize_top_level_eval_value` pushes the cancel after the drain
+(`session_requests.rs:89` and `:619`, both before
+`finish_cancelled_eval_response`).
+
+The controls are green at HEAD and stay green:
+- `b3k1` and `b3k2`: completion reports `General::reslim` and `Throw::nocatch`;
+- `b3k3`: a cleanup that succeeds;
+- `b3k4`: a completed `Exit[3]` cleanup is a `Failure` with `exit_status`
+  `Some(3)` and no message;
+- `b3k5` and `b3k6`: cleanups inside a file roll back with their file, so
+  the outcome is `["General::cancel"]`;
+- `b3k7` (`ValueQ`), `b3k8` (snapshot restore) and `b3k9` (`StepMonitor`):
+  the three reasons that do not report. Each one's marker proves it fired.
+
+**Write first, red at HEAD before you change code, three runs each.**
+1. Port the probe crate's tests into a new
+   `crates/rum-host/tests/cleanup_errors.rs`, unchanged in what they assert.
+2. Add `b3p1`, a probe of a guest deadline on the drain:
+   `tc630 = 0; TimeConstrained[WithCleanup[InputString["x"], tc630 = 1], 1/10]` (the limit must be an exact number).
+   Wait 300 ms on the host side, then cancel. Record `tc630` and the messages
+   at HEAD and after.
+   - The guest-form environment restores `current_time_deadline`
+     (`guest_loading/scope.rs:61` and `:91`), and the `TimeConstrained` frame
+     is abandoned after the cleanup.
+   - Pin the after-state if it follows the rule: an escaping
+     `TimeConstraintExceeded` with no host interrupt pending is
+     `General::timelim`, and a cleanup that completed reports nothing.
+     Otherwise STOP with both rows.
+3. In-crate, `runtime/tests/suspension_abandonment.rs`: a firing control for
+   `SupersededOrQueuedInputDiscard`, in the style of
+   `queued_input_abandons_the_older_generation_before_consuming_the_value`.
+   - Suspend `WithCleanup[InputString["old"], (queuedCleaned630 = 1; Throw[630])]`,
+     queue `"drain"`, and evaluate `InputString["new"]`.
+   - The value is `"drain"`, `queuedCleaned630` is 1, and the session
+     messages hold no `Throw::nocatch`.
+4. In-crate, `suspension/typed/tests/driver_faults.rs`: a falsifier for
+   `ContinuationSlotMismatch`, modelled on
+   `cleanup_failure_or_nested_input_never_replaces_the_first_fault` with the
+   cleanup `cleaned=1;Throw[630]`.
+   - The first fault is kept and the probe counts 1.
+   - The failure's messages gain `Throw::nocatch`, which they lack at HEAD.
+
+**Mutants, each run once and reverted.** Quote the failing line of each.
+- Flip `SupersededOrQueuedInputDiscard` to `true` in the policy: step 3's
+  control goes red.
+- Delete the `interrupted` exclusion: B1's `f1_second_cancel_...` (a second
+  `General::cancel`) and `control_b_...` (`General::timelim`) go red.
+- Report on `CheckpointRollbackDiscard`: `b3k7` goes red. If it stays green,
+  the control does not reach the arm: STOP.
+
+**Stop conditions.**
+- Any expected value outside the new tests would change, in particular in
+  `retirement_interrupt.rs`, `suspension_abandonment_contract.rs`,
+  `output_window.rs`, or the rum-cli, rum-repl and rum-jupyter abandonment
+  tests: STOP with the test and both values.
+- A cleanup's `evaluate` returns `EvalError::ContinuationSlotMismatch`, which
+  A3 says it cannot: STOP with the path.
+- `b3p1` does not follow the rule: STOP.
+- **Census.** Pair the frontier through the diff, as B2 did.
+  - If the only change is new rows on lines B3 adds to `abandon.rs`, and
+    every other row keeps its kind, callee and reason with
+    `base_only=0`, update the assertion and its comment yourself, naming
+    each new row.
+  - Anything else: STOP.
+
+**Scope.**
+- **MAY modify:**
+  - `crates/rum-runtime/src/runtime/suspension/core/abandon.rs`;
+  - the `Exit::abandoned` registration in
+    `crates/rum-stdlib/src/catalog/control.rs`, and
+    `docs/reference/builtins.md` regenerated by its generator, not by hand;
+  - the new `crates/rum-host/tests/cleanup_errors.rs`;
+  - the two in-crate test files above;
+  - the standing inventories, by replay, including the census assertion under
+    the rule above.
+- **Disclosure duty:** any other file, with its reason. Anything beyond a
+  mechanical change there is a STOP.
+- **MUST NOT touch:** `rum-cli`, `rum-jupyter`, `rum-repl`, `docs/` other
+  than the generated reference (I write the guide sentences at commit),
+  `TODO.md`, `Cargo.lock`.
+
+**Run, single-threaded:**
+- `cargo fmt --check`;
+- the falsifiers red at HEAD, then everything after the change, three runs
+  each;
+- `cargo test -p rum-host` (all targets);
+- `cargo test -p rum-runtime --lib`;
+- `frame_root_trace`;
+- the docgen drift test;
+- the standing inventories;
+- **the whole workspace.**
+
+Report every `test result:` line verbatim.
+
+**Then STOP.** Measurement follows my gate. Abandonment is a cold path. The
+arm adds one mark read before each cleanup and, on an error, one cold call.
+
+Append "Executing-agent report — B3". Every quoted line must be copied from
+a file you name. Quote every verdict line your instruments print, and settle
+each flagged row.
