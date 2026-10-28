@@ -2957,3 +2957,195 @@ Steps 3 and 4 as written, and the run list as written. Add
 front-end tests. Then STOP. Append "Executing-agent report — B2, continued"
 under this ruling. Every quoted line must be copied from a file you name, and
 every verdict line your instruments print must be quoted.
+
+## Executing-agent report — B2, continued
+
+STOP at step 3. An existing expected value moved. Step 4 (the `rum-cli` `CancellationOutput` deletion) was not started. B3 was not started. Measurement panels were not run. The workspace run and the standing-inventory replays were not started.
+
+### Step 2b, before step 3
+
+Existing rum-runtime tests passed, apart from the two restored trace assertions, which passed inside that same run. W1–W3 match the step-2 cells.
+
+`.temp/brief-630/logs/b2-step2b-check-2.log` line 22: `warning: rum-runtime (lib test) generated 3 warnings`
+
+`.temp/brief-630/logs/b2-step2b-check-2.log` line 23: `Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.60s`
+
+`.temp/brief-630/logs/b2-step2b-check-2.log` line 24: `EXIT:0`
+
+The three warnings are the pre-existing `register_test_*` dead_code warnings.
+
+`.temp/brief-630/logs/b2-step2b-runtime-lib.log` line 251: `test runtime::suspension::typed::tests::driver_faults::cleanup_failure_or_nested_input_never_replaces_the_first_fault ... ok`
+
+`.temp/brief-630/logs/b2-step2b-runtime-lib.log` line 252: `test runtime::suspension::typed::tests::driver_faults::completion_exact_decode_and_probe_survive_rollback_and_replacement ... ok`
+
+`.temp/brief-630/logs/b2-step2b-runtime-lib.log` line 253: `test runtime::suspension::typed::tests::driver_faults::direct_public_fault_is_fatal_at_evaluation_and_test_capture ... ok`
+
+`.temp/brief-630/logs/b2-step2b-runtime-lib.log` line 254: `test runtime::suspension::typed::tests::driver_faults::wrong_arms_and_exact_state_unwind_captures_and_scopes ... ok`
+
+`.temp/brief-630/logs/b2-step2b-runtime-lib.log` line 617: `test runtime::tests::frame_root_trace::manual_frame_root_trace_implementations_match_sorted_allowlist ... ok`
+
+`.temp/brief-630/logs/b2-step2b-runtime-lib.log` line 1192: `test runtime::tests::suspension_abandonment::capture_output::abandonment_rolls_back_all_declared_channels_with_existing_tracing ... ok`
+
+`.temp/brief-630/logs/b2-step2b-runtime-lib.log` line 1249: `test result: ok. 1216 passed; 0 failed; 5 ignored; 0 measured; 0 filtered out; finished in 43.40s`
+
+`.temp/brief-630/logs/b2-step2b-runtime-lib.log` line 1251: `EXIT:0`
+
+The W cell log was taken before the later W1 field strip. It matches the step-2 cells. `.temp/brief-630/logs/b2-step2b-w-cell-compare.txt` line 4: `COMPARE step2 vs step2b: step2=42 step2b=42`. Line 5: `CELL MATCH`.
+
+`.temp/brief-630/logs/b2-w-step2b-1.log` line 10: `test w3_rolled_back_unreported_stays_out ... ok`
+
+`.temp/brief-630/logs/b2-w-step2b-1.log` line 19: `W1VERDICT cells=4 red=4 green=0`
+
+`.temp/brief-630/logs/b2-w-step2b-1.log` line 62: `W2VERDICT cells=36 panic=0 lost-cancel=0 dropped-prefix=24 check=0 other=0 green=12`
+
+`.temp/brief-630/logs/b2-w-step2b-1.log` line 74: `test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s`
+
+`.temp/brief-630/logs/b2-w-step2b-1.log` line 77: `EXIT:101`
+
+### Front ends on the 2b tree, before step 3
+
+These were not weakened. Eval and setup on the CLI, and the REPL and Jupyter outer counts, are red here because retirement still lacks the input prefix.
+
+`.temp/brief-630/logs/b2-step2b-fe-cli.log` line 6: `CLIVERDICT kind=script status=exit status: 0 inside=1 outer=1 reason=1 cancel=false`
+
+`.temp/brief-630/logs/b2-step2b-fe-cli.log` line 7: `CLIVERDICT kind=eval status=exit status: 0 inside=1 outer=0 reason=1 cancel=false`
+
+`.temp/brief-630/logs/b2-step2b-fe-cli.log` line 8: `CLIVERDICT kind=setup status=exit status: 0 inside=1 outer=0 reason=1 cancel=false`
+
+`.temp/brief-630/logs/b2-step2b-fe-cli.log` line 9: `CLIVERDICT kind=file status=exit status: 0 inside=1 outer=0 reason=1 cancel=false`
+
+`.temp/brief-630/logs/b2-step2b-fe-cli.log` line 29: `test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 15 filtered out; finished in 0.05s`
+
+`.temp/brief-630/logs/b2-step2b-fe-cli.log` line 32: `EXIT:101`
+
+Script and file match the contract. Eval and setup are red: outer count 0, expected 1.
+
+`.temp/brief-630/logs/b2-step2b-fe-jupyter.log` line 11: `assertion `left == right` failed: probe::inside: inside message`
+
+`.temp/brief-630/logs/b2-step2b-fe-jupyter.log` line 13: `  left: 0`
+
+`.temp/brief-630/logs/b2-step2b-fe-jupyter.log` line 14: ` right: 1`
+
+`.temp/brief-630/logs/b2-step2b-fe-jupyter.log` line 23: `test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 151 filtered out; finished in 0.01s`
+
+`.temp/brief-630/logs/b2-step2b-fe-jupyter.log` line 26: `EXIT:101`
+
+`.temp/brief-630/logs/b2-step2b-fe-repl.log` line 8: `assertion `left == right` failed: rum> ! probe::inside: inside message`
+
+`.temp/brief-630/logs/b2-step2b-fe-repl.log` line 9: `in`
+
+`.temp/brief-630/logs/b2-step2b-fe-repl.log` line 10: `! input cancelled`
+
+`.temp/brief-630/logs/b2-step2b-fe-repl.log` line 12: `  left: 0`
+
+`.temp/brief-630/logs/b2-step2b-fe-repl.log` line 13: ` right: 1`
+
+`.temp/brief-630/logs/b2-step2b-fe-repl.log` line 22: `test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.00s`
+
+`.temp/brief-630/logs/b2-step2b-fe-repl.log` line 25: `EXIT:101`
+
+### Step 3
+
+`ReportedOutput` is carried in `PendingEvalRequest` on eval, eval_expr, call, script, and file. Script and file store it with `resumable` false and still refuse `resume_eval_request_with_input` with `no suspended evaluation is waiting for host input`, leaving the stored value installed. Publication is at input pause, completion, failure, and cancellation. The script loop no longer splits each form off or splices it back; the request cuts once at its admission mark. `$MessageList` stays the session view. Memory for the reported lists is charged to `PendingEvalRequest`. Reported trace expressions are gensym roots.
+
+`.temp/brief-630/logs/b2-step3-fmt-1.log` line 1: `EXIT:0`
+
+`.temp/brief-630/logs/b2-step3-check-2.log` line 22: `warning: rum-runtime (lib test) generated 3 warnings`
+
+`.temp/brief-630/logs/b2-step3-check-2.log` line 23: `Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.07s`
+
+`.temp/brief-630/logs/b2-step3-check-2.log` line 24: `EXIT:0`
+
+### Stop
+
+`cargo test -p rum-runtime --lib` moved one expected value, in seven tests, all at the same assertion. Expected `pending_eval_request` is `None`. Actual is `Some`. The assertion was not edited.
+
+`.temp/brief-630/logs/b2-step3-runtime-lib.log` line 1254: `batch has no resume checkpoint`
+
+That line is the panic from `flat_public_file_cancellation_control` at `crates/rum-runtime/src/runtime/tests/session_requests/batch_boundary.rs:61`. The same message is at lines 1259, 1264, 1269, 1274, 1279, and 1284 for the other six tests.
+
+`.temp/brief-630/logs/b2-step3-runtime-lib.log` line 1288: `runtime::tests::session_requests::batch_boundary::flat_public_file_cancellation_control`
+
+`.temp/brief-630/logs/b2-step3-runtime-lib.log` line 1289: `runtime::tests::session_requests::batch_boundary::public_file_cancel_nested`
+
+`.temp/brief-630/logs/b2-step3-runtime-lib.log` line 1290: `runtime::tests::session_requests::batch_boundary::public_file_cancel_two_levels`
+
+`.temp/brief-630/logs/b2-step3-runtime-lib.log` line 1291: `runtime::tests::session_requests::batch_boundary::public_file_cleanup_observes_inner_then_outer_state_once`
+
+`.temp/brief-630/logs/b2-step3-runtime-lib.log` line 1292: `runtime::tests::session_requests::batch_boundary::public_file_first_input_answered_then_cancel_deeper_second`
+
+`.temp/brief-630/logs/b2-step3-runtime-lib.log` line 1293: `runtime::tests::session_requests::batch_boundary::public_file_rollback_is_deferred_while_blocked`
+
+`.temp/brief-630/logs/b2-step3-runtime-lib.log` line 1294: `runtime::tests::session_requests::batch_boundary::public_file_snapshot_roots_survive_suspension`
+
+`.temp/brief-630/logs/b2-step3-runtime-lib.log` line 1296: `test result: FAILED. 1209 passed; 7 failed; 5 ignored; 0 measured; 0 filtered out; finished in 40.13s`
+
+`.temp/brief-630/logs/b2-step3-runtime-lib.log` line 1299: `EXIT:101`
+
+1209 passed. The 7 failures are the whole of the movement: 1216 minus 7. No other rum-runtime lib expected value moved. Step 4 would not put this field back to `None`; step 3 requires the file route to store the admission and the reported prefix.
+
+## Director ruling on the B2 step-3 stop (2026-10-28 17:40) — the pending request becomes a typed enum; continue step 3, then step 4 — grk
+
+**The stop, settled.** You were right to stop again, and again the cause is my
+brief. At HEAD, a batch is non-resumable because it has no `pending_eval_request`.
+The seven `batch_boundary` tests assert exactly that, and
+`resume_eval_request_with_input` refuses a batch because it finds nothing to
+take. My shape put the batch's admission and reported output into that same
+field, and I did not first ask what the field's absence meant.
+
+`resumable: bool` keeps the behaviour, but it is the wrong shape for two
+reasons. A structural fact becomes a value checked at one site. And the resume
+path passes a value that is always `true` into
+`resume_eval_request_from_checkpoint` and `store_pending_report`. Replace the
+bool with a type:
+
+```rust
+/// The request a pending suspension belongs to: its admission mark and what
+/// the host has already been shown.
+pub(in crate::runtime) struct PendingReport {
+    pub(in crate::runtime) mark: OutputMark,
+    pub(in crate::runtime) reported: ReportedOutput,
+}
+
+/// What a request left waiting when it returned `InputRequired`.
+pub(in crate::runtime) enum PendingRequest {
+    /// `eval`, `eval_expr` and `call`. Only this variant can be resumed.
+    Resumable(PendingReport),
+    /// `eval_script` and `eval_file`, which are not resumable, as documented.
+    /// Retirement still publishes the reported prefix.
+    Batch(PendingReport),
+}
+```
+
+- `Session.pending_eval_request` becomes `pending_request: Option<PendingRequest>`.
+  The memory owner, its schema decision row and the field inventory follow the
+  rename.
+- `resume_eval_request_with_input` takes only `Resumable`. A `Batch` stays
+  installed, and the refusal is unchanged. The resume path takes a
+  `PendingReport`, and it stores `Resumable` again when the resumed request
+  suspends again. No function takes a `resumable` parameter.
+- Retirement reads either variant.
+- Three sites check that no request is pending, of either kind, and they keep
+  that meaning:
+  - the `.is_none()` guards in `association_lvalue.rs:226` and
+    `incremental_mutation.rs:15`;
+  - the terminal assertion in `session_requests.rs`.
+
+**Expected values that change, sanctioned.**
+- The assertion at `batch_boundary.rs:61-64`, shared by the seven tests, becomes
+  `matches!(s.pending_request, Some(PendingRequest::Batch(_)))`. Keep its
+  message, "batch has no resume checkpoint": the type now says what the
+  absence used to say.
+- `batch_boundary/restore.rs:56`, where an `eval` request is suspended, becomes
+  `matches!(s.pending_request, Some(PendingRequest::Resumable(_)))`.
+
+No other expected value may move.
+
+**One question for the report.** `take_pending_report` still has an arm for a
+suspension with no stored request, which starts a fresh admission at the current
+clock. After step 3, every public route stores a request. Name the path that
+still reaches that arm, and the test that reaches it. If nothing reaches it, say
+so, and I will rule on it at the gate.
+
+Then finish step 3, do step 4, and run the run list from the 16:45 ruling. Then
+STOP. Append "Executing-agent report — B2, continued (2)" under this ruling.
