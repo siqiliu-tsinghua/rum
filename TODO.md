@@ -119,6 +119,15 @@ filter cuts this census work a third time, switch workers.**
   evaluation refreshes the display, which suspends again and queues another
   cleanup. It needs `Capability::Interactive`, so the sandboxed profiles
   cannot reach it; the CLI and Jupyter can.
+  - **The wider form (director, A2 gate): retirement runs guest code with no
+    interrupt armed.** `WithCleanup[InputString["x"], While[True, Null]]`,
+    then cancel and retire. The retirement never returns. A second cancel
+    and a 1 s `eval_with_timeout` do not stop it either. The accepted ticket
+    is taken before the drain, and the deadline is installed after it.
+  - The window defect also covers trace (with tracing on, the file route
+    panics at `session_requests.rs:714`) and the stdin script route. All
+    three front ends merge retirement output by count, which a rollback
+    breaks even on the healthy single-source route.
 - **Three dead-code warnings in `crates/rum-runtime/src/runtime/test_builtins.rs`.**
   `register_test_vm_template_builtins` has no caller, so the two
   registrations reached only through it are dead too. They have been present
