@@ -2390,3 +2390,198 @@ On the other side, 38 labels sit below the base in every rep, from −0.02% to
 **Verdict.** There is no default-path cost: the only deterministic code
 delta is a saving at a retirement site, and the one rise above the noise is
 memcmp operand placement.
+
+## Stage B2 (2026-10-28 15:20) — the window: stamped output, one cumulative convention, then STOP — grk
+
+B1 is committed (`854cfa4a`); its gate is above. B2 goes to grk on the same
+session: you designed this window as code in A3 and hold the A2 matrix.
+
+**The defect, from your A2 and A3 evidence.** A host cut is a `usize` taken
+from a session list's length before a restore can shorten that list. On the
+file and nested routes the cut then panics (`split_off`, the trace slice) or
+the cancel notice falls below it. On the script route the retirement cut is
+the live length after the body, so the outer cleanup's message and
+`$MessageList` lose it. On every route, the front ends' cumulative skip-by-count
+loses an outer cleanup's message once a rollback removed an item that was
+already reported. P1–P3 (my A2 ruling) are the contract; the shape below is
+the one I ruled in A3.
+
+**The shape.** New module `crates/rum-runtime/src/runtime/model/output_log.rs`:
+
+```rust
+/// A position in the session's output order. Every push to a session output
+/// list takes the next stamp; nothing ever hands one out again.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+pub(in crate::runtime) struct OutputStamp(u64);
+
+/// Everything stamped at or before this point. A mark is a value of the
+/// session's output clock, not a position in any list, so it means the same
+/// thing before and after any snapshot restore or rollback.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+pub(in crate::runtime) struct OutputMark(u64);
+
+/// One session output list. Items are sorted by strictly increasing stamp:
+/// a restore only brings back items stamped before every later push.
+#[derive(Clone, Debug)]
+pub(in crate::runtime) struct OutputLog<T> {
+    items: Vec<(OutputStamp, T)>,
+}
+
+impl<T> OutputLog<T> {
+    pub(in crate::runtime) fn push(&mut self, stamp: OutputStamp, value: T);
+    /// The items stamped after `mark`, oldest first.
+    pub(in crate::runtime) fn after(&self, mark: OutputMark) -> impl ExactSizeIterator<Item = &T>;
+    /// The items stamped after `from` and at or before `through`.
+    pub(in crate::runtime) fn between(&self, from: OutputMark, through: OutputMark)
+        -> impl ExactSizeIterator<Item = &T>;
+    pub(in crate::runtime) fn split_after(&mut self, mark: OutputMark) -> Vec<T>;
+    pub(in crate::runtime) fn truncate_after(&mut self, mark: OutputMark);
+    pub(in crate::runtime) fn iter(&self) -> impl ExactSizeIterator<Item = &T>;
+    pub(in crate::runtime) fn len(&self) -> usize;
+}
+```
+
+- `Session` gains `output_clock: u64`, `fn output_mark(&self) -> OutputMark`
+  and `fn next_output_stamp(&mut self) -> OutputStamp` (increment, then
+  stamp). The clock is never reset or restored, by any snapshot.
+- The four session lists become `OutputLog`s: `messages`, `prints`,
+  `handled_non_loader_eval_errors`, and one `OutputLog<(TraceEvent, usize)>`
+  for `trace_events` with `trace_event_depths`. `items` is private. **No
+  positional cut survives**: there is no `truncate(usize)`, `split_off(usize)`,
+  index or range slice, and no `splice`. The compiler enumerates the sites.
+  Whole-list operations (`mem::take`, replace from a snapshot, clone into a
+  snapshot) stay; they keep the stamps.
+- Every stored checkpoint becomes an `OutputMark`: `RequestCheckpoint`,
+  `PendingEvalRequest`, `OutputBoundary`'s three fields,
+  `current_message_list_checkpoint`, `GuestFormScope`, `GetCompleteFrame`,
+  `GuestScriptCursor`, the evaluation-data checkpoint, the test-report and
+  trace capture frames, `Check`/`Quiet`, `Confirm`. A local
+  `let n = …len()` that only counts may stay a `usize`.
+
+**What a request has reported.** Per request, append-only, never touched by
+a rollback:
+
+```rust
+/// What one request has shown its host. Each channel has its own published
+/// mark, because an input pause publishes each channel only up to its own
+/// provisional boundary.
+#[derive(Clone, Debug)]
+pub(in crate::runtime) struct ReportedOutput {
+    messages: Vec<RuntimeMessage>,
+    prints: Vec<String>,
+    trace: Vec<TraceEvent>,
+    published: ChannelMarks, // messages, prints, trace
+}
+```
+
+- Created at admission with every published mark at the admission mark.
+  Carried in `PendingEvalRequest` across a suspension, **on every route**:
+  `eval`, `eval_expr`, `call`, script and file all store their admission mark
+  and their `ReportedOutput` when they return `InputRequired`. (My A2 ruling
+  rejected an admission mark on batches only because `CleanupOnly` would
+  reprint; that mode is deleted below.)
+- Publishing appends each channel's session items stamped after its
+  published mark and at or before its `through`, then advances that mark to
+  `through`. An input pause publishes through the pending `OutputBoundary`
+  (a channel with no boundary goes through the current mark). Completion,
+  failure and cancellation publish through the current mark.
+- Every host outcome's `messages`, `prints` and `trace` are the request's
+  reported lists after that publication: cumulative, as `embedding.md`
+  already promises. Its memory is charged to `MemoryOwner::PendingEvalRequest`
+  while it waits there.
+- The session lists keep their meaning: a request still splits its own
+  items off at completion (`split_after(admission)`), and `$MessageList`
+  (`last_message_list`) is the session view after the rollbacks, as today.
+  P1 binds the reported lists only.
+
+**The script route.** The script loop stops splitting each form's output off
+and splicing it back on an error. Each form's outcome copies its items
+(`after(form_mark)`) and leaves them in the session lists; the request cuts
+once, at its admission mark. Per-form `$MessageList` stays the form's own
+items.
+
+**Front ends.** Delete `CancellationOutput` from `rum-cli`
+(`input_retirement.rs:9-37`; `main.rs:10`, `234`, `246`, `258`, `266` and
+`343`; `eval_tests.rs:65` and `447`). One rule for every route: skip what this front
+end already emitted for the request, by count. Jupyter and the REPL are
+already that rule; do not change them.
+
+**Falsifiers — write them first, in `crates/rum-host/tests/output_window.rs`,
+and calibrate each red at HEAD before the crate edit (three runs).**
+
+- **W1, the merge (your `a3_merge`).** `Inner.rum` is
+  `probe::inside = "inside message"; Message[probe::inside]; InputString["in"]`.
+  The request is `probe::outer = "outer message"; WithCleanup[Get["Inner`"], Message[probe::outer]]`.
+  Routes `eval` and `eval_script`; retirement by `cancel()` then `eval("")`,
+  and by `cancel()` then `resume_with_input("")`. Expected on all four:
+  the input outcome's tags are `["probe::inside"]`; the retirement outcome's
+  tags are exactly `["probe::inside", "probe::outer", "General::cancel"]`;
+  `$MessageList` afterwards is `List[probe::outer, General::cancel]`; and the
+  three front-end merges (CLI skip-by-count with the trailing cancel popped,
+  Jupyter, REPL), applied to the two outcomes, each add exactly
+  `probe::outer`. At HEAD: the eval route loses the inside prefix and the
+  script route returns only the cancel.
+- **W2, the window matrix (your `a2_window_matrix`).** Routes file, script,
+  eval-get and nested; earlier entries 0, 1, 2; kinds messages, trace and
+  handled. Expected in every cell: no panic; the retirement outcome equals the
+  input outcome's items followed by exactly one `General::cancel` (trace: the
+  same events, cumulative); the following `Check` request reports
+  `["General::passlim"]`. At HEAD (`.temp/brief-630/logs/a2-window-1.log`)
+  every cell with an earlier entry is red: 10 of the 36 panic, 6 lose the
+  cancel, and the other 8 (eval-get, and script trace) drop the reported
+  prefix from the retirement outcome. The 12 cells with no earlier entry are
+  green at HEAD and stay green.
+- **W3, a rolled-back unreported item stays out (P2).** A `Message` inside the
+  file after `InputString` cannot have been reported; in-file cleanup output
+  rolled back before packaging never appears. Your `k_get_cleanup_inside_file_rolls_message_back`
+  and `rum-cli`'s `cleanup_messages_appear_once_with_original_input_reason`
+  (file count 0) are the controls; both stay green at HEAD and after.
+- **Controls.** Every existing test in rum-runtime, rum-host, rum-cli,
+  rum-jupyter and rum-repl keeps its expected values, except the two
+  `eval_tests.rs` call sites that lose the enum. `retirement_interrupt.rs`
+  stays green unchanged.
+
+**Order of work, in one dispatch.**
+1. W1–W3, red at HEAD, three runs.
+2. The `OutputLog` conversion alone: stamps, marks and every stored
+   checkpoint, with each route still packaging exactly what it packages at
+   HEAD. Every existing test passes unchanged, and W1–W3 are as red as at
+   HEAD, cell for cell. Record both in the report before step 3. If any
+   existing expected value moves here, STOP: a type change that changes
+   behaviour has a positional cut the conversion missed.
+3. `ReportedOutput`, the admission mark on every route, publication, and the
+   script route without the splice.
+4. The `rum-cli` deletion.
+
+**Stop conditions.**
+- A persisted format (snapshot bytes, `Save`, a dump) contains one of these
+  lists: STOP with the site.
+- A trace event and its depth are not pushed, cut and replaced together at
+  some site: STOP with the site.
+- A consumer needs a cut a mark cannot express: STOP with the site and why.
+- Any expected value outside the list above would change: STOP with the
+  test and both values.
+
+**Scope.**
+- **MAY modify:** `crates/rum-runtime/src/runtime/` (the new module, its
+  `mod` line and every site the type change reaches); `crates/rum-host/src/`
+  where it packages these lists; `crates/rum-cli/src/input_retirement.rs`,
+  `main.rs`, `eval_tests.rs`; the new test file; the standing inventories, by
+  replay.
+- **Disclosure duty:** any other file, with its reason. Anything beyond a
+  mechanical change there is a STOP.
+- **MUST NOT touch:** `rum-jupyter`, `rum-repl`, `docs/` (I write the
+  `embedding.md` sentence at commit), `TODO.md`, `Cargo.lock`. The
+  cleanup-error arm (B3) is not in B2.
+
+**Run, single-threaded:** `cargo fmt --check`; W1–W3 three runs each, red at
+HEAD first; `cargo test -p rum-host`, `-p rum-cli`, `-p rum-jupyter`,
+`-p rum-repl`; `cargo test -p rum-runtime --lib`; the standing inventories;
+the whole workspace. Report every `test result:` line verbatim.
+
+**Then STOP.** Measurement follows my gate: every push now takes a stamp,
+and each item grows by eight bytes.
+
+Append "Executing-agent report — B2". Every quoted line must be copied from
+a file you name. Quote every verdict line your instruments print, and settle
+each flagged row.
