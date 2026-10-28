@@ -53,7 +53,10 @@ fn restore_admission_rejection_preserves_unrelated_request() {
         if message.contains("cannot start a new evaluation"))
     );
     assert_eq!(s.pending_suspension_generation(), generation);
-    assert!(s.pending_eval_request.is_some());
+    assert!(matches!(
+        s.pending_request,
+        Some(PendingRequest::Resumable(_))
+    ));
     assert_eq!(s.pending_input_request().unwrap().prompt, "original: ");
     assert!(s.active_accepted_request.is_some());
     assert!(!s.restoring_snapshot);

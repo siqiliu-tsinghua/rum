@@ -25,7 +25,7 @@ fn session_memory_field_decision_inventory_is_sorted_and_exhaustive() {
             .iter()
             .filter(|(_, decision)| matches!(decision, SessionMemoryFieldDecision::Accounted(_)))
             .count(),
-        53,
+        52,
     );
     let breakdown = session_breakdown(&session);
     assert_eq!(breakdown.fields.len(), SESSION_MEMORY_FIELD_DECISIONS.len());

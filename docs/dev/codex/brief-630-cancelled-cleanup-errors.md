@@ -3149,3 +3149,537 @@ so, and I will rule on it at the gate.
 
 Then finish step 3, do step 4, and run the run list from the 16:45 ruling. Then
 STOP. Append "Executing-agent report — B2, continued (2)" under this ruling.
+
+
+## Executing-agent report — B2, continued (2)
+
+Step 3 is finished as the 17:40 ruling specifies, step 4 is done, and the 16:45 run list has been run. B3 was not started. Measurement panels were not run. The census assertion was not edited: discovery is 998 against the asserted 1003, paired with `base_only=0` and `cand_only=0`. That comparison is below for the director.
+
+`Session.pending_request` is `Option<PendingRequest>`. `PendingRequest::{Resumable, Batch}` each holds a `PendingReport { mark, reported }`. Resume takes only `Resumable`. A `Batch` is put back and the refusal stays `no_suspended_evaluation_failure()`. Retirement reads either variant. The three "no request pending" sites still use `is_none()`. The two sanctioned assertions are `PendingRequest::Batch` in `batch_boundary.rs` and `PendingRequest::Resumable` in `batch_boundary/restore.rs`.
+
+### The fresh-admission arm
+
+Nothing that was run reaches `take_pending_report`'s `None` arm. The arm was not deleted. It still does `RequestCheckpoint::new(self)` and `ReportedOutput::at(checkpoint.mark)`, a fresh admission at the current clock.
+
+The only callers are `finish_cancelled_pending_evaluation_request` (and only after the request is cancelled and `pending_suspension_generation()` is `Some`) and the cancelled-input path of `finish_accepted_value_request` (after the input pause has stored a `PendingRequest`). `abandon.rs` and `fault.rs` clear `pending_request` without calling `take_pending_report`.
+
+The probe wrote `.temp/brief-630/take-pending-none.txt` only from that arm. The file was absent after each of these runs, and it is absent now:
+
+- `.temp/brief-630/logs/b2-step3-enum-none-probe-runtime-2.log` line 1249: `test result: ok. 1216 passed; 0 failed; 5 ignored; 0 measured; 0 filtered out; finished in 35.19s`. Line 1251: `EXIT:0`.
+- `.temp/brief-630/logs/b2-step3-enum-none-probe-host.log` line 321: `EXIT:0`. Every `test result:` line in that log is `ok`, including `output_window` line 233: `test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s`.
+- `.temp/brief-630/logs/b2-step3-enum-none-probe-stdlib-tests.log` line 4065: `EXIT:101` because the lib's inventory tests failed on the probe tree (that log is not the gate). The integration tests that call `finish_cancelled_pending_evaluation_request` passed: line 3071 `test result: ok. 21 passed` (default_fallback), line 3093 `test result: ok. 16 passed` (destructuring), line 3146 `test result: ok. 47 passed` (guest_loading_resume), line 3354 `test result: ok. 100 passed` (option_reader), line 3431 `test result: ok. 71 passed` (rule_pattern), line 3534 `test result: ok. 51 passed` (sow_trace), line 4039 `test result: ok. 499 passed` (suspension_oracle).
+
+### Step 4
+
+`CancellationOutput` is deleted from `rum-cli`. `retire_input_request` always skips by `suspension.prints.len()` and `suspension.messages.len()`. No `rum-cli` source still names `CancellationOutput` or `cancellation_output`. `rum-jupyter` source outside `src/tests/` and `rum-repl/src` were not edited.
+
+### Format, W, and the front ends
+
+`.temp/brief-630/logs/b2-step4-fmt-check.log` line 1: `EXIT:0`.
+
+`.temp/brief-630/logs/b2-step4-w.log` line 12: `W1VERDICT cells=4 red=0 green=4`
+
+`.temp/brief-630/logs/b2-step4-w.log` line 50: `W2VERDICT cells=36 panic=0 lost-cancel=0 dropped-prefix=0 check=0 other=0 green=36`
+
+`.temp/brief-630/logs/b2-step4-w.log` line 54: `W3VERDICT green`
+
+`.temp/brief-630/logs/b2-step4-w.log` line 57: `test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s`
+
+`.temp/brief-630/logs/b2-step4-w.log` line 59: `EXIT:0`
+
+`.temp/brief-630/logs/b2-step4-fe-cli.log` line 5: `CLIVERDICT kind=script status=exit status: 0 inside=1 outer=1 reason=1 cancel=false`
+
+`.temp/brief-630/logs/b2-step4-fe-cli.log` line 6: `CLIVERDICT kind=eval status=exit status: 0 inside=1 outer=1 reason=1 cancel=false`
+
+`.temp/brief-630/logs/b2-step4-fe-cli.log` line 7: `CLIVERDICT kind=setup status=exit status: 0 inside=1 outer=1 reason=1 cancel=false`
+
+`.temp/brief-630/logs/b2-step4-fe-cli.log` line 8: `CLIVERDICT kind=file status=exit status: 0 inside=1 outer=0 reason=1 cancel=false`
+
+`.temp/brief-630/logs/b2-step4-fe-cli.log` line 11: `test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 15 filtered out; finished in 0.05s`
+
+`.temp/brief-630/logs/b2-step4-fe-cli.log` line 13: `EXIT:0`
+
+`.temp/brief-630/logs/b2-step4-repl.log` line 62: `test eval_route_reports_inside_message_once_and_outer_cleanup_once ... ok`
+
+`.temp/brief-630/logs/b2-step4-repl.log` line 72: `test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s`
+
+`.temp/brief-630/logs/b2-step4-repl.log` line 98: `EXIT:0`
+
+`.temp/brief-630/logs/b2-step4-jupyter.log` line 75: `test tests::input_abandonment::execute_route_reports_inside_message_once_and_outer_cleanup_once ... ok`
+
+The same jupyter log's other nine failures are the sandbox loopback refusals, quoted under the workspace section. `RUM_ALLOW_NATIVE_ZEROMQ_SKIP` was not set.
+
+Package runs on this tree, all `EXIT:0` except jupyter: `.temp/brief-630/logs/b2-step4-host.log` line 319 `EXIT:0`; `.temp/brief-630/logs/b2-step4-cli.log` line 89 `EXIT:0`; `.temp/brief-630/logs/b2-step4-runtime-lib.log` line 1249 `test result: ok. 1216 passed; 0 failed; 5 ignored; 0 measured; 0 filtered out; finished in 37.92s`, line 1251 `EXIT:0`.
+
+### Standing inventories
+
+Fingerprints, 68 rows, last column only. `.temp/brief-630/logs/b2-step4-fingerprints.log` line 7: `Regenerated 68 fingerprints at /home/remi/dev/rum/target/brief-544/local-contracts.tsv`. Line 10: `test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 0.18s`. Line 12: `EXIT:0`.
+
+Certificates. The first run of each build wrote the review file and then failed reconcile. `.temp/brief-630/logs/b2-step4-c01-hash-true.log` line 17: `stale or omitted instance certificate C01 hash=true`. Line 26: `test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 20.08s`. Line 29: `EXIT:101`. `.temp/brief-630/logs/b2-step4-c01-hash-false.log` line 17: `stale or omitted instance certificate C01 hash=false`. Line 26: `test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1157 filtered out; finished in 19.10s`. Line 29: `EXIT:101`. Only the active certificate column was copied. Status, identity, source span, preconditions, strength, and exclusions did not change. After the copy, `.temp/brief-630/logs/b2-step4-c01-hash-true-2.log` line 17: `test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 18.95s`, line 19: `EXIT:0`. `.temp/brief-630/logs/b2-step4-c01-hash-false-2.log` line 17: `test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1157 filtered out; finished in 19.06s`, line 19: `EXIT:0`.
+
+Ownership. `.temp/brief-630/logs/b2-step4-ownership-5.log` line 5: `EXACT INVENTORY self-reaching types: 61 rows`. Line 6: `EXACT INVENTORY UnknownHostPayload: 79 rows`. Line 7: `EXACT INVENTORY UnknownConstruct: 7940 rows`. Line 10: `test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 6.13s`. Line 12: `EXIT:0`. The ledger, `.temp/brief-630/logs/b2-step4-ownership-4.log` line 7: `test tests::ownership_graph::host_payload_ledger::production_host_payload_ledger_is_complete_and_attributed ... ok`. Line 9: `test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1162 filtered out; finished in 12.60s`. Line 11: `EXIT:0`.
+
+No new `UnknownHostPayload`. The 79 host rows and 61 self-reaching rows are the same identities; ten host rows and five self-reaching rows moved line. UnknownConstruct went from 7923 to 7940. Every changed row is in `.temp/brief-630/ownership-changes.tsv`: 327 moves, 8 removed, 25 new. Every one of those files differs from `.temp/director/gate-630b2/head-wt`, or is the new `output_log.rs`. Moves by file:
+
+```
+54  crates/rum-runtime/src/runtime/session/session_state.rs
+39  crates/rum-runtime/src/runtime/kernel_data/control_data/confirmation/builtins/resume_frames.rs
+33  crates/rum-runtime/src/runtime/session/session_helpers.rs
+28  crates/rum-runtime/src/runtime/session/session_requests.rs
+26  crates/rum-runtime/src/runtime/debug_tools/test_report/evaluation.rs
+24  crates/rum-runtime/src/runtime/session/session_eval.rs
+19  crates/rum-runtime/src/runtime/debug_tools/trace.rs
+18  crates/rum-runtime/src/runtime/kernel_data/control_data/confirmation/builtins.rs
+17  crates/rum-runtime/src/runtime/debug_tools/resources/memory.rs
+8   crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs
+8   crates/rum-runtime/src/runtime/scoping/gensym_gc.rs
+8   crates/rum-runtime/src/runtime/session/guest_loading/file.rs
+7   crates/rum-runtime/src/runtime/session/guest_loading/script.rs
+6   crates/rum-runtime/src/runtime/suspension/core.rs
+6   crates/rum-runtime/src/runtime/debug_tools/resources/memory/session.rs
+5   crates/rum-runtime/src/runtime/model/session.rs
+4   crates/rum-runtime/src/runtime/debug_tools/evaluation_data.rs
+4   crates/rum-runtime/src/runtime/debug_tools/trace/resume_frames.rs
+3   crates/rum-runtime/src/runtime/definitions/application/mod.rs
+3   crates/rum-runtime/src/runtime/eval_core/symbol.rs
+3   crates/rum-runtime/src/runtime/kernel_data/control_data/confirmation.rs
+2   crates/rum-runtime/src/runtime/suspension/output.rs
+1   crates/rum-runtime/src/runtime/debug_tools/resources/maintained/owners.rs
+1   crates/rum-runtime/src/runtime/model/requests.rs
+```
+
+The eight removed rows are constructs whose source lines this stage deleted. From `.temp/brief-630/ownership-changes.tsv`:
+
+```
+removed	crates/rum-runtime/src/runtime/debug_tools/resources/memory/session.rs	175	28			closure captures: |_| (capture types/modes unresolved)
+removed	crates/rum-runtime/src/runtime/session/guest_loading/file.rs	148	9			unexpanded macro debug_assert! (ends at 148:71)
+removed	crates/rum-runtime/src/runtime/session/guest_loading/file.rs	149	9			unexpanded macro debug_assert! (ends at 149:67)
+removed	crates/rum-runtime/src/runtime/session/guest_loading/script.rs	96	9			unexpanded macro debug_assert_eq! (ends at 96:76)
+removed	crates/rum-runtime/src/runtime/session/guest_loading/script.rs	97	9			unexpanded macro debug_assert_eq! (ends at 97:72)
+removed	crates/rum-runtime/src/runtime/session/session_requests.rs	282	25			closure captures: || (capture types/modes unresolved)
+removed	crates/rum-runtime/src/runtime/session/session_requests.rs	577	33			closure captures: || (capture types/modes unresolved)
+removed	crates/rum-runtime/src/runtime/session/session_requests.rs	59	29			closure captures: || (capture types/modes unresolved)
+```
+
+The `|_|` walk was replaced by the new `|pending|` row at `memory/session.rs:162`. The two `file.rs` asserts are the mark checks the 16:45 ruling deleted. The two `script.rs` `debug_assert_eq!` compared a cursor end with `messages.len()` / `prints.len()`. The three `||` closures were the old `RequestCheckpoint::new` / `ok_or_else` arms. The 25 new rows are derives, closures, and one `debug_assert!` in `output_log.rs`, `requests.rs` (`PendingReport` / `PendingRequest`), `memory.rs`, `memory/session.rs`, and `session_api.rs`. No new suspension frame and no new `FrameRootTrace` / `PureFrameAbandon` type.
+
+LP01. `.temp/brief-630/logs/b2-step4-lp01.log` line 4176: `test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 498 filtered out; finished in 67.09s`. Line 4178: `EXIT:0`.
+
+Typed-slot. `.temp/brief-630/logs/b2-step4-typed-slot.log` line 1714: `test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 289.61s`. Line 1716: `EXIT:0`. The `forced_red_probe` panics earlier in that log are the scratch-copy falsifiers the parent tests require.
+
+### Rejection census — the count moved; the assert was not edited
+
+`.temp/brief-630/logs/b2-step4-census.log` line 77: `left: 998`. Line 78: `right: 1003`. Line 87: `test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 18.15s`. Line 90: `EXIT:101`. The dump footer, `.temp/brief-630/census-cand.tsv` line 1000: `# counts {RET001: 10, RET002: 957, RET003: 31} len 998`. The patch was applied and removed: `.temp/brief-630/logs/b2-step4-census-patch-revert.log` line 2: `REVERT:0`. `census/tests.rs` does not contain `RUM_CENSUS_DUMP`.
+
+`.temp/brief-630/logs/b2-step4-census-pair.log` line 1: `CENSUSPAIR base=1003 cand=998 paired=986 retired=17 new=12 base_only=0 cand_only=0`. Line 2: `EXIT:0`.
+
+All 17 retired and 12 new rows are RET002. Keyed by kind, file, callee, and reason:
+
+- diagnostics.rs: retired 6 method receivers, 4 primitive operands, 2 `std::mem::size_of`; new 2 method receivers, 2 primitive operands, 1 `std::mem::size_of`.
+- definitions/application/mod.rs: 1 retired and 1 new, both `method syntax: no unique inherent definition`, same span `98:46-98:59` on a changed line.
+- suspension/output.rs: 4 retired method receivers, 3 new method receivers.
+- model/session.rs: 2 new method receivers, `139:29-141:28` and `139:29-142:46`.
+- model/output_log.rs: 1 new, `path Self has 0 exact bindings` at `26:9-26:20`.
+
+`base_only` and `cand_only` are both 0. The full rows are `.temp/brief-630/census-pair.tsv`. This is the same verdict the 16:45 ruling recorded for the step-2 tree. RET001 stays 10 and RET003 stays 31. The asserted 1003 was not changed.
+
+### Workspace check and the workspace run
+
+`.temp/brief-630/logs/b2-step4-check-workspace.log`: `warning: rum-runtime (lib test) generated 3 warnings`, then `Finished `dev` profile [unoptimized + debuginfo] target(s) in 10.13s`, then `EXIT:0`. The three warnings are the pre-existing `register_test_if_builtin`, `register_test_return_builtin`, and `register_test_vm_template_builtins` dead_code warnings. The stale `Symbol: Copy` fingerprint failure did not recur.
+
+`.temp/brief-630/logs/b2-step4-workspace.log` line 4579: `EXIT:101`. 58 binaries: 3982 passed, 10 failed, 61 ignored. The 10 failures are the 9 native ZeroMQ tests and the one census assertion. No other expected value moved.
+
+Every `test result:` line, with its line number in that log:
+
+```
+112: test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s
+146: test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.29s
+158: test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.25s
+173: test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.00s
+186: test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+197: test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+206: test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+215: test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+311: test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.65s
+324: test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+335: test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+344: test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.35s
+354: test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+361: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.43s
+371: test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+384: test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+406: test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
+413: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+422: test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+436: test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+445: test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+453: test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+468: test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.21s
+475: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+487: test result: ok. 4 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.30s
+506: test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.17s
+524: test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+741: test result: FAILED. 143 passed; 9 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.70s
+748: test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+802: test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.39s
+819: test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+837: test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+2064: test result: ok. 1216 passed; 0 failed; 5 ignored; 0 measured; 0 filtered out; finished in 31.94s
+3315: test result: FAILED. 1110 passed; 1 failed; 53 ignored; 0 measured; 0 filtered out; finished in 1300.50s
+3322: test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+3349: test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+3371: test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+3424: test result: ok. 47 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.05s
+3499: test result: ok. 69 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 24.22s
+3526: test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.34s
+3632: test result: ok. 100 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.02s
+3709: test result: ok. 71 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.59s
+3755: test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.17s
+3812: test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.47s
+4317: test result: ok. 499 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 105.00s
+4332: test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 295.79s
+4339: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 54.86s
+4538: test result: ok. 193 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.44s
+4549: test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+4555: test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+4568: test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.38s
+4575: test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.03s
+4581: test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+4587: test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+4615: test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.36s
+4621: test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+4627: test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+4633: test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+
+Line 445 is `tests/output_window.rs`. Line 468 is `tests/retirement_interrupt.rs`. Line 819 is `rum-repl` `tests/input_abandonment.rs`. Line 2064 is `rum-runtime` lib. Line 3315 is `rum-stdlib` lib.
+
+The census failure in that run, line 3247: `thread 'tests::retention_closure::census::tests::production_rejection_census_is_complete' panicked at crates/rum-stdlib/src/tests/retention_closure/census/tests.rs:258:5:`. Line 3248: `assertion `left == right` failed: STOP: brief-545 exact legacy frontier inventory moved`. Line 3249: `left: 998`. Line 3250: `right: 1003`.
+
+The nine jupyter failures, each panicking at `crates/rum-jupyter/src/zeromq/tests/../../zeromq_native_test_support.rs:346:17` with `native ZeroMQ test cannot bind loopback: Operation not permitted (os error 1); set RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1 to explicitly allow this test to skip`:
+
+```
+zeromq::tests::native::basic::native_zeromq_backend_echoes_heartbeat_over_loopback_req_socket
+zeromq::tests::native::basic::native_zeromq_backend_round_trips_execute_over_loopback_sockets
+zeromq::tests::native::frontend::control::native_zeromq_backend_frontend_style_control_interrupt_round_trip
+zeromq::tests::native::frontend::control::native_zeromq_backend_shutdown_stops_shell_work_and_reports_pending_shell_messages
+zeromq::tests::native::frontend::execute::native_zeromq_backend_frontend_style_execute_preserves_headers_and_iopub_metadata
+zeromq::tests::native::frontend::session_flow::native_zeromq_backend_frontend_style_multi_message_session_flow_tracks_counts_and_shutdown
+zeromq::tests::native::frontend::stdin::native_zeromq_backend_frontend_style_stdin_round_trip_emits_iopub_and_shell_reply
+zeromq::tests::native::signed::native_zeromq_backend_rejects_tampered_signed_requests_end_to_end
+zeromq::tests::native::signed::native_zeromq_backend_round_trips_signed_execute_and_signed_iopub_messages
+```
+
+The execute-route abandonment test is among the 143 that passed. The loopback refusal is the sandbox (`Operation not permitted (os error 1)`). It was not worked around.
+
+STOP. The director rules the census count. B3 was not started. Measurement panels were not run.
+
+## Director gate of B2 (2026-10-29 03:34) — B2 accepted
+
+### The report, checked
+
+- **Scope.** Every changed file is in B2's MAY list or the 16:45 widening.
+  `rum-host/src` is unchanged. `rum-repl/src` is untouched, and so is
+  `rum-jupyter/src` outside `src/tests/`. The fence logged three git attempts,
+  all from grk's own harness (`git branch --show-current`,
+  `git rev-parse HEAD`), and refused each one.
+- **Shape.** `PendingRequest::{Resumable, Batch}` is as ruled, and resume takes
+  only `Resumable`.
+  - The two sanctioned assertions now name the variant.
+  - The two weakened ones (`typed/tests/driver_faults.rs`,
+    `tests/capture_output.rs`) are restored by content. Each takes the session
+    trace stamped at or before the boundary when the pause is packaged, and
+    compares the whole session trace with it after the unwind.
+  - Every assertion the stage deleted named `trace_event_depths`, which no
+    longer exists.
+- **W1–W3, three runs:** W1 4/4, W2 36/36, W3 green, on each run.
+- **Front ends, calibrated at HEAD.** I added the three new tests to a HEAD
+  worktree.
+  - CLI: script, eval and setup print the inside message once and the outer
+    message 0 times, so they are red. The file route prints 0 outer messages,
+    which is its expected value.
+  - REPL and Jupyter: each fails at its outer-message count, with the inside
+    message present once.
+  - On the candidate, all three tests are green.
+- **Workspace, on the worker's tree:** 58 binaries, 3991 passed, 1 failed (the
+  census count), 61 ignored. Jupyter's nine native tests pass on this host;
+  the worker's sandbox refuses the loopback bind.
+
+### Two defects no test saw, fixed at the gate
+
+1. **The public non-request batch API kept its output.**
+   - The script loop had stopped cutting each form's output, because the
+     request now cuts once at its admission mark. The public `Session::eval_script`
+     and `Session::eval_file` run outside any request, so nothing cut for them.
+   - A probe ran `eval_script` three times on one session. Session prints grew
+     2 → 4 → 6 and session messages 1 → 2 → 3. At HEAD both stay 0. A
+     long-lived session used through these two APIs grew without bound.
+   - The cause was my brief, which described the script route only as a
+     request route.
+   - The fix:
+     - Form evaluation and the script loop now return the value and termination
+       and cut nothing.
+     - `eval_text`, `eval_script` and `eval_file` cut once, at their own start,
+       when they succeed (`take_batch_output`).
+     - The request routes call `eval_script_retaining_output` and
+       `eval_file_retaining_output`, and publish before they cut.
+     - The `retain_output: bool` parameter is gone.
+     - Each form still sets `$MessageList` to its own messages. A script still
+       ends with `$MessageList` holding all of its messages.
+   - Pinned by `non_request_batches_take_their_output_off_the_session_lists`:
+     two rounds of the text, script and file routes on one session. A mutant
+     that copies the output instead of cutting it fails at the session-prints
+     assertion (2 against 0). The test passes at HEAD, so the public API now
+     behaves exactly as it did there.
+2. **The fresh-admission arm is reachable.**
+   - The worker's probe was correct for every test: none of them reaches the
+     arm. The public API does reach it, though. `eval_text` leaves its
+     suspension without storing a request, and a cancelled accepted request
+     then retires that suspension through the arm.
+   - The arm's behaviour is correct, and it is the same at HEAD. No response
+     reported anything for the suspension, so its retirement starts a fresh
+     admission and reports only `General::cancel`.
+   - The comment now names this path, and
+     `cancelled_request_retires_a_non_request_suspension` pins it. It passes at
+     HEAD and on the candidate.
+
+Also:
+
+- `OutputStamp::from_clock` is `pub(super)`, so only the model can mint a stamp.
+- `OutputBoundary`'s comment now speaks of marks, not offsets.
+
+### A cost the measurement found, fixed at the gate
+
+The first resume panel was not clean. Both arms were built from one source path
+with one codegen unit, and the path calibration passes.
+
+- Over 15 interleaved reps, all 121 labels rose, with a median of +2.67%.
+- 119 of them sat above the base in every rep. `resume-cleanup` rose +7.9%
+  (+1 462 instructions per iteration), and `resume-s5-default-guard` rose by
+  +4 072.
+
+Callgrind attributed it on three labels, six processes per arm at N and 2N.
+
+- On `resume-cleanup` the delta was +1 459.
+- Of that, +1 009 came from `pending_output_boundary`. It walks every pending
+  frame, and the pause packaging now called it twice: once in
+  `publish_reported_boundary` and once for `$MessageList`. HEAD called it once,
+  inlined.
+- The frame's `output_boundary` doubled with it (+80).
+- `publish` added +130, and its empty `between_vec` collections added +80.
+
+The fix:
+
+- `finish_input_required_request` walks the frames once and passes the boundary
+  to the publication.
+- `OutputLog::has_after` reads only the last stamp. `publish` skips a channel
+  with nothing new, and extends from the iterator instead of collecting first.
+- The resume path's "anything new" test uses `has_after`, and so do
+  `Check`/`Quiet` and the script cursor's two debug assertions.
+
+After the fix, callgrind deltas were:
+
+| label | before | after |
+|---|---|---|
+| `resume-cleanup` | +1 459 | +27 |
+| `resume-table` | +895 | +89 |
+| `resume-s5-default-guard` | +4 033 | −24 |
+
+What remains is deterministic and per pause. The response clones the three
+reported lists (+36 net of HEAD's `to_vec`), `$MessageList` collects its
+messages (+40), `publish` costs +30, and the host layer +22. The cumulative
+response itself costs these. The rerun panel is in the Measurement section
+below.
+
+### A second cost, on the CLI panel
+
+The first CLI panel on the fixed tree had a median of +0.0001%. Callgrind on
+its Check and Quiet labels found one more cost of B2's own.
+
+- `quiet-no-message` rose +9.09 per iteration. Its two cuts remove nothing.
+  Each was still an out-of-line generic call to `truncate_after` (+22 for the
+  two), where HEAD had inlined `Vec::truncate`, a length compare.
+- `check-message-fallback` rose +71.63. `truncate_after` cost +71, against
+  −43 of truncation that HEAD inlined into `resume_quiet_after_primary`,
+  `builtin_check` and `builtin_quiet`. Stamping the pushed messages added
+  +22, two growth calls +8, and `resume_check_after_primary` +5.
+
+A cut that removes nothing should cost what a positional one did. The fix:
+`truncate_after` is inline and reads only the last stamp, and the search and
+removal move out of line into `truncate_found_after`. Every caller that
+inlines it changed, and nothing else did: 14 functions in `resume` and 15 in
+`rum-cli`.
+
+Callgrind deltas before and after the guard:
+
+| label | before | after |
+|---|---|---|
+| `quiet-no-message` | +9.09 | −2.89 |
+| `quiet-clean` | +11.3 (panel) | −10.54 |
+| `check-no-message` | +4.9 (panel) | −2.62 |
+| `check-message-fallback` | +71.63 | +61.08 |
+
+- `quiet-no-message`'s −2.89 is two Quiet frames now 12 below HEAD, and
+  `cached_expr_stability_with_bloom` +13. That function's cost varies per
+  process with the hash seed.
+- What remains on `check-message-fallback` is a cut that does remove a
+  message: `truncate_found_after` costs +49 against −27 inlined at HEAD. On
+  top of that, stamps add +22, and the standard library's growth helper +8
+  (see the Measurement section).
+
+### The file size
+
+- `session_requests.rs` went over the 35k line. Its implementation, excluding
+  the in-file test module, was 34 079 B at HEAD and 35 093 B after the stage.
+- It is split along a real boundary. `request_errors.rs` takes the public
+  failure surface, moved unchanged: the `EvalError` → `SessionRequestError`
+  mapping, `request_syntax_failure`, `no_suspended_evaluation_failure` and the
+  mapper's own test.
+- After the split, `session_requests.rs` is 29 806 B, with no test module, and
+  `request_errors.rs` is 6 232 B.
+
+### Inventories, replayed on the final tree
+
+- **Contract fingerprints:** 68 last-column cells. Every other column is equal.
+- **Certificates:** the C01 and C02 cells of both builds, copied from
+  `local_production_acceptance`. Both builds pass.
+- **Ownership:** 7941 `UnknownConstruct` rows, exact. No new
+  `UnknownHostPayload`, and the 79 host rows and 61 self-reaching rows keep
+  their identities.
+  - The worker's replay holds: 327 moves, 8 removed and 25 new rows.
+  - My edits add moves and one row.
+    - 46 moves are in `output_log.rs`, `session_eval.rs` and
+      `session_requests.rs`.
+    - The split adds 28: 22 within `session_requests.rs`, and 6 that moved with
+      their code into `request_errors.rs`. Of those 6, two are closures and four
+      are `format!` macros, each offset by 783 lines in the same column, with
+      the same span.
+    - The cost fix above adds 21 moves and one new row, the closure in
+      `OutputLog::has_after`. That makes 7941 rows, exact.
+    - The truncation guard adds 9 moves in `output_log.rs`. Each is 10 lines
+      down, in the same column, with the same construct.
+- The fingerprints and certificates were replayed again after the guard.
+  Editing rum-runtime source invalidates them too, not only stdlib source.
+- **Ledger:** 15 of 15.
+- **Census:** 998 (10/957/31).
+  - Paired through the diff: 986 paired, 17 retired, 12 new, `base_only=0`,
+    `cand_only=0`. The pairing is identical on the worker's tree, after the
+    split, after the cost fix and after the guard.
+  - The split moved no census row.
+  - The assertion and its comment record the classes.
+
+### Gate
+
+- `cargo fmt --check` passes.
+- `cargo check --workspace --all-targets`: the only warnings are the three
+  existing dead-code warnings in the untouched `test_builtins.rs`.
+- `rum-runtime` lib: 1218 passed.
+- Workspace, on the tree before the split: 58 binaries, 3994 passed, 0 failed,
+  61 ignored.
+- Workspace, after the cost fix: 58 binaries, 3994 passed, 0 failed, 61
+  ignored. The scope peaked at 5.95 GB of 14, with no OOM kill.
+  - Two earlier runs on that tree lost a binary to a host-wide OOM
+    (`global_oom`, invoked by `kswapd0`, with the scope at 6.1 GB of 14):
+    `rum-stdlib`'s lib binary during the
+    `local_option_read_claims_match_stable_rustc` oracle, then an oracle's
+    rustc. Both oracles passed when run alone. This was B1's MGLRU
+    `min_ttl_ms` valve again. The user set it to 0, and this run was the
+    first full run since.
+- Workspace, on the final tree, after the guard: 58 binaries, 3994 passed, 0
+  failed, 61 ignored. The scope peaked at 11.9 GB of 14, page cache
+  included, with no OOM kill.
+
+### Host documentation
+
+`docs/guide/embedding.md`, Cancel And Timeout, now says that the retirement
+outcome is cumulative on every route.
+
+- It begins with what the input outcome reported, including output that the
+  rollback has since removed from the session.
+- It then adds the cleanups' output and `General::cancel`.
+- Output that a rollback removed before any response reported it appears in no
+  response.
+
+### Measurement
+
+Both arms are built from one source path with one codegen unit. The base is
+HEAD `f4af1768` and the candidate is the final tree. The path calibration
+passes for `resume` and `rum-cli` on every candidate build.
+
+**Structure.** `fndiff3` strips symbol hashes and separates layout-only bodies,
+which are equal once every constant is replaced.
+
+- `resume` has 411 differing groups: 311 layout-only, 100 code. `rum-cli` has
+  440: 323 layout-only, 117 code.
+- The code groups are output push and cut sites, request and suspension
+  packaging, memory accounting, and the functions that inline them. No
+  evaluator core function changed.
+- Each gate fix changed only what it edited and the functions that inline it.
+  - The cost fix changed 7 groups: the four request and Check functions it
+    edited, the `extend` it introduced in `publish`, the standard library's
+    `do_reserve_and_handle` (below), and `mi_bin`'s trailing padding.
+  - The guard changed 14 groups in `resume` and 15 in `rum-cli`, each one an
+    inliner of `truncate_after`.
+
+**Resume panel** (121 labels, 15 interleaved reps, final arms). The median is
+−0.0472% and the max +0.3563%. No label sits above or below the base in every
+rep. Before the guard it was −0.0519%, with the max at +0.5195%
+(`resume-do-chain`) and likewise none apart.
+
+**CLI panel** (192 labels, 15 interleaved reps, final arms). The median is
++0.0000%, the max +6.69% and the min −1.32%.
+
+- The max is `valueq-undefined-symbol-definitions-2000`. Across the reps, its
+  base slope alone spans 2 215 to 8 243 per iteration. On the previous panel
+  the same label read −13.93%, so nothing separates there.
+- 9 labels sit above the base in every rep, by +3.8 to +1 515 per iteration
+  (+0.011% to +0.158%). 10 sit below it.
+- Callgrind attributes every label I ran in either direction to the same two
+  effects. Each was run fresh on the final arms, six processes per arm at N
+  and 2N:
+
+| label | delta | `do_reserve_and_handle` | memcmp |
+|---|---|---|---|
+| `lazy-depth-drop-all-one-8` | +32.67 | +32 | |
+| `lazy-depth-take-map-64` | +265.27 | +256 | |
+| `upvalue-guarded-hit` | +4.87 | +4 | |
+| `lhs-set-ownvalue-arg` | +3.44 | +4 | |
+| `failure-list-property` | +29.08 | +16 | +8.91 |
+| `replacepart-wide-rule-list` | +1 673.57 | +12 800 | −11 210.55 |
+| `take-multispec-small` | −23.88 | +32 | −56.05 |
+| `table-iterator-pair-list` | −6.99 | | −7.01 |
+| `replaceall-leaf-rebuild-small` | −881.20 | | −884.13 |
+
+`lazy-depth-drop-all-one-64` and `-256` and `lazy-depth-take-map-256` scale
+with depth as the rows above do: +257, +1 023 and +899.
+
+- **`do_reserve_and_handle`** is the standard library's shared `Vec` growth
+  helper.
+  - It costs 53 instructions per call against 49 at HEAD, on every label.
+    `lazy-depth-drop-all-one-8` makes 8 calls per iteration, one per
+    `LazyDrop` stage. No B2 code is on these paths.
+  - At HEAD and in the pre-fix candidate, the helper's body uses what is known
+    of its element-size argument: it has no zero check and a two-way minimum
+    capacity. In the final candidate it computes both.
+  - All 254 call sites pass a constant element size between 1 and 192, with
+    the same histogram in both candidates. The callers did not change what the
+    helper can know; the optimizer stopped using it.
+  - This is the one-codegen-unit build's whole-crate interprocedural
+    optimization. It is the same class as codegen-unit partition noise:
+    steering it means arranging unrelated call sites, and the next edit undoes
+    the arrangement. It is recorded, not fixed.
+- **memcmp** is libc's `__memcmp_avx2_movbe`.
+  - On `failure-tag-fallback` it made 12 264 calls per 1 000 iterations in
+    both arms. The same calls take a path that depends on their addresses, so
+    the change is layout.
+  - It moves both ways, and it accounts for all three below-base labels I ran.
+
+**B2's own cost on the CLI panel** is the per-message stamp and the search of a
+cut that removes something.
+
+- After the guard, `check-message-fallback` is +41.8 per iteration (+0.24%).
+  It is not apart in every rep, and callgrind gives +61.
+- `quiet-no-message` is −13.4 and `quiet-clean` −11.5.
+- The `failure-*` labels that are not apart move +16 to +41. Where
+  attributed (`failure-tag-fallback`, `failure-message-property`), that is the
+  growth helper and memcmp.

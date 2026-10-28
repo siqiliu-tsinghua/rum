@@ -1,4 +1,5 @@
 use super::super::*;
+use crate::runtime::model::{OutputLog, OutputMark};
 use rum_syntax::SourceText;
 use std::time::Instant;
 
@@ -10,8 +11,8 @@ pub(in crate::runtime) struct EvaluationRollbackSnapshot {
     evaluation_depth: usize,
     match_depth: usize,
     evaluation_stack: Vec<EvaluationStackEntry>,
-    prints: Vec<String>,
-    handled_non_loader_eval_errors: Vec<RuntimeMessage>,
+    prints: OutputLog<String>,
+    handled_non_loader_eval_errors: OutputLog<RuntimeMessage>,
     reap_scopes: Vec<ReapScope>,
     monitor_scopes: Vec<MonitorScope>,
     monitor_callbacks_enabled: bool,
@@ -22,7 +23,7 @@ pub(in crate::runtime) struct EvaluationRollbackSnapshot {
     abort_protect_pending: usize,
     queued_input_responses: VecDeque<String>,
     pending_input_request: Option<RuntimeInputRequest>,
-    pending_eval_request: Option<PendingEvalRequest>,
+    pending_request: Option<PendingRequest>,
     pending_suspension_generation: Option<SuspensionGeneration>,
 }
 
@@ -120,7 +121,6 @@ impl Session {
             next_sealed_symbol_id: self.next_sealed_symbol_id,
             next_source_unit_epoch: self.next_source_unit_epoch,
             trace_events: self.trace_events.clone(),
-            trace_event_depths: self.trace_event_depths.clone(),
             disabled_message_selectors: self.disabled_message_selectors.clone(),
             messages: self.messages.clone(),
             last_message_list: self.last_message_list.clone(),
@@ -192,10 +192,6 @@ impl Session {
         self.next_source_unit_epoch = snapshot.next_source_unit_epoch;
         self.trace_events = snapshot.trace_events;
         self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::TraceEvents);
-        self.trace_event_depths = snapshot.trace_event_depths;
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::TraceEventDepths,
-        );
         self.disabled_message_selectors = snapshot.disabled_message_selectors;
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::DisabledMessageSelectors,
@@ -231,7 +227,7 @@ impl Session {
             abort_protect_pending: self.abort_protect_pending,
             queued_input_responses: self.queued_input_responses.clone(),
             pending_input_request: self.pending_input_request.clone(),
-            pending_eval_request: self.pending_eval_request,
+            pending_request: self.pending_request.clone(),
             pending_suspension_generation: self.pending_suspension_generation(),
         }
     }
@@ -304,9 +300,9 @@ impl Session {
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
         );
-        self.pending_eval_request = snapshot.pending_eval_request;
+        self.pending_request = snapshot.pending_request;
         self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingRequest,
         );
         if rearm_accounting {
             // Loader restoration above can clear caches while unarmed. The
@@ -475,17 +471,62 @@ impl Session {
         })
     }
 
+    pub(in crate::runtime) fn messages_through(
+        &self,
+        from: OutputMark,
+        through: Option<OutputMark>,
+    ) -> Vec<RuntimeMessage> {
+        match through {
+            Some(through) => self.messages.between_vec(from, through),
+            None => self.messages.after_vec(from),
+        }
+    }
+
+    #[cfg(test)]
+    pub(in crate::runtime) fn trace_values(&self) -> Vec<TraceEvent> {
+        self.trace_events
+            .iter()
+            .map(|(event, _depth)| event.clone())
+            .collect()
+    }
+
+    /// Session trace events stamped at or before `mark`.
+    #[cfg(test)]
+    pub(in crate::runtime) fn trace_values_at_or_before(
+        &self,
+        mark: OutputMark,
+    ) -> Vec<TraceEvent> {
+        self.trace_events
+            .between(OutputMark::START, mark)
+            .map(|(event, _depth)| event.clone())
+            .collect()
+    }
+
+    pub(in crate::runtime) fn trace_pairs_after(
+        &self,
+        mark: OutputMark,
+    ) -> (Vec<TraceEvent>, Vec<usize>) {
+        let mut events = Vec::new();
+        let mut depths = Vec::new();
+        for (event, depth) in self.trace_events.after(mark) {
+            events.push(event.clone());
+            depths.push(*depth);
+        }
+        (events, depths)
+    }
+
     pub(in crate::runtime) fn emit_non_loader_eval_message(
         &mut self,
-        checkpoint: usize,
+        checkpoint: OutputMark,
         error: &EvalError,
     ) -> bool {
         let Some(message) = Self::runtime_message_for_non_loader_eval_error(error) else {
             return false;
         };
 
-        if self.handled_non_loader_eval_errors[checkpoint..]
-            .iter()
+        if self
+            .handled_non_loader_eval_errors
+            .after(checkpoint)
             .any(|existing| existing == &message)
         {
             return true;
@@ -653,17 +694,17 @@ impl Session {
 
     pub(in crate::runtime) fn messages_since_match(
         &self,
-        checkpoint: usize,
+        checkpoint: OutputMark,
         selectors: &[MessageSelector],
     ) -> bool {
-        self.messages[checkpoint..]
-            .iter()
+        self.messages
+            .after(checkpoint)
             .any(|message| selectors.iter().any(|selector| selector.matches(message)))
     }
 
     pub(in crate::runtime) fn suppress_messages_since(
         &mut self,
-        checkpoint: usize,
+        checkpoint: OutputMark,
         selectors: &[MessageSelector],
     ) {
         let trailing_messages = self.split_accounted_messages(checkpoint);

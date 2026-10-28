@@ -5,6 +5,7 @@ mod config;
 mod definitions;
 mod evaluation_depth;
 mod messages;
+mod output_log;
 mod request_cancellation;
 mod requests;
 mod session;
@@ -33,17 +34,19 @@ pub use messages::{
     TraceEvent,
 };
 pub(super) use messages::{MessageDefinition, MessageNameKey, MessageSelector};
+pub(in crate::runtime) use output_log::{OutputLog, OutputMark, OutputStamp};
+pub use output_log::{OutputView, SessionTraceView};
 pub use request_cancellation::{
     AcceptRequestError, AcceptedRequest, CancellationObserver, RequestCancelHandle,
 };
 pub(super) use request_cancellation::{MAX_REQUEST_GENERATION, RequestInterruptState};
-pub(super) use requests::PendingEvalRequest;
 pub use requests::{
     EvalOutcome, EvalTerminationReason, SessionCompletenessStatus, SessionCompletionResponse,
     SessionDefinitionSummary, SessionEvalResponse, SessionInspectResponse,
     SessionIsCompleteResponse, SessionLowerResponse, SessionParseResponse, SessionRequestError,
     SessionRequestFailure,
 };
+pub(super) use requests::{PendingReport, PendingRequest, ReportedOutput};
 pub use session::Session;
 pub(super) use session::{EvaluationStackEntry, ModuleActivation};
 pub(super) use traversal::{

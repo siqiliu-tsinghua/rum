@@ -227,10 +227,121 @@ pub struct SessionRequestFailure {
     pub trace: Vec<TraceEvent>,
 }
 
+/// One published mark per channel. An input pause can settle the channels at
+/// different clocks, so the marks advance independently.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub(in crate::runtime) struct PendingEvalRequest {
-    pub(in crate::runtime) message_checkpoint: usize,
-    pub(in crate::runtime) print_checkpoint: usize,
-    pub(in crate::runtime) handled_error_checkpoint: usize,
-    pub(in crate::runtime) trace_checkpoint: usize,
+pub(in crate::runtime) struct ChannelMarks {
+    pub(in crate::runtime) messages: OutputMark,
+    pub(in crate::runtime) prints: OutputMark,
+    pub(in crate::runtime) trace: OutputMark,
+}
+
+/// What one request has shown its host. Append-only, and never touched by a
+/// rollback: publication copies session items, then the session lists may lose
+/// them.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub(in crate::runtime) struct ReportedOutput {
+    pub(in crate::runtime) messages: Vec<RuntimeMessage>,
+    pub(in crate::runtime) prints: Vec<String>,
+    pub(in crate::runtime) trace: Vec<TraceEvent>,
+    pub(in crate::runtime) published: ChannelMarks,
+}
+
+impl ReportedOutput {
+    pub(in crate::runtime) fn at(mark: OutputMark) -> Self {
+        Self {
+            messages: Vec::new(),
+            prints: Vec::new(),
+            trace: Vec::new(),
+            published: ChannelMarks {
+                messages: mark,
+                prints: mark,
+                trace: mark,
+            },
+        }
+    }
+
+    /// Append session items stamped after each published mark and at or before
+    /// `through`, then advance that mark. A `through` behind the published mark
+    /// publishes nothing and leaves the mark where it is.
+    pub(in crate::runtime) fn publish(
+        &mut self,
+        messages: &OutputLog<RuntimeMessage>,
+        prints: &OutputLog<String>,
+        trace: &OutputLog<(TraceEvent, usize)>,
+        through_messages: OutputMark,
+        through_prints: OutputMark,
+        through_trace: OutputMark,
+    ) {
+        // `has_after` reads one stamp, so a pause with nothing new on a channel
+        // does no search there.
+        if through_messages > self.published.messages {
+            if messages.has_after(self.published.messages) {
+                self.messages.extend(
+                    messages
+                        .between(self.published.messages, through_messages)
+                        .cloned(),
+                );
+            }
+            self.published.messages = through_messages;
+        }
+        if through_prints > self.published.prints {
+            if prints.has_after(self.published.prints) {
+                self.prints.extend(
+                    prints
+                        .between(self.published.prints, through_prints)
+                        .cloned(),
+                );
+            }
+            self.published.prints = through_prints;
+        }
+        if through_trace > self.published.trace {
+            if trace.has_after(self.published.trace) {
+                self.trace.extend(
+                    trace
+                        .between(self.published.trace, through_trace)
+                        .map(|(event, _depth)| event.clone()),
+                );
+            }
+            self.published.trace = through_trace;
+        }
+    }
+}
+
+/// The request a pending suspension belongs to: its admission mark and what
+/// the host has already been shown.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub(in crate::runtime) struct PendingReport {
+    pub(in crate::runtime) mark: OutputMark,
+    pub(in crate::runtime) reported: ReportedOutput,
+}
+
+/// What a request left waiting when it returned `InputRequired`.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub(in crate::runtime) enum PendingRequest {
+    /// `eval`, `eval_expr` and `call`. Only this variant can be resumed.
+    Resumable(PendingReport),
+    /// `eval_script` and `eval_file`, which are not resumable, as documented.
+    /// Retirement still publishes the reported prefix.
+    Batch(PendingReport),
+}
+
+impl PendingRequest {
+    pub(in crate::runtime) fn report(&self) -> &PendingReport {
+        match self {
+            Self::Resumable(report) | Self::Batch(report) => report,
+        }
+    }
+
+    pub(in crate::runtime) fn report_mut(&mut self) -> &mut PendingReport {
+        match self {
+            Self::Resumable(report) | Self::Batch(report) => report,
+        }
+    }
+
+    pub(in crate::runtime) fn into_report(self) -> PendingReport {
+        match self {
+            Self::Resumable(report) | Self::Batch(report) => report,
+        }
+    }
 }

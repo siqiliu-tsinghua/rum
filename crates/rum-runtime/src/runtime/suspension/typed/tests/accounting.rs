@@ -145,7 +145,11 @@ fn adapter_delegates_roots_and_capture_boundary_without_running_frame() {
     let boundary = erased.output_boundary();
     assert_eq!(
         (boundary.prints, boundary.messages, boundary.trace),
-        (Some(2), Some(3), Some(4))
+        (
+            Some(crate::runtime::model::OutputMark::from_clock(2)),
+            Some(crate::runtime::model::OutputMark::from_clock(3)),
+            Some(crate::runtime::model::OutputMark::from_clock(4)),
+        )
     );
     assert_eq!(calls.load(Ordering::SeqCst), 0);
 }

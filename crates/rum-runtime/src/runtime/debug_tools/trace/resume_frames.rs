@@ -1,10 +1,11 @@
 use super::*;
+use crate::runtime::model::OutputMark;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
 #[derive(rum_derive::FrameRootTrace)]
 pub(super) struct EvalStructuredTraceCaptureExprSuspensionFrame {
     pub(super) suspended_state: crate::runtime::debug_tools::trace::TraceEvalState,
-    pub(super) trace_checkpoint: usize,
+    pub(super) trace_checkpoint: OutputMark,
     pub(super) prior_enabled: bool,
 }
 

@@ -251,18 +251,29 @@ fn baseline(source: &Source) {
     // (the depth debug_assert and the message format!). The shared body's
     // rows count once per mode witness. 1003 (10/962/31), still no mark or
     // coverage.
+    // brief-630 B2: the session output lists become stamped logs and every
+    // stored cut becomes a mark. Paired through the diff, 986 rows keep their
+    // kind, callee and reason, and none is base-only or candidate-only. All
+    // 17 retired and 12 new rows are RET002 on lines B2 changed:
+    // diagnostics.rs's per-list accounting (12 retire, 5 appear, among them
+    // the removed trace-depth list's), rollback_capture_output's four
+    // truncations becoming three in output.rs (4 and 3), the merged trace
+    // push in definitions/application/mod.rs (1 and 1), next_output_stamp's
+    // two checked_add receivers in model/session.rs, and OutputStamp's
+    // `Self(clock)` in output_log.rs. 998 (10/957/31), still no mark or
+    // coverage.
     assert!(options.rejected.iter().any(|row| row.kind == Kind::RET002
         && row.site.file.ends_with("resolution.rs")
         && row.site.start == (36, 19)
         && row.reason == "path AccumulatorChain::default has 0 exact bindings"));
     assert_eq!(
         options.rejected.len(),
-        1003,
+        998,
         "STOP: brief-545 exact legacy frontier inventory moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 962), (Kind::RET003, 31)])
+        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 957), (Kind::RET003, 31)])
     );
     let wrapper = regions::frontier(
         source,

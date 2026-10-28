@@ -2,6 +2,7 @@ mod resume_frames;
 use resume_frames::*;
 
 use super::*;
+use crate::runtime::model::OutputMark;
 
 impl Session {
     pub(in crate::runtime) fn eval_enclose(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {
@@ -129,7 +130,7 @@ impl Session {
             }
         };
 
-        let message_checkpoint = self.messages.len();
+        let message_checkpoint = self.output_mark();
         let body_result = self.evaluate(args_slice[0].clone());
         let outcome = crate::resume_or_suspend!(
             self,
@@ -437,11 +438,11 @@ impl Session {
         &mut self,
         args: &SharedArgs,
         selectors: ConfirmQuietSelectorsView<'_>,
-        message_checkpoint: usize,
+        message_checkpoint: OutputMark,
         outcome: Result<Expr, EvalError>,
     ) -> Result<Expr, EvalError> {
         let matched_message =
-            confirm_quiet_matched_message(&self.messages[message_checkpoint..], selectors);
+            confirm_quiet_matched_message(self.messages.after(message_checkpoint), selectors);
 
         let Some(message) = matched_message else {
             return outcome;
@@ -466,7 +467,7 @@ impl Session {
         &mut self,
         args: &SharedArgs,
         selectors: &SuspendedConfirmQuietSelectors,
-        message_checkpoint: usize,
+        message_checkpoint: OutputMark,
         outcome: Result<Expr, EvalError>,
     ) -> Result<Expr, EvalError> {
         self.resume_confirm_quiet_after_body(args, selectors.view(), message_checkpoint, outcome)

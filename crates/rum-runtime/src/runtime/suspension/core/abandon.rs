@@ -7,9 +7,9 @@ impl Session {
         reason: AbandonReason,
     ) -> AbandonReason {
         let pending = self.take_accounted_pending_suspension_for_abandon();
-        self.pending_eval_request = None;
+        self.pending_request = None;
         self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingRequest,
         );
         let Some(pending) = pending else {
             return reason;
@@ -113,9 +113,9 @@ impl Session {
                             self.abandonment_worklist.push(nested);
                             self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::AbandonmentWorklist);
                         }
-                        self.pending_eval_request = None;
+                        self.pending_request = None;
                         self.refresh_memory_owner(
-                            crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
+                            crate::runtime::debug_tools::resources::MemoryOwner::PendingRequest,
                         );
                     }
                     if self.drain_host_interrupt_pending() {

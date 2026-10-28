@@ -1,4 +1,5 @@
 use super::*;
+use crate::runtime::model::OutputMark;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
 impl Session {
@@ -66,22 +67,21 @@ impl Session {
 
         if let Err(error) = &outcome {
             if Self::terminated_evaluation_expr_for_error(error).is_some() {
-                self.emit_non_loader_eval_message(checkpoint.handled_error_checkpoint, error);
+                self.emit_non_loader_eval_message(checkpoint.mark, error);
             }
             self.emit_top_level_control_flow_messages(error);
         }
 
-        let messages = self.split_accounted_messages(checkpoint.message_checkpoint);
-        let prints = self.split_accounted_prints(checkpoint.print_checkpoint);
-        let events = self.trace_events[checkpoint.trace_checkpoint..].to_vec();
-        let depths = self.trace_event_depths[checkpoint.trace_checkpoint..].to_vec();
+        let messages = self.split_accounted_messages(checkpoint.mark);
+        let prints = self.split_accounted_prints(checkpoint.mark);
+        let (events, depths) = self.trace_pairs_after(checkpoint.mark);
         let trace_root = self.structured_trace_expr_from_events(input_expr, &events, &depths);
 
         if !prior_tracing {
-            self.truncate_trace_from(checkpoint.trace_checkpoint);
+            self.truncate_trace_from(checkpoint.mark);
         }
         self.handled_non_loader_eval_errors
-            .truncate(checkpoint.handled_error_checkpoint);
+            .truncate_after(checkpoint.mark);
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
         );
@@ -189,19 +189,13 @@ impl Session {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, rum_derive::FrameRootTrace)]
 struct DebugCaptureCheckpoint {
-    message_checkpoint: usize,
-    print_checkpoint: usize,
-    trace_checkpoint: usize,
-    handled_error_checkpoint: usize,
+    mark: OutputMark,
 }
 
 impl DebugCaptureCheckpoint {
     fn new(session: &Session) -> Self {
         Self {
-            message_checkpoint: session.messages.len(),
-            print_checkpoint: session.prints.len(),
-            trace_checkpoint: session.trace_events.len(),
-            handled_error_checkpoint: session.handled_non_loader_eval_errors.len(),
+            mark: session.output_mark(),
         }
     }
 }
@@ -220,9 +214,9 @@ impl crate::runtime::suspension::SuspensionFrame for EvalEvaluationDataSuspensio
     fn output_boundary(&self) -> crate::runtime::suspension::OutputBoundary {
         use crate::runtime::suspension::OutputBoundary;
         OutputBoundary::all(
-            self.checkpoint.print_checkpoint,
-            self.checkpoint.message_checkpoint,
-            self.checkpoint.trace_checkpoint,
+            self.checkpoint.mark,
+            self.checkpoint.mark,
+            self.checkpoint.mark,
         )
     }
 
@@ -261,10 +255,7 @@ impl crate::runtime::suspension::FrameAbandon for EvalEvaluationDataSuspensionFr
         self: std::sync::Arc<Self>,
         context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
     ) -> crate::runtime::suspension::FrameAbandonAction {
-        context.restore_evaluation_data_capture(
-            self.checkpoint.handled_error_checkpoint,
-            self.prior_tracing,
-        );
+        context.restore_evaluation_data_capture(self.checkpoint.mark, self.prior_tracing);
         crate::runtime::suspension::FrameAbandonAction::Discard
     }
 }

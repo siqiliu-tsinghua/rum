@@ -355,3 +355,27 @@ fn worker_retirement_runs_cleanup_off_transport_thread() {
     assert!(receive.try_recv().is_err());
     assert_reusable(&mut adapter);
 }
+
+#[test]
+fn execute_route_reports_inside_message_once_and_outer_cleanup_once() {
+    let directory =
+        std::env::temp_dir().join(format!("rum-jupyter-b2-inner-{}", std::process::id()));
+    std::fs::create_dir_all(&directory).unwrap();
+    let inner = directory.join("Inner.rum");
+    std::fs::write(
+        &inner,
+        "probe::inside = \"inside message\"; Message[probe::inside]; InputString[\"in\"]\n",
+    )
+    .unwrap();
+    let source = format!(
+        "probe::outer = \"outer message\"; WithCleanup[Get[{:?}], Message[probe::outer]]",
+        inner
+    );
+    let mut adapter = KernelAdapter::new(Session::new());
+    let first = adapter.execute(KernelExecuteRequest::new(&source));
+    let _ = std::fs::remove_dir_all(&directory);
+    assert_input_error(&first, "in");
+    let stderr = streams(&first, KernelStreamName::Stderr).join("");
+    assert_eq!(stderr.matches("inside message").count(), 1, "{stderr}");
+    assert_eq!(stderr.matches("outer message").count(), 1, "{stderr}");
+}

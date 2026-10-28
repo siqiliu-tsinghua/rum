@@ -95,8 +95,7 @@ impl Session {
 
     fn push_trace_with_depth(&mut self, event: TraceEvent, depth: usize) {
         if self.tracing_enabled {
-            self.push_accounted_trace_events(event.clone());
-            self.push_accounted_trace_event_depths(depth);
+            self.push_accounted_trace_events(event.clone(), depth);
         }
 
         self.handle_monitor_trace_event(&event);

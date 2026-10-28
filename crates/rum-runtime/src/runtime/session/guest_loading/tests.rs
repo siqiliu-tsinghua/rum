@@ -75,7 +75,7 @@ fn idle(s: &mut Session) {
     assert!(s.resuming_suspension.is_none());
     assert!(s.abandonment_worklist.is_empty());
     assert!(!s.abandonment_active);
-    assert!(s.pending_eval_request.is_none());
+    assert!(s.pending_request.is_none());
     assert!(s.pending_input_request.is_none());
     assert!(s.guest_form.is_none());
     assert!(s.load_stack.is_empty());
@@ -333,11 +333,15 @@ InputString["first: "];Global`before=$MessageList;Message[Global`probe::tag];Glo
 }
 
 fn seed_handled_error(s: &mut Session, _: &Expr, _: &SharedArgs) -> Result<Expr, EvalError> {
-    s.handled_non_loader_eval_errors.push(RuntimeMessage {
-        symbol: "GuestProbe".into(),
-        tag: "handled".into(),
-        text: "saved tail".into(),
-    });
+    let stamp = s.next_output_stamp();
+    s.handled_non_loader_eval_errors.push(
+        stamp,
+        RuntimeMessage {
+            symbol: "GuestProbe".into(),
+            tag: "handled".into(),
+            text: "saved tail".into(),
+        },
+    );
     s.refresh_memory_owner(
         crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
     );
@@ -346,8 +350,14 @@ fn seed_handled_error(s: &mut Session, _: &Expr, _: &SharedArgs) -> Result<Expr,
 
 fn require_guest_environment(s: &mut Session, _: &Expr, _: &SharedArgs) -> Result<Expr, EvalError> {
     assert_eq!(s.handled_non_loader_eval_errors.len(), 1);
-    assert_eq!(s.handled_non_loader_eval_errors[0].text, "saved tail");
-    assert_eq!(s.current_message_list_checkpoint, Some(0));
+    assert_eq!(
+        s.handled_non_loader_eval_errors.iter().next().unwrap().text,
+        "saved tail"
+    );
+    assert_eq!(
+        s.current_message_list_checkpoint,
+        Some(crate::runtime::model::OutputMark::START)
+    );
     assert!(s.guest_form.is_some());
     assert_eq!(s.current_memory_limit, Some(100_000_000));
     Ok(system_expr("Null"))

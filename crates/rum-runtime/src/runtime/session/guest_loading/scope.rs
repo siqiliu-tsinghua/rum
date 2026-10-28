@@ -35,10 +35,10 @@ impl GuestCallerStack {
 #[derive(Clone, rum_derive::FrameRootTrace)]
 pub(in crate::runtime) struct GuestFormEnvironment {
     identity: GuestFormIdentity,
-    message_checkpoint: Option<usize>,
+    message_checkpoint: Option<OutputMark>,
     message_dirty: bool,
     last_message_list: Vec<RuntimeMessage>,
-    handled_errors: Vec<RuntimeMessage>,
+    handled_errors: OutputLog<RuntimeMessage>,
     eval_deadline: Option<Instant>,
     time_deadline: Option<Instant>,
     memory_limit: Option<usize>,
@@ -70,10 +70,10 @@ impl Session {
 /// Kept on the resume driver's stack, never in a suspension frame.
 pub(in crate::runtime) struct DisplacedGuestFormEnvironment {
     identity: Option<GuestFormIdentity>,
-    message_checkpoint: Option<usize>,
+    message_checkpoint: Option<OutputMark>,
     message_dirty: bool,
     last_message_list: Vec<RuntimeMessage>,
-    handled_errors: Vec<RuntimeMessage>,
+    handled_errors: OutputLog<RuntimeMessage>,
     eval_deadline: Option<Instant>,
     time_deadline: Option<Instant>,
     memory_limit: Option<usize>,
@@ -149,10 +149,8 @@ impl GuestFormEnvironment {
 
 #[derive(Clone, rum_derive::FrameRootTrace)]
 pub(in crate::runtime) struct GuestFormScope {
-    pub(super) message_checkpoint: usize,
-    pub(super) print_checkpoint: usize,
-    pub(super) handled_error_checkpoint: usize,
-    previous_message_checkpoint: Option<usize>,
+    pub(super) mark: OutputMark,
+    previous_message_checkpoint: Option<OutputMark>,
     previous_message_dirty: bool,
     previous_guest_form: Option<GuestFormIdentity>,
     caller_stack: Arc<GuestCallerStack>,
@@ -164,14 +162,10 @@ impl GuestFormScope {
         identity: GuestFormIdentity,
         caller_stack: Arc<GuestCallerStack>,
     ) -> Self {
-        let message_checkpoint = session.messages.len();
+        let mark = session.output_mark();
         Self {
-            message_checkpoint,
-            print_checkpoint: session.prints.len(),
-            handled_error_checkpoint: session.handled_non_loader_eval_errors.len(),
-            previous_message_checkpoint: session
-                .current_message_list_checkpoint
-                .replace(message_checkpoint),
+            mark,
+            previous_message_checkpoint: session.current_message_list_checkpoint.replace(mark),
             previous_message_dirty: std::mem::replace(
                 &mut session.current_message_list_dirty,
                 false,
@@ -189,7 +183,7 @@ impl GuestFormScope {
         session.guest_form = self.previous_guest_form;
         session
             .handled_non_loader_eval_errors
-            .truncate(self.handled_error_checkpoint);
+            .truncate_after(self.mark);
         session.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
         );

@@ -39,8 +39,7 @@ impl FrameAbandon for GuestFileCloseFrame {
 #[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
 struct GetCompleteFrame {
     source: Arc<GuestFileSource>,
-    message_start: usize,
-    print_start: usize,
+    start: OutputMark,
 }
 impl SuspensionFrame for GetCompleteFrame {
     fn resume(
@@ -72,8 +71,7 @@ impl Session {
         let source = Arc::new(GuestFileSource { path, text });
         let completion = GetCompleteFrame {
             source: source.clone(),
-            message_start: self.messages.len(),
-            print_start: self.prints.len(),
+            start: self.output_mark(),
         };
         let outcome = self.start_guest_file_load(source);
         if matches!(outcome, Err(EvalError::InputRequired { .. })) {
@@ -145,8 +143,6 @@ impl Session {
         completion: &GetCompleteFrame,
         outcome: Result<Expr, EvalError>,
     ) -> Result<Expr, EvalError> {
-        debug_assert!(completion.message_start <= self.messages.len());
-        debug_assert!(completion.print_start <= self.prints.len());
         match outcome {
             Ok(value) => Ok(value), // Session-owned stream ranges are already committed.
             Err(

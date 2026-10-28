@@ -1,4 +1,5 @@
 use super::super::*;
+use crate::runtime::model::OutputMark;
 use rum_syntax::{ScriptForm, parse_script_form_with_source};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -37,7 +38,7 @@ impl Session {
     pub(in crate::runtime) fn finalize_top_level_eval_value(
         &mut self,
         outcome: Result<Expr, EvalError>,
-        handled_error_checkpoint: usize,
+        handled_error_checkpoint: OutputMark,
     ) -> Result<(Expr, Option<EvalTerminationReason>), EvalError> {
         match self.finalize_top_level_control_flow(outcome) {
             Err(error @ EvalError::ExceptionThrown { .. }) => {
@@ -63,7 +64,7 @@ impl Session {
     pub(in crate::runtime) fn finalize_cycle_termination_value(
         &mut self,
         outcome: Result<Expr, EvalError>,
-        handled_error_checkpoint: usize,
+        handled_error_checkpoint: OutputMark,
     ) -> Result<(Expr, Option<EvalTerminationReason>), EvalError> {
         match self.finalize_top_level_control_flow(outcome) {
             Err(error @ EvalError::EvaluationCycleDetected { .. }) => {
@@ -197,32 +198,46 @@ impl Session {
     }
 
     pub fn eval_text(&mut self, input: &str) -> Result<EvalOutcome, EvalError> {
-        self.eval_text_with_terminated_handling(input, TerminatedEvaluationHandling::ConvertToValue)
-    }
-
-    fn eval_text_with_terminated_handling(
-        &mut self,
-        input: &str,
-        terminated_handling: TerminatedEvaluationHandling,
-    ) -> Result<EvalOutcome, EvalError> {
-        self.eval_input_with_terminated_handling(
+        let mark = self.output_mark();
+        let value = self.eval_input_with_terminated_handling(
             TopLevelEvalInput::Text(input),
-            terminated_handling,
-        )
+            TerminatedEvaluationHandling::ConvertToValue,
+        )?;
+        Ok(self.take_batch_output(mark, value))
     }
 
+    /// A successful evaluation outside any request takes its output off the
+    /// session lists once, at its start mark. A request publishes from those
+    /// lists before it cuts, so its routes call the retaining batches instead.
+    fn take_batch_output(
+        &mut self,
+        mark: OutputMark,
+        (value, termination): (Expr, Option<EvalTerminationReason>),
+    ) -> EvalOutcome {
+        let messages = self.split_accounted_messages(mark);
+        let prints = self.split_accounted_prints(mark);
+        self.last_message_list = messages.clone();
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
+        );
+        EvalOutcome {
+            value,
+            termination,
+            messages,
+            prints,
+        }
+    }
+
+    /// Evaluates one top-level input and leaves its output in the session
+    /// lists. On success the caller sets `$MessageList`.
     fn eval_input_with_terminated_handling(
         &mut self,
         input: TopLevelEvalInput<'_>,
         terminated_handling: TerminatedEvaluationHandling,
-    ) -> Result<EvalOutcome, EvalError> {
+    ) -> Result<(Expr, Option<EvalTerminationReason>), EvalError> {
         self.begin_top_level_interrupt_budget();
-        let message_checkpoint = self.messages.len();
-        let print_checkpoint = self.prints.len();
-        let handled_error_checkpoint = self.handled_non_loader_eval_errors.len();
-        let previous_message_list_checkpoint = self
-            .current_message_list_checkpoint
-            .replace(message_checkpoint);
+        let mark = self.output_mark();
+        let previous_message_list_checkpoint = self.current_message_list_checkpoint.replace(mark);
         let previous_message_list_dirty =
             std::mem::replace(&mut self.current_message_list_dirty, false);
         let result = (|| {
@@ -246,10 +261,10 @@ impl Session {
             }
             match terminated_handling {
                 TerminatedEvaluationHandling::ConvertToValue => {
-                    self.finalize_top_level_eval_value(result, handled_error_checkpoint)
+                    self.finalize_top_level_eval_value(result, mark)
                 }
                 TerminatedEvaluationHandling::ConvertCyclesToValue => {
-                    self.finalize_cycle_termination_value(result, handled_error_checkpoint)
+                    self.finalize_cycle_termination_value(result, mark)
                 }
             }
         })();
@@ -257,34 +272,21 @@ impl Session {
         self.current_message_list_dirty = previous_message_list_dirty;
 
         match result {
-            Ok((value, termination)) => {
-                let messages = self.split_accounted_messages(message_checkpoint);
-                let prints = self.split_accounted_prints(print_checkpoint);
-                self.last_message_list = messages.clone();
-                self.refresh_memory_owner(
-                    crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
-                );
-                self.handled_non_loader_eval_errors
-                    .truncate(handled_error_checkpoint);
+            Ok(value) => {
+                self.handled_non_loader_eval_errors.truncate_after(mark);
                 self.refresh_memory_owner(
                     crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
                 );
-                Ok(EvalOutcome {
-                    value,
-                    termination,
-                    messages,
-                    prints,
-                })
+                Ok(value)
             }
             Err(err) => {
-                self.emit_non_loader_eval_message(handled_error_checkpoint, &err);
+                self.emit_non_loader_eval_message(mark, &err);
                 self.emit_top_level_control_flow_messages(&err);
-                self.last_message_list = self.messages[message_checkpoint..].to_vec();
+                self.last_message_list = self.messages.after_vec(mark);
                 self.refresh_memory_owner(
                     crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
                 );
-                self.handled_non_loader_eval_errors
-                    .truncate(handled_error_checkpoint);
+                self.handled_non_loader_eval_errors.truncate_after(mark);
                 self.refresh_memory_owner(
                     crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
                 );
@@ -294,16 +296,20 @@ impl Session {
     }
 
     pub fn eval_script(&mut self, source: &str) -> Result<EvalOutcome, EvalError> {
+        let mark = self.output_mark();
+        let value = self.eval_script_retaining_output(source)?;
+        Ok(self.take_batch_output(mark, value))
+    }
+
+    /// The script batch a request runs. Its output stays in the session lists
+    /// for the request to publish and then cut at its admission mark.
+    pub(super) fn eval_script_retaining_output(
+        &mut self,
+        source: &str,
+    ) -> Result<(Expr, Option<EvalTerminationReason>), EvalError> {
         self.eval_script_with_terminated_handling(
             source,
             TerminatedEvaluationHandling::ConvertToValue,
-        )
-    }
-
-    fn eval_script_for_loader(&mut self, source: &str) -> Result<EvalOutcome, EvalError> {
-        self.eval_script_with_terminated_handling(
-            source,
-            TerminatedEvaluationHandling::ConvertCyclesToValue,
         )
     }
 
@@ -311,16 +317,14 @@ impl Session {
         &mut self,
         source: &str,
         terminated_handling: TerminatedEvaluationHandling,
-    ) -> Result<EvalOutcome, EvalError> {
-        let message_checkpoint = self.messages.len();
-        let print_checkpoint = self.prints.len();
+    ) -> Result<(Expr, Option<EvalTerminationReason>), EvalError> {
+        let start = self.output_mark();
         let forms = split_script_into_forms(source)?;
         let mut value = system_expr("Null");
         let mut termination = None;
-        let mut messages = Vec::new();
-        let mut prints = Vec::new();
 
         for form in forms {
+            let form_mark = self.output_mark();
             // A parsed form lowers its carried syntax directly. A text-only
             // form (hard error or lex-failure fallback) reparses its exact raw
             // source range so every resulting span is a file coordinate.
@@ -343,61 +347,43 @@ impl Session {
                     )
                 }
             };
-            match result {
-                Ok(outcome) => {
-                    value = outcome.value;
-                    termination = outcome.termination;
-                    messages.extend(outcome.messages);
-                    prints.extend(outcome.prints);
-                    if self.active_accepted_request.is_some()
-                        && (termination == Some(EvalTerminationReason::Cancelled)
-                            || self.active_accepted_request_is_cancelled())
-                    {
-                        break;
-                    }
-                }
-                Err(err) => {
-                    if !messages.is_empty() {
-                        self.messages
-                            .splice(message_checkpoint..message_checkpoint, messages);
-                        self.refresh_memory_owner(
-                            crate::runtime::debug_tools::resources::MemoryOwner::Messages,
-                        );
-                        self.last_message_list = self.messages[message_checkpoint..].to_vec();
-                        self.refresh_memory_owner(
-                            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
-                        );
-                    }
-                    if !prints.is_empty() {
-                        self.prints
-                            .splice(print_checkpoint..print_checkpoint, prints);
-                        self.refresh_memory_owner(
-                            crate::runtime::debug_tools::resources::MemoryOwner::Prints,
-                        );
-                    }
-
-                    return Err(err);
-                }
+            // Each form leaves its items in the session lists. The batch's
+            // caller cuts once, at its own start.
+            (value, termination) = result?;
+            self.last_message_list = self.messages.after_vec(form_mark);
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
+            );
+            if self.active_accepted_request.is_some()
+                && (termination == Some(EvalTerminationReason::Cancelled)
+                    || self.active_accepted_request_is_cancelled())
+            {
+                break;
             }
         }
 
-        self.last_message_list = messages.clone();
+        self.last_message_list = self.messages.after_vec(start);
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
         );
-        Ok(EvalOutcome {
-            value,
-            termination,
-            messages,
-            prints,
-        })
+        Ok((value, termination))
     }
 
     /// Evaluates a non-resumable file batch. On input suspension, its file
     /// transaction stays live until abandonment; read-only inspection sees the
     /// partial state. Cancellation rolls back inner loads before this file.
     pub fn eval_file(&mut self, path: impl AsRef<Path>) -> Result<EvalOutcome, EvalError> {
-        let path = path.as_ref();
+        let mark = self.output_mark();
+        let value = self.eval_file_retaining_output(path.as_ref())?;
+        Ok(self.take_batch_output(mark, value))
+    }
+
+    /// The file batch a request runs. Its output stays in the session lists,
+    /// as [`Self::eval_script_retaining_output`]'s does.
+    pub(super) fn eval_file_retaining_output(
+        &mut self,
+        path: &Path,
+    ) -> Result<(Expr, Option<EvalTerminationReason>), EvalError> {
         let source = self
             .file_io()
             .ok_or(EvalError::NoFileIoProvider)?
@@ -411,7 +397,10 @@ impl Session {
 
         self.load_stack.push(path.to_owned());
         self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::LoadStack);
-        let result = self.eval_script_for_loader(&source);
+        let result = self.eval_script_with_terminated_handling(
+            &source,
+            TerminatedEvaluationHandling::ConvertCyclesToValue,
+        );
         if matches!(result, Err(EvalError::InputRequired { .. })) {
             self.defer_public_file_rollback(path, depth, snapshot);
         } else {

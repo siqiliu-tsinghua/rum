@@ -4,6 +4,7 @@ use super::super::memory::{
     render_trace_event_memory_proxy_bytes,
 };
 use super::*;
+use crate::runtime::model::{OutputMark, OutputStamp};
 
 impl Session {
     pub(in crate::runtime) fn push_accounted_messages(&mut self, value: RuntimeMessage) {
@@ -14,23 +15,24 @@ impl Session {
         } else {
             0
         };
+        let stamp = self.next_output_stamp();
         let capacity = self.messages.capacity();
-        self.messages.push(value);
+        self.messages.push(stamp, value);
         if armed {
             self.charge_memory_owner(MemoryOwner::Messages, payload);
             self.charge_memory_owner(
                 MemoryOwner::Messages,
-                (self.messages.capacity() - capacity) * size_of::<RuntimeMessage>(),
+                (self.messages.capacity() - capacity) * size_of::<(OutputStamp, RuntimeMessage)>(),
             );
         }
     }
 
     pub(in crate::runtime) fn split_accounted_messages(
         &mut self,
-        at: usize,
+        at: OutputMark,
     ) -> Vec<RuntimeMessage> {
         let capacity = self.messages.capacity();
-        let removed = self.messages.split_off(at);
+        let removed = self.messages.split_after(at);
         if self.current_memory_limit.is_some() {
             for value in &removed {
                 self.release_memory_owner(
@@ -40,7 +42,7 @@ impl Session {
             }
             self.release_memory_owner(
                 MemoryOwner::Messages,
-                (capacity - self.messages.capacity()) * size_of::<RuntimeMessage>(),
+                (capacity - self.messages.capacity()) * size_of::<(OutputStamp, RuntimeMessage)>(),
             );
         }
         removed
@@ -54,27 +56,28 @@ impl Session {
         } else {
             0
         };
+        let stamp = self.next_output_stamp();
         let capacity = self.prints.capacity();
-        self.prints.push(value);
+        self.prints.push(stamp, value);
         if armed {
             self.charge_memory_owner(MemoryOwner::Prints, payload);
             self.charge_memory_owner(
                 MemoryOwner::Prints,
-                (self.prints.capacity() - capacity) * size_of::<String>(),
+                (self.prints.capacity() - capacity) * size_of::<(OutputStamp, String)>(),
             );
         }
     }
 
-    pub(in crate::runtime) fn split_accounted_prints(&mut self, at: usize) -> Vec<String> {
+    pub(in crate::runtime) fn split_accounted_prints(&mut self, at: OutputMark) -> Vec<String> {
         let capacity = self.prints.capacity();
-        let removed = self.prints.split_off(at);
+        let removed = self.prints.split_after(at);
         if self.current_memory_limit.is_some() {
             for value in &removed {
                 self.release_memory_owner(MemoryOwner::Prints, value.capacity());
             }
             self.release_memory_owner(
                 MemoryOwner::Prints,
-                (capacity - self.prints.capacity()) * size_of::<String>(),
+                (capacity - self.prints.capacity()) * size_of::<(OutputStamp, String)>(),
             );
         }
         removed
@@ -91,19 +94,24 @@ impl Session {
         } else {
             0
         };
+        let stamp = self.next_output_stamp();
         let capacity = self.handled_non_loader_eval_errors.capacity();
-        self.handled_non_loader_eval_errors.push(value);
+        self.handled_non_loader_eval_errors.push(stamp, value);
         if armed {
             self.charge_memory_owner(MemoryOwner::HandledNonLoaderEvalErrors, payload);
             self.charge_memory_owner(
                 MemoryOwner::HandledNonLoaderEvalErrors,
                 (self.handled_non_loader_eval_errors.capacity() - capacity)
-                    * size_of::<RuntimeMessage>(),
+                    * size_of::<(OutputStamp, RuntimeMessage)>(),
             );
         }
     }
 
-    pub(in crate::runtime) fn push_accounted_trace_events(&mut self, value: TraceEvent) {
+    pub(in crate::runtime) fn push_accounted_trace_events(
+        &mut self,
+        value: TraceEvent,
+        depth: usize,
+    ) {
         let armed = self.current_memory_limit.is_some();
         let payload = if armed {
             let value = &value;
@@ -111,27 +119,15 @@ impl Session {
         } else {
             0
         };
+        let stamp = self.next_output_stamp();
         let capacity = self.trace_events.capacity();
-        self.trace_events.push(value);
+        self.trace_events.push(stamp, (value, depth));
         if armed {
             self.charge_memory_owner(MemoryOwner::TraceEvents, payload);
             self.charge_memory_owner(
                 MemoryOwner::TraceEvents,
-                (self.trace_events.capacity() - capacity) * size_of::<TraceEvent>(),
-            );
-        }
-    }
-
-    pub(in crate::runtime) fn push_accounted_trace_event_depths(&mut self, value: usize) {
-        let armed = self.current_memory_limit.is_some();
-        let payload = if armed { 0 } else { 0 };
-        let capacity = self.trace_event_depths.capacity();
-        self.trace_event_depths.push(value);
-        if armed {
-            self.charge_memory_owner(MemoryOwner::TraceEventDepths, payload);
-            self.charge_memory_owner(
-                MemoryOwner::TraceEventDepths,
-                (self.trace_event_depths.capacity() - capacity) * size_of::<usize>(),
+                (self.trace_events.capacity() - capacity)
+                    * size_of::<(OutputStamp, (TraceEvent, usize))>(),
             );
         }
     }

@@ -232,12 +232,10 @@ fn suspended_frames_charge_storage_repeated_roots_and_exception_payloads() {
         3
     ];
     session.begin_input_suspension(RuntimeInputRequest::new(reserved("prompt", 73)));
-    session.pending_eval_request = Some(PendingEvalRequest {
-        message_checkpoint: 0,
-        print_checkpoint: 0,
-        handled_error_checkpoint: 0,
-        trace_checkpoint: 0,
-    });
+    session.pending_request = Some(PendingRequest::Resumable(PendingReport {
+        mark: crate::runtime::model::OutputMark::START,
+        reported: ReportedOutput::at(crate::runtime::model::OutputMark::START),
+    }));
     let bare_symbol = Symbol::from_name("frameRoot");
     let symbol_bytes = size_of::<Symbol>() + bare_symbol.context().len() + bare_symbol.name().len();
     let mut roots = Vec::with_capacity(11);
@@ -260,8 +258,8 @@ fn suspended_frames_charge_storage_repeated_roots_and_exception_payloads() {
     let model = assert_model(&session);
     assert_eq!(model.field("pending_suspension"), Bytes::Exact(expected));
     assert_eq!(
-        model.field("pending_eval_request"),
-        Bytes::Exact(size_of::<PendingEvalRequest>())
+        model.field("pending_request"),
+        Bytes::Exact(size_of::<PendingRequest>())
     );
     assert_eq!(
         model.field("pending_input_request"),
@@ -303,17 +301,28 @@ fn live_frames_messages_and_traces_preserve_conservative_inline_terms() {
             tag_positions: Some(HashMap::from([(expr.clone(), 0)])),
         }],
     });
-    session.messages = Vec::with_capacity(5);
-    session.messages.push(RuntimeMessage {
-        symbol: reserved("s", 17),
-        tag: reserved("t", 19),
-        text: reserved("message", 101),
-    });
-    session.trace_events = Vec::with_capacity(6);
-    session.trace_events.push(TraceEvent::EvaluationPass {
-        before: expr.clone(),
-        after: expr,
-    });
+    session.messages = crate::runtime::model::OutputLog::with_capacity(5);
+    let message_stamp = session.next_output_stamp();
+    session.messages.push(
+        message_stamp,
+        RuntimeMessage {
+            symbol: reserved("s", 17),
+            tag: reserved("t", 19),
+            text: reserved("message", 101),
+        },
+    );
+    session.trace_events = crate::runtime::model::OutputLog::with_capacity(6);
+    let trace_stamp = session.next_output_stamp();
+    session.trace_events.push(
+        trace_stamp,
+        (
+            TraceEvent::EvaluationPass {
+                before: expr.clone(),
+                after: expr,
+            },
+            0,
+        ),
+    );
     let model = assert_model(&session);
     assert_eq!(
         model.field("dynamic_own_values"),
@@ -334,11 +343,16 @@ fn live_frames_messages_and_traces_preserve_conservative_inline_terms() {
     );
     assert_eq!(
         model.field("messages"),
-        Bytes::Exact(5 * size_of::<RuntimeMessage>() + 17 + 19 + 101)
+        Bytes::Exact(
+            5 * size_of::<(crate::runtime::model::OutputStamp, RuntimeMessage)>() + 17 + 19 + 101
+        )
     );
     assert_eq!(
         model.field("trace_events"),
-        Bytes::Exact(6 * size_of::<TraceEvent>() + 2 * size_of::<Expr>())
+        Bytes::Exact(
+            6 * size_of::<(crate::runtime::model::OutputStamp, (TraceEvent, usize))>()
+                + 2 * size_of::<Expr>()
+        )
     );
 }
 
@@ -367,7 +381,7 @@ fn session_memory_layout_baseline() {
         ("RuntimeMessage", size_of::<RuntimeMessage>()),
         ("TraceEvent", size_of::<TraceEvent>()),
         ("RuntimeInputRequest", size_of::<RuntimeInputRequest>()),
-        ("PendingEvalRequest", size_of::<PendingEvalRequest>()),
+        ("PendingRequest", size_of::<PendingRequest>()),
         ("SuspendedEvaluation", size_of::<SuspendedEvaluation>()),
         (
             "Arc<dyn SuspensionFrame>",

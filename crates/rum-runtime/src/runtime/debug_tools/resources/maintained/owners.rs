@@ -37,8 +37,8 @@ pub(in crate::runtime) enum MemoryOwner {
     OptionValueScopes,
     Options,
     PackageSearchPaths,
-    PendingEvalRequest,
     PendingInputRequest,
+    PendingRequest,
     PendingSuspension,
     PrintSink,
     Prints,
@@ -53,11 +53,10 @@ pub(in crate::runtime) enum MemoryOwner {
     SymbolCallEffectCache,
     SymbolGenerations,
     SyntaxInformation,
-    TraceEventDepths,
     TraceEvents,
 }
 impl MemoryOwner {
-    pub(in crate::runtime) const ALL: [Self; 53] = [
+    pub(in crate::runtime) const ALL: [Self; 52] = [
         Self::AbandonmentWorklist,
         Self::AccountingRoute,
         Self::AssociationLookupCache,
@@ -93,8 +92,8 @@ impl MemoryOwner {
         Self::OptionValueScopes,
         Self::Options,
         Self::PackageSearchPaths,
-        Self::PendingEvalRequest,
         Self::PendingInputRequest,
+        Self::PendingRequest,
         Self::PendingSuspension,
         Self::PrintSink,
         Self::Prints,
@@ -109,7 +108,6 @@ impl MemoryOwner {
         Self::SymbolCallEffectCache,
         Self::SymbolGenerations,
         Self::SyntaxInformation,
-        Self::TraceEventDepths,
         Self::TraceEvents,
     ];
     pub(in crate::runtime) const fn maintained(self) -> bool {
@@ -160,10 +158,9 @@ impl MemoryOwner {
                 | Self::LastMessageList
                 | Self::Prints
                 | Self::TraceEvents
-                | Self::TraceEventDepths
                 | Self::QueuedInputResponses
                 | Self::PendingInputRequest
-                | Self::PendingEvalRequest
+                | Self::PendingRequest
                 | Self::PendingSuspension
                 | Self::ResumingSuspension
                 | Self::AbandonmentWorklist
@@ -208,8 +205,8 @@ impl MemoryOwner {
             Self::OptionValueScopes => "option_value_scopes",
             Self::Options => "options",
             Self::PackageSearchPaths => "package_search_paths",
-            Self::PendingEvalRequest => "pending_eval_request",
             Self::PendingInputRequest => "pending_input_request",
+            Self::PendingRequest => "pending_request",
             Self::PendingSuspension => "pending_suspension",
             Self::PrintSink => "print_sink",
             Self::Prints => "prints",
@@ -224,7 +221,6 @@ impl MemoryOwner {
             Self::SymbolCallEffectCache => "symbol_call_effect_cache",
             Self::SymbolGenerations => "symbol_generations",
             Self::SyntaxInformation => "syntax_information",
-            Self::TraceEventDepths => "trace_event_depths",
             Self::TraceEvents => "trace_events",
         }
     }

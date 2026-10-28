@@ -519,6 +519,16 @@ and `Monitor` callbacks do not run during a retirement. Because time spent
 waiting for input counts toward the deadline, a deadline that has already
 passed when the cancel arrives skips every cleanup.
 
+The retirement outcome is cumulative for the request, like every other
+response, on the single-source and the script-shaped routes alike. Its
+`messages`, `prints` and `trace` begin with everything the input outcome
+reported, including output that the retirement's rollback has since removed
+from the session, and then add the cleanups' output and `General::cancel`. A
+host that skips the suffix it has already shown therefore shows each item
+once. Output that a rollback removed before any response reported it, such as
+cleanup output inside a public file that the cancellation rolls back, appears
+in no response.
+
 Use `eval_with_timeout(source, duration)` for a per-evaluation elapsed-time
 deadline backed by Rust's monotonic `Instant`. The original absolute deadline
 stays armed across `Input` and `InputString` suspensions and every

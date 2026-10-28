@@ -12,7 +12,7 @@ impl Session {
             && self.current_memory_limit.is_none()
             && self.eval_deadline.is_none()
             && self.pending_input_request.is_none()
-            && self.pending_eval_request.is_none()
+            && self.pending_request.is_none()
             && self.pending_suspension.is_none()
             && !self.incremental_append_has_dynamic_own_value(target)
     }

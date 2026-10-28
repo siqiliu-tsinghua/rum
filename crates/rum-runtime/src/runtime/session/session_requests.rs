@@ -1,47 +1,79 @@
 use super::super::*;
+use super::request_errors::{
+    no_suspended_evaluation_failure, request_syntax_failure, session_request_error_from_eval_error,
+    session_request_error_from_eval_error_with_source,
+};
+use crate::runtime::model::OutputMark;
 
+/// One clock stamps every session output list, so one mark names the cut on
+/// all four channels.
 #[derive(Clone, Copy, Debug)]
 struct RequestCheckpoint {
-    message_checkpoint: usize,
-    print_checkpoint: usize,
-    handled_error_checkpoint: usize,
-    trace_checkpoint: usize,
+    mark: OutputMark,
 }
 
 impl RequestCheckpoint {
     fn new(session: &Session) -> Self {
         Self {
-            message_checkpoint: session.messages.len(),
-            print_checkpoint: session.prints.len(),
-            handled_error_checkpoint: session.handled_non_loader_eval_errors.len(),
-            trace_checkpoint: session.trace_events.len(),
-        }
-    }
-}
-
-impl From<RequestCheckpoint> for PendingEvalRequest {
-    fn from(checkpoint: RequestCheckpoint) -> Self {
-        Self {
-            message_checkpoint: checkpoint.message_checkpoint,
-            print_checkpoint: checkpoint.print_checkpoint,
-            handled_error_checkpoint: checkpoint.handled_error_checkpoint,
-            trace_checkpoint: checkpoint.trace_checkpoint,
-        }
-    }
-}
-
-impl From<PendingEvalRequest> for RequestCheckpoint {
-    fn from(state: PendingEvalRequest) -> Self {
-        Self {
-            message_checkpoint: state.message_checkpoint,
-            print_checkpoint: state.print_checkpoint,
-            handled_error_checkpoint: state.handled_error_checkpoint,
-            trace_checkpoint: state.trace_checkpoint,
+            mark: session.output_mark(),
         }
     }
 }
 
 impl Session {
+    fn publish_reported_now(&self, reported: &mut ReportedOutput) {
+        let through = self.output_mark();
+        reported.publish(
+            &self.messages,
+            &self.prints,
+            &self.trace_events,
+            through,
+            through,
+            through,
+        );
+    }
+
+    fn publish_reported_boundary(&self, reported: &mut ReportedOutput, boundary: OutputBoundary) {
+        let now = self.output_mark();
+        reported.publish(
+            &self.messages,
+            &self.prints,
+            &self.trace_events,
+            boundary.messages.unwrap_or(now),
+            boundary.prints.unwrap_or(now),
+            boundary.trace.unwrap_or(now),
+        );
+    }
+
+    /// Removes the waiting report, whichever variant stored it. Every request
+    /// route stores one when it returns `InputRequired`. A suspension that the
+    /// non-request `eval_text`, `eval_script` or `eval_file` left has none: no
+    /// response reported anything for it, so its retirement admits fresh at
+    /// this clock (`cancelled_request_retires_a_non_request_suspension`).
+    fn take_pending_report(&mut self) -> (RequestCheckpoint, ReportedOutput) {
+        let taken = match self.pending_request.take() {
+            Some(pending) => {
+                let report = pending.into_report();
+                (RequestCheckpoint { mark: report.mark }, report.reported)
+            }
+            None => {
+                let checkpoint = RequestCheckpoint::new(self);
+                (checkpoint, ReportedOutput::at(checkpoint.mark))
+            }
+        };
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingRequest,
+        );
+        taken
+    }
+
+    fn store_pending_request(&mut self, request: PendingRequest) {
+        self.pending_request = Some(request);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingRequest,
+        );
+    }
+
     #[doc(hidden)]
     pub fn finish_cancelled_pending_evaluation_request(
         &mut self,
@@ -53,10 +85,7 @@ impl Session {
             return Ok(None);
         }
 
-        let checkpoint = self
-            .pending_eval_request
-            .map(RequestCheckpoint::from)
-            .unwrap_or_else(|| RequestCheckpoint::new(self));
+        let (checkpoint, reported) = self.take_pending_report();
         self.abandon_pending_suspension(AbandonReason::CancelledRequest);
         let accepted = self
             .take_active_accepted_request()
@@ -64,7 +93,7 @@ impl Session {
         let cancellation_won = accepted.finish();
         debug_assert!(cancellation_won);
 
-        let response = self.finish_cancelled_eval_response(checkpoint);
+        let response = self.finish_cancelled_eval_response(checkpoint, reported);
         self.package_eval_request_outcome(Ok(response)).map(Some)
     }
 
@@ -141,9 +170,9 @@ impl Session {
     ) -> Result<SessionLowerResponse, SessionRequestFailure> {
         let checkpoint = RequestCheckpoint::new(self);
         let parsed = parse_with_diagnostics(input).map_err(request_syntax_failure)?;
-        let expr = self
-            .lower_syntax_expr(parsed.syntax())
-            .map_err(|err| self.finish_request_failure(checkpoint, err))?;
+        let expr = self.lower_syntax_expr(parsed.syntax()).map_err(|err| {
+            self.finish_request_failure(checkpoint, ReportedOutput::at(checkpoint.mark), err)
+        })?;
 
         Ok(SessionLowerResponse { expr })
     }
@@ -158,16 +187,17 @@ impl Session {
         self.reject_overlapping_evaluation_request()?;
         self.begin_top_level_interrupt_budget();
         let checkpoint = RequestCheckpoint::new(self);
+        let reported = ReportedOutput::at(checkpoint.mark);
         if self.active_accepted_request_is_cancelled() {
-            return self.finish_cancelled_active_request(checkpoint);
+            return self.finish_cancelled_active_request(checkpoint, reported);
         }
         let result = (|| {
             let parsed = parse_with_diagnostics(input).map_err(request_syntax_failure)?;
-            let expr = self
-                .lower_syntax_expr(parsed.syntax())
-                .map_err(|err| self.finish_request_failure(checkpoint, err))?;
+            let expr = self.lower_syntax_expr(parsed.syntax()).map_err(|err| {
+                self.finish_request_failure(checkpoint, ReportedOutput::at(checkpoint.mark), err)
+            })?;
 
-            self.eval_expr_request_from_checkpoint(expr, checkpoint)
+            self.eval_expr_request_from_checkpoint(expr, checkpoint, reported)
         })();
         self.finish_accepted_value_request(result)
     }
@@ -186,11 +216,12 @@ impl Session {
         self.reject_overlapping_evaluation_request()?;
         self.begin_top_level_interrupt_budget();
         let checkpoint = RequestCheckpoint::new(self);
+        let reported = ReportedOutput::at(checkpoint.mark);
         if self.active_accepted_request_is_cancelled() {
-            return self.finish_cancelled_active_request(checkpoint);
+            return self.finish_cancelled_active_request(checkpoint, reported);
         }
 
-        let result = self.eval_expr_request_from_checkpoint(expr, checkpoint);
+        let result = self.eval_expr_request_from_checkpoint(expr, checkpoint, reported);
         self.finish_accepted_value_request(result)
     }
 
@@ -218,52 +249,35 @@ impl Session {
         &mut self,
         expr: Expr,
         checkpoint: RequestCheckpoint,
+        reported: ReportedOutput,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
         let previous_message_list_checkpoint = self
             .current_message_list_checkpoint
-            .replace(checkpoint.message_checkpoint);
+            .replace(checkpoint.mark);
         let previous_message_list_dirty =
             std::mem::replace(&mut self.current_message_list_dirty, false);
         let outcome = self.evaluate(expr);
         let finalized = if self.has_continuation_fault() {
             Err(self.continuation_fault_outcome(outcome))
         } else {
-            self.finalize_top_level_eval_value(outcome, checkpoint.handled_error_checkpoint)
+            self.finalize_top_level_eval_value(outcome, checkpoint.mark)
         };
         self.current_message_list_checkpoint = previous_message_list_checkpoint;
         self.current_message_list_dirty = previous_message_list_dirty;
         let (value, termination) = match finalized {
             Ok(finalized) => finalized,
             Err(EvalError::InputRequired { .. }) => {
-                return Err(self.finish_input_required_request(checkpoint));
+                return Err(
+                    self.finish_input_required_request(PendingRequest::Resumable(PendingReport {
+                        mark: checkpoint.mark,
+                        reported,
+                    })),
+                );
             }
-            Err(err) => return Err(self.finish_request_failure(checkpoint, err)),
+            Err(err) => return Err(self.finish_request_failure(checkpoint, reported, err)),
         };
 
-        let messages = self.split_accounted_messages(checkpoint.message_checkpoint);
-        let prints = self.split_accounted_prints(checkpoint.print_checkpoint);
-        let trace = self.trace_events[checkpoint.trace_checkpoint..].to_vec();
-        self.last_message_list = messages.clone();
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
-        );
-        self.handled_non_loader_eval_errors
-            .truncate(checkpoint.handled_error_checkpoint);
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
-        );
-        self.pending_eval_request = None;
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
-        );
-
-        Ok(SessionEvalResponse {
-            value,
-            termination,
-            messages,
-            prints,
-            trace,
-        })
+        Ok(self.finish_reported_success(checkpoint, reported, value, termination))
     }
 
     pub fn resume_eval_request_with_input(
@@ -275,45 +289,51 @@ impl Session {
                 return Ok(cancelled);
             }
         }
-        let checkpoint = self
-            .pending_eval_request
-            .take()
-            .map(RequestCheckpoint::from)
-            .ok_or_else(|| SessionRequestFailure {
-                error: SessionRequestError::Other {
-                    message: "no suspended evaluation is waiting for host input".to_string(),
-                },
-                messages: Vec::new(),
-                prints: Vec::new(),
-                trace: Vec::new(),
-            })?;
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
-        );
-        let result = self.resume_eval_request_from_checkpoint(input.into(), checkpoint);
+        // A batch stays installed. Only `Resumable` can be resumed.
+        let pending = match self.pending_request.take() {
+            Some(PendingRequest::Resumable(report)) => {
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::PendingRequest,
+                );
+                report
+            }
+            other => {
+                let restore = other.is_some();
+                self.pending_request = other;
+                if restore {
+                    self.refresh_memory_owner(
+                        crate::runtime::debug_tools::resources::MemoryOwner::PendingRequest,
+                    );
+                }
+                return Err(no_suspended_evaluation_failure());
+            }
+        };
+        let result = self.resume_eval_request_from_checkpoint(input.into(), pending);
         self.package_eval_request_outcome(result)
     }
 
     fn resume_eval_request_from_checkpoint(
         &mut self,
         input: String,
-        checkpoint: RequestCheckpoint,
+        pending: PendingReport,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        let checkpoint = RequestCheckpoint { mark: pending.mark };
+        let reported = pending.reported;
         let previous_message_list_checkpoint = self
             .current_message_list_checkpoint
-            .replace(checkpoint.message_checkpoint);
+            .replace(checkpoint.mark);
         let previous_message_list_dirty = std::mem::replace(
             &mut self.current_message_list_dirty,
-            self.messages.len() > checkpoint.message_checkpoint,
+            self.messages.has_after(checkpoint.mark),
         );
         let outcome = self.resume_suspended_evaluation(input.clone());
         let outcome = match outcome {
             Err(error @ EvalError::InputRequired { .. }) => {
                 if self.active_accepted_request_is_cancelled() {
-                    self.pending_eval_request = Some(checkpoint.into());
-                    self.refresh_memory_owner(
-                        crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
-                    );
+                    self.store_pending_request(PendingRequest::Resumable(PendingReport {
+                        mark: checkpoint.mark,
+                        reported,
+                    }));
                     return self
                         .finish_cancelled_pending_evaluation_request()?
                         .ok_or_else(|| SessionRequestFailure {
@@ -339,41 +359,25 @@ impl Session {
         let finalized = if self.has_continuation_fault() {
             Err(self.continuation_fault_outcome(outcome))
         } else {
-            self.finalize_top_level_eval_value(outcome, checkpoint.handled_error_checkpoint)
+            self.finalize_top_level_eval_value(outcome, checkpoint.mark)
         };
         self.current_message_list_checkpoint = previous_message_list_checkpoint;
         self.current_message_list_dirty = previous_message_list_dirty;
-        let (value, termination) = match finalized {
-            Ok(finalized) => finalized,
-            Err(EvalError::InputRequired { .. }) => {
-                return Err(self.finish_input_required_request(checkpoint));
+        match finalized {
+            Ok((value, termination)) => {
+                Ok(self.finish_reported_success(checkpoint, reported, value, termination))
             }
+            Err(EvalError::InputRequired { .. }) => Err(self.finish_input_required_request(
+                PendingRequest::Resumable(PendingReport {
+                    mark: checkpoint.mark,
+                    reported,
+                }),
+            )),
             Err(err @ EvalError::Syntax(_)) => {
-                return Err(self.finish_completed_request_failure(checkpoint, Some(&input), err));
+                Err(self.finish_completed_request_failure(checkpoint, reported, Some(&input), err))
             }
-            Err(err) => return Err(self.finish_request_failure(checkpoint, err)),
-        };
-
-        let messages = self.split_accounted_messages(checkpoint.message_checkpoint);
-        let prints = self.split_accounted_prints(checkpoint.print_checkpoint);
-        let trace = self.trace_events[checkpoint.trace_checkpoint..].to_vec();
-        self.last_message_list = messages.clone();
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
-        );
-        self.handled_non_loader_eval_errors
-            .truncate(checkpoint.handled_error_checkpoint);
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
-        );
-
-        Ok(SessionEvalResponse {
-            value,
-            termination,
-            messages,
-            prints,
-            trace,
-        })
+            Err(err) => Err(self.finish_request_failure(checkpoint, reported, err)),
+        }
     }
 
     pub fn eval_script_request(
@@ -385,16 +389,21 @@ impl Session {
         }
         self.reject_overlapping_evaluation_request()?;
         let checkpoint = RequestCheckpoint::new(self);
+        let reported = ReportedOutput::at(checkpoint.mark);
 
-        let result = match self.eval_script(source) {
-            Ok(outcome) => Ok(SessionEvalResponse {
-                value: outcome.value,
-                termination: outcome.termination,
-                messages: outcome.messages,
-                prints: outcome.prints,
-                trace: self.trace_events[checkpoint.trace_checkpoint..].to_vec(),
-            }),
-            Err(err) => Err(self.finish_completed_request_failure(checkpoint, Some(source), err)),
+        let result = match self.eval_script_retaining_output(source) {
+            Ok((value, termination)) => {
+                Ok(self.finish_reported_success(checkpoint, reported, value, termination))
+            }
+            Err(EvalError::InputRequired { .. }) => Err(self.finish_input_required_request(
+                PendingRequest::Batch(PendingReport {
+                    mark: checkpoint.mark,
+                    reported,
+                }),
+            )),
+            Err(err) => {
+                Err(self.finish_completed_request_failure(checkpoint, reported, Some(source), err))
+            }
         };
         self.finish_accepted_value_request(result)
     }
@@ -418,25 +427,33 @@ impl Session {
         }
         self.reject_overlapping_evaluation_request()?;
         let checkpoint = RequestCheckpoint::new(self);
+        let reported = ReportedOutput::at(checkpoint.mark);
         let path = path.as_ref();
 
-        let result = match self.eval_file(path) {
-            Ok(outcome) => Ok(SessionEvalResponse {
-                value: outcome.value,
-                termination: outcome.termination,
-                messages: outcome.messages,
-                prints: outcome.prints,
-                trace: self.trace_events[checkpoint.trace_checkpoint..].to_vec(),
-            }),
+        let result = match self.eval_file_retaining_output(path) {
+            Ok((value, termination)) => {
+                Ok(self.finish_reported_success(checkpoint, reported, value, termination))
+            }
+            Err(EvalError::InputRequired { .. }) => Err(self.finish_input_required_request(
+                PendingRequest::Batch(PendingReport {
+                    mark: checkpoint.mark,
+                    reported,
+                }),
+            )),
             Err(err) => {
-                let source = match err {
+                let source = match &err {
                     EvalError::Syntax(_) => self
                         .file_io()
                         .and_then(|file_io| file_io.read_to_string(path).ok()),
                     _ => None,
                 };
 
-                Err(self.finish_completed_request_failure(checkpoint, source.as_deref(), err))
+                Err(self.finish_completed_request_failure(
+                    checkpoint,
+                    reported,
+                    source.as_deref(),
+                    err,
+                ))
             }
         };
         self.finish_accepted_file_request(result)
@@ -464,29 +481,45 @@ impl Session {
         })
     }
 
-    /// A pause exposes only settled prefixes and preserves all capture state.
-    fn finish_input_required_request(
+    /// Publishes through the current mark, then splits the session lists once
+    /// at the admission mark. `$MessageList` keeps that session suffix.
+    fn finish_reported_success(
         &mut self,
         checkpoint: RequestCheckpoint,
+        mut reported: ReportedOutput,
+        value: Expr,
+        termination: Option<EvalTerminationReason>,
+    ) -> SessionEvalResponse {
+        self.publish_reported_now(&mut reported);
+        self.release_request_session_output(checkpoint.mark);
+        SessionEvalResponse {
+            value,
+            termination,
+            messages: reported.messages,
+            prints: reported.prints,
+            trace: reported.trace,
+        }
+    }
+
+    /// A pause publishes each channel through its own boundary and keeps the
+    /// reported prefix for a later completion or cancellation.
+    fn finish_input_required_request(
+        &mut self,
+        mut request: PendingRequest,
     ) -> SessionRequestFailure {
-        self.pending_eval_request = Some(checkpoint.into());
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
-        );
+        // One walk of the pending frames serves the publication and `$MessageList`.
         let boundary = self.pending_output_boundary();
-        let messages = self.messages
-            [checkpoint.message_checkpoint..boundary.messages.unwrap_or(self.messages.len())]
-            .to_vec();
-        let prints = self.prints
-            [checkpoint.print_checkpoint..boundary.prints.unwrap_or(self.prints.len())]
-            .to_vec();
-        let trace = self.trace_events
-            [checkpoint.trace_checkpoint..boundary.trace.unwrap_or(self.trace_events.len())]
-            .to_vec();
-        self.last_message_list = messages.clone();
+        let report = request.report_mut();
+        self.publish_reported_boundary(&mut report.reported, boundary);
+        let messages = report.reported.messages.clone();
+        let prints = report.reported.prints.clone();
+        let trace = report.reported.trace.clone();
+        let mark = report.mark;
+        self.last_message_list = self.messages_through(mark, boundary.messages);
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
         );
+        self.store_pending_request(request);
         SessionRequestFailure {
             error: SessionRequestError::InputRequired {
                 request: self
@@ -503,57 +536,66 @@ impl Session {
     fn finish_request_failure(
         &mut self,
         checkpoint: RequestCheckpoint,
+        mut reported: ReportedOutput,
         err: EvalError,
     ) -> SessionRequestFailure {
-        self.emit_non_loader_eval_message(checkpoint.handled_error_checkpoint, &err);
+        self.emit_non_loader_eval_message(checkpoint.mark, &err);
         self.emit_top_level_control_flow_messages(&err);
-
-        let messages = self.messages[checkpoint.message_checkpoint..].to_vec();
-        let prints = self.prints[checkpoint.print_checkpoint..].to_vec();
-        let trace = self.trace_events[checkpoint.trace_checkpoint..].to_vec();
-        self.last_message_list = messages.clone();
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
-        );
-        self.handled_non_loader_eval_errors
-            .truncate(checkpoint.handled_error_checkpoint);
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
-        );
+        self.publish_reported_now(&mut reported);
+        self.record_unsplit_request_view(checkpoint.mark);
 
         SessionRequestFailure {
             error: session_request_error_from_eval_error(&err),
-            messages,
-            prints,
-            trace,
+            messages: reported.messages,
+            prints: reported.prints,
+            trace: reported.trace,
         }
     }
 
     fn finish_completed_request_failure(
         &mut self,
         checkpoint: RequestCheckpoint,
+        mut reported: ReportedOutput,
         source: Option<&str>,
         err: EvalError,
     ) -> SessionRequestFailure {
-        let messages = self.messages[checkpoint.message_checkpoint..].to_vec();
-        let prints = self.prints[checkpoint.print_checkpoint..].to_vec();
-        let trace = self.trace_events[checkpoint.trace_checkpoint..].to_vec();
-        self.last_message_list = messages.clone();
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
-        );
-        self.handled_non_loader_eval_errors
-            .truncate(checkpoint.handled_error_checkpoint);
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
-        );
+        self.publish_reported_now(&mut reported);
+        self.record_unsplit_request_view(checkpoint.mark);
 
         SessionRequestFailure {
             error: session_request_error_from_eval_error_with_source(&err, source),
-            messages,
-            prints,
-            trace,
+            messages: reported.messages,
+            prints: reported.prints,
+            trace: reported.trace,
         }
+    }
+
+    fn record_unsplit_request_view(&mut self, mark: OutputMark) {
+        self.last_message_list = self.messages.after_vec(mark);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
+        );
+        self.handled_non_loader_eval_errors.truncate_after(mark);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
+        );
+    }
+
+    fn release_request_session_output(&mut self, mark: OutputMark) {
+        let session_messages = self.split_accounted_messages(mark);
+        self.last_message_list = session_messages;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
+        );
+        let _prints = self.split_accounted_prints(mark);
+        self.handled_non_loader_eval_errors.truncate_after(mark);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
+        );
+        self.pending_request = None;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingRequest,
+        );
     }
 
     fn finish_accepted_value_request(
@@ -571,17 +613,16 @@ impl Session {
                 return result;
             }
 
-            let checkpoint = self
-                .pending_eval_request
-                .map(RequestCheckpoint::from)
-                .unwrap_or_else(|| RequestCheckpoint::new(self));
+            // Abandonment clears the stored request before the drain. Take the
+            // published prefix first, or the input outcome's items are lost.
+            let (checkpoint, reported) = self.take_pending_report();
             self.abandon_pending_suspension(AbandonReason::CancelledRequest);
             let accepted = self
                 .take_active_accepted_request()
                 .expect("cancelled input suspension should retain its accepted ticket");
             let cancellation_won = accepted.finish();
             debug_assert!(cancellation_won);
-            let response = self.finish_cancelled_eval_response(checkpoint);
+            let response = self.finish_cancelled_eval_response(checkpoint, reported);
             return self.package_eval_request_outcome(Ok(response));
         }
 
@@ -635,7 +676,7 @@ impl Session {
                 && self.abandonment_worklist.is_empty()
                 && !self.abandonment_active
                 && self.pending_input_request.is_none()
-                && self.pending_eval_request.is_none()),
+                && self.pending_request.is_none()),
             "terminal request outcome retained a suspension owner"
         );
         result
@@ -644,10 +685,11 @@ impl Session {
     fn finish_cancelled_active_request(
         &mut self,
         checkpoint: RequestCheckpoint,
+        reported: ReportedOutput,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
         let cancellation_won = self.finish_active_accepted_request();
         debug_assert!(cancellation_won);
-        let response = self.finish_cancelled_eval_response(checkpoint);
+        let response = self.finish_cancelled_eval_response(checkpoint, reported);
         self.package_eval_request_outcome(Ok(response))
     }
 
@@ -702,36 +744,20 @@ impl Session {
     fn finish_cancelled_eval_response(
         &mut self,
         checkpoint: RequestCheckpoint,
+        mut reported: ReportedOutput,
     ) -> SessionEvalResponse {
         let (value, termination) = self
-            .finalize_top_level_eval_value(
-                Err(EvalError::Cancelled),
-                checkpoint.handled_error_checkpoint,
-            )
+            .finalize_top_level_eval_value(Err(EvalError::Cancelled), checkpoint.mark)
             .expect("host cancellation is a terminated-evaluation value");
-        let messages = self.split_accounted_messages(checkpoint.message_checkpoint);
-        let prints = self.split_accounted_prints(checkpoint.print_checkpoint);
-        let trace = self.trace_events[checkpoint.trace_checkpoint..].to_vec();
-        self.last_message_list = messages.clone();
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
-        );
-        self.handled_non_loader_eval_errors
-            .truncate(checkpoint.handled_error_checkpoint);
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
-        );
-        self.pending_eval_request = None;
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
-        );
+        self.publish_reported_now(&mut reported);
+        self.release_request_session_output(checkpoint.mark);
 
         SessionEvalResponse {
             value,
             termination,
-            messages,
-            prints,
-            trace,
+            messages: reported.messages,
+            prints: reported.prints,
+            trace: reported.trace,
         }
     }
 }
@@ -750,15 +776,6 @@ fn append_cancel_message(messages: &mut Vec<RuntimeMessage>) {
     );
 }
 
-fn request_syntax_failure(diagnostic: rum_syntax::SourceDiagnostic) -> SessionRequestFailure {
-    SessionRequestFailure {
-        error: SessionRequestError::Syntax(diagnostic.structured()),
-        messages: Vec::new(),
-        prints: Vec::new(),
-        trace: Vec::new(),
-    }
-}
-
 fn suggest_continuation_indent(input: &str) -> String {
     let base_indent = input
         .lines()
@@ -772,140 +789,4 @@ fn suggest_continuation_indent(input: &str) -> String {
         .unwrap_or_default();
 
     format!("{base_indent}  ")
-}
-
-fn session_request_error_from_eval_error(err: &EvalError) -> SessionRequestError {
-    session_request_error_from_eval_error_with_source(err, None)
-}
-
-fn session_request_error_from_eval_error_with_source(
-    err: &EvalError,
-    source: Option<&str>,
-) -> SessionRequestError {
-    match err {
-        EvalError::ContinuationSlotMismatch(fault) => {
-            SessionRequestError::ContinuationSlotMismatch {
-                expected: fault.expected(),
-                got: fault.got(),
-            }
-        }
-        EvalError::Syntax(error) => source
-            .map(|source| {
-                SessionRequestError::Syntax(
-                    rum_syntax::SourceDiagnostic::new(
-                        rum_syntax::SourceText::new(source),
-                        error.clone(),
-                    )
-                    .structured(),
-                )
-            })
-            .unwrap_or_else(|| SessionRequestError::Other {
-                message: error.to_string(),
-            }),
-        EvalError::InvalidInteger { literal } => SessionRequestError::InvalidInteger {
-            literal: literal.clone(),
-        },
-        EvalError::Io { path, source } => SessionRequestError::Io {
-            path: path.clone(),
-            message: source.to_string(),
-        },
-        EvalError::LoadPathNotFound { target, searched } => SessionRequestError::LoadPathNotFound {
-            target: target.clone(),
-            searched: searched.clone(),
-        },
-        EvalError::NoFileIoProvider => SessionRequestError::Other {
-            message: "no file provider installed".to_string(),
-        },
-        EvalError::EvaluationCycleDetected { expr } => {
-            SessionRequestError::EvaluationCycleDetected { expr: expr.clone() }
-        }
-        EvalError::RecursionLimitExceeded { limit } => {
-            SessionRequestError::RecursionLimitExceeded { limit: *limit }
-        }
-        EvalError::StackLimitExceeded { limit } => {
-            SessionRequestError::StackLimitExceeded { limit: *limit }
-        }
-        EvalError::MatchRecursionLimitExceeded { limit } => {
-            SessionRequestError::MatchRecursionLimitExceeded { limit: *limit }
-        }
-        EvalError::Cancelled => SessionRequestError::Cancelled,
-        EvalError::TimeConstraintExceeded => SessionRequestError::TimeConstraintExceeded,
-        EvalError::MemoryConstraintExceeded { limit } => {
-            SessionRequestError::MemoryConstraintExceeded { limit: *limit }
-        }
-        EvalError::GeneratedElementLimitExceeded { limit } => {
-            SessionRequestError::GeneratedElementLimitExceeded { limit: *limit }
-        }
-        EvalError::IntegerWorkLimitExceeded { limit } => {
-            SessionRequestError::IntegerWorkLimitExceeded { limit: *limit }
-        }
-        EvalError::IterationWorkLimitExceeded { limit } => {
-            SessionRequestError::IterationWorkLimitExceeded { limit: *limit }
-        }
-        EvalError::IterationLimitExceeded { limit } => {
-            SessionRequestError::IterationLimitExceeded { limit: *limit }
-        }
-        EvalError::EvaluationPassLimitExceeded { limit } => {
-            SessionRequestError::EvaluationPassLimitExceeded { limit: *limit }
-        }
-        EvalError::Exit { code } => SessionRequestError::Exit { code: *code },
-        EvalError::Return { value } => SessionRequestError::Other {
-            message: format!("uncaught top-level Return resolved to {value}"),
-        },
-        EvalError::Thrown { value, tag, .. } => SessionRequestError::Other {
-            message: format!("uncaught throw: {value} with tag {tag}"),
-        },
-        EvalError::ThrownBypassingCatch {
-            value,
-            tag,
-            cleanup_value,
-            cleanup_tag,
-            ..
-        } => SessionRequestError::Other {
-            message: format!(
-                "uncaught throw: {cleanup_value} with tag {cleanup_tag}; uncaught throw: {value} with tag {tag}"
-            ),
-        },
-        EvalError::Abort | EvalError::ProtectedAbort => SessionRequestError::Other {
-            message: "uncaught Abort[]".to_string(),
-        },
-        EvalError::Break => SessionRequestError::Other {
-            message: "uncaught Break[]".to_string(),
-        },
-        EvalError::Continue => SessionRequestError::Other {
-            message: "uncaught Continue[]".to_string(),
-        },
-        EvalError::InputRequired { request } => SessionRequestError::InputRequired {
-            request: request.clone(),
-        },
-        EvalError::ExceptionThrown { exception } => SessionRequestError::Other {
-            message: format!("uncaught exception: {exception}"),
-        },
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn eval_error_mapper_preserves_non_request_surface_limit_codes() {
-        let memory = session_request_error_from_eval_error_with_source(
-            &EvalError::MemoryConstraintExceeded { limit: 20 },
-            Some("MemoryConstrained[Table[x, 100], 20]"),
-        );
-        assert!(matches!(
-            memory,
-            SessionRequestError::MemoryConstraintExceeded { limit: 20 }
-        ));
-
-        let pass = session_request_error_from_eval_error_with_source(
-            &EvalError::EvaluationPassLimitExceeded { limit: 2 },
-            Some("loopA"),
-        );
-        assert!(matches!(
-            pass,
-            SessionRequestError::EvaluationPassLimitExceeded { limit: 2 }
-        ));
-    }
 }

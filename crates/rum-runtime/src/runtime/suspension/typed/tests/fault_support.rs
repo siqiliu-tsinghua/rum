@@ -222,7 +222,7 @@ pub(super) fn session(kind: FaultKind, nested: bool) -> (Session, Events) {
 pub(super) fn restored(s: &mut Session) {
     super::accounting::reconcile(s);
     assert!(s.pending_input_request().is_none());
-    assert!(s.pending_eval_request.is_none());
+    assert!(s.pending_request.is_none());
     assert!(s.pending_suspension.is_none());
     assert!(s.resuming_suspension.is_none());
     assert!(s.abandonment_worklist.is_empty());
@@ -233,7 +233,6 @@ pub(super) fn restored(s: &mut Session) {
     assert!(s.guest_form.is_none());
     assert!(s.module_activations.is_empty());
     assert!(s.handled_non_loader_eval_errors.is_empty());
-    assert_eq!(s.trace_event_depths.len(), s.trace_events.len());
     assert!(s.reject_overlapping_evaluation_request().is_ok());
     assert_eq!(s.eval_request("1+1").unwrap().value, Expr::small_integer(2));
 }

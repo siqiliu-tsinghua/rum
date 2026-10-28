@@ -18,7 +18,7 @@ fn pause_keeps_raw_capture_buffers_and_handled_errors_for_nested_observers() {
     assert_eq!(first_boundary.prints, second_boundary.prints);
     assert_eq!(s.trace_events, raw_trace);
     let error = EvalError::IterationLimitExceeded { limit: 17 };
-    s.emit_non_loader_eval_message(0, &error);
+    s.emit_non_loader_eval_message(crate::runtime::model::OutputMark::START, &error);
     let handled = s.handled_non_loader_eval_errors.len();
     assert!(handled > 0);
     let second = s.resume_eval_request_with_input("one").unwrap_err();
@@ -85,14 +85,15 @@ fn abandonment_rolls_back_all_declared_channels_with_existing_tracing() {
                 let again = s.resume_eval_request_with_input("one").unwrap_err();
                 assert_eq!(again.trace, public_trace);
             }
-            assert!(s.trace_events.len() > boundary.trace.unwrap());
+            let end = boundary.trace.unwrap();
+            assert!(s.trace_events.after(end).len() > 0);
+            let kept = s.trace_values_at_or_before(end);
             abandon(&mut s, AbandonReason::CancelledRequest);
             assert!(s.tracing_enabled);
             assert_eq!(s.prints, vec!["outside"]);
             assert_eq!(s.messages.len(), 1);
-            assert!(s.trace_events.ends_with(&public_trace));
-            assert_eq!(s.trace_events.len(), boundary.trace.unwrap());
-            assert_eq!(s.trace_event_depths.len(), s.trace_events.len());
+            assert!(s.trace_values().ends_with(&public_trace));
+            assert_eq!(s.trace_values(), kept);
             assert_eq!(value(&mut s, "later"), "0");
         }
     }
@@ -138,7 +139,7 @@ fn completion_releases_trace_prefix_when_tracing_was_already_enabled() {
         assert!(!first.trace.is_empty());
         let second = s.resume_eval_request_with_input("one").unwrap_err();
         assert_eq!(second.trace, first.trace);
-        let raw = s.trace_events.clone();
+        let raw = s.trace_values();
         assert!(raw.len() > second.trace.len());
         let done = s.resume_eval_request_with_input("two").unwrap();
         assert!(done.trace.starts_with(&raw));

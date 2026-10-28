@@ -113,12 +113,12 @@ impl Session {
             self.abandonment_worklist.push(nested);
         }
         self.pending_input_request = None;
-        self.pending_eval_request = None;
+        self.pending_request = None;
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
         );
         self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::PendingEvalRequest,
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingRequest,
         );
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::AbandonmentWorklist,

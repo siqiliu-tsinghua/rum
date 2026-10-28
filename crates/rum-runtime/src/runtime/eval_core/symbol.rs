@@ -275,8 +275,9 @@ impl Session {
             .current_message_list_checkpoint
             .filter(|_| self.current_message_list_dirty)
         {
-            return self.messages[checkpoint..]
-                .iter()
+            return self
+                .messages
+                .after(checkpoint)
                 .cloned()
                 .map(held_runtime_message_name_expr)
                 .collect();

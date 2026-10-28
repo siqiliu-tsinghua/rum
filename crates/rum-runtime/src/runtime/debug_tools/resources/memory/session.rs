@@ -85,14 +85,9 @@ impl Session {
             MemoryOwner::GcCandidateGensyms => {
                 render_symbol_hash_set_memory_proxy_bytes(&self.gc_candidate_gensyms)
             }
-            MemoryOwner::HandledNonLoaderEvalErrors => self
-                .handled_non_loader_eval_errors
-                .iter()
-                .map(render_runtime_message_memory_proxy_bytes)
-                .sum::<usize>()
-                .saturating_add(vec_spare_capacity_bytes(
-                    &self.handled_non_loader_eval_errors,
-                )),
+            MemoryOwner::HandledNonLoaderEvalErrors => {
+                render_stamped_messages_bytes(&self.handled_non_loader_eval_errors)
+            }
             MemoryOwner::InstalledSystemDownValues => {
                 render_installed_system_down_values_memory_proxy_bytes(
                     &self.installed_system_down_values,
@@ -130,12 +125,7 @@ impl Session {
             MemoryOwner::MessageSymbolCounts => {
                 render_symbol_keyed_hash_map_memory_proxy_bytes(&self.message_symbol_counts)
             }
-            MemoryOwner::Messages => self
-                .messages
-                .iter()
-                .map(render_runtime_message_memory_proxy_bytes)
-                .sum::<usize>()
-                .saturating_add(vec_spare_capacity_bytes(&self.messages)),
+            MemoryOwner::Messages => render_stamped_messages_bytes(&self.messages),
             MemoryOwner::ModuleActivations => self
                 .module_activations
                 .iter()
@@ -169,10 +159,27 @@ impl Session {
             MemoryOwner::PackageSearchPaths => {
                 render_path_buf_vec_memory_proxy_bytes(&self.package_search_paths)
             }
-            MemoryOwner::PendingEvalRequest => self
-                .pending_eval_request
-                .as_ref()
-                .map_or(0, |_| std::mem::size_of::<PendingEvalRequest>()),
+            MemoryOwner::PendingRequest => self.pending_request.as_ref().map_or(0, |pending| {
+                let reported = &pending.report().reported;
+                std::mem::size_of::<PendingRequest>()
+                    .saturating_add(
+                        reported
+                            .messages
+                            .iter()
+                            .map(render_runtime_message_memory_proxy_bytes)
+                            .sum::<usize>(),
+                    )
+                    .saturating_add(vec_spare_capacity_bytes(&reported.messages))
+                    .saturating_add(render_string_vec_memory_proxy_bytes(&reported.prints))
+                    .saturating_add(
+                        reported
+                            .trace
+                            .iter()
+                            .map(render_trace_event_memory_proxy_bytes)
+                            .sum::<usize>(),
+                    )
+                    .saturating_add(vec_spare_capacity_bytes(&reported.trace))
+            }),
             MemoryOwner::PendingInputRequest => self
                 .pending_input_request
                 .as_ref()
@@ -185,7 +192,7 @@ impl Session {
                 .print_sink
                 .as_ref()
                 .map_or(0, |sink| std::mem::size_of_val(sink.as_ref())),
-            MemoryOwner::Prints => render_string_vec_memory_proxy_bytes(&self.prints),
+            MemoryOwner::Prints => render_stamped_strings_bytes(&self.prints),
             MemoryOwner::QueuedInputResponses => {
                 render_string_vecdeque_memory_proxy_bytes(&self.queued_input_responses)
             }
@@ -230,16 +237,7 @@ impl Session {
                 .iter()
                 .map(|(symbol, expr)| symbol.to_string().len() + expr_memory_proxy_bytes(expr))
                 .sum::<usize>(),
-            MemoryOwner::TraceEventDepths => self
-                .trace_event_depths
-                .capacity()
-                .saturating_mul(std::mem::size_of::<usize>()),
-            MemoryOwner::TraceEvents => self
-                .trace_events
-                .iter()
-                .map(render_trace_event_memory_proxy_bytes)
-                .sum::<usize>()
-                .saturating_add(vec_spare_capacity_bytes(&self.trace_events)),
+            MemoryOwner::TraceEvents => render_stamped_trace_bytes(&self.trace_events),
         }
     }
 

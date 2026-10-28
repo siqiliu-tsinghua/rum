@@ -59,7 +59,7 @@ fn suspended(
     assert!(s.pending_suspension.is_some());
     assert_eq!(s.pending_input_request().unwrap().prompt, prompt);
     assert!(
-        s.pending_eval_request.is_none(),
+        matches!(s.pending_request, Some(PendingRequest::Batch(_))),
         "batch has no resume checkpoint"
     );
 }
@@ -69,7 +69,7 @@ fn idle(s: &mut Session) {
     assert!(s.resuming_suspension.is_none());
     assert!(s.abandonment_worklist.is_empty());
     assert!(!s.abandonment_active);
-    assert!(s.pending_eval_request.is_none());
+    assert!(s.pending_request.is_none());
     assert!(s.pending_input_request().is_none());
     assert!(s.active_accepted_request.is_none());
     assert!(s.pending_accepted_request.borrow().is_none());
@@ -394,4 +394,57 @@ fn invariant_falsifier_file() {
 #[should_panic(expected = "terminal request outcome retained a suspension owner")]
 fn invariant_falsifier_snapshot() {
     let _ = leaky_session().eval_snapshot_restore_request("Leak551[]");
+}
+
+/// Outside any request, a successful batch takes its own output off the
+/// session lists, as `eval_text` does. A request's batch leaves it there for
+/// the request to publish, then cuts at its admission mark.
+#[test]
+fn non_request_batches_take_their_output_off_the_session_lists() {
+    const BATCH: &str = "Print[\"a\"]\nMessage[probe::m]\nPrint[\"b\"]";
+    let mut s = session(&[("Batch.rum", BATCH)]);
+    s.eval_request("probe::m = \"probe text\"").unwrap();
+    for _ in 0..2 {
+        for route in ["text", "script", "file"] {
+            let outcome = match route {
+                "text" => s.eval_text("Print[\"a\"]; Message[probe::m]; Print[\"b\"]"),
+                "script" => s.eval_script(BATCH),
+                _ => s.eval_file("Batch.rum"),
+            }
+            .unwrap();
+            assert_eq!(outcome.prints, ["a", "b"], "{route}");
+            assert_eq!(outcome.messages.len(), 1, "{route}");
+            assert_eq!(outcome.messages[0].tag, "m", "{route}");
+            assert_eq!(s.prints.len(), 0, "{route}");
+            assert_eq!(s.messages.len(), 0, "{route}");
+            assert_eq!(s.last_message_list, outcome.messages, "{route}");
+        }
+    }
+    idle(&mut s);
+}
+
+/// A suspension the non-request `eval_text` left behind has no stored request.
+/// Nothing reported anything for it, so the cancelled request that retires it
+/// admits fresh at the current clock and reports only its cancel notice.
+#[test]
+fn cancelled_request_retires_a_non_request_suspension() {
+    let mut s = session(&[]);
+    s.eval_request("probe::m = \"probe text\"").unwrap();
+    let first = s.eval_text("Message[probe::m]; InputString[\"p: \"]");
+    assert!(matches!(first, Err(EvalError::InputRequired { .. })));
+    assert!(s.pending_suspension.is_some());
+    assert!(s.pending_request.is_none());
+    let accepted = s.accept_cancellable_request().unwrap();
+    accepted.cancel_handle().cancel();
+    let retired = s.eval_accepted_request(accepted, "").unwrap();
+    assert_eq!(retired.termination, Some(EvalTerminationReason::Cancelled));
+    assert_eq!(
+        retired
+            .messages
+            .iter()
+            .map(|message| format!("{}::{}", message.symbol, message.tag))
+            .collect::<Vec<_>>(),
+        ["General::cancel"]
+    );
+    idle(&mut s);
 }

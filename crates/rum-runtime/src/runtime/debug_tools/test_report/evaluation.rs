@@ -1,5 +1,6 @@
 use super::model::{EvalCapturedOutcome, TestCaseSpec, TestReportOptions};
 use super::*;
+use crate::runtime::model::OutputMark;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
 impl ContinuationValue for EvalCapturedOutcome {
@@ -200,47 +201,35 @@ impl Session {
         expr: Expr,
     ) -> Result<EvalCapturedOutcome, EvalError> {
         let started = Instant::now();
-        let message_checkpoint = self.messages.len();
-        let print_checkpoint = self.prints.len();
-        let trace_checkpoint = self.trace_events.len();
-        let handled_error_checkpoint = self.handled_non_loader_eval_errors.len();
+        let mark = self.output_mark();
         let evaluated = self.evaluate(expr);
         let result = self.finalize_top_level_control_flow(evaluated);
 
         match result {
             Err(EvalError::InputRequired { request }) => {
-                crate::resume_or_suspend!(insert self, EvalExprWithStreamCaptureSuspensionFrame { started, message_checkpoint, print_checkpoint, trace_checkpoint, handled_error_checkpoint });
+                crate::resume_or_suspend!(insert self, EvalExprWithStreamCaptureSuspensionFrame { started, mark });
                 Err(EvalError::InputRequired { request })
             }
-            result => self.finish_eval_expr_with_stream_capture(
-                started,
-                message_checkpoint,
-                print_checkpoint,
-                handled_error_checkpoint,
-                result,
-            ),
+            result => self.finish_eval_expr_with_stream_capture(started, mark, result),
         }
     }
 
     fn finish_eval_expr_with_stream_capture(
         &mut self,
         started: Instant,
-        message_checkpoint: usize,
-        print_checkpoint: usize,
-        handled_error_checkpoint: usize,
+        mark: OutputMark,
         result: Result<Expr, EvalError>,
     ) -> Result<EvalCapturedOutcome, EvalError> {
         match result {
             Err(error @ EvalError::ContinuationSlotMismatch(_)) => Err(error),
             Ok(value) => {
-                let messages = self.split_accounted_messages(message_checkpoint);
-                let prints = self.split_accounted_prints(print_checkpoint);
+                let messages = self.split_accounted_messages(mark);
+                let prints = self.split_accounted_prints(mark);
                 self.last_message_list = messages.clone();
                 self.refresh_memory_owner(
                     crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
                 );
-                self.handled_non_loader_eval_errors
-                    .truncate(handled_error_checkpoint);
+                self.handled_non_loader_eval_errors.truncate_after(mark);
                 self.refresh_memory_owner(
                     crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
                 );
@@ -253,16 +242,15 @@ impl Session {
                 })
             }
             Err(err) => {
-                self.emit_non_loader_eval_message(handled_error_checkpoint, &err);
+                self.emit_non_loader_eval_message(mark, &err);
                 self.emit_top_level_control_flow_messages(&err);
-                let messages = self.messages[message_checkpoint..].to_vec();
-                let prints = self.prints[print_checkpoint..].to_vec();
+                let messages = self.messages.after_vec(mark);
+                let prints = self.prints.after_vec(mark);
                 self.last_message_list = messages.clone();
                 self.refresh_memory_owner(
                     crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
                 );
-                self.handled_non_loader_eval_errors
-                    .truncate(handled_error_checkpoint);
+                self.handled_non_loader_eval_errors.truncate_after(mark);
                 self.refresh_memory_owner(
                     crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
                 );
@@ -453,20 +441,13 @@ impl crate::runtime::suspension::SuspensionFrame for EvaluateTestCaseInputSuspen
 #[derive(rum_derive::FrameRootTrace)]
 struct EvalExprWithStreamCaptureSuspensionFrame {
     started: std::time::Instant,
-    message_checkpoint: usize,
-    print_checkpoint: usize,
-    trace_checkpoint: usize,
-    handled_error_checkpoint: usize,
+    mark: OutputMark,
 }
 
 impl crate::runtime::suspension::SuspensionFrame for EvalExprWithStreamCaptureSuspensionFrame {
     fn output_boundary(&self) -> crate::runtime::suspension::OutputBoundary {
         use crate::runtime::suspension::OutputBoundary;
-        OutputBoundary::all(
-            self.print_checkpoint,
-            self.message_checkpoint,
-            self.trace_checkpoint,
-        )
+        OutputBoundary::all(self.mark, self.mark, self.mark)
     }
 
     fn resume(
@@ -477,20 +458,10 @@ impl crate::runtime::suspension::SuspensionFrame for EvalExprWithStreamCaptureSu
         #[allow(unused_mut)]
         let mut started = self.started.clone();
         #[allow(unused_mut)]
-        let mut message_checkpoint = self.message_checkpoint.clone();
-        #[allow(unused_mut)]
-        let mut print_checkpoint = self.print_checkpoint.clone();
-        #[allow(unused_mut)]
-        let mut handled_error_checkpoint = self.handled_error_checkpoint.clone();
+        let mut mark = self.mark;
         let resumed = (|| {
             let result = session.finalize_top_level_control_flow(outcome);
-            let captured = session.finish_eval_expr_with_stream_capture(
-                started,
-                message_checkpoint,
-                print_checkpoint,
-                handled_error_checkpoint,
-                result,
-            )?;
+            let captured = session.finish_eval_expr_with_stream_capture(started, mark, result)?;
             Ok(captured.into_continuation_expr())
         })();
         crate::runtime::suspension::FrameAction::complete(resumed)
@@ -502,7 +473,7 @@ impl crate::runtime::suspension::FrameAbandon for EvalExprWithStreamCaptureSuspe
         self: std::sync::Arc<Self>,
         context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
     ) -> crate::runtime::suspension::FrameAbandonAction {
-        context.restore_stream_capture(self.handled_error_checkpoint);
+        context.restore_stream_capture(self.mark);
         crate::runtime::suspension::FrameAbandonAction::Discard
     }
 }

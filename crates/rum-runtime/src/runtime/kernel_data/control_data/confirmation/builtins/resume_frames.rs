@@ -1,4 +1,5 @@
 use super::*;
+use crate::runtime::model::OutputMark;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
 #[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
@@ -93,7 +94,7 @@ pub(super) struct EvalConfirmQuietSuspensionFrame {
     pub(super) args: rum_core::SharedArgs,
     pub(super) selectors:
         crate::runtime::kernel_data::control_data::confirmation::SuspendedConfirmQuietSelectors,
-    pub(super) message_checkpoint: usize,
+    pub(super) message_checkpoint: OutputMark,
 }
 
 impl crate::runtime::suspension::SuspensionFrame for EvalConfirmQuietSuspensionFrame {

@@ -422,23 +422,29 @@ impl AbandonmentContext<'_> {
 
     pub(in crate::runtime) fn restore_evaluation_data_capture(
         &mut self,
-        handled_error_checkpoint: usize,
+        handled_error_checkpoint: crate::runtime::model::OutputMark,
         prior_tracing: bool,
     ) {
         self.session.tracing_enabled = prior_tracing;
         self.restore_message_capture(handled_error_checkpoint);
     }
 
-    pub(in crate::runtime) fn restore_message_capture(&mut self, handled_error_checkpoint: usize) {
+    pub(in crate::runtime) fn restore_message_capture(
+        &mut self,
+        handled_error_checkpoint: crate::runtime::model::OutputMark,
+    ) {
         self.session
             .handled_non_loader_eval_errors
-            .truncate(handled_error_checkpoint);
+            .truncate_after(handled_error_checkpoint);
         self.session.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,
         );
     }
 
-    pub(in crate::runtime) fn restore_stream_capture(&mut self, handled_error_checkpoint: usize) {
+    pub(in crate::runtime) fn restore_stream_capture(
+        &mut self,
+        handled_error_checkpoint: crate::runtime::model::OutputMark,
+    ) {
         self.restore_message_capture(handled_error_checkpoint);
     }
 

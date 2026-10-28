@@ -6,6 +6,7 @@
 //! Reading the oracle neither samples the peak nor prunes/initializes caches.
 
 use super::*;
+use crate::runtime::model::{OutputLog, OutputStamp};
 use std::mem::{size_of, size_of_val};
 
 mod arithmetic;
@@ -68,6 +69,26 @@ fn spare<T>(values: &Vec<T>) -> Bytes {
 
 fn sequence<T>(values: &Vec<T>, item: impl Fn(&T) -> Bytes) -> Bytes {
     spare(values).add(sum(values.iter().map(item)))
+}
+
+fn stamped_messages(values: &OutputLog<RuntimeMessage>) -> Bytes {
+    slots::<(OutputStamp, RuntimeMessage)>(values.capacity()).add(sum(values.iter().map(|value| {
+        Bytes::Exact(value.symbol.capacity())
+            .add(Bytes::Exact(value.tag.capacity()))
+            .add(Bytes::Exact(value.text.capacity()))
+    })))
+}
+
+fn stamped_strings(values: &OutputLog<String>) -> Bytes {
+    slots::<(OutputStamp, String)>(values.capacity()).add(sum(values
+        .iter()
+        .map(|value| Bytes::Exact(value.capacity()))))
+}
+
+fn stamped_trace_events(values: &OutputLog<(TraceEvent, usize)>) -> Bytes {
+    slots::<(OutputStamp, (TraceEvent, usize))>(values.capacity()).add(sum(values
+        .iter()
+        .map(|(event, _)| trace(event).release(Bytes::Exact(size_of::<TraceEvent>())))))
 }
 
 fn strings(values: &Vec<String>) -> Bytes {

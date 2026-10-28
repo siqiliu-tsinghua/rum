@@ -5,6 +5,7 @@ use resume_frames::*;
 
 use super::*;
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::model::OutputMark;
 
 mod builder;
 
@@ -64,7 +65,7 @@ impl Session {
         state: TraceEvalState,
     ) -> Result<Expr, EvalError> {
         let prior_enabled = self.tracing_enabled;
-        let trace_checkpoint = self.trace_events.len();
+        let trace_checkpoint = self.output_mark();
         self.tracing_enabled = true;
 
         let value_result = self.evaluate(state.original.clone());
@@ -92,7 +93,7 @@ impl Session {
     fn finish_structured_trace_capture_expr(
         &mut self,
         state: TraceEvalState,
-        trace_checkpoint: usize,
+        trace_checkpoint: OutputMark,
         prior_enabled: bool,
         outcome: Result<Expr, EvalError>,
     ) -> Result<Expr, EvalError> {
@@ -116,12 +117,11 @@ impl Session {
 
     fn finish_trace_event_capture(
         &mut self,
-        trace_checkpoint: usize,
+        trace_checkpoint: OutputMark,
         prior_enabled: bool,
         value: Expr,
     ) -> Result<(Expr, Vec<TraceEvent>, Vec<usize>), EvalError> {
-        let events = self.trace_events[trace_checkpoint..].to_vec();
-        let depths = self.trace_event_depths[trace_checkpoint..].to_vec();
+        let (events, depths) = self.trace_pairs_after(trace_checkpoint);
         self.tracing_enabled = prior_enabled;
 
         if !prior_enabled {
@@ -131,7 +131,11 @@ impl Session {
         Ok((value, events, depths))
     }
 
-    fn restore_trace_capture_on_error(&mut self, trace_checkpoint: usize, prior_enabled: bool) {
+    fn restore_trace_capture_on_error(
+        &mut self,
+        trace_checkpoint: OutputMark,
+        prior_enabled: bool,
+    ) {
         self.tracing_enabled = prior_enabled;
         if !prior_enabled {
             self.truncate_trace_from(trace_checkpoint);
@@ -143,7 +147,10 @@ impl Session {
         self.tracing_enabled = prior_enabled;
     }
 
-    pub(in crate::runtime::debug_tools) fn truncate_trace_from(&mut self, trace_checkpoint: usize) {
+    pub(in crate::runtime::debug_tools) fn truncate_trace_from(
+        &mut self,
+        trace_checkpoint: OutputMark,
+    ) {
         self.rollback_capture_output(crate::runtime::suspension::OutputBoundary::trace(
             trace_checkpoint,
         ));

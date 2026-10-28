@@ -90,17 +90,17 @@ pub struct Session {
     pub(in crate::runtime) interrupt_armed: bool,
     pub(in crate::runtime) evaluation_stack: Vec<EvaluationStackEntry>,
     pub(in crate::runtime) tracing_enabled: bool,
-    pub(in crate::runtime) trace_events: Vec<TraceEvent>,
-    pub(in crate::runtime) trace_event_depths: Vec<usize>,
+    pub(in crate::runtime) output_clock: u64,
+    pub(in crate::runtime) trace_events: OutputLog<(TraceEvent, usize)>,
     pub(in crate::runtime) disabled_message_selectors: Vec<MessageSelector>,
-    pub(in crate::runtime) messages: Vec<RuntimeMessage>,
-    pub(in crate::runtime) prints: Vec<String>,
+    pub(in crate::runtime) messages: OutputLog<RuntimeMessage>,
+    pub(in crate::runtime) prints: OutputLog<String>,
     pub(in crate::runtime) print_sink: Option<Box<dyn PrintSink>>,
     pub(in crate::runtime) peak_memory_proxy_bytes: std::cell::Cell<usize>,
     pub(in crate::runtime) last_message_list: Vec<RuntimeMessage>,
-    pub(in crate::runtime) current_message_list_checkpoint: Option<usize>,
+    pub(in crate::runtime) current_message_list_checkpoint: Option<OutputMark>,
     pub(in crate::runtime) current_message_list_dirty: bool,
-    pub(in crate::runtime) handled_non_loader_eval_errors: Vec<RuntimeMessage>,
+    pub(in crate::runtime) handled_non_loader_eval_errors: OutputLog<RuntimeMessage>,
     pub(in crate::runtime) reap_scopes: Vec<ReapScope>,
     pub(in crate::runtime) monitor_scopes: Vec<MonitorScope>,
     pub(in crate::runtime) monitor_callbacks_enabled: bool,
@@ -111,7 +111,7 @@ pub struct Session {
     pub(in crate::runtime) abort_protect_pending: usize,
     pub(in crate::runtime) queued_input_responses: VecDeque<String>,
     pub(in crate::runtime) pending_input_request: Option<RuntimeInputRequest>,
-    pub(in crate::runtime) pending_eval_request: Option<PendingEvalRequest>,
+    pub(in crate::runtime) pending_request: Option<PendingRequest>,
     pub(in crate::runtime) pending_suspension: SuspensionSlot,
     pub(in crate::runtime) resuming_suspension: Option<SuspendedEvaluation>,
     pub(in crate::runtime) abandonment_active: bool,
@@ -130,6 +130,19 @@ pub struct Session {
 }
 
 impl Session {
+    pub(in crate::runtime) fn output_mark(&self) -> OutputMark {
+        OutputMark::from_clock(self.output_clock)
+    }
+
+    /// Hands out the next output stamp. The clock is never reset or restored.
+    pub(in crate::runtime) fn next_output_stamp(&mut self) -> OutputStamp {
+        self.output_clock = self
+            .output_clock
+            .checked_add(1)
+            .expect("output clock exhausted");
+        OutputStamp::from_clock(self.output_clock)
+    }
+
     /// Installs a host-selected destination for `Print` output.
     ///
     /// Installing a sink is the host's explicit choice about where print output

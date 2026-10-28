@@ -37,7 +37,11 @@ impl TypedFrame for Echo {
         TypedAction::complete(input)
     }
     fn output_boundary(&self) -> OutputBoundary {
-        OutputBoundary::all(2, 3, 4)
+        OutputBoundary::all(
+            crate::runtime::model::OutputMark::from_clock(2),
+            crate::runtime::model::OutputMark::from_clock(3),
+            crate::runtime::model::OutputMark::from_clock(4),
+        )
     }
 }
 

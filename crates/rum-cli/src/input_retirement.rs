@@ -4,18 +4,10 @@ use rum_host::{
     HostTerminationReason,
 };
 
-/// The host's single-source checkpoint is replayed on cancellation; batch
-/// cancellation starts its output checkpoint at abandonment instead.
-pub(super) enum CancellationOutput {
-    Cumulative,
-    CleanupOnly,
-}
-
 pub(super) fn retire_input_request(
     session: &mut HostSession,
     cancel: &HostCancelHandle,
     suspension: &mut HostInputSuspension,
-    output: CancellationOutput,
 ) {
     cancel.cancel();
     // The documented cancellation route retires the old request before it
@@ -32,10 +24,9 @@ pub(super) fn retire_input_request(
         outcome => panic!("host input cancellation did not retire its request: {outcome:?}"),
     };
 
-    let (prior_prints, prior_messages) = match output {
-        CancellationOutput::Cumulative => (suspension.prints.len(), suspension.messages.len()),
-        CancellationOutput::CleanupOnly => (0, 0),
-    };
+    // Skip what this front end already emitted for the request, by count.
+    let prior_prints = suspension.prints.len();
+    let prior_messages = suspension.messages.len();
     // Keep guest diagnostics, including any guest-authored General::cancel;
     // only the final, runtime-synthesized cancellation notice is redundant.
     if messages.len() > prior_messages

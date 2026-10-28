@@ -75,6 +75,18 @@ impl<T: FrameRootTrace, E: FrameRootTrace> FrameRootTrace for Result<T, E> {
     }
 }
 
+impl<T: FrameRootTrace> FrameRootTrace for crate::runtime::model::OutputLog<T> {
+    fn trace_roots(&self, visitor: &mut dyn FrameRootVisitor) {
+        for value in self.iter() {
+            value.trace_roots(visitor);
+        }
+    }
+}
+
+impl FrameRootTrace for crate::runtime::model::OutputMark {
+    fn trace_roots(&self, _visitor: &mut dyn FrameRootVisitor) {}
+}
+
 impl<T: FrameRootTrace> FrameRootTrace for Vec<T> {
     fn trace_roots(&self, visitor: &mut dyn FrameRootVisitor) {
         for value in self {
@@ -458,6 +470,8 @@ pub(in crate::runtime) const MANUAL_FRAME_ROOT_TRACE_IMPLS: &[&str] = &[
     "[T]",
     "bool",
     "char",
+    "crate::runtime::model::OutputLog<T>",
+    "crate::runtime::model::OutputMark",
     "f32",
     "f64",
     "fn(&Expr)->bool",

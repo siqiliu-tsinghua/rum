@@ -59,12 +59,7 @@ fn invoke(
         "script" => eval_script_source(session, source),
         "file" => eval_file(session, File::new(source).path()),
         "setup" => eval_setup_binding(session, source).map(|()| ExitCode::SUCCESS),
-        "request" => eval_request(
-            session,
-            "evaluation failed",
-            CancellationOutput::Cumulative,
-            |session| session.eval(source),
-        ),
+        "request" => eval_request(session, "evaluation failed", |session| session.eval(source)),
         _ => panic!("unknown helper {kind}"),
     }
 }
@@ -441,18 +436,67 @@ fn cleanup_messages_appear_once_with_original_input_reason() {
 #[test]
 fn retirement_does_not_consume_a_queued_future_answer() {
     let mut session = build_host_session();
-    let result = eval_request(
-        &mut session,
-        "evaluation failed",
-        CancellationOutput::CleanupOnly,
-        |session| {
-            let outcome = session.eval_script(INPUT);
-            assert!(matches!(outcome, HostEvalOutcome::InputRequired(_)));
-            session.queue_input_response("future");
-            outcome
-        },
-    );
+    let result = eval_request(&mut session, "evaluation failed", |session| {
+        let outcome = session.eval_script(INPUT);
+        assert!(matches!(outcome, HostEvalOutcome::InputRequired(_)));
+        session.queue_input_response("future");
+        outcome
+    });
     input_error(result, "request", "p: ");
     reusable(&mut session);
     value(&mut session, "InputString[]", "\"future\"");
+}
+
+/// W1 through the CLI helpers. Script, eval, and setup keep the nested file's
+/// already-reported inside message and the outer cleanup message. The file
+/// route's rollback discards the outer cleanup, as in
+/// `cleanup_messages_appear_once_with_original_input_reason`.
+#[test]
+fn cancelled_nested_get_reports_inside_once_and_outer_once() {
+    if let Ok(kind) = env::var(CHILD_CASE) {
+        let mut session = build_host_session();
+        let inner = File::new(
+            "probe::inside = \"inside message\"; Message[probe::inside]; InputString[\"in\"]",
+        );
+        let source = format!(
+            "probe::outer = \"outer message\"; WithCleanup[Get[{:?}], Message[probe::outer]]",
+            inner.path()
+        );
+        let error = invoke(&kind, &mut session, &source).unwrap_err();
+        assert!(
+            error.to_string().contains("input required: in"),
+            "{kind}: {error}"
+        );
+        if kind == "setup" {
+            eprintln!("{error}");
+        }
+        reusable(&mut session);
+        return;
+    }
+    let mut failures = Vec::new();
+    for kind in ["script", "eval", "setup", "file"] {
+        let output = child(
+            "cancelled_nested_get_reports_inside_once_and_outer_once",
+            kind,
+            false,
+        );
+        let stderr = String::from_utf8(output.stderr).unwrap();
+        let inside = stderr.matches("inside message").count();
+        let outer = stderr.matches("outer message").count();
+        let reason = stderr.matches("input required: in").count();
+        let cancel = stderr.contains("cancel");
+        eprintln!(
+            "CLIVERDICT kind={kind} status={} inside={inside} outer={outer} reason={reason} cancel={cancel}",
+            output.status
+        );
+        let expect_outer = usize::from(kind != "file");
+        if !output.status.success() || inside != 1 || outer != expect_outer || reason != 1 || cancel
+        {
+            failures.push(format!(
+                "{kind}: status={} inside={inside} outer={outer} (expect {expect_outer}) reason={reason} cancel={cancel}\n{stderr}",
+                output.status
+            ));
+        }
+    }
+    assert!(failures.is_empty(), "{}", failures.join("\n---\n"));
 }

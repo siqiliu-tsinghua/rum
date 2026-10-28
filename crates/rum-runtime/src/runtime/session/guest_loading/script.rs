@@ -18,10 +18,8 @@ struct GuestScriptCursor {
     form: usize,
     last_value: Expr,
     last_termination: Option<EvalTerminationReason>,
-    message_start: usize,
-    print_start: usize,
-    completed_message_end: usize,
-    completed_print_end: usize,
+    start: OutputMark,
+    completed_end: OutputMark,
     caller_stack: Arc<GuestCallerStack>,
 }
 
@@ -64,10 +62,8 @@ impl Session {
             form: 0,
             last_value: system_expr("Null"),
             last_termination: None,
-            message_start: self.messages.len(),
-            print_start: self.prints.len(),
-            completed_message_end: self.messages.len(),
-            completed_print_end: self.prints.len(),
+            start: self.output_mark(),
+            completed_end: self.output_mark(),
             caller_stack: Arc::new(GuestCallerStack::capture(self)),
         };
         self.drive_guest_script(cursor)
@@ -93,10 +89,9 @@ impl Session {
             }
             self.finish_guest_form(&mut cursor, &scope, outcome, false)?;
         }
-        debug_assert_eq!(cursor.completed_message_end, self.messages.len());
-        debug_assert_eq!(cursor.completed_print_end, self.prints.len());
-        debug_assert!(cursor.print_start <= cursor.completed_print_end);
-        self.last_message_list = self.messages[cursor.message_start..].to_vec();
+        debug_assert!(!self.messages.has_after(cursor.completed_end));
+        debug_assert!(!self.prints.has_after(cursor.completed_end));
+        self.last_message_list = self.messages.after_vec(cursor.start);
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
         );
@@ -136,23 +131,21 @@ impl Session {
         resumed: bool,
     ) -> Result<(), EvalError> {
         debug_assert!(!matches!(outcome, Err(EvalError::InputRequired { .. })));
-        let result = self.finalize_cycle_termination_value(outcome, scope.handled_error_checkpoint);
+        let result = self.finalize_cycle_termination_value(outcome, scope.mark);
         if let Err(error) = &result {
-            self.emit_non_loader_eval_message(scope.handled_error_checkpoint, error);
+            self.emit_non_loader_eval_message(scope.mark, error);
             self.emit_top_level_control_flow_messages(error);
         }
-        self.last_message_list = self.messages[scope.message_checkpoint..].to_vec();
+        self.last_message_list = self.messages.after_vec(scope.mark);
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,
         );
-        debug_assert!(scope.print_checkpoint <= self.prints.len());
         scope.restore(self, resumed);
         let (value, termination) = result?;
         cursor.last_value = value;
         cursor.last_termination = termination;
         cursor.form += 1;
-        cursor.completed_message_end = self.messages.len();
-        cursor.completed_print_end = self.prints.len();
+        cursor.completed_end = self.output_mark();
         Ok(())
     }
 }

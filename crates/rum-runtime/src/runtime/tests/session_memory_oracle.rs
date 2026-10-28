@@ -105,11 +105,11 @@ fn byte_array_charges_encoded_capacity_for_valid_invalid_and_nonstring_payloads(
 #[test]
 fn container_capacity_and_legacy_length_terms_are_distinct() {
     let mut session = Session::empty();
-    session.prints = Vec::with_capacity(7);
-    session.prints.push(reserved("p", 101));
-    session.prints.push(reserved("q", 103));
-    session.trace_event_depths = Vec::with_capacity(9);
-    session.trace_event_depths.push(1);
+    session.prints = crate::runtime::model::OutputLog::with_capacity(7);
+    let first = session.next_output_stamp();
+    let second = session.next_output_stamp();
+    session.prints.push(first, reserved("p", 101));
+    session.prints.push(second, reserved("q", 103));
     session.declared_stubs.reserve(30);
     let symbol = Symbol::from_name("kept");
     let symbol_bytes = size_of::<Symbol>() + symbol.context().len() + symbol.name().len();
@@ -129,11 +129,10 @@ fn container_capacity_and_legacy_length_terms_are_distinct() {
     let model = assert_model(&session);
     assert_eq!(
         model.field("prints"),
-        Bytes::Exact(session.prints.capacity() * size_of::<String>() + 204)
-    );
-    assert_eq!(
-        model.field("trace_event_depths"),
-        Bytes::Exact(session.trace_event_depths.capacity() * size_of::<usize>())
+        Bytes::Exact(
+            session.prints.capacity() * size_of::<(crate::runtime::model::OutputStamp, String)>()
+                + 204
+        )
     );
     assert_eq!(model.field("declared_stubs"), Bytes::Exact(symbol_bytes));
     assert_eq!(

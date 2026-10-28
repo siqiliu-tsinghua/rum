@@ -73,6 +73,7 @@ fn wrong_arms_and_exact_state_unwind_captures_and_scopes() {
                 "{label}: {first:?}"
             );
             let boundary = s.pending_output_boundary();
+            let kept_trace = boundary.trace.map(|end| s.trace_values_at_or_before(end));
             super::accounting::reconcile(&s);
             let failure = s.resume_eval_request_with_input("answer").unwrap_err();
             kind.assert_request(&failure.error);
@@ -96,8 +97,8 @@ fn wrong_arms_and_exact_state_unwind_captures_and_scopes() {
                 usize::from(!capture_message),
                 "{label}"
             );
-            if let Some(end) = boundary.trace {
-                assert_eq!(s.trace_events.len(), end, "{label}");
+            if let Some(kept) = kept_trace {
+                assert_eq!(s.trace_values(), kept, "{label}");
             }
             assert!(s.tracing_enabled);
             restored(&mut s);

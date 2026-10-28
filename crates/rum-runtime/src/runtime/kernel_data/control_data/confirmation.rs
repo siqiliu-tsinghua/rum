@@ -1,6 +1,7 @@
 use super::status::is_failure_q_expr;
 use super::*;
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::model::OutputMark;
 use std::sync::Arc;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -60,12 +61,11 @@ fn normalize_confirm_quiet_selectors(
     }
 }
 
-fn confirm_quiet_matched_message(
-    messages: &[RuntimeMessage],
+fn confirm_quiet_matched_message<'a>(
+    mut messages: impl Iterator<Item = &'a RuntimeMessage>,
     selectors: ConfirmQuietSelectorsView<'_>,
 ) -> Option<RuntimeMessage> {
     messages
-        .iter()
         .find(|message| match selectors {
             ConfirmQuietSelectorsView::All => true,
             ConfirmQuietSelectorsView::Exact(selectors) => {
@@ -77,11 +77,11 @@ fn confirm_quiet_matched_message(
 
 fn suppress_confirm_quiet_messages(
     session: &mut Session,
-    checkpoint: usize,
+    checkpoint: OutputMark,
     selectors: ConfirmQuietSelectorsView<'_>,
 ) {
     match selectors {
-        ConfirmQuietSelectorsView::All => session.messages.truncate(checkpoint),
+        ConfirmQuietSelectorsView::All => session.messages.truncate_after(checkpoint),
         ConfirmQuietSelectorsView::Exact(selectors) => {
             session.suppress_messages_since(checkpoint, selectors);
         }

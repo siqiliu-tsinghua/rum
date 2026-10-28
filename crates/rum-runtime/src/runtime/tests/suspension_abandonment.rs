@@ -18,7 +18,7 @@ fn suspend(session: &mut Session, source: &str) {
 fn abandon(session: &mut Session, reason: AbandonReason) {
     assert_eq!(session.abandon_pending_suspension(reason), reason);
     assert!(session.pending_input_request.is_none());
-    assert!(session.pending_eval_request.is_none());
+    assert!(session.pending_request.is_none());
     assert!(session.pending_suspension.is_none());
     assert!(session.resuming_suspension.is_none());
     assert!(session.abandonment_worklist.is_empty());
@@ -307,7 +307,6 @@ fn abandonment_restores_trace_and_evaluation_data_captures_without_rendering() {
     abandon(&mut session, AbandonReason::CancelledRequest);
     assert!(!session.tracing_enabled);
     assert_eq!(session.trace_events.len(), trace_checkpoint);
-    assert_eq!(session.trace_event_depths.len(), trace_checkpoint);
     assert_eq!(value(&mut session, "traceLater"), "0");
 
     let message_checkpoint = session.messages.len();
@@ -327,7 +326,6 @@ fn abandonment_restores_trace_and_evaluation_data_captures_without_rendering() {
     assert_eq!(session.messages.len(), message_checkpoint);
     assert_eq!(session.prints.len(), print_checkpoint);
     assert_eq!(session.trace_events.len(), trace_checkpoint);
-    assert_eq!(session.trace_event_depths.len(), trace_checkpoint);
     assert_eq!(
         session.handled_non_loader_eval_errors.len(),
         handled_checkpoint

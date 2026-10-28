@@ -264,38 +264,38 @@ impl Session {
         self.asserts_enabled
     }
 
-    pub fn trace(&self) -> &[TraceEvent] {
-        &self.trace_events
+    pub fn trace(&self) -> SessionTraceView<'_> {
+        SessionTraceView::new(self.trace_events.view())
     }
 
     pub fn take_trace(&mut self) -> Vec<TraceEvent> {
-        self.trace_event_depths.clear();
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::TraceEventDepths,
-        );
         let taken = std::mem::take(&mut self.trace_events);
         self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::TraceEvents);
         taken
+            .into_values()
+            .into_iter()
+            .map(|(event, _depth)| event)
+            .collect()
     }
 
-    pub fn messages(&self) -> &[RuntimeMessage] {
-        &self.messages
+    pub fn messages(&self) -> OutputView<'_, RuntimeMessage> {
+        self.messages.view()
     }
 
     pub fn take_messages(&mut self) -> Vec<RuntimeMessage> {
         let taken = std::mem::take(&mut self.messages);
         self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Messages);
-        taken
+        taken.into_values()
     }
 
-    pub fn prints(&self) -> &[String] {
-        &self.prints
+    pub fn prints(&self) -> OutputView<'_, String> {
+        self.prints.view()
     }
 
     pub fn take_prints(&mut self) -> Vec<String> {
         let taken = std::mem::take(&mut self.prints);
         self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::Prints);
-        taken
+        taken.into_values()
     }
 
     pub fn pending_input_request(&self) -> Option<&RuntimeInputRequest> {

@@ -7,7 +7,7 @@
 
 mod input_retirement;
 
-use input_retirement::{CancellationOutput, retire_input_request};
+use input_retirement::retire_input_request;
 use std::env;
 use std::io::{self, IsTerminal, Read, Write};
 use std::process::ExitCode;
@@ -228,42 +228,30 @@ fn eval_source(
     session: &mut HostSession,
     input: &str,
 ) -> Result<ExitCode, Box<dyn std::error::Error>> {
-    eval_request(
-        session,
-        "evaluation failed",
-        CancellationOutput::Cumulative,
-        |session| session.eval(input),
-    )
+    eval_request(session, "evaluation failed", |session| session.eval(input))
 }
 
 fn eval_script_source(
     session: &mut HostSession,
     input: &str,
 ) -> Result<ExitCode, Box<dyn std::error::Error>> {
-    eval_request(
-        session,
-        "evaluation failed",
-        CancellationOutput::CleanupOnly,
-        |session| session.eval_script(input),
-    )
+    eval_request(session, "evaluation failed", |session| {
+        session.eval_script(input)
+    })
 }
 
 fn eval_file(
     session: &mut HostSession,
     path: &str,
 ) -> Result<ExitCode, Box<dyn std::error::Error>> {
-    eval_request(
-        session,
-        "file evaluation failed",
-        CancellationOutput::CleanupOnly,
-        |session| session.eval_file(path),
-    )
+    eval_request(session, "file evaluation failed", |session| {
+        session.eval_file(path)
+    })
 }
 
 fn eval_request(
     session: &mut HostSession,
     error_context: &str,
-    cancellation_output: CancellationOutput,
     request: impl FnOnce(&mut HostSession) -> HostEvalOutcome,
 ) -> Result<ExitCode, Box<dyn std::error::Error>> {
     let cancel = session.cancel_handle();
@@ -291,7 +279,7 @@ fn eval_request(
         HostEvalOutcome::InputRequired(mut suspension) => {
             // Only an admitted request can suspend. Retire before any output
             // error or broken-pipe return; a rejected admission owns nothing.
-            retire_input_request(session, &cancel, &mut suspension, cancellation_output);
+            retire_input_request(session, &cancel, &mut suspension);
             if broken_pipe.load(Ordering::Relaxed) {
                 return Ok(ExitCode::SUCCESS);
             }
@@ -336,12 +324,7 @@ fn eval_setup_binding(
         HostEvalOutcome::Success(_) => return Ok(()),
         HostEvalOutcome::Failure(failure) => render_host_failure(&failure),
         HostEvalOutcome::InputRequired(mut suspension) => {
-            retire_input_request(
-                session,
-                &cancel,
-                &mut suspension,
-                CancellationOutput::Cumulative,
-            );
+            retire_input_request(session, &cancel, &mut suspension);
             render_input_suspension(&suspension)
         }
     };

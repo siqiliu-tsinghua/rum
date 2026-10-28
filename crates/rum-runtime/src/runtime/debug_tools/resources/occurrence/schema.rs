@@ -113,8 +113,8 @@ session_memory_field_decisions! {
     gensym_gc_sweep_count => Exempt("fixed-size test-only value already covered by size_of::<Session>()"),
     gensym_gc_watermark => Exempt("fixed-size value already covered by size_of::<Session>()"),
     guest_form => Exempt("fixed-size scalar guest-form identity already covered by size_of::<Session>()"),
-    handled_non_loader_eval_errors => Accounted("RuntimeMessage strings and Vec spare capacity") =
-        sequence(handled_non_loader_eval_errors, message),
+    handled_non_loader_eval_errors => Accounted("RuntimeMessage strings, output stamps, and Vec spare capacity") =
+        stamped_messages(handled_non_loader_eval_errors),
     has_up_value_definitions => Exempt("fixed-size value already covered by size_of::<Session>()"),
     in_gensym_sweep => Exempt("fixed-size value already covered by size_of::<Session>()"),
     installed_system_down_values => Accounted("hash-table storage, Symbol text, rule expressions, and nested Vec spare capacity") =
@@ -135,8 +135,8 @@ session_memory_field_decisions! {
         sum(message_definitions.iter().map(|(key, value)| Bytes::Exact(key.symbol.to_string().len()).add(Bytes::Exact(key.tag.len())).add(optional_expr(value.immediate.as_ref())).add(optional_expr(value.delayed.as_ref())))),
     message_symbol_counts => Accounted("hash-table capacity and live Symbol text") =
         symbol_map(message_symbol_counts),
-    messages => Accounted("RuntimeMessage strings and Vec spare capacity") =
-        sequence(messages, message),
+    messages => Accounted("RuntimeMessage strings, output stamps, and Vec spare capacity") =
+        stamped_messages(messages),
     module_activations => Accounted("ModuleActivation gensym vectors and outer Vec spare capacity") =
         sequence(module_activations, activation),
     monitor_callbacks_enabled => Exempt("fixed-size value already covered by size_of::<Session>()"),
@@ -152,20 +152,27 @@ session_memory_field_decisions! {
         sequence(option_value_scopes, option_scope),
     options => Accounted("Symbol keys and SymbolOptions entries") =
         sum(options.iter().map(|(key, value)| Bytes::Exact(key.to_string().len()).add(payloads::options(value)))),
+    output_clock => Exempt("fixed-size value already covered by size_of::<Session>()"),
     package_search_paths => Accounted("PathBuf payloads and Vec capacity") =
         paths(package_search_paths),
     peak_memory_proxy_bytes => Exempt("fixed-size value already covered by size_of::<Session>()"),
     pending_accepted_request => Exempt("fixed-size wrapper already covered by size_of::<Session>(); Arc contents are already counted through request_interrupt_control"),
-    pending_eval_request => Accounted("existing conditional PendingEvalRequest conservative term") =
-        Bytes::Exact(pending_eval_request.as_ref().map_or(0, |_| size_of::<PendingEvalRequest>())),
     pending_input_request => Accounted("RuntimeInputRequest prompt capacity") =
         pending_input_request.as_ref().map_or(Bytes::Exact(0), |request| Bytes::Exact(size_of::<RuntimeInputRequest>()).add(Bytes::Exact(request.prompt.capacity())).add(Bytes::Exact(1))),
+    pending_request => Accounted("admission mark and reported message, print, and trace lists") =
+        pending_request.as_ref().map_or(Bytes::Exact(0), |pending| {
+            let reported = &pending.report().reported;
+            Bytes::Exact(size_of::<PendingRequest>())
+                .add(sequence(&reported.messages, message))
+                .add(strings(&reported.prints))
+                .add(sequence(&reported.trace, trace))
+        }),
     pending_suspension => Accounted("owned SuspendedEvaluation stack, frames, and roots") =
         pending_suspension.as_ref().map_or(Bytes::Exact(0), SuspendedEvaluation::occurrence_bytes),
     print_sink => Accounted("concrete boxed FnMut object") =
         Bytes::Exact(print_sink.as_ref().map_or(0, |sink| size_of_val(sink.as_ref()))),
-    prints => Accounted("String capacities and Vec capacity") =
-        strings(prints),
+    prints => Accounted("String capacities, output stamps, and Vec capacity") =
+        stamped_strings(prints),
     prng_state => Exempt("fixed-size value already covered by size_of::<Session>()"),
     queued_input_responses => Accounted("String capacities and VecDeque capacity") =
         slots::<String>(queued_input_responses.capacity()).add(sum(queued_input_responses.iter().map(|value| Bytes::Exact(value.capacity())))),
@@ -194,10 +201,8 @@ session_memory_field_decisions! {
         sum(symbol_generations.iter().map(|((context, name), _)| Bytes::Exact(size_of::<((String, String), u64)>()).add(Bytes::Exact(context.capacity())).add(Bytes::Exact(name.capacity())))),
     syntax_information => Accounted("Symbol keys and Expr values") =
         sum(syntax_information.iter().map(|(key, value)| Bytes::Exact(key.to_string().len()).add(expression(value)))),
-    trace_event_depths => Accounted("Vec capacity") =
-        slots::<usize>(trace_event_depths.capacity()),
-    trace_events => Accounted("TraceEvent strings, expressions, and Vec spare capacity") =
-        sequence(trace_events, trace),
+    trace_events => Accounted("TraceEvent strings, depths, output stamps, and Vec spare capacity") =
+        stamped_trace_events(trace_events),
     tracing_enabled => Exempt("fixed-size value already covered by size_of::<Session>()"),
     value_q_effect_suppression_active => Exempt("fixed-size value already covered by size_of::<Session>()"),
 }

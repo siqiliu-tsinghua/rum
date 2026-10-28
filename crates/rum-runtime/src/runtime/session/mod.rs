@@ -1,5 +1,6 @@
 mod batch_file;
 pub(in crate::runtime) mod guest_loading;
+mod request_errors;
 mod session_api;
 mod session_eval;
 mod session_helpers;

@@ -1,4 +1,5 @@
 use super::*;
+use crate::runtime::model::{OutputLog, OutputStamp};
 use crate::runtime::suspension::trace::FrameRootVisitor;
 use rum_core::IntValue;
 
@@ -602,6 +603,51 @@ fn render_option_value_scope_memory_proxy_bytes(scope: &OptionValueScope) -> usi
     std::mem::size_of::<OptionValueScope>()
         .saturating_add(scope.target().to_string().len())
         .saturating_add(render_symbol_options_memory_proxy_bytes(scope.explicit()))
+}
+
+pub(super) fn render_stamped_messages_bytes(values: &OutputLog<RuntimeMessage>) -> usize {
+    values
+        .iter()
+        .map(|message| {
+            message
+                .symbol
+                .capacity()
+                .saturating_add(message.tag.capacity())
+                .saturating_add(message.text.capacity())
+        })
+        .sum::<usize>()
+        .saturating_add(
+            values
+                .capacity()
+                .saturating_mul(std::mem::size_of::<(OutputStamp, RuntimeMessage)>()),
+        )
+}
+
+pub(super) fn render_stamped_strings_bytes(values: &OutputLog<String>) -> usize {
+    values
+        .iter()
+        .map(String::capacity)
+        .sum::<usize>()
+        .saturating_add(
+            values
+                .capacity()
+                .saturating_mul(std::mem::size_of::<(OutputStamp, String)>()),
+        )
+}
+
+pub(super) fn render_stamped_trace_bytes(values: &OutputLog<(TraceEvent, usize)>) -> usize {
+    values
+        .iter()
+        .map(|(event, _)| {
+            render_trace_event_memory_proxy_bytes(event)
+                .saturating_sub(std::mem::size_of::<TraceEvent>())
+        })
+        .sum::<usize>()
+        .saturating_add(
+            values
+                .capacity()
+                .saturating_mul(std::mem::size_of::<(OutputStamp, (TraceEvent, usize))>()),
+        )
 }
 
 fn vec_spare_capacity_bytes<T>(values: &Vec<T>) -> usize {

@@ -208,8 +208,31 @@ impl Session {
             }
         }
 
-        // `pending_eval_request` currently stores request checkpoints only; it
-        // does not carry an `Expr`.
+        // A rollback can drop the session copy of a trace event after it was
+        // published. The reported copy stays reachable until the request ends.
+        if let Some(pending) = &self.pending_request {
+            for event in &pending.report().reported.trace {
+                match event {
+                    crate::runtime::model::TraceEvent::EvaluationPass { before, after } => {
+                        visit(before);
+                        visit(after);
+                    }
+                    crate::runtime::model::TraceEvent::DefinitionStored { value, .. } => {
+                        visit(value);
+                    }
+                    crate::runtime::model::TraceEvent::RuleApplied {
+                        input,
+                        rule,
+                        result,
+                        ..
+                    } => {
+                        visit(input);
+                        visit(rule);
+                        visit(result);
+                    }
+                }
+            }
+        }
     }
 }
 

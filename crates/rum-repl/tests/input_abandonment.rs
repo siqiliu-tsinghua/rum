@@ -306,3 +306,29 @@ fn permanently_broken_output_cannot_prevent_guest_cleanup() {
         "List[1, 0, 1]"
     );
 }
+
+#[test]
+fn eval_route_reports_inside_message_once_and_outer_cleanup_once() {
+    let directory = std::env::temp_dir().join(format!("rum-repl-b2-inner-{}", std::process::id()));
+    std::fs::create_dir_all(&directory).unwrap();
+    let inner = directory.join("Inner.rum");
+    std::fs::write(
+        &inner,
+        "probe::inside = \"inside message\"; Message[probe::inside]; InputString[\"in\"]\n",
+    )
+    .unwrap();
+    let source = format!(
+        "probe::outer = \"outer message\"; WithCleanup[Get[{:?}], Message[probe::outer]]",
+        inner
+    );
+    let mut session = rum_host::HostSession::builder()
+        .with_config(rum_host::HostConfig::default())
+        .build();
+    let mut output = Vec::new();
+    let run = Repl::new(Cursor::new(format!("{source}\n")), &mut output).run(&mut session);
+    let _ = std::fs::remove_dir_all(&directory);
+    run.unwrap();
+    let output = String::from_utf8(output).unwrap();
+    assert_eq!(output.matches("inside message").count(), 1, "{output}");
+    assert_eq!(output.matches("outer message").count(), 1, "{output}");
+}
