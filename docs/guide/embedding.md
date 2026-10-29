@@ -519,6 +519,17 @@ and `Monitor` callbacks do not run during a retirement. Because time spent
 waiting for input counts toward the deadline, a deadline that has already
 passed when the cancel arrives skips every cleanup.
 
+A cleanup that fails during a retirement reports its error the way top-level
+evaluation reports it, before `General::cancel`: an uncaught `Throw` adds
+`Throw::nocatch`, and a resource limit adds its `General` message. The work
+around the cleanup is retired, not resumed, so an enclosing `Catch` or
+`TimeConstrained` does not handle the error. An `Exit[n]` in such a cleanup is
+not honored. The outcome stays `Cancelled` and reports `Exit::abandoned`. A
+cleanup stopped by a further `cancel()` or by the deadline reports nothing of
+its own, because `WithCleanup::skipped` and `General::cancel` already cover it.
+The message of a failing cleanup inside a file that the cancellation rolls back
+is rolled back with that file.
+
 The retirement outcome is cumulative for the request, like every other
 response, on the single-source and the script-shaped routes alike. Its
 `messages`, `prints` and `trace` begin with everything the input outcome

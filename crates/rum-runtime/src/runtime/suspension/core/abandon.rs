@@ -103,6 +103,7 @@ impl Session {
                         break;
                     }
                     let entry_depth = self.evaluation_depth.get();
+                    let report_mark = self.output_mark();
                     let cleanup_outcome = self.evaluate(cleanup.expr);
                     if matches!(cleanup_outcome, Err(EvalError::InputRequired { .. })) {
                         if let Some(nested) = self.take_accounted_pending_suspension_for_abandon() {
@@ -118,7 +119,13 @@ impl Session {
                             crate::runtime::debug_tools::resources::MemoryOwner::PendingRequest,
                         );
                     }
-                    if self.drain_host_interrupt_pending() {
+                    let interrupted = self.drain_host_interrupt_pending();
+                    if abandonment_reports_cleanup_error(reason) {
+                        if let Some(error) = escaped_cleanup_error(&cleanup_outcome, interrupted) {
+                            self.report_abandoned_cleanup_error(report_mark, error);
+                        }
+                    }
+                    if interrupted {
                         *skip_cleanups = true;
                     }
                     self.clear_accounted_evaluation_stack();
@@ -187,4 +194,52 @@ fn nested_front_is_deeper(nested: &SuspendedEvaluation, entry_depth: usize) -> b
         .frames
         .front()
         .is_some_and(|cell| cell.context.depth > entry_depth)
+}
+
+/// `CancelledRequest` and `ContinuationSlotMismatch` report an error that
+/// escapes a cleanup. The other abandonment reasons do not.
+fn abandonment_reports_cleanup_error(reason: AbandonReason) -> bool {
+    match reason {
+        AbandonReason::CancelledRequest | AbandonReason::ContinuationSlotMismatch => true,
+        AbandonReason::FailedSnapshotRestore
+        | AbandonReason::CheckpointRollbackDiscard
+        | AbandonReason::SupersededOrQueuedInputDiscard
+        | AbandonReason::HelperBestEffortDiscard => false,
+    }
+}
+
+/// The error a cleanup let escape, or `None` for a value, a requeued input,
+/// or the host interrupt that ended it.
+fn escaped_cleanup_error(
+    outcome: &Result<Expr, EvalError>,
+    interrupted: bool,
+) -> Option<&EvalError> {
+    match outcome {
+        Ok(_) | Err(EvalError::InputRequired { .. }) | Err(EvalError::Cancelled) => None,
+        Err(EvalError::TimeConstraintExceeded) if interrupted => None,
+        Err(error) => Some(error),
+    }
+}
+
+impl Session {
+    #[cold]
+    #[inline(never)]
+    fn report_abandoned_cleanup_error(
+        &mut self,
+        mark: crate::runtime::model::OutputMark,
+        error: &EvalError,
+    ) {
+        if let EvalError::Exit { code } = error {
+            self.push_message(
+                "Exit",
+                "abandoned",
+                format!(
+                    "Exit[{code}] in a cleanup was not honored because its request was being abandoned."
+                ),
+            );
+            return;
+        }
+        self.emit_non_loader_eval_message(mark, error);
+        self.emit_top_level_control_flow_messages(error);
+    }
 }

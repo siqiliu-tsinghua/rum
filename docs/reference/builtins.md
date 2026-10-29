@@ -1660,6 +1660,7 @@ Requests host-level termination with an optional integer exit code.
 - Messages:
   - Exit::argt — Exit called with `1` arguments; 0 or 1 arguments are expected.
   - Exit::intm — Machine-sized integer expected at position 1 in `1`.
+  - Exit::abandoned — Exit[`1`] in a cleanup was not honored because its request was being abandoned.
 
 ### Expand
 

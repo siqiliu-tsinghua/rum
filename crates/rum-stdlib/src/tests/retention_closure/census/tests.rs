@@ -262,18 +262,30 @@ fn baseline(source: &Source) {
     // two checked_add receivers in model/session.rs, and OutputStamp's
     // `Self(clock)` in output_log.rs. 998 (10/957/31), still no mark or
     // coverage.
+    // brief-630 B3: abandonment reports an error that escapes a cleanup.
+    // Paired through the diff, 996 rows keep their kind, callee and reason,
+    // and none is base-only. On abandon.rs's changed lines, 2 RET002 rows
+    // retire and 6 appear: the moved drain_host_interrupt_pending witnesses,
+    // output_mark's, Exit::abandoned's push_message, and its format! (RET003).
+    // The arm calls emit_non_loader_eval_message and
+    // emit_top_level_control_flow_messages, which the census walks (it stops
+    // at push_message), so 38 rows on unchanged lines enter the frontier:
+    // those two emitters and emit_uncaught_throw_message in session_helpers.rs
+    // (12 RET002, 1 RET003), the message and handled-error pushes in
+    // diagnostics.rs (18), and the message memory proxy in memory.rs (7).
+    // 1040 (10/997/33), still no mark or coverage.
     assert!(options.rejected.iter().any(|row| row.kind == Kind::RET002
         && row.site.file.ends_with("resolution.rs")
         && row.site.start == (36, 19)
         && row.reason == "path AccumulatorChain::default has 0 exact bindings"));
     assert_eq!(
         options.rejected.len(),
-        998,
+        1040,
         "STOP: brief-545 exact legacy frontier inventory moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 957), (Kind::RET003, 31)])
+        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 997), (Kind::RET003, 33)])
     );
     let wrapper = regions::frontier(
         source,

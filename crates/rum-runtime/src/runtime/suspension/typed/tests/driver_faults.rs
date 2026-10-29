@@ -156,6 +156,48 @@ fn cleanup_failure_or_nested_input_never_replaces_the_first_fault() {
 }
 
 #[test]
+fn b3_cleanup_throw_reports_nocatch_without_replacing_the_first_fault() {
+    let cleanup = "cleaned=1;Throw[630]";
+    let kind = FaultKind::StateForValue;
+    let (mut s, events) = session(kind, true);
+    s.eval_request("cleaned=0;cleanupLater=0;later=0;x=outside")
+        .unwrap();
+    let probe = s.continuation_fault_probe();
+    let first = s
+        .eval_request(&format!(
+            "WithCleanup[Block[{{x=inside}},SlotTrip[];later=1],({cleanup})]"
+        ))
+        .unwrap_err();
+    assert!(matches!(
+        first.error,
+        SessionRequestError::InputRequired { .. }
+    ));
+    super::accounting::reconcile(&s);
+    let failure = s.resume_eval_request_with_input("answer").unwrap_err();
+    kind.assert_request(&failure.error);
+    assert_eq!(probe.occurrences(), 1);
+    assert_eq!(
+        *events.lock().unwrap(),
+        ["emit", "nested", "consumer", "suffix-one", "suffix-two"]
+    );
+    restored(&mut s);
+    assert_eq!(
+        s.eval_request("{x,cleaned,cleanupLater,later}")
+            .unwrap()
+            .value
+            .to_string(),
+        "List[outside, 1, 0, 0]"
+    );
+    let tags: Vec<_> = failure
+        .messages
+        .iter()
+        .map(|message| format!("{}::{}", message.symbol, message.tag))
+        .collect();
+    eprintln!("B3SLOTVERDICT tags={tags:?}");
+    assert_eq!(tags, ["Throw::nocatch"]);
+}
+
+#[test]
 fn completion_exact_decode_and_probe_survive_rollback_and_replacement() {
     for kind in [
         FaultKind::ValueForState,

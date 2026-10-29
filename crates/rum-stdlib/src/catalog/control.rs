@@ -155,6 +155,10 @@ pub(crate) const CONTROL_BUILTINS: &[BuiltinSpec] = &[
             tag: "intm",
             template: "Machine-sized integer expected at position 1 in `1`.",
         },
+        BuiltinMessageSpec {
+            tag: "abandoned",
+            template: "Exit[`1`] in a cleanup was not honored because its request was being abandoned.",
+        },
     ]).protected()
     .with_capability(Capability::Process),
     BuiltinSpec::ordinary_with_hold(

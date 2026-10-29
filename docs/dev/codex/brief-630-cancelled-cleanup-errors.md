@@ -4104,3 +4104,318 @@ every `test result:` line verbatim.
 Append "Executing-agent report — B3, continued" and STOP. Every quoted line
 must be copied from a file you name. Quote every verdict line your instruments
 print, and settle each flagged row.
+
+## Executing-agent report — B3, continued
+
+STOP. The census pair is not "only new rows on lines B3 adds to `abandon.rs`". The assertion stays 998 (10/957/31). `cargo fmt --check`, `frame_root_trace`, the docgen drift test, the standing inventories, `cargo test -p rum-host`, `cargo test -p rum-runtime --lib`, and the workspace were not started. Measurement panels were not run. The `b3k7` mutant was not re-run.
+
+The `Cancelled` exclusion is back in `escaped_cleanup_error`. It is observable: it keeps `WithCleanup::skipped` ahead of `General::cancel`.
+
+### 1. Order pin, `b3k10_escalation_outside_a_file`
+
+The test is B1's F3 without the file: `outerMarker630 = 0; WithCleanup[WithCleanup[InputString["x"], While[True, Null]], outerMarker630 = 1]`, `cancel()`, retire with `eval("")`, and a second `cancel()` 1 s later on another thread, inside `on_thread` (8 s, `process::exit(101)` on timeout). No HEAD rebuild.
+
+Three runs on the tree with the exclusion in place, each `EXIT:0`:
+
+`.temp/brief-630/logs/b3k10-1.log` line 6: `test b3k10_escalation_outside_a_file ... B3K10VERDICT outer=0 tags=["WithCleanup::skipped", "General::cancel"] termination=Some(Cancelled)`
+
+`.temp/brief-630/logs/b3k10-1.log` line 9: `test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 16 filtered out; finished in 1.00s`
+
+`.temp/brief-630/logs/b3k10-1.log` line 11: `EXIT:0`
+
+`.temp/brief-630/logs/b3k10-2.log` line 5: `test b3k10_escalation_outside_a_file ... B3K10VERDICT outer=0 tags=["WithCleanup::skipped", "General::cancel"] termination=Some(Cancelled)`
+
+`.temp/brief-630/logs/b3k10-2.log` line 8: `test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 16 filtered out; finished in 1.01s`
+
+`.temp/brief-630/logs/b3k10-2.log` line 10: `EXIT:0`
+
+`.temp/brief-630/logs/b3k10-3.log` line 5: `test b3k10_escalation_outside_a_file ... B3K10VERDICT outer=0 tags=["WithCleanup::skipped", "General::cancel"] termination=Some(Cancelled)`
+
+`.temp/brief-630/logs/b3k10-3.log` line 8: `test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 16 filtered out; finished in 1.01s`
+
+`.temp/brief-630/logs/b3k10-3.log` line 10: `EXIT:0`
+
+The mutant removed only `| Err(EvalError::Cancelled)` from `escaped_cleanup_error` and left the `TimeConstraintExceeded if interrupted` arm. One run. The director's reading matches.
+
+`.temp/brief-630/logs/b3k10-mutant-cancelled.log` line 8: `test b3k10_escalation_outside_a_file ... B3K10VERDICT outer=0 tags=["General::cancel", "WithCleanup::skipped"] termination=Some(Cancelled)`
+
+`.temp/brief-630/logs/b3k10-mutant-cancelled.log` line 10: `thread 'b3k10_escalation_outside_a_file' panicked at crates/rum-host/tests/cleanup_errors.rs:457:5:`
+
+`.temp/brief-630/logs/b3k10-mutant-cancelled.log` line 12: `  left: ["General::cancel", "WithCleanup::skipped"]`
+
+`.temp/brief-630/logs/b3k10-mutant-cancelled.log` line 13: ` right: ["WithCleanup::skipped", "General::cancel"]`
+
+`.temp/brief-630/logs/b3k10-mutant-cancelled.log` line 22: `test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 16 filtered out; finished in 1.01s`
+
+`.temp/brief-630/logs/b3k10-mutant-cancelled.log` line 25: `EXIT:101`
+
+The arm was restored before the exact-list runs. `abandon.rs` line 218 is again `Ok(_) | Err(EvalError::InputRequired { .. }) | Err(EvalError::Cancelled) => None,`.
+
+Both lists: with the exclusion, `["WithCleanup::skipped", "General::cancel"]`; with only that arm removed, `["General::cancel", "WithCleanup::skipped"]`. `outerMarker630` is 0 in all four runs.
+
+### 2. Exact lists
+
+`driver_faults.rs:197` is `assert_eq!(tags, ["Throw::nocatch"]);`. `suspension_abandonment.rs:88` is `assert_eq!(tags, [] as [&str; 0]);`. The value, probe, trace, and marker asserts in those tests were left as they were. Three runs, each both tests, each `EXIT:0`. The first log recompiled `rum-runtime` after the revert. Its three warnings are the pre-existing `register_test_if_builtin`, `register_test_return_builtin`, and `register_test_vm_template_builtins` dead_code warnings. `.temp/brief-630/logs/b3-exact-1.log` line 22:
+
+```
+warning: `rum-runtime` (lib test) generated 3 warnings
+```
+
+`.temp/brief-630/logs/b3-exact-1.log` line 27: `test runtime::suspension::typed::tests::driver_faults::b3_cleanup_throw_reports_nocatch_without_replacing_the_first_fault ... B3SLOTVERDICT tags=["Throw::nocatch"]`
+
+`.temp/brief-630/logs/b3-exact-1.log` line 29: `test runtime::tests::suspension_abandonment::b3_superseded_queued_input_does_not_report_the_cleanup_throw ... B3QVERDICT tags=[]`
+
+`.temp/brief-630/logs/b3-exact-1.log` line 32: `test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1223 filtered out; finished in 0.02s`
+
+`.temp/brief-630/logs/b3-exact-1.log` line 34: `EXIT:0`
+
+`.temp/brief-630/logs/b3-exact-2.log` line 26: `test runtime::suspension::typed::tests::driver_faults::b3_cleanup_throw_reports_nocatch_without_replacing_the_first_fault ... B3SLOTVERDICT tags=["Throw::nocatch"]`
+
+`.temp/brief-630/logs/b3-exact-2.log` line 28: `test runtime::tests::suspension_abandonment::b3_superseded_queued_input_does_not_report_the_cleanup_throw ... B3QVERDICT tags=[]`
+
+`.temp/brief-630/logs/b3-exact-2.log` line 31: `test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1223 filtered out; finished in 0.03s`
+
+`.temp/brief-630/logs/b3-exact-2.log` line 33: `EXIT:0`
+
+`.temp/brief-630/logs/b3-exact-3.log` line 26: `test runtime::suspension::typed::tests::driver_faults::b3_cleanup_throw_reports_nocatch_without_replacing_the_first_fault ... B3SLOTVERDICT tags=["Throw::nocatch"]`
+
+`.temp/brief-630/logs/b3-exact-3.log` line 28: `test runtime::tests::suspension_abandonment::b3_superseded_queued_input_does_not_report_the_cleanup_throw ... B3QVERDICT tags=[]`
+
+`.temp/brief-630/logs/b3-exact-3.log` line 31: `test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1223 filtered out; finished in 0.02s`
+
+`.temp/brief-630/logs/b3-exact-3.log` line 33: `EXIT:0`
+
+### 3. Census — stop
+
+The dump snippet was inserted into `census/tests.rs` only for this run, wrote `.temp/brief-630/census-b3-cand.tsv`, and was removed. `census/tests.rs` does not contain `RUM_CENSUS_DUMP`. The 998 assertion and its comment were not edited. Base is `.temp/director/gate-630b2/frontier-b2gate.tsv` against `.temp/director/gate-630b2/same/src`. Pair output is `.temp/brief-630/census-b3-pair.tsv`.
+
+`.temp/brief-630/logs/b3-census.log` line 77: `thread 'tests::retention_closure::census::tests::production_rejection_census_is_complete' panicked at crates/rum-stdlib/src/tests/retention_closure/census/tests.rs:295:5:`
+
+`.temp/brief-630/logs/b3-census.log` line 78:
+
+```
+assertion `left == right` failed: STOP: brief-545 exact legacy frontier inventory moved
+```
+
+`.temp/brief-630/logs/b3-census.log` line 79: `  left: 1040`
+
+`.temp/brief-630/logs/b3-census.log` line 80: ` right: 998`
+
+`.temp/brief-630/logs/b3-census.log` line 89: `test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1163 filtered out; finished in 18.44s`
+
+`.temp/brief-630/logs/b3-census.log` line 92: `EXIT:101`
+
+That panic is the length assert. The dump occupied the lines above it during the run, so `tests.rs:295` is the instrumented file. The line-43, line-44, and line-94 `RET002` asserts sit above that assert and had already passed. `.temp/brief-630/census-b3-cand.tsv` line 1042: `# counts {RET001: 10, RET002: 997, RET003: 33} len 1040`
+
+`.temp/brief-630/logs/b3-census-pair.log` line 1: `CENSUSPAIR base=998 cand=1040 paired=996 retired=2 new=6 base_only=0 cand_only=38`
+
+`.temp/brief-630/logs/b3-census-pair.log` line 2: `EXIT:0`
+
+`.temp/brief-630/logs/b3-census-filediff.log` line 1: `CENSUSFILES 45 same=44 differ=1 missing=0`
+
+`.temp/brief-630/logs/b3-census-filediff.log` line 2: `DIFFER crates/rum-runtime/src/runtime/suspension/core/abandon.rs`
+
+`.temp/brief-630/logs/b3-census-filediff.log` line 3: `CONTROL same=False`
+
+`.temp/brief-630/logs/b3-census-filediff.log` line 4: `BASE session_helpers.rs rows=0`
+
+`.temp/brief-630/logs/b3-census-filediff.log` line 5: `BASE diagnostics.rs first_line=115 last_line=130 rows=9`
+
+`.temp/brief-630/logs/b3-census-filediff.log` line 6: `EXIT:0`
+
+`control.rs` differs by the `Exit::abandoned` registration from the previous stage and is outside the census file set. The other 44 census files are byte-identical to the gate snapshot, including the three files that carry candidate-only rows. Arithmetic: 998 − 2 + 6 + 38 = 1040. RET001 stays 10. RET002 goes 957 → 997. RET003 goes 31 → 33.
+
+Flagged rows, `.temp/brief-630/census-b3-pair.tsv` lines 1–46. Line 47 repeats the verdict above.
+
+```
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:11:21-11:56	-	method syntax: method receiver lacks checked nominal/place provenance	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:14:13-14:91	-	primitive operand proof or exact operator/conversion impl required	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:14:64-14:91	std::mem::size_of	not a resolved function definition: std::mem::size_of	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:19:24-19:48	-	method syntax: method receiver lacks checked nominal/place provenance	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:20:9-20:41	-	method syntax: method receiver lacks checked nominal/place provenance	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:25:17-25:99	-	primitive operand proof or exact operator/conversion impl required	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:25:18-25:42	-	method syntax: method receiver lacks checked nominal/place provenance	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:25:18-25:53	-	primitive operand proof or exact operator/conversion impl required	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:25:57-25:99	std::mem::size_of	not a resolved function definition: std::mem::size_of	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:90:21-90:56	-	method syntax: method receiver lacks checked nominal/place provenance	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:93:13-93:91	-	primitive operand proof or exact operator/conversion impl required	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:93:64-93:91	std::mem::size_of	not a resolved function definition: std::mem::size_of	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:98:24-98:70	-	method syntax: method receiver lacks checked nominal/place provenance	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:99:9-99:63	-	method syntax: method receiver lacks checked nominal/place provenance	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:104:17-105:65	-	primitive operand proof or exact operator/conversion impl required	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:104:18-104:64	-	method syntax: method receiver lacks checked nominal/place provenance	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:104:18-104:75	-	primitive operand proof or exact operator/conversion impl required	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/maintained/diagnostics.rs:105:23-105:65	std::mem::size_of	not a resolved function definition: std::mem::size_of	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/memory.rs:440:5-440:42	std::mem::size_of	not a resolved function definition: std::mem::size_of	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/memory.rs:440:5-446:6	-	method syntax: method receiver lacks checked nominal/place provenance	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/memory.rs:441:9-443:24	-	method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/memory.rs:441:9-444:52	-	method syntax: method receiver lacks checked nominal/place provenance	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/memory.rs:441:9-445:53	-	method syntax: method receiver lacks checked nominal/place provenance	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/memory.rs:444:29-444:51	-	method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/debug_tools/resources/memory.rs:445:29-445:52	-	method syntax: no unique inherent definition; user Deref/unsizing/trait dispatch is not searched	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/session/session_helpers.rs:523:29-523:83	-	path Self::runtime_message_for_non_loader_eval_error has 0 exact bindings	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/session/session_helpers.rs:527:12-529:31	-	method syntax: method receiver lacks checked nominal/place provenance	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/session/session_helpers.rs:527:12-530:50	-	method syntax: method receiver lacks checked nominal/place provenance	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/session/session_helpers.rs:530:18-530:49	-	closure capture/callback effects unresolved; closure body is a rejected boundary	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/session/session_helpers.rs:535:60-535:75	-	method syntax: method receiver lacks checked nominal/place provenance	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/session/session_helpers.rs:536:12-536:63	rum_runtime::runtime::model::session::Session::message_enabled	method syntax: opaque imported trait candidate std::collections::BTreeMap	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/session/session_helpers.rs:549:62-549:75	-	primitive operand proof or exact operator/conversion impl required	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/session/session_helpers.rs:559:78-559:99	-	primitive operand proof or exact operator/conversion impl required	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/session/session_helpers.rs:560:62-560:75	-	primitive operand proof or exact operator/conversion impl required	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/session/session_helpers.rs:562:33-566:14	rum_runtime::runtime::model::session::Session::push_message	method syntax: type is outside the admitted surface: impl Into < String >	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/session/session_helpers.rs:567:36-571:14	rum_runtime::runtime::model::session::Session::push_message	method syntax: type is outside the admitted surface: impl Into < String >	unchanged line
+CAND-ONLY	RET002	crates/rum-runtime/src/runtime/session/session_helpers.rs:577:9-584:10	rum_runtime::runtime::model::session::Session::push_message	method syntax: type is outside the admitted surface: impl Into < String >	unchanged line
+CAND-ONLY	RET003	crates/rum-runtime/src/runtime/session/session_helpers.rs:580:13-583:14	-	unexpanded macro; contents are not resolved Rust	unchanged line
+RETIRED	RET002	crates/rum-runtime/src/runtime/suspension/core/abandon.rs:121:24-121:59	rum_runtime::runtime::model::session::Session::drain_host_interrupt_pending	method syntax: opaque imported trait candidate std::sync::Arc	line changed
+RETIRED	RET002	crates/rum-runtime/src/runtime/suspension/core/abandon.rs:121:24-121:59	rum_runtime::runtime::model::session::Session::drain_host_interrupt_pending	method syntax: opaque imported trait candidate std::sync::Arc	line changed
+NEW	RET002	crates/rum-runtime/src/runtime/suspension/core/abandon.rs:106:39-106:57	rum_runtime::runtime::model::session::Session::output_mark	method syntax: opaque imported trait candidate std::sync::Arc	line added or changed
+NEW	RET002	crates/rum-runtime/src/runtime/suspension/core/abandon.rs:106:39-106:57	rum_runtime::runtime::model::session::Session::output_mark	method syntax: opaque imported trait candidate std::sync::Arc	line added or changed
+NEW	RET002	crates/rum-runtime/src/runtime/suspension/core/abandon.rs:122:39-122:74	rum_runtime::runtime::model::session::Session::drain_host_interrupt_pending	method syntax: opaque imported trait candidate std::sync::Arc	line added or changed
+NEW	RET002	crates/rum-runtime/src/runtime/suspension/core/abandon.rs:122:39-122:74	rum_runtime::runtime::model::session::Session::drain_host_interrupt_pending	method syntax: opaque imported trait candidate std::sync::Arc	line added or changed
+NEW	RET002	crates/rum-runtime/src/runtime/suspension/core/abandon.rs:233:13-239:14	rum_runtime::runtime::model::session::Session::push_message	method syntax: type is outside the admitted surface: impl Into < String >	line added or changed
+NEW	RET003	crates/rum-runtime/src/runtime/suspension/core/abandon.rs:236:17-238:18	-	unexpanded macro; contents are not resolved Rust	line added or changed
+```
+
+Settled:
+
+- The two retired rows are the two mode witnesses of `drain_host_interrupt_pending` at the old line 121 (`if self.drain_host_interrupt_pending()`). The edit rewrote that call to `let interrupted = self.drain_host_interrupt_pending();`, which the candidate records at line 122 with the same kind, callee, and reason (the two NEW rows at `122:39-122:74`). A retired row is outside the update rule.
+- The six NEW rows are on lines this stage added to `abandon.rs`: two mode witnesses of `output_mark` at `106:39-106:57`, the two moved `drain_host_interrupt_pending` witnesses, `push_message` for `Exit::abandoned` at `233:13-239:14`, and the `format!` of that message (`RET003`, `236:17-238:18`).
+- The 38 candidate-only rows are on lines the diff calls unchanged, in files this stage did not edit. `diagnostics.rs` lines 11–25 are `push_accounted_messages`. `diagnostics.rs` lines 90–105 are `push_accounted_handled_non_loader_eval_errors`. The gate frontier's nine `diagnostics.rs` rows are the trace push at lines 115–130, so these message pushes were absent there. `memory.rs` lines 440–445 are `render_runtime_message_memory_proxy_bytes`, which those pushes call. `session_helpers.rs` lines 523–536 are `emit_non_loader_eval_message`, lines 549–573 are `emit_top_level_control_flow_messages`, and lines 577–584 are `emit_uncaught_throw_message` (its `format!` is the second new `RET003`). The gate frontier has zero `session_helpers.rs` rows. The arm calls `emit_non_loader_eval_message` and then `emit_top_level_control_flow_messages`. These 38 rows are not new rows on lines B3 adds to `abandon.rs`.
+
+`base_only` is 0. `cand_only` is 38, and two rows retired. The rule says anything else is a stop, so the count was left at 998.
+
+`rum-cli`, `rum-jupyter`, `rum-repl`, and `docs/` other than this report were not edited. The generated reference was not touched in this continuation.
+
+## Director gate of B3 (2026-10-29 13:52) — B3 accepted
+
+### The two stops, settled
+
+Both were mine.
+
+- **The `b3k7` mutant** assumed only two outcomes: red, or a control that never
+  reaches the arm. There is a third. `restore_evaluation_rollback_snapshot`
+  replaces the session's messages after the drain, and no host channel sees a
+  message live. So `CheckpointRollbackDiscard`'s stance cannot be observed.
+  It stays "do not report", recorded by the exhaustive policy.
+- **The census rule** allowed new rows only on lines B3 adds to `abandon.rs`.
+  The arm calls `emit_non_loader_eval_message` and
+  `emit_top_level_control_flow_messages`. The census walks those (it stops at
+  `push_message`, whose `impl Into<String>` is outside the admitted surface),
+  so their existing rejected sites entered the frontier.
+
+### The report, checked
+
+- **Scope.** The changed files are `abandon.rs`, `catalog/control.rs`, the
+  regenerated `docs/reference/builtins.md` (one line), the new
+  `rum-host/tests/cleanup_errors.rs`, and the two in-crate test files. The
+  fence logged three git attempts, all from grk's own harness, and refused
+  each one.
+- **Shape.** The arm, `escaped_cleanup_error` and
+  `report_abandoned_cleanup_error` are the code as briefed. The census's
+  pinned lines 43, 44 and 94 are unchanged. `drain_host_interrupt_pending()`
+  is still called once per cleanup. `push_message` checks `message_enabled`,
+  so `Off[Exit::abandoned]` silences it.
+- **Tests.** The port of my probe asserts what the probe asserts; rustfmt only
+  rewrapped long lines. Both in-crate tests now assert exact lists. I added a
+  termination assertion to `b3k10`.
+- **My probe on the final tree, three runs:** 15 passed each time. These are
+  the six falsifiers, red at HEAD, and the nine controls.
+- **Host tests, three runs:** `cleanup_errors` 17 of 17,
+  `retirement_interrupt` 9 of 9, and `output_window` 3 of 3, each time.
+- **Mutants**, from the worker's logs:
+  - Flipping `SupersededOrQueuedInputDiscard` turns its control red with
+    `["Throw::nocatch"]`.
+  - Removing the `TimeConstraintExceeded` exclusion turns B1's `control_b`
+    red with `General::timelim`.
+  - Removing only the `Cancelled` exclusion turns `b3k10` red with
+    `["General::cancel", "WithCleanup::skipped"]`. That exclusion fixes order:
+    the final cancel dedups against the handled record, so a second
+    `General::cancel` never appears.
+- **`b3p1`.** The guest deadline that the guest-form environment restores has
+  passed by the time the drain runs, so the cleanup stops before its
+  assignment.
+  - At HEAD this was silent: `tc630` 0 and `["General::cancel"]`.
+  - Now the outcome reads `["General::timelim", "General::cancel"]`, by the
+    rule.
+
+### Inventories, replayed
+
+- **Census:** 998 → 1040 (10/997/33). I reproduced the worker's pairing from
+  my own dump: 996 paired, 2 retired, 6 new, `base_only=0`, `cand_only=38`.
+  - The 2 retired and 6 new rows are on `abandon.rs`'s changed lines: the
+    moved `drain_host_interrupt_pending` witnesses, `output_mark`'s,
+    `Exit::abandoned`'s `push_message`, and its `format!`.
+  - The 38 candidate-only rows are on unchanged lines in files B3 did not
+    edit:
+    - the two emitters and `emit_uncaught_throw_message` in
+      `session_helpers.rs` (12 RET002, 1 RET003);
+    - the message and handled-error pushes in `diagnostics.rs` (18);
+    - the message memory proxy in `memory.rs` (7).
+  - The assertion and its comment record this.
+- **Ownership:** 7942 rows. That is 5 moves in `abandon.rs` (same columns) and
+  one new `format!` row, the `Exit::abandoned` text.
+- **Fingerprints:** 68 last-column cells, with every other column equal.
+- **Certificates:** C01 and C02 of both builds, which both pass.
+- **Ledger:** 15 of 15.
+- **Compiler oracle.** Live constructor contexts went from 170 to 173, and
+  with the two clone-return contexts from 172 to 175.
+  - `escaped_cleanup_error` adds two `None` and one `Some(error)`, each an
+    `Option<&EvalError>`.
+  - The first workspace run caught this. The worker's run list had stopped at
+    the census, before the oracles.
+  - rustc agrees with all three claims. The fingerprints and certificates were
+    replayed again after the edit, and all 19 inventory tests pass.
+
+### Gate
+
+- `cargo fmt --check` passes.
+- `cargo check --workspace --all-targets` gives only the three existing
+  dead-code warnings.
+- **Workspace, first run:** 59 binaries, 4012 passed, 1 failed (the oracle
+  count above), 61 ignored.
+- **Workspace, on the final tree:** 59 binaries, 4013 passed, 0 failed, 61
+  ignored. The scope peaked at 10.5 GB of 14, with no OOM kill.
+- **The CLI**, debug build, input closed:
+  - `--eval 'WithCleanup[InputString["x"], Throw[630]]'` prints
+    `! Throw::nocatch: Uncaught Throw[630] returned to top level.` once, then
+    the input requirement, and exits 1.
+  - With `Exit[3]` it prints the `Exit::abandoned` sentence once and still
+    exits 1.
+  - A cleanup's ordinary `Message` prints in the same place, before the input
+    requirement. That is the existing order, and B3 adds nothing to it.
+
+### Host documentation
+
+- `docs/guide/embedding.md`, Cancel And Timeout: a cleanup that fails during a
+  retirement reports its error as top-level evaluation would, before
+  `General::cancel`.
+  - An enclosing `Catch` or `TimeConstrained` does not handle it, because the
+    work around the cleanup is retired, not resumed.
+  - `Exit[n]` is not honored and reports `Exit::abandoned`.
+  - An interrupted cleanup reports nothing of its own.
+  - A message inside a rolled-back file rolls back with that file.
+- `docs/guide/getting-started.md`, the CLI: a failing cleanup reports its
+  error once, and `Exit[n]` in a cleanup does not change the exit status.
+
+### Measurement
+
+Both arms are built from one source path with one codegen unit. The base is
+the B2 final candidate (`1c115117`); the candidate is this tree. The path
+calibration passes for `resume` and `rum-cli`.
+
+- **Structure.** In each binary, `fndiff3` finds 3 differing groups, all of
+  them code.
+  - Two are `abandon_frames_profiled` and `drain_abandonment_worklist`, the two
+    bodies that inline the arm.
+  - The third is `mi_bin`, whose only change is its trailing padding.
+  - `report_abandoned_cleanup_error` is new.
+
+  No other function changed.
+- **Resume panel** (121 labels, 15 interleaved reps): the median is +0.0031%
+  and the max +0.1642%. No label sits above or below the base in every rep.
+- **The CLI panel was not run.**
+  - None of its labels enters the drain (Stage A §6).
+  - No function on an evaluation path changed its code.
+  - An instruction count can still move through data layout: the catalog adds
+    one string, and memcmp's per-call path depends on addresses. B2's gate
+    showed that this moves both ways.

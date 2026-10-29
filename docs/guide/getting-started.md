@@ -171,7 +171,9 @@ This also applies to input requested inside nested `Get` calls and to scripts
 that ask more than once: evaluation stops at the first unanswered request, and
 the abandoned remainder never runs. Output printed before the request is kept
 without replay; cleanup `Print` output goes to stdout exactly once. Retirement
-does not add a second cancellation error.
+does not add a second cancellation error. A cleanup that fails reports its
+error once, as top-level evaluation would. An `Exit[n]` in a cleanup is reported
+as `Exit::abandoned` and does not change the exit status.
 
 A public file (`--file` or a positional file) rolls back on cancellation;
 nested file loads roll back from inner to outer. Messages produced during

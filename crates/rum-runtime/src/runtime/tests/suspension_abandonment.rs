@@ -64,6 +64,31 @@ fn queued_input_abandons_the_older_generation_before_consuming_the_value() {
 }
 
 #[test]
+fn b3_superseded_queued_input_does_not_report_the_cleanup_throw() {
+    let mut session = session_with_test_control_builtins();
+    session.eval_text("queuedCleaned630 = 0").unwrap();
+
+    suspend(
+        &mut session,
+        "WithCleanup[InputString[\"old\"], (queuedCleaned630 = 1; Throw[630])]",
+    );
+    session.queue_input_response("drain");
+
+    let input = session.lower_text("InputString[\"new\"]").unwrap();
+    assert_eq!(session.evaluate(input).unwrap(), Expr::string("drain"));
+    assert!(session.queued_input_responses.is_empty());
+    assert!(session.pending_suspension.is_none());
+    assert_eq!(value(&mut session, "queuedCleaned630"), "1");
+    let tags: Vec<_> = session
+        .messages()
+        .iter()
+        .map(|message| format!("{}::{}", message.symbol, message.tag))
+        .collect();
+    eprintln!("B3QVERDICT tags={tags:?}");
+    assert_eq!(tags, [] as [&str; 0]);
+}
+
+#[test]
 fn checkpoint_rollback_abandons_a_trial_generation_before_restoring_state() {
     let mut session = session_with_test_control_builtins();
     session.eval_text("rollbackBlock403 = outside").unwrap();
