@@ -26,6 +26,18 @@ test('the dispatcher is matched where a command starts, not as an argument', () 
   expect(dispatchProblems('cdx exec -s workspace-write x', false).length).toBe(1)
 })
 
+test('quoted text starts no command; the body of -c does', () => {
+  expect(dispatchProblems('grep -n "AT_COMMAND\\|dispatch-brief" register.ts | head', false)).toEqual([])
+  expect(dispatchProblems('grep -n -E "WORKER|worker=|grk\\)" scripts/dispatch-brief.sh | head -20; ls', false)).toEqual([])
+  expect(dispatchProblems("grep -c 'x|cdx exec' log", false)).toEqual([])
+  expect(dispatchProblems('grep "a\\"|dispatch-brief" f', false)).toEqual([])
+  expect(dispatchProblems("bash -c 'scripts/dispatch-brief.sh 632'", false).length).toBe(1)
+  expect(dispatchProblems('sh -c "ls; scripts/dispatch-brief.sh 632"', true).length).toBe(1)
+  expect(dispatchProblems("/bin/bash -lc 'scripts/dispatch-brief.sh 632'", false).length).toBe(1)
+  expect(isCommit('git log --grep "x; git commit"')).toBe(false)
+  expect(stagingProblem('git commit -q -m "then git add the rest"')).toBeUndefined()
+})
+
 test('a commit is recognised where a command starts, not inside text', () => {
   expect(isCommit('git commit -q -F - <<EOF\nmsg\nEOF')).toBe(true)
   expect(isCommit('cd /home/remi/dev/rum && git commit -q -F -')).toBe(true)

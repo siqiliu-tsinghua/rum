@@ -11,6 +11,8 @@ Outside the rum repository every hook passes through.
   This replaces the old `.claude/hooks/guard-dispatch.py`, which had not been
   wired since the move to Linux.
 - Every guard ignores heredoc bodies: a commit message is text, not commands.
+  It also ignores quoted text (a grep pattern naming the dispatcher), except
+  the body of a shell's `-c`, which is a command.
 - **Commit guard**, before `git commit` runs:
   - staging and committing are separate Bash calls (no `git add … && git
     commit`, no `commit -a`), so the guard reads the final staged set;

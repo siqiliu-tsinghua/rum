@@ -62,8 +62,44 @@ export function withoutHeredocBodies(command: string): string {
   return kept.join('\n')
 }
 
+// A quoted string is an argument (a grep pattern, a message), not commands:
+// blank its body, so a `|` or a name inside it starts nothing. The body of
+// `-c` (bash -c '...') is a command, so it is kept, its opening quote turned
+// into `(` so that the command inside starts where AT_COMMAND looks. Only a
+// shell's -c: `grep -c 'x'` is a count.
+const SHELL_C = /(?:^|[\s;&|(/])(?:ba|z|da|k)?sh\s+(?:-[A-Za-z]+\s+)*-[A-Za-z]*c\s*$/
+export function withoutQuotedText(command: string): string {
+  let out = ''
+  let i = 0
+  while (i < command.length) {
+    const c = command[i]
+    if (c === '\\') {
+      out += command.slice(i, i + 2)
+      i += 2
+      continue
+    }
+    if (c !== "'" && c !== '"') {
+      out += c
+      i++
+      continue
+    }
+    let j = i + 1
+    while (j < command.length && command[j] !== c) j += c === '"' && command[j] === '\\' ? 2 : 1
+    const body = command.slice(i + 1, j)
+    out += SHELL_C.test(out) ? `(${body} ` : ' '.repeat(body.length + 2)
+    i = j + 1
+  }
+  return out
+}
+
+// The text the guards match: heredoc bodies dropped first (their delimiter
+// may be quoted), then quoted text blanked.
+export function commandText(full: string): string {
+  return withoutQuotedText(withoutHeredocBodies(full))
+}
+
 export function dispatchProblems(full: string, background: boolean): string[] {
-  const command = withoutHeredocBodies(full)
+  const command = commandText(full)
   if (!DISPATCH.test(command) || command.includes('DRY_RUN=1')) return []
   const problems: string[] = []
   if (/&&|\|\||;|\n/.test(command)) problems.push('it is chained with other commands (&&, ||, ; or a newline)')
@@ -74,7 +110,7 @@ export function dispatchProblems(full: string, background: boolean): string[] {
 }
 
 export function stagingProblem(full: string): string | undefined {
-  const command = withoutHeredocBodies(full)
+  const command = commandText(full)
   if (STAGE.test(command) || COMMIT_ALL.test(command)) {
     return 'stage in its own Bash call first (git add ...), then commit in a separate call, so the guard reads the final staged set.'
   }
@@ -82,7 +118,7 @@ export function stagingProblem(full: string): string | undefined {
 }
 
 export function isCommit(command: string): boolean {
-  return COMMIT.test(withoutHeredocBodies(command))
+  return COMMIT.test(commandText(command))
 }
 
 async function root($: EngineInterface): Promise<string> {
