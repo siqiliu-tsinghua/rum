@@ -1,0 +1,4 @@
+gMicroDeleteCasesLeafDeleteSmall = Nest[List, 1, 8];
+Do[DeleteCases[gMicroDeleteCasesLeafDeleteSmall, 1, Infinity],{perfIterationS4,1,500}];
+If[SameQ[(gMicroDeleteCasesLeafDeleteSmall = Nest[List, 1, 8];
+SameQ[DeleteCases[gMicroDeleteCasesLeafDeleteSmall, 1, Infinity], Nest[List, {}, 7]]),True],Null,Exit[2]];

@@ -1,0 +1,17 @@
+[package]
+name = "rum-resume-harness"
+version = "0.0.0"
+edition = "2024"
+
+[workspace]
+
+[[bin]]
+name = "resume"
+path = "src/main.rs"
+
+[features]
+alloc-count = []
+
+[dependencies]
+rum-host = { path = "../../../crates/rum-host" }
+mimalloc = "0.1.52"

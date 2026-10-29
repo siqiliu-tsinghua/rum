@@ -1,0 +1,3 @@
+gMicroGuardedOwnValue:=123/;True;
+Do[gMicroGuardedOwnValue,{s5PerfIteration,1,4000}];
+If[SameQ[gMicroGuardedOwnValue,123],Null,Exit[2]];

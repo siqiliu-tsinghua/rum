@@ -1,0 +1,1 @@
+Do[Catch[Throw[1]],{500}];If[SameQ[Catch[Throw[1]],1],Null,Exit[2]]

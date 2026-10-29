@@ -1,0 +1,4 @@
+gDepthSelect=LazySelect[Function[x,x>=1],LazyRange[0]];Do[gDepthSelect=LazySelect[Function[x,True],gDepthSelect],{6}];gDepthSelect=LazySelect[Function[x,x>=2],gDepthSelect];
+Do[First[gDepthSelect],{perfIteration561,1,2000}];
+If[SameQ[(gDepthSelect=LazySelect[Function[x,x>=1],LazyRange[0]];Do[gDepthSelect=LazySelect[Function[x,True],gDepthSelect],{6}];gDepthSelect=LazySelect[Function[x,x>=2],gDepthSelect];
+First[gDepthSelect]),2],Null,Exit[2]];

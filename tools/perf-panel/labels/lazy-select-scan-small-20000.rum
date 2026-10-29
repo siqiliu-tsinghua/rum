@@ -1,0 +1,3 @@
+
+Do[Take[LazySelect[Function[x,SameQ[Mod[x,8],0]],LazyRange[1,1]],4],{perfIteration561,1,20000}];
+If[SameQ[(Take[LazySelect[Function[x,SameQ[Mod[x,8],0]],LazyRange[1,1]],4]),List[8, 16, 24, 32]],Null,Exit[2]];

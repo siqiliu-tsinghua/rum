@@ -1,0 +1,1 @@
+sMicro = Success["t", <|"x" -> 1|>];Do[sMicro["x"],{1000}];If[SameQ[sMicro["x"],1],Null,Exit[2]]

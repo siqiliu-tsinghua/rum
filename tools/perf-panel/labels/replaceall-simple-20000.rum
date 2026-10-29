@@ -1,0 +1,4 @@
+rulesSimple = {a -> 1, b -> 2, c -> 3};
+Do[a /. rulesSimple, {i, 1, 20000}];
+If[SameQ[(rulesSimple = {a -> 1, b -> 2, c -> 3};
+a /. rulesSimple),1],Null,Exit[2]];

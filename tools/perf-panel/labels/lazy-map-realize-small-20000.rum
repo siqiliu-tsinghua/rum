@@ -1,0 +1,3 @@
+
+Do[Normal[LazyTake[LazyMap[Function[x,x+1],LazyRange[1,1]],8]],{perfIteration561,1,20000}];
+If[SameQ[(Normal[LazyTake[LazyMap[Function[x,x+1],LazyRange[1,1]],8]]),List[2, 3, 4, 5, 6, 7, 8, 9]],Null,Exit[2]];

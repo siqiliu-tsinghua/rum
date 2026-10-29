@@ -1,0 +1,1 @@
+ftMicro = Failure["t", <||>];Do[ftMicro["Message"],{1000}];If[SameQ[ftMicro["Message"],"A failure of type \"t\" occurred."],Null,Exit[2]]

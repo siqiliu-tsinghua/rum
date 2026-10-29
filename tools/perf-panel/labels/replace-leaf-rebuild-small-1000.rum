@@ -1,0 +1,4 @@
+gMicroReplaceLeafRebuildSmall = Nest[List, 1, 8];
+Do[Replace[gMicroReplaceLeafRebuildSmall, 1 -> 2, {0, Infinity}],{perfIterationS4,1,1000}];
+If[SameQ[(gMicroReplaceLeafRebuildSmall = Nest[List, 1, 8];
+SameQ[Replace[gMicroReplaceLeafRebuildSmall, 1 -> 2, {0, Infinity}], Nest[List, 2, 8]]),True],Null,Exit[2]];

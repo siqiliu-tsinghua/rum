@@ -1,0 +1,3 @@
+gMicroStringLiteralHaystack = StringJoin[StringRepeat["z", 300], StringRepeat["a", 16]];gMicroStringLiteralNeedle = StringRepeat["a", 16];gMicroStringLiteralRule = gMicroStringLiteralNeedle -> "x";
+Do[StringReplace[gMicroStringLiteralHaystack, gMicroStringLiteralRule],{s6PerfIteration,1,200}];
+If[SameQ[StringReplace[gMicroStringLiteralHaystack, gMicroStringLiteralRule],"zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzx"],Null,Exit[2]];

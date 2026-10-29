@@ -1,0 +1,1 @@
+Do[Catch[Throw[7, t[1]], t[_]],{500}];If[SameQ[Catch[Throw[7, t[1]], t[_]],7],Null,Exit[2]]

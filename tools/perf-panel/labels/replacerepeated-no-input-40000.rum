@@ -1,0 +1,3 @@
+
+Do[ReplaceRepeated[g[g[a]], g[x_] :> x], {i, 1, 40000}];
+If[SameQ[(ReplaceRepeated[g[g[a]], g[x_] :> x]),a],Null,Exit[2]];

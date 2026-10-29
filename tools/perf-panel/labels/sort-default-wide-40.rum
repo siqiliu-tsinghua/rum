@@ -1,0 +1,3 @@
+gMicroSortDefaultWide=Reverse[Range[1600]];
+Do[Sort[gMicroSortDefaultWide],{s5PerfIteration,1,40}];
+If[SameQ[SameQ[Sort[gMicroSortDefaultWide],Range[1600]],True],Null,Exit[2]];

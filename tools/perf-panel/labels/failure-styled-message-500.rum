@@ -1,0 +1,1 @@
+fmMicro = Failure["t", <|"MessageTemplate" -> "m ``", "MessageParameters" -> {1}|>];Do[fmMicro["StyledMessage"],{500}];If[SameQ[fmMicro["StyledMessage"],System`Style["m 1", "Message"]],Null,Exit[2]]

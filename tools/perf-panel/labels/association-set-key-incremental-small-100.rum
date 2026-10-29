@@ -1,0 +1,1 @@
+gMicroAssociationSetKeySmall=<||>;Do[gMicroAssociationSetKeySmall[i]=i,{i,1,100}];If[SameQ[gMicroAssociationSetKeySmall,AssociationThread[Range[100],Range[100]]],Null,Exit[2]]

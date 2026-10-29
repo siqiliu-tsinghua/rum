@@ -1,0 +1,4 @@
+gMicroRuleRhsDeepSmall = Nest[List, gMicroRuleBinding, 8];
+Do[Replace[7, RuleDelayed @@ {Pattern[gMicroRuleBinding, Blank[]], gMicroRuleRhsDeepSmall}],{perfIterationS4,1,1000}];
+If[SameQ[(gMicroRuleRhsDeepSmall = Nest[List, gMicroRuleBinding, 8];
+SameQ[Replace[7, RuleDelayed @@ {Pattern[gMicroRuleBinding, Blank[]], gMicroRuleRhsDeepSmall}], Nest[List, 7, 8]]),True],Null,Exit[2]];

@@ -108,8 +108,8 @@ So:
 - Worker reports are `rum-report/1` JSON (`scripts/report.py`, `TEMPLATE.md`).
   I read `summary`, pull a part with `show`, gate scope with `check
   --against-git`, and `render` the record into the brief. Diffs: in full.
-- Procedures become scripts: inputs in, one table out (the gate:
-  `scripts/director-gate.py run NNN`). Long output stays in `.temp/`.
+- Procedures become scripts, inputs in and one table out: the gate is
+  `director-gate.py run NNN [--perf resume,cli]`; long output in `.temp/`.
 - Subagents are never switched to a smaller model or a lower effort to save
   tokens (user ruling): recovering from their errors costs more.
 - The `rum-director` mod (`tools/claude-mod/rum-director/`) enforces the
@@ -174,9 +174,9 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   3. G15-C2's remaining 353 rows, then CM;
   4. `CHANGELOG.md` (user ruling: before S10);
   5. G13 S10–S54, F1–F23, R;
-  6. E2;
-  7. Q1–Q5.
-- **After the branch:** the retention line from E0, the binary snapshot
+  6. E2.
+- **After the branch:** the retention line from E0 with Q3 designed beside
+  it, then Q1, Q2, Q4, Q5 (user ruling 2026-10-29), the binary snapshot
   format, the remaining audit items and the threat-model critiques. Only then
   `v0.3.0`.
 - **Latest done:**

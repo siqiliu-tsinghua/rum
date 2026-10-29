@@ -1,0 +1,1 @@
+Do[AbortProtect[1 + 2],{500}];If[SameQ[AbortProtect[1 + 2],3],Null,Exit[2]]

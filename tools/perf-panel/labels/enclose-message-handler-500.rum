@@ -1,0 +1,1 @@
+Do[Enclose[Confirm[$Failed], "Message"],{500}];If[SameQ[Enclose[Confirm[$Failed], "Message"],"$Failed encountered."],Null,Exit[2]]

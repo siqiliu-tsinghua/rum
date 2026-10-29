@@ -1,0 +1,1 @@
+Do[Check[1, 2],{500}];If[SameQ[Check[1, 2],1],Null,Exit[2]]

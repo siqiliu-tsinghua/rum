@@ -1,0 +1,1 @@
+Do[Assert[True],{1000}];If[SameQ[Assert[True],Assert[True]],Null,Exit[2]]

@@ -1,0 +1,3 @@
+
+Do[MatchQ[gMicroWideMatcher[1, 2, 3, 4], gMicroWideMatcher[1, 2, 3, 4]],{s6PerfIteration,1,1000}];
+If[SameQ[MatchQ[gMicroWideMatcher[1, 2, 3, 4], gMicroWideMatcher[1, 2, 3, 4]],True],Null,Exit[2]];

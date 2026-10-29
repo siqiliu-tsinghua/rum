@@ -1,0 +1,4 @@
+gMicroGuardedRewriteFallbackRules = {x_Integer :> x + 1 /; x > 0, x_Integer :> x};
+Do[Replace[-1, gMicroGuardedRewriteFallbackRules],{perfIterationS4,1,500}];
+If[SameQ[(gMicroGuardedRewriteFallbackRules = {x_Integer :> x + 1 /; x > 0, x_Integer :> x};
+Replace[-1, gMicroGuardedRewriteFallbackRules]),-1],Null,Exit[2]];

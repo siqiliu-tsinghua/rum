@@ -1,0 +1,1 @@
+Do[Replace[3, {x_ /; x < 0 :> 0, x_ :> 9}],{500}];If[SameQ[Replace[3, {x_ /; x < 0 :> 0, x_ :> 9}],9],Null,Exit[2]]

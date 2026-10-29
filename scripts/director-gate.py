@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """The director's gate for a rum brief: one command, one table.
 
-  director-gate.py run NNN [--stage S] [--steps a,b | --from STEP] [--continue]
+  director-gate.py run NNN [--stage S] [--steps a,b | --from STEP] [--continue] [--perf resume,cli]
   director-gate.py show NNN [--stage S] STEP
+  director-gate.py rule NNN [--stage S] STEP --why TEXT
   director-gate.py pair BASE_TSV CAND_TSV [--rev REV]
   director-gate.py base-frontier [--rev REV]
   director-gate.py selftest
@@ -23,13 +24,17 @@ step's notes (the rows behind its verdict).
   certificates  local_production_acceptance in both feature builds, merged
   inventories   the inventory tests in one run, on the final tree
   workspace     cargo fmt --check, then cargo test --workspace --no-fail-fast
+  arms          both arms from one source path, one codegen unit (needs --perf)
+  structure     function diff of the two arms (needs --perf)
+  panels        one interleaved perf panel per engine named in --perf
 
 The steps up to `standing` can need a ruling (a moved count, a new unknown
 row, a new warning). A FLAGGED or FAIL there stops the run before the replays
 that hash the tree. Rule, edit, then rerun with --from. --continue runs on.
 
-Verdicts: PASS; FLAGGED (read the notes and rule); FAIL; SKIP. A filtered test
-run that runs no test is a FAIL: a check that ran nothing checked nothing.
+Verdicts: PASS; FLAGGED (read the notes and rule); RULED (a FLAGGED step a
+human has accepted); FAIL; SKIP. A filtered test run that runs no test is a
+FAIL: a check that ran nothing checked nothing.
 
 Base artifacts are keyed by the git tree of crates/. A green run stores its
 final frontier and its warnings under .temp/director/gate-state/<tree>/, so
@@ -37,12 +42,16 @@ the next gate, whose HEAD is that tree, pairs against them. When the key is
 missing, `census` dumps HEAD's frontier in a worktree (base-frontier).
 
 Every cargo build or test runs in scripts/memory-scope.sh at 14G, with
-CARGO_BUILD_JOBS=8, RUST_TEST_THREADS=1 and --offline. Timing and perf panels
-are not part of this gate.
+CARGO_BUILD_JOBS=8, RUST_TEST_THREADS=1 and --offline. Steps run serially.
+With --perf, three steps follow workspace: arms (both arms from one source
+path, one codegen unit), structure (the function diff) and panels (one perf
+panel per named engine). Without --perf they are SKIP. `rule` turns a
+FLAGGED step into RULED; GREEN counts RULED as passing.
 """
 
 import argparse
 import collections
+import hashlib
 import json
 import os
 import re
@@ -56,6 +65,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SCOPE = ROOT / "scripts/memory-scope.sh"
 STATE = ROOT / ".temp/director/gate-state"
+PERF_WORK = ROOT / ".temp/director/perf"
+PERF_PANEL = ROOT / "scripts/perf-panel.py"
 OWNERSHIP = Path("crates/rum-stdlib/src/tests/ownership_graph/inventory")
 CONTRACTS = Path("crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv")
 PROMOTED = Path("crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv")
@@ -64,7 +75,9 @@ CERTIFICATES = Path(".temp/brief-546/certificates")
 TEST_RESULT = re.compile(r"test result: (?:ok|FAILED)\. (\d+) passed; (\d+) failed; (\d+) ignored")
 SCOPE_LINE = re.compile(r"# memory-scope: unit=\S+ max=\S* peak=(\d*) oom=\S+ oom_kill=(\S+) rc=")
 STEPS = ["scope", "fmt", "check", "ownership", "census", "oracle", "standing",
-         "fingerprints", "certificates", "inventories", "workspace"]
+         "fingerprints", "certificates", "inventories", "workspace",
+         "arms", "structure", "panels"]
+PASSING = ("PASS", "SKIP", "RULED")
 RULING = STEPS[: STEPS.index("standing") + 1]
 INVENTORY_TESTS = ["production_rejection_census_is_complete", "production_inventory_is_exact",
                    "host_payload_ledger", "local_production_acceptance",
@@ -280,18 +293,30 @@ def crates_tree_of(rev):
     return git("rev-parse", f"{rev}:crates").strip()
 
 
+def head_worktree(rev):
+    """The worktree base_frontier uses, checked out at `rev` (factored out of it).
+
+    `rev` is resolved in the main tree first: inside the worktree, HEAD names
+    the worktree's own checkout, so the last gate's commit would stay put."""
+    commit = git("rev-parse", "--verify", f"{rev}^{{commit}}").strip()
+    wt = STATE / "worktree"
+    if wt.exists():
+        git("checkout", "--detach", "--force", commit, cwd=wt)
+    else:
+        STATE.mkdir(parents=True, exist_ok=True)
+        git("worktree", "add", "--detach", str(wt), commit)
+    if git("rev-parse", "HEAD", cwd=wt).strip() != commit:
+        raise RuntimeError(f"worktree {wt} is not at {rev} ({commit[:12]})")
+    return wt
+
+
 def base_frontier(rev, gate=None):
     """Dump the census frontier of `rev` in a worktree; store it by its tree."""
     tree = crates_tree_of(rev)
     out = STATE / tree / "frontier.tsv"
     if out.exists():
         return out
-    wt = STATE / "worktree"
-    if wt.exists():
-        git("checkout", "--detach", "--force", rev, cwd=wt)
-    else:
-        STATE.mkdir(parents=True, exist_ok=True)
-        git("worktree", "add", "--detach", str(wt), rev)
+    wt = head_worktree(rev)
     if "RUM_CENSUS_DUMP" not in (wt / "crates/rum-stdlib/src/tests/retention_closure/census/tests.rs").read_text():
         raise RuntimeError(f"{rev} predates RUM_CENSUS_DUMP: seed {out} by hand")
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -677,6 +702,185 @@ def step_workspace(g, a):
     return result("PASS" if ok else "FAIL", detail, failures(text), [path])
 
 
+def perf_engines(a):
+    return [engine for engine in (getattr(a, "perf", "") or "").split(",") if engine]
+
+
+def green(verdicts):
+    return all(verdict in PASSING for verdict in verdicts)
+
+
+def arms_verdict(receipt):
+    """PASS when both arms built, both copies match their crates, and pathcal passes."""
+    parts, ok = [], True
+    for arm in ("base", "cand"):
+        info = receipt["arms"][arm]
+        rc_cli = info["builds"]["rum-cli"]["rc"]
+        rc_resume = info["builds"]["resume"]["rc"]
+        equal = info["source_equal"]
+        parts.append(f"{arm} rc {rc_cli}/{rc_resume} source-equal={'yes' if equal else 'no'}")
+        if rc_cli != 0 or rc_resume != 0 or not equal:
+            ok = False
+    for binary in ("resume", "rum-cli"):
+        passed = receipt["pathcal"][binary]["pass"]
+        parts.append(f"pathcal {binary} {'PASS' if passed else 'FAIL'}")
+        if not passed:
+            ok = False
+    return ("PASS" if ok else "FAIL"), ", ".join(parts)
+
+
+def structure_verdict(report):
+    """Informational. new is only in the candidate; gone is only in the base."""
+    parts, notes = [], []
+    for name in ("resume", "rum-cli"):
+        binary = report["binaries"][name]
+        parts.append(
+            f"{name}: differ {binary['differ']} (layout {binary['layout_only']}, code {len(binary['code'])}), "
+            f"new {len(binary['only_b'])}, gone {len(binary['only_a'])}"
+        )
+        notes.extend(binary.get("notes") or [])
+    return "PASS", "; ".join(parts), notes
+
+
+def panels_verdict(summaries, failed):
+    notes = []
+    for summary in summaries:
+        notes.extend(summary.get("apart_above_rows") or [])
+        notes.extend(summary.get("apart_below_rows") or [])
+    if failed:
+        return "FAIL", "failed run: " + ", ".join(failed), notes
+    detail = "; ".join(
+        f"{summary['engine']}: {summary['labels']} labels, median {summary['median_pct']}, "
+        f"max {summary['max_pct']}, apart above {summary['apart_above']}/below {summary['apart_below']}"
+        for summary in summaries
+    )
+    flagged = any(summary["apart_above"] for summary in summaries)
+    return ("FLAGGED" if flagged else "PASS"), detail, notes
+
+
+def apply_rule(step, why):
+    """Turn a FLAGGED step into RULED. A rerun of the step replaces this result."""
+    if step.get("verdict") != "FLAGGED":
+        raise ValueError(f"rule refuses {step.get('verdict')}: not FLAGGED")
+    updated = dict(step)
+    updated["verdict"] = "RULED"
+    notes = list(step.get("notes") or [])
+    notes.append(f"RULED: {why}")
+    updated["notes"] = notes
+    return updated
+
+
+def stale_arms(receipt, digest):
+    """Why the arms on disk are not the ones `receipt` built, or None.
+
+    structure and panels read PERF_WORK, which every gate shares, so a run
+    --from structure must not measure an earlier gate's binaries."""
+    if receipt is None:
+        return "no arms receipt in this gate: run the arms step first"
+    for arm in ("base", "cand"):
+        for name in ("resume", "rum-cli"):
+            want = receipt["arms"].get(arm, {}).get("sha256", {}).get(name)
+            got = digest(PERF_WORK / "arms" / arm / name)
+            if want is None or got != want:
+                return f"arms/{arm}/{name} is not the binary this gate's arms step built"
+    return None
+
+
+def file_sha256(path):
+    if not path.is_file():
+        return None
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def arms_receipt(g):
+    path = g.dir / "arms.json"
+    return json.loads(path.read_text()) if path.is_file() else None
+
+
+def run_perf(g, name, args, json_path):
+    log = g.log(f"{name}.log")
+    cmd = [sys.executable, str(PERF_PANEL), *args]
+    with log.open("w") as sink:
+        sink.write("$ " + " ".join(cmd) + "\n")
+        sink.flush()
+        rc = subprocess.run(
+            cmd, cwd=ROOT, stdout=sink, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
+        ).returncode
+    data = None
+    if json_path is not None and Path(json_path).is_file():
+        data = json.loads(Path(json_path).read_text())
+    return rc, data, log
+
+
+def step_arms(g, a):
+    if not perf_engines(a):
+        return result("SKIP", "not requested")
+    receipt_path = g.dir / "arms.json"
+    rc, receipt, log = run_perf(g, "arms", [
+        "arms", "--work", str(PERF_WORK),
+        "--base-src", str(head_worktree("HEAD")), "--cand-src", str(ROOT),
+        "--json", str(receipt_path),
+    ], receipt_path)
+    if receipt is None:
+        return result("FAIL", f"arms produced no receipt (rc {rc})", logs=[log])
+    verdict, detail = arms_verdict(receipt)
+    if rc != 0 and verdict == "PASS":
+        verdict, detail = "FAIL", detail + f"; perf-panel rc {rc}"
+    return result(verdict, detail, logs=[log])
+
+
+def step_structure(g, a):
+    if not perf_engines(a):
+        return result("SKIP", "not requested")
+    stale = stale_arms(arms_receipt(g), file_sha256)
+    if stale:
+        return result("FAIL", stale)
+    report_path = g.dir / "structure.json"
+    rc, report, log = run_perf(g, "structure", [
+        "structure", str(PERF_WORK / "arms" / "base"), str(PERF_WORK / "arms" / "cand"),
+        "--json", str(report_path),
+    ], report_path)
+    if report is None:
+        return result("FAIL", f"structure produced no report (rc {rc})", logs=[log])
+    verdict, detail, notes = structure_verdict(report)
+    if rc != 0:
+        return result("FAIL", f"structure rc {rc}", notes, [log])
+    return result(verdict, detail, notes, [log])
+
+
+def step_panels(g, a):
+    engines = perf_engines(a)
+    if not engines:
+        return result("SKIP", "not requested")
+    stale = stale_arms(arms_receipt(g), file_sha256)
+    if stale:
+        return result("FAIL", stale)
+    summaries, failed, logs = [], [], []
+    for engine in engines:
+        if engine not in ("resume", "cli"):
+            return result("FAIL", f"unknown engine {engine}")
+        tsv = g.dir / f"panel-{engine}.tsv"
+        rc, _data, log = run_perf(g, f"panel-{engine}", [
+            "panel", str(PERF_WORK / "arms" / "base"), str(PERF_WORK / "arms" / "cand"),
+            "--engine", engine, "--all", "--out", str(tsv),
+        ], None)
+        logs.append(log)
+        if rc != 0:
+            failed.append(engine)
+            continue
+        summary_path = g.dir / f"panel-{engine}.json"
+        rc, summary, summary_log = run_perf(g, f"summary-{engine}", [
+            "summary", str(tsv), "--json", str(summary_path),
+        ], summary_path)
+        logs.append(summary_log)
+        if rc != 0 or summary is None:
+            failed.append(engine)
+        else:
+            summaries.append(summary)
+    verdict, detail, notes = panels_verdict(summaries, failed)
+    return result(verdict, detail, notes, logs)
+
+
 STEP_FNS = {name: globals()[f"step_{name}"] for name in STEPS}
 
 
@@ -733,7 +937,7 @@ def run(a):
               f"Read: director-gate.py show {a.brief}{' --stage ' + a.stage if a.stage else ''} {stopped}; "
               f"rule, then rerun with --from {stopped}.")
         return 1
-    if complete and all(v in ("PASS", "SKIP") for v in verdicts):
+    if complete and green(verdicts):
         tree = store_base(g)
         print(f"VERDICT: GREEN. Base artifacts stored for crates tree {tree[:12]}.")
         return 0
@@ -752,6 +956,20 @@ def show(a):
         print(f"  {n}")
     for p in r["logs"]:
         print(f"  log: {p}")
+    return 0
+
+
+def rule(a):
+    g = Gate(a.brief, a.stage)
+    current = g.state["steps"].get(a.step)
+    if current is None:
+        sys.exit(f"no result for {a.step}")
+    try:
+        updated = apply_rule(current, a.why)
+    except ValueError as exc:
+        sys.exit(str(exc))
+    g.save(a.step, updated)
+    print(f"{a.step}: RULED  {updated['detail']}")
     return 0
 
 
@@ -837,6 +1055,85 @@ def selftest():
         flags = own_flags(actions, hunks.get)
         expect("replay flags", sorted(f.split(":")[0] for f in flags),
                ["NEW on an unchanged line", "REMOVED unknown_storage.tsv"])
+
+    receipt = {
+        "arms": {
+            "base": {"source_equal": True, "builds": {"rum-cli": {"rc": 0}, "resume": {"rc": 0}}},
+            "cand": {"source_equal": True, "builds": {"rum-cli": {"rc": 0}, "resume": {"rc": 0}}},
+        },
+        "pathcal": {"resume": {"pass": True}, "rum-cli": {"pass": True}},
+    }
+    expect("arms detail", arms_verdict(receipt), (
+        "PASS",
+        "base rc 0/0 source-equal=yes, cand rc 0/0 source-equal=yes, pathcal resume PASS, pathcal rum-cli PASS",
+    ))
+    bad = {
+        "arms": {
+            "base": {"source_equal": True, "builds": {"rum-cli": {"rc": 0}, "resume": {"rc": 0}}},
+            "cand": {"source_equal": False, "builds": {"rum-cli": {"rc": 1}, "resume": {"rc": 0}}},
+        },
+        "pathcal": {"resume": {"pass": False}, "rum-cli": {"pass": True}},
+    }
+    verdict, detail = arms_verdict(bad)
+    expect("arms fail", verdict, "FAIL")
+    expect("arms fail detail", "rc 1/0" in detail and "source-equal=no" in detail and "pathcal resume FAIL" in detail, True)
+
+    structure = {"binaries": {
+        "resume": {"differ": 3, "layout_only": 0, "code": [{}, {}, {}], "only_a": [], "only_b": [{}],
+                   "notes": ["CODE [502] -> [520] abandon_frames_profiled"]},
+        "rum-cli": {"differ": 3, "layout_only": 0, "code": [{}, {}, {}], "only_a": [], "only_b": [{}],
+                    "notes": ["ONLY_B 44\treport_abandoned_cleanup_error"]},
+    }}
+    verdict, detail, notes = structure_verdict(structure)
+    expect("structure verdict", verdict, "PASS")
+    expect("structure detail", detail,
+           "resume: differ 3 (layout 0, code 3), new 1, gone 0; rum-cli: differ 3 (layout 0, code 3), new 1, gone 0")
+    expect("structure notes", notes,
+           ["CODE [502] -> [520] abandon_frames_profiled", "ONLY_B 44\treport_abandoned_cleanup_error"])
+
+    quiet = {"engine": "resume", "labels": 121, "median_pct": "+0.0031%", "max_pct": "+0.1642%",
+             "apart_above": 0, "apart_below": 0, "apart_above_rows": [], "apart_below_rows": []}
+    expect("panels pass", panels_verdict([quiet], [])[:2], (
+        "PASS", "resume: 121 labels, median +0.0031%, max +0.1642%, apart above 0/below 0",
+    ))
+    hot = dict(quiet, apart_above=1, apart_above_rows=["  hot +1.0/iter +1.0000% base 1-2 cand 4-5"])
+    verdict, _detail, notes = panels_verdict([hot], [])
+    expect("panels flagged", verdict, "FLAGGED")
+    expect("panels flagged note", notes, hot["apart_above_rows"])
+    cold = dict(quiet, apart_below=1, apart_below_rows=["  cold -1.0/iter -1.0000% base 4-5 cand 1-2"])
+    verdict, detail, notes = panels_verdict([cold], [])
+    expect("panels below", verdict, "PASS")
+    expect("panels below detail", "apart above 0/below 1" in detail, True)
+    expect("panels below note", notes, cold["apart_below_rows"])
+    expect("panels failed run", panels_verdict([], ["cli"])[0], "FAIL")
+
+    flagged = {"verdict": "FLAGGED",
+               "detail": "resume: 1 labels, median +1.0000%, max +1.0000%, apart above 1/below 0",
+               "notes": ["  hot +1.0/iter +1.0000% base 1-2 cand 4-5"], "secs": 3}
+    ruled = apply_rule(flagged, "layout effect")
+    expect("rule verdict", ruled["verdict"], "RULED")
+    expect("rule detail", ruled["detail"], flagged["detail"])
+    expect("rule note", ruled["notes"][-1], "RULED: layout effect")
+    expect("rule keeps earlier notes", ruled["notes"][0], flagged["notes"][0])
+    try:
+        apply_rule({"verdict": "PASS", "detail": "ok", "notes": []}, "no")
+        fails.append("rule refuses: a PASS step was ruled")
+    except ValueError:
+        pass
+    state = {"panels": ruled}
+    state["panels"] = {"verdict": "PASS", "detail": "fresh", "notes": []}
+    expect("rerun replaces ruling", state["panels"]["verdict"], "PASS")
+    built = {"arms": {arm: {"sha256": {"resume": f"{arm}-r", "rum-cli": f"{arm}-c"}}
+                      for arm in ("base", "cand")}}
+    current = {PERF_WORK / "arms" / arm / name: built["arms"][arm]["sha256"][name]
+               for arm in ("base", "cand") for name in ("resume", "rum-cli")}
+    expect("arms current", stale_arms(built, current.get), None)
+    expect("arms no receipt", stale_arms(None, current.get) is not None, True)
+    current[PERF_WORK / "arms/cand/resume"] = "older"
+    expect("arms stale", stale_arms(built, current.get), "arms/cand/resume is not the binary this gate's arms step built")
+    expect("green counts RULED", green(["PASS", "SKIP", "RULED"]), True)
+    expect("green rejects FLAGGED", green(["PASS", "FLAGGED"]), False)
+
     for f in fails:
         print(f"SELFTEST FAIL {f}")
     print(f"selftest: {'PASS' if not fails else f'{len(fails)} failures'}")
@@ -852,10 +1149,16 @@ def main():
     r.add_argument("--steps")
     r.add_argument("--from", dest="from_")
     r.add_argument("--continue", dest="continue_", action="store_true")
+    r.add_argument("--perf", default="", help="comma list of perf engines, e.g. resume,cli")
     s = sub.add_parser("show")
     s.add_argument("brief")
     s.add_argument("--stage")
     s.add_argument("step")
+    rule_cmd = sub.add_parser("rule")
+    rule_cmd.add_argument("brief")
+    rule_cmd.add_argument("--stage")
+    rule_cmd.add_argument("step")
+    rule_cmd.add_argument("--why", required=True)
     p = sub.add_parser("pair")
     p.add_argument("base")
     p.add_argument("cand")
@@ -868,6 +1171,8 @@ def main():
         return run(a)
     if a.cmd == "show":
         return show(a)
+    if a.cmd == "rule":
+        return rule(a)
     if a.cmd == "pair":
         counts, rows = pair(load_frontier(a.base), load_frontier(a.cand), tree_hunks(a.rev))
         print("\n".join(pair_groups(rows)))

@@ -1,0 +1,1 @@
+Do[Catch[1],{1000}];If[SameQ[Catch[1],1],Null,Exit[2]]

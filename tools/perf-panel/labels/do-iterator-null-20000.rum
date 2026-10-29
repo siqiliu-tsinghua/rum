@@ -1,0 +1,3 @@
+
+Do[Null, {j, 20000}];
+If[SameQ[(Do[Null, {j, 4}]),Null],Null,Exit[2]];

@@ -1,0 +1,4 @@
+gMicroSetPartFillSmall = Table[0, {200}];
+Do[Do[gMicroSetPartFillSmall[[i]] = i, {i, 1, 200}],{perfIterationS4,1,200}];
+If[SameQ[(gMicroSetPartFillSmall = Table[0, {200}];
+(gMicroSetPartFillSmall = Table[0, {200}]; Do[gMicroSetPartFillSmall[[i]] = i, {i, 1, 200}]; SameQ[gMicroSetPartFillSmall, Range[200]])),True],Null,Exit[2]];

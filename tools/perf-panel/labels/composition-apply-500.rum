@@ -1,0 +1,1 @@
+Do[Composition[Minus, Abs][3],{500}];If[SameQ[Composition[Minus, Abs][3],-3],Null,Exit[2]]

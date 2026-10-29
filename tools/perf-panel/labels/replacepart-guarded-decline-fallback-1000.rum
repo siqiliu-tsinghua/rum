@@ -1,0 +1,3 @@
+gMicroGuardedReplacePartFallbackRules = {1 -> 0, 1 :> 1 /; False};
+Do[ReplacePart[{0}, gMicroGuardedReplacePartFallbackRules],{s6PerfIteration,1,1000}];
+If[SameQ[ReplacePart[{0}, gMicroGuardedReplacePartFallbackRules],List[0]],Null,Exit[2]];

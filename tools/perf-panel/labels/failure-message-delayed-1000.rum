@@ -1,0 +1,1 @@
+fdMicro = Failure["t", <|"MessageTemplate" -> "m ``", "MessageParameters" :> {1 + 1}|>];Do[fdMicro["Message"],{1000}];If[SameQ[fdMicro["Message"],"m 2"],Null,Exit[2]]

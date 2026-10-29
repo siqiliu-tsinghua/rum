@@ -1,0 +1,4 @@
+Options[f] = {a -> 1, b -> 2, c -> 3};
+Do[OptionValue[f, {a,b,c}], {i, 1, 40000}];
+If[SameQ[(Options[f] = {a -> 1, b -> 2, c -> 3};
+OptionValue[f, {a,b,c}]),List[1, 2, 3]],Null,Exit[2]];

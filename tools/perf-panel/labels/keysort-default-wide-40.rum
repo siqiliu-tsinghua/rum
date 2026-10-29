@@ -1,0 +1,3 @@
+gMicroKeySortDefaultWide=AssociationThread[Reverse[Range[1600]]->Reverse[Range[1600]]];
+Do[KeySort[gMicroKeySortDefaultWide],{s5PerfIteration,1,40}];
+If[SameQ[SameQ[KeySort[gMicroKeySortDefaultWide],AssociationThread[Range[1600]->Range[1600]]],True],Null,Exit[2]];

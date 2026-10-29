@@ -1,0 +1,1 @@
+Do[{1, 2, 3} /. x_Integer /; x > 1 :> x + 1,{500}];If[SameQ[{1, 2, 3} /. x_Integer /; x > 1 :> x + 1,{1,3,4}],Null,Exit[2]]

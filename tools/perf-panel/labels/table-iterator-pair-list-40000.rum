@@ -1,0 +1,3 @@
+
+Table[{j,j},{j,40000}];
+If[SameQ[(Table[{j,j},{j,4}]),List[List[1, 1], List[2, 2], List[3, 3], List[4, 4]]],Null,Exit[2]];

@@ -1,0 +1,1 @@
+fMicro = Failure["t", <|"x" -> 1|>];Do[fMicro["y"],{1000}];If[SameQ[fMicro["y"],Missing["NotAvailable", "y"]],Null,Exit[2]]

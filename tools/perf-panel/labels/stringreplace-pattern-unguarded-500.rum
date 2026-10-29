@@ -1,0 +1,3 @@
+gMicroStringPatternRule = x_ :> x;
+Do[StringReplace["abc", gMicroStringPatternRule],{s6PerfIteration,1,500}];
+If[SameQ[StringReplace["abc", gMicroStringPatternRule],"abc"],Null,Exit[2]];

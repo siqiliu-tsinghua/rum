@@ -1,0 +1,4 @@
+gMicroSetPartFixed100Len100 = Table[0, {100}];
+Do[Do[gMicroSetPartFixed100Len100[[1]] = i, {i, 1, 100}],{perfIterationS4,1,200}];
+If[SameQ[(gMicroSetPartFixed100Len100 = Table[0, {100}];
+(gMicroSetPartFixed100Len100 = Table[0, {100}]; Do[gMicroSetPartFixed100Len100[[1]] = i, {i, 1, 100}]; SameQ[gMicroSetPartFixed100Len100, Join[{100}, Table[0, {99}]]])),True],Null,Exit[2]];

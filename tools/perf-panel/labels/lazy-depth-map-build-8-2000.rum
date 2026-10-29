@@ -1,0 +1,4 @@
+gDepthMap=LazyRange[0];Do[gDepthMap=LazyMap[Function[x,x+1],gDepthMap],{8}];
+Do[Take[gDepthMap,0],{perfIteration561,1,2000}];
+If[SameQ[(gDepthMap=LazyRange[0];Do[gDepthMap=LazyMap[Function[x,x+1],gDepthMap],{8}];
+Take[gDepthMap,0]),List[]],Null,Exit[2]];

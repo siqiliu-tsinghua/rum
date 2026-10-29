@@ -1,0 +1,3 @@
+
+Do[LazyTable[i,{i,3}],{perfIteration561,1,40000}];
+If[SameQ[(LazyTable[i,{i,3}]),LazyList[LazyTake[LazyMap[Function[i, i], LazyRange[1, 1]], 3]]],Null,Exit[2]];

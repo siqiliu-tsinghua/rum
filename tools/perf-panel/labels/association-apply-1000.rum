@@ -1,0 +1,1 @@
+aMicro = <|"a" -> 1|>;Do[aMicro["a"],{1000}];If[SameQ[aMicro["a"],1],Null,Exit[2]]

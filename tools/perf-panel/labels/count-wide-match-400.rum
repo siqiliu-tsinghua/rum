@@ -1,0 +1,1 @@
+gMicroWideTraversal = Range[1600];Do[Count[gMicroWideTraversal, _Integer, {1}],{400}];If[SameQ[Count[gMicroWideTraversal, _Integer, {1}],1600],Null,Exit[2]]

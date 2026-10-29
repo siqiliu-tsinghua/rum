@@ -1,0 +1,4 @@
+gMicroTakeMultispecSmall=Nest[List,1,8];
+Do[Take[gMicroTakeMultispecSmall,{1},{1},{1},{1},{1},{1},{1},{1}],{perfIteration561,1,40000}];
+If[SameQ[(gMicroTakeMultispecSmall=Nest[List,1,8];
+Take[gMicroTakeMultispecSmall,{1},{1},{1},{1},{1},{1},{1},{1}]),List[List[List[List[List[List[List[List[1]]]]]]]]],Null,Exit[2]];

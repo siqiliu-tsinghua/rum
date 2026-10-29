@@ -1,0 +1,1 @@
+Do[CheckAbort[1, 2],{1000}];If[SameQ[CheckAbort[1, 2],1],Null,Exit[2]]

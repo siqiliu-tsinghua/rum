@@ -1,0 +1,1 @@
+Do[Table[Null, {5000}],{16}];If[SameQ[Table[Null, {5000}],ConstantArray[Null,5000]],Null,Exit[2]]

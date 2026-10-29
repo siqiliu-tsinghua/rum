@@ -1,0 +1,1 @@
+Do[Assert[1 > 2],{1000}];If[SameQ[Assert[1 > 2],Assert[Greater[1, 2]]],Null,Exit[2]]

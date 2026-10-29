@@ -1,0 +1,1 @@
+fmMicro = Failure["t", <|"MessageTemplate" -> "m ``", "MessageParameters" -> {1}|>];Do[Enclose[Confirm[fmMicro], "Message"],{500}];If[SameQ[Enclose[Confirm[fmMicro], "Message"],"m 1"],Null,Exit[2]]

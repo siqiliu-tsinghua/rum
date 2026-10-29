@@ -1,0 +1,3 @@
+
+Table[Null, {j, 40000}];
+If[SameQ[(Table[Null, {j, 4}]),List[Null, Null, Null, Null]],Null,Exit[2]];

@@ -1,0 +1,4 @@
+gDepthDrop=LazyRange[0];Do[gDepthDrop=LazyDrop[gDepthDrop,1],{8}];
+Do[First[gDepthDrop],{perfIteration561,1,2000}];
+If[SameQ[(gDepthDrop=LazyRange[0];Do[gDepthDrop=LazyDrop[gDepthDrop,1],{8}];
+First[gDepthDrop]),8],Null,Exit[2]];

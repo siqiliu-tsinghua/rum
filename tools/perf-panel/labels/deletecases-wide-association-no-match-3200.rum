@@ -1,0 +1,4 @@
+gMicroWideAssociation = AssociationThread[Range[1600] -> Range[1600]];
+Do[DeleteCases[gMicroWideAssociation, _String, {1}],{perfIterationS4,1,3200}];
+If[SameQ[(gMicroWideAssociation = AssociationThread[Range[1600] -> Range[1600]];
+SameQ[DeleteCases[gMicroWideAssociation, _String, {1}], gMicroWideAssociation]),True],Null,Exit[2]];

@@ -1,0 +1,4 @@
+gMicroGuardedRewriteRule = x_Integer :> x + 1 /; x > 0;
+Do[ReplaceAll[1, gMicroGuardedRewriteRule],{perfIterationS4,1,1000}];
+If[SameQ[(gMicroGuardedRewriteRule = x_Integer :> x + 1 /; x > 0;
+ReplaceAll[1, gMicroGuardedRewriteRule]),2],Null,Exit[2]];

@@ -1,0 +1,3 @@
+gMicroGuardedStringFallbackRules = {"a" :> ("x" /; False), "a" -> "y"};
+Do[StringReplace["abc", gMicroGuardedStringFallbackRules],{s6PerfIteration,1,1000}];
+If[SameQ[StringReplace["abc", gMicroGuardedStringFallbackRules],"ybc"],Null,Exit[2]];

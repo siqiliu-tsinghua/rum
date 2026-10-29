@@ -1,0 +1,1 @@
+On[Assert];Do[Assert[1 < 2],{500}];If[SameQ[Assert[1 < 2],Null],Null,Exit[2]]

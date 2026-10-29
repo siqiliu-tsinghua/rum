@@ -1,0 +1,1 @@
+Do[CatchExceptions[1],{500}];If[SameQ[CatchExceptions[1],1],Null,Exit[2]]

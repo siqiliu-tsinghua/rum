@@ -1,0 +1,4 @@
+gMicroWideTraversal = Range[1600];
+Do[Cases[gMicroWideTraversal, _String, {1}],{perfIterationS4,1,3200}];
+If[SameQ[(gMicroWideTraversal = Range[1600];
+Cases[gMicroWideTraversal, _String, {1}]),List[]],Null,Exit[2]];

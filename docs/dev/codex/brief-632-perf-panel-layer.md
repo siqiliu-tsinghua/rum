@@ -428,3 +428,239 @@ format). Sections, with these tags:
 - `disclosures`: what was not ported, and why.
 
 Your final message is `python3 scripts/report.py summary 632`.
+
+## Worker report (grk, DONE)
+
+scripts/perf-panel.py and tools/perf-panel/ are the rum-vs-rum panel, and director-gate.py adds opt-in arms, structure, and panels plus rule. C1 matched the reference instruments on stored inputs. C2 and C3 were apart 0/0 (medians -0.0021% and +0.0021%). C4 was median +2.6552%, 120 apart above, below 0, resume-cleanup +1408.65. C5 matched the seven probes. C6 attributed do_reserve_and_handle +32.0000 and __memcmp_avx2_movbe -884.2220. C7 builds were rc 0, source-equal, pathcal PASS, about 51s each; shas differ and structure is differ 0, only_a 0, only_b 0. C8 named report_abandoned_cleanup_error [44] to [47], and the restored candidate shas match C7. C9 resume was apart 0/0; CLI ran all 192 labels in 288.013s. Six mutants CAUGHT. crates diff exit 0.
+
+| File | Kind | Lines | Why |
+| --- | --- | --- | --- |
+| `scripts/perf-panel.py` | added | 1-1122 | one stdlib tool for arms, pathcal, structure, panel, summary, attr, callers, fnslope, shape |
+| `scripts/director-gate.py` | modified | 1-50, 67-79, 295-306, 698-846, 922-937, 1019-1092 | opt-in arms, structure, panels, --perf, rule, head_worktree, and RULED counted as passing |
+| `scripts/README.md` | modified | 48-56 | director-gate step list names --perf, arms, structure, panels, and rule; one perf-panel entry |
+| `tools/perf-panel/harness/Cargo.toml` | added | 1-17 | package rum-resume-harness, its own workspace, bin resume, rum-host path into crates |
+| `tools/perf-panel/harness/Cargo.lock` | added | 1-342 | harness-630b2 lock; package name brief608-resume renamed to rum-resume-harness for --offline |
+| `tools/perf-panel/labels.json` | added | 1-2142 | 313 labels in brief-626 order, only the fields that decide a command |
+| `tools/perf-panel/harness/src/g15.rs` | added | 1-55 | resume harness source copied from harness-630b2, then rustfmt |
+| `tools/perf-panel/harness/src/g15c1.rs` | added | 1-55 | resume harness source copied from harness-630b2, then rustfmt |
+| `tools/perf-panel/harness/src/lhs.rs` | added | 1-167 | resume harness source copied from harness-630b2, then rustfmt |
+| `tools/perf-panel/harness/src/main.rs` | added | 1-172 | resume harness source copied from harness-630b2, then rustfmt |
+| `tools/perf-panel/harness/src/s5.rs` | added | 1-126 | resume harness source copied from harness-630b2, then rustfmt |
+| `tools/perf-panel/harness/src/s6.rs` | added | 1-37 | resume harness source copied from harness-630b2, then rustfmt |
+| `tools/perf-panel/harness/src/s7.rs` | added | 1-79 | resume harness source copied from harness-630b2, then rustfmt |
+| `tools/perf-panel/harness/src/s8.rs` | added | 1-121 | resume harness source copied from harness-630b2, then rustfmt |
+| `tools/perf-panel/harness/src/s9.rs` | added | 1-169 | resume harness source copied from harness-630b2, then rustfmt |
+| `tools/perf-panel/labels/*.rum` (384 files) | added | 1-3 each | CLI label files at N and 2N, byte copies of brief-626's |
+
+- Disclosed: `.temp/brief-629/instruments/lp01_fingerprint.py`: not in the port table; no panel subcommand calls it
+- Disclosed: `.temp/brief-629/instruments/attr.py`: older attr. The port is .temp/director/gate-630b2/attr.py
+- Disclosed: `.temp/director/gate-630b2/fndiff2.py`: nothing calls it. structure is fndiff.py plus fndiff3.py's hex mask in one objdump pass
+- Disclosed: `.temp/brief-626/perf/`: 216 files no panel command reads were not copied: 202 *-check.rum files plus json, tsv, csv, and notes. The 384 N and 2N .rum files were copied byte for byte
+- Disclosed: `scripts/perf-panel.py`: shape prints calls[<pattern>] as the brief specifies. resume-shape.sh prints poll_calls and leaf_calls. The numbers matched on b2final and b3
+- Disclosed: `scripts/perf-panel.py`: fnslope prints instr_slope.py's lines and prefixes each arm/rep pair with # arm=<arm> rep=<rep>, because attr stores several pairs in one directory
+- Disclosed: `tools/perf-panel/harness/Cargo.lock`: one-line package rename, brief608-resume to rum-resume-harness, so the copied lock resolves --offline under the new package name
+- Disclosed: `tools/perf-panel/harness/src/`: rustfmt only. cargo fmt --check is clean. No harness logic change
+- Disclosed: `.temp/brief-632/mutant-src/tools/perf-panel/harness`: head-src has no harness. arms overlays the candidate's harness, so the C8 copy of head-src also received tools/perf-panel/harness. The black_box edit is only in that copy of abandon.rs
+- Disclosed: `scripts/perf-panel.py`: attr passes an absolute DEBUGINFOD_CACHE_PATH. A relative path is ignored and libc locals stay addresses. The reference path is absolute
+
+| Run | Try | Exit | Tests | Log |
+| --- | ---: | ---: | --- | --- |
+| c0 | 1 | 0 | - | `.temp/brief-632/logs/c0.log` |
+| selftest-perf | 1 | 0 | - | `.temp/brief-632/logs/selftest-perf.log` |
+| selftest-gate | 1 | 0 | - | `.temp/brief-632/logs/selftest-gate.log` |
+| fmt | 1 | 0 | - | `.temp/brief-632/logs/fmt.log` |
+| mutants | 1 | 0 | - | `.temp/brief-632/logs/mutants.log` |
+| c1 | 1 | 0 | - | `.temp/brief-632/logs/c1-run.log` |
+| c2 | 1 | 0 | - | `.temp/brief-632/logs/c2-summary.log` |
+| c3 | 1 | 0 | - | `.temp/brief-632/logs/c3-summary.log` |
+| c4 | 1 | 0 | - | `.temp/brief-632/logs/c4-summary.log` |
+| c5 | 1 | 0 | - | `.temp/brief-632/logs/c5-panel.log` |
+| c6-drop | 1 | 0 | - | `.temp/brief-632/attr/attr-lazy-depth-drop-all-one-8.tsv` |
+| c6-memcmp | 2 | 0 | - | `.temp/brief-632/attr/attr-replaceall-leaf-rebuild-small.tsv` |
+| c6-relative | 1 | 0 | - | `.temp/brief-632/logs/c6-sym2.out` |
+| c7 | 1 | 0 | - | `.temp/brief-632/logs/c7-arms.log` |
+| c7-structure | 1 | 0 | - | `.temp/brief-632/logs/c7-structure.log` |
+| c8-mutant | 1 | 0 | - | `.temp/brief-632/logs/c8-mutant-arms.json` |
+| c8-structure | 1 | 0 | - | `.temp/brief-632/logs/c8-structure.log` |
+| c8-restore | 1 | 0 | - | `.temp/brief-632/logs/c8-restore-arms.json` |
+| c9-resume | 1 | 0 | - | `.temp/brief-632/logs/c9-resume-summary.log` |
+| c9-cli | 1 | 0 | - | `.temp/brief-632/logs/c9-cli-summary.log` |
+| c9-coverage | 1 | 0 | - | `.temp/brief-632/logs/c9-cli-coverage.log` |
+| crates-diff | 1 | 0 | - | `.temp/brief-632/logs/crates-diff.log` |
+
+| Check | Bar | Result | Verdict | Note |
+| --- | --- | --- | --- | --- |
+| c0 | perf prints a count and sha256sum -c passes | 180925 instructions, sha_rc=0 | PASS |  |
+| c1 | ported output equals the reference on stored inputs | C1 PASS | PASS |  |
+| c2 | apart above 0, apart below 0, \|median\| <= 0.05% | 0/0, median -0.0021% | PASS |  |
+| c3 | apart above 0, apart below 0, \|median\| <= 0.05% | 0/0, median +0.0021% | PASS |  |
+| c4 | apart above >= 115, below 0, median in [+2.3%, +3.0%], resume-cleanup delta in [+1350, +1500] | 120 / 0 / +2.6552% / +1408.7 per iter | PASS |  |
+| c5 | each delta within max(3, 10% of \|probe\|) and the same sign | -6.94, -24.03, +31.63, +242.59, +3.54, +1620.15, -884.53 | PASS |  |
+| c6 | do_reserve_and_handle +32 ±1; __memcmp_avx2_movbe -884 ±10 | +32.0000 and -884.2220 | PASS |  |
+| c7 | both builds rc 0, source-equal, pathcal PASS; if shas differ, structure differ 0, only_a 0, only_b 0 | pathcal PASS; STRUCTURE differ=0 only_a=0 only_b=0 on both binaries | PASS |  |
+| c8 | structure names report_abandoned_cleanup_error or an inliner; switch-back shas equal C7 | CODE [44] -> [47]; shas match C7 | PASS |  |
+| c9-resume | apart above 0 and apart below 0 | 0/0 | PASS |  |
+| c9-cli | all 192 labels run at N and 2N on both arms, stdout and rc checked | 192 rows, bad 0, total seconds 288.013 | PASS |  |
+| crates | diff -rq crates .temp/brief-632/head-src/crates prints nothing | no diff output, CRATES_DIFF_EXIT:0 | PASS |  |
+| selftest | both selftests PASS and six mutants CAUGHT | selftest: PASS; six CAUGHT | PASS |  |
+
+| Measurement | Bar | Result | Verdict | Note |
+| --- | --- | --- | --- | --- |
+| c2-null | b3 vs b3 resume, 15 reps, apart 0/0 and \|median\| <= 0.05% | median -0.0021%, apart above 0 below 0, 78.893s | PASS |  |
+| c3-b3 | b2final vs b3 resume, 15 reps, apart 0/0 and \|median\| <= 0.05% | median +0.0021%, apart above 0 below 0, 80.295s | PASS |  |
+| c4-positive | b2base vs b2v1, apart above >= 115, below 0, median +2.3% to +3.0%, cleanup +1350 to +1500 | median +2.6552%, apart 120/0, resume-cleanup +1408.7/iter | PASS |  |
+| c7-builds | each build under 3600s, rc 0 | base cli 50.756s, base resume 50.259s, cand cli 50.747s, cand resume 50.926s | PASS |  |
+| c9-cli-time | one CLI rep over all labels, bound 1800s | 288.013s; slowest lazy-depth-fold-through-source-256 205.436s | PASS |  |
+
+Deviations:
+- attr resolves DEBUGINFOD_CACHE_PATH to an absolute path: The debuginfod client ignores a relative cache path. The first replaceall attr then left __memcmp_avx2_movbe as libc.so.6!0x00000000001b1220 (delta -883.813). That run's log was overwritten by the remeasure. The reproduction is .temp/brief-632/logs/c6-sym2.out. The reference attr passes an absolute path.
+- C8 mutant-src includes a copy of tools/perf-panel/harness: arms reads the harness from the candidate source and overlays it. head-src, the cp -a source, has no harness.
+
+### Files and subcommands
+
+`scripts/perf-panel.py` is one stdlib file. Subcommands: arms, pathcal, structure, panel, summary, attr, callers, fnslope, shape, selftest.
+`tools/perf-panel/harness` is package `rum-resume-harness`, its own `[workspace]`, bin `resume`, `rum-host` at `../../../crates/rum-host`. It is not a root workspace member.
+`tools/perf-panel/labels.json` has 313 labels in brief-626 order. `tools/perf-panel/labels/` has the 384 CLI files at N and 2N.
+`scripts/director-gate.py` appends `arms`, `structure`, `panels` after `workspace`. `PERF_WORK` is `.temp/director/perf`. Without `--perf` the three steps are SKIP `not requested`. `step_arms` uses `head_worktree("HEAD")` as the base and the repo as the candidate, and it does not pass `--no-scope`. This worker's own arms runs passed `--no-scope` because the sandbox cannot make a scope.
+`rule` turns a FLAGGED step into RULED, keeps the detail, appends `RULED: <why>`, and refuses a step that is not FLAGGED. A rerun replaces the ruling. GREEN counts RULED.
+`panels` is FAIL on a failed run, FLAGGED when any label is apart above, and PASS otherwise. Apart below is a note, not a flag. `panels` is not in the ruling set, so FLAGGED does not stop the run.
+
+### C1
+
+`.temp/brief-632/c1.py` stopped at the first miss. It printed `C1 PASS`.
+pathcal on (b2base, b2v1), (b2base, b2final), and (b2final, b3), both binaries: six `PASS` lines, stdout equal to `path-calibration.sh`.
+structure on (b2final, b3): fndiff and fndiff3 blocks matched the reference scripts. Both binaries: differ 3, layout_only 0, code 3, only_a 0, only_b 1. CODE rows: `abandon_frames_profiled` [502]->[520], `drain_abandonment_worklist` [1217]->[1236], `mi_bin` [23]->[25]. only_b: `report_abandoned_cleanup_error` count 44.
+summary on the two stored TSVs matched `panel-summary.py` byte for byte. B3 resume: `labels 121 median +0.0031% max +0.1642% min -0.0967% above +0.1%: 8` and `cand above base in every rep: 0  below in every rep: 0`.
+`PASS labels 313 commands and 384 files`.
+shape on `resume_eval_request_from_checkpoint` for b2final and b3: size=25829, frame=0x858, memcpy_sites=19, calls[poll_resumed_native_stack]=0, calls[Session.*native_stack_budget_exhausted]=8. Those numbers equal resume-shape.sh. The key names are the brief's `calls[<pattern>]`.
+
+### C2 to C9
+
+No bound fired. Resume panels were about 80s (bound 1800). The CLI rep was 288s (bound 1800). Each cargo build was about 48-51s (bound 3600 per build; the two-arm C7 wrapper was 7200).
+C2, b3 vs b3, resume, 15 reps: `labels 121 median -0.0021% max +0.2010% min -0.1295% above +0.1%: 4` and `cand above base in every rep: 0  below in every rep: 0`.
+C3, b2final vs b3, resume, 15 reps: `labels 121 median +0.0021% max +0.3240% min -0.3259% above +0.1%: 12` and apart 0/0. The stored record is +0.0031%.
+C4, b2base vs b2v1, resume, 15 reps: `labels 121 median +2.6552% max +7.5507% min +0.6994% above +0.1%: 121`, `cand above base in every rep: 120  below in every rep: 0`, `resume-cleanup +1408.7/iter +7.5507%`. The TSV delta is +1408.65, inside [+1350, +1500].
+C5 deltas (probe, tolerance max(3, 10% of |probe|)): table-iterator-pair-list -6.94 (-7.0); take-multispec-small -24.03 (-24.0); lazy-depth-drop-all-one-8 +31.63 (+31.4); lazy-depth-take-map-64 +242.59 (+236.4, tol 23.64); upvalue-guarded-hit +3.54 (+4.9); replacepart-wide-rule-list +1620.15 (+1677.0, tol 167.7); replaceall-leaf-rebuild-small -884.53 (-884.0). Same sign, inside tolerance.
+C6: `+32.0000` on `rum-cli!alloc::raw_vec::RawVecInner<A>::reserve::do_reserve_and_handle`. `-884.2220` on `libc.so.6!__memcmp_avx2_movbe`. debuginfod was copied from `~/.cache/debuginfod_client` (build-id e363db7c..., 11947584 bytes).
+C7: both arms source-equal, pathcal PASS for resume and rum-cli. Build seconds: base cli 50.756, base resume 50.259, cand cli 50.747, cand resume 50.926. Shas differ. Structure: `STRUCTURE resume differ=0 layout_only=0 code=0 only_a=0 only_b=0` and the same line for rum-cli.
+C8: black_box is the first statement of `report_abandoned_cleanup_error` in the mutant copy only. Cand rebuild rc 0 (47.978s and 48.787s). Both binaries name the function: `CODE [44] -> [47] ...report_abandoned_cleanup_error`. Resume also differed in `_mi_bitmap_forall_setc_ranges` [118]->[114] and `mi_bin` [23]->[25]; rum-cli also in `mi_bin` [25]->[23]. The switch-back shas equal C7: resume `0df7e0dd027c0edb4df4ede9f3132e3da11758340d933a6680704f897d0e6421`, rum-cli `98549ed1d79538843c5b08202c83f810373f062200c3cc8dfeea8cb76e5f3912`.
+C9 resume on the restored C7 arms: `labels 121 median +0.0067% max +0.1468% min -0.2150% above +0.1%: 6` and `cand above base in every rep: 0  below in every rep: 0`.
+C9 CLI, `--reps 1`: `cli labels 192 rows_with_one_count_per_arm_size 192 bad 0`. The panel exited 0, so every stdout and rc check passed. `total seconds: 288.013`. Five slowest: `205.436 lazy-depth-fold-through-source-256`, `13.463 lazy-depth-fold-through-source-64`, `11.554 lazy-depth-map-eight-256`, `6.456 lazy-select-scan-small`, `4.836 deletecases-wide-association-no-match`. At one rep the apart line is `cand above base in every rep: 90  below in every rep: 102`. That is one sample per label on binaries that are not byte-identical. The brief's bar for this run is that all 192 labels run.
+`diff -rq crates .temp/brief-632/head-src/crates` printed nothing. Exit status: 0 (`CRATES_DIFF_EXIT:0`).
+
+### Selftest mutants
+
+`.temp/brief-632/mutants.py` copies `scripts/perf-panel.py` to `scripts/perf-panel-mutant.py` (the repo root must be the parent of `scripts/`, or label lookup looks under `.temp`). Each mutant turns one named selftest red. The work file is removed after the run.
+`MUTANT apart >= for >: CAUGHT`
+`MUTANT slope without / N: CAUGHT`
+`MUTANT re-entry ignores sha256: CAUGHT`
+`MUTANT layout split without hex masking: CAUGHT`
+`MUTANT lhs- args dropped: CAUGHT`
+`MUTANT pathcal compares counts: CAUGHT`
+Re-run after the absolute-cache-path edit: same six lines, exit 0. `scripts/perf-panel-mutant.py` is absent.
+
+### What was not ported
+
+Not ported: `lp01_fingerprint.py` (not in the port table), brief-629's older `attr.py` (the port is gate-630b2's attr), `fndiff2.py` (structure uses fndiff.py and fndiff3.py), and 216 brief-626 perf files no command reads (202 `*-check.rum` plus json, tsv, csv, and notes).
+Specified output differences, checked rather than treated as a rule change: shape uses `calls[<pattern>]` and the numbers equal resume-shape.sh; fnslope adds `# arm=<arm> rep=<rep>` before instr_slope.py's lines.
+The harness Cargo.lock renames package `brief608-resume` to `rum-resume-harness`. Harness sources were rustfmt'd and `cargo fmt --check` exits 0.
+The C8 mutant tree also holds a copy of the harness, because arms overlays the candidate's harness and head-src does not contain one.
+No decision rule was changed. The apart comparison stays strict `>`. Equal is not apart.
+
+## Director gate
+
+**Rerun by me.**
+
+- Both selftests PASS. The worker's six mutants (`.temp/brief-632/mutants.py`)
+  are still CAUGHT on the amended script. `cargo fmt --check` on the harness
+  exits 0. `git status crates` is empty.
+- The 384 label files are byte-identical to brief-626's. The harness sources
+  equal `harness-630b2` up to rustfmt:
+  - eight files are equal modulo whitespace, trailing commas and `;}`;
+  - `main.rs` is also equal modulo braces and `mod` order;
+  - `Cargo.toml` changes only the package name, `[[bin]]` and the `rum-host`
+    path; `Cargo.lock` changes only the package name.
+- C2 (b3 vs b3): median +0.0036%, apart 0/0.
+- C4 (b2base vs b2v1): median +2.6195%, 120 apart above, `resume-cleanup`
+  +1458.5. Inside the known answer.
+- C3 (b2final vs b3): median +0.0173%, **1 apart above**:
+  `resume-s8-repeated-guard +369.7/iter +0.3565% base 103507-103947 cand
+  103951-104267`, four instructions apart.
+  - The worker's C3 has the same label at +336.11 (+0.3240%), not apart.
+  - Callgrind (`attr`, 6 runs per arm) gives +304.19/iter, all of it in
+    mimalloc's aligned-allocation paths:
+    - `mi_theap_malloc_zero_aligned_at_generic` +124.8;
+    - `_overalloc` +117.0;
+    - `_mi_theap_malloc_zero` +58.0;
+    - `mi_bin` +34.8;
+    - `mi_good_size` +22.5;
+    - `_mi_bin_size` +12.8.
+  - None of B3's changed functions is on this label's path. It is a layout
+    effect, so the brief's "0 apart" on this pair is not a stable known
+    answer: a panel on it may flag this label, and the flag is ruled after
+    attribution.
+- C7's shas differ because mimalloc embeds `__TIME__` (`21:39:31` against
+  `21:41:13`, beside `Oct 29 2026`). Resume's `.rodata` also shifts by 64
+  bytes, a linker string-merge layout: cand keeps a separate `"1"`. The code
+  is equal by `structure`.
+- Not rerun by me: C1's TSV and command equivalence, C5, C6, C8, C9.
+
+**The git parts the worker could not run.**
+
+`run 632 --steps scope,fmt,arms,structure,panels --perf resume`. The
+worktree did not exist, so `head_worktree` took its `worktree add` path:
+
+| Step | Verdict | Secs | Detail |
+| --- | --- | --- | --- |
+| scope | RULED | 0 | 4 problems: `.gitignore`, `CLAUDE.md`, `TODO.md`, the progress snapshot, all the director's own edits |
+| fmt | PASS | 2 | formatted |
+| arms | PASS | 202 | base rc 0/0 source-equal=yes, cand rc 0/0 source-equal=yes, pathcal resume PASS, pathcal rum-cli PASS |
+| structure | PASS | 21 | resume: differ 0 (layout 0, code 0), new 0, gone 0; rum-cli: the same |
+| panels | PASS | 83 | resume: 121 labels, median +0.0104%, max +0.1180%, apart above 0/below 0 |
+
+- **Checkout path.** A second `--steps arms,structure` run took the checkout
+  path. Its builds were no-ops (0.1 s and 1.9 s) and the result was the same.
+- **Stale arms.** A run on a fresh stage dir (`--stage x`) without `arms`
+  gave `structure` and `panels` FAIL "no arms receipt in this gate".
+- **`rule`.** It refuses a PASS step ("rule refuses PASS: not FLAGGED"), and
+  `rule 632 scope` turned FLAGGED into RULED.
+- **Not run, and why.**
+  - The CLI panel at 15 reps, about 73 minutes. In `step_panels` it differs
+    from resume only in the engine name, and perf-panel's CLI path ran in the
+    worker's C5 and C9.
+  - The crates-dependent steps (`check` through `workspace`). Nothing under
+    `crates/` changed, and the crates tree is `5bffd8d2a0b2`, the tree run
+    dg1 gated GREEN.
+
+**Director amendments, in this commit.** Items 2–4 have selftest cases,
+each watched to fail on its mutant: 4 perf-panel mutants and 2 director-gate
+mutants, all CAUGHT. Item 1 has the falsifier given with it.
+
+1. **`head_worktree` resolves `rev` in the main tree.** Inside the worktree,
+   `HEAD` names the worktree's own checkout. The falsifier: with the worktree
+   at `HEAD~1`, `head_worktree("HEAD")` left it at `333e446c` while the main
+   HEAD was `7f671af5`.
+   - After any commit, the next gate would have used the previous commit as
+     its base. `base_frontier` would have dumped a stale frontier under the
+     new tree's key: brief-631's code, latent because no worktree had
+     survived until now.
+   - It now checks out the resolved sha and verifies the worktree's HEAD.
+2. **`structure` drops alignment padding after a body.** objdump counts the
+   padding as the preceding function's instructions: `mi_bin` read 23 or 25
+   lines on identical C, with the extra lines being `cs nopw` padding.
+   b2final→b3 is now differ 2, code 2: B3's two abandon functions, and
+   `report_abandoned_cleanup_error` as the one new function. That replaces
+   C1's differ 3.
+3. **`structure` keeps every body under a duplicate name.** Each later one is
+   kept as `name#k` and grouped back. fndiff kept only the last: resume has 43
+   such names, with 82 more instances. New and gone now use hash-stripped
+   names, because a crate whose metadata moved renames every symbol it has:
+   b2base→b2v1 new/gone went from 2777/2807 to 3/27.
+4. **No stale binaries.** `arms` deletes an arm's binaries before building
+   it. The gate's `structure` and `panels` FAIL unless the arms on disk are
+   the ones this gate's `arms.json` built, so a `--from structure` run cannot
+   measure an earlier gate's binaries.
+5. **Smaller items.**
+   - A comment on `attr`'s debuginfod fallback to `.temp/brief-629/debuginfod`,
+     which a sandboxed worker needs and the report did not disclose.
+   - `.gitignore` gains `__pycache__/`: the worker's mutants import the script.

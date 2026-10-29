@@ -26,11 +26,20 @@ New briefs go to grk or kimi while Codex has no quota (user, 2026-10-29).
 warnings against HEAD, the ownership replay, the census pairing, the
 compiler oracle, LP01 and the typed-slot census, the fingerprints, the
 certificates, the inventory run and the workspace, and prints one table.
-In flight: the perf-panel layer, brief-632 on grk. It moves the instruments
-from `.temp/` into `scripts/perf-panel.py` and `tools/perf-panel/` (the
-resume harness, brief-626's label set) and adds the opt-in `arms`,
-`structure` and `panels` steps. The calibrations are known answers on stored
-binaries from brief-630 B2 and B3.
+The perf-panel layer is in (brief-632, grk, director-gated):
+- `scripts/perf-panel.py` and `tools/perf-panel/` (the resume harness and
+  brief-626's 313 labels);
+- `run NNN --perf resume,cli` adds `arms` (both arms at one path, one
+  codegen unit), `structure` and `panels`. A label apart above in every rep
+  is FLAGGED and is ruled after attribution
+  (`director-gate.py rule NNN panels --why ...`).
+- A resume panel takes about 80 s. A 15-rep CLI panel takes about 73
+  minutes, 51 of them on `lazy-depth-fold-through-source-256`.
+- A known layout effect: b2final→b3 `resume-s8-repeated-guard` +0.33%, all
+  in mimalloc's aligned-allocation paths.
+
+Parked by the user (2026-10-29), done only on a must-do reason: that
+51-minute label, and measuring `rum-stdlib` at 8 test threads.
 
 G15-C2 (brief-623, three runs) has settled 679 of its 1 032 rows by
 execution or by mechanical rule:
@@ -353,9 +362,11 @@ relative order in every front end; (Q2) the duplicated `First::nofirst` on an
 empty lazy list. The director met the same class again on 2026-10-17: a failed
 call returned unevaluated is evaluated once more outside the construct that
 produced it, so `Quiet[{1}[[3]]]` still prints `Part::partw` and
-`x = {1}[[3]]; 5` prints it twice. Both wait for the branch to close; the retention line, paused
-mid-line at E0, resumes first under the "a line once opened is finished"
-ruling unless the user places them earlier. Also behind the branch: the
+`x = {1}[[3]]; 5` prints it twice. Both wait for the branch to close.
+**Order after the branch (user ruling 2026-10-29):** the retention line
+resumes at E0 first, with Q3 designed together with it (the same shape, a
+Rust local invisible to the Session, on the roots side); Q1, Q2, Q4 and Q5
+follow the retention line. Also behind the branch: the
 `rum-cli`/`rum-repl` `rum-runtime` dev-dependency audit.
 **brief-562 is in (design only) — the flat machine is chosen.** The unary-chain
 premise holds (every adapter has one lazy child; `LazyTable` lowers to one
@@ -1739,7 +1750,8 @@ internal heads as state.
 
 **Recorded, not in this branch — the gensym sweep does not see Rust-local
 values (found 2026-10-14 reviewing brief-605; Q3, queued behind the branch by
-user ruling 2026-10-14).** The sweep's roots
+user ruling 2026-10-14; designed together with the retention line when it
+resumes, user ruling 2026-10-29).** The sweep's roots
 (`scoping/gensym_gc.rs:9`, `:136`) are Session fields, module activations, the
 sweeping Module's own outcome and suspension frames. A value a builtin holds
 only in a Rust accumulator across guest evaluation is not a root, so a sweep

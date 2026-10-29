@@ -1,0 +1,4 @@
+gDepthNest=LazyNestList[Function[x,x+1],0];Do[gDepthNest=LazyMap[Function[x,x+1],gDepthNest],{8}];
+Do[First[gDepthNest],{perfIteration561,1,2000}];
+If[SameQ[(gDepthNest=LazyNestList[Function[x,x+1],0];Do[gDepthNest=LazyMap[Function[x,x+1],gDepthNest],{8}];
+First[gDepthNest]),8],Null,Exit[2]];

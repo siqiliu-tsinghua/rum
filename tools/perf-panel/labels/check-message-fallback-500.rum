@@ -1,0 +1,1 @@
+Do[Quiet[Check[{1}[[3]], 9]],{500}];If[SameQ[Quiet[Check[{1}[[3]], 9]],9],Null,Exit[2]]

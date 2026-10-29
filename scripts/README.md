@@ -48,5 +48,9 @@ invocation.
 - `director-gate.py` — the director's gate in one command: the scope check,
   fmt, new warnings, the standing inventory replays (ownership, census
   pairing, compiler oracle, LP01, typed-slot census, fingerprints,
-  certificates) and the workspace, with one table out and the logs in
-  `.temp/director/gate-NNN<stage>/`. `selftest` checks its pure parts.
+  certificates), the workspace, and, with `--perf`, `arms`, `structure` and
+  `panels`. One table out; logs in `.temp/director/gate-NNN<stage>/`.
+  `selftest` checks its pure parts. `rule` records a ruling on a FLAGGED step.
+- `perf-panel.py` — the rum-vs-rum instruction panel: build both arms at one
+  path (`arms`), path-calibrate, diff functions (`structure`), run the
+  interleaved perf panel, summarize it, and attribute a label with callgrind.

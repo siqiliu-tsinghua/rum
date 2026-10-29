@@ -1,0 +1,1 @@
+gMicroReplaceLeafRebuildSmall = Nest[List, 1, 8];Do[gMicroReplaceLeafRebuildSmall /. 1 -> 2,{1000}];If[SameQ[gMicroReplaceLeafRebuildSmall /. 1 -> 2,Nest[List,2,8]],Null,Exit[2]]

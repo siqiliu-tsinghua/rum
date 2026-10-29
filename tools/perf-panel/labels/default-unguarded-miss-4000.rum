@@ -1,0 +1,3 @@
+gMicroDefaultMiss[x_.]:=x;
+Do[gMicroDefaultMiss[],{s5PerfIteration,1,4000}];
+If[SameQ[gMicroDefaultMiss[],gMicroDefaultMiss[]],Null,Exit[2]];

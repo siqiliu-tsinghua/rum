@@ -1,0 +1,1 @@
+Do[Count[{1, 2, 3}, x_ /; x > 1],{500}];If[SameQ[Count[{1, 2, 3}, x_ /; x > 1],2],Null,Exit[2]]

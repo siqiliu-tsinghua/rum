@@ -1,0 +1,4 @@
+gDepthTake=LazyRange[0];Do[gDepthTake=LazyTake[LazyMap[Function[x,x+1],gDepthTake],1],{256}];
+Do[First[gDepthTake],{perfIteration561,1,1000}];
+If[SameQ[(gDepthTake=LazyRange[0];Do[gDepthTake=LazyTake[LazyMap[Function[x,x+1],gDepthTake],1],{256}];
+First[gDepthTake]),256],Null,Exit[2]];

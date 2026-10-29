@@ -1,0 +1,1 @@
+Do[CatchExceptions[ThrowException["Exception", <|"a" -> 1|>], {Exception["Exception", p_] :> p["a"]}],{500}];If[SameQ[CatchExceptions[ThrowException["Exception", <|"a" -> 1|>], {Exception["Exception", p_] :> p["a"]}],1],Null,Exit[2]]

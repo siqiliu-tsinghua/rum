@@ -1,0 +1,3 @@
+
+Table[j,{j,4000}];
+If[SameQ[SameQ[Table[j,{j,4000}],Range[4000]],True],Null,Exit[2]];

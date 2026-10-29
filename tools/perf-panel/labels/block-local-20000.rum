@@ -1,0 +1,4 @@
+xOwn = 123;
+Do[Block[{xOwn = 1}, xOwn + 1], {20000}];
+If[SameQ[(xOwn = 123;
+Block[{xOwn = 1}, xOwn + 1]),2],Null,Exit[2]];

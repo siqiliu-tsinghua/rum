@@ -1,0 +1,1 @@
+Do[Check[1 + 2, 9],{1000}];If[SameQ[Check[1 + 2, 9],3],Null,Exit[2]]

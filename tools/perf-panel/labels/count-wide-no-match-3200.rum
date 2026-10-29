@@ -1,0 +1,4 @@
+gMicroWideTraversal = Range[1600];
+Do[Count[gMicroWideTraversal, _String, {1}],{perfIterationS4,1,3200}];
+If[SameQ[(gMicroWideTraversal = Range[1600];
+Count[gMicroWideTraversal, _String, {1}]),0],Null,Exit[2]];

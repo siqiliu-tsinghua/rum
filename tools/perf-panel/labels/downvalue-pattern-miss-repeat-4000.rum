@@ -1,0 +1,3 @@
+fPattern[x_Integer]:=x+1;
+Do[fPattern["x"],{4000}];
+If[SameQ[Do[fPattern["x"],{4000}],Null],Null,Exit[2]];

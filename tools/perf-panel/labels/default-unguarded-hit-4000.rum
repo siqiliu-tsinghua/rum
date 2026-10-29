@@ -1,0 +1,3 @@
+Default[gMicroDefaultHit]=1;gMicroDefaultHit[x_.]:=x;
+Do[gMicroDefaultHit[],{s5PerfIteration,1,4000}];
+If[SameQ[gMicroDefaultHit[],1],Null,Exit[2]];

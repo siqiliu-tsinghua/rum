@@ -1,0 +1,3 @@
+gMicroReplacePartDeepPathSmall = Nest[List, 0, 8];
+Do[ReplacePart[gMicroReplacePartDeepPathSmall, {1, 1, 1, 1, 1, 1, 1, 1} -> 9],{s6PerfIteration,1,500}];
+If[SameQ[ReplacePart[gMicroReplacePartDeepPathSmall, {1, 1, 1, 1, 1, 1, 1, 1} -> 9],List[List[List[List[List[List[List[List[9]]]]]]]]],Null,Exit[2]];

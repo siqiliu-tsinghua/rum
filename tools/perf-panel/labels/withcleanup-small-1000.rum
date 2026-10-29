@@ -1,0 +1,1 @@
+Do[WithCleanup[1, Null],{1000}];If[SameQ[WithCleanup[1, Null],1],Null,Exit[2]]

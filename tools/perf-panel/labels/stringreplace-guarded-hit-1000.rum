@@ -1,0 +1,3 @@
+gMicroGuardedStringRule = "a" :> ("x" /; True);
+Do[StringReplace["abc", gMicroGuardedStringRule],{s6PerfIteration,1,1000}];
+If[SameQ[StringReplace["abc", gMicroGuardedStringRule],"xbc"],Null,Exit[2]];

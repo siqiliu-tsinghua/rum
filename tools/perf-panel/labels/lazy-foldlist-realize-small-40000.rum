@@ -1,0 +1,3 @@
+
+Do[Normal[LazyTake[LazyFoldList[Plus,0,LazyRange[1,1]],8]],{perfIteration561,1,40000}];
+If[SameQ[(Normal[LazyTake[LazyFoldList[Plus,0,LazyRange[1,1]],8]]),List[0, 1, 3, 6, 10, 15, 21, 28]],Null,Exit[2]];

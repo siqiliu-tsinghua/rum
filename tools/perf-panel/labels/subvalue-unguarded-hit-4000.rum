@@ -1,0 +1,3 @@
+gMicroSubvalue[1][x_Integer]:=x+1;
+Do[gMicroSubvalue[1][1],{s5PerfIteration,1,4000}];
+If[SameQ[gMicroSubvalue[1][1],2],Null,Exit[2]];

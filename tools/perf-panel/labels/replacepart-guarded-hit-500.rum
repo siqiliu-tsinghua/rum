@@ -1,0 +1,3 @@
+gMicroGuardedReplacePartRule = 1 :> 1 /; True;
+Do[ReplacePart[{0}, gMicroGuardedReplacePartRule],{s6PerfIteration,1,500}];
+If[SameQ[ReplacePart[{0}, gMicroGuardedReplacePartRule],List[1]],Null,Exit[2]];

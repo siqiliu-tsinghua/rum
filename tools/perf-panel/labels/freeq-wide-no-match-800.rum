@@ -1,0 +1,1 @@
+gMicroWideTraversal = Range[1600];Do[FreeQ[gMicroWideTraversal, _String],{800}];If[SameQ[FreeQ[gMicroWideTraversal, _String],True],Null,Exit[2]]

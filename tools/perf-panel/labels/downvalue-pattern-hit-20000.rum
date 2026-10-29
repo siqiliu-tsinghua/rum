@@ -1,0 +1,4 @@
+fPattern[x_Integer] := x + 1;
+Do[fPattern[1], {20000}];
+If[SameQ[(fPattern[x_Integer] := x + 1;
+fPattern[1]),2],Null,Exit[2]];

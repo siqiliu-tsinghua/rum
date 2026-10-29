@@ -1,0 +1,3 @@
+gMicroUpvalueNonce=0;gMicroUpvalueTag /: gMicroUpvalueMarker[gMicroUpvalueTag]:=1;
+Do[(gMicroUpvalueNonce=gMicroUpvalueNonce+1;gMicroUpvalueProbe[a,b,c,d,gMicroUpvalueNonce]),{s5PerfIteration,1,4000}];
+If[SameQ[(gMicroUpvalueNonce=gMicroUpvalueNonce+1;SameQ[Length[gMicroUpvalueProbe[a,b,c,d,gMicroUpvalueNonce]],5]),True],Null,Exit[2]];

@@ -1,0 +1,1 @@
+Do[Quiet[1 + 2],{500}];If[SameQ[Quiet[1 + 2],3],Null,Exit[2]]

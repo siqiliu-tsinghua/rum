@@ -1,0 +1,1 @@
+Do[ReplaceAllUnheld[1, x_Integer :> (x + 1)],{500}]
