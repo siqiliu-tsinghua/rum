@@ -406,3 +406,68 @@ C3, D, E and F. The census rows from run 1 stand; do not rerun them.
 Write this run's report to `.temp/brief-633/report-c2.json`. Do not edit
 `report.json` from run 1. Your final message is
 `python3 scripts/report.py summary 633 --stage c2`.
+
+## Director amendment 2 (2026-10-30): grk's balance ran out, kimi takes over
+
+grk's run 2 ended at turn 222 with
+`API error (status 402 Payment Required): Grok Build usage balance exhausted`.
+It wrote no `report-c2.json`. **You (kimi) continue the brief from where run 2
+stopped.** Read the whole brief first, amendment 1 included. Everything
+run 2 left is under `.temp/brief-633/`:
+
+- the checkpoint `PROGRESS.md`. Its "Exact next action" is where you start;
+- logs: `logs/c4p/` (C4′ and its mutants), `logs/tree/` (C1),
+  `logs/lease/`, `logs/scratch/`, `logs/parse/`;
+- two drafts: `drafts/brief-profiler-test-lease.md` and
+  `drafts/brief-private-scratch.md`;
+- the scratch tree `tree/`, which carries run 2's lease and its edit to
+  `typed_slot_census.rs`, and its target directory `target-scratch/`.
+
+### Re-verify before you build on run 2
+
+Run 2's claims are a worker's claims. Before you build on them, reproduce
+these on the scratch tree, and save the logs under `logs/c3/`:
+
+- each of C4′'s three tests, once, unmutated: green;
+- the chain pair at `--test-threads=2`, 5 runs: green;
+- the span falsifier
+  (`unregistered_thread_span_does_not_record_while_a_profiling_guard_is_held`):
+  green.
+
+Also check the claim about `logical_thread_metadata_stays_charged_until_thread_exit`
+(`PROGRESS.md`). Run 2 says `std::thread::scope`'s implicit wait returns
+before the worker's TLS destructors run, so the test now joins its worker
+explicitly. Prove that mechanism with a minimal probe crate under `probe/`,
+using a TLS value whose `Drop` is observed. Otherwise name it unproven. If the
+explicit join changes what the test asserts, say so in `disclosures`.
+
+### The rlib race is a finding, not a scratch artefact
+
+- `crates/rum-runtime/src/runtime/accounting_mode/tests/compile.rs:18-37`
+  runs `cargo build --lib` into the test's own target directory, which can
+  replace `deps/librum_runtime-*.rlib`.
+- `crates/rum-runtime/src/runtime/options/tests/compile.rs:5-15` picks the
+  newest `librum_runtime-*.rlib` in that same `deps` directory.
+- Run 2 worked around the overlap by keeping a hardlink,
+  `target-scratch/debug/deps/librum_runtime-brief633-keep.rlib`.
+
+What to do:
+
+1. Delete that hardlink.
+2. Put the pair into the B1 or B2 inventory.
+3. Establish its precondition: when does the build actually replace the
+   rlib? For example, a fresh target, or a stale lib.
+4. Design its fix the same way as the others: the path or the artifact comes
+   from a constructor that a test cannot bypass.
+5. Calibrate its falsifier red and green.
+
+Then go on to the remaining work: the typed-slot pair, E (measure, do not
+estimate), the rest of B, D and F, and the drafts.
+
+### Report
+
+- Write `.temp/brief-633/report-c3.json`. It covers run 2's work, citing
+  run 2's logs, and yours.
+- Mark each run-2 claim either "re-verified" (with your log) or "run 2 only".
+- Do not edit `report.json`.
+- Your final message is `python3 scripts/report.py summary 633 --stage c3`.
