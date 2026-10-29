@@ -5,9 +5,12 @@ Outside the rum repository every hook passes through.
 
 - **Dispatch guard.** A `scripts/dispatch-brief.sh` (or `cdx exec`/`codex exec`)
   call must be its own Bash call with `run_in_background: true`: not chained,
-  piped or `&`-detached. `DRY_RUN=1` is exempt. This replaces the old
-  `.claude/hooks/guard-dispatch.py`, which had not been wired since the move
-  to Linux.
+  piped or `&`-detached. `DRY_RUN=1` is exempt. The dispatcher is matched
+  only where a command starts (after any `VAR=value` assignments and a
+  runner such as `bash`), so a `grep` or a `git add` naming the script passes.
+  This replaces the old `.claude/hooks/guard-dispatch.py`, which had not been
+  wired since the move to Linux.
+- Every guard ignores heredoc bodies: a commit message is text, not commands.
 - **Commit guard**, before `git commit` runs:
   - staging and committing are separate Bash calls (no `git add … && git
     commit`, no `commit -a`), so the guard reads the final staged set;
@@ -22,7 +25,10 @@ Outside the rum repository every hook passes through.
   the context at 200,000 tokens or more, the mod compacts
   (`$.session.compact`) with handoff instructions and appends `state.md` to
   the compacted conversation. If a new turn has already started, it retries
-  at that turn's end.
+  at that turn's end. The owed compaction is kept in `$.state`
+  (`types/index.d.ts`), not in a module variable: an edit to the mod reloads
+  it at the turn end and cancels its timers, and the reloaded copy's
+  `session.start` schedules the compaction again.
 - **Every other compaction** (manual, automatic, precomputed) gets the same
   instructions; the manual and automatic ones also get `state.md` appended.
 - The status line shows the context size after each turn.

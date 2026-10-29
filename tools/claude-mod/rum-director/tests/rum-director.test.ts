@@ -13,6 +13,19 @@ test('a dispatch must be one background call, alone', () => {
   expect(dispatchProblems('ls -la', false)).toEqual([])
 })
 
+test('the dispatcher is matched where a command starts, not as an argument', () => {
+  expect(dispatchProblems('grep -n CDX_FORK scripts/dispatch-brief.sh', false)).toEqual([])
+  expect(dispatchProblems('git add scripts/dispatch-brief.sh docs/x.md', false)).toEqual([])
+  expect(dispatchProblems('sed -n 1,40p scripts/dispatch-brief.sh | head', false)).toEqual([])
+  expect(dispatchProblems('echo "cdx exec"', false)).toEqual([])
+  expect(dispatchProblems("git commit -q -F - <<'EOF'\nscripts/dispatch-brief.sh 631 next\nEOF", false)).toEqual([])
+  expect(dispatchProblems('CDX_FORK=abc GRK_RESUME=1 scripts/dispatch-brief.sh 631', true)).toEqual([])
+  expect(dispatchProblems('bash /home/remi/dev/rum/scripts/dispatch-brief.sh 631', false).length).toBe(1)
+  expect(dispatchProblems('ls && ./scripts/dispatch-brief.sh 631', true).length).toBe(1)
+  expect(dispatchProblems('x=$(scripts/dispatch-brief.sh 631)', false).length).toBe(1)
+  expect(dispatchProblems('cdx exec -s workspace-write x', false).length).toBe(1)
+})
+
 test('a commit is recognised where a command starts, not inside text', () => {
   expect(isCommit('git commit -q -F - <<EOF\nmsg\nEOF')).toBe(true)
   expect(isCommit('cd /home/remi/dev/rum && git commit -q -F -')).toBe(true)
@@ -20,6 +33,7 @@ test('a commit is recognised where a command starts, not inside text', () => {
   expect(isCommit('echo "git commit"')).toBe(false)
   expect(isCommit('git commit-tree abc')).toBe(false)
   expect(isCommit('git log --oneline')).toBe(false)
+  expect(isCommit("cat > x.sh <<'EOF'\ngit commit -m y\nEOF")).toBe(false)
 })
 
 test('staging and committing are separate calls', () => {
@@ -27,6 +41,7 @@ test('staging and committing are separate calls', () => {
   expect(stagingProblem('git add TODO.md && git commit -q -F -')).toBeDefined()
   expect(stagingProblem('git commit -am "x"')).toBeDefined()
   expect(stagingProblem('git commit --all -m x')).toBeDefined()
+  expect(stagingProblem("git commit -q -F - <<'EOF'\nstage with git add first\nEOF")).toBeUndefined()
 })
 
 // The world beneath the plugin: a repository whose answers each test sets.
@@ -184,4 +199,25 @@ test('a compaction that another instance already made is not repeated', async ($
   await $.turn.complete(TURN)
   await clock.advance(600)
   expect(compacted).toBe(0)
+})
+
+test('a compaction an earlier copy left owed is made after a reload', async ($, on) => {
+  // What the copy before the reload stored stays; its timer did not.
+  const clock = mock.clock(on)
+  seat(on, world())
+  let seeded = false
+  on('state.get', (_, e, next) => {
+    if (seeded || e.key !== 'pending') return next(e)
+    seeded = true
+    return { value: { value: { hash: 'abcd1234' }, version: 1 } }
+  })
+  on('session.start', (_, e) => ({ cwd: e.cwd }))
+  let compacted = 0
+  on('session.compact', () => {
+    compacted += 1
+    return { messages: [{ role: 'user', text: 'summary', toolUses: [] }] }
+  })
+  await $.session.start({ cwd: '/repo', surface: 'terminal', isInteractive: true })
+  await clock.advance(600)
+  expect(compacted).toBe(1)
 })

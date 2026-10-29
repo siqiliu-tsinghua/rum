@@ -1,4 +1,5 @@
 import type { EngineInterface, Register } from 'claude-code'
+import type { Pending } from '../types'
 
 // The director's session discipline for the rum repository, as hooks:
 // - a dispatch guard (a brief dispatch is one background Bash call, alone);
@@ -8,6 +9,7 @@ import type { EngineInterface, Register } from 'claude-code'
 // - compaction after every commit once the context reaches FLOOR_TOKENS, with
 //   the handoff file appended to the compacted conversation;
 // - the same handoff instructions and re-injection on every other compaction.
+// Pending work lives in $.state, so a reload of the mod does not lose it.
 // Outside the rum repository every hook passes through.
 
 const FLOOR_TOKENS = 200_000
@@ -23,20 +25,45 @@ export const INSTRUCTIONS = [
   'compaction. The user reads Chinese only: replies stay in Chinese.',
 ].join(' ')
 
-const DISPATCH = /dispatch-brief|\bcdx\s+exec\b|\bcodex\s+exec\b/
+// Where a command starts: the start, a separator or a substitution, then any
+// VAR=value assignments and runners. An argument naming the dispatcher (a grep
+// of it, a git add of it) is not a dispatch.
+const AT_COMMAND = String.raw`(?:^|[\n;&|(\`]|\$\()\s*(?:[A-Za-z_][A-Za-z0-9_]*=\S*\s+)*(?:(?:bash|sh|exec|env|nohup|time)\s+)*`
+const DISPATCH = new RegExp(`${AT_COMMAND}(?:\\S*/)?(?:dispatch-brief(?:\\.sh)?(?![\\w.-])|(?:cdx|codex)\\s+exec\\b)`)
 const COMMIT = /(^|[\n;&|(]\s*)(cd\s+[^;&|\n]+&&\s*)?git(\s+-C\s+\S+)?\s+commit(?![\w-])/
 const STAGE = /\bgit(\s+-C\s+\S+)?\s+(add|rm|mv|stage)\b/
 const COMMIT_ALL = /\bgit(\s+-C\s+\S+)?\s+commit(?![\w-])[^\n]*\s(-a|-am|--all)\b/
 const BRIEF = /^docs\/dev\/codex\/brief-\d+-[^/]*\.md$/
 const GATE_SECTION = /^#{2,4} Director gate/m
 
-type Pending = { hash: string }
+// In $.state, not module variables: a reload of the mod (which an edit to it
+// makes at the turn end) starts the module over and cancels its timers.
+const PENDING = { plugin: 'rum-director', key: 'pending' } as const
+const INJECT = { plugin: 'rum-director', key: 'injectAtTurnEnd' } as const
 
-// Module state: a reload starts it over, which at worst skips one compaction.
-let pending: Pending | undefined
-let injectAtTurnEnd = false
+async function pendingOf($: EngineInterface): Promise<Pending | null> {
+  const { value = null } = await $.state.get(PENDING)
+  return value
+}
 
-export function dispatchProblems(command: string, background: boolean): string[] {
+// A heredoc's body is text (a commit message, a file), not commands: drop it
+// before matching, keeping the line that opens it.
+export function withoutHeredocBodies(command: string): string {
+  const kept: string[] = []
+  let end: string | undefined
+  for (const line of command.split('\n')) {
+    if (end !== undefined) {
+      if (line.trim() === end) end = undefined
+      continue
+    }
+    kept.push(line)
+    end = /(?<!<)<<(?!<)-?\s*(['"]?)([A-Za-z_][A-Za-z0-9_]*)\1/.exec(line)?.[2]
+  }
+  return kept.join('\n')
+}
+
+export function dispatchProblems(full: string, background: boolean): string[] {
+  const command = withoutHeredocBodies(full)
   if (!DISPATCH.test(command) || command.includes('DRY_RUN=1')) return []
   const problems: string[] = []
   if (/&&|\|\||;|\n/.test(command)) problems.push('it is chained with other commands (&&, ||, ; or a newline)')
@@ -46,7 +73,8 @@ export function dispatchProblems(command: string, background: boolean): string[]
   return problems
 }
 
-export function stagingProblem(command: string): string | undefined {
+export function stagingProblem(full: string): string | undefined {
+  const command = withoutHeredocBodies(full)
   if (STAGE.test(command) || COMMIT_ALL.test(command)) {
     return 'stage in its own Bash call first (git add ...), then commit in a separate call, so the guard reads the final staged set.'
   }
@@ -54,7 +82,7 @@ export function stagingProblem(command: string): string | undefined {
 }
 
 export function isCommit(command: string): boolean {
-  return COMMIT.test(command)
+  return COMMIT.test(withoutHeredocBodies(command))
 }
 
 async function root($: EngineInterface): Promise<string> {
@@ -132,7 +160,7 @@ async function compactAfterCommit($: EngineInterface, commit: Pending): Promise<
   // loads it twice) or a compaction in between may already have brought it down.
   const { context } = await $.session.usage()
   if (context.tokens !== undefined && context.tokens < FLOOR_TOKENS) {
-    pending = undefined
+    await $.state.set(PENDING, null)
     return
   }
   let result
@@ -142,12 +170,12 @@ async function compactAfterCommit($: EngineInterface, commit: Pending): Promise<
     // A turn is running (a notification started one): retry at its end.
     return
   }
-  pending = undefined
+  await $.state.set(PENDING, null)
   if (result.skip !== undefined) {
     $.ui.toast(`rum-director: compaction after ${commit.hash} skipped: ${result.skip}`)
     return
   }
-  if (!(await injectState($))) injectAtTurnEnd = true
+  if (!(await injectState($))) await $.state.set(INJECT, true)
   $.ui.toast(`rum-director: compacted after ${commit.hash}: ${wan(result.tokensBefore)} → ${wan(result.tokensAfter)}`)
 }
 
@@ -172,7 +200,7 @@ export const register: Register = on => {
     const ran = await next(e)
     const after = await headOf($)
     if (after.hash !== before.hash) {
-      pending = { hash: after.hash.slice(0, 8) }
+      await $.state.set(PENDING, { hash: after.hash.slice(0, 8) })
       if (sourceStaged && !(await memoryTouchedSince($, before.seconds))) {
         $.ui.toast('rum-director: a source commit landed and no memory file changed since the previous commit.')
       }
@@ -187,18 +215,32 @@ export const register: Register = on => {
     if (e.agentId !== undefined || !(await isRum($))) return result
     const { context } = await $.session.usage()
     if (context.tokens !== undefined) $.ui.status(`ctx ${wan(context.tokens)}`)
-    if (injectAtTurnEnd) {
-      injectAtTurnEnd = !(await injectState($))
-    }
-    if (pending !== undefined && !e.isAborted) {
+    const { value: inject = false } = await $.state.get(INJECT)
+    if (inject && (await injectState($))) await $.state.set(INJECT, false)
+    const commit = await pendingOf($)
+    if (commit !== null && !e.isAborted) {
       if (context.tokens === undefined || context.tokens < FLOOR_TOKENS) {
-        pending = undefined
+        await $.state.set(PENDING, null)
       } else {
-        const commit = pending
         $.clock.after(500, () => {
           void compactAfterCommit($, commit)
         })
       }
+    }
+    return result
+  })
+
+  // A reload (or a restart that kept the session's state) cancelled the timer
+  // of a compaction still owed: schedule it again. A turn still running makes
+  // the compaction throw, and the next turn end retries it.
+  on('session.start', async ($, e, next) => {
+    const result = await next(e)
+    if (!(await isRum($))) return result
+    const commit = await pendingOf($)
+    if (commit !== null) {
+      $.clock.after(500, () => {
+        void compactAfterCommit($, commit)
+      })
     }
     return result
   })
@@ -208,8 +250,8 @@ export const register: Register = on => {
     const instructions = e.instructions === undefined ? INSTRUCTIONS : `${e.instructions}\n\n${INSTRUCTIONS}`
     const result = await next({ ...e, instructions })
     if (result.skip === undefined && e.trigger !== 'precompute') {
-      pending = undefined
-      if (!(await injectState($))) injectAtTurnEnd = true
+      await $.state.set(PENDING, null)
+      if (!(await injectState($))) await $.state.set(INJECT, true)
     }
     return result
   }).catch(($, e, next) => next(e))

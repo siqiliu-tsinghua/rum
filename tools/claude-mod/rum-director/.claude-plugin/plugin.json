@@ -1,1 +1,1 @@
-{ "name": "rum-director", "version": "0.1.0", "description": "rum director discipline: dispatch and commit guards, compaction after every commit with a handoff file", "author": { "name": "rum director (Claude)" } }
+{"name": "rum-director", "version": "0.1.0", "description": "rum director discipline: dispatch and commit guards, compaction after every commit with a handoff file", "author": {"name": "rum director (Claude)"}, "types": "./types/index.d.ts"}
