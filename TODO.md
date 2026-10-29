@@ -26,10 +26,11 @@ New briefs go to grk or kimi while Codex has no quota (user, 2026-10-29).
 warnings against HEAD, the ownership replay, the census pairing, the
 compiler oracle, LP01 and the typed-slot census, the fingerprints, the
 certificates, the inventory run and the workspace, and prints one table.
-Owed: the perf-panel layer (two arms at one path, path calibration,
-`fndiff3`, the interleaved panels), whose instruments still live in `.temp/`
-(the resume harness, brief-626's label set) and must move into the repo
-first.
+In flight: the perf-panel layer, brief-632 on grk. It moves the instruments
+from `.temp/` into `scripts/perf-panel.py` and `tools/perf-panel/` (the
+resume harness, brief-626's label set) and adds the opt-in `arms`,
+`structure` and `panels` steps. The calibrations are known answers on stored
+binaries from brief-630 B2 and B3.
 
 G15-C2 (brief-623, three runs) has settled 679 of its 1 032 rows by
 execution or by mechanical rule:
