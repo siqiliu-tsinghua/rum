@@ -10,6 +10,13 @@
 # command die with SIGKILL (exit 137) and carries on. The default policy, stop,
 # would tear the whole scope down, worker included.
 #
+# That holds for one kill, not for a run of them. On 2026-10-30 a 32-thread
+# test grew past brief-633's 16G worker scope; the kernel killed four
+# processes there, and one was the worker (oom_kill=4, rc=137). So a command
+# that can reach the cap runs in a scope of its own: calling this script from
+# inside a scope makes a sibling under app.slice with its own cap, and the
+# worker stays outside that OOM domain.
+#
 # No MemoryHigh is set on purpose. Throttling just below the cap stalls the
 # scope for long periods, and systemd-oomd watches the user slice's memory
 # pressure; a long stall there invites oomd to kill the whole scope. At

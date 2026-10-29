@@ -471,3 +471,55 @@ estimate), the rest of B, D and F, and the drafts.
 - Mark each run-2 claim either "re-verified" (with your log) or "run 2 only".
 - Do not edit `report.json`.
 - Your final message is `python3 scripts/report.py summary 633 --stage c3`.
+
+## Director amendment 3 (2026-10-30): a measurement OOM killed the worker
+
+Continuation 3 (kimi session `session_5dadef8f-151c-4aa9-a829-60b899067dec`)
+ended at 02:05 with exit 137. The scope line reads
+`peak=17179869184 oom=39 oom_kill=4 rc=137`, and the process killed was kimi
+itself. `run-c3-typed-options.sh` had run option ii at 16 threads (its test
+binary was SIGKILLed at 16.83 GB, the cap) and then at 32. One of the four
+kills inside the shared 16G scope took the worker. The loop outlived the
+worker, and I let it finish where it was; its rows are in
+`logs/typed-options/status.tsv`.
+
+**The cause is my brief.** Its concurrency plan put every measurement inside
+the worker's own scope. E asked for each option's memory at 16 and 32
+threads, and an option whose memory grows with the thread count reaches the
+cap there. A test that reaches the cap shares its OOM domain with the worker.
+
+**Rules from here on.**
+
+1. **Every command that runs a test or probe binary runs in its own scope:**
+   `scripts/memory-scope.sh b633-<label>-<n> 14G <command>`. Wrap
+   `run-one.sh`'s command in it, and make each unit name unique; systemd
+   refuses a second active unit with the same name.
+   - Calibrated by me: a nested scope is a sibling under `app.slice` with its
+     own cap. It is not inside your scope.
+   - Check it once before anything else:
+     `scripts/memory-scope.sh b633-probe-1 1G cat /proc/self/cgroup` must
+     print a path ending in `app.slice/b633-probe-1.scope`.
+   - If that fails, STOP and quote the error.
+2. **One measured test process at a time.** This replaces the plan's
+   "at most two test processes beside each other". The host has 30 GB, and
+   two 14G scopes beside your own leave nothing for the host.
+3. **Within one option, stop at the first thread count killed at the cap.**
+   - Record it as `killed at cap (14G) at tN`. A kill at the cap is a measured
+     result: the peak is greater than 14G.
+   - Give the measured points below it and their per-thread slope.
+   - Do not run that option at a larger count.
+4. **These rows stand.** Do not rerun options ii or iii at 16 or 32 threads.
+
+   | Option | t4 | t8 | t16 | t32 |
+   | --- | --- | --- | --- | --- |
+   | (i) shared `Sync` discovery | 1.18 GB | 1.18 GB | 1.18 GB | 1.19 GB |
+   | (ii) discover per worker | 4.70 GB | 9.38 GB | killed at 16.83 GB (16G cap) | killed |
+   | (iii) shared text, rediscover | 4.71 GB | 9.40 GB | killed at 17.12 GB (16G cap) | killed at 17.11 GB (16G cap) |
+
+   The values are max RSS from `logs/typed-options/`. t8/t4 is 2.00 for both
+   ii and iii: linear in the thread count.
+
+Then continue from your own last step: the remaining E work, B, D, F, the
+drafts and `report-c3.json`. In `disclosures`, list every measurement this
+run made inside the shared scope before this amendment, and say whether a cap
+kill could have touched it.
