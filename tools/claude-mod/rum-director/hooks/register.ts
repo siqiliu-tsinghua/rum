@@ -128,6 +128,13 @@ function wan(tokens: number | undefined): string {
 }
 
 async function compactAfterCommit($: EngineInterface, commit: Pending): Promise<void> {
+  // Read the size again: another instance of this mod (a resumed session that
+  // loads it twice) or a compaction in between may already have brought it down.
+  const { context } = await $.session.usage()
+  if (context.tokens !== undefined && context.tokens < FLOOR_TOKENS) {
+    pending = undefined
+    return
+  }
   let result
   try {
     result = await $.session.compact({ instructions: INSTRUCTIONS })

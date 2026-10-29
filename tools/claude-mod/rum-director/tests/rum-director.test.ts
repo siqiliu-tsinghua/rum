@@ -37,6 +37,7 @@ type World = {
   briefText: string
   memoryTouched: boolean
   tokens: number
+  tokensLater?: number
   calls: string[]
 }
 
@@ -60,9 +61,11 @@ function seat(on: Parameters<TestBody>[1], w: World) {
   on('fs.exists', () => ({ value: true }))
   on('fs.stat', () => ({ value: { kind: 'file', size: 10, mtimeMs: w.stateMtimeMs, isLink: false } }))
   on('fs.read', () => ({ value: 'brief 631, stage A; next: gate' }))
-  on('session.usage', () => ({
-    value: { startedAt: 0, context: { tokens: w.tokens, window: 1_000_000, percent: w.tokens / 10_000 }, rateLimits: [], cost: { usd: 0 } },
-  }))
+  let usageCalls = 0
+  on('session.usage', () => {
+    const tokens = usageCalls++ === 0 ? w.tokens : (w.tokensLater ?? w.tokens)
+    return { value: { startedAt: 0, context: { tokens, window: 1_000_000, percent: tokens / 10_000 }, rateLimits: [], cost: { usd: 0 } } }
+  })
   on('process.run', (_, e) => {
     const argv = (e as { argv: readonly string[] }).argv
     const line = argv.join(' ')
@@ -158,6 +161,20 @@ test('a commit below the floor does not compact', async ($, on) => {
 test('a failed commit (head unchanged) does not compact', async ($, on) => {
   const clock = mock.clock(on)
   seat(on, world({ heads: ['aaaaaaaa1111 1000'] }))
+  let compacted = 0
+  on('session.compact', () => {
+    compacted += 1
+    return { messages: [{ role: 'user', text: 'summary', toolUses: [] }] }
+  })
+  await $.tool.call({ tool: 'Bash', command: 'git commit -q -F -' })
+  await $.turn.complete(TURN)
+  await clock.advance(600)
+  expect(compacted).toBe(0)
+})
+
+test('a compaction that another instance already made is not repeated', async ($, on) => {
+  const clock = mock.clock(on)
+  seat(on, world({ tokens: 250_000, tokensLater: 70_000 }))
   let compacted = 0
   on('session.compact', () => {
     compacted += 1
