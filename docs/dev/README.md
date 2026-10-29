@@ -20,6 +20,10 @@ designed and executed at a point in time, and may lag the current code.
   `lazy-sequences-design.md`, `sealed-scoping-design.md`,
   `structured-exceptions-contract.md`, `matcher-flat-optional-contract.md`) and
   the line records (`*-line.md`).
+- **[director-method.md](./director-method.md)** and
+  **[director-log.md](./director-log.md)** — the director's full method and
+  the line-by-line direction log, moved out of `CLAUDE.md` when it was cut to
+  200 lines.
 - **[usability-pass/](./usability-pass/)** — per-unit findings ledgers from the
   builtin usability sweep.
 - **[publication-audit/](./publication-audit/)** — the pre-publication security
