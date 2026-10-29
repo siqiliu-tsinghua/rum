@@ -81,8 +81,9 @@ a reviewable plan plus the drafted follow-up briefs, still not a code change.
   - `crates/rum-core/src/expr.rs` `Expr`/`Symbol` representation and any public
     type/serde shape, unless this brief's Goal is exactly that;
   - `AGENTS.md`, `PROGRESS.md`, `TODO.md`, `docs/**`, anything under
-    `docs/dev/codex/` except appending to your own report — unless the brief
-    explicitly lists a doc file as in-scope;
+    `docs/dev/codex/` — unless the brief explicitly lists a doc file as
+    in-scope. Your report is a file in `.temp/` (Report format, below); the
+    director renders it into the brief;
   - `.git`, git config, `Cargo.lock` (unless the Goal is a dependency change).
 - **Every source change carries a standing maintenance duty — always in scope,
   whatever the fence says.** The retention contract fingerprints hash every
@@ -299,17 +300,37 @@ edits costs the director a reconstruction.
 - You MUST paste the real verbatim verification output. If a run did not reach
   green / did not produce the evidence, say so explicitly — never fake it.
 
-## Report format (your final message)
+## Report format (a structured file)
 
-1. What changed — per file, with line ranges and a one-line why (or
-   "diagnostic only, no source change").
-2. Verification — each command run, with the exact verbatim output lines
-   (test counts, per-label rows, or attribution tables). **Quote every
-   verdict line your own instruments print** (PASS, STOP, flagged), and
-   settle each flagged row in the text. A report that says "no STOP" while
-   its own closure file marks a row STOP hides the row from its reader, even
-   when the row turns out not to be one (brief-629 A5b).
-3. The finding / verdict — for diagnostic, the mechanism the numbers point to;
-   for implementation, the before/after rows and any neighbor checked.
-4. Stop-loss / open questions — where you stopped and why, anything unsure
-   (empty if none).
+The report is a JSON file in the `rum-report/1` schema, not prose in your
+final message. `python3 scripts/report.py schema` prints the schema and an
+example. The director reads it by script, so every field you leave vague is a
+question asked back, and every citation is checked against your logs.
+
+1. **Write it to** `.temp/brief-NNN/report.json`. For a staged brief, write
+   `.temp/brief-NNN/report-<stage>.json`, one file per stage or continuation,
+   and never overwrite an earlier stage's file.
+2. **Save every run's full output to a log** under `.temp/brief-NNN/` before
+   you parse it. Each run is a `runs` entry with its `cmd`, `log`, `exit`,
+   `attempt` and `tests` counts, failed attempts included.
+3. **Quote, do not paraphrase.**
+   - Every verdict line your own instruments print (PASS, STOP, flagged) goes
+     into `verdict_lines` or an `evidence` entry, copied exactly from the log.
+   - A FLAGGED row carries a `note` that settles it.
+   - A report that says DONE while a row is FAIL, or hides a row its own
+     instrument marked STOP, is refused by `check` (brief-629 A5b).
+4. **`changes`** lists every file you touched, with line ranges and a
+   one-line why. Anything outside this brief's allowed list is also a
+   `disclosures` entry.
+5. **Keep `summary` to one paragraph** (at most 1200 characters). The
+   mechanism, the measurement detail and the alternatives you tried go into
+   `sections`, each with a short `tag` (`shape`, `timing`, `census`, ...).
+   Open decisions go into `questions`, each with options and a
+   recommendation.
+6. **Before you finish**, run `python3 scripts/report.py check NNN [--stage
+   S]` and fix every PROBLEM it prints. It verifies that every cited line
+   appears verbatim in its log, that test counts equal the sum of the log's
+   `test result:` lines, that the files you list exist, and that the verdicts
+   agree.
+7. **Your final message** is the output of `python3 scripts/report.py summary
+   NNN [--stage S]` and nothing else.

@@ -422,7 +422,7 @@ explicit timeout long enough for it, because the 600-second background default k
 full test run. Your own tool timeout must exceed any bound the command sets itself, such as \
 the run-bounded.py timeout: a 300-second tool timeout kills a command bounded at 3600. \
 Wait for each one to finish before you go on. \
-Report with verbatim evidence in your final message."
+Write the report file the brief's Report format section names, run scripts/report.py check on it until it prints no PROBLEM, and make your final message the output of scripts/report.py summary."
   kimi_task="$role $task"
   kimi_args=()
   if [[ -n "${KIMI_RESUME:-}" ]]; then
@@ -510,7 +510,7 @@ so that every step is in this run. Long commands move to the background: do not 
 turn while one is running, but poll it with command_status until it finishes, because once \
 you end your turn the CLI waits at most 30 minutes for background tasks and a full test \
 run takes longer. Do not end your turn until the brief is finished or one of its stop \
-conditions has fired. Report with verbatim evidence in your final message."
+conditions has fired. Write the report file the brief's Report format section names, run scripts/report.py check on it until it prints no PROBLEM, and make your final message the output of scripts/report.py summary."
   agy_task="$role $task"
   agy_args="--model $model --effort $effort --output-format stream-json --print-timeout 0 \
 --sandbox --project default-cli-project"
@@ -620,8 +620,9 @@ make it longer than the command needs. Never end your turn while a background co
 runs: once your turn ends, the run waits about an hour for background work and then kills \
 it. Do not end your turn until the brief is finished or one of its stop conditions has \
 fired. Keep the checkpoint and report files the brief asks for current as you go: a run \
-cut by a usage limit keeps only what is already on disk. Report with verbatim evidence in \
-your final message."
+cut by a usage limit keeps only what is already on disk. Write the report file the brief's \
+Report format section names, run scripts/report.py check on it until it prints no PROBLEM, \
+and make your final message the output of scripts/report.py summary."
   grk_task="$role $task"
   if [[ -n "${GRK_RESUME:-}" ]]; then
     [[ "$GRK_RESUME" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]] \
@@ -651,7 +652,7 @@ else
   role="You are the implementation worker for this brief, not the project director. \
 CLAUDE.md belongs to the director and is NOT your instruction file. \
 Follow AGENTS.md and the brief. Do not commit, branch, or push; leave changes in the \
-working tree. Report with verbatim evidence."
+working tree. Write the report file the brief's Report format section names, run scripts/report.py check on it until it prints no PROBLEM, and make your final message the output of scripts/report.py summary."
   # A single response is capped at CLAUDE_CODE_MAX_OUTPUT_TOKENS; exceeding it
   # kills the run and leaves nothing behind (brief-307 died that way at the
   # 32000 default). The cap belongs to cgl, not to this repo, so it lives in

@@ -105,9 +105,9 @@ human labour to budget.
 My usage is calls times context, and my time-window quota is the bottleneck.
 So:
 
-- Worker reports become structured documents with tagged sections. I read the
-  summary by script and extract a section by tag when I need it. The code diff
-  is still read in full.
+- Worker reports are `rum-report/1` JSON (`scripts/report.py`, `TEMPLATE.md`).
+  I read `summary`, pull a part with `show`, gate scope with `check
+  --against-git`, and `render` the record into the brief. Diffs: in full.
 - Procedures become scripts: inputs in, one summary table out. Long output
   goes to `.temp/` files; I print verdict lines only.
 - Subagents are never switched to a smaller model or a lower effort to save
