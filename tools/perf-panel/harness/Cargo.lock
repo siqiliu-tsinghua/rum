@@ -18,14 +18,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "rum-resume-harness"
-version = "0.0.0"
-dependencies = [
- "mimalloc",
- "rum-host",
-]
-
-[[package]]
 name = "cc"
 version = "1.2.63"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -200,6 +192,14 @@ dependencies = [
  "rum-core",
  "rum-runtime",
  "rum-stdlib",
+]
+
+[[package]]
+name = "rum-resume-harness"
+version = "0.0.0"
+dependencies = [
+ "mimalloc",
+ "rum-host",
 ]
 
 [[package]]
