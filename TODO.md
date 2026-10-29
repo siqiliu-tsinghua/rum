@@ -4,13 +4,32 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-27. The committed tree runs through:
+Status checkpoint: 2026-10-29. The committed tree runs through:
 - G13 step S9 (brief-617, control and cleanup; gated, below);
 - G15-A (brief-619, `afdcd02f`) and G15-B (brief-620, `43a26c72`);
 - the G15-C design (brief-621, accepted `8f77793c`) and G15-C1 (brief-622,
   `b4f81ebe`);
 - the logical profiler's LP01 (brief-625, `3fd1885c`) and LP02 (brief-626,
-  `17576575`).
+  `17576575`);
+- the native stack base per thread (brief-629, `60ca9585`) and the
+  abandonment repairs (brief-630: B1 `854cfa4a`, B2 `1c115117`, B3
+  `ba1e1e52`).
+
+**Next, in order** (the branch queue): test isolation (brief-627's
+families: a profiler test lease, typed-slot scratch directories, and one
+shared retention parse per process, with `typed_slot_census` added to it),
+then LP03-LP08, C2's remaining 353 rows, CM, `CHANGELOG.md`, and S10 onward.
+New briefs go to grk or kimi while Codex has no quota (user, 2026-10-29).
+
+**The director's gate is a script** (brief-631, director tooling):
+`scripts/director-gate.py run NNN --stage S` runs the scope check, fmt, the
+warnings against HEAD, the ownership replay, the census pairing, the
+compiler oracle, LP01 and the typed-slot census, the fingerprints, the
+certificates, the inventory run and the workspace, and prints one table.
+Owed: the perf-panel layer (two arms at one path, path calibration,
+`fndiff3`, the interleaved panels), whose instruments still live in `.temp/`
+(the resume harness, brief-626's label set) and must move into the repo
+first.
 
 G15-C2 (brief-623, three runs) has settled 679 of its 1 032 rows by
 execution or by mechanical rule:
@@ -47,8 +66,9 @@ does the same work, only without its profiling hooks.
   - The director's falsifier `crates/rum-host/tests/logical_profile_abandonment.rs`
     now pins that last one.
 
-**Next: LP03** from `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md`,
-on Codex (user ruling 2026-10-26: new briefs go back to Codex). Write it at
+**LP03, after test isolation,** from `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md`,
+on Codex (user ruling 2026-10-26: new briefs go back to Codex; while it has
+no quota, grk or kimi). Write it at
 the granularity `TEMPLATE.md` now records. **LP03 carries one shape item from
 LP02's gate:** `Session::enable_pending_profile` (`suspension/core.rs`)
 unwraps `pending_suspension`, a state the type allows. Its caller already
@@ -95,20 +115,19 @@ filter cuts this census work a third time, switch workers.**
   director. The default parallel `cargo test` is still red for brief-627's
   test-isolation families, so I have not rerun the original
   workspace-parallel reproduction (3 failures in 10).
-- **Next: the dropped cleanup error (user ruling 2026-10-27, Option A).** A
-  `WithCleanup` cleanup that fails while a cancelled request is abandoned is
-  dropped without a message. It should report its message, keep the outer
-  `Cancelled` outcome, and drain every remaining frame. The brief first
-  settles which `AbandonReason`s emit, from an inventory of the message
-  channel each retirement has. Raw material:
-  `.temp/brief-628/drafts/brief-abandonment-cleanup-diagnostics.md` (its
-  target shape predates brief-629). **brief-630**: Stage A done, policy
-  accepted (`ce95b440`); A2 inventoried the two defects below (`422211f5`)
-  and A3 designed both as code (`d1baa06a`). Stage B fixes them and the arm,
-  one per step. B1, the drain's termination, is done (2026-10-28). Next is B2,
-  the window, then B3, the arm.
-- **Found by brief-630 Stage A (2026-10-28): cancelling a public file that
-  emitted messages before its `InputString` corrupts the cancel window.**
+- **DONE (brief-630, 2026-10-29): the dropped cleanup error (user ruling
+  2026-10-27, Option A).** A `WithCleanup` cleanup that failed while a
+  cancelled request was abandoned was dropped without a message. Stage A
+  settled the policy (`ce95b440`); A2 inventoried the two defects below
+  (`422211f5`) and A3 designed both as code (`d1baa06a`). B1 (`854cfa4a`)
+  made the drain stop under host control; B2 (`1c115117`) made the session
+  output lists stamped logs, so a stored cut is a mark; B3 (`ba1e1e52`)
+  reports an error that escapes a cleanup through the ordinary emitters,
+  before `General::cancel`, by an exhaustive policy over the abandonment
+  reasons. The record is in the brief.
+- **Fixed by brief-630 B2 (`1c115117`). Found by Stage A (2026-10-28):
+  cancelling a public file that emitted messages before its `InputString`
+  corrupts the cancel window.**
   The cancel path takes its checkpoint at the current length, after the
   script loop spliced the earlier messages back. The file rollback then
   shortens the list below that checkpoint. With one earlier message, the

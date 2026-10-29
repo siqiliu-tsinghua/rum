@@ -43,3 +43,10 @@ invocation.
 - `dispatch-brief.sh` — dispatch a Codex task brief for execution (the internal
   director/Codex workflow; see [`CLAUDE.md`](../CLAUDE.md) and
   [`docs/dev/codex/`](../docs/dev/codex/)).
+- `report.py` — the structured worker report (`rum-report/1`): `check`,
+  `summary`, `show`, `render`.
+- `director-gate.py` — the director's gate in one command: the scope check,
+  fmt, new warnings, the standing inventory replays (ownership, census
+  pairing, compiler oracle, LP01, typed-slot census, fingerprints,
+  certificates) and the workspace, with one table out and the logs in
+  `.temp/director/gate-NNN<stage>/`. `selftest` checks its pure parts.

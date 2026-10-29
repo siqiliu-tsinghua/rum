@@ -134,6 +134,27 @@ fn conditional_ambiguous_and_missing_roots_are_located() {
     );
 }
 
+fn dump_frontier(rows: &BTreeSet<Diagnostic>, path: &std::path::Path) {
+    let mut out = String::from("kind\tfile\tline\tcol\tend_line\tend_col\tcallee\treason\n");
+    let mut kinds = BTreeMap::new();
+    for row in rows {
+        *kinds.entry(row.kind).or_insert(0) += 1;
+        out.push_str(&format!(
+            "{:?}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n",
+            row.kind,
+            row.site.file,
+            row.site.start.0,
+            row.site.start.1,
+            row.site.end.0,
+            row.site.end.1,
+            row.target.as_deref().unwrap_or("-"),
+            row.reason.replace('\t', " ")
+        ));
+    }
+    out.push_str(&format!("# counts {kinds:?} len {}\n", rows.len()));
+    std::fs::write(path, out).unwrap();
+}
+
 fn baseline(source: &Source) {
     let options = regions::frontier(
         source,
@@ -142,6 +163,12 @@ fn baseline(source: &Source) {
             format!("{}::evaluate_runtime_option_expr", regions::SESSION),
         ],
     );
+    // The director's gate pairs this frontier with the base's through the
+    // source diff (scripts/director-gate.py). The rows are written before any
+    // assertion, so a moved count still leaves them to pair.
+    if let Some(path) = std::env::var_os("RUM_CENSUS_DUMP") {
+        dump_frontier(&options.rejected, path.as_ref());
+    }
     // The symbol constructors remain absent. The removed raw C01 vector is
     // protected by local_option_contract_controls; C02 clone-return rejection
     // remains in compiler_oracle::exact. This historical frontier still rejects

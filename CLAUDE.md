@@ -108,8 +108,8 @@ So:
 - Worker reports are `rum-report/1` JSON (`scripts/report.py`, `TEMPLATE.md`).
   I read `summary`, pull a part with `show`, gate scope with `check
   --against-git`, and `render` the record into the brief. Diffs: in full.
-- Procedures become scripts: inputs in, one summary table out. Long output
-  goes to `.temp/` files; I print verdict lines only.
+- Procedures become scripts: inputs in, one table out (the gate:
+  `scripts/director-gate.py run NNN`). Long output stays in `.temp/`.
 - Subagents are never switched to a smaller model or a lower effort to save
   tokens (user ruling): recovering from their errors costs more.
 - The `rum-director` mod (`tools/claude-mod/rum-director/`) enforces the
@@ -184,7 +184,7 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
     `1c115117`, B3 `ba1e1e52`;
   - brief-629, the native stack base per thread: `60ca9585`;
   - LP02: `17576575`.
-- **Workers.** New briefs go to cdx (user ruling 2026-10-28).
+- **Workers.** cdx (user ruling 2026-10-28); grk or kimi while it has no quota.
 - **Earlier lines** are recorded in `director-log.md`; deferred items in
   `TODO.md` (full polynomial factorization stays deferred by user decision).
 
