@@ -112,6 +112,10 @@ So:
   goes to `.temp/` files; I print verdict lines only.
 - Subagents are never switched to a smaller model or a lower effort to save
   tokens (user ruling): recovering from their errors costs more.
+- The `rum-director` mod (`tools/claude-mod/rum-director/`) enforces the
+  dispatch and commit discipline and compacts after every commit at 200k
+  tokens or more. Before every commit, rewrite `.temp/director/state.md` (the
+  handoff it re-injects); stage and commit in separate calls.
 
 ## Diagnosis method, short form
 
@@ -181,14 +185,12 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   - brief-629, the native stack base per thread: `60ca9585`;
   - LP02: `17576575`.
 - **Workers.** New briefs go to cdx (user ruling 2026-10-28).
-- **Earlier lines.** Each closed line has a record in `director-log.md`, and
-  the deferred items are in `TODO.md`. Full polynomial factorization stays
-  deferred by user decision.
+- **Earlier lines** are recorded in `director-log.md`; deferred items in
+  `TODO.md` (full polynomial factorization stays deferred by user decision).
 
 ## Pointers
 
-- `AGENTS.md`: the operational first stop (snapshot, commands, testing
-  policy).
+- `AGENTS.md`: the operational first stop (snapshot, commands, tests).
 - `TODO.md`: the active roadmap. `PROGRESS.md`: the append-only log.
   `CHANGELOG.md`: release-facing changes.
 - `docs/dev/codex/TEMPLATE.md`: the brief format, with the standing
