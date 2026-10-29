@@ -80,10 +80,11 @@ consume another record.
 
 Logical collection uses one enabled, process-wide epoch collector. An owner can
 resume its Session on another thread without losing its records. TLS diagnostic
-maps may remain physical telemetry. Comparison isolates one epoch, or filters
-native receipts by owner: unrelated profiled requests are not part of a
-program's vector. Nested or interleaved sessions cannot inherit parked native
-stacks.
+maps may remain physical telemetry. Comparison isolates one epoch: unrelated
+profiled requests are not part of a program's vector. The epoch's rows are keyed
+by logical key, not by owner, so requests profiled at the same time in one
+epoch add up per key. Nested or interleaved sessions cannot inherit parked
+native stacks.
 
 Reset retires the old epoch, discharges its open records with the
 profile-reset abandonment reason and creates an empty epoch. Old tokens and

@@ -323,3 +323,86 @@ Write the `rum-report/1` file `.temp/brief-633/report.json` (`TEMPLATE.md`,
 
 Put open decisions in `questions`, each with options and a recommendation.
 Your final message is `python3 scripts/report.py summary 633`.
+
+## Director amendment 1 (2026-10-29): the C4 STOP came from my predicate
+
+Under the brief as written, you were right to stop. But the predicate was
+wrong, and it was mine. I wrote it in brief-627's review, item 2, and
+repeated it here as C4. I took it from the sentence in
+`docs/dev/profiling.md`, "Comparison isolates one epoch, or filters native
+receipts by owner", and did not read the code first.
+
+There is no owner-filtered receipt:
+
+- `Epoch::rows` is keyed by `AggregateKey`.
+- `totals::settle` (`logical/totals.rs:88-113`) adds a settled record into
+  its key's row, then removes the record.
+- An `Owner` lives only on an open record. There it does two things:
+  - it routes the record to its request (`segments::owner`,
+    `logical/segments.rs:76-88`);
+  - it limits abandonment to that owner's records (`Epoch::abandon_owner`,
+    `logical/epoch.rs:231-242`).
+
+Your result was `[2, 2, …]` against a solo `[1, 1, …]`. That is two equal
+sessions recording into one key, so the row is the sum of the two solos. The
+single epoch is working as designed; this is not a defect.
+
+The documentation sentence claimed a filter that does not exist. This
+commit corrects it: comparison isolates one epoch, rows are keyed by logical
+key, and requests profiled at the same time add up per key.
+
+### C4′ replaces C4: the concurrency contract the single epoch does make
+
+Put three tests in one probe file on the scratch copy. Each one calls
+`enabled()`, so run each alone with `--exact`, 10 runs per test.
+
+1. **No cross-attribution.**
+   - Session A records the phase `owner-a` and session B records `owner-b`,
+     on two threads.
+   - Both records are open at the same moment: each side opens its `Call`,
+     both meet at a `Barrier`, then each side finishes.
+   - Expected: the `owner-a` row equals A's solo row, the `owner-b` row
+     equals B's solo row, and no other row changes.
+2. **Same-key additivity, with sides that differ.** Both sessions record one
+   key, and the two sides differ, so a row that swaps or drops one side
+   cannot pass. For example, A makes one `Ok` call and B makes two calls, or
+   one call that fails, if the API allows it. Expected: the concurrent row is
+   the field-by-field sum of the two solo rows.
+3. **Owner-scoped abandonment.**
+   - Both records are open at the same moment.
+   - Abandon A's owner through the production path that reaches
+     `abandon_owner`: a Session drop or a cancellation. Cite the path with
+     `path:line`.
+   - Then B finishes `Ok`.
+   - Expected:
+     - A's key shows the abandonment reason;
+     - B's key equals B's solo `Ok` row;
+     - `Session::logical_profile_test_assert_quiescent()` holds at the end.
+
+Calibrate each test against a mutant on the scratch copy, and keep both logs:
+
+- for test 1, route B's record into A's key;
+- for test 2, drop one side's counts in `settle`;
+- for test 3, make `abandon_owner` remove every record.
+
+Each test must be red on its mutant and green unmutated. If any test is red
+unmutated, STOP: that is a product defect.
+
+### C5 ruling
+
+- **Lease falsifier per thread:**
+  `unregistered_thread_span_does_not_record_while_a_profiling_guard_is_held`.
+  It is red at HEAD for the right reason: the flag is process-global.
+- **Drop the `evaluate("1")` form.** Production evaluation does not enter
+  the LP02 engine until LP03 wires its phases, so that test cannot fail
+  today.
+- **Family falsifier:** the chain pair, unchanged.
+
+### Then finish the brief
+
+Do C1 (run `cargo tree -e features`, as the brief asks), C2's type design,
+C3, D, E and F. The census rows from run 1 stand; do not rerun them.
+
+Write this run's report to `.temp/brief-633/report-c2.json`. Do not edit
+`report.json` from run 1. Your final message is
+`python3 scripts/report.py summary 633 --stage c2`.
