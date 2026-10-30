@@ -1549,3 +1549,268 @@ them.
   - Test-isolation item 1 is not done until amendment 2 is gated.
 - **Not rerun:** kimi's frontier dumps (the gate's census covers the same
   frontier), and kimi's 15 extra lib runs (I ran 5).
+
+## Director amendment 2 (2026-10-30): the reset admits, and the evaluation-cache flag publishes
+
+**Worker: kimi, continuing its session.** Amendment 1 is gated (record
+above) and committed (`5184797c`). My gate found one write path that it did not fence,
+and one more instance of its cold-load race. Both are misses in my
+amendment, not deviations of yours: amendment 1 told you that stage 1
+covered the reset. This amendment is one gated step, in three stages.
+
+### What is open, with evidence
+
+- **The reset checks, then writes.** `reset_lexical_profile_counters`
+  (`profiling/reset.rs:8`) opens with stage 1's refusal,
+  `blocks_unregistered_thread()`, and then writes with no admission:
+  - `logical::epoch::reset_production` calls `reset_unleased`
+    (`logical/epoch.rs:316`). That function takes the slot lock and retires
+    the current epoch. Unlike `current` (`epoch.rs:290`), it does not
+    re-check under the slot lock.
+  - Then come the 47 counter stores, the thread-local clears, and the two
+    flag stores (`reset.rs:111-112`): `LEXICAL_PROFILE_SUMMARY_PRINTED`
+    gets 0 and `LEXICAL_PROFILE_ACTIVE` gets 1.
+
+  An unregistered thread can pass the refusal between two leases, while the
+  generation is 0, and write after the next lease's first snapshot. That
+  write zeroes the holder's counters, retires the holder's epoch, and stores
+  1 over a holder's `ACTIVE` 2: `queue_boundaries.rs` now really stores 2.
+  Amendment 1 closed this window for the nine write sites, but not for the
+  reset. `RumProfileReset[]` reaches the reset from any thread
+  (`debug_tools/basic.rs:119`).
+
+  Amendment 1 also said that stage 1's epoch side has no such window. That
+  holds for `current`, `charge` and `open`, which re-check, but not for the
+  reset.
+- **`EVALUATION_CACHE_PROFILE_ACTIVE` has amendment 1's production race.**
+  - Its initializer (`evaluation_cache/profile/mod.rs:182-188`) stores
+    unconditionally, and `RumProfileReset[]` stores 1 into it
+    (`profile/mod.rs:379`, through `debug_tools/basic.rs:120`). Under
+    `RUM_PROFILE_EVALUATION_CACHE_DEFER`, a first load can store 2 over the
+    reset's 1.
+  - I checked every other cold-load `AtomicU8` outside `profiling/`.
+    `ALLOC_PROFILE_ENABLED`, `REPR_PROFILE_ENABLED`,
+    `BUILTIN_MEMORY_GROWTH_TEST_ENABLED`, `ASSOCIATION_PROFILE_CONFIGURED`,
+    `SUBSTITUTION_SHARING_PROFILE_ENABLED`,
+    `EVALUATION_CACHE_PROFILE_ENABLED` and
+    `EVALUATION_CACHE_PROFILE_INCREMENTAL_ENABLED` each have their
+    initializer as the only writer. Each store writes the one env value, so
+    these flags stay as they are.
+  - The observer reads the evaluation-cache flags, counters and maps
+    (`profile/mod.rs:383`), but no in-process test compares them, and no
+    in-process code enables that profile.
+- **Your frontier section called two replaced rows position moves.** In
+  `config.rs`, the two initializer `.store` rows (HEAD lines 137 and 146)
+  were replaced by `publish`'s `compare_exchange` (line 129) and by
+  `published == 1` (line 136). I ruled them at my gate. This time, label
+  a replaced row as a replacement.
+
+**My calibration**, in `.temp/director/gate-635a2-calib/` (`calib.sh`,
+`logs/`), ran on a copy of your amendment-1 tree:
+
+- **Your tree as it stands, with R and E added** (`logs/cand.log`):
+  - R is green, because stage 1's refusal stops the reset when a lease is
+    already current;
+  - E is red: `"published 2, after 1, answered true"`.
+- **Stage 1's refusal deleted** (`logs/norefusal.log`): R is red,
+  `an unregistered reset wrote while a lease was held:
+  ["ARG_PREFILTER_MAYBE_COUNT", "LEXICAL_PROFILE_SUMMARY_PRINTED"]`, and
+  `owner_filter`'s reset test is red, `unregistered reset invalidated the
+  held epoch`.
+- **The target shape below** (`logs/shape.log`): all eight A–E, R and
+  `owner_filter` tests pass, `test result: ok. 8 passed`.
+  - At 32 threads, 10 of 10 lib runs passed:
+    `test result: ok. 1231 passed; 0 failed; 5 ignored`
+    (`logs/shape-lib32c-*.log`). None hung.
+  - `cargo fmt --check` finds one diff: rustfmt puts the new `pub(in
+    crate::runtime) use` line before line 91, not after it.
+- **M3, the shape with the reset's admission deleted** (`logs/m3.log`): R
+  and `owner_filter`'s reset test are red, with the same messages as above.
+- Copy `scripts/run-bounded.py` into every tree copy. Without it, three
+  compile-control tests fail on the missing script. That happened in my
+  first five runs (`logs/shape-lib32-*.log`).
+
+### Target shape
+
+The shape is fixed. A departure from it is a STOP. `TEST_CFG` is the
+stage-1 attribute, as in amendment 1.
+
+**`profiling/reset.rs`**: stage 1's refusal becomes an admission. Nothing
+else in the function changes.
+
+```rust
+pub(in crate::runtime) fn reset_lexical_profile_counters() {
+    TEST_CFG
+    let Some(_admitted) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    if !lexical_profile_configured() {
+        return;
+    }
+    // ... unchanged to the end ...
+}
+```
+
+The guard lives to the end of the function. So the epoch retire, the
+counter stores, the clears and both flag stores form one admitted write,
+and a lease published during the reset waits for it at the fence. No check
+remains outside the admission, so there is nothing to race.
+
+**The lock rule.**
+- The reset's admitted scope takes four locks:
+  - `std::env`'s, through a cold load in `lexical_profile_configured`;
+  - the epoch slot lock, in `reset_unleased`;
+  - the epoch data lock, in `retire`;
+  - stderr's, in `eprintln!`.
+- The nine write sites' scopes take only `std::env`'s and stderr's.
+- No thread holds any of these locks while it calls `admit` or `lease`.
+  Prove it in the report with these greps:
+  - `logical/` calls neither function;
+  - `rum-core` has one lock, the symbol interner (`expr.rs:47`), and only
+    `intern_symbol_text` takes it, a leaf that calls neither function;
+  - `rum-runtime` has no `stderr().lock()`.
+
+**`profiling/lease.rs`**: the `Admitted` doc comment states the lock rule:
+
+```rust
+/// One admitted lexical write. Its scope never calls `admit` or `lease`, and
+/// takes no lock that a thread holds while calling either: `std::env`'s (a
+/// cold load), stderr's, and in the reset the epoch slot and data locks,
+/// whose holders (`logical/epoch.rs`) call neither.
+```
+
+**`profiling/config.rs`**: `publish` becomes
+`pub(in crate::runtime) fn publish_cold_load`, and its twelve call sites
+are renamed. In `profiling/mod.rs`, add this line where rustfmt puts it,
+just before line 91:
+
+```rust
+pub(in crate::runtime) use config::publish_cold_load;
+```
+
+**`evaluation_cache/profile/mod.rs`**:
+- In `initialize_evaluation_cache_profile_active`, the tail becomes:
+
+  ```rust
+      let active = !deferred;
+      crate::runtime::profiling::publish_cold_load(&EVALUATION_CACHE_PROFILE_ACTIVE, active)
+  ```
+
+- At the end of the file, add:
+
+  ```rust
+  #[cfg(test)]
+  #[path = "tests/cold_load.rs"]
+  mod cold_load;
+  ```
+
+- The two sibling initializers stay as they are. In each, the initializer
+  is the flag's only writer.
+
+**`docs/dev/profiling.md`**: two sentences of the test-isolation paragraph
+change.
+- "A lease becomes current only after every lexical write admitted before
+  it has landed." becomes "A lease becomes current only after every lexical
+  write or reset admitted before it has landed."
+- "The cold-load profile flags publish over their uninitialized state only"
+  becomes "The cold-load lexical profile flags, and the evaluation-cache
+  `ACTIVE` flag that `RumProfileReset[]` also writes, publish over their
+  uninitialized state only".
+
+### Scope
+
+- **MAY modify:**
+  - `profiling/reset.rs`: the refusal statement only;
+  - `profiling/lease.rs`: the `Admitted` doc comment;
+  - `profiling/config.rs`: `publish`'s name and visibility, and its twelve
+    call sites;
+  - `profiling/mod.rs`: one line;
+  - `evaluation_cache/profile/mod.rs`: the `ACTIVE` initializer's tail and
+    the three `mod` lines;
+  - the new `evaluation_cache/profile/tests/cold_load.rs`;
+  - `profiling/tests/unregistered_writes.rs`: R appended;
+  - `docs/dev/profiling.md`: the two sentences;
+  - the standing inventories, through their replays.
+- **Every other edit is a disclosed deviation**, with its reason. An
+  undisclosed edit is a STOP at my gate.
+- **MUST NOT:**
+  - change anything in amendment 1's shape except `publish`'s rename;
+  - add a re-check to `reset_unleased`, because the admission covers it;
+  - change any other cold-load flag;
+  - add a dependency or `unsafe`.
+
+### Falsifiers
+
+Before your first edit, copy the current tree to `.temp/brief-635/a2/head/`,
+as in amendment 1. Use the same scopes and bounds, and never use git. Build
+each mutant in a copy, never in place.
+
+1. **R and E: my calibrated files, copied verbatim.**
+   - Append `.temp/director/gate-635a2-calib/src/reset_test.rs` to
+     `profiling/tests/unregistered_writes.rs`. That is **R**,
+     `an_unregistered_reset_does_not_reach_a_held_window`.
+   - Copy `.temp/director/gate-635a2-calib/src/cold_load.rs` to
+     `evaluation_cache/profile/tests/cold_load.rs`. That is **E**,
+     `a_cold_load_keeps_the_active_flag_published_after_its_load`.
+2. **Mutants.** Each must go red as stated. Quote its panic message.
+   - **M3**, the reset's admission deleted: R goes red naming
+     `ARG_PREFILTER_MAYBE_COUNT` and `LEXICAL_PROFILE_SUMMARY_PRINTED`, and
+     `owner_filter::unregistered_thread_profile_reset_leaves_the_held_epoch`
+     goes red.
+   - **M4**, the `ACTIVE` initializer's old store restored: E goes red with
+     `published 2, after 1, answered true`.
+   - **M1 and M2**, from amendment 1: still red as stated there.
+3. **Regression.**
+   - A–D, R and E;
+   - both `owner_filter` tests;
+   - the three C4′ tests;
+   - the chain pair at 2 threads, 10 runs;
+   - `queue_boundaries`.
+4. **The rum-runtime lib at 32 threads: 20 runs, all green.**
+   - Bound each run at 300 s.
+   - A deadlock shows up as a hang. A bound hit is a STOP: report the log
+     tail.
+   - Quote all 20 `test result:` lines.
+
+### B1, updated
+
+Update the amendment-1 table. Do not redo it.
+- Every row whose writer list has `reset.rs` now cites the reset's
+  admission, with R as its falsifier.
+- Rows 1 and 2 also cite `owner_filter`'s reset test.
+- Add one note for the evaluation-cache statics that the observer reads
+  (`profile/mod.rs:383` onward). For each, give:
+  - its writers, from grep;
+  - grep evidence that no in-process test compares it;
+  - its protection: **none**, except for `ACTIVE`, which publishes (E).
+
+### Stages and stops
+
+1. **Shape.**
+   - Implement the shape, R, E and M1–M4.
+   - Run `cargo build --tests --workspace --offline` with no new warning.
+   - Run falsifiers 1 and 2. STOP if any arm is not as stated.
+2. **B1.** Update the table. STOP on an unprotected row.
+3. **Frontier, replays, lib, workspace**, as in amendment 1's stage 3:
+   - the frontier dumps, in `.temp/brief-635/a2/`; label every one-sided row
+     as a move, a replacement, new or gone;
+   - the standing-inventory replays;
+   - falsifiers 3 and 4;
+   - `nm -C` and the feature tree;
+   - the workspace run, bound 5400 s, in one 14G scope, with the nine native
+     ZeroMQ `--skip`s.
+
+### Forbidden
+
+Everything amendment 1 forbids, except that the reset's admitted scope may
+take the four locks named above. In addition:
+- any other edit in `reset.rs`;
+- any lock under an admission beyond those four.
+
+### Report
+
+- Write `.temp/brief-635/report-a2.json`.
+- Quote every `test result:` line and every verdict line.
+- Run `python3 scripts/report.py check 635 --stage a2` until it prints no
+  PROBLEM.
+- Your final message is `python3 scripts/report.py summary 635 --stage a2`.
