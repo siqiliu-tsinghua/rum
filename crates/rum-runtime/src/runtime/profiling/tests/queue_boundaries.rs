@@ -282,7 +282,8 @@ fn logical_queue_representation_survives_a_disabled_global_gate() {
         let token = call(&session);
         begin(&mut session);
         session.logical_insert_boundary(token.pause().unwrap(), None, false);
-        let prior = LEXICAL_PROFILE_ACTIVE.swap(0, Ordering::Relaxed);
+        // 2 is disabled; 0 is uninitialized, and any cold load re-arms it.
+        let prior = LEXICAL_PROFILE_ACTIVE.swap(2, Ordering::Relaxed);
         let result = if abandon {
             session.abandon_pending_suspension(AbandonReason::CancelledRequest);
             Ok(Expr::string("reply"))

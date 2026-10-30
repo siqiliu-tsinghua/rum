@@ -97,6 +97,16 @@ does not count against the guest memory ceiling. Exhausting the diagnostic cap
 invalidates the epoch visibly and retires its leases without changing the guest
 resource outcome. An invalid epoch cannot certify parity.
 
+Profiling tests share the process with ordinary tests. Under the test cfg,
+every test that reads or writes the process-wide profiling state holds the
+one `TestLease` (`profiling/lease.rs`). While a lease is current, a thread
+that has not registered with it cannot construct, open, charge or reset
+the epoch, reset the lexical counters, or write a lexical counter or the
+summary once-flag. A lease becomes current only after every lexical write
+admitted before it has landed. Production builds compile none of the
+lease. The cold-load profile flags publish over their uninitialized state
+only, so a value stored after a thread's first load is kept.
+
 ## Execution telemetry and durations
 
 Telemetry is reported independently and never compared as logical parity:

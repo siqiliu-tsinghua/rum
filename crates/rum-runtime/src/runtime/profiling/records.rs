@@ -5,11 +5,21 @@ pub(in crate::runtime) fn record_profile_rewrite_rule_prefilter_candidate(would_
         return;
     }
 
-    REWRITE_RULE_CANDIDATE_COUNT.fetch_add(1, Ordering::Relaxed);
-    if would_reject {
-        REWRITE_RULE_WOULD_PREFILTER_REJECT_COUNT.fetch_add(1, Ordering::Relaxed);
-    } else {
-        REWRITE_RULE_WOULD_MATCHER_COUNT.fetch_add(1, Ordering::Relaxed);
+    {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some(_admitted) = crate::runtime::profiling::lease::admit() else {
+            return;
+        };
+        REWRITE_RULE_CANDIDATE_COUNT.fetch_add(1, Ordering::Relaxed);
+        if would_reject {
+            REWRITE_RULE_WOULD_PREFILTER_REJECT_COUNT.fetch_add(1, Ordering::Relaxed);
+        } else {
+            REWRITE_RULE_WOULD_MATCHER_COUNT.fetch_add(1, Ordering::Relaxed);
+        }
     }
 
     let Some(source_symbol) = evaluation_profile_current_source_symbol() else {
@@ -36,13 +46,23 @@ pub(in crate::runtime) fn record_profile_rewrite_rule_match_outcome(
         return;
     }
 
-    if matched {
-        REWRITE_RULE_MATCH_COUNT.fetch_add(1, Ordering::Relaxed);
-        if would_reject {
-            REWRITE_RULE_PREFILTER_FALSE_REJECT_COUNT.fetch_add(1, Ordering::Relaxed);
+    {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some(_admitted) = crate::runtime::profiling::lease::admit() else {
+            return;
+        };
+        if matched {
+            REWRITE_RULE_MATCH_COUNT.fetch_add(1, Ordering::Relaxed);
+            if would_reject {
+                REWRITE_RULE_PREFILTER_FALSE_REJECT_COUNT.fetch_add(1, Ordering::Relaxed);
+            }
+        } else {
+            REWRITE_RULE_MATCHER_MISS_COUNT.fetch_add(1, Ordering::Relaxed);
         }
-    } else {
-        REWRITE_RULE_MATCHER_MISS_COUNT.fetch_add(1, Ordering::Relaxed);
     }
 
     let Some(source_symbol) = evaluation_profile_current_source_symbol() else {

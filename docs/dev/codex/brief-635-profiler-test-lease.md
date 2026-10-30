@@ -1177,3 +1177,375 @@ A row with an in-process reader and none of the four is a **STOP**.
 - Run `python3 scripts/report.py check 635 --stage a1` until it prints no
   PROBLEM.
 - Your final message is `python3 scripts/report.py summary 635 --stage a1`.
+
+## a1 report (kimi, DONE)
+
+Amendment 1 adds the admitted lexical-write gate, lease fence, all mandated recording admissions, compare-from-zero cold-load publication and the real queue disable value. A/B/C/D pass; M1 and M2 fail with the prescribed messages. B1 now lists every writer/helper/caller/reset site: 52 lease rows and 10 cold-load rows, zero unprotected. Both frontiers have 1042 rows with 14 position-only rows per side. Replays and ten stage-1 chain runs pass; all twenty 32-thread runs pass. Release CLI and harness have zero lease symbols. Workspace: 59 binaries, 4013 passed, 0 failed, 61 ignored, nine standing skips.
+
+| File | Kind | Lines | Why |
+| --- | --- | --- | --- |
+| `crates/rum-runtime/src/runtime/profiling/config.rs` | modified | 125-139,144,151,159,166,173,180,187,194,201,208,215,222-227 | Publish all twelve cold-load flags only over zero and register cold-load tests; accessors unchanged. |
+| `crates/rum-runtime/src/runtime/profiling/counters.rs` | modified | 13-20,66-73,92-99,111-118,127-134 | Admit timing, counter, add and max writes after their existing gates. |
+| `crates/rum-runtime/src/runtime/profiling/lease.rs` | modified | 1,6-7,12-17,34,40-74 | Add the admitted-write read gate, lease fence and fencing observable. |
+| `crates/rum-runtime/src/runtime/profiling/records.rs` | modified | 8-22,49-64,66 | Admit both rewrite-rule counter blocks before symbol or thread-local work. |
+| `crates/rum-runtime/src/runtime/profiling/summary.rs` | modified | 12-23,43,46-57 | Admit the summary once-flag swap and snapshot store. |
+| `crates/rum-runtime/src/runtime/profiling/tests/cold_load.rs` | added | 1-92 | Add the verbatim twelve-flag D cold-load falsifier. |
+| `crates/rum-runtime/src/runtime/profiling/tests/mod.rs` | modified | 12 | Register unregistered lexical-write falsifiers. |
+| `crates/rum-runtime/src/runtime/profiling/tests/queue_boundaries.rs` | modified | 285-286 | Use disabled value 2 rather than uninitialized value 0 for the queue gate test. |
+| `crates/rum-runtime/src/runtime/profiling/tests/unregistered_writes.rs` | added | 1-155 | Add calibrated A/B and the appended C fence falsifier. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv` | modified | replayed rows | Replay exact ownership positions and new test-cfg construct rows. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv` | modified | replayed rows | Replay exact ownership positions and new test-cfg construct rows. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv` | modified | replayed rows | Replay exact ownership positions and new test-cfg construct rows. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_storage.tsv` | modified | replayed rows | Replay exact ownership positions and new test-cfg construct rows. |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv` | modified | replayed rows | Replay all 68 generated retention fingerprints. |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv` | modified | replayed rows | Merge four generated certificate cells from both feature builds. |
+| `docs/dev/profiling.md` | modified | 100-108 | Document the lexical write lease, admitted-write fence and cold-load publication rule. |
+
+| Run | Try | Exit | Tests | Log |
+| --- | ---: | ---: | --- | --- |
+| fmt | 1 | 0 | - | `.temp/brief-635/a1/logs/fmt.log` |
+| shape-check-helper | 1 | 1 | - | `.temp/brief-635/a1/logs/shape-check-attempt-1.log` |
+| shape | 2 | 0 | - | `.temp/brief-635/a1/logs/shape-check.log` |
+| build-tests | 1 | 0 | - | `.temp/brief-635/a1/logs/build-tests.log` |
+| abcd-invocation | 1 | 101 | - | `.temp/brief-635/a1/logs/abcd-green.log` |
+| abcd-green | 2 | 0 | 4/0/0 | `.temp/brief-635/a1/logs/abcd-green-2.log` |
+| m1-red | 1 | 101 | 0/1/0 | `.temp/brief-635/a1/logs/m1-red.log` |
+| m2-red | 1 | 101 | 0/2/0 | `.temp/brief-635/a1/logs/m2-red.log` |
+| b1-writers | 1 | 0 | - | `.temp/brief-635/a1/logs/b1-writers.log` |
+| cold-load-env-grep | 1 | 0 | - | `.temp/brief-635/a1/logs/cold-load-env-grep.log` |
+| frontier-head-setup | 1 | 101 | - | `.temp/brief-635/a1/logs/frontier-head.log` |
+| frontier-head | 2 | 0 | 1/0/0 | `.temp/brief-635/a1/logs/frontier-head-2.log` |
+| frontier-candidate | 1 | 101 | 0/1/0 | `.temp/brief-635/a1/logs/frontier-cand.log` |
+| frontier-compare | 1 | 0 | - | `.temp/brief-635/a1/logs/frontier-compare.log` |
+| fingerprints-generate | 1 | 0 | 1/0/0 | `.temp/brief-635/a1/logs/fingerprints-generate.log` |
+| fingerprints-replay | 1 | 0 | - | `.temp/brief-635/a1/logs/fingerprints-replay.log` |
+| certificate-default-earn | 1 | 101 | 0/1/0 | `.temp/brief-635/a1/logs/certificate-default-earn.log` |
+| certificate-nodefault-earn | 1 | 101 | 0/1/0 | `.temp/brief-635/a1/logs/certificate-nodefault-earn.log` |
+| certificate-merge | 1 | 0 | - | `.temp/brief-635/a1/logs/certificate-replay.log` |
+| certificate-default-replay | 2 | 0 | 1/0/0 | `.temp/brief-635/a1/logs/certificate-default-replay.log` |
+| certificate-nodefault-replay | 2 | 0 | 1/0/0 | `.temp/brief-635/a1/logs/certificate-nodefault-replay.log` |
+| ownership-discovery | 1 | 101 | 2/1/0 | `.temp/brief-635/a1/logs/ownership-discovery.log` |
+| ownership-replay | 1 | 0 | - | `.temp/brief-635/a1/logs/ownership-replay.log` |
+| ownership-verify | 2 | 0 | 3/0/0 | `.temp/brief-635/a1/logs/ownership-replay-verify.log` |
+| lp01 | 1 | 0 | 6/0/0 | `.temp/brief-635/a1/logs/lp01.log` |
+| typed-receipts | 1 | 0 | 8/2/1 | `.temp/brief-635/a1/logs/typed-receipts.log` |
+| rejection-census | 1 | 0 | 1/0/0 | `.temp/brief-635/a1/logs/rejection-census.log` |
+| chain-01 | 1 | 0 | 2/0/0 | `.temp/brief-635/a1/logs/chain-01.log` |
+| chain-02 | 2 | 0 | 2/0/0 | `.temp/brief-635/a1/logs/chain-02.log` |
+| chain-03 | 3 | 0 | 2/0/0 | `.temp/brief-635/a1/logs/chain-03.log` |
+| chain-04 | 4 | 0 | 2/0/0 | `.temp/brief-635/a1/logs/chain-04.log` |
+| chain-05 | 5 | 0 | 2/0/0 | `.temp/brief-635/a1/logs/chain-05.log` |
+| chain-06 | 6 | 0 | 2/0/0 | `.temp/brief-635/a1/logs/chain-06.log` |
+| chain-07 | 7 | 0 | 2/0/0 | `.temp/brief-635/a1/logs/chain-07.log` |
+| chain-08 | 8 | 0 | 2/0/0 | `.temp/brief-635/a1/logs/chain-08.log` |
+| chain-09 | 9 | 0 | 2/0/0 | `.temp/brief-635/a1/logs/chain-09.log` |
+| chain-10 | 10 | 0 | 2/0/0 | `.temp/brief-635/a1/logs/chain-10.log` |
+| stage1-regression | 1 | 0 | 5/0/0 | `.temp/brief-635/a1/logs/stage1-regression.log` |
+| lib32-build | 1 | 0 | - | `.temp/brief-635/a1/logs/lib32-build.log` |
+| lib32-01 | 1 | 0 | 1229/0/5 | `.temp/brief-635/a1/logs/lib32-01.log` |
+| lib32-02 | 2 | 0 | 1229/0/5 | `.temp/brief-635/a1/logs/lib32-02.log` |
+| lib32-03 | 3 | 0 | 1229/0/5 | `.temp/brief-635/a1/logs/lib32-03.log` |
+| lib32-04 | 4 | 0 | 1229/0/5 | `.temp/brief-635/a1/logs/lib32-04.log` |
+| lib32-05 | 5 | 0 | 1229/0/5 | `.temp/brief-635/a1/logs/lib32-05.log` |
+| lib32-06 | 6 | 0 | 1229/0/5 | `.temp/brief-635/a1/logs/lib32-06.log` |
+| lib32-07 | 7 | 0 | 1229/0/5 | `.temp/brief-635/a1/logs/lib32-07.log` |
+| lib32-08 | 8 | 0 | 1229/0/5 | `.temp/brief-635/a1/logs/lib32-08.log` |
+| lib32-09 | 9 | 0 | 1229/0/5 | `.temp/brief-635/a1/logs/lib32-09.log` |
+| lib32-10 | 10 | 0 | 1229/0/5 | `.temp/brief-635/a1/logs/lib32-10.log` |
+| lib32-11 | 11 | 0 | 1229/0/5 | `.temp/brief-635/a1/logs/lib32-11.log` |
+| lib32-12 | 12 | 0 | 1229/0/5 | `.temp/brief-635/a1/logs/lib32-12.log` |
+| lib32-13 | 13 | 0 | 1229/0/5 | `.temp/brief-635/a1/logs/lib32-13.log` |
+| lib32-14 | 14 | 0 | 1229/0/5 | `.temp/brief-635/a1/logs/lib32-14.log` |
+| lib32-15 | 15 | 0 | 1229/0/5 | `.temp/brief-635/a1/logs/lib32-15.log` |
+| lib32-16 | 16 | 0 | 1229/0/5 | `.temp/brief-635/a1/logs/lib32-16.log` |
+| lib32-17 | 17 | 0 | 1229/0/5 | `.temp/brief-635/a1/logs/lib32-17.log` |
+| lib32-18 | 18 | 0 | 1229/0/5 | `.temp/brief-635/a1/logs/lib32-18.log` |
+| lib32-19 | 19 | 0 | 1229/0/5 | `.temp/brief-635/a1/logs/lib32-19.log` |
+| lib32-20 | 20 | 0 | 1229/0/5 | `.temp/brief-635/a1/logs/lib32-20.log` |
+| release-cli | 1 | 0 | - | `.temp/brief-635/a1/logs/release-cli-build.log` |
+| release-harness | 1 | 0 | - | `.temp/brief-635/a1/logs/release-harness-build.log` |
+| nm-cli | 1 | 0 | - | `.temp/brief-635/a1/logs/nm-cli-check.log` |
+| nm-harness | 1 | 0 | - | `.temp/brief-635/a1/logs/nm-harness-check.log` |
+| feature-tree | 1 | 0 | - | `.temp/brief-635/a1/logs/rum-cli-features.log` |
+| fmt-check | 1 | 0 | - | `.temp/brief-635/a1/logs/fmt-check.log` |
+| static-invariants | 1 | 0 | - | `.temp/brief-635/a1/logs/static-invariants.log` |
+| workspace | 1 | 0 | 4013/0/61 | `.temp/brief-635/a1/logs/workspace.log` |
+
+| Check | Bar | Result | Verdict | Note |
+| --- | --- | --- | --- | --- |
+| shape | fixed A1 shape with verbatim calibrated tests and unchanged accessors | all shape and static checks pass; D byte-identical, A only imports/C plus two rustfmt wraps | PASS | The rustfmt-only A wraps are disclosed as a deviation. |
+| build | workspace test build has no new warning | only HEAD three warnings | PASS |  |
+| abcd | A/B/C/D are green on the changed tree | 4 passed | PASS | The first invocation used repeated --exact and ran no tests; unique full-name filters ran all four. |
+| m1 | deleting the fence makes C red with its exact message | M1 red with that message | PASS |  |
+| m2 | deleting record_timing admission makes A red and B red only at record_timing | both red; B names exactly record_timing and its two counters | PASS |  |
+| queue | queue gate uses real disabled value 2 and stays green | swap(2), test passes in all 20 lib runs | PASS | Zero is uninitialized and cold-loads back on. |
+| b1 | 62 rows include every writer/helper/caller/reset site and protection | 52 lease, 10 cold load, zero unprotected | PASS | No set_var or remove_var occurs under crates. |
+| frontier | dump and compare complete HEAD/candidate frontiers | 1042 rows in both; 14 position-only candidate rows and 14 HEAD rows | PASS | No row count moved; all one-sided rows are disclosed in the frontier section. |
+| fingerprints | fingerprint/certificate replay changes generated cells only | 68 fingerprints and four certificate cells; non-certificate changes zero | PASS | Both earning passes stopped only on stale recorded cells. |
+| ownership | ownership identities and host-payload rules hold | 7974 rows; 12 added, 43 moved, zero removed identities; final exact | PASS | 61 self-reaching types and 79 host payloads unchanged. |
+| lp01-typed-census | LP01, typed receipts and rejection census replay green | all green; no expectation edits | PASS | Typed logs include the two expected forced-red child results. |
+| stage1-regression | chain pair ten runs, owner-filter and C4-prime stay green | 10 chain runs and five owner/C4 tests green | PASS |  |
+| lib32 | twenty rum-runtime lib runs at 32 threads | 20 green runs, zero failures | PASS | Each run had its own 14G scope and a 300-second bound after the build. |
+| production | release production contains no lease symbols and test features stay dev-only | zero symbols in both; feature tree exit zero | PASS |  |
+| format | cargo fmt --check | exit zero | PASS |  |
+| workspace | serial full workspace with exactly nine standing native ZeroMQ skips | 59 green binaries; 4013 passed; 0 failed; 61 ignored | PASS | No other skip, retry, sleep or serial target was used. |
+| scope | only amendment files and replayed inventories change | all static invariants pass | PASS | No dependency was added. |
+
+Deviations:
+- `unregistered_writes.rs` contains two rustfmt-only wraps beyond the calibrated import merge and C append.: Workspace `cargo fmt` produced them. The calibrated statements are unchanged, the cold-load file is byte-identical, and the shape check compares normalized content; the tree passes `cargo fmt --check`.
+
+### Amendment 1 mechanism
+
+Each new lease publishes its generation and then takes WRITE_GATE for write, so it becomes current only after all admitted writes have landed. Recording admissions are after existing flag/start gates and hold only a read guard across atomics, thread-locals and eprintln. No admission nests or contains another lock. Cold-load initializers use compare_exchange(0, value), preserving any value published after the initial load. Accessors, stage-1 refusals, C4-prime, PROCESS_LIMIT and epoch semantics are unchanged; production compiles no lease.
+
+### 62-row writer-level B1 disposition
+
+Each row lists its declaration, every writer site (including helpers, callers and reset), every in-process reader test, protection, and covering falsifier. LP01 readers run in five isolated mode children; runtime readers hold the lease.
+
+| # | Declaration | Writers | Readers | Protection | Falsifier |
+| ---: | --- | --- | --- | --- | --- |
+| 1 | `crates/rum-runtime/src/runtime/profiling/logical/budget.rs:8` | crates/rum-runtime/src/runtime/profiling/logical/budget.rs:22,31,44,59,74,84 | lease: logical_initial_cap_failure_stays_invalid_until_reset; logical_thread_metadata_stays_charged_until_thread_exit (registered and joined worker); logical_expired_queue_arena_stays_charged_until_weak_drop. child: logical_native_nested_pause_counts (LP02_NESTED_CHILD); logical_native_source_scope_survives_resume (LP02_SCOPE_CHILD); logical_native_lifecycle (LP02_NATIVE_CHILD); profiled_abandonment_requeues_like_ordinary (LP02_ABANDON_CHILD); oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | stage-1 chain pair; unregistered span/reset; C4-prime |
+| 2 | `crates/rum-runtime/src/runtime/profiling/logical/epoch.rs:18` | crates/rum-runtime/src/runtime/profiling/logical/epoch.rs:30,286,303,306,318,319 | lease: logical_initial_cap_failure_stays_invalid_until_reset; logical_thread_metadata_stays_charged_until_thread_exit; logical_source_chain_drops_on_two_mib; logical_source_chain_concurrent_last_holders; logical_zero_frames_and_after_input_frontier_have_no_guest_storage; logical_every_structural_route_closes_once_with_its_reason; logical_diagnostic_cap_keeps_the_marker_free_guest_capacity; logical_deferred_return_boundary_observes_the_return_resource_error; logical_driver_slot_fault_abandons_the_rooted_boundary; logical_frontier_rejects_another_owner_even_without_semantic_cells; logical_after_consumer_sees_the_input_parser_error; logical_queued_frames_have_one_owner_in_both_modes; logical_queue_representation_survives_a_disabled_global_gate; logical_marker_preserves_slot_identity_and_rejects_wrong_channels; logical_marker_observes_closed_channels_without_codecs; unregistered_thread_span_does_not_record_while_a_profiling_guard_is_held; unregistered_thread_profile_reset_leaves_the_held_epoch; no_cross_attribution; same_key_additivity; owner_scoped_abandonment. child: logical_native_nested_pause_counts (LP02_NESTED_CHILD); logical_native_source_scope_survives_resume (LP02_SCOPE_CHILD); logical_native_lifecycle (LP02_NATIVE_CHILD); profiled_abandonment_requeues_like_ordinary (LP02_ABANDON_CHILD); oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | stage-1 chain pair; unregistered span/reset; C4-prime |
+| 3 | `crates/rum-runtime/src/runtime/profiling/state.rs:20` | crates/rum-runtime/src/runtime/profiling/config.rs:129,crates/rum-runtime/src/runtime/profiling/config.rs:151,crates/rum-runtime/src/runtime/profiling/tests/engine_support.rs:21,29,crates/rum-runtime/src/runtime/profiling/tests/cold_load.rs:77,80 | lease: logical_initial_cap_failure_stays_invalid_until_reset; logical_thread_metadata_stays_charged_until_thread_exit; logical_source_chain_drops_on_two_mib; logical_source_chain_concurrent_last_holders; logical_zero_frames_and_after_input_frontier_have_no_guest_storage; logical_every_structural_route_closes_once_with_its_reason; logical_diagnostic_cap_keeps_the_marker_free_guest_capacity; logical_deferred_return_boundary_observes_the_return_resource_error; logical_driver_slot_fault_abandons_the_rooted_boundary; logical_frontier_rejects_another_owner_even_without_semantic_cells; logical_after_consumer_sees_the_input_parser_error; logical_queued_frames_have_one_owner_in_both_modes; logical_queue_representation_survives_a_disabled_global_gate; logical_marker_preserves_slot_identity_and_rejects_wrong_channels; logical_marker_observes_closed_channels_without_codecs; unregistered_thread_span_does_not_record_while_a_profiling_guard_is_held; unregistered_thread_profile_reset_leaves_the_held_epoch; no_cross_attribution; same_key_additivity; owner_scoped_abandonment; profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window; a_cold_load_keeps_a_flag_published_after_its_load. child: logical_native_nested_pause_counts (LP02_NESTED_CHILD); logical_native_source_scope_survives_resume (LP02_SCOPE_CHILD); logical_native_lifecycle (LP02_NATIVE_CHILD); profiled_abandonment_requeues_like_ordinary (LP02_ABANDON_CHILD); oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | D cold load; stage-1 Enabled/reset falsifiers |
+| 4 | `crates/rum-runtime/src/runtime/profiling/state.rs:21` | crates/rum-runtime/src/runtime/profiling/config.rs:129,crates/rum-runtime/src/runtime/profiling/config.rs:159,crates/rum-runtime/src/runtime/profiling/tests/engine_support.rs:22,30,crates/rum-runtime/src/runtime/profiling/tests/queue_boundaries.rs:286,293,crates/rum-runtime/src/runtime/profiling/reset.rs:112,crates/rum-runtime/src/runtime/profiling/tests/cold_load.rs:77,80 | lease: logical_initial_cap_failure_stays_invalid_until_reset; logical_thread_metadata_stays_charged_until_thread_exit; logical_source_chain_drops_on_two_mib; logical_source_chain_concurrent_last_holders; logical_zero_frames_and_after_input_frontier_have_no_guest_storage; logical_every_structural_route_closes_once_with_its_reason; logical_diagnostic_cap_keeps_the_marker_free_guest_capacity; logical_deferred_return_boundary_observes_the_return_resource_error; logical_driver_slot_fault_abandons_the_rooted_boundary; logical_frontier_rejects_another_owner_even_without_semantic_cells; logical_after_consumer_sees_the_input_parser_error; logical_queued_frames_have_one_owner_in_both_modes; logical_queue_representation_survives_a_disabled_global_gate; logical_marker_preserves_slot_identity_and_rejects_wrong_channels; logical_marker_observes_closed_channels_without_codecs; unregistered_thread_span_does_not_record_while_a_profiling_guard_is_held; unregistered_thread_profile_reset_leaves_the_held_epoch; no_cross_attribution; same_key_additivity; owner_scoped_abandonment; profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window; a_cold_load_keeps_a_flag_published_after_its_load. child: logical_native_nested_pause_counts (LP02_NESTED_CHILD); logical_native_source_scope_survives_resume (LP02_SCOPE_CHILD); logical_native_lifecycle (LP02_NATIVE_CHILD); profiled_abandonment_requeues_like_ordinary (LP02_ABANDON_CHILD); oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | D cold load; stage-1 Enabled/reset falsifiers |
+| 5 | `crates/rum-runtime/src/runtime/profiling/state.rs:22` | crates/rum-runtime/src/runtime/profiling/config.rs:129,144; crates/rum-runtime/src/runtime/profiling/tests/cold_load.rs:77,80 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window; a_cold_load_keeps_a_flag_published_after_its_load. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **cold load** | D cold load |
+| 6 | `crates/rum-runtime/src/runtime/profiling/state.rs:23` | crates/rum-runtime/src/runtime/profiling/config.rs:129,166; crates/rum-runtime/src/runtime/profiling/tests/cold_load.rs:77,80 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window; a_cold_load_keeps_a_flag_published_after_its_load. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **cold load** | D cold load |
+| 7 | `crates/rum-runtime/src/runtime/profiling/state.rs:24` | crates/rum-runtime/src/runtime/profiling/config.rs:129,173; crates/rum-runtime/src/runtime/profiling/tests/cold_load.rs:77,80 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window; a_cold_load_keeps_a_flag_published_after_its_load. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **cold load** | D cold load |
+| 8 | `crates/rum-runtime/src/runtime/profiling/state.rs:25` | crates/rum-runtime/src/runtime/profiling/config.rs:129,180; crates/rum-runtime/src/runtime/profiling/tests/cold_load.rs:77,80 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window; a_cold_load_keeps_a_flag_published_after_its_load. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **cold load** | D cold load |
+| 9 | `crates/rum-runtime/src/runtime/profiling/state.rs:26` | crates/rum-runtime/src/runtime/profiling/config.rs:129,187; crates/rum-runtime/src/runtime/profiling/tests/cold_load.rs:77,80 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window; a_cold_load_keeps_a_flag_published_after_its_load. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **cold load** | D cold load |
+| 10 | `crates/rum-runtime/src/runtime/profiling/state.rs:27` | crates/rum-runtime/src/runtime/profiling/config.rs:129,194; crates/rum-runtime/src/runtime/profiling/tests/cold_load.rs:77,80 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window; a_cold_load_keeps_a_flag_published_after_its_load. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **cold load** | D cold load |
+| 11 | `crates/rum-runtime/src/runtime/profiling/state.rs:28` | crates/rum-runtime/src/runtime/profiling/config.rs:129,201; crates/rum-runtime/src/runtime/profiling/tests/cold_load.rs:77,80 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window; a_cold_load_keeps_a_flag_published_after_its_load. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **cold load** | D cold load |
+| 12 | `crates/rum-runtime/src/runtime/profiling/state.rs:29` | crates/rum-runtime/src/runtime/profiling/config.rs:129,208; crates/rum-runtime/src/runtime/profiling/tests/cold_load.rs:77,80 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window; a_cold_load_keeps_a_flag_published_after_its_load. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **cold load** | D cold load |
+| 13 | `crates/rum-runtime/src/runtime/profiling/state.rs:30` | crates/rum-runtime/src/runtime/profiling/config.rs:129,215; crates/rum-runtime/src/runtime/profiling/tests/cold_load.rs:77,80 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window; a_cold_load_keeps_a_flag_published_after_its_load. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **cold load** | D cold load |
+| 14 | `crates/rum-runtime/src/runtime/profiling/state.rs:31` | crates/rum-runtime/src/runtime/profiling/config.rs:129,222; crates/rum-runtime/src/runtime/profiling/tests/cold_load.rs:77,80 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window; a_cold_load_keeps_a_flag_published_after_its_load. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **cold load** | D cold load |
+| 15 | `crates/rum-runtime/src/runtime/profiling/state.rs:32` | crates/rum-runtime/src/runtime/profiling/summary.rs:21,57; crates/rum-runtime/src/runtime/profiling/reset.rs:111; crates/rum-runtime/src/runtime/profiling/tests/unregistered_writes.rs:82,95 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B summary_once; B snapshot; stage-1 reset |
+| 16 | `crates/rum-runtime/src/runtime/profiling/state.rs:34` | crates/rum-runtime/src/runtime/profiling/counters.rs:3,crates/rum-runtime/src/runtime/profiling/records.rs:88,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:30 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | A and B record_timing; M2; stage-1 reset |
+| 17 | `crates/rum-runtime/src/runtime/profiling/state.rs:35` | crates/rum-runtime/src/runtime/profiling/counters.rs:3,crates/rum-runtime/src/runtime/profiling/records.rs:89,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:31 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | A and B record_timing; M2; stage-1 reset |
+| 18 | `crates/rum-runtime/src/runtime/profiling/state.rs:36` | crates/rum-runtime/src/runtime/profiling/counters.rs:3,crates/rum-runtime/src/runtime/profiling/records.rs:96,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:32 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | A and B record_timing; M2; stage-1 reset |
+| 19 | `crates/rum-runtime/src/runtime/profiling/state.rs:37` | crates/rum-runtime/src/runtime/profiling/counters.rs:3,crates/rum-runtime/src/runtime/profiling/records.rs:96,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:33 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | A and B record_timing; M2; stage-1 reset |
+| 20 | `crates/rum-runtime/src/runtime/profiling/state.rs:38` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:104,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:34 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 21 | `crates/rum-runtime/src/runtime/profiling/state.rs:39` | crates/rum-runtime/src/runtime/profiling/counters.rs:126,crates/rum-runtime/src/runtime/profiling/records.rs:106,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:35 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_max; stage-1 reset |
+| 22 | `crates/rum-runtime/src/runtime/profiling/state.rs:40` | crates/rum-runtime/src/runtime/profiling/counters.rs:3,crates/rum-runtime/src/runtime/profiling/records.rs:114,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:36 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | A and B record_timing; M2; stage-1 reset |
+| 23 | `crates/rum-runtime/src/runtime/profiling/state.rs:41` | crates/rum-runtime/src/runtime/profiling/counters.rs:3,crates/rum-runtime/src/runtime/profiling/records.rs:115,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:37 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | A and B record_timing; M2; stage-1 reset |
+| 24 | `crates/rum-runtime/src/runtime/profiling/state.rs:42` | crates/rum-runtime/src/runtime/profiling/counters.rs:3,crates/rum-runtime/src/runtime/profiling/records.rs:123,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:38 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | A and B record_timing; M2; stage-1 reset |
+| 25 | `crates/rum-runtime/src/runtime/profiling/state.rs:43` | crates/rum-runtime/src/runtime/profiling/counters.rs:3,crates/rum-runtime/src/runtime/profiling/records.rs:124,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:39 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | A and B record_timing; M2; stage-1 reset |
+| 26 | `crates/rum-runtime/src/runtime/profiling/state.rs:44` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:138,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:40 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 27 | `crates/rum-runtime/src/runtime/profiling/state.rs:45` | crates/rum-runtime/src/runtime/profiling/counters.rs:34,crates/rum-runtime/src/runtime/profiling/counters.rs:55,crates/rum-runtime/src/runtime/profiling/records.rs:183,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:41 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_profile_lexical_timing_elapsed; stage-1 reset |
+| 28 | `crates/rum-runtime/src/runtime/profiling/state.rs:46` | crates/rum-runtime/src/runtime/profiling/counters.rs:34,crates/rum-runtime/src/runtime/profiling/counters.rs:55,crates/rum-runtime/src/runtime/profiling/records.rs:184,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:42 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_profile_lexical_timing_elapsed; stage-1 reset |
+| 29 | `crates/rum-runtime/src/runtime/profiling/state.rs:47` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:172,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:43 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 30 | `crates/rum-runtime/src/runtime/profiling/state.rs:48` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:177,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:44 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 31 | `crates/rum-runtime/src/runtime/profiling/state.rs:49` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:147,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:45 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 32 | `crates/rum-runtime/src/runtime/profiling/state.rs:50` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:151,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:46 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 33 | `crates/rum-runtime/src/runtime/profiling/state.rs:51` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:155,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:47 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 34 | `crates/rum-runtime/src/runtime/profiling/state.rs:52` | crates/rum-runtime/src/runtime/profiling/counters.rs:126,crates/rum-runtime/src/runtime/profiling/records.rs:160,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:48 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_max; stage-1 reset |
+| 35 | `crates/rum-runtime/src/runtime/profiling/state.rs:53` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:141,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:49 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 36 | `crates/rum-runtime/src/runtime/profiling/state.rs:54` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:195,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:50 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 37 | `crates/rum-runtime/src/runtime/profiling/state.rs:55` | crates/rum-runtime/src/runtime/profiling/counters.rs:106,crates/rum-runtime/src/runtime/profiling/records.rs:197,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:51 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_add; stage-1 reset |
+| 38 | `crates/rum-runtime/src/runtime/profiling/state.rs:56` | crates/rum-runtime/src/runtime/profiling/counters.rs:126,crates/rum-runtime/src/runtime/profiling/records.rs:201,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:52 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_max; stage-1 reset |
+| 39 | `crates/rum-runtime/src/runtime/profiling/state.rs:57` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:208,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:53 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 40 | `crates/rum-runtime/src/runtime/profiling/state.rs:58` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:206,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:54 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 41 | `crates/rum-runtime/src/runtime/profiling/state.rs:59` | crates/rum-runtime/src/runtime/profiling/counters.rs:3,crates/rum-runtime/src/runtime/profiling/records.rs:225,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:55 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | A and B record_timing; M2; stage-1 reset |
+| 42 | `crates/rum-runtime/src/runtime/profiling/state.rs:60` | crates/rum-runtime/src/runtime/profiling/counters.rs:3,crates/rum-runtime/src/runtime/profiling/records.rs:226,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:56 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | A and B record_timing; M2; stage-1 reset |
+| 43 | `crates/rum-runtime/src/runtime/profiling/state.rs:61` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:217,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:57 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 44 | `crates/rum-runtime/src/runtime/profiling/state.rs:62` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:220,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:58 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 45 | `crates/rum-runtime/src/runtime/profiling/state.rs:63` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:322,crates/rum-runtime/src/runtime/profiling/records.rs:324,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:59 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 46 | `crates/rum-runtime/src/runtime/profiling/state.rs:64` | crates/rum-runtime/src/runtime/profiling/counters.rs:106,crates/rum-runtime/src/runtime/profiling/records.rs:331,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:60 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_add; stage-1 reset |
+| 47 | `crates/rum-runtime/src/runtime/profiling/state.rs:65` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:326,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:61 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 48 | `crates/rum-runtime/src/runtime/profiling/state.rs:66` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:325,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:62 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 49 | `crates/rum-runtime/src/runtime/profiling/state.rs:67` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:337,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:63 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 50 | `crates/rum-runtime/src/runtime/profiling/state.rs:68` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:342,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:64 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 51 | `crates/rum-runtime/src/runtime/profiling/state.rs:69` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:383,crates/rum-runtime/src/runtime/profiling/records.rs:385,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:65 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 52 | `crates/rum-runtime/src/runtime/profiling/state.rs:70` | crates/rum-runtime/src/runtime/profiling/counters.rs:106,crates/rum-runtime/src/runtime/profiling/records.rs:392,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:66 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_add; stage-1 reset |
+| 53 | `crates/rum-runtime/src/runtime/profiling/state.rs:71` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:387,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:67 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 54 | `crates/rum-runtime/src/runtime/profiling/state.rs:72` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:386,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:68 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 55 | `crates/rum-runtime/src/runtime/profiling/state.rs:73` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:397,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:69 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 56 | `crates/rum-runtime/src/runtime/profiling/state.rs:74` | crates/rum-runtime/src/runtime/profiling/counters.rs:87,crates/rum-runtime/src/runtime/profiling/records.rs:400,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:70 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B record_counter; stage-1 reset |
+| 57 | `crates/rum-runtime/src/runtime/profiling/state.rs:75` | crates/rum-runtime/src/runtime/profiling/records.rs:17,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:71 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B rewrite_rule_prefilter_candidate; stage-1 reset |
+| 58 | `crates/rum-runtime/src/runtime/profiling/state.rs:76` | crates/rum-runtime/src/runtime/profiling/records.rs:19,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:72 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B rewrite_rule_prefilter_candidate; stage-1 reset |
+| 59 | `crates/rum-runtime/src/runtime/profiling/state.rs:77` | crates/rum-runtime/src/runtime/profiling/records.rs:21,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:73 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B rewrite_rule_prefilter_candidate; stage-1 reset |
+| 60 | `crates/rum-runtime/src/runtime/profiling/state.rs:78` | crates/rum-runtime/src/runtime/profiling/records.rs:64,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:74 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B rewrite_rule_match_outcome; stage-1 reset |
+| 61 | `crates/rum-runtime/src/runtime/profiling/state.rs:79` | crates/rum-runtime/src/runtime/profiling/records.rs:59,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:75 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B rewrite_rule_match_outcome; stage-1 reset |
+| 62 | `crates/rum-runtime/src/runtime/profiling/state.rs:80` | crates/rum-runtime/src/runtime/profiling/records.rs:61,crates/rum-runtime/src/runtime/profiling/reset.rs:25,crates/rum-runtime/src/runtime/profiling/reset.rs:76 | lease: profiling_observer_covers_every_map_and_flag_without_ranking; unregistered_timing_started_under_one_lease_does_not_land_in_the_next; unregistered_writes_do_not_reach_a_held_window. child: oracle::fixtures::logical_profile::logical_counter_port (five isolated RUM_LP01_CHILD modes) | **lease** | B rewrite_rule_match_outcome; stage-1 reset |
+
+
+### Complete frontier comparison
+
+Both dumps have 1,042 rows. The complete one-sided rows are reproduced below; all are position moves.
+
+```text
+FRONTIER_HEAD_ROWS=1042
+FRONTIER_CAND_ROWS=1042
+CANDIDATE_ONLY
+RET002	crates/rum-runtime/src/runtime/profiling/config.rs	129	11	134	6	-	method syntax: method receiver lacks checked nominal/place provenance
+RET002	crates/rum-runtime/src/runtime/profiling/config.rs	136	27	136	41	-	primitive operand proof or exact operator/conversion impl required
+RET002	crates/rum-runtime/src/runtime/profiling/config.rs	149	19	149	56	std::env::var_os	not a resolved function definition: std::env::var_os
+RET002	crates/rum-runtime/src/runtime/profiling/config.rs	149	19	150	64	-	method syntax: method receiver lacks checked nominal/place provenance
+RET002	crates/rum-runtime/src/runtime/profiling/config.rs	150	22	150	63	-	closure capture/callback effects unresolved; closure body is a rejected boundary
+RET002	crates/rum-runtime/src/runtime/profiling/config.rs	156	20	156	63	std::env::var_os	not a resolved function definition: std::env::var_os
+RET002	crates/rum-runtime/src/runtime/profiling/config.rs	156	20	157	64	-	method syntax: method receiver lacks checked nominal/place provenance
+RET002	crates/rum-runtime/src/runtime/profiling/config.rs	157	22	157	63	-	closure capture/callback effects unresolved; closure body is a rejected boundary
+RET002	crates/rum-runtime/src/runtime/profiling/config.rs	158	18	158	27	-	primitive operand proof or exact operator/conversion impl required
+RET002	crates/rum-runtime/src/runtime/profiling/counters.rs	172	36	172	56	-	path u128::from has 0 exact bindings
+RET002	crates/rum-runtime/src/runtime/profiling/counters.rs	172	5	172	20	-	method syntax: method receiver lacks checked nominal/place provenance
+RET002	crates/rum-runtime/src/runtime/profiling/counters.rs	172	5	172	31	-	method syntax: method receiver lacks checked nominal/place provenance
+RET002	crates/rum-runtime/src/runtime/profiling/counters.rs	172	5	172	57	-	method syntax: method receiver lacks checked nominal/place provenance
+RET002	crates/rum-runtime/src/runtime/profiling/counters.rs	172	5	172	64	-	primitive operand proof or exact operator/conversion impl required
+HEAD_ONLY
+RET002	crates/rum-runtime/src/runtime/profiling/config.rs	135	19	135	56	std::env::var_os	not a resolved function definition: std::env::var_os
+RET002	crates/rum-runtime/src/runtime/profiling/config.rs	135	19	136	64	-	method syntax: method receiver lacks checked nominal/place provenance
+RET002	crates/rum-runtime/src/runtime/profiling/config.rs	136	22	136	63	-	closure capture/callback effects unresolved; closure body is a rejected boundary
+RET002	crates/rum-runtime/src/runtime/profiling/config.rs	137	5	137	82	-	method syntax: method receiver lacks checked nominal/place provenance
+RET002	crates/rum-runtime/src/runtime/profiling/config.rs	143	20	143	63	std::env::var_os	not a resolved function definition: std::env::var_os
+RET002	crates/rum-runtime/src/runtime/profiling/config.rs	143	20	144	64	-	method syntax: method receiver lacks checked nominal/place provenance
+RET002	crates/rum-runtime/src/runtime/profiling/config.rs	144	22	144	63	-	closure capture/callback effects unresolved; closure body is a rejected boundary
+RET002	crates/rum-runtime/src/runtime/profiling/config.rs	145	18	145	27	-	primitive operand proof or exact operator/conversion impl required
+RET002	crates/rum-runtime/src/runtime/profiling/config.rs	146	5	146	80	-	method syntax: method receiver lacks checked nominal/place provenance
+RET002	crates/rum-runtime/src/runtime/profiling/counters.rs	132	36	132	56	-	path u128::from has 0 exact bindings
+RET002	crates/rum-runtime/src/runtime/profiling/counters.rs	132	5	132	20	-	method syntax: method receiver lacks checked nominal/place provenance
+RET002	crates/rum-runtime/src/runtime/profiling/counters.rs	132	5	132	31	-	method syntax: method receiver lacks checked nominal/place provenance
+RET002	crates/rum-runtime/src/runtime/profiling/counters.rs	132	5	132	57	-	method syntax: method receiver lacks checked nominal/place provenance
+RET002	crates/rum-runtime/src/runtime/profiling/counters.rs	132	5	132	64	-	primitive operand proof or exact operator/conversion impl required
+FRONTIER_DIFF candidate_only=14 head_only=14
+```
+
+### Standing inventory disclosure
+
+Final replay changed all 68 fingerprint cells and four certificate cells only. Ownership has 7,974 UnknownConstruct rows: 12 added and 43 position moves, zero removed identities and no new UnknownHostPayload; self-reaching types remain 61 and host payloads 79. Diffs are in `local-contracts-fingerprint.diff`, `certificate-replay.diff`, and `ownership-replay.diff`. LP01, typed receipts and the rejection census required no expectation edits.
+
+## Director gate (2026-10-30): amendment 1 committed, the reset left open
+
+The nine write sites, the fence and the cold-load publish are right, and are
+committed. One writer is still open: the reset checks first and writes
+after, with no admission. A second instance of the cold-load race sits in
+the evaluation-cache profile. My brief missed both, and amendment 2 closes
+them.
+
+- **Code.** I read the whole diff. It takes the brief's shape:
+  - `lease.rs` adds `WRITE_GATE`, `FENCING`, `fence_admitted_writes` (called
+    after `CURRENT_GEN.store`), `Admitted` and `admit()`, which reads the
+    gate first and checks second. `fencing()` is `#[cfg(test)]`.
+  - There are nine admissions, each after the site's existing flag or start
+    gate. The two in `records.rs` are in block form, ahead of the
+    thread-local and `Symbol` work. In `summary.rs` the once-swap is a
+    block, and the snapshot store goes through
+    `mark_lexical_profile_summary_printed`.
+  - No admission's scope calls another write site. The helpers never call
+    each other inside one, so no admission nests.
+  - `publish` is `compare_exchange(0, v)`, and all twelve initializers use
+    it. No accessor changed.
+  - The queue test stores 2, with its comment.
+  - `profiling.md` gains its paragraph.
+- **The falsifier files.**
+  - `cold_load.rs` is byte-identical to my calibrated file.
+  - In `unregistered_writes.rs`, the import merge and the C append are as
+    specified, with two rustfmt-only rewraps, which were disclosed.
+  - Test C matches the brief: a holder admitted on its own thread, a next
+    lease on a second thread, and a yield loop on `fencing()` or
+    `returned`.
+- **Ownership inventories.** `unknown_attributes` gained 9 rows, one per new
+  cfg attribute. `unknown_storage` moved two rows and gained
+  `Admitted._gate`. `unknown_captures` and `unknown_macros` moved positions
+  only. The two promoted rows and the 68 local-contract fingerprints were
+  regenerated, and the gate's `fingerprints` and `certificates` steps
+  passed on them.
+- **`python3 -I scripts/director-gate.py run 635 --stage a1 --perf
+  resume,cli`** (`.temp/director/gate-635a1/`): GREEN, every step PASS except `census`, which I RULED.
+  - `check`: 3 warnings, 0 new against HEAD.
+  - `census`, RULED: 1040 rows, of which 1038 paired, 2 retired and 2 new,
+    all in `config.rs`.
+    - The two retired rows are the `.store` calls of the two
+      production-reachable initializers (HEAD lines 137 and 146: "method
+      receiver lacks checked nominal/place provenance").
+    - The two new rows are `publish`'s `compare_exchange` (line 129, the
+      same reason) and `published == 1` (line 136, primitive operand).
+    - RET002 stays at 997. This is the one production change. kimi's
+      frontier section called all 14 one-sided pairs position moves, but
+      these two are replacements. That is a report fault, not a code fault.
+  - workspace: 59 binaries, 4022 passed, 0 failed, 61 ignored, peak 3.2 GB
+    of 14, `oom_kill` 0. That is stage 1's 4018 plus the four new tests.
+    kimi's 4013 lacks the nine native ZeroMQ tests.
+  - structure: `resume` and `rum-cli` each differ in 35 functions, with 0
+    layout, 0 new and 0 gone. I disassembled all 35 in `rum-cli`.
+    - The twelve initializers are the change: `mov %al,(%rcx)` became
+      `lock cmpxchg`, plus the `published == 1` select, 6 to 7 bytes each,
+      all on the cold path.
+    - The other 23 are flag readers: `record_counter`, `record_add`,
+      `record_timing`, the lexical-substitution callers and the summary
+      body. They are instruction-for-instruction identical once addresses
+      are masked. They differ only because the static
+      `LEXICAL_PROFILE_INCREMENTAL_ENABLED` was emitted as `…E.0` in base
+      and `…E` in cand, a symbol name and not code.
+  - panels, 15 reps each:
+    - resume: 121 labels, median +0.0039%, maximum +0.15%.
+    - cli: 192 labels, median −0.0001%.
+    - Nothing is apart on either side.
+    - The cli maximum, +18.50%, is again `valueq-undefined-symbol-definitions-8000`, stage 1's noisy
+      label. Its slope moves 793 instructions per unit over 20 units, about
+      16k in total, while each arm's totals spread across about 227k. Its
+      2000 sibling reads −7.11%. No hot function changed.
+    - Competing load: the user briefly opened a game while the gate was in
+      `workspace`, and it was closed by 17:51. `panels` started at about
+      18:04, with no game process left. Panels count instructions, and they
+      ran with nothing else running.
+- **Production symbols.** kimi's `nm -C` on the release `rum-cli` and the
+  harness finds 0 lease symbols, and the gate's structure step finds no
+  new function in either release arm.
+- **Falsifiers I reproduced on the change**, serially, each in its own 14G
+  scope (`.temp/director/gate-635a1-repro/`):
+  - A–D: `test result: ok. 4 passed; 0 failed`.
+  - M1, the fence call deleted, built from a copy: C panics `a lease became
+    current while an admitted write was in flight`, `test result: FAILED.
+    3 passed; 1 failed`.
+  - M2, `record_timing`'s admission deleted: A panics `a start taken under
+    one lease recorded into the next`. B lists exactly
+    `"record_timing: [\"DEFINITION_RHS_EVAL_COUNT\",
+    \"DEFINITION_RHS_EVAL_NANOS\"]"`. `test result: FAILED. 2 passed; 2
+    failed`.
+  - The chain pair at two threads: 10 of 10 runs `test result: ok. 2
+    passed`.
+  - Both `owner_filter` tests and the three C4′ tests: `test result: ok. 5
+    passed`.
+  - The rum-runtime lib at 32 threads: 5 of 5 runs `test result: ok. 1229
+    passed; 0 failed; 5 ignored`. HEAD was 4 red in 13. With kimi's 20
+    green runs, that makes 25 green in a row. If the fault remained, that
+    would happen about 0.01% of the time.
+- **What is still open, from my reading at this gate.**
+  - **The reset checks, then writes.** `reset_lexical_profile_counters`
+    keeps stage 1's refusal, `blocks_unregistered_thread()`, and then calls
+    `reset_production`, which goes to `reset_unleased`
+    (`logical/epoch.rs:316`). That function takes the slot lock and retires
+    the epoch with no re-check. The 47 counter stores and the two flag
+    stores follow, with no admission.
+    - An unregistered `RumProfileReset[]` that passes the refusal between
+      two leases can retire the next holder's epoch, zero its counters, and
+      store 1 over its `ACTIVE` 2.
+    - Amendment 1 said that "Stage 1's epoch side does not have this
+      window". That holds for `current`, `charge` and `open`, which
+      re-check, but not for the reset. It was my error, and kimi followed
+      it: B1 marked the reset's writes **lease** on the strength of the
+      check alone.
+  - **`EVALUATION_CACHE_PROFILE_ACTIVE`** has the race that `publish`
+    closed. Its initializer stores unconditionally, and `RumProfileReset[]`
+    stores 1 into it (`evaluation_cache/profile/mod.rs:379`).
+    - The other seven cold-load `AtomicU8` flags outside `profiling/` each
+      have their initializer as the only writer.
+    - The observer reads the evaluation-cache statics, but no in-process
+      test compares them, and nothing in-process enables that profile.
+  - Calibration for amendment 2 is in `.temp/director/gate-635a2-calib/`:
+    - R, an unregistered reset under a held lease: green on this tree
+      (the refusal stops it); red with the refusal deleted, `["ARG_PREFILTER_MAYBE_COUNT",
+      "LEXICAL_PROFILE_SUMMARY_PRINTED"]`.
+    - E: red on this tree, `"published 2, after 1, answered true"`.
+    - With the reset's refusal turned into an admission, and the
+      evaluation-cache `ACTIVE` initializer publishing, R, E, A–D and
+      `owner_filter` pass. The lib at 32 threads passed 10 of 10 runs, none
+      hung, and M3 (that admission deleted) is red.
+- **Disposition.**
+  - Committed as amendment 1: the write gate and the fence, the nine
+    admissions, `publish`, the queue fix, the falsifiers A–D, and B1.
+  - Open, as amendment 2: the reset admits for its whole body; `publish`
+    becomes `publish_cold_load` and covers the evaluation-cache `ACTIVE`
+    flag; R and E ship, with M3 and M4.
+  - Test-isolation item 1 is not done until amendment 2 is gated.
+- **Not rerun:** kimi's frontier dumps (the gate's census covers the same
+  frontier), and kimi's 15 extra lib runs (I ran 5).

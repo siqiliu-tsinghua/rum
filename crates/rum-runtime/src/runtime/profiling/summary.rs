@@ -9,7 +9,18 @@ pub(in crate::runtime) fn print_lexical_profile_summary_once(session: &crate::ru
     if lexical_enabled {
         logical::drop_session(session);
     }
-    if LEXICAL_PROFILE_SUMMARY_PRINTED.swap(1, Ordering::Relaxed) == 1 {
+    let printed = {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some(_admitted) = crate::runtime::profiling::lease::admit() else {
+            return;
+        };
+        LEXICAL_PROFILE_SUMMARY_PRINTED.swap(1, Ordering::Relaxed)
+    };
+    if printed == 1 {
         return;
     }
 
@@ -29,9 +40,21 @@ pub(in crate::runtime) fn print_lexical_profile_snapshot(label: &str) {
     if lexical_configured {
         eprintln!("rum-profile lexical snapshot label={label}");
         print_lexical_profile_summary_body();
-        LEXICAL_PROFILE_SUMMARY_PRINTED.store(1, Ordering::Relaxed);
+        mark_lexical_profile_summary_printed();
     }
     print_repr_profile_summary();
+}
+
+fn mark_lexical_profile_summary_printed() {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(_admitted) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    LEXICAL_PROFILE_SUMMARY_PRINTED.store(1, Ordering::Relaxed);
 }
 
 fn print_repr_profile_summary() {

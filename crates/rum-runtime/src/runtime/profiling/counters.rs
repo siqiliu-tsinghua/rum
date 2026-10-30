@@ -10,6 +10,14 @@ pub(super) fn record_timing(
         return;
     };
 
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(_admitted) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
     let elapsed_nanos = start.elapsed().as_nanos().min(u128::from(u64::MAX)) as u64;
     let count_value = count.fetch_add(1, Ordering::Relaxed) + 1;
     let total_value = total_nanos
@@ -55,6 +63,14 @@ pub(super) fn record_profile_lexical_timing_elapsed(
         return;
     };
 
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(_admitted) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
     let timing_value = timing_count.fetch_add(1, Ordering::Relaxed) + 1;
     let total_value = total_nanos
         .fetch_add(elapsed_nanos, Ordering::Relaxed)
@@ -73,6 +89,14 @@ pub(super) fn record_counter(counter: &AtomicU64, name: &str) {
         return;
     }
 
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(_admitted) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
     let value = counter.fetch_add(1, Ordering::Relaxed) + 1;
     if lexical_profile_incremental_enabled() && value.is_power_of_two() {
         eprintln!("rum-profile lexical {name}={value}");
@@ -84,6 +108,14 @@ pub(super) fn record_add(counter: &AtomicU64, name: &str, amount: u64) {
         return;
     }
 
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(_admitted) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
     let previous = counter.fetch_add(amount, Ordering::Relaxed);
     let value = previous.saturating_add(amount);
     if lexical_profile_incremental_enabled() && crossed_power_of_two(previous, value) {
@@ -92,6 +124,14 @@ pub(super) fn record_add(counter: &AtomicU64, name: &str, amount: u64) {
 }
 
 pub(super) fn record_max(counter: &AtomicU64, name: &str, value: u64) {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(_admitted) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
     let mut previous = counter.load(Ordering::Relaxed);
     while value > previous {
         match counter.compare_exchange_weak(previous, value, Ordering::Relaxed, Ordering::Relaxed) {
