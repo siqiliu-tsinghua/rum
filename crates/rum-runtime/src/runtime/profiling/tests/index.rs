@@ -3,7 +3,8 @@ use std::collections::BTreeMap;
 
 #[test]
 fn logical_index_matches_ordered_map_through_reuse_and_bulk_removal() {
-    let epoch = Epoch::new(4 * 1024 * 1024).unwrap();
+    let lease = crate::runtime::profiling::lease::lease();
+    let epoch = Epoch::for_test(&lease, 4 * 1024 * 1024).unwrap();
     let mut index = Index::new(epoch.storage(0).unwrap());
     let mut expected = BTreeMap::new();
     let mut seed = 7u64;

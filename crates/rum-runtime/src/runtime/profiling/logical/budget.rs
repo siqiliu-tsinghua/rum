@@ -92,7 +92,7 @@ mod tests {
     #[test]
     fn logical_initial_cap_failure_stays_invalid_until_reset() {
         use crate::runtime::profiling::logical::{epoch, test_support};
-        let _enabled = test_support::enabled();
+        let enabled = test_support::enabled();
         let budget = Budget::new(PROCESS_LIMIT).unwrap();
         let reserved = budget
             .claim(PROCESS_LIMIT - PROCESS_BYTES.load(Ordering::Relaxed))
@@ -102,7 +102,7 @@ mod tests {
         drop(budget);
         // Freeing old diagnostic owners must not silently repair lost receipts.
         assert!(epoch::current().is_none());
-        epoch::reset();
+        epoch::reset_for_lease(enabled.lease());
         assert!(epoch::current().unwrap().is_valid());
     }
 }
@@ -114,31 +114,39 @@ fn logical_thread_metadata_stays_charged_until_thread_exit() {
     use crate::runtime::profiling::logical::{
         AggregateKey, Call, Outcome, Policy, epoch, test_support,
     };
-    let _enabled = test_support::enabled();
+    let enabled = test_support::enabled();
     let before = PROCESS_BYTES.load(Ordering::Relaxed);
     let (report, received) = std::sync::mpsc::channel();
     let (release, released) = std::sync::mpsc::channel();
-    let worker = std::thread::spawn(move || {
-        let session = Session::new();
-        Call::start(
-            &session,
-            AggregateKey::Runtime {
-                phase: "thread-metadata",
-                source: None,
-            },
-            Policy::Expr,
-        )
-        .unwrap()
-        .finish(Outcome::Ok);
-        drop(session);
-        epoch::reset();
-        assert_eq!(test_support::active(), 0);
-        report.send(PROCESS_BYTES.load(Ordering::Relaxed)).unwrap();
-        let _ = released.recv();
+    let lease = enabled.lease();
+    // Scope's implicit wait fires when the worker closure returns, before
+    // that thread's TLS destructors. Join the handle so the header charge
+    // is released before the parent samples.
+    let pinned = std::thread::scope(|scope| {
+        let worker = scope.spawn(move || {
+            lease.allow_current_thread();
+            let session = Session::new();
+            Call::start(
+                &session,
+                AggregateKey::Runtime {
+                    phase: "thread-metadata",
+                    source: None,
+                },
+                Policy::Expr,
+            )
+            .unwrap()
+            .finish(Outcome::Ok);
+            drop(session);
+            epoch::reset_for_lease(lease);
+            assert_eq!(test_support::active(), 0);
+            report.send(PROCESS_BYTES.load(Ordering::Relaxed)).unwrap();
+            let _ = released.recv();
+        });
+        let pinned = received.recv().unwrap();
+        release.send(()).unwrap();
+        worker.join().unwrap();
+        pinned
     });
-    let pinned = received.recv().unwrap();
-    release.send(()).unwrap();
-    worker.join().unwrap();
     assert!(
         pinned > before,
         "TLS metadata must stay reserved while its thread lives"
@@ -152,7 +160,8 @@ fn logical_expired_queue_arena_stays_charged_until_weak_drop() {
     use crate::runtime::profiling::logical::Epoch;
     use crate::runtime::suspension::{FrameStorage, QueueArena};
     let before = PROCESS_BYTES.load(Ordering::Relaxed);
-    let epoch = Epoch::new(1024 * 1024).unwrap();
+    let lease = crate::runtime::profiling::lease::lease();
+    let epoch = Epoch::for_test(&lease, 1024 * 1024).unwrap();
     let initial = PROCESS_BYTES.load(Ordering::Relaxed);
     let mut queue = FrameStorage::new();
     queue.enable_profile(Arc::clone(&epoch));

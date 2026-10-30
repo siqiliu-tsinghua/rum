@@ -2,8 +2,10 @@ use crate::runtime::RequestInterruptState;
 use crate::runtime::profiling::logical::*;
 use std::sync::Arc;
 
-fn chain() -> (Arc<Epoch>, Owner, [RecordId; 3]) {
-    let epoch = Epoch::new(1024 * 1024).unwrap();
+fn chain(
+    lease: &crate::runtime::profiling::lease::TestLease,
+) -> (Arc<Epoch>, Owner, [RecordId; 3]) {
+    let epoch = Epoch::for_test(lease, 1024 * 1024).unwrap();
     let owner = Owner {
         control: Arc::new(RequestInterruptState::new()),
         generation: 1,
@@ -41,7 +43,8 @@ fn accumulated(epoch: &Epoch) {
 
 #[test]
 fn logical_teardown_rejects_an_unsettled_child() {
-    let (epoch, _, ids) = chain();
+    let lease = crate::runtime::profiling::lease::lease();
+    let (epoch, _, ids) = chain(&lease);
     assert!(epoch.close(ids[0], Ok(Outcome::Ok)));
     let failure = std::panic::catch_unwind(|| epoch.assert_quiescent()).unwrap_err();
     let message = failure.downcast_ref::<String>().unwrap();
@@ -62,7 +65,8 @@ fn logical_late_child_totals_survive_every_terminal_order() {
         [2, 0, 1],
         [2, 1, 0],
     ] {
-        let (epoch, _, ids) = chain();
+        let lease = crate::runtime::profiling::lease::lease();
+        let (epoch, _, ids) = chain(&lease);
         accumulated(&epoch);
         for (closed, position) in order.into_iter().enumerate() {
             assert!(epoch.close(ids[position], Err(Retire::LastDrop)));
@@ -85,8 +89,9 @@ fn logical_late_child_totals_survive_every_terminal_order() {
 
 #[test]
 fn logical_bulk_retirement_preserves_late_child_totals() {
+    let lease = crate::runtime::profiling::lease::lease();
     for retire in [false, true] {
-        let (epoch, owner, _) = chain();
+        let (epoch, owner, _) = chain(&lease);
         if retire {
             epoch.retire(Retire::ProfileReset);
         } else {
@@ -103,7 +108,8 @@ fn logical_bulk_retirement_preserves_late_child_totals() {
 
 #[test]
 fn logical_context_restores_only_one_record() {
-    let (epoch, _, ids) = chain();
+    let lease = crate::runtime::profiling::lease::lease();
+    let (epoch, _, ids) = chain(&lease);
     let mut native: Vec<_> = ids
         .iter()
         .map(|id| segments::enter(&epoch, *id).unwrap())

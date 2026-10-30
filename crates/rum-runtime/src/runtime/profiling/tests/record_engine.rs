@@ -11,7 +11,8 @@ fn owner() -> Owner {
 }
 #[test]
 fn logical_terminal_transitions_are_idempotent() {
-    let epoch = Epoch::new(1024 * 1024).unwrap();
+    let lease = crate::runtime::profiling::lease::lease();
+    let epoch = Epoch::for_test(&lease, 1024 * 1024).unwrap();
     for outcome in [
         Outcome::Ok,
         Outcome::Some,
@@ -53,7 +54,8 @@ fn logical_terminal_transitions_are_idempotent() {
 }
 #[test]
 fn logical_epoch_cap_invalidates_without_success() {
-    let epoch = Epoch::new(4096).unwrap();
+    let lease = crate::runtime::profiling::lease::lease();
+    let epoch = Epoch::for_test(&lease, 4096).unwrap();
     let _ = epoch
         .open(
             owner(),
@@ -75,7 +77,8 @@ fn logical_epoch_cap_invalidates_without_success() {
 }
 #[test]
 fn logical_equal_keys_are_distinct_identities() {
-    let epoch = Epoch::new(1024 * 1024).unwrap();
+    let lease = crate::runtime::profiling::lease::lease();
+    let epoch = Epoch::for_test(&lease, 1024 * 1024).unwrap();
     let owner = owner();
     let key = AggregateKey::Runtime {
         phase: "recursive",
@@ -94,7 +97,8 @@ fn logical_equal_keys_are_distinct_identities() {
 }
 #[test]
 fn logical_reset_does_not_pop_a_new_epoch() {
-    let old = Epoch::new(1024 * 1024).unwrap();
+    let lease = crate::runtime::profiling::lease::lease();
+    let old = Epoch::for_test(&lease, 1024 * 1024).unwrap();
     let id = old
         .open(
             owner(),
@@ -108,7 +112,7 @@ fn logical_reset_does_not_pop_a_new_epoch() {
         .unwrap();
     let token = segments::enter(&old, id).unwrap();
     old.retire(Retire::ProfileReset);
-    let new = Epoch::new(1024 * 1024).unwrap();
+    let new = Epoch::for_test(&lease, 1024 * 1024).unwrap();
     let id = new
         .open(
             owner(),
@@ -131,8 +135,9 @@ fn logical_reset_does_not_pop_a_new_epoch() {
 
 #[test]
 fn logical_marker_refuses_an_active_recursive_peer() {
+    let lease = crate::runtime::profiling::lease::lease();
     for abandon in [false, true] {
-        let epoch = Epoch::new(1024 * 1024).unwrap();
+        let epoch = Epoch::for_test(&lease, 1024 * 1024).unwrap();
         let owner = owner();
         let key = AggregateKey::Runtime {
             phase: "marker-lifo",
@@ -173,7 +178,8 @@ fn logical_marker_refuses_an_active_recursive_peer() {
 
 #[test]
 fn logical_active_abandonment_finishes_the_interval_once() {
-    let epoch = Epoch::new(1024 * 1024).unwrap();
+    let lease = crate::runtime::profiling::lease::lease();
+    let epoch = Epoch::for_test(&lease, 1024 * 1024).unwrap();
     let id = epoch
         .open(
             owner(),

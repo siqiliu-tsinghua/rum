@@ -77,6 +77,7 @@ fn logical_native_nested_pause_counts() {
         return;
     }
 
+    let lease = Session::logical_profile_test_acquire();
     let mut s = session();
     for (source, second) in [
         (
@@ -88,7 +89,7 @@ fn logical_native_nested_pause_counts() {
             3,
         ),
     ] {
-        Session::logical_profile_test_reset();
+        Session::logical_profile_test_reset(&lease);
         paused(s.eval(source));
         assert_eq!(counts()[9], 2);
         assert_eq!(Session::logical_profile_test_pauses(), 2);
@@ -126,6 +127,7 @@ fn logical_native_source_scope_survives_resume() {
         return;
     }
 
+    let lease = Session::logical_profile_test_acquire();
     let mut s = session();
     for (arrangement, paused_source, control_source) in [
         (
@@ -139,12 +141,12 @@ fn logical_native_source_scope_survives_resume() {
             "LpSpan[LpScope[1; LpSpan[2]]]",
         ),
     ] {
-        Session::logical_profile_test_reset();
+        Session::logical_profile_test_reset(&lease);
         paused(s.eval(paused_source));
         let before = Session::logical_profile_test_rows();
         done(s.resume_with_input("reply"));
         let resumed = Session::logical_profile_test_rows();
-        Session::logical_profile_test_reset();
+        Session::logical_profile_test_reset(&lease);
         done(s.eval(control_source));
         let control = Session::logical_profile_test_rows();
         println!(
@@ -181,6 +183,7 @@ fn logical_native_lifecycle() {
         return;
     }
 
+    let lease = Session::logical_profile_test_acquire();
     let mut s = session();
     paused(s.eval("LpSpan[InputString[\"first\"]; InputString[\"second\"]]"));
     assert_eq!(counts()[0], 0);
@@ -200,7 +203,7 @@ fn logical_native_lifecycle() {
         ("LpSpan[InputString[]; Return[7]]", Some(5)),
         ("Catch[LpSpan[InputString[]; Throw[8]]]", Some(6)),
     ] {
-        Session::logical_profile_test_reset();
+        Session::logical_profile_test_reset(&lease);
         paused(s.eval(source));
         done(s.resume_with_input("reply"));
         let mut expected = [1, 0, 1, 0, 0, 0, 0, 0, 0, 0];
@@ -211,7 +214,7 @@ fn logical_native_lifecycle() {
     }
     println!("LP02_NATIVE error return throw closed-once");
 
-    Session::logical_profile_test_reset();
+    Session::logical_profile_test_reset(&lease);
     let cancel = s.cancel_handle();
     paused(s.eval("LpSpan[InputString[]]"));
     cancel.cancel();
@@ -219,19 +222,19 @@ fn logical_native_lifecycle() {
     closed([1, 0, 1, 0, 0, 0, 0, 1, 0, 0]);
     println!("LP02_NATIVE cancellation closed-once");
 
-    Session::logical_profile_test_reset();
+    Session::logical_profile_test_reset(&lease);
     paused(s.eval("LpSpan[InputString[]]"));
     s.reset();
     closed([1, 0, 0, 0, 0, 0, 0, 0, 1, 0]);
     println!("LP02_NATIVE session-reset abandoned-once");
 
-    Session::logical_profile_test_reset();
+    Session::logical_profile_test_reset(&lease);
     paused(s.eval("LpSpan[InputString[]]"));
     drop(s);
     closed([1, 0, 0, 0, 0, 0, 0, 0, 1, 0]);
     println!("LP02_NATIVE session-drop abandoned-once");
 
-    Session::logical_profile_test_reset();
+    Session::logical_profile_test_reset(&lease);
     let mut a = session();
     let mut b = session();
     paused(a.eval("LpSpan[InputString[]]"));
@@ -247,7 +250,7 @@ fn logical_native_lifecycle() {
     closed([2, 2, 0, 0, 0, 0, 0, 0, 0, 0]);
     println!("LP02_NATIVE interleaved moved-session closed-once");
 
-    Session::logical_profile_test_reset();
+    Session::logical_profile_test_reset(&lease);
     paused(a.eval("LpSpan[InputString[]; RumProfileReset[]; LpSpan[InputString[]]]"));
     paused(a.resume_with_input("first"));
     assert_eq!(counts()[9], 1);
@@ -256,7 +259,7 @@ fn logical_native_lifecycle() {
     closed([1, 1, 0, 0, 0, 0, 0, 0, 0, 0]);
     println!("LP02_NATIVE profile-reset active-call closed-once");
 
-    Session::logical_profile_test_reset();
+    Session::logical_profile_test_reset(&lease);
     assert!(a.restore_from_bytes(b"LpSpan[InputString[]]").is_err());
     closed([1, 0, 0, 0, 0, 0, 0, 0, 1, 0]);
     assert_eq!(Session::logical_profile_test_reasons()[2], 1);
@@ -266,7 +269,7 @@ fn logical_native_lifecycle() {
         ("ValueQ[LpSpan[InputString[]]]", 1),
         ("Monitor[Null,LpSpan[InputString[]]]", 2),
     ] {
-        Session::logical_profile_test_reset();
+        Session::logical_profile_test_reset(&lease);
         done(a.eval(source));
         closed([expected, 0, 0, 0, 0, 0, 0, 0, expected, 0]);
         let reasons = Session::logical_profile_test_reasons();
@@ -274,7 +277,7 @@ fn logical_native_lifecycle() {
     }
     println!("LP02_NATIVE rollback helper-discard abandoned-once");
 
-    Session::logical_profile_test_reset();
+    Session::logical_profile_test_reset(&lease);
     done(a.eval(
         "ValueQ[LpSpan[WithCleanup[InputString[\"body\"], LpSpan[InputString[\"cleanup\"]]]]]",
     ));
@@ -283,7 +286,7 @@ fn logical_native_lifecycle() {
     assert_eq!(Session::logical_profile_test_pauses(), 3);
     println!("LP02_NATIVE nested-cleanup re-suspended abandoned-once");
 
-    Session::logical_profile_test_reset();
+    Session::logical_profile_test_reset(&lease);
     paused(a.eval("LpSpan[Map[Function[InputString[]],{1,2}]]"));
     paused(a.resume_with_input("first"));
     done(a.resume_with_input("second"));

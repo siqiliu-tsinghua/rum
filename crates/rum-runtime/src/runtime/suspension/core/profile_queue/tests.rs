@@ -2,7 +2,8 @@ use super::*;
 
 #[test]
 fn logical_sequence_preserves_order_join_and_stale_handle_rejection() {
-    let epoch = Epoch::new(4 * 1024 * 1024).unwrap();
+    let lease = crate::runtime::profiling::lease::lease();
+    let epoch = Epoch::for_test(&lease, 4 * 1024 * 1024).unwrap();
     let mut arena = Arena::new(epoch.storage(0).unwrap());
     let mut root = None;
     let mut expected = Vec::new();
@@ -80,7 +81,8 @@ fn logical_sequence_preserves_order_join_and_stale_handle_rejection() {
 #[test]
 fn logical_deferred_markers_keep_sequence_order_after_a_return() {
     use crate::runtime::profiling::logical::{AggregateKey, Owner, Policy};
-    let epoch = Epoch::new(4 * 1024 * 1024).unwrap();
+    let lease = crate::runtime::profiling::lease::lease();
+    let epoch = Epoch::for_test(&lease, 4 * 1024 * 1024).unwrap();
     let context = ResumeContext {
         stack_len: 0,
         depth: 0,

@@ -14,7 +14,7 @@ mod totals;
 
 pub(in crate::runtime) use budget::Storage;
 pub(in crate::runtime) use context::{Context, ContextGuard};
-pub(in crate::runtime) use epoch::{Epoch, drop_session, reset, summary};
+pub(in crate::runtime) use epoch::{Epoch, drop_session, summary};
 pub(in crate::runtime) use record::*;
 
 pub(in crate::runtime) struct ProfileBoundary {
@@ -91,7 +91,22 @@ pub(in crate::runtime) fn error_outcome(error: &crate::runtime::EvalError) -> Ou
     feature = "test-builtin-memory-growth",
     feature = "test-continuation-slots"
 ))]
+pub struct LogicalProfileTestLease {
+    inner: super::lease::TestLease,
+}
+
+#[cfg(any(
+    test,
+    feature = "test-builtin-memory-growth",
+    feature = "test-continuation-slots"
+))]
 impl crate::runtime::Session {
+    #[doc(hidden)]
+    pub fn logical_profile_test_acquire() -> LogicalProfileTestLease {
+        LogicalProfileTestLease {
+            inner: super::lease::lease(),
+        }
+    }
     /// Isolated native test span; no production phase uses the LP02 engine.
     #[doc(hidden)]
     pub fn logical_profile_test_span(
@@ -178,8 +193,8 @@ impl crate::runtime::Session {
     }
 
     #[doc(hidden)]
-    pub fn logical_profile_test_reset() {
-        epoch::reset();
+    pub fn logical_profile_test_reset(lease: &LogicalProfileTestLease) {
+        epoch::reset_for_lease(&lease.inner);
     }
 
     #[doc(hidden)]
@@ -210,6 +225,14 @@ impl Call {
         key: AggregateKey,
         policy: Policy,
     ) -> Option<Self> {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        if crate::runtime::profiling::lease::blocks_unregistered_thread() {
+            return None;
+        }
         let control = session.request_interrupt_control.borrow();
         let (epoch, owner, parent) = match segments::owner(&control) {
             Some((epoch, owner, parent)) => (epoch, owner, Some(parent)),

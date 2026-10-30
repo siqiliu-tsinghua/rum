@@ -26,8 +26,11 @@ Test isolation, in progress:
 - the design (brief-633) is gated;
 - the test-artifact constructors (brief-634: `PrivateScratch` and
   `CompiledLibrary`) are done;
-- next are the profiler test lease (brief-635) and the shared parse
-  (brief-636, option iv);
+- the profiler test lease (brief-635) is at stage 1: the epoch lease is
+  committed; amendment 1 refuses the lexical counter writes an unregistered
+  thread can reach and closes the flag cold-load race (the director's
+  rum-runtime lib run at 32 threads was red 1 in 3 in the observer);
+- then the shared parse (brief-636, option iv);
 - after those, the director measures the workspace at 4, 8, 16 and 32
   threads, and the user rules the default thread count.
 

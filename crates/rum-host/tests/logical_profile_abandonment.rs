@@ -38,7 +38,8 @@ const SETUP: &str = "k[] := WithCleanup[InputString[\"p\"], LpSeen[{\"inner\", S
 const PROGRAM: &str = "LpSpan[m[]]";
 
 fn run(trigger: &str) -> (String, Vec<[u64; 10]>) {
-    Session::logical_profile_test_reset();
+    let lease = Session::logical_profile_test_acquire();
+    Session::logical_profile_test_reset(&lease);
     SEEN.lock().unwrap().clear();
     let mut s = HostSession::builder()
         .with_builtin_installer(install)

@@ -455,6 +455,7 @@ pub(crate) fn snapshot() -> LogicalProfileSnapshot {
 #[cfg(test)]
 #[test]
 fn profiling_observer_covers_every_map_and_flag_without_ranking() {
+    let _lease = crate::runtime::profiling::lease::lease();
     let before = snapshot();
     let source = include_str!("../state.rs");
     for line in source.lines().filter(|l| l.contains("static ")) {

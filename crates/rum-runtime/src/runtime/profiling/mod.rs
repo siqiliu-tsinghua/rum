@@ -9,6 +9,12 @@ mod config;
 mod counters;
 mod fingerprints;
 mod formatting;
+#[cfg(any(
+    test,
+    feature = "test-builtin-memory-growth",
+    feature = "test-continuation-slots"
+))]
+pub(in crate::runtime) mod lease;
 #[allow(dead_code)] // LP02 supplies infrastructure; later briefs adopt phases.
 pub(in crate::runtime) mod logical;
 mod presence;

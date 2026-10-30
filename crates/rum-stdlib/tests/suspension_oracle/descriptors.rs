@@ -135,13 +135,16 @@ impl Checks {
 }
 
 pub fn run(f: &Fixture, queued: bool, checks: Checks) -> Result<ResultView, Rejection> {
+    let profile_lease = f
+        .logical_profile
+        .then(rum_runtime::Session::logical_profile_test_acquire);
     let mut s = f.session();
-    if f.logical_profile {
+    if let Some(lease) = profile_lease.as_ref() {
         s.set_eval_timeout(Some(std::time::Duration::from_secs(2)));
         if f.profile_trace {
             s.enable_tracing(true);
         }
-        rum_runtime::test_logical_profile_reset();
+        rum_runtime::test_logical_profile_reset(lease);
     }
     let answers: Vec<_> = f.pauses.iter().map(|p| p.answer.as_str()).collect();
     let expected: Vec<_> = f

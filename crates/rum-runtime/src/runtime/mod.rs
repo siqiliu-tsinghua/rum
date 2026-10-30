@@ -110,12 +110,19 @@ mod tests;
 #[cfg(any(test, feature = "test-continuation-slots"))]
 #[doc(hidden)]
 pub use profiling::LogicalProfileSnapshot;
+#[cfg(any(
+    test,
+    feature = "test-builtin-memory-growth",
+    feature = "test-continuation-slots"
+))]
+#[doc(hidden)]
+pub use profiling::logical::LogicalProfileTestLease;
 #[cfg(any(test, feature = "test-continuation-slots"))]
 pub(crate) fn logical_profile_snapshot() -> LogicalProfileSnapshot {
     profiling::logical_profile_snapshot()
 }
 #[cfg(any(test, feature = "test-continuation-slots"))]
-pub(crate) fn logical_profile_reset() {
+pub(crate) fn logical_profile_reset(_lease: &LogicalProfileTestLease) {
     profiling::reset_lexical_profile_counters();
     evaluation_cache::reset_evaluation_cache_profile_counters();
 }

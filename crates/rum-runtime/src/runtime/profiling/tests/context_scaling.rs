@@ -58,7 +58,8 @@ fn logical_context_instruction_probe() {
         control,
         root: epoch::next_id(),
     };
-    let epoch = Epoch::new(16 * 1024 * 1024).unwrap();
+    let lease = crate::runtime::profiling::lease::lease();
+    let epoch = Epoch::for_test(&lease, 16 * 1024 * 1024).unwrap();
     let key = AggregateKey::Runtime {
         phase: "context-probe",
         source: None,

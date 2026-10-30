@@ -91,8 +91,8 @@ fn logical_every_structural_route_closes_once_with_its_reason() {
 
 #[test]
 fn logical_diagnostic_cap_keeps_the_marker_free_guest_capacity() {
-    let _enabled = test_support::enabled();
-    test_support::limit(20 * 1024);
+    let enabled = test_support::enabled();
+    test_support::limit(enabled.lease(), 20 * 1024);
     let mut session = Session::new();
     let token = call(&session);
     begin(&mut session);

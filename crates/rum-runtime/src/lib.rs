@@ -15,6 +15,6 @@ pub fn test_logical_profile_snapshot() -> LogicalProfileSnapshot {
 }
 #[cfg(any(test, feature = "test-continuation-slots"))]
 #[doc(hidden)]
-pub fn test_logical_profile_reset() {
-    runtime::logical_profile_reset();
+pub fn test_logical_profile_reset(lease: &LogicalProfileTestLease) {
+    runtime::logical_profile_reset(lease);
 }

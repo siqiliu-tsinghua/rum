@@ -1,11 +1,24 @@
 use super::*;
 
+/// Minted only in this module. Tests cannot construct it.
+pub(in crate::runtime::profiling) struct ProductionReset {
+    _private: (),
+}
+
 pub(in crate::runtime) fn reset_lexical_profile_counters() {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    if crate::runtime::profiling::lease::blocks_unregistered_thread() {
+        return;
+    }
     if !lexical_profile_configured() {
         return;
     }
 
-    logical::reset();
+    logical::epoch::reset_production(ProductionReset { _private: () });
 
     macro_rules! reset {
         ($($counter:ident),+ $(,)?) => {

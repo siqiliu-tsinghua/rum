@@ -54,7 +54,7 @@ impl Epoch {
     pub(in crate::runtime) fn is_valid(&self) -> bool {
         self.valid.load(Ordering::Relaxed)
     }
-    pub(in crate::runtime) fn new(limit: usize) -> Option<Arc<Self>> {
+    fn new_unleased(limit: usize) -> Option<Arc<Self>> {
         let budget = Budget::new(limit)?;
         let storage =
             budget.claim(std::mem::size_of::<Self>() + 2 * std::mem::size_of::<usize>())?;
@@ -75,7 +75,32 @@ impl Epoch {
         }))
     }
 
+    /// Tests construct an epoch only while they hold the process lease.
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    pub(in crate::runtime) fn for_test(
+        lease: &crate::runtime::profiling::lease::TestLease,
+        limit: usize,
+    ) -> Option<Arc<Self>> {
+        let _ = lease;
+        Self::new_unleased(limit)
+    }
+
     pub(in crate::runtime) fn storage(&self, bytes: usize) -> Option<Storage> {
+        // An unregistered thread must not charge this epoch while a test
+        // lease is current. The header lives in that thread's TLS until the
+        // thread exits, which outlives the test. Production builds omit this.
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        if crate::runtime::profiling::lease::blocks_unregistered_thread() {
+            return None;
+        }
         if !self.valid.load(Ordering::Relaxed) {
             return None;
         }
@@ -93,6 +118,16 @@ impl Epoch {
         key: AggregateKey,
         policy: Policy,
     ) -> Option<RecordId> {
+        // Refuse before taking the data lock. A refusal must not retire the
+        // epoch: the caller is not this lease's thread.
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        if crate::runtime::profiling::lease::blocks_unregistered_thread() {
+            return None;
+        }
         let mut data = self.data.lock().unwrap();
         if !self.valid.load(Ordering::Relaxed) {
             return None;
@@ -243,15 +278,29 @@ impl Epoch {
 }
 
 #[cfg(test)]
-pub(in crate::runtime) fn test_limit(limit: usize) {
-    reset();
-    current_slot().lock().unwrap().epoch = Epoch::new(limit);
+pub(in crate::runtime) fn test_limit(
+    lease: &crate::runtime::profiling::lease::TestLease,
+    limit: usize,
+) {
+    reset_for_lease(lease);
+    current_slot().lock().unwrap().epoch = Epoch::new_unleased(limit);
 }
 
 pub(in crate::runtime) fn current() -> Option<Arc<Epoch>> {
     let mut slot = current_slot().lock().unwrap();
+    // Re-check under the slot lock, including when an epoch already exists.
+    // An unregistered thread must neither construct nor borrow the leased
+    // epoch. Production builds omit this check.
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    if crate::runtime::profiling::lease::blocks_unregistered_thread() {
+        return None;
+    }
     if slot.epoch.is_none() && slot.failed.is_none() {
-        slot.epoch = Epoch::new(16 * 1024 * 1024);
+        slot.epoch = Epoch::new_unleased(16 * 1024 * 1024);
         if slot.epoch.is_none() {
             let id = EpochId(next_id());
             slot.failed = Some(id);
@@ -264,12 +313,30 @@ pub(in crate::runtime) fn current() -> Option<Arc<Epoch>> {
     slot.epoch.clone()
 }
 
-pub(in crate::runtime) fn reset() {
+fn reset_unleased() {
     let mut slot = current_slot().lock().unwrap();
     slot.failed = None;
     if let Some(old) = slot.epoch.take() {
         old.retire(Retire::ProfileReset);
     }
+}
+
+/// Production counter reset. Callers outside `profiling::reset` cannot mint
+/// `ProductionReset`, so a test cannot reach this without the lease.
+pub(in crate::runtime::profiling) fn reset_production(
+    _token: super::super::reset::ProductionReset,
+) {
+    reset_unleased();
+}
+
+#[cfg(any(
+    test,
+    feature = "test-builtin-memory-growth",
+    feature = "test-continuation-slots"
+))]
+pub(in crate::runtime) fn reset_for_lease(lease: &crate::runtime::profiling::lease::TestLease) {
+    let _ = lease;
+    reset_unleased();
 }
 
 pub(in crate::runtime) fn drop_session(session: &crate::runtime::Session) {

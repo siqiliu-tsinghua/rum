@@ -24,7 +24,8 @@ fn logical_engine_instruction_probe() {
         control,
         root: epoch::next_id(),
     };
-    let epoch = Epoch::new(16 * 1024 * 1024).unwrap();
+    let lease = crate::runtime::profiling::lease::lease();
+    let epoch = Epoch::for_test(&lease, 16 * 1024 * 1024).unwrap();
     let symbol = crate::runtime::Symbol::new("System`", "LogicalProbe");
     let key = |i| AggregateKey::Definition {
         kind: "probe",

@@ -40,7 +40,8 @@ fn concurrent_drop<T: Send + 'static>(first: T, second: T) {
 }
 
 fn record_chain(concurrent: bool) {
-    let epoch = Epoch::new(16 * 1024 * 1024).unwrap();
+    let lease = test_support::lease();
+    let epoch = Epoch::for_test(&lease, 16 * 1024 * 1024).unwrap();
     let control = Arc::new(RequestInterruptState::new());
     let owner = Owner {
         control: Arc::clone(&control),
