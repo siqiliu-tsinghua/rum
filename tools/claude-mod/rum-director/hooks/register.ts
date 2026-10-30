@@ -6,6 +6,8 @@ import type { Pending } from '../types'
 // - a commit guard (staging and committing are separate calls, the handoff
 //   file is rewritten before every commit, and a source commit carries its
 //   TODO.md and the brief's director gate);
+// - a push guard (user ruling 2026-10-30: every commit is pushed at once, so a
+//   commit or a dispatch is refused while HEAD is ahead of its upstream);
 // - compaction after every commit once the context reaches FLOOR_TOKENS, with
 //   the handoff file appended to the compacted conversation;
 // - the same handoff instructions and re-injection on every other compaction.
@@ -98,9 +100,14 @@ export function commandText(full: string): string {
   return withoutQuotedText(withoutHeredocBodies(full))
 }
 
+export function isDispatch(full: string): boolean {
+  const command = commandText(full)
+  return DISPATCH.test(command) && !command.includes('DRY_RUN=1')
+}
+
 export function dispatchProblems(full: string, background: boolean): string[] {
   const command = commandText(full)
-  if (!DISPATCH.test(command) || command.includes('DRY_RUN=1')) return []
+  if (!isDispatch(full)) return []
   const problems: string[] = []
   if (/&&|\|\||;|\n/.test(command)) problems.push('it is chained with other commands (&&, ||, ; or a newline)')
   if (/(^|[^|])\|(?!\|)/.test(command)) problems.push('it is piped (pipefail plus a closed pipe kills the dispatcher before it dispatches)')
@@ -140,10 +147,21 @@ async function headOf($: EngineInterface): Promise<{ hash: string; seconds: numb
   return { hash, seconds: Number(seconds) }
 }
 
+// HEAD's commits not on its upstream. A branch with no upstream is not
+// checked (rev-list exits non-zero).
+async function unpushed($: EngineInterface): Promise<string | undefined> {
+  const ran = await $.process.run(['git', 'rev-list', '--count', '@{upstream}..HEAD'], { cwd: await root($), timeoutMs: 30_000 })
+  const count = Number(ran.stdout.trim())
+  if (ran.exitCode !== 0 || !(count > 0)) return undefined
+  return `HEAD is ${count} commit(s) ahead of its upstream: push first (git push origin main, its own call), since every commit is pushed at once (user ruling 2026-10-30).`
+}
+
 export async function commitProblems($: EngineInterface): Promise<string[]> {
   const staged = (await git($, ['diff', '--cached', '--name-only'])).split('\n').filter(p => p !== '')
   if (staged.length === 0) return []
   const problems: string[] = []
+  const ahead = await unpushed($)
+  if (ahead !== undefined) problems.push(ahead)
   const head = await headOf($)
   const statePath = `${await root($)}/${STATE_FILE}`
   const stateTime = (await $.fs.exists(statePath)) ? (await $.fs.stat(statePath)).mtimeMs : 0
@@ -224,6 +242,10 @@ export const register: Register = on => {
       return {
         deny: `rum-director dispatch guard: ${dispatch.join('; ')}. A dispatch is its own single Bash call with run_in_background: true; commit first, in a separate call. (DRY_RUN=1 is exempt.)`,
       }
+    }
+    if (isDispatch(command)) {
+      const ahead = await unpushed($)
+      if (ahead !== undefined) return { deny: `rum-director push guard: ${ahead}` }
     }
     if (!isCommit(command)) return next(e)
     const staging = stagingProblem(command)

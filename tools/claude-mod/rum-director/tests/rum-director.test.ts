@@ -63,6 +63,7 @@ type World = {
   stateMtimeMs: number
   briefText: string
   memoryTouched: boolean
+  unpushed: number
   tokens: number
   tokensLater?: number
   calls: string[]
@@ -75,6 +76,7 @@ function world(overrides: Partial<World> = {}): World {
     stateMtimeMs: 1_500_000,
     briefText: '# brief\n\n## Director gate of B3\n',
     memoryTouched: true,
+    unpushed: 0,
     tokens: 250_000,
     calls: [],
     ...overrides,
@@ -104,6 +106,7 @@ function seat(on: Parameters<TestBody>[1], w: World) {
       return ok(head + '\n')
     }
     if (line.startsWith('git show :')) return ok(w.briefText)
+    if (line.startsWith('git rev-list --count @{upstream}..HEAD')) return ok(`${w.unpushed}\n`)
     if (argv[0] === 'sh') return ok(w.memoryTouched ? '/m/x.md\n' : '')
     return ok('')
   })
@@ -145,6 +148,28 @@ test('a source commit needs TODO.md and the director gate', async ($, on) => {
 test('an aligned source commit goes through', async ($, on) => {
   seat(on, world({ staged: ['crates/rum-runtime/src/a.rs', 'TODO.md', 'docs/dev/codex/brief-631-x.md'] }))
   const ran = await $.tool.call({ tool: 'Bash', command: 'git commit -q -F -' })
+  expect(ran.deny).toBeUndefined()
+})
+
+test('a commit while the previous one is unpushed is refused', async ($, on) => {
+  seat(on, world({ unpushed: 1 }))
+  const ran = await $.tool.call({ tool: 'Bash', command: 'git commit -q -F -' })
+  expect(String(ran.deny)).toMatch(/1 commit\(s\) ahead of its upstream/)
+})
+
+test('a dispatch is refused until HEAD is pushed, and goes through after', async ($, on) => {
+  const w = world({ unpushed: 2 })
+  seat(on, w)
+  const refused = await $.tool.call({ tool: 'Bash', command: 'scripts/dispatch-brief.sh 636', run_in_background: true })
+  expect(String(refused.deny)).toMatch(/push guard: HEAD is 2 commit/)
+  w.unpushed = 0
+  const ran = await $.tool.call({ tool: 'Bash', command: 'scripts/dispatch-brief.sh 636', run_in_background: true })
+  expect(ran.deny).toBeUndefined()
+})
+
+test('a dry-run dispatch is not held by the push guard', async ($, on) => {
+  seat(on, world({ unpushed: 3 }))
+  const ran = await $.tool.call({ tool: 'Bash', command: 'DRY_RUN=1 scripts/dispatch-brief.sh 636', run_in_background: true })
   expect(ran.deny).toBeUndefined()
 })
 

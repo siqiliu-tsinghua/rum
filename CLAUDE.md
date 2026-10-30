@@ -18,7 +18,8 @@ Anything longer belongs in a document read on demand:
 ## Role split
 
 - **I own** direction, diagnosis, picking the next target, plan review, the
-  authoritative gate, and the git commit.
+  authoritative gate, the git commit and its push: every commit goes to the
+  public `origin` at once, never batched (user ruling 2026-10-30).
 - **Workers own** design-only plans, then exactly one implementation brief at
   a time, self-verified to green and reported with verbatim evidence. They do
   not commit, branch or push; they leave the tree for my gate.
@@ -113,9 +114,9 @@ So:
 - Subagents are never switched to a smaller model or a lower effort to save
   tokens (user ruling): recovering from their errors costs more.
 - The `rum-director` mod (`tools/claude-mod/rum-director/`) enforces the
-  dispatch and commit discipline and compacts after every commit at 200k
-  tokens or more. Before every commit, rewrite `.temp/director/state.md` (the
-  handoff it re-injects); stage and commit in separate calls.
+  dispatch, commit and push discipline, and compacts after every commit at
+  200k tokens or more. Before every commit, rewrite `.temp/director/state.md`
+  (the handoff it re-injects). Stage, commit and push in separate calls.
 
 ## Diagnosis method, short form
 
@@ -180,11 +181,10 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   format, the remaining audit items and the threat-model critiques. Only then
   `v0.3.0`.
 - **Latest done:**
-  - brief-630, cleanup errors during abandonment: B1 `854cfa4a`, B2
-    `1c115117`, B3 `ba1e1e52`;
-  - brief-629, the native stack base per thread: `60ca9585`;
-  - LP02: `17576575`.
-- **Workers.** cdx (user ruling 2026-10-28); grk or kimi while it has no quota.
+  - brief-635 stage 1, the epoch test lease: `b199d63c`;
+  - brief-634, the test-artifact constructors: `467ff97a`;
+  - brief-630, abandonment cleanup errors: `854cfa4a`, `1c115117`, `ba1e1e52`.
+- **Workers.** kimi only (2026-10-30: cdx has no quota, grk no balance).
 - **Earlier lines** are recorded in `director-log.md`; deferred items in
   `TODO.md` (full polynomial factorization stays deferred by user decision).
 
