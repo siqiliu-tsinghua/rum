@@ -1,5 +1,40 @@
 //! Source census and earned typing receipts. G15-C1 deliberately refuses preflip.
+use std::path::{Path, PathBuf};
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::{fs, process::Command};
+
+/// Owns one directory for its lifetime. There is no constructor from a path,
+/// and dropping it removes the tree.
+struct PrivateScratch {
+    path: PathBuf,
+}
+
+impl PrivateScratch {
+    fn create() -> Self {
+        static NEXT: AtomicU64 = AtomicU64::new(1);
+        let id = NEXT.fetch_add(1, Ordering::Relaxed);
+        let path = root()
+            .join(".temp/typed-slot-census/private")
+            .join(format!("{}-{id}", std::process::id()));
+        // A leftover tree from a killed run with a recycled pid is removed,
+        // never reused.
+        let _ = fs::remove_dir_all(&path);
+        fs::create_dir_all(&path).unwrap();
+        Self { path }
+    }
+
+    fn path(&self) -> &Path {
+        &self.path
+    }
+}
+
+impl Drop for PrivateScratch {
+    fn drop(&mut self) {
+        let _ = fs::remove_dir_all(&self.path);
+    }
+}
+
+const SCRATCH_ENV: &str = "RUM_TYPED_SLOT_FORCED_RED_TREE";
 
 // Reuse the real lexical resolver; the census does not invent a second trait
 // namespace or infer identity from a spelling count.
@@ -108,9 +143,9 @@ fn forced_red(remove_guard: bool) {
     let root = root();
     let (files, facts, report) = discover(&root);
     baseline(&facts, &report).unwrap();
-    let scratch = root.join(".temp/typed-slot-census/forced-red/tree");
+    let scratch = PrivateScratch::create();
     for (file, source) in &files {
-        let p = scratch.join(file);
+        let p = scratch.path().join(file);
         fs::create_dir_all(p.parent().unwrap()).unwrap();
         fs::write(p, source).unwrap();
     }
@@ -158,11 +193,12 @@ fn forced_red(remove_guard: bool) {
             .map(|c| if c == '\n' { '\n' } else { ' ' })
             .collect::<String>(),
     );
-    fs::write(scratch.join(&site.file), changed).unwrap();
+    fs::write(scratch.path().join(&site.file), changed).unwrap();
     let output = Command::new("python3")
         .arg(root.join("scripts/run-bounded.py"))
         .args(["--timeout", "900", "--"])
         .arg(std::env::current_exe().unwrap())
+        .env(SCRATCH_ENV, scratch.path())
         .args(["--exact", "forced_red_probe", "--ignored", "--nocapture"])
         .output()
         .unwrap();
@@ -172,14 +208,12 @@ fn forced_red(remove_guard: bool) {
         String::from_utf8_lossy(&output.stderr)
     );
     let kind = if remove_guard { "guard" } else { "frame" };
-    fs::write(
-        root.join(format!(
-            ".temp/typed-slot-census/forced-red/{}-{kind}.log",
-            feature()
-        )),
-        &log,
-    )
-    .unwrap();
+    let log_path = root.join(format!(
+        ".temp/typed-slot-census/forced-red/{}-{kind}.log",
+        feature()
+    ));
+    fs::create_dir_all(log_path.parent().unwrap()).unwrap();
+    fs::write(&log_path, &log).unwrap();
     let marker = if remove_guard {
         "production frames=472 finalizers=55 implementations=626"
     } else {
@@ -196,7 +230,15 @@ fn forced_red(remove_guard: bool) {
 #[test]
 #[ignore = "invoked explicitly by both bounded scratch-copy falsifiers"]
 fn forced_red_probe() {
-    let (_, facts, report) = discover(&root().join(".temp/typed-slot-census/forced-red/tree"));
+    let scratch = std::env::var(SCRATCH_ENV)
+        .unwrap_or_else(|_| panic!("forced_red_probe needs {SCRATCH_ENV}"));
+    let path = Path::new(&scratch);
+    let private = root().join(".temp/typed-slot-census/private");
+    assert!(
+        path.starts_with(&private) && path != private,
+        "forced_red_probe requires a private scratch path: {scratch}"
+    );
+    let (_, facts, report) = discover(path);
     baseline(&facts, &report).unwrap();
 }
 

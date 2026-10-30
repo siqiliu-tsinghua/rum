@@ -1,18 +1,7 @@
+use crate::runtime::tests::compiled_library::CompiledLibrary;
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::process::Command;
-
-fn library(deps: &Path, name: &str) -> PathBuf {
-    fs::read_dir(deps)
-        .unwrap()
-        .map(|entry| entry.unwrap().path())
-        .filter(|path| {
-            let filename = path.file_name().unwrap().to_string_lossy();
-            filename.starts_with(&format!("lib{name}-")) && filename.ends_with(".rlib")
-        })
-        .max_by_key(|path| fs::metadata(path).unwrap().modified().unwrap())
-        .unwrap_or_else(|| panic!("missing compiled library {name}"))
-}
 
 #[test]
 fn option_reentry_compile_pass_precedes_pinned_compile_fail() {
@@ -23,8 +12,8 @@ fn option_reentry_compile_pass_precedes_pinned_compile_fail() {
         .unwrap();
     let scratch = workspace.join("target/brief-531/compile-proof");
     fs::create_dir_all(&scratch).unwrap();
-    let executable = std::env::current_exe().unwrap();
-    let deps = executable.parent().unwrap();
+    let library = CompiledLibrary::get();
+    let deps = library.deps();
     let docs = include_str!("../reentry.md");
     for (fence, name, succeeds) in [
         ("```no_run\n", "control", true),
@@ -57,12 +46,9 @@ fn option_reentry_compile_pass_precedes_pinned_compile_fail() {
             .arg("-L")
             .arg(format!("dependency={}", deps.display()))
             .arg("--extern")
-            .arg(format!(
-                "rum_runtime={}",
-                library(deps, "rum_runtime").display()
-            ))
+            .arg(format!("rum_runtime={}", library.runtime().display()))
             .arg("--extern")
-            .arg(format!("rum_core={}", library(deps, "rum_core").display()))
+            .arg(format!("rum_core={}", library.core().display()))
             .arg(&fixture)
             .output()
             .unwrap();

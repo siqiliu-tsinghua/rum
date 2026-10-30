@@ -19,7 +19,17 @@ Status checkpoint: 2026-10-29. The committed tree runs through:
 families: a profiler test lease, typed-slot scratch directories, and one
 shared retention parse per process, with `typed_slot_census` added to it),
 then LP03-LP08, C2's remaining 353 rows, CM, `CHANGELOG.md`, and S10 onward.
-New briefs go to grk or kimi while Codex has no quota (user, 2026-10-29).
+New briefs go to kimi while Codex has no quota and grk has no balance
+(2026-10-30).
+
+Test isolation, in progress:
+- the design (brief-633) is gated;
+- the test-artifact constructors (brief-634: `PrivateScratch` and
+  `CompiledLibrary`) are done;
+- next are the profiler test lease (brief-635) and the shared parse
+  (brief-636, option iv);
+- after those, the director measures the workspace at 4, 8, 16 and 32
+  threads, and the user rules the default thread count.
 
 **The director's gate is a script** (brief-631, director tooling):
 `scripts/director-gate.py run NNN --stage S` runs the scope check, fmt, the

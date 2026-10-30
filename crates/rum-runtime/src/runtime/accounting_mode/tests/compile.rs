@@ -1,3 +1,4 @@
+use crate::runtime::tests::compiled_library::CompiledLibrary;
 use std::fs;
 use std::path::Path;
 use std::process::Command;
@@ -11,35 +12,10 @@ fn retention_compile_controls_precede_pinned_failures() {
         .unwrap();
     let scratch = workspace.join("target/brief-538/compile-proof");
     fs::create_dir_all(&scratch).unwrap();
-    let executable = std::env::current_exe().unwrap();
-    let deps = executable.parent().unwrap();
-    // A filtered unit-test run need not build the non-test rlib. Build that
-    // artifact explicitly; a stale rlib must never certify a rejection.
-    let build = Command::new("python3")
-        .arg(workspace.join("scripts/run-bounded.py"))
-        .args([
-            "--timeout",
-            "180",
-            "--",
-            "cargo",
-            "build",
-            "--offline",
-            "-p",
-            "rum-runtime",
-            "--lib",
-            "--target-dir",
-        ])
-        .arg(deps.parent().unwrap().parent().unwrap())
-        .current_dir(workspace)
-        .output()
-        .unwrap();
-    fs::write(scratch.join("library-build.stdout"), &build.stdout).unwrap();
-    fs::write(scratch.join("library-build.stderr"), &build.stderr).unwrap();
-    assert!(
-        build.status.success(),
-        "fresh protocol library: {}",
-        String::from_utf8_lossy(&build.stderr)
-    );
+    let library = CompiledLibrary::get();
+    let deps = library.deps();
+    fs::write(scratch.join("library-build.stdout"), library.build_stdout()).unwrap();
+    fs::write(scratch.join("library-build.stderr"), library.build_stderr()).unwrap();
     for section in include_str!("../protocol.md").split("### ").skip(1) {
         let name = section.lines().next().unwrap();
         for (case, expected) in [
@@ -89,10 +65,7 @@ fn retention_compile_controls_precede_pinned_failures() {
                 .arg("-L")
                 .arg(format!("dependency={}", deps.display()))
                 .arg("--extern")
-                .arg(format!(
-                    "rum_runtime={}",
-                    deps.parent().unwrap().join("librum_runtime.rlib").display()
-                ))
+                .arg(format!("rum_runtime={}", library.runtime().display()))
                 .arg(&fixture)
                 .output()
                 .unwrap();

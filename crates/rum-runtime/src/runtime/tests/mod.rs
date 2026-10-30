@@ -125,6 +125,7 @@ mod association_part_cursor;
 mod association_write_index;
 mod association_write_recovery;
 mod comparison_lowering;
+pub(in crate::runtime) mod compiled_library;
 mod context_and_loader;
 mod debug_tools;
 mod definition_lhs_preparation;
