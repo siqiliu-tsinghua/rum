@@ -698,3 +698,482 @@ brief continues as amendment 1.
 - **Not rerun:** kimi's twenty chain pairs (I ran ten), and the three
   old-form compile probes (their logs show E0061/E0624, and the code they
   probe is deleted).
+
+## Director amendment 1 (2026-10-30): refuse the lexical write side
+
+**Worker: kimi, continuing its stage-1 session.** Stage 1 is committed
+(`b199d63c`). It leased the epoch, and that part is right. The lexical write
+side stays open: my gate (above) found the rum-runtime lib red at 32 threads,
+in the observer kimi leased. The B1 rule ("**lease**: every write an
+unregistered thread can reach is refused under the test cfg") was not met for
+any of the 58 lexical rows. This amendment closes that side. It is one gated
+step, in three stages.
+
+### What is open, with evidence
+
+- **HEAD's 32-thread red rate.** HEAD is `927efc18`; its `crates/` is stage
+  1's tree. I ran `cargo test -p rum-runtime --lib --offline --
+  --test-threads=32` ten times, serially, each in its own 14G scope (logs in
+  `.temp/director/gate-635a1-calib/logs/head32-*.log`).
+  - Three of the ten runs were red: runs 1, 8 and 9. Each failed with
+    `test result: FAILED. 1224 passed; 1 failed; 5 ignored`.
+  - All three failed in
+    `profiling_observer_covers_every_map_and_flag_without_ranking`
+    (`logical_contract.rs:481`). The only moved row was
+    `counter|definition_rhs_eval`: `[44]`→`[45]`, `[19]`→`[21]`, `[17]`→`[18]`.
+  - With my stage-1 gate's three runs (one red), that is 4 red of 13.
+- **The writers no check refuses.** Every process-wide write to a `state.rs`
+  static reaches one of these sites. The source is
+  `grep -rnE '(<the 60 names>)\s*\.\s*(fetch_|store|swap|compare_exchange)'`
+  over `crates/`, plus every `&NAME` passed to a helper. All 33 helper calls
+  are in `records.rs`, and the 34th is `counters.rs`'s own
+  `record_profile_lexical_timing` → `_elapsed`.
+  - `counters.rs`:
+    - `record_timing` and `record_profile_lexical_timing_elapsed` are gated
+      only on a `Some` start or elapsed value. A start taken under one
+      lease's flag is recorded under the next lease. That is the red above.
+    - `record_counter` and `record_add` are gated on the flag, not on the
+      thread.
+    - `record_max` has no gate. Its three callers gate on the flag.
+  - `records.rs`: `record_profile_rewrite_rule_prefilter_candidate` and
+    `record_profile_rewrite_rule_match_outcome` `fetch_add` six
+    `REWRITE_RULE_*` counters directly, behind the flag.
+  - `summary.rs`: `print_lexical_profile_summary_once` swaps
+    `LEXICAL_PROFILE_SUMMARY_PRINTED`, and `print_lexical_profile_snapshot`
+    stores it.
+  - `config.rs`: the twelve cold-load initializers `store` the env value
+    unconditionally. A holder's `Enabled` swaps 1 into `ENABLED` and
+    `ACTIVE`, and restores what it swapped out, which can be 0. That 0
+    re-arms the initializers. A thread that loaded 0 before the holder's
+    swap then stores its env value over the holder's 1. In production, a
+    first `ACTIVE` load under `RUM_PROFILE_LEXICAL_DEFER` can likewise store
+    2 over a concurrent `RumProfileReset[]`'s 1.
+  - `reset.rs`'s writes are refused by stage 1. The `Enabled` and
+    `queue_boundaries.rs` flag writes are made by holders only.
+- **A check alone leaves a window.** Suppose a thread checks
+  `blocks_unregistered_thread()` and then writes. It can read generation 0
+  between two leases and write after the next lease's first snapshot. Stage
+  1's epoch side does not have this window, because each lease gets a fresh
+  epoch under the slot lock. The counters have no such lock. So a lease must
+  wait for every write admitted before its generation. That wait is the
+  fence below.
+- **`logical_queue_representation_survives_a_disabled_global_gate` is
+  vacuous.** It swaps `LEXICAL_PROFILE_ACTIVE` to 0. But 0 is the
+  *uninitialized* state: the test thread's next `lexical_profile_active()`
+  cold-loads it back to 1, so the gate is never disabled. I swapped in 2
+  (disabled) in a HEAD copy, and the test passed: `test result: ok. 1
+  passed` (`logs/queue2.log`). The test's claim holds with the gate really
+  off, so the test takes 2.
+
+### Target shape
+
+The shape is fixed. A departure from it is a STOP.
+
+**The test cfg** is the stage-1 attribute, written exactly as at the top of
+`reset_lexical_profile_counters`:
+
+```rust
+#[cfg(any(
+    test,
+    feature = "test-builtin-memory-growth",
+    feature = "test-continuation-slots"
+))]
+```
+
+Below, `TEST_CFG` stands for it.
+
+**`profiling/lease.rs`** gains the write gate, the fence and admission:
+
+```rust
+use std::sync::atomic::{AtomicU64, AtomicUsize, Ordering};
+use std::sync::{Mutex, MutexGuard, RwLock, RwLockReadGuard};
+
+/// Read across one admitted lexical write. `lease` takes it for write after
+/// publishing its generation, so a lease is current only once every write
+/// admitted before it has landed.
+static WRITE_GATE: RwLock<()> = RwLock::new(());
+/// Leases that have published their generation and wait at `WRITE_GATE`.
+static FENCING: AtomicUsize = AtomicUsize::new(0);
+
+pub(in crate::runtime) fn lease() -> TestLease {
+    let guard = TEST_LEASE
+        .lock()
+        .unwrap_or_else(|poison| poison.into_inner());
+    let generation = NEXT_GEN.fetch_add(1, Ordering::Relaxed);
+    CURRENT_GEN.store(generation, Ordering::Release);
+    fence_admitted_writes();
+    REGISTERED_GEN.with(|cell| cell.set(generation));
+    TestLease {
+        _guard: guard,
+        generation,
+    }
+}
+
+/// Wait out every lexical write admitted before this generation.
+fn fence_admitted_writes() {
+    FENCING.fetch_add(1, Ordering::SeqCst);
+    drop(WRITE_GATE.write().unwrap_or_else(|poison| poison.into_inner()));
+    FENCING.fetch_sub(1, Ordering::SeqCst);
+}
+
+/// One admitted lexical write. Its scope holds atomics, thread-locals and
+/// `eprintln!` only: never `admit`, `lease`, or another lock.
+pub(in crate::runtime) struct Admitted {
+    _gate: RwLockReadGuard<'static, ()>,
+}
+
+/// `None` when a lease is current and this thread did not register for it.
+#[inline]
+pub(in crate::runtime) fn admit() -> Option<Admitted> {
+    let gate = WRITE_GATE
+        .read()
+        .unwrap_or_else(|poison| poison.into_inner());
+    if blocks_unregistered_thread() {
+        return None;
+    }
+    Some(Admitted { _gate: gate })
+}
+
+/// Leases waiting at the fence: the fence falsifier's observable.
+#[cfg(test)]
+pub(in crate::runtime) fn fencing() -> usize {
+    FENCING.load(Ordering::SeqCst)
+}
+```
+
+- `TestLease`, `allow_current_thread`, `Drop for TestLease` and
+  `blocks_unregistered_thread` are unchanged.
+- The module comment gains "and the lexical counters" after "the
+  process-wide logical epoch".
+
+**Admission at every lexical write.** Each site gains one statement, placed
+exactly where shown: after the site's existing flag or start gate, so the
+flag-off path does not change in any build.
+
+```rust
+    TEST_CFG
+    let Some(_admitted) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+```
+
+- **`counters.rs`:**
+  - `record_timing`: after `let Some(start) = start else { return; };`.
+  - `record_profile_lexical_timing_elapsed`: after its
+    `let Some(elapsed_nanos) = ... else { return; };`.
+  - `record_counter` and `record_add`: after
+    `if !lexical_profile_enabled() { return; }`.
+  - `record_max`: as its first statement. Its three callers gate on the
+    flag.
+  - `record_profile_lexical_timing` gains nothing. It forwards to `_elapsed`,
+    and admissions never nest.
+- **`records.rs`.** In both rewrite-rule functions, the admission and the
+  `fetch_add`s move into one block, so the gate is not held across
+  `Symbol::new` or the thread-local map:
+
+  ```rust
+      if !lexical_profile_enabled() {
+          return;
+      }
+
+      {
+          TEST_CFG
+          let Some(_admitted) = crate::runtime::profiling::lease::admit() else {
+              return;
+          };
+          REWRITE_RULE_CANDIDATE_COUNT.fetch_add(1, Ordering::Relaxed);
+          if would_reject {
+              REWRITE_RULE_WOULD_PREFILTER_REJECT_COUNT.fetch_add(1, Ordering::Relaxed);
+          } else {
+              REWRITE_RULE_WOULD_MATCHER_COUNT.fetch_add(1, Ordering::Relaxed);
+          }
+      }
+
+      let Some(source_symbol) = evaluation_profile_current_source_symbol() else {
+  ```
+
+  `record_profile_rewrite_rule_match_outcome` takes the same block around its
+  `if matched { ... } else { ... }`.
+- **`summary.rs`:**
+
+  ```rust
+      if lexical_enabled {
+          logical::drop_session(session);
+      }
+      let printed = {
+          TEST_CFG
+          let Some(_admitted) = crate::runtime::profiling::lease::admit() else {
+              return;
+          };
+          LEXICAL_PROFILE_SUMMARY_PRINTED.swap(1, Ordering::Relaxed)
+      };
+      if printed == 1 {
+          return;
+      }
+  ```
+
+  In `print_lexical_profile_snapshot`, the
+  `LEXICAL_PROFILE_SUMMARY_PRINTED.store(1, Ordering::Relaxed);` line becomes
+  `mark_lexical_profile_summary_printed();`, with:
+
+  ```rust
+  fn mark_lexical_profile_summary_printed() {
+      TEST_CFG
+      let Some(_admitted) = crate::runtime::profiling::lease::admit() else {
+          return;
+      };
+      LEXICAL_PROFILE_SUMMARY_PRINTED.store(1, Ordering::Relaxed);
+  }
+  ```
+
+**`config.rs`: the twelve initializers publish over 0 only.** This is the
+one production change. It runs once per flag per process, in a `#[cold]`
+function. Without a concurrent writer its semantics are those of the
+`store`, which they replace.
+
+```rust
+/// Publish a cold-loaded flag over the uninitialized 0 only. A value another
+/// writer stored after this thread's load (a test holder's swap,
+/// `RumProfileReset[]`) is kept, and answered.
+fn publish(flag: &AtomicU8, enabled: bool) -> bool {
+    match flag.compare_exchange(
+        0,
+        if enabled { 1 } else { 2 },
+        Ordering::Relaxed,
+        Ordering::Relaxed,
+    ) {
+        Ok(_) => enabled,
+        Err(published) => published == 1,
+    }
+}
+
+#[cold]
+fn initialize_lexical_profile_enabled() -> bool {
+    let enabled = std::env::var_os(LEXICAL_PROFILE_ENV)
+        .is_some_and(|value| !value.is_empty() && value != "0");
+    publish(&LEXICAL_PROFILE_ENABLED, enabled)
+}
+```
+
+- Each of the other eleven initializers ends the same way:
+  `publish(&<ITS FLAG>, <its value>)`, where
+  `initialize_lexical_profile_active` passes `active`.
+- `config.rs` also gains, at its end:
+
+  ```rust
+  #[cfg(test)]
+  #[path = "tests/cold_load.rs"]
+  mod cold_load;
+  ```
+
+- `lexical_profile_enabled`, `lexical_profile_configured`,
+  `lexical_profile_active` and every other accessor stay byte-identical.
+- At my gate, the structure step should show only these initializers
+  differing in the release binaries, or a caller they are inlined into. I
+  rule on any other function that differs.
+
+**`tests/queue_boundaries.rs`**, in
+`logical_queue_representation_survives_a_disabled_global_gate`:
+
+```rust
+        // 2 is disabled; 0 is uninitialized, and any cold load re-arms it.
+        let prior = LEXICAL_PROFILE_ACTIVE.swap(2, Ordering::Relaxed);
+```
+
+**`docs/dev/profiling.md`.** Add this paragraph after the "Enabled
+diagnostic storage" paragraph of "Lifecycle and epochs":
+
+> Profiling tests share the process with ordinary tests. Under the test cfg,
+> every test that reads or writes the process-wide profiling state holds the
+> one `TestLease` (`profiling/lease.rs`). While a lease is current, a thread
+> that has not registered with it cannot construct, open, charge or reset
+> the epoch, reset the lexical counters, or write a lexical counter or the
+> summary once-flag. A lease becomes current only after every lexical write
+> admitted before it has landed. Production builds compile none of the
+> lease. The cold-load profile flags publish over their uninitialized state
+> only, so a value stored after a thread's first load is kept.
+
+### Scope
+
+- **MAY modify:** `profiling/lease.rs`, `counters.rs`, `records.rs` (the two
+  rewrite-rule functions only), `summary.rs` (the two once-flag writes
+  only), `config.rs` (`publish`, the twelve initializers' tails, the
+  `cold_load` line), `profiling/tests/mod.rs` (one line), the new
+  `profiling/tests/unregistered_writes.rs` and `profiling/tests/cold_load.rs`,
+  `tests/queue_boundaries.rs` (the swap line), `docs/dev/profiling.md` (the
+  paragraph above), and the standing inventories through their replays.
+- **Every other edit is a disclosed deviation**, with its reason, in the
+  report's `deviations`. An undisclosed edit is a STOP at my gate.
+- **MUST NOT:**
+  - change any accessor in `config.rs`;
+  - change a recording path outside the sites above, or any flag-off path;
+  - change stage 1's refusals, `Enabled`, or the C4′ tests;
+  - change `PROCESS_LIMIT` or the epoch's semantics;
+  - add a dependency or `unsafe`.
+
+### Falsifiers
+
+Before your first edit, copy the current
+`crates/ Cargo.toml Cargo.lock rust-toolchain.toml scripts/run-bounded.py`
+to `.temp/brief-635/a1/head/`. Each run uses its own
+`scripts/memory-scope.sh b635a1-<label>-<n> 14G` scope, `--offline` and
+`CARGO_BUILD_JOBS=8`. Never use git.
+
+1. **A, B and D: the calibrated files, copied verbatim.**
+   - `.temp/director/gate-635a1-calib/src/unregistered_writes.rs` goes to
+     `profiling/tests/unregistered_writes.rs`, registered as
+     `mod unregistered_writes;` after `mod slot_boundary;` in `tests/mod.rs`.
+   - `.temp/director/gate-635a1-calib/src/cold_load.rs` goes to
+     `profiling/tests/cold_load.rs`.
+   - Do not edit either file, beyond the import merge and the test C append
+     below.
+   - **A**, `unregistered_timing_started_under_one_lease_does_not_land_in_the_next`:
+     a start taken under one lease's flag, recorded under the next lease.
+   - **B**, `unregistered_writes_do_not_reach_a_held_window`: one entry per
+     write site, each from a fresh unregistered thread while the test holds
+     `Enabled`. It compares all 47 counters and the once-flag, which the
+     file reads from `state.rs` so the list stays complete.
+   - **D**, `a_cold_load_keeps_a_flag_published_after_its_load`: all twelve
+     initializers, each run over a published 1 and a published 2.
+   - **My calibration at HEAD**, in a `git archive` copy with only these two
+     files and their two registration lines added
+     (`.temp/director/gate-635a1-calib/calib.sh`, logs beside it):
+     - A is red: `a start taken under one lease recorded into the next`,
+       with `DEFINITION_RHS_EVAL_COUNT` `[0]`→`[1]`.
+     - B is red, and all nine sites wrote: `record_timing`,
+       `record_profile_lexical_timing_elapsed`, `record_counter`,
+       `record_add`, `record_max`, `rewrite_rule_prefilter_candidate`,
+       `rewrite_rule_match_outcome`, `summary_once` and `snapshot`. Each
+       site named exactly the counters it writes.
+     - D is red, and all twelve flags were overwritten (for example
+       `LEXICAL_PROFILE_ENABLED: published 1, after 2, answered false` and
+       `LEXICAL_PROFILE_ACTIVE: published 2, after 1, answered true`).
+     - The build had the same three `test_builtins.rs` warnings as HEAD, and
+       no new one.
+   - **On the change**, A, B and D are green.
+2. **C, the fence.** Append it to `unregistered_writes.rs`, merging its
+   imports (`std::sync::Arc`,
+   `std::sync::atomic::{AtomicBool, Ordering}`):
+
+   ```rust
+   /// A lease that becomes current waits for every lexical write admitted
+   /// before its generation was published.
+   #[test]
+   fn a_new_lease_waits_for_an_admitted_write() {
+       let held = lease::lease();
+       let admitted = lease::admit().expect("the holder's own thread is admitted");
+       let returned = Arc::new(AtomicBool::new(false));
+       let next = std::thread::spawn({
+           let returned = Arc::clone(&returned);
+           move || {
+               let _next = lease::lease();
+               returned.store(true, Ordering::SeqCst);
+           }
+       });
+       drop(held);
+       while lease::fencing() == 0 && !returned.load(Ordering::SeqCst) {
+           std::thread::yield_now();
+       }
+       assert!(
+           !returned.load(Ordering::SeqCst),
+           "a lease became current while an admitted write was in flight"
+       );
+       drop(admitted);
+       next.join().expect("next lease");
+   }
+   ```
+
+   - It cannot compile at HEAD. Its red arm is mutant M1 below.
+   - The wait loop is a wait on an event that comes in both arms: either a
+     lease reaches the fence, or `next` returns. It is the one loop this
+     amendment allows.
+3. **The mutant arms.** Each is a copy of the changed tree with one
+   deletion, built with its own target directory. Save both logs.
+   - **M1:** delete the `fence_admitted_writes();` call in `lease()`. C must
+     be red with `a lease became current while an admitted write was in
+     flight`.
+   - **M2:** delete the admission in `record_timing`. A must be red, and B
+     must be red listing exactly `record_timing`.
+   - On the changed tree, C is green and A and B are green.
+4. **Regression.** Stage 1's falsifiers stay green on the change:
+   - the chain pair at two threads, 10 runs;
+   - both `owner_filter` tests;
+   - the three C4′ tests (`epoch_contract`).
+5. **The rum-runtime lib at 32 threads: 20 runs, all green.**
+
+   ```
+   cargo test -p rum-runtime --lib --offline -- --test-threads=32
+   ```
+
+   - Build first. Then bound each run at 300 s.
+   - HEAD's rate is 4 red in 13 runs. If the fault were still there, 20
+     green runs in a row would have a chance of about 0.06%
+     (`(9/13)^20`).
+   - Quote all 20 `test result:` lines.
+
+### B1, redone
+
+Replace stage 1's `b1` section with a 62-row table: the 58 lexical rows plus
+`PROCESS_BYTES`, `CURRENT`, `LEXICAL_PROFILE_ENABLED` and
+`LEXICAL_PROFILE_ACTIVE`. Each row gives:
+
+- its declaration;
+- **every writer site**, by `path:line`, from grep. For a counter written
+  through a helper, give both the helper and each `records.rs` caller that
+  passes this counter.
+- every in-process reader test;
+- its protection, which must be one of four:
+  - **child**: the reader runs in a child process;
+  - **lease**: every writer an unregistered thread can reach admits, or is
+    refused by stage 1, under the test cfg;
+  - **cold load**: the only writer an unregistered thread can reach is
+    `publish`'s compare-exchange from 0. Cite the grep showing that no
+    in-process code calls `set_var` or `remove_var`; my grep found none
+    under `crates/` outside `rum-cli/tests` `Command` env;
+  - **none**: no in-process test reads the row;
+- the falsifier that covers it: an A/B/C/D site name, or a stage-1 falsifier.
+
+A row with an in-process reader and none of the four is a **STOP**.
+
+### Stages and stops
+
+1. **Shape.**
+   - Implement the target shape, then A–D, M1, M2 and the queue line.
+   - `cargo build --tests --workspace --offline`, with no new warning.
+   - Run falsifiers 1–3. STOP if any arm is not as stated.
+2. **B1.** Write the table. STOP on an unprotected row.
+3. **Frontier, replays, lib, workspace.**
+   - **The frontier.** Run
+     `RUM_CENSUS_DUMP=<absolute path> cargo test -p rum-stdlib --lib --offline production_rejection_census_is_complete`
+     in `.temp/brief-635/a1/head/` and in the changed tree, writing
+     `.temp/brief-635/a1/frontier-head.tsv` and `frontier-cand.tsv`.
+     - The dump is written even when the test then fails on stale
+       fingerprints.
+     - Report both row counts and every row present in only one dump.
+     - A moved row is a disclosure, not a stop. I rule on it at the gate.
+   - Replay the standing inventories as in stage 3.
+   - Run falsifiers 4 and 5.
+   - Prove production builds with `nm -C` (0 lease symbols in the release
+     `rum-cli` and the perf-panel harness) and with the feature tree.
+   - Run `cargo test --workspace --no-fail-fast --offline --
+     --test-threads=1`, bound 5400 s, in one 14G scope, with the nine native
+     ZeroMQ `--skip`s.
+
+### Forbidden
+
+- A check in, or a change to, any `config.rs` accessor.
+- A lease load, lock or branch on any flag-off path.
+- An admission whose scope holds anything but atomics, thread-locals and
+  `eprintln!`, a nested admission, or a lock taken inside one.
+- Any wait in `lease()` other than the fence.
+- `#[ignore]` as a fix, retries, sleeps, raised or guessed bounds,
+  `--test-threads=1` as a fix, `serial_test`, or any dependency.
+- Weakening any stage-1 or C4′ test.
+
+### Report
+
+- Write `.temp/brief-635/report-a1.json`.
+- Quote every `test result:` line and every verdict line.
+- Run `python3 scripts/report.py check 635 --stage a1` until it prints no
+  PROBLEM.
+- Your final message is `python3 scripts/report.py summary 635 --stage a1`.
