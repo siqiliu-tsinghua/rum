@@ -2113,10 +2113,14 @@ Standing Engineering Debt entry on snapshots. The interner quota work (briefs
   boundary. "Guest code cannot kill the kernel" needs the host's RSS or
   process bound too — the audit's third criticism.
 
-**Branch state.** `spike/brief-499-symbol-non-copy` holds the refuted A1
-representation and is kept as its record; nothing else is outstanding. The
-brief-514 and brief-522 spike branches were deleted after their work landed
-in `d1e5de5c` and `46126cab`.
+**Branch state.** No spike branch is left. The refuted A1 representation
+(`spike/brief-499-symbol-non-copy`, ten commits on `3024c33c`) is kept as
+`docs/dev/spike-brief-499-a1-symbol-non-copy.patch`. That is a
+`git format-patch` mbox. `git am` on `3024c33c` rebuilds the branch tip's tree
+`0ebb349a`, and the patch carries the original commit ids that briefs 500-503
+cite. The branch was deleted on 2026-10-30 (user ruling). The brief-514 and
+brief-522 spike branches were deleted after their work landed in `d1e5de5c`
+and `46126cab`.
 
 **Where the previous line ended.** The ownership branch (briefs 480-498) is closed — the
 host-payload destruction contract, the accumulator-chain family and its
@@ -3328,8 +3332,9 @@ guard on wire-message JSON (the 2026-09-02 audit's F3), deliberately untouched.
 first; the 2026-09-02 text is kept because its reasoning about `Symbol`'s
 equality contract is still correct, not because its choice still stands.
 
-**What the spike measured** (briefs 499-503, code on branch
-`spike/brief-499-symbol-non-copy`, reports in `docs/dev/codex/`):
+**What the spike measured** (briefs 499-503, code in
+`docs/dev/spike-brief-499-a1-symbol-non-copy.patch` (formerly branch
+`spike/brief-499-symbol-non-copy`), reports in `docs/dev/codex/`):
 
 - The non-`Copy` migration alone costs **+0.06% to +0.84%** and is a fixpoint
   rather than a count: 92 files, a 35-type `Copy`-loss closure of which 29 are
