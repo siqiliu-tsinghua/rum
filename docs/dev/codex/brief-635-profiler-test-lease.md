@@ -1814,3 +1814,61 @@ take the four locks named above. In addition:
 - Run `python3 scripts/report.py check 635 --stage a2` until it prints no
   PROBLEM.
 - Your final message is `python3 scripts/report.py summary 635 --stage a2`.
+
+## Director ruling (2026-10-30): amendment 2's census move is accepted
+
+**Worker: kimi, continuing its session.** Your STOP was right, and your
+comparison is correct. Stage 1 and B1 stand, and so do your frontier dumps
+and labels. Continue stage 3 from the replays.
+
+- **The ruling.**
+  - One RET002 row retires: the unconditional `.store` in
+    `initialize_evaluation_cache_profile_active` (HEAD
+    `evaluation_cache/profile/mod.rs` 186:5-89).
+  - No row appears. The new call resolves to `publish_cold_load`, whose two
+    rows (`config.rs:129` and `:136`) have been in the frontier since
+    amendment 1.
+  - The file's other 12 rows move up one line.
+  - The frontier is now 1039 rows (10/996/33).
+- **My edit.** I updated the expectation in
+  `crates/rum-stdlib/src/tests/retention_closure/census/tests.rs`: the
+  counts 1039 and 996, and one comment paragraph each for amendment 1's
+  paired swap and for this retirement. Do not change that file. List it in
+  `changes` with the reason `director's edit (census ruling)`.
+- **My calibration** (`.temp/director/gate-635a2/census-ruled.log`). With
+  the edit, the census test passes the count, kind and `PUBLIC_WRAPPER`
+  assertions. It then stops in `verify_promotions` (`promotion.rs:27`) on
+  `stale contract fingerprint` for O010, O011, O0200 and O0210. The
+  fingerprint hashes every `.rs`, `.py` and `.toml` file under `crates/`
+  (`local/contracts.rs:88`), so my edit expired all of them. That is the
+  rot guard working, not a fault.
+
+### Continue
+
+1. **Replays, again, after my edit:**
+   - regenerate the local-contract fingerprints and copy them in;
+   - earn, merge and replay the promoted certificates, in both builds;
+   - the ownership discovery and replay;
+   - LP01 and the typed receipts;
+   - then the rejection census. It must pass whole.
+2. **The rest of stage 3, as written:**
+   - falsifier 3;
+   - falsifier 4, 20 runs at 32 threads, each bounded at 300 s;
+   - `nm -C` and the feature tree;
+   - the workspace run, bound 5400 s, in one 14G scope, with the nine
+     native ZeroMQ `--skip`s.
+3. **No source edit after the replays.** Any edit under `crates/` expires
+   the fingerprints again. If something forces one, STOP.
+
+### Report
+
+- Update `.temp/brief-635/report-a2.json` in place. I keep a copy of the
+  STOP version.
+  - Keep the runs already recorded, and add the new ones under new ids.
+  - Remove the STOP, which this ruling answers.
+  - Replace the `not-run` section.
+  - Set the verdict to DONE only when everything is green.
+- Quote every `test result:` line and every verdict line.
+- Run `python3 scripts/report.py check 635 --stage a2 --against-git` until
+  it prints no PROBLEM.
+- Your final message is `python3 scripts/report.py summary 635 --stage a2`.
