@@ -70,7 +70,7 @@ pub(super) fn verify(
             .values()
             .flatten()
             .filter(|f| {
-                f.attrs
+                f.attrs()
                     .iter()
                     .any(|a| a.path().is_ident("doc") && tokens(&a.meta).contains(&marker))
             })
@@ -123,7 +123,7 @@ pub(super) fn definition_edges(source: &Source, f: &Function) -> Frontier {
         locals: parameter_names(f),
         methods: methods::claims(source, f),
     }
-    .visit_block(&f.body);
+    .visit_block(&f.body());
     report
 }
 
@@ -157,7 +157,7 @@ pub(super) fn frontier(source: &Source, roots: &[Id]) -> Frontier {
             locals: parameter_names(&f),
             methods: methods::claims(source, &f),
         }
-        .visit_block(&f.body);
+        .visit_block(&f.body());
     }
     report
 }
@@ -348,7 +348,7 @@ fn parameter_names(f: &Function) -> BTreeSet<String> {
         }
     }
     let mut names = Names(BTreeSet::new());
-    for arg in &f.sig.inputs {
+    for arg in &f.sig().inputs {
         match arg {
             syn::FnArg::Typed(arg) => names.visit_pat(&arg.pat),
             syn::FnArg::Receiver(_) => {

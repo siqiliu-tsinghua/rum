@@ -169,8 +169,9 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   the retention line (paused at E0), which contains the suspension
   continuation branch (active).
 - **Branch queue, in order:**
-  1. test isolation: the shared retention parse (brief-636), then the
-     workspace thread-count measurement (4/8/16/32) for the user's ruling;
+  1. the workspace thread-count measurement (4/8/16/32) for the user's
+     ruling — `rum-stdlib` at 8 threads was parked by the user on
+     2026-10-29, so ask first. Test isolation is done (briefs 634–636);
   2. LP03–LP08;
   3. G15-C2's remaining 353 rows, then CM;
   4. `CHANGELOG.md` (user ruling: before S10);
@@ -181,8 +182,11 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   format, the remaining audit items and the threat-model critiques. Only then
   `v0.3.0`.
 - **Latest done:**
+  - brief-636, the shared parse: one immutable `Source`, `Interfaces`,
+    population and typed `Discovery` per process; test-isolation item 1 is
+    done (briefs 634, 635, 636);
   - brief-635 amendment 2, the reset admits for its whole body and the
-    evaluation-cache `ACTIVE` publishes: test-isolation item 1 is done;
+    evaluation-cache `ACTIVE` publishes;
   - brief-635 amendment 1, the lexical write gate: `5184797c`;
   - brief-635 stage 1, the epoch test lease: `b199d63c`;
   - brief-634, the test-artifact constructors: `467ff97a`;

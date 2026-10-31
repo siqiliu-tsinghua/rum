@@ -5,10 +5,11 @@ use std::fs;
 
 #[test]
 fn local_production_acceptance() {
-    let source = promotion::population(source::production());
+    let shared = promotion::shared_population();
+    let source = &shared.source;
     assert!(source.errors.is_empty(), "{:?}", source.errors);
-    let index = Interfaces::new(&source);
-    let marks = promotion::earn(&source, &index);
+    let index = &shared.index;
+    let marks = promotion::earn(source, index);
     let directory = source::workspace().join(".temp/brief-546/certificates");
     fs::create_dir_all(&directory).unwrap();
     let mut rows = String::from("body\tinstance\trejections\n");

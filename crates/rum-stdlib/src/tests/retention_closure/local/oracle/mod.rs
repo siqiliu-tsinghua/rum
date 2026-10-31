@@ -33,12 +33,9 @@ pub(super) fn json(text: &str) -> String {
 
 #[test]
 fn local_probe_claims_match_stable_rustc() {
-    let source = source::test_module(
-        source::production(),
-        "crates/rum-runtime/src/runtime/accounting_mode/tests/mod.rs",
-        "rum_runtime::runtime::accounting_mode::tests",
-    );
-    let index = Interfaces::new(&source);
+    let shared = promotion::shared_population();
+    let source = &shared.source;
+    let index = &shared.index;
     let marks = Marks::contracts(
         contracts::read(include_str!("../../inventory/local-contracts.tsv")).unwrap(),
     )
@@ -64,7 +61,7 @@ fn local_probe_claims_match_stable_rustc() {
             let report = check_instance(&index, &f, &marks);
             assert!(report.rejected.is_empty(), "{}", report.text());
             let text = &source.files[&f.site.file];
-            let body_site = Site::new(&f.site.file, f.body.span());
+            let body_site = Site::new(&f.site.file, f.body().span());
             let start = offset(text, body_site.start);
             let end = offset(text, body_site.end);
             struct Sites(Vec<(Site, bool, bool)>);
@@ -92,7 +89,7 @@ fn local_probe_claims_match_stable_rustc() {
                 }
             }
             let mut sites = Sites(vec![]);
-            sites.visit_block(&f.body);
+            sites.visit_block(&f.body());
             let mut claims = vec![];
             for (mut site, place, value) in sites.0 {
                 site.file = f.site.file.clone();
@@ -109,7 +106,7 @@ fn local_probe_claims_match_stable_rustc() {
                 }
                 claims.push(format!("{{\"start\":{},\"end\":{},\"site\":{},\"exact\":{},\"place\":{},\"targets\":[{}]}}", offset(text,site.start)-start,offset(text,site.end)-start,json(&site.display()),exact.as_ref().map(|s|json(s)).unwrap_or_else(||"null".into()),place,targets.iter().map(|s|json(s)).collect::<Vec<_>>().join(",")));
             }
-            let mut sig = original.sig.clone();
+            let mut sig = original.sig();
             sig.ident = syn::Ident::new(&format!("__b540_{name}_{i}"), sig.ident.span());
             sig.generics.params = sig
                 .generics

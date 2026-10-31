@@ -76,7 +76,7 @@ pub(super) fn reconcile(source: &Source, inventory: &str) -> Result<Vec<String>,
             file: &function.site.file,
             sites: Vec::new(),
         };
-        copies.visit_block(&function.body);
+        copies.visit_block(&function.body());
         let [site] = copies.sites.as_slice() else {
             return Err(format!("escaping copy missing or ambiguous: {}", row[0]));
         };

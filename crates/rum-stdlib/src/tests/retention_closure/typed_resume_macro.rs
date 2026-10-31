@@ -243,8 +243,8 @@ fn adapt(source: &Source, f: &Function, mac: &syn::Macro) -> Result<Arm, String>
         }
     }
     let mut bindings = Bindings(false);
-    bindings.visit_signature(&f.sig);
-    bindings.visit_block(&f.body);
+    bindings.visit_signature(&f.sig());
+    bindings.visit_block(&f.body());
     bindings.visit_pat(&arm.value);
     for expression in [&arm.session, &arm.result, &arm.success, &arm.frame] {
         bindings.visit_expr(expression);

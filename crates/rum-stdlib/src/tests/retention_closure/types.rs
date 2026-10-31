@@ -74,7 +74,7 @@ fn ownership_inner(source: &Source, exact: &ExactTy, active: &mut BTreeSet<Id>) 
             }
             let result = (|| -> Result<Ty, String> {
                 if let Some([def]) = source.types.get(id).map(Vec::as_slice) {
-                    attributes(&def.attrs)?;
+                    attributes(&def.attrs())?;
                 }
                 let vs = variants(source, exact)?;
                 if vs.is_empty() {
@@ -109,8 +109,8 @@ fn ownership_inner(source: &Source, exact: &ExactTy, active: &mut BTreeSet<Id>) 
 pub(super) fn in_function(source: &Source, f: &Function, t: &syn::Type) -> Result<ExactTy, String> {
     let mut substitutions = f.substitutions.clone();
     if !substitutions.contains_key("Self") {
-        if let Some(owner) = &f.impl_self {
-            if let Ok(ty) = substitute(source, &f.module, owner, &substitutions) {
+        if let Some(owner) = f.impl_self() {
+            if let Ok(ty) = substitute(source, &f.module, &owner, &substitutions) {
                 substitutions.insert("Self".into(), ty);
             }
         }
@@ -121,7 +121,7 @@ pub(super) fn in_function(source: &Source, f: &Function, t: &syn::Type) -> Resul
 }
 
 pub(super) fn exact_output(source: &Source, f: &Function) -> Result<ExactTy, String> {
-    match &f.sig.output {
+    match &f.sig().output {
         syn::ReturnType::Default => Ok(ExactTy::Unit),
         syn::ReturnType::Type(_, t) => in_function(source, f, t),
     }
@@ -131,7 +131,7 @@ pub(super) fn exact_parameters(
     source: &Source,
     f: &Function,
 ) -> Result<Vec<(String, ExactTy)>, String> {
-    f.sig
+    f.sig()
         .inputs
         .iter()
         .map(|arg| match arg {
@@ -167,15 +167,15 @@ pub(super) fn output(source: &Source, f: &Function) -> Result<Ty, String> {
 }
 
 pub(super) fn signature(source: &Source, f: &Function) -> Result<Vec<(String, Ty)>, String> {
-    attributes(&f.attrs)?;
+    attributes(&f.attrs())?;
     if f.conditional
-        || !f.sig.generics.params.is_empty()
-        || !f.impl_generics.params.is_empty()
-        || f.sig.generics.where_clause.is_some()
-        || f.sig.asyncness.is_some()
-        || f.sig.unsafety.is_some()
-        || f.sig.abi.is_some()
-        || f.sig.variadic.is_some()
+        || !f.sig().generics.params.is_empty()
+        || !f.impl_generics().params.is_empty()
+        || f.sig().generics.where_clause.is_some()
+        || f.sig().asyncness.is_some()
+        || f.sig().unsafety.is_some()
+        || f.sig().abi.is_some()
+        || f.sig().variadic.is_some()
     {
         return Err("only unconditional monomorphic safe Rust signatures are admitted".into());
     }

@@ -18,9 +18,11 @@ pub(super) fn check(source: &Source, f: &Function, report: &mut Report) {
         pending: vec![],
         terminated: false,
     };
-    for input in &f.sig.inputs {
+    for input in &f.sig().inputs {
         let mut one = f.clone();
-        one.sig.inputs = [input.clone()].into_iter().collect();
+        let mut signature = one.sig();
+        signature.inputs = [input.clone()].into_iter().collect();
+        one.sig = tokens(&signature);
         if let Ok(parameters) = types::exact_parameters(source, &one) {
             for (name, ty) in parameters {
                 let v = flow.value(ty, input.span());
@@ -34,7 +36,7 @@ pub(super) fn check(source: &Source, f: &Function, report: &mut Report) {
             }
         }
     }
-    flow.block(&f.body);
+    flow.block(&f.body());
 }
 
 struct Flow<'a> {

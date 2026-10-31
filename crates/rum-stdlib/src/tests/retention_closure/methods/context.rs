@@ -33,17 +33,17 @@ pub(in super::super) fn claims(
         }
     }
     let mut conditional = Conditional {
-        unknown: f.conditional || types::attributes(&f.attrs).is_err(),
+        unknown: f.conditional || types::attributes(&f.attrs()).is_err(),
         source,
         function: f,
     };
-    for input in &f.sig.inputs {
+    for input in &f.sig().inputs {
         conditional.unknown |= match input {
             syn::FnArg::Typed(a) => !a.attrs.is_empty(),
             syn::FnArg::Receiver(r) => !r.attrs.is_empty(),
         };
     }
-    conditional.visit_block(&f.body);
+    conditional.visit_block(&f.body());
     let mut context = Context {
         source,
         f,
@@ -53,9 +53,11 @@ pub(in super::super) fn claims(
     };
     // An unrelated unknown generic parameter must not erase an independently
     // checked nominal parameter. Open generic receivers themselves stay unknown.
-    for input in &f.sig.inputs {
+    for input in &f.sig().inputs {
         let mut single = f.clone();
-        single.sig.inputs = [input.clone()].into_iter().collect();
+        let mut signature = single.sig();
+        signature.inputs = [input.clone()].into_iter().collect();
+        single.sig = tokens(&signature);
         match input {
             syn::FnArg::Typed(a) => {
                 if let Ok(ty) = types::in_function(source, f, &a.ty) {
@@ -82,7 +84,7 @@ pub(in super::super) fn claims(
             }
         }
     }
-    context.visit_block(&f.body);
+    context.visit_block(&f.body());
     context.claims
 }
 
@@ -160,7 +162,7 @@ impl Context<'_> {
                 }
                 let target = resolve::path(self.source, &self.f.module, &p.path).ok()?;
                 let f = resolve::function(self.source, &target).ok()?;
-                if !f.sig.generics.params.is_empty() || f.sig.asyncness.is_some() {
+                if !f.sig().generics.params.is_empty() || f.sig().asyncness.is_some() {
                     return None;
                 }
                 Some(self.value(

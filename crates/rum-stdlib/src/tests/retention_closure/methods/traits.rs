@@ -71,7 +71,7 @@ pub(super) fn exclude(
         if defs.len() != 1 || defs[0].conditional {
             return Err(format!("conditional trait {id}"));
         }
-        let tr = &defs[0].item;
+        let tr = defs[0].item();
         types::attributes(&tr.attrs)?;
         for item in &tr.items {
             if let syn::TraitItem::Fn(f) = item {
@@ -102,6 +102,7 @@ pub(super) fn exclude(
         }
         let mut seen = 0;
         for (module, item, _, conditional) in &source.trait_impls {
+            let item = ast::<syn::ItemImpl>(item);
             let Some((_, path, _)) = &item.trait_ else {
                 unreachable!()
             };

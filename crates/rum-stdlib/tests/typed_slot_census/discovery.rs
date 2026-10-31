@@ -55,3 +55,10 @@ pub(super) fn discover(root: &Path) -> (BTreeMap<String, String>, Facts, Report)
     classify::wire_graph(&mut report, &facts, &decoders);
     (files, facts, report)
 }
+
+type Discovery = (BTreeMap<String, String>, Facts, Report);
+static PRODUCTION: std::sync::OnceLock<Discovery> = std::sync::OnceLock::new();
+
+pub(super) fn production() -> &'static Discovery {
+    PRODUCTION.get_or_init(|| discover(&root()))
+}

@@ -61,8 +61,8 @@ pub(in super::super) fn substitutions(
     definition: &Nominal,
     args: &[ExactTy],
 ) -> Result<BTreeMap<String, ExactTy>, String> {
-    let parameters = definition
-        .generics
+    let generics = definition.generics();
+    let parameters = generics
         .params
         .iter()
         .filter(|p| !matches!(p, syn::GenericParam::Lifetime(_)))
@@ -174,13 +174,13 @@ fn expand(
                     return Err(format!("conditional type {id}"));
                 }
                 let params = substitutions(def, &args)?;
-                if let Some(alias) = &def.alias {
+                if let Some(alias) = def.alias() {
                     if !active.insert(id.clone()) {
                         return Err(format!(
                             "recursive type/alias requires an exact cleanup contract: {id}"
                         ));
                     }
-                    let result = expand(source, &def.module, alias, &params, active);
+                    let result = expand(source, &def.module, &alias, &params, active);
                     active.remove(&id);
                     return result;
                 }
@@ -264,7 +264,7 @@ pub(in super::super) fn fields(
             }
             Ok((
                 f.name.clone(),
-                substitute(source, &def.module, &f.ty, &params)?,
+                substitute(source, &def.module, &f.ty(), &params)?,
             ))
         })
         .collect()
@@ -302,7 +302,7 @@ pub(in super::super) fn field(
     if field.conditional {
         return Err("conditional field".into());
     }
-    substitute(source, &def.module, &field.ty, &substitutions(def, args)?)
+    substitute(source, &def.module, &field.ty(), &substitutions(def, args)?)
 }
 
 pub(in super::super) fn variants(source: &Source, ty: &ExactTy) -> Result<Vec<String>, String> {

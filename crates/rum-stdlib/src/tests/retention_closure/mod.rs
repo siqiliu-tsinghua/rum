@@ -22,7 +22,7 @@ mod types;
 
 use std::collections::BTreeMap;
 
-use model::{Kind, Ty};
+use model::{Kind, Source, Ty};
 
 fn contracts() -> Vec<leaves::Leaf> {
     leaves::read(include_str!("inventory/leaves.tsv")).unwrap()
@@ -37,6 +37,24 @@ fn production_obligations_are_exact() {
         "module reconciliation: {:?}",
         source.errors
     );
+    let shared_functions = &*source.functions as *const _;
+    let (id, original) = source
+        .functions
+        .iter()
+        .find_map(|(id, functions)| {
+            functions
+                .first()
+                .map(|function| (id.clone(), function.body.clone()))
+        })
+        .unwrap();
+    let mut mutant = Source::clone(source);
+    mutant.functions.get_mut(&id).unwrap()[0]
+        .body
+        .push_str("\n// mutant");
+    assert!(std::ptr::eq(shared_functions, &*source.functions));
+    assert_eq!(original, source.functions[&id][0].body);
+    assert_ne!(original, mutant.functions[&id][0].body);
+    assert!(!std::ptr::eq(shared_functions, &*mutant.functions));
     println!(
         "MODULES={} RECONCILED_FILES={} PRODUCTION_FILES={} FUNCTION_IDENTITIES={}",
         source.modules.len(),
@@ -253,7 +271,7 @@ fn unresolved_edges_are_errors() {
     );
     let cycle = source::fixture(&[("cycle", "cycle.rs", "#[path = \"./cycle.rs\"] mod again;")]);
     assert_eq!(
-        cycle.errors,
+        cycle.errors.as_slice(),
         ["recursive source path: cycle.rs in fixture::cycle::again"]
     );
     // A workspace crate is an extern-prelude root too. Passing through its

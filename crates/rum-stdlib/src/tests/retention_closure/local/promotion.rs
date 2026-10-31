@@ -7,9 +7,9 @@ pub(super) const INVENTORY: &str = include_str!("../inventory/promoted.tsv");
 pub(super) const OBLIGATIONS: &str = include_str!("../inventory/obligations.tsv");
 pub(super) const CONSUMERS: &str = include_str!("../inventory/consumer-obligations.tsv");
 
-pub(super) fn population(source: Source) -> Source {
+pub(super) fn population(source: &Source) -> Source {
     source::test_module(
-        source,
+        Source::clone(source),
         "crates/rum-runtime/src/runtime/accounting_mode/tests/mod.rs",
         "rum_runtime::runtime::accounting_mode::tests",
     )
@@ -175,9 +175,31 @@ pub(super) fn reconcile(
     Ok(())
 }
 
-pub(in super::super) fn verify(source: &Source) {
-    let source = population(source.clone());
-    let index = Interfaces::new(&source);
-    let marks = earn(&source, &index);
-    reconcile(&source, &index, &marks, INVENTORY, OBLIGATIONS, CONSUMERS).unwrap();
+pub(super) struct SharedPopulation {
+    pub source: Source,
+    pub index: Interfaces,
+}
+
+pub(super) fn shared_population() -> &'static SharedPopulation {
+    static POPULATION: std::sync::OnceLock<SharedPopulation> = std::sync::OnceLock::new();
+    POPULATION.get_or_init(|| {
+        let source = population(source::production());
+        let index = Interfaces::new(&source);
+        SharedPopulation { source, index }
+    })
+}
+
+pub(in super::super) fn verify(input: &Source) {
+    let shared = shared_population();
+    assert!(std::ptr::eq(input, source::production()));
+    let marks = earn(&shared.source, &shared.index);
+    reconcile(
+        &shared.source,
+        &shared.index,
+        &marks,
+        INVENTORY,
+        OBLIGATIONS,
+        CONSUMERS,
+    )
+    .unwrap();
 }

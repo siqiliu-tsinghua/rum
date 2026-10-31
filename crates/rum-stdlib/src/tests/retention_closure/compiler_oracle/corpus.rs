@@ -31,7 +31,7 @@ fn census_constructor_resolutions_are_compiler_observed() {
                 site,
                 callee: None,
             };
-            find.visit_block(&f.body);
+            find.visit_block(&f.body());
             if find.callee.is_some() {
                 found = find.callee;
             }
@@ -181,7 +181,7 @@ mod typed_argument_fixture {
 fn typed_argument_source() -> (Source, Function) {
     let file = "crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/corpus.rs";
     let module = "rum_stdlib::tests::retention_closure::compiler_oracle::corpus";
-    let mut source = source::production();
+    let mut source = source::production().to_owned();
     source
         .files
         .insert(file.into(), include_str!("corpus.rs").into());
@@ -220,7 +220,7 @@ fn typed_macro_constructor_locator_reads_arguments() {
             site: &claim.site,
             callee: None,
         };
-        find.visit_block(&f.body);
+        find.visit_block(&f.body());
         assert!(
             find.callee.is_some(),
             "constructor locator hid {}",
@@ -301,7 +301,7 @@ fn typed_macro_expression_form_reads_all_four_views() {
             site: &claim.site,
             callee: None,
         };
-        find.visit_block(&f.body);
+        find.visit_block(&f.body());
         assert!(
             find.callee.is_some(),
             "expression-form constructor is visible"
@@ -338,13 +338,15 @@ fn typed_macro_expression_form_reads_all_four_views() {
 fn legacy_macro_stays_opaque_in_all_four_views() {
     let (source, mut f) = typed_argument_source();
     let typed_claims = regions::definition_edges(&source, &f).constructors;
-    let mac = match f.body.stmts.last_mut().unwrap() {
+    let mut body = f.body();
+    let mac = match body.stmts.last_mut().unwrap() {
         syn::Stmt::Expr(syn::Expr::Macro(m), _) => &mut m.mac,
         syn::Stmt::Macro(m) => &mut m.mac,
         _ => panic!("fixture tail is a macro"),
     };
     // Preserve every argument span while changing only the macro path.
     mac.path = syn::parse_quote!(rum_runtime::resume_or_suspend);
+    f.body = tokens(&body);
     let edges = regions::definition_edges(&source, &f);
     assert!(edges.constructors.is_empty() && edges.resolved.is_empty());
     assert_eq!(edges.rejected.len(), 1);
@@ -358,7 +360,7 @@ fn legacy_macro_stays_opaque_in_all_four_views() {
             site: &claim.site,
             callee: None,
         };
-        find.visit_block(&f.body);
+        find.visit_block(&f.body());
         assert!(find.callee.is_none(), "legacy arguments must remain opaque");
     }
     println!("LEGACY_MACRO_OPAQUE regions/locator/methods/types");
@@ -443,7 +445,7 @@ fn typed_macro_definition_drift_fails_every_view() {
                         site: &f.site,
                         callee: None,
                     };
-                    find.visit_block(&f.body);
+                    find.visit_block(&f.body());
                 }
                 "methods" => {
                     super::super::methods::claims(&source, &f);
@@ -480,17 +482,15 @@ fn typed_macro_definition_drift_fails_every_view() {
 #[test]
 fn typed_macro_unknown_pattern_does_not_leak_or_select() {
     let (source, mut f) = typed_argument_source();
-    f.body = syn::parse_str(
-        r#"{
+    f.body = r#"{
         rum_runtime::resume_typed_or_suspend!(
             { let _ = local.choose(); session },
             { let _ = local.choose(); unresolved_producer() },
             ok(local) => { let _ = local.choose(); Ok(None) },
             suspend => { let _ = local.choose(); frame },
         )
-    }"#,
-    )
-    .unwrap();
+    }"#
+    .into();
     let claims = super::super::methods::claims(&source, &f);
     assert_eq!(claims.len(), 4);
     let mut selected = 0;
@@ -517,7 +517,8 @@ fn typed_macro_unknown_pattern_does_not_leak_or_select() {
 #[test]
 fn typed_macro_evaluation_return_reads_all_four_views() {
     let (source, mut f) = typed_argument_source();
-    let mac = match f.body.stmts.last_mut().unwrap() {
+    let mut body = f.body();
+    let mac = match body.stmts.last_mut().unwrap() {
         syn::Stmt::Expr(syn::Expr::Macro(m), _) => &mut m.mac,
         syn::Stmt::Macro(m) => &mut m.mac,
         _ => panic!("fixture tail is a macro"),
@@ -527,6 +528,7 @@ fn typed_macro_evaluation_return_reads_all_four_views() {
         .to_string()
         .replace("suspend =>", "evaluation_return =>");
     mac.tokens = arguments.parse().unwrap();
+    f.body = tokens(&body);
     let edges = regions::definition_edges(&source, &f);
     assert!(edges.rejected.iter().any(|row| {
         row.reason
@@ -540,7 +542,7 @@ fn typed_macro_evaluation_return_reads_all_four_views() {
             site: &claim.site,
             callee: None,
         };
-        find.visit_block(&f.body);
+        find.visit_block(&f.body());
         assert!(find.callee.is_some());
     }
     assert_eq!(super::super::methods::claims(&source, &f).len(), 1);

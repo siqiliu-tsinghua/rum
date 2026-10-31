@@ -21,13 +21,13 @@ fn site_fields(site: &Site) -> Vec<String> {
 
 fn signature_fields(source: &Source, id: &str) -> Vec<String> {
     let f = resolve::function(source, id).unwrap();
-    let close = f.sig.paren_token.span.close().start();
+    let close = f.sig().paren_token.span.close().start();
     vec![
         id.into(),
         f.site.file.clone(),
         close.line.to_string(),
         (close.column + 1).to_string(),
-        if f.sig.inputs.is_empty() || f.sig.inputs.trailing_punct() {
+        if f.sig().inputs.is_empty() || f.sig().inputs.trailing_punct() {
             ""
         } else {
             ", "

@@ -145,7 +145,7 @@ impl Lint<'_> {
             });
         let output = if let Some(callee) = &signature {
             if p.path.segments.iter().any(|s| !s.arguments.is_empty())
-                || c.args.len() != callee.sig.inputs.len()
+                || c.args.len() != callee.sig().inputs.len()
             {
                 return self.no(
                     c.span(),
@@ -156,7 +156,8 @@ impl Lint<'_> {
                 Site::new(&self.f.site.file, p.span()),
                 ExactTy::Function(target.clone()),
             );
-            if !callee.sig.generics.params.is_empty() || !callee.impl_generics.params.is_empty() {
+            if !callee.sig().generics.params.is_empty() || !callee.impl_generics().params.is_empty()
+            {
                 self.reject(
                     c.span(),
                     Kind::RET002,
@@ -169,12 +170,13 @@ impl Lint<'_> {
             self.std_output(p, &target, expected)
         };
         for (i, arg) in c.args.iter().enumerate() {
-            let parameter = signature
-                .as_ref()
-                .and_then(|f| match f.sig.inputs.iter().nth(i)? {
-                    syn::FnArg::Typed(a) => types::in_function(self.source(), f, &a.ty).ok(),
-                    _ => None,
-                });
+            let parameter =
+                signature
+                    .as_ref()
+                    .and_then(|f| match f.sig().inputs.iter().nth(i)? {
+                        syn::FnArg::Typed(a) => types::in_function(self.source(), f, &a.ty).ok(),
+                        _ => None,
+                    });
             let previous = self.argument_hazard.take();
             if !self.inert.contains(&target) {
                 self.argument_hazard = Some(Site::new(&self.f.site.file, c.span()));
@@ -290,7 +292,7 @@ impl Lint<'_> {
         });
         for (i, arg) in c.args.iter().enumerate() {
             let parameter = diagnostic_signature.as_ref().and_then(|f| {
-                match f.sig.inputs.iter().nth(i + 1)? {
+                match f.sig().inputs.iter().nth(i + 1)? {
                     syn::FnArg::Typed(a) => types::in_function(self.source(), f, &a.ty).ok(),
                     _ => None,
                 }

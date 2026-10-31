@@ -54,8 +54,7 @@ fn local_concrete_contract_controls() {
     let shared = <SharedArgs as Clone>::clone(&args);
     assert!(SharedArgs::ptr_eq(&args, &shared));
     let records = contracts::read(include_str!("../inventory/local-contracts.tsv")).unwrap();
-    let source = source::production();
-    let index = Interfaces::new(&source);
+    let index = Interfaces::shared_production();
     for record in records.iter().filter(|r| r.status == "Discharged") {
         let good = Marks::contracts(records.clone()).unwrap();
         assert!(good.lookup(&index, &record.target).is_ok());

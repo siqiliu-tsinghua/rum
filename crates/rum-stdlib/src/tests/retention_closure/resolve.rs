@@ -294,7 +294,7 @@ fn enum_alias(source: &Source, id: &str, active: &mut BTreeSet<Id>) -> Option<Id
         if def.conditional {
             return None;
         }
-        let syn::Type::Path(p) = def.alias.as_ref()? else {
+        let syn::Type::Path(p) = def.alias()? else {
             return None;
         };
         if p.qself.is_some() {
@@ -330,7 +330,7 @@ fn enum_alias(source: &Source, id: &str, active: &mut BTreeSet<Id>) -> Option<Id
 
 pub(super) fn function<'a>(source: &'a Source, id: &str) -> Result<&'a Function, String> {
     match source.functions.get(id).map(Vec::as_slice) {
-        Some([f]) if !f.conditional && f.impl_generics.params.is_empty() => Ok(f),
+        Some([f]) if !f.conditional && f.impl_generics().params.is_empty() => Ok(f),
         Some(_) => Err(format!("ambiguous or conditional function {id}")),
         None => Err(format!("not a resolved function definition: {id}")),
     }
@@ -496,11 +496,12 @@ pub(super) fn collect_imports(
 }
 
 pub(super) fn impls(source: &mut Source) {
-    for (module, item, site, conditional) in source.impls.clone() {
+    for (module, text, site, conditional) in source.impls.clone() {
+        let item = ast::<syn::ItemImpl>(&text);
         if item.trait_.is_some() {
             source
                 .trait_impls
-                .push((module.clone(), item.clone(), site.clone(), conditional));
+                .push((module.clone(), text.clone(), site.clone(), conditional));
         }
         let syn::Type::Path(owner) = &*item.self_ty else {
             continue;
@@ -533,8 +534,16 @@ pub(super) fn impls(source: &mut Source) {
                     continue;
                 }
                 let id = format!("{owner}::{}", f.sig.ident);
-                let mut attrs = item.attrs.clone();
-                attrs.extend(f.attrs.clone());
+                let mut attrs: Vec<_> = item
+                    .attrs
+                    .iter()
+                    .map(|attr| located(attr, &site.file, &source.files))
+                    .collect();
+                attrs.extend(
+                    f.attrs
+                        .iter()
+                        .map(|attr| located(attr, &site.file, &source.files)),
+                );
                 source
                     .functions
                     .entry(id.clone())
@@ -543,13 +552,13 @@ pub(super) fn impls(source: &mut Source) {
                         id,
                         module: module.clone(),
                         site: Site::new(&site.file, f.span()),
-                        sig: f.sig.clone(),
-                        body: f.block.clone(),
+                        sig: located(&f.sig, &site.file, &source.files),
+                        body: located(&f.block, &site.file, &source.files),
                         attrs,
                         owner: Some(owner.clone()),
                         boundary: source::boundary(&f.vis, &module),
-                        impl_self: Some((*item.self_ty).clone()),
-                        impl_generics: item.generics.clone(),
+                        impl_self: Some(located(&item.self_ty, &site.file, &source.files)),
+                        impl_generics: located(&item.generics, &site.file, &source.files),
                         substitutions: Default::default(),
                         conditional: conditional || source::conditional(&f.attrs),
                     });

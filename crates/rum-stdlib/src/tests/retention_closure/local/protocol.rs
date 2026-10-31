@@ -165,11 +165,11 @@ pub(super) fn method(source: &Source, ty: &ExactTy, name: &str) -> Option<Call> 
         {
             let target = format!("{id}::{name}");
             let f = signature(source, &target)?;
-            types::attributes(&f.attrs).ok()?;
-            if f.sig.unsafety.is_some()
-                || f.sig.asyncness.is_some()
-                || f.sig.abi.is_some()
-                || f.sig.variadic.is_some()
+            types::attributes(&f.attrs()).ok()?;
+            if f.sig().unsafety.is_some()
+                || f.sig().asyncness.is_some()
+                || f.sig().abi.is_some()
+                || f.sig().variadic.is_some()
             {
                 return None;
             }
@@ -202,7 +202,7 @@ pub(super) fn competing_trait(source: &Source, f: &Function, name: &str) -> bool
         for binding in scope.bindings.values().flatten() {
             if let Some(definitions) = source.traits.get(&binding.target) {
                 if definitions.iter().any(|d| {
-                    d.item
+                    d.item()
                         .items
                         .iter()
                         .any(|item| matches!(item, syn::TraitItem::Fn(m) if m.sig.ident == name))

@@ -4,7 +4,7 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-29. The committed tree runs through:
+Status checkpoint: 2026-10-31. The committed tree runs through:
 - G13 step S9 (brief-617, control and cleanup; gated, below);
 - G15-A (brief-619, `afdcd02f`) and G15-B (brief-620, `43a26c72`);
 - the G15-C design (brief-621, accepted `8f77793c`) and G15-C1 (brief-622,
@@ -13,16 +13,19 @@ Status checkpoint: 2026-10-29. The committed tree runs through:
   `17576575`);
 - the native stack base per thread (brief-629, `60ca9585`) and the
   abandonment repairs (brief-630: B1 `854cfa4a`, B2 `1c115117`, B3
-  `ba1e1e52`).
+  `ba1e1e52`);
+- test isolation: the artifact constructors (brief-634, `467ff97a`), the
+  profiler test lease (brief-635: stage 1 `b199d63c`, amendment 1
+  `5184797c`, amendment 2 `f38657d0`) and the shared parse (brief-636).
 
-**Next, in order** (the branch queue): test isolation (brief-627's
-families: a profiler test lease, typed-slot scratch directories, and one
-shared retention parse per process, with `typed_slot_census` added to it),
-then LP03-LP08, C2's remaining 353 rows, CM, `CHANGELOG.md`, and S10 onward.
-New briefs go to kimi while Codex has no quota and grk has no balance
-(2026-10-30).
+**Next, in order** (the branch queue): the workspace thread-count
+measurement (4/8/16/32) for the user's default-thread ruling — note the
+2026-10-29 park on measuring `rum-stdlib` at 8 test threads, so this needs
+the user's go-ahead — then LP03-LP08, C2's remaining 353 rows, CM,
+`CHANGELOG.md`, and S10 onward. New briefs go to kimi while Codex has no
+quota and grk has no balance (2026-10-30).
 
-Test isolation, in progress:
+Test isolation, done:
 - the design (brief-633) is gated;
 - the test-artifact constructors (brief-634: `PrivateScratch` and
   `CompiledLibrary`) are done;
@@ -34,9 +37,12 @@ Test isolation, in progress:
   - amendment 2 admits the reset for its whole body and makes the
     evaluation-cache `ACTIVE` flag publish too. The gate is GREEN, with the
     census ruled; the record is in the brief;
-- then the shared parse (brief-636, option iv);
-- after those, the director measures the workspace at 4, 8, 16 and 32
-  threads, and the user rules the default thread count.
+- the shared parse (brief-636, option iv) is done: one immutable `Source`,
+  its production `Interfaces`, the test population and the typed
+  `Discovery` per process, with copy-on-write mutants; the 32-thread lib
+  that was SIGKILLed at the cap at HEAD passes three times, and the
+  complete dumps are byte-identical. The record is in the brief;
+- next, the workspace thread-count measurement above.
 
 **The director's gate is a script** (brief-631, director tooling):
 `scripts/director-gate.py run NNN --stage S` runs the scope check, fmt, the

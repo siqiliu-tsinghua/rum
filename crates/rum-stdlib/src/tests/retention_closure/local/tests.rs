@@ -147,7 +147,7 @@ fn local_side_door_and_covered_freshness() {
         .unwrap()
         .first_mut()
         .unwrap();
-    helper.body = syn::parse_str("{ let _raw = Vec::<u8>::new(); missing(); }").unwrap();
+    helper.body = "{ let _raw = Vec::<u8>::new(); missing(); }".into();
     let other = Interfaces::new(&changed);
     let a = check(&index, function(&source, "missing"), &Marks::default());
     let b = check(&other, function(&changed, "missing"), &Marks::default());
@@ -180,7 +180,7 @@ fn local_side_door_and_covered_freshness() {
             .functions
             .values()
             .flatten()
-            .all(|f| f.body.stmts.is_empty())
+            .all(|f| f.body().stmts.is_empty())
     );
     save(
         "side-door.green.txt",
@@ -212,7 +212,7 @@ fn local_side_door_and_covered_freshness() {
 #[test]
 fn local_contract_falsifiers() {
     let source = source::production();
-    let index = Interfaces::new(&source);
+    let index = Interfaces::shared_production();
     let records = contracts::read(include_str!("../inventory/local-contracts.tsv")).unwrap();
     assert_eq!(
         records
@@ -270,7 +270,7 @@ fn local_contract_falsifiers() {
     )
     .unwrap()
     .clone();
-    caller.body = syn::parse_str("{ self.evaluate(expr); }").unwrap();
+    caller.body = "{ self.evaluate(expr); }".into();
     let report = check(&index, &caller, &stale);
     save("contract-stale.red.txt", &report.text());
     assert!(
@@ -321,7 +321,7 @@ fn local_inventory_marks_are_earned() {
     assert_eq!(marks.count(), seen.len());
     save("earned-marks.tsv", &marks.inventory());
     let mut forged = function(&source, "unit_helper").clone();
-    forged.body = syn::parse_str("{ () }").unwrap();
+    forged.body = "{ () }".into();
     assert!(
         marks
             .certify(&index, &forged)

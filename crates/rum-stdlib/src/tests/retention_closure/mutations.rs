@@ -30,9 +30,11 @@ pub(super) fn probe(text: &str) -> Source {
 pub(super) fn extracted() -> Source {
     let mut source = fixtures::program();
     let root = &mut source.functions.get_mut(regions::DEMO).unwrap()[0];
-    root.body.stmts.insert(
+    let mut body = root.body();
+    body.stmts.insert(
         0,
         syn::parse_str("super::extracted_allocator::root();").unwrap(),
     );
+    root.body = tokens(&body);
     source
 }

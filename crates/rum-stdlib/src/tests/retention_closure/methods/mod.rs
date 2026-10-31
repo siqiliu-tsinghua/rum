@@ -109,7 +109,7 @@ fn instantiate(
         return Err("receiver is not nominal".into());
     };
     let instantiated;
-    let f = if let Ok(Some(_)) = types::mode_parameter(source, &f.module, &f.impl_generics) {
+    let f = if let Ok(Some(_)) = types::mode_parameter(source, &f.module, &f.impl_generics()) {
         let [mode] = args.as_slice() else {
             return Err("mode owner must have exactly one type argument".into());
         };
@@ -120,33 +120,34 @@ fn instantiate(
     };
     let mut result = f.clone();
     let mut substitutions = f.substitutions.clone();
-    if !f.impl_generics.params.is_empty() {
+    if !f.impl_generics().params.is_empty() {
         // Direct nominal positional impl parameters only; unification is not
         // guessed from a lone candidate or from the crate compiling.
-        let syn::Type::Path(p) = f.impl_self.as_ref().ok_or("missing impl Self")? else {
+        let impl_self = f.impl_self().ok_or("missing impl Self")?;
+        let syn::Type::Path(p) = &impl_self else {
             return Err("arbitrary impl owner".into());
         };
         let syn::PathArguments::AngleBracketed(a) = &p.path.segments.last().unwrap().arguments
         else {
             return Err("non-positional generic impl".into());
         };
-        if a.args.len() != f.impl_generics.params.len() || !a.args.iter().zip(&f.impl_generics.params).all(|(a,p)| {
+        if a.args.len() != f.impl_generics().params.len() || !a.args.iter().zip(&f.impl_generics().params).all(|(a,p)| {
             matches!((a,p), (syn::GenericArgument::Type(syn::Type::Path(t)), syn::GenericParam::Type(p)) if t.qself.is_none() && t.path.is_ident(&p.ident))
         }) { return Err("non-positional generic impl".into()); }
         bind(
             source,
             &f.module,
-            &f.impl_generics,
+            &f.impl_generics(),
             args,
             &mut substitutions,
         )?;
-    } else if f.impl_generics.where_clause.is_some() {
+    } else if f.impl_generics().where_clause.is_some() {
         return Err("impl bounds are not proved".into());
     }
     let actual = types::substitute(
         source,
         &f.module,
-        f.impl_self.as_ref().ok_or("missing impl owner")?,
+        f.impl_self().as_ref().ok_or("missing impl owner")?,
         &substitutions,
     )?;
     if actual != *owner {
@@ -168,17 +169,18 @@ fn instantiate(
         })
         .transpose()?
         .unwrap_or_default();
+    let signature = result.sig();
     bind(
         source,
         &f.module,
-        &f.sig.generics,
+        &signature.generics,
         &arguments,
         &mut substitutions,
     )?;
     substitutions.insert("Self".into(), owner.clone());
     result.substitutions = substitutions;
-    result.sig.generics = syn::Generics::default();
-    result.impl_generics = syn::Generics::default();
+    result.sig = without_generics(&result.sig);
+    result.impl_generics = String::new();
     Ok(result)
 }
 
@@ -217,16 +219,17 @@ pub(super) fn select(
     {
         return Err("inherent method is not visible".into());
     }
-    types::attributes(&f.attrs)?;
-    if f.sig.asyncness.is_some()
-        || f.sig.unsafety.is_some()
-        || f.sig.abi.is_some()
-        || f.sig.variadic.is_some()
+    types::attributes(&f.attrs())?;
+    if f.sig().asyncness.is_some()
+        || f.sig().unsafety.is_some()
+        || f.sig().abi.is_some()
+        || f.sig().variadic.is_some()
     {
         return Err("method signature has unmodeled calling or return effects".into());
     }
     let f = instantiate(source, caller, f, owner, call)?;
-    let Some(syn::FnArg::Receiver(r)) = f.sig.inputs.first() else {
+    let signature = f.sig();
+    let Some(syn::FnArg::Receiver(r)) = signature.inputs.first() else {
         return Err("associated function has no receiver".into());
     };
     if r.colon_token.is_some() || r.reference.as_ref().is_some_and(|(_, l)| l.is_some()) {

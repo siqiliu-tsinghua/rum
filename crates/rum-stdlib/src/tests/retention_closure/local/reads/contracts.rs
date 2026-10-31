@@ -14,6 +14,7 @@ fn deref(source: &Source) -> Result<(), String> {
         .trait_impls
         .iter()
         .filter(|(module, item, _, _)| {
+            let item = ast::<syn::ItemImpl>(item);
             types::exact(source, module, &item.self_ty).ok() == Some(protocol::nominal(SHARED))
                 && item.trait_.as_ref().is_some_and(|(_, path, _)| {
                     resolve::path(source, module, path).ok().as_deref() == Some("std::ops::Deref")
@@ -29,7 +30,7 @@ fn deref(source: &Source) -> Result<(), String> {
             fn deref(&self) -> &Self::Target { &self.0 }
         }
     };
-    if *conditional || tokens(item) != tokens(&expected) {
+    if *conditional || tokens(&ast::<syn::ItemImpl>(item)) != tokens(&expected) {
         return Err("I02 concrete Deref implementation changed; re-discharge its contract".into());
     }
     Ok(())
@@ -45,8 +46,8 @@ fn helper(source: &Source) -> Result<(), String> {
     };
     if f.conditional
         || !f.attrs.is_empty()
-        || tokens(&f.sig) != tokens(&sig)
-        || tokens(&f.body) != tokens(&body)
+        || tokens(&f.sig()) != tokens(&sig)
+        || tokens(&f.body()) != tokens(&body)
         || resolve::path(source, &f.module, &syn::parse_quote!(expr_as_symbol))
             .ok()
             .as_deref()

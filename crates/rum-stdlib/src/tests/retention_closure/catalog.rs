@@ -57,7 +57,7 @@ pub(super) fn attachments(source: &Source) -> BTreeMap<String, BTreeSet<Attachme
                         let entry = self.routes.entry(name.value()).or_default();
                         let constructor = resolve::path(self.source, self.module, &p.path).unwrap();
                         let definition = resolve::function(self.source, &constructor).unwrap();
-                        for (parameter, arg) in definition.sig.inputs.iter().zip(&call.args) {
+                        for (parameter, arg) in definition.sig().inputs.iter().zip(&call.args) {
                             let syn::FnArg::Typed(parameter) = parameter else {
                                 continue;
                             };
@@ -95,7 +95,7 @@ pub(super) fn attachments(source: &Source) -> BTreeMap<String, BTreeSet<Attachme
             file,
             routes: &mut routes,
         }
-        .visit_expr(expr);
+        .visit_expr(&ast::<syn::Expr>(expr));
     }
     // The installed accounting companion is a distinct source route, checked
     // against the actual install_core body, not inferred from the builtin name.
@@ -129,7 +129,7 @@ pub(super) fn attachments(source: &Source) -> BTreeMap<String, BTreeSet<Attachme
         file: &install.site.file,
         found: BTreeSet::new(),
     };
-    companion.visit_block(&install.body);
+    companion.visit_block(&install.body());
     assert_eq!(
         companion
             .found

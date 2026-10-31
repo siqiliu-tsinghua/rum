@@ -47,8 +47,8 @@ fn projection(
         if declaration.conditional {
             return Err("conditional mode trait".into());
         }
-        let declared: Vec<_> = declaration
-            .item
+        let item = declaration.item();
+        let declared: Vec<_> = item
             .items
             .iter()
             .filter_map(|item| match item {
@@ -67,6 +67,7 @@ fn projection(
             return Err("generic or defaulted mode associated type".into());
         }
         for (module, item, _, _) in &source.trait_impls {
+            let item = ast::<syn::ItemImpl>(item);
             if item.trait_.as_ref().is_none_or(|(_, p, _)| {
                 resolve::path(source, module, p).ok().as_deref() != Some(domain.trait_path)
             }) || super::super::exact(source, module, &item.self_ty)? != owner

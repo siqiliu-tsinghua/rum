@@ -83,8 +83,8 @@ pub(super) fn declarations(source: &Source, files: &[(&str, &str, &str)]) -> Res
                     let id = format!("{module}::{}", item.sig.ident);
                     let f = resolve::function(source, &id)?;
                     if f.conditional
-                        || tokens(&f.sig) != tokens(&item.sig)
-                        || tokens(&f.body) != tokens(&item.block)
+                        || tokens(&f.sig()) != tokens(&item.sig)
+                        || tokens(&f.body()) != tokens(&item.block)
                     {
                         return Err(format!("rule boundary declaration changed: {id}"));
                     }
@@ -98,7 +98,9 @@ pub(super) fn declarations(source: &Source, files: &[(&str, &str, &str)]) -> Res
                         &source.impls
                     };
                     if !candidates.iter().any(|(m, i, _, conditional)| {
-                        m == module && !conditional && tokens(i) == tokens(&item)
+                        m == module
+                            && !conditional
+                            && tokens(&ast::<syn::ItemImpl>(i)) == tokens(&item)
                     }) {
                         return Err(format!(
                             "rule boundary impl changed: {module}::{}",
@@ -115,16 +117,16 @@ pub(super) fn declarations(source: &Source, files: &[(&str, &str, &str)]) -> Res
                                 .flatten()
                                 .filter(|f| {
                                     f.site.file == *path
-                                        && f.sig.ident == method.sig.ident
-                                        && f.impl_self
+                                        && f.sig().ident == method.sig.ident
+                                        && f.impl_self()
                                             .as_ref()
                                             .is_some_and(|s| tokens(s) == tokens(&item.self_ty))
                                 })
                                 .collect();
                             if matching.len() != 1
                                 || matching[0].conditional
-                                || tokens(&matching[0].sig) != tokens(&method.sig)
-                                || tokens(&matching[0].body) != tokens(&method.block)
+                                || tokens(&matching[0].sig()) != tokens(&method.sig)
+                                || tokens(&matching[0].body()) != tokens(&method.block)
                             {
                                 return Err(format!(
                                     "rule boundary indexed method changed: {}",
@@ -172,14 +174,18 @@ pub(super) fn declarations(source: &Source, files: &[(&str, &str, &str)]) -> Res
                                 name.clone(),
                                 fields
                                     .iter()
-                                    .map(|f| (f.name.clone(), tokens(&f.ty)))
+                                    .map(|f| (f.name.clone(), tokens(&f.ty())))
                                     .collect::<Vec<_>>(),
                             )
                         })
                         .collect::<BTreeMap<_, _>>();
                     if ty.conditional
-                        || tokens(&ty.generics) != tokens(&item.generics)
-                        || ty.attrs.iter().map(tokens).collect::<Vec<_>>()
+                        || tokens(&ty.generics()) != tokens(&item.generics)
+                        || ty
+                            .attrs
+                            .iter()
+                            .map(|a| attribute_text(a))
+                            .collect::<Vec<_>>()
                             != item.attrs.iter().map(tokens).collect::<Vec<_>>()
                         || actual != expected
                         || ty.variants.values().flatten().any(|f| f.conditional)
@@ -207,12 +213,12 @@ pub(super) fn declarations(source: &Source, files: &[(&str, &str, &str)]) -> Res
                         })
                         .collect::<Vec<_>>();
                     if ty.conditional
-                        || tokens(&ty.generics) != tokens(&item.generics)
+                        || tokens(&ty.generics()) != tokens(&item.generics)
                         || ty.fields.iter().any(|f| f.conditional)
                         || ty
                             .fields
                             .iter()
-                            .map(|f| (f.name.clone(), tokens(&f.ty)))
+                            .map(|f| (f.name.clone(), tokens(&f.ty())))
                             .collect::<Vec<_>>()
                             != expected
                     {

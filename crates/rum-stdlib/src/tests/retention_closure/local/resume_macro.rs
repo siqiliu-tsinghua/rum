@@ -151,8 +151,8 @@ pub(super) fn adapt(
         }
     }
     let mut bindings = Bindings(false);
-    bindings.visit_signature(&f.sig);
-    bindings.visit_block(&f.body);
+    bindings.visit_signature(&f.sig());
+    bindings.visit_block(&f.body());
     if bindings.0 {
         return Err("resume macro local Ok/Err shadow".into());
     }
@@ -201,7 +201,7 @@ pub(super) fn guarded_insert(index: &Interfaces, f: &Function, arm: &Arm) -> Res
         }
     }
     let mut invocations = Invocations(vec![]);
-    invocations.visit_block(&f.body);
+    invocations.visit_block(&f.body());
     if !invocations.0.iter().any(|mac| {
         syn::parse2::<Arm>(mac.tokens.clone())
             .is_ok_and(|original| tokens(&original.expansion()) == tokens(&arm.expansion()))

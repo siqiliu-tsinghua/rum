@@ -32,7 +32,7 @@ pub(in super::super) fn constructor_claims(source: &Source, function: &Function)
         claims: Vec::new(),
     };
     context.expected = context.output.clone();
-    context.visit_block(&function.body);
+    context.visit_block(&function.body());
     context.claims
 }
 

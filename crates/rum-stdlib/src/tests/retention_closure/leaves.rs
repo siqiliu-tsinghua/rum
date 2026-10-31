@@ -197,7 +197,7 @@ pub(super) fn validate(
         let f = resolve::function(source, &leaf.id)?;
         let expected: syn::ItemFn =
             syn::parse_str(&format!("{} {{}}", leaf.signature)).map_err(|e| e.to_string())?;
-        if tokens(&f.sig) != tokens(&expected.sig) {
+        if tokens(&f.sig()) != tokens(&expected.sig) {
             return Err(format!("stale trusted signature {}", leaf.id));
         }
         let expected_fingerprint = if leaf.operation == "keep" {

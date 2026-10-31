@@ -48,7 +48,7 @@ fn files(dir: &Path, source: &mut Source) {
     }
 }
 
-pub(super) fn production() -> Source {
+fn fresh_production() -> Source {
     let mut source = Source::default();
     // The manifest, rather than a stored inventory, selects workspace roots.
     let manifest = fs::read_to_string(workspace().join("Cargo.toml")).unwrap();
@@ -130,6 +130,11 @@ pub(super) fn production() -> Source {
             .push(format!("unreconciled source file: {path}"));
     }
     finish(loader.source)
+}
+
+pub(super) fn production() -> &'static Source {
+    static PRODUCTION: std::sync::OnceLock<Source> = std::sync::OnceLock::new();
+    PRODUCTION.get_or_init(fresh_production)
 }
 
 pub(super) fn fixture(files: &[(&str, &str, &str)]) -> Source {
@@ -464,13 +469,17 @@ impl Loader {
                             id,
                             module: module.into(),
                             site: site.clone(),
-                            sig: f.sig.clone(),
-                            body: (*f.block).clone(),
-                            attrs: f.attrs.clone(),
+                            sig: located(&f.sig, file, &self.source.files),
+                            body: located(&f.block, file, &self.source.files),
+                            attrs: f
+                                .attrs
+                                .iter()
+                                .map(|attr| located(attr, file, &self.source.files))
+                                .collect(),
                             owner: None,
                             boundary: boundary(&f.vis, module),
                             impl_self: None,
-                            impl_generics: syn::Generics::default(),
+                            impl_generics: String::new(),
                             substitutions: BTreeMap::new(),
                             conditional: uncertain,
                         });
@@ -482,7 +491,7 @@ impl Loader {
                         site,
                         &s.ident,
                         &s.generics,
-                        named_fields(&s.fields),
+                        named_fields(&s.fields, file, &self.source.files),
                         BTreeMap::new(),
                         None,
                         &s.attrs,
@@ -499,7 +508,12 @@ impl Loader {
                         Vec::new(),
                         e.variants
                             .iter()
-                            .map(|v| (v.ident.to_string(), named_fields(&v.fields)))
+                            .map(|v| {
+                                (
+                                    v.ident.to_string(),
+                                    named_fields(&v.fields, file, &self.source.files),
+                                )
+                            })
                             .collect(),
                         None,
                         &e.attrs,
@@ -522,9 +536,10 @@ impl Loader {
                     (&t.ident, &t.vis)
                 }
                 syn::Item::Impl(i) => {
+                    let text = located(i, file, &self.source.files);
                     self.source
                         .impls
-                        .push((module.into(), i.clone(), site, uncertain));
+                        .push((module.into(), text, site, uncertain));
                     continue;
                 }
                 syn::Item::Use(u) => {
@@ -542,9 +557,10 @@ impl Loader {
                     self.source
                         .value_names
                         .insert(format!("{module}::{}", c.ident));
+                    let text = located(&c.expr, file, &self.source.files);
                     self.source
                         .constants
-                        .push((module.into(), file.into(), (*c.expr).clone()));
+                        .push((module.into(), file.into(), text));
                     (&c.ident, &c.vis)
                 }
                 syn::Item::Static(s) => {
@@ -554,12 +570,13 @@ impl Loader {
                     (&s.ident, &s.vis)
                 }
                 syn::Item::Trait(t) => {
+                    let text = located(t, file, &self.source.files);
                     self.source
                         .traits
                         .entry(format!("{module}::{}", t.ident))
                         .or_default()
                         .push(Trait {
-                            item: t.clone(),
+                            item: text,
                             conditional: uncertain,
                         });
                     (&t.ident, &t.vis)
@@ -598,6 +615,7 @@ impl Loader {
         attrs: &[syn::Attribute],
         conditional: bool,
     ) {
+        let file = site.file.clone();
         self.source
             .types
             .entry(format!("{module}::{ident}"))
@@ -605,11 +623,16 @@ impl Loader {
             .push(Nominal {
                 module: module.into(),
                 site,
-                generics: generics.clone(),
+                generics: located(generics, &file, &self.source.files),
                 fields,
                 variants,
-                alias,
-                attrs: attrs.to_vec(),
+                alias: alias
+                    .as_ref()
+                    .map(|ty| located(ty, &file, &self.source.files)),
+                attrs: attrs
+                    .iter()
+                    .map(|attr| located(attr, &file, &self.source.files))
+                    .collect(),
                 conditional,
             });
     }
@@ -619,7 +642,7 @@ fn conditional_attrs(attrs: &[syn::Attribute]) -> bool {
     conditional(attrs)
 }
 
-fn named_fields(fields: &syn::Fields) -> Vec<Field> {
+fn named_fields(fields: &syn::Fields, file: &str, files: &BTreeMap<String, String>) -> Vec<Field> {
     fields
         .iter()
         .enumerate()
@@ -629,7 +652,7 @@ fn named_fields(fields: &syn::Fields) -> Vec<Field> {
                 .as_ref()
                 .map(ToString::to_string)
                 .unwrap_or_else(|| i.to_string()),
-            ty: field.ty.clone(),
+            ty: located(&field.ty, file, files),
             conditional: conditional_attrs(&field.attrs),
         })
         .collect()

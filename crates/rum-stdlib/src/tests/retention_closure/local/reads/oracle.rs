@@ -10,7 +10,7 @@ use std::{fs, process::Command};
 #[test]
 fn local_option_read_claims_match_stable_rustc() {
     let source = source::production();
-    let index = Interfaces::new(&source);
+    let index = Interfaces::shared_production();
     let marks = Marks::contracts(tests::records()).unwrap();
     let f = resolve::function(
         &source,
@@ -110,7 +110,7 @@ fn claims(
     ident: &str,
 ) -> (String, BTreeSet<Id>) {
     let report = check(index, f, marks);
-    let body = Site::new(&f.site.file, f.body.span());
+    let body = Site::new(&f.site.file, f.body().span());
     let start = offset(text, body.start);
     let end = offset(text, body.end);
     let mut claims = vec![];
@@ -160,7 +160,7 @@ fn claims(
             offset(text,site.start)-start, offset(text,site.end)-start, json(&site.display()), json(&ty.spelling()), place, adjustment,
             selected.iter().map(|s| json(s)).collect::<Vec<_>>().join(",")));
     }
-    let mut sig = f.sig.clone();
+    let mut sig = f.sig();
     sig.ident = syn::Ident::new(ident, sig.ident.span());
     (
         format!(

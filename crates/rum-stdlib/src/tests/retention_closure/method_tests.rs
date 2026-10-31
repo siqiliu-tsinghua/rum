@@ -91,7 +91,7 @@ fn receiver_adjustments_fail_closed() {
         .functions
         .get_mut(&format!("{PREFIX}nominal"))
         .unwrap()[0];
-    f.attrs.push(syn::parse_quote!(#[opaque_attribute]));
+    f.attrs.push(attribute_text("#[opaque_attribute]"));
     let f = f.clone();
     assert!(regions::definition_edges(&changed, &f).resolved.is_empty());
     let mut changed = source.clone();

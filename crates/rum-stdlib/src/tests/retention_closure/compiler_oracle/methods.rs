@@ -14,7 +14,7 @@ fn inherent_method_claims_match_rustc() {
     let mut total = 0;
     for (population, source) in [
         ("fixture", fixtures::program()),
-        ("production", source::production()),
+        ("production", source::production().to_owned()),
     ] {
         assert!(source.errors.is_empty(), "{:?}", source.errors);
         let claims = methods::all(&source);
@@ -22,8 +22,8 @@ fn inherent_method_claims_match_rustc() {
         for ((_, instance), (caller, selection)) in claims {
             let site = &selection.method_site;
             let f = &selection.function;
-            let paren = f.sig.paren_token.span.close().start();
-            let prefix = if f.sig.inputs.is_empty() || f.sig.inputs.trailing_punct() {
+            let paren = f.sig().paren_token.span.close().start();
+            let prefix = if f.sig().inputs.is_empty() || f.sig().inputs.trailing_punct() {
                 ""
             } else {
                 ", "
@@ -31,7 +31,7 @@ fn inherent_method_claims_match_rustc() {
             writeln!(out, "method_{total}\t{population}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{:?}\t{}\t{}\t{}\t{}\t{}",
                 caller.id, instance.display(), site.file, site.start.0, site.start.1, site.end.0, site.end.1,
                 caller.site.start.0, caller.site.start.1, f.id, f.site.file, f.site.start.0, f.site.start.1,
-                f.sig.ident, selection.receiver.exact.spelling(),
+                f.sig().ident, selection.receiver.exact.spelling(),
                 format!("{}:{}:{}", selection.receiver.provenance.source.display(), selection.receiver.provenance.basis, selection.receiver.provenance.projections.join(" / ")),
                 selection.derefs, selection.autoref,
                 selection.order.iter().map(|t| t.spelling()).collect::<Vec<_>>().join(" -> "), selection.exclusions.join(" | "), paren.line, paren.column + 1, prefix).unwrap();

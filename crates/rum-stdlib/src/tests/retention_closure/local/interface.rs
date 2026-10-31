@@ -35,12 +35,14 @@ pub(super) fn hash(parts: impl IntoIterator<Item = impl AsRef<[u8]>>) -> String 
     format!("fnv1a64:{hash:016x}")
 }
 
-fn erase_impl(item: &mut syn::ItemImpl) {
-    for item in &mut item.items {
+fn erase_impl(item: &mut String) {
+    let mut parsed = ast::<syn::ItemImpl>(item);
+    for item in &mut parsed.items {
         if let syn::ImplItem::Fn(f) = item {
             f.block.stmts.clear();
         }
     }
+    *item = tokens(&parsed);
 }
 
 impl Interfaces {
@@ -48,14 +50,14 @@ impl Interfaces {
         let mut parts = vec![
             f.id.clone(),
             f.module.clone(),
-            tokens(&f.sig),
-            tokens(&f.body),
+            tokens(&f.sig()),
+            tokens(&f.body()),
             format!("{:?}", f.substitutions),
             format!("{}:{:?}:{:?}", f.conditional, f.owner, f.boundary),
-            tokens(&f.impl_generics),
-            f.impl_self.as_ref().map(tokens).unwrap_or_default(),
+            tokens(&f.impl_generics()),
+            f.impl_self().as_ref().map(tokens).unwrap_or_default(),
         ];
-        parts.extend(f.attrs.iter().map(tokens));
+        parts.extend(f.attrs().iter().map(tokens));
         hash(parts)
     }
 
@@ -63,13 +65,41 @@ impl Interfaces {
         self.syntax.get(&f.id) == Some(&Self::syntax(f))
     }
 
+    pub fn shared_production() -> &'static Self {
+        static PRODUCTION: std::sync::OnceLock<Interfaces> = std::sync::OnceLock::new();
+        PRODUCTION.get_or_init(|| Self::new(source::production()))
+    }
+
     pub fn new(input: &Source) -> Self {
-        let mut signatures = input.clone();
-        signatures.files.clear();
-        signatures.constants.clear();
-        for f in signatures.functions.values_mut().flatten() {
-            f.body.stmts.clear();
-        }
+        let mut signatures = Source::default();
+        signatures.functions = input
+            .functions
+            .iter()
+            .map(|(id, functions)| {
+                (
+                    id.clone(),
+                    functions
+                        .iter()
+                        .map(|f| Function {
+                            body: "{ }".into(),
+                            ..f.clone()
+                        })
+                        .collect(),
+                )
+            })
+            .collect();
+        signatures.types = input.types.clone();
+        signatures.modules = input.modules.clone();
+        signatures.impls = input.impls.clone();
+        signatures.traits = input.traits.clone();
+        signatures.trait_impls = input.trait_impls.clone();
+        signatures.opaque_inherent_owners = input.opaque_inherent_owners.clone();
+        signatures.value_names = input.value_names.clone();
+        signatures.drop_types = input.drop_types.clone();
+        signatures.dependencies = input.dependencies.clone();
+        signatures.reached = input.reached.clone();
+        signatures.production_files = input.production_files.clone();
+        signatures.errors = input.errors.clone();
         for (_, item, _, _) in &mut signatures.impls {
             erase_impl(item);
         }
@@ -77,11 +107,13 @@ impl Interfaces {
             erase_impl(item);
         }
         for tr in signatures.traits.values_mut().flatten() {
-            for item in &mut tr.item.items {
+            let mut item = tr.item();
+            for item in &mut item.items {
                 if let syn::TraitItem::Fn(f) = item {
                     f.default = None;
                 }
             }
+            tr.item = tokens(&item);
         }
         // Conservative flat lexical/type/selection dependency key. It contains
         // no callee bodies and computes no call graph or transitive closure.
@@ -105,12 +137,12 @@ impl Interfaces {
                 context.push(format!(
                     "{id}:{}:{}:{:?}",
                     d.module,
-                    tokens(&d.generics),
+                    tokens(&d.generics()),
                     d.conditional
                 ));
-                context.extend(d.attrs.iter().map(tokens));
+                context.extend(d.attrs.iter().map(|a| attribute_text(a)));
                 if let Some(alias) = &d.alias {
-                    context.push(tokens(alias));
+                    context.push(type_text(alias));
                 }
                 for (variant, fields) in std::iter::once(("", &d.fields))
                     .chain(d.variants.iter().map(|(v, fs)| (v.as_str(), fs)))
@@ -119,7 +151,7 @@ impl Interfaces {
                         context.push(format!(
                             "{variant}:{}:{}:{}",
                             f.name,
-                            tokens(&f.ty),
+                            tokens(&f.ty()),
                             f.conditional
                         ));
                     }
@@ -130,18 +162,18 @@ impl Interfaces {
             context.push(format!(
                 "{}:{}:{}:{:?}:{:?}",
                 f.id,
-                tokens(&f.sig),
+                tokens(&f.sig()),
                 f.conditional,
                 f.owner,
                 f.boundary
             ));
-            context.extend(f.attrs.iter().map(tokens));
+            context.extend(f.attrs.iter().map(|a| attribute_text(a)));
         }
         for (_, item, _, c) in signatures.impls.iter().chain(&signatures.trait_impls) {
-            context.push(format!("{c}:{}", tokens(item)));
+            context.push(format!("{c}:{}", tokens(&ast::<syn::ItemImpl>(item))));
         }
         for tr in signatures.traits.values().flatten() {
-            context.push(tokens(&tr.item));
+            context.push(tokens(&tr.item()));
         }
         context.push(format!(
             "{:?}:{:?}:{:?}",
@@ -179,6 +211,16 @@ impl Interfaces {
             }
         }
         let context = hash(context);
+        let syntax: BTreeMap<Id, String> = input
+            .functions
+            .iter()
+            .filter_map(|(id, fs)| {
+                let [f] = fs.as_slice() else {
+                    return None;
+                };
+                Some((id.clone(), Self::syntax(f)))
+            })
+            .collect();
         let bodies = input
             .functions
             .iter()
@@ -186,8 +228,8 @@ impl Interfaces {
                 let [f] = fs.as_slice() else {
                     return None;
                 };
-                let mut parts = vec![context.clone(), Self::syntax(f)];
-                parts.extend(f.attrs.iter().map(tokens));
+                let mut parts = vec![context.clone(), syntax[id].clone()];
+                parts.extend(f.attrs.iter().map(|a| attribute_text(a)));
                 // Include original body lines too: even comment-only source drift
                 // expires a mark. Synthetic fixture mutations also change tokens.
                 if let Some(text) = input.files.get(&f.site.file) {
@@ -200,16 +242,6 @@ impl Interfaces {
                     );
                 }
                 Some((id.clone(), hash(parts)))
-            })
-            .collect();
-        let syntax = input
-            .functions
-            .iter()
-            .filter_map(|(id, fs)| {
-                let [f] = fs.as_slice() else {
-                    return None;
-                };
-                Some((id.clone(), Self::syntax(f)))
             })
             .collect();
         let mut index = Self {

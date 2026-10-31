@@ -96,7 +96,7 @@ mod s8;
 mod s9;
 #[path = "typed_slot_census/witnessed.rs"]
 mod witnessed;
-use discovery::{discover, feature, root};
+use discovery::{discover, feature, production, root};
 use receipts::{baseline, preflip};
 use reporting::emit;
 use scan::Population;
@@ -109,14 +109,14 @@ const FLIP_SLOT: Option<&str> = None;
 #[test]
 fn source_baseline_matches_earned_receipt() {
     let root = root();
-    let (_, facts, report) = discover(&root);
+    let (_, facts, report) = production();
     emit(&root, &facts, &report);
     baseline(&facts, &report).unwrap_or_else(|error| panic!("{error}"));
     routes::compatible_driver(&facts).unwrap();
 }
 #[test]
 fn preflip_no_legacy_transport_uses() {
-    let (_, facts, report) = discover(&root());
+    let (_, facts, report) = production();
     if let Some(slot) = FLIP_SLOT {
         preflip(&facts, &report, slot).unwrap();
     } else {
@@ -141,10 +141,10 @@ fn removing_a_test_guard_in_a_scratch_copy_is_red() {
 
 fn forced_red(remove_guard: bool) {
     let root = root();
-    let (files, facts, report) = discover(&root);
+    let (files, facts, report) = production();
     baseline(&facts, &report).unwrap();
     let scratch = PrivateScratch::create();
-    for (file, source) in &files {
+    for (file, source) in files {
         let p = scratch.path().join(file);
         fs::create_dir_all(p.parent().unwrap()).unwrap();
         fs::write(p, source).unwrap();
@@ -259,10 +259,10 @@ fn shadowing_a_witness_in_a_cold_helper_is_red() {
 
 fn forced_red_witness(kind: &str) {
     let root = root();
-    let (files, facts, report) = discover(&root);
+    let (files, facts, report) = production();
     baseline(&facts, &report).unwrap();
     let scratch = root.join(format!(".temp/typed-slot-census/forced-red/{kind}"));
-    for (file, source) in &files {
+    for (file, source) in files {
         let path = scratch.join(file);
         fs::create_dir_all(path.parent().unwrap()).unwrap();
         fs::write(path, source).unwrap();

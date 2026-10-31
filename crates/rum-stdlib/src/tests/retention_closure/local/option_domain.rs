@@ -40,13 +40,13 @@ pub(super) fn copy_member(source: &Source, ty: &ExactTy) -> bool {
         return false;
     };
     !d.conditional
-        && d.generics.params.is_empty()
+        && d.generics().params.is_empty()
         && d.fields.is_empty()
         && !d.variants.is_empty()
         && d.variants.values().all(Vec::is_empty)
         && !source.drop_types.contains(id)
-        && has_derive(&d.attrs, "Copy")
-        && has_derive(&d.attrs, "FrameRootTrace")
+        && has_derive(&d.attrs(), "Copy")
+        && has_derive(&d.attrs(), "FrameRootTrace")
 }
 
 pub(super) fn specialize(
@@ -55,16 +55,16 @@ pub(super) fn specialize(
     arguments: &[ExactTy],
     members: &[ExactTy],
 ) -> Result<Function, String> {
-    if !f.impl_generics.params.is_empty()
-        || f.sig.generics.where_clause.is_some()
-        || f.sig.generics.params.len() != arguments.len()
+    if !f.impl_generics().params.is_empty()
+        || f.sig().generics.where_clause.is_some()
+        || f.sig().generics.params.len() != arguments.len()
     {
         return Err("exact option instance arity or bounds differ".into());
     }
     types::domain(source)?;
     let mut instance = f.clone();
     let mut seen = BTreeSet::new();
-    for (parameter, ty) in f.sig.generics.params.iter().zip(arguments) {
+    for (parameter, ty) in f.sig().generics.params.iter().zip(arguments) {
         let syn::GenericParam::Type(p) = parameter else {
             return Err("only declared option type parameters".into());
         };
@@ -93,7 +93,7 @@ pub(super) fn specialize(
             .substitutions
             .insert(p.ident.to_string(), ty.clone());
     }
-    instance.sig.generics = syn::Generics::default();
+    instance.sig = without_generics(&instance.sig);
     Ok(instance)
 }
 
@@ -164,6 +164,7 @@ pub(super) fn members(source: &Source) -> Result<Vec<ExactTy>, String> {
     }
     let mut implementations = BTreeSet::new();
     for (module, item, _, conditional) in &source.trait_impls {
+        let item = ast::<syn::ItemImpl>(item);
         let Some((_, path, _)) = &item.trait_ else {
             continue;
         };
@@ -185,13 +186,13 @@ pub(super) fn members(source: &Source) -> Result<Vec<ExactTy>, String> {
             return Err("unique descriptor declaration required".into());
         };
         if definition.conditional
-            || !definition.generics.params.is_empty()
+            || !definition.generics().params.is_empty()
             || source.drop_types.contains(&id)
             || !definition.fields.is_empty()
             || definition.variants.is_empty()
             || definition.variants.values().any(|fs| !fs.is_empty())
-            || !has_derive(&definition.attrs, "Copy")
-            || !has_derive(&definition.attrs, "FrameRootTrace")
+            || !has_derive(&definition.attrs(), "Copy")
+            || !has_derive(&definition.attrs(), "FrameRootTrace")
         {
             return Err(
                 "descriptor must have checked fieldless Copy and root trace derives".into(),
@@ -215,7 +216,7 @@ pub(super) fn members(source: &Source) -> Result<Vec<ExactTy>, String> {
         }
     }
     let mut installs = Installs(vec![]);
-    installs.visit_block(&installer.body);
+    installs.visit_block(&installer.body());
     let expected: syn::Expr =
         syn::parse_quote!(session.install_option_reentry_domain(option_domain::DECLARATION));
     if installer.conditional || installs.0 != [tokens(&expected)] {
@@ -299,9 +300,12 @@ fn local_option_domain_reconciliation_and_independent_drift_controls() {
         .trait_impls
         .iter_mut()
         .find(|(module, item, _, _)| {
-            item.trait_.as_ref().is_some_and(|(_, p, _)| {
-                resolve::path(&source, module, p).ok().as_deref() == Some(TRAIT)
-            })
+            ast::<syn::ItemImpl>(item)
+                .trait_
+                .as_ref()
+                .is_some_and(|(_, p, _)| {
+                    resolve::path(&source, module, p).ok().as_deref() == Some(TRAIT)
+                })
         })
         .unwrap();
     *conditional = true;
@@ -312,8 +316,8 @@ fn local_option_domain_reconciliation_and_independent_drift_controls() {
     );
     let descriptor = members[0].spelling();
     let mut false_derive = source.clone();
-    false_derive.types.get_mut(&descriptor).unwrap()[0].attrs =
-        vec![syn::parse_quote!(#[doc = "Copy FrameRootTrace"])];
+    let attribute: syn::Attribute = syn::parse_quote!(#[doc = "Copy FrameRootTrace"]);
+    false_derive.types.get_mut(&descriptor).unwrap()[0].attrs = vec![tokens(&attribute)];
     assert!(
         reconcile(&false_derive, &session, &keys)
             .unwrap_err()
@@ -324,7 +328,7 @@ fn local_option_domain_reconciliation_and_independent_drift_controls() {
         .functions
         .get_mut("rum_stdlib::install_core")
         .unwrap()[0]
-        .body = syn::parse_quote!({});
+        .body = "{ }".into();
     assert!(
         reconcile(&installer, &session, &keys)
             .unwrap_err()

@@ -2,11 +2,10 @@
 use super::super::source;
 use super::*;
 
-fn setup() -> (Source, Interfaces, Marks) {
-    let source = promotion::population(source::production());
-    let index = Interfaces::new(&source);
-    let marks = promotion::earn(&source, &index);
-    (source, index, marks)
+fn setup() -> (&'static Source, &'static Interfaces, Marks) {
+    let shared = promotion::shared_population();
+    let marks = promotion::earn(&shared.source, &shared.index);
+    (&shared.source, &shared.index, marks)
 }
 
 fn witness(label: &str, red: &str) {
@@ -117,16 +116,16 @@ fn production_marks_require_current_local_lint_and_direct_contracts() {
 
 #[test]
 fn production_body_domain_and_build_expiry_and_raw_local() {
-    let (source, mut index, marks) = setup();
+    let (source, _, marks) = setup();
+    let mut index = Interfaces::new(source);
     for (label, id) in certificates::roots() {
         let mut changed = source.clone();
-        changed.functions.get_mut(&id).unwrap()[0]
-            .body
-            .stmts
-            .insert(
-                0,
-                syn::parse_quote!(let raw = std::vec::Vec::<rum_core::Expr>::new();),
-            );
+        let mut body = changed.functions.get_mut(&id).unwrap()[0].body();
+        body.stmts.insert(
+            0,
+            syn::parse_quote!(let raw = std::vec::Vec::<rum_core::Expr>::new();),
+        );
+        changed.functions.get_mut(&id).unwrap()[0].body = tokens(&body);
         let other = Interfaces::new(&changed);
         let raw = resolve::function(&changed, &id).unwrap();
         let mut attempt = Marks::contracts(

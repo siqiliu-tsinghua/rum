@@ -4,7 +4,7 @@ use super::*;
 #[test]
 fn local_option_contract_controls() {
     let source = source::production();
-    let index = Interfaces::new(&source);
+    let index = Interfaces::shared_production();
     let records = contracts::read(include_str!("../inventory/local-contracts.tsv")).unwrap();
     let marks = Marks::contracts(records.clone()).unwrap();
     let body = resolve::function(&source, &c01()).unwrap();
@@ -32,7 +32,7 @@ fn local_option_contract_controls() {
     for target in [SNAPSHOT, DRIVE] {
         let mut changed = source.clone();
         changed.functions.get_mut(target).unwrap()[0].body =
-            syn::parse_quote!({ panic!("omitted boundary") });
+            block("{ panic!(\"omitted boundary\") }");
         assert!(validate(&changed).values().all(Result::is_err));
     }
     let mut schema = source.clone();
@@ -52,7 +52,7 @@ fn local_option_contract_controls() {
             0 => {
                 variants.remove("Flat");
             }
-            1 => variants.get_mut("Flat").unwrap()[0].ty = syn::parse_quote!(usize),
+            1 => variants.get_mut("Flat").unwrap()[0].ty = type_text("usize"),
             _ => variants.get_mut("Flat").unwrap()[0].conditional = true,
         }
         assert!(validate(&changed).values().all(Result::is_err));
@@ -62,6 +62,7 @@ fn local_option_contract_controls() {
         .trait_impls
         .iter_mut()
         .find(|(module, item, _, _)| {
+            let item = ast::<syn::ItemImpl>(item);
             module == "rum_runtime::runtime::accounting_mode::lease"
                 && tokens(&item.self_ty) == "Unarmed"
                 && item.items.iter().any(
@@ -69,21 +70,24 @@ fn local_option_contract_controls() {
                 )
         })
         .unwrap();
-    for item in &mut mode.items {
+    let mut parsed = ast::<syn::ItemImpl>(mode);
+    for item in &mut parsed.items {
         if let syn::ImplItem::Fn(f) = item {
             if f.sig.ident == "option_handoff" {
                 f.block = syn::parse_quote!({ true });
             }
         }
     }
+    *mode = tokens(&parsed);
     assert!(validate(&changed).values().all(Result::is_err));
     // Persistent replacements for the former raw Vec at a shifting source line.
     let mut raw = body.clone();
-    raw.body = syn::parse_str(r#"{
+    raw.body = r#"{
         let raw = std::vec::Vec::<rum_core::Expr>::new();
         let state = crate::runtime::accounting_mode::options::snapshot::<M>(self, symbol, explicit)?;
         crate::runtime::accounting_mode::options::drive::<M, R>(self, state, symbol, explicit, 0, reentry, head, args)
-    }"#).unwrap();
+    }"#
+    .into();
     let raw_report = check(&index, &raw, &marks);
     assert!(
         raw_report.rejected.iter().any(|d| d.kind == Kind::RET001),
@@ -125,9 +129,11 @@ fn local_option_contract_controls() {
     );
     // No implicit unsizing or extra reference layer is admitted at the adapter.
     let mut wrong = body.clone();
-    wrong.body = syn::parse_quote!({
+    wrong.body = block(
+        "{
         crate::runtime::accounting_mode::options::snapshot::<M>(&self, symbol, explicit)
-    });
+    }",
+    );
     assert!(!check(&index, &wrong, &marks).rejected.is_empty());
     println!(
         "OPTION544_CONTRACT: concrete M x R green; stale/Pending/body/schema/raw-container/outside-R/all-R/wrong-reborrow red; promotion=0"

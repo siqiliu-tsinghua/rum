@@ -128,17 +128,17 @@ impl Checker<'_> {
         self.stack.push(f.id.clone());
         self.active.insert(key.clone());
         let parameters = types::signature(self.source, &f)
-            .map_err(|reason| self.unsupported(&f, f.sig.span(), reason))?;
+            .map_err(|reason| self.unsupported(&f, f.sig().span(), reason))?;
         if !self.source.modules[&f.module].hazards.is_empty() {
             return Err(self.unsupported(
                 &f,
-                f.sig.span(),
+                f.sig().span(),
                 "module contains an unclassified item-generating expansion",
             ));
         }
         let mut env = Environment::new();
         let exact = types::exact_parameters(self.source, &f)
-            .map_err(|r| self.unsupported(&f, f.sig.span(), r))?;
+            .map_err(|r| self.unsupported(&f, f.sig().span(), r))?;
         for ((name, ty), (_, exact)) in parameters.into_iter().zip(exact) {
             let mut value = Value::typed(exact, ty);
             value.provenance = Some(Provenance {
@@ -146,18 +146,18 @@ impl Checker<'_> {
                 basis: format!("parameter {name}"),
                 projections: Vec::new(),
             });
-            self.retain(&f, f.sig.span(), &value)?;
+            self.retain(&f, f.sig().span(), &value)?;
             env.insert(name, Local { value, live: true });
         }
         let output = types::exact_output(self.source, &f)
-            .map_err(|r| self.unsupported(&f, f.sig.span(), r))?;
-        let value = self.block_expected(&f, &f.body, &mut env, Some(&output))?;
-        self.cleanup(&f, f.body.span(), &env)?;
-        self.retain(&f, f.body.span(), &value)?;
+            .map_err(|r| self.unsupported(&f, f.sig().span(), r))?;
+        let value = self.block_expected(&f, &f.body(), &mut env, Some(&output))?;
+        self.cleanup(&f, f.body().span(), &env)?;
+        self.retain(&f, f.body().span(), &value)?;
         if value.exact != output && !matches!(value.ty, Ty::Moved) {
             return Err(self.unsupported(
                 &f,
-                f.body.span(),
+                f.body().span(),
                 format!(
                     "return ownership/type mismatch: {:?} versus {output:?}",
                     value.exact

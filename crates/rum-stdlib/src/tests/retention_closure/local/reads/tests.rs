@@ -12,8 +12,8 @@ pub(super) fn function(source: &Source, body: &str) -> Function {
     )
     .unwrap()
     .clone();
-    f.sig = syn::parse_quote!(fn evaluate_runtime_option_expr(expr: &Expr) -> bool);
-    f.body = syn::parse_str(body).unwrap();
+    f.sig = signature("fn evaluate_runtime_option_expr(expr: &Expr) -> bool");
+    f.body = body.into();
     f
 }
 
@@ -39,7 +39,7 @@ pub(super) const READS: &str = "{
 #[test]
 fn local_option_borrowed_pattern_controls() {
     let source = source::production();
-    let index = Interfaces::new(&source);
+    let index = Interfaces::shared_production();
     let marks = Marks::contracts(records()).unwrap();
     let f = function(&source, READS);
     let green = check(&index, &f, &marks);
@@ -84,7 +84,7 @@ fn local_option_borrowed_pattern_controls() {
         evidence(name, &red, &green, reason);
     }
     let mut extra_ref = f.clone();
-    extra_ref.sig = syn::parse_quote!(fn evaluate_runtime_option_expr(expr: &&Expr) -> bool);
+    extra_ref.sig = signature("fn evaluate_runtime_option_expr(expr: &&Expr) -> bool");
     evidence(
         "extra-reference",
         &check(&index, &extra_ref, &marks),
@@ -92,7 +92,7 @@ fn local_option_borrowed_pattern_controls() {
         "exactly &Expr",
     );
     let mut owned = function(&source, READS);
-    owned.sig = syn::parse_quote!(fn evaluate_runtime_option_expr(expr: Expr) -> bool);
+    owned.sig = signature("fn evaluate_runtime_option_expr(expr: Expr) -> bool");
     evidence(
         "owned-pattern",
         &check(&index, &owned, &marks),
@@ -120,7 +120,7 @@ fn local_option_borrowed_pattern_controls() {
         .variants
         .get_mut("Call")
         .unwrap()[0]
-        .ty = syn::parse_quote!(SharedArgs);
+        .ty = type_text("SharedArgs");
     let altered = Interfaces::new(&changed);
     evidence(
         "changed-field-schema",
@@ -160,15 +160,13 @@ fn local_option_borrowed_pattern_controls() {
 
     let cleanup_body = "{ let Expr::Call { head, args } = expr else { { let retired = raw; } return false; }; { let retired = raw; } is_system_symbol_name(head, \"RuleDelayed\") }";
     let mut cleanup = function(&source, cleanup_body);
-    cleanup.sig =
-        syn::parse_quote!(fn evaluate_runtime_option_expr(expr: &Expr, raw: Vec<u8>) -> bool);
+    cleanup.sig = signature("fn evaluate_runtime_option_expr(expr: &Expr, raw: Vec<u8>) -> bool");
     let restored = check(&index, &cleanup, &marks);
     // Failure's move/drop must not retire the owner on the continuing path.
-    cleanup.body = syn::parse_str(&cleanup_body.replace(
+    cleanup.body = cleanup_body.replace(
         "; { let retired = raw; } is_system",
         "; unknown(); is_system",
-    ))
-    .unwrap();
+    );
     evidence(
         "else-cleanup-keeps-success-owner",
         &check(&index, &cleanup, &marks),
@@ -222,7 +220,7 @@ fn local_option_short_circuit_ownership_controls() {
     let terminating = run("{ flag && { let retired = raw; return true; } }");
     assert!(terminating.rejected.is_empty(), "{}", terminating.text());
     let source = source::production();
-    let index = Interfaces::new(&source);
+    let index = Interfaces::shared_production();
     let marks = Marks::contracts(records()).unwrap();
     let good = check(&index, &function(&source, READS), &marks);
     evidence(
@@ -252,7 +250,7 @@ fn local_option_read_contract_controls() {
     // harness executes the None/Some false/Some true and borrowed identity
     // controls inside a scratch copy of its lexical module.
     let source = source::production();
-    let index = Interfaces::new(&source);
+    let index = Interfaces::shared_production();
     let f = function(&source, READS);
     let original = records();
     let green = check(&index, &f, &Marks::contracts(original.clone()).unwrap());
@@ -280,8 +278,9 @@ fn local_option_read_contract_controls() {
     }
     let mut changed = source.clone();
     for (module, item, _, _) in &mut changed.trait_impls {
-        if types::exact(&source, module, &item.self_ty).ok() == Some(protocol::nominal(SHARED)) {
-            for method in &mut item.items {
+        let mut parsed = ast::<syn::ItemImpl>(item);
+        if types::exact(&source, module, &parsed.self_ty).ok() == Some(protocol::nominal(SHARED)) {
+            for method in &mut parsed.items {
                 if let syn::ImplItem::Fn(method) = method {
                     if method.sig.ident == "deref" {
                         method.block = syn::parse_quote!({ panic!() });
@@ -289,6 +288,7 @@ fn local_option_read_contract_controls() {
                 }
             }
         }
+        *item = tokens(&parsed);
     }
     evidence(
         "changed-deref",
@@ -300,8 +300,8 @@ fn local_option_read_contract_controls() {
         &green,
         "Deref implementation changed",
     );
-    let mut changed = source;
-    changed.functions.get_mut(HELPER).unwrap()[0].body = syn::parse_quote!({ false });
+    let mut changed = Source::clone(source);
+    changed.functions.get_mut(HELPER).unwrap()[0].body = block("{ false }");
     evidence(
         "changed-helper",
         &check(

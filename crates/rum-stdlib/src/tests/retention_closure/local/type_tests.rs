@@ -92,12 +92,15 @@ fn finite_profile_modes_are_closed_and_selected_at_both_calls() {
         assert!(types::in_function(&source, &instance, &syn::parse_quote!(M::Guard<u8>)).is_err());
         let mut missing = source.clone();
         for (module, item, _, _) in &mut missing.trait_impls {
-            if item.trait_.as_ref().is_some_and(|(_, path, _)| {
+            let mut parsed = ast::<syn::ItemImpl>(item);
+            if parsed.trait_.as_ref().is_some_and(|(_, path, _)| {
                 resolve::path(&source, module, path).ok().as_deref() == Some(profile.trait_path)
             }) {
-                item.items
+                parsed
+                    .items
                     .retain(|item| !matches!(item, syn::ImplItem::Type(t) if t.ident == "Guard"));
             }
+            *item = tokens(&parsed);
         }
         assert!(types::in_function(&missing, &instance, &syn::parse_quote!(M::Guard)).is_err());
     }
@@ -155,9 +158,13 @@ fn finite_profile_modes_are_closed_and_selected_at_both_calls() {
             .iter()
             .enumerate()
             .filter(|(_, (module, item, _, _))| {
-                item.trait_.as_ref().is_some_and(|(_, path, _)| {
-                    resolve::path(&source, module, path).ok().as_deref() == Some(domain.trait_path)
-                })
+                ast::<syn::ItemImpl>(item)
+                    .trait_
+                    .as_ref()
+                    .is_some_and(|(_, path, _)| {
+                        resolve::path(&source, module, path).ok().as_deref()
+                            == Some(domain.trait_path)
+                    })
             })
             .map(|(i, _)| i)
             .collect();
@@ -183,7 +190,8 @@ fn finite_profile_modes_are_closed_and_selected_at_both_calls() {
         }
         let mut third = source.clone();
         let mut item = source.trait_impls[members[0]].clone();
-        item.1.self_ty = if domain.trait_path == profile.trait_path {
+        let mut parsed = ast::<syn::ItemImpl>(&item.1);
+        parsed.self_ty = if domain.trait_path == profile.trait_path {
             Box::new(syn::parse_quote!(
                 crate::runtime::accounting_mode::counter::Unarmed
             ))
@@ -192,6 +200,7 @@ fn finite_profile_modes_are_closed_and_selected_at_both_calls() {
                 crate::runtime::suspension::core::profile_mode::Ordinary
             ))
         };
+        item.1 = tokens(&parsed);
         third.trait_impls.push(item);
         assert!(
             domain.check(&third).is_err(),
@@ -212,7 +221,9 @@ fn finite_profile_modes_are_closed_and_selected_at_both_calls() {
         conditional.trait_impls[members[0]].3 = true;
         assert!(domain.check(&conditional).is_err());
         let mut generic = source.clone();
-        generic.trait_impls[members[0]].1.generics = syn::parse_quote!(<T>);
+        let mut parsed = ast::<syn::ItemImpl>(&generic.trait_impls[members[0]].1);
+        parsed.generics = syn::parse_quote!(<T>);
+        generic.trait_impls[members[0]].1 = tokens(&parsed);
         assert!(domain.check(&generic).is_err());
     }
 }
@@ -220,7 +231,7 @@ fn finite_profile_modes_are_closed_and_selected_at_both_calls() {
 #[test]
 fn finite_modes_and_opaque_brands() {
     let source = source::test_module(
-        source::production(),
+        source::production().to_owned(),
         "crates/rum-runtime/src/runtime/accounting_mode/tests/mod.rs",
         "rum_runtime::runtime::accounting_mode::tests",
     );
@@ -258,17 +269,20 @@ fn finite_modes_and_opaque_brands() {
             "both sealed substitutions must be checked"
         );
         let mut open = f.clone();
-        open.sig.generics = syn::parse_quote!(<T>);
+        open.sig = rewrite_generics(&open.sig, "<T>");
         assert!(types::with_mode(&source, &open, None).is_err());
         assert!(types::with_mode(&source, f, Some(&ExactTy::Scalar("u8".into()))).is_err());
     }
     let module = "rum_runtime::runtime::accounting_mode::tests";
     let mut changed = source.clone();
     changed.trait_impls.retain(|(m, item, _, _)| {
-        item.trait_.as_ref().is_none_or(|(_, p, _)| {
-            resolve::path(&source, m, p).ok().as_deref()
-                != Some("rum_runtime::runtime::accounting_mode::lease::Mode")
-        })
+        ast::<syn::ItemImpl>(item)
+            .trait_
+            .as_ref()
+            .is_none_or(|(_, p, _)| {
+                resolve::path(&source, m, p).ok().as_deref()
+                    != Some("rum_runtime::runtime::accounting_mode::lease::Mode")
+            })
     });
     assert!(
         types::domain(&changed).is_err(),

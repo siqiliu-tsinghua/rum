@@ -105,7 +105,9 @@ pub(in super::super) fn with_mode(
     mode: Option<&ExactTy>,
 ) -> Result<Function, String> {
     let mut f = f.clone();
-    for g in [&f.sig.generics, &f.impl_generics] {
+    let signature = f.sig();
+    let impl_generics = f.impl_generics();
+    for g in [&signature.generics, &impl_generics] {
         if let Some(name) = mode_parameter(source, &f.module, g)? {
             let ty = mode.ok_or("finite mode is not instantiated")?;
             let parameter = g
@@ -116,8 +118,8 @@ pub(in super::super) fn with_mode(
             f.substitutions.insert(name, ty.clone());
         }
     }
-    f.sig.generics = syn::Generics::default();
-    f.impl_generics = syn::Generics::default();
+    f.sig = without_generics(&f.sig);
+    f.impl_generics = String::new();
     Ok(f)
 }
 
@@ -135,6 +137,7 @@ impl ModeDomain {
     pub(in super::super) fn check(&self, source: &Source) -> Result<(), String> {
         let mut modes = std::collections::BTreeSet::new();
         for (module, item, _, conditional) in &source.trait_impls {
+            let item = ast::<syn::ItemImpl>(item);
             let Some((_, path, _)) = &item.trait_ else {
                 continue;
             };
@@ -171,9 +174,9 @@ impl ModeDomain {
                     return Err("mode implementor is not an exact nominal definition".into());
                 };
                 if definition.conditional
-                    || !definition.generics.params.is_empty()
-                    || definition.generics.where_clause.is_some()
-                    || definition.alias.is_some()
+                    || !definition.generics().params.is_empty()
+                    || definition.generics().where_clause.is_some()
+                    || definition.alias().is_some()
                     || !definition.fields.is_empty()
                     || !definition.variants.is_empty()
                 {

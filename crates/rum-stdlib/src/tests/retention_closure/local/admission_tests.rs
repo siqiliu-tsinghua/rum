@@ -110,13 +110,10 @@ fn local_pending_argument_and_wrapped_payload_controls() {
     assert!(red.text().contains("imported trait candidate"));
     evidence("competing-method-trait", &red, &green);
 
-    let source = source::test_module(
-        source::production(),
-        "crates/rum-runtime/src/runtime/accounting_mode/tests/mod.rs",
-        "rum_runtime::runtime::accounting_mode::tests",
-    );
+    let shared = promotion::shared_population();
+    let source = &shared.source;
     let f = resolve::function(
-        &source,
+        source,
         "rum_runtime::runtime::accounting_mode::tests::start",
     )
     .unwrap();
@@ -124,21 +121,20 @@ fn local_pending_argument_and_wrapped_payload_controls() {
         contracts::read(include_str!("../inventory/local-contracts.tsv")).unwrap(),
     )
     .unwrap();
-    let index = Interfaces::new(&source);
+    let index = &shared.index;
     let green = check(&index, f, &marks);
     let mut changed = f.clone();
-    changed.body=syn::parse_str("{ let payload = Expr::string(\"prefix538\".repeat(150_000)); cx.reserve(&mut values, 32)?; cx.push(&mut values, payload)?; drive(cx, values, args, 1) }").unwrap();
+    changed.body = "{ let payload = Expr::string(\"prefix538\".repeat(150_000)); cx.reserve(&mut values, 32)?; cx.push(&mut values, payload)?; drive(cx, values, args, 1) }".into();
     let red = check(&index, &changed, &marks);
     assert!(red.text().contains("live across call"), "{}", red.text());
     evidence("wrapper-does-not-hide-payload", &red, &green);
-    changed.body=syn::parse_str("{ let payload = if args[0] == Expr::small_integer(1) { Expr::string(\"x\".repeat(2)) } else { Expr::small_integer(2) }; cx.reserve(&mut values, 32)?; cx.push(&mut values, payload)?; drive(cx, values, args, 1) }").unwrap();
+    changed.body = "{ let payload = if args[0] == Expr::small_integer(1) { Expr::string(\"x\".repeat(2)) } else { Expr::small_integer(2) }; cx.reserve(&mut values, 32)?; cx.push(&mut values, payload)?; drive(cx, values, args, 1) }".into();
     let red = check(&index, &changed, &marks);
     assert!(red.text().contains("live across call"), "{}", red.text());
     evidence("branch-preserves-payload", &red, &green);
-    changed.body = syn::parse_str(
-        "{ let copied = args.clone(); cx.reserve(&mut values, 32)?; drive(cx, values, args, 1) }",
-    )
-    .unwrap();
+    changed.body =
+        "{ let copied = args.clone(); cx.reserve(&mut values, 32)?; drive(cx, values, args, 1) }"
+            .into();
     let red = check(&index, &changed, &marks);
     assert!(red.text().contains("live across call"), "{}", red.text());
     evidence("shared-clone-has-no-receipt", &red, &green);

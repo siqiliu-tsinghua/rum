@@ -178,8 +178,9 @@ fn reaches_insertion(
     if seen.contains(&target.identity) {
         return false;
     }
-    let parameters: Vec<_> = target
-        .signature_ast
+    let signature: syn::Signature = syn::parse_str(&target.signature_ast).unwrap();
+    let body: syn::Block = syn::parse_str(&target.body).unwrap();
+    let parameters: Vec<_> = signature
         .inputs
         .iter()
         .filter_map(|p| {
@@ -194,7 +195,7 @@ fn reaches_insertion(
         return false;
     };
     let mut rebound = Rebindings::default();
-    rebound.visit_block(&target.body);
+    rebound.visit_block(&body);
     if rebound
         .0
         .iter()
@@ -204,7 +205,7 @@ fn reaches_insertion(
     }
     seen.push(target.identity.clone());
     let mut calls = Calls(Vec::new());
-    calls.visit_block(&target.body);
+    calls.visit_block(&body);
     let result = calls
         .0
         .into_iter()
@@ -286,6 +287,7 @@ pub(super) fn insertion(facts: &Facts, site: &Use) -> bool {
     let Some(function) = facts.functions.iter().find(|f| f.identity == site.caller) else {
         return false;
     };
+    let body: syn::Block = syn::parse_str(&function.body).unwrap();
     let mut proof = Producer {
         facts,
         function,
@@ -293,6 +295,6 @@ pub(super) fn insertion(facts: &Facts, site: &Use) -> bool {
         witnesses: BTreeMap::new(),
         proved: false,
     };
-    proof.visit_block(&function.body);
+    proof.visit_block(&body);
     proof.proved
 }

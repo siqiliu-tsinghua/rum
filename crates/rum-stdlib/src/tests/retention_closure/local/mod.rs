@@ -60,7 +60,7 @@ fn check(index: &Interfaces, f: &Function, marks: &Marks) -> Report {
     if f.id == option_boundaries::c01() {
         return option_boundaries::check_instances(index, f, &marks);
     }
-    let generic = types::mode_parameter(source, &f.module, &f.sig.generics);
+    let generic = types::mode_parameter(source, &f.module, &f.sig().generics);
     if matches!(generic, Ok(Some(_))) {
         let mut combined = Report::default();
         for id in types::MODES {
@@ -111,7 +111,7 @@ fn check_instance(index: &Interfaces, f: &Function, marks: &Marks) -> Report {
     };
     if !source.errors.is_empty() || !source.modules[&f.module].hazards.is_empty() {
         lint.reject(
-            f.sig.span(),
+            f.sig().span(),
             Kind::RET002,
             None,
             "unresolved source or item-generating scope",
@@ -124,7 +124,7 @@ fn check_instance(index: &Interfaces, f: &Function, marks: &Marks) -> Report {
         }
     }
     let mut attributes = Attributes(Vec::new());
-    attributes.visit_block(&f.body);
+    attributes.visit_block(&f.body());
     for span in attributes.0 {
         lint.reject(
             span,
@@ -133,26 +133,26 @@ fn check_instance(index: &Interfaces, f: &Function, marks: &Marks) -> Report {
             "expression/statement attribute is not admitted",
         );
     }
-    if let Err(reason) = types::attributes(&f.attrs) {
-        lint.reject(f.sig.span(), Kind::RET002, None, reason);
+    if let Err(reason) = types::attributes(&f.attrs()) {
+        lint.reject(f.sig().span(), Kind::RET002, None, reason);
     }
     if f.conditional
-        || !f.sig.generics.params.is_empty()
-        || !f.impl_generics.params.is_empty()
-        || f.sig.generics.where_clause.is_some()
-        || f.sig.unsafety.is_some()
-        || f.sig.asyncness.is_some()
-        || f.sig.abi.is_some()
-        || f.sig.variadic.is_some()
+        || !f.sig().generics.params.is_empty()
+        || !f.impl_generics().params.is_empty()
+        || f.sig().generics.where_clause.is_some()
+        || f.sig().unsafety.is_some()
+        || f.sig().asyncness.is_some()
+        || f.sig().abi.is_some()
+        || f.sig().variadic.is_some()
     {
         lint.reject(
-            f.sig.span(),
+            f.sig().span(),
             Kind::RET002,
             None,
             "signature outside A1/A2 admissions",
         );
     }
-    for input in &f.sig.inputs {
+    for input in &f.sig().inputs {
         if let syn::FnArg::Typed(a) = input {
             if matches!(&*a.pat, syn::Pat::Wild(_))
                 && matches!(
@@ -164,7 +164,9 @@ fn check_instance(index: &Interfaces, f: &Function, marks: &Marks) -> Report {
             }
         }
         let mut one = f.clone();
-        one.sig.inputs = [input.clone()].into_iter().collect();
+        let mut signature = one.sig();
+        signature.inputs = [input.clone()].into_iter().collect();
+        one.sig = tokens(&signature);
         match types::exact_parameters(source, &one) {
             Ok(parameters) => {
                 for (n, t) in parameters {
@@ -185,9 +187,9 @@ fn check_instance(index: &Interfaces, f: &Function, marks: &Marks) -> Report {
     }
     let output = types::exact_output(source, f);
     if let Err(reason) = &output {
-        lint.reject(f.sig.span(), Kind::RET002, None, reason);
+        lint.reject(f.sig().span(), Kind::RET002, None, reason);
     }
-    lint.block(&f.body, output.as_ref().ok());
+    lint.block(&f.body(), output.as_ref().ok());
     flow::check(source, f, &mut lint.report);
     lint.report
 }

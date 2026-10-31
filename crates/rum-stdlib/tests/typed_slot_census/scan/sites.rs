@@ -11,6 +11,31 @@ use syn::{
     visit::{self, Visit},
 };
 
+fn located<T: Spanned>(
+    value: &T,
+    file: &str,
+    files: &std::collections::BTreeMap<String, String>,
+) -> String {
+    let span = value.span();
+    let source = &files[file];
+    let offset = |point: proc_macro2::LineColumn| {
+        source
+            .match_indices('\n')
+            .take(point.line - 1)
+            .last()
+            .map_or(0, |(index, _)| index + 1)
+            + point.column
+    };
+    let text = &source[offset(span.start())..offset(span.end())];
+    let start = span.start();
+    format!(
+        "{}{}{}",
+        "\n".repeat(start.line - 1),
+        " ".repeat(start.column),
+        text
+    )
+}
+
 impl Walker<'_> {
     fn record(&mut self, kind: &str, name: String, target: String, receiver: String, span: Span) {
         let ordinal = self
@@ -48,8 +73,8 @@ impl Walker<'_> {
             trait_name: self.trait_name.clone(),
             name: sig.ident.to_string(),
             signature: text(sig),
-            signature_ast: sig.clone(),
-            body: block.clone(),
+            signature_ast: located(sig, &self.file, &self.files),
+            body: located(block, &self.file, &self.files),
             cold: attrs.iter().any(|a| a.path().is_ident("cold")),
             site: Site::new(&self.file, sig.span()),
             test: self.test,

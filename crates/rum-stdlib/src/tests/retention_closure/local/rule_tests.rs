@@ -15,7 +15,7 @@ fn evidence(name: &str, text: &str) {
 #[test]
 fn local_rule_contract_controls() {
     let source = source::production();
-    let index = Interfaces::new(&source);
+    let index = Interfaces::shared_production();
     let records = records();
     let marks = Marks::contracts(records.clone()).unwrap();
     let c02 = resolve::function(
@@ -61,10 +61,12 @@ fn local_rule_contract_controls() {
     }
     // A receipt never follows from the return signature or a known clone type.
     let mut raw = c02.clone();
-    raw.body = syn::parse_quote!({
+    raw.body = block(
+        "{
         let raw = expr.clone();
         crate::runtime::accounting_mode::rule::clone_result(self, expr)
-    });
+    }",
+    );
     let red = check(&index, &raw, &marks);
     assert!(
         red.rejected.iter().any(|d| d.kind == Kind::RET001),
@@ -75,11 +77,13 @@ fn local_rule_contract_controls() {
         "raw-clone-before-adapter",
         &format!("RED\n{}GREEN 0\n", red.text()),
     );
-    raw.body = syn::parse_quote!({
+    raw.body = block(
+        "{
         let result = crate::runtime::accounting_mode::rule::clone_result(self, expr);
         expr.clone();
         crate::runtime::accounting_mode::rule::clone_result(self, expr)
-    });
+    }",
+    );
     let red = check(&index, &raw, &marks);
     assert!(
         red.rejected.iter().any(|d| d.kind == Kind::RET001),
@@ -104,7 +108,7 @@ fn local_rule_contract_controls() {
         let name = id.rsplit("::").next().unwrap();
         let mut changed = source.clone();
         let f = changed.functions.get_mut(&id).unwrap().first_mut().unwrap();
-        f.body = syn::parse_quote!({ panic!("boundary removed") });
+        f.body = block("{ panic!(\"boundary removed\") }");
         assert!(validate(&changed).values().all(Result::is_err));
         evidence(
             &format!("body-{name}"),
@@ -137,7 +141,7 @@ fn local_rule_contract_controls() {
         .unwrap()
         .first_mut()
         .unwrap();
-    builder.body = syn::parse_str(&tokens(&builder.body).replace("\"Rule\"", "\"List\"")).unwrap();
+    builder.body = builder.body.replace("\"Rule\"", "\"List\"");
     assert!(validate(&literal).values().all(Result::is_err));
     evidence(
         "wrong-head-literal",
@@ -148,7 +152,7 @@ fn local_rule_contract_controls() {
 #[test]
 fn local_rule_macro_definition_arms_hygiene_and_raw_frame_controls() {
     let source = source::production();
-    let index = Interfaces::new(&source);
+    let index = Interfaces::shared_production();
     assert!(
         index.resume_definition.is_ok(),
         "{:?}",
@@ -194,7 +198,7 @@ fn local_rule_macro_definition_arms_hygiene_and_raw_frame_controls() {
         }
     }
     let mut macros = Macros(vec![]);
-    macros.visit_block(&guarded.body);
+    macros.visit_block(&guarded.body());
     let [insert] = macros.0.as_slice() else {
         panic!("one insert arm")
     };
@@ -233,9 +237,11 @@ fn local_rule_macro_definition_arms_hygiene_and_raw_frame_controls() {
     alias.path = syn::parse_quote!(resume_or_suspend);
     assert!(resume_macro::adapt(&source, c02, &alias, &index.resume_definition).is_err());
     let mut shadow = c02.clone();
-    shadow.body = syn::parse_quote!({
+    shadow.body = block(
+        "{
         let Ok = 1;
-    });
+    }",
+    );
     assert!(resume_macro::adapt(&source, &shadow, &original, &index.resume_definition).is_err());
     let malformed: syn::Macro = syn::parse_quote!(
         crate::resume_or_suspend!(self, result, ok((a,b)) => Ok(a), suspend => frame)

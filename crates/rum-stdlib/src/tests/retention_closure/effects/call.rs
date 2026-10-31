@@ -78,7 +78,7 @@ impl Checker<'_> {
             )
         } else {
             let substitutions = callee
-                .sig
+                .sig()
                 .generics
                 .params
                 .iter()
@@ -90,7 +90,7 @@ impl Checker<'_> {
                 .collect::<Result<BTreeMap<_, _>, _>>()
                 .map_err(|r| self.unsupported(f, call.span(), r))?;
             if substitutions.len() != instance.len()
-                || instance.len() != callee.sig.generics.params.len()
+                || instance.len() != callee.sig().generics.params.len()
             {
                 return Err(self.unsupported(
                     f,
@@ -99,7 +99,7 @@ impl Checker<'_> {
                 ));
             }
             let parameters = callee
-                .sig
+                .sig()
                 .inputs
                 .iter()
                 .map(|arg| {
@@ -115,7 +115,7 @@ impl Checker<'_> {
                     ))
                 })
                 .collect::<Result<Vec<_>, String>>();
-            let output = match &callee.sig.output {
+            let output = match &callee.sig().output {
                 syn::ReturnType::Default => Ok(ExactTy::Unit),
                 syn::ReturnType::Type(_, t) => {
                     types::substitute(self.source, &callee.module, t, &substitutions)

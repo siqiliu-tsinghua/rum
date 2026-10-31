@@ -144,7 +144,7 @@ pub(super) fn instances(
             }
         }
     } else {
-        if !f.sig.generics.params.is_empty() || !f.impl_generics.params.is_empty() {
+        if !f.sig().generics.params.is_empty() || !f.impl_generics().params.is_empty() {
             return Err("C02 must remain nongeneric".into());
         }
         result.push((

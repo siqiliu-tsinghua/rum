@@ -86,13 +86,13 @@ fn exact_types_and_constructor_claims_match_rustc() {
     {
         calls.module = f.module.clone();
         calls.file = f.site.file.clone();
-        calls.visit_block(&f.body);
+        calls.visit_block(&f.body());
     }
     for (i, (site, target, kind)) in calls.rows.into_iter().enumerate() {
         let definition = resolve::function(&source, &target).ok();
         let (file, line, column) = definition
             .map(|f| {
-                let p = f.sig.paren_token.span.close().start();
+                let p = f.sig().paren_token.span.close().start();
                 (f.site.file.clone(), p.line, p.column + 1)
             })
             .unwrap_or_default();
@@ -148,7 +148,7 @@ fn exact_types_and_constructor_claims_match_rustc() {
                 "production_{total}\t{}\t{}\t{}",
                 columns(&claim.site),
                 claim.target,
-                match &f.sig.output {
+                match &f.sig().output {
                     syn::ReturnType::Type(_, t)
                         if types::exact_output(&production, f).ok().as_ref()
                             == Some(&claim.exact) =>
