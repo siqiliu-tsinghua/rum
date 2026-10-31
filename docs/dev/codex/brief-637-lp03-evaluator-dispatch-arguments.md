@@ -430,3 +430,92 @@ ordinary-label regression is a defect to attribute or report, never noise.
   `rum-report/1` at `.temp/brief-637/report-a1.json`, `report-a2.json`,
   `report-b.json`, and `python3 scripts/report.py check 637 --stage a1`
   (etc.) must pass before each stage's final message.
+
+## Director gate — stage A1 (2026-11-01): the STOP is a false positive; the bar is amended
+
+I ran the gate (`python3 -I scripts/director-gate.py run 637 --stage a1`,
+`.temp/director/gate-637a1/`): **scope PASS** (53 citations verified),
+**fmt FAIL** — one call in `eval_core/call.rs:356` needs rustfmt. A1 does not
+pass as delivered; the fmt fix, the replays it invalidates and A1's workspace
+suite are part of the continuation below.
+
+The loss-ledger STOP is correct under this brief as written, and the bar it
+enforced is wrong. I rule it a false positive: **A2 may proceed.**
+
+### Q1, answered: the movement is the queue's source-context restore
+
+`Context::capture` (`crates/rum-runtime/src/runtime/profiling/logical/context.rs:37`)
+records `Session::logical_capture_sources()`, and `Context::enter_active`
+(`:70`) swaps that stack back in on resume. LP03 A1 inserts the first
+boundaries in the tree — LP02 adopted no phase — so for the first time a
+resumed frame restores the `EVALUATION_PROFILE_SOURCE_STACK` that the
+suspension unwind had emptied. The `runtime|phase|<source>` keys are rendered
+from exactly that stack (`profiling/tests/logical_contract.rs:352`), so
+nested phases owned by LP04–LP07 are re-attributed **on the resumed arm only**
+to the source the queued arm always had. A lost or duplicated legacy event
+would move the resumed arm *away* from the queued arm; these cells move it
+toward.
+
+### The evidence (my reproduction, `.temp/director/brief-637-repro/`)
+
+Scripts `cmp_ledgers.py`, `cmp2.py`, `cmp3.py`, `distance.py`,
+`moved_after_moves.py`; inputs the committed LP01 ledger
+(`.temp/brief-637/originals/lp01/`, md5-identical to `HEAD`) and the
+regenerated one.
+
+- After applying the six approved producer-position moves to the old rows,
+  **`lexical` and `timing` are exactly identical**: 0 old-only, 0 new-only.
+  Only `cache` and `all` move — the modes in which the logical epoch exists
+  (`executing_epoch()` is `None` without it, `logical/segments.rs:95`), so
+  only there is a boundary inserted. The suspension-macro restructuring runs
+  in every mode; a movement confined to two modes cannot come from it.
+- **The queued arm is untouched**: every `(mode, program, key)` present in
+  both ledgers has an identical queued vector — 77,564 vectors, 0 changed.
+- **The disagreement mass falls and never rises.** For each `(mode, program)`,
+  `M = Σ_keys L1(resumed, queued)` over that program's loss rows (the ledger
+  *is* the difference set, so this is the program's whole
+  resumed-vs-queued disagreement): 3,184 cells, **610 lower, 2,574 equal,
+  0 higher**; `Σ M` 1,364,160 → 725,052. Net rows: cache 21,485 old-only vs
+  9,166 new-only; all 24,091 vs 9,515.
+- Per-owner old-only rows (cache): LP03 14,615, LP05 4,104, LP06 1,512,
+  LP04 1,226, LP07 28. The LP03 promotion and the source re-attribution are
+  the same mechanism at different depths.
+
+### Amended loss-ledger bar (supersedes every earlier LP04–LP07 bar in this brief)
+
+`inventory/logical-profile-losses.json` is a derived inventory: it is
+re-baselined whenever a stage inserts boundaries. Regenerate it with the pin
+procedure, then extend `verify_losses.py` and make it print ALL of these
+verdicts **PASS** (keep the existing receipt check as well):
+
+1. **queued-unchanged** — for every `(mode, program, key)` present in both
+   the old and the new ledger, the queued vector is identical.
+2. **mode-confinement** — after the six approved producer-position moves,
+   the `lexical` and `timing` rows are identical old to new.
+3. **mass-never-up** — per `(mode, program)`, the L1 disagreement mass over
+   its loss rows is `<=` the old ledger's; print the lower/equal/higher
+   counts and both totals.
+4. **executed-receipts** — 4,375 receipts unchanged (existing).
+
+Any increase under 3 is a STOP. LP04–LP07 cells may move only under 1–3.
+Never weaken one of these checks to reach green.
+
+### What the continuation must do
+
+1. `cargo fmt` (only `eval_core/call.rs` is unformatted today), then confirm
+   `cargo fmt --check` is clean. Re-run A1's `profiling` suite and its
+   workspace (`RUST_TEST_THREADS=8`) on the formatted text.
+2. Implement **A2** — the spanning routes `evaluate.total`,
+   `evaluate.once_unstable`, `evaluate_call.total`, `evaluate_call.dispatch`
+   — and insert the falsifier, exactly per the route table, the shape rules
+   and the consumer boundaries above.
+3. Run the standing inventory replay **once on the final text**, in the
+   brief's order, with the amended bar and the extended `verify_losses.py`.
+   The A1 `local_production_acceptance` reds (`stale or omitted instance
+   certificate C01`) were the certificate ordering artifact: the certificate
+   replay ran after them. My rerun on the delivered tree is green (1 passed,
+   rc=0, 33.69 s). Rerun that test in both builds after the replay and quote
+   both verdict lines.
+4. Run both Stage A verification sets and report `a1` and `a2` separately,
+   each with its own runs, checks and pasted verdict lines. A1's report
+   stands as delivered except where this continuation replaces its numbers.
