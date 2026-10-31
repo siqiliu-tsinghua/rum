@@ -519,3 +519,141 @@ Never weaken one of these checks to reach green.
 4. Run both Stage A verification sets and report `a1` and `a2` separately,
    each with its own runs, checks and pasted verdict lines. A1's report
    stands as delivered except where this continuation replaces its numbers.
+
+## Director gate — continuation 1 (2026-11-01): the layout defect and the measured adopted-start design
+
+The continuation left the tree red: six workspace targets fail
+(`logical_profile_lifecycle`, `native_stack_thread_scope`, `rum-runtime --lib`,
+`rum-stdlib --lib`, `suspension_oracle`, `typed_slot_census`). Two of the
+failures are real and are the stop: the recursive evaluator frames grew.
+Measured in the same debug build, symbol by symbol:
+
+```
+evaluate_call          0x2b8 -> 0x318   (+96)
+evaluate_inner_unstable 0x3e8 -> 0x438  (+80)
+evaluate_atom_fast_path 0x1a8 -> 0x1f8  (+80)
+```
+
+The `native_stack_thread_scope` fixtures sit on the 1 MiB limit, so this
+growth flips `dive[12]` and the 80-deep suspension. **Do not recalibrate
+those tests.** Off-by-default state in a hot recursive frame is a hard-line
+violation (CLAUDE.md), and the bundle/`Call` local — boxed or not — is that
+state. The worker's six layout attempts (boxed, serial, modes, outlined,
+bundles, zst-guarded) all leave some growth; none can remove it, because a
+local that survives the recursive call always costs a slot in debug.
+
+### The design that measures zero: fold the logical start into the existing timing call
+
+I measured this on the delivered tree (scripts and logs in
+`.temp/director/brief-637-repro/`; the probe edits were reverted afterwards):
+
+| variant (evaluate_atom_fast_path) | prologue |
+|---|---|
+| base function, current build | `0x1a8` |
+| + two hot `phase_begin` calls + cold finish/pause | `0x1c8` (+32) |
+| + two hot begins + `phase_capture` + cold finish/pause | `0x1e8` (+64) |
+| **adopted start (logical open+capture inside the existing start call) + cold finish/pause** | **`0x1a8` (+0)** |
+
+Cold-path calls are free (the `matches!` branch with two pause and two finish
+calls measured `0x1a8` on its own). What costs is adding a call *at the entry*
+of a recursive function. So the start must ride the call that is already
+there.
+
+**Shape (this compiles, passes `cargo test -p rum-runtime --lib profiling`
+44/0/2, and measures `0x1a8`):**
+
+```rust
+// profiling/timing.rs — beside the legacy start; the legacy function itself
+// is untouched.
+#[inline]
+pub(in crate::runtime) fn runtime_path_timing_start_adopted(
+    session: &mut crate::runtime::Session,
+    phase: &'static str,
+) -> Option<RuntimePathTimingToken> {
+    let token = runtime_path_timing_start(phase);
+    if token.is_some() {
+        if let Some(site) = crate::runtime::profiling::logical::adopted_site(phase) {
+            crate::runtime::profiling::logical::open_phase(session, phase, site);
+        }
+    }
+    token
+}
+
+// profiling/logical/mod.rs
+pub(in crate::runtime) struct AdoptedSite {
+    pub policy: Policy,
+    pub after_consumer: bool,
+    pub after_return: bool,
+}
+
+pub(in crate::runtime) fn open_phase(
+    session: &mut crate::runtime::Session,
+    phase: &'static str,
+    site: AdoptedSite,
+) {
+    let Some(mut call) = session.logical_phase_start(phase, site.policy) else {
+        return;
+    };
+    call.capture_frontier(session, site.after_consumer);
+    PHASE_LIFO.with_borrow_mut(|stack| {
+        let storage = match executing_epoch() {
+            Some(epoch) => match epoch.storage(std::mem::size_of::<PhaseEntry>() + 16) {
+                Some(storage) => Some(storage),
+                None => { epoch.retire(Retire::DiagnosticCap); None }
+            },
+            None => None,
+        };
+        stack.push(PhaseEntry {
+            phase, call: Some(call), after_return: site.after_return, _storage: storage,
+        });
+    });
+}
+```
+
+- `PhaseEntry { phase: &'static str, call: Option<Call>, after_return: bool,
+  _storage: Option<Storage> }`, one TLS `RefCell<Vec<PhaseEntry>>` (LIFO),
+  **no `LogicalPhases` local and no `Drop`**.
+- Exit helpers are cold calls that pop by phase: `take_phase(phase)` reads the
+  top entry, checks its stored phase, pops, and on a mismatch calls
+  `epoch.fault()` and returns `None`; then `finish_phase_expr/optional/
+  prepared/error/ok` and `phase_pause(session, phase)` call the existing
+  `finish_logical_*` / `pause_into`.
+- The resume-side completions `finish_logical_stage` and
+  `finish_logical_prepared_total` are unchanged and do **not** pop: the pause
+  already popped that entry when it converted the record into a boundary.
+- `adopted_site(phase)` is the single table: the eleven keys and their
+  policies (`Expr`; `OptionalExpr` for `call.stage.*` with
+  `after_consumer=true`; `Prepared` for `prepare_arguments.total` with
+  `after_consumer=true`; `Expr` with `after_return=true` only for
+  `evaluate.once_unstable`). A unit test must assert the table's key set equals
+  the brief's adopted list, so a drift is a red test, not a silent lost row.
+
+**The edit at each route** is one line per phase: replace
+`runtime_path_timing_start(phase)` with
+`runtime_path_timing_start_adopted(self, phase)` (same call count, one more
+register argument), delete the bundle start/capture calls, and keep the cold
+`pause`/`finish` calls at the exit. Every early return path (the dispatch
+loop's `return`s, the prepared-argument `break`) must finish or pause before
+it returns; the falsifier's `abandoned=0`/`open=0`/quiescence checks are the
+enforcement — there is no `Drop` safety net any more.
+
+### What the continuation must do
+
+1. Revert the `LogicalPhases`/`PHASE_STACK` bundle and apply the adopted-start
+   design to every A1 route (inner, atom-fast, head, stage, arg-total,
+   arg-evaluate).
+2. Before anything else, verify the three prologues are back to
+   `0x2b8`/`0x3e8`/`0x1a8` with the same objdump method, and run
+   `cargo test -p rum-host --test native_stack_thread_scope` — the two failing
+   fixtures must pass unmodified.
+3. Then A2 (the spanning routes and the falsifier), the standing replay on the
+   final text with the amended loss bar, and both Stage A verification sets,
+   reporting a1 and a2 separately.
+4. Diagnose each of the other four failing targets before the workspace run;
+   the report must name, per target, whether it was a stale inventory cell
+   (replayed) or a code defect (fixed), with the verdict line quoted.
+
+The measured probe is reproducible: the base function's `0x1a8` was
+re-derived in the same build after reverting, and the profiling suite was
+green on the measured variant. If the implemented version does not reproduce
+`0x1a8`, stop and report the prologue with the diff, not a recalibrated test.
