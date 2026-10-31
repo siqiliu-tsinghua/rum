@@ -202,13 +202,16 @@ produce; for implementation: code + tests + the before/after per-label rows).
      call `systemd-run` yourself: the agy and grk sandboxes cannot reach the
      user bus.
    - Builds use `CARGO_BUILD_JOBS=8`, which peaked at about 9 GiB.
-   - Tests use `RUST_TEST_THREADS=1`, unless the brief states a measured
-     profile.
-     - rum-stdlib's tests at the default thread count peaked at 14.6 GB and
-       were OOM-killed.
-     - At `17576575`, the logical profiler's tests fail under parallel
-       threads, 13–16 of 30 per run. That is an open defect (`TODO.md`), not
-       a property to rely on.
+   - Tests use `RUST_TEST_THREADS=8` (user ruling 2026-11-01). The whole
+     workspace is green at 4/8/16/32 test threads (2026-10-31: 4024 passed,
+     0 failed, identical test-name sets at each); 8 threads is the
+     fastest-per-GB point (315 s, peak 6.33 GB, against 876 s and 4.88 GB
+     serial), and 16/32 buy about 5 s for 1.3–2.0 GB more.
+   - A red is reproduced at `--test-threads=1` before it is reported as a
+     defect, and interference is fixed rather than masked by serializing the
+     default. (The 2026-10-27 LP02 parallel failure, 13–16 of 30, was cured
+     by brief-635 and is green at 32 threads; the 14.6 GB 32-thread
+     rum-stdlib OOM predates the test-isolation line, briefs 634–636.)
    - On an `oom-kill` (exit 137 with `oom_kill` risen), rerun that command
      once with one job.
    - `perf stat`, timing, Callgrind and heap captures run serially and alone,

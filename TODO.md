@@ -120,16 +120,25 @@ filter cuts this census work a third time, switch workers.**
   instrument could not see. The record is at the end of brief-617.
 
 **Opened by LP02's gate (2026-10-27):**
-- **The standard `cargo test` is red at `17576575`.** At the default thread
+- **DONE (2026-10-31; briefs 634–636, ruled 2026-11-01): the standard
+  `cargo test` is red at `17576575`.** At the default thread
   count, `cargo test -p rum-runtime --lib profiling` failed 16, 13 and 14 of
   30 tests in three runs, and all of the failures are LP02's tests. Single-threaded, all
   30 pass. The logical profiler's epoch is process-wide by design, and the test
-  guard `test_support::enabled()` holds no lock. The director's gates have run
+  guard `test_support::enabled()` held no lock. The director's gates ran
   tests single-threaded since 2026-09-30, so they never saw it. I measured
   this on 2026-10-26 and did not record it until 10-27. **brief-627** (the
-  parallel test census, design-only, on grk) covers all 46 test targets,
-  per-test memory, the root causes, and an enforced fix. It runs before LP03,
-  because LP03-LP08 will add more profiler tests.
+  parallel test census, design-only, on grk) covered all 46 test targets,
+  per-test memory, the root causes, and an enforced fix; the fix landed as
+  briefs 634–636 (test-artifact constructors, the epoch lease and write
+  gate, one immutable parse per process).
+  - Evidence (2026-10-31, `.temp/director/thread-count/`): the whole
+    workspace is green at 4, 8, 16 and 32 test threads, 4024 passed / 0
+    failed / 61 ignored at each with identical test-name sets; 32 threads is
+    the old default configuration and its 42 `runtime::profiling::*` cases
+    ran 40 ok + 2 ignored, 0 failed. From the user ruling 2026-11-01 the default is
+    `RUST_TEST_THREADS=8` (315 s, peak 6.33 GB, against 876 s and 4.88 GB
+    serial).
 - **DONE (brief-629, `60ca9585`): the native stack guard measured against
   another thread's stack after a Session moved threads** (found by the
   director at brief-627's review, designed in brief-628).
@@ -145,9 +154,9 @@ filter cuts this census work a third time, switch workers.**
 - **The `rum-jupyter` `execute_lifecycle` interrupt "flake" was this
   defect.** Jupyter runs each execute on a fresh thread. After brief-629 the
   pair passes 40 of 40 at `--test-threads=2`, 20 by the worker and 20 by the
-  director. The default parallel `cargo test` is still red for brief-627's
-  test-isolation families, so I have not rerun the original
-  workspace-parallel reproduction (3 failures in 10).
+  director. The 2026-10-31 workspace run at 32 test threads passed all 13
+  `tests::execute_lifecycle` cases, so the original 10-run reproduction (3
+  failures) is moot; it was not repeated in that form.
 - **DONE (brief-630, 2026-10-29): the dropped cleanup error (user ruling
   2026-10-27, Option A).** A `WithCleanup` cleanup that failed while a
   cancelled request was abandoned was dropped without a message. Stage A

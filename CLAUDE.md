@@ -98,8 +98,10 @@ human labour to budget.
   codegen unit.
 - **Host discipline.** All scratch goes in the git-ignored `.temp/`, never
   `/tmp`. Every cargo command runs in `scripts/memory-scope.sh <unit> 14G` at
-  `-j8` with `RUST_TEST_THREADS=1`, and test runs use `--no-fail-fast`.
-  Timing, perf and callgrind runs are serial and run alone.
+  `-j8`, tests at `RUST_TEST_THREADS=8` (user ruling 2026-11-01: 876 s serial
+  → 315 s at a 6.33 GB peak), with `--no-fail-fast`; a red is reproduced at
+  `--test-threads=1` before it is called a defect. Timing, perf and callgrind
+  runs are serial and run alone.
 
 ## Context economy (user ruling 2026-10-29)
 
@@ -163,34 +165,24 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
 - **Permission lists.** They get under-enumerated, so write a disclosure duty
   instead. An inventory rule must cover what new call edges make reachable.
 
-## Current state (2026-10-31)
+## Current state (2026-11-01)
 
 - **Nesting.** The security-hardening mainline (since 2026-09-02) contains
   the retention line (paused at E0), which contains the suspension
   continuation branch (active).
 - **Branch queue, in order:**
-  1. the workspace thread-count measurement (4/8/16/32) for the user's
-     ruling — `rum-stdlib` at 8 threads was parked by the user on
-     2026-10-29, so ask first. Test isolation is done (briefs 634–636);
-  2. LP03–LP08;
-  3. G15-C2's remaining 353 rows, then CM;
-  4. `CHANGELOG.md` (user ruling: before S10);
-  5. G13 S10–S54, F1–F23, R;
-  6. E2.
+  1. LP03–LP08;
+  2. G15-C2's remaining 353 rows, then CM;
+  3. `CHANGELOG.md` (user ruling: before S10);
+  4. G13 S10–S54, F1–F23, R;
+  5. E2.
 - **After the branch:** the retention line from E0 with Q3 designed beside
   it, then Q1, Q2, Q4, Q5 (user ruling 2026-10-29), the binary snapshot
   format, the remaining audit items and the threat-model critiques. Only then
   `v0.3.0`.
-- **Latest done:**
-  - brief-636, the shared parse: one immutable `Source`, `Interfaces`,
-    population and typed `Discovery` per process; test-isolation item 1 is
-    done (briefs 634, 635, 636);
-  - brief-635 amendment 2, the reset admits for its whole body and the
-    evaluation-cache `ACTIVE` publishes;
-  - brief-635 amendment 1, the lexical write gate: `5184797c`;
-  - brief-635 stage 1, the epoch test lease: `b199d63c`;
-  - brief-634, the test-artifact constructors: `467ff97a`;
-  - brief-630, abandonment cleanup errors: `854cfa4a`, `1c115117`, `ba1e1e52`.
+- **Latest done:** brief-636, the shared parse (`caec4c8e`), closed test
+  isolation (briefs 634–636); before it brief-635's epoch lease and write
+  gate, brief-630's cleanup errors. Details in `director-log.md`.
 - **Workers.** kimi only (2026-10-30: cdx has no quota, grk no balance).
 - **Earlier lines** are recorded in `director-log.md`; deferred items in
   `TODO.md` (full polynomial factorization stays deferred by user decision).

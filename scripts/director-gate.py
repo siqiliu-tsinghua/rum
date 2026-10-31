@@ -42,7 +42,7 @@ the next gate, whose HEAD is that tree, pairs against them. When the key is
 missing, `census` dumps HEAD's frontier in a worktree (base-frontier).
 
 Every cargo build or test runs in scripts/memory-scope.sh at 14G, with
-CARGO_BUILD_JOBS=8, RUST_TEST_THREADS=1 and --offline. Steps run serially.
+CARGO_BUILD_JOBS=8, RUST_TEST_THREADS=8 and --offline. Steps run serially.
 With --perf, three steps follow workspace: arms (both arms from one source
 path, one codegen unit), structure (the function diff) and panels (one perf
 panel per named engine). Without --perf they are SKIP. `rule` turns a
@@ -115,7 +115,7 @@ class Gate:
         """Run cargo in its own memory scope; returns (rc, log text, scope facts)."""
         path = self.log(f"{name}.log")
         unit = f"gate{self.brief}{(self.stage or '').lower()}-{name}-{os.getpid()}"
-        cmd = [str(SCOPE), unit, "14G", "env", "CARGO_BUILD_JOBS=8", "RUST_TEST_THREADS=1",
+        cmd = [str(SCOPE), unit, "14G", "env", "CARGO_BUILD_JOBS=8", "RUST_TEST_THREADS=8",
                *env, "cargo", *args]
         with path.open("w") as sink:
             sink.write(f"$ {' '.join(cmd)}\n")
