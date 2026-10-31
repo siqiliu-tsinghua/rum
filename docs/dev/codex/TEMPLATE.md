@@ -97,6 +97,11 @@ a reviewable plan plus the drafted follow-up briefs, still not a code change.
   in both the default and `--no-default-features` builds and copy the cells it
   writes to `.temp/brief-546/certificates/`, and reconcile the ownership rows
   against the discovery the tests print. Disclose every changed row.
+  **Replay as the last step of the edit stage, before the first acceptance
+  suite.** A suite red whose only cause is a stale derived cell — a
+  fingerprint, certificate, position or receipt — is an ordering artifact,
+  never evidence of a regression, and it is never reported as one. The replay
+  is the fix; the test and the inventory stay as they are.
   Fingerprints, hashes and positions may move. **New `UnknownConstruct` rows
   for code this brief added or changed are expected** — a derive on a new
   frame, a new closure, a new macro call — and are added with each row's file
@@ -241,8 +246,9 @@ bash scripts/core-language-microbench.sh --output-dir <new-dir>    # on the chan
 # paste the per-label rum_seconds rows for the target label AND its same-tier neighbors
 ```
 
-Loop: edit → test → fix → rerun, until green; then rerun the gate and paste
-the before/after rows. Never claim a result without the verbatim lines.
+Loop: edit → replay the standing inventories → test → fix → rerun, until
+green; then rerun the gate and paste the before/after rows. Never claim a
+result without the verbatim lines.
 
 ## Checkpointing — protect the scene
 

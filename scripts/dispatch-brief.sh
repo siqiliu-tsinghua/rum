@@ -224,7 +224,7 @@ rel="docs/dev/codex/$(basename "$brief")"
 num=$(basename "$brief" | sed -E 's/^brief-([0-9]+).*/\1/')
 mkdir -p "$repo_root/.temp/logs"
 log="$repo_root/.temp/logs/${log_tag}_brief_${num}.log"
-task="Do not run git in any form, not even git status: the director owns git. Read $rel first and execute it exactly. Follow its Hard rules."
+task="Do not run git in any form, not even git status: the director owns git. Read $rel first and execute it exactly. Follow its Hard rules. Standing inventories: when an edit changes source they cover, replay them before the first acceptance suite, and quote the replay verdict lines in your report. A suite red caused only by a stale fingerprint, certificate or position cell is an ordering artifact, not a regression: report it as such, and never weaken or hand-edit an inventory."
 
 echo "brief:   $rel"
 echo "worker:  $worker"
