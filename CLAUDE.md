@@ -163,14 +163,14 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
 - **Permission lists.** They get under-enumerated, so write a disclosure duty
   instead. An inventory rule must cover what new call edges make reachable.
 
-## Current state (2026-10-29)
+## Current state (2026-10-31)
 
 - **Nesting.** The security-hardening mainline (since 2026-09-02) contains
   the retention line (paused at E0), which contains the suspension
   continuation branch (active).
 - **Branch queue, in order:**
-  1. test isolation: profiler test lease, typed-slot scratch, a shared
-     retention parse;
+  1. test isolation: the shared retention parse (brief-636), then the
+     workspace thread-count measurement (4/8/16/32) for the user's ruling;
   2. LP03–LP08;
   3. G15-C2's remaining 353 rows, then CM;
   4. `CHANGELOG.md` (user ruling: before S10);
@@ -181,6 +181,9 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   format, the remaining audit items and the threat-model critiques. Only then
   `v0.3.0`.
 - **Latest done:**
+  - brief-635 amendment 2, the reset admits for its whole body and the
+    evaluation-cache `ACTIVE` publishes: test-isolation item 1 is done;
+  - brief-635 amendment 1, the lexical write gate: `5184797c`;
   - brief-635 stage 1, the epoch test lease: `b199d63c`;
   - brief-634, the test-artifact constructors: `467ff97a`;
   - brief-630, abandonment cleanup errors: `854cfa4a`, `1c115117`, `ba1e1e52`.

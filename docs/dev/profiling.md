@@ -103,9 +103,10 @@ one `TestLease` (`profiling/lease.rs`). While a lease is current, a thread
 that has not registered with it cannot construct, open, charge or reset
 the epoch, reset the lexical counters, or write a lexical counter or the
 summary once-flag. A lease becomes current only after every lexical write
-admitted before it has landed. Production builds compile none of the
-lease. The cold-load profile flags publish over their uninitialized state
-only, so a value stored after a thread's first load is kept.
+or reset admitted before it has landed. Production builds compile none of the
+lease. The cold-load lexical profile flags, and the evaluation-cache
+`ACTIVE` flag that `RumProfileReset[]` also writes, publish over their
+uninitialized state only, so a value stored after a thread's first load is kept.
 
 ## Execution telemetry and durations
 

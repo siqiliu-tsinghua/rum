@@ -11,9 +11,9 @@ pub(in crate::runtime) fn reset_lexical_profile_counters() {
         feature = "test-builtin-memory-growth",
         feature = "test-continuation-slots"
     ))]
-    if crate::runtime::profiling::lease::blocks_unregistered_thread() {
+    let Some(_admitted) = crate::runtime::profiling::lease::admit() else {
         return;
-    }
+    };
     if !lexical_profile_configured() {
         return;
     }

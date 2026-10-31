@@ -1872,3 +1872,269 @@ and labels. Continue stage 3 from the replays.
 - Run `python3 scripts/report.py check 635 --stage a2 --against-git` until
   it prints no PROBLEM.
 - Your final message is `python3 scripts/report.py summary 635 --stage a2`.
+
+## a2 report (kimi, DONE)
+
+Amendment 2 admits the whole reset, publishes cache ACTIVE through publish_cold_load, and adds R/E with M1–M4 all matching their required outcomes. B1 is updated and the cache note has 28 entries. The director accepted the ACTIVE retirement; all post-ruling replays and the whole census pass. A–D/R/E, owner/C4/queue and ten chain pairs are green, and all twenty 32-thread runs pass. Release CLI and harness have zero lease symbols. Workspace: 59 binaries, 4015 passed, 0 failed, 61 ignored, nine standing skips.
+
+| File | Kind | Lines | Why |
+| --- | --- | --- | --- |
+| `crates/rum-runtime/src/runtime/evaluation_cache/profile/mod.rs` | modified | 186,582-585 | Publish cache ACTIVE through publish_cold_load and register E. |
+| `crates/rum-runtime/src/runtime/evaluation_cache/profile/tests/cold_load.rs` | added | 1-28 | Add the calibrated E cold-load falsifier. |
+| `crates/rum-runtime/src/runtime/profiling/config.rs` | modified | 128,144,151,159,166,173,180,187,194,201,208,215,222 | Rename and publish publish_cold_load for all twelve lexical initializers. |
+| `crates/rum-runtime/src/runtime/profiling/lease.rs` | modified | 53-56 | Document the reset admission lock rule. |
+| `crates/rum-runtime/src/runtime/profiling/mod.rs` | modified | 91 | Re-export publish_cold_load within the runtime. |
+| `crates/rum-runtime/src/runtime/profiling/reset.rs` | modified | 14,16 | Replace the reset refusal with one whole-body admission. |
+| `crates/rum-runtime/src/runtime/profiling/tests/unregistered_writes.rs` | modified | 156-181 | Append R, the unregistered reset falsifier. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv` | modified | replayed rows | Replay exact ownership positions without removed identities. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_captures.tsv` | modified | replayed rows | Replay exact ownership positions without removed identities. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_macros.tsv` | modified | replayed rows | Replay exact ownership positions without removed identities. |
+| `crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_storage.tsv` | modified | replayed rows | Replay exact ownership positions without removed identities. |
+| `crates/rum-stdlib/src/tests/retention_closure/census/tests.rs` | modified | 304-315,321-323 | director's edit (census ruling) |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/local-contracts.tsv` | modified | replayed rows | Replay all 68 generated retention fingerprints. |
+| `crates/rum-stdlib/src/tests/retention_closure/inventory/promoted.tsv` | modified | replayed rows | Merge four generated certificate cells from both builds. |
+| `docs/dev/profiling.md` | modified | 105-109 | Document admitted resets and evaluation-cache ACTIVE publication. |
+
+| Run | Try | Exit | Tests | Log |
+| --- | ---: | ---: | --- | --- |
+| fmt | 1 | 0 | - | `.temp/brief-635/a2/logs/fmt.log` |
+| build-tests | 1 | 0 | - | `.temp/brief-635/a2/logs/build-tests.log` |
+| re-green | 1 | 0 | 2/0/0 | `.temp/brief-635/a2/logs/re-green.log` |
+| m1-red | 1 | 101 | 0/1/0 | `.temp/brief-635/a2/logs/m1-red.log` |
+| m2-red | 1 | 101 | 0/2/0 | `.temp/brief-635/a2/logs/m2-red.log` |
+| m3-red | 1 | 101 | 0/2/0 | `.temp/brief-635/a2/logs/m3-red.log` |
+| m4-red | 1 | 101 | 0/1/0 | `.temp/brief-635/a2/logs/m4-red.log` |
+| b1-update | 1 | 0 | - | `.temp/brief-635/a2/logs/b1-update.log` |
+| cache-statics | 1 | 0 | - | `.temp/brief-635/a2/logs/cache-statics.log` |
+| cache-test-comparisons | 1 | 0 | - | `.temp/brief-635/a2/logs/cache-test-comparisons.log` |
+| frontier-head-setup | 1 | 1 | - | `.temp/brief-635/a2/logs/frontier-head.log` |
+| frontier-head | 2 | 0 | 1/0/0 | `.temp/brief-635/a2/logs/frontier-head-2.log` |
+| frontier-candidate | 1 | 101 | 0/1/0 | `.temp/brief-635/a2/logs/frontier-cand.log` |
+| frontier-compare | 1 | 0 | - | `.temp/brief-635/a2/logs/frontier-compare.log` |
+| frontier-classified | 1 | 0 | - | `.temp/brief-635/a2/logs/frontier-classified.log` |
+| fingerprints-generate | 1 | 0 | 1/0/0 | `.temp/brief-635/a2/logs/fingerprints-generate.log` |
+| fingerprints-replay | 1 | 0 | - | `.temp/brief-635/a2/logs/fingerprints-replay.log` |
+| certificate-default-earn | 1 | 101 | 0/1/0 | `.temp/brief-635/a2/logs/certificate-default-earn.log` |
+| certificate-nodefault-earn | 1 | 101 | 0/1/0 | `.temp/brief-635/a2/logs/certificate-nodefault-earn.log` |
+| certificate-merge | 1 | 0 | - | `.temp/brief-635/a2/logs/certificate-replay.log` |
+| certificate-default-replay | 2 | 0 | 1/0/0 | `.temp/brief-635/a2/logs/certificate-default-replay.log` |
+| certificate-nodefault-replay | 2 | 0 | 1/0/0 | `.temp/brief-635/a2/logs/certificate-nodefault-replay.log` |
+| ownership-discovery | 1 | 101 | 2/1/0 | `.temp/brief-635/a2/logs/ownership-discovery.log` |
+| ownership-replay | 1 | 0 | - | `.temp/brief-635/a2/logs/ownership-replay.log` |
+| ownership-verify | 2 | 0 | 3/0/0 | `.temp/brief-635/a2/logs/ownership-replay-verify.log` |
+| lp01 | 1 | 0 | 6/0/0 | `.temp/brief-635/a2/logs/lp01.log` |
+| typed-receipts | 1 | 0 | 8/2/1 | `.temp/brief-635/a2/logs/typed-receipts.log` |
+| lock-rule | 1 | 0 | - | `.temp/brief-635/a2/logs/lock-rule.log` |
+| rejection-census | 1 | 101 | 0/1/0 | `.temp/brief-635/a2/logs/rejection-census.log` |
+| fingerprints-generate-ruled | 2 | 0 | 1/0/0 | `.temp/brief-635/a2/logs/fingerprints-generate-2.log` |
+| fingerprints-replay-ruled | 2 | 0 | - | `.temp/brief-635/a2/logs/fingerprints-replay-2.log` |
+| certificate-default-earn-ruled | 2 | 101 | 0/1/0 | `.temp/brief-635/a2/logs/certificate-default-earn-2.log` |
+| certificate-nodefault-earn-ruled | 2 | 101 | 0/1/0 | `.temp/brief-635/a2/logs/certificate-nodefault-earn-2.log` |
+| certificate-merge-ruled | 2 | 0 | - | `.temp/brief-635/a2/logs/certificate-replay-2.log` |
+| certificate-default-replay-ruled | 3 | 0 | 1/0/0 | `.temp/brief-635/a2/logs/certificate-default-replay-2.log` |
+| certificate-nodefault-replay-ruled | 3 | 0 | 1/0/0 | `.temp/brief-635/a2/logs/certificate-nodefault-replay-2.log` |
+| ownership-ruled | 2 | 0 | 3/0/0 | `.temp/brief-635/a2/logs/ownership-discovery-2.log` |
+| lp01-ruled | 2 | 0 | 6/0/0 | `.temp/brief-635/a2/logs/lp01-2.log` |
+| typed-receipts-ruled | 2 | 0 | 8/2/1 | `.temp/brief-635/a2/logs/typed-receipts-2.log` |
+| rejection-census-ruled | 2 | 0 | 1/0/0 | `.temp/brief-635/a2/logs/rejection-census-2.log` |
+| regression | 1 | 0 | 21/0/0 | `.temp/brief-635/a2/logs/regression.log` |
+| chain-01 | 1 | 0 | 2/0/0 | `.temp/brief-635/a2/logs/chain-01.log` |
+| chain-02 | 2 | 0 | 2/0/0 | `.temp/brief-635/a2/logs/chain-02.log` |
+| chain-03 | 3 | 0 | 2/0/0 | `.temp/brief-635/a2/logs/chain-03.log` |
+| chain-04 | 4 | 0 | 2/0/0 | `.temp/brief-635/a2/logs/chain-04.log` |
+| chain-05 | 5 | 0 | 2/0/0 | `.temp/brief-635/a2/logs/chain-05.log` |
+| chain-06 | 6 | 0 | 2/0/0 | `.temp/brief-635/a2/logs/chain-06.log` |
+| chain-07 | 7 | 0 | 2/0/0 | `.temp/brief-635/a2/logs/chain-07.log` |
+| chain-08 | 8 | 0 | 2/0/0 | `.temp/brief-635/a2/logs/chain-08.log` |
+| chain-09 | 9 | 0 | 2/0/0 | `.temp/brief-635/a2/logs/chain-09.log` |
+| chain-10 | 10 | 0 | 2/0/0 | `.temp/brief-635/a2/logs/chain-10.log` |
+| lib32-build | 1 | 0 | - | `.temp/brief-635/a2/logs/lib32-build.log` |
+| lib32-01 | 1 | 0 | 1231/0/5 | `.temp/brief-635/a2/logs/lib32-01.log` |
+| lib32-02 | 2 | 0 | 1231/0/5 | `.temp/brief-635/a2/logs/lib32-02.log` |
+| lib32-03 | 3 | 0 | 1231/0/5 | `.temp/brief-635/a2/logs/lib32-03.log` |
+| lib32-04 | 4 | 0 | 1231/0/5 | `.temp/brief-635/a2/logs/lib32-04.log` |
+| lib32-05 | 5 | 0 | 1231/0/5 | `.temp/brief-635/a2/logs/lib32-05.log` |
+| lib32-06 | 6 | 0 | 1231/0/5 | `.temp/brief-635/a2/logs/lib32-06.log` |
+| lib32-07 | 7 | 0 | 1231/0/5 | `.temp/brief-635/a2/logs/lib32-07.log` |
+| lib32-08 | 8 | 0 | 1231/0/5 | `.temp/brief-635/a2/logs/lib32-08.log` |
+| lib32-09 | 9 | 0 | 1231/0/5 | `.temp/brief-635/a2/logs/lib32-09.log` |
+| lib32-10 | 10 | 0 | 1231/0/5 | `.temp/brief-635/a2/logs/lib32-10.log` |
+| lib32-11 | 11 | 0 | 1231/0/5 | `.temp/brief-635/a2/logs/lib32-11.log` |
+| lib32-12 | 12 | 0 | 1231/0/5 | `.temp/brief-635/a2/logs/lib32-12.log` |
+| lib32-13 | 13 | 0 | 1231/0/5 | `.temp/brief-635/a2/logs/lib32-13.log` |
+| lib32-14 | 14 | 0 | 1231/0/5 | `.temp/brief-635/a2/logs/lib32-14.log` |
+| lib32-15 | 15 | 0 | 1231/0/5 | `.temp/brief-635/a2/logs/lib32-15.log` |
+| lib32-16 | 16 | 0 | 1231/0/5 | `.temp/brief-635/a2/logs/lib32-16.log` |
+| lib32-17 | 17 | 0 | 1231/0/5 | `.temp/brief-635/a2/logs/lib32-17.log` |
+| lib32-18 | 18 | 0 | 1231/0/5 | `.temp/brief-635/a2/logs/lib32-18.log` |
+| lib32-19 | 19 | 0 | 1231/0/5 | `.temp/brief-635/a2/logs/lib32-19.log` |
+| lib32-20 | 20 | 0 | 1231/0/5 | `.temp/brief-635/a2/logs/lib32-20.log` |
+| release-cli | 1 | 0 | - | `.temp/brief-635/a2/logs/release-cli-build.log` |
+| release-harness | 1 | 0 | - | `.temp/brief-635/a2/logs/release-harness-build.log` |
+| nm-cli | 1 | 0 | - | `.temp/brief-635/a2/logs/nm-cli-check.log` |
+| nm-harness | 1 | 0 | - | `.temp/brief-635/a2/logs/nm-harness-check.log` |
+| feature-tree | 1 | 0 | - | `.temp/brief-635/a2/logs/rum-cli-features.log` |
+| fmt-check | 1 | 0 | - | `.temp/brief-635/a2/logs/fmt-check.log` |
+| static-invariants | 1 | 0 | - | `.temp/brief-635/a2/logs/static-invariants.log` |
+| workspace | 1 | 0 | 4015/0/61 | `.temp/brief-635/a2/logs/workspace.log` |
+
+| Check | Bar | Result | Verdict | Note |
+| --- | --- | --- | --- | --- |
+| shape | reset whole-body admission and cache ACTIVE publish | R/E green; only HEAD three warnings | PASS |  |
+| m1-m4 | all four mutant arms are red with prescribed messages | all four red with exact messages | PASS |  |
+| b1 | reset-backed B1 rows cite R and cache note is complete | 49 reset rows with R; rows 1 and 2 with owner_filter; 28 cache entries, only ACTIVE publishes | PASS |  |
+| frontier | classify every one-sided frontier row | 1041 candidate versus 1042 HEAD; 12 moves per side and one cache ACTIVE replacement; no new or gone | PASS | The replacement is the cache ACTIVE store becoming publish_cold_load. |
+| fingerprints | fingerprint and certificate replay changes generated cells only | 68 fingerprints and four certificate cells; both builds green | PASS |  |
+| ownership | ownership identities and host-payload rules hold | 7974 rows; 105 position moves, zero added or removed identities; final exact | PASS |  |
+| lp01-typed | LP01 and typed receipts stay green | all green with no expectation edits | PASS |  |
+| lock-rule | reset admission never nests lease/admit and takes only allowed locks | all lock checks pass; two non-lock-holding test-hook sites disclosed | PASS |  |
+| post-ruling-replays | repeat all required replays after the director census edit | all green without another ownership edit | PASS | No source edit occurred after these replays. |
+| rejection-census | whole rejection census after accepted ruling and replay | whole census passes | PASS | The earlier STOP is answered by the director's ruling and edit to census/tests.rs. |
+| regression | A–D, R/E, owner-filter, C4-prime, queue and ten chain pairs stay green | 21 selected tests and all 10 chain runs pass | PASS | The 21 tests include one unrelated matching message test. |
+| lib32 | twenty rum-runtime lib runs at 32 threads | 20 green runs, zero failures and no timeout | PASS | Each run had its own 14G scope and a 300-second bound. |
+| production | release production has zero lease symbols and feature tree evidence | zero symbols in both; feature tree exit zero | PASS |  |
+| format | cargo fmt --check | exit zero | PASS |  |
+| workspace | serial full workspace with exactly nine standing native ZeroMQ skips | 59 green binaries; 4015 passed; 0 failed; 61 ignored | PASS | No other skip, retry, sleep or serial target was used. |
+| scope | only amendment, generated inventories and the director census edit change | all static invariants pass | PASS | The census file is listed separately as the director's edit. |
+
+Deviations:
+- The final report check used the normal citation validator, not `--against-git`.: The run instruction forbids invoking git in any form. `python3 scripts/report.py check 635 --stage a2` passed with no PROBLEM.
+
+### Updated B1 and evaluation-cache note
+
+All 49 reset-backed rows cite R; PROCESS_BYTES and CURRENT also cite owner_filter reset. The separate evaluation-cache note has 28 entries: three flags, 21 counters and four process-wide maps. Only ACTIVE publishes, covered by E; all other entries have protection none because no named in-process comparison exists. Full machine-readable tables are `.temp/brief-635/a2/b1-writers.tsv` and `.temp/brief-635/a2/cache-statics.tsv`.
+
+### Complete classified frontier
+
+Both one-sided lists and labels are preserved in `logs/frontier-classified.log`. There are 12 moves on each side and one replacement, the cache ACTIVE store becoming publish_cold_load. No one-sided row is labelled new or gone. The replacement reduces RET002 by one and triggers the standing stop.
+
+### Post-ruling completion
+
+The earlier STOP and every earlier run remain in history. The director accepted the cache ACTIVE retirement and edited the census expectation. Post-ruling fingerprints, both certificate builds, ownership, LP01 and typed receipts pass; the whole census then passed. All regression and twenty lib32 runs, production symbol checks and the serial workspace are green. No source edit occurred after the post-ruling replays.
+
+## Director gate (2026-10-30): amendment 2 committed; brief-635 done
+
+The reset now admits for its whole body, and the evaluation-cache `ACTIVE`
+flag publishes. With this amendment, test-isolation item 1 is done.
+
+- **Code.** I read the whole diff. It is exactly the brief's shape:
+  - `reset.rs`: the refusal statement became `let Some(_admitted) =
+    admit() else { return; };`, under the same `TEST_CFG`. Nothing else in
+    the function changed.
+  - `config.rs`: `publish` became `pub(in crate::runtime) fn
+    publish_cold_load`, and its twelve call sites were renamed.
+    `profiling/mod.rs` re-exports it, in rustfmt's position.
+  - `evaluation_cache/profile/mod.rs`: the `ACTIVE` initializer's tail
+    publishes, and the three `mod` lines sit at the end of the file.
+  - `profiling.md`: the two sentences, as specified.
+  - E is byte-identical to my calibrated file. R is identical too, with one
+    blank separator line.
+- **kimi's STOP was right.** The rejection census moved from 1040 to 1039
+  rows, with RET002 going from 997 to 996. I ruled it in the brief
+  (`ced223c6`) and updated the census expectation myself in
+  `census/tests.rs`: the counts, plus one comment paragraph each for
+  amendment 1's paired swap and for this retirement.
+  - The edit expired every contract fingerprint, because the rot guard
+    hashes every source file under `crates/`. kimi replayed the standing
+    inventories after it, and then the whole census passed.
+  - This time the frontier labels are right: one replacement, 12 moves on
+    each side, nothing new and nothing gone.
+- **My edit to the lock rule.** The `Admitted` doc comment was my own text,
+  and it was incomplete.
+  - It named the epoch slot and data locks, but not each record path's
+    `state` lock. `retire` takes those through `totals::terminal` and
+    `settle` (`totals.rs:74`, `:96`, `:109`).
+  - It placed their holders in `logical/epoch.rs` alone.
+  - I rewrote it in four lines, so no inventory row moves. It now states
+    the rule and lists the logical epoch's slot, data and record-path state
+    locks. I made the edit before this gate run, which covers it.
+- **My brief's lock grep was wrong as written.** I said `logical/` calls
+  neither `admit` nor `lease`.
+  - `profiling/logical/` calls `lease()` twice: `budget.rs:163`, a test's
+    first statement, and `mod.rs:107`, the `logical_profile_test_acquire`
+    hook. Neither holds a lock there.
+  - kimi found both and reported them (`A2_LOCK_SCOPE`).
+- **The lock rule, read through.** The reset's admitted scope takes, in
+  order:
+  - the write gate, for read;
+  - `std::env`'s lock, in the cold loads;
+  - the slot lock (`epoch.rs:317`);
+  - the data lock (`retire`, `epoch.rs:247`);
+  - each record path's `state` lock;
+  - stderr's lock, in `retire`'s `eprintln!`, which runs under the data
+    lock.
+
+  Why no holder of these locks calls `admit` or `lease`:
+  - `blocks_unregistered_thread` takes no lock: one acquire load and one
+    thread-local read.
+  - rum-core takes its interner lock only in `intern_symbol_text`
+    (`expr.rs:81`), and no rum-core `Drop` takes it.
+  - The `Drop` impls on the reset's drop paths touch atomics only:
+    `Budget`, `Storage`, and `AccumulatorChain`'s drain. `ProfileQueue`'s
+    drop retires records, so it takes the data lock, but it calls neither
+    function.
+  - No `fmt` impl in rum-runtime reaches a write site. The one file that
+    has both, `session_state.rs`, has them in separate functions (lines
+    344 and 698).
+  - rum-runtime has no `stderr().lock()`.
+- **kimi's one deviation.** It could not run `report.py check
+  --against-git`, because that command runs git. My continuation asked
+  for it, which was my error. I ran it: `check: OK, 346 citations
+  verified`.
+- **kimi's evidence.**
+  - M1–M4 are red as stated.
+  - Regression: 21 passed. The chain pair: 10 of 10.
+  - The lib at 32 threads: 20 of 20, each `test result: ok. 1231 passed;
+    0 failed; 5 ignored`.
+  - `nm -C` on the release `rum-cli` and the harness finds 0 lease
+    symbols.
+  - workspace: 4015 passed, 0 failed, 61 ignored. That is 4013 plus R and
+    E, and it omits the nine native ZeroMQ tests.
+- **`python3 -I scripts/director-gate.py run 635 --stage a2 --perf
+  resume,cli`** (`.temp/director/gate-635a2/`, 2026-10-30 20:57–22:57):
+  GREEN, every step PASS except `census`, which I RULED.
+  - census, RULED: 1039 rows {RET001 10, RET002 996, RET003 33}; 1039
+    paired, 1 retired, 0 new, 0 base-only, 0 cand-only.
+  - scope: `check: OK, 346 citations verified (report-a2.json)`; fmt
+    formatted; check 3 warnings, 0 new against HEAD, 0 gone.
+  - ownership: self-reaching types 61, `UnknownHostPayload` 79,
+    `UnknownConstruct` 7974; 0 replay rounds.
+  - oracle: 1 passed. standing: lp01 1/0; typed-slot 8/0.
+  - fingerprints: 68 contracts, 68 changed, copied in.
+  - certificates: both builds pass; 2 promoted rows merged; 2 rounds.
+  - inventories: 19 passed, 0 failed; frontier 1039 (10/996/33).
+  - workspace: 59 binaries, 4024 passed, 0 failed, 61 ignored; peak 9.2 GB
+    of 14, `oom_kill` 0, no kernel OOM line. That is 4013 plus R, E and
+    the nine native ZeroMQ tests.
+  - arms: base and cand rc 0/0, source-equal; pathcal green for resume and
+    cli.
+  - structure: resume and cli each differ in 1 function (code 1, layout 0),
+    new 0, gone 0 — the evaluation-cache `ACTIVE` initializer.
+  - panels: resume 121 labels, median +0.0017%, max +0.2327%, none apart;
+    cli 192 labels, median −0.0001%, max +0.3693%, none apart.
+- **Falsifiers I reproduced** (`.temp/director/gate-635a2-repro/`), on a
+  snapshot copy, serially, each run in its own 14G scope:
+  - Candidate: `test result: ok. 20 passed; 0 failed; 0 ignored` — A–D, R,
+    E, `owner_filter`, the three C4′ tests and `queue_boundaries`; peak
+    2.4 GB of 14.
+  - M3, the reset's admission deleted, built from a copy: R and
+    `owner_filter` red —
+    `unregistered_thread_profile_reset_leaves_the_held_epoch` and
+    `an_unregistered_reset_does_not_reach_a_held_window` both FAILED, with
+    `unregistered reset invalidated the held epoch` and
+    `an unregistered reset wrote while a lease was held:
+    ["ARG_PREFILTER_MAYBE_COUNT", "LEXICAL_PROFILE_SUMMARY_PRINTED"]`;
+    `test result: FAILED. 18 passed; 2 failed`.
+  - M4, the `ACTIVE` initializer's store restored, built from a copy: E
+    red — `"published 2, after 1, answered true"`;
+    `test result: FAILED. 19 passed; 1 failed`.
+  - The chain pair at two threads: 10 of 10 runs
+    `test result: ok. 2 passed`.
+  - The rum-runtime lib at 32 threads: 5 of 5 runs
+    `test result: ok. 1231 passed; 0 failed; 5 ignored`.
+- **Disposition.** Brief-635 is complete. It covers stage 1, the epoch
+  lease, amendment 1, the lexical write gate, and amendment 2, the reset's
+  admission and the evaluation-cache publish. Test-isolation item 1 is
+  done. Next is brief-636, the shared parse.
+- **Not rerun:** kimi's frontier dumps, since the gate's census covers the
+  same frontier, and 15 of kimi's 20 lib runs, since I ran 5.

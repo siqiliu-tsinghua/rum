@@ -183,8 +183,7 @@ fn initialize_evaluation_cache_profile_active() -> bool {
     let deferred = std::env::var_os(EVALUATION_CACHE_PROFILE_DEFER_ENV)
         .is_some_and(|value| !value.is_empty() && value != "0");
     let active = !deferred;
-    EVALUATION_CACHE_PROFILE_ACTIVE.store(if active { 1 } else { 2 }, Ordering::Relaxed);
-    active
+    crate::runtime::profiling::publish_cold_load(&EVALUATION_CACHE_PROFILE_ACTIVE, active)
 }
 
 #[cold]
@@ -580,3 +579,7 @@ pub(crate) fn observe_logical_profile(out: &mut crate::runtime::profiling::Logic
         );
     });
 }
+
+#[cfg(test)]
+#[path = "tests/cold_load.rs"]
+mod cold_load;

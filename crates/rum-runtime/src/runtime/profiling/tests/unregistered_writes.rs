@@ -153,3 +153,29 @@ fn a_new_lease_waits_for_an_admitted_write() {
     drop(admitted);
     next.join().expect("next lease");
 }
+
+/// An unregistered `RumProfileReset[]` while a lease is held: refused whole,
+/// so no counter and not the once-flag moves (brief-635 amendment 2).
+#[test]
+fn an_unregistered_reset_does_not_reach_a_held_window() {
+    let _enabled = test_support::enabled();
+    let printed = LEXICAL_PROFILE_SUMMARY_PRINTED.swap(1, Ordering::Relaxed);
+    record_profile_arg_prefilter(true);
+    let before = process_wide();
+    std::thread::spawn(|| {
+        let _ = Session::new().eval_text("RumProfileReset[]");
+    })
+    .join()
+    .expect("unregistered reset");
+    let after = process_wide();
+    LEXICAL_PROFILE_SUMMARY_PRINTED.store(printed, Ordering::Relaxed);
+    let moved: Vec<_> = before
+        .iter()
+        .filter(|(name, value)| after[*name] != **value)
+        .map(|(name, _)| name.as_str())
+        .collect();
+    assert!(
+        moved.is_empty(),
+        "an unregistered reset wrote while a lease was held: {moved:?}"
+    );
+}

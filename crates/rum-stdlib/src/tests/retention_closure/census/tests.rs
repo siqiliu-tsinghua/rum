@@ -301,18 +301,30 @@ fn baseline(source: &Source) {
     // (12 RET002, 1 RET003), the message and handled-error pushes in
     // diagnostics.rs (18), and the message memory proxy in memory.rs (7).
     // 1040 (10/997/33), still no mark or coverage.
+    // brief-635 amendment 1: the cold-load initializers publish over 0 only.
+    // Paired through the diff, 1038 rows keep their kind, callee and reason,
+    // and none is base-only. In config.rs the two production-reachable
+    // initializers' `.store` rows retire, and `publish`'s compare_exchange
+    // receiver and its `published == 1` operand appear (all RET002).
+    // 1040 (10/997/33), still no mark or coverage.
+    // brief-635 amendment 2: the evaluation-cache ACTIVE initializer
+    // publishes through publish_cold_load. Its `.store` row (RET002, HEAD
+    // profile/mod.rs 186:5-89) retires. The call resolves to
+    // publish_cold_load, whose rows are already in the frontier, so none
+    // appears; the file's other 12 rows move up one line. 1039 (10/996/33),
+    // still no mark or coverage.
     assert!(options.rejected.iter().any(|row| row.kind == Kind::RET002
         && row.site.file.ends_with("resolution.rs")
         && row.site.start == (36, 19)
         && row.reason == "path AccumulatorChain::default has 0 exact bindings"));
     assert_eq!(
         options.rejected.len(),
-        1040,
+        1039,
         "STOP: brief-545 exact legacy frontier inventory moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 997), (Kind::RET003, 33)])
+        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 996), (Kind::RET003, 33)])
     );
     let wrapper = regions::frontier(
         source,

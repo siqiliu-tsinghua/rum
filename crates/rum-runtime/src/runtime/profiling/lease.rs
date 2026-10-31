@@ -50,8 +50,10 @@ fn fence_admitted_writes() {
     FENCING.fetch_sub(1, Ordering::SeqCst);
 }
 
-/// One admitted lexical write. Its scope holds atomics, thread-locals and
-/// `eprintln!` only: never `admit`, `lease`, or another lock.
+/// One admitted lexical write. Its scope never calls `admit` or `lease`. It
+/// takes only locks that no thread holds while calling either: `std::env`'s (a
+/// cold load), stderr's, and in the reset the logical epoch's slot, data and
+/// record-path state locks.
 pub(in crate::runtime) struct Admitted {
     _gate: RwLockReadGuard<'static, ()>,
 }

@@ -59,7 +59,7 @@ UnknownConstruct	crates/rum-runtime/src/runtime/model/session.rs	124	43	rum_runt
 UnknownConstruct	crates/rum-runtime/src/runtime/options/tests/resume.rs	1	1	source file is not reachable from a production or test module declaration
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/lease.rs	24	13	rum_runtime::runtime::profiling::lease::TestLease._guard: unresolved conditional storage: MutexGuard < 'static , () >
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/lease.rs	25	17	rum_runtime::runtime::profiling::lease::TestLease.generation: unresolved conditional storage: u64
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/lease.rs	56	12	rum_runtime::runtime::profiling::lease::Admitted._gate: unresolved conditional storage: RwLockReadGuard < 'static , () >
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/lease.rs	58	12	rum_runtime::runtime::profiling::lease::Admitted._gate: unresolved conditional storage: RwLockReadGuard < 'static , () >
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/budget.rs	11	12	rum_runtime::runtime::profiling::logical::budget::Budget.bytes: foreign representation std::sync::atomic::AtomicUsize: AtomicUsize
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	13	16	rum_runtime::runtime::profiling::logical::context::Context.executing: foreign representation std::sync::atomic::AtomicBool: AtomicBool
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	35	35	rum_runtime::runtime::profiling::logical::epoch::Epoch.valid: foreign representation std::sync::atomic::AtomicBool: AtomicBool
@@ -77,8 +77,8 @@ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	201	9	c
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	214	9	conditional public input signature logical_profile_test_pauses
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	13	12	rum_runtime::runtime::profiling::logical::segments::Active.start/std::option::Option[Own]/arg0: foreign representation std::time::Instant: Instant
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/totals.rs	31	17	rum_runtime::runtime::profiling::logical::totals::ActiveId.thread: foreign representation std::thread::ThreadId: std :: thread :: ThreadId
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	476	12	rum_runtime::runtime::profiling::BuiltinTimingToken.start: foreign representation std::time::Instant: Instant
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	481	12	rum_runtime::runtime::profiling::RuntimePathTimingToken.start: foreign representation std::time::Instant: Instant
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	477	12	rum_runtime::runtime::profiling::BuiltinTimingToken.start: foreign representation std::time::Instant: Instant
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	482	12	rum_runtime::runtime::profiling::RuntimePathTimingToken.start: foreign representation std::time::Instant: Instant
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/logical_contract.rs	11	18	rum_runtime::runtime::profiling::logical_contract::LogicalProfileSnapshot.logical: unresolved conditional storage: BTreeMap < String , Vec < u64 > >
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/logical_contract.rs	12	20	rum_runtime::runtime::profiling::logical_contract::LogicalProfileSnapshot.durations: unresolved conditional storage: BTreeMap < String , Vec < u64 > >
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/logical_contract.rs	13	20	rum_runtime::runtime::profiling::logical_contract::LogicalProfileSnapshot.telemetry: unresolved conditional storage: BTreeMap < String , String >

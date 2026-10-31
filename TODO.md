@@ -26,13 +26,14 @@ Test isolation, in progress:
 - the design (brief-633) is gated;
 - the test-artifact constructors (brief-634: `PrivateScratch` and
   `CompiledLibrary`) are done;
-- the profiler test lease (brief-635) is at amendment 2:
+- the profiler test lease (brief-635) is done:
   - stage 1, the epoch lease, is committed;
-  - amendment 1 is committed. It fences the nine lexical write sites behind
-    a write gate and makes the cold-load flags publish over 0. The lib at
-    32 threads went from 4 red in 13 runs to 25 green in a row.
-  - amendment 2 admits the reset, which still checks and then writes, and
-    makes the evaluation-cache `ACTIVE` flag publish too;
+  - amendment 1 fences the nine lexical write sites behind a write gate and
+    makes the cold-load flags publish over 0. The lib at 32 threads went
+    from 4 red in 13 runs to 25 green in a row.
+  - amendment 2 admits the reset for its whole body and makes the
+    evaluation-cache `ACTIVE` flag publish too. The gate is GREEN, with the
+    census ruled; the record is in the brief;
 - then the shared parse (brief-636, option iv);
 - after those, the director measures the workspace at 4, 8, 16 and 32
   threads, and the user rules the default thread count.

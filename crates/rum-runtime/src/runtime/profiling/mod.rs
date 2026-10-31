@@ -88,6 +88,7 @@ use report_timing::{
 };
 use state::*;
 
+pub(in crate::runtime) use config::publish_cold_load;
 pub(super) use config::{lexical_profile_detail_enabled, lexical_profile_enabled};
 pub(super) use records::{
     record_profile_arg_list_start, record_profile_arg_prefilter,
