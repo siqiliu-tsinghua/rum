@@ -947,3 +947,79 @@ must be audited the same way (`Epoch::close` is TLS-free; it was checked).
 The probe is reproducible: each variant above was one build in the delivered
 tree; the atom-fast and head-eval probes were reverted from
 `.temp/director/brief-637-repro/backup/`.
+
+## Director gate — continuation 4 (2026-11-01): A1 is green; the falsifier caught two things
+
+Continuation 4's A1 gate is green and I reproduced it: all three prologues at
+or below base, `native_stack_thread_scope` 8/8 unmodified, profiling 45/0/2 at
+`--test-threads=1` and at eight threads. A2 wired the five spanning routes and
+installed the falsifier verbatim, then stopped on the falsifier's
+`evaluate_inner_unstable.symbol` row. That stop opened two findings.
+
+### 1. My falsifier's program was wrong, not the implementation
+
+`f[x_] := x + 1; f[1]` evaluates `f` and `1` on the fast path — a stable symbol
+and an atom — so the symbol route never runs and no `evaluate_inner_unstable.
+symbol` record can exist. The phase is a real producer
+(`logical-profile-required.tsv` row P0509). The probe programs are now ones
+that exercise every row:
+
+```rust
+("x = 1; f[y_] := y + x; f[2]", false),
+("x = 1; f[y_] := y + x; f[InputString[\"p\"]]", true),
+```
+
+The `ADOPTED` list and every assertion are unchanged — nothing was dropped. The
+completed program passes all ten rows. Both `.temp/brief-637/falsifier/
+lp03_phase_rows.rs` and the installed `crates/rum-host/tests/lp03_phase_rows.rs`
+carry this text and must stay identical.
+
+### 2. My A2 command was missing the enable switch
+
+Logical profiling only records when `RUM_PROFILE_LEXICAL_SUBSTITUTION=1` is
+set; without it the row vector is empty (I measured `[]`, which is also what a
+broken implementation looks like). The A2 command is:
+
+```
+RUM_PROFILE_LEXICAL_SUBSTITUTION=1 cargo test -p rum-host --test lp03_phase_rows
+```
+
+Every falsifier run in the report must paste that command and its verdict.
+
+### 3. Behind that row there is a real defect
+
+With the completed program fixed, the *paused* program faults:
+
+```
+Epoch::fault                       profiling/logical/epoch.rs:262
+segments.rs:131                    segments::restore: !path.is_open()
+context.rs:66                      Context::enter_active -> segments::restore
+context.rs:63, context.rs:54       Context::enter
+```
+
+`logical_profile_test_assert_quiescent()` reports `(0, 0, 0, 0, 1)` — one
+fault. It reproduces with the **original** paused program
+(`f[x_] := x + 1; f[InputString["p"]]`) too, so it is not caused by the program
+change; the verbatim run never reached it because program 1's row check stopped
+first.
+
+The rule `segments::restore` states is the one being broken: a captured context
+must be consumed before its record's boundary closes. So on the
+prepare-arguments pause path either a phase that suspends **finishes** where it
+must pause, or the resume-side completion closes the record before the queued
+context is entered. Find it with the falsifier as the instrument — the bar is
+`faults == 0`, `open == 0`, `abandoned == 0` on both programs — and state which
+phase and which ordering was wrong.
+
+### What continuation 5 must do
+
+1. Diagnose and fix finding 3. Do not touch the falsifier's rows, assertions or
+   programs; they are the instrument, not the fault.
+2. Run `RUM_PROFILE_LEXICAL_SUBSTITUTION=1 cargo test -p rum-host --test
+   lp03_phase_rows` to green, plus the falsifier without the switch to show the
+   RED it would produce.
+3. Then the rest of A2: the spelling of the five routes is already in; the
+   standing replay with the amended loss bar (queued-unchanged,
+   mode-confinement, mass-never-up, executed-receipts 4,375), both Stage A
+   verification sets, the per-target diagnosis with quoted verdict lines, and
+   `a1`/`a2` reported separately. Then Stage B.
