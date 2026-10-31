@@ -790,3 +790,160 @@ The bisection is reproducible: I deleted the exit blocks from the delivered
 tree (atom-fast, and the head-eval branch in `evaluate_call`), re-derived the
 base functions in the same build, and restored both files; the tree is exactly
 as continuation 2 left it.
+
+## Director gate — continuation 3 (2026-11-01): ride the record call; make the drop path teardown-safe
+
+Continuation 3 converted the phase identity to `PhaseKey` and stopped on the
+bar: `evaluate_call 0x2b8` and `evaluate_atom_fast_path 0x1a8` reproduced
+base, but `evaluate_inner_unstable` grew to `0x428` (+64), and the profiling
+suite went red (`44/1/2`, then a TLS abort under `--test-threads=1`). Both
+findings are right and both have a measured fix.
+
+### The prologue: an added call costs 16, an enum argument costs another 16
+
+Measured on `evaluate_inner_unstable`, one build each, base re-derived:
+
+| variant | prologue |
+|---|---|
+| base (plain `runtime_path_timing_start`, no exits) | `0x3e8` |
+| legacy string start + the exit branches with **no calls** | `0x3e8` |
+| legacy string start + 4 exit calls taking `u8` | `0x3f8` |
+| legacy string start + 4 exit calls taking `PhaseKey` | `0x408` |
+| adopted start `(self, PhaseKey)` + keyed exits (delivered) | `0x428` |
+
+So in a hot frame **every added call costs 16 bytes and every by-value enum
+argument costs another 16**, while a `&'static str` constant and a `&mut
+Session` argument are free. `evaluate_atom_fast_path` had slack and absorbed
+both; `evaluate_inner_unstable` did not.
+
+A zero-growth design therefore cannot *add* a call: it must ride calls that
+are already there. Both calls exist:
+
+- the start already is `runtime_path_timing_start(phase)` — the adopted start
+  with a **string** argument measured free;
+- the exit already is `record_profile_runtime_path_timing(token, outcome)` —
+  and it receives the token, which carries the phase.
+
+**Measured shape** (probe edits, then restored): delete every exit call and
+replace the record call with `record_profile_runtime_path_timing_adopted(self,
+token, &result)`, which records timing and closes the logical phase:
+
+| function | base | this shape |
+|---|---|---|
+| `evaluate_inner_unstable` | `0x3e8` | `0x3d8` |
+| `evaluate_atom_fast_path` | `0x1a8` | `0x1a8` |
+| `evaluate_call` (head-eval exits) | `0x2b8` | `0x2a8` |
+
+Passing `outcome` **by value** costs the extra 16 again (`0x1b8` on
+atom-fast), so the adopted record takes `&result` and computes the outcome
+inside. Passing `&result` to a `#[cold] #[inline(never)]` helper is free.
+
+### Shape
+
+```rust
+// profiling/logical/mod.rs — the completion, per result type
+pub(in crate::runtime) trait PhaseCompletion {
+    fn timing_outcome(result: &Result<Self, EvalError>) -> RuntimeProfileOutcome
+    where Self: Sized;
+    fn finish_logical(call: Option<Call>, result: &Result<Self, EvalError>)
+    where Self: Sized;
+}
+
+impl PhaseCompletion for Expr {
+    fn timing_outcome(result: &Result<Expr, EvalError>) -> RuntimeProfileOutcome {
+        runtime_profile_outcome_for_expr_result(result)
+    }
+    fn finish_logical(call: Option<Call>, result: &Result<Expr, EvalError>) {
+        finish_logical_expr(call, result)
+    }
+}
+// Option<Expr>  -> runtime_profile_outcome_for_optional_result / finish_logical_optional
+// PreparedCallArguments -> the shared-args mapping / finish_logical_prepared
+```
+
+```rust
+// profiling/timing.rs — beside the legacy record, which stays untouched
+#[inline]
+pub(in crate::runtime) fn record_profile_runtime_path_timing_adopted<T: PhaseCompletion>(
+    session: &mut crate::runtime::Session,
+    token: Option<RuntimePathTimingToken>,
+    result: &Result<T, EvalError>,
+) {
+    let outcome = T::timing_outcome(result);
+    if let Some(phase) = token.as_ref().map(|token| token.key.phase) {
+        if let Some(key) = crate::runtime::profiling::logical::PhaseKey::from_name(phase) {
+            crate::runtime::profiling::logical::complete_phase(session, key, outcome, |call| {
+                T::finish_logical(call, result)
+            });
+        }
+    }
+    record_profile_runtime_path_timing(token, outcome);
+}
+```
+
+- `PhaseKey` stays the internal identity (`PhaseEntry.key`, `take_phase(key)`
+  with `epoch.fault()` on a mismatch) and gains `from_name(&'static str) ->
+  Option<PhaseKey>` and `const ALL`. The call edges keep **strings**;
+  `PhaseKey` never crosses a call boundary. `adopted_site(phase)` becomes
+  `PhaseKey::from_name(phase).map(PhaseKey::site)`.
+- `complete_phase(session, key, outcome, finish)` takes the entry, and when
+  the outcome is `RuntimeProfileOutcome::InputRequired` calls
+  `call.pause_into(session, entry.after_return)`, otherwise `finish(Some(call))`.
+  A missing entry is a no-op (logical off); a mismatched top is the existing
+  `epoch.fault()`.
+- The `Ok(None)`-style sites that record a literal outcome get
+  `record_profile_runtime_path_timing_adopted_ok(self, token)` (two
+  arguments), e.g. the stable-head branch's three closes.
+- `phase_pause` and the five `finish_phase_*` helpers are **deleted**; every
+  adopted route's plain record call becomes the adopted one. A route is
+  converted in pairs — start and record together — because the record is what
+  closes the entry: a half-converted route would either leak an entry or fault
+  on the wrong top.
+- Sites whose deleted finish used a different result expression than their
+  record must keep the close at the finish point as a dedicated cold call and
+  report that site; do not silently re-point it.
+
+### The teardown defect, and its measured fix (already applied)
+
+`PHASE_LIFO` owns `Call`s; a thread that abandons a suspended evaluation
+leaves entries open, and at thread exit their `Segment::drop` calls
+`ACTIVE`/`ACTIVE_STATE`, which are already destroyed: `cannot access a Thread
+Local Storage value during or after destruction` → panic in a destructor →
+SIGABRT. It fired in `lp03_argument_total_spans_a_second_pause` under
+`--test-threads=1`.
+
+The fix is in the tree now (`profiling/logical/segments.rs`, five lines): the
+drop path must be teardown-safe, not a no-op by accident —
+
+```rust
+pub(in crate::runtime) fn active_len() -> usize {
+    ACTIVE_STATE.try_with(Cell::get).unwrap_or(0).saturating_sub(1)
+}
+// Segment::end
+let _ = ACTIVE.try_with(|cell| { let mut stack = cell.borrow_mut(); /* body unchanged */ });
+```
+
+Measured with it: `cargo test -p rum-runtime --lib profiling` is `45 passed, 0
+failed, 2 ignored` both at `--test-threads=1` and at the default eight
+threads. Keep this change. Any other TLS reachable from `Call`'s drop path
+must be audited the same way (`Epoch::close` is TLS-free; it was checked).
+
+### What continuation 4 must do
+
+1. Apply the record-riding shape above. Delete the exit helpers and every
+   entry's `phase_pause`/`finish_phase_*` calls; convert each adopted route's
+   record call. Keep the strings at the edges.
+2. Then measure the three prologues and require `evaluate_call <= 0x2b8`,
+   `evaluate_inner_unstable <= 0x3e8`, `evaluate_atom_fast_path <= 0x1a8`, and
+   run `cargo test -p rum-host --test native_stack_thread_scope`
+   **unmodified**. If a number is above base, stop and report the three
+   prologues with the diff; do not recalibrate a fixture.
+3. Run the profiling suite both at `--test-threads=1` and at the default eight
+   threads; both must be green.
+4. Only then A2, the falsifier, the standing replay with the amended loss bar,
+   both Stage A verification sets, and the per-target diagnosis — as in
+   continuation 3's instructions.
+
+The probe is reproducible: each variant above was one build in the delivered
+tree; the atom-fast and head-eval probes were reverted from
+`.temp/director/brief-637-repro/backup/`.
