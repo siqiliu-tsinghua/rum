@@ -657,3 +657,136 @@ The measured probe is reproducible: the base function's `0x1a8` was
 re-derived in the same build after reverting, and the profiling suite was
 green on the measured variant. If the implemented version does not reproduce
 `0x1a8`, stop and report the prologue with the diff, not a recalibrated test.
+
+## Director gate — continuation 2 (2026-11-01): the 16 bytes are the exit strings
+
+Continuation 2 ran 24 minutes, reverted the `LogicalPhases` bundle, applied the
+adopted start to the A1 routes, and stopped on the prologue bar: 45/0/2 on the
+profiling suite, fixtures untouched, A2 and Stage B not started. The stop is
+correct and the bar stands. The measured deltas were `evaluate_call 0x2c8`,
+`evaluate_inner_unstable 0x3f8`, `evaluate_atom_fast_path 0x1c8` — exactly +16
+on each.
+
+I bisected the increment in the delivered tree, in one build, against the base
+function re-derived in the same build:
+
+| variant | `evaluate_atom_fast_path` | `evaluate_call` |
+|---|---|---|
+| delivered | `0x1c8` | `0x2c8` |
+| exit block deleted | `0x1a8` | `0x2b8` |
+| exits kept, `u8` argument instead of the phase string | `0x1a8` | — |
+| wrapper `#[inline]` instead of `#[inline(always)]` | `0x1c8` | — |
+
+The wrapper, its inlining attribute, and the extra calls are all free. The cost
+is the **`&'static str` phase identity at the exit**: a debug build materialises
+every such argument as a 16-byte fat pointer in the caller's frame, and the exit
+is a point the base function never had one at. Passing a byte-sized key instead
+measured `0x1a8` with the exit calls still present.
+
+### Shape: `PhaseKey`, the phase identity as a `Copy` enum
+
+Text survives only where it is consumed (`runtime_path_timing_start`,
+`logical_phase_start`); every call edge passes a key.
+
+```rust
+// profiling/logical/mod.rs
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(in crate::runtime) enum PhaseKey {
+    EvaluateTotal,
+    EvaluateOnceUnstable,
+    EvaluateInnerUnstableTotal,
+    EvaluateInnerUnstableSymbol,
+    EvaluateInnerUnstableCall,
+    EvaluateInnerUnstableAtom,
+    EvaluateAtomFastPathTotal,
+    EvaluateAtomFastPathStableSymbol,
+    EvaluateAtomFastPathUnstableSymbol,
+    EvaluateAtomFastPathAtom,
+    EvaluateAtomFastPathCall,
+    EvaluateCallTotal,
+    EvaluateCallHeadEval,
+    EvaluateCallResumeAfterHead,
+    EvaluateCallDispatch,
+    CallStageSpecialForm,
+    CallStagePrepareArguments,
+    CallStageListable,
+    CallStageUpValues,
+    CallStageDownValues,
+    CallStageSubValues,
+    CallStageOrdinaryBuiltin,
+    CallStageFunction,
+    PrepareArgumentsTotal,
+    PrepareArgumentsEvaluateArg,
+}
+
+impl PhaseKey {
+    pub(in crate::runtime) const ALL: [PhaseKey; 25] = [/* every variant */];
+
+    /// The timing key text: byte-identical to the strings in the tree today,
+    /// because the loss ledger, the binding inventory and every oracle cell
+    /// are keyed by them.
+    pub(in crate::runtime) const fn name(self) -> &'static str {
+        /* one arm per variant */
+    }
+
+    /// Exhaustive, no `_` arm: a phase cannot exist without its site.
+    const fn site(self) -> AdoptedSite {
+        /* one arm per variant, with today's assignment */
+    }
+}
+```
+
+- `AdoptedSite { policy, after_consumer, after_return }` and `Policy` are
+  unchanged. `site()` keeps the current assignment: `Expr`/false/false for the
+  evaluator routes, `Expr`/false/true for `EvaluateOnceUnstable`,
+  `OptionalExpr`/true/false for the eight `CallStage*`, `Prepared`/true/false
+  for `PrepareArgumentsTotal`.
+- `adopted_site(&'static str)` and the `ADOPTED_SITES` string table are
+  deleted. The unit test walks `PhaseKey::ALL` and asserts the name list equals
+  the brief's adopted list; the compiler now enforces that every key has a
+  site.
+- `PhaseEntry.phase: &'static str` becomes `key: PhaseKey`; `take_phase(key)`
+  compares keys and calls `epoch.fault()` on a mismatch, exactly as today.
+- `open_phase(session, key)` resolves `site = key.site()` and calls
+  `session.logical_phase_start(key.name(), site.policy)`.
+- The exit helpers take `key: PhaseKey`: `phase_pause(session, key)`,
+  `finish_phase_expr(key, &result)`, `finish_phase_optional(key, &result)`,
+  `finish_phase_prepared(key, &result)`, `finish_phase_error(key, &error)`,
+  `finish_phase_ok(key)`.
+- `runtime_path_timing_start_adopted(session, key: PhaseKey)` keeps `#[inline]`
+  (measured identical to `#[inline(always)]`; do not spend a build on the
+  attribute) and calls `runtime_path_timing_start(key.name())`.
+- The two string producers become key producers:
+  `EvaluateAtomFastPathKind::phase_key(self) -> PhaseKey` and
+  `CallDispatchStage::phase_key(self) -> PhaseKey`. Delete
+  `call_dispatch_stage_profile_name`; its resume-side caller
+  (`resume_suspended_call_dispatch_frame`) passes `key.name()` to
+  `finish_logical_stage`. Delete `profile_name()` if no reader is left.
+- The finish/pause ordering and the resume-side non-popping completions
+  (`finish_logical_stage`, `finish_logical_prepared_total`) are unchanged.
+
+### What continuation 3 must do
+
+1. Convert every site to `PhaseKey` as above. No `&'static str` may remain at
+   any `runtime_path_timing_start_adopted`, `phase_pause` or `finish_phase_*`
+   edge.
+2. Then, before anything else, measure the three prologues with the objdump
+   method already in `.temp/brief-637/` and confirm `evaluate_call 0x2b8`,
+   `evaluate_inner_unstable 0x3e8`, `evaluate_atom_fast_path 0x1a8`, then run
+   `cargo test -p rum-host --test native_stack_thread_scope` **unmodified**. If
+   the numbers are not the base, stop again and report the three prologues with
+   the diff; do not recalibrate a fixture and do not weaken the bar.
+3. Only then A2: wire the five remaining routes (`evaluate.total`,
+   `evaluate.once_unstable`, `evaluate_call.total`,
+   `evaluate_call.resume_after_head`, `evaluate_call.dispatch`) onto
+   `runtime_path_timing_start_adopted`, install the falsifier at
+   `crates/rum-host/tests/lp03_phase_rows.rs`, run the standing replay with the
+   amended loss bar and both Stage A verification sets, and report `a1` and
+   `a2` separately.
+4. The per-target diagnosis duty from continuation 1 stands: name, per failing
+   target, stale inventory cell vs code defect, with the verdict line quoted.
+
+The bisection is reproducible: I deleted the exit blocks from the delivered
+tree (atom-fast, and the head-eval branch in `evaluate_call`), re-derived the
+base functions in the same build, and restored both files; the tree is exactly
+as continuation 2 left it.
