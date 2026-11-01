@@ -501,13 +501,21 @@ the legacy recorder rows are in `.temp/brief-638/falsifier/reach.log`,
 including the paused program's `definition-rule ... ok=0 err=1`.
 
 My calibration on the base tree (2026-11-01, `8a7eaae3`, 8 threads, log
-`.temp/brief-638/falsifier/base-run.log`):
+`.temp/brief-638/falsifier/base-run-switch.log`), **with the switch on**:
 
 ```
+RUM_PROFILE_LEXICAL_SUBSTITUTION=1 cargo test -p rum-host --test lp04_definition_rows
 test lp04_adopted_definition_rows_are_exact_in_completed_and_resumed_runs ... FAILED
 panicked at crates/rum-host/tests/lp04_definition_rows.rs:118:36:
-definition.rhs.total missing for `f[x_Integer /; x > 0] := x + 1; Default[f] = 3; f[2]; Default[f]`: []
+definition.rhs.total missing for `f[x_Integer /; x > 0] := x + 1; Default[f] = 3; f[2]; Default[f]`: [ ... 18 LP03 rows ... ]
 ```
+
+The row dump is **not empty**: every LP03 route is present, and only the LP04
+routes are missing. This is the calibration of record; an earlier run without
+the switch also printed `[]`, which is what a broken engine looks like — as
+LP03 learned, logical profiling only records when
+`RUM_PROFILE_LEXICAL_SUBSTITUTION=1` is set. Every falsifier run below carries
+the switch.
 
 It must be green after LP04, and it is never weakened to reach green. If it
 fails for a route you implemented but could not make reachable, that is a
@@ -529,12 +537,18 @@ routes, and the falsifier.** Run and paste verbatim:
 
 ```
 cargo fmt --check
-cargo test -p rum-host --test lp04_definition_rows --offline
+RUM_PROFILE_LEXICAL_SUBSTITUTION=1 cargo test -p rum-host --test lp04_definition_rows --offline
 cargo test -p rum-stdlib --test suspension_oracle --offline -- logical_counter_port
 cargo test -p rum-stdlib --test suspension_oracle --offline
-cargo test --workspace --offline --no-fail-fast
-cargo test --workspace --offline --no-default-features --no-fail-fast
+cargo test --workspace --offline --no-fail-fast -- --skip lp03_adopted_phases_are_exact_in_completed_and_resumed_runs --skip lp04_adopted_definition_rows_are_exact_in_completed_and_resumed_runs
+cargo test --workspace --offline --no-default-features --no-fail-fast -- --skip lp03_adopted_phases_are_exact_in_completed_and_resumed_runs --skip lp04_adopted_definition_rows_are_exact_in_completed_and_resumed_runs
 ```
+
+The two `--skip` flags are the LP03 acceptance's rule: the host falsifiers are
+switch-gated, so the plain suite skips them and they run separately with
+`RUM_PROFILE_LEXICAL_SUBSTITUTION=1` (this is exactly how LP03's workspace was
+accepted). Do not add a global `RUM_PROFILE_LEXICAL_SUBSTITUTION=1` to the
+workspace run — 25 tests that assert the off path fail under it.
 
 The **testing tier (user ruling 2026-11-01)** applies: while you are editing,
 `cargo check --workspace --all-targets` plus the touched crate's `-p` tests

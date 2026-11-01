@@ -23,7 +23,9 @@ step's notes (the rows behind its verdict).
   fingerprints  regenerate_local_contract_fingerprints, copied in
   certificates  local_production_acceptance in both feature builds, merged
   inventories   the inventory tests in one run, on the final tree
-  workspace     cargo fmt --check, then cargo test --workspace --no-fail-fast
+  workspace     cargo fmt --check, then cargo test --workspace --no-fail-fast,
+                with the switch-gated host falsifiers skipped (they run
+                separately under RUM_PROFILE_LEXICAL_SUBSTITUTION=1)
   arms          both arms from one source path, one codegen unit (needs --perf)
   structure     function diff of the two arms (needs --perf)
   panels        one interleaved perf panel per engine named in --perf
@@ -82,6 +84,13 @@ RULING = STEPS[: STEPS.index("standing") + 1]
 INVENTORY_TESTS = ["production_rejection_census_is_complete", "production_inventory_is_exact",
                    "host_payload_ledger", "local_production_acceptance",
                    "exact_types_and_constructor_claims_match_rustc"]
+# Host falsifiers that record only when RUM_PROFILE_LEXICAL_SUBSTITUTION=1 is
+# set: the plain workspace suite would see empty rows and fail them, so it
+# skips them here and the brief runs them separately with the switch.
+SWITCH_GATED = [
+    "lp03_adopted_phases_are_exact_in_completed_and_resumed_runs",
+    "lp04_adopted_definition_rows_are_exact_in_completed_and_resumed_runs",
+]
 
 
 # ---- running -------------------------------------------------------------------
@@ -691,7 +700,14 @@ def step_workspace(g, a):
     if fmt.returncode != 0:
         return result("FAIL", "cargo fmt --check fails")
     since = time.strftime("%Y-%m-%d %H:%M:%S")
-    rc, text, facts, path = g.cargo("workspace", ["test", "--workspace", "--offline", "--no-fail-fast"])
+    # The host falsifiers record only under RUM_PROFILE_LEXICAL_SUBSTITUTION=1,
+    # so a plain suite sees empty rows and calls them broken; the LP03 and LP04
+    # acceptances run them separately, with the switch, and skip them here.
+    skips = []
+    for test in SWITCH_GATED:
+        skips += ["--skip", test]
+    rc, text, facts, path = g.cargo(
+        "workspace", ["test", "--workspace", "--offline", "--no-fail-fast", "--", *skips])
     t = test_totals(text)
     kern = subprocess.run(["journalctl", "-k", "--since", since, "--no-pager"], capture_output=True, text=True)
     ooms = len(re.findall(r"oom-kill", kern.stdout, re.I))
