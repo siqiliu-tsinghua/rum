@@ -1444,3 +1444,88 @@ Staged stops: STOP if the gate does not collapse the call-heavy deltas; STOP if
 any ordinary-label residual cannot be shown not to be a per-op cost; STOP if a
 new warning remains. Nothing in this section authorizes touching an LP02 bar,
 the falsifier, or any inventory count.
+
+## Director gate — continuation 8 (2026-11-01): the mechanism is gone, the residue is not yet attributed
+
+### What moved
+
+The gate fired where it was aimed. Pre-gate → gated, same codegen unit:
+`function-slot-apply` +282.694/+285.338 → −80.682/−85.832,
+`c1-replaceall-atom` +457.268/+452.076 → −21.936/−18.274,
+`withcleanup-two-arg` +450.638/+447.780 → −1.942/−13.404,
+`literal-integer` +0.0574/+0.1160. That is the mechanism I named, measured,
+removed. `fmt` and `check` are green with no new warnings, the three dead
+methods are gone, and the falsifier, native lifecycle, profiling and typed
+census suites are green in the worker's runs.
+
+### What the panel can and cannot say
+
+The 192 ordinary deltas have median −0.218 %, p5 −0.80 %, min −13.5 %, and
+162 of 192 are negative; the positive tail runs 0.13–1.15 %. Instruction
+counts are deterministic, so a positive delta is different emitted code —
+either LP03 work still on the path, or codegen perturbation in functions LP03
+does not touch. The panel cannot separate those two, and its flag rule has no
+noise-floor term: `deletecases-wide-association-no-match` is flagged on a range
+of 30 instructions in a 7.5-million-instruction operation. "Must not move" is
+therefore not decidable from the flag list; the verdict has to come from
+attribution.
+
+### Ruling 1 — the token carries the enabled state
+
+The only default-path work added after the last gate is one
+`lexical_profile_enabled()` per call-dispatch stage inside
+`complete_phase_optional_at_finish` and `complete_phase_error_at_finish`, and
+it is redundant: `runtime_profile_stage` is `Some` exactly when the switch was
+on when the stage's phase was opened (`runtime_path_timing_start_adopted`
+creates the token and opens the phase under the same gate). Pass the token
+into the two finish helpers at the four `call.rs` dispatch sites and make the
+early return `if token.is_none() { return; }`. Testing the token is also the
+more correct test: a phase record exists only if its start produced a token.
+Where no token exists — `pause_phase_at_finish` in the cold suspension
+helpers, `complete_logical_expr_defer_pause` at `resolution.rs:455` — the
+inline switch gate stays. Nothing about what is recorded changes.
+
+### Ruling 2 — attribute the residue before re-running the panel
+
+Callgrind, per-function instruction counts, base against candidate, same N,
+three runs per arm, on `keysort-default-wide`,
+`deletecases-wide-association-no-match`, `appendto-part-outer1000-large`,
+`keysortby-default-wide`, `replacepart-wide-rule-list`, plus
+`appendto-part-outer1000-small` (−0.9 %) and `literal-integer` as controls.
+Report the per-function delta table with call counts.
+
+- A delta inside an adopted helper or the switch path, with a per-call count
+  that matches the label's call count, is LP03 work: it goes to zero.
+- A delta inside untouched functions (allocation, comparison, hashing,
+  arithmetic) is codegen perturbation. The panel then needs a layout-control
+  arm — the base source plus a behaviour-neutral, cold-referenced layout
+  perturbator — and the flags are read against that arm's spread.
+
+Nothing here authorizes editing an inventory or a test to move a flag.
+
+### Ruling 3 — one degenerate label
+
+`valueq-undefined-symbol-definitions-8000` has a base slope of 16.8
+instructions per N step: the workload's N does not drive work, so its
+"delta" 4,357.6 and "threshold" 8,114 are both artifacts. Exclude it from the
+ordinary panel, and restate the exclusion in every brief that reuses this
+instrument. The other twelve flags stand until attributed.
+
+### Bars for continuation 9, in order
+
+1. `cargo fmt --check` and `cargo check --workspace --all-targets`: green, no
+   new warnings against HEAD.
+2. The focused suites unchanged: falsifier both ways, native lifecycle 3/3,
+   `rum-runtime --lib profiling`, typed census with its forced-reds.
+3. The token change, then the callgrind attribution table, then the full
+   192-label panel with the one exclusion.
+4. Prologues and native-stack fixtures re-measured after the edit.
+5. The standing replays the edit invalidates; the loss bar unchanged.
+6. Workspace green in both feature builds; the three reports regenerated with
+   `changes` matching the tree.
+
+Staged stops: STOP if callgrind puts the residual inside an adopted helper
+after the token change — the mechanism is back and I want the table, not a
+fix. STOP if the attribution lands in untouched functions and no layout-control
+arm has been run. STOP at any inventory or test that moves to make a flag
+green.
