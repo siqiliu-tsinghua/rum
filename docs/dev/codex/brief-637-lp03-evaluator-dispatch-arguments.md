@@ -1837,3 +1837,139 @@ the modal value; an arm whose modal value moves is a defect.
 Staged stops: STOP after step 3 if the dispatcher bar is not met. STOP at any
 inventory or test that moves to make a flag green. STOP if a fix moves the
 own cost of any other rum function up by more than two instructions a call.
+## Director gate — continuation 13 (2026-11-01): the dispatch loop is back to base, and the timing residual is decided by instruction counts
+
+Continuation 13 met the dispatcher bar with room to spare and then stopped on
+the timing lane. I re-derived every number I rule on below from the raw data,
+including a four-pass timing campaign of my own.
+
+### The dispatcher bar is met
+
+Three shapes were built and measured at the leaf label's panel N and 2N, own
+instructions per call in every sample:
+
+| shape | own instructions per call |
+|---|---|
+| base | 121 |
+| continuation-12 tree | 132 |
+| my phase-hoist probe | 131 |
+| **defer-pause consolidation (adopted)** | **121** |
+
+The append label's delta fell from +1,144 per operation to +0.990 per call,
+and no other non-bimodal rum function in the leaf table is above +2
+instructions per call. I measured the final binary myself with the same script
+that gave base 121.0 and the continuation-12 tree 132.0: 121.0 own
+instructions per call, call slope 1.0 (`c13-probe.py`, two profiles at panel N
+and 2N).
+
+### What the adopted shape does, and why it is equivalent
+
+The optional dispatch stage now records once, up front, with
+`record_profile_runtime_path_timing_adopted_defer_pause`, which skips the
+logical completion exactly on `InputRequired` and lets `pause_phase_at_finish`
+record the pause; the success and error arms no longer call the finish
+helpers. `complete_phase_optional_at_finish` and its cold half are deleted,
+`complete_phase_error_at_finish` takes the phase from `token.key.phase`, and
+`pause_phase_at_finish` recomputes `stage.profile_name()` in its cold arm.
+
+Equivalence, checked in the code rather than asserted: `complete_phase` uses
+its `outcome` argument only to branch on `InputRequired`; the recorded row
+outcome comes from the finish closure, and both shapes reach `error_outcome`
+for an error and `Outcome::Some` / `Outcome::None` for the optional value.
+
+### Ruling 1 — the external class, restated once more
+
+`__memcmp_avx2_movbe` remains the only positive row on the leaf's table with
+identical call slopes (276.012 / 276.008 / 275.994 against 276.012 / 275.986 /
+276.016). With the dispatcher row gone, the leaf's rum side is the bimodal
+`Symbol::system` row (modal value 63 instructions a call on both arms) and two
+deterministic savings (`evaluate` −20, `evaluate_inner` −38). The external
+class now applies to the leaf as written.
+
+### Ruling 2 — the census move is a source move, not an expectation edited
+
+Base 1,039 (10/996/33) → candidate 1,067 (10/1022/35): paired 1,032, retired
+7, new 35, base-only 0, cand-only 0. The seven retired rows are all the single
+`resume_typed_or_suspend` macro expansion at `resolution.rs:390:24-397:15`
+that LP03 replaced with a witnessed match, and the 35 new rows are the adopted
+recorder call sites in `profiling/timing.rs` (15 RET002 + 1 RET003),
+`profiling/logical/mod.rs` (16 RET002 + 1 RET003) and `resolution.rs` (2). No
+row is lost.
+
+### Ruling 3 — the timing lane is read by tier-median quotient
+
+The worker's two-pass comparison left 26 labels outside its control
+envelope. I ran the standing protocol instead of taking that verdict: four
+passes per arm, three arms (base, candidate, and the base-plus-cold-
+perturbator control), 120 labels, min-of-reps inside each pass and both the
+minimum and the median across the four.
+
+At the statistic the protocol names — the tier median quotient:
+
+| tier | candidate / base | control / base |
+|---|---|---|
+| under 50 us (n=12) | 0.99532 | 1.00653 |
+| 50-200 us (n=26) | 0.99038 | 0.99958 |
+| 200 us - 1 ms (n=47) | 0.99234 | 0.99913 |
+| over 1 ms (n=35) | 0.99448 | 0.99979 |
+
+The candidate is faster than base in every tier by 0.5 to 1.0 per cent and
+the control is within 0.7 per cent. No tier shows a slowdown.
+
+Two per-label residuals survive both readings with non-overlapping
+distributions:
+
+- `appendto-list-incremental-large`: base 1.461-1.573 ms, candidate
+  1.593-1.675 ms over four passes, about +9 per cent, control at base.
+  Hardware instruction counter: -43.4 per operation (-0.41 per cent,
+  threshold 24.4).
+- `replacepart-wide-rule-list`: about +3.9 per cent, instructions +12,671
+  (+0.21 per cent).
+
+Both execute the same or fewer instructions. The candidate's code shrank
+rather than grew: of the 72 symbols whose size changed, 63 shrank and 9 grew —
+`evaluate_call` 1,394 to 1,115 bytes, `resume_call_with_dispatch_plan` 4,236
+to 4,135, `prepare_arguments_for_call_with_unevaluated_restore` 6,355 to
+6,016, `Context::enter` 5,725 to 1,302, and `evaluate_inner_unstable` 10,700
+to 9,009 in its large copy. Code size does not explain the two labels, so
+placement does.
+
+Ruling: the timing lane is not the deciding instrument; instruction slopes
+are. At the deciding instrument these labels are neutral or better, so they
+are recorded and not charged, with the falsifier stated: if a future change
+makes either label instruction-positive, or moves any rum function's per-call
+cost, they are defects again and are attributed then. What I do not claim is
+that the layout control reproduced them — it did not, and both stay on the
+record as unexplained by the control rather than as an established layout
+effect.
+
+### Shape notes carried forward
+
+`open_phase` in `profiling/logical/mod.rs` re-derives the `PhaseKey` with
+`.expect("adopted site must have a phase key")` after its only caller already
+proved `Some` one frame up. It cannot fire, but it is a panic on a state the
+type allows plus a duplicated lookup. Pass the `PhaseKey` instead.
+
+The LP02 carry-over is half addressed. `Session::enable_pending_profile` now
+takes `&mut FrameStorage` as TODO.md asked, but the caller extracts `.frames`
+through a second `.expect("just installed input owner")` two statements below
+the pre-existing one. Binding the pending suspension once and using it for
+both would make it one expect instead of two. Both notes are recorded for
+LP04; neither is on a path that runs with logical profiling off.
+
+### The gate I ran
+
+`director-gate.py`: scope PASS (345 citations), fmt PASS, check PASS
+(`--all-targets`, 3 warnings, 0 new against HEAD), ownership PASS (61
+self-reaching, 79 UnknownHostPayload, 7,992 UnknownConstruct), census RULED
+above, oracle PASS, standing PASS (lp01 1/0, typed-slot 10/0), fingerprints
+PASS (68 contracts, 0 changed), certificates PASS (both builds, 0 promoted
+rows merged), inventories PASS (19 passed, 0 failed, frontier 1,067).
+
+The `workspace`, `arms`, `structure` and `panels` steps were not re-run by the
+script. `cargo test --workspace` ran once for this brief, at acceptance, as
+the 2026-11-01 testing tier requires, and I verified both suites from their
+logs myself: 4,031 passed / 0 failed / 61 ignored in each of the default and
+no-default builds, and the 48-program campaign SAME=48 DIFF=0 with profiling
+off and on. The perf steps are covered by the campaigns re-derived above, not
+by a second run of the same instrument.

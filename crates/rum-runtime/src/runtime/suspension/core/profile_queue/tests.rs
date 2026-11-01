@@ -14,8 +14,10 @@ fn logical_sequence_preserves_order_join_and_stale_handle_rejection() {
         let after = position.checked_sub(1).map(|i| expected[i]);
         let id = arena
             .allocate(Cell {
-                kind: Kind::Guest {
-                    consumer: i % 3 == 0,
+                kind: if i % 3 == 0 {
+                    Kind::Guest
+                } else {
+                    Kind::EvaluationReturn
                 },
                 context: None,
                 deferred: false,
@@ -34,7 +36,7 @@ fn logical_sequence_preserves_order_join_and_stale_handle_rejection() {
                 .iter()
                 .rev()
                 .copied()
-                .find(|id| arena.cell(*id).unwrap().consumer())
+                .find(|id| matches!(arena.cell(*id).unwrap().kind, Kind::Guest))
         );
     }
     for _ in 0..1000 {
@@ -46,7 +48,7 @@ fn logical_sequence_preserves_order_join_and_stale_handle_rejection() {
         assert!(!arena.belongs(root, id));
         let replacement = arena
             .allocate(Cell {
-                kind: Kind::Guest { consumer: true },
+                kind: Kind::Guest,
                 context: None,
                 deferred: false,
             })
@@ -59,7 +61,7 @@ fn logical_sequence_preserves_order_join_and_stale_handle_rejection() {
     for _ in 0..100 {
         let id = arena
             .allocate(Cell {
-                kind: Kind::Guest { consumer: false },
+                kind: Kind::EvaluationReturn,
                 context: None,
                 deferred: false,
             })

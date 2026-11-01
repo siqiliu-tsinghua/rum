@@ -51,6 +51,7 @@ impl FrameStorage {
             Self::Guest(_) => None,
         }
     }
+    #[cfg(test)]
     #[cold]
     #[inline(never)]
     pub(in crate::runtime) fn consumer_frontier(&self) -> Option<CellId> {

@@ -105,7 +105,7 @@ pub(super) fn transitions(facts: &Facts, report: &Report) -> Result<(), String> 
         return Err("D0003: typed deferred finalizer or S6 receipt missing".into());
     }
     println!(
-        "S6 TOTAL typed=42 typed_macros=31 witnessed_sites=16; D0003 typed; modes unchanged; preflip remains refused"
+        "S6 TOTAL typed=42 typed_macros=24 witnessed_sites=23; D0003 typed; modes unchanged; preflip remains refused"
     );
     Ok(())
 }

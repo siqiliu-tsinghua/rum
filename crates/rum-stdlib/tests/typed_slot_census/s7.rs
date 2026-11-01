@@ -122,7 +122,7 @@ pub(super) fn transitions(facts: &Facts, report: &Report) -> Result<(), String> 
         return Err("S7: publishing removal or D0014 outer Expr completion not proved".into());
     }
     println!(
-        "S7 TOTAL typed=52 typed_macros=35 witnessed_sites=22; F0348 retired; D0014 typed; modes unchanged; preflip remains refused"
+        "S7 TOTAL typed=52 typed_macros=28 witnessed_sites=29; F0348 retired; D0014 typed; modes unchanged; preflip remains refused"
     );
     Ok(())
 }

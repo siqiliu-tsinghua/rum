@@ -124,6 +124,33 @@ fn runtime_path_timing_start_slow(phase: &'static str) -> Option<RuntimePathTimi
     })
 }
 
+#[inline]
+pub(in crate::runtime) fn runtime_path_timing_start_adopted(
+    session: &mut crate::runtime::Session,
+    phase: &'static str,
+) -> Option<RuntimePathTimingToken> {
+    if !lexical_profile_enabled() {
+        return None;
+    }
+
+    runtime_path_timing_start_adopted_slow(session, phase)
+}
+
+#[cold]
+#[inline(never)]
+fn runtime_path_timing_start_adopted_slow(
+    session: &mut crate::runtime::Session,
+    phase: &'static str,
+) -> Option<RuntimePathTimingToken> {
+    let token = runtime_path_timing_start_slow(phase);
+    if let Some(site) = crate::runtime::profiling::logical::PhaseKey::from_name(phase)
+        .map(crate::runtime::profiling::logical::PhaseKey::site)
+    {
+        crate::runtime::profiling::logical::open_phase(session, phase, site);
+    }
+    token
+}
+
 pub(in crate::runtime) fn record_profile_rule_rhs_timing(
     phase: &'static str,
     start: Option<Instant>,
@@ -369,6 +396,142 @@ fn record_profile_builtin_timing_slow(token: BuiltinTimingToken, result_is_ok: b
             entry.err = entry.err.saturating_add(1);
         }
     });
+}
+
+#[inline]
+pub(in crate::runtime) fn record_profile_runtime_path_timing_adopted<
+    T: crate::runtime::profiling::logical::PhaseCompletion,
+>(
+    session: &mut crate::runtime::Session,
+    token: Option<RuntimePathTimingToken>,
+    result: &Result<T, crate::runtime::EvalError>,
+) {
+    if !lexical_profile_enabled() {
+        return;
+    }
+
+    record_profile_runtime_path_timing_adopted_slow(session, token, result)
+}
+
+#[cold]
+#[inline(never)]
+fn record_profile_runtime_path_timing_adopted_slow<
+    T: crate::runtime::profiling::logical::PhaseCompletion,
+>(
+    session: &mut crate::runtime::Session,
+    token: Option<RuntimePathTimingToken>,
+    result: &Result<T, crate::runtime::EvalError>,
+) {
+    let outcome = T::timing_outcome(result);
+    if let Some(phase) = token.as_ref().map(|token| token.key.phase) {
+        if let Some(key) = crate::runtime::profiling::logical::PhaseKey::from_name(phase) {
+            crate::runtime::profiling::logical::complete_phase(session, key, outcome, |call| {
+                T::finish_logical(call, result)
+            });
+        }
+    }
+    record_profile_runtime_path_timing(token, outcome);
+}
+
+#[inline]
+pub(in crate::runtime) fn record_profile_runtime_path_timing_adopted_defer_pause<
+    T: crate::runtime::profiling::logical::PhaseCompletion,
+>(
+    session: &mut crate::runtime::Session,
+    token: Option<RuntimePathTimingToken>,
+    result: &Result<T, crate::runtime::EvalError>,
+) {
+    if !lexical_profile_enabled() {
+        return;
+    }
+
+    record_profile_runtime_path_timing_adopted_defer_pause_slow(session, token, result)
+}
+
+#[cold]
+#[inline(never)]
+fn record_profile_runtime_path_timing_adopted_defer_pause_slow<
+    T: crate::runtime::profiling::logical::PhaseCompletion,
+>(
+    session: &mut crate::runtime::Session,
+    token: Option<RuntimePathTimingToken>,
+    result: &Result<T, crate::runtime::EvalError>,
+) {
+    let outcome = T::timing_outcome(result);
+    if !matches!(outcome, RuntimeProfileOutcome::InputRequired) {
+        if let Some(phase) = token.as_ref().map(|token| token.key.phase) {
+            if let Some(key) = crate::runtime::profiling::logical::PhaseKey::from_name(phase) {
+                crate::runtime::profiling::logical::complete_phase(session, key, outcome, |call| {
+                    T::finish_logical(call, result)
+                });
+            }
+        }
+    }
+    record_profile_runtime_path_timing(token, outcome);
+}
+
+#[inline]
+pub(in crate::runtime) fn record_profile_runtime_path_timing_adopted_ok(
+    session: &mut crate::runtime::Session,
+    token: Option<RuntimePathTimingToken>,
+) {
+    if !lexical_profile_enabled() {
+        return;
+    }
+
+    record_profile_runtime_path_timing_adopted_ok_slow(session, token)
+}
+
+#[cold]
+#[inline(never)]
+fn record_profile_runtime_path_timing_adopted_ok_slow(
+    session: &mut crate::runtime::Session,
+    token: Option<RuntimePathTimingToken>,
+) {
+    let outcome = RuntimeProfileOutcome::Ok;
+    if let Some(phase) = token.as_ref().map(|token| token.key.phase) {
+        if let Some(key) = crate::runtime::profiling::logical::PhaseKey::from_name(phase) {
+            crate::runtime::profiling::logical::complete_phase(
+                session,
+                key,
+                outcome,
+                crate::runtime::profiling::logical::finish_logical_expr_ok,
+            );
+        }
+    }
+    record_profile_runtime_path_timing(token, outcome);
+}
+
+#[inline]
+pub(in crate::runtime) fn record_profile_runtime_path_timing_adopted_none(
+    session: &mut crate::runtime::Session,
+    token: Option<RuntimePathTimingToken>,
+) {
+    if !lexical_profile_enabled() {
+        return;
+    }
+
+    record_profile_runtime_path_timing_adopted_none_slow(session, token)
+}
+
+#[cold]
+#[inline(never)]
+fn record_profile_runtime_path_timing_adopted_none_slow(
+    session: &mut crate::runtime::Session,
+    token: Option<RuntimePathTimingToken>,
+) {
+    let outcome = RuntimeProfileOutcome::None;
+    if let Some(phase) = token.as_ref().map(|token| token.key.phase) {
+        if let Some(key) = crate::runtime::profiling::logical::PhaseKey::from_name(phase) {
+            crate::runtime::profiling::logical::complete_phase(
+                session,
+                key,
+                outcome,
+                crate::runtime::profiling::logical::finish_logical_optional_none,
+            );
+        }
+    }
+    record_profile_runtime_path_timing(token, outcome);
 }
 
 #[inline]

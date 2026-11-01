@@ -172,14 +172,14 @@ fn exact_types_and_constructor_claims_match_rustc() {
     // lines); the four-view fixture checks typed-argument expected types.
     // brief-630 B3: escaped_cleanup_error in suspension/core/abandon.rs adds
     // three contexts, two `None` and one `Some(error)`, each an
-    // `Option<&EvalError>`. 173.
+    // `Option<&EvalError>`. 173. LP03 adds the adopted early-gate `None`: 174.
     assert_eq!(
-        total, 173,
+        total, 174,
         "all live constructor contexts, including the direct unarmed guest entry"
     );
     assert_eq!(
         total + legacy_clone_claims,
-        175,
+        176,
         "all live contexts and both preserved clone-return contexts"
     );
     fs::write(directory.join("production.tsv"), out).unwrap();

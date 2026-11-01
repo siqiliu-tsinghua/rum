@@ -321,12 +321,9 @@ impl Session {
             return self.evaluate_at_root(expr);
         }
         self.record_profile_evaluate_entry();
-        let runtime_profile = runtime_path_timing_start("evaluate.total");
+        let runtime_profile = runtime_path_timing_start_adopted(self, "evaluate.total");
         let result = self.evaluate_profiled_fixed_point(expr);
-        record_profile_runtime_path_timing(
-            runtime_profile,
-            runtime_profile_outcome_for_expr_result(&result),
-        );
+        record_profile_runtime_path_timing_adopted(self, runtime_profile, &result);
         result
     }
 
@@ -336,12 +333,9 @@ impl Session {
         let _entry = NativeStackEntry::enter();
         self.evaluation_depth.restore(0);
         self.record_profile_evaluate_entry();
-        let runtime_profile = runtime_path_timing_start("evaluate.total");
+        let runtime_profile = runtime_path_timing_start_adopted(self, "evaluate.total");
         let result = self.evaluate_profiled_fixed_point(expr);
-        record_profile_runtime_path_timing(
-            runtime_profile,
-            runtime_profile_outcome_for_expr_result(&result),
-        );
+        record_profile_runtime_path_timing_adopted(self, runtime_profile, &result);
         result
     }
 
@@ -378,23 +372,32 @@ impl Session {
                 fixed_point_seen.push(current.clone());
             }
 
-            let runtime_profile_once = runtime_path_timing_start("evaluate.once_unstable");
+            let runtime_profile_once =
+                runtime_path_timing_start_adopted(self, "evaluate.once_unstable");
             let next_result = self.evaluate_once_unstable_after_input_check_with_cycle_tracking(
                 current.clone(),
                 track_cycle,
             );
-            record_profile_runtime_path_timing(
-                runtime_profile_once,
-                runtime_profile_outcome_for_expr_result(&next_result),
-            );
-            let next = crate::resume_typed_or_suspend!(
+            let witness = crate::runtime::kernel_api::slot_witness(&next_result);
+            record_profile_runtime_path_timing_adopted_defer_pause(
                 self,
-                next_result,
-                ok(value) => Ok(value),
-                evaluation_return => EvaluateProfiledFixedPointSuspensionFrame::freeze(
-                    current, evaluation_passes, fixed_point_seen,
-                ),
-            )?;
+                runtime_profile_once,
+                &next_result,
+            );
+            let next = match next_result {
+                Ok(value) => Ok(value),
+                Err(EvalError::InputRequired { request }) => {
+                    return suspend_initial_evaluation_once_with_boundary(
+                        self,
+                        current,
+                        evaluation_passes,
+                        fixed_point_seen,
+                        witness,
+                        request,
+                    );
+                }
+                Err(error) => Err(error),
+            }?;
 
             let runtime_profile_equal = runtime_path_timing_start("evaluate.fixed_point_equal");
             let fixed_point = next == current;
@@ -446,17 +449,25 @@ impl Session {
                 state.seen = state.seen.appended(state.current.clone());
             }
 
+            crate::runtime::profiling::logical::open_logical_phase(self, "evaluate.once_unstable");
             let next_result = self.evaluate_once_unstable_after_input_check_with_cycle_tracking(
                 state.current.clone(),
                 track_cycle,
             );
-            let next = 'next_value: {
-                return crate::resume_typed_or_suspend!(
-                    self,
-                    next_result,
-                    ok(value) => break 'next_value value,
-                    evaluation_return => ResumeFixedPointFromSuspensionFrame { state },
-                );
+            let witness = crate::runtime::kernel_api::slot_witness(&next_result);
+            crate::runtime::profiling::logical::complete_logical_expr_defer_pause(
+                self,
+                "evaluate.once_unstable",
+                &next_result,
+            );
+            let next = match next_result {
+                Ok(value) => value,
+                Err(EvalError::InputRequired { request }) => {
+                    return suspend_resumed_evaluation_once_with_boundary(
+                        self, state, witness, request,
+                    );
+                }
+                Err(error) => return Err(error),
             };
 
             if next == state.current {
@@ -517,16 +528,40 @@ pub(super) fn symbol_generation_key(context: &str, name: &str) -> (String, Strin
     (context.to_string(), name.to_string())
 }
 
-fn runtime_profile_outcome_for_expr_result(
-    result: &Result<Expr, EvalError>,
-) -> RuntimeProfileOutcome {
-    match result {
-        Ok(_) => RuntimeProfileOutcome::Ok,
-        Err(EvalError::Return { .. }) => RuntimeProfileOutcome::Return,
-        Err(EvalError::Thrown { .. }) | Err(EvalError::ThrownBypassingCatch { .. }) => {
-            RuntimeProfileOutcome::Throw
-        }
-        Err(EvalError::InputRequired { .. }) => RuntimeProfileOutcome::InputRequired,
-        Err(_) => RuntimeProfileOutcome::Error,
-    }
+#[cold]
+#[inline(never)]
+fn suspend_initial_evaluation_once_with_boundary(
+    session: &mut Session,
+    current: Expr,
+    evaluation_passes: usize,
+    fixed_point_seen: Vec<Expr>,
+    witness: crate::runtime::kernel_api::SlotWitness<Expr>,
+    request: crate::runtime::RuntimeInputRequest,
+) -> Result<Expr, EvalError> {
+    crate::runtime::profiling::logical::pause_phase_at_finish(session, "evaluate.once_unstable");
+    witness.suspend_evaluation_return(
+        session,
+        request,
+        EvaluateProfiledFixedPointSuspensionFrame::freeze(
+            current,
+            evaluation_passes,
+            fixed_point_seen,
+        ),
+    )
+}
+
+#[cold]
+#[inline(never)]
+fn suspend_resumed_evaluation_once_with_boundary(
+    session: &mut Session,
+    state: SuspendedFixedPointState,
+    witness: crate::runtime::kernel_api::SlotWitness<Expr>,
+    request: crate::runtime::RuntimeInputRequest,
+) -> Result<Expr, EvalError> {
+    crate::runtime::profiling::logical::pause_phase_at_finish(session, "evaluate.once_unstable");
+    witness.suspend_evaluation_return(
+        session,
+        request,
+        ResumeFixedPointFromSuspensionFrame { state },
+    )
 }

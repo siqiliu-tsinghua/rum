@@ -1,5 +1,5 @@
-//! LP02 infrastructure. Production phase recorders deliberately remain legacy.
-use crate::runtime::{EvalError, suspension::Slot};
+//! LP02 infrastructure and LP03 evaluator, dispatch and argument phase records.
+use crate::runtime::{EvalError, Expr, suspension::Slot};
 use std::sync::Arc;
 
 mod budget;
@@ -62,10 +62,15 @@ impl Drop for ProfileBoundary {
 }
 
 pub(in crate::runtime) struct Call {
+    inner: Box<CallInner>,
+}
+
+struct CallInner {
     epoch: Arc<Epoch>,
     record: RecordId,
     segment: Option<segments::Segment>,
     finished: bool,
+    _storage: Storage,
 }
 
 #[derive(Clone)]
@@ -83,6 +88,144 @@ pub(in crate::runtime) fn error_outcome(error: &crate::runtime::EvalError) -> Ou
         EvalError::Thrown { .. } | EvalError::ThrownBypassingCatch { .. } => Outcome::Throw,
         EvalError::Cancelled => Outcome::Cancelled,
         _ => Outcome::Error,
+    }
+}
+
+impl crate::runtime::Session {
+    #[inline]
+    pub(in crate::runtime) fn logical_phase_start(
+        &self,
+        phase: &'static str,
+        policy: Policy,
+    ) -> Option<Call> {
+        if !crate::runtime::profiling::lexical_profile_enabled() {
+            return None;
+        }
+        Self::logical_phase_start_slow(self, phase, policy)
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn logical_phase_start_slow(&self, phase: &'static str, policy: Policy) -> Option<Call> {
+        Call::start(
+            self,
+            AggregateKey::Runtime {
+                phase,
+                source: crate::runtime::evaluation_profile_current_source_symbol(),
+            },
+            policy,
+        )
+    }
+}
+
+pub(in crate::runtime) fn finish_logical_expr(
+    call: Option<Call>,
+    result: &Result<Expr, EvalError>,
+) {
+    if let Some(call) = call {
+        call.finish(match result {
+            Ok(_) => Outcome::Ok,
+            Err(error) => error_outcome(error),
+        });
+    }
+}
+
+pub(in crate::runtime) fn finish_logical_optional(
+    call: Option<Call>,
+    result: &Result<Option<Expr>, EvalError>,
+) {
+    if let Some(call) = call {
+        call.finish(match result {
+            Ok(Some(_)) => Outcome::Some,
+            Ok(None) => Outcome::None,
+            Err(error) => error_outcome(error),
+        });
+    }
+}
+
+pub(in crate::runtime) fn finish_logical_optional_none(call: Option<Call>) {
+    if let Some(call) = call {
+        call.finish(Outcome::None);
+    }
+}
+
+pub(in crate::runtime) fn finish_logical_expr_ok(call: Option<Call>) {
+    if let Some(call) = call {
+        call.finish(Outcome::Ok);
+    }
+}
+
+pub(in crate::runtime) fn finish_logical_error(call: Option<Call>, error: &EvalError) {
+    if let Some(call) = call {
+        call.finish(error_outcome(error));
+    }
+}
+
+pub(in crate::runtime) fn finish_logical_prepared(
+    call: Option<Call>,
+    result: &Result<crate::runtime::eval_call_prepare::PreparedCallArguments, EvalError>,
+) {
+    if let Some(call) = call {
+        call.finish(match result {
+            Ok(_) => Outcome::Ok,
+            Err(error) => error_outcome(error),
+        });
+    }
+}
+
+fn phase_timing_outcome<T>(result: &Result<T, EvalError>) -> super::RuntimeProfileOutcome {
+    match result {
+        Ok(_) => super::RuntimeProfileOutcome::Ok,
+        Err(EvalError::Return { .. }) => super::RuntimeProfileOutcome::Return,
+        Err(EvalError::Thrown { .. } | EvalError::ThrownBypassingCatch { .. }) => {
+            super::RuntimeProfileOutcome::Throw
+        }
+        Err(EvalError::InputRequired { .. }) => super::RuntimeProfileOutcome::InputRequired,
+        Err(_) => super::RuntimeProfileOutcome::Error,
+    }
+}
+
+pub(in crate::runtime) trait PhaseCompletion {
+    fn timing_outcome(result: &Result<Self, EvalError>) -> super::RuntimeProfileOutcome
+    where
+        Self: Sized;
+
+    fn finish_logical(call: Option<Call>, result: &Result<Self, EvalError>)
+    where
+        Self: Sized;
+}
+
+impl PhaseCompletion for Expr {
+    fn timing_outcome(result: &Result<Self, EvalError>) -> super::RuntimeProfileOutcome {
+        phase_timing_outcome(result)
+    }
+
+    fn finish_logical(call: Option<Call>, result: &Result<Self, EvalError>) {
+        finish_logical_expr(call, result);
+    }
+}
+
+impl PhaseCompletion for Option<Expr> {
+    fn timing_outcome(result: &Result<Self, EvalError>) -> super::RuntimeProfileOutcome {
+        match result {
+            Ok(Some(_)) => super::RuntimeProfileOutcome::Some,
+            Ok(None) => super::RuntimeProfileOutcome::None,
+            Err(_) => phase_timing_outcome(result),
+        }
+    }
+
+    fn finish_logical(call: Option<Call>, result: &Result<Self, EvalError>) {
+        finish_logical_optional(call, result);
+    }
+}
+
+impl PhaseCompletion for crate::runtime::eval_call_prepare::PreparedCallArguments {
+    fn timing_outcome(result: &Result<Self, EvalError>) -> super::RuntimeProfileOutcome {
+        phase_timing_outcome(result)
+    }
+
+    fn finish_logical(call: Option<Call>, result: &Result<Self, EvalError>) {
+        finish_logical_prepared(call, result);
     }
 }
 
@@ -213,7 +356,27 @@ impl crate::runtime::Session {
     #[doc(hidden)]
     pub fn logical_profile_test_pauses() -> u64 {
         epoch::current()
-            .map(|e| e.rows().iter().map(|(_, c)| c.pauses).sum())
+            .map(|e| {
+                e.rows()
+                    .iter()
+                    .map(|(_, c)| c.pauses + c.input_required)
+                    .sum()
+            })
+            .unwrap_or(0)
+    }
+
+    #[doc(hidden)]
+    pub fn logical_profile_test_pauses_for(phase: &'static str) -> u64 {
+        epoch::current()
+            .map(|e| {
+                e.rows()
+                    .iter()
+                    .filter(|(key, _)| {
+                        matches!(key, AggregateKey::Runtime { phase: actual, .. } if *actual == phase)
+                    })
+                    .map(|(_, c)| c.pauses)
+                    .sum()
+            })
             .unwrap_or(0)
     }
 }
@@ -248,39 +411,363 @@ impl Call {
         };
         let record = epoch.open(owner, parent, key, policy)?;
         let segment = segments::enter(&epoch, record)?;
+        let storage = epoch.storage(std::mem::size_of::<CallInner>() + 16)?;
         Some(Self {
-            epoch,
-            record,
-            segment: Some(segment),
-            finished: false,
+            inner: Box::new(CallInner {
+                epoch,
+                record,
+                segment: Some(segment),
+                finished: false,
+                _storage: storage,
+            }),
         })
     }
     pub(in crate::runtime) fn finish(mut self, outcome: Outcome) {
-        self.segment.take();
-        self.epoch.close(self.record, Ok(outcome));
-        self.finished = true;
+        self.inner.segment.take();
+        self.inner.epoch.close(self.inner.record, Ok(outcome));
+        self.inner.finished = true;
+    }
+    fn finish_input_required(self) {
+        self.inner.epoch.input_required(self.inner.record);
+        self.finish(Outcome::Error);
     }
     pub(in crate::runtime) fn pause(mut self) -> Option<Arc<ProfileBoundary>> {
-        if let Some(segment) = &self.segment {
+        if let Some(segment) = &self.inner.segment {
             segment.pause();
         }
-        self.segment.take();
+        self.inner.segment.take();
         let storage = self
+            .inner
             .epoch
             .storage(std::mem::size_of::<ProfileBoundary>() + 16)?;
-        self.finished = true;
+        self.inner.finished = true;
         Some(Arc::new(ProfileBoundary {
-            epoch: Arc::clone(&self.epoch),
-            record: self.record,
+            epoch: Arc::clone(&self.inner.epoch),
+            record: self.inner.record,
             _storage: storage,
         }))
     }
 }
+
+#[derive(Clone, Copy)]
+pub(in crate::runtime) struct AdoptedSite {
+    pub policy: Policy,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(in crate::runtime) enum PhaseKey {
+    EvaluateTotal,
+    EvaluateOnceUnstable,
+    EvaluateInnerUnstableTotal,
+    EvaluateInnerUnstableSymbol,
+    EvaluateInnerUnstableCall,
+    EvaluateInnerUnstableAtom,
+    EvaluateAtomFastPathTotal,
+    EvaluateAtomFastPathStableSymbol,
+    EvaluateAtomFastPathUnstableSymbol,
+    EvaluateAtomFastPathAtom,
+    EvaluateAtomFastPathCall,
+    EvaluateCallTotal,
+    EvaluateCallHeadEval,
+    EvaluateCallResumeAfterHead,
+    EvaluateCallDispatch,
+    CallStageSpecialForm,
+    CallStagePrepareArguments,
+    CallStageListable,
+    CallStageUpValues,
+    CallStageDownValues,
+    CallStageSubValues,
+    CallStageOrdinaryBuiltin,
+    CallStageFunction,
+    PrepareArgumentsTotal,
+    PrepareArgumentsEvaluateArg,
+}
+
+impl PhaseKey {
+    pub(in crate::runtime) const ALL: [PhaseKey; 25] = [
+        PhaseKey::EvaluateTotal,
+        PhaseKey::EvaluateOnceUnstable,
+        PhaseKey::EvaluateInnerUnstableTotal,
+        PhaseKey::EvaluateInnerUnstableSymbol,
+        PhaseKey::EvaluateInnerUnstableCall,
+        PhaseKey::EvaluateInnerUnstableAtom,
+        PhaseKey::EvaluateAtomFastPathTotal,
+        PhaseKey::EvaluateAtomFastPathStableSymbol,
+        PhaseKey::EvaluateAtomFastPathUnstableSymbol,
+        PhaseKey::EvaluateAtomFastPathAtom,
+        PhaseKey::EvaluateAtomFastPathCall,
+        PhaseKey::EvaluateCallTotal,
+        PhaseKey::EvaluateCallHeadEval,
+        PhaseKey::EvaluateCallResumeAfterHead,
+        PhaseKey::EvaluateCallDispatch,
+        PhaseKey::CallStageSpecialForm,
+        PhaseKey::CallStagePrepareArguments,
+        PhaseKey::CallStageListable,
+        PhaseKey::CallStageUpValues,
+        PhaseKey::CallStageDownValues,
+        PhaseKey::CallStageSubValues,
+        PhaseKey::CallStageOrdinaryBuiltin,
+        PhaseKey::CallStageFunction,
+        PhaseKey::PrepareArgumentsTotal,
+        PhaseKey::PrepareArgumentsEvaluateArg,
+    ];
+
+    pub(in crate::runtime) const fn name(self) -> &'static str {
+        match self {
+            PhaseKey::EvaluateTotal => "evaluate.total",
+            PhaseKey::EvaluateOnceUnstable => "evaluate.once_unstable",
+            PhaseKey::EvaluateInnerUnstableTotal => "evaluate_inner_unstable.total",
+            PhaseKey::EvaluateInnerUnstableSymbol => "evaluate_inner_unstable.symbol",
+            PhaseKey::EvaluateInnerUnstableCall => "evaluate_inner_unstable.call",
+            PhaseKey::EvaluateInnerUnstableAtom => "evaluate_inner_unstable.atom",
+            PhaseKey::EvaluateAtomFastPathTotal => "evaluate_atom_fast_path.total",
+            PhaseKey::EvaluateAtomFastPathStableSymbol => "evaluate_atom_fast_path.stable_symbol",
+            PhaseKey::EvaluateAtomFastPathUnstableSymbol => {
+                "evaluate_atom_fast_path.unstable_symbol"
+            }
+            PhaseKey::EvaluateAtomFastPathAtom => "evaluate_atom_fast_path.atom",
+            PhaseKey::EvaluateAtomFastPathCall => "evaluate_atom_fast_path.call",
+            PhaseKey::EvaluateCallTotal => "evaluate_call.total",
+            PhaseKey::EvaluateCallHeadEval => "evaluate_call.head_eval",
+            PhaseKey::EvaluateCallResumeAfterHead => "evaluate_call.resume_after_head",
+            PhaseKey::EvaluateCallDispatch => "evaluate_call.dispatch",
+            PhaseKey::CallStageSpecialForm => "call.stage.special_form",
+            PhaseKey::CallStagePrepareArguments => "call.stage.prepare_arguments",
+            PhaseKey::CallStageListable => "call.stage.listable",
+            PhaseKey::CallStageUpValues => "call.stage.up_values",
+            PhaseKey::CallStageDownValues => "call.stage.down_values",
+            PhaseKey::CallStageSubValues => "call.stage.sub_values",
+            PhaseKey::CallStageOrdinaryBuiltin => "call.stage.ordinary_builtin",
+            PhaseKey::CallStageFunction => "call.stage.function",
+            PhaseKey::PrepareArgumentsTotal => "prepare_arguments.total",
+            PhaseKey::PrepareArgumentsEvaluateArg => "prepare_arguments.evaluate_arg",
+        }
+    }
+
+    pub(in crate::runtime) fn from_name(phase: &'static str) -> Option<Self> {
+        let index = match phase {
+            "evaluate.total" => 0,
+            "evaluate.once_unstable" => 1,
+            "evaluate_inner_unstable.total" => 2,
+            "evaluate_inner_unstable.symbol" => 3,
+            "evaluate_inner_unstable.call" => 4,
+            "evaluate_inner_unstable.atom" => 5,
+            "evaluate_atom_fast_path.total" => 6,
+            "evaluate_atom_fast_path.stable_symbol" => 7,
+            "evaluate_atom_fast_path.unstable_symbol" => 8,
+            "evaluate_atom_fast_path.atom" => 9,
+            "evaluate_atom_fast_path.call" => 10,
+            "evaluate_call.total" => 11,
+            "evaluate_call.head_eval" => 12,
+            "evaluate_call.resume_after_head" => 13,
+            "evaluate_call.dispatch" => 14,
+            "call.stage.special_form" => 15,
+            "call.stage.prepare_arguments" => 16,
+            "call.stage.listable" => 17,
+            "call.stage.up_values" => 18,
+            "call.stage.down_values" => 19,
+            "call.stage.sub_values" => 20,
+            "call.stage.ordinary_builtin" => 21,
+            "call.stage.function" => 22,
+            "prepare_arguments.total" => 23,
+            "prepare_arguments.evaluate_arg" => 24,
+            _ => Self::ALL.len(),
+        };
+        Self::ALL.get(index).copied()
+    }
+
+    pub(in crate::runtime) const fn site(self) -> AdoptedSite {
+        let policy = match self {
+            PhaseKey::CallStageSpecialForm
+            | PhaseKey::CallStagePrepareArguments
+            | PhaseKey::CallStageListable
+            | PhaseKey::CallStageUpValues
+            | PhaseKey::CallStageDownValues
+            | PhaseKey::CallStageSubValues
+            | PhaseKey::CallStageOrdinaryBuiltin
+            | PhaseKey::CallStageFunction => Policy::OptionalExpr,
+            PhaseKey::PrepareArgumentsTotal => Policy::Prepared,
+            _ => Policy::Expr,
+        };
+        AdoptedSite { policy }
+    }
+}
+
+struct PhaseEntry {
+    key: PhaseKey,
+    call: Option<Call>,
+    _storage: Option<Storage>,
+}
+
+thread_local! {
+    static PHASE_LIFO: std::cell::RefCell<Vec<PhaseEntry>> = const {
+        std::cell::RefCell::new(Vec::new())
+    };
+}
+
+#[inline(always)]
+pub(in crate::runtime) fn open_phase(
+    session: &mut crate::runtime::Session,
+    phase: &'static str,
+    site: AdoptedSite,
+) {
+    let key = PhaseKey::from_name(phase).expect("adopted site must have a phase key");
+    let Some(call) = session.logical_phase_start(phase, site.policy) else {
+        return;
+    };
+    PHASE_LIFO.with_borrow_mut(|stack| {
+        let storage = match executing_epoch() {
+            Some(epoch) => match epoch.storage(std::mem::size_of::<PhaseEntry>() + 16) {
+                Some(storage) => Some(storage),
+                None => {
+                    epoch.retire(Retire::DiagnosticCap);
+                    None
+                }
+            },
+            None => None,
+        };
+        stack.push(PhaseEntry {
+            key,
+            call: call.into(),
+            _storage: storage,
+        });
+    });
+}
+
+fn take_phase(key: PhaseKey) -> Option<PhaseEntry> {
+    PHASE_LIFO.with_borrow_mut(|stack| {
+        let entry = stack.last()?;
+        if entry.key != key {
+            if let Some(call) = &entry.call {
+                call.inner.epoch.fault();
+            }
+            return None;
+        }
+        stack.pop()
+    })
+}
+
+#[cold]
+#[inline(never)]
+pub(in crate::runtime) fn complete_phase(
+    _session: &mut crate::runtime::Session,
+    key: PhaseKey,
+    outcome: super::RuntimeProfileOutcome,
+    finish: impl FnOnce(Option<Call>),
+) {
+    let Some(entry) = take_phase(key) else {
+        return;
+    };
+    let Some(call) = entry.call else {
+        return;
+    };
+    if matches!(outcome, super::RuntimeProfileOutcome::InputRequired) {
+        call.finish_input_required();
+    } else {
+        finish(call.into());
+    }
+}
+
+#[inline]
+pub(in crate::runtime) fn open_logical_phase(
+    session: &mut crate::runtime::Session,
+    phase: &'static str,
+) {
+    if !crate::runtime::profiling::lexical_profile_enabled() {
+        return;
+    }
+    if let Some(site) = PhaseKey::from_name(phase).map(PhaseKey::site) {
+        open_phase(session, phase, site);
+    }
+}
+
+#[inline]
+pub(in crate::runtime) fn complete_logical_expr_defer_pause(
+    session: &mut crate::runtime::Session,
+    phase: &'static str,
+    result: &Result<Expr, EvalError>,
+) {
+    if !crate::runtime::profiling::lexical_profile_enabled() {
+        return;
+    }
+    complete_logical_expr_defer_pause_slow(session, phase, result)
+}
+
+#[cold]
+#[inline(never)]
+fn complete_logical_expr_defer_pause_slow(
+    session: &mut crate::runtime::Session,
+    phase: &'static str,
+    result: &Result<Expr, EvalError>,
+) {
+    let Some(key) = PhaseKey::from_name(phase) else {
+        return;
+    };
+    let outcome = <Expr as PhaseCompletion>::timing_outcome(result);
+    if !matches!(outcome, super::RuntimeProfileOutcome::InputRequired) {
+        complete_phase(session, key, outcome, |call| {
+            finish_logical_expr(call, result)
+        });
+    }
+}
+
+#[inline]
+pub(in crate::runtime) fn pause_phase_at_finish(
+    session: &mut crate::runtime::Session,
+    phase: &'static str,
+) {
+    if !crate::runtime::profiling::lexical_profile_enabled() {
+        return;
+    }
+    pause_phase_at_finish_slow(session, phase)
+}
+
+#[cold]
+#[inline(never)]
+fn pause_phase_at_finish_slow(session: &mut crate::runtime::Session, phase: &'static str) {
+    if let Some(key) = PhaseKey::from_name(phase) {
+        complete_phase(
+            session,
+            key,
+            super::RuntimeProfileOutcome::InputRequired,
+            |_| {},
+        );
+    }
+}
+
+#[inline]
+pub(in crate::runtime) fn complete_phase_error_at_finish(
+    session: &mut crate::runtime::Session,
+    token: &Option<crate::runtime::profiling::RuntimePathTimingToken>,
+    error: &EvalError,
+) {
+    let Some(token) = token.as_ref() else {
+        return;
+    };
+    complete_phase_error_at_finish_slow(session, token.key.phase, error)
+}
+
+#[cold]
+#[inline(never)]
+fn complete_phase_error_at_finish_slow(
+    session: &mut crate::runtime::Session,
+    phase: &'static str,
+    error: &EvalError,
+) {
+    if let Some(key) = PhaseKey::from_name(phase) {
+        complete_phase(session, key, super::RuntimeProfileOutcome::Error, |call| {
+            finish_logical_error(call, error)
+        });
+    }
+}
+
 impl Drop for Call {
     fn drop(&mut self) {
-        self.segment.take();
-        if !self.finished {
-            self.epoch.close(self.record, Err(Retire::LastDrop));
+        self.inner.segment.take();
+        if !self.inner.finished {
+            self.inner
+                .epoch
+                .close(self.inner.record, Err(Retire::LastDrop));
         }
     }
 }
@@ -334,3 +821,7 @@ impl ProfileBoundary {
 
 #[cfg(test)]
 pub(in crate::runtime) use super::tests::engine_support as test_support;
+
+#[cfg(test)]
+#[path = "../tests/evaluator.rs"]
+mod evaluator;

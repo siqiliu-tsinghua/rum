@@ -31,13 +31,9 @@ struct Cell {
     deferred: bool,
 }
 enum Kind {
-    Guest { consumer: bool },
+    Guest,
+    EvaluationReturn,
     Boundary(Arc<ProfileBoundary>),
-}
-impl Cell {
-    fn consumer(&self) -> bool {
-        matches!(self.kind, Kind::Guest { consumer: true })
-    }
 }
 
 impl QueueArena {
@@ -84,8 +80,10 @@ impl ProfileQueue {
                     return;
                 }
                 let cell = Cell {
-                    kind: Kind::Guest {
-                        consumer: !matches!(entry, EntryRef::EvaluationReturn),
+                    kind: if matches!(entry, EntryRef::EvaluationReturn) {
+                        Kind::EvaluationReturn
+                    } else {
+                        Kind::Guest
                     },
                     context: Some(Arc::clone(&context)),
                     deferred: false,
@@ -124,6 +122,7 @@ impl ProfileQueue {
     pub(super) fn frontier(&self) -> Option<CellId> {
         self.arena.data.lock().unwrap().last(self.root)
     }
+    #[cfg(test)]
     pub(super) fn consumer_frontier(&self) -> Option<CellId> {
         self.arena.data.lock().unwrap().last_consumer(self.root)
     }
@@ -171,7 +170,11 @@ impl ProfileQueue {
         let after = if front { None } else { self.frontier() };
         if !self.add(
             Cell {
-                kind: Kind::Guest { consumer },
+                kind: if consumer {
+                    Kind::Guest
+                } else {
+                    Kind::EvaluationReturn
+                },
                 context: Some(context),
                 deferred: false,
             },
@@ -244,7 +247,10 @@ impl ProfileQueue {
         data.release(id)
     }
     fn pop_metadata(&mut self) {
-        if !matches!(self.take_cell().map(|c| c.kind), Some(Kind::Guest { .. })) {
+        if !matches!(
+            self.take_cell().map(|c| c.kind),
+            Some(Kind::Guest | Kind::EvaluationReturn)
+        ) {
             self.epoch.fault();
         }
     }

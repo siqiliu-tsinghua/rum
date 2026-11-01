@@ -128,7 +128,7 @@ pub(super) fn transitions(facts: &Facts, report: &Report) -> Result<(), String> 
         "S5 SPLIT F0244 Expr / F0244A Option<Expr>; one frame per pause; generic F0239 retains Scan"
     );
     println!(
-        "S5 TOTAL typed=37 typed_macros=30 witnessed_sites=12; modes unchanged; preflip remains refused"
+        "S5 TOTAL typed=37 typed_macros=23 witnessed_sites=19; modes unchanged; preflip remains refused"
     );
     Ok(())
 }

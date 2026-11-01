@@ -131,7 +131,7 @@ pub(super) fn transitions(facts: &Facts, report: &Report) -> Result<(), String> 
         return Err("S9: stage receipt missing".into());
     }
     println!(
-        "S9 TOTAL typed=95 typed_macros=55 witnessed_sites=46; one transport map and five identity decodes removed; modes unchanged; preflip remains refused"
+        "S9 TOTAL typed=95 typed_macros=48 witnessed_sites=53; one transport map and five identity decodes removed; modes unchanged; preflip remains refused"
     );
     Ok(())
 }

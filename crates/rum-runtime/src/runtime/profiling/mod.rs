@@ -113,8 +113,11 @@ pub(super) use timing::{
     record_profile_definition_dispatch_matcher_outcome,
     record_profile_definition_dispatch_phase_timing,
     record_profile_definition_dispatch_prefilter_skip, record_profile_definition_rule_timing,
-    record_profile_rule_rhs_timing, record_profile_runtime_path_timing, rule_rhs_timing_start,
-    runtime_path_timing_start,
+    record_profile_rule_rhs_timing, record_profile_runtime_path_timing,
+    record_profile_runtime_path_timing_adopted,
+    record_profile_runtime_path_timing_adopted_defer_pause,
+    record_profile_runtime_path_timing_adopted_none, record_profile_runtime_path_timing_adopted_ok,
+    rule_rhs_timing_start, runtime_path_timing_start, runtime_path_timing_start_adopted,
 };
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]

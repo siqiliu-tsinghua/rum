@@ -79,7 +79,6 @@ mod receipts;
 mod reporting;
 #[path = "typed_slot_census/routes.rs"]
 mod routes;
-#[allow(dead_code)]
 #[path = "typed_slot_census/s3.rs"]
 mod s3;
 #[path = "typed_slot_census/s4.rs"]
@@ -292,6 +291,47 @@ fn forced_red_witness(kind: &str) {
     let error = s5::transitions(&changed, &report).unwrap_err();
     assert_eq!(error, "M0245: witnessed typed insertion absent");
     let log = format!("FORCED RED {kind}: {error}\n");
+    fs::write(scratch.join(format!("{}.log", feature())), &log).unwrap();
+    print!("{log}");
+}
+
+#[test]
+fn suspend_evaluation_return_with_wrong_receiver_is_red() {
+    forced_red_evaluation_return("wrong-receiver");
+}
+
+#[test]
+fn suspend_evaluation_return_with_wrong_request_is_red() {
+    forced_red_evaluation_return("wrong-request");
+}
+
+fn forced_red_evaluation_return(kind: &str) {
+    let root = root();
+    let (files, facts, report) = production();
+    baseline(&facts, &report).unwrap();
+    let scratch = root.join(format!(
+        ".temp/typed-slot-census/forced-red/evaluation-return-{kind}"
+    ));
+    for (file, source) in files {
+        let path = scratch.join(file);
+        fs::create_dir_all(path.parent().unwrap()).unwrap();
+        fs::write(path, source).unwrap();
+    }
+    let path = scratch.join("crates/rum-runtime/src/runtime/resolution.rs");
+    let source = fs::read_to_string(&path).unwrap();
+    let before = "witness.suspend_evaluation_return(\n        session,\n        request,\n        ResumeFixedPointFromSuspensionFrame { state },\n    )";
+    let after = if kind == "wrong-receiver" {
+        "self.suspend_evaluation_return(\n        session,\n        request,\n        ResumeFixedPointFromSuspensionFrame { state },\n    )"
+    } else {
+        assert_eq!(kind, "wrong-request");
+        "witness.suspend_evaluation_return(\n        session,\n        other_request,\n        ResumeFixedPointFromSuspensionFrame { state },\n    )"
+    };
+    assert!(source.contains(before));
+    fs::write(&path, source.replacen(before, after, 1)).unwrap();
+    let changed = scan::scan(&scan::files(&scratch));
+    let error = baseline(&changed, &report).unwrap_err();
+    assert_eq!(error, "M0607: witnessed typed insertion absent");
+    let log = format!("FORCED RED evaluation-return-{kind}: {error}\n");
     fs::write(scratch.join(format!("{}.log", feature())), &log).unwrap();
     print!("{log}");
 }

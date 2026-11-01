@@ -25,6 +25,10 @@ impl Session {
         frontier: Option<crate::runtime::profiling::logical::Frontier>,
         after_return: bool,
     ) {
+        debug_assert!(matches!(
+            boundary.policy(),
+            Some(crate::runtime::profiling::logical::Policy::Expr)
+        ));
         let context = self.resume_context();
         let Some(owner) = self.pending_suspension.as_mut() else {
             boundary.epoch.fault();
@@ -54,7 +58,7 @@ impl Session {
         );
     }
 
-    #[allow(dead_code)]
+    #[cfg(test)]
     pub(in crate::runtime) fn logical_frontier_after_consumer(
         &mut self,
     ) -> Option<crate::runtime::profiling::logical::Frontier> {

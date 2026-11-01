@@ -123,11 +123,12 @@ fn reaches_insertion(
         return false;
     };
     if let Expr::MethodCall(call) = expr {
-        if name == "suspend" {
+        if matches!(name.as_str(), "suspend" | "suspend_evaluation_return") {
             return if ident(&call.receiver).as_deref() == Some(witness) {
                 args.len() == 3 && ident(args[1]).as_deref() == Some(request)
             } else {
-                ident(&call.receiver).as_deref() == Some("route")
+                name == "suspend"
+                    && ident(&call.receiver).as_deref() == Some("route")
                     && args.len() == 4
                     && ident(args[1]).as_deref() == Some(witness)
                     && ident(args[2]).as_deref() == Some(request)

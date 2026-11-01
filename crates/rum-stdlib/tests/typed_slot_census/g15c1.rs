@@ -64,13 +64,13 @@ pub(super) fn transitions(facts: &Facts, report: &Report) -> Result<(), String> 
             site.population == Population::Production && site.name == "resume_typed_or_suspend"
         })
         .count();
-    if typed != 99 || macros != 55 || by_id["G15-C1"][3] != "implemented" {
+    if typed != 99 || macros != 48 || by_id["G15-C1"][3] != "implemented" {
         return Err(format!(
-            "G15-C1: expected typed=99 and typed_macros=55, got {typed}/{macros}"
+            "G15-C1: expected typed=99 and typed_macros=48, got {typed}/{macros}"
         ));
     }
     println!(
-        "G15-C1 TOTAL implementations=610 typed=99 typed_macros=55 witnessed_sites=50; two new Expr -> Expr frames; global modes unchanged"
+        "G15-C1 TOTAL implementations=610 typed=99 typed_macros=48 witnessed_sites=57; two new Expr -> Expr frames; global modes unchanged"
     );
     Ok(())
 }

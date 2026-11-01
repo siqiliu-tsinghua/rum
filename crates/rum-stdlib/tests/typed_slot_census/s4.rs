@@ -125,8 +125,7 @@ pub(super) fn transitions(facts: &Facts, report: &Report) -> Result<(), String> 
 
     let expected = [
         "M0205", "M0248", "M0249", "M0251", "M0252", "M0253", "M0254", "M0255", "M0256", "M0257",
-        "M0258", "M0259", "M0279", "M0281", "M0282", "M0283", "M0282S", "M0283S", "M0285", "M0286",
-        "M0287", "M0289", "M0561", "M0562",
+        "M0258", "M0259", "M0279", "M0285", "M0286", "M0287", "M0289",
     ];
     let identities: BTreeSet<_> = expected.iter().map(|id| by_id[id][4].to_owned()).collect();
     let actual: BTreeSet<_> = facts

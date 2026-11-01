@@ -28,9 +28,14 @@ fn session() -> HostSession {
         .with_builtin_installer(install)
         .build()
 }
+fn native_rows() -> Vec<(String, [u64; 10])> {
+    Session::logical_profile_test_rows()
+        .into_iter()
+        .filter(|(key, _)| key.contains("native"))
+        .collect()
+}
 fn counts() -> [u64; 10] {
-    let rows = Session::logical_profile_test_rows();
-    let rows: Vec<_> = rows.iter().filter(|(k, _)| k.contains("native")).collect();
+    let rows = native_rows();
     assert!(rows.len() <= 1, "{rows:?}");
     rows.first().map(|(_, c)| *c).unwrap_or_default()
 }
@@ -92,12 +97,12 @@ fn logical_native_nested_pause_counts() {
         Session::logical_profile_test_reset(&lease);
         paused(s.eval(source));
         assert_eq!(counts()[9], 2);
-        assert_eq!(Session::logical_profile_test_pauses(), 2);
+        assert_eq!(Session::logical_profile_test_pauses_for("native"), 2);
         paused(s.resume_with_input("first"));
-        assert_eq!(Session::logical_profile_test_pauses(), second);
+        assert_eq!(Session::logical_profile_test_pauses_for("native"), second);
         done(s.resume_with_input("second"));
         closed([2, 2, 0, 0, 0, 0, 0, 0, 0, 0]);
-        assert_eq!(Session::logical_profile_test_pauses(), second);
+        assert_eq!(Session::logical_profile_test_pauses_for("native"), second);
         println!("LP02_NATIVE nested-pause source={source} pauses=2,{second},{second}");
     }
 }
@@ -143,12 +148,12 @@ fn logical_native_source_scope_survives_resume() {
     ] {
         Session::logical_profile_test_reset(&lease);
         paused(s.eval(paused_source));
-        let before = Session::logical_profile_test_rows();
+        let before = native_rows();
         done(s.resume_with_input("reply"));
-        let resumed = Session::logical_profile_test_rows();
+        let resumed = native_rows();
         Session::logical_profile_test_reset(&lease);
         done(s.eval(control_source));
-        let control = Session::logical_profile_test_rows();
+        let control = native_rows();
         println!(
             "LP02_SCOPE arrangement={arrangement} before={before:?} resumed={resumed:?} control={control:?}"
         );
@@ -188,14 +193,14 @@ fn logical_native_lifecycle() {
     paused(s.eval("LpSpan[InputString[\"first\"]; InputString[\"second\"]]"));
     assert_eq!(counts()[0], 0);
     assert_eq!(counts()[9], 1);
-    assert_eq!(Session::logical_profile_test_pauses(), 1);
+    assert_eq!(Session::logical_profile_test_pauses_for("native"), 1);
     paused(s.resume_with_input("one"));
     assert_eq!(counts()[0], 0);
     assert_eq!(counts()[9], 1);
-    assert_eq!(Session::logical_profile_test_pauses(), 2);
+    assert_eq!(Session::logical_profile_test_pauses_for("native"), 2);
     done(s.resume_with_input("two"));
     closed([1, 1, 0, 0, 0, 0, 0, 0, 0, 0]);
-    assert_eq!(Session::logical_profile_test_pauses(), 2);
+    assert_eq!(Session::logical_profile_test_pauses_for("native"), 2);
     println!("LP02_NATIVE second-pause success closed-once pauses=2");
 
     for (source, subset) in [
@@ -283,7 +288,7 @@ fn logical_native_lifecycle() {
     ));
     closed([2, 0, 0, 0, 0, 0, 0, 0, 2, 0]);
     // The cleanup child's pause reaches its open parent.
-    assert_eq!(Session::logical_profile_test_pauses(), 3);
+    assert_eq!(Session::logical_profile_test_pauses_for("native"), 3);
     println!("LP02_NATIVE nested-cleanup re-suspended abandoned-once");
 
     Session::logical_profile_test_reset(&lease);

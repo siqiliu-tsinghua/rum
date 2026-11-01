@@ -90,7 +90,10 @@ pub(in crate::runtime) fn has_active() -> bool {
     active_len() != 0
 }
 pub(in crate::runtime) fn active_len() -> usize {
-    ACTIVE_STATE.with(Cell::get).saturating_sub(1)
+    ACTIVE_STATE
+        .try_with(Cell::get)
+        .unwrap_or(0)
+        .saturating_sub(1)
 }
 pub(in crate::runtime) fn executing_epoch() -> Option<Arc<Epoch>> {
     if active_len() == 0 {
@@ -122,9 +125,17 @@ pub(in crate::runtime) fn enter(epoch: &Arc<Epoch>, record: RecordId) -> Option<
     install(epoch, path, false)
 }
 pub(super) fn restore(epoch: &Arc<Epoch>, path: &Arc<RecordPath>) -> Option<Segment> {
-    // Queue contexts must be consumed before their captured record's boundary.
-    // A stale context is a visible instrumentation fault, never silent loss.
+    // Adopted phases close locally on InputRequired; only an explicit LP02
+    // boundary remains open across the typed queue.
     if !path.is_open() {
+        if matches!(&path.key, AggregateKey::Runtime { phase, .. } if PhaseKey::from_name(phase).is_some())
+        {
+            return path
+                .parent
+                .clone()
+                .into_inner()
+                .and_then(|parent| restore(epoch, &parent));
+        }
         epoch.fault();
         return None;
     }
@@ -180,13 +191,19 @@ impl Segment {
                 if cursor.get() != Some((self.epoch.id, self.record)) {
                     active.path.pause();
                 }
-                cursor.set(
-                    active
-                        .path
-                        .parent
-                        .as_deref()
-                        .map(|p| (self.epoch.id, p.record)),
-                );
+                let mut parent = active.path.parent.as_deref();
+                let next = loop {
+                    let Some(path) = parent else {
+                        break None;
+                    };
+                    if matches!(&path.key, AggregateKey::Runtime { phase, .. } if PhaseKey::from_name(phase).is_some())
+                    {
+                        parent = path.parent.as_deref();
+                    } else {
+                        break Some((self.epoch.id, path.record));
+                    }
+                };
+                cursor.set(next);
             });
         });
     }
@@ -194,7 +211,8 @@ impl Segment {
         if active_len() == 0 {
             return;
         }
-        ACTIVE.with_borrow_mut(|stack| {
+        let _ = ACTIVE.try_with(|cell| {
+            let mut stack = cell.borrow_mut();
             let Some(active) = stack.frame(self.index) else {
                 return;
             };

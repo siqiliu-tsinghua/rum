@@ -238,7 +238,8 @@ impl Session {
         attributes: AttributeSet,
         args: SharedArgs,
     ) -> Result<PreparedCallArguments, EvalError> {
-        let runtime_profile = runtime_path_timing_start("prepare_arguments.total");
+        let runtime_profile = runtime_path_timing_start_adopted(self, "prepare_arguments.total");
+        let this = &mut *self;
         let result = (|| {
             let sequence_hold = attributes.sequence_hold();
             let list_drops_nothing = is_system_symbol_name(&head, heads::structure::LIST);
@@ -254,16 +255,19 @@ impl Session {
                 let prepared_arg = match plan.mode {
                     CallArgumentMode::Evaluate => {
                         let allow_sequence_splice = plan.allow_sequence_splice;
-                        let runtime_profile_evaluate =
-                            runtime_path_timing_start("prepare_arguments.evaluate_arg");
-                        let evaluated_result = self.evaluate_atom_fast_path(plan.expr);
-                        record_profile_runtime_path_timing(
+                        let runtime_profile_evaluate = runtime_path_timing_start_adopted(
+                            this,
+                            "prepare_arguments.evaluate_arg",
+                        );
+                        let evaluated_result = this.evaluate_atom_fast_path(plan.expr);
+                        record_profile_runtime_path_timing_adopted(
+                            this,
                             runtime_profile_evaluate,
-                            runtime_profile_outcome_for_expr_result(&evaluated_result),
+                            &evaluated_result,
                         );
                         'argument_value: {
                             return crate::resume_typed_or_suspend!(
-                                self,
+                                &mut *this,
                                 evaluated_result,
                                 ok(value) => break 'argument_value value,
                                 suspend => PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame::freeze(
@@ -375,10 +379,7 @@ impl Session {
                 unevaluated_restore,
             })
         })();
-        record_profile_runtime_path_timing(
-            runtime_profile,
-            runtime_profile_outcome_for_shared_args_result(&result),
-        );
+        record_profile_runtime_path_timing_adopted(self, runtime_profile, &result);
         result
     }
 
@@ -426,11 +427,12 @@ impl Session {
                 CallArgumentMode::Evaluate => {
                     let allow_sequence_splice = plan.allow_sequence_splice;
                     let runtime_profile_evaluate =
-                        runtime_path_timing_start("prepare_arguments.evaluate_arg");
+                        runtime_path_timing_start_adopted(self, "prepare_arguments.evaluate_arg");
                     let evaluated_result = self.evaluate_atom_fast_path(plan.expr);
-                    record_profile_runtime_path_timing(
+                    record_profile_runtime_path_timing_adopted(
+                        self,
                         runtime_profile_evaluate,
-                        runtime_profile_outcome_for_expr_result(&evaluated_result),
+                        &evaluated_result,
                     );
                     // The witness is derived before matching the actual evaluator Result.
                     let witness: SlotWitness<
@@ -522,34 +524,6 @@ impl Session {
         ));
 
         self.resume_call_with_dispatch_plan(head, plan, state, 0, prepared.unevaluated_restore)
-    }
-}
-
-fn runtime_profile_outcome_for_expr_result(
-    result: &Result<Expr, EvalError>,
-) -> RuntimeProfileOutcome {
-    match result {
-        Ok(_) => RuntimeProfileOutcome::Ok,
-        Err(EvalError::Return { .. }) => RuntimeProfileOutcome::Return,
-        Err(EvalError::Thrown { .. }) | Err(EvalError::ThrownBypassingCatch { .. }) => {
-            RuntimeProfileOutcome::Throw
-        }
-        Err(EvalError::InputRequired { .. }) => RuntimeProfileOutcome::InputRequired,
-        Err(_) => RuntimeProfileOutcome::Error,
-    }
-}
-
-fn runtime_profile_outcome_for_shared_args_result<T>(
-    result: &Result<T, EvalError>,
-) -> RuntimeProfileOutcome {
-    match result {
-        Ok(_) => RuntimeProfileOutcome::Ok,
-        Err(EvalError::Return { .. }) => RuntimeProfileOutcome::Return,
-        Err(EvalError::Thrown { .. }) | Err(EvalError::ThrownBypassingCatch { .. }) => {
-            RuntimeProfileOutcome::Throw
-        }
-        Err(EvalError::InputRequired { .. }) => RuntimeProfileOutcome::InputRequired,
-        Err(_) => RuntimeProfileOutcome::Error,
     }
 }
 

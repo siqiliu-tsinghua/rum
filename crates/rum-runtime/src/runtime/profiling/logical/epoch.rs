@@ -204,6 +204,16 @@ impl Epoch {
         true
     }
 
+    pub(in crate::runtime) fn input_required(&self, id: RecordId) {
+        let mut data = self.data.lock().unwrap();
+        let Some(key) = data.records.get(id).map(|record| record.path.key) else {
+            return;
+        };
+        if let Some(counts) = data.rows.get_mut(key) {
+            counts.input_required = counts.input_required.saturating_add(1);
+        }
+    }
+
     pub(in crate::runtime) fn inspect(
         &self,
         id: RecordId,

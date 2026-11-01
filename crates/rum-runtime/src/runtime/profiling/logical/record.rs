@@ -157,6 +157,7 @@ pub(in crate::runtime) struct Counts {
     pub abandoned: u64,
     pub open: u64,
     pub pauses: u64,
+    pub input_required: u64,
     pub segments: u64,
     pub nanos: u64,
     pub self_nanos: u64,

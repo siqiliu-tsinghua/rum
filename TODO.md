@@ -98,15 +98,23 @@ does the same work, only without its profiling hooks.
     that re-queued the remainder without its stack.
   - The director's falsifier `crates/rum-host/tests/logical_profile_abandonment.rs`
     now pins that last one.
+- **LP03** (brief-637): the adopted evaluator dispatch records.
+  - Thirteen continuations. The dispatch loop's own cost is back to base:
+    121.0 own instructions per call against the continuation-12 tree's 132.0,
+    re-measured on the final binary at the leaf label's panel N and 2N.
+  - The shape is one up-front record per optional stage
+    (`record_profile_runtime_path_timing_adopted_defer_pause`) with the pause
+    recorded separately, so `complete_phase_optional_at_finish` and its cold
+    half are gone and the finish helpers take the phase from the token.
+  - The LP02 carry-over is half closed: `enable_pending_profile` now takes
+    `&mut FrameStorage`, but the caller still extracts `.frames` through a
+    second `.expect`.
+  - Shape items carried to LP04: that second `.expect`, and `open_phase`'s
+    `.expect` after its only caller already proved `Some`.
 
-**LP03, after test isolation,** from `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md`,
-on Codex (user ruling 2026-10-26: new briefs go back to Codex; while it has
-no quota, grk or kimi). Write it at
-the granularity `TEMPLATE.md` now records. **LP03 carries one shape item from
-LP02's gate:** `Session::enable_pending_profile` (`suspension/core.rs`)
-unwraps `pending_suspension`, a state the type allows. Its caller already
-holds the installed suspension, so pass `&mut FrameStorage` to the cold
-helper. LP04-LP08 follow, one per brief. Then come C2's remaining 353 rows on the final source, the manifest
+**LP04-LP08 follow**, one per brief, from
+`.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its
+successors. Write them at the granularity `TEMPLATE.md` now records. Then come C2's remaining 353 rows on the final source, the manifest
 (CM, `.temp/brief-621/draft-G15-CM-obligation-manifest.md`), `CHANGELOG.md`
 (user ruling), and S10 from `.temp/brief-606/draft-S10.md`, with its
 owned-row table from `.temp/brief-621/draft-existing-owner-additions.md`. The

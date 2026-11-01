@@ -514,7 +514,13 @@ impl Session {
             .expect("just installed input owner")
             .guest_form_environment = guest_form_environment;
         if crate::runtime::profiling::lexical_profile_enabled() {
-            self.enable_pending_profile();
+            Self::enable_pending_profile(
+                &mut self
+                    .pending_suspension
+                    .as_mut()
+                    .expect("just installed input owner")
+                    .frames,
+            );
         }
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
@@ -526,13 +532,9 @@ impl Session {
 
     #[cold]
     #[inline(never)]
-    fn enable_pending_profile(&mut self) {
+    fn enable_pending_profile(frames: &mut FrameStorage) {
         if let Some(epoch) = crate::runtime::profiling::logical::executing_epoch() {
-            self.pending_suspension
-                .as_mut()
-                .unwrap()
-                .frames
-                .enable_profile(epoch);
+            frames.enable_profile(epoch);
         }
     }
 

@@ -312,19 +312,22 @@ fn baseline(source: &Source) {
     // profile/mod.rs 186:5-89) retires. The call resolves to
     // publish_cold_load, whose rows are already in the frontier, so none
     // appears; the file's other 12 rows move up one line. 1039 (10/996/33),
-    // still no mark or coverage.
+    // still no mark or coverage. LP03 (brief-637): the adopted evaluator
+    // records add their rejected boundaries and replace seven fabricated macro
+    // expansions with witnessed calls. Continuation 7 removes the adopted queue
+    // pause machinery and cold enabled helpers; defer-pause consolidation adds one rejected boundary; the generated frontier is 1067 (10/1022/35).
     assert!(options.rejected.iter().any(|row| row.kind == Kind::RET002
         && row.site.file.ends_with("resolution.rs")
         && row.site.start == (36, 19)
         && row.reason == "path AccumulatorChain::default has 0 exact bindings"));
     assert_eq!(
         options.rejected.len(),
-        1039,
+        1067,
         "STOP: brief-545 exact legacy frontier inventory moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 996), (Kind::RET003, 33)])
+        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 1022), (Kind::RET003, 35)])
     );
     let wrapper = regions::frontier(
         source,

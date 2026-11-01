@@ -113,9 +113,9 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
         counts[0].2 + counts[1].2,
         counts[0].3 + counts[1].3
     );
-    if counts[0] != (461, 50, 610, 542, 343, 199) || counts[1] != (11, 5, 16, 11, 3, 8) {
+    if counts[0] != (461, 50, 610, 535, 336, 199) || counts[1] != (11, 5, 16, 11, 3, 8) {
         return Err(
-            "G15-C1 baseline requires production 610/542 and test-only 16/11; combined 626/553"
+            "G15-C1 baseline requires production 610/535 and test-only 16/11; combined 626/546"
                 .into(),
         );
     }
@@ -143,6 +143,7 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
             .map(|f| f.identity.clone())
             .collect(),
     )?;
+    super::s3::transitions(facts, report)?;
     super::s5::transitions(facts, report)?;
     super::s6::transitions(facts, report)?;
     super::s7::transitions(facts, report)?;
@@ -154,7 +155,10 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
         .into_iter()
         .filter(|r| {
             r[0] == "M"
-                && matches!(r[2], "S5" | "S6" | "S7" | "S8" | "S9" | "G15-A" | "G15-C1")
+                && matches!(
+                    r[2],
+                    "S3" | "S5" | "S6" | "S7" | "S8" | "S9" | "G15-A" | "G15-C1"
+                )
                 && r[6] == "witnessed"
         })
         .map(|r| r[4])
@@ -179,7 +183,7 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
     let receipts = rows(RECEIPTS);
     for (kind, count) in [
         ("F", 629), // F0273 merged; F0275P splits the prepared consumer; F0248 has a retained removal receipt.
-        ("M", 607), // M0280 and M0288 are retained removals; M0250 has a retained removal receipt.
+        ("M", 614), // Seven LP03 macro receipts move to witnessed cold-helper calls; old rows stay removed.
         // M0282S/M0283S complete the two looping stage consumers.
         ("Chain", 62),
         ("Obligation", 14),

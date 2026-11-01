@@ -15,7 +15,6 @@ struct Node {
     right: Option<CellId>,
     height: u8,
     deferred: usize,
-    consumers: usize,
 }
 enum Slot {
     Live(Node),
@@ -36,10 +35,10 @@ impl Arena {
             parent: Option<CellId>,
             depth: usize,
             output: &mut Vec<CellId>,
-        ) -> (u8, usize, usize) {
+        ) -> (u8, usize) {
             assert!(depth < 64, "sequence cycle or unbalanced tree");
             let Some(id) = root else {
-                return (0, 0, 0);
+                return (0, 0);
             };
             let node = arena.node(id).unwrap();
             assert_eq!(node.parent, parent);
@@ -50,9 +49,8 @@ impl Arena {
             let expected = (
                 1 + left.0.max(right.0),
                 left.1 + right.1 + usize::from(node.cell.deferred),
-                left.2 + right.2 + usize::from(node.cell.consumer()),
             );
-            assert_eq!((node.height, node.deferred, node.consumers), expected);
+            assert_eq!((node.height, node.deferred), expected);
             expected
         }
         let mut result = Vec::new();
@@ -91,20 +89,14 @@ impl Arena {
     fn deferred(&self, id: Option<CellId>) -> usize {
         id.and_then(|i| self.node(i)).map_or(0, |n| n.deferred)
     }
-    fn consumers(&self, id: Option<CellId>) -> usize {
-        id.and_then(|i| self.node(i)).map_or(0, |n| n.consumers)
-    }
     fn update(&mut self, id: CellId) -> Option<()> {
         let n = self.node(id)?;
         let height = 1 + self.height(n.left).max(self.height(n.right));
         let deferred =
             usize::from(n.cell.deferred) + self.deferred(n.left) + self.deferred(n.right);
-        let consumers =
-            usize::from(n.cell.consumer()) + self.consumers(n.left) + self.consumers(n.right);
         let n = self.node_mut(id)?;
         n.height = height;
         n.deferred = deferred;
-        n.consumers = consumers;
         Some(())
     }
     fn parent(&mut self, child: Option<CellId>, parent: Option<CellId>) -> Option<()> {
@@ -217,7 +209,6 @@ impl Arena {
         let n = Node {
             generation,
             deferred: usize::from(cell.deferred),
-            consumers: usize::from(cell.consumer()),
             cell,
             parent: None,
             left: None,
@@ -275,18 +266,12 @@ impl Arena {
         }
         Some(id)
     }
+    #[cfg(test)]
     pub(super) fn last_consumer(&self, root: Option<CellId>) -> Option<CellId> {
-        let mut id = root?;
-        loop {
-            let n = self.node(id)?;
-            if self.consumers(n.right) != 0 {
-                id = n.right?;
-            } else if n.cell.consumer() {
-                return Some(id);
-            } else {
-                id = n.left?;
-            }
-        }
+        self.ordered_and_balanced(root)
+            .into_iter()
+            .rev()
+            .find(|id| matches!(self.node(*id).map(|n| &n.cell.kind), Some(Kind::Guest)))
     }
     pub(super) fn first_deferred(&self, root: Option<CellId>) -> Option<CellId> {
         let mut id = root?;

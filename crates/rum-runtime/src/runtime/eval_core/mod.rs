@@ -136,61 +136,48 @@ impl Session {
     }
 
     pub(super) fn evaluate_inner_unstable(&mut self, expr: Expr) -> Result<Expr, EvalError> {
-        let runtime_profile_total = runtime_path_timing_start("evaluate_inner_unstable.total");
+        let runtime_profile_total =
+            runtime_path_timing_start_adopted(self, "evaluate_inner_unstable.total");
         let result = match expr {
             Expr::Atom(Atom::Symbol(symbol)) => {
-                let runtime_profile = runtime_path_timing_start("evaluate_inner_unstable.symbol");
+                let runtime_profile =
+                    runtime_path_timing_start_adopted(self, "evaluate_inner_unstable.symbol");
                 let result = self.evaluate_symbol(symbol);
-                record_profile_runtime_path_timing(
-                    runtime_profile,
-                    runtime_profile_outcome_for_expr_result(&result),
-                );
+                record_profile_runtime_path_timing_adopted(self, runtime_profile, &result);
                 result
             }
             Expr::Call { head, args } => {
-                let runtime_profile = runtime_path_timing_start("evaluate_inner_unstable.call");
+                let runtime_profile =
+                    runtime_path_timing_start_adopted(self, "evaluate_inner_unstable.call");
                 let result = self.evaluate_call(head.clone(), args);
-                record_profile_runtime_path_timing(
-                    runtime_profile,
-                    runtime_profile_outcome_for_expr_result(&result),
-                );
+                record_profile_runtime_path_timing_adopted(self, runtime_profile, &result);
                 result
             }
             other => {
-                let runtime_profile = runtime_path_timing_start("evaluate_inner_unstable.atom");
+                let runtime_profile =
+                    runtime_path_timing_start_adopted(self, "evaluate_inner_unstable.atom");
                 let result = Ok(other);
-                record_profile_runtime_path_timing(
-                    runtime_profile,
-                    runtime_profile_outcome_for_expr_result(&result),
-                );
+                record_profile_runtime_path_timing_adopted(self, runtime_profile, &result);
                 result
             }
         };
-        record_profile_runtime_path_timing(
-            runtime_profile_total,
-            runtime_profile_outcome_for_expr_result(&result),
-        );
+        record_profile_runtime_path_timing_adopted(self, runtime_profile_total, &result);
         result
     }
 
     pub(super) fn evaluate_atom_fast_path(&mut self, expr: Expr) -> Result<Expr, EvalError> {
         let kind = EvaluateAtomFastPathKind::classify(self, &expr);
-        let runtime_profile_total = runtime_path_timing_start("evaluate_atom_fast_path.total");
-        let runtime_profile_kind = runtime_path_timing_start(kind.profile_name());
+        let runtime_profile_total =
+            runtime_path_timing_start_adopted(self, "evaluate_atom_fast_path.total");
+        let runtime_profile_kind = runtime_path_timing_start_adopted(self, kind.profile_name());
         let result = match kind {
             EvaluateAtomFastPathKind::StableSymbol | EvaluateAtomFastPathKind::Atom => Ok(expr),
             EvaluateAtomFastPathKind::UnstableSymbol | EvaluateAtomFastPathKind::Call => {
                 self.evaluate(expr)
             }
         };
-        record_profile_runtime_path_timing(
-            runtime_profile_kind,
-            runtime_profile_outcome_for_expr_result(&result),
-        );
-        record_profile_runtime_path_timing(
-            runtime_profile_total,
-            runtime_profile_outcome_for_expr_result(&result),
-        );
+        record_profile_runtime_path_timing_adopted(self, runtime_profile_kind, &result);
+        record_profile_runtime_path_timing_adopted(self, runtime_profile_total, &result);
         result
     }
 }
@@ -224,21 +211,6 @@ impl EvaluateAtomFastPathKind {
             Self::Atom => "evaluate_atom_fast_path.atom",
             Self::Call => "evaluate_atom_fast_path.call",
         }
-    }
-}
-
-fn runtime_profile_outcome_for_optional_result(
-    result: &Result<Option<Expr>, EvalError>,
-) -> RuntimeProfileOutcome {
-    match result {
-        Ok(Some(_)) => RuntimeProfileOutcome::Some,
-        Ok(None) => RuntimeProfileOutcome::None,
-        Err(EvalError::Return { .. }) => RuntimeProfileOutcome::Return,
-        Err(EvalError::Thrown { .. }) | Err(EvalError::ThrownBypassingCatch { .. }) => {
-            RuntimeProfileOutcome::Throw
-        }
-        Err(EvalError::InputRequired { .. }) => RuntimeProfileOutcome::InputRequired,
-        Err(_) => RuntimeProfileOutcome::Error,
     }
 }
 

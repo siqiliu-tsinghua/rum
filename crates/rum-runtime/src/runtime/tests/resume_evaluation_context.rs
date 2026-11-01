@@ -223,7 +223,7 @@ fn evaluation_return_source_boundary_is_closed() {
         2,
         "every native evaluator caller needs the approved return boundary"
     );
-    assert_eq!(resolution.matches("evaluation_return =>").count(), 2);
+    assert_eq!(resolution.matches("suspend_evaluation_return(").count(), 2);
     let witness = include_str!("../suspension/typed/witness.rs");
     let start = witness
         .find("fn suspend_evaluation_return")
