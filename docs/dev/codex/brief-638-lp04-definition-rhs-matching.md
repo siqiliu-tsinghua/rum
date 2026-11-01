@@ -845,3 +845,105 @@ one measurement gap.
 Everything else stands from Amendment 7: the observation is unchanged (row
 names, finish order, the local `InputRequired` close, the four ledger bars,
 4,375 receipts, census 1067, constructor 175/177).
+
+**Amendment 9 (2026-11-02, round 2 accepted where it aimed; the control was
+not an instrument; the own-Ir rows are the residue).**
+
+Accepted from round 2, re-read from the retained tables:
+
+- **Stack is closed.** All 44 fits are zero-residual and no shape grows
+  against base: control equals base in every row, debug repair is -32..-80
+  bytes/level, release -160 or 0, and the two +32 release rows are 0 against
+  LP04. The 15 static entry reservations that grew +16..+48 (largest:
+  `try_apply_up_values` +48 and `try_apply_sub_values_from_symbol` +48) are
+  supporting evidence, not a bar — the live chain is the bar and it does not
+  grow. Round 3 re-checks the +48 on the recursive `try_apply_up_values` and
+  names the frame if it survives.
+- The 16-byte const assertion is in the code; copy, allocation, layout and
+  lifecycle pass; both named routes improve in both samples
+  (`downvalue-pattern-hit` -16.19/-16.07, `downvalue-exact-hit`
+  -13.01/-13.39).
+
+**R-638-3: the two-sample control interval is not a noise bound, and the 132
+above-control labels are withdrawn as regressions.** This is an error in
+Amendment 8 (3), my instrument, not a finding about the code.
+
+- The null rates are exact under exchangeability:
+  `P(max(repair pair) > max(control pair)) = 1/2`, and
+  `P(both repair samples above the control max) = 1/6`. Observed: **132**
+  against 156.5 expected, and **30** against 52.2 expected — both *below*
+  chance. A 42 % flag rate on a panel whose null rate is 50 % reports the
+  measurement.
+- A two-draw control does not even bound the same-binary spread. On **183 of
+  313** labels, some arm's two runs of the *same binary* differ by more than
+  the control pair does. Median same-binary run spread on the candidate arm
+  is 44.4 instructions/iteration; `lazy-nestlist-realize-small` differs by
+  50.5 between the candidate's own two samples while its control pair differs
+  by 1.3; `replaceall-simple` by 708x.
+- Standing lesson, unchanged: a one-pair floor flags half the panel. The
+  replacement instrument is item 4 below.
+
+**The five deterministic own-Ir rows stand, and they are the STOP.**
+
+| Label | Function | Base -> repair own/call | Extra per call |
+| --- | --- | --- | --- |
+| downvalue-guarded-hit | finish_suspended_down_value_application | 173 -> 174 | +1 |
+| default-unguarded-hit | finish_suspended_down_value_application | 157 -> 158 | +1 |
+| default-guarded-hit | finish_suspended_down_value_application | 157 -> 158 | +1 |
+| default-unguarded-miss | try_apply_down_values_from_symbol'2 | 104 -> 106 | +2 |
+| upvalue-guarded-hit | try_apply_up_values'2 | 119 -> 121 | +2 (x2 per iteration) |
+
+This route is immune to run noise: base and control opcode counts are
+identical at the same entry address, every executed PC has a fixed integer
+multiplicity per call at N and 2N, and the reconciliation is count x cost.
+All five labels improve in total in both samples; a net label gain does not
+waive a positive per-function row. An off-by-default feature may not leave a
+per-call cost in a function.
+
+**The shape: the off-path token must be one word.** `Option<Call>` is 8
+bytes and `Option<Instant>` is 16; the merged token is 16, and the residual
+rows carry the two-word signature — exactly +2 mov per call in each
+recursion context (one store, one reload) and a +5 mov / +1 movl / -6
+reshuffle on the completion path. Box the whole record so the disabled start
+returns a null pointer:
+
+```rust
+pub(in crate::runtime) struct DefinitionRuleTimingToken(Box<DefinitionRuleRecord>);
+
+pub(in crate::runtime) struct DefinitionRuleRecord {
+    start: Option<std::time::Instant>,
+    call: Option<Call>,
+    _storage: Option<Storage>,
+}
+```
+
+with `size_of::<Option<DefinitionRuleTimingToken>>() ==
+size_of::<Option<Call>>()` as the const assertion (8 bytes), replacing the
+16-byte one. The slow half keeps every field; the legacy-only case is the
+same box with `call: None`. Keep `&Symbol`.
+
+**Diagnostic checkpoint before the campaign.** Rebuild base, control and
+candidate, then run only `downvalue-guarded-hit`, `default-unguarded-hit`,
+`default-unguarded-miss`, `default-guarded-hit` and `upvalue-guarded-hit`.
+Require `finish_suspended_down_value_application` at 173/157,
+`try_apply_down_values_from_symbol'2` at 104 and `try_apply_up_values'2` at
+119 own instructions per call — base-equal — before the 313-label panel
+runs. If a row survives the one-word token, test the 2x2 on those five
+labels only — token (16 vs 8 bytes) x symbol argument (by-value vs borrow) —
+and report the own-Ir result *and* the 44 stack fits for the cell; do not
+run the campaign on a shape that has not cleared the five rows. Either way,
+name the extra instruction from the address review.
+
+**Stage B's panel instrument (replaces Amendment 8 (3)).** Five samples per
+arm, interleaved round-robin across base, control and repair so drift cannot
+masquerade as a delta; LP04 keeps its two samples as a reference column
+only, not a decision input. A label is a regression iff
+`min(repair deltas) > max(control deltas)`. The per-label null rate is
+`1/C(10,5) = 0.4 %`, so at most about 1.3 false flags are expected across
+313 labels, and a single flag escalates to more samples on that label
+instead of stopping the stage. Report every sample, not an interval.
+
+Timing stays last, after the five rows are at base and the panel is green.
+Everything else stands: the observation is unchanged, census 1067,
+constructors 175/177, 4,375 receipts, the four ledger bars, the 44 stack
+fits green.
