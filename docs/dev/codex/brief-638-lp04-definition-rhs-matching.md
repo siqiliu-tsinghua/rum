@@ -9,6 +9,15 @@ argument routes). LP03 established the mechanism this brief reuses; read its
 final gate section (`.temp` copy of the engine is not authoritative — read
 the tree).
 
+**Amendment 1 (2026-11-01, before any source change):** the first dispatch
+stopped at A1's preflight, correctly: two files this brief already requires
+were missing from **Scope**. `profiling/tests/evaluator.rs` holds
+`lp03_adopted_site_table_is_exact`, which asserts the exact 25-name set that
+appending five keys to `PhaseKey::ALL` necessarily changes, and
+`profiling/timing.rs` holds `open_phase`'s only production caller, whose call
+shape item A changes. Both are authorized below, narrowly. The STOP was the
+scope rule working; no source was touched.
+
 ## Goal
 
 Adopt the definition RHS, definition-rule and definition-dispatch phases —
@@ -73,6 +82,15 @@ Files you MAY modify:
 - `crates/rum-runtime/src/runtime/suspension/core.rs` (the shape item only)
 - `crates/rum-runtime/src/runtime/profiling/tests/definitions.rs` (new; your
   unit tests)
+- `crates/rum-runtime/src/runtime/profiling/tests/evaluator.rs` — the test
+  `lp03_adopted_site_table_is_exact` only. Add exactly these five names to
+  its `expected` set: `definition.rhs.total`, `definition.rhs.evaluate`,
+  `down_values.direct_default_lookup`, `down_values.compiled_matcher`,
+  `sub_values.compiled_matcher`. No other line of that file changes; no
+  existing name, assertion or helper is removed, weakened or reformatted.
+- `crates/rum-runtime/src/runtime/profiling/timing.rs` — the
+  `runtime_path_timing_start_adopted_slow` body only, at `:149`, for shape
+  item A (resolve the key once and pass it). Nothing else in that file.
 - `crates/rum-host/tests/lp04_definition_rows.rs` (new; my falsifier,
   inserted verbatim from the `.temp` copy)
 - the standing inventories named under **Inventory replay** below.
@@ -325,8 +343,8 @@ these live, so no visibility change is needed.
 ### 5. Shape item A — `open_phase` takes the key it was given
 
 `profiling/logical/mod.rs:609`. Its only production caller,
-`runtime_path_timing_start_adopted_slow` (`profiling/timing.rs:141`), has
-already resolved the `PhaseKey` and passes the phase string back down, so
+`runtime_path_timing_start_adopted_slow` (`profiling/timing.rs:141`), resolves
+the `PhaseKey` in its `if let` and then passes the phase string back down, so
 `open_phase` re-derives it and `.expect`s on a state it cannot observe. Take
 the key instead:
 
@@ -344,8 +362,10 @@ pub(in crate::runtime) fn open_phase(
 }
 ```
 
-Callers: `runtime_path_timing_start_adopted_slow` passes the key it already
-holds; `open_logical_phase` (`:671`) becomes
+Callers: `runtime_path_timing_start_adopted_slow` (`timing.rs:149`) passes
+the key it already holds instead of the phase string —
+`if let Some(key) = PhaseKey::from_name(phase) { open_phase(session, key, key.site()) }`;
+`open_logical_phase` (`:671`) becomes
 `if let Some(key) = PhaseKey::from_name(phase) { open_phase(session, key, key.site()) }`.
 No `.expect` remains, and the duplicated lookup is gone.
 
