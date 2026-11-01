@@ -763,3 +763,49 @@ certificates, inventories and the workspace suite (4,033 passed / 0 failed /
   `runtime_profile_outcome_for_internal_result`) were deleted under
   Amendment 5. The only warnings left are the three pre-existing
   `register_test_*` ones.
+
+**Amendment 7 (2026-11-02, Stage B STOP: LP04 pays on the default path).**
+Stage B is right and the verdict stands: LP04 is not acceptable as it is.
+
+Measured, and reproduced from the retained tables:
+
+- `try_apply_down_values_from_symbol` gains **26 own instructions per
+  call** in both named routes (412 -> 438 on `downvalue-pattern-hit`,
+  247 -> 273 on `downvalue-exact-hit`); the adopted RHS start gives back 10
+  and 4, and the outer route 5, leaving +11, +15 and +19 on the perf rows.
+  `logical_definition_rule_start` has no callgrind row in either arm, so the
+  26 is inlined code, not a call.
+- 43 ordinary and 30 resume labels are positive in both pairs;
+  `appendto-list-incremental-small` is +5.57 %; all 22 debug stack shapes grow
+  32-240 bytes/level (the release shrink does not waive them).
+
+The cause to attack first: every rule site now pays **two**
+`lexical_profile_enabled()` reads — the legacy `definition_rule_timing_start`
+and the new `logical_definition_rule_start` — and holds a second live
+`Option<Call>` across the RHS evaluation. LP03's accepted shape already shows
+the fix: one adopted token, one check, both records opened in one `#[cold]`
+half. For the rule record that means one starter per site (the legacy timing
+token and the logical `Call` in one value, one gate), and one completer pair
+that consumes it; the disabled path must be one predictable branch and the
+same or smaller live value than the legacy `Option<Instant>` it replaces.
+
+Required, in this order:
+
+1. **Calibrate before designing.** Build a mutant whose eight logical openers
+   return `None` unconditionally and nothing else changes, and measure the
+   two named routes against base in the same A/B. If the mutant is not
+   base-equal, the opener is not the whole cost: attribute the rest first and
+   say so. Keep the mutant as a standing row in the report.
+2. **Then the merged shape**, with the observation unchanged: same row names,
+   same finish order (inner `definition.rhs.*`, then `definition.rhs.total`,
+   then the rule), the same `InputRequired` local close, the four loss-ledger
+   bars, 4,375 receipts, the census 1067 and the constructor 175/177.
+3. **Re-run Stage B exactly as before**, on the same arms (base = the export
+   at `.temp/director/gate-state/worktree`, candidate = your tree), and add
+   the LP04 commit `4d4851b3` as a second candidate arm so the repair's own
+   delta is visible. The bar does not move: no ordinary or same-tier per-call
+   increase, all 22 debug and release shapes with zero-residual fits and no
+   ordinary growth.
+
+Do not waive a positive row as noise, and do not chase timing while the
+instruction counts on the named routes are still above base.
