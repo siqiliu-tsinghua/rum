@@ -1640,3 +1640,56 @@ The same eight as before, in the same order, plus: the attribution table
 before the fix, per-sample slopes in the panel, and every outlier re-run and
 reported. The four outside-envelope labels must come out either below the
 control envelope or attributed to a named function with a named mechanism.
+
+## Director gate — continuation 11 (2026-11-01): the residual is libc's, not rum's
+
+The attribution is exact and I checked it against the table:
+`__memcmp_avx2_movbe` carries +28,372 / +28,154 own-instruction slopes with
+**identical call slopes** (8,358.22 against 8,358.22; 6,723.85 against
+6,723.6), and every rum-side adopted row is zero on both labels. So the same
+number of comparisons execute three to four more instructions each inside
+glibc. That is memcmp's alignment- and length-dependent path reacting to a
+different memory image, stable across three processes; it is not rum running
+more code.
+
+### Ruling 1 — the external-call class is recorded, not charged
+
+A positive delta that is carried entirely by an external symbol, with
+identical call slopes on both arms and zero adopted rows on rum's side, is an
+external data-layout effect. The panel records it as a named class and does
+not charge it against the disabled-path bar. The bar is about rum's own
+executed instructions and it stands for every rum function.
+
+This is a refinement, not a weakening, and it is restated in every brief that
+reuses this panel. It lapses for a label the moment a rum-side row is
+non-zero, a call slope moves, or the class is not stable across samples —
+then it is a defect again and gets attributed.
+
+### Ruling 2 — the noise of these six samples is now the number
+
+From `.temp/brief-637/c11-outlier-summary-1.log`:
+
+- `deletecases-leaf-delete-small`: candidate 63,421–64,223 (1.2 % spread);
+  base 62,893–63,209. Positive but not decidable yet.
+- `appendto-part-outer1000-small`: base 2,202,267 / 2,241,851 (1.8 %), and
+  candidate 2,184,095–2,246,731 (2.8 %). A 2.8 % spread on a label whose
+  claimed effect is 0.2 % cannot decide anything; that row is withdrawn as
+  undecidable, and the withdrawal is restated wherever the panel is reused.
+
+### What continuation 12 must do
+
+1. Give `deletecases-leaf-delete-small` the same per-function slope
+   attribution at panel N and 2N — it is small (64 k/op) and may be a
+   different class. `appendto-part-outer1000-small` gets the same table only
+   to confirm zero rum-side rows before its withdrawal stands.
+2. The full ordinary panel under these rules, with the control readout, every
+   sample reported, and every outlier re-run.
+3. Then the acceptance battery in full, unchanged from the eight bars: focused
+   suites, prologues and native-stack fixtures, the standing replays and the
+   loss bar, both workspace builds, the 48-program correctness campaign, and
+   the regenerated reports with `changes` matching the tree.
+
+Staged stops: STOP if `deletecases-leaf-delete-small` lands in a rum function
+that the adopted phases reach; STOP if any adopted row appears anywhere in
+the panel's attribution; STOP at any inventory or test that moves to make a
+flag green.
