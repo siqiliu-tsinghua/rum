@@ -1305,3 +1305,142 @@ LP03-adopted phase, STOP and name it. I accept or reject after reading it.
 3. Staged stops: stop if the falsifier cannot go green without touching an
    LP02 bar; stop if any census count moves beyond the ±7; stop at the LP04
    attribution if it is not attributable to an adopted phase.
+
+## Director gate — continuation 7 (2026-11-01): the default path pays for a name search
+
+Stage A is close and Stage B is rightly stopped. I reproduced three defects;
+one of them is the cause of Stage B, and it is visible in the shipped binary.
+
+### What I reproduced
+
+- `python3 -I scripts/director-gate.py run 637 --stage a1`: **scope FLAGGED**
+  (3 problems), **fmt PASS**, **check FLAGGED** — three new dead-code warnings
+  against HEAD: `consumer_frontier` at `suspension/core/storage.rs:56` and
+  `suspension/core/profile_queue.rs:127`, `last_consumer` at
+  `suspension/core/profile_queue/arena.rs:278`. They are what is left of the
+  frontier machinery the previous section ordered deleted: the callers went,
+  the methods did not.
+- `.temp/brief-637/stage-b/perf/instruction-comparison.json`: 154 of 192
+  ordinary labels flagged, 144 above 0.25 %, 91 at or above 1 %, and the
+  call-heavy labels cluster at 2.3–3.4 % (`function-slot-apply` +284
+  instructions/op on 10,776; `c1-replaceall-atom` +455 on 22,669;
+  `withcleanup-two-arg` +449 on 13,338). The three leaves move −4.
+- The object code, `.temp/brief-637/stage-b/cand/rum-cli`:
+  `complete_phase_optional_at_finish` at `0xe2730` is four instructions that
+  call `PhaseKey::from_name` at `0x733830` — 1,368 bytes, 337 instructions of
+  length-and-bytes comparison — and branch on the returned index. No
+  `lexical_profile_enabled()` on the way. `complete_logical_expr_defer_pause`,
+  `pause_phase_at_finish` and `complete_phase_error_at_finish` have the same
+  shape.
+
+`#[cold] #[inline(never)]` moved those four helpers out of the caller; it did
+not stop them executing. `complete_phase_optional_at_finish` runs once per
+call-dispatch stage and `complete_logical_expr_defer_pause` once per
+fixed-point iteration **whether or not the switch is on**, and the phase names
+it searches for are arms 15–22 of a 25-arm match, so every call stage pays a
+few hundred instructions to rediscover a name the call site already knows
+statically. That is a default-path cost for a diagnostic, which the hard rule
+forbids, and it is what the 2.3–3.4 % flags are.
+
+### Ruling 1 — gate the four logical entry points
+
+The established shape, the one `runtime_path_timing_start_adopted` and
+`open_logical_phase` already use: check the switch in an `#[inline]` wrapper
+and keep the body in a `#[cold] #[inline(never)]` slow function.
+
+```rust
+#[inline]
+pub(in crate::runtime) fn complete_phase_optional_at_finish(
+    session: &mut crate::runtime::Session,
+    phase: &'static str,
+    value: &Option<Expr>,
+) {
+    if !crate::runtime::profiling::lexical_profile_enabled() {
+        return;
+    }
+    complete_phase_optional_at_finish_slow(session, phase, value)
+}
+
+#[cold]
+#[inline(never)]
+fn complete_phase_optional_at_finish_slow(
+    session: &mut crate::runtime::Session,
+    phase: &'static str,
+    value: &Option<Expr>,
+) { /* the body exactly as it stands */ }
+```
+
+The same for `pause_phase_at_finish`, `complete_phase_error_at_finish` and
+`complete_logical_expr_defer_pause`. Nothing else about them changes: no
+`#[allow(dead_code)]`, no new `unsafe`, no behavioural change on the enabled
+path. If a fifth ungated entry from the logical module into a hot frame exists,
+gate it too and name it.
+
+### Ruling 2 — prove the mechanism before the panel
+
+Isolated A/B first: the current candidate binary against the gated candidate,
+one codegen unit, separate target dirs, on `function-slot-apply`,
+`c1-replaceall-atom`, `withcleanup-two-arg` and `literal-integer`, N/2N, two
+samples. Prediction: the call-heavy deltas collapse to the leaf's layout scale
+(a few instructions/op), and `literal-integer` does not move. If they do not
+collapse, my mechanism is wrong — STOP and report the measurement; do not spend
+the panel.
+
+Then the full 192-label comparison against base. The bar is the flag rule as it
+stands. A residual flag is not to be called layout: it must be shown not to be
+a per-op cost, by the same pair deltas at N and 2N in both samples. Stage B
+stays STOP until that holds for every ordinary label.
+
+### Ruling 3 — the dead methods
+
+Delete `consumer_frontier` (both), `last_consumer`, and anything else they keep
+alive; `cargo check --workspace --all-targets` must report no new warning
+against HEAD.
+
+### Ruling 4 — the report must match the tree
+
+Three scope problems: `profiling/logical/totals.rs` changed in the tree but not
+in `changes`; `eval_call_prepare/resume_frames.rs` and
+`ownership_graph/inventory/self_reaching.tsv` listed but unchanged. The
+`totals.rs` edit is `saturating_add` in `RecordPath::pause`, a no-op in
+practice — revert it unless it is needed, and then say why. The other two are
+report inaccuracies to correct. The three reports are regenerated after the
+last edit anyway.
+
+### Accepted
+
+- **The LP04 attribution.** The four `rule-rhs` keys sit on
+  `substitution/binding_substitution.rs:128,133`; they moved only because the
+  deleted `pause_into` edge restored the expression source stack on resume.
+  With the edge gone they return to the LP01 baseline, and my own rerun of
+  `verify_losses.py` passes all four parts (`queued-unchanged` shared=77564
+  changed=0; `mode-confinement` old_only=0 new_only=0; `mass-never-up`
+  lower=610 equal=2574 higher=0, 1,364,160 → 725,052; `executed-receipts`
+  4,375). Accepted.
+- **The pause route.** The previous section ordered `Totals::child` to stop
+  rolling up `pauses`; the tree instead keeps the roll-up and skips adopted
+  records in `PAUSE_PARENT` (`segments.rs:190-206`). It meets the intent —
+  an adopted row carries no descendant pause — while keeping LP02's documented
+  aggregate, and the bars are green at 1/2/2, 2/4/4 and 2/3. Accepted as the
+  better route and recorded here.
+
+### Bars for continuation 8, in order
+
+1. `cargo fmt --check` green.
+2. `cargo check --workspace --all-targets`: zero new warnings against HEAD.
+3. The focused suites unchanged-green: falsifier enabled 1/0 and RED without
+   the switch; `logical_profile_lifecycle` 3/3; `rum-runtime --lib profiling`;
+   `typed_slot_census` with all forced-reds red.
+4. The isolated gate A/B, then the full instruction panel.
+5. Native-stack fixtures and the inline prologue sizes re-measured after the
+   edit (0x1e8/0x3d8/0x1a8 must stay at or below base).
+6. The standing replays the edit invalidates, with the loss bar unchanged.
+7. Workspace green in both feature builds after the last edit, with command
+   and timestamp.
+8. The three reports regenerated and passing `check`, with `changes` matching
+   the tree.
+
+Staged stops: STOP if the gate does not collapse the call-heavy deltas; STOP if
+any ordinary-label residual cannot be shown not to be a per-op cost; STOP if a
+new warning remains. Nothing in this section authorizes touching an LP02 bar,
+the falsifier, or any inventory count.
