@@ -11,17 +11,15 @@ impl Session {
         let profile_start = lexical_profile_start();
         let eval_cache_profile_start =
             evaluation_cache_profile_source_timing_start("definition_rhs_eval_by_source");
-        let runtime_profile_total = runtime_path_timing_start("definition.rhs.total");
+        let runtime_profile_total = runtime_path_timing_start_adopted(self, "definition.rhs.total");
         let result = if option_scope.is_none() && expr_is_self_evaluating_atom(&rhs) {
             Ok(rhs)
         } else {
-            let runtime_profile_evaluate = runtime_path_timing_start("definition.rhs.evaluate");
+            let runtime_profile_evaluate =
+                runtime_path_timing_start_adopted(self, "definition.rhs.evaluate");
             let rhs_result = self.evaluate_with_option_value_scope(option_scope, rhs);
             let witness = slot_witness(&rhs_result);
-            record_profile_runtime_path_timing(
-                runtime_profile_evaluate,
-                runtime_profile_outcome_for_expr_result(&rhs_result),
-            );
+            record_profile_runtime_path_timing_adopted(self, runtime_profile_evaluate, &rhs_result);
             let outcome = match rhs_result {
                 Ok(value) => Ok(value),
                 Err(EvalError::InputRequired { request }) => {
@@ -39,10 +37,7 @@ impl Session {
         };
         record_profile_definition_rhs_eval(profile_start);
         record_profile_definition_rhs_eval_by_source(eval_cache_profile_start);
-        record_profile_runtime_path_timing(
-            runtime_profile_total,
-            runtime_profile_outcome_for_expr_result(&result),
-        );
+        record_profile_runtime_path_timing_adopted(self, runtime_profile_total, &result);
         result
     }
 
@@ -56,26 +51,25 @@ impl Session {
         let profile_start = lexical_profile_start();
         let eval_cache_profile_start =
             evaluation_cache_profile_source_timing_start("definition_rhs_eval_by_source");
-        let runtime_profile_total = runtime_path_timing_start("definition.rhs.total");
+        let runtime_profile_total = runtime_path_timing_start_adopted(self, "definition.rhs.total");
         let result = if option_scope.is_none() && expr_is_self_evaluating_atom(&rhs) {
             Ok(rhs)
         } else {
-            let runtime_profile_evaluate = runtime_path_timing_start("definition.rhs.evaluate");
+            let runtime_profile_evaluate =
+                runtime_path_timing_start_adopted(self, "definition.rhs.evaluate");
             let rhs_result = self.evaluate_with_option_value_scope(option_scope, rhs);
             let witness = slot_witness(&rhs_result);
-            record_profile_runtime_path_timing(
-                runtime_profile_evaluate,
-                runtime_profile_outcome_for_expr_result(&rhs_result),
-            );
+            record_profile_runtime_path_timing_adopted(self, runtime_profile_evaluate, &rhs_result);
             match rhs_result {
                 Err(EvalError::InputRequired { request }) => {
                     let result =
                         self.suspend_definition_application_rhs_evaluation(witness, request);
                     record_profile_definition_rhs_eval(profile_start);
                     record_profile_definition_rhs_eval_by_source(eval_cache_profile_start);
-                    record_profile_runtime_path_timing(
+                    record_profile_runtime_path_timing_adopted(
+                        self,
                         runtime_profile_total,
-                        runtime_profile_outcome_for_result(&result),
+                        &result,
                     );
                     return result;
                 }
@@ -84,10 +78,7 @@ impl Session {
         };
         record_profile_definition_rhs_eval(profile_start);
         record_profile_definition_rhs_eval_by_source(eval_cache_profile_start);
-        record_profile_runtime_path_timing(
-            runtime_profile_total,
-            runtime_profile_outcome_for_expr_result(&result),
-        );
+        record_profile_runtime_path_timing_adopted(self, runtime_profile_total, &result);
         result.map(Some)
     }
 

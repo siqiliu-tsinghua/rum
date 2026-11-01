@@ -3,6 +3,7 @@ use crate::runtime::kernel_api::{
     ContinueToken, ResumeStop, SlotWitness, TypedAction, TypedFrame, slot_witness,
 };
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
+use crate::runtime::profiling::logical::complete_definition_rule;
 use std::sync::Arc;
 
 #[derive(Clone, FrameRootTrace)]
@@ -103,6 +104,8 @@ impl Session {
                     &substituted,
                 );
                 let profile_rule_start = definition_rule_timing_start();
+                let logical_rule =
+                    self.logical_definition_rule_start("up_value_rhs_eval", symbol, index);
                 let result = self.evaluate_definition_application_rhs(option_scope, substituted);
                 record_profile_definition_rule_timing(
                     "up_value_rhs_eval",
@@ -111,6 +114,7 @@ impl Session {
                     profile_rule_start,
                     result.is_ok(),
                 );
+                complete_definition_rule(logical_rule, &result);
                 return result;
             }
 
@@ -183,6 +187,8 @@ impl Session {
                     &substituted,
                 );
                 let profile_rule_start = definition_rule_timing_start();
+                let logical_rule =
+                    self.logical_definition_rule_start("up_value_rhs_eval", symbol, index);
                 let result = self.evaluate_definition_application_rhs(option_scope, substituted);
                 record_profile_definition_rule_timing(
                     "up_value_rhs_eval",
@@ -191,6 +197,7 @@ impl Session {
                     profile_rule_start,
                     result.is_ok(),
                 );
+                complete_definition_rule(logical_rule, &result);
                 return result;
             }
 
@@ -308,6 +315,8 @@ impl Session {
                     &substituted,
                 );
                 let profile_rule_start = definition_rule_timing_start();
+                let logical_rule =
+                    self.logical_definition_rule_start("up_value_rhs_eval", symbol, state.index);
                 let result = self.evaluate_definition_application_rhs(option_scope, substituted);
                 record_profile_definition_rule_timing(
                     "up_value_rhs_eval",
@@ -316,6 +325,7 @@ impl Session {
                     profile_rule_start,
                     result.is_ok(),
                 );
+                complete_definition_rule(logical_rule, &result);
                 return result.map_err(ResumeStop::failure);
             }
             state.index += 1;

@@ -108,27 +108,6 @@ fn runtime_profile_outcome_for_expr_result(
     runtime_profile_outcome_for_result(result)
 }
 
-fn runtime_profile_outcome_for_option_result<T>(
-    result: &Result<Option<T>, EvalError>,
-) -> RuntimeProfileOutcome {
-    match result {
-        Ok(Some(_)) => RuntimeProfileOutcome::Some,
-        Ok(None) => RuntimeProfileOutcome::None,
-        Err(EvalError::Return { .. }) => RuntimeProfileOutcome::Return,
-        Err(EvalError::Thrown { .. }) | Err(EvalError::ThrownBypassingCatch { .. }) => {
-            RuntimeProfileOutcome::Throw
-        }
-        Err(EvalError::InputRequired { .. }) => RuntimeProfileOutcome::InputRequired,
-        Err(_) => RuntimeProfileOutcome::Error,
-    }
-}
-
-fn runtime_profile_outcome_for_internal_result<T>(
-    result: &Result<T, EvalError>,
-) -> RuntimeProfileOutcome {
-    runtime_profile_outcome_for_result(result)
-}
-
 fn runtime_profile_outcome_for_result<T>(result: &Result<T, EvalError>) -> RuntimeProfileOutcome {
     match result {
         Ok(_) => RuntimeProfileOutcome::Ok,

@@ -124,12 +124,18 @@ pub(in crate::runtime) fn enter(epoch: &Arc<Epoch>, record: RecordId) -> Option<
     }
     install(epoch, path, false)
 }
+/// A record that closes locally at `InputRequired`, so the queue never
+/// carries it: every adopted runtime phase, and every definition-rule record.
+fn locally_closed(key: &AggregateKey) -> bool {
+    matches!(key, AggregateKey::Runtime { phase, .. } if PhaseKey::from_name(phase).is_some())
+        || matches!(key, AggregateKey::Definition { .. })
+}
+
 pub(super) fn restore(epoch: &Arc<Epoch>, path: &Arc<RecordPath>) -> Option<Segment> {
     // Adopted phases close locally on InputRequired; only an explicit LP02
     // boundary remains open across the typed queue.
     if !path.is_open() {
-        if matches!(&path.key, AggregateKey::Runtime { phase, .. } if PhaseKey::from_name(phase).is_some())
-        {
+        if locally_closed(&path.key) {
             return path
                 .parent
                 .clone()
@@ -196,8 +202,7 @@ impl Segment {
                     let Some(path) = parent else {
                         break None;
                     };
-                    if matches!(&path.key, AggregateKey::Runtime { phase, .. } if PhaseKey::from_name(phase).is_some())
-                    {
+                    if locally_closed(&path.key) {
                         parent = path.parent.as_deref();
                     } else {
                         break Some((self.epoch.id, path.record));

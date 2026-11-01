@@ -116,11 +116,53 @@ impl crate::runtime::Session {
             policy,
         )
     }
+
+    #[inline]
+    pub(in crate::runtime) fn logical_definition_rule_start(
+        &self,
+        kind: &'static str,
+        symbol: crate::runtime::Symbol,
+        index: usize,
+    ) -> Option<Call> {
+        if !crate::runtime::profiling::lexical_profile_enabled() {
+            return None;
+        }
+        Self::logical_definition_rule_start_slow(self, kind, symbol, index)
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn logical_definition_rule_start_slow(
+        &self,
+        kind: &'static str,
+        symbol: crate::runtime::Symbol,
+        index: usize,
+    ) -> Option<Call> {
+        let index = u32::try_from(index).ok()?;
+        Call::start(
+            self,
+            AggregateKey::Definition {
+                kind,
+                symbol,
+                index,
+            },
+            Policy::OptionalExpr,
+        )
+    }
 }
 
 pub(in crate::runtime) fn finish_logical_expr(
     call: Option<Call>,
     result: &Result<Expr, EvalError>,
+) {
+    finish_logical_total(call, result);
+}
+
+/// `rhs-total` in both overloads: a successful application total is `Ok`,
+/// never `Some`, whatever the overload's carrier is.
+pub(in crate::runtime) fn finish_logical_total<T>(
+    call: Option<Call>,
+    result: &Result<T, crate::runtime::EvalError>,
 ) {
     if let Some(call) = call {
         call.finish(match result {
@@ -146,6 +188,21 @@ pub(in crate::runtime) fn finish_logical_optional(
 pub(in crate::runtime) fn finish_logical_optional_none(call: Option<Call>) {
     if let Some(call) = call {
         call.finish(Outcome::None);
+    }
+}
+
+/// Completes the rule record with the application overload's actual result.
+/// `Err(InputRequired)` marks the pause and closes the record locally.
+pub(in crate::runtime) fn complete_definition_rule(
+    call: Option<Call>,
+    result: &Result<Option<Expr>, crate::runtime::EvalError>,
+) {
+    let Some(call) = call else {
+        return;
+    };
+    match result {
+        Err(crate::runtime::EvalError::InputRequired { .. }) => call.finish_input_required(),
+        other => finish_logical_optional(Some(call), other),
     }
 }
 
@@ -226,6 +283,24 @@ impl PhaseCompletion for crate::runtime::eval_call_prepare::PreparedCallArgument
 
     fn finish_logical(call: Option<Call>, result: &Result<Self, EvalError>) {
         finish_logical_prepared(call, result);
+    }
+}
+
+/// The matcher routes' carrier: a match and a miss both complete the call.
+impl PhaseCompletion for crate::runtime::pattern_matching::CompiledMatchOutcome {
+    fn timing_outcome(
+        result: &Result<Self, crate::runtime::EvalError>,
+    ) -> super::RuntimeProfileOutcome {
+        phase_timing_outcome(result)
+    }
+
+    fn finish_logical(call: Option<Call>, result: &Result<Self, crate::runtime::EvalError>) {
+        if let Some(call) = call {
+            call.finish(match result {
+                Ok(_) => Outcome::Ok,
+                Err(error) => error_outcome(error),
+            });
+        }
     }
 }
 
@@ -481,10 +556,15 @@ pub(in crate::runtime) enum PhaseKey {
     CallStageFunction,
     PrepareArgumentsTotal,
     PrepareArgumentsEvaluateArg,
+    DefinitionRhsTotal,
+    DefinitionRhsEvaluate,
+    DownValuesDirectDefaultLookup,
+    DownValuesCompiledMatcher,
+    SubValuesCompiledMatcher,
 }
 
 impl PhaseKey {
-    pub(in crate::runtime) const ALL: [PhaseKey; 25] = [
+    pub(in crate::runtime) const ALL: [PhaseKey; 30] = [
         PhaseKey::EvaluateTotal,
         PhaseKey::EvaluateOnceUnstable,
         PhaseKey::EvaluateInnerUnstableTotal,
@@ -510,6 +590,11 @@ impl PhaseKey {
         PhaseKey::CallStageFunction,
         PhaseKey::PrepareArgumentsTotal,
         PhaseKey::PrepareArgumentsEvaluateArg,
+        PhaseKey::DefinitionRhsTotal,
+        PhaseKey::DefinitionRhsEvaluate,
+        PhaseKey::DownValuesDirectDefaultLookup,
+        PhaseKey::DownValuesCompiledMatcher,
+        PhaseKey::SubValuesCompiledMatcher,
     ];
 
     pub(in crate::runtime) const fn name(self) -> &'static str {
@@ -541,6 +626,11 @@ impl PhaseKey {
             PhaseKey::CallStageFunction => "call.stage.function",
             PhaseKey::PrepareArgumentsTotal => "prepare_arguments.total",
             PhaseKey::PrepareArgumentsEvaluateArg => "prepare_arguments.evaluate_arg",
+            PhaseKey::DefinitionRhsTotal => "definition.rhs.total",
+            PhaseKey::DefinitionRhsEvaluate => "definition.rhs.evaluate",
+            PhaseKey::DownValuesDirectDefaultLookup => "down_values.direct_default_lookup",
+            PhaseKey::DownValuesCompiledMatcher => "down_values.compiled_matcher",
+            PhaseKey::SubValuesCompiledMatcher => "sub_values.compiled_matcher",
         }
     }
 
@@ -571,6 +661,11 @@ impl PhaseKey {
             "call.stage.function" => 22,
             "prepare_arguments.total" => 23,
             "prepare_arguments.evaluate_arg" => 24,
+            "definition.rhs.total" => 25,
+            "definition.rhs.evaluate" => 26,
+            "down_values.direct_default_lookup" => 27,
+            "down_values.compiled_matcher" => 28,
+            "sub_values.compiled_matcher" => 29,
             _ => Self::ALL.len(),
         };
         Self::ALL.get(index).copied()
@@ -585,8 +680,12 @@ impl PhaseKey {
             | PhaseKey::CallStageDownValues
             | PhaseKey::CallStageSubValues
             | PhaseKey::CallStageOrdinaryBuiltin
-            | PhaseKey::CallStageFunction => Policy::OptionalExpr,
+            | PhaseKey::CallStageFunction
+            | PhaseKey::DownValuesDirectDefaultLookup => Policy::OptionalExpr,
             PhaseKey::PrepareArgumentsTotal => Policy::Prepared,
+            PhaseKey::DownValuesCompiledMatcher | PhaseKey::SubValuesCompiledMatcher => {
+                Policy::Match
+            }
             _ => Policy::Expr,
         };
         AdoptedSite { policy }
@@ -607,12 +706,11 @@ thread_local! {
 
 #[inline(always)]
 pub(in crate::runtime) fn open_phase(
-    session: &mut crate::runtime::Session,
-    phase: &'static str,
+    session: &crate::runtime::Session,
+    key: PhaseKey,
     site: AdoptedSite,
 ) {
-    let key = PhaseKey::from_name(phase).expect("adopted site must have a phase key");
-    let Some(call) = session.logical_phase_start(phase, site.policy) else {
+    let Some(call) = session.logical_phase_start(key.name(), site.policy) else {
         return;
     };
     PHASE_LIFO.with_borrow_mut(|stack| {
@@ -676,8 +774,8 @@ pub(in crate::runtime) fn open_logical_phase(
     if !crate::runtime::profiling::lexical_profile_enabled() {
         return;
     }
-    if let Some(site) = PhaseKey::from_name(phase).map(PhaseKey::site) {
-        open_phase(session, phase, site);
+    if let Some(key) = PhaseKey::from_name(phase) {
+        open_phase(session, key, key.site());
     }
 }
 
@@ -825,3 +923,7 @@ pub(in crate::runtime) use super::tests::engine_support as test_support;
 #[cfg(test)]
 #[path = "../tests/evaluator.rs"]
 mod evaluator;
+
+#[cfg(test)]
+#[path = "../tests/definitions.rs"]
+mod definitions;

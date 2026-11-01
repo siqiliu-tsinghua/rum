@@ -126,7 +126,7 @@ fn runtime_path_timing_start_slow(phase: &'static str) -> Option<RuntimePathTimi
 
 #[inline]
 pub(in crate::runtime) fn runtime_path_timing_start_adopted(
-    session: &mut crate::runtime::Session,
+    session: &crate::runtime::Session,
     phase: &'static str,
 ) -> Option<RuntimePathTimingToken> {
     if !lexical_profile_enabled() {
@@ -139,14 +139,12 @@ pub(in crate::runtime) fn runtime_path_timing_start_adopted(
 #[cold]
 #[inline(never)]
 fn runtime_path_timing_start_adopted_slow(
-    session: &mut crate::runtime::Session,
+    session: &crate::runtime::Session,
     phase: &'static str,
 ) -> Option<RuntimePathTimingToken> {
     let token = runtime_path_timing_start_slow(phase);
-    if let Some(site) = crate::runtime::profiling::logical::PhaseKey::from_name(phase)
-        .map(crate::runtime::profiling::logical::PhaseKey::site)
-    {
-        crate::runtime::profiling::logical::open_phase(session, phase, site);
+    if let Some(key) = crate::runtime::profiling::logical::PhaseKey::from_name(phase) {
+        crate::runtime::profiling::logical::open_phase(session, key, key.site());
     }
     token
 }

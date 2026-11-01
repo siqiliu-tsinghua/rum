@@ -316,6 +316,26 @@ fn baseline(source: &Source) {
     // records add their rejected boundaries and replace seven fabricated macro
     // expansions with witnessed calls. Continuation 7 removes the adopted queue
     // pause machinery and cold enabled helpers; defer-pause consolidation adds one rejected boundary; the generated frontier is 1067 (10/1022/35).
+    // Brief 638 (LP04) shape item A: `open_phase` takes the resolved
+    // PhaseKey and `timing.rs` passes `key.site()` instead of the
+    // `.map(PhaseKey::site)` chain, so the redundant `.expect` row retires
+    // and the two call-form rows re-spell inside RET002 (mod.rs 615->713,
+    // timing.rs 146->147). 1066 (10/1021/35). Ruled by the director
+    // 2026-11-01 (gate-638a1): one redundant rejection retired; no semantic
+    // row and no coverage claim moved.
+    // Brief 638 (LP04) A2: the authorized `&Session` relaxation of the adopted
+    // starters and `open_phase` moves this frontier one level deeper.
+    // `session.logical_phase_start(..)` in `open_phase` was rejected as method
+    // syntax needing an unexpanded receiver reborrow (`&mut Session` ->
+    // `&Session`, mod.rs 713:22-74); with an exact `&Session` receiver it
+    // resolves, and the walk enters `logical_phase_start` -- its only caller --
+    // where it stops at the `!lexical_profile_enabled()` operand (mod.rs
+    // 101:12-65) and at `Self::logical_phase_start_slow` (mod.rs 104:9-60),
+    // both RET002. 1067 (10/1022/35): 1065 rows pair, one retires, two appear,
+    // zero base-only and zero candidate-only, and definitions/roots stay
+    // 7707/7707. The callee's body was previously wholly behind the boundary,
+    // so the analysed surface grew while the row count rose by one. Ruled by
+    // the director 2026-11-01 (R-638-2): no mark and no coverage claim moved.
     assert!(options.rejected.iter().any(|row| row.kind == Kind::RET002
         && row.site.file.ends_with("resolution.rs")
         && row.site.start == (36, 19)

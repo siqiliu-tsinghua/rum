@@ -4,6 +4,7 @@ use super::*;
 use crate::runtime::kernel_api::{ContinueToken, ResumeStop, TypedAction, TypedFrame};
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 use crate::runtime::kernel_api::{SlotWitness, slot_witness};
+use crate::runtime::profiling::logical::complete_definition_rule;
 
 #[derive(Clone, FrameRootTrace)]
 struct SuspendedDownValueApplication {
@@ -65,7 +66,7 @@ impl Session {
 
         if is_system_symbol_name(head, heads::patterns::DEFAULT) {
             let runtime_profile_default =
-                runtime_path_timing_start("down_values.direct_default_lookup");
+                runtime_path_timing_start_adopted(self, "down_values.direct_default_lookup");
             let has_guarded_default_values = definition.has_non_ground_down_values();
             let down_values = definition.down_values.clone();
             let direct_default = self.try_apply_direct_default_value(
@@ -74,9 +75,10 @@ impl Session {
                 has_guarded_default_values,
             );
             let witness = slot_witness(&direct_default);
-            record_profile_runtime_path_timing(
+            record_profile_runtime_path_timing_adopted(
+                self,
                 runtime_profile_default,
-                runtime_profile_outcome_for_option_result(&direct_default),
+                &direct_default,
             );
             match direct_default {
                 Ok(Some(value)) => return Ok(Some(value)),
@@ -228,6 +230,8 @@ impl Session {
             self.record_profile_down_value_application(&symbol);
             let _profile_definition_source = evaluation_profile_definition_source(symbol);
             let profile_rule_start = definition_rule_timing_start();
+            let logical_rule =
+                self.logical_definition_rule_start("down_value_rhs_eval", symbol, index);
             let result = self.evaluate_definition_application_rhs(option_scope, rhs);
             record_profile_definition_rule_timing(
                 "down_value_rhs_eval",
@@ -236,6 +240,7 @@ impl Session {
                 profile_rule_start,
                 result.is_ok(),
             );
+            complete_definition_rule(logical_rule, &result);
             return result.map_err(Route::failure);
         }
 
@@ -331,6 +336,8 @@ impl Session {
             self.record_profile_down_value_application(&symbol);
             let _profile_definition_source = evaluation_profile_definition_source(symbol);
             let profile_rule_start = definition_rule_timing_start();
+            let logical_rule =
+                self.logical_definition_rule_start("down_value_rhs_eval", symbol, index);
             let result = self.evaluate_definition_application_rhs(option_scope, rhs);
             record_profile_definition_rule_timing(
                 "down_value_rhs_eval",
@@ -339,6 +346,7 @@ impl Session {
                 profile_rule_start,
                 result.is_ok(),
             );
+            complete_definition_rule(logical_rule, &result);
             return result.map_err(Route::failure);
         }
 
@@ -357,7 +365,7 @@ impl Session {
             self.compile_down_value_matcher(&application.lhs, &down_value.guards)
         });
         let runtime_profile_compiled_matcher =
-            runtime_path_timing_start("down_values.compiled_matcher");
+            runtime_path_timing_start_adopted(self, "down_values.compiled_matcher");
         let compiled_matcher_start = definition_dispatch_timing_start();
         let match_result = self.match_compiled_owned(
             matcher,
@@ -371,9 +379,10 @@ impl Session {
             "compiled_matcher",
             compiled_matcher_start,
         );
-        record_profile_runtime_path_timing(
+        record_profile_runtime_path_timing_adopted(
+            self,
             runtime_profile_compiled_matcher,
-            runtime_profile_outcome_for_internal_result(&match_result),
+            &match_result,
         );
 
         match match_result {
@@ -464,6 +473,11 @@ impl Session {
         self.record_profile_down_value_application(&application.symbol);
         let _profile_definition_source = evaluation_profile_definition_source(application.symbol);
         let profile_rule_start = definition_rule_timing_start();
+        let logical_rule = self.logical_definition_rule_start(
+            "down_value_rhs_eval",
+            application.symbol,
+            application.index,
+        );
         let result = self.evaluate_definition_application_rhs(option_scope, rhs);
         record_profile_definition_rule_timing(
             "down_value_rhs_eval",
@@ -472,6 +486,7 @@ impl Session {
             profile_rule_start,
             result.is_ok(),
         );
+        complete_definition_rule(logical_rule, &result);
         result.map_err(Route::failure)
     }
 }

@@ -679,8 +679,12 @@ cell must stay green.
 ## Verification — Stage B (measurement campaign)
 
 Only after A2 is green. Read `.temp/brief-624/DESIGN.md:265-328` and run its
-campaign with the director-supplied arms (base tree at `HEAD`, candidate at
-your tree, one codegen unit, separate target dirs, offline, serial):
+campaign with the director-supplied arms (base = the director's clean export
+at `.temp/director/gate-state/worktree`, whose `crates/` equals `e924bb4f`
+and which you already verified against all 1537 snapshotted source files;
+`HEAD` now carries the LP04 candidate, so do not use it as the base;
+candidate = your tree; one codegen unit, separate target dirs, offline,
+serial):
 
 - one-codegen-unit instruction slopes for all 192 ordinary and 121 resume
   labels (`.temp/brief-624/performance/labels.json`), with the
@@ -729,3 +733,33 @@ same table** (LP03's ruling).
   `rum-report/1` at `.temp/brief-638/report-a1.json`, `report-a2.json`,
   `report-b.json`, and `python3 scripts/report.py check 638 --stage a1`
   (etc.) must pass before each stage's final message.
+
+## Director gate — A1 and A2 (2026-11-02)
+
+**`gate-638a1` GREEN** (crates tree `581d68eabe0e`): scope, fmt, check,
+ownership, census (RULED at 1066 then), oracle, standing, fingerprints,
+certificates, inventories and the workspace suite (4,033 passed / 0 failed /
+61 ignored) all passed with both LP03 shape items as written.
+
+**`gate-638a2` GREEN** (crates tree `5e5f243b941c`):
+
+- census RULED at **1067 (10/1022/35)** under R-638-1 and R-638-2: paired
+  1064, retired 3, new 1, base-only 0, cand-only 2; definitions and roots
+  stay 7707/7707. Every moved row is named in Amendment 5's ruling.
+- oracle PASS after Amendment 6's constructor replay: 175 live contexts,
+  177 with the two preserved clone-return fixtures, both builds.
+- standing lp01 1/0 and typed-slot 10/0; fingerprints 68 contracts with 0
+  changed; certificates pass in both builds with 0 promoted rows merged;
+  inventories 19 passed / 0 failed with the frontier at 1067.
+- **workspace PASS in both builds**, run by the director outside the
+  sandbox: default 4,037 passed / 0 failed / 61 ignored (peak 13.5 GiB of
+  14, oom_kill 0); `--no-default-features` 4,037 / 0 / 61 (peak 8.6 GB,
+  oom_kill 0).
+- A2 self-flagged one scheduling overlap (fmt and fingerprint generation in
+  flight together, both green). It reached no measurement and no source
+  decision; recorded here so it is not mistaken for a rerun artifact.
+- The two helpers A2's adopted starts orphaned
+  (`runtime_profile_outcome_for_option_result`,
+  `runtime_profile_outcome_for_internal_result`) were deleted under
+  Amendment 5. The only warnings left are the three pre-existing
+  `register_test_*` ones.

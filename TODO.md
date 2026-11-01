@@ -112,6 +112,29 @@ does the same work, only without its profiling hooks.
   - Shape items carried to LP04: that second `.expect`, and `open_phase`'s
     `.expect` after its only caller already proved `Some`.
 
+- **LP04** (brief-638): the definition RHS, rule and dispatch records.
+  - Both RHS overloads are adopted (`definition.rhs.total`,
+    `definition.rhs.evaluate`), plus the direct-default lookup and both
+    compiled-matcher routes; the five keys are appended (25 -> 30) and
+    `finish_logical_total` keeps a successful application total `Ok` in both
+    carrier shapes.
+  - The rule record is a `Call` the call site holds, opened at each of the
+    eight `definition_rule_timing_start` sites and closed by
+    `complete_definition_rule`, whose `InputRequired` arm marks the pause
+    locally; `segments.rs`'s `locally_closed` now covers
+    `AggregateKey::Definition`, so no queue carries a rule record.
+  - Both LP03 shape items landed: `open_phase` takes the `PhaseKey` it was
+    given, and the adopted starters plus `open_phase` take `&Session` (the
+    direct-default site holds an immutable borrow of `self.definitions`).
+    The two helpers those routes orphaned are deleted.
+  - The rejection census is **1067 (10/1022/35)** under R-638-1/R-638-2: the
+    `&Session` receiver resolves `open_phase`'s single call edge, so the walk
+    enters `logical_phase_start` and stops at two sites inside it. The
+    constructor inventory is 175 (177 with the clone fixtures) for the same
+    reason.
+  - `gate-638a2` GREEN; workspace 4,037 passed / 0 failed / 61 ignored in
+    both builds. Stage B (the cost campaign) follows.
+
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its
 successors. Write them at the granularity `TEMPLATE.md` now records. Then come C2's remaining 353 rows on the final source, the manifest
