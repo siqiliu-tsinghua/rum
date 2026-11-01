@@ -80,6 +80,33 @@ After both: replay the inventories this source edit invalidates (contracts
 first, then certificates and promoted rows), rerun the census, and complete
 A2's acceptance. Then Stage B.
 
+**Amendment 6 (2026-11-02, the gate's oracle red and the workspace duty).**
+A2's remaining red is a derived inventory the A2 run list missed, and the
+workspace duty moves to me.
+
+1. **The constructor inventory is 175 (and 177).** The gate's `oracle` step
+   runs `exact_types_and_constructor_claims_match_rustc`
+   (`crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/exact.rs`),
+   which no A2 run covered. It fails at `total 175` against the recorded 174,
+   by the same deeper walk as R-638-2: `logical_phase_start` was never entered
+   while the `:713` call was rejected, and its early `return None`
+   (`logical/mod.rs:102:20-102:24`, `Option<Option<Call>>::None`) is exactly
+   one new live constructor context. Every other context is intact (the run
+   prints 175 rows, one of them in `logical/mod.rs`). Update the two
+   expectations (174 -> 175, 176 -> 177) and the comment with this reason,
+   then run the test in both builds and disclose the change as a derived
+   inventory replay. Do not hand-edit any other row of any inventory.
+2. **The two full workspace suites are mine.** The sandbox cannot reach the
+   systemd user bus, so `scripts/memory-scope.sh` fails before cargo. Do not
+   attempt `cargo test --workspace` again, and never run it unscoped; the
+   gate runs both builds outside the sandbox at 14G and eight threads. That
+   is the A2 acceptance item that stopped the last two continuations, and it
+   is now the director's.
+
+After the oracle test is green in both builds, report A2 complete with the
+run logs and **stop**: do not start Stage B in that continuation. Stage B is
+dispatched only after I gate A2.
+
 ## Goal
 
 Adopt the definition RHS, definition-rule and definition-dispatch phases —
@@ -695,9 +722,9 @@ same table** (LP03's ruling).
 - No version-control command in any form; leave the tree for the director.
 - No network, no new dependency, no `unsafe`, no default-path cost.
 - Keep every legacy recorder and `phase-sites.tsv` untouched.
-- Full workspace runs use `RUST_TEST_THREADS=8` (user ruling 2026-11-01) in
-  `scripts/memory-scope.sh` at 14G; timing, perf and callgrind runs are
-  serial and alone with profiling off.
+- The two full workspace suites belong to the director's gate (Amendment 6):
+  your sandbox cannot open the user scope, so do not run them at all. Timing,
+  perf and callgrind runs are serial and alone with profiling off.
 - Paste real output; say plainly what did not run. The report is
   `rum-report/1` at `.temp/brief-638/report-a1.json`, `report-a2.json`,
   `report-b.json`, and `python3 scripts/report.py check 638 --stage a1`
