@@ -18,6 +18,16 @@ appending five keys to `PhaseKey::ALL` necessarily changes, and
 shape item A changes. Both are authorized below, narrowly. The STOP was the
 scope rule working; no source was touched.
 
+**Amendment 2 (2026-11-01, director's census ruling R-638-1):** A1's shape
+item A moved the rejection census from 1067 to 1066 (10/1021/35). One
+redundant `.expect` rejection retired and two call-form rows re-spelled
+inside RET002 (`mod.rs` 615->713, `timing.rs` 146->147); no semantic row and
+no coverage claim moved. As `TEMPLATE.md` requires, the director ruled and
+updated `crates/rum-stdlib/src/tests/retention_closure/census/tests.rs`
+himself. That file is already modified in your tree: **do not edit it**, and
+list it in your A2 `changes` with why `director census ruling R-638-1` so the
+gate's tree check stays exact.
+
 ## Goal
 
 Adopt the definition RHS, definition-rule and definition-dispatch phases —
@@ -91,6 +101,10 @@ Files you MAY modify:
 - `crates/rum-runtime/src/runtime/profiling/timing.rs` — the
   `runtime_path_timing_start_adopted_slow` body only, at `:149`, for shape
   item A (resolve the key once and pass it). Nothing else in that file.
+- `crates/rum-stdlib/src/tests/retention_closure/census/tests.rs` — **already
+  modified by the director** under Amendment 2 (the expected frontier is now
+  1066 = 10/1021/35). Do not edit it; include it in A2's `changes` as
+  instructed there.
 - `crates/rum-host/tests/lp04_definition_rows.rs` (new; my falsifier,
   inserted verbatim from the `.temp` copy)
 - the standing inventories named under **Inventory replay** below.
