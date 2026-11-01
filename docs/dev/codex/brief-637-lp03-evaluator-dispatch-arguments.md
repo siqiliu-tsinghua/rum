@@ -1693,3 +1693,147 @@ Staged stops: STOP if `deletecases-leaf-delete-small` lands in a rum function
 that the adopted phases reach; STOP if any adopted row appears anywhere in
 the panel's attribution; STOP at any inventory or test that moves to make a
 flag green.
+
+## Director gate — continuation 12 (2026-11-01): the dispatch loop charges eleven instructions a call
+
+Continuation 12 built the leaf and append tables and stopped where the staged
+rule said to stop. I rebuilt both tables from the raw profiles myself: the
+per-function own slopes sum to each sample's total slope exactly, to the
+digit, on all six samples of both labels. The tables are real, and the STOP
+was correct — `resume_call_with_dispatch_plan` is the function the adopted
+stage phases are recorded inside.
+
+### The leaf, in full
+
+`deletecases-leaf-delete-small`, per-sample total slopes: base 63,221.206 /
+63,221.178 / 63,234.822, candidate 63,632.750 / 63,543.710 / 63,539.856.
+Delta +411.544 / +322.532 / +305.034 own instructions per operation. Every
+row of the table:
+
+- `__memcmp_avx2_movbe` **+368.262 / +368.004 / +367.782**, call slopes
+  275.986 / 275.98 / 276.02 against 275.998 / 275.98 / 276.012 — identical
+  to 0.004 %. This is the external class.
+- `rum_core::expr::Symbol::system` own 201.7 / 251.7 / 251.7 against 333.4 /
+  252.4 / 252.1, four calls an operation on both arms. Bimodal in *both*
+  arms: the modal value is 62.9 against 63.06 instructions a call, and each
+  arm has one process on the minority path. A mean over these samples
+  measures the sampler, not the code.
+- `resume_call_with_dispatch_plan` **121.0 / 121.0 / 121.0 against 132.0 /
+  132.0 / 132.0**, exactly one call an operation on both arms. Deterministic
+  to the instruction across three processes: a rum-side regression of eleven
+  instructions per call.
+- `evaluate` −20.00 and `evaluate_inner` −38.00, deterministic, savings.
+
+So the leaf's positive delta is one external row, one bimodal row, and eleven
+instructions a call of rum's own code.
+
+### The append label, in full
+
+- `resume_call_with_dispatch_plan` **+1,144.0 in every sample**, call slope
+  104.0 on both arms. That is the same eleven instructions a call, seen 104
+  times.
+- `__memcmp_avx2_movbe` +971.030 / +978.120 / +977.370, call slopes 2421.08 /
+  2420.89 / 2420.96 against 2420.86 / 2420.98 / 2421.02 — the external class
+  again.
+- `evaluation_cache::stability` own 426,745.5 / 426,765.9 / 428,362.4
+  against 441,476.7 / 456,106.3 / 402,746.1 at an identical call slope of
+  2,623. Per call: 162.7 / 162.7 / 163.3 against 168.3 / 173.9 / 153.5.
+- Deterministic savings: `evaluate` −900 and −3,904, `eval_call_prepare`
+  −1,430, `resolution::evaluate` −4,821.
+
+The label's whole delta (−37,533 … +18,912) is inside the spread of one
+untouched function's own row.
+
+### Ruling 1 — the external class lapses on any non-zero rum row
+
+My continuation-11 wording said "zero adopted rows on rum's side". That test
+inspects the adopted recorders only, and this leaf has a rum row that came
+out of the adopted plumbing without being inside a recorder. The wording was
+too narrow and the row slips through it. It is now: **a positive delta
+carried entirely by an external symbol, with identical call slopes on both
+arms and no non-zero rum-side row anywhere in the table, is recorded, not
+charged.** Any rum row lapses it.
+
+The leaf therefore is not closed by the external class. It cannot be closed
+until the dispatch row is gone.
+
+### Ruling 2 — eleven instructions a call in the dispatch loop is a defect
+
+The bar is not a percentage of a benchmark. `resume_call_with_dispatch_plan`
+is the interpreter's call dispatcher: it runs once for every evaluated call
+in every program, and its own cost per call rose from 121 to 132 instructions
+(+9.1 %). That is default-path cost paid for logical profiling that is off.
+The hard line in CLAUDE.md is explicit: no default-path cost for
+diagnostics. Recorded against a label it dilutes to 0.017 %; against the
+function it is 9.1 %.
+
+I probed the cause before briefing it, and the first hypothesis was wrong:
+
+- Bisect over the build snapshots at the leaf's panel N/2N, own instructions
+  per call: base **121.0**, mid-c8 71.5 at a different call shape (2 call
+  slots per operation, not comparable), c9-era **139.0**, c10-era **129.0**,
+  final **132.0** (`.temp/director/c13-bisect.tsv`).
+- Disassembly: the candidate spills the phase pointer to `0x50(%rsp)` and
+  reloads it at six places, spills `&plan.stages` in the prologue, sets the
+  seventh argument with `sub $8` / `push` / `add $16` where base stored it
+  into a reserved slot, and pays an extra compare against the token sentinel.
+- Probe: I removed the phase hoist — the two finish helpers now take the
+  phase from the token (`let Some(token) = token.as_ref() else { return }`,
+  then `PhaseKey::from_name(token.key.phase)`) and `pause_phase_at_finish`
+  recomputes `stage.profile_name()` in its cold arm — built it, measured it,
+  and restored the tree (hashes verified). Result: **131.0**. The phase hoist
+  is worth one of the eleven.
+
+So the remaining ten are spread across the restructured loop and must be
+found by measurement, not by argument.
+
+### Ruling 3 — the append withdrawal stands on the noise floor
+
+The continuation-12 prerequisite ("zero rum-side rows before the withdrawal
+stands") was the wrong test and is retired. `evaluation_cache::stability` is
+untouched by this diff, its call slope is identical at 2,623 on both arms,
+and its own per-call cost swings 153.5–173.9 across candidate processes
+against 162.7–163.3 on base. An untouched control moving by ±27,000 per
+operation is the noise floor, and the label's delta is inside it. The row is
+withdrawn as undecidable.
+
+But the asymmetry is an open obligation, not a conclusion: base is tight and
+candidate is wide, so the candidate is taking a different path in that
+function on some processes. The layout-control arm must reproduce it. If it
+does, record it as the layout class; if it does not, it stays open.
+
+### Ruling 4 — bimodal rows are read by modal value
+
+`Symbol::system` here, like the `deletecases-wide-association-no-match` row
+before it, is a process-level bimodality in an untouched function with an
+identical call slot count. The panel reports every sample; the verdict uses
+the modal value; an arm whose modal value moves is a defect.
+
+### What continuation 13 must do
+
+1. **Reduce the dispatcher's own cost.** Bar: own instructions per call in
+   `resume_call_with_dispatch_plan`, measured at the leaf label's panel N and
+   2N with the c12 instrument, **at most 123 in every sample** (base 121 plus
+   two). Keep the probe's shape as the starting point — it removes a
+   redundant parameter, makes the token's invariant type-enforced, and is
+   worth one instruction. If 123 is not reachable, report the residual per
+   instruction (address, what it is, why the semantics need it) and STOP for
+   my ruling: do not widen the bar yourself.
+2. **Close the class, not the instance.** List every site that holds a phase
+   name, a token, or a witness across a call in a frame that runs on the
+   default path, with `path:line`, and give each one the same measurement or
+   the same fix.
+3. Re-run the leaf and append attribution at panel N/2N, three samples per
+   arm, and show that the leaf's only remaining positive rows are the
+   external class and the bimodal row.
+4. The layout-control readout for `evaluation_cache::stability` on the append
+   label.
+5. Then the full panel and the acceptance battery unchanged from the eight
+   bars: focused suites, prologues and native-stack fixtures, the standing
+   replays and the loss bar, both workspace builds, the 48-program
+   correctness campaign, and the regenerated reports with `changes` matching
+   the tree.
+
+Staged stops: STOP after step 3 if the dispatcher bar is not met. STOP at any
+inventory or test that moves to make a flag green. STOP if a fix moves the
+own cost of any other rum function up by more than two instructions a call.
