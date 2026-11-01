@@ -1023,3 +1023,132 @@ phase and which ordering was wrong.
    mode-confinement, mass-never-up, executed-receipts 4,375), both Stage A
    verification sets, the per-target diagnosis with quoted verdict lines, and
    `a1`/`a2` reported separately. Then Stage B.
+
+## Director gate — continuation 5 (2026-11-01): the stop is right; the carrier cannot cross
+
+Continuation 5 fixed finding 3's instance and stopped on three blockers. I
+reproduced what matters; the stop is accepted, but one of its claims is a
+ruling question and its workspace evidence is stale.
+
+### What I reproduced
+
+The falsifier is green with the switch (rebuilt from the final tree):
+
+```
+RUM_PROFILE_LEXICAL_SUBSTITUTION=1 cargo test -p rum-host --test lp03_phase_rows
+test lp03_adopted_phases_are_exact_in_completed_and_resumed_runs ... ok
+```
+
+`logical_native_lifecycle` is red on the **final** tree — the case is the
+interleaved moved-session block at `:246-255`:
+
+```
+panicked at crates/rum-host/tests/logical_profile_lifecycle.rs:55:5
+  left:  [2, 0, 0, 0, 0, 0, 0, 0, 2, 0]
+ right:  [2, 2, 0, 0, 0, 0, 0, 0, 0, 0]
+rum-profile logical epoch=1074 valid=false reason=InstrumentationFault
+```
+
+gdb on that child, breakpoint `Epoch::fault`:
+
+```
+#0 Epoch::fault
+#1 ProfileBoundary::observe              logical/mod.rs:945
+#2 ProfileQueue::observe_boundaries      profile_queue.rs:275
+policy = Policy::OptionalExpr            $1 = RecordId(1124)
+```
+
+Record 1124 is the `call.stage.ordinary_builtin` record, created at
+`resume_call_with_dispatch_plan` and faulted when the session resumes on the
+spawned thread. The A2 nested-cleanup stop names the same record.
+
+**The report's workspace evidence is stale.** `final-workspace-default-2.log`
+is timestamped 09:25; five sources changed after it — `profile_queue.rs` 09:31,
+`logical_profile_lifecycle.rs` 09:32, `resolution.rs` 09:36, `logical/mod.rs`
+09:47, `arena.rs` 09:49. `typed-macro-identity-stop` cites that log. From now
+on a workspace claim must come from a run made after the last edit, with its
+command and its timestamp.
+
+### Why the boundary cannot complete — the source, not a guess
+
+```rust
+// suspension/typed/registry.rs:24
+impl Codec for Option<Expr> { type Mode = LegacyMode; }
+// suspension/typed/registry.rs:328
+impl Codec for PreparedCallArguments { type Mode = LegacyMode; }
+```
+
+`LegacyMode` encodes to `Slot::Value` (`typed/channel.rs:101`), and
+`ProfileBoundary::observe` accepts `Policy::OptionalExpr` only as
+`Slot::State(ContinuationState::OptionalExpr(_))` (`logical/mod.rs:934`);
+anything else faults (`:944-947`). The flip to `StateMode` is refused until
+S54 — `preflip_no_legacy_transport_uses` asserts that refusal.
+
+So a paused record whose policy is `OptionalExpr` or `Prepared` **can never be
+satisfied**. Whether it faults is decided only by whether the queue reaches
+it. In the falsifier's programs it does not: I traced every observation at
+`observe`'s entry — 24, all `Policy::Expr`. In the nested-cleanup and
+moved-session cases it does.
+
+### The ruling
+
+1. **A record may pause into the queue only when its carrier crosses the typed
+   channel — `Policy::Expr`.** An `OptionalExpr` or `Prepared` record
+   terminates at the pause, finished with the `InputRequired` outcome, which
+   the counts map to `err` (`error_outcome`, `logical/mod.rs:89-97`). This is
+   what `runtime-path-timing` already records: one `input_required` terminal,
+   and a new call on resume.
+   - `call.stage.*`: finish at the pause. The resumed dispatch already opens a
+     fresh stage record at the top of its loop, so the resumed half is the
+     second record.
+   - `prepare_arguments.total`: the resumed half is the finalizer's
+     (`finish_logical_prepared_total`). Choose between a record-riding
+     completion and a fresh open on the resume side, and prove the choice with
+     the falsifier — the paused program must still show `ok > 0` for that row,
+     `open == 0`, `abandoned == 0`.
+   - Make the rule structural: a debug assertion or a test that every inserted
+     boundary's policy is `Expr`.
+2. **Delete what the rule makes dead.** A record that never pauses needs no
+   frontier: `captures_at_start()` for `CallStage*`, `AdoptedSite::after_consumer`,
+   `Call::frontier`/`_frontier_storage`/`capture_frontier` and
+   `logical_frontier_after_consumer` should disappear if nothing else uses
+   them. Do not leave `#[allow(dead_code)]` to hide a survivor — the compiler
+   is the proof.
+3. **The `arena.rs` insertion walk**: prove it with a named check or remove it.
+   My control — reverting exactly that hunk, rebuilding, rerunning
+   `logical_native_lifecycle` — changed nothing (same `[2,0,…,2,0]`).
+4. `logical_native_lifecycle`, `logical_native_nested_pause_counts` and
+   `logical_native_source_scope_survives_resume` must pass. The moved-session
+   case is the class-wide detector: an epoch fault is a defect, not a bar.
+   `pauses_for("native")` is an acceptable scoping of the LP02 counter and
+   stays.
+
+### Inventory rulings — mine to make, not the worker's
+
+- **Retention frontier: accepted at 1074 (10/1028/36).** I diffed the dump
+  against `gate-state/587d0bff…/frontier.tsv`: 76 new rows, 41 gone. Every new
+  row is an unresolved site in the three edited files — 72 RET002
+  (method-syntax, closure, trait call), 3 RET003 (macro expansions) and one
+  RET001 (`resolution.rs:346`, `Vec::new`, replacing a removed one). RET001
+  stays at 10, so no new allocation appears. Regenerate it with the census;
+  never hand-edit, and disclose every changed row.
+- **Typed-slot M receipt: a move, not a defect — and only if witnessed.** The
+  seven macro expansions moved into `#[cold] #[inline(never)]` helpers because
+  the hot-frame rule requires it; the receipt records the caller identity, so
+  the move shows up there by construction. Accept the seven new identities
+  **only if** `witnessed::insertion` covers each by an existing transition;
+  otherwise STOP naming the identity and the missing witness. Edit
+  `typed-slot-stages.tsv` only: add the new rows, mark the old ones `removed`,
+  and leave `exact()`, the counts 629/607/62/14/10/90/134 and
+  `shadowing_a_witness_in_a_cold_helper_is_red` untouched.
+
+### What continuation 6 must do
+
+1. Apply the pause rule and delete what it makes dead. Falsifier green with the
+   switch, RED without it; `logical_profile_lifecycle` 3/3.
+2. Re-run the workspace **after the last edit** and paste the command, its
+   timestamp and the failing-test list (empty).
+3. Then the rest of A2: the standing replay with the amended loss bar
+   (queued-unchanged, mode-confinement, mass-never-up, executed-receipts
+   4,375), both Stage A verification sets, the per-target diagnosis with quoted
+   verdict lines, and `a1`/`a2` reported separately. Then Stage B.
