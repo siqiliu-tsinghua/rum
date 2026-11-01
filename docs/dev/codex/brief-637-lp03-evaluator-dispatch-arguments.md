@@ -1571,3 +1571,72 @@ Everything else from the previous section stands: the focused suites, the
 prologues and native-stack fixtures, the standing replays, both workspace
 builds and the regenerated reports are all part of this continuation's bars,
 in that order.
+
+## Director gate — continuation 10 (2026-11-01): two residuals are real, one sample is bad
+
+The wrappers are fixed: callgrind reports zero adopted positive deltas, and
+`nm` shows only the `_slow` halves. That part is closed.
+
+### What the panel actually says
+
+I recomputed the slopes from the raw runs of both panels.
+
+- `deletecases-wide-association-no-match`: base 7,515,628 / 7,515,129;
+  candidate in continuation 7 7,544,080 / 7,543,606, in continuation 10
+  7,713,780 / 7,543,866. Five candidate samples sit at 7.544 M and one at
+  7.714 M — that one sample is a 2.2 % outlier, and it is the sample that
+  produced the +198,151 pair delta.
+- `keysort-default-wide`: candidate 8,301,552 / 8,301,084 (c7) and 8,301,509 /
+  8,300,843 (c10); base 8,271,633 / 8,274,002. That is a stable **+0.36 %**,
+  reproduced across two panels and four samples.
+
+So two residuals are real code, not variance: `deletecases-wide…` +0.38 % and
+`keysort-default-wide` +0.36 %. `appendto-part-outer1000-small` is unstable in
+both panels and `deletecases-leaf-delete-small` sits 0.4 % past the control
+envelope; neither is decidable as it stands.
+
+### Ruling 1 — never average an outlier; report every sample
+
+The panel reports per-sample slopes, and a sample outside 0.5 % of the arm's
+other samples on a label is re-run, not averaged in. The +198,151 row is
+withdrawn.
+
+### Ruling 2 — attribute a per-op cost with per-function *slopes*, not budgets
+
+The callgrind budget is `min(N, 2000, floor(20M/base_slope))` — for an 8 M
+instruction label that is N = 2, which measures setup, not per-op work; it
+found the +18/call wrapper cost because that one is call-counted, and it
+cannot be used to clear a per-op residual. For `deletecases-wide…` and
+`keysort-default-wide`, run callgrind at the panel's own N and 2N on both
+arms and diff **per-function instruction slopes**, three runs per arm. The
+table names the function that carries the +28 000 and says whether it is
+adopted or untouched.
+
+### Ruling 3 — one recorder per stage, and it owns the completion
+
+Read the enabled path of the two dispatch loops as it now stands: base pays
+one switch check in `runtime_path_timing_start` and one in
+`record_profile_runtime_path_timing`; the candidate pays those two **and** a
+third test in `complete_phase_optional_at_finish`, plus a second
+`PhaseKey::from_name` when the switch is on. That third call is the only
+per-stage work left that base does not have.
+
+The recorder that already takes the token must own both duties: record the
+legacy outcome and finish the logical phase, in one call, one switch check,
+one name lookup. `record_profile_runtime_path_timing_adopted` is already that
+shape for the generic case; `resume_call_with_dispatch_plan` and
+`resume_suspended_call_with_dispatch_plan` get the optional-value variant and
+stop calling `complete_phase_optional_at_finish` separately. The suspension
+paths keep their cold `pause_phase_at_finish`.
+
+Do this **after** the attribution, and only if the table points at the
+per-stage completion. If the +28 000 lands in an untouched function, STOP with
+the table — that is a codegen regression of the same class as
+`function-slot-apply`'s −80, and I will rule on it separately.
+
+### Bars for continuation 11
+
+The same eight as before, in the same order, plus: the attribution table
+before the fix, per-sample slopes in the panel, and every outlier re-run and
+reported. The four outside-envelope labels must come out either below the
+control envelope or attributed to a named function with a named mechanism.
