@@ -1529,3 +1529,45 @@ after the token change — the mechanism is back and I want the table, not a
 fix. STOP if the attribution lands in untouched functions and no layout-control
 arm has been run. STOP at any inventory or test that moves to make a flag
 green.
+
+## Director gate — continuation 9 (2026-11-01): the two wrappers that never inlined
+
+The attribution is clean: +18 instructions per call, the same on all 14 rows
+and in all three samples, inside `record_profile_runtime_path_timing_adopted_ok`
+and `_adopted_none`. I read the binary to find out why.
+
+- `nm -S` on the token build: `..._adopted_ok` at `0x751690` is 266 bytes and
+  `..._adopted_none` at `0x7517a0` is 269 bytes — both are **outlined whole**,
+  so every call pays call, prologue, spills and epilogue even when the switch
+  is off. `..._adopted_slow` (`0xe4720`) and `..._defer_pause_slow` (`0xe4810`)
+  are outlined cold halves, and their wrappers do inline: they are absent from
+  the symbol table, and so is the base's `record_profile_runtime_path_timing`.
+  That is the 18.
+- The cause is shape, not cost: `_ok` and `_none` are one-level — the body sits
+  directly inside the `#[inline]` function — while the other two and the base
+  recorder are two-level, gate in the wrapper and body behind
+  `#[cold] #[inline(never)]`. LLVM declined to inline a 266-byte body and paid
+  the call instead.
+
+### Ruling
+
+Give `record_profile_runtime_path_timing_adopted_ok` and `_adopted_none` the
+same two-level shape as the two that work: the `#[inline]` wrapper keeps only
+the switch gate and delegates to a `#[cold] #[inline(never)]` slow function
+holding the body exactly as it stands. Change nothing else.
+
+Verify in this order:
+
+1. `nm -S` on the new build: neither name appears as an outlined whole; only
+   the `_slow` halves do.
+2. Callgrind, the same seven labels, three runs per arm, same budgets: no
+   adopted recorder may carry a positive per-call delta. Callgrind is
+   deterministic, so the target is zero, not "small".
+3. The full 192-label panel with the `valueq-undefined-symbol-definitions-8000`
+   exclusion. If positive flags remain and no adopted helper appears in the
+   attribution, run the layout-control arm and read the flags against it.
+
+Everything else from the previous section stands: the focused suites, the
+prologues and native-stack fixtures, the standing replays, both workspace
+builds and the regenerated reports are all part of this continuation's bars,
+in that order.
