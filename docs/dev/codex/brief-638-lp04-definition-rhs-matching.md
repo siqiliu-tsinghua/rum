@@ -1019,3 +1019,35 @@ samples per arm, round-robin, `min(repair) > max(control)`), then copy,
 allocation, layout and lifecycle, then timing last. If it does not hold,
 report the exact added instructions and stop; do not improvise a fifth
 shape.
+
+**Amendment 11 (2026-11-02, Q1 answered: no new export, no scope change).**
+
+The scope STOP is right, and the remedy is not to widen Scope. The
+`_under_gate` legacy entry is unnecessary: `definition_rule_timing_start()`
+is already exported to the runtime and already checks the gate in its own
+inline head, so calling it *under* the site's `enabled` flag reads the gate
+once on the disabled path (the enabled path re-reads, and CSEs; it is not
+the hot path). The logical under-gate opener is the existing slow body in
+`logical/mod.rs`, made callable at `pub(in crate::runtime)` and keeping
+`&Symbol` with the clone inside:
+
+```rust
+let enabled = crate::runtime::profiling::lexical_profile_enabled();
+let profile_rule_start = if enabled {
+    definition_rule_timing_start()          // already exported; re-checks on the enabled path only
+} else {
+    None
+};
+let logical_rule = if enabled {
+    self.logical_definition_rule_start_under_gate(kind, &symbol, index)  // cold, &Symbol, clones inside
+} else {
+    None
+};
+let result = self.evaluate_definition_application_rhs(option_scope, rhs);
+record_profile_definition_rule_timing(kind, &symbol, index, profile_rule_start, result.is_ok());
+complete_definition_rule(logical_rule, &result);
+```
+
+Every file this needs is already in Scope; `crates/rum-runtime/src/runtime/
+profiling/mod.rs` stays untouched. Everything else in Amendment 10 stands,
+including the checkpoint and the ban on a fifth shape.
