@@ -947,3 +947,75 @@ Timing stays last, after the five rows are at base and the panel is green.
 Everything else stands: the observation is unchanged, census 1067,
 constructors 175/177, 4,375 receipts, the four ledger bars, the 44 stack
 fits green.
+
+**Amendment 10 (2026-11-02, round 3 accepted where it aimed; the merged
+*value* is the wrong abstraction, the merged *gate* is the right one).**
+
+Accepted from round 3, re-read from the matrix and address proof:
+
+- **The one-word token works where it was aimed.** The three completion rows
+  are now *below* base: 172/156/156 against 173/157/157 (-1 per call), in
+  both argument forms once the token is 8 bytes. Production keeps the
+  8-byte borrowed cell.
+- **Stack stays closed in production**: 528 correct probes, 44
+  zero-residual fits, no growth against base. The release up frame is
+  1008 -> 1024 (+16) and `evaluate_definition_application_rhs` is -112 per
+  level, netting the measured -96. The two scratch by-value cells grow (21
+  and 2 shapes) and were not promoted; the +48 entry reservation is a static
+  bound, not the live chain.
+- **The token shape does not explain the two recursion rows.** All four
+  cells (token 16/8 x symbol value/borrow) keep `+2` per call in both
+  recursion contexts. The exact added instructions are named: down-value
+  reloads the spilled session pointer twice from `rsp+0x10`; up-value copies
+  `rsi` to `r12` and reloads the saved pointer from `rsp+0x340` into `rbx`.
+  This is a register-allocation consequence of the merged value, not a
+  second gate read and not the symbol argument.
+
+**R-638-4: keep one gate, keep base's two values.** Amendment 7's "one
+token per site" was my instruction, and the measurements retire it: base's
+own two-value shape allocates no spill in either recursion context, while
+every merged-value cell does. What round 1 actually needed was one *gate
+read* per site, not one value. Merge the gate and leave the values as LP03
+had them:
+
+```rust
+let enabled = crate::runtime::profiling::lexical_profile_enabled();
+let profile_rule_start = if enabled {
+    crate::runtime::profiling::definition_rule_timing_start_under_gate()
+} else {
+    None
+};
+let logical_rule = if enabled {
+    self.logical_definition_rule_start_under_gate("down_value_rhs_eval", &symbol, index)
+} else {
+    None
+};
+let result = self.evaluate_definition_application_rhs(option_scope, rhs);
+record_profile_definition_rule_timing(
+    "down_value_rhs_eval", &symbol, index, profile_rule_start, result.is_ok(),
+);
+complete_definition_rule(logical_rule, &result);
+```
+
+- Both `_under_gate` entries are `#[cold] #[inline(never)]` and *assume*
+  the gate already passed; the legacy one calls the existing slow path, the
+  logical one is `logical_definition_rule_start_slow` with `&Symbol` and the
+  clone inside. Nothing but the gate is inlined at a site.
+- The disabled path is one gate read (two relaxed loads and a branch), two
+  `None` values — exactly LP03's live set — and no call. Delete
+  `DefinitionRuleTimingToken`, `DefinitionRuleRecord` and the const
+  assertion; the Box per rule goes away with them.
+- The observation is unchanged: legacy start first, logical start second,
+  the same completion order (legacy timing record, then the rule), the same
+  row names, the four ledger bars, 4,375 receipts, census 1067,
+  constructors 175/177.
+
+**Checkpoint, then the panel.** Rebuild base, control and candidate and run
+only the five labels. Require `finish_suspended_down_value_application` at
+or below 173/157, `try_apply_down_values_from_symbol'2` at 104 and
+`try_apply_up_values'2` at 119, and the 44 stack fits zero-residual against
+base. If that holds, run Stage B with Amendment 9's instrument (five
+samples per arm, round-robin, `min(repair) > max(control)`), then copy,
+allocation, layout and lifecycle, then timing last. If it does not hold,
+report the exact added instructions and stop; do not improvise a fifth
+shape.
