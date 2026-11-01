@@ -34,6 +34,23 @@ certificates, inventories and the workspace suite (4,033 passed, 0 failed,
 61 ignored) all pass on the tree you left. Begin at **A2**; do not redo A1's
 routes or its shape items.
 
+**Amendment 4 (2026-11-01, A2's two STOPs ruled).** Both are accepted, and
+both remedies are now in the brief:
+
+1. **`&Session` starters.** The direct-default start at `down_values.rs:69`
+   holds `definition` (an immutable borrow of `self.definitions` from `:36`)
+   across the call, so a `&mut Session` starter cannot compile (E0502). The
+   three-parameter remedy in `a2-readonly-starter-proposal.patch`
+   (`runtime_path_timing_start_adopted`, its cold half, and `open_phase`) is
+   authorized: the whole path only calls `logical_phase_start(&self, ..)` and
+   mutates nothing. This is a signature-only change; do not restructure the
+   borrows at the call site.
+2. **The falsifier is rustfmt-clean now.** The `.temp` source was re-wrapped
+   exactly as `a2-falsifier-format-proposal.patch` shows, the base
+   calibration was re-run on the formatted bytes (same RED at
+   `definition.rhs.total`, all 18 LP03 rows present), and the verbatim
+   insertion now passes `cargo fmt --check`. Use the updated `.temp` copy.
+
 ## Goal
 
 Adopt the definition RHS, definition-rule and definition-dispatch phases —
@@ -105,8 +122,9 @@ Files you MAY modify:
   `sub_values.compiled_matcher`. No other line of that file changes; no
   existing name, assertion or helper is removed, weakened or reformatted.
 - `crates/rum-runtime/src/runtime/profiling/timing.rs` — the
-  `runtime_path_timing_start_adopted_slow` body only, at `:149`, for shape
-  item A (resolve the key once and pass it). Nothing else in that file.
+  `runtime_path_timing_start_adopted` and `_slow` signatures (`&mut Session`
+  → `&Session`, nothing else) and the single caller at `:149` for shape item
+  A. Nothing else in that file.
 - `crates/rum-stdlib/src/tests/retention_closure/census/tests.rs` — **already
   modified by the director** under Amendment 2 (the expected frontier is now
   1066 = 10/1021/35). Do not edit it; include it in A2's `changes` as
@@ -371,7 +389,7 @@ the key instead:
 ```rust
 #[inline(always)]
 pub(in crate::runtime) fn open_phase(
-    session: &mut crate::runtime::Session,
+    session: &crate::runtime::Session,
     key: PhaseKey,
     site: AdoptedSite,
 ) {
@@ -381,6 +399,14 @@ pub(in crate::runtime) fn open_phase(
     // unchanged from here
 }
 ```
+
+`&Session`, not `&mut`: the body only calls `logical_phase_start(&self, ..)`,
+and A2's direct-default site holds an immutable borrow of `self.definitions`
+across the start (`down_values.rs:36` .. `:70`), so a `&mut` starter cannot
+compile there (E0502). The same relaxation applies to
+`runtime_path_timing_start_adopted` and its cold half in `timing.rs`; nothing
+on those paths mutates the session. Signature only — no call-site borrow
+changes.
 
 Callers: `runtime_path_timing_start_adopted_slow` (`timing.rs:149`) passes
 the key it already holds instead of the phase string —
@@ -506,8 +532,14 @@ Both probe programs were verified at HEAD to reach every route they assert —
 the legacy recorder rows are in `.temp/brief-638/falsifier/reach.log`,
 including the paused program's `definition-rule ... ok=0 err=1`.
 
+Insert the `.temp/brief-638/falsifier/lp04_definition_rows.rs` file
+byte-for-byte: as of Amendment 4 it is rustfmt-clean (one closure in
+`kind`'s loop was re-wrapped; no assertion changed), so the verbatim copy
+passes `cargo fmt --check`.
+
 My calibration on the base tree (2026-11-01, `8a7eaae3`, 8 threads, log
-`.temp/brief-638/falsifier/base-run-switch.log`), **with the switch on**:
+`.temp/brief-638/falsifier/base-run-switch.log`, re-run on the formatted
+bytes), **with the switch on**:
 
 ```
 RUM_PROFILE_LEXICAL_SUBSTITUTION=1 cargo test -p rum-host --test lp04_definition_rows
