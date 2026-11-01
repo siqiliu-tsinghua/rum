@@ -1152,3 +1152,156 @@ moved-session cases it does.
    (queued-unchanged, mode-confinement, mass-never-up, executed-receipts
    4,375), both Stage A verification sets, the per-target diagnosis with quoted
    verdict lines, and `a1`/`a2` reported separately. Then Stage B.
+
+## Director gate — continuation 6 (2026-11-01): the carrier decides, not the policy
+
+Continuation 6 (kimi, 10:30–11:52, log `.temp/logs/kimi_brief_637.log`, 1518
+lines, exit 0, git-attempts 0) applied the pause rule, removed the arena walk
+and part of the frontier machinery, and STOPped. I reproduced its reds myself
+before treating its report as evidence; one of its three STOPs rests on a
+condition I wrote wrong, and I correct it here.
+
+### What I reproduced myself
+
+- **The census is red, and it names the seven helpers.** My run
+  (`cargo test -p rum-stdlib --test typed_slot_census --offline -- --exact
+  source_baseline_matches_earned_receipt`, 32.5 s) reports
+  `M receipt mismatch: expected 603, discovered 603`, seven `missing:` — the
+  old inline macro sites in `evaluate_call`,
+  `resume_call_with_dispatch_plan` ×2, `resume_suspended_call_with_dispatch_plan`
+  ×2, `evaluate_profiled_fixed_point`, `resume_fixed_point_from` — and seven
+  `unrecorded:` identities, the cold helpers. The tree cannot be committed.
+- **The remaining fault.** gdb, breakpoint on `Epoch::fault` in
+  `lp03_phase_rows`: `#1 finish_logical_prepared_total` (`logical/mod.rs:253`)
+  ← `#2 FinishPreparedCallArgumentsFinalizer::finish`
+  (`eval_call_prepare/resume_frames.rs:75`) ← `#3 adapter::finish` ←
+  `#4 drive_frames`. The finalizer reads the TLS ancestry for a
+  `prepare_arguments.total` record that is not there.
+- **The pause counter.** `logical_native_lifecycle` fails at
+  `logical_profile_lifecycle.rs:196` with `left: 2, right: 1`;
+  `logical_native_nested_pause_counts` at `:100` with `left: 5, right: 2`.
+  `Totals::child` (`logical/totals.rs:17`) adds the child's `pauses` into the
+  parent's totals, and `report` writes that into the parent's row, so a phase
+  row counts every descendant pause. The LP02 bars were written against
+  own-record pauses and are right.
+
+### Correction: my witness condition could never pass
+
+`witnessed::insertion` proves a **call or method** use. `visit_expr_match`
+(`typed_slot_census/witnessed.rs:246-262`) matches the site's line/column
+against a call's callee span inside an `Err(EvalError::InputRequired { request
+})` arm. A `resume_typed_or_suspend!` use site is a macro path (`scan/sites.rs`
+`:323` records `mac.span()`); no call starts at its position, so `insertion`
+is false for every macro site by construction — which is exactly why `s6.rs:80`,
+`s8.rs:102` and `s9.rs:107` exempt `s.name == "resume_typed_or_suspend"` from
+it. Continuation 6's probe therefore asked an unsatisfiable predicate of all 92
+macro expansions in those seven functions. Its "no witness" STOP is my error,
+not its finding. The probe is deleted, correctly, and must not be reinstated.
+
+### Ruling: a cold helper carries the witness; it does not re-enter the macro
+
+The seven helpers take `request` and re-enter `resume_typed_or_suspend!` with a
+fabricated `Err(EvalError::InputRequired { request })` and a dead `ok(_) =>
+unreachable!()` (e.g. `eval_core/call.rs:35-44`). `slot_witness` is
+`PhantomData` (`suspension/typed/witness.rs:11-13`), so the fabricated value
+type-checks and proves nothing: the receipt would record a match the helper
+never performs.
+
+The census already has the sanctioned shape for this exact extraction — S5's
+producer-to-cold-helper route (`witnessed.rs:112-121`) — with seven exemplars
+in `kernel_data/control_data/cleanup.rs:257-295`:
+
+```rust
+#[cold]
+#[inline(never)]
+fn suspend_x(
+    session: &mut Session,
+    /* frame parts */
+    witness: SlotWitness<I>,
+    request: RuntimeInputRequest,
+) -> Result<Expr, EvalError> {
+    witness.suspend(session, request, Frame { .. })
+}
+```
+
+Rewrite all seven. The caller keeps its `Err(EvalError::InputRequired {
+request })` arm, binds `let witness = slot_witness(&produced);`, and passes
+`witness` then `request` as consecutive arguments. Two sites used the macro's
+`evaluation_return =>` arm (`resolution.rs`'s `evaluate_profiled_fixed_point`
+and `resume_fixed_point_from`); they call
+`witness.suspend_evaluation_return(session, request, frame)` and keep that
+semantic.
+
+`reaches_insertion` must learn that terminal: today it accepts only method name
+`suspend` (`witnessed.rs:125-136`). Add `suspend_evaluation_return` under the
+same discipline — receiver is the witness, `args[1]` is the request, three
+arguments — and ship its falsifier: a wrong receiver or a wrong request must be
+red. The existing three witness forced-reds stay untouched.
+
+The M receipt therefore moves seven rows from the macro family to the call
+family: exactly −7 macro and +7 call identities, every other row byte-identical.
+My earlier "leave `exact()` and the counts untouched" is amended for this delta
+only: the `exact()` totals and the `baseline()` tuple (production
+461/50/610/542/343/199, test-only 11/5/16/11/3/8) change by exactly that, and
+the report prints both tables before and after. Any other movement is a STOP.
+
+### Ruling: no adopted phase crosses a pause
+
+Continuation 6 kept `complete_phase`'s ride branch (`logical/mod.rs:771-776`): a
+`Policy::Expr` record `pause_into`s the queue. That is why the outer chain is
+left open — after the resumed run `evaluate.total`, `evaluate.once_unstable`,
+`evaluate_inner_unstable.total/.call`, `evaluate_call.total/.resume_after_head/
+.dispatch` each read `calls=2, ok=1, open=1`, and quiescence reports
+`faults=1`.
+
+The policy says the channel *can* carry a record; it does not say a frame
+*does*. The Rust frame that opened these records is gone after the suspension:
+the resumed drive re-enters at the deepest typed frame and returns straight
+out, so no `complete_phase` runs for the outer phases on resume. The LP02 test
+span rides only because it inserts its boundary explicitly
+(`logical/mod.rs:297-316`) and the queue observes the resumed completion.
+
+So: **every one of the 25 `PhaseKey` sites closes with `Outcome::Error` on
+`InputRequired`; none inserts a queue boundary.** Delete `captures_at_start`,
+`Call::capture_frontier`/`pause_into`/`frontier`/`_frontier_storage` and the
+`Policy::Expr` branch of `complete_phase`; the compiler must show they are
+dead, with no `#[allow(dead_code)]`. The LP02 span keeps its own explicit path.
+
+Each row already carries an `ok` record that is not the paused one, so
+`calls == ok + err` and `ok > 0` hold as soon as the pre-pause record closes
+with `err`.
+
+`prepare_arguments.total` is `Policy::Prepared` and already finished that way,
+so `finish_logical_prepared_total` is dead under the rule: delete the function
+and its call at `resume_frames.rs:75`, keep the finalizer's own work.
+
+### The LP04 movement is not yours to accept
+
+The pin stops at `E1.0258.return_boundary.loop-store-reset` with four keys
+outside the indexed set: `rule-rhs|request|target`, `rule-rhs|request|-`,
+`rule-rhs|fast_clone_empty|-`, `rule-rhs|fast_clone_empty|target` (sites
+`substitution/binding_substitution.rs:128,133`). LP04 owns them. Before any
+regeneration, attribute each to its producer and consumer with `path:line` and
+the call edge that changed; if an attribution depends on anything other than an
+LP03-adopted phase, STOP and name it. I accept or reject after reading it.
+
+### What continuation 7 must do
+
+1. The two corrections and the seven-helper rewrite, in one tree.
+2. Bars in this order — the derived inventories replay before the acceptance
+   suites:
+   - `cargo fmt --check` green (red today at `logical/segments.rs:128`);
+   - falsifier green with `RUM_PROFILE_LEXICAL_SUBSTITUTION=1`, RED without;
+   - `logical_profile_lifecycle` 3/3 with the `pauses_for("native")` bars
+     unchanged (1/2/2 in the first block, 2/4/4 and 2/3 in the nested one;
+     the scoping edit already in the tree is mine and stays);
+   - `rum-runtime --lib profiling` green, including the new evaluator tests;
+   - `typed_slot_census` green with the amended receipt, `exact()` strict, all
+     nine forced-reds red;
+   - the standing replay with the unchanged loss bar (queued-unchanged,
+     mode-confinement, mass-never-up, executed-receipts 4,375) and the LP04
+     attribution;
+   - workspace green, run after the last edit, with command and timestamp.
+3. Staged stops: stop if the falsifier cannot go green without touching an
+   LP02 bar; stop if any census count moves beyond the ±7; stop at the LP04
+   attribution if it is not attributable to an adopted phase.
