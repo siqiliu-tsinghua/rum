@@ -809,3 +809,39 @@ Required, in this order:
 
 Do not waive a positive row as noise, and do not chase timing while the
 instruction counts on the named routes are still above base.
+
+**Amendment 8 (2026-11-02, second repair round: the token is right, the
+argument is not).** The repair did its job where it was aimed: both named
+routes improve in both samples and the mutant returns the scanner to
+412 / 247 own instructions. The three remaining reds are one real residue and
+one measurement gap.
+
+1. **The token size is not the stack growth.** I probed the shape on this
+   toolchain: `size_of::<Option<Instant>>()` and
+   `size_of::<Option<DefinitionRuleTimingToken>>()` are both 16 bytes. Put
+   that equality into the code as a `const` assertion (a compile-time
+   guarantee, not a comment) so no later edit can grow the slot silently.
+2. **The debug growth is the by-value `Symbol`.** The starter takes
+   `symbol: crate::runtime::Symbol` by value — 24 bytes spilled at each of the
+   eight sites in debug, which matches the +32 to +80 bytes/level the probes
+   see while release shrinks everywhere. Take `&Symbol` and clone only inside
+   the cold half, then re-measure. If any shape still grows, name the frame
+   that holds it (per shape, from the probe heights) instead of arguing from
+   the token.
+3. **The panel needs a noise control, not a waiver.** The three-arm columns
+   already show the same label flipping sign across arms (`lazy-part-small`
+   repair-base `[206.2, 75.5]` against LP04-base `[-110.1, 194.2]`), so the
+   absolute "any positive is a defect" reading flags the measurement, not the
+   code. Add a **base-vs-base control arm** — the export built twice at the
+   same path with one codegen unit, two samples — and report per label
+   whether the repair-base delta lies outside that control's spread. A label
+   counts as a regression when it does, or when a deterministic own-Ir row
+   reconciles a positive count x cost. The bar itself does not move; the
+   control decides what is a delta at all.
+4. **Re-run Stage B** on the same arms plus the control, and add the timing
+   panel only after (2) is settled: the timing lane is secondary and must not
+   be chased while instructions or stack are open.
+
+Everything else stands from Amendment 7: the observation is unchanged (row
+names, finish order, the local `InputRequired` close, the four ledger bars,
+4,375 receipts, census 1067, constructor 175/177).
