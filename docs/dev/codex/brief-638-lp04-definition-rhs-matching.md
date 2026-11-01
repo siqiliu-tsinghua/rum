@@ -51,6 +51,35 @@ both remedies are now in the brief:
    `definition.rhs.total`, all 18 LP03 rows present), and the verbatim
    insertion now passes `cargo fmt --check`. Use the updated `.temp` copy.
 
+**Amendment 5 (2026-11-01, director's census ruling R-638-2 and the dead
+helpers).** A2's STOP is accepted, and both open items are ruled:
+
+1. **The frontier is 1067 (10/1022/35), not 1066.** The authorized
+   `&Session` receiver moved the frontier one level deeper.
+   `session.logical_phase_start(..)` at `logical/mod.rs:713` was rejected as
+   method syntax needing an unexpanded receiver reborrow (`&mut Session` ->
+   `&Session`); with an exact `&Session` receiver it resolves, the walk
+   enters `logical_phase_start` — its only caller — and stops at two RET002
+   sites inside it: the `!lexical_profile_enabled()` operand (`:101:12-65`)
+   and `Self::logical_phase_start_slow` (`:104:9-60`). Pairing: 1065 rows
+   keep kind, file, callee and reason, one retires, two appear, zero
+   base-only and zero candidate-only; definitions and roots stay 7707/7707.
+   The callee's body was wholly behind the old boundary, so the analysed
+   surface grew while the row count rose by one — no mark and no coverage
+   claim moved. I reproduced the dump myself and it is byte-identical to your
+   two. The census file is already at 1067 = 10/1022/35 with the ruling in
+   its comment; include it in A2's `changes` and do not edit it.
+2. **Delete the two now-unused helpers.** A2's adopted starts took the last
+   callers of `runtime_profile_outcome_for_option_result` and
+   `runtime_profile_outcome_for_internal_result`
+   (`definitions/application/mod.rs:111` and `:126`). Delete exactly those
+   two functions and nothing else in that file; new dead-code warnings are
+   not acceptable. The pre-existing test-builtin warnings stay as they are.
+
+After both: replay the inventories this source edit invalidates (contracts
+first, then certificates and promoted rows), rerun the census, and complete
+A2's acceptance. Then Stage B.
+
 ## Goal
 
 Adopt the definition RHS, definition-rule and definition-dispatch phases —
@@ -125,10 +154,14 @@ Files you MAY modify:
   `runtime_path_timing_start_adopted` and `_slow` signatures (`&mut Session`
   → `&Session`, nothing else) and the single caller at `:149` for shape item
   A. Nothing else in that file.
+- `crates/rum-runtime/src/runtime/definitions/application/mod.rs` — delete
+  only `runtime_profile_outcome_for_option_result` (`:111`) and
+  `runtime_profile_outcome_for_internal_result` (`:126`), which lost their
+  last callers to A2's adopted starts (Amendment 5).
 - `crates/rum-stdlib/src/tests/retention_closure/census/tests.rs` — **already
-  modified by the director** under Amendment 2 (the expected frontier is now
-  1066 = 10/1021/35). Do not edit it; include it in A2's `changes` as
-  instructed there.
+  modified by the director** under Amendments 2 and 5 (the expected frontier
+  is now 1067 = 10/1022/35, ruling R-638-2). Do not edit it; include it in
+  A2's `changes` as instructed there.
 - `crates/rum-host/tests/lp04_definition_rows.rs` (new; my falsifier,
   inserted verbatim from the `.temp` copy)
 - the standing inventories named under **Inventory replay** below.
