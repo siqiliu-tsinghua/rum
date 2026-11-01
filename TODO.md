@@ -98,7 +98,7 @@ does the same work, only without its profiling hooks.
     that re-queued the remainder without its stack.
   - The director's falsifier `crates/rum-host/tests/logical_profile_abandonment.rs`
     now pins that last one.
-- **LP03** (brief-637): the adopted evaluator dispatch records.
+- **LP03** (brief-637, `e924bb4f`): the adopted evaluator dispatch records.
   - Thirteen continuations. The dispatch loop's own cost is back to base:
     121.0 own instructions per call against the continuation-12 tree's 132.0,
     re-measured on the final binary at the leaf label's panel N and 2N.
