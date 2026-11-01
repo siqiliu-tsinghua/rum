@@ -28,6 +28,12 @@ himself. That file is already modified in your tree: **do not edit it**, and
 list it in your A2 `changes` with why `director census ruling R-638-1` so the
 gate's tree check stays exact.
 
+**A1 accepted (2026-11-01, `gate-638a1` GREEN).** Scope, fmt, check,
+ownership, census (RULED at 1066), oracle, standing, fingerprints,
+certificates, inventories and the workspace suite (4,033 passed, 0 failed,
+61 ignored) all pass on the tree you left. Begin at **A2**; do not redo A1's
+routes or its shape items.
+
 ## Goal
 
 Adopt the definition RHS, definition-rule and definition-dispatch phases —
