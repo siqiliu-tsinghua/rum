@@ -1133,3 +1133,70 @@ with its PC and opcodes, and stop. Do not cap N, do not substitute the copy
 census, and do not propose another shape.
 
 If the gate closes: layout, prologues and lifecycle, then timing last.
+
+**Amendment 14 (2026-11-02, round 7 names the carrier: libc's short-compare
+guard. The class is keyed on operand addresses, and the missing calibration
+is a build that differs only in layout).**
+
+Round 7 ran the full-N attribution and stopped as instructed, with every
+function and PC retained. It is not a rum row. The numbers reconcile exactly.
+
+1. **What the numbers say.** `dot-three-no-input`: candidate − base 161,693 at
+   N=20,000 (8.08465 Ir/iteration), of which the libc IFUNC target `0x1b1220`
+   contributes 20,009/2,500 (8.0036) and **every rum row together** contributes
+   +1,621/20,000 (+0.081). `failure-tag-fallback`: 521/20 (26.05), libc
+   16,813/500 (33.626), rum rows −947/125 (−7.576). The four accepted reload
+   PCs execute zero times at N and at 2N in both candidate profiles.
+2. **The carrier is a guard on addresses.** At `0x1b1220`:
+   `cmp $0x20,%rdx; jb 0x1b1500`, then `0x1b1505..0x1b1513`:
+   `eax = (p1|p2) & 0xfff; cmp $0xfe0; jg 0x1b1540`. The vector path
+   (`0x1b1515..0x1b1533`) is 9 instructions on the equal path; the 4..7-byte
+   scalar path (`0x1b1540..0x1b157a`) is 17. **The difference is exactly 8 per
+   flipped comparison**, and the arithmetic closes: dot moves
+   `0x1b1515` 1,907,528 -> 1,887,539 (−19,989) and `0x1b154a` 14 -> 20,015
+   (+20,001), and 20,001 x 8 = 160,008 of 161,693; failure moves 6,212 ->
+   4,200 and 541 -> 2,550, and 2,009 x 8 = 16,072 of 16,813.
+3. **No call changed.** Every memcmp/bcmp call site has the same call count in
+   both arms, to within startup-constant moves of 8 (`Symbol::system`
+   1,000,213 -> 1,000,221; `Symbol::is_system_name` 620,096 in all three
+   arms). The number of comparisons, their lengths and their contents are
+   unchanged. Only the operand addresses differ, and only their low twelve
+   bits are read.
+4. **R-638-7.** A label separation carried by this guard is not a rum
+   instruction cost and does not fail the instruction gate, provided (a) every
+   rum own-Ir row is at or below base outside the accepted class, and (b) the
+   memcmp/bcmp call-site counts are unchanged. Both hold: 311/313 labels were
+   already clean, and the two flags are 0.0025 % and 0.22 % with a rum side of
+   +0.081 and −7.576 per iteration. Two observable falsifiers void the
+   exclusion for a label: one positive rum own-Ir row outside R-638-5/R-638-6
+   in the same table, or any change in a call-site count.
+5. **Why the null could not see it.** base and control are one source built
+   twice at one path: identical link layout, so the five-sample control
+   interval bounds *run* noise only. Any source change perturbs `.rodata`
+   placement — the candidate's moved by up to 0xB8 bytes within the section
+   and by a page between sections — and a 4..7-byte literal that moves 184
+   bytes flips the guard for **every** call of that comparison, deterministically.
+   The label test's null is therefore incomplete for comparisons whose
+   operands the linker places, and the missing calibration is a build that
+   differs only in layout.
+6. **Round 8 is that calibration, before anything else.** Build the base
+   source at the base path with one codegen unit plus one inert `.rodata`
+   padding static — never read, so no executed instruction changes — and sweep
+   at least three sizes. First prove the pad moved the layout: report a fixed
+   marker literal's address in base and in each padded build; a null result
+   with an unmoved layout is not a result. Then run the round-7 capture on
+   both labels for base and each padded arm, and report the guard PCs
+   (`0x1b1515`, `0x1b1540`, `0x1b154a`, `0x1b15a0`) with every rum own-Ir row.
+   **The class is demonstrated if any pad moves either label's guard count, in
+   either direction, while every rum own-Ir row is unchanged.** If no pad
+   moves it after the layout shift is verified, report that and stop; the
+   director rules.
+
+**Correction to Amendment 13's preamble.** I wrote that copy/allocation pass.
+Round 6 recorded copy 192/192 and allocation 0/194: allocation has not run.
+The worker's FLAGGED check is right, and this paragraph supersedes the
+sentence.
+
+If the class is demonstrated, the instruction gate closes on the round-6
+panel plus R-638-7, and the campaign continues in order: the allocation
+census (194 rows), layout, prologues, lifecycle, timing last.
