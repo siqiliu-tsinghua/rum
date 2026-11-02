@@ -144,7 +144,7 @@ larger copy), STOP and report.
 
 | Shape | Measured | Bound (3x, rounded up) |
 | --- | ---: | ---: |
-| cold copy of the tree (2,587 regular files, 68,485,831 bytes = 65.3 MiB, no `.git`/`.temp`/`target`) | 1 s | 60 s |
+| cold copy of the tree (about 2,587 regular files / 65.3 MiB; the brief is itself in the tree, so the count moves with docs commits) | 1 s | 60 s |
 | cold release build + one exact test, base shape | 84 s | 300 s |
 | cold release build + one exact test, zero-guard feature shape | 87 s | 300 s |
 | incremental rebuild + one exact test in a warm copy | not separately measured; use the cold bound | 300 s |
@@ -157,10 +157,13 @@ The baseline and the mutant in the same copy share one built `target/`; the
 mutant run rebuilds only the changed crate.
 
 The first version of this table said "32 MB"; that was `du` disk usage on a
-compressed filesystem, not the byte size. The byte count above is the copy's
-own enumeration (2,587 regular files, 68,485,831 bytes) and matches the
-worker's measurement. The shape is now exact: a different file count or byte
-total means the tree changed, and only then is it a STOP.
+compressed filesystem, not the byte size. The second said an exact byte
+total, which this brief itself invalidates every time it is amended. The
+copy gate is therefore a **ceiling, not an equality** (Amendment 3): a copy
+of at most 4,000 regular files and 120 MiB (125,829,120 bytes), excluding
+`.git`, `.temp` and `target`, passes; anything larger is a STOP. Do not
+compare the copy to a literal byte total, and do not stop because the brief
+or a docs commit changed it.
 
 Every cargo command runs inside the dispatcher's own 16 GiB memory scope
 (the `memory-scope: unit=brief-640-cdx-...` line in the dispatch log) with
@@ -230,6 +233,20 @@ worker itself.
 - The environment preflight is just `cargo --version` and
   `rustc --version`.
 - Everything else in this brief stands unchanged.
+
+## Amendment 3 (2026-11-02) — the copy shape is a ceiling, not a byte equality
+
+Attempt 3 stopped at its own copy-shape preflight: the tree was 68,486,235
+bytes against the table's 68,485,831, a 404-byte difference, because this
+brief lives in the tree and amendment 2 had just edited it. The gate was
+wrong in kind, not in number.
+
+- The copy gate is a **ceiling**: at most 4,000 regular files and 120 MiB
+  (125,829,120 bytes), excluding `.git`, `.temp` and `target`.
+- Do not compare the copy to a literal byte total; do not stop because the
+  brief or a docs commit changed it.
+- No copy-shape preflight is required; if one is run, it is this ceiling.
+- The 60 s copy bound and every other bound stand unchanged.
 
 ## Report format
 
