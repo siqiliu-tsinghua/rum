@@ -1094,3 +1094,42 @@ allocation on 192 labels; layout, lifecycle and prologues; then timing last.
 The observation is unchanged: legacy start first, logical start second, the
 same completion order, the same row names, the four ledger bars, 4,375
 receipts, census 1067, constructors 175/177.
+
+**Amendment 13 (2026-11-02, round 6's instrument is sound; the residue is a
+class, and two labels need full-N attribution).**
+
+Round 6 ran the panel the way it should be run: 313 labels, five interleaved
+samples per arm, four initial flags, five more samples each. Stack and
+copy/allocation pass. Layout, prologues, lifecycle and timing were correctly
+left unrun behind the instruction gate. Two things remain.
+
+1. **The own-Ir residue is one class, not two rows.** The 192-label census
+   found the same two reloads (`0x574142`, `0x574172`, `mov 0x10(%rsp),%rax`
+   and `mov 0x10(%rsp),%rdx`, once per call at N and 2N) in two more
+   contexts: the unprimed scanner `try_apply_down_values_from_symbol`
+   (412 -> 414 on `downvalue-pattern-hit`) and a second primed path
+   (396 -> 398). **R-638-6: the accepted residual covers every context that
+   executes those two reloads**, at +2/call. It is the same instruction, the
+   same mechanism and the same count; naming only two functions was too
+   narrow. The justification is unchanged and is measured, not argued: the
+   only shape that removes them costs +23/call and 21 growing stack shapes
+   (Amendment 12). Any positive own-Ir row that is *not* these two reloads
+   remains a STOP.
+2. **The two persistent labels are real under the instrument and must be
+   attributed.** `dot-three-no-input` separates by 6.15 instructions per
+   iteration on a base slope of 248,506.6 (0.0025 %); `failure-tag-fallback`
+   by 20.94 on a base slope of 9,427.6 (0.22 %, candidate deltas 27..41).
+   Both are repeatable across ten samples with a control spread of about
+   one instruction, so neither is noise. The capped census (N=80 and N=500)
+   does not reproduce the panel and, as reported, does not explain them.
+
+**Round 7 is a diagnostic, not a new shape.** Run base, control and
+candidate under Callgrind at each label's exact panel N (`dot-three-no-input`
+N=20000, `failure-tag-fallback` N=500), and reconcile the delta per
+function and per PC. Either the separation is the named reloads times the
+incoming calls (plus a reshuffle that nets zero), in which case the label is
+the accepted class and the gate closes, or a new row carries it — name it,
+with its PC and opcodes, and stop. Do not cap N, do not substitute the copy
+census, and do not propose another shape.
+
+If the gate closes: layout, prologues and lifecycle, then timing last.
