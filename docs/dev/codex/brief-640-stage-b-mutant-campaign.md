@@ -332,6 +332,51 @@ no re-run. Report the four rows into the same results table and the same
 `report.json`; the final summary states the counts with the abort class
 separate.
 
+## Director gate — C (2026-11-03): the campaign is closed
+
+The four-row completion run finished exit 0 on the same Kimi session
+(`resume-6`). **Final: 58/58 target pairs — 54 assertion KILLED + 1 abort
+KILLED (M12/I12), 2 SURVIVED (M08/I08, M08/I17), 1 INCONCLUSIVE (M21/I21),
+and I07 OPEN by D01.** Report check OK (4,565 citations); integrity PASS
+(1,519 source files and 2,587 tree files byte-identical before and after);
+production tree clean. The report's own summary matches this count.
+
+Row level: 51 of the 52 required rows carry at least one mutant. **50 of
+them are forced by at least one kill**; I17 is forced by M17a even though
+M08 survived there. **I08 is the one covered row with no kill** — its only
+mutant is M08, which survived. I21 has no distinguishing evidence, and I07
+is open.
+
+The four completed rows, from their logs:
+
+- **M17b/I17**: baseline green (0.01 s); mutant and serial red at
+  `association_lookup_depth.rs:117:18` — the resumed default is discarded
+  and a `Missing` expression reaches the structural observer.
+- **M19/I19**: baseline green (0.02 s); mutant and serial red at
+  `delete_missing_depth.rs:127:5`, left keeps the `drop -> Missing[]` entry
+  in front of the survivor, right does not.
+- **M19/I20**: baseline green in **484.88 s**; mutant red in 487.98 s,
+  serial red in 487.47 s at the same line — inside the authorized 1800 s
+  bound, and the arming changes nothing about the verdict.
+- **M33/I33**: baseline green (0.01 s); mutant and serial red at
+  `iterative_traversal_depth.rs:237:5` (bare `1` where `deepMapProbe[1]` is
+  required).
+- **M45/I45**: baseline green in **449.19 s**; mutant red in 0.14 s,
+  serial red in 0.16 s at `iterative_traversal_depth.rs:535:9`, Length
+  `16` vs `4096`.
+
+Both standing-inventory stops were exactly as authorized: M17b's receipt
+replaces the borrowed default at `lookup.rs:259` with the discard, and
+M33's replaces the atom-arm rebuild at `traversal.rs:115` with the bare
+expression; each receipt carries the before/after SHA-256 of the mutated
+file, and the pre-mutation inventory was preserved in the copy.
+
+The final standing counts supersede the interim ones in gate B. What
+remains from the audit is exactly: **D01 (I07 has no localized mutant),
+I08's survived certificate (D02), I21's inconclusive row, and the D03–D09
+obligations** already recorded in brief-639. No further Stage B run is
+authorized.
+
 ## Report format
 
 `rum-report/1` at `.temp/brief-640/report.json` with sections `summary`,

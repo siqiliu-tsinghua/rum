@@ -179,27 +179,33 @@ does the same work, only without its profiling hooks.
     names suggest (D04); I53's refusal does not establish head traversal
     (D05); the three zero-guard contracts need an explicit feature build
     (D06, authorized for Stage B only).
-  - **Stage B, the mutant campaign (brief-640): 45/45 mutants, 58 target
-    pairs.** Worker report: 49 KILLED, 2 SURVIVED, 7 INCONCLUSIVE; with the
-    director's M12 ruling the standing count is 49 assertion kills + 1 abort
-    kill, 2 survived, 6 inconclusive, I07 OPEN. Integrity PASS (1,519
-    source files and 2,587 tree files byte-identical before and after);
-    4,171 citations verified; the production tree was never touched.
+  - **Stage B, the mutant campaign (brief-640): CLOSED — 45/45 mutants,
+    58/58 target pairs.** Final: **54 assertion KILLED + 1 abort KILLED
+    (M12), 2 SURVIVED (M08), 1 INCONCLUSIVE (M21), I07 OPEN by D01.**
+    Report check OK (4,565 citations); integrity PASS (1,519 source files
+    and 2,587 tree files byte-identical before and after); production tree
+    never touched.
+    - Row level: 51 of 52 required rows carry a mutant; **50 are forced by
+      at least one kill**. I17 is forced by M17a despite M08 surviving
+      there; **I08 is the one covered row with no kill** (M08 is its only
+      mutant); I21 has no distinguishing evidence; I07 is open.
     - **The two SURVIVED are M08 on I08 and I17**: replacing the iterative
       drop with the recursive one is invisible to the 4097-depth drop
       certificate, because at that depth the recursive drop still completes.
       D02 is confirmed — the certificate proves completion, not the
       mechanism.
-    - **M12 is KILLED BY ABORT**, a class separate from the 49: the named
-      `association-key-deflatten-drop-path` thread overflowed its stack
-      under the mutation; the certificate's claim is "without growing the
-      stack", so the abort falsifies it, though no assertion fired.
-    - M17b and M33 stopped on a standing-inventory row deletion; M19/I20 and
-      M45/I45 timed out at the old 120 s bound (measured 482 s and 443 s).
-      Amendment 5 re-runs those four with a measured 1800 s bound and the
-      scratch-copy ruling.
-  - **Next: the four-row completion run (resume-6), then a certificate-only
-    brief for D01/D03, then LP05.**
+    - **M12 is KILLED BY ABORT**, a class separate from the assertion
+      kills: the named `association-key-deflatten-drop-path` thread
+      overflowed its stack under the mutation; the certificate's claim is
+      "without growing the stack", so the abort falsifies it, though no
+      assertion fired.
+    - The four-row completion run closed M17b/I17, M19/I19 + I20 (baseline
+      484.88 s, mutant 487.98 s, serial 487.47 s), M33/I33 and M45/I45
+      (baseline 449.19 s, mutant 0.16 s) — all KILLED at their predicted
+      observations, all inside the authorized 1800 s bound.
+  - **Next: a certificate-only brief for D01/D03** (I07's drop witness;
+    I31's Take fixture cannot force selection), then implement I08's
+    surviving certificate (D02), then LP05.
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its
