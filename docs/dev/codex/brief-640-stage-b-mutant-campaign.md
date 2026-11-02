@@ -166,7 +166,7 @@ compare the copy to a literal byte total, and do not stop because the brief
 or a docs commit changed it.
 
 Every cargo command runs inside the dispatcher's own 16 GiB memory scope
-(the `memory-scope: unit=brief-640-cdx-...` line in the dispatch log) with
+(the `memory-scope: unit=brief-640-<worker>-...` line in the dispatch log) with
 `CARGO_BUILD_JOBS=8`, `RUST_TEST_THREADS=8`, `--offline --locked`, one cargo
 command at a time, no other heavy work alongside. **Do not invoke
 `scripts/memory-scope.sh` yourself** — inside this sandbox it cannot reach
@@ -219,14 +219,14 @@ stop cleanly at a checkpoint rather than losing receipts.
 
 Attempt 1 stopped before any cargo run: the brief required
 `scripts/memory-scope.sh` around every cargo command, and that launcher
-cannot connect to the user scope bus inside the Codex sandbox
+cannot connect to the user scope bus inside the worker sandbox
 (`Failed to connect to user scope bus via local transport: Operation not
 permitted`). The worker stopped correctly with no fallback, no copy and no
 mutation. The rule is a director rule; the dispatcher already wraps the
 worker itself.
 
 - **Do not run `scripts/memory-scope.sh`.** The dispatch log's
-  `memory-scope: unit=brief-640-cdx-...` line is the scope. Run cargo
+  `memory-scope: unit=brief-640-<worker>-...` line is the scope. Run cargo
   directly with `CARGO_BUILD_JOBS=8`, `RUST_TEST_THREADS=8`,
   `--offline --locked`, one cargo command at a time, each as a child of
   `scripts/run-bounded.py --timeout <bound> --`.
@@ -247,6 +247,18 @@ wrong in kind, not in number.
   brief or a docs commit changed it.
 - No copy-shape preflight is required; if one is run, it is this ceiling.
 - The 60 s copy bound and every other bound stand unchanged.
+
+## Amendment 4 (2026-11-02) — resume on Kimi
+
+Attempt 4 (Codex) completed six mutants — M03, M06, M06b, M08, M09, M10 —
+and then the provider's content filter fired on the crash probes. The user
+directed this campaign to Kimi on 2026-11-02 (no GLM quota). The checkpoint
+is `.temp/brief-640/PROGRESS.md`; skip every mutant marked COMPLETE and
+continue at M12/M13. The deliberately broken production code in each scratch
+copy is the authorized purpose of this brief; the production tree stays
+untouched. The prior Codex report is preserved beside the new one as
+`.temp/brief-640/report-cdx-attempt4.json`. Everything else stands
+unchanged.
 
 ## Report format
 
