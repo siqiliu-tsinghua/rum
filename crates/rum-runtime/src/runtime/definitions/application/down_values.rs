@@ -4,7 +4,7 @@ use super::*;
 use crate::runtime::kernel_api::{ContinueToken, ResumeStop, TypedAction, TypedFrame};
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 use crate::runtime::kernel_api::{SlotWitness, slot_witness};
-use crate::runtime::profiling::logical::complete_definition_rule;
+use crate::runtime::profiling::logical::record_profile_definition_rule_timing_adopted;
 
 #[derive(Clone, FrameRootTrace)]
 struct SuspendedDownValueApplication {
@@ -229,18 +229,17 @@ impl Session {
             );
             self.record_profile_down_value_application(&symbol);
             let _profile_definition_source = evaluation_profile_definition_source(symbol);
-            let profile_rule_start = definition_rule_timing_start();
-            let logical_rule =
-                self.logical_definition_rule_start("down_value_rhs_eval", symbol, index);
+            let profile_rule_start =
+                self.definition_rule_timing_start_adopted("down_value_rhs_eval", &symbol, index);
             let result = self.evaluate_definition_application_rhs(option_scope, rhs);
-            record_profile_definition_rule_timing(
+            record_profile_definition_rule_timing_adopted(
                 "down_value_rhs_eval",
                 &symbol,
                 index,
                 profile_rule_start,
                 result.is_ok(),
+                &result,
             );
-            complete_definition_rule(logical_rule, &result);
             return result.map_err(Route::failure);
         }
 
@@ -335,18 +334,17 @@ impl Session {
             );
             self.record_profile_down_value_application(&symbol);
             let _profile_definition_source = evaluation_profile_definition_source(symbol);
-            let profile_rule_start = definition_rule_timing_start();
-            let logical_rule =
-                self.logical_definition_rule_start("down_value_rhs_eval", symbol, index);
+            let profile_rule_start =
+                self.definition_rule_timing_start_adopted("down_value_rhs_eval", &symbol, index);
             let result = self.evaluate_definition_application_rhs(option_scope, rhs);
-            record_profile_definition_rule_timing(
+            record_profile_definition_rule_timing_adopted(
                 "down_value_rhs_eval",
                 &symbol,
                 index,
                 profile_rule_start,
                 result.is_ok(),
+                &result,
             );
-            complete_definition_rule(logical_rule, &result);
             return result.map_err(Route::failure);
         }
 
@@ -472,21 +470,20 @@ impl Session {
         );
         self.record_profile_down_value_application(&application.symbol);
         let _profile_definition_source = evaluation_profile_definition_source(application.symbol);
-        let profile_rule_start = definition_rule_timing_start();
-        let logical_rule = self.logical_definition_rule_start(
+        let profile_rule_start = self.definition_rule_timing_start_adopted(
             "down_value_rhs_eval",
-            application.symbol,
+            &application.symbol,
             application.index,
         );
         let result = self.evaluate_definition_application_rhs(option_scope, rhs);
-        record_profile_definition_rule_timing(
+        record_profile_definition_rule_timing_adopted(
             "down_value_rhs_eval",
             &application.symbol,
             application.index,
             profile_rule_start,
             result.is_ok(),
+            &result,
         );
-        complete_definition_rule(logical_rule, &result);
         result.map_err(Route::failure)
     }
 }

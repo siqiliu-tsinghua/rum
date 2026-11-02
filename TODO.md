@@ -132,8 +132,31 @@ does the same work, only without its profiling hooks.
     enters `logical_phase_start` and stops at two sites inside it. The
     constructor inventory is 175 (177 with the clone fixtures) for the same
     reason.
-  - `gate-638a2` GREEN; workspace 4,037 passed / 0 failed / 61 ignored in
-    both builds. Stage B (the cost campaign) follows.
+  - The cost campaign, in order: allocation 194/194 with zero positive
+    ordinary slopes (counts, requested bytes, peak-live all equal to base);
+    563 frame declarations and the 16 named slots unchanged, the merged
+    token 16 -> 8 bytes; prologues and complete live helper chains reconcile
+    with zero residual; lifecycle 12/0/0 with a constant-space disabled
+    registry.
+  - Timing is ruled under **R-638-9**: the 120-label panel's own base-vs-base
+    control flags 59/120 rows, so the worker's best-of-2 bar was
+    uncalibrated. Eight interleaved draws per arm put the panel median at
+    -0.09 %; four labels separate and all four are dominated by one unchanged
+    function (`collect_upvalue_candidate_symbols_in_matching_order`, 87 % of
+    the instructions) whose machine code is identical in both arms but sits
+    at a different address — instructions flat, cycles +17 %, front-end bound
+    20.7 -> 32.2 %. Recorded as a bounded residual, not a cost of the change.
+  - A pre-existing pathology found while attributing it: with any upvalue
+    defined, a keyed association read costs ~3.3 M instructions and ~200 us
+    instead of ~1 us. That belongs to a later performance line, not to LP04.
+  - `gate-638a2` GREEN on the repair tree (crates tree `73398da19811`):
+    census 1067 with every row paired, oracle 175/177, standing 1/0 and
+    10/0, fingerprints 68/0, certificates both builds, inventories 19/19,
+    workspace 4,037 passed / 0 failed / 61 ignored in both builds, and the
+    performance steps: arms and structure PASS, panels RULED (9 labels below
+    base by 11-42 instructions per iteration; the single row above the
+    step's HEAD base is the accepted +2/call class plus a build difference in
+    the first attempt's code).
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its

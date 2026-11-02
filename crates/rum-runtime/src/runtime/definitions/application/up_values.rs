@@ -3,7 +3,7 @@ use crate::runtime::kernel_api::{
     ContinueToken, ResumeStop, SlotWitness, TypedAction, TypedFrame, slot_witness,
 };
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
-use crate::runtime::profiling::logical::complete_definition_rule;
+use crate::runtime::profiling::logical::record_profile_definition_rule_timing_adopted;
 use std::sync::Arc;
 
 #[derive(Clone, FrameRootTrace)]
@@ -103,18 +103,17 @@ impl Session {
                     &up_value.lhs,
                     &substituted,
                 );
-                let profile_rule_start = definition_rule_timing_start();
-                let logical_rule =
-                    self.logical_definition_rule_start("up_value_rhs_eval", symbol, index);
+                let profile_rule_start =
+                    self.definition_rule_timing_start_adopted("up_value_rhs_eval", &symbol, index);
                 let result = self.evaluate_definition_application_rhs(option_scope, substituted);
-                record_profile_definition_rule_timing(
+                record_profile_definition_rule_timing_adopted(
                     "up_value_rhs_eval",
                     &symbol,
                     index,
                     profile_rule_start,
                     result.is_ok(),
+                    &result,
                 );
-                complete_definition_rule(logical_rule, &result);
                 return result;
             }
 
@@ -186,18 +185,17 @@ impl Session {
                     &lhs,
                     &substituted,
                 );
-                let profile_rule_start = definition_rule_timing_start();
-                let logical_rule =
-                    self.logical_definition_rule_start("up_value_rhs_eval", symbol, index);
+                let profile_rule_start =
+                    self.definition_rule_timing_start_adopted("up_value_rhs_eval", &symbol, index);
                 let result = self.evaluate_definition_application_rhs(option_scope, substituted);
-                record_profile_definition_rule_timing(
+                record_profile_definition_rule_timing_adopted(
                     "up_value_rhs_eval",
                     &symbol,
                     index,
                     profile_rule_start,
                     result.is_ok(),
+                    &result,
                 );
-                complete_definition_rule(logical_rule, &result);
                 return result;
             }
 
@@ -314,18 +312,20 @@ impl Session {
                     &up_value.lhs,
                     &substituted,
                 );
-                let profile_rule_start = definition_rule_timing_start();
-                let logical_rule =
-                    self.logical_definition_rule_start("up_value_rhs_eval", symbol, state.index);
+                let profile_rule_start = self.definition_rule_timing_start_adopted(
+                    "up_value_rhs_eval",
+                    &symbol,
+                    state.index,
+                );
                 let result = self.evaluate_definition_application_rhs(option_scope, substituted);
-                record_profile_definition_rule_timing(
+                record_profile_definition_rule_timing_adopted(
                     "up_value_rhs_eval",
                     &symbol,
                     state.index,
                     profile_rule_start,
                     result.is_ok(),
+                    &result,
                 );
-                complete_definition_rule(logical_rule, &result);
                 return result.map_err(ResumeStop::failure);
             }
             state.index += 1;

@@ -1339,3 +1339,58 @@ the bar as written.
    `collect_upvalue_candidate_symbols_in_matching_order`, pre-existing and
    untouched by LP04. It is recorded here and belongs to a later performance
    line, not to this repair.
+
+## Director gate — A3 (2026-11-02, the repair tree)
+
+**`gate-638a2` GREEN on the repair tree, crates tree `73398da19811`.** The
+record made at 01:12 belonged to the committed first attempt (`4d4851b3`); the
+repair landed after it, so every source-dependent step was re-run on the
+repair tree and the three performance steps were run for the first time.
+
+- **scope** PASS (report check, 290 citations), **fmt** PASS, **check** PASS
+  (3 warnings, 0 new against HEAD, 0 gone), **ownership** PASS, **census**
+  PASS at **1067 (10/1022/35)**: all 1067 rows paired against HEAD with zero
+  moved. HEAD is the first attempt, whose own frontier is 1067; composed with
+  the LP03 pairing RULED in Amendment 5, the repair moves no frontier row
+  against the base of record.
+- **oracle** PASS (175 live / 177 with the clone fixtures), **standing** lp01
+  1/0 and typed-slot 10/0, **fingerprints** 68 contracts / 0 changed,
+  **certificates** both builds, **inventories** 19/19 at 1067.
+- **workspace** PASS: 4,037 passed / 0 failed / 61 ignored, peak 12.6 GB of
+  14, oom_kill 0, kernel OOM lines 0. The director's own
+  `--no-default-features` suite runs separately (the gate runs default
+  features only) and is green on the rerun: 61 test binaries, 0 failed,
+  peak 6.5 GB of 14, oom_kill 0. **One red in its first run, recorded as
+  unreproduced**: `-p rum-host --test native_stack_thread_scope` failed once
+  under the full parallel suite; the binary passes 8/8 at `--test-threads=1`
+  and 5/5 at eight threads in isolation, and the whole suite's rerun is
+  green. The first run's assertion text was not captured (its output was
+  tailed), so the failing test is unknown; the file prints per-thread stack
+  addresses (`DIR628`) for exactly this class, and the test touches
+  cancellation, not the repair. It is not called a defect and it is not
+  waived: it stays here as an open observation.
+- **arms** PASS (both arms at one source path, one codegen unit, pathcal
+  PASS on both binaries); **structure** 6 code / 0 layout / 5 new / 1 gone —
+  the repair's own diff.
+- **panels** RULED. resume: 121 labels, median +0.0002 %, max +0.1296 %,
+  **0 apart above / 0 below**. cli: 192 labels, median −0.0001 %, max
+  +1.0331 %, **9 apart below and 1 above**. The nine below are the repair's
+  own removals: downvalue-exact-hit −11.0, downvalue-pattern-hit −13.1,
+  default-unguarded-hit −12.9, downvalue-guarded-decline-fallback −19.4,
+  downvalue-guarded-hit −32.0, default-guarded-hit −30.9,
+  subvalue-guarded-hit −37.6, subvalue-unguarded-hit −41.9,
+  upvalue-guarded-hit −12.0 instructions per iteration.
+- **The one above row is the step's base, not the repair.** `panel` compares
+  the working tree against HEAD, and HEAD is the committed first LP04
+  attempt, not the brief's base of record. `default-unguarded-miss +5.7`/iter
+  decomposes exactly: **+4.0** in one inlined copy of
+  `try_apply_down_values_from_symbol` where HEAD's build emits 382
+  instructions and both the LP03 build and the repair emit 386 (per-function
+  callgrind at N and 2N on three binaries), and **+2.0** in the second copy
+  (104 -> 106), which is the accepted R-638-5/R-638-6 +2/call class — the
+  accepted reload PCs `0x574142` and `0x574172` are inside that same
+  function. Re-measured with the gate's own 15-rep separating instrument
+  against the LP03 export, that label is **−2.01**/iteration, and
+  downvalue-exact-hit −11.01, downvalue-pattern-hit −13.05,
+  subvalue-guarded-hit −29.11, default-unguarded-hit −12.93. Every row at or
+  below base; the brief's bar holds.

@@ -73,6 +73,18 @@ struct CallInner {
     _storage: Storage,
 }
 
+pub(in crate::runtime) struct DefinitionRuleTimingToken(Box<DefinitionRuleRecord>);
+
+pub(in crate::runtime) struct DefinitionRuleRecord {
+    start: Option<std::time::Instant>,
+    call: Option<Call>,
+    _storage: Option<Storage>,
+}
+
+const _: () = assert!(
+    std::mem::size_of::<Option<DefinitionRuleTimingToken>>() == std::mem::size_of::<Option<Call>>()
+);
+
 #[derive(Clone)]
 pub(in crate::runtime) struct Frontier {
     pub(in crate::runtime) generation: crate::runtime::suspension::SuspensionGeneration,
@@ -118,16 +130,47 @@ impl crate::runtime::Session {
     }
 
     #[inline]
-    pub(in crate::runtime) fn logical_definition_rule_start(
+    pub(in crate::runtime) fn definition_rule_timing_start_adopted(
         &self,
         kind: &'static str,
-        symbol: crate::runtime::Symbol,
+        symbol: &crate::runtime::Symbol,
         index: usize,
-    ) -> Option<Call> {
+    ) -> Option<DefinitionRuleTimingToken> {
         if !crate::runtime::profiling::lexical_profile_enabled() {
             return None;
         }
-        Self::logical_definition_rule_start_slow(self, kind, symbol, index)
+        Self::definition_rule_timing_start_adopted_slow(self, kind, symbol, index)
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn definition_rule_timing_start_adopted_slow(
+        &self,
+        kind: &'static str,
+        symbol: &crate::runtime::Symbol,
+        index: usize,
+    ) -> Option<DefinitionRuleTimingToken> {
+        let start = super::definition_rule_timing_start();
+        let (call, storage) =
+            match Self::logical_definition_rule_start_slow(self, kind, symbol.clone(), index) {
+                Some(call) => match call
+                    .inner
+                    .epoch
+                    .storage(std::mem::size_of::<DefinitionRuleRecord>() + 16)
+                {
+                    Some(storage) => (Some(call), Some(storage)),
+                    None => (None, None),
+                },
+                None => (None, None),
+            };
+        if start.is_none() && call.is_none() {
+            return None;
+        }
+        Some(DefinitionRuleTimingToken(Box::new(DefinitionRuleRecord {
+            start,
+            call,
+            _storage: storage,
+        })))
     }
 
     #[cold]
@@ -149,6 +192,46 @@ impl crate::runtime::Session {
             Policy::OptionalExpr,
         )
     }
+}
+
+#[inline]
+pub(in crate::runtime) fn record_profile_definition_rule_timing_adopted(
+    kind: &'static str,
+    symbol: &crate::runtime::Symbol,
+    index: usize,
+    token: Option<DefinitionRuleTimingToken>,
+    result_is_ok: bool,
+    result: &Result<Option<Expr>, EvalError>,
+) {
+    if let Some(token) = token {
+        record_profile_definition_rule_timing_adopted_slow(
+            kind,
+            symbol,
+            index,
+            token,
+            result_is_ok,
+            result,
+        );
+    }
+}
+
+#[cold]
+#[inline(never)]
+fn record_profile_definition_rule_timing_adopted_slow(
+    kind: &'static str,
+    symbol: &crate::runtime::Symbol,
+    index: usize,
+    token: DefinitionRuleTimingToken,
+    result_is_ok: bool,
+    result: &Result<Option<Expr>, EvalError>,
+) {
+    let DefinitionRuleRecord {
+        start,
+        call,
+        _storage,
+    } = *token.0;
+    super::record_profile_definition_rule_timing(kind, symbol, index, start, result_is_ok);
+    complete_definition_rule(call, result);
 }
 
 pub(in crate::runtime) fn finish_logical_expr(
