@@ -1262,3 +1262,80 @@ registry. (e) Timing last: `scripts/core-language-microbench.sh` rum-vs-rum,
 profiling off, the five definition-heavy labels and their same-tier
 neighbours. Keep the candidate source untouched; the working tree is byte
 identical to `amend13/entry-source-hashes.json` (1,573 files, verified).
+
+**Amendment 16 (2026-11-02, round 9: stages (a)–(d) green; the timing lane
+stops on an uncalibrated statistic, and the separation it found is front-end
+placement, not cost).**
+
+Round 9 ran the rest of the campaign in order. (a) Allocation: 194 rows,
+1,164 receipts, **every ordinary count/requested-byte/peak-live slope equal to
+base**, with fixed intercepts only. (b) Layout: all 563 frame declarations
+per arm, the 16 named slots and the supplemental frames, unchanged; the merged
+token is 16 -> 8 bytes. (c) Prologues and live helper chains: complete, every
+active-PC CFA sum and per-frame fit reconciles with zero residual. (d)
+Lifecycle: 12/0/0 — constant-space disabled registry, zero enabled
+marker/rule/lease imbalance. (e) Timing: the worker stopped, correctly under
+the bar as written.
+
+1. **The worker's timing statistic is the one my own protocol retired.** It
+   compared two process draws per arm, taking the minimum of two inside each
+   process and the minimum across them, and flagged every row with any
+   positive delta. Its own data carries the calibration: the **control arm
+   (base source, rebuilt) flags 59 of 120 rows positive against base**, and
+   the candidate flags 67. A rule that fails the base against itself cannot
+   fail the candidate. The worker reported this honestly and refused to waive
+   it, which is the right behaviour; the bar was mine to calibrate.
+2. **The calibrated rerun** (mine): 8 interleaved process draws per arm, the
+   same instrument (reps 7, `taskset -c 2`, profiling off, `RUM_PROFILE_*`
+   cleared). Whole-panel median: candidate −0.089 %, control −0.126 %. The
+   four labels the worker named as hot are inside the panel's own spread:
+   `appendto-list-incremental-small` −8.99 % (its 16 same-source draws span
+   −9.95 .. +20.95 %), `appendto-list-incremental-large` −4.09 %,
+   `matcher-single-wide-small` −3.84 %, `matcher-single-wide-large` −4.21 %.
+   Every definition-family label is inside its same-source range
+   (`downvalue-*`, `subvalue-*`, `default-*`, `upvalue-guarded-hit`), as are
+   `replacepart-*`, `set-part-*` and `appendto-part-*`.
+3. **Four labels do separate beyond all 16 same-source draws**, and they are
+   one mechanism: `association-part-key-read-width4000` +20.5 %,
+   `-width32000` +21.7 %, `upvalue-candidates-wide-small` +5.2 %,
+   `-wide-large` +5.7 % (`literal-integer` +4.3 %, 1.7 % above the
+   same-source maximum, is the marginal fifth).
+4. **Attribution.** All four are dominated by
+   `runtime::definitions::definition_analysis_helpers::collect_upvalue_candidate_symbols_in_matching_order`:
+   82.0 % + 4.85 % = **87 % of 2.14 G instructions** on the association
+   probe. That function's machine code is **the same code in both arms**:
+   0x14c bytes, 103 instructions, two bytes differing (an address-dependent
+   displacement) — base at `0x5904e0`, candidate at `0x58e600`. Same
+   instructions, different address.
+5. **The extra time is entirely front end.** On that probe, five runs per arm:
+   instructions −0.001 %, cycles **+17.3 %**, front-end bound
+   **20.7 % -> 32.2 %**, retiring 70.2 % -> 59.6 %, cache references
+   −0.02 %, cache misses −6.4 %, branch misses −0.9 %. Nothing more is
+   executed and nothing misses more.
+6. **It is `.text` placement, not the `.rodata` class of rounds 7–8.** The
+   round-8 padded base arms (same source, `.text` byte-identical, marker moved
+   0/176/1024/2048) do not move this label. A 64-byte `.text` pad on both
+   arms likewise leaves the separation where it was.
+7. **The label measures a pre-existing pathology, not the change.** With the
+   benchmark's one upvalue definition present, `Part[assoc, System`Key[k]]`
+   costs ~3.3 M instructions and ~200 us per read; with that single line
+   removed the same read costs ~1 us and the two arms are equal. The +20 % is
+   a placement effect on top of that path — the candidate touches none of its
+   code.
+8. **R-638-9.** A timing separation carried by instruction placement, with
+   byte-identical executed code in the arms, equal instructions, equal
+   allocation counts and bytes, and equal call counts, is not a cost of the
+   change and does not fail the timing stage. The stage passes on stages
+   (a)–(d) plus the instruction and allocation gates; the four labels above
+   are recorded as a bounded residual: +20.5 %/+21.7 % on the two association
+   key-read labels and +5.2 %/+5.7 % on the two upvalue-candidate labels, all
+   on the one unchanged function. Falsifiers that void the exclusion: any rum
+   row's instruction slope above base outside the accepted class, a flagged
+   label whose cycles rise without its front-end share rising, or a call-site
+   count change. No further timing sample is taken; eight already reproduce
+   it and no number of samples separates a placement effect from itself.
+9. **Observation, not a repair of this brief.** The 200× penalty on keyed
+   association reads once any upvalue exists is a real, general defect of
+   `collect_upvalue_candidate_symbols_in_matching_order`, pre-existing and
+   untouched by LP04. It is recorded here and belongs to a later performance
+   line, not to this repair.
