@@ -156,9 +156,12 @@ passed their exact ignored test, peak RSS 2.4 GB, and the copy is one second.
 The baseline and the mutant in the same copy share one built `target/`; the
 mutant run rebuilds only the changed crate.
 
-Every cargo command runs in `scripts/memory-scope.sh brief640-<id> 14G` with
+Every cargo command runs inside the dispatcher's own 16 GiB memory scope
+(the `memory-scope: unit=brief-640-cdx-...` line in the dispatch log) with
 `CARGO_BUILD_JOBS=8`, `RUST_TEST_THREADS=8`, `--offline --locked`, one cargo
-command at a time, no other heavy work alongside.
+command at a time, no other heavy work alongside. **Do not invoke
+`scripts/memory-scope.sh` yourself** — inside this sandbox it cannot reach
+the systemd user bus (Amendment 1).
 
 ## Verification (MANDATORY — you run it)
 
@@ -202,6 +205,25 @@ stop cleanly at a checkpoint rather than losing receipts.
   receipt is the proof.
 - Report in `rum-report/1`; a number without a quoted line is an open
   question.
+
+## Amendment 1 (2026-11-02) — the dispatcher's scope, not a per-command launcher
+
+Attempt 1 stopped before any cargo run: the brief required
+`scripts/memory-scope.sh` around every cargo command, and that launcher
+cannot connect to the user scope bus inside the Codex sandbox
+(`Failed to connect to user scope bus via local transport: Operation not
+permitted`). The worker stopped correctly with no fallback, no copy and no
+mutation. The rule is a director rule; the dispatcher already wraps the
+worker itself.
+
+- **Do not run `scripts/memory-scope.sh`.** The dispatch log's
+  `memory-scope: unit=brief-640-cdx-...` line is the scope. Run cargo
+  directly with `CARGO_BUILD_JOBS=8`, `RUST_TEST_THREADS=8`,
+  `--offline --locked`, one cargo command at a time, each as a child of
+  `scripts/run-bounded.py --timeout <bound> --`.
+- The environment preflight is just `cargo --version` and
+  `rustc --version`.
+- Everything else in this brief stands unchanged.
 
 ## Report format
 
