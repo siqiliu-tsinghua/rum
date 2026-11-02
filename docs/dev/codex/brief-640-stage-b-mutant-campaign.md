@@ -144,7 +144,7 @@ larger copy), STOP and report.
 
 | Shape | Measured | Bound (3x, rounded up) |
 | --- | ---: | ---: |
-| cold copy of the tree (32 MB, no `.git`/`.temp`/`target`) | 1 s | 60 s |
+| cold copy of the tree (2,587 regular files, 68,485,831 bytes = 65.3 MiB, no `.git`/`.temp`/`target`) | 1 s | 60 s |
 | cold release build + one exact test, base shape | 84 s | 300 s |
 | cold release build + one exact test, zero-guard feature shape | 87 s | 300 s |
 | incremental rebuild + one exact test in a warm copy | not separately measured; use the cold bound | 300 s |
@@ -155,6 +155,12 @@ Measured 2026-11-02: `.temp/director/audit-638/bounds/timings.md`,
 passed their exact ignored test, peak RSS 2.4 GB, and the copy is one second.
 The baseline and the mutant in the same copy share one built `target/`; the
 mutant run rebuilds only the changed crate.
+
+The first version of this table said "32 MB"; that was `du` disk usage on a
+compressed filesystem, not the byte size. The byte count above is the copy's
+own enumeration (2,587 regular files, 68,485,831 bytes) and matches the
+worker's measurement. The shape is now exact: a different file count or byte
+total means the tree changed, and only then is it a STOP.
 
 Every cargo command runs inside the dispatcher's own 16 GiB memory scope
 (the `memory-scope: unit=brief-640-cdx-...` line in the dispatch log) with
