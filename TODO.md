@@ -4,26 +4,27 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-10-31. The committed tree runs through:
+Status checkpoint: 2026-11-02. The committed tree runs through:
 - G13 step S9 (brief-617, control and cleanup; gated, below);
 - G15-A (brief-619, `afdcd02f`) and G15-B (brief-620, `43a26c72`);
 - the G15-C design (brief-621, accepted `8f77793c`) and G15-C1 (brief-622,
   `b4f81ebe`);
-- the logical profiler's LP01 (brief-625, `3fd1885c`) and LP02 (brief-626,
-  `17576575`);
+- the logical profiler's LP01 (brief-625, `3fd1885c`), LP02 (brief-626,
+  `17576575`), LP03 (brief-637, `e924bb4f`) and LP04 (brief-638,
+  `504471a5`);
 - the native stack base per thread (brief-629, `60ca9585`) and the
   abandonment repairs (brief-630: B1 `854cfa4a`, B2 `1c115117`, B3
   `ba1e1e52`);
 - test isolation: the artifact constructors (brief-634, `467ff97a`), the
   profiler test lease (brief-635: stage 1 `b199d63c`, amendment 1
-  `5184797c`, amendment 2 `f38657d0`) and the shared parse (brief-636).
+  `5184797c`, amendment 2 `f38657d0`) and the shared parse (brief-636);
+- the test audit's design stage (brief-639, `d6533dac`).
 
-**Next, in order** (the branch queue): the workspace thread-count
-measurement (4/8/16/32) for the user's default-thread ruling — note the
-2026-10-29 park on measuring `rum-stdlib` at 8 test threads, so this needs
-the user's go-ahead — then LP03-LP08, C2's remaining 353 rows, CM,
-`CHANGELOG.md`, and S10 onward. New briefs go to kimi while Codex has no
-quota and grk has no balance (2026-10-30).
+**Next, in order** (the branch queue): the test audit's Stage B mutant
+campaign, then its D03 certificate-strengthening brief, then LP05-LP08,
+C2's remaining 353 rows, CM, `CHANGELOG.md`, and S10 onward. New briefs go
+to cdx for every brief (user ruling 2026-11-01); a cdx quota death is a stop
+and a question, never a silent fallback.
 
 Test isolation, done:
 - the design (brief-633) is gated;
@@ -157,6 +158,29 @@ does the same work, only without its profiling hooks.
     base by 11-42 instructions per iteration; the single row above the
     step's HEAD base is the accepted +2/call class plus a build difference in
     the first attempt's code).
+
+- **Test audit** (brief-639, design-only, accepted 2026-11-02): all 61
+  `#[ignore]` tests inventoried with a one-line claim and `path:line` — 48
+  certificate, 4 contract, 5 behaviour, 2 instrument, 1 generator, 1
+  falsifier — plus a production mutant and its full observation path for
+  every certificate/contract row (45 designs covering 52 rows), nine
+  re-derived duplicate-body groups (22 members), and the staged plan. The
+  full tables are the report record appended to the brief.
+  - **Stage C is NO ELIGIBLE COLLAPSE** (R-639-2): six deliberate mirrors
+    and three behaviour copies; the old handoff's "5 exact-duplicate body
+    pairs" is superseded by the re-derived nine groups.
+  - A director calibration ran 55 of the 61 in release: 54 green, and the
+    one red is the profiling gate's own `RUM_PROFILE_EVALUATION_CACHE=1`
+    precondition (green when set).
+  - Open obligations, with costs, are the report's D01–D09: I07 has no
+    honest localized drop mutant; M08/M12 are conditional drop aborts
+    (INCONCLUSIVE on a bare abort); I31's Take fixture cannot force
+    selection (D03); eleven certificates prove narrower claims than their
+    names suggest (D04); I53's refusal does not establish head traversal
+    (D05); the three zero-guard contracts need an explicit feature build
+    (D06, authorized for Stage B only).
+  - **Next: Stage B**, the scratch-copy mutant campaign, then a
+    certificate-only brief for D03/D01, then LP05.
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its
