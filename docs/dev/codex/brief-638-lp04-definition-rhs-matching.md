@@ -1051,3 +1051,46 @@ complete_definition_rule(logical_rule, &result);
 Every file this needs is already in Scope; `crates/rum-runtime/src/runtime/
 profiling/mod.rs` stays untouched. Everything else in Amendment 10 stands,
 including the checkpoint and the ban on a fifth shape.
+
+**Amendment 12 (2026-11-02, round 5 brackets the design space; the one-word
+token is its minimum).**
+
+Round 5's checkpoint failed three of five rows and the stack, and it
+measured the exact cost of the shape I ordered:
+
+- The three completion rows are **196/180/180 against base 173/157/157
+  (+23/call)**, and 21 debug shapes grow +32..+96 bytes/level. The added
+  instructions are named: eight 16-byte loads and eight 16-byte stores copy
+  the **128-byte `Result` carrier** at `0x57dc24..0x57dc96` before the tag
+  branch, plus seven net opcode changes. Two live values (the legacy
+  `Option<Instant>` and the logical `Option<Call>`) force the carrier copy —
+  the same class as LP02's large-result copy.
+- Both recursion rows are **exactly base**: down 104, up 119. That is the
+  other half of the bracket, and it is why Amendment 10 looked right.
+
+The two shapes bracket the design space: **one value carried across the RHS
+costs +2/call of register spill in the two recursion contexts; two values
+cost +23/call of carrier copy plus 21 growing stack shapes.** The one-word
+token is the minimum by an order of magnitude and the only shape that keeps
+all 44 stack fits.
+
+**R-638-5: keep the Amendment 9 candidate; the two recursion rows are a
+named, accepted residual.** `try_apply_down_values_from_symbol'2` +2/call
+and `try_apply_up_values'2` +2/call (x2 per iteration) are recorded with
+their count x cost as the price of the merge. They are not waived as noise —
+they are deterministic, PC-mapped, and they survive every measured cell —
+and the only shape that removes them was built and measured at 23/call plus
+21 growing stack shapes. Any *new* positive own-Ir row is still a STOP, and
+the five affected labels face the panel's label test like every other label.
+
+**Resume from the retained cell.** Restore exactly the Amendment 9 candidate
+(`.temp/brief-638/amend9/sources/candidate`, the 8-byte borrowed shape),
+verify it against `amend9/candidate-source-hashes.json`, and re-run the
+five-label checkpoint to confirm 172/156/156 completion and 106/121
+recursion before the campaign. Then Stage B: the 313-label panel with five
+interleaved samples per arm and `min(repair) > max(control)`; copy and
+allocation on 192 labels; layout, lifecycle and prologues; then timing last.
+
+The observation is unchanged: legacy start first, logical start second, the
+same completion order, the same row names, the four ledger bars, 4,375
+receipts, census 1067, constructors 175/177.
