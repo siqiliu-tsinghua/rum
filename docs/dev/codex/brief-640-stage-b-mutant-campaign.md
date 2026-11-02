@@ -260,6 +260,78 @@ untouched. The prior Codex report is preserved beside the new one as
 `.temp/brief-640/report-cdx-attempt4.json`. Everything else stands
 unchanged.
 
+## Director gate — B (2026-11-03)
+
+Campaign result: **45/45 mutants, 58 target pairs.** The worker reports 49
+KILLED, 2 SURVIVED, 7 INCONCLUSIVE; after the M12 ruling below the standing
+count is **49 assertion KILLED + 1 abort KILLED, 2 SURVIVED, 6 INCONCLUSIVE,
+I07 OPEN by D01**. Report check OK (4,171 citations);
+integrity PASS (1,519 source files and 2,587 tree files identical before and
+after). The production tree was never touched.
+
+Director spot checks, from the mutant logs:
+
+- **M31/I31**: red at `iterative_traversal_depth.rs:211:5`, left 15-brace
+  depth against the expected 8193-character string, serial reproduction;
+  KILLED.
+- **M26/I26**: red at `held_association_exact_path_depth.rs:152:5` with the
+  literal stale target (the added rule missing); KILLED.
+- **M54/I54, I56**: under `--features rum-runtime/test-native-stack-guard-zero`
+  red at `merge_native_stack_guard.rs:71:5` and the shared helper at `:26`;
+  KILLED. The feature shape builds and runs inside the worker sandbox.
+- **M08/I08, I17**: green under the recursive-drop mutation. The first
+  certificate replays red in both builds and the rerun passes — the stale
+  fingerprint cells, not the mutation. The mutation is a real code change;
+  at 4097 the recursive drop still completes, so the certificate cannot
+  distinguish iterative from recursive destruction. **SURVIVED stands.**
+
+The seven INCONCLUSIVE, ruled:
+
+- **M12/I12 — KILLED BY ABORT** (a distinct class, not an assertion kill).
+  The child thread `association-key-deflatten-drop-path` overflowed its
+  stack (SIGABRT) before any assertion. The certificate's own claim is
+  "abandons ... without growing the stack", the mutation replaces the
+  iterative cleanup with `drop`, and the named thread is the only work in
+  that test; the abort falsifies the claim. No assertion fired, so it is
+  never counted with the 49 assertion kills.
+- **M21/I21 — INCONCLUSIVE stands.** The named thread
+  `delete-missing-scan-depth-4097` overflowed before the line-236 equality;
+  the mutation (a boolean flip in the contains-Missing scan) has no
+  established mechanism for a stack overflow. Recorded, not credited.
+- **M17b/I17 and M33/I33 — re-run authorized.** The ownership replay would
+  delete an existing `UnknownConstruct` row (`lookup.rs:261`,
+  `traversal.rs:115:58`). Inside a scratch copy that deletion is an expected
+  consequence of the mutation: preserve the pre-mutation inventory, record
+  the deleted row, then run the target.
+- **M19/I20 and M45/I45 — re-run authorized.** The unchanged baseline
+  exceeded the 120 s per-test bound (exit 124). The bound was too tight for
+  these heavy tests; Amendment 5 supplies the measured bound.
+
+## Amendment 5 (2026-11-03) — the four-row completion run
+
+Re-run exactly these four mutants, everything else unchanged and every
+completed mutant skipped: **M17b (I17), M19 (I19 and I20), M33 (I33), M45
+(I45)**. The rulings above are the authorization for the two
+standing-inventory stops. The two timed-out baselines use the measured
+bound below instead of 120 s; the other targets keep their existing bounds.
+
+Measured baselines (director, 2026-11-03, release, one thread, alone):
+
+| Target | Measured | Bound |
+| --- | ---: | ---: |
+| I20 `delete_missing_recursive_armed_completes_at_physical_height_4097_on_two_mib` | 482 s | 1800 s |
+| I45 `d_nested_sin_completes_at_physical_height_4097_on_two_mib` | 443 s | 1800 s |
+
+The measurements are the test's own reported time (482.28 s and 442.72 s)
+on a warm build; a cold copy adds the measured ~84 s build. The 1800 s
+bound is 3x the cold shape, rounded up, and it is a per-target bound for
+these two rows only.
+
+For M12 the classification stays as ruled above: the evidence is complete,
+no re-run. Report the four rows into the same results table and the same
+`report.json`; the final summary states the counts with the abort class
+separate.
+
 ## Report format
 
 `rum-report/1` at `.temp/brief-640/report.json` with sections `summary`,

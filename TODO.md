@@ -179,8 +179,27 @@ does the same work, only without its profiling hooks.
     names suggest (D04); I53's refusal does not establish head traversal
     (D05); the three zero-guard contracts need an explicit feature build
     (D06, authorized for Stage B only).
-  - **Next: Stage B**, the scratch-copy mutant campaign, then a
-    certificate-only brief for D03/D01, then LP05.
+  - **Stage B, the mutant campaign (brief-640): 45/45 mutants, 58 target
+    pairs.** Worker report: 49 KILLED, 2 SURVIVED, 7 INCONCLUSIVE; with the
+    director's M12 ruling the standing count is 49 assertion kills + 1 abort
+    kill, 2 survived, 6 inconclusive, I07 OPEN. Integrity PASS (1,519
+    source files and 2,587 tree files byte-identical before and after);
+    4,171 citations verified; the production tree was never touched.
+    - **The two SURVIVED are M08 on I08 and I17**: replacing the iterative
+      drop with the recursive one is invisible to the 4097-depth drop
+      certificate, because at that depth the recursive drop still completes.
+      D02 is confirmed — the certificate proves completion, not the
+      mechanism.
+    - **M12 is KILLED BY ABORT**, a class separate from the 49: the named
+      `association-key-deflatten-drop-path` thread overflowed its stack
+      under the mutation; the certificate's claim is "without growing the
+      stack", so the abort falsifies it, though no assertion fired.
+    - M17b and M33 stopped on a standing-inventory row deletion; M19/I20 and
+      M45/I45 timed out at the old 120 s bound (measured 482 s and 443 s).
+      Amendment 5 re-runs those four with a measured 1800 s bound and the
+      scratch-copy ruling.
+  - **Next: the four-row completion run (resume-6), then a certificate-only
+    brief for D01/D03, then LP05.**
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its
