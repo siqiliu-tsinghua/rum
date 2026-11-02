@@ -1200,3 +1200,65 @@ sentence.
 If the class is demonstrated, the instruction gate closes on the round-6
 panel plus R-638-7, and the campaign continues in order: the allocation
 census (194 rows), layout, prologues, lifecycle, timing last.
+
+**Amendment 15 (2026-11-02, round 8 demonstrates the class on a build whose
+`.text` is byte-identical; the gate closes).**
+
+Round 8 did the calibration and stopped on a condition I wrote badly. The
+experiment is stronger than the condition.
+
+1. **What was built.** Base source, one path, one codegen unit, plus a
+   never-read static placed inside `.rodata`, at three sizes. The marker
+   literal moved 0 -> 176 -> 1024 -> 2048 bytes (low twelve bits `0x1c6`,
+   `0x276`, `0x5c6`, `0x9c6`). **All 1,851,548 `.text` address/opcode entries
+   are identical in all four arms, same SHA256, and every function symbol has
+   the same address and size.** The pad changed no emitted instruction.
+2. **What moved anyway.** `dot-three-no-input`: the 4..7-byte scalar entry
+   `0x1b154a` goes 14 -> 20,018 under pad184 (+19,999 visits/iteration) while
+   the vector entry `0x1b1515` falls by 20,003. `failure-tag-fallback`: pad184
+   moves it 541 -> 48 (−1.002/iteration) and pad2048 moves the vector entry up
+   by 483/500 (+0.966/iteration). **The guard moves in both directions, at
+   full per-iteration magnitude, from a change that executes nothing.**
+3. **Reconciliation.** pad184 on Dot: total +7.87045, memcmp +7.9964, rum
+   −0.6517. The candidate on Dot: +8.08465, memcmp +8.0036, rum +0.081. The
+   padded base reproduces the candidate's carrier to within 0.2 Ir/iteration
+   with a rum side slightly *below* base.
+4. **Why the literal condition failed, and why that is not a defect.** The
+   padded arms' rum rows move by at most +3.07/iteration on a 9,428/iteration
+   label (0.033 %), with `.text` byte-identical: that is the instrument's
+   per-run residual (hash seeds and data addresses), the exact thing the
+   five interleaved samples exist to average. Requiring every row unchanged
+   in a single paired capture was unattainable, and I withdraw it. The four
+   "changed" comparison sites are startup-only (829, 1, 167 and 1 calls in a
+   run); every per-iteration site is identical in count in all four arms, and
+   the changes sit in the intercept, never in the slope.
+5. **R-638-8: the class is demonstrated and the instruction gate closes.**
+   A rum-vs-rum instruction label can move by a libc short-compare flip driven
+   by read-only-data placement alone. The two round-6 flags are that class:
+   candidate Dot +20,001 flips (= the padded base's +19,999) and failure
+   +2,009 flips, with every rum row at or below base outside R-638-5/R-638-6.
+   The exclusion's falsifiers, corrected to what the control calibrates: a
+   rum row with an integer per-call increase outside the accepted class, or a
+   **slope** change at a memcmp/bcmp call site. Intercept moves of ≤6 calls
+   per run appear in every arm, including base against itself, and are not a
+   signal. This exclusion is part of the instrument and is restated in every
+   brief that reuses the panel.
+6. **The placement lesson is now a rule.** The worker's first pad landed in an
+   existing 467-byte gap and the marker did not move; it caught that before
+   any capture, moved the static inside `.rodata` with a `KEEP` script and
+   rebuilt all four arms. That is the discipline: **prove the layout moved
+   before believing any null that depends on it.** Round 8's preliminary and
+   final builds are both retained.
+
+**Round 9 is the rest of the campaign, in this order, each stage stopping on
+its own bar.** (a) The allocation census, 194 rows (192 ordinary plus two
+lifecycle controls): counts, requested bytes and peak-live bytes per label;
+no positive ordinary slope. (b) The layout gate: every existing frame, Entry,
+`Queued<Entry>`, `FrameQueue`, `ResumeContext`, `SuspendedEvaluation`, Session
+and profiling-token slot; unchanged ordinary frame sizes. (c) Changed
+hot-function prologues and their complete live helper chains. (d) Lifecycle:
+enabled registry/marker allocation/drop balance and a constant-space disabled
+registry. (e) Timing last: `scripts/core-language-microbench.sh` rum-vs-rum,
+profiling off, the five definition-heavy labels and their same-tier
+neighbours. Keep the candidate source untouched; the working tree is byte
+identical to `amend13/entry-source-hashes.json` (1,573 files, verified).
