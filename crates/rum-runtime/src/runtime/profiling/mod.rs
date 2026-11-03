@@ -43,6 +43,9 @@ use config::{
     lexical_profile_source_fingerprints_enabled, lexical_profile_sources_enabled,
     rule_rhs_timing_enabled,
 };
+pub(in crate::runtime) use control_timing::{
+    CompoundItemSuspend, ForwardedTimingPhase, SetRhsSuspend, WhileBodySuspend, WhileTestSuspend,
+};
 use counters::{
     average, elapsed_nanos_since, load, record_add, record_counter, record_max,
     record_profile_lexical_timing, record_profile_lexical_timing_elapsed, record_timing,

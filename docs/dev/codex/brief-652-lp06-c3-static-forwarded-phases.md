@@ -233,3 +233,65 @@ prologues, the must-not-change proofs, the size assessment of the touched
 files, and any unpassed cost question. Run
 `python3 -I scripts/report.py check 652` and return its summary and the full
 compliance verdict lines.
+
+## Director gate — 2026-11-04: GREEN
+
+| Step | Verdict | Detail |
+|---|---|---|
+| scope | PASS | 22,822 citations verified against Git; the 12 changed files are exactly the scope set (five source, seven replayed inventories) |
+| fmt | PASS | formatted |
+| check | PASS | 3 warnings, 0 new against HEAD, 0 gone |
+| ownership | PASS | 61 self-reaching types, 79 UnknownHostPayload, 8018 UnknownConstruct; 0 replay rounds |
+| census | PASS | 1067 {RET001: 10, RET002: 1022, RET003: 35}; paired 1067, retired 0, new 0 |
+| oracle | PASS | 1 passed |
+| standing | PASS | LP01 1/0; typed-slot 10/0 |
+| fingerprints | PASS | 68 contracts, 0 fingerprints changed, copied in |
+| certificates | PASS | both builds pass; 0 promoted rows merged; 1 round |
+| inventories | PASS | 19 passed, 0 failed; frontier 1067 |
+| workspace | PASS | 62 binaries, 4095 passed, 0 failed, 61 ignored; peak 7.0 GB of 14, oom_kill 0 |
+
+Beyond the script, reproduced by the director:
+
+- **Shape, recomputed by me on the pinned candidate attempt-2 objdumps and
+  the fresh base arm**, against the six supplied specs: forwarded slow
+  bodies four ordinals each 24 / 56 / 24 bytes (cli / stack-debug /
+  stack-release); `resume_while_loop` 744 / 3528 / 744;
+  `resume_compound_expression_from_index` 648 / 1304 / 664;
+  `resume_catch_after_body` 1000 / 792 / 1000. Base arm: one body at
+  24 / 88 / 24; While 808 / 3528 / 808; Compound 776 / 1304 / 776; Catch
+  1016 / 792 / 1016. Every bar met; no spec, instrument or source shape was
+  retuned.
+- **The literals are static and per marker.** In the candidate CLI objdump
+  the four bodies sit at `0xe2ce0`, `0xe2d30`, `0xe2d80`, `0xe2dd0`, each
+  loading its own `.rodata` literal ("set.rhs.suspend" 15 B,
+  "compound.item.suspend" 21 B, "while.body.suspend" and
+  "while.test.suspend" 18 B) and each called from exactly one site; no
+  phase register is saved across a shared body any more.
+- **Release wrappers absent, cold bodies present.** Both release arms lack
+  the boundary, forwarded-recorder and adopted-start wrapper symbols and
+  keep their cold bodies (boundary 2, forwarded 1, adopted 1 hits); the
+  debug arm keeps the wrapper outlined and the four forwarded cold bodies
+  at 56 B.
+- **The recorder reorder earns its place.** My full-shape probe before
+  dispatch (generic phases plus token-first recorders) matched these
+  candidate values exactly; the reorder lowers While 776 -> 744 and
+  Compound 696/680 -> 648/664 rather than costing a frame.
+- **No semantic movement.** The diff touches only the forwarded wrapper and
+  its one cold body, the two recorder wrappers' gate placement (the lexical
+  recheck moved to the head of each existing cold body), one trait with
+  four zero-sized markers, one re-export block and four call-site
+  turbofish arguments. No `PhaseKey`, no new field on any frame, no moved
+  phase literal, no widened visibility; the adopted start's gate-first body
+  is byte-identical.
+- **Inventories, column-audited against HEAD**: the ownership inventories
+  move only line/end-line columns (52/28/4/2 rows); `local-contracts.tsv`
+  moves only the fingerprint column across 68 rows; `promoted.tsv` only its
+  two certificate cells; `logical-profile-required.tsv` only the
+  producer_fingerprint column across 140 rows of the edited producer's
+  body. Row sets and keys are unchanged, and the gate's replay steps are
+  green.
+- **Recorded, not gated**: F6's neighbours (`try_apply_function`
+  1096/2808/1096; `eval_control_data_builtin` 1240/120/984) and F7
+  (`try_dispatch_builtin_call` [872, 856] in CLI at both the pinned entry
+  arm and the candidate) are unchanged by C3 and remain brief-653's. LP06
+  stays unpassed until the D campaign.

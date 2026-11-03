@@ -39,8 +39,8 @@ impl Session {
                 runtime_profile_rhs,
                 &rhs_result,
             );
-            let runtime_profile_suspend =
-                self.runtime_path_timing_start_adopted_forwarded("set.rhs.suspend", &rhs_result);
+            let runtime_profile_suspend = self
+                .runtime_path_timing_start_adopted_forwarded::<crate::runtime::profiling::SetRhsSuspend>(&rhs_result);
             let rhs_result = {
                 let session = &mut *self;
                 let suspended_lhs = &lhs;

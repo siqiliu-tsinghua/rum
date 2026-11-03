@@ -365,8 +365,24 @@ does the same work, only without its profiling hooks.
     new fault/drop tests, five calibrated mutants (including the
     Cancelled/Error conflation) and the 56/56 layout pin are green; the
     enabled terminal inspect lock and Owner Arc clone are disclosed.
-    **C3 (static forwarded phases and neighbours) and D (the fresh
-    repaired-tree campaign) follow; LP07 waits behind them.**
+    **C3 landed below; D (the fresh repaired-tree campaign) follows; LP07
+    waits behind it.**
+  - **C3 landed (2026-11-04, brief-652).** The four forwarded suspend
+    phases are compile-time markers over a `pub(in crate::runtime)`
+    `ForwardedTimingPhase` trait; the one shared start's single cold body
+    is monomorphized per marker and uses `P::NAME`, so each site gets its
+    own body instead of the 40-byte runtime-string form. Both timing
+    recorders are token-first with the lexical recheck at the head of their
+    existing cold bodies, `#[inline]` kept. Measured at one source path,
+    CGU=1: forwarded 4x24 / 4x56 / 4x24 (cli / stack-debug / stack-release;
+    base 1x24 / 1x88 / 1x24, entry 1x40 / 1x88 / 1x40); While
+    744/3528/744 (entry 776/3528/776); Compound 648/1304/664 (entry
+    696/1304/680); Catch 1000/792/1000 unchanged; release wrappers absent
+    with cold bodies present. Two director probes (generic phases alone;
+    generic phases plus the recorder reorder) passed every bar before
+    dispatch, and the gate reproduced all six numbers. F7 [872, 856] and
+    F6's executed neighbours are unchanged and remain D's. LP06 closes only
+    when the brief-653 campaign passes.
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its

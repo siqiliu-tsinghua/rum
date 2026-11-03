@@ -185,27 +185,29 @@ impl crate::runtime::Session {
 
     /// A forwarded RHS pause ends before its assignment consumer is enqueued.
     #[inline]
-    pub(in crate::runtime) fn runtime_path_timing_start_adopted_forwarded(
+    pub(in crate::runtime) fn runtime_path_timing_start_adopted_forwarded<
+        P: crate::runtime::profiling::ForwardedTimingPhase,
+    >(
         &mut self,
-        phase: &'static str,
         result: &Result<Expr, crate::runtime::EvalError>,
     ) -> Option<RuntimePathTimingToken> {
         if !lexical_profile_enabled() {
             return None;
         }
-        self.runtime_path_timing_start_adopted_forwarded_slow(phase, result)
+        self.runtime_path_timing_start_adopted_forwarded_slow::<P>(result)
     }
 
     #[cold]
     #[inline(never)]
-    fn runtime_path_timing_start_adopted_forwarded_slow(
+    fn runtime_path_timing_start_adopted_forwarded_slow<
+        P: crate::runtime::profiling::ForwardedTimingPhase,
+    >(
         &mut self,
-        phase: &'static str,
         result: &Result<Expr, crate::runtime::EvalError>,
     ) -> Option<RuntimePathTimingToken> {
-        let token = runtime_path_timing_start_adopted_slow(self, phase);
+        let token = runtime_path_timing_start_adopted_slow(self, P::NAME);
         if matches!(result, Err(crate::runtime::EvalError::InputRequired { .. })) {
-            self.complete_profile_runtime_path_boundary_slow(phase, result);
+            self.complete_profile_runtime_path_boundary_slow(P::NAME, result);
         }
         token
     }
@@ -218,10 +220,6 @@ impl crate::runtime::Session {
         token: Option<RuntimePathTimingToken>,
         result: &Result<T, crate::runtime::EvalError>,
     ) {
-        if !lexical_profile_enabled() {
-            return;
-        }
-
         let Some(token) = token else {
             return;
         };
@@ -238,6 +236,10 @@ impl crate::runtime::Session {
         token: RuntimePathTimingToken,
         result: &Result<T, crate::runtime::EvalError>,
     ) {
+        if !lexical_profile_enabled() {
+            return;
+        }
+
         let token = Some(token);
         if let Some(token) = &token {
             self.complete_profile_runtime_path_boundary_slow(token.key.phase, result);

@@ -160,7 +160,7 @@ impl Session {
                         &result,
                     );
                     let runtime_profile_suspend = self
-                        .runtime_path_timing_start_adopted_forwarded("while.test.suspend", &result);
+                        .runtime_path_timing_start_adopted_forwarded::<crate::runtime::profiling::WhileTestSuspend>(&result);
                     let outcome = crate::resume_or_suspend!(
                         self,
                         result,
@@ -187,7 +187,7 @@ impl Session {
                         &result,
                     );
                     let runtime_profile_suspend = self
-                        .runtime_path_timing_start_adopted_forwarded("while.body.suspend", &result);
+                        .runtime_path_timing_start_adopted_forwarded::<crate::runtime::profiling::WhileBodySuspend>(&result);
                     let outcome = crate::resume_or_suspend!(
                         self,
                         result,
@@ -369,7 +369,7 @@ impl Session {
             &current_result,
         );
         let runtime_profile_suspend = self
-            .runtime_path_timing_start_adopted_forwarded("compound.item.suspend", &current_result);
+            .runtime_path_timing_start_adopted_forwarded::<crate::runtime::profiling::CompoundItemSuspend>(&current_result);
         let outcome = crate::resume_or_suspend!(
             self,
             current_result,

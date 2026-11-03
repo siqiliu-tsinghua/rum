@@ -6,6 +6,34 @@ use super::timing::{record_profile_runtime_path_timing, runtime_path_timing_star
 use super::{RuntimePathTimingToken, RuntimeProfileOutcome, lexical_profile_enabled};
 use crate::runtime::{EvalError, Expr, Session};
 
+pub(in crate::runtime) trait ForwardedTimingPhase {
+    const NAME: &'static str;
+}
+
+pub(in crate::runtime) struct SetRhsSuspend;
+
+impl ForwardedTimingPhase for SetRhsSuspend {
+    const NAME: &'static str = "set.rhs.suspend";
+}
+
+pub(in crate::runtime) struct WhileTestSuspend;
+
+impl ForwardedTimingPhase for WhileTestSuspend {
+    const NAME: &'static str = "while.test.suspend";
+}
+
+pub(in crate::runtime) struct WhileBodySuspend;
+
+impl ForwardedTimingPhase for WhileBodySuspend {
+    const NAME: &'static str = "while.body.suspend";
+}
+
+pub(in crate::runtime) struct CompoundItemSuspend;
+
+impl ForwardedTimingPhase for CompoundItemSuspend {
+    const NAME: &'static str = "compound.item.suspend";
+}
+
 pub(in crate::runtime) struct IncomingPathTimingToken {
     legacy: RuntimePathTimingToken,
 }
@@ -104,9 +132,6 @@ impl Session {
         result: &Result<Expr, EvalError>,
         legacy_outcome: RuntimeProfileOutcome,
     ) {
-        if !lexical_profile_enabled() {
-            return;
-        }
         let Some(token) = token else {
             return;
         };
@@ -125,6 +150,9 @@ impl Session {
         result: &Result<Expr, EvalError>,
         legacy_outcome: RuntimeProfileOutcome,
     ) {
+        if !lexical_profile_enabled() {
+            return;
+        }
         // The starter already transferred a forwarded pause before its consumer.
         if !matches!(result, Err(EvalError::InputRequired { .. })) {
             if let Some(key) = PhaseKey::from_name(token.key.phase) {
