@@ -378,3 +378,52 @@ cell receipts, the semantic result, the unrun performance gates and any
 remaining question. Check it with `scripts/report.py check` (without its
 version-control option) and return its summary and the full compliance
 verdict lines.
+
+## Amendment 1 — the test-instrument parser repair (after the attempt-1 STOP)
+
+**The STOP was correct in kind and is accepted.** The fault is in a helper
+this brief added, `support/logical_profile.rs` `control_legacy_keys`, not in
+production code, an inventory, or an expected row. The worker left the
+candidate unchanged, reproduced the panic at one thread, and asked. The
+repair below is authorized; nothing else in this amendment moves.
+
+**Cause and exact rule.** The legacy snapshot key is
+`runtime|{phase}|{profile_optional_symbol_name(source)}`, and that helper is
+`Symbol::to_string()` = `qualified_name()`: a global or system symbol renders
+as its bare name with no backtick. `control_legacy_keys` assumed every
+non-`-` field contains a backtick, so the cache-mode legacy source `f`
+panicked at `rsplit_once('`').unwrap()`. Repair exactly:
+
+```rust
+let source = (parts[2] != "-").then(|| match parts[2].rsplit_once('`') {
+    Some((context, name)) => rum_core::Symbol::new(format!("{context}`"), name),
+    None => rum_core::Symbol::new("", parts[2]),
+});
+```
+
+A bare field is reconstructed as the global symbol. If that reconstruction
+still differs from the native key, STOP: do not guess a context, do not
+special-case a mode, and do not weaken the comparison. No expected count,
+cell, production line, or inventory identity changes.
+
+**What to rerun after the repair.** The repair edits a file under `crates/`,
+so the standing inventories expire again. Replay them before the first
+remaining acceptance suite, exactly as the brief requires. Then run, in
+order: the full `logical_counter_port` (all five child modes, not just cache),
+the full `suspension_oracle` in both builds, the whole workspace in both
+builds, and the six switch-gated `rum-host` tests with
+`RUM_PROFILE_LEXICAL_SUBSTITUTION=1`. Do not redo the green production work
+the attempt already proved — the runtime suites and the six mutant receipts
+stand because the repair touches only the test helper. Quote every verdict
+line of the resumed runs.
+
+The disclosed 3.740-second cargo overlap of attempt 1 is accepted as
+procedural noise for deterministic tests, because the worker reran the
+affected checks serially; the exclusive command lock is now required for the
+rest of the run and an overlap must not recur.
+
+Update `.temp/brief-646/report-a1.json` in place for the resumed run,
+retaining the attempt-1 STOP as a recorded run. If the repaired comparison
+fails, or any remaining acceptance command is red, STOP with the same
+evidence standard instead of repairing beyond this rule.
+
