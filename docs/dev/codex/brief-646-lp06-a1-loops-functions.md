@@ -427,3 +427,52 @@ retaining the attempt-1 STOP as a recorded run. If the repaired comparison
 fails, or any remaining acceptance command is red, STOP with the same
 evidence standard instead of repairing beyond this rule.
 
+## Amendment 2 — the bare-name reconstruction is `from_name` (after the resume STOP)
+
+**The second STOP is correct in kind and is accepted.** Amendment 1 removed
+the panic; the strict comparison then failed at cache-mode
+`lp06.status.value_return`. The worker quoted the exact mismatch: the native
+key holds `Symbol { id: 670, identity: None, text: SymbolText { id: 670,
+context: "Global`", name: "f" } }` and `Symbol::new("", "f")` produced the
+same name in the empty context (id 671). The reproduction is at one thread.
+
+**Cause.** `Symbol::to_string()` is `qualified_name()`, which renders both
+`Global`` context symbols and `System`` context symbols as a bare name. The
+bare field therefore names a real symbol in one of the two implicit
+contexts; the empty context is not one. The native evidence fixes this case:
+the source is the user-defined `f`, i.e. `Global`f`.
+
+**Exact rule, one line.** Replace only the bare branch of
+`control_legacy_keys`:
+
+```rust
+let source = (parts[2] != "-").then(|| match parts[2].rsplit_once('`') {
+    Some((context, name)) => rum_core::Symbol::new(format!("{context}`"), name),
+    None => rum_core::Symbol::from_name(parts[2]),
+});
+```
+
+`Symbol::from_name(name)` is exactly `Symbol::new(GLOBAL_CONTEXT, name)`, the
+default context in which guest source resolves a bare name. Because that
+interned `(context, name)` pair already exists in the test process, the
+reconstruction is the identical `SymbolText` and carries the same id, so the
+comparison stays byte-exact and is not weakened. This is not a guess for an
+arbitrary symbol: a `System`` source would render bare as well, reconstruct
+in `Global``, and fail the exact comparison — a loud STOP, not a silent
+conflation. No expected row, cell, production line, or inventory identity
+changes.
+
+**What to rerun.** The helper is under `crates/`, so the standing
+inventories expire again: replay them before the first remaining acceptance
+suite. Then run the full `logical_counter_port` in all five child modes, the
+full `suspension_oracle` in both builds, the whole workspace in both builds,
+and the six switch-gated `rum-host` tests with
+`RUM_PROFILE_LEXICAL_SUBSTITUTION=1`. The production work, the runtime
+suites, and the six mutant receipts still stand; the amended line is test
+instrumentation only. Update `.temp/brief-646/report-a1.json` in place,
+retaining both earlier STOPs as recorded runs and quoting every verdict
+line.
+
+If this exact reconstruction still fails for any cell, STOP. Do not pick a
+different context by hand, do not special-case a mode, and do not relax the
+comparison to rendered names.
