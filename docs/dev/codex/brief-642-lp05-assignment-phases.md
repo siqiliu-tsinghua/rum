@@ -94,6 +94,10 @@ Files you MAY modify:
 - `crates/rum-runtime/src/runtime/profiling/logical/mod.rs` — append the six
   phase keys and their `name()`/`from_name()` arms; wire the new unit-test
   module at the foot. No other change to this file.
+- `crates/rum-runtime/src/runtime/profiling/logical/queue_api.rs` — one hunk
+  only, by the A2 Q1 decision below: the `debug_assert!` in
+  `logical_insert_boundary` admits `Policy::ApplicableExpr` beside
+  `Policy::Expr`. No other line of this file changes.
 - `crates/rum-runtime/src/runtime/profiling/timing.rs` — **only** if a route
   genuinely needs a new adopted helper or a signature it already lacks; state
   why in the report. Prefer the existing family.
@@ -446,3 +450,29 @@ destruction, after the lease has been handed on. A scratch probe that
 releases it under `TestLease::drop` (test-gated) gives 20/20 green, and its
 falsifier is red on the unfixed tree with `left: 4232, right: 0` and green on
 the fixed one. No production behaviour change; brief-643 owns the repair.
+
+## Director decision — A2 questions (2026-11-03)
+
+The A2 preflight STOP was correct: neither proposal had been applied, and the
+tree is untouched. Both questions are answered; proceed with A2.
+
+- **Q1 — authorized, narrowly.** `crates/rum-runtime/src/runtime/profiling/
+  logical/queue_api.rs` has joined Scope for exactly one hunk: the
+  `debug_assert!` in `logical_insert_boundary` admits
+  `Policy::Expr | Policy::ApplicableExpr`, as
+  `.temp/brief-642/a2/queue-applicable-policy-proposal.patch` shows. The
+  assertion stays a `debug_assert!`; the owner, generation, frontier and
+  memory-owner checks are unchanged; no other line of the file changes.
+  `ProfileBoundary::observe` already decodes
+  `(ApplicableExpr, Slot::Value(_)) => Some`, which is the attempt routes'
+  applicable-success classification, and every route frame returns `Expr`;
+  the guard was the only obstacle. Do not add an insertion bypass or a
+  second mechanism.
+- **Q2 — authorized, formatting only.** The canonical `.temp` copy
+  `.temp/brief-642/falsifier/lp05_assignment_rows.rs` has been replaced with
+  the rustfmt-clean bytes; the only difference is the four-element `phases`
+  array wrapped with a trailing comma. I verified the two differ by that
+  layout alone — programs, assertions and literals are token-identical — and
+  `rustfmt --check` passes. Insert that file verbatim, as Scope says.
+- Everything else stands: the acceptance commands, the inventory-replay
+  order, and the stop after A2.
