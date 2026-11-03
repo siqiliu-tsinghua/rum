@@ -4138,6 +4138,14 @@ Settled after brief-414's design pass and the director review of it.
 - Continue splitting formatter planner/builder/render/test modules by
   responsibility as they grow; do not create a separate string crate without a
   real ownership boundary.
+- The `PhaseKey` enum and its three tables in
+  `crates/rum-runtime/src/runtime/profiling/logical/mod.rs` sit in the
+  split-plan range and cross 35k characters during LP06. **Written exception
+  (brief-646):** the seven LP06 A1 keys and the three A2 keys may be appended
+  table-only; move no existing type in LP06, because a moved inventory
+  identity is a STOP. Split the key enum and its tables into
+  `logical/phase.rs` after LP07 closes, in an identity-safe organization
+  stage; the A2 brief's report must restate this boundary.
 
 ### The native stack budget — CLOSED (2026-09-04, briefs 436-438)
 
