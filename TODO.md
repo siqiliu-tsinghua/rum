@@ -300,7 +300,12 @@ does the same work, only without its profiling hooks.
     flag (`appendto-list-incremental-large`): every rum function's own Ir is
     identical across arms. The timing lane's 80/129 best-of-two rows are
     retained and disclosed but do not decide (TEMPLATE pitfall 8), and every
-    large timing mover has a negative instruction delta. **LP06 is next.**
+    large timing mover has a negative instruction delta.
+  - **LP06 next**: builtins, loops, Catch, Function and status from
+    `.temp/brief-624/drafts/LP06-builtins-control-functions.md`. The raw
+    draft is 13 days old, so a design-only brief (brief-645, `Scope: NONE`)
+    re-probes the routes at HEAD and drafts the implementation brief I will
+    rewrite and dispatch.
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its
