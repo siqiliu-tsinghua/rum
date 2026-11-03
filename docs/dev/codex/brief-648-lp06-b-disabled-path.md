@@ -415,3 +415,74 @@ attempt uses new ids ending in `-3`, and a re-entered chunk gets `-4`. Do
 not repeat a completed build; `campaign_build.py` refuses one.
 
 **The rest of the brief stands**, including Amendment 1's R1–R7.
+
+---
+
+## Amendment 3 — the corrected LP06 lifecycle probe and the remaining panels (after the attempt-3 STOP)
+
+**The STOP is accepted.** The candidate-only no-epoch probe at `epoch.rs:412`
+calls `Session::logical_profile_test_leases()`, which goes through
+`epoch::current()` → `Epoch::new_unleased`, before asserting at `:415`
+that no epoch exists. The observer creates the state it asserts absent, so
+the assertion can never pass. Two identical failures on the same pinned
+binary, no weakened assertion, no rebuilt binary: an invalid probe oracle,
+not a runtime regression.
+
+**Q1 answer: option 1 — one corrected diagnostic-only artifact.** Apply
+exactly the proposed probe-only correction: read the slot after
+`drop(session)`, assert `slot.epoch.is_none() && slot.failed.is_none()`,
+and take the zero-lease count from the same slot
+(`slot.epoch.as_ref().map_or(0, |e| e.contexts.load(Relaxed))`), removing
+the initializing accessor call. The three assertions are preserved;
+nothing is waived.
+
+Build it as a **new, separate diagnostic kind** — not `stack-debug`, not
+any pinned binary. Use a fresh copy of the candidate export, a separate
+target directory, a new `bin/candidate/lifecycle-debug` and
+`builds/candidate/lifecycle-debug/binary.json`; install the same shared
+probes plus the corrected candidate-only probes. This is the one
+authorized exception to R4/R5: a diagnostic-only build after consumers is
+permitted exactly here, and only if it replaces, relinks or overwrites no
+pinned artifact; record the new artifact's SHA and disclose the build. The
+completed stack, layout and live-chain receipts keep their pinned
+`stack-debug` SHA.
+
+**Remaining panels; do not repeat completed ones.** The 313 initial + 71
+flagged-only instruction pairs, the 192 copy rows, the 194 allocation
+rows, the 1056 canonical + 432 LP06 stack probes, the 563-frame layout
+tables, the 352 live chains, the extra DeleteMissing sizes and the six
+retained lifecycle controls are complete and must not be rerun. Resume
+exactly:
+
+1. the corrected candidate `lifecycle-debug` build;
+2. the LP06 lifecycle proofs on it — disabled no-epoch/no-handles, the
+   three-family × seven-ending retirement/second-pause/owner-generation
+   set, and diagnostic-byte balance; the base arm keeps the six retained
+   controls;
+3. the emitted-PC attribution for the 27 ordinary and 2 resume positives
+   (`attribute_pcs.py`, `pc_disposition.py`, the retained relocation
+   procedure), with the whole-row reconciliation;
+4. `timing_pipeline.py` under R1/R2, last;
+5. the final index and report.
+
+**The native-staging finding stands and is not waived.** The unchecked CLI
+dispatch entry reservations (856→888 and 856→872 bytes) and the Catch
+finish +16 bytes in all three kinds are measured positives; the checked
+`cfg(test)` chain savings do not prove the unchecked CLI arm unchanged.
+Keep them unpassed. Do not rerun the prologue/layout panels, and do not
+substitute `size_of` or a net-chain waiver.
+
+**Lifecycle verdict composition.** The lifecycle gate is PASS only when
+the six retained controls and every LP06 proof pass. The retained
+`lifecycle.py` verdict remains a separate receipt; the pipeline's
+`lifecycle-verdict.json` precondition may stand, but the report must state
+the combined disposition, and timing must not be called before the LP06
+lifecycle is resolved. A corrected probe that exposes a genuine runtime
+failure is a finding: record it, run the remaining non-deciding
+measurements, and never weaken the assertion.
+
+**Resume state.** Attempt 3's record is preserved under
+`.temp/brief-648/attempt-3/`. Attempt-3 ids end in `-3`; this attempt uses
+new ids ending in `-4` (a re-entered chunk gets `-5`). All pinned
+artifacts and exports remain immutable, and the closing
+`verify_sources.py` still applies.
