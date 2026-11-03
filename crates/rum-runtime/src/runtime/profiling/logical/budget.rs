@@ -7,6 +7,11 @@ use std::sync::{
 const PROCESS_LIMIT: usize = 16 * 1024 * 1024;
 static PROCESS_BYTES: AtomicUsize = AtomicUsize::new(0);
 
+#[cfg(test)]
+pub(super) fn process_bytes() -> usize {
+    PROCESS_BYTES.load(Ordering::Relaxed)
+}
+
 pub(super) struct Budget {
     bytes: AtomicUsize,
     limit: usize,
@@ -159,8 +164,8 @@ fn logical_thread_metadata_stays_charged_until_thread_exit() {
 fn logical_expired_queue_arena_stays_charged_until_weak_drop() {
     use crate::runtime::profiling::logical::Epoch;
     use crate::runtime::suspension::{FrameStorage, QueueArena};
-    let before = PROCESS_BYTES.load(Ordering::Relaxed);
     let lease = crate::runtime::profiling::lease::lease();
+    let before = PROCESS_BYTES.load(Ordering::Relaxed);
     let epoch = Epoch::for_test(&lease, 1024 * 1024).unwrap();
     let initial = PROCESS_BYTES.load(Ordering::Relaxed);
     let mut queue = FrameStorage::new();

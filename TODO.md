@@ -43,7 +43,16 @@ Test isolation, done:
   `Discovery` per process, with copy-on-write mutants; the 32-thread lib
   that was SIGKILLed at the cap at HEAD passes three times, and the
   complete dumps are byte-identical. The record is in the brief;
-- next, the workspace thread-count measurement above.
+- the lease releases its thread registration (brief-643, gated GREEN): the
+  4,232-byte TLS registration charged by `segments::install` is released by
+  `TestLease::drop` while the lease is still held (a no-op mid-segment, so a
+  later lease on the thread re-charges). The eight-thread runtime lib is
+  20/20 green (before: 17/20 with three `parked - initial` underflows), the
+  falsifier is red at 4,232/0 on a copy that differs only by the release
+  removal, and the gate's workspace is 4,048 passed / 0 failed. The record
+  is in the brief;
+- the workspace thread-count measurement is done (2026-10-31); the default
+  is `RUST_TEST_THREADS=8` from the user ruling 2026-11-01.
 
 **The director's gate is a script** (brief-631, director tooling):
 `scripts/director-gate.py run NNN --stage S` runs the scope check, fmt, the
@@ -231,21 +240,21 @@ does the same work, only without its profiling hooks.
     missing row before it passed. Scope, fmt, check, ownership, census,
     oracle, standing, fingerprints, certificates and inventories PASS; the
     workspace suite is deferred to A2 by the per-brief ruling.
-  - **Open at A1 (brief-643 lands it before A2)**: the ten new tests expose
-    a test-isolation race in
+  - **Closed by brief-643 (gated GREEN)**: the ten new tests exposed a
+    test-isolation race in
     `budget::logical_expired_queue_arena_stays_charged_until_weak_drop` at
     eight threads (3/20 red with them, 0/20 with `--skip
     logical::assignments::`, serial green). The 4,232-byte TLS registration
-    charged by `segments::install` is released at thread destruction, after
-    the lease has moved on, so the decrement lands in the next holder's
-    window. Releasing it under `TestLease::drop` gives 0/20 and a
-    calibrated falsifier (red 4,232 on the unfixed tree, green on the
-    fixed one).
+    charged by `segments::install` was released at thread destruction, after
+    the lease had moved on, so the decrement landed in the next holder's
+    window. `TestLease::drop` now releases it under the lease; the
+    eight-thread runtime lib is 20/20, and the calibrated falsifier is red
+    at 4,232/0 with only the release removed. Round 2 also moved the
+    protected test's `before` sample under its lease (Q1, authorized) after
+    one final-equality failure at 0 vs 20,136; no assertion changed.
   - **Stage A2 next** (the list and association attempt routes, `set-lhs`,
     the genuine RHS-then-LHS double pause, and the inventory replay), then
     Stage B, the measurement campaign.
-  - **Next: brief-643 (the lease releases its thread registration), then
-    LP05 A2.**
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its

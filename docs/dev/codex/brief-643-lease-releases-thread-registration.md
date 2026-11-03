@@ -242,3 +242,37 @@ remaining red is a different, pre-existing sampling error, and Q1 is
   of a different assertion is a STOP with its log.
 - The standing inventories were already replayed in round 1; replay again if
   this edit moves any derived cell.
+
+## Director gate (2026-11-03): GREEN
+
+`python3 -I scripts/director-gate.py run 643`: scope (report check OK, 946
+citations), fmt, check (3 warnings, 0 new), ownership (61 / 79 / 8,006, 0
+rounds; the five added rows point at this brief's own code — the new cfg
+gate, the two closures in the new release function, the new test file and
+its `#[path]` module declaration — and mirror the existing `assignments.rs`
+rows; no new `UnknownHostPayload`), census (1067 = 10/1022/35, paired, 0
+new), oracle (1 passed), standing (LP01 1/0, typed-slot 10/0), fingerprints
+(68 contracts, 0 changed), certificates (both builds, 0 promoted rows
+merged), inventories (19 passed, frontier 1067) and workspace (61 binaries,
+4,048 passed / 0 failed / 61 ignored, peak 14.5 GB, `oom_kill` 0) all PASS.
+
+Reproduced by hand:
+
+- the Q1 edit is exactly the authorized reorder: `before` now follows
+  `lease()` and every other byte of the test is unchanged;
+- the eight-thread runtime lib, 20/20 (`1253 passed; 0 failed; 5 ignored`
+  every run), `.temp/director/gate-643/exposure/run-1..20.log`; the before
+  rate stays quoted as 17/20 with three `parked - initial` underflows plus
+  round 1's 19/20 with its one final-equality failure;
+- the falsifier is red at `left: 4232, right: 0` on a copy that differs only
+  by the removal of the release call, and green in the tree;
+- only the fingerprint column of all 68 `local-contracts.tsv` rows changed;
+  the two promoted certificate cells were replayed.
+
+FLAGGED settlements: the round-1 and round-2 certificate generators failed
+only on the stale C01 cell, and the gate's own certificate step now passes
+both feature builds with zero merged rows; the two replay helpers failed on
+a scratch filename (file not found) and were re-run clean; the two
+typed-slot child failures are the intentional negative controls owned by
+`removing_a_test_guard` and `removing_a_frame` (the gate's standing step is
+10/0). No open ruling remains.

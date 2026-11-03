@@ -1038,3 +1038,7 @@ mod definitions;
 #[cfg(test)]
 #[path = "../tests/assignments.rs"]
 mod assignments;
+
+#[cfg(test)]
+#[path = "../tests/lease_release.rs"]
+mod lease_release;

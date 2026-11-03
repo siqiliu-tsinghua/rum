@@ -87,6 +87,7 @@ impl TestLease {
 impl Drop for TestLease {
     fn drop(&mut self) {
         debug_assert_eq!(CURRENT_GEN.load(Ordering::Relaxed), self.generation);
+        super::logical::segments::release_thread_registration();
         CURRENT_GEN.store(0, Ordering::Release);
         REGISTERED_GEN.with(|cell| cell.set(0));
     }

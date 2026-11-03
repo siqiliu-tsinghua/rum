@@ -790,7 +790,8 @@ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	72	1
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	109	1	unresolved attribute/expansion derive (rum_derive :: AccumulatorChainNode)
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	112	5	unresolved attribute/expansion accumulator_link
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/record.rs	147	1	unresolved attribute/expansion derive (Clone , Copy , Debug , Default)
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	285	1	unresolved attribute/expansion cfg (any (test , feature = "test-builtin-memory-growth" , feature = "test-continuation-slots"))
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	67	1	unresolved attribute/expansion cfg (any (test , feature = "test-builtin-memory-growth" , feature = "test-continuation-slots"))
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	298	1	unresolved attribute/expansion cfg (any (test , feature = "test-builtin-memory-growth" , feature = "test-continuation-slots"))
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/source_stack.rs	6	1	unresolved attribute/expansion derive (rum_derive :: AccumulatorChainNode)
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/source_stack.rs	9	5	unresolved attribute/expansion accumulator_link
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/totals.rs	4	1	unresolved attribute/expansion derive (Clone , Copy , Default)

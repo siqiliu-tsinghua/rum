@@ -64,6 +64,19 @@ pub(in crate::runtime) struct Segment {
 
 mod stack;
 
+#[cfg(any(
+    test,
+    feature = "test-builtin-memory-growth",
+    feature = "test-continuation-slots"
+))]
+pub(in crate::runtime) fn release_thread_registration() {
+    ACTIVE.with_borrow_mut(|stack| {
+        if stack.count == 0 && stack.header.take().is_some() {
+            ACTIVE_STATE.with(|state| state.set(0));
+        }
+    });
+}
+
 pub(in crate::runtime) fn ancestry(epoch: &Arc<Epoch>) -> Option<Arc<RecordPath>> {
     if active_len() == 0 {
         return None;
