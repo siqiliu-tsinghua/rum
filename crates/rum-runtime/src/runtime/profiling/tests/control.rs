@@ -17,6 +17,294 @@ const OPEN: [u64; 10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1];
 const OK: [u64; 10] = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0];
 const ERROR: [u64; 10] = [1, 0, 1, 0, 0, 0, 0, 0, 0, 0];
 const RETURN: [u64; 10] = [1, 0, 1, 0, 0, 1, 0, 0, 0, 0];
+const THROW: [u64; 10] = [1, 0, 1, 0, 0, 0, 1, 0, 0, 0];
+const CATCH: &[&str] = &[
+    "catch.eval.total",
+    "catch.body.evaluate",
+    "catch.resume_after_body",
+];
+
+struct BuiltinEnabled(u8);
+impl BuiltinEnabled {
+    fn new() -> Self {
+        Self(
+            super::super::state::BUILTIN_TIMING_ENABLED
+                .swap(1, std::sync::atomic::Ordering::Relaxed),
+        )
+    }
+}
+impl Drop for BuiltinEnabled {
+    fn drop(&mut self) {
+        super::super::state::BUILTIN_TIMING_ENABLED
+            .store(self.0, std::sync::atomic::Ordering::Relaxed);
+    }
+}
+
+// Finite runtime doubles; the oracle and standalone package use the stdlib handlers.
+fn integer_greater(
+    _session: &mut Session,
+    head: &Expr,
+    args: &SharedArgs,
+) -> Result<Expr, EvalError> {
+    let [left, right] = args.as_ref() else {
+        return Ok(Expr::call(head.clone(), args.as_ref().to_vec()));
+    };
+    let (Some(left), Some(right)) = (expr_as_exact_integer(left), expr_as_exact_integer(right))
+    else {
+        return Ok(Expr::call(head.clone(), args.as_ref().to_vec()));
+    };
+    Ok(system_expr(if left > right { "True" } else { "False" }))
+}
+
+fn call_length(_session: &mut Session, head: &Expr, args: &SharedArgs) -> Result<Expr, EvalError> {
+    match args.as_ref() {
+        [Expr::Call { args, .. }] => Ok(Expr::small_integer(args.len() as i64)),
+        _ => Ok(Expr::call(head.clone(), args.as_ref().to_vec())),
+    }
+}
+
+fn a2_snapshot(
+    id: &str,
+    at: &str,
+    keys: &[AggregateKey],
+    counts: &[[u64; 10]],
+) -> BTreeMap<String, [u64; 10]> {
+    let all = Session::logical_profile_test_rows()
+        .into_iter()
+        .collect::<BTreeMap<_, _>>();
+    let actual = test_support::epoch()
+        .rows()
+        .into_iter()
+        .filter(|(key, _)| {
+            keys.iter().any(|selected| match (key, selected) {
+                (
+                    AggregateKey::Runtime { phase: a, .. },
+                    AggregateKey::Runtime { phase: b, .. },
+                ) => a == b,
+                (
+                    AggregateKey::Builtin { symbol: a, .. },
+                    AggregateKey::Builtin { symbol: b, .. },
+                ) => a == b,
+                _ => false,
+            })
+        })
+        .map(|(key, _)| {
+            let key = format!("{key:?}");
+            let row = all[&key];
+            (key, row)
+        })
+        .collect::<BTreeMap<_, _>>();
+    let expected = keys
+        .iter()
+        .zip(counts)
+        .filter(|(_, row)| **row != [0; 10])
+        .map(|(key, row)| (format!("{key:?}"), *row))
+        .collect::<BTreeMap<_, _>>();
+    assert_eq!(
+        actual, expected,
+        "{id} {at}: FULL keys and calls/ok/err/some/none/return/throw/cancelled/abandoned/open"
+    );
+    assert_eq!(
+        test_support::epoch()
+            .faults
+            .load(std::sync::atomic::Ordering::Relaxed),
+        0,
+        "{id} {at}: instrumentation fault"
+    );
+    eprintln!("LP06 A2 NATIVE {id} {at}: SAME {actual:?}; faults=0");
+    actual
+}
+
+fn a2_cell(
+    id: &str,
+    source: &str,
+    prompts: &[&str],
+    value: Option<&str>,
+    builtin: Option<(&'static str, u16)>,
+    pauses: &[&[[u64; 10]]],
+    terminal: &[[u64; 10]],
+) {
+    let enabled = test_support::enabled();
+    let _builtin_enabled = BuiltinEnabled::new();
+    let keys = match builtin {
+        Some((name, arity)) => vec![AggregateKey::Builtin {
+            symbol: crate::runtime::Symbol::new("System`", name),
+            source: None,
+            arity,
+        }],
+        None => CATCH
+            .iter()
+            .map(|phase| AggregateKey::Runtime {
+                phase,
+                source: None,
+            })
+            .collect(),
+    };
+    let mut completed = None;
+    let mut completed_output = None;
+    assert_eq!(prompts.len(), pauses.len());
+    for queued in [true, false] {
+        let mut session = crate::runtime::test_builtins::session_with_test_control_builtins();
+        crate::runtime::test_builtins::register_test_arithmetic_builtins(&mut session);
+        session.register_builtin(BuiltinSpec::ordinary(
+            "Greater",
+            "Finite integer comparison.",
+            integer_greater,
+            MemoryGrowthContract::NonAmplifying,
+        ));
+        session.register_builtin(BuiltinSpec::ordinary(
+            "Length",
+            "Call argument count.",
+            call_length,
+            MemoryGrowthContract::NonAmplifying,
+        ));
+        super::super::reset_lexical_profile_counters();
+        super::epoch::reset_for_lease(enabled.lease());
+        let probe = session.continuation_fault_probe();
+        let faults = probe.occurrences();
+        if queued {
+            for answer in ["a", "b"].into_iter().take(prompts.len()) {
+                session.queue_input_response(answer);
+            }
+        }
+        let mut result = session.eval_request(source);
+        if !queued {
+            for (index, (prompt, expected)) in prompts.iter().zip(pauses).enumerate() {
+                match &result {
+                    Err(failure) => match &failure.error {
+                        crate::runtime::SessionRequestError::InputRequired { request } => {
+                            assert_eq!(request.prompt, *prompt, "{id} request {}", index + 1);
+                            assert_eq!(request.kind, RuntimeInputKind::InputString);
+                        }
+                        other => panic!("{id} missed request {}: {other:?}", index + 1),
+                    },
+                    other => panic!("{id} missed request {}: {other:?}", index + 1),
+                }
+                a2_snapshot(id, prompt, &keys, expected);
+                result = session.resume_eval_request_with_input(["a", "b"][index]);
+            }
+        }
+        if let Some(value) = value {
+            assert_eq!(result.as_ref().unwrap().value.to_string(), value, "{id}");
+        } else {
+            let error = &result.as_ref().unwrap_err().error;
+            let expected = if id == "lp06.catch.bypass_miss" {
+                "uncaught throw: 1 with tag t"
+            } else {
+                "uncaught Abort[]"
+            };
+            assert_eq!(
+                error,
+                &crate::runtime::SessionRequestError::Other {
+                    message: expected.into()
+                },
+                "{id}"
+            );
+        }
+        let rows = a2_snapshot(id, "terminal", &keys, terminal);
+        Session::logical_profile_test_assert_quiescent();
+        assert_eq!(test_support::active(), 0);
+        assert_eq!(probe.occurrences(), faults, "{id}: continuation fault");
+        if let Some(expected) = &completed {
+            assert_eq!(expected, &rows, "{id}: queued/resumed full key map");
+        } else {
+            completed = Some(rows);
+        }
+        if let Some(expected) = &completed_output {
+            assert_eq!(expected, &result, "{id}: queued/resumed guest outcome");
+        } else {
+            completed_output = Some(result);
+        }
+    }
+}
+
+#[test]
+fn lp06_a2_builtin_no_handler() {
+    let _enabled = test_support::enabled();
+    let _builtin_enabled = BuiltinEnabled::new();
+    let mut session = Session::new();
+    let head = system_expr("Length");
+    let args = SharedArgs::from(Vec::new());
+    for spec in [
+        None,
+        Some(BuiltinSpec::new(
+            "Length",
+            "No handler.",
+            MemoryGrowthContract::NonAmplifying,
+        )),
+    ] {
+        assert!(matches!(
+            session.try_dispatch_builtin_call(spec, &head, &args),
+            Ok(None)
+        ));
+        assert!(
+            test_support::epoch()
+                .rows()
+                .iter()
+                .all(|(key, _)| !matches!(key, AggregateKey::Builtin { .. }))
+        );
+    }
+    Session::logical_profile_test_assert_quiescent();
+    assert_eq!(
+        test_support::epoch()
+            .faults
+            .load(std::sync::atomic::Ordering::Relaxed),
+        0
+    );
+    eprintln!(
+        "LP06 A2 NATIVE lp06.builtin.no_handler: SAME spec=None handler=None; builtin keys=0 faults=0"
+    );
+}
+
+#[test]
+fn lp06_a2_incoming_policy_cases() {
+    use super::super::RuntimeProfileOutcome;
+    let enabled = test_support::enabled();
+    let mut session = Session::new();
+    for (incoming, legacy, expected) in [
+        (Ok(Expr::small_integer(1)), RuntimeProfileOutcome::Ok, OK),
+        (Err(EvalError::Abort), RuntimeProfileOutcome::Error, ERROR),
+        (
+            Err(EvalError::Return {
+                value: Expr::small_integer(1),
+            }),
+            RuntimeProfileOutcome::Return,
+            RETURN,
+        ),
+        (
+            Err(EvalError::Thrown {
+                value: Expr::small_integer(1),
+                tag: system_expr("None"),
+                explicit_tag: false,
+            }),
+            RuntimeProfileOutcome::Throw,
+            THROW,
+        ),
+        (
+            Err(EvalError::Cancelled),
+            RuntimeProfileOutcome::Error,
+            [1, 0, 1, 0, 0, 0, 0, 1, 0, 0],
+        ),
+    ] {
+        super::epoch::reset_for_lease(enabled.lease());
+        let token = session.runtime_path_timing_start_adopted_incoming(CATCH[2], &incoming);
+        session.record_profile_runtime_path_timing_adopted_incoming(
+            token,
+            legacy,
+            &Ok(Expr::small_integer(9)),
+        );
+        a2_snapshot(
+            "lp06.catch.policy",
+            "terminal",
+            &[AggregateKey::Runtime {
+                phase: CATCH[2],
+                source: None,
+            }],
+            &[expected],
+        );
+        Session::logical_profile_test_assert_quiescent();
+    }
+}
 
 // The runtime test session uses the same finite integer comparison double as
 // definitions_rhs_guards; guest cells exercise stdlib's actual Less handler.
@@ -375,5 +663,279 @@ fn lp06_status_raw_success() {
         FUNCTION,
         &[&[OPEN]],
         &[OK],
+    );
+}
+
+#[test]
+fn lp06_a2_builtin_ok() {
+    a2_cell(
+        "lp06.builtin.ok",
+        r###"Length[{1,2}]"###,
+        &[],
+        Some("2"),
+        Some(("Length", 1)),
+        &[],
+        &[OK],
+    );
+}
+
+#[test]
+fn lp06_a2_builtin_cleanup_twice() {
+    a2_cell(
+        "lp06.builtin.cleanup.twice",
+        r###"WithCleanup[(InputString["primary"];7),(InputString["cleanup"];Null)]"###,
+        &["primary", "cleanup"],
+        Some("7"),
+        Some(("WithCleanup", 2)),
+        &[&[OPEN], &[OPEN]],
+        &[OK],
+    );
+}
+
+#[test]
+fn lp06_a2_builtin_cleanup_throw() {
+    a2_cell(
+        "lp06.builtin.cleanup.throw",
+        r###"Catch[WithCleanup[Throw[7,t],(InputString["cleanup"];Null)],t]"###,
+        &["cleanup"],
+        Some("7"),
+        Some(("WithCleanup", 2)),
+        &[&[OPEN]],
+        &[THROW],
+    );
+}
+
+#[test]
+fn lp06_a2_builtin_return() {
+    a2_cell(
+        "lp06.builtin.return",
+        r###"Function[{},Return[7]][]"###,
+        &[],
+        Some("7"),
+        Some(("Return", 1)),
+        &[],
+        &[RETURN],
+    );
+}
+
+#[test]
+fn lp06_a2_catch_body() {
+    a2_cell(
+        "lp06.catch.body",
+        r###"Catch[(InputString["p"];Throw[1])]"###,
+        &["p"],
+        Some("1"),
+        None,
+        &[&[OPEN, OPEN, [0; 10]]],
+        &[OK, THROW, THROW],
+    );
+}
+
+#[test]
+fn lp06_a2_catch_handler_twice() {
+    a2_cell(
+        "lp06.catch.handler.twice",
+        r###"Catch[(InputString["body"];Throw[7,t]),t,Function[{v,k},(InputString["handler"];v+1)]]"###,
+        &["body", "handler"],
+        Some("8"),
+        None,
+        &[&[OPEN, OPEN, [0; 10]], &[OPEN, THROW, OPEN]],
+        &[OK, THROW, THROW],
+    );
+}
+
+#[test]
+fn lp06_a2_catch_handler_error() {
+    a2_cell(
+        "lp06.catch.handler_error",
+        r###"Catch[(InputString["body"];Throw[7,t]),t,Function[{v,k},(InputString["handler"];Abort[])]]"###,
+        &["body", "handler"],
+        Some("$Aborted"),
+        None,
+        &[&[OPEN, OPEN, [0; 10]], &[OPEN, THROW, OPEN]],
+        &[ERROR, THROW, THROW],
+    );
+}
+
+#[test]
+fn lp06_a2_catch_form() {
+    a2_cell(
+        "lp06.catch.form",
+        r###"Catch[Throw[1,t],(InputString["f"];t)]"###,
+        &["f"],
+        Some("1"),
+        None,
+        &[&[OPEN, THROW, OPEN]],
+        &[OK, THROW, THROW],
+    );
+}
+
+#[test]
+fn lp06_a2_catch_match() {
+    a2_cell(
+        "lp06.catch.match",
+        r###"Catch[Throw[1,t[2]],t[x_]/;(InputString["g"];x>1)]"###,
+        &["g"],
+        Some("1"),
+        None,
+        &[&[OPEN, THROW, OPEN]],
+        &[OK, THROW, THROW],
+    );
+}
+
+#[test]
+fn lp06_a2_catch_match_miss() {
+    a2_cell(
+        "lp06.catch.match_miss",
+        r###"Catch[Catch[Throw[1,t[2]],t[x_]/;(InputString["g"];x>5)],_]"###,
+        &["g"],
+        Some("1"),
+        None,
+        &[&[
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+            [1, 0, 1, 0, 0, 0, 1, 0, 0, 1],
+            OPEN,
+        ]],
+        &[
+            [2, 1, 1, 0, 0, 0, 1, 0, 0, 0],
+            [2, 0, 2, 0, 0, 0, 2, 0, 0, 0],
+            [2, 0, 2, 0, 0, 0, 2, 0, 0, 0],
+        ],
+    );
+}
+
+#[test]
+fn lp06_a2_catch_bypass_form() {
+    a2_cell(
+        "lp06.catch.bypass_form",
+        r###"Catch[Catch[WithCleanup[Throw[1,t],Throw[2,t]],(InputString["f"];t)],t]"###,
+        &["f"],
+        Some("1"),
+        None,
+        &[&[
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+            [1, 0, 1, 0, 0, 0, 1, 0, 0, 1],
+            OPEN,
+        ]],
+        &[
+            [2, 1, 1, 0, 0, 0, 1, 0, 0, 0],
+            [2, 0, 2, 0, 0, 0, 2, 0, 0, 0],
+            [2, 0, 2, 0, 0, 0, 2, 0, 0, 0],
+        ],
+    );
+}
+
+#[test]
+fn lp06_a2_catch_bypass_match() {
+    a2_cell(
+        "lp06.catch.bypass_match",
+        r###"Catch[Catch[WithCleanup[Throw[1,t[1]],Throw[2,t[1]]],t[x_]/;(InputString["g"];True)],_]"###,
+        &["g"],
+        Some("1"),
+        None,
+        &[&[
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+            [1, 0, 1, 0, 0, 0, 1, 0, 0, 1],
+            OPEN,
+        ]],
+        &[
+            [2, 1, 1, 0, 0, 0, 1, 0, 0, 0],
+            [2, 0, 2, 0, 0, 0, 2, 0, 0, 0],
+            [2, 0, 2, 0, 0, 0, 2, 0, 0, 0],
+        ],
+    );
+}
+
+#[test]
+fn lp06_a2_catch_ok() {
+    a2_cell(
+        "lp06.catch.ok",
+        r###"Catch[(InputString["body"];19)]"###,
+        &["body"],
+        Some("19"),
+        None,
+        &[&[OPEN, OPEN, [0; 10]]],
+        &[OK, OK, OK],
+    );
+}
+
+#[test]
+fn lp06_a2_catch_invalid_arity() {
+    a2_cell(
+        "lp06.catch.invalid_arity",
+        r###"Catch[]"###,
+        &[],
+        Some("Catch[]"),
+        None,
+        &[],
+        &[OK, [0; 10], [0; 10]],
+    );
+}
+
+#[test]
+fn lp06_a2_catch_return() {
+    a2_cell(
+        "lp06.catch.return",
+        r###"Function[{},Catch[(InputString["body"];Return[7])]][]"###,
+        &["body"],
+        Some("7"),
+        None,
+        &[&[OPEN, OPEN, [0; 10]]],
+        &[RETURN, RETURN, RETURN],
+    );
+}
+
+#[test]
+fn lp06_a2_catch_bypass_no_form() {
+    a2_cell(
+        "lp06.catch.bypass_no_form",
+        r###"Catch[Catch[WithCleanup[Throw[1,t],(InputString["cleanup"];Throw[2,t])]],t]"###,
+        &["cleanup"],
+        Some("1"),
+        None,
+        &[&[
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+            [0; 10],
+        ]],
+        &[
+            [2, 1, 1, 0, 0, 0, 1, 0, 0, 0],
+            [2, 0, 2, 0, 0, 0, 2, 0, 0, 0],
+            [2, 0, 2, 0, 0, 0, 2, 0, 0, 0],
+        ],
+    );
+}
+
+#[test]
+fn lp06_a2_catch_bypass_miss() {
+    a2_cell(
+        "lp06.catch.bypass_miss",
+        r###"Catch[Catch[WithCleanup[Throw[1,t],Throw[2,t]],(InputString["f"];u)],t]"###,
+        &["f"],
+        None,
+        None,
+        &[&[
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+            [1, 0, 1, 0, 0, 0, 1, 0, 0, 1],
+            OPEN,
+        ]],
+        &[
+            [2, 0, 2, 0, 0, 0, 2, 0, 0, 0],
+            [2, 0, 2, 0, 0, 0, 2, 0, 0, 0],
+            [2, 0, 2, 0, 0, 0, 2, 0, 0, 0],
+        ],
+    );
+}
+
+#[test]
+fn lp06_a2_catch_match_error() {
+    a2_cell(
+        "lp06.catch.match_error",
+        r###"Catch[Throw[1,t[2]],t[x_]/;(InputString["g"];Abort[])]"###,
+        &["g"],
+        Some("$Aborted"),
+        None,
+        &[&[OPEN, THROW, OPEN]],
+        &[ERROR, THROW, THROW],
     );
 }

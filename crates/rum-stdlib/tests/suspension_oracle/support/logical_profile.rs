@@ -474,3 +474,31 @@ pub fn hashes_by_program(bindings: &[Vec<&str>]) -> BTreeMap<String, String> {
     }
     out
 }
+
+pub const CATCH_PHASES: [&str; 3] = [
+    "catch.eval.total",
+    "catch.body.evaluate",
+    "catch.resume_after_body",
+];
+
+pub const BUILTIN_CATCH_CELLS: [&str; 19] = [
+    "lp06.builtin.ok",
+    "lp06.builtin.cleanup.twice",
+    "lp06.builtin.cleanup.throw",
+    "lp06.builtin.return",
+    "lp06.builtin.no_handler",
+    "lp06.catch.body",
+    "lp06.catch.handler.twice",
+    "lp06.catch.handler_error",
+    "lp06.catch.form",
+    "lp06.catch.match",
+    "lp06.catch.match_miss",
+    "lp06.catch.bypass_form",
+    "lp06.catch.bypass_match",
+    "lp06.catch.ok",
+    "lp06.catch.invalid_arity",
+    "lp06.catch.return",
+    "lp06.catch.bypass_no_form",
+    "lp06.catch.bypass_miss",
+    "lp06.catch.match_error",
+];

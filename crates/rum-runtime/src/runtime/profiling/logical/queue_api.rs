@@ -30,6 +30,7 @@ impl Session {
             Some(
                 crate::runtime::profiling::logical::Policy::Expr
                     | crate::runtime::profiling::logical::Policy::ApplicableExpr
+                    | crate::runtime::profiling::logical::Policy::Incoming(_)
             )
         ));
         let context = self.resume_context();

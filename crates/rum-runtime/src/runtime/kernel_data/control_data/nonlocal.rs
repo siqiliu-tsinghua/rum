@@ -78,24 +78,24 @@ impl Session {
     }
 
     pub(in crate::runtime) fn eval_catch(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {
-        let runtime_profile_total = runtime_path_timing_start("catch.eval.total");
+        let runtime_profile_total = runtime_path_timing_start_adopted(self, "catch.eval.total");
         if !(1..=3).contains(&args.len()) {
             let result = Ok(self.invalid_call_with_arg_range("Catch", args, 1, 3));
-            record_profile_runtime_path_timing(
+            self.record_profile_runtime_path_timing_adopted_boundary(
                 runtime_profile_total,
-                runtime_profile_outcome_for_expr_result(&result),
+                &result,
             );
             return result;
         }
 
         let form = args.get(1).cloned();
         let handler = args.get(2).cloned();
-        let runtime_profile_body = runtime_path_timing_start("catch.body.evaluate");
+        let runtime_profile_body = runtime_path_timing_start_adopted(self, "catch.body.evaluate");
         let body_result = self.evaluate(args[0].clone());
         let witness = slot_witness(&body_result);
-        record_profile_runtime_path_timing(
+        self.record_profile_runtime_path_timing_adopted_boundary(
             runtime_profile_body,
-            runtime_profile_outcome_for_expr_result(&body_result),
+            &body_result,
         );
         let result = match body_result {
             Err(EvalError::InputRequired { request }) => {
@@ -104,10 +104,7 @@ impl Session {
             Ok(value) => self.resume_catch_after_body(form, handler, Ok(value)),
             Err(error) => self.resume_catch_after_body(form, handler, Err(error)),
         };
-        record_profile_runtime_path_timing(
-            runtime_profile_total,
-            runtime_profile_outcome_for_expr_result(&result),
-        );
+        self.record_profile_runtime_path_timing_adopted_boundary(runtime_profile_total, &result);
         result
     }
 
@@ -117,7 +114,8 @@ impl Session {
         handler: Option<Expr>,
         outcome: Result<Expr, EvalError>,
     ) -> Result<Expr, EvalError> {
-        let runtime_profile = runtime_path_timing_start("catch.resume_after_body");
+        let runtime_profile =
+            self.runtime_path_timing_start_adopted_incoming("catch.resume_after_body", &outcome);
         let profile_outcome = runtime_profile_outcome_for_expr_result(&outcome);
         let result = match outcome {
             Ok(value) => Ok(value),
@@ -144,7 +142,11 @@ impl Session {
             }) => self.resume_catch_for_throw(form, handler, value, tag, explicit_tag),
             Err(error) => Err(error),
         };
-        record_profile_runtime_path_timing(runtime_profile, profile_outcome);
+        self.record_profile_runtime_path_timing_adopted_incoming(
+            runtime_profile,
+            profile_outcome,
+            &result,
+        );
         result
     }
 

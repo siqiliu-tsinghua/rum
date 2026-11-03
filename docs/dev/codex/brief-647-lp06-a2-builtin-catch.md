@@ -409,3 +409,44 @@ attempt changed nothing, so there is no state to carry forward. Preserve its
 report and logs under `.temp/brief-647/` as failed-attempt evidence, then
 proceed with the source stage as written. Everything else in this brief
 stands.
+
+---
+
+## Director gate — 2026-11-03: GREEN
+
+`python3 -I scripts/director-gate.py run 647 --stage a2 --steps scope` and
+`python3 -I scripts/director-gate.py run 647` (`.temp/director/gate-647a2`,
+`.temp/director/gate-647`):
+
+| Step | Verdict | Detail |
+|---|---|---|
+| scope | PASS | 10,473 citations verified against Git; 23 files, exactly the scope set |
+| fmt | PASS | formatted |
+| check | PASS | 3 warnings, 0 new against HEAD, 0 gone |
+| ownership | PASS | 61 self-reaching types, 79 UnknownHostPayload, 8017 UnknownConstruct |
+| census | PASS | 1067 {RET001: 10, RET002: 1022, RET003: 35}; paired 1067, retired 0, new 0 |
+| oracle | PASS | 1 passed |
+| standing | PASS | LP01 1/0; typed-slot 10/0 |
+| fingerprints | PASS | 68 contracts, 0 fingerprints changed |
+| certificates | PASS | both builds pass; 0 promoted rows merged; 1 round |
+| inventories | PASS | 19 passed, 0 failed; frontier 1067 |
+| workspace | PASS | 62 binaries, 4092 passed, 0 failed, 61 ignored; peak 7.9 GB of 14, oom_kill 0 |
+
+Beyond the script, reproduced by the director:
+
+- **Mutant replay.** `premature_finish` (the handler-pause `call.pause()`
+  replaced by an immediate frozen `finish`) injected into
+  `control_timing.rs`: exit 101 with
+  `assertion left == right failed: lp06.catch.handler.twice handler: FULL
+  keys and calls/ok/err/some/none/return/throw/cancelled/abandoned/open`.
+  Restored byte-identically (sha256 `b1aa97f7...` equals the base copy) and
+  green, 1 passed. Logs `.temp/director/brief-647-mutant/{red,green}.log`.
+- **Switch-gated host tests.** lp03/lp04/lp05, `1 passed` each, with
+  `RUM_PROFILE_LEXICAL_SUBSTITUTION=1`, in the default build and with
+  `--no-default-features` (`.temp/director/gate-647-switch/`).
+- **Native ZeroMQ.** The gate workspace ran without
+  `RUM_ALLOW_NATIVE_ZEROMQ_SKIP`; all nine `native_zeromq_backend_*` tests
+  passed on the host.
+- **No-default workspace.** `cargo test --workspace --no-default-features`
+  at the host: 62 binaries, 4092 passed, 0 failed, 61 ignored; peak 11.4 GB
+  of 14, oom_kill 0 (`.temp/director/gate-647-nodefault.log`).

@@ -198,4 +198,8 @@ fn logical_counter_context_is_exact() {
     assert_eq!(cells.len(), 13);
     assert_eq!(cells.into_iter().collect::<BTreeSet<_>>().len(), 13);
     println!("COUNTER_CONTEXT LP06 A1 additive cells=13; original identities unchanged");
+    let cells = super::support::logical_profile::BUILTIN_CATCH_CELLS;
+    assert_eq!(cells.len(), 19);
+    assert_eq!(cells.into_iter().collect::<BTreeSet<_>>().len(), 19);
+    println!("COUNTER_CONTEXT LP06 A2 additive cells=19; original identities unchanged");
 }

@@ -657,10 +657,13 @@ pub(in crate::runtime) enum PhaseKey {
     CompoundItemEvaluate,
     CompoundItemSuspend,
     FunctionApplyEvaluate,
+    CatchEvalTotal,
+    CatchBodyEvaluate,
+    CatchResumeAfterBody,
 }
 
 impl PhaseKey {
-    pub(in crate::runtime) const ALL: [PhaseKey; 43] = [
+    pub(in crate::runtime) const ALL: [PhaseKey; 46] = [
         PhaseKey::EvaluateTotal,
         PhaseKey::EvaluateOnceUnstable,
         PhaseKey::EvaluateInnerUnstableTotal,
@@ -704,6 +707,9 @@ impl PhaseKey {
         PhaseKey::CompoundItemEvaluate,
         PhaseKey::CompoundItemSuspend,
         PhaseKey::FunctionApplyEvaluate,
+        PhaseKey::CatchEvalTotal,
+        PhaseKey::CatchBodyEvaluate,
+        PhaseKey::CatchResumeAfterBody,
     ];
 
     pub(in crate::runtime) const fn name(self) -> &'static str {
@@ -753,6 +759,9 @@ impl PhaseKey {
             PhaseKey::CompoundItemEvaluate => "compound.item.evaluate",
             PhaseKey::CompoundItemSuspend => "compound.item.suspend",
             PhaseKey::FunctionApplyEvaluate => "function.apply.evaluate",
+            PhaseKey::CatchEvalTotal => "catch.eval.total",
+            PhaseKey::CatchBodyEvaluate => "catch.body.evaluate",
+            PhaseKey::CatchResumeAfterBody => "catch.resume_after_body",
         }
     }
 
@@ -801,6 +810,9 @@ impl PhaseKey {
             "compound.item.evaluate" => 40,
             "compound.item.suspend" => 41,
             "function.apply.evaluate" => 42,
+            "catch.eval.total" => 43,
+            "catch.body.evaluate" => 44,
+            "catch.resume_after_body" => 45,
             _ => Self::ALL.len(),
         };
         Self::ALL.get(index).copied()

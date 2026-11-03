@@ -162,6 +162,7 @@ fn logical_counter_port() {
 
 fn child(mode: &str) {
     control::run(mode);
+    control::run_a2(mode);
     let plans = plans::plans();
     let required = lp::required(REQUIRED).unwrap();
     let bindings = lp::rows(BINDINGS, 6).unwrap();

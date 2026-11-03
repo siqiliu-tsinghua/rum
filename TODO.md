@@ -313,7 +313,21 @@ does the same work, only without its profiling hooks.
     oracle cells over five modes, both oracle builds 499/0/0 each with 4,375
     legacy receipts, six mutant families plus the key roundtrip, workspace
     green in both builds, host pause totals re-derived from the record tree.
-    **A2 (builtin and Catch) is brief-647.**
+  - **A2 landed (2026-11-03, brief-647).** Three appended Catch phases
+    (`catch.eval.total`, `catch.body.evaluate`, `catch.resume_after_body`;
+    `ALL` 46); the builtin family rides the existing
+    `AggregateKey::Builtin { symbol, source, arity }` through a private boxed
+    adoption handle gated by the legacy builtin switch, and observes the
+    handler's actual `Expr` after its finalizer. Catch total/body take the A1
+    `Expr` boundary; the finish record freezes its incoming outcome with
+    `Policy::Incoming` and stays open through form, matcher, handler and
+    bypass, transferring an actual pause into the queue boundary. 19 A2
+    oracle cells over five modes and 13 unchanged A1 cells; ten calibrated
+    mutants each killed by their own counter assertion; the isolated
+    unchecked harness resolves `test-continuation-slots` only. Both oracle
+    builds 499/0/0, workspace green in both builds, six switch-gated host
+    tests and nine native ZeroMQ tests green at the director gate.
+    **LP07 (module aggregation) is next.**
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its
