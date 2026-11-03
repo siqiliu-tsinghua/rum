@@ -90,6 +90,7 @@ INVENTORY_TESTS = ["production_rejection_census_is_complete", "production_invent
 SWITCH_GATED = [
     "lp03_adopted_phases_are_exact_in_completed_and_resumed_runs",
     "lp04_adopted_definition_rows_are_exact_in_completed_and_resumed_runs",
+    "lp05_adopted_assignment_rows_are_exact_in_completed_and_resumed_runs",
 ]
 
 
