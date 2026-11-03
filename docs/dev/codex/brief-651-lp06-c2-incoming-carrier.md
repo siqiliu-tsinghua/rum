@@ -321,3 +321,53 @@ source edit other than the one below.
    `python3 -I scripts/report.py check 651` and return its summary and the
    full compliance lines. Everything else in the brief, including Hard
    rules and reporting, is unchanged.
+
+## Director gate — 2026-11-04: GREEN (amendment 1)
+
+`python3 -I scripts/director-gate.py run 651` (`.temp/director/gate-651`):
+
+| Step | Verdict | Detail |
+|---|---|---|
+| scope | PASS | 23,554 citations verified against Git; the 10 changed files are exactly the scope set |
+| fmt | PASS | formatted |
+| check | PASS | 3 warnings, 0 new against HEAD, 0 gone |
+| ownership | PASS | 61 self-reaching types, 79 UnknownHostPayload, 8018 UnknownConstruct; 0 replay rounds |
+| census | PASS | 1067 {RET001: 10, RET002: 1022, RET003: 35}; paired 1067, retired 0, new 0 |
+| oracle | PASS | 1 passed |
+| standing | PASS | LP01 1/0; typed-slot 10/0 |
+| fingerprints | PASS | 68 contracts, 0 fingerprints changed, copied in |
+| certificates | PASS | both builds pass; 0 promoted rows merged; 1 round |
+| inventories | PASS | 19 passed, 0 failed; frontier 1067 |
+| workspace | PASS | 62 binaries, 4095 passed, 0 failed, 61 ignored; peak 7.0 GB of 14, oom_kill 0 |
+
+Beyond the script, reproduced by the director:
+
+- **First run stopped correctly.** Candidate stack-debug reserved 888
+  against the 792 bar; the worker changed nothing after the failure and
+  preserved `report-stop.json` and every failed run.
+- **Attribution.** The +96 was `#[inline(always)]` on the incoming
+  recorder wrapper: LLVM's always-inliner runs at `-O0` and folds the
+  wrapper's 56-byte Option parameter and body allocas into the Catch frame.
+  A controlled probe with that one attribute changed to `#[inline]`
+  measured stack-debug 792 (wrapper outlined) and CLI 1000 (wrapper
+  absent); B's release objdump already had this wrapper absent with
+  `#[inline]`, so the attribute bought nothing in release. The debug
+  spec's `absent` clause was the brief's error; amendment 1 supplied
+  `c2-cand-stack-debug-outlined.json` (792, wrapper present).
+- **Shape, reproduced on the pinned attempt-2 objdumps**: CLI 1016/1000,
+  stack-debug 792/792, stack-release 1016/1000 (base/candidate); release
+  wrapper absent and cold body present in both release arms; debug wrapper
+  and cold body present. Layout: `IncomingPathTimingToken` 56 and
+  `Option<IncomingPathTimingToken>` 56. All six binary and objdump
+  sha256 receipts verify.
+- **Inventories**: `local-contracts.tsv` changes only the fingerprint
+  column across all 68 rows; the ownership inventories shift only
+  `logical/mod.rs` line numbers by +1 (the `mod incoming;` declaration);
+  `promoted.tsv` changes only its certificate cells. Identities, statuses
+  and dispositions are untouched.
+- **C2 bars, as ruled**: carrier and Option 56; CLI and stack-release
+  1000 <= 1016 with the wrapper gone; stack-debug 792 with the wrapper
+  outlined; the five Incoming outcomes (including Cancelled), the two new
+  tests and the five mutant calibrations green on the final bytes. The
+  enabled terminal `Epoch::inspect` lock and temporary `Owner` Arc clone
+  remain disclosed and accepted. LP06 stays unpassed until brief-653.

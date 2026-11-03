@@ -370,6 +370,92 @@ fn lp06_a2_incoming_policy_cases() {
     }
 }
 
+#[test]
+fn lp06_c2_incoming_wrong_live_policy_faults() {
+    use super::{Policy, Retire};
+    use std::sync::atomic::Ordering;
+
+    let enabled = test_support::enabled();
+    let session = Session::new();
+    let epoch = test_support::epoch();
+    let call = session.logical_phase_start(CATCH[2], Policy::Expr).unwrap();
+    assert_eq!(epoch.faults.load(Ordering::Relaxed), 0);
+    assert_eq!(epoch.rows()[0].1.open, 1);
+
+    call.finish_incoming();
+
+    assert_eq!(epoch.faults.load(Ordering::Relaxed), 1);
+    assert!(!epoch.is_valid());
+    assert_eq!(
+        Session::logical_profile_test_rows(),
+        vec![(
+            format!(
+                "{:?}",
+                AggregateKey::Runtime {
+                    phase: CATCH[2],
+                    source: None,
+                }
+            ),
+            [1, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+        )]
+    );
+    let mut reasons = [0; 11];
+    reasons[Retire::InstrumentationFault.index()] = 1;
+    assert_eq!(Session::logical_profile_test_reasons(), reasons);
+    assert_eq!(test_support::active(), 0);
+    // Preserve the diagnosed fault while resetting the leased test epoch.
+    super::epoch::reset_for_lease(enabled.lease());
+    assert_eq!(epoch.faults.load(Ordering::Relaxed), 1);
+    eprintln!(
+        "LP06 C2 NATIVE lp06_c2_incoming_wrong_live_policy_faults: PASS faults=1 calls=1 abandoned=1 open=0 active=0"
+    );
+    Session::logical_profile_test_assert_quiescent();
+}
+
+#[test]
+fn lp06_c2_incoming_retired_record_drops() {
+    use super::{Outcome, Policy, Retire};
+    use std::sync::atomic::Ordering;
+
+    let _enabled = test_support::enabled();
+    let session = Session::new();
+    let epoch = test_support::epoch();
+    let call = session
+        .logical_phase_start(CATCH[2], Policy::Incoming(Outcome::Throw))
+        .unwrap();
+    assert_eq!(epoch.rows()[0].1.open, 1);
+    epoch.retire(Retire::DiagnosticCap);
+    let retired = Session::logical_profile_test_rows();
+    assert_eq!(
+        retired,
+        vec![(
+            format!(
+                "{:?}",
+                AggregateKey::Runtime {
+                    phase: CATCH[2],
+                    source: None,
+                }
+            ),
+            [1, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+        )]
+    );
+    assert_eq!(epoch.faults.load(Ordering::Relaxed), 0);
+
+    call.finish_incoming();
+
+    assert_eq!(Session::logical_profile_test_rows(), retired);
+    assert_eq!(epoch.faults.load(Ordering::Relaxed), 0);
+    assert!(!epoch.is_valid());
+    let mut reasons = [0; 11];
+    reasons[Retire::DiagnosticCap.index()] = 1;
+    assert_eq!(Session::logical_profile_test_reasons(), reasons);
+    assert_eq!(test_support::active(), 0);
+    eprintln!(
+        "LP06 C2 NATIVE lp06_c2_incoming_retired_record_drops: PASS faults=0 calls=1 abandoned=1 open=0 active=0 no_double_settlement"
+    );
+    Session::logical_profile_test_assert_quiescent();
+}
+
 // The runtime test session uses the same finite integer comparison double as
 // definitions_rhs_guards; guest cells exercise stdlib's actual Less handler.
 fn integer_less(_session: &mut Session, head: &Expr, args: &SharedArgs) -> Result<Expr, EvalError> {

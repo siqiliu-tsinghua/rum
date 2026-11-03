@@ -8,7 +8,6 @@ use crate::runtime::{EvalError, Expr, Session};
 
 pub(in crate::runtime) struct IncomingPathTimingToken {
     legacy: RuntimePathTimingToken,
-    frozen: Outcome,
 }
 
 impl Session {
@@ -51,7 +50,7 @@ impl Session {
                 },
             );
         }
-        Some(IncomingPathTimingToken { legacy, frozen })
+        Some(IncomingPathTimingToken { legacy })
     }
 
     #[inline]
@@ -61,9 +60,6 @@ impl Session {
         legacy_incoming: RuntimeProfileOutcome,
         result: &Result<Expr, EvalError>,
     ) {
-        if !lexical_profile_enabled() {
-            return;
-        }
         let Some(token) = token else {
             return;
         };
@@ -82,13 +78,16 @@ impl Session {
         legacy_incoming: RuntimeProfileOutcome,
         result: &Result<Expr, EvalError>,
     ) {
+        if !lexical_profile_enabled() {
+            return;
+        }
         if let Some(key) = PhaseKey::from_name(token.legacy.key.phase) {
             let mut boundary = None;
             complete_phase(self, key, RuntimeProfileOutcome::Ok, |call| {
                 if matches!(result, Err(EvalError::InputRequired { .. })) {
                     boundary = call.and_then(|call| call.pause());
                 } else if let Some(call) = call {
-                    call.finish(token.frozen);
+                    call.finish_incoming();
                 }
             });
             if let Some(boundary) = boundary {

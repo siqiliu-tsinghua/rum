@@ -350,9 +350,23 @@ does the same work, only without its profiling hooks.
     diagnostic and is localized to the restructured dispatch (A1 and
     A1+A2-non-dispatch trees sit at base 856/856). It is open finding F7 for
     C2/C3 and the D campaign, not waived.
-    **C2 (Catch carrier, brief-651), C3 (static forwarded phases and
-    neighbours) and D (the fresh repaired-tree campaign) follow; LP07 waits
-    behind them.**
+  - **C2 landed (2026-11-04, brief-651).** The Incoming carrier keeps only
+    its legacy token (56 bytes; `Option` 56), and the frozen outcome is read
+    back from the existing `Policy::Incoming` record through `Epoch::inspect`
+    in the new `profiling/logical/incoming.rs` at terminal completion; a
+    live non-Incoming policy faults the epoch, a retired record drops. The
+    recorder wrapper is token-first `#[inline]`. The first run stopped
+    correctly at the debug frame bar (888 vs base 792) because
+    `#[inline(always)]` is applied at `-O0` and folds the wrapper's 56-byte
+    Option parameter into the Catch frame; the one-attribute amendment
+    restored 792 while CLI stayed 1000 with the wrapper absent. Catch
+    reservations base/candidate: CLI 1016/1000, stack-release 1016/1000,
+    stack-debug 792/792. Five Incoming outcomes including Cancelled, two
+    new fault/drop tests, five calibrated mutants (including the
+    Cancelled/Error conflation) and the 56/56 layout pin are green; the
+    enabled terminal inspect lock and Owner Arc clone are disclosed.
+    **C3 (static forwarded phases and neighbours) and D (the fresh
+    repaired-tree campaign) follow; LP07 waits behind them.**
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its
