@@ -217,3 +217,28 @@ log, exit code and test counts; `changes` lists every touched file with line
 ranges and the reason; `disclosures` lists every inventory row that moved;
 `questions` carries any STOP. Final message is exactly
 `python3 scripts/report.py summary 643`.
+
+## Director decision — Q1 (2026-11-03): the baseline moves under the lease
+
+Round 1 is accepted as a diagnosis and a correct patch: the original
+`parked - initial` underflow is gone in all twenty eight-thread runs. The one
+remaining red is a different, pre-existing sampling error, and Q1 is
+**authorized, narrowly**:
+
+- In `logical_expired_queue_arena_stays_charged_until_weak_drop`
+  (`budget.rs:158-181`), move the `before` sample so it is taken **after**
+  `lease()`. Today it precedes the acquisition, so it can include a
+  concurrent test's in-flight charge (the observed 20,136 bytes); the final
+  equality then compares against a value that was never this test's
+  baseline. Under the lease the baseline is taken with no other leased test
+  in flight, which is the premise the assertion always needed.
+- Nothing else changes in that test: the assertion text, both literals,
+  `initial`, `parked`, the `epoch`/`queue` lines and the drop order stay
+  byte-identical. This is not a weakening; a changed comparison or a
+  tolerance is a STOP.
+- Round 2 acceptance: the twenty-run eight-thread exposure reaches **20/20**,
+  the falsifier stays red on the unfixed copy and green on the tree, the
+  serial runtime suite and all focused contracts stay green, and any failure
+  of a different assertion is a STOP with its log.
+- The standing inventories were already replayed in round 1; replay again if
+  this edit moves any derived cell.
