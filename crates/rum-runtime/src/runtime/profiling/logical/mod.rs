@@ -644,10 +644,16 @@ pub(in crate::runtime) enum PhaseKey {
     DownValuesDirectDefaultLookup,
     DownValuesCompiledMatcher,
     SubValuesCompiledMatcher,
+    SetRhsEvaluate,
+    SetRhsSuspend,
+    SetFinish,
+    SetTryListDestructuring,
+    SetTryAssociationLvalue,
+    SetPrepareLhs,
 }
 
 impl PhaseKey {
-    pub(in crate::runtime) const ALL: [PhaseKey; 30] = [
+    pub(in crate::runtime) const ALL: [PhaseKey; 36] = [
         PhaseKey::EvaluateTotal,
         PhaseKey::EvaluateOnceUnstable,
         PhaseKey::EvaluateInnerUnstableTotal,
@@ -678,6 +684,12 @@ impl PhaseKey {
         PhaseKey::DownValuesDirectDefaultLookup,
         PhaseKey::DownValuesCompiledMatcher,
         PhaseKey::SubValuesCompiledMatcher,
+        PhaseKey::SetRhsEvaluate,
+        PhaseKey::SetRhsSuspend,
+        PhaseKey::SetFinish,
+        PhaseKey::SetTryListDestructuring,
+        PhaseKey::SetTryAssociationLvalue,
+        PhaseKey::SetPrepareLhs,
     ];
 
     pub(in crate::runtime) const fn name(self) -> &'static str {
@@ -714,6 +726,12 @@ impl PhaseKey {
             PhaseKey::DownValuesDirectDefaultLookup => "down_values.direct_default_lookup",
             PhaseKey::DownValuesCompiledMatcher => "down_values.compiled_matcher",
             PhaseKey::SubValuesCompiledMatcher => "sub_values.compiled_matcher",
+            PhaseKey::SetRhsEvaluate => "set.rhs.evaluate",
+            PhaseKey::SetRhsSuspend => "set.rhs.suspend",
+            PhaseKey::SetFinish => "set.finish",
+            PhaseKey::SetTryListDestructuring => "set.try_list_destructuring",
+            PhaseKey::SetTryAssociationLvalue => "set.try_association_lvalue",
+            PhaseKey::SetPrepareLhs => "set.prepare_lhs",
         }
     }
 
@@ -749,6 +767,12 @@ impl PhaseKey {
             "down_values.direct_default_lookup" => 27,
             "down_values.compiled_matcher" => 28,
             "sub_values.compiled_matcher" => 29,
+            "set.rhs.evaluate" => 30,
+            "set.rhs.suspend" => 31,
+            "set.finish" => 32,
+            "set.try_list_destructuring" => 33,
+            "set.try_association_lvalue" => 34,
+            "set.prepare_lhs" => 35,
             _ => Self::ALL.len(),
         };
         Self::ALL.get(index).copied()
@@ -1010,3 +1034,7 @@ mod evaluator;
 #[cfg(test)]
 #[path = "../tests/definitions.rs"]
 mod definitions;
+
+#[cfg(test)]
+#[path = "../tests/assignments.rs"]
+mod assignments;

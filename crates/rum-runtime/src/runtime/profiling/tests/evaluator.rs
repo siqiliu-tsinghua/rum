@@ -152,6 +152,12 @@ fn lp03_adopted_site_table_is_exact() {
         "down_values.direct_default_lookup",
         "down_values.compiled_matcher",
         "sub_values.compiled_matcher",
+        "set.rhs.evaluate",
+        "set.rhs.suspend",
+        "set.finish",
+        "set.try_list_destructuring",
+        "set.try_association_lvalue",
+        "set.prepare_lhs",
     ]);
     let actual = super::PhaseKey::ALL
         .iter()

@@ -9,7 +9,7 @@ use std::{collections::BTreeMap, fs, process::Command};
 const REQUIRED: &str = include_str!("../../inventory/logical-profile-required.tsv");
 const BINDINGS: &str = include_str!("../../inventory/logical-profile-bindings.tsv");
 fn scratch() -> std::path::PathBuf {
-    std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../.temp/brief-625")
+    std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../.temp/brief-642/lp01-observation")
 }
 
 #[test]

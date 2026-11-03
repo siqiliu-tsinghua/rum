@@ -419,3 +419,30 @@ Final message is exactly `python3 scripts/report.py summary 642 --stage a1`
 counts; `changes` lists every touched file with line ranges and the reason;
 `disclosures` lists every inventory row that moved; `questions` carries any
 STOP.
+
+## Director gate — stage A1 (2026-11-03): PASS
+
+`director-gate.py run 642 --stage a1`: scope (report check OK, 122
+citations), fmt, check (3 warnings, 0 new), ownership (61 / 79 / 8,001, 0
+rounds), census (1067 = 10/1022/35, every row paired), oracle (1 passed),
+standing (LP01 1/0, typed-slot 10/0), fingerprints (68 contracts, 0 changed),
+certificates (both builds), inventories (19 passed; frontier 1067) all PASS.
+The workspace step was not run at this stage by the per-brief testing tier;
+it runs at the A2 gate.
+
+Reproduced by hand: the ten focused tests were red on the base tree with the
+missing `set.*` row in every case (`a1-assignments-red-3.log`) and green
+after the wiring (`10 passed`).
+
+**Open at this gate, carried to brief-643 before A2.** My rerun of
+`cargo test -p rum-runtime --lib` at eight threads hit an intermittent red in
+`profiling::logical::budget::logical_expired_queue_arena_stays_charged_until_
+weak_drop` (`parked - initial` underflow at `budget.rs:176`): 3/20 red with
+the ten new tests, 0/20 with `--skip logical::assignments::`, and green at
+`--test-threads=1`. The mechanism is the 4,232-byte TLS registration charged
+by `segments::install` (`size_of::<RefCell<Stack>>() + 4096`): libtest runs
+each test on its own thread and that registration is released only at thread
+destruction, after the lease has been handed on. A scratch probe that
+releases it under `TestLease::drop` (test-gated) gives 20/20 green, and its
+falsifier is red on the unfixed tree with `left: 4232, right: 0` and green on
+the fixed one. No production behaviour change; brief-643 owns the repair.

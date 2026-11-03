@@ -220,7 +220,32 @@ does the same work, only without its profiling hooks.
     4,037 passed, 0 failed, 61 ignored, peak 7.7 GB); the nine native
     ZeroMQ tests skip through the documented sandbox opt-in and socket
     transport stays unexercised.
-  - **Next: LP05.**
+- **LP05** (brief-642): the assignment RHS, finish, list, association and LHS
+  phases.
+  - **Stage A1 gated GREEN** (`gate-642a1`): six keys appended (30 -> 36);
+    `set.rhs.evaluate` and `set.rhs.suspend` complete at the producer
+    boundary before `EvalSetSuspensionFrame` consumes the RHS, and a paused
+    RHS transfers both records to a `ProfileBoundary` instead of closing
+    them as errors. `set.finish` opens on the resumed RHS-success branch and
+    never on an RHS error. Ten focused tests, each watched red on its
+    missing row before it passed. Scope, fmt, check, ownership, census,
+    oracle, standing, fingerprints, certificates and inventories PASS; the
+    workspace suite is deferred to A2 by the per-brief ruling.
+  - **Open at A1 (brief-643 lands it before A2)**: the ten new tests expose
+    a test-isolation race in
+    `budget::logical_expired_queue_arena_stays_charged_until_weak_drop` at
+    eight threads (3/20 red with them, 0/20 with `--skip
+    logical::assignments::`, serial green). The 4,232-byte TLS registration
+    charged by `segments::install` is released at thread destruction, after
+    the lease has moved on, so the decrement lands in the next holder's
+    window. Releasing it under `TestLease::drop` gives 0/20 and a
+    calibrated falsifier (red 4,232 on the unfixed tree, green on the
+    fixed one).
+  - **Stage A2 next** (the list and association attempt routes, `set-lhs`,
+    the genuine RHS-then-LHS double pause, and the inventory replay), then
+    Stage B, the measurement campaign.
+  - **Next: brief-643 (the lease releases its thread registration), then
+    LP05 A2.**
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its

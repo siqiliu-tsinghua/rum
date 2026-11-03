@@ -26,19 +26,21 @@ impl Session {
 
         let lhs = args[0].clone();
         let rhs = if expr_is_self_evaluating_atom(&args[1]) {
-            let runtime_profile_rhs = runtime_path_timing_start("set.rhs.evaluate");
-            record_profile_runtime_path_timing(runtime_profile_rhs, RuntimeProfileOutcome::Ok);
-            let runtime_profile_suspend = runtime_path_timing_start("set.rhs.suspend");
-            record_profile_runtime_path_timing(runtime_profile_suspend, RuntimeProfileOutcome::Ok);
+            let runtime_profile_rhs = runtime_path_timing_start_adopted(self, "set.rhs.evaluate");
+            record_profile_runtime_path_timing_adopted_ok(self, runtime_profile_rhs);
+            let runtime_profile_suspend =
+                runtime_path_timing_start_adopted(self, "set.rhs.suspend");
+            record_profile_runtime_path_timing_adopted_ok(self, runtime_profile_suspend);
             args[1].clone()
         } else {
-            let runtime_profile_rhs = runtime_path_timing_start("set.rhs.evaluate");
+            let runtime_profile_rhs = runtime_path_timing_start_adopted(self, "set.rhs.evaluate");
             let rhs_result = self.evaluate(args[1].clone());
-            record_profile_runtime_path_timing(
+            self.record_profile_runtime_path_timing_adopted_boundary(
                 runtime_profile_rhs,
-                runtime_profile_outcome_for_expr_result(&rhs_result),
+                &rhs_result,
             );
-            let runtime_profile_suspend = runtime_path_timing_start("set.rhs.suspend");
+            let runtime_profile_suspend =
+                self.runtime_path_timing_start_adopted_forwarded("set.rhs.suspend", &rhs_result);
             let rhs_result = {
                 let session = &mut *self;
                 let suspended_lhs = &lhs;
@@ -54,19 +56,17 @@ impl Session {
                     )
                 })()
             };
-            record_profile_runtime_path_timing(
+            record_profile_runtime_path_timing_adopted_defer_pause(
+                self,
                 runtime_profile_suspend,
-                runtime_profile_outcome_for_expr_result(&rhs_result),
+                &rhs_result,
             );
             rhs_result?
         };
 
-        let runtime_profile_finish = runtime_path_timing_start("set.finish");
+        let runtime_profile_finish = runtime_path_timing_start_adopted(self, "set.finish");
         let result = self.resume_set_with_rhs(lhs, rhs);
-        record_profile_runtime_path_timing(
-            runtime_profile_finish,
-            runtime_profile_outcome_for_expr_result(&result),
-        );
+        self.record_profile_runtime_path_timing_adopted_boundary(runtime_profile_finish, &result);
         result
     }
 

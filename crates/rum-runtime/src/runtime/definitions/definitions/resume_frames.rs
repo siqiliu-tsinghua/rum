@@ -19,7 +19,12 @@ impl crate::runtime::kernel_api::TypedFrame for EvalSetSuspensionFrame {
         #[allow(unused_mut)]
         let mut lhs = self.lhs.clone();
         let resumed = match outcome {
-            Ok(rhs) => (|| session.resume_set_with_rhs(lhs, rhs))(),
+            Ok(rhs) => {
+                crate::runtime::profiling::logical::open_logical_phase(session, "set.finish");
+                let result = (|| session.resume_set_with_rhs(lhs, rhs))();
+                session.complete_profile_runtime_path_boundary("set.finish", &result);
+                result
+            }
             Err(error) => Err(error),
         };
         crate::runtime::kernel_api::TypedAction::complete(resumed)

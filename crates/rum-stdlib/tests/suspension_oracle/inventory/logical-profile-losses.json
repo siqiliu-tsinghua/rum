@@ -1757,7 +1757,7 @@
 "crates/rum-runtime/src/runtime/definitions/application/up_values.rs:108",
 "runtime|call.stage.up_values",
 "crates/rum-runtime/src/runtime/definitions/application/up_values.rs:190",
-"crates/rum-runtime/src/runtime/definitions/definitions.rs:65",
+"crates/rum-runtime/src/runtime/definitions/definitions.rs:68",
 "runtime|call.stage.special_form",
 "runtime|set.finish",
 "crates/rum-runtime/src/runtime/definitions/definitions.rs:64@set-finish",

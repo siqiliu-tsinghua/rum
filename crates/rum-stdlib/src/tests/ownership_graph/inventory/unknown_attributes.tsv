@@ -196,7 +196,7 @@ UnknownConstruct	crates/rum-runtime/src/runtime/definitions/definitions/destruct
 UnknownConstruct	crates/rum-runtime/src/runtime/definitions/definitions/destructuring.rs	18	1	unresolved attribute/expansion derive (Clone , rum_derive :: FrameRootTrace)
 UnknownConstruct	crates/rum-runtime/src/runtime/definitions/definitions/destructuring.rs	128	1	unresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: PureFrameAbandon)
 UnknownConstruct	crates/rum-runtime/src/runtime/definitions/definitions/resume_frames.rs	4	1	unresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: PureFrameAbandon)
-UnknownConstruct	crates/rum-runtime/src/runtime/definitions/definitions/resume_frames.rs	29	1	unresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: PureFrameAbandon)
+UnknownConstruct	crates/rum-runtime/src/runtime/definitions/definitions/resume_frames.rs	34	1	unresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: PureFrameAbandon)
 UnknownConstruct	crates/rum-runtime/src/runtime/definitions/part_assignment/resume_frames.rs	5	1	unresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: PureFrameAbandon)
 UnknownConstruct	crates/rum-runtime/src/runtime/definitions/rhs_guards.rs	390	1	unresolved attribute/expansion derive (FrameRootTrace)
 UnknownConstruct	crates/rum-runtime/src/runtime/definitions/rhs_guards.rs	412	1	unresolved attribute/expansion derive (Clone , FrameRootTrace)
