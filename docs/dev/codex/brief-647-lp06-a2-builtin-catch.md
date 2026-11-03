@@ -320,11 +320,12 @@ loopback binding. For the two workspace commands only, set
 change no ZeroMQ source or test. The director gate runs the whole workspace
 on the host without the variable, where the nine tests must pass natively.
 
-One cargo at a time, build jobs 8, test threads 8, offline. Every cargo
-command runs in `scripts/memory-scope.sh <unit> 14G`; no nested scope. One
-substantive red reproduction at one thread; a confirmed cgroup OOM gets one
-retry at one build job. No performance campaign, no Callgrind, no timing
-numbers.
+One cargo at a time, build jobs 8, test threads 8, offline. The dispatcher
+already runs this session inside a 16G memory scope; never invoke
+`scripts/memory-scope.sh` yourself, and never run a cargo command outside the
+dispatch scope (amendment 1). One substantive red reproduction at one
+thread; a confirmed cgroup OOM gets one retry at one build job. No
+performance campaign, no Callgrind, no timing numbers.
 
 ## Checkpointing — protect the scene
 
@@ -361,3 +362,50 @@ green), the size and split assessment (the Q3 boundary), the semantic
 result, the unrun performance gates and any remaining question. Check it
 with `scripts/report.py check` (without its version-control option) and
 return its summary and the full compliance verdict lines.
+
+---
+
+## Amendment 1 — the command envelope is the dispatcher's scope (after the attempt-1 STOP)
+
+**The STOP is correct in kind and is accepted.** The preflight was
+`scripts/memory-scope.sh rum-647-preflight-fmt 14G cargo fmt --check`; the
+wrapper exited 1 before Cargo with `Failed to connect to user scope bus via
+local transport: Operation not permitted`, and the worker stopped with zero
+source edits (reported: 1,575 captured files byte-identical). That is my
+brief's fault, not the worker's: the Verification paragraph both required
+the wrapper and forbade a nested scope, and the sandbox denies the user
+scope bus, so the two halves cannot both hold.
+
+**Ruling on Q-ENV: the enclosing dispatcher scope is the command envelope.**
+`scripts/dispatch-brief.sh` runs every worker inside its own memory-capped
+systemd user scope — `MemoryMax=BRIEF_MEMORY_MAX` (16G default), no swap,
+`OOMPolicy=continue` — and its own header states the worker cannot create
+scopes of its own. So inside this session:
+
+- Run every cargo command **plain**: no `scripts/memory-scope.sh`, no
+  `systemd-run`, no other scope call. A nested scope is expected to fail and
+  must not be attempted.
+- The scope is evidenced, not assumed: read `memory.max` from
+  `/sys/fs/cgroup` (it must read 17179869184 bytes, the dispatcher's 16G) and
+  quote it in the compliance section. The dispatch log ends with a
+  `# memory-scope:` line giving peak and OOM counts; I read it at the gate.
+- Keep `CARGO_BUILD_JOBS=8`, `RUST_TEST_THREADS=8`,
+  `CARGO_NET_OFFLINE=true`, `TMPDIR` under `.temp/brief-647/scratch`, one
+  cargo at a time, and `scripts/run-bounded.py` with the Q6 bounds. The
+  test-thread and OOM-retry rules are unchanged.
+
+The 14G figure is the director's host instrument: my gate reruns the
+acceptance under `memory-scope.sh <unit> 14G` on the host. The worker
+envelope stays the dispatcher's 16G; do not change `BRIEF_MEMORY_MAX` and do
+not substitute a smaller or larger scope. A cgroup OOM (exit 137 with a
+risen `oom_kill`) is still a STOP with one retry at one build job.
+
+**Restated compliance bar.** `cargo-envelope` now reads: PASS when every
+cargo command ran inside the dispatcher's scope, with the `memory.max` line
+quoted, no nested scope attempted and no unscoped run.
+
+**Rerun.** This is a fresh dispatch after the amendment commit; the stopped
+attempt changed nothing, so there is no state to carry forward. Preserve its
+report and logs under `.temp/brief-647/` as failed-attempt evidence, then
+proceed with the source stage as written. Everything else in this brief
+stands.
