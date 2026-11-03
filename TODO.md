@@ -203,9 +203,24 @@ does the same work, only without its profiling hooks.
       484.88 s, mutant 487.98 s, serial 487.47 s), M33/I33 and M45/I45
       (baseline 449.19 s, mutant 0.16 s) — all KILLED at their predicted
       observations, all inside the authorized 1800 s bound.
-  - **Next: a certificate-only brief for D01/D03** (I07's drop witness;
-    I31's Take fixture cannot force selection), then implement I08's
-    surviving certificate (D02), then LP05.
+  - **brief-641 (certificate observers): DONE and gated GREEN.** Test-only:
+    the I31 Take fixture now removes a sibling at the iterative-tail
+    transition while keeping a unique deepest sentinel, and the line-320
+    no-op falsifier reds the whole-output assertion in a scratch copy
+    (serial too). The I07 natural-drop certificate now witnesses the raw
+    nesting and unique `SharedExpr`/`SharedArgs` reachability iteratively
+    before the drop; deliberate deep-subtree sharing reds the uniqueness
+    assertion (serial too). **D03 is closed with a calibrated falsifier.**
+    **D01 is closed as specified** — no localized production drop mutant
+    exists without a disproportionate core rewrite, so I07 stays a
+    completion probe, now with the raw-shape and unique-ownership witness
+    it lacked. **D02 is a calibration fact, not a defect**: the 4097-depth
+    certificate proves deployment-depth completion, not the drop mechanism;
+    no test change follows. Gate: all steps PASS (workspace 61 binaries,
+    4,037 passed, 0 failed, 61 ignored, peak 7.7 GB); the nine native
+    ZeroMQ tests skip through the documented sandbox opt-in and socket
+    transport stays unexercised.
+  - **Next: LP05.**
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its

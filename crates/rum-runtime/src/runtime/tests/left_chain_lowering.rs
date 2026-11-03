@@ -568,13 +568,85 @@ fn drop_expr_iteratively(expr: Expr) {
 fn left_chain_two_mib_nested_expr_drops_naturally_at_the_boundary() {
     for token in ["/.", "//.", "//", "?", "::", "**", ":"] {
         let message = run_on_two_mib_thread("nested-natural-drop", move || {
-            let source = repeated_chain_source(token, MAX_LEFT_ASSOCIATIVE_CHAIN_LINKS);
+            const SENTINEL: &str = "naturalDropSentinel641";
+            let mut source = repeated_chain_source(token, MAX_LEFT_ASSOCIATIVE_CHAIN_LINKS);
+            source.replace_range(..1, SENTINEL);
             let parsed = rum_syntax::parse_with_diagnostics(source)
                 .expect("4,096-link source should parse on a 2 MiB stack");
             let lowered = lower_syntax_expr(parsed.syntax())
                 .expect("4,096-link syntax should lower on a 2 MiB stack");
             let formatted = format_parsed_source(&parsed, FormatterOptions::default());
             assert!(!formatted.is_empty());
+
+            // Borrow every structural edge before natural drop: repeated Arc
+            // reachability would certify only a refcount decrement for a DAG.
+            // Symbol interning is irrelevant; both walks are iterative and
+            // neither clones the lowered tree.
+            let mut shared_exprs = std::collections::HashMap::new();
+            let mut shared_args = std::collections::HashMap::new();
+            let mut work = vec![(&lowered, 1_usize)];
+            let mut max_depth = 0;
+            let mut sentinel_depths = Vec::new();
+            while let Some((current, depth)) = work.pop() {
+                max_depth = max_depth.max(depth);
+                match current {
+                    Expr::Call { head, args } => {
+                        assert_eq!(
+                            shared_exprs.insert(head.ptr_key(), depth),
+                            None,
+                            "natural drop requires unique SharedExpr reachability: {token}, depth {depth}"
+                        );
+                        assert_eq!(
+                            shared_args.insert(args.ptr_key(), depth),
+                            None,
+                            "natural drop requires unique SharedArgs reachability: {token}, depth {depth}"
+                        );
+                        work.push((head.as_ref(), depth + 1));
+                        for arg in args.iter() {
+                            work.push((arg, depth + 1));
+                        }
+                    }
+                    Expr::Atom(Atom::Symbol(symbol))
+                        if symbol.context() == GLOBAL_CONTEXT && symbol.name() == SENTINEL =>
+                    {
+                        sentinel_depths.push(depth);
+                    }
+                    Expr::Atom(_) => {}
+                }
+            }
+            assert_eq!(max_depth, MAX_LEFT_ASSOCIATIVE_CHAIN_LINKS + 1);
+            assert_eq!(sentinel_depths, vec![MAX_LEFT_ASSOCIATIVE_CHAIN_LINKS + 1]);
+            assert_eq!(shared_exprs.len(), MAX_LEFT_ASSOCIATIVE_CHAIN_LINKS);
+            assert_eq!(shared_args.len(), MAX_LEFT_ASSOCIATIVE_CHAIN_LINKS);
+
+            let op = match token {
+                "/." => BinaryOp::ReplaceAll,
+                "//." => BinaryOp::ReplaceRepeated,
+                "//" => BinaryOp::PostfixApply,
+                "?" => BinaryOp::PatternTest,
+                "::" => BinaryOp::MessageName,
+                "**" => BinaryOp::NonCommutativeMultiply,
+                ":" => BinaryOp::Pattern,
+                _ => unreachable!(),
+            };
+            let mut current = &lowered;
+            for index in (0..MAX_LEFT_ASSOCIATIVE_CHAIN_LINKS).rev() {
+                let next = assert_link_shape(current, op, index == 0);
+                let Expr::Call { args, .. } = current else {
+                    unreachable!("assert_link_shape checked the call")
+                };
+                if token == "::" {
+                    assert!(matches!(&args[1], Expr::Atom(Atom::String(tag)) if tag == "a"));
+                } else if token != "//" {
+                    assert_global_a(&args[1]);
+                }
+                current = next;
+            }
+            assert!(matches!(
+                current,
+                Expr::Atom(Atom::Symbol(symbol))
+                    if symbol.context() == GLOBAL_CONTEXT && symbol.name() == SENTINEL
+            ));
 
             drop(lowered);
             drop(formatted);

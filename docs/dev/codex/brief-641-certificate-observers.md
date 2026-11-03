@@ -210,3 +210,40 @@ log, exit code and test counts; `changes` lists both test files with line
 ranges and the reason; `disclosures` lists every inventory row that moved;
 `questions` carries any STOP. Final message is exactly
 `python3 scripts/report.py summary 641`.
+
+## Director gate (2026-11-03): GREEN
+
+`director-gate.py run 641`: scope, fmt, check, ownership, census, oracle,
+standing, fingerprints, certificates, inventories and workspace all PASS;
+workspace 61 binaries, 4,037 passed, 0 failed, 61 ignored, peak 7.7 GB of 14,
+no OOM. Report check OK (444 citations).
+
+The evidence was verified by hand, not only by the table:
+
+- The Take falsifier receipt's `before_sha256` equals the current
+  `take_drop.rs`; its `old` text occurs once; applying it reproduces the
+  receipt's `after_sha256`. The red is the whole-output assertion at
+  `iterative_traversal_depth.rs:246`, and the retained diagnostic path
+  `[1 x 16, 2]` is exactly the excluded sibling.
+- The natural-drop negative control's file is byte-identical to the current
+  test file plus the authorized nine-line sharing insertion, and its hash
+  equals the receipt. The red is the unique-reachability assertion
+  (`Some(2) != None`) and reproduces serially.
+- **Both certificates were also run by the director, release, ignored, in
+  their 2 MiB threads: green** (0.01 s and 0.05 s).
+- The inventory replay is mechanical: 68 `local-contracts.tsv` rows changed
+  only in the fingerprint column (keys identical), and the two
+  `promoted.tsv` rows changed only in the hash=true/hash=false certificate
+  columns.
+
+The one FLAGGED report check is settled by the standing AGENTS.md allowance:
+the sandbox denies native ZeroMQ loopback binds, all nine denials reproduced
+serially, and the existing `RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1` opt-in was used.
+Native socket transport remains unexercised and is disclosed, not counted.
+
+**Disposition.** D03 is closed with a calibrated falsifier. D01 is closed as
+the obligation text allows — no proportionate localized production drop
+mutant exists, so I07 remains a completion probe, now carrying the raw-shape
+and unique-ownership witness it lacked. D02 is a recorded calibration fact:
+the 4097-depth certificate proves deployment-depth completion, not the drop
+mechanism; no test change follows from it.

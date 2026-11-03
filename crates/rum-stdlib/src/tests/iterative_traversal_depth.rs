@@ -204,13 +204,48 @@ fn tostring_completes_at_physical_height_4097_on_two_mib() {
 fn take_multispec_completes_at_physical_height_4097_on_two_mib() {
     let certificate = run_on_two_mib_thread("take-multispec-depth-4097", || {
         let spec_count = TARGET_PHYSICAL_HEIGHT - 1;
+        // After 16 recursive specs, only the iterative tail can remove the
+        // sibling in its first list. The unique sentinel must remain at the
+        // bottom of all 4,096 wrappers, so returning the input cannot pass.
+        let tail_inner_count = spec_count - 16 - 1;
+        let mut session = Session::new();
+        install_core(&mut session);
+        let source = format!(
+            "x = takeDepthSentinel641; Do[x = {{x}}, {{i, {tail_inner_count}}}]; \
+             x = {{x, takeTailExcluded641}}; Do[x = {{x}}, {{i, 16}}]; \
+             ToString[x, InputForm]"
+        );
+        let input = session
+            .eval_text(&source)
+            .expect("Take depth fixture should be constructed")
+            .value;
+        let Expr::Atom(Atom::String(input)) = input else {
+            panic!("Take depth input should return an Atom::String")
+        };
+        assert_eq!(
+            input,
+            nested_input_form(
+                16,
+                &format!(
+                    "{{{}, takeTailExcluded641}}",
+                    nested_input_form(tail_inner_count, "takeDepthSentinel641")
+                )
+            )
+        );
         let body =
             format!("ToString[Take @@ Prepend[Table[{{1}}, {{{spec_count}}}], x], InputForm]");
-        evaluate_string_certificate(&body)
+        let value = session
+            .eval_text(&body)
+            .expect("Take depth certificate should evaluate")
+            .value;
+        let Expr::Atom(Atom::String(value)) = value else {
+            panic!("Take depth certificate should return an Atom::String")
+        };
+        value
     });
     assert_eq!(
         certificate,
-        nested_input_form(TARGET_PHYSICAL_HEIGHT - 1, "1")
+        nested_input_form(TARGET_PHYSICAL_HEIGHT - 1, "takeDepthSentinel641")
     );
 }
 
