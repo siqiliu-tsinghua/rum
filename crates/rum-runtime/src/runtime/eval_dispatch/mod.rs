@@ -181,8 +181,8 @@ impl Session {
         if let Some(symbol) = builtin_symbol {
             self.record_profile_builtin_application(&symbol);
         }
-        let profile_builtin_start =
-            builtin_symbol.map(|symbol| self.builtin_timing_start_adopted(&symbol, args.len()));
+        let profile_builtin_start = builtin_symbol
+            .and_then(|symbol| self.builtin_timing_start_adopted(&symbol, args.len()));
         if !builtin_memory_growth_test_enabled() {
             let result = self.run_builtin_handler(handler, head, args);
             return self.finish_builtin_dispatch(
@@ -224,15 +224,12 @@ impl Session {
         &mut self,
         produced: Result<Expr, EvalError>,
         profile_builtin_start: Option<
-            Option<crate::runtime::profiling::control_builtin::AdoptedBuiltinTimingToken>,
+            crate::runtime::profiling::control_builtin::AdoptedBuiltinTimingToken,
         >,
         freeze: impl FnOnce() -> RunCallDispatchStageSuspensionFrame,
         finish: impl FnOnce(&mut Self, Result<Expr, EvalError>) -> Result<Option<Expr>, EvalError>,
     ) -> Result<Option<Expr>, EvalError> {
-        self.record_profile_builtin_timing_adopted_boundary(
-            profile_builtin_start.flatten(),
-            &produced,
-        );
+        self.record_profile_builtin_timing_adopted_boundary(profile_builtin_start, &produced);
         let result = crate::resume_typed_or_suspend!(
             self,
             produced,

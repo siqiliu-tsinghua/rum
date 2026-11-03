@@ -243,3 +243,57 @@ with attempts, the two test halves' verdict lines, both shape runs with their
 assessment of the touched files, and any unpassed cost question. Run
 `python3 -I scripts/report.py check 650` and return its summary and the full
 compliance verdict lines.
+
+## Director gate — 2026-11-04: GREEN (bar re-specified on new evidence)
+
+`python3 -I scripts/director-gate.py run 650` (`.temp/director/gate-650`):
+
+| Step | Verdict | Detail |
+|---|---|---|
+| scope | PASS | 11,688 citations verified against Git; 8 files, exactly the scope set |
+| fmt | PASS | formatted |
+| check | PASS | 3 warnings, 0 new against HEAD, 0 gone |
+| ownership | PASS | 61 self-reaching types, 79 UnknownHostPayload, 8017 UnknownConstruct; 0 replay rounds |
+| census | PASS | 1067 {RET001: 10, RET002: 1022, RET003: 35}; paired 1067, retired 0, new 0 |
+| oracle | PASS | 1 passed |
+| standing | PASS | LP01 1/0; typed-slot 10/0 |
+| fingerprints | PASS | 68 contracts, 0 fingerprints changed, copied in |
+| certificates | PASS | both builds pass; 0 promoted rows merged; 1 round |
+| inventories | PASS | 19 passed, 0 failed; frontier 1067 |
+| workspace | PASS | 62 binaries, 4093 passed, 0 failed, 61 ignored; peak 6.5 GB of 14, oom_kill 0, kernel OOM lines 0 |
+
+Beyond the script, reproduced by the director:
+
+- **Worker artifacts.** I re-ran the calibrated reducer on the worker's
+  pinned original candidate objdump: `[872, 856]`, wrapper absent, cold body
+  present, its only callers the dispatch bodies — the report's exact values.
+- **Clean rebuild.** The same C1 source at the same absolute path
+  (`builds/candidate/cli-attempt4`, sha256 `655089cb...`) reproduces the
+  shape `[872, 856]`; the byte hash differs from the worker's build. An early
+  probe build had overwritten the pinned candidate path; the rebuild restored
+  it, and `.temp/brief-650/EVIDENCE-RECONCILIATION.md` records the loss. The
+  builder now pins per attempt.
+- **Frame attribution probes** (same path, CGU=1, `-p rum-cli` release):
+  A1-only (commit 6864588b) and A1 + A2's non-dispatch files both reserve
+  `[856, 856]`; A2 `[888, 872]`; C1 `[872, 856]`; C1 with the
+  `Option<Option<...>>` layer restored `[888, 872]`; C1 with the entire
+  builtin diagnostic removed `[872, 856]`; C1 with the token unboxed
+  `[904, 888]`; C1 with only the finish call removed `[872, 872]`.
+  Therefore the single-Option form is worth 16 bytes in both
+  specializations, the recorder inlining is frame-neutral, and the remaining
+  +16 in the enlarged-spec specialization is the restructured dispatch's
+  layout cost, present with no diagnostic at all. Open finding F7; no source
+  shape tested restores 856 while keeping the adopted boundary.
+- **Bar.** C1's acceptance is: no ordinal grows; the ordinary specialization
+  returns to base; the recorder wrapper and its call edge are gone; the
+  adopted diagnostic adds 0 bytes over a diagnostic-free build of the same
+  tree; the enabled lifecycle and gate transition are unchanged. "Both
+  ordinals at 856" was not achievable inside C1's causal scope.
+
+- **No-default workspace** at the host: 62 binaries, 4093 passed, 0 failed,
+  61 ignored (`.temp/director/gate-650-nodefault.log`).
+- **Switch-gated host tests** lp03/lp04/lp05, `1 passed` each, with
+  `RUM_PROFILE_LEXICAL_SUBSTITUTION=1` in the default and the
+  `--no-default-features` builds (`.temp/director/gate-650-switch/`).
+- **Native ZeroMQ**: the gate workspace ran without
+  `RUM_ALLOW_NATIVE_ZEROMQ_SKIP`; its nine native tests passed on the host.

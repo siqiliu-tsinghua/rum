@@ -327,7 +327,32 @@ does the same work, only without its profiling hooks.
     unchecked harness resolves `test-continuation-slots` only. Both oracle
     builds 499/0/0, workspace green in both builds, six switch-gated host
     tests and nine native ZeroMQ tests green at the director gate.
-    **The LP06 B campaign (disabled-path cost) is brief-648; LP07 follows.**
+  - **B measured the disabled path (2026-11-04, brief-648) and its
+    zero-cost gate did not pass.** The adopted builtin recorder was an
+    outlined 19-instruction call per dispatch (Callgrind own slope 19, call
+    slope 1); 22 ordinary plus 2 resume labels kept iteration-proportional
+    rum work; `try_dispatch_builtin_call` reservations grew 856->888 and
+    856->872, the Catch finish 1016->1032 (792->808 in stack-debug), and the
+    adopted-forwarded slow helper 24->40 (enabled-only). Copies, allocations,
+    stacks, layouts, live chains and lifecycle passed; timing is
+    non-deciding. The C design (brief-649) ruled the repair.
+  - **C1 landed (2026-11-04, brief-650).** The builtin boundary is a
+    token-first always-inline test with the lexical recheck at the head of
+    the cold body, and the dispatch start erases the unobserved
+    `Option<Option<...>>` layer through `.and_then`. The wrapper symbol is
+    gone from the release CLI; the cold body's only caller is the dispatch.
+    A gate-transition test pins enabled recording and mid-call abandonment
+    (`(1,0,1,0)` and `(1,0,0,1)`). Measured at one source path, CGU=1: the
+    single-Option form is worth 16 bytes in both CLI specializations
+    (888/872 -> 872/856) and the adopted diagnostic costs 0 frame bytes over
+    a diagnostic-free build of the same tree. One +16 reservation remains in
+    the enlarged-spec specialization; it survives removing the whole builtin
+    diagnostic and is localized to the restructured dispatch (A1 and
+    A1+A2-non-dispatch trees sit at base 856/856). It is open finding F7 for
+    C2/C3 and the D campaign, not waived.
+    **C2 (Catch carrier, brief-651), C3 (static forwarded phases and
+    neighbours) and D (the fresh repaired-tree campaign) follow; LP07 waits
+    behind them.**
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its

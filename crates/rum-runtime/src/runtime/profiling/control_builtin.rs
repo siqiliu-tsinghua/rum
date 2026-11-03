@@ -55,15 +55,12 @@ impl Session {
         })))
     }
 
-    #[inline]
+    #[inline(always)]
     pub(in crate::runtime) fn record_profile_builtin_timing_adopted_boundary(
         &mut self,
         token: Option<AdoptedBuiltinTimingToken>,
         result: &Result<Expr, EvalError>,
     ) {
-        if !lexical_profile_enabled() {
-            return;
-        }
         let Some(token) = token else {
             return;
         };
@@ -77,6 +74,9 @@ impl Session {
         token: AdoptedBuiltinTimingToken,
         result: &Result<Expr, EvalError>,
     ) {
+        if !lexical_profile_enabled() {
+            return;
+        }
         let BuiltinRecord {
             legacy,
             call,

@@ -257,6 +257,70 @@ fn lp06_a2_builtin_no_handler() {
 }
 
 #[test]
+fn lp06_c1_builtin_gate_transition() {
+    use super::super::state::LEXICAL_PROFILE_ACTIVE;
+    use std::sync::atomic::Ordering;
+
+    let enabled = test_support::enabled();
+    let _builtin_enabled = BuiltinEnabled::new();
+    let mut session = Session::new();
+    let symbol = crate::runtime::Symbol::new("System`", "Length");
+    for (disable, expected) in [(false, (1, 0, 1, 0)), (true, (1, 0, 0, 1))] {
+        super::epoch::reset_for_lease(enabled.lease());
+        // The builtin starter charges its record to the executing parent epoch.
+        let parent = session
+            .logical_phase_start(
+                super::PhaseKey::EvaluateCallDispatch.name(),
+                super::Policy::Expr,
+            )
+            .unwrap();
+        let token = session.builtin_timing_start_adopted(&symbol, 1).unwrap();
+        let prior = if disable {
+            Some(LEXICAL_PROFILE_ACTIVE.swap(2, Ordering::Relaxed))
+        } else {
+            None
+        };
+        session.record_profile_builtin_timing_adopted_boundary(
+            Some(token),
+            &Ok(Expr::small_integer(2)),
+        );
+        if let Some(prior) = prior {
+            LEXICAL_PROFILE_ACTIVE.store(prior, Ordering::Relaxed);
+        }
+        parent.finish(super::Outcome::Ok);
+        let rows = test_support::epoch()
+            .rows()
+            .into_iter()
+            .filter(|(key, _)| matches!(key, AggregateKey::Builtin { .. }))
+            .collect::<Vec<_>>();
+        assert_eq!(rows.len(), 1);
+        assert_eq!(
+            rows[0].0,
+            AggregateKey::Builtin {
+                symbol,
+                source: None,
+                arity: 1,
+            }
+        );
+        let counts = rows[0].1;
+        assert_eq!(
+            (counts.calls, counts.open, counts.ok, counts.abandoned),
+            expected
+        );
+        Session::logical_profile_test_assert_quiescent();
+        assert_eq!(test_support::active(), 0);
+        eprintln!(
+            "LP06 C1 NATIVE gate={} PASS calls={} open={} ok={} abandoned={} quiescent active=0",
+            if disable { "disabled" } else { "enabled" },
+            counts.calls,
+            counts.open,
+            counts.ok,
+            counts.abandoned,
+        );
+    }
+}
+
+#[test]
 fn lp06_a2_incoming_policy_cases() {
     use super::super::RuntimeProfileOutcome;
     let enabled = test_support::enabled();

@@ -233,7 +233,7 @@ UnknownConstruct	crates/rum-runtime/src/runtime/eval_core/call.rs	618	1	unresolv
 UnknownConstruct	crates/rum-runtime/src/runtime/eval_core/call.rs	683	1	unresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: PureFrameAbandon)
 UnknownConstruct	crates/rum-runtime/src/runtime/eval_core/mod.rs	185	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq)
 UnknownConstruct	crates/rum-runtime/src/runtime/eval_core/symbol.rs	304	1	unresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: PureFrameAbandon)
-UnknownConstruct	crates/rum-runtime/src/runtime/eval_dispatch/mod.rs	430	1	unresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: PureFrameAbandon)
+UnknownConstruct	crates/rum-runtime/src/runtime/eval_dispatch/mod.rs	427	1	unresolved attribute/expansion derive (rum_derive :: FrameRootTrace , rum_derive :: PureFrameAbandon)
 UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/mod.rs	5	1	unresolved attribute/expansion cfg_attr (not (test) , allow (dead_code))
 UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/mod.rs	21	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
 UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/mod.rs	29	1	unresolved attribute/expansion derive (Clone , Copy , Debug , PartialEq , Eq , Hash)
