@@ -6,6 +6,7 @@ use std::sync::atomic::{AtomicU8, AtomicU64, Ordering};
 use std::time::Instant;
 
 mod config;
+mod control_timing;
 mod counters;
 mod fingerprints;
 mod formatting;

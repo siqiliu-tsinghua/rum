@@ -306,6 +306,14 @@ does the same work, only without its profiling hooks.
     draft is 13 days old, so a design-only brief (brief-645, `Scope: NONE`)
     re-probes the routes at HEAD and drafts the implementation brief I will
     rewrite and dispatch.
+  - **A1 landed (2026-11-03, brief-646).** Seven appended phases: while
+    test/body evaluate and suspend, compound item evaluate and suspend, and
+    one shared function.apply.evaluate for function and status application.
+    Five adopted evaluate starts and three forwarded suspend recorders; 13
+    oracle cells over five modes, both oracle builds 499/0/0 each with 4,375
+    legacy receipts, six mutant families plus the key roundtrip, workspace
+    green in both builds, host pause totals re-derived from the record tree.
+    **A2 (builtin and Catch) is brief-647.**
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its

@@ -84,26 +84,27 @@ fn logical_native_nested_pause_counts() {
 
     let lease = Session::logical_profile_test_acquire();
     let mut s = session();
+    // Native tree totals include the compound evaluate/suspend children.
     for (source, second) in [
         (
             "LpSpan[LpSpan[InputString[\"one\"]; InputString[\"two\"]]]",
-            4,
+            8,
         ),
         (
             "LpSpan[LpSpan[InputString[\"one\"]]; InputString[\"two\"]]",
-            3,
+            6,
         ),
     ] {
         Session::logical_profile_test_reset(&lease);
         paused(s.eval(source));
         assert_eq!(counts()[9], 2);
-        assert_eq!(Session::logical_profile_test_pauses_for("native"), 2);
+        assert_eq!(Session::logical_profile_test_pauses_for("native"), 4);
         paused(s.resume_with_input("first"));
         assert_eq!(Session::logical_profile_test_pauses_for("native"), second);
         done(s.resume_with_input("second"));
         closed([2, 2, 0, 0, 0, 0, 0, 0, 0, 0]);
         assert_eq!(Session::logical_profile_test_pauses_for("native"), second);
-        println!("LP02_NATIVE nested-pause source={source} pauses=2,{second},{second}");
+        println!("LP02_NATIVE nested-pause source={source} pauses=4,{second},{second}");
     }
 }
 
@@ -193,15 +194,15 @@ fn logical_native_lifecycle() {
     paused(s.eval("LpSpan[InputString[\"first\"]; InputString[\"second\"]]"));
     assert_eq!(counts()[0], 0);
     assert_eq!(counts()[9], 1);
-    assert_eq!(Session::logical_profile_test_pauses_for("native"), 1);
+    assert_eq!(Session::logical_profile_test_pauses_for("native"), 2);
     paused(s.resume_with_input("one"));
     assert_eq!(counts()[0], 0);
     assert_eq!(counts()[9], 1);
-    assert_eq!(Session::logical_profile_test_pauses_for("native"), 2);
+    assert_eq!(Session::logical_profile_test_pauses_for("native"), 4);
     done(s.resume_with_input("two"));
     closed([1, 1, 0, 0, 0, 0, 0, 0, 0, 0]);
-    assert_eq!(Session::logical_profile_test_pauses_for("native"), 2);
-    println!("LP02_NATIVE second-pause success closed-once pauses=2");
+    assert_eq!(Session::logical_profile_test_pauses_for("native"), 4);
+    println!("LP02_NATIVE second-pause success closed-once pauses=4");
 
     for (source, subset) in [
         ("LpSpan[InputString[]; Abort[]]", None),

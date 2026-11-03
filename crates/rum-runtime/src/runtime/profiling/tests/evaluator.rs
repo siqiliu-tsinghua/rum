@@ -158,6 +158,13 @@ fn lp03_adopted_site_table_is_exact() {
         "set.try_list_destructuring",
         "set.try_association_lvalue",
         "set.prepare_lhs",
+        "while.test.evaluate",
+        "while.test.suspend",
+        "while.body.evaluate",
+        "while.body.suspend",
+        "compound.item.evaluate",
+        "compound.item.suspend",
+        "function.apply.evaluate",
     ]);
     let actual = super::PhaseKey::ALL
         .iter()

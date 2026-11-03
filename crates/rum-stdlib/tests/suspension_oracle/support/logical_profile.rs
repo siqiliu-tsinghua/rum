@@ -11,6 +11,57 @@ pub const ASSIGNMENT_PHASES: [&str; 6] = [
     "set.prepare_lhs",
 ];
 
+pub const CONTROL_PHASES: [&str; 7] = [
+    "while.test.evaluate",
+    "while.test.suspend",
+    "while.body.evaluate",
+    "while.body.suspend",
+    "compound.item.evaluate",
+    "compound.item.suspend",
+    "function.apply.evaluate",
+];
+
+pub const CONTROL_CELLS: [&str; 13] = [
+    "lp06.while.test.once",
+    "lp06.while.test.twice",
+    "lp06.while.body.break",
+    "lp06.while.body.continue",
+    "lp06.compound.items",
+    "lp06.compound.next_throw",
+    "lp06.function.return.twice",
+    "lp06.function.ok",
+    "lp06.status.projection_value",
+    "lp06.status.projection_return",
+    "lp06.status.value_return",
+    "lp06.status.raw_failure",
+    "lp06.status.raw_success",
+];
+
+/// Match the native key's source against the original legacy invocation key.
+pub fn control_legacy_keys(
+    snapshot: &LogicalProfileSnapshot,
+    selected: &[&str],
+) -> BTreeSet<String> {
+    snapshot
+        .logical
+        .keys()
+        .filter_map(|key| {
+            let parts = key.split('|').collect::<Vec<_>>();
+            if parts[0] != "runtime" || !selected.contains(&parts[1]) {
+                return None;
+            }
+            let phase = parts[1];
+            let source = (parts[2] != "-").then(|| match parts[2].rsplit_once('`') {
+                Some((context, name)) => rum_core::Symbol::new(format!("{context}`"), name),
+                None => rum_core::Symbol::from_name(parts[2]),
+            });
+            Some(format!(
+                "Runtime {{ phase: {phase:?}, source: {source:?} }}"
+            ))
+        })
+        .collect()
+}
+
 pub fn fingerprint(parts: &[&str]) -> String {
     let mut hash = 0xcbf29ce484222325u64;
     for bytes in parts.iter().map(|p| p.as_bytes()) {

@@ -1,4 +1,5 @@
 //! LP01 counter context. The frozen semantic oracle remains fully active.
+mod control;
 mod plans;
 use super::super::{
     descriptors::{self, Checks},
@@ -144,6 +145,7 @@ fn logical_counter_port() {
         for line in text.lines().filter(|l| {
             l.starts_with("LP01 ")
                 || l.starts_with("LP05 ")
+                || l.starts_with("LP06 ")
                 || l.starts_with("test result:")
                 || l.starts_with("continuation-slot fault-occurrence")
         }) {
@@ -159,6 +161,7 @@ fn logical_counter_port() {
 }
 
 fn child(mode: &str) {
+    control::run(mode);
     let plans = plans::plans();
     let required = lp::required(REQUIRED).unwrap();
     let bindings = lp::rows(BINDINGS, 6).unwrap();

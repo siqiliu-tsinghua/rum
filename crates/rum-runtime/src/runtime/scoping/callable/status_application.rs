@@ -30,12 +30,13 @@ impl Session {
     }
 
     fn evaluate_status_function_value(&mut self, applied: Expr) -> Result<Option<Expr>, EvalError> {
-        let runtime_profile_evaluate = runtime_path_timing_start("function.apply.evaluate");
+        let runtime_profile_evaluate =
+            runtime_path_timing_start_adopted(self, "function.apply.evaluate");
         let applied_result = self.evaluate(applied);
         let witness = slot_witness(&applied_result);
-        record_profile_runtime_path_timing(
+        self.record_profile_runtime_path_timing_adopted_boundary(
             runtime_profile_evaluate,
-            runtime_profile_outcome_for_expr_result(&applied_result),
+            &applied_result,
         );
         let outcome = match applied_result {
             Err(EvalError::InputRequired { request }) => {

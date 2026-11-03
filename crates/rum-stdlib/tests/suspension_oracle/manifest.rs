@@ -194,4 +194,8 @@ fn logical_counter_context_is_exact() {
     println!(
         "COUNTER_CONTEXT phase_observation.counters required=1115 bound=875 encoding-owned=240"
     );
+    let cells = super::support::logical_profile::CONTROL_CELLS;
+    assert_eq!(cells.len(), 13);
+    assert_eq!(cells.into_iter().collect::<BTreeSet<_>>().len(), 13);
+    println!("COUNTER_CONTEXT LP06 A1 additive cells=13; original identities unchanged");
 }

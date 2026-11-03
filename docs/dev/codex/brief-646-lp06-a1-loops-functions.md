@@ -539,3 +539,42 @@ replayed the standing inventories; this file is test-only and is not a
 standing-inventory source — verify that claim and replay if any inventory
 does cover it. Update `.temp/brief-646/report-a1.json` in place, retaining
 all three STOPs. Any other red is a STOP under the same evidence standard.
+
+## Director gate — 2026-11-03: GREEN
+
+`python3 -I scripts/director-gate.py run 646` (`.temp/director/gate-646/`):
+
+| step | verdict | detail |
+| --- | --- | --- |
+| scope | SKIP | director edit after the report; `report.py check --against-git` passes, 24,305 citations |
+| fmt | PASS | formatted |
+| check | PASS | 3 warnings, 0 new against HEAD, 0 gone |
+| ownership | PASS | 61 / 79 / 8,010; 0 replay rounds |
+| census | PASS | 1,067 `{RET001: 10, RET002: 1,022, RET003: 35}`, paired, 0 new |
+| oracle | PASS | 1 passed |
+| standing | PASS | LP01 1/0; typed-slot 10/0 |
+| fingerprints | PASS | 68 contracts, 68 fingerprints changed, copied in |
+| certificates | PASS | both builds, 2 promoted rows merged |
+| inventories | PASS | 19 passed, 0 failed |
+| workspace | PASS | 62 binaries, **4,072 passed / 0 failed / 61 ignored**, peak 14.0 GB of 14, `oom_kill` 0 |
+
+The `scope` step skips because I edited two stale diagnostic literals in
+`logical_profile_lifecycle.rs` after the report (`pauses=2` -> `pauses=4`).
+The report check passes before and after that edit; no other line moved.
+
+**Reproduced by the director**: the clean-HEAD worktree is green on the same
+host test binary (3 passed / 0 failed, `.temp/baseline-646.log`); the six
+switch-gated host tests pass in both builds
+(`.temp/director/gate-646-switch/`); the no-default workspace on the host,
+without `RUM_ALLOW_NATIVE_ZEROMQ_SKIP`, is 4,072 / 0 / 61
+(`.temp/director/gate-646-nodefault.log`); mutant `compound_order` goes red
+with exit 101 and `left [0,0,0,0,0,0,0,0,0,2]` against
+`[1,1,0,0,0,0,0,0,0,1]`, restores byte-identically, and greens
+(`.temp/director/gate-646-mutant/`). The ten pre-registered pause derivations
+match the observed values.
+
+**Accepted worker evidence**: the five child modes and both oracle builds
+(499/0/0 each, 13 cells, 130 trace receipts, 4,375 legacy receipts per run);
+the six mutant families and the key roundtrip; the derived host constants
+2/4/4, 4/8/8, 4/6/6 and the unchanged cleanup 3; the sandbox ZeroMQ skips
+(support flag only, nine quoted) with no source or test change.

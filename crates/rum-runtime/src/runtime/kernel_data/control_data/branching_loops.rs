@@ -152,13 +152,15 @@ impl Session {
             }
             let outcome = match phase {
                 WhilePhase::Test => {
-                    let runtime_profile_test = runtime_path_timing_start("while.test.evaluate");
+                    let runtime_profile_test =
+                        runtime_path_timing_start_adopted(self, "while.test.evaluate");
                     let result = self.evaluate(args[0].clone());
-                    record_profile_runtime_path_timing(
+                    self.record_profile_runtime_path_timing_adopted_boundary(
                         runtime_profile_test,
-                        runtime_profile_outcome_for_expr_result(&result),
+                        &result,
                     );
-                    let runtime_profile_suspend = runtime_path_timing_start("while.test.suspend");
+                    let runtime_profile_suspend = self
+                        .runtime_path_timing_start_adopted_forwarded("while.test.suspend", &result);
                     let outcome = crate::resume_or_suspend!(
                         self,
                         result,
@@ -168,21 +170,24 @@ impl Session {
                     ResumeWhileLoopSuspensionFrame1 { args }
                     },
                     );
-                    record_profile_runtime_path_timing(
+                    self.record_profile_runtime_path_timing_adopted_forwarded(
                         runtime_profile_suspend,
+                        &outcome,
                         runtime_profile_outcome_for_expr_result(&outcome),
                     );
                     outcome
                 }
                 WhilePhase::Body => {
                     let body = args.get(1).cloned().unwrap_or_else(|| system_expr("Null"));
-                    let runtime_profile_body = runtime_path_timing_start("while.body.evaluate");
+                    let runtime_profile_body =
+                        runtime_path_timing_start_adopted(self, "while.body.evaluate");
                     let result = self.evaluate(body);
-                    record_profile_runtime_path_timing(
+                    self.record_profile_runtime_path_timing_adopted_boundary(
                         runtime_profile_body,
-                        runtime_profile_outcome_for_expr_result(&result),
+                        &result,
                     );
-                    let runtime_profile_suspend = runtime_path_timing_start("while.body.suspend");
+                    let runtime_profile_suspend = self
+                        .runtime_path_timing_start_adopted_forwarded("while.body.suspend", &result);
                     let outcome = crate::resume_or_suspend!(
                         self,
                         result,
@@ -192,8 +197,9 @@ impl Session {
                     ResumeWhileLoopSuspensionFrame2 { args }
                     },
                     );
-                    record_profile_runtime_path_timing(
+                    self.record_profile_runtime_path_timing_adopted_forwarded(
                         runtime_profile_suspend,
+                        &outcome,
                         runtime_profile_outcome_for_expr_result(&outcome),
                     );
                     outcome
@@ -355,13 +361,15 @@ impl Session {
             return Ok(system_expr("Null"));
         };
 
-        let runtime_profile_item = runtime_path_timing_start("compound.item.evaluate");
+        let runtime_profile_item =
+            runtime_path_timing_start_adopted(self, "compound.item.evaluate");
         let current_result = self.evaluate(current);
-        record_profile_runtime_path_timing(
+        self.record_profile_runtime_path_timing_adopted_boundary(
             runtime_profile_item,
-            runtime_profile_outcome_for_expr_result(&current_result),
+            &current_result,
         );
-        let runtime_profile_suspend = runtime_path_timing_start("compound.item.suspend");
+        let runtime_profile_suspend = self
+            .runtime_path_timing_start_adopted_forwarded("compound.item.suspend", &current_result);
         let outcome = crate::resume_or_suspend!(
             self,
             current_result,
@@ -371,8 +379,9 @@ impl Session {
         ResumeCompoundExpressionFromIndexSuspensionFrame { args, index }
         },
         );
-        record_profile_runtime_path_timing(
+        self.record_profile_runtime_path_timing_adopted_forwarded(
             runtime_profile_suspend,
+            &outcome,
             runtime_profile_outcome_for_expr_result(&outcome),
         );
 

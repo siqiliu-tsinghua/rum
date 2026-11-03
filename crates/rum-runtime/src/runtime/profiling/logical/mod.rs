@@ -650,10 +650,17 @@ pub(in crate::runtime) enum PhaseKey {
     SetTryListDestructuring,
     SetTryAssociationLvalue,
     SetPrepareLhs,
+    WhileTestEvaluate,
+    WhileTestSuspend,
+    WhileBodyEvaluate,
+    WhileBodySuspend,
+    CompoundItemEvaluate,
+    CompoundItemSuspend,
+    FunctionApplyEvaluate,
 }
 
 impl PhaseKey {
-    pub(in crate::runtime) const ALL: [PhaseKey; 36] = [
+    pub(in crate::runtime) const ALL: [PhaseKey; 43] = [
         PhaseKey::EvaluateTotal,
         PhaseKey::EvaluateOnceUnstable,
         PhaseKey::EvaluateInnerUnstableTotal,
@@ -690,6 +697,13 @@ impl PhaseKey {
         PhaseKey::SetTryListDestructuring,
         PhaseKey::SetTryAssociationLvalue,
         PhaseKey::SetPrepareLhs,
+        PhaseKey::WhileTestEvaluate,
+        PhaseKey::WhileTestSuspend,
+        PhaseKey::WhileBodyEvaluate,
+        PhaseKey::WhileBodySuspend,
+        PhaseKey::CompoundItemEvaluate,
+        PhaseKey::CompoundItemSuspend,
+        PhaseKey::FunctionApplyEvaluate,
     ];
 
     pub(in crate::runtime) const fn name(self) -> &'static str {
@@ -732,6 +746,13 @@ impl PhaseKey {
             PhaseKey::SetTryListDestructuring => "set.try_list_destructuring",
             PhaseKey::SetTryAssociationLvalue => "set.try_association_lvalue",
             PhaseKey::SetPrepareLhs => "set.prepare_lhs",
+            PhaseKey::WhileTestEvaluate => "while.test.evaluate",
+            PhaseKey::WhileTestSuspend => "while.test.suspend",
+            PhaseKey::WhileBodyEvaluate => "while.body.evaluate",
+            PhaseKey::WhileBodySuspend => "while.body.suspend",
+            PhaseKey::CompoundItemEvaluate => "compound.item.evaluate",
+            PhaseKey::CompoundItemSuspend => "compound.item.suspend",
+            PhaseKey::FunctionApplyEvaluate => "function.apply.evaluate",
         }
     }
 
@@ -773,6 +794,13 @@ impl PhaseKey {
             "set.try_list_destructuring" => 33,
             "set.try_association_lvalue" => 34,
             "set.prepare_lhs" => 35,
+            "while.test.evaluate" => 36,
+            "while.test.suspend" => 37,
+            "while.body.evaluate" => 38,
+            "while.body.suspend" => 39,
+            "compound.item.evaluate" => 40,
+            "compound.item.suspend" => 41,
+            "function.apply.evaluate" => 42,
             _ => Self::ALL.len(),
         };
         Self::ALL.get(index).copied()
@@ -1042,3 +1070,7 @@ mod assignments;
 #[cfg(test)]
 #[path = "../tests/lease_release.rs"]
 mod lease_release;
+
+#[cfg(test)]
+#[path = "../tests/control.rs"]
+mod control_tests;
