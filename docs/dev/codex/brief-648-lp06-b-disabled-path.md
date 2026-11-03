@@ -271,3 +271,104 @@ the attribution tables, the timing rows and their Q5 disposition, the final
 source-integrity check, and every unpassed gate. Check it with
 `scripts/report.py check` (without its version-control option) and return
 its summary and the full compliance verdict lines.
+
+---
+
+## Amendment 1 — orchestration roles, the build phase, and the resume (after the attempt-1 STOP)
+
+**The attempt-1 STOP is accepted in kind.** The worker audited the supplied
+package before the first panel and found conflicts that are mine, not its
+own. It ran no measurement, changed no live source; the tree is clean and
+both exports verify. I reproduced the decisive one myself:
+`timing_pipeline.py:20` spawns `run.py` per child, while the outer `run.py`
+holds `serial.lock` with `LOCK_EX|LOCK_NB`, so the child dies at
+`run.py:18` with `BlockingIOError` (receipt:
+`.temp/director/brief-648-stop-check/`). The pipeline's confirmation sample
+is the whole 129-label panel, `compare_timing.py` cannot run after the
+pipeline has written its output, and `extra_layouts.py:31` invokes cargo at
+a position the prescribed order places after consumers. All four findings
+are real; the brief was wrong.
+
+**R1 — orchestration roles.** A script that launches its children through
+`run.py` is an orchestrator: invoke it **directly**, never through `run.py`,
+and run it alone with nothing else executing. Bound the orchestrator itself
+with `scripts/run-bounded.py` (for example, `python3 scripts/run-bounded.py
+--timeout 2400 -- python3 <orchestrator>`), retain its stdout as a log, and
+let each child take the serial lock and write its own `runs.jsonl` receipt.
+`timing_pipeline.py` is the only listed orchestrator; if another script
+turns out to spawn `run.py`, the same rule applies. Every measurement
+command that is not an orchestrator still goes through `run.py`.
+
+`run.py` parses the id's trailing `-<digits>` as the attempt number
+(`run.py:36`) and raises without it. Attempt 1's ids are taken. Every
+command in this attempt uses a new id ending in `-2`; a re-entered chunk
+gets `-3`, and so on.
+
+**R2 — timing confirmation.** Keep `timing_pipeline.py` unchanged. Its
+retained semantics are authorized: one paired sample over the 129-label
+panel (120 canonical + 9 supplemental), then at most one further paired
+sample of the **whole panel** only when the first sample has any positive
+row; the final rows are best-of-two and the pipeline writes
+`timing-comparison-{1,2}.json` and `timing-verdict.json`. The sentence "at
+most one confirmation pair for flagged rows" in Deliverable 9 is amended
+for timing: the confirmation set is the whole panel, taken at most once,
+and no further timing draws are permitted. Confirming only the rows that
+were positive would select the data; the whole panel is the honest set, and
+Q5 already keeps timing non-decisive. `timing_supplement.py` runs per arm
+and sample exactly as the pipeline invokes it. The pipeline's own child
+bounds are its retained envelope — 240 s for the canonical microbench and
+300 s for the nine-label supplement, with the microbench's 180 s inner
+bound; the contract's 240/180 describes the canonical child.
+
+**R3 — the reducer.** Do not run `compare_timing.py`. It reads only the
+120-label canonical panel and asserts `timing-comparison-<sample>.json`
+absent (`compare_timing.py:7,31`), which `timing_pipeline.py:49` has already
+written. The pipeline's comparison and verdict files, with the raw
+`timings.tsv`, are the timing receipts. An independent cross-check is
+allowed only as a new script under `.temp/brief-648/` that reads the
+retained tsvs and writes a new path; disclose it.
+
+**R4 — build before consumers.** Every cargo invocation runs in the build
+phase, before the first measurement consumer: all `campaign_build.py` kinds
+for both arms, `extra_layouts.py`, and any candidate-only probe build. Run
+`extra_layouts.py` immediately after the campaign builds, not in the layout
+phase. The Q1 sentence "never rebuild an arm after its consumers ran" is
+amended to its intent: once a consumer has read `bin/<arm>/<kind>`, its
+SHA-256 in `builds/<arm>/<kind>/binary.json` is immutable, and no later
+command may replace, relink or rebuild it. A cargo run that produces only a
+separate test artifact in `target-<arm>` is permitted in the build phase
+and never later.
+
+**R5 — LP06 probes are build inputs.** Anything that must be compiled — the
+shared layout probes, the candidate-only profiler-type layouts, and the
+LP06 lifecycle tests — is installed in the active tree during the build
+phase, before the first consumer. Shared probes are identical in both arms;
+candidate-only probes are installed only in the candidate's stack-debug
+build and labelled; the base arm keeps the retained controls. The layout
+and lifecycle panels read the pinned binaries and compile nothing.
+
+**R6 — the resume.** Attempt 1 holds no measurement. Preserve its record
+before writing anything: copy `report-b.json`, `report-b.assembly.json`,
+`unpassed-panels.json`, `final-receipt-index.json`, `evidence-index.json`,
+`PROGRESS.md` and `PROGRESS.capture.md` into `.temp/brief-648/attempt-1/`;
+leave `instruments/logs/`, `instruments/runs.jsonl`, `serial.lock`,
+`builds/`, `bin/` and `b/active` in place; never delete or rewrite an
+attempt-1 receipt. `builds/base/cli/binary.json` (sha256 `06d8df06…`) is a
+completed build: verify the source export against `base-source-hashes.json`
+and the binary against its `binary.json`, then continue with the remaining
+kinds; `campaign_build.py` refuses to repeat a completed build, so do not
+delete it to force one. `preflight_manifest.py` takes the attempt number:
+use `2`. The campaign report is written to `report-b.json` as the brief
+says; attempt 1's copy stays under `attempt-1/`.
+
+**R7 — an interface conflict is not a stop.** Where an invocation or
+ordering detail conflicts with a retained script's own interface, choose
+the reading that produces the measurement this brief defines, disclose the
+choice in the report, and continue. A conflict is a question only when it
+would change an acceptance bar, a measurement algorithm, a frozen input, or
+would require a source repair. The wrapper is a receipt mechanism; it must
+not cost a campaign.
+
+**Answer to Q1:** proceed under R1–R7. The rest of the brief stands
+unchanged — the panels, the bars, Q5, the report format and the closing
+source-integrity check.
