@@ -177,9 +177,12 @@ a checkpoint.
 - No network, no new dependency, no `unsafe`, no default-path cost, no new
   feature, no `#[ignore]`.
 - Timing, perf and Callgrind runs are serial and alone, profiling off.
-- All scratch under `.temp/`, never `/tmp`. Every cargo command runs in
-  `scripts/memory-scope.sh <unit> 14G` at `-j8`; tests at
-  `RUST_TEST_THREADS=8` with `--no-fail-fast`.
+- All scratch under `.temp/`, never `/tmp`. The dispatcher already runs this
+  session inside `scripts/memory-scope.sh ... 16G`; **do not invoke that
+  wrapper again from inside the sandbox** — it cannot reach the user bus and
+  the attempt exits 1. Run cargo directly with `CARGO_BUILD_JOBS=8`, as
+  brief-642 A2 and Stage B did; tests at `RUST_TEST_THREADS=8` with
+  `--no-fail-fast`.
 - Paste real output; say plainly what did not run.
 
 ## Report format
@@ -191,3 +194,40 @@ report lists every run with its command, log, exit code and counts; the
 `changes` list names every touched file with line ranges and the reason;
 `disclosures` lists every inventory row that moved; `questions` carries any
 STOP.
+
+## Director amendment — execution context, and the mechanism is proven
+
+The first attempt stopped on my rule, not on the code: I wrote that every
+cargo command must be wrapped in `scripts/memory-scope.sh`, but the
+dispatcher already holds the whole session in a 16G unit and a nested
+wrapper cannot reach the user bus inside the sandbox. The rule above now
+says so. That STOP consumed no attempt; the tree is unchanged.
+
+The red-side work that run did is accepted as evidence and should not be
+redone from scratch:
+
+- The +10 is confirmed on the retained source-verified binaries, base
+  216,161/432,161 (108/call) against 236,141/472,141 (118/call).
+- The two eight-instruction groups are **moves of the by-value
+  `Option<RuntimePathTimingToken>` argument** staged at `definitions.rs:30`
+  and `:33` for the inlined `record_profile_runtime_path_timing_adopted_ok`
+  wrapper and its cold `_slow` callee. Both wrappers are already inlined;
+  the caller must prepare the 56-byte aggregate even when the following
+  flag test skips the call.
+- The base does not pay it because its inline recorder destructures
+  `Some(token)` before passing a **bare token** to its cold recorder, so the
+  disabled path never stages the aggregate.
+- The type mapping is 40-byte key + 16-byte `Instant` = 56-byte token, and
+  the `None` niche is the `Instant` nanosecond field (`1_000_000_000`
+  written at `+48`), not the string pointer. My string-pointer-niche guess
+  was wrong; the arithmetic was right.
+- The +10 reconciles as +16 at the two RHS copies and net -6 on the finish
+  route (three fewer staging instructions, five fewer classification
+  instructions, two more in the finish token copy).
+
+Nothing above changes the Goal or the bar. The base shape is the obvious
+starting point, but the repair is still yours to measure and prove; a
+different mechanism is fine if the emitted path shows it.
+
+The first audit's report is `.temp/brief-644/report.json`; the resumed run
+replaces it.
