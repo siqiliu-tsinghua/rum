@@ -476,3 +476,41 @@ tree is untouched. Both questions are answered; proceed with A2.
   `rustfmt --check` passes. Insert that file verbatim, as Scope says.
 - Everything else stands: the acceptance commands, the inventory-replay
   order, and the stop after A2.
+
+## Director gate — stage A2 (2026-11-03): GREEN
+
+`python3 -I scripts/director-gate.py run 642 --stage a2` (log
+`.temp/director/gate-642a2/`):
+
+| step | verdict | detail |
+| --- | --- | --- |
+| scope | PASS | 274 citations verified (`report-a2.json`) |
+| fmt | PASS | formatted |
+| check | PASS | 3 warnings, 0 new against HEAD, 0 gone |
+| ownership | PASS | 61 self-reaching types, 79 `UnknownHostPayload`, 8,006 `UnknownConstruct`; 0 replay rounds |
+| census | PASS | 1,067 `{RET001: 10, RET002: 1,022, RET003: 35}`; paired 1,067, retired 0, new 0 |
+| oracle | PASS | 1 passed |
+| standing | PASS | LP01 1/0; typed-slot 10/0 |
+| fingerprints | PASS | 68 contracts, 0 changed |
+| certificates | PASS | both builds pass, 0 promoted rows merged |
+| inventories | PASS | 19 passed, 0 failed |
+| workspace | PASS | 62 binaries, **4,059 passed / 0 failed / 61 ignored**, peak 7.0 GB of 14, `oom_kill` 0 |
+
+**The first workspace run failed, and it was the gate's own gap.** The LP05
+host falsifier records rows only under `RUM_PROFILE_LEXICAL_SUBSTITUTION=1`;
+the gate's `SWITCH_GATED` list knew LP03 and LP04 but not LP05, so the
+ungated run saw empty rows (`set.rhs.evaluate missing for x = 1; x: []`).
+The test name is now in `SWITCH_GATED` (`417fb11c`), matching the LP03/LP04
+entries; the rerun from `--from workspace` is the PASS above.
+
+Reproduced by the director under the switch, on the tree:
+
+    RUM_PROFILE_LEXICAL_SUBSTITUTION=1 cargo test -p rum-host --test lp05_assignment_rows
+    test lp05_adopted_assignment_rows_are_exact_in_completed_and_resumed_runs ... ok
+    test result: ok. 1 passed; 0 failed; 0 ignored
+
+Log `.temp/director/gate-642a2/director-falsifier/run-1.log`; peak 24 MB.
+The red direction remains the A2 preflight calibration at `ab3c1c89`, where
+the same file fails with the missing `set.rhs.evaluate` row.
+
+A2 is accepted. Stage B (the measurement campaign) is next.

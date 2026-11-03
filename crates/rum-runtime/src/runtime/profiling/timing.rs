@@ -150,6 +150,39 @@ fn runtime_path_timing_start_adopted_slow(
 }
 
 impl crate::runtime::Session {
+    /// Attempts may decline synchronously; only applicable work can suspend.
+    #[inline]
+    pub(in crate::runtime) fn runtime_path_timing_start_adopted_applicable(
+        &self,
+        phase: &'static str,
+    ) -> Option<RuntimePathTimingToken> {
+        if !lexical_profile_enabled() {
+            return None;
+        }
+        self.runtime_path_timing_start_adopted_applicable_slow(phase)
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn runtime_path_timing_start_adopted_applicable_slow(
+        &self,
+        phase: &'static str,
+    ) -> Option<RuntimePathTimingToken> {
+        use crate::runtime::profiling::logical::{AdoptedSite, PhaseKey, Policy, open_phase};
+
+        let token = runtime_path_timing_start_slow(phase);
+        if let Some(key) = PhaseKey::from_name(phase) {
+            open_phase(
+                self,
+                key,
+                AdoptedSite {
+                    policy: Policy::ApplicableExpr,
+                },
+            );
+        }
+        token
+    }
+
     /// A forwarded RHS pause ends before its assignment consumer is enqueued.
     #[inline]
     pub(in crate::runtime) fn runtime_path_timing_start_adopted_forwarded(
@@ -178,10 +211,12 @@ impl crate::runtime::Session {
     }
 
     #[inline]
-    pub(in crate::runtime) fn record_profile_runtime_path_timing_adopted_boundary(
+    pub(in crate::runtime) fn record_profile_runtime_path_timing_adopted_boundary<
+        T: crate::runtime::profiling::logical::PhaseCompletion,
+    >(
         &mut self,
         token: Option<RuntimePathTimingToken>,
-        result: &Result<Expr, crate::runtime::EvalError>,
+        result: &Result<T, crate::runtime::EvalError>,
     ) {
         if !lexical_profile_enabled() {
             return;
@@ -191,18 +226,17 @@ impl crate::runtime::Session {
 
     #[cold]
     #[inline(never)]
-    fn record_profile_runtime_path_timing_adopted_boundary_slow(
+    fn record_profile_runtime_path_timing_adopted_boundary_slow<
+        T: crate::runtime::profiling::logical::PhaseCompletion,
+    >(
         &mut self,
         token: Option<RuntimePathTimingToken>,
-        result: &Result<Expr, crate::runtime::EvalError>,
+        result: &Result<T, crate::runtime::EvalError>,
     ) {
         if let Some(token) = &token {
             self.complete_profile_runtime_path_boundary_slow(token.key.phase, result);
         }
-        record_profile_runtime_path_timing(
-            token,
-            <Expr as crate::runtime::profiling::logical::PhaseCompletion>::timing_outcome(result),
-        );
+        record_profile_runtime_path_timing(token, T::timing_outcome(result));
     }
 
     /// Logical-only completion for the finish route first entered on RHS resume.
@@ -220,25 +254,27 @@ impl crate::runtime::Session {
 
     #[cold]
     #[inline(never)]
-    fn complete_profile_runtime_path_boundary_slow(
+    fn complete_profile_runtime_path_boundary_slow<
+        T: crate::runtime::profiling::logical::PhaseCompletion,
+    >(
         &mut self,
         phase: &'static str,
-        result: &Result<Expr, crate::runtime::EvalError>,
+        result: &Result<T, crate::runtime::EvalError>,
     ) {
-        use crate::runtime::profiling::logical::{PhaseKey, complete_phase, finish_logical_expr};
+        use crate::runtime::profiling::logical::{PhaseKey, complete_phase};
 
         let Some(key) = PhaseKey::from_name(phase) else {
             return;
         };
         let mut boundary = None;
-        // Delegate completion to the actual Expr carrier below. In particular,
+        // Delegate completion to the actual route carrier below. In particular,
         // bypass complete_phase's locally-terminal InputRequired policy so the
         // existing queue boundary can retain this call instead.
         complete_phase(self, key, RuntimeProfileOutcome::Ok, |call| match result {
             Err(crate::runtime::EvalError::InputRequired { .. }) => {
                 boundary = call.and_then(|call| call.pause());
             }
-            _ => finish_logical_expr(call, result),
+            _ => T::finish_logical(call, result),
         });
         if let Some(boundary) = boundary {
             self.logical_insert_boundary(boundary, None, false);

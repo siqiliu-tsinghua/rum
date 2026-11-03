@@ -1764,7 +1764,7 @@
 "LP05",
 "runtime|set.prepare_lhs",
 "crates/rum-runtime/src/runtime/definitions/definitions.rs:343@set-lhs",
-"crates/rum-runtime/src/runtime/definitions/definitions.rs:344",
+"crates/rum-runtime/src/runtime/definitions/definitions.rs:347",
 "crates/rum-runtime/src/runtime/eval_core/call.rs:133",
 "crates/rum-runtime/src/runtime/eval_core/call.rs:162",
 "runtime|call.stage.function",

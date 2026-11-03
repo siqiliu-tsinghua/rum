@@ -2,6 +2,15 @@
 use rum_runtime::LogicalProfileSnapshot;
 use std::collections::{BTreeMap, BTreeSet};
 
+pub const ASSIGNMENT_PHASES: [&str; 6] = [
+    "set.rhs.evaluate",
+    "set.rhs.suspend",
+    "set.finish",
+    "set.try_list_destructuring",
+    "set.try_association_lvalue",
+    "set.prepare_lhs",
+];
+
 pub fn fingerprint(parts: &[&str]) -> String {
     let mut hash = 0xcbf29ce484222325u64;
     for bytes in parts.iter().map(|p| p.as_bytes()) {

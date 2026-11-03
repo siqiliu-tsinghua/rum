@@ -27,7 +27,10 @@ impl Session {
     ) {
         debug_assert!(matches!(
             boundary.policy(),
-            Some(crate::runtime::profiling::logical::Policy::Expr)
+            Some(
+                crate::runtime::profiling::logical::Policy::Expr
+                    | crate::runtime::profiling::logical::Policy::ApplicableExpr
+            )
         ));
         let context = self.resume_context();
         let Some(owner) = self.pending_suspension.as_mut() else {

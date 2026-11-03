@@ -9,7 +9,81 @@ use std::{collections::BTreeMap, fs, process::Command};
 const REQUIRED: &str = include_str!("../../inventory/logical-profile-required.tsv");
 const BINDINGS: &str = include_str!("../../inventory/logical-profile-bindings.tsv");
 fn scratch() -> std::path::PathBuf {
-    std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../.temp/brief-642/lp01-observation")
+    std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../.temp/brief-642/a2-implementation/lp01-observation")
+}
+
+/// The LP01 snapshot keeps its legacy counters. Observe the adopted records
+/// separately, immediately after the same subject and before any guest probe.
+fn assignment_counts(fixture: &descriptors::Fixture, queued: bool) -> BTreeMap<String, [u64; 7]> {
+    use rum_runtime::Session;
+
+    let lease = Session::logical_profile_test_acquire();
+    let mut session = fixture.session();
+    session.set_eval_timeout(Some(std::time::Duration::from_secs(2)));
+    if fixture.profile_trace {
+        session.enable_tracing(true);
+    }
+    rum_runtime::test_logical_profile_reset(&lease);
+    let answers = fixture
+        .pauses
+        .iter()
+        .map(|pause| pause.answer.as_str())
+        .collect::<Vec<_>>();
+    let expected = fixture
+        .pauses
+        .iter()
+        .map(|pause| (pause.kind, pause.prompt.clone()))
+        .collect::<Vec<_>>();
+    let run = match super::super::support::drive::execute_planned(
+        &mut session,
+        &fixture.source,
+        &answers,
+        queued,
+        Some(&expected),
+    ) {
+        Ok(run) => run,
+        Err(error) => panic!("{} adopted queued={queued}: {error:?}", fixture.id),
+    };
+    if !queued {
+        assert_eq!(run.requests.len(), fixture.pauses.len());
+    }
+    let legacy = rum_runtime::test_logical_profile_snapshot();
+    let mut counts = BTreeMap::new();
+    for (key, row) in Session::logical_profile_test_rows() {
+        if lp::ASSIGNMENT_PHASES
+            .iter()
+            .any(|phase| key.contains(&format!("phase: \"{phase}\"")))
+        {
+            assert_eq!(row[0], row[1] + row[2], "{} {key}: {row:?}", fixture.id);
+            assert_eq!((row[8], row[9]), (0, 0), "{} {key}: {row:?}", fixture.id);
+            assert!(
+                counts
+                    .insert(
+                        key,
+                        [row[0], row[1], row[2], row[3], row[4], row[5], row[6]]
+                    )
+                    .is_none()
+            );
+        }
+    }
+    for phase in lp::ASSIGNMENT_PHASES {
+        if legacy
+            .logical
+            .keys()
+            .any(|key| key.starts_with(&format!("runtime|{phase}|")))
+        {
+            assert!(
+                counts
+                    .keys()
+                    .any(|key| key.contains(&format!("phase: \"{phase}\""))),
+                "{} missing adopted {phase}",
+                fixture.id
+            );
+        }
+    }
+    Session::logical_profile_test_assert_quiescent();
+    counts
 }
 
 #[test]
@@ -69,6 +143,7 @@ fn logical_counter_port() {
         let text = fs::read_to_string(&path).unwrap();
         for line in text.lines().filter(|l| {
             l.starts_with("LP01 ")
+                || l.starts_with("LP05 ")
                 || l.starts_with("test result:")
                 || l.starts_with("continuation-slot fault-occurrence")
         }) {
@@ -125,6 +200,8 @@ fn child(mode: &str) {
     let mut actual = Vec::new();
     let mut completed = BTreeMap::new();
     let mut groups = BTreeMap::new();
+    let mut assignment_cells = 0;
+    let mut assignment_phases = std::collections::BTreeSet::new();
     for p in &plans {
         let hash = plans::fixture_fingerprint(&p.fixture);
         assert_eq!(hash, all_hashes[p.id.as_str()], "unfrozen program {}", p.id);
@@ -157,6 +234,25 @@ fn child(mode: &str) {
         }
         if matches!(mode, "timing" | "all") {
             plans::prove_new(p, &q);
+            let queued = assignment_counts(&p.fixture, true);
+            let resumed = assignment_counts(&p.fixture, false);
+            assert_eq!(queued, resumed, "{} adopted assignment rows", p.id);
+            assignment_cells += queued.len();
+            for phase in lp::ASSIGNMENT_PHASES {
+                if queued
+                    .keys()
+                    .any(|key| key.contains(&format!("phase: \"{phase}\"")))
+                {
+                    assignment_phases.insert(phase);
+                }
+            }
+            if matches!(p.id.as_str(), "624.min.P0413" | "624.min.P0431") {
+                println!(
+                    "LP05 {} {mode}: SAME adopted assignment cells={}",
+                    p.id,
+                    queued.len()
+                );
+            }
         }
         let (q, r) = (q.profile.unwrap(), r.profile.unwrap());
         if mode == "disabled" {
@@ -228,6 +324,14 @@ fn child(mode: &str) {
         println!("LP01 EXECUTED {} {mode}", p.id);
     }
     let mut receipts = Vec::new();
+    if matches!(mode, "timing" | "all") {
+        assert_eq!(assignment_phases.len(), lp::ASSIGNMENT_PHASES.len());
+        println!(
+            "LP05 adopted assignments {mode}: SAME programs={} cells={assignment_cells} phases={}",
+            plans.len(),
+            assignment_phases.len()
+        );
+    }
     for b in &bindings {
         if b[1].split(',').all(|id| completed.contains_key(id)) {
             let r = active.iter().find(|r| r[16] == b[0]).unwrap();

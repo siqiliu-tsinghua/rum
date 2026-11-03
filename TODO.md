@@ -252,9 +252,23 @@ does the same work, only without its profiling hooks.
     at 4,232/0 with only the release removed. Round 2 also moved the
     protected test's `before` sample under its lease (Q1, authorized) after
     one final-equality failure at 0 vs 20,136; no assertion changed.
-  - **Stage A2 next** (the list and association attempt routes, `set-lhs`,
-    the genuine RHS-then-LHS double pause, and the inventory replay), then
-    Stage B, the measurement campaign.
+  - **Stage A2 gated GREEN** (`gate-642a2`, 2026-11-03): all six phases
+    across five routes; the list/association attempt routes start at
+    `Policy::ApplicableExpr` through a cold starter, and the boundary
+    machinery is generic over the existing `PhaseCompletion` carrier; 11 new
+    focused tests (21 total); the falsifier is inserted verbatim; both
+    oracle builds 499/499; census 1,067 paired, 0 new; the loss ledger's
+    four verdicts PASS. Gate: scope (274 citations), fmt, check, ownership
+    (61/79/8,006), census, oracle, standing, fingerprints, certificates,
+    inventories and workspace (62 binaries, **4,059 passed / 0 failed / 61
+    ignored**) all PASS. The gate's first workspace run failed only on the
+    LP05 host falsifier, which records under
+    `RUM_PROFILE_LEXICAL_SUBSTITUTION=1` and was missing from
+    `SWITCH_GATED`; fixed in `417fb11c` and rerun GREEN, and the director
+    reproduced the switch-on pass by hand.
+  - **Stage B next**: the measurement campaign (instruction slopes on 192
+    ordinary + 121 resume labels, the microbench timings, the copy/allocation
+    census, and 22 stack shapes), against the base export at `ab3c1c89`.
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its

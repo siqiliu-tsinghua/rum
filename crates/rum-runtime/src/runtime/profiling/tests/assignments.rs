@@ -111,3 +111,193 @@ fn lp05_rhs_error_does_not_enter_finish() {
     assert!(!rows.iter().any(|(key, _)| key.contains("set.finish")));
     assert_closed(&rows);
 }
+
+fn assignment_route(
+    source: &str,
+    responses: &[(&str, &str)],
+    expected_value: Option<&str>,
+    phase: &'static str,
+    expected_counts: [u64; 10],
+) {
+    let _enabled = test_support::enabled();
+    let mut session = crate::runtime::test_builtins::session_with_test_control_builtins();
+    let mut result = session.eval_text(source).map(|result| result.value);
+    for (prompt, answer) in responses {
+        match &result {
+            Err(EvalError::InputRequired { request }) => assert_eq!(&request.prompt, prompt),
+            other => panic!("expected input {prompt}: {other:?}"),
+        }
+        result = session.resume_suspended_evaluation(*answer);
+    }
+    match (expected_value, result) {
+        (Some(expected), Ok(value)) => assert_eq!(value.to_string(), expected),
+        (None, Err(EvalError::Thrown { value, .. })) => assert_eq!(value.to_string(), "7"),
+        (expected, actual) => panic!("expected {expected:?}: {actual:?}"),
+    }
+    let rows = Session::logical_profile_test_rows();
+    assert_eq!(row(&rows, phase), expected_counts);
+    if !responses.is_empty() {
+        assert!(Session::logical_profile_test_pauses_for(phase) > 0);
+    }
+    assert_closed(&rows);
+    eprintln!(
+        "LP05 A2 {phase}: {:?}; responses={}",
+        row(&rows, phase),
+        responses.len()
+    );
+}
+
+#[test]
+fn lp05_a2_declined_list_is_none() {
+    assignment_route(
+        "f[1] = 7; f[1]",
+        &[],
+        Some("7"),
+        "set.try_list_destructuring",
+        [1, 1, 0, 0, 1, 0, 0, 0, 0, 0],
+    );
+}
+
+#[test]
+fn lp05_a2_declined_association_is_none() {
+    assignment_route(
+        "f[1] = 7; f[1]",
+        &[],
+        Some("7"),
+        "set.try_association_lvalue",
+        [1, 1, 0, 0, 1, 0, 0, 0, 0, 0],
+    );
+}
+
+#[test]
+fn lp05_a2_completed_lhs_includes_store() {
+    assignment_route(
+        "f[1] = 7; f[1]",
+        &[],
+        Some("7"),
+        "set.prepare_lhs",
+        [1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+    );
+}
+
+#[test]
+fn lp05_a2_completed_list_is_some() {
+    assignment_route(
+        "{a, b} = {1, 2}; {a, b}",
+        &[],
+        Some("List[1, 2]"),
+        "set.try_list_destructuring",
+        [1, 1, 0, 1, 0, 0, 0, 0, 0, 0],
+    );
+}
+
+#[test]
+fn lp05_a2_list_spans_two_leaf_pauses() {
+    assignment_route(
+        r#"{f[InputString["first"]], g[InputString["second"]]} = {1, 2}; {f["a"], g["b"]}"#,
+        &[("first", "a"), ("second", "b")],
+        Some("List[1, 2]"),
+        "set.try_list_destructuring",
+        [3, 3, 0, 1, 2, 0, 0, 0, 0, 0],
+    );
+}
+
+#[test]
+fn lp05_a2_association_spans_two_selector_pauses() {
+    assignment_route(
+        r#"assoc = <|"a" -> <|"b" -> 0|>|>; assoc[InputString["first"], InputString["second"]] = 9; assoc["a", "b"]"#,
+        &[("first", "a"), ("second", "b")],
+        Some("9"),
+        "set.try_association_lvalue",
+        [1, 1, 0, 1, 0, 0, 0, 0, 0, 0],
+    );
+}
+
+#[test]
+fn lp05_a2_association_part_completes_after_typed_selector_consumer() {
+    assignment_route(
+        r#"assoc = <|"a" -> 0|>; assoc[[System`Key[InputString["key"]]]] = 9; assoc["a"]"#,
+        &[("key", "a")],
+        Some("9"),
+        "set.try_association_lvalue",
+        [1, 1, 0, 1, 0, 0, 0, 0, 0, 0],
+    );
+}
+
+#[test]
+fn lp05_a2_list_resumed_error_is_not_some() {
+    assignment_route(
+        r#"{f[(InputString["lhs"]; Throw[7])]} = {1}"#,
+        &[("lhs", "a")],
+        None,
+        "set.try_list_destructuring",
+        [2, 1, 1, 0, 1, 0, 1, 0, 0, 0],
+    );
+}
+
+#[test]
+fn lp05_a2_association_resumed_error_is_not_some() {
+    assignment_route(
+        r#"assoc = <|"a" -> 0|>; assoc[(InputString["key"]; Throw[7])] = 9"#,
+        &[("key", "a")],
+        None,
+        "set.try_association_lvalue",
+        [1, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+    );
+}
+
+#[test]
+fn lp05_a2_lhs_resumed_error_closes_once() {
+    assignment_route(
+        r#"f[(InputString["lhs"]; Throw[7])] = 9"#,
+        &[("lhs", "a")],
+        None,
+        "set.prepare_lhs",
+        [1, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+    );
+}
+
+#[test]
+fn lp05_a2_rhs_then_lhs_pause_preserves_nested_boundaries() {
+    let _enabled = test_support::enabled();
+    let mut session = crate::runtime::test_builtins::session_with_test_control_builtins();
+    match session.eval_text(r#"f[InputString["lhs"]] = InputString["rhs"]; f["key"]"#) {
+        Err(EvalError::InputRequired { request }) => assert_eq!(request.prompt, "rhs"),
+        other => panic!("expected RHS input: {other:?}"),
+    }
+    let rhs_pause = Session::logical_profile_test_rows();
+    assert!(
+        !rhs_pause
+            .iter()
+            .any(|(key, _)| key.contains("set.prepare_lhs"))
+    );
+    match session.resume_suspended_evaluation("value") {
+        Err(EvalError::InputRequired { request }) => assert_eq!(request.prompt, "lhs"),
+        other => panic!("expected LHS input: {other:?}"),
+    }
+    let lhs_pause = Session::logical_profile_test_rows();
+    for phase in ["set.rhs.evaluate", "set.rhs.suspend"] {
+        assert_eq!(row(&lhs_pause, phase), [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]);
+    }
+    for phase in ["set.prepare_lhs", "set.finish"] {
+        assert_eq!(row(&lhs_pause, phase), [0, 0, 0, 0, 0, 0, 0, 0, 0, 1]);
+    }
+    match session.resume_suspended_evaluation("key") {
+        Ok(value) => assert_eq!(value.to_string(), "\"value\""),
+        Err(error) => panic!("assignment completion: {error:?}"),
+    }
+    let rows = Session::logical_profile_test_rows();
+    for phase in [
+        "set.rhs.evaluate",
+        "set.rhs.suspend",
+        "set.prepare_lhs",
+        "set.finish",
+    ] {
+        assert_eq!(row(&rows, phase), [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]);
+        assert!(Session::logical_profile_test_pauses_for(phase) > 0);
+    }
+    assert_closed(&rows);
+    eprintln!(
+        "LP05 A2 double pause: RHS closed before LHS; finish/LHS each retained once; final open=0 abandoned=0"
+    );
+}

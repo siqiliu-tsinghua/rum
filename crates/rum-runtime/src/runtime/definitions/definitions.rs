@@ -314,22 +314,24 @@ impl Session {
         }
 
         if !delayed {
-            let runtime_profile_list = runtime_path_timing_start("set.try_list_destructuring");
+            let runtime_profile_list =
+                self.runtime_path_timing_start_adopted_applicable("set.try_list_destructuring");
             let list_result =
                 self.try_set_list_destructuring_lvalue(symbol, lhs.clone(), rhs.clone());
-            record_profile_runtime_path_timing(
+            self.record_profile_runtime_path_timing_adopted_boundary(
                 runtime_profile_list,
-                runtime_profile_outcome_for_optional_result(&list_result),
+                &list_result,
             );
             if let Some(value) = list_result? {
                 return Ok(value);
             }
 
-            let runtime_profile_assoc = runtime_path_timing_start("set.try_association_lvalue");
+            let runtime_profile_assoc =
+                self.runtime_path_timing_start_adopted_applicable("set.try_association_lvalue");
             let assoc_result = self.try_set_association_lvalue(lhs.clone(), rhs.clone());
-            record_profile_runtime_path_timing(
+            self.record_profile_runtime_path_timing_adopted_boundary(
                 runtime_profile_assoc,
-                runtime_profile_outcome_for_optional_result(&assoc_result),
+                &assoc_result,
             );
             if let Some(value) = assoc_result? {
                 return Ok(value);
@@ -340,14 +342,15 @@ impl Session {
             }
         }
 
-        let runtime_profile_prepare_lhs = runtime_path_timing_start("set.prepare_lhs");
+        let runtime_profile_prepare_lhs =
+            runtime_path_timing_start_adopted(self, "set.prepare_lhs");
         let result = self.prepare_definition_lhs(
             lhs,
             DefinitionLhsPreparationContinuation::Set { rhs, delayed },
         );
-        record_profile_runtime_path_timing(
+        self.record_profile_runtime_path_timing_adopted_boundary(
             runtime_profile_prepare_lhs,
-            runtime_profile_outcome_for_expr_result(&result),
+            &result,
         );
         result
     }
@@ -524,41 +527,12 @@ fn list_destructuring_shapes_match(lhs: &Expr, rhs: &Expr) -> bool {
             .all(|(lhs_item, rhs_item)| list_destructuring_shapes_match(lhs_item, rhs_item))
 }
 
-fn runtime_profile_outcome_for_optional_result(
-    result: &Result<Option<Expr>, EvalError>,
-) -> RuntimeProfileOutcome {
-    match result {
-        Ok(Some(_)) => RuntimeProfileOutcome::Some,
-        Ok(None) => RuntimeProfileOutcome::None,
-        Err(EvalError::Return { .. }) => RuntimeProfileOutcome::Return,
-        Err(EvalError::Thrown { .. }) | Err(EvalError::ThrownBypassingCatch { .. }) => {
-            RuntimeProfileOutcome::Throw
-        }
-        Err(EvalError::InputRequired { .. }) => RuntimeProfileOutcome::InputRequired,
-        Err(_) => RuntimeProfileOutcome::Error,
-    }
-}
-
 fn runtime_profile_outcome_for_bool_result(
     result: &Result<bool, EvalError>,
 ) -> RuntimeProfileOutcome {
     match result {
         Ok(true) => RuntimeProfileOutcome::Some,
         Ok(false) => RuntimeProfileOutcome::None,
-        Err(EvalError::Return { .. }) => RuntimeProfileOutcome::Return,
-        Err(EvalError::Thrown { .. }) | Err(EvalError::ThrownBypassingCatch { .. }) => {
-            RuntimeProfileOutcome::Throw
-        }
-        Err(EvalError::InputRequired { .. }) => RuntimeProfileOutcome::InputRequired,
-        Err(_) => RuntimeProfileOutcome::Error,
-    }
-}
-
-fn runtime_profile_outcome_for_expr_result(
-    result: &Result<Expr, EvalError>,
-) -> RuntimeProfileOutcome {
-    match result {
-        Ok(_) => RuntimeProfileOutcome::Ok,
         Err(EvalError::Return { .. }) => RuntimeProfileOutcome::Return,
         Err(EvalError::Thrown { .. }) | Err(EvalError::ThrownBypassingCatch { .. }) => {
             RuntimeProfileOutcome::Throw
