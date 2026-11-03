@@ -327,7 +327,7 @@ does the same work, only without its profiling hooks.
     unchecked harness resolves `test-continuation-slots` only. Both oracle
     builds 499/0/0, workspace green in both builds, six switch-gated host
     tests and nine native ZeroMQ tests green at the director gate.
-    **LP07 (module aggregation) is next.**
+    **The LP06 B campaign (disabled-path cost) is brief-648; LP07 follows.**
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its
