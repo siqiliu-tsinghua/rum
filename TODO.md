@@ -292,10 +292,15 @@ does the same work, only without its profiling hooks.
     rule (a positive per-call delta on an iteration-proportional rum
     function is a defect unless its own code is proven unchanged). Gate:
     all 11 steps PASS, workspace 4,059 passed / 0 failed / 61 ignored.
-  - **Stage B resumes next** over the repaired candidate: re-sync `cand`,
-    rebuild the candidate arms, invalidate candidate-side capture receipts,
-    then the full panel, copy/allocation census, 22 stack shapes,
-    layout/lifecycle and the timings last.
+  - **Stage B gated GREEN (2026-11-03); LP05 closed.** The resumed campaign
+    ran on `a51ae7ac` with no source change: target 94 own Ir/call; all 29
+    persistent ordinary labels PC-disposed with 0 unresolved positive rum
+    rows; copy 0/192 positive, allocation 0/192, stack 0 growth across 528
+    probes, layout/live-chain/lifecycle PASS. I spot-checked the largest
+    flag (`appendto-list-incremental-large`): every rum function's own Ir is
+    identical across arms. The timing lane's 80/129 best-of-two rows are
+    retained and disclosed but do not decide (TEMPLATE pitfall 8), and every
+    large timing mover has a negative instruction delta. **LP06 is next.**
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its

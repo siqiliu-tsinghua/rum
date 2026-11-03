@@ -581,3 +581,44 @@ placement. Fixed-call startup residuals are recorded in the whole-row
 reconciliation and do not by themselves fail a label. This rule replaces
 "any increase is a defect" for rows whose changed PCs are proven to be
 untouched code; it does not waive an unattributed positive.
+
+## Director gate — stage B resumed (2026-11-03): GREEN, timing disclosed
+
+The resumed campaign ran on the repaired tree (`a51ae7ac`) and changed no
+source. Checks: 11 PASS, 1 FLAGGED (timing).
+
+| gate | result |
+| --- | --- |
+| source and replay | 1,542 covered files equal the brief-644 replay; 1,576 live crate files unchanged |
+| measurement integrity | 14 binary hashes, 576 frozen programs, 313 labels, all receipts |
+| workloads | 384 value checks; 1,684 correct instruction captures |
+| target cost | base 108 -> candidate **94** own Ir/call |
+| persistent ordinary PCs | 29 labels; **0 unresolved positive rum function rows** |
+| copy | 192 labels, 768 correct captures, **0 positive** |
+| allocation | 192 ordinary labels + 2 controls, **0 positive** |
+| stack | 528 probes per arm, **0 growth**, 44 fits |
+| layout / live chains / lifecycle | PASS; 352 safe backtraces, 44 active-PC/CFA reconciliations |
+| timing | FLAGGED: 80/129 best-of-two rows positive |
+
+**I spot-checked the largest persistent flag myself.** `appendto-list-incremental-large`
+at N=500/1000, base against my own repaired build: every rum function's own
+Ir is identical between arms (`builtin_append_to` 235,500/471,000 in both),
+and the whole-process slope is -22/iteration on the repaired arm. The
+positive rows are placement, not code.
+
+**Ruling on the timing lane.** The 80 positive best-of-two rows are
+retained and disclosed, not waived and not called regressions. Timing does
+not decide this gate (TEMPLATE pitfall 8; the standing rule is that
+instruction slopes decide), the sample is two pairs of sub-millisecond
+in-kernel times on a P/E host, and every large timing mover has a
+**negative** instruction delta — `set-part-fixed100-len800` -5,195/iteration
+(-0.4%) against a reported +10.6% timing, `set-part-fill-large`
+-16,061, `set-part-fill-small` -7,977. A lane that disagrees with the
+deciding instrument at this sample size cannot carry a verdict. No
+follow-up timing campaign is ordered for LP05; if timing is ever to
+decide, it needs the four-pass tier-median protocol as a separate
+instrument decision.
+
+Stage B is accepted. **LP05 is closed**: the assignment RHS, finish, list,
+association and LHS phases are in the lifted profile, and the disabled
+path is 14 instructions per call cheaper than before the line opened.
