@@ -266,9 +266,25 @@ does the same work, only without its profiling hooks.
     `RUM_PROFILE_LEXICAL_SUBSTITUTION=1` and was missing from
     `SWITCH_GATED`; fixed in `417fb11c` and rerun GREEN, and the director
     reproduced the switch-on pass by hand.
-  - **Stage B next**: the measurement campaign (instruction slopes on 192
-    ordinary + 121 resume labels, the microbench timings, the copy/allocation
-    census, and 22 stack shapes), against the base export at `ab3c1c89`.
+  - **Stage B STOP (2026-11-03), a confirmed default-path cost.** All 313
+    instruction labels ran (1,656 correct captures, 384 frozen-value
+    checks). The decisive row is `set-ownvalue`: `builtin_set` grows from
+    108 to 118 own Ir per unchanged call at exact N=2000/4000 (base
+    216,161/432,161, candidate 236,141/472,141; every retained PC slope
+    one). **I reproduced it and attributed it to A1**, not A2: a
+    one-codegen-unit build of `16bec656` gives the identical
+    236,141/472,141 row, while A2's `set.prepare_lhs` change is
+    cost-neutral here. The emitted difference is two 56-byte
+    `Option<RuntimePathTimingToken>`-shaped copies at `eval_set`'s
+    self-evaluating sites, less 6 removed classification instructions.
+    26 ordinary and 13 resume labels are positive in both pairs and
+    unresolved; copy/allocation, stack, layout and timing gates did not
+    run. Q1 (the four label names I wrote) resolved as family aliases; the
+    frozen catalogue is authoritative.
+  - **brief-644 owns the repair** (dispatched 2026-11-03): bar is
+    `builtin_set` ≤ 108 own Ir/call with the record set unchanged and no
+    cost shifted into a helper, then the focused labels and the standing
+    inventories. Stage B resumes over the repaired candidate afterwards.
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its

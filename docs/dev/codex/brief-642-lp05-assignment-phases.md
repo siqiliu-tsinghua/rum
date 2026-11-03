@@ -514,3 +514,44 @@ The red direction remains the A2 preflight calibration at `ab3c1c89`, where
 the same file fails with the missing `set.rhs.evaluate` row.
 
 A2 is accepted. Stage B (the measurement campaign) is next.
+
+## Director gate — stage B (2026-11-03): STOP, and the rulings
+
+The campaign ran all 313 instruction labels with one confirmation per flag
+(1,656 correct captures) and stopped on a proven disabled-path cost. I
+reproduced the decisive row myself: four fresh Callgrind captures at exact
+N=2000/4000 on `set-ownvalue` (`Do[xOwn = 123,{2000}]`), same binaries the
+campaign built (source trees verified against `ab3c1c89` and `731a4bc7`),
+`callgrind_annotate --inclusive=no`:
+
+| arm | `builtin_set` own Ir, N=2000 / 4000 | per call |
+| --- | --- | --- |
+| base `ab3c1c89` | 216,161 / 432,161 | 108 |
+| A1 `16bec656` (built for this ruling) | 236,141 / 472,141 | 118 |
+| A2 `731a4bc7` | 236,141 / 472,141 | 118 |
+
+**Attribution: the +10 enters with A1, not A2.** The A1-only arm — a fresh
+one-codegen-unit release build of `16bec656` at the same source path, then
+Callgrind — reproduces A2's row exactly, and A2's `set.prepare_lhs` change is
+cost-neutral on this label. The worker was right not to attribute it without
+that arm. The emitted difference is two 56-byte copies (8 instructions each)
+at `eval_set`'s `expr_is_self_evaluating_atom` sites (`set.rhs.evaluate`,
+`set.rhs.suspend`), less 6 removed outcome-classification instructions.
+
+- **Q1 — answered: family aliases.** The four names I wrote are not frozen
+  labels; the 313-row catalogue is authoritative and no additional workload
+  path exists. `lhs-set-deep-path`/`lhs-set-pattern` are the
+  `lhs-set-*` family (`lhs-set-literal`, `lhs-set-ownvalue-arg`,
+  `lhs-set-head-eval`, `lhs-setdelayed-pattern`, `lhs-set-unset`,
+  `lhs-set-cycle-recovery`); `association-set` is
+  `association-set-key-incremental-small/large`; `association-part-set` is
+  `association-set-part-key-investigation`. All were measured; none is
+  renamed or replaced.
+- **Q2 — repair dispatched as brief-644.** Its bar is the base row itself:
+  `builtin_set` ≤ 108 own Ir/call at exact N=2000/4000, the same PC-level
+  reconciliation, and no ordinary focused label positive, with every record
+  unchanged. The remaining campaign gates stay unpassed until it is gated.
+
+Stage B stays **unaccepted**: copy/allocation, stack, layout, lifecycle and
+timing gates did not run, and the other 38 positive-in-every-pair rows are
+disclosed but unresolved. They resume after brief-644.
