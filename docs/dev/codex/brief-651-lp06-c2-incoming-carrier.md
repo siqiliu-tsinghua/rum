@@ -245,3 +245,79 @@ new tests' verdict lines, the six shape runs' `STAGE-SHAPE` lines and the
 assessment of the touched files, and any unpassed cost question. Run
 `python3 -I scripts/report.py check 651` and return its summary and the full
 compliance verdict lines.
+
+## Amendment 1 — 2026-11-04: the incoming wrapper is `#[inline]`; the debug arm expects it outlined
+
+The run stopped correctly at the debug cost bar: candidate stack-debug
+`resume_catch_after_body` reserves 888 against 792. The director reproduced
+it (888 on a plain build of the submitted tree), then ran a controlled probe
+with exactly one line changed — `#[inline(always)]` -> `#[inline]` on
+`record_profile_runtime_path_timing_adopted_incoming` — and measured:
+
+| arm | CLI release | stack-debug | stack-release |
+|---|---|---|---|
+| base (pre-A1) | 1016 | 792 | 1016 |
+| submitted C2 | 1000, wrapper absent | 888 | 1000 |
+| probe C2 `#[inline]` | 1000, wrapper absent | **792**, wrapper present | (this amendment) |
+
+At `-O0` LLVM's always-inliner folds the wrapper's parameter and body
+allocas into the Catch frame: a 56-byte Option plus `self`/outcome/result
+slots is +96. With `#[inline]`, B's own release objdump already shows this
+wrapper absent — the release inliner inlines it anyway — so `inline(always)`
+bought nothing in release and cost 96 debug bytes per Catch frame.
+
+The working tree already holds the completed C2 source. Execute this
+amendment on it; do not re-apply the earlier deliverables, and make no
+source edit other than the one below.
+
+1. In `crates/rum-runtime/src/runtime/profiling/control_timing.rs`, change
+   the attribute on `record_profile_runtime_path_timing_adopted_incoming`
+   from `#[inline(always)]` to `#[inline]`. Every other byte of the three
+   source files stays as it is now.
+
+2. Candidate stack-debug is checked with the new supplied spec
+   `.temp/brief-651/instruments/c2-cand-stack-debug-outlined.json`:
+   prologue-max 792 ordinals 1; the wrapper and its slow body both
+   **present** (outlined in the debug profile is the intended shape). The
+   base stack-debug spec is unchanged (`absent` for both: the base has no
+   adopted path). All other specs are unchanged.
+
+3. Amended bars: CLI release 1000 <= 1016, wrapper absent, slow present;
+   stack-release 1000 <= 1016, wrapper absent, slow present; stack-debug
+   792, wrapper present, slow present; `IncomingPathTimingToken` and its
+   Option 56 bytes; the five outcomes, the two C2 tests and the five mutant
+   calibrations on the amended bytes.
+
+4. Full re-acceptance on the amended source, in the same order:
+   inventory replay (quote every verdict), the 24-command SOURCE catalogue,
+   the two C2 tests, the five mutant calibrations (red, byte-identical
+   restore, green), then the shape phase. Rebuild all six arms with fresh
+   artifacts and target dirs:
+
+   ```
+   python3 -I .temp/brief-651/instruments/stage_build.py .temp/brief-651 base cli --attempt 2 --target-suffix amend1
+   python3 -I .temp/brief-651/instruments/stage_build.py .temp/brief-651 candidate cli --attempt 2 --target-suffix amend1
+   python3 -I .temp/brief-651/instruments/stage_build.py .temp/brief-651 base stack-debug --attempt 2 --target-suffix amend1
+   python3 -I .temp/brief-651/instruments/stage_build.py .temp/brief-651 candidate stack-debug --attempt 2 --target-suffix amend1 --candidate-probes .temp/brief-651/instruments/c2-incoming-probes.json
+   python3 -I .temp/brief-651/instruments/stage_build.py .temp/brief-651 base stack-release --attempt 2 --target-suffix amend1
+   python3 -I .temp/brief-651/instruments/stage_build.py .temp/brief-651 candidate stack-release --attempt 2 --target-suffix amend1
+   python3 -I .temp/brief-651/instruments/stage_shape.py --objdump .temp/brief-651/objdump/base/cli-attempt2.objdump --spec .temp/brief-651/instruments/c2-base-cli.json --out .temp/brief-651/shape/base-cli-amend1.json
+   python3 -I .temp/brief-651/instruments/stage_shape.py --objdump .temp/brief-651/objdump/candidate/cli-attempt2.objdump --spec .temp/brief-651/instruments/c2-cand-cli.json --out .temp/brief-651/shape/cand-cli-amend1.json
+   python3 -I .temp/brief-651/instruments/stage_shape.py --objdump .temp/brief-651/objdump/base/stack-debug-attempt2.objdump --spec .temp/brief-651/instruments/c2-base-stack-debug.json --out .temp/brief-651/shape/base-stack-debug-amend1.json
+   python3 -I .temp/brief-651/instruments/stage_shape.py --objdump .temp/brief-651/objdump/candidate/stack-debug-attempt2.objdump --spec .temp/brief-651/instruments/c2-cand-stack-debug-outlined.json --out .temp/brief-651/shape/cand-stack-debug-amend1.json
+   python3 -I .temp/brief-651/instruments/stage_shape.py --objdump .temp/brief-651/objdump/base/stack-release-attempt2.objdump --spec .temp/brief-651/instruments/c2-base-stack-release.json --out .temp/brief-651/shape/base-stack-release-amend1.json
+   python3 -I .temp/brief-651/instruments/stage_shape.py --objdump .temp/brief-651/objdump/candidate/stack-release-attempt2.objdump --spec .temp/brief-651/instruments/c2-cand-stack-release.json --out .temp/brief-651/shape/cand-stack-release-amend1.json
+   .temp/brief-651/bin/candidate/stack-debug-attempt2 brief651_incoming_layouts --nocapture --test-threads=1
+   ```
+
+   The base arms are rebuilt rather than reused so the amendment's receipts
+   form one campaign. A FAIL is a STOP with the values; do not retune.
+   Never edit an instrument; the new spec file is supplied.
+
+5. Report: copy the stopped record to `.temp/brief-651/report-stop.json`,
+   then write the amendment's final `rum-report/1` at
+   `.temp/brief-651/report.json` with the same fields plus this amendment's
+   edit, bars, and every verdict line. Run
+   `python3 -I scripts/report.py check 651` and return its summary and the
+   full compliance lines. Everything else in the brief, including Hard
+   rules and reporting, is unchanged.
