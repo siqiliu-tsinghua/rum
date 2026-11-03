@@ -476,3 +476,66 @@ line.
 If this exact reconstruction still fails for any cell, STOP. Do not pick a
 different context by hand, do not special-case a mode, and do not relax the
 comparison to rendered names.
+
+## Amendment 3 — the native-span pause totals move with the tree; ZeroMQ is sandbox-only
+
+**The STOP is correct in kind and is accepted.** The worker reproduced both
+host failures at one test thread after the five-mode and oracle runs were
+green, and changed no source, expectation, exclusion or skip flag. I checked
+the baseline myself: at HEAD `18b7d918` the same test binary is green, 3
+passed / 0 failed (`.temp/baseline-646.log`, a clean worktree, one thread).
+So the two failures are candidate-induced, and they are not inventory
+staleness.
+
+**Ruling on Q3: the new pause totals are correct and the two standing
+expectations must move.** `LpSpan` wraps its argument in a `Policy::Expr`
+native call, so every logical record started inside that argument is a child
+of the `native` row. A1 now starts `compound.item.evaluate`, and its
+forwarded `.suspend` sibling, around each compound item.
+`Segment::pause` walks from the pausing record to the nearest open, not
+locally closed ancestor with its per-event cursor, and `Totals::child` folds
+a settled child's pauses into its parent
+(`crates/rum-runtime/src/runtime/profiling/logical/segments.rs:207`,
+`crates/rum-runtime/src/runtime/profiling/logical/totals.rs:15`). The
+`native` row's pause counter is a tree total, not an own count, so a deeper
+tree changes it by construction. The old numbers were written against the
+shallower tree. Do not revert, suppress or carve out propagation for adopted
+children; that would be a false observer, not a repair.
+
+**Authorized change: one file, one constant family.** Add
+`crates/rum-host/tests/logical_profile_lifecycle.rs` to the files this brief
+may modify. Change only the expected pause counts in that file: the two
+per-arrangement constants in the nested test's input table, and the expected
+arguments of the seven `Session::logical_profile_test_pauses_for("native")`
+assertions (nested lines 100, 102, 105; lifecycle lines 196, 200, 203, 291).
+An adjacent comment naming the new child level is allowed. Every other
+assertion in the file — `counts()`, open, `closed()`, the
+cancellation/reset/drop/restore cases and the leases — stays byte-identical.
+Do not add a skip, a filter, an import, a helper or a mode branch.
+
+**Derivation duty, not fitting.** For every changed number the report must
+show, at that assertion point: the open record set with its key chain, the
+pause event, which record receives it under the cursor, and the resulting
+count. Print the full Runtime row set at each assertion during derivation.
+If the derived number differs from the observed one, STOP; do not write the
+observed value and invent a story for it. A number that cannot be derived
+from the tree is a STOP, not a measurement.
+
+**Ruling on Q4: the nine native ZeroMQ tests are a sandbox limitation.** The
+worker sandbox denies loopback binding (`Operation not permitted`, reproduced
+at one thread); the support code requires the explicit
+`RUM_ALLOW_NATIVE_ZEROMQ_SKIP=1` to let such a test skip. For the two
+workspace acceptance commands only, set that variable, and quote the flag and
+all nine skip/ignore verdict lines. Change no ZeroMQ source, test or support
+code. The director gate reruns the whole workspace on the host with loopback
+available and without that variable; those nine must pass there. This is an
+environment exemption for the sandbox run, not an acceptance exclusion.
+
+**Reruns.** After the edit: the two host tests at one test thread; the full
+workspace in both builds with the three standing `--skip` flags and the
+ZeroMQ variable above; then the six switch-gated `rum-host` tests with
+`RUM_PROFILE_LEXICAL_SUBSTITUTION=1`. Amendment 2's helper edit already
+replayed the standing inventories; this file is test-only and is not a
+standing-inventory source — verify that claim and replay if any inventory
+does cover it. Update `.temp/brief-646/report-a1.json` in place, retaining
+all three STOPs. Any other red is a STOP under the same evidence standard.
