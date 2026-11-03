@@ -555,3 +555,29 @@ at `eval_set`'s `expr_is_self_evaluating_atom` sites (`set.rhs.evaluate`,
 Stage B stays **unaccepted**: copy/allocation, stack, layout, lifecycle and
 timing gates did not run, and the other 38 positive-in-every-pair rows are
 disclosed but unresolved. They resume after brief-644.
+
+## Director gate — stage B resumed (2026-11-03)
+
+brief-644 repaired the disabled-path cost and is gated GREEN: `builtin_set`
+is 94 own Ir/call at exact N=2000/4000 (188,134/376,134, reproduced by me;
+base 108, A1/A2 118). The source change is one shape in `timing.rs` — the
+two adopted recorders destructure `Some(token)` before their cold calls.
+The candidate arm for this campaign is the tree at this commit.
+
+Resume Stage B from the panel. The base arm and its cached captures remain
+valid; delete the candidate-side receipts and `.out` files for every label
+you re-measure, because the builder asserts the binary hash. Then run the
+campaign to completion: all 313 instruction labels with one confirmation
+per flag, the copy/allocation census on all 192 ordinary labels, the 22
+debug/release stack shapes, the layout/lifecycle checks, and the
+`core-language-microbench.sh` timings last.
+
+**Disposition rule for flags (director ruling 2026-11-03).** Every
+ordinary row positive in both pairs gets an emitted-PC disposition: name
+the changed PCs and their functions. A positive per-call delta on an
+iteration-proportional rum function is a defect unless the PC evidence
+shows that the row's own code is unchanged and the PCs moved only by
+placement. Fixed-call startup residuals are recorded in the whole-row
+reconciliation and do not by themselves fail a label. This rule replaces
+"any increase is a defect" for rows whose changed PCs are proven to be
+untouched code; it does not waive an unattributed positive.

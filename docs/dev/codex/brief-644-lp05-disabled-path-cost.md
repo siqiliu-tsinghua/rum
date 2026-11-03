@@ -231,3 +231,49 @@ different mechanism is fine if the emitted path shows it.
 
 The first audit's report is `.temp/brief-644/report.json`; the resumed run
 replaces it.
+
+## Director gate — 2026-11-03: GREEN
+
+`python3 -I scripts/director-gate.py run 644` (log `.temp/director/gate-644/`):
+
+| step | verdict | detail |
+| --- | --- | --- |
+| scope | PASS | 347 citations verified |
+| fmt | PASS | formatted |
+| check | PASS | 3 warnings, 0 new against HEAD, 0 gone |
+| ownership | PASS | 61 / 79 / 8,006; 0 replay rounds |
+| census | PASS | 1,067 `{RET001: 10, RET002: 1,022, RET003: 35}`, paired, 0 new |
+| oracle | PASS | 1 passed |
+| standing | PASS | LP01 1/0; typed-slot 10/0 |
+| fingerprints | PASS | 68 contracts, 0 changed |
+| certificates | PASS | both builds, 0 promoted rows merged |
+| inventories | PASS | 19 passed, 0 failed |
+| workspace | PASS | 62 binaries, **4,059 passed / 0 failed / 61 ignored**, peak 14.5 GB of 14, `oom_kill` 0 |
+
+**Reproduced by the director**: a fresh one-codegen-unit release build of
+this tree at its own path, four Callgrind captures at exact N=2000/4000 on
+`set-ownvalue`, `callgrind_annotate --inclusive=no`: `builtin_set`
+**188,134 / 376,134 own Ir = 94.0 per call**, against the campaign's
+216,161 / 432,161 = 108.0. The red row (118) and the two attempts
+(102, 94) are the worker's evidence; the target value is mine.
+
+The diff is exactly the repair: in the two adopted recorders the inline
+gate destructures `Some(token)` before the cold call, and the cold helper
+takes the bare token and re-wraps it. No other source line changed; the
+four inventories are positional churn.
+
+## Director ruling — the neighbour flags
+
+The focused-panel clause ("same-tier neighbours non-positive") is
+superseded. The six neighbour positives are not evidence against this
+change: none of those labels executes either repaired wrapper on its
+measured path (`AppendTo` reaches `eval_append_to`; the downvalue labels
+never assign; `Do[Null, ...]` never enters `eval_set`), so the movement is
+in shared or untouched code. They are **not waived**: Stage B's panel
+re-measures all 313 labels on this tree, and every ordinary row positive in
+both pairs receives an emitted-PC disposition there — the changed PCs
+named with their functions, and a positive per-call delta on any
+iteration-proportional rum function is a defect unless the PC evidence
+shows the row's own code unchanged. Fixed-call startup residuals are
+recorded in the whole-row reconciliation and do not by themselves fail a
+label.

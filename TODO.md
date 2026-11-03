@@ -281,10 +281,21 @@ does the same work, only without its profiling hooks.
     unresolved; copy/allocation, stack, layout and timing gates did not
     run. Q1 (the four label names I wrote) resolved as family aliases; the
     frozen catalogue is authoritative.
-  - **brief-644 owns the repair** (dispatched 2026-11-03): bar is
-    `builtin_set` ≤ 108 own Ir/call with the record set unchanged and no
-    cost shifted into a helper, then the focused labels and the standing
-    inventories. Stage B resumes over the repaired candidate afterwards.
+  - **brief-644 gated GREEN (2026-11-03)**: the two adopted recorders now
+    destructure `Some(token)` before their cold calls (the base's shape), so
+    the disabled path never stages the 56-byte aggregate. `builtin_set`
+    fell from 118 to **94** own Ir/call at exact N=2000/4000
+    (188,134/376,134, reproduced by me; base 108). The six required labels
+    all improved; six neighbour labels moved slightly positive, and since
+    none of them executes the repaired wrappers, they are carried as
+    pre-declared flags into the Stage B panel with the new PC-disposition
+    rule (a positive per-call delta on an iteration-proportional rum
+    function is a defect unless its own code is proven unchanged). Gate:
+    all 11 steps PASS, workspace 4,059 passed / 0 failed / 61 ignored.
+  - **Stage B resumes next** over the repaired candidate: re-sync `cand`,
+    rebuild the candidate arms, invalidate candidate-side capture receipts,
+    then the full panel, copy/allocation census, 22 stack shapes,
+    layout/lifecycle and the timings last.
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its

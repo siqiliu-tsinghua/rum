@@ -221,6 +221,11 @@ impl crate::runtime::Session {
         if !lexical_profile_enabled() {
             return;
         }
+
+        let Some(token) = token else {
+            return;
+        };
+
         self.record_profile_runtime_path_timing_adopted_boundary_slow(token, result);
     }
 
@@ -230,9 +235,10 @@ impl crate::runtime::Session {
         T: crate::runtime::profiling::logical::PhaseCompletion,
     >(
         &mut self,
-        token: Option<RuntimePathTimingToken>,
+        token: RuntimePathTimingToken,
         result: &Result<T, crate::runtime::EvalError>,
     ) {
+        let token = Some(token);
         if let Some(token) = &token {
             self.complete_profile_runtime_path_boundary_slow(token.key.phase, result);
         }
@@ -610,6 +616,10 @@ pub(in crate::runtime) fn record_profile_runtime_path_timing_adopted_ok(
         return;
     }
 
+    let Some(token) = token else {
+        return;
+    };
+
     record_profile_runtime_path_timing_adopted_ok_slow(session, token)
 }
 
@@ -617,8 +627,9 @@ pub(in crate::runtime) fn record_profile_runtime_path_timing_adopted_ok(
 #[inline(never)]
 fn record_profile_runtime_path_timing_adopted_ok_slow(
     session: &mut crate::runtime::Session,
-    token: Option<RuntimePathTimingToken>,
+    token: RuntimePathTimingToken,
 ) {
+    let token = Some(token);
     let outcome = RuntimeProfileOutcome::Ok;
     if let Some(phase) = token.as_ref().map(|token| token.key.phase) {
         if let Some(key) = crate::runtime::profiling::logical::PhaseKey::from_name(phase) {
