@@ -383,6 +383,25 @@ does the same work, only without its profiling hooks.
     dispatch, and the gate reproduced all six numbers. F7 [872, 856] and
     F6's executed neighbours are unchanged and remain D's. LP06 closes only
     when the brief-653 campaign passes.
+  - **D ran (2026-11-04, brief-653); LP06 NOT closed.** The repaired tree
+    (`029c06ff`) was measured afresh against the pre-A1 base
+    (`654f2ce5`): 15 pinned binaries, 652 supplied files unchanged, 1,252
+    instruction and 112 confirmation processes; gate GREEN (workspace 62
+    binaries, 4095 passed / 0 failed / 61 ignored, peak 7.2 GB). Every
+    shape bar passes (While 744/3528/744, Compound 648/1304/664, Catch
+    1000/792/1000, forwarded 24/56/24, release wrappers absent, token
+    56/56) and the copy, allocation, stack, layout, live-chain and
+    lifecycle panels pass. Three bars fail: **F6** (29 owner rows at
+    +1..+3 own Ir/iteration in the disabled path, reproduced by the
+    director on five rows), **F7** (CLI `try_dispatch_builtin_call` 872
+    against base 856, reproduced by disassembly), and the four **While**
+    own-slope rows, which no frozen workload exercises. **F5 is ruled
+    out** as a single-pair artifact: five repeats per arm put the
+    between-arm equality-call delta at -12 inside a within-arm spread of
+    69..116, with the candidate slope 12/iteration lower. Next: brief 654
+    (design: per-instruction attribution, the zero-cost edit, F7's 16
+    bytes, the While workloads), then a source brief and a coverage
+    brief, then the D2 campaign.
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its

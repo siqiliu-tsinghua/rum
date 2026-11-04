@@ -268,3 +268,46 @@ zero, no B result was re-used, and both exports verified unchanged.
 - The campaign restarts fresh at attempt 3. The supplied package is now
   the adapted B set plus the D scripts, the C3 probe forms, the corrected
   Amendment-3 observer and the copy reducer — nothing else.
+
+## Director gate — 2026-11-04: GREEN, LP06 NOT CLOSED
+
+Gate `.temp/director/gate-653/gate.json`: scope RULED (28,820 campaign
+paths under the git-ignored root; 1,581 live crate files and both exports
+unchanged at entry and closing), fmt, check (3 warnings, 0 new),
+ownership 61/79/8018, census 1067 {RET001 10, RET002 1022, RET003 35},
+oracle 1, standing LP01 1/0 typed-slot 10/0, fingerprints 68 contracts/0
+changed, certificates both builds, inventories 19/0, workspace 62 binaries
+4095 passed / 0 failed / 61 ignored, peak 7.2 GB of 14, oom_kill 0;
+arms/structure/panels SKIP. I re-verified all 15 pinned binaries against
+their build receipts (15/15).
+
+Campaign outcome: STOP. Every shape bar passes and the copy, allocation,
+stack, layout, live-chain and lifecycle panels pass. Three bars fail:
+
+- **F6** — 29 owner rows carry +1..+3 own instructions per iteration in
+  the disabled path (`eval_control_data_builtin'2` 21,
+  `try_apply_function` 8). I re-derived five rows from the raw Callgrind
+  own pairs: table-small 78 -> 80, appendto-part-outer1000-large
+  187/3 -> 190/3, set-part-fixed100-len800 79 -> 80, withcleanup-small
+  62 -> 64, failure-message-property 49 -> 50. Incoming-call slopes are
+  equal; the same labels save 28 Ir/iteration in
+  `try_dispatch_builtin_call'2`, and that saving does not pay for it.
+- **F7** — CLI `try_dispatch_builtin_call` [872, 856] against base
+  [856, 856]. I disassembled both pinned binaries: 6 pushes + `sub
+  $0x338` = 872 at entry `0x5d72e0`, 48 + 808 = 856 at `0x5d7bf0`.
+- **While coverage** — no frozen workload exercises `While`; the four
+  mandatory own-slope rows (`while.test/body .evaluate/.suspend`) are
+  unmeasured and no value is inferred from stack or static bodies.
+
+**F5 is ruled out, not carried.** The report's single N=2/4 Callgrind pair
+reads a seed-dependent equality-probe count. Five repeats per arm on the
+same pinned binaries and programs give N=4 equality calls base
+2133..2249 (median 2201) against candidate 2164..2233 (median 2189), a
+delta of -12 inside both spreads, and slopes +223.5 against +211.5 per
+iteration. It is an instrument artifact of a single-pair reading; no
+source liability attaches.
+
+Ruling: **LP06 does not close.** F6, F7 and the While coverage return to a
+design round (brief 654), then to a source brief and a coverage brief
+before a fresh campaign. A persisting defect is never waived by an
+aggregate total.
