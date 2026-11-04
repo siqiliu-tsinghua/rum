@@ -402,6 +402,31 @@ does the same work, only without its profiling hooks.
     (design: per-instruction attribution, the zero-cost edit, F7's 16
     bytes, the While workloads), then a source brief and a coverage
     brief, then the D2 campaign.
+  - **654 design ran; calibrated by the director (2026-11-04).**
+    `.temp/brief-654/report-design.json` (`check: OK`, 18,730 citations,
+    30 PASS / 3 FLAGGED for the retained F6/F7/While bars) attributes all
+    29 F6 rows to register pressure, proposes E1 (a by-value
+    result-ownership adapter at the eight LP06 sites) and E2 (dispatch
+    terminal-result forwarding), fixes the While package (nine `.rum`
+    sources, exact bytes and hashes reproduced) and gives seven probe
+    contracts. My one-variable calibration
+    (`.temp/director/calib-655-verdict.md`; fresh base reproducing D's
+    29 base pairs exactly; CGU=1, one source path, serial Callgrind):
+    **E1 returns all eight `try_apply_function` status rows to the base
+    pair exactly and does not move the 21 `eval_control_data_builtin'2`
+    rows** (own pairs equal the candidate's byte for byte). Reverting
+    only `branching_loops.rs` and `nonlocal.rs` to `654f2ce5` restores
+    all 21 to base and leaves the eight at +1, so the 21-row residual is
+    the presence of the while/compound/catch attach inside the 38 KB
+    inlined dispatcher — a whole-function register-allocation effect,
+    not the result borrow; the executed `withcleanup-small` path carries
+    no profiling code at all. **E2 gives CLI reservations 616/600**
+    (base 856/856) with no 29-row movement; its exact-856 prediction is
+    superseded by "no specialization above the base reservation".
+    Next: brief 655, a design for an allocation-neutral attach whose
+    hot-path calls keep the base shape with a session-free cold logical
+    context, proved by build probes under its own root; then one source
+    brief (attach + E2), the While package, and D2.
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its
