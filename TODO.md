@@ -481,6 +481,27 @@ does the same work, only without its profiling hooks.
     design for the frame repair (restore `try_apply_function` and the six
     rows to base while keeping F6/F7/While), then the source brief and a
     targeted re-measurement.
+  - **Frame-repair design gated PASS (2026-11-05, brief 672); source
+    stage 673 dispatched.** Twenty compiled form trees; the selected form
+    keeps the token copy in the enabled cold helper behind a shared
+    reference and removes the by-value result slot. Measured in two
+    independent builds: ordinary CLI `try_apply_function` 6 pushes +
+    `sub $0x408` = 1,032 B (base 1,048), release probe 1,048 B static /
+    1,104 physical, debug 2,816 B per level; all 44 ordinary rows zero
+    residual and none above base; six rows 49,632/51,136/51,136 and
+    18,304/19,392/19,392 (the two −32 are
+    `evaluate_status_function_value`, target owner delta 0); F6 8+21 exact
+    both draws; F7 632/600; While 202/564/623 with equal calls; 12/12
+    enabled; lease green. The worker stopped on my literal 1,048/six-equal
+    wording; I ruled the bar as no growth over base — a smaller frame is
+    the hard line satisfied more strongly, and every literal-1,048 form
+    fails the eight Function F6 rows at +1 own instruction per call. My
+    reproductions: objdump of the retained binaries (`0x418`/`0x4a8`/
+    `0x408`), the six slopes rerun at four heights × two repeats × two
+    draws, a fresh F6 spot-check (exact) and the by-value control red.
+    Gate note `.temp/director/brief-672-gate.md`. Next: brief 673, the
+    source stage (the two-file form, inventory replay, targeted campaign,
+    both workspaces, host suites, fmt, microbench A/B).
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its
