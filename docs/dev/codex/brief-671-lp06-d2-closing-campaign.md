@@ -388,3 +388,53 @@ scratch-probe branch carried inside the script, not a campaign input.
 - A build kind invoked outside this list is a STOP; a script edit that
   removes or rewrites the dormant branch is also a STOP. Everything else
   in Amendments 1 and 2 stands, and the bars are unchanged.
+
+## Amendment 4 — 2026-11-05: the cold-rollover row is candidate-only
+
+The fourth stop was correct. The copied 668 rollover collector selects
+`runtime::profiling::logical::evaluator::lp664_rare_rollover_cost`; that
+test, its helpers `lp657_session` and `lp657_quiescent`, and the logical
+profile carrier it measures are introduced by the candidate `19b61027`.
+The base export `654f2ce5` has zero definitions of the test, no
+`runtime/profiling/logical/incoming.rs`, no `control_builtin.rs` and no
+`lp657` helpers — the whole surface postdates it. Amendment 2's "both
+arms are captured in this campaign" governs the bars whose decision
+compares the two arms; it does not create a fixture the base source
+cannot host. A base-arm rollover capture would require porting candidate
+test helpers into the base export — a source change that Q1 and
+Amendment 2 forbid.
+
+- **Ruling.** The cold-rollover row is a candidate-only absolute row.
+  The base export contributes no row, and that absence is not a missing
+  input. The 184/184 red value belongs to the pre-F tree `029c06ff`,
+  not to `654f2ce5`; it is context only. No base fixture is supplied,
+  invented or substituted, and a base-arm attempt is neither a STOP nor
+  a bar. The unpassed-panel paraphrase "disabled 184/184, enabled
+  213/213 and 242/242" is superseded by this ruling.
+- **The deciding row.** Build a clean release `rum-runtime` lib test
+  binary from the candidate export with the copied 668 builder (`cargo
+  test --offline --locked --no-fail-fast -p rum-runtime --lib --no-run
+  --release`, CGU=1, jobs 8) in its own target directory under
+  `.temp/brief-671/`, with no injected stack probe, receipted and
+  hashed. Run the exact selector in draw1 and draw2, disabled and
+  enabled, at `LP664_ROLLOVERS` 100 and 200, with the retained
+  Callgrind flags: `LP664_ROLLOVER_ENABLED` absent for disabled and
+  `=1` for enabled, every other `RUM_PROFILE_*` cleared. Report own and
+  per-helper own PCs and the inclusive slope `(total_2N - total_N)/100`.
+- **Bar.** Disabled inclusive slope <= 213 in each draw; enabled
+  inclusive slope <= 242 in each draw — the 665 rebound-carrier row
+  that the 668 final capture reproduces. The 184/184 red and the 668
+  final capture are cross-checks only, never the deciding row.
+- **Selector checks.** `--list` on the clean candidate release test
+  binary must show the one test; `--list` on the base `stack-debug`
+  binary shows zero and is recorded as provenance, not as a failed
+  input. The campaign's own `stack-release` binary carries the shared
+  stack probes and is not this row's instrument.
+- **Adaptation.** The copied collector is re-rooted to
+  `.temp/brief-671` and reads its ceiling cross-check from
+  `.temp/brief-665/rollover-cost/inclusive-comparison.json`; the rest
+  of its logic is unchanged and disclosed.
+- **Everything else stands.** Amendments 1-3 and the bars are
+  unchanged. No campaign build kind is added or removed: this row
+  builds its own clean release test binary through the copied 668
+  path, exactly as the 668 collector did.
