@@ -331,6 +331,7 @@ impl Session {
     #[inline(never)]
     fn evaluate_at_root(&mut self, expr: Expr) -> Result<Expr, EvalError> {
         let _entry = NativeStackEntry::enter();
+        let _scope = crate::runtime::profiling::logical::ExecutionScope::enter(self);
         self.evaluation_depth.restore(0);
         self.record_profile_evaluate_entry();
         let runtime_profile = runtime_path_timing_start_adopted(self, "evaluate.total");

@@ -59,12 +59,11 @@ impl Session {
             return Ok(None);
         };
 
-        let runtime_profile_evaluate =
-            runtime_path_timing_start_adopted(self, "function.apply.evaluate");
+        let runtime_profile_evaluate = runtime_path_timing_start("function.apply.evaluate");
         let applied_result = self.evaluate(applied);
-        self.record_profile_runtime_path_timing_adopted_boundary(
+        let applied_result = self.finish_profile_runtime_path_timing_adopted_boundary(
             runtime_profile_evaluate,
-            &applied_result,
+            applied_result,
         );
         let outcome = crate::resume_or_suspend!(
             self,

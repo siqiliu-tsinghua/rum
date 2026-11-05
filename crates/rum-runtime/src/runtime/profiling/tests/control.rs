@@ -1089,3 +1089,111 @@ fn lp06_a2_catch_match_error() {
         &[ERROR, THROW, THROW],
     );
 }
+
+// Disposable brief-655 falsifier: a sessionful start permits a root record.
+#[test]
+fn lp655_root_context_falsifier() {
+    let enabled = test_support::enabled();
+    let mut session = Session::new();
+    let count = || {
+        test_support::epoch()
+            .rows()
+            .iter()
+            .filter_map(|(key, c)| {
+                matches!(
+                    key,
+                    AggregateKey::Runtime {
+                        phase: "catch.eval.total",
+                        ..
+                    }
+                )
+                .then_some(c.calls)
+            })
+            .sum::<u64>()
+    };
+    let token = super::super::runtime_path_timing_start_adopted(&session, "catch.eval.total");
+    session.record_profile_runtime_path_timing_adopted_boundary(token, &Ok(Expr::small_integer(1)));
+    assert_eq!(count(), 1);
+    eprintln!("LP655 ROOT CONTROL PASS: existing sessionful start records one root call");
+    super::epoch::reset_for_lease(enabled.lease());
+    assert_eq!(test_support::active(), 0);
+    let result = session.eval_catch(&[Expr::small_integer(1)]).unwrap();
+    assert_eq!(result, Expr::small_integer(1));
+    eprintln!("LP655 ROOT CANDIDATE: catch.eval.total calls={}", count());
+    assert_eq!(
+        count(),
+        1,
+        "session-free start must preserve the root logical call"
+    );
+}
+
+#[test]
+fn lp655_deferred_enable_context_falsifier() {
+    let _enabled = test_support::enabled();
+    let mut session = crate::runtime::test_builtins::session_with_test_control_builtins();
+    session.register_builtin(BuiltinSpec::ordinary(
+        "RumProfileReset",
+        "Use the actual runtime profile reset handler.",
+        |session, _head, args| session.eval_rum_profile_reset(args.as_ref()),
+        MemoryGrowthContract::NonAmplifying,
+    ));
+    super::super::state::LEXICAL_PROFILE_ACTIVE.store(2, std::sync::atomic::Ordering::Relaxed);
+    assert_eq!(
+        session
+            .eval_text("RumProfileReset[]; 1")
+            .unwrap()
+            .value
+            .to_string(),
+        "1"
+    );
+    let calls = test_support::epoch()
+        .rows()
+        .iter()
+        .filter_map(|(key, c)| {
+            matches!(
+                key,
+                AggregateKey::Runtime {
+                    phase: "compound.item.evaluate",
+                    ..
+                }
+            )
+            .then_some(c.calls)
+        })
+        .sum::<u64>();
+    eprintln!("LP655 DEFERRED ENABLE: compound.item.evaluate calls={calls}");
+    assert_eq!(
+        calls, 1,
+        "first item after enabling the profile must be recorded"
+    );
+}
+
+// A public, Session-bearing dispatch entry reaches the phase-only Catch starts.
+#[test]
+fn lp656_public_root_context_falsifier() {
+    let _enabled = test_support::enabled();
+    let mut session = crate::runtime::test_builtins::session_with_test_control_builtins();
+    let result = session
+        .eval_control_data_builtin(
+            crate::runtime::kernel_data::control_data::ControlDataBuiltin::Catch,
+            &system_expr("Catch"),
+            &SharedArgs::from(vec![Expr::small_integer(1)]),
+        )
+        .unwrap();
+    assert_eq!(result, Expr::small_integer(1));
+    a2_snapshot(
+        "lp656.public.root",
+        "final",
+        &[
+            AggregateKey::Runtime {
+                phase: "catch.eval.total",
+                source: None,
+            },
+            AggregateKey::Runtime {
+                phase: "catch.body.evaluate",
+                source: None,
+            },
+        ],
+        &[OK, OK],
+    );
+    assert_eq!(test_support::active(), 0);
+}

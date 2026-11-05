@@ -259,3 +259,14 @@ exit 137 with `oom_kill` risen, rerun that one command once with one job.
   shape.
 - Every claim carries a citation the checker can resolve; every FLAGGED row
   carries a note that settles it. The director's gate owns acceptance.
+
+## Director gate — 2026-11-05: GREEN (source form accepted; lease carried to 669)
+
+| Step | Verdict | Detail |
+|---|---|---|
+| scope | PASS | 33 files: the 19-file surface is byte-identical to `.temp/brief-667/probe/inline-enter` and `.temp/director/gate-667/form`; the two test-only files, the census constants and the nine generated inventories are the disclosed set |
+| census | PASS | 1130 rows; kinds 10/1083/37, plus the one ruled comment line |
+| panel | PASS (excluded row) | `matcher-single-tiny` +26 Ir/iteration is a callgrind layout artifact: my never-read 4 KiB `.layoutpad` control moves the row 513.248 -> 487.248 (exactly the base arm) and the workload slope 11,524.312 -> 11,496.726; native repeats +0.5/+0.5/-3.6/+5.1 |
+| lease | FAIL, carried to 669 | 4 failures in 60 unfixed 8-thread lib runs; the window baseline is a retired epoch's 19,776 B charge released inside the window by an unregistered thread |
+| all other rows | PASS by identity | checkpoint 4,606/25,861/4,693, root 223->231, abandonment 1,262->1,270, simple 2,223, admission 63, driver 88/121 and the 88-point 2528 root were measured on the same 19 bytes at gate-667 |
+| report | PASS | `.temp/brief-668/report.json`; `check: OK, 4,305 citations`; `--against-git` OK |

@@ -22,26 +22,32 @@ impl FrameStorage {
     #[cold]
     #[inline(never)]
     pub(in crate::runtime) fn enable_profile(&mut self, epoch: Arc<Epoch>) {
-        if matches!(self, Self::Profiled(_)) {
+        self.enable_execution_context(Some(epoch));
+    }
+    #[cold]
+    #[inline(never)]
+    pub(in crate::runtime) fn enable_execution_context(&mut self, epoch: Option<Arc<Epoch>>) {
+        // Execution selection survives retirement. A fresh valid epoch may
+        // attach new diagnostics to the existing guest continuation.
+        if matches!(self, Self::Profiled(profile)
+            if !epoch.as_ref().is_some_and(|epoch| epoch.is_valid())
+                || profile.epoch().is_some_and(|epoch| epoch.is_valid()))
+        {
             return;
         }
         let old = std::mem::replace(self, Self::new());
-        *self = match old {
-            Self::Guest(guest) => match ProfileQueue::new(guest, epoch) {
-                Ok(profile) => Self::Profiled(profile),
-                Err(guest) => Self::Guest(guest),
-            },
-            profile => profile,
+        let guest = match old {
+            Self::Guest(guest) => guest,
+            Self::Profiled(profile) => profile.into_guest(),
         };
+        *self = Self::Profiled(ProfileQueue::with_control(guest, epoch));
     }
     #[cold]
     #[inline(never)]
     fn deprofile(&mut self) {
-        let old = std::mem::replace(self, Self::new());
-        *self = match old {
-            Self::Profiled(profile) => Self::Guest(profile.into_guest()),
-            ordinary => ordinary,
-        };
+        if let Self::Profiled(profile) = self {
+            profile.retire_diagnostics();
+        }
     }
     #[cold]
     #[inline(never)]
@@ -196,21 +202,31 @@ impl FrameStorage {
     #[cold]
     #[inline(never)]
     fn append_profiled(&mut self, suffix: &mut Self) {
-        if matches!(self, Self::Profiled(p) if !p.epoch().is_valid()) {
+        if matches!(self, Self::Profiled(p) if p.epoch().is_some_and(|e| !e.is_valid())) {
             self.deprofile();
         }
-        if matches!(suffix, Self::Profiled(p) if !p.epoch().is_valid()) {
+        if matches!(suffix, Self::Profiled(p) if p.epoch().is_some_and(|e| !e.is_valid())) {
             suffix.deprofile();
         }
         let epoch = match (&*self, &*suffix) {
-            (Self::Profiled(p), _) | (_, Self::Profiled(p)) => Arc::clone(p.epoch()),
+            (Self::Profiled(a), Self::Profiled(b)) => {
+                let first = a.epoch();
+                let second = b.epoch();
+                first
+                    .filter(|epoch| epoch.is_valid())
+                    .or_else(|| second.filter(|epoch| epoch.is_valid()))
+                    .or(first)
+                    .or(second)
+                    .cloned()
+            }
+            (Self::Profiled(p), _) | (_, Self::Profiled(p)) => p.epoch().cloned(),
             (Self::Guest(_), Self::Guest(_)) => {
                 self.append(suffix);
                 return;
             }
         };
-        self.enable_profile(Arc::clone(&epoch));
-        suffix.enable_profile(epoch);
+        self.enable_execution_context(epoch.clone());
+        suffix.enable_execution_context(epoch);
         if let (Self::Profiled(a), Self::Profiled(b)) = (&mut *self, &mut *suffix) {
             if a.append(b) {
                 return;

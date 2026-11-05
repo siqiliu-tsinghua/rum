@@ -375,3 +375,20 @@ pub(in crate::runtime) fn summary() {
         );
     }
 }
+
+/// After resetting under the lease, wait for retired owners (including TLS
+/// destructors) to release their charges before a test takes its baseline.
+/// The current lease prevents unregistered threads from adding new charges.
+#[cfg(test)]
+pub(in crate::runtime) fn drain_for_lease(_lease: &crate::runtime::profiling::lease::TestLease) {
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(30);
+    while budget::process_bytes() != 0 {
+        super::lease_release::release_deferred_charge();
+        assert!(
+            std::time::Instant::now() < deadline,
+            "diagnostic drain stalled at {} bytes",
+            budget::process_bytes()
+        );
+        std::thread::yield_now();
+    }
+}

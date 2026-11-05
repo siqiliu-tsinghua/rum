@@ -101,7 +101,27 @@ pub(in crate::runtime) fn runtime_path_timing_start(
         return None;
     }
 
-    runtime_path_timing_start_slow(phase)
+    runtime_path_timing_start_context_slow(phase)
+}
+
+#[cold]
+#[inline(never)]
+fn runtime_path_timing_start_context_slow(phase: &'static str) -> Option<RuntimePathTimingToken> {
+    let token = runtime_path_timing_start_slow(phase);
+    if matches!(
+        phase,
+        "while.test.evaluate"
+            | "while.body.evaluate"
+            | "compound.item.evaluate"
+            | "catch.eval.total"
+            | "catch.body.evaluate"
+            | "function.apply.evaluate"
+    ) {
+        if let Some(key) = logical::PhaseKey::from_name(phase) {
+            logical::open_phase_from_active(key);
+        }
+    }
+    token
 }
 
 #[cold]
@@ -245,6 +265,36 @@ impl crate::runtime::Session {
             self.complete_profile_runtime_path_boundary_slow(token.key.phase, result);
         }
         record_profile_runtime_path_timing(token, T::timing_outcome(result));
+    }
+
+    /// Finish an adopted boundary by value: the borrow of the produced result
+    /// exists only inside the enabled cold body.
+    #[inline]
+    pub(in crate::runtime) fn finish_profile_runtime_path_timing_adopted_boundary<
+        T: crate::runtime::profiling::logical::PhaseCompletion,
+    >(
+        &mut self,
+        token: Option<RuntimePathTimingToken>,
+        produced: Result<T, crate::runtime::EvalError>,
+    ) -> Result<T, crate::runtime::EvalError> {
+        let Some(token) = token else {
+            return produced;
+        };
+
+        self.finish_profile_runtime_path_timing_adopted_boundary_slow(token, produced)
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn finish_profile_runtime_path_timing_adopted_boundary_slow<
+        T: crate::runtime::profiling::logical::PhaseCompletion,
+    >(
+        &mut self,
+        token: RuntimePathTimingToken,
+        produced: Result<T, crate::runtime::EvalError>,
+    ) -> Result<T, crate::runtime::EvalError> {
+        self.record_profile_runtime_path_timing_adopted_boundary_slow(token, &produced);
+        produced
     }
 
     /// Logical-only completion for the finish route first entered on RHS resume.

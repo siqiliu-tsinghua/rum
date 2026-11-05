@@ -98,14 +98,19 @@ fn join_registered(
     right: impl FnOnce() + Send,
 ) {
     std::thread::scope(|scope| {
-        scope.spawn(|| {
+        let left = scope.spawn(|| {
             enabled.lease().allow_current_thread();
             left();
         });
-        scope.spawn(|| {
+        let right = scope.spawn(|| {
             enabled.lease().allow_current_thread();
             right();
         });
+        // The implicit scope wait can finish before TLS destructors release
+        // their PROCESS_BYTES charges. Join while this lease is still held so
+        // that release cannot interfere with the next test's budget baseline.
+        left.join().unwrap();
+        right.join().unwrap();
     });
 }
 

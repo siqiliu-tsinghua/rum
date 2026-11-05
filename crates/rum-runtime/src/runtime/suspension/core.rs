@@ -514,7 +514,7 @@ impl Session {
             .as_mut()
             .expect("just installed input owner");
         pending.guest_form_environment = guest_form_environment;
-        if crate::runtime::profiling::lexical_profile_enabled() {
+        if crate::runtime::profiling::logical::resume_profile_configured() {
             Self::enable_pending_profile(&mut pending.frames);
         }
         self.refresh_memory_owner(
@@ -528,9 +528,7 @@ impl Session {
     #[cold]
     #[inline(never)]
     fn enable_pending_profile(frames: &mut FrameStorage) {
-        if let Some(epoch) = crate::runtime::profiling::logical::executing_epoch() {
-            frames.enable_profile(epoch);
-        }
+        frames.enable_execution_context(crate::runtime::profiling::logical::resume_profile_epoch());
     }
 
     /// Inserts a named, traceable frame into the fresh pending suspension.

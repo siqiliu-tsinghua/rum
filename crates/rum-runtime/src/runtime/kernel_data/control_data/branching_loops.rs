@@ -152,8 +152,7 @@ impl Session {
             }
             let outcome = match phase {
                 WhilePhase::Test => {
-                    let runtime_profile_test =
-                        runtime_path_timing_start_adopted(self, "while.test.evaluate");
+                    let runtime_profile_test = runtime_path_timing_start("while.test.evaluate");
                     let result = self.evaluate(args[0].clone());
                     self.record_profile_runtime_path_timing_adopted_boundary(
                         runtime_profile_test,
@@ -179,8 +178,7 @@ impl Session {
                 }
                 WhilePhase::Body => {
                     let body = args.get(1).cloned().unwrap_or_else(|| system_expr("Null"));
-                    let runtime_profile_body =
-                        runtime_path_timing_start_adopted(self, "while.body.evaluate");
+                    let runtime_profile_body = runtime_path_timing_start("while.body.evaluate");
                     let result = self.evaluate(body);
                     self.record_profile_runtime_path_timing_adopted_boundary(
                         runtime_profile_body,
@@ -361,8 +359,7 @@ impl Session {
             return Ok(system_expr("Null"));
         };
 
-        let runtime_profile_item =
-            runtime_path_timing_start_adopted(self, "compound.item.evaluate");
+        let runtime_profile_item = runtime_path_timing_start("compound.item.evaluate");
         let current_result = self.evaluate(current);
         self.record_profile_runtime_path_timing_adopted_boundary(
             runtime_profile_item,

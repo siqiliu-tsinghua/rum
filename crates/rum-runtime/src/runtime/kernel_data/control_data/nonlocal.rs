@@ -78,7 +78,7 @@ impl Session {
     }
 
     pub(in crate::runtime) fn eval_catch(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {
-        let runtime_profile_total = runtime_path_timing_start_adopted(self, "catch.eval.total");
+        let runtime_profile_total = runtime_path_timing_start("catch.eval.total");
         if !(1..=3).contains(&args.len()) {
             let result = Ok(self.invalid_call_with_arg_range("Catch", args, 1, 3));
             self.record_profile_runtime_path_timing_adopted_boundary(
@@ -90,7 +90,7 @@ impl Session {
 
         let form = args.get(1).cloned();
         let handler = args.get(2).cloned();
-        let runtime_profile_body = runtime_path_timing_start_adopted(self, "catch.body.evaluate");
+        let runtime_profile_body = runtime_path_timing_start("catch.body.evaluate");
         let body_result = self.evaluate(args[0].clone());
         let witness = slot_witness(&body_result);
         self.record_profile_runtime_path_timing_adopted_boundary(

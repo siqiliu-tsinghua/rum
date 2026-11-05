@@ -182,10 +182,17 @@ impl Session {
         }
 
         if self.next_request_generation.get() == 0 {
-            *control = Arc::new(RequestInterruptState::new());
-            self.next_request_generation.set(1);
+            return self.accept_after_request_exhaustion(&mut control);
         }
 
+        self.reserve_request_identity(&mut control)
+    }
+
+    #[inline(always)]
+    fn reserve_request_identity(
+        &self,
+        control: &mut Arc<RequestInterruptState>,
+    ) -> Result<AcceptedRequest, AcceptRequestError> {
         let generation = NonZeroU64::new(self.next_request_generation.get())
             .expect("request generation zero is the exhaustion sentinel");
         if !control.try_reserve(generation) {
@@ -199,7 +206,23 @@ impl Session {
                 generation.get() + 1
             });
 
-        Ok(AcceptedRequest::new(Arc::clone(&control), generation))
+        Ok(AcceptedRequest::new(Arc::clone(control), generation))
+    }
+
+    /// Request-generation exhaustion: replace the control, let every active
+    /// execution scope of this session observe the replacement, and admit the
+    /// request. Outlined and terminal so the ordinary admission path keeps its
+    /// exact emitted code.
+    #[cold]
+    #[inline(never)]
+    fn accept_after_request_exhaustion(
+        &self,
+        control: &mut Arc<RequestInterruptState>,
+    ) -> Result<AcceptedRequest, AcceptRequestError> {
+        let previous = std::mem::replace(control, Arc::new(RequestInterruptState::new()));
+        self.next_request_generation.set(1);
+        crate::runtime::profiling::logical::refresh_execution_control(&previous, control);
+        self.reserve_request_identity(control)
     }
 
     /// Returns a generation-agnostic observer of request cancellation.

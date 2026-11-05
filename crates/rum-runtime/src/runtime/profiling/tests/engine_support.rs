@@ -17,6 +17,7 @@ impl Enabled {
 pub(in crate::runtime) fn enabled() -> Enabled {
     let lease = lease::lease();
     epoch::reset_for_lease(&lease);
+    epoch::drain_for_lease(&lease);
     Enabled {
         configured: LEXICAL_PROFILE_ENABLED.swap(1, Ordering::Relaxed),
         active: LEXICAL_PROFILE_ACTIVE.swap(1, Ordering::Relaxed),

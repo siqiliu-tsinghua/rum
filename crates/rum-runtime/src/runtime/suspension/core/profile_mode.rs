@@ -30,7 +30,9 @@ impl Mode for Profiled {
         if let Some(suspension) = &mut session.resuming_suspension {
             if let FrameStorage::Profiled(profile) = &mut suspension.frames {
                 profile.observe_boundaries(outcome);
-                return profile.enter_front();
+                return profile.enter_front_with_control(Arc::clone(
+                    &session.request_interrupt_control.borrow(),
+                ));
             }
         }
         None

@@ -230,15 +230,12 @@ impl Session {
         finish: impl FnOnce(&mut Self, Result<Expr, EvalError>) -> Result<Option<Expr>, EvalError>,
     ) -> Result<Option<Expr>, EvalError> {
         self.record_profile_builtin_timing_adopted_boundary(profile_builtin_start, &produced);
-        let result = crate::resume_typed_or_suspend!(
+        crate::resume_typed_or_suspend!(
             self,
             produced,
-            ok(value) => Ok(value),
-            suspend => {
-                freeze()
-            },
-        );
-        finish(self, result)
+            ok(value) => finish(self, Ok(value)),
+            suspend => freeze(),
+        )
     }
 
     #[inline]

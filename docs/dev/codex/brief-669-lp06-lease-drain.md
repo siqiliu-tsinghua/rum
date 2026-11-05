@@ -125,3 +125,18 @@ All scratch under `.temp/brief-669/`; keep `PROGRESS.md` with the exact next
 action and receipts. Leave the tree compiling at each checkpoint. No
 version-control command, no network, no new `unsafe`, no public API/feature/
 serde change, no workload or inventory edit.
+
+## Director gate — 2026-11-05: GREEN
+
+| Step | Verdict | Detail |
+|---|---|---|
+| STOP ruled | PASS | the brief's inventory freeze conflicts with `TEMPLATE.md`'s standing maintenance duty ("always in scope, whatever the fence says"); the whole-source fingerprints include `cfg(test)` files, so the two generated refreshes are required and were applied |
+| generated | PASS | `local-contracts.tsv` 68 rows, column 18 only; `promoted.tsv` C01/C02, columns 4/5 only; every other field unchanged; the green acceptance tests prove each cell equals the generator output |
+| scope | PASS | exactly the three permitted files changed; the original lease test byte-identical; `epoch_contract.rs` joins kept unchanged; the two refreshed inventories are the standing duty |
+| falsifier | PASS | my own builds from the final source: red 3/3 without the acquisition call (`.temp/director/gate-669/no-drain`), green 3/3 with it |
+| repeats | PASS | 24/24 full 8-thread lib runs green, the lease test and the falsifier running in every run; with the worker's 60/60, 84 fixed runs and zero lease failures |
+| witness | PASS | reproduced on the unfixed tree: 2/60 failures, window baseline 19,776 B, own addition 6,136 B, foreign release 19,776 B (1 Budget 32 B + 32 Storage 19,744 B) |
+| workspace | PASS | default and `--no-default-features` at 8 threads: 4,145 passed / 0 failed / 61 ignored each; the seven standing skips equal the 668 list; the lease test is not skipped |
+| host switch | PASS | lp03/lp04/lp05 with `RUM_PROFILE_LEXICAL_SUBSTITUTION=1`: 3 + 1 + 1 passed in both configurations |
+| fmt | PASS | `cargo fmt --check` |
+| production | PASS | `#[cfg(test)]` only; production cfg path untouched; compile controls green; no new warnings |

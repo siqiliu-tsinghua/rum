@@ -14,7 +14,9 @@ pub(in crate::runtime) mod source_stack;
 mod totals;
 
 pub(in crate::runtime) use budget::Storage;
-pub(in crate::runtime) use context::{Context, ContextGuard};
+pub(in crate::runtime) use context::{
+    Context, ContextGuard, ExecutionScope, refresh_execution_control,
+};
 pub(in crate::runtime) use epoch::{Epoch, drop_session, summary};
 pub(in crate::runtime) use record::*;
 
@@ -568,6 +570,37 @@ impl Call {
                 None,
             ),
         };
+        Self::start_owned(epoch, owner, parent, key, policy)
+    }
+
+    fn start_from_active(key: AggregateKey, policy: Policy) -> Option<Self> {
+        // The free start differs from the sessionful start only in where the
+        // control comes from: the TLS execution scope instead of the session.
+        // The owner-or-root rule below is `Call::start`'s rule verbatim.
+        let control = context::execution_control()?;
+        if let Some((epoch, owner, parent)) = segments::owner(&control) {
+            return Self::start_owned(epoch, owner, Some(parent), key, policy);
+        }
+        Self::start_owned(
+            epoch::current()?,
+            Owner {
+                generation: control.logical_generation(),
+                control,
+                root: epoch::next_id(),
+            },
+            None,
+            key,
+            policy,
+        )
+    }
+
+    fn start_owned(
+        epoch: Arc<Epoch>,
+        owner: Owner,
+        parent: Option<RecordId>,
+        key: AggregateKey,
+        policy: Policy,
+    ) -> Option<Self> {
         let record = epoch.open(owner, parent, key, policy)?;
         let segment = segments::enter(&epoch, record)?;
         let storage = epoch.storage(std::mem::size_of::<CallInner>() + 16)?;
@@ -861,6 +894,23 @@ pub(in crate::runtime) fn open_phase(
     let Some(call) = session.logical_phase_start(key.name(), site.policy) else {
         return;
     };
+    push_phase(key, call);
+}
+
+pub(in crate::runtime) fn open_phase_from_active(key: PhaseKey) {
+    let Some(call) = Call::start_from_active(
+        AggregateKey::Runtime {
+            phase: key.name(),
+            source: crate::runtime::evaluation_profile_current_source_symbol(),
+        },
+        key.site().policy,
+    ) else {
+        return;
+    };
+    push_phase(key, call);
+}
+
+fn push_phase(key: PhaseKey, call: Call) {
     PHASE_LIFO.with_borrow_mut(|stack| {
         let storage = match executing_epoch() {
             Some(epoch) => match epoch.storage(std::mem::size_of::<PhaseEntry>() + 16) {
@@ -1087,3 +1137,27 @@ mod lease_release;
 #[cfg(test)]
 #[path = "../tests/control.rs"]
 mod control_tests;
+
+// The suspension already has a profiling gate; retain its identity carrier
+// while configured collection is deferred as well as while it is active.
+// Keep configured && (enabled || cold configured fallback): round 10
+// simplification added one instruction to drive_input_request on all 121
+// resume labels. Any change to this shape must remeasure that row.
+#[inline]
+pub(in crate::runtime) fn resume_profile_configured() -> bool {
+    super::lexical_profile_configured()
+        && (super::lexical_profile_enabled() || resume_deferred_carrier())
+}
+
+#[cold]
+#[inline(never)]
+fn resume_deferred_carrier() -> bool {
+    super::lexical_profile_configured()
+}
+
+#[cold]
+pub(in crate::runtime) fn resume_profile_epoch() -> Option<Arc<Epoch>> {
+    segments::executing_epoch()
+        .filter(|epoch| epoch.is_valid())
+        .or_else(epoch::current)
+}

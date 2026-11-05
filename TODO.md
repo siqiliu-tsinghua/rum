@@ -427,6 +427,24 @@ does the same work, only without its profiling hooks.
     hot-path calls keep the base shape with a session-free cold logical
     context, proved by build probes under its own root; then one source
     brief (attach + E2), the While package, and D2.
+  - **LP06 source stage landed (2026-11-05, briefs 668/669); gates GREEN.**
+    The 19-file surface materialized from the measured gate-667 form (the
+    `ExecutionScope` carrier at the two execution sites, the rebound resume
+    hook); census replayed to 1130 rows with kinds 10/1083/37. The panel's
+    one positive (`matcher-single-tiny` +26 Ir/iteration) is a calibrated
+    callgrind layout artifact: a never-read 4 KiB `.layoutpad` moves the row
+    513.248 -> 487.248, exactly the base arm, and the workload slope
+    11,524.312 -> 11,496.726; native repeats +0.5/+0.5/-3.6/+5.1. The
+    8-thread lease interference is closed by a `#[cfg(test)]` acquisition
+    drain: a retired epoch's deferred 19,776 B release (1 Budget 32 B +
+    32 Storage 19,744 B) landed inside the lease window against the test's
+    6,136 B; 84 fixed lib-suite runs (24 by the director) with zero lease
+    failures; the deterministic falsifier is red without the drain and
+    green with it. Both workspaces at 8 threads: 4,145 passed / 0 failed /
+    61 ignored, the lease test running. The two generated cells
+    (`local-contracts.tsv` column 18, `promoted.tsv` C01/C02 certificates)
+    were refreshed by the standing replay. Next: brief 670 (the While
+    package), then D2 (brief 671) against base `654f2ce5`.
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its

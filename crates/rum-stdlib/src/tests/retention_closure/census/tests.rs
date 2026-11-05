@@ -340,14 +340,15 @@ fn baseline(source: &Source) {
         && row.site.file.ends_with("resolution.rs")
         && row.site.start == (36, 19)
         && row.reason == "path AccumulatorChain::default has 0 exact bindings"));
+    // Brief 668 ruling: replay equals brief 666 row for row: 1067 paired, 0 removed, 63 added.
     assert_eq!(
         options.rejected.len(),
-        1067,
+        1130,
         "STOP: brief-545 exact legacy frontier inventory moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 1022), (Kind::RET003, 35)])
+        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 1083), (Kind::RET003, 37)])
     );
     let wrapper = regions::frontier(
         source,

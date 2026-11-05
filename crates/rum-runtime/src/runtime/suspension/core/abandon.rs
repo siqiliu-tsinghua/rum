@@ -27,6 +27,7 @@ impl Session {
             return reason;
         }
         let _entry = NativeStackEntry::enter();
+        let _scope = crate::runtime::profiling::logical::ExecutionScope::enter(self);
         self.begin_ordered_abandonment(reason);
         let previous_guest_form = self.guest_form;
         let saved_stack = self.replace_accounted_evaluation_stack(Vec::new());

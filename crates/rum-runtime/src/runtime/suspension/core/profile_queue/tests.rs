@@ -101,6 +101,8 @@ fn logical_deferred_markers_keep_sequence_order_after_a_return() {
     for i in 0..24 {
         let before = queue
             .arena
+            .as_ref()
+            .unwrap()
             .data
             .lock()
             .unwrap()
@@ -133,6 +135,8 @@ fn logical_deferred_markers_keep_sequence_order_after_a_return() {
         assert!(queue.insert(context, boundary, after, i % 3 != 0));
         let now = queue
             .arena
+            .as_ref()
+            .unwrap()
             .data
             .lock()
             .unwrap()
@@ -143,6 +147,8 @@ fn logical_deferred_markers_keep_sequence_order_after_a_return() {
     }
     let before = queue
         .arena
+        .as_ref()
+        .unwrap()
         .data
         .lock()
         .unwrap()
@@ -150,6 +156,8 @@ fn logical_deferred_markers_keep_sequence_order_after_a_return() {
     assert!(queue.push(context, Entry::EvaluationReturn, false));
     let after = queue
         .arena
+        .as_ref()
+        .unwrap()
         .data
         .lock()
         .unwrap()

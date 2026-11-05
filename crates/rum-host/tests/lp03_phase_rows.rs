@@ -92,3 +92,49 @@ fn lp03_adopted_phases_are_exact_in_completed_and_resumed_runs() {
         );
     }
 }
+
+// Disposable direct host-facade falsifiers for the R8 execution context.
+fn lp658_host_reset_record(resume: bool) {
+    let lease = Session::logical_profile_test_acquire();
+    Session::logical_profile_test_reset(&lease);
+    let mut session = HostSession::builder().build();
+    let outcome = if resume {
+        assert!(matches!(
+            session.eval("InputString[\"host-context\"];RumProfileReset[];1"),
+            HostEvalOutcome::InputRequired(_)
+        ));
+        session.resume_with_input("reply")
+    } else {
+        session.eval("RumProfileReset[];1")
+    };
+    assert!(
+        matches!(outcome, HostEvalOutcome::Success(_)),
+        "{outcome:?}"
+    );
+    Session::logical_profile_test_assert_quiescent();
+    let rows = Session::logical_profile_test_rows();
+    let records: Vec<_> = rows
+        .iter()
+        .filter(|(key, _)| key == "Runtime { phase: \"compound.item.evaluate\", source: None }")
+        .collect();
+    assert_eq!(
+        records.len(),
+        1,
+        "post-reset host compound record missing: {rows:?}"
+    );
+    assert_eq!(records[0].1, [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]);
+    assert_eq!(Session::logical_profile_test_leases(), 0);
+    eprintln!(
+        "LP658 HOST resume={resume}: PASS key=compound.item.evaluate source=None calls=1 ok=1 err=0 abandoned=0 open=0 faults=0 leases=0"
+    );
+}
+
+#[test]
+fn lp658_host_eval_reset() {
+    lp658_host_reset_record(false);
+}
+
+#[test]
+fn lp658_host_resume_reset() {
+    lp658_host_reset_record(true);
+}
