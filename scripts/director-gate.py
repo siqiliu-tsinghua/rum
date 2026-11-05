@@ -91,6 +91,10 @@ SWITCH_GATED = [
     "lp03_adopted_phases_are_exact_in_completed_and_resumed_runs",
     "lp04_adopted_definition_rows_are_exact_in_completed_and_resumed_runs",
     "lp05_adopted_assignment_rows_are_exact_in_completed_and_resumed_runs",
+    "lp658_host_eval_reset",
+    "lp658_host_resume_reset",
+    "lp655_root_context_falsifier",
+    "lp656_public_root_context_falsifier",
 ]
 
 
