@@ -295,3 +295,41 @@ While owner rows and phase table, the enabled verdicts, F6/F7
 dispositions with their evidence, the final source/binary audit, and the
 unpassed list. Run `python3 -I scripts/report.py check 671` and return
 its summary and every compliance verdict line.
+
+## Amendment 1 — 2026-11-05: two fresh draws and the process maxima
+
+The stop was correct and is ruled. The Goal demands two fresh paired
+draws for the instruction panel, the copy panel and the three While
+owner rows (the 668/667 protocol, where "both draws" decide), while
+Q3's maxima were copied from the design's `instrument_ripple`, which is
+a one-draw schedule. The bar is not lowered: the maxima are raised to
+cover the second draw, and the resume-own receipts become draw-indexed.
+
+- **Draws.** The instruction panel (all 316 labels), the copy panel
+  (194 CLI labels) and the resume-own capture (the three While owner
+  rows) run two independent paired N/2N draws per arm — draw1 and draw2
+  — with fresh outputs and no receipt or capture shared between draws.
+  Every row is reported per draw; the per-label untouched band comes
+  from the two draws; each While owner bar (candidate <= base) must
+  hold in each draw separately, and both per-draw slopes are reported.
+  The allocation panel keeps the retained single paired sample (197
+  labels, 788 processes); the stack, layout, lifecycle and timing
+  panels keep their retained single sets.
+- **Maxima (supersede Q3's counts).** 2,528 initial instruction
+  processes (316 x 2 sizes x 2 arms x 2 draws); confirmation only for
+  flagged rows, at most one extra paired sample per flagged label, hard
+  maximum 2,528; 1,552 ordinary copy processes (194 x 4 x 2); 8
+  resume-own processes (1 label x 4 x 2); 788 allocation processes
+  (197 x 4); 1,056 stack probes; 352 live chains. The maxima remain
+  ceilings, not prompts.
+- **Resume-own receipts.** The copied collector's stem has no draw
+  index (`calibrate.py:33`) and re-entry skips a completed receipt
+  (`calibrate.py:36`). Add the draw index to the output and receipt
+  paths (`-draw1`/`-draw2`), assert non-existence before every capture,
+  and never re-enter a completed draw as another draw. The adapted
+  collector is hashed and disclosed. The 670 package's four receipts
+  are historical calibration only and are not reused.
+- **Everything else stands.** The bars, the frozen bytes, the 316/197
+  manifests, the 585 ledger, the harness, the enabled control, the
+  retained exclusions and Q1-Q8 are unchanged. This brief measures; it
+  repairs nothing.
