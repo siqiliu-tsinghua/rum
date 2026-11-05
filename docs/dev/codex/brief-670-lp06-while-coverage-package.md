@@ -167,3 +167,27 @@ checkpoint.
 `.temp/brief-670/report.json` in `rum-report/1`, every run and verdict line
 quoted; run `python3 -I scripts/report.py check 670` and return its summary
 and all compliance verdict lines.
+
+## Director gate — 2026-11-05: GREEN
+
+Gate note `.temp/director/brief-670-gate.md`; my independent reproduction
+`.temp/director/gate-670/repro.py` (log `repro.log`). Report
+`.temp/brief-670/report.json`; `check: OK, 316 citations`. The two FLAGGED
+rows are settled diagnostic-setup errors; the frozen workloads, expected
+counts and 12 pinned binaries are unchanged.
+
+| Step | Verdict | Detail |
+|---|---|---|
+| bytes | PASS | 12/12 design files byte- and SHA-256-exact, and equal to the design's literal source text |
+| harness | PASS | 9 non-design modules and `Cargo.lock` byte-identical to the 653 copy; 13/13 files match the package hash manifest recomputed from bytes |
+| ledger | PASS | 576 prior cells unchanged, 9 added, no overlap; the regenerated ledger hashes to `5baf1a34e0e76b92c89291f233da022daa408dc776fb4ef2eb2d0a0f6cde27bd` (design prediction = package file) |
+| manifests | PASS | instruction labels 313 -> 316 (CLI 192 -> 194, resume 121 -> 122) and allocation rows 194 -> 197 (CLI 192 -> 194, resume 2 -> 3); priors byte-equal, none lost or changed |
+| behaviour | PASS | 18/18 correctness receipts: CLI `Null` at 500/1000; resume `resumes=384/768` at 64/128 and 6 at N=1; six prompts per item, empty messages/prints, `List[Null; n]`, exhausted input |
+| coverage | PASS | four keys x 3 labels x 2 arms = 24 rows with owner entry, own/call N/2N pairs and executed PCs; the keys share the physical `resume_while_loop` owner; zero-trip body keys are negative controls |
+| slopes | PASS | zero-trip test 1 / body 0; one-trip test 2 / body 1; resume test 2 / body 1 with 384/768 pauses; owner call slopes 1 / 1 / 4 |
+| enabled | PASS | 12/12 `phase_counts=exact epoch_identity=stable open=0 leases=0 duplicate_finish=0`; adopted identity true in the candidate, false in the base |
+| tree | PASS | live tree clean; the 23,281-entry change list is confined to `.temp/brief-670/`; no retained-root file is newer than the dispatch |
+| scope | PASS | no live source, test, workload, manifest, inventory or `.git` change; no D2, acceptance or timing lane |
+
+Accepted as the frozen While coverage input to brief 671 (D2). The
+single-draw owner rows are calibration and decide no cost bar.

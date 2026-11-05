@@ -443,8 +443,19 @@ does the same work, only without its profiling hooks.
     green with it. Both workspaces at 8 threads: 4,145 passed / 0 failed /
     61 ignored, the lease test running. The two generated cells
     (`local-contracts.tsv` column 18, `promoted.tsv` C01/C02 certificates)
-    were refreshed by the standing replay. Next: brief 670 (the While
-    package), then D2 (brief 671) against base `654f2ce5`.
+    were refreshed by the standing replay.
+  - **While package gated GREEN (2026-11-05, brief 670).** Twelve design
+    files byte- and hash-exact (nine frozen `.rum`, `lp06.rs`, `main.rs`,
+    `Cargo.toml`); 585-hash ledger regenerated from bytes to the predicted
+    `5baf1a34...dc27bd`; instruction labels 313 -> 316, allocation rows
+    194 -> 197, priors unchanged; 18/18 correctness receipts (CLI `Null`,
+    resume 384/768 with six prompts per item, exhausted input); four keys
+    x 3 labels x 2 arms observed with owner entry, own/call N/2N and
+    executed PCs; start slopes equal the design (zero-trip 1/0, one-trip
+    2/1, resume 2/1, owner call slopes 1/1/4); 12/12 enabled controls
+    `open=0 leases=0 duplicate_finish=0`. The single-draw candidate owner
+    slopes sit 32/92/118 own Ir/iteration below base; D2 decides them.
+    Next: D2 (brief 671) against base `654f2ce5` and candidate `19b61027`.
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its
