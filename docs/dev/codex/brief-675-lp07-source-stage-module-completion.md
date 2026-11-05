@@ -375,3 +375,31 @@ repository bar requires it. This amendment answers Q1.
   `cargo fmt --check` must be green, including every later test and source
   edit. Record this amendment, the normalization receipts, the equality
   check and the re-run shape controls in the report.
+
+## Amendment 2 — 2026-11-05: the exact phase table extends by the four Module phases
+
+The STOP is correct. `profiling/tests/evaluator.rs` is outside the file
+scope and was left unchanged; its `lp03_adopted_site_table_is_exact`
+asserts the literal complete `PhaseKey` name set (46 names), and the
+pinned form adds exactly the four Module phases, so the focused runtime
+gate fails on that one assertion (1,351 unit and 22 doc tests pass; the
+serial reproduction shows exactly the four additions and no removals).
+
+- **Ruling.** Authorize the minimal exact extension of that expected set
+  by exactly `module.eval.total`, `module.resume_initializers`,
+  `module.initializer.evaluate` and `module.body.evaluate`, in the
+  table's existing literal style. The assertion stays complete and
+  exact: no filtering, no derivation from `PhaseKey::ALL`, no count
+  weakening, no skip, and no other change to the file.
+- **Disclosure duty (the class).** If another active assertion whose
+  meaning is exactly "the complete set of `PhaseKey` names" fails solely
+  because of the four added phases, the same literal extension is
+  authorized; list every edited file and line in the report. An assertion
+  whose meaning is anything narrower, or any other failure, is a STOP.
+- **Re-run.** After the extension, run the serial reproduction and the
+  focused runtime gate at 8 threads, then continue the acceptance ladder
+  (both workspace configurations, the required-switch host suites, the
+  lease, `cargo fmt --check`), and only then the campaign and the timing
+  panel. The seven standing skips are unchanged.
+- **Report.** Record the edit, the red-to-green reproduction and this
+  amendment. The run cap and every bar are unchanged.
