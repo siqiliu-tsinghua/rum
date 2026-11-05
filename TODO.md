@@ -524,6 +524,14 @@ does the same work, only without its profiling hooks.
     slopes rerun at four heights x two repeats x two draws; a fresh F6
     spot-check; the lease and one enabled control rerun. Gate note
     `.temp/director/brief-673-gate.md`.
+  - **LP07 opened (2026-11-05, brief 674).** LP06 closed with the frame
+    repair; LP07 is the brief-624 raw draft's Module total/body/
+    initializer records and source-attributed aggregates, now re-anchored
+    on the post-673 tree. The design round re-derives every count and
+    `path:line` (the 624 numbers predate LP06's keys and token-first
+    recorders), names the cells already closed, measures each open form's
+    disabled-path instruction/stack cost and enabled coverage, and drafts
+    the implementation brief. Design-only; probes under `.temp/brief-674/`.
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its
