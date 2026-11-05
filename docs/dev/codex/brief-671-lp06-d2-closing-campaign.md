@@ -368,3 +368,23 @@ was under-enumerated; it is replaced by a disclosure duty.
 - **Records.** The attempt-2 single base CLI build receipt is immutable;
   a re-entered build gets a new id. The earlier STOP reports stay in the
   root as history; the final report supersedes them.
+
+## Amendment 3 — 2026-11-05: the dormant rule-layout branch
+
+The third stop was correct. Q2 listed `rule-layout` among the retained
+build kinds, but that branch is dormant: the retained 653 command book
+never scheduled it, no bar in this brief uses it, and its input
+`rule-layout-probes.json` exists in no retained root. It is a
+scratch-probe branch carried inside the script, not a campaign input.
+
+- **Ruling.** The copied `campaign_build.py` keeps the branch
+  byte-identically (it is part of the retained script), but the campaign
+  must not invoke it. The D2 build kinds are exactly Q3's list: `cli`,
+  `cli-alloc`, `resume`, `resume-alloc`, `stack-debug`, `stack-release`,
+  `layout-stdlib`. No `rule-layout-probes.json` is supplied, invented or
+  substituted; the missing-input rule does not apply to a branch that no
+  bar uses and the retained procedure never scheduled. The layouts panel
+  keeps `layout-stdlib` and `extra_layouts` as its authorities.
+- A build kind invoked outside this list is a STOP; a script edit that
+  removes or rewrites the dormant branch is also a STOP. Everything else
+  in Amendments 1 and 2 stands, and the bars are unchanged.
