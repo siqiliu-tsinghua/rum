@@ -438,3 +438,29 @@ Amendment 2 forbid.
   unchanged. No campaign build kind is added or removed: this row
   builds its own clean release test binary through the copied 668
   path, exactly as the 668 collector did.
+
+## Director gate — 2026-11-05: LP06 does NOT close
+
+D2 is accepted as the record. Report `check: OK`, 12,870 citations; gate
+note `.temp/director/brief-671-gate.md`; my reproductions in
+`.temp/director/gate-671/`. I verified the live tree clean, both exports
+hash-equal to their manifests, every pinned binary matching its receipt,
+F6 58/58 exact pairs, the six While rows, the rollover rows and the
+stack failure.
+
+| Panel | Verdict |
+|---|---|
+| F6 | PASS — 29/29 own and incoming pairs exact, both draws |
+| While owners | PASS — 234->202, 656->564, 741->623, both draws |
+| While enabled | PASS — 12/12 controls, adopted identity candidate-only |
+| F7 | PASS on the design's reference — 632/600 <= 856, equal to the 668 red arm; the D2 base 856/856 is pre-surface |
+| Stack | **FAIL** — six ordinary rows +112/+144 B/level; `try_apply_function` 1,048 -> 1,192 B release |
+| Rollover | PASS — 213/213, 242/242 |
+| Others | PASS — checkpoint, entry, admission, driver, root, native, copies, allocations, layouts, chains, lifecycle |
+| Instructions | FLAGGED — 7 deterministic positives retained (668 layout-artifact class), not waived |
+
+The stack growth is a default-path cost of an off-by-default diagnostic
+in a hot recursive frame. The standing hard line forbids it even at zero
+CPU cost, and savings elsewhere do not pay for it. LP06 stays open.
+Next: a design-only brief (672) for the frame repair, then the source
+stage and a targeted re-measurement of the deciding panels.

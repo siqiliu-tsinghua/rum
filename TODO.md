@@ -455,7 +455,32 @@ does the same work, only without its profiling hooks.
     2/1, resume 2/1, owner call slopes 1/1/4); 12/12 enabled controls
     `open=0 leases=0 duplicate_finish=0`. The single-draw candidate owner
     slopes sit 32/92/118 own Ir/iteration below base; D2 decides them.
-    Next: D2 (brief 671) against base `654f2ce5` and candidate `19b61027`.
+  - **D2 ran (2026-11-05, brief 671); LP06 NOT closed.** The whole line
+    (`19b61027`) against the pre-A1 base (`654f2ce5`): 316 labels in two
+    draws and the 670 package. F6 29/29 exact (58/58 pairs); the three
+    While owner slopes 234 -> 202, 656 -> 564, 741 -> 623 in both draws;
+    the 12 enabled controls; rollover 213/213 and 242/242; and the
+    checkpoint, entry, admission, driver, fixed-root, native, copy,
+    allocation, layout, physical-chain and lifecycle panels pass. **The
+    stack panel fails**: six ordinary rows grow 112 B/level (debug) and
+    144/112 B/level (release). The frame is `try_apply_function`, whose
+    release reservation grew 1,048 -> 1,192 B (+144, 13.7%), reproduced by
+    me on the pinned binaries and by disassembling the ordinary CLI builds
+    (`sub $0x418` -> `sub $0x4a8`). The E1 by-value result adapter that
+    returned the eight F6 rows to base added the slot; the 668 stage saw
+    surface vs surface+A1 at 0, so the growth is the 19-file surface. It
+    is a default-path cost of an off-by-default diagnostic in a hot
+    recursive frame; savings elsewhere (dispatch reservations -224/-256 B)
+    do not pay for it. F7's literal "equal base" clause is ill-posed: the
+    D2 base is the pre-surface 856/856, the 668 design's red arm is the
+    surface 632/600, and the candidate reproduces 632/600 exactly under
+    the 856 ceiling; ruled PASS on the design's reference. The instruction
+    panel is FLAGGED with seven deterministic positives retained (the same
+    `cached_expr_stability_with_bloom` layout class as the 668 ruling).
+    Gate note `.temp/director/brief-671-gate.md`. Next: brief 672, a
+    design for the frame repair (restore `try_apply_function` and the six
+    rows to base while keeping F6/F7/While), then the source brief and a
+    targeted re-measurement.
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its
