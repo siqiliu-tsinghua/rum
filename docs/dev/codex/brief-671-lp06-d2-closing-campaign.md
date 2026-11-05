@@ -333,3 +333,38 @@ cover the second draw, and the resume-own receipts become draw-indexed.
   manifests, the 585 ledger, the harness, the enabled control, the
   retained exclusions and Q1-Q8 are unchanged. This brief measures; it
   repairs nothing.
+
+## Amendment 2 — 2026-11-05: the source-stage instruments and the disclosure duty
+
+The second stop was correct. The closed 653+670 package lacks the
+entry/abandonment harnesses and the 121-label function-own capture path
+that this brief's bars require; those instruments belong to the
+source-stage campaign root `.temp/brief-668/`. Q2's "nothing else" fence
+was under-enumerated; it is replaced by a disclosure duty.
+
+- **Approved sources (read-only, copy before use).** The 653 D-panel
+  instruments; the 670 While package's declared files; and the
+  source-stage instruments under `.temp/brief-668/` — `harnesses/entry/`,
+  `harnesses/resume/`, and the scripts that implement the checkpoint,
+  entry/admission, driver-121, native-shape, fixed-root and cold-rollover
+  panels, with their input manifests and helpers. Never execute a file
+  in place.
+- **Allowed adaptations.** Root substitution `.temp/brief-668` ->
+  `.temp/brief-671`; the two 671 export paths; draw indexing; and the
+  fresh two-arm comparison — both arms are captured in this campaign,
+  and the 665/668 captures are cross-checks only, never the base side of
+  a bar. No source, workload, frozen row, assertion or count changes.
+  Every copied, adapted or new script and input is hashed and disclosed;
+  a missing or stale input is a STOP with the value.
+- **Bars unchanged.** The 29/29 own and incoming pairs, the 88 own
+  Ir/call on the 121 resume labels, the entry/root/abandonment rows, the
+  fixed debug root 2,528 B at all 88 points in two independent builds,
+  the native shapes and the cold rollover are measured as written, on
+  the two 671 exports, with two fresh draws where the brief says both
+  draws.
+- **The D panels** (instructions, copies, allocations, stack, layouts,
+  lifecycles, timing) keep the retained 653 script forms, with the 670
+  label/allocation integration and the Amendment-1 maxima.
+- **Records.** The attempt-2 single base CLI build receipt is immutable;
+  a re-entered build gets a new id. The earlier STOP reports stay in the
+  root as history; the final report supersedes them.
