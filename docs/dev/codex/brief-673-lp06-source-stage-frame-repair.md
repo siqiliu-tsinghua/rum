@@ -233,3 +233,19 @@ Leave the tree compiling at each checkpoint.
   line quoted, every attempt listed.
 - Run `python3 -I scripts/report.py check 673` and return its summary and
   every compliance verdict line.
+
+## Director gate — 2026-11-05: GREEN (deterministic lanes; timing FLAG ruled non-deciding)
+
+| Step | Verdict | Detail |
+|---|---|---|
+| scope | PASS | exactly the two measured production files (byte-identical to `.temp/brief-672/src/selected`) and four generated inventories: 68 fingerprint rows (column 18), two certificate rows (columns 4/5), 26 position-only ownership rows; no identity, disposition, unknown or census change (1130 paired, 10/1083/37) |
+| frame | PASS | my objdump: CLI base `sub $0x418` = 1,048 vs final `sub $0x408` = 1,032 (6 pushes, both draws); debug probe `sub $0xaf8` = 2,816 per level; release probe 1,048 static / 1,104 physical; F7 `0x328/0x328` (856/856) -> `0x248/0x228` (632/600) |
+| stack | PASS | my rerun at four heights x two repeats x two draws: all six rows exact, zero residual (debug 49,632/51,136/51,136; release 18,304/19,392/19,392); all 44 rows no-growth in the raw receipts |
+| instruction | PASS | fresh F6 captures on two Function labels exact (`own` 24549/49049, `incoming` 501/1001, both arms); the raw receipts carry 8 + 21 exact pairs in both draws; the by-value control reads +1/call (25,050 vs 24,549) |
+| acceptance | PASS | `cargo fmt --check` rc 0; both workspace configurations at 8 threads with the seven standing skips: 4,145 passed / 0 failed / 61 ignored each, lease included; my lease reruns 4/4 and one enabled control PASS (`open=0 leases=0 duplicate_finish=0`) |
+| timing | FLAGGED, ruled non-deciding | 45/129 best-of-two positives, median about -0.5%, bidirectional extremes on labels with no mechanism; the same protocol flagged 72/129 at 668. Standing rule: instruction slopes decide, timing last and non-deciding; retained, not waived |
+| report | PASS | `.temp/brief-673/report.json`; `check: OK, 4,489 citations`; `--against-git` OK; the stale-certificate and LP01 scratch reds are ordering/harness artifacts, repaired by their canonical replays |
+
+My gate reproductions are in `.temp/director/gate-673/` (stack rerun,
+F6 spot-check, both workspace logs) and the ruling is in
+`.temp/director/brief-673-gate.md`. LP06 closes with this commit.

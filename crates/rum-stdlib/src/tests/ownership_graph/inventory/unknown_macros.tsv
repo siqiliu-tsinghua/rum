@@ -1606,7 +1606,7 @@ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/logical_contract
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/logical_contract.rs	446	9	unexpanded macro format! (ends at 446:59)
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/timing.rs	111	8	unexpanded macro matches! (ends at 119:6)
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/timing.rs	229	12	unexpanded macro matches! (ends at 229:82)
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/timing.rs	650	9	unexpanded macro matches! (ends at 650:64)
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/timing.rs	654	9	unexpanded macro matches! (ends at 654:64)
 UnknownConstruct	crates/rum-runtime/src/runtime/resolution.rs	295	13	unexpanded macro vec! (ends at 295:38)
 UnknownConstruct	crates/rum-runtime/src/runtime/resolution/match_normalization.rs	29	12	unexpanded macro matches! (ends at 29:70)
 UnknownConstruct	crates/rum-runtime/src/runtime/resolution/match_normalization.rs	130	24	unexpanded macro vec! (ends at 130:65)

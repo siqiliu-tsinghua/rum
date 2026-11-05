@@ -502,6 +502,28 @@ does the same work, only without its profiling hooks.
     Gate note `.temp/director/brief-672-gate.md`. Next: brief 673, the
     source stage (the two-file form, inventory replay, targeted campaign,
     both workspaces, host suites, fmt, microbench A/B).
+  - **Frame repair landed (2026-11-05, brief 673); LP06 source line
+    complete.** The two measured files are in the live tree, byte-equal to
+    the 672 form; the four generated inventories refreshed (68 fingerprint
+    rows, two certificate rows, 26 position-only rows; no identity,
+    disposition, unknown or census change; 1130 paired, 10/1083/37). On
+    the exact final source, two draws: ordinary CLI `try_apply_function`
+    6 pushes + `sub $0x408` = 1,032 B (base 1,048); release probe 1,048
+    static / 1,104 physical; debug 2,816 per level; 44 ordinary rows zero
+    residual, 14 equal and 30 below, none above; six rows
+    49,632/51,136/51,136 and 18,304/19,392/19,392; F6 8+21 exact; F7
+    632/600; While 202/564/623; enabled 12/12; lease green. Both
+    workspaces at 8 threads 4,145 passed / 0 failed / 61 ignored, the
+    seven standing skips only, lease included; required-switch host
+    suites and `cargo fmt --check` green. The microbench A/B is FLAGGED
+    (45/129 best-of-two positives, median ~0, bidirectional extremes on
+    labels with no mechanism; the same protocol flagged 72/129 at 668
+    and, by the standing rule, instruction slopes decide and timing is
+    non-deciding) — retained, not waived. My reproductions: objdump
+    `0x418`/`0x408`, `0xaf8`, F7 `0x328`/`0x248`/`0x228`; the six
+    slopes rerun at four heights x two repeats x two draws; a fresh F6
+    spot-check; the lease and one enabled control rerun. Gate note
+    `.temp/director/brief-673-gate.md`.
 
 **LP04-LP08 follow**, one per brief, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its

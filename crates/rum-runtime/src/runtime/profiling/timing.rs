@@ -267,18 +267,17 @@ impl crate::runtime::Session {
         record_profile_runtime_path_timing(token, T::timing_outcome(result));
     }
 
-    /// Finish an adopted boundary by value: the borrow of the produced result
-    /// exists only inside the enabled cold body.
+    /// Keep the token copy and result observation inside the enabled cold body.
     #[inline]
     pub(in crate::runtime) fn finish_profile_runtime_path_timing_adopted_boundary<
         T: crate::runtime::profiling::logical::PhaseCompletion,
     >(
         &mut self,
-        token: Option<RuntimePathTimingToken>,
-        produced: Result<T, crate::runtime::EvalError>,
-    ) -> Result<T, crate::runtime::EvalError> {
+        token: &Option<RuntimePathTimingToken>,
+        produced: &Result<T, crate::runtime::EvalError>,
+    ) {
         let Some(token) = token else {
-            return produced;
+            return;
         };
 
         self.finish_profile_runtime_path_timing_adopted_boundary_slow(token, produced)
@@ -290,11 +289,16 @@ impl crate::runtime::Session {
         T: crate::runtime::profiling::logical::PhaseCompletion,
     >(
         &mut self,
-        token: RuntimePathTimingToken,
-        produced: Result<T, crate::runtime::EvalError>,
-    ) -> Result<T, crate::runtime::EvalError> {
-        self.record_profile_runtime_path_timing_adopted_boundary_slow(token, &produced);
-        produced
+        token: &RuntimePathTimingToken,
+        produced: &Result<T, crate::runtime::EvalError>,
+    ) {
+        self.record_profile_runtime_path_timing_adopted_boundary_slow(
+            RuntimePathTimingToken {
+                start: token.start,
+                key: token.key,
+            },
+            produced,
+        );
     }
 
     /// Logical-only completion for the finish route first entered on RHS resume.
