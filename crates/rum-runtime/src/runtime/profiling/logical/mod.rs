@@ -7,6 +7,7 @@ mod context;
 pub(in crate::runtime) mod epoch;
 mod incoming;
 pub(in crate::runtime) mod index;
+pub(in crate::runtime) mod module;
 mod queue_api;
 mod record;
 pub(in crate::runtime) mod segments;
@@ -694,10 +695,14 @@ pub(in crate::runtime) enum PhaseKey {
     CatchEvalTotal,
     CatchBodyEvaluate,
     CatchResumeAfterBody,
+    ModuleTotal,
+    ModuleInitializers,
+    ModuleInitializer,
+    ModuleBody,
 }
 
 impl PhaseKey {
-    pub(in crate::runtime) const ALL: [PhaseKey; 46] = [
+    pub(in crate::runtime) const ALL: [PhaseKey; 50] = [
         PhaseKey::EvaluateTotal,
         PhaseKey::EvaluateOnceUnstable,
         PhaseKey::EvaluateInnerUnstableTotal,
@@ -744,6 +749,10 @@ impl PhaseKey {
         PhaseKey::CatchEvalTotal,
         PhaseKey::CatchBodyEvaluate,
         PhaseKey::CatchResumeAfterBody,
+        PhaseKey::ModuleTotal,
+        PhaseKey::ModuleInitializers,
+        PhaseKey::ModuleInitializer,
+        PhaseKey::ModuleBody,
     ];
 
     pub(in crate::runtime) const fn name(self) -> &'static str {
@@ -796,6 +805,10 @@ impl PhaseKey {
             PhaseKey::CatchEvalTotal => "catch.eval.total",
             PhaseKey::CatchBodyEvaluate => "catch.body.evaluate",
             PhaseKey::CatchResumeAfterBody => "catch.resume_after_body",
+            PhaseKey::ModuleTotal => "module.eval.total",
+            PhaseKey::ModuleInitializers => "module.resume_initializers",
+            PhaseKey::ModuleInitializer => "module.initializer.evaluate",
+            PhaseKey::ModuleBody => "module.body.evaluate",
         }
     }
 
@@ -847,6 +860,10 @@ impl PhaseKey {
             "catch.eval.total" => 43,
             "catch.body.evaluate" => 44,
             "catch.resume_after_body" => 45,
+            "module.eval.total" => 46,
+            "module.resume_initializers" => 47,
+            "module.initializer.evaluate" => 48,
+            "module.body.evaluate" => 49,
             _ => Self::ALL.len(),
         };
         Self::ALL.get(index).copied()

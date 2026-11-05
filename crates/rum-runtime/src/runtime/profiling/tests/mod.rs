@@ -5,6 +5,7 @@ pub(in crate::runtime) mod engine_support;
 mod epoch_contract;
 mod index;
 mod logical_totals;
+mod module;
 mod owner_filter;
 mod queue_boundaries;
 mod record_engine;

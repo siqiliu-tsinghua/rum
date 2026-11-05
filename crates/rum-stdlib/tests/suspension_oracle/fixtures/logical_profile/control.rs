@@ -10,6 +10,81 @@ const RETURN: [u64; 10] = [1, 0, 1, 0, 0, 1, 0, 0, 0, 0];
 const OPEN: [u64; 10] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1];
 const THROW: [u64; 10] = [1, 0, 1, 0, 0, 0, 1, 0, 0, 0];
 
+/// LP07 observes the frozen subject again before any guest state projection.
+pub(super) fn module_counts(
+    fixture: &Fixture,
+    queued: bool,
+    mode: &str,
+) -> BTreeMap<String, [u64; 10]> {
+    const PHASES: [&str; 4] = [
+        "module.eval.total",
+        "module.resume_initializers",
+        "module.initializer.evaluate",
+        "module.body.evaluate",
+    ];
+    let lease = Session::logical_profile_test_acquire();
+    let mut session = fixture.session();
+    session.set_eval_timeout(Some(std::time::Duration::from_secs(2)));
+    session.enable_tracing(fixture.profile_trace);
+    rum_runtime::test_logical_profile_reset(&lease);
+    let answers = fixture
+        .pauses
+        .iter()
+        .map(|p| p.answer.as_str())
+        .collect::<Vec<_>>();
+    let requests = fixture
+        .pauses
+        .iter()
+        .map(|p| (p.kind, p.prompt.clone()))
+        .collect::<Vec<_>>();
+    let run = super::super::super::support::drive::execute_planned(
+        &mut session,
+        &fixture.source,
+        &answers,
+        queued,
+        Some(&requests),
+    )
+    .unwrap_or_else(|e| panic!("{} LP07 queued={queued}: {e:?}", fixture.id));
+    assert_eq!(run.requests.len(), if queued { 0 } else { requests.len() });
+    let rows = Session::logical_profile_test_rows()
+        .into_iter()
+        .filter(|(key, _)| {
+            PHASES
+                .iter()
+                .any(|p| key.contains(&format!("phase: {p:?}")))
+        })
+        .collect::<BTreeMap<_, _>>();
+    let legacy = rum_runtime::test_logical_profile_snapshot();
+    assert_eq!(
+        rows.keys().cloned().collect::<BTreeSet<_>>(),
+        lp::control_legacy_keys(&legacy, &PHASES)
+    );
+    if mode == "disabled" {
+        assert!(rows.is_empty());
+    } else {
+        for phase in [PHASES[0], PHASES[1], PHASES[3]] {
+            assert!(
+                rows.keys()
+                    .any(|key| key.contains(&format!("phase: {phase:?}"))),
+                "{} missing {phase}",
+                fixture.id
+            );
+        }
+    }
+    for (key, row) in &rows {
+        assert_eq!(row[0], row[1] + row[2], "{} {key}", fixture.id);
+        assert_eq!(
+            (row[3], row[4], row[7], row[8], row[9]),
+            (0, 0, 0, 0, 0),
+            "{} {key}",
+            fixture.id
+        );
+    }
+    Session::logical_profile_test_assert_quiescent();
+    assert_eq!(Session::logical_profile_test_leases(), 0);
+    rows
+}
+
 struct A2Cell {
     fixture: Fixture,
     builtin: Option<(&'static str, u16)>,

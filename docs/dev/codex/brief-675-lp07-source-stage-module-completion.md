@@ -443,3 +443,61 @@ Its same-named helpers in `branching_loops.rs`, `nonlocal.rs` and
   the report duties. The report records the deletion, the warning set,
   the replay verdicts and the remeasured rows; the retained brief-675
   evidence stays in place as history.
+
+## Director gate — 2026-11-06: GREEN (deterministic lanes; timing FLAG ruled non-deciding)
+
+| Step | Verdict | Detail |
+|---|---|---|
+| scope | RULED | 829 `--against-git` problems, every one a `.temp/` scratch row the checker cannot see in git (zero non-`.temp` rows); `check: OK, 9,650 citations verified` |
+| fmt | PASS | `cargo fmt --check` |
+| check | PASS | 3 warnings, all three pre-existing `register_test_*` test-only dead-code warnings in `test_builtins.rs`; the orphaned-helper warning is gone. No HEAD baseline exists yet, so I read the list rather than diffing it |
+| ownership | PASS | self-reaching types 61, UnknownHostPayload 79, UnknownConstruct 8,049; replayed 0 rounds: nothing changed |
+| census | PASS | 1,130 rows {RET001: 10, RET002: 1,083, RET003: 37}; paired 1,130, 0 retired/new/base-only/cand-only |
+| oracle | PASS | `exact_types_and_constructor_claims_match_rustc` 1 passed |
+| standing | PASS | LP01 five-mode 1/0; typed-slot census 10/0 |
+| fingerprints | PASS | 68 contracts; the canonical replay reproduces `local-contracts.tsv` byte for byte |
+| certificates | PASS | both feature builds pass; 0 promoted rows merged |
+| inventories | PASS | 19 passed, 0 failed; frontier 1,130 {10/1,083/37} |
+| workspace | PASS | 62 binaries, 4,147 passed / 0 failed / 61 ignored; peak touched the 14 GiB cap with `oom_kill 0` and no kernel OOM line |
+| arms | PASS | both arms built at one source path, source-equal; pathcal PASS on both engines; the fresh binaries are byte-identical to the pre-deletion measured arms (sha256) |
+| structure | PASS | 37 differ (21 layout, 16 code), 5 new, 0 gone, identical in both binaries |
+| panels | FLAGGED, ruled non-deciding | the tsv headers name the same arm sha256s as the fresh `arms.json`, so the rows are the same measured bytes; the only rows apart are the 3 cli rows at +4-5 instructions/iteration (+0.015-0.025%). Instruction slopes decide, timing last and non-deciding (673 ruling); retained, not waived |
+
+**The deletion is exactly the authorized one.** My pre-deletion
+`production.diff` against `git diff` now differs by exactly the
+`runtime_profile_outcome_for_expr_result` hunk in
+`scoping/lexical/mod.rs`; every other production byte is unchanged. File
+times show the continuation wrote only that file (01:44) and the two
+regenerated retention-closure inventories (01:45, 01:48); the three
+oracle inventories are byte-identical and their mtimes pre-date the
+continuation. The 68 fingerprint cells of `local-contracts.tsv` and the
+body fingerprints of `promoted.tsv` moved because the generator's
+conservative context hash covers every function signature in the tree,
+and the canonical replays regenerated them. The three same-named
+helpers in `branching_loops.rs`, `nonlocal.rs` and
+`definitions/application/mod.rs` are still used; nothing else changed.
+
+**My reproductions on the final tree** (`.temp/director/gate-675/`):
+the ledger re-derives to 91,424 loss cells, the 672 removed cells equal
+the 672 proofs exactly, zero added, 7,960 key rows and 4,375 receipts
+unchanged; 66/66 owner-instruction slopes on the two fresh draws equal
+the retained final rows; 12 stack sets equal point for point (release
+18,896/14,064/18,304, debug 54,048/41,904/49,632, spread 0); my objdump
+reads 1,736/1,080/1,080 and 328/440 for the CLI prologues and resume
+frames; layouts 8/72/8/72, Session 2,128, enabled RecordPath 232 in both
+draws; the source-rows observations (expected, full ten-field union,
+alias ids, events, errors) are identical to the retained final for all
+three labels in both draws; the five-mode P1507 run emits 55 x 5 = 275
+required rows, all PASS; the focused suite passes in source-on and
+source-off modes; ten completion positives and seven mutants run in the
+fresh scratch binary; observer snapshots pass.
+
+**My own acceptance reruns**: the no-default workspace at 8 threads,
+4,147 passed / 0 failed / 61 ignored (the first attempt showed the seven
+switch-gated tests red without `RUM_PROFILE_LEXICAL_SUBSTITUTION=1`;
+with the standing skips it is green, as the gate's workspace step
+already ran it), and the required-switch host suites 3/0, 5/0 (default),
+5/0 (no-default), 1/0, 1/0, 1/0, 2/0, lease included, on the exact
+final source. `cargo fmt --check` is green.
+
+LP07's source line closes with this commit; the next brief is LP08.

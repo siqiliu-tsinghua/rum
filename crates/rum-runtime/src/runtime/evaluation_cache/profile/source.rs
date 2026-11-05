@@ -110,8 +110,27 @@ pub(in crate::runtime) fn record_profile_definition_rhs_eval_by_source(start: Op
     record_current_source_timing("definition_rhs_eval_by_source", start);
 }
 
-pub(in crate::runtime) fn record_profile_eval_module_by_source(start: Option<Instant>) {
-    record_current_source_timing("eval_module_by_source", start);
+pub(in crate::runtime) fn record_profile_eval_module_by_source(
+    start: Option<Instant>,
+    aliased: bool,
+) {
+    if aliased {
+        discard_module_source_timing(start);
+    } else {
+        record_current_source_timing("eval_module_by_source", start);
+    }
+}
+
+#[cold]
+#[inline(never)]
+fn discard_module_source_timing(start: Option<Instant>) {
+    if !evaluation_cache_profile_enabled() {
+        return;
+    }
+    let Some(symbol) = current_evaluation_profile_source_symbol() else {
+        return;
+    };
+    let _ = finish_symbol_timing_frame("eval_module_by_source", symbol, start);
 }
 
 pub(in crate::runtime) fn record_profile_module_init_substitution_by_source(
@@ -151,23 +170,9 @@ fn record_symbol_timing_profile_counter(
     symbol: Symbol,
     start: Option<Instant>,
 ) {
-    let Some(start) = start else {
+    let Some((elapsed_nanos, self_nanos)) = finish_symbol_timing_frame(name, symbol, start) else {
         return;
     };
-    let elapsed_nanos = start.elapsed().as_nanos().min(u128::from(u64::MAX)) as u64;
-    let child_nanos = EVALUATION_PROFILE_TIMING_STACK.with(|stack| {
-        let mut stack = stack.borrow_mut();
-        let frame = stack.pop();
-        if let Some(parent) = stack.last_mut() {
-            parent.child_nanos = parent.child_nanos.saturating_add(elapsed_nanos);
-        }
-
-        frame
-            .filter(|frame| frame.name == name && frame.symbol == symbol)
-            .map(|frame| frame.child_nanos)
-            .unwrap_or(0)
-    });
-    let self_nanos = elapsed_nanos.saturating_sub(child_nanos);
 
     let mut counters = symbol_timing_profile_counters()
         .lock()
@@ -376,4 +381,30 @@ fn record_call_stability_source_head_rewritten_dirty_skip_enabled(head: &Expr) {
 
 fn elapsed_nanos_since(start: Instant) -> u64 {
     start.elapsed().as_nanos().min(u128::from(u64::MAX)) as u64
+}
+
+fn finish_symbol_timing_frame(
+    name: &'static str,
+    symbol: Symbol,
+    start: Option<Instant>,
+) -> Option<(u64, u64)> {
+    let Some(start) = start else {
+        return None;
+    };
+    let elapsed_nanos = start.elapsed().as_nanos().min(u128::from(u64::MAX)) as u64;
+    let child_nanos = EVALUATION_PROFILE_TIMING_STACK.with(|stack| {
+        let mut stack = stack.borrow_mut();
+        let frame = stack.pop();
+        if let Some(parent) = stack.last_mut() {
+            parent.child_nanos = parent.child_nanos.saturating_add(elapsed_nanos);
+        }
+
+        frame
+            .filter(|frame| frame.name == name && frame.symbol == symbol)
+            .map(|frame| frame.child_nanos)
+            .unwrap_or(0)
+    });
+    let self_nanos = elapsed_nanos.saturating_sub(child_nanos);
+
+    Some((elapsed_nanos, self_nanos))
 }

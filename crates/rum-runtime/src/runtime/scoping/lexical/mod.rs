@@ -56,17 +56,3 @@ impl Session {
         })
     }
 }
-
-fn runtime_profile_outcome_for_expr_result(
-    result: &Result<Expr, EvalError>,
-) -> RuntimeProfileOutcome {
-    match result {
-        Ok(_) => RuntimeProfileOutcome::Ok,
-        Err(EvalError::Return { .. }) => RuntimeProfileOutcome::Return,
-        Err(EvalError::Thrown { .. }) | Err(EvalError::ThrownBypassingCatch { .. }) => {
-            RuntimeProfileOutcome::Throw
-        }
-        Err(EvalError::InputRequired { .. }) => RuntimeProfileOutcome::InputRequired,
-        Err(_) => RuntimeProfileOutcome::Error,
-    }
-}

@@ -36,6 +36,8 @@ pub(super) struct ActiveId {
 #[derive(Default)]
 pub(super) struct State {
     pub closed: bool,
+    pub module_scalar_alias: bool,
+    pub module_source_alias: Option<crate::runtime::Symbol>,
     pub settled: bool,
     pub children: usize,
     pub active: Option<ActiveId>,
@@ -76,6 +78,19 @@ pub(super) fn terminal(
         return false;
     }
     state.closed = true;
+    // A retired epoch may still have live stack segments. Never publish its
+    // later duration settlement into the freshly reset scalar/source maps.
+    if matches!(outcome, Err(Retire::ProfileReset)) {
+        state.module_scalar_alias = false;
+        state.module_source_alias = None;
+    }
+    if state.module_scalar_alias {
+        crate::runtime::profiling::state::EVAL_MODULE_COUNT
+            .fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+    }
+    if let Some(source) = state.module_source_alias {
+        crate::runtime::Session::module_source_alias_completion(source);
+    }
     if let Some(counts) = rows.get_mut(path.key) {
         counts.finish(outcome);
     }
@@ -98,6 +113,17 @@ pub(super) fn settle(
                 break;
             }
             state.settled = true;
+            if state.module_scalar_alias {
+                crate::runtime::profiling::state::EVAL_MODULE_NANOS
+                    .fetch_add(state.totals.nanos, std::sync::atomic::Ordering::Relaxed);
+            }
+            if let Some(source) = state.module_source_alias {
+                crate::runtime::Session::module_source_alias_duration(
+                    source,
+                    state.totals.nanos,
+                    state.totals.self_nanos,
+                );
+            }
             state.totals
         };
         if let Some(counts) = rows.get_mut(path.key) {

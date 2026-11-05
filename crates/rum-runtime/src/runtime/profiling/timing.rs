@@ -116,6 +116,10 @@ fn runtime_path_timing_start_context_slow(phase: &'static str) -> Option<Runtime
             | "catch.eval.total"
             | "catch.body.evaluate"
             | "function.apply.evaluate"
+            | "module.eval.total"
+            | "module.resume_initializers"
+            | "module.initializer.evaluate"
+            | "module.body.evaluate"
     ) {
         if let Some(key) = logical::PhaseKey::from_name(phase) {
             logical::open_phase_from_active(key);
@@ -802,4 +806,20 @@ fn record_profile_runtime_path_timing_slow(
             }
         }
     });
+}
+
+#[inline]
+pub(in crate::runtime) fn runtime_path_timing_start_module_resume() -> Option<RuntimePathTimingToken>
+{
+    if !lexical_profile_enabled() {
+        return None;
+    }
+    runtime_path_timing_start_module_resume_slow()
+}
+#[cold]
+#[inline(never)]
+fn runtime_path_timing_start_module_resume_slow() -> Option<RuntimePathTimingToken> {
+    let token = runtime_path_timing_start_slow("module.resume_initializers");
+    logical::module::open_resume_alias();
+    token
 }

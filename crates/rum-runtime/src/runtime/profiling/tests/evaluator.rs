@@ -168,6 +168,10 @@ fn lp03_adopted_site_table_is_exact() {
         "catch.eval.total",
         "catch.body.evaluate",
         "catch.resume_after_body",
+        "module.eval.total",
+        "module.resume_initializers",
+        "module.initializer.evaluate",
+        "module.body.evaluate",
     ]);
     let actual = super::PhaseKey::ALL
         .iter()

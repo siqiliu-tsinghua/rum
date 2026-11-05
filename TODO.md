@@ -4,14 +4,15 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-11-02. The committed tree runs through:
+Status checkpoint: 2026-11-06. The committed tree runs through:
 - G13 step S9 (brief-617, control and cleanup; gated, below);
 - G15-A (brief-619, `afdcd02f`) and G15-B (brief-620, `43a26c72`);
 - the G15-C design (brief-621, accepted `8f77793c`) and G15-C1 (brief-622,
   `b4f81ebe`);
 - the logical profiler's LP01 (brief-625, `3fd1885c`), LP02 (brief-626,
-  `17576575`), LP03 (brief-637, `e924bb4f`) and LP04 (brief-638,
-  `504471a5`);
+  `17576575`), LP03 (brief-637, `e924bb4f`), LP04 (brief-638,
+  `504471a5`), LP05 (brief-642, `78fd58f3`), LP06 (briefs 666-673,
+  `5446cacc`) and the LP07 source stage (brief 675);
 - the native stack base per thread (brief-629, `60ca9585`) and the
   abandonment repairs (brief-630: B1 `854cfa4a`, B2 `1c115117`, B3
   `ba1e1e52`);
@@ -20,11 +21,11 @@ Status checkpoint: 2026-11-02. The committed tree runs through:
   `5184797c`, amendment 2 `f38657d0`) and the shared parse (brief-636);
 - the test audit's design stage (brief-639, `d6533dac`).
 
-**Next, in order** (the branch queue): the test audit's Stage B mutant
-campaign, then its D03 certificate-strengthening brief, then LP05-LP08,
-C2's remaining 353 rows, CM, `CHANGELOG.md`, and S10 onward. New briefs go
-to cdx for every brief (user ruling 2026-11-01); a cdx quota death is a stop
-and a question, never a silent fallback.
+**Next, in order** (the branch queue): LP08, then C2's remaining 353
+rows, CM, `CHANGELOG.md`, and S10 onward. The test audit's Stage B and D03
+are closed; LP05-LP07 are done. New briefs go to cdx for every brief (user
+ruling 2026-11-01); a cdx quota death is a stop and a question, never a
+silent fallback.
 
 Test isolation, done:
 - the design (brief-633) is gated;
@@ -532,8 +533,31 @@ does the same work, only without its profiling hooks.
     recorders), names the cells already closed, measures each open form's
     disabled-path instruction/stack cost and enabled coverage, and drafts
     the implementation brief. Design-only; probes under `.temp/brief-674/`.
+  - **LP07 source stage gated GREEN (2026-11-06, brief 675); the LP07
+    source line closes.** The Module total/body/initializer records and
+    source aggregates are in the live tree: the existing by-value
+    token-first boundary plus a charged `PhaseEntry` alias
+    (`module.resume_initializers`, `call: None`, exact restored loop
+    identity), a source alias bound at total open, terminal/settle
+    publication with `ProfileReset` clearing, and the test-only observer
+    projection. On the exact final source, two draws: ordinary Module own
+    692 (from 772), body entry 705 (818), three-pause 760/441 (829/536),
+    resume bodies 35/138, Block 307, definition RHS 125, named Function
+    193, raw Failure 49; release stack 18,896/14,064/18,304 B and debug
+    54,048/41,904/49,632 B per level, zero residual; CLI `builtin_module`
+    1,736 B (1,784), reentry 1,080 (1,128), `try_apply_function` 1,080,
+    resume symbols 328/440/328/440; frames 8/72/8/72 and Session 2,128
+    unchanged, enabled RecordPath 232 B (from 208); 18 + 17 source rows
+    exact; five-mode P1507 275 required rows; ten completion controls and
+    seven killed mutants. The ledger removes exactly the 672 LP07 cells
+    (92,096 -> 91,424; zero added; 7,960 keys and 4,375 receipts
+    unchanged). Amendment 3 deleted the orphaned Module outcome helper;
+    the fresh arms are byte-identical to the measured arms and every
+    retained row equals. Both workspaces at 8 threads (4,147 passed / 0
+    failed / 61 ignored each), the required-switch host suites, the lease
+    and `cargo fmt --check` are green. Gate in the brief.
 
-**LP04-LP08 follow**, one per brief, from
+**LP08 follows**, the last of the line, from
 `.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its
 successors. Write them at the granularity `TEMPLATE.md` now records. Then come C2's remaining 353 rows on the final source, the manifest
 (CM, `.temp/brief-621/draft-G15-CM-obligation-manifest.md`), `CHANGELOG.md`

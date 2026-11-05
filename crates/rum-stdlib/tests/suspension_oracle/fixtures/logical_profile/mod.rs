@@ -10,8 +10,10 @@ use std::{collections::BTreeMap, fs, process::Command};
 const REQUIRED: &str = include_str!("../../inventory/logical-profile-required.tsv");
 const BINDINGS: &str = include_str!("../../inventory/logical-profile-bindings.tsv");
 fn scratch() -> std::path::PathBuf {
-    std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../../.temp/brief-642/a2-implementation/lp01-observation")
+    let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../.temp/brief-675/lp01-observation");
+    fs::create_dir_all(&path).unwrap();
+    path
 }
 
 /// The LP01 snapshot keeps its legacy counters. Observe the adopted records
@@ -146,6 +148,7 @@ fn logical_counter_port() {
             l.starts_with("LP01 ")
                 || l.starts_with("LP05 ")
                 || l.starts_with("LP06 ")
+                || l.starts_with("LP07 ")
                 || l.starts_with("test result:")
                 || l.starts_with("continuation-slot fault-occurrence")
         }) {
@@ -206,6 +209,18 @@ fn child(mode: &str) {
     let mut groups = BTreeMap::new();
     let mut assignment_cells = 0;
     let mut assignment_phases = std::collections::BTreeSet::new();
+    let mut module_programs = std::collections::BTreeSet::new();
+    let module_subjects = bindings
+        .iter()
+        .filter(|binding| {
+            active
+                .iter()
+                .any(|r| r[0] == "P1507" && r[16] == binding[0])
+        })
+        .flat_map(|binding| binding[1].split(','))
+        .chain(std::iter::once("624.min.P1507"))
+        .collect::<std::collections::BTreeSet<_>>();
+    assert_eq!(module_subjects.len(), 56);
     for p in &plans {
         let hash = plans::fixture_fingerprint(&p.fixture);
         assert_eq!(hash, all_hashes[p.id.as_str()], "unfrozen program {}", p.id);
@@ -233,6 +248,20 @@ fn child(mode: &str) {
                     .as_ref(),
                 Some(value),
                 "{} frozen value",
+                p.id
+            );
+        }
+        if module_subjects.contains(p.id.as_str()) {
+            let queued = control::module_counts(&p.fixture, true, mode);
+            let resumed = control::module_counts(&p.fixture, false, mode);
+            assert_eq!(
+                queued, resumed,
+                "{}: full ten-field Module native union",
+                p.id
+            );
+            module_programs.insert(p.id.clone());
+            println!(
+                "LP07 P1507 {} {mode}: SAME full_native_union={queued:?}",
                 p.id
             );
         }
@@ -357,6 +386,20 @@ fn child(mode: &str) {
         }
     }
     let tag = format!("{}-{mode}", cfg!(feature = "hash"));
+    assert_eq!(module_programs.len(), 56);
+    let module_requirements = active
+        .iter()
+        .filter(|r| r[0] == "P1507")
+        .collect::<Vec<_>>();
+    assert_eq!(module_requirements.len(), 55);
+    for requirement in module_requirements {
+        let binding = bindings.iter().find(|b| b[0] == requirement[16]).unwrap();
+        assert!(binding[1].split(',').all(|id| module_programs.contains(id)));
+        println!(
+            "LP07 required row={} {mode}: PASS programs={}",
+            requirement[16], binding[1]
+        );
+    }
     actual.sort();
     fs::write(
         scratch().join(format!("actual-{tag}.json")),

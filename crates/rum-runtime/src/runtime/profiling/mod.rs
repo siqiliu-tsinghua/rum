@@ -98,13 +98,12 @@ pub(super) use config::{lexical_profile_detail_enabled, lexical_profile_enabled}
 pub(super) use records::{
     record_profile_arg_list_start, record_profile_arg_prefilter,
     record_profile_arg_substitution_attempt, record_profile_definition_rhs_eval,
-    record_profile_eval_module, record_profile_expression_rebuild,
-    record_profile_lexical_substitution_finish, record_profile_lexical_substitution_start,
-    record_profile_module_body_substitution, record_profile_module_init_substitution,
-    record_profile_module_resume_entry, record_profile_multi_presence_scan,
-    record_profile_rewrite_rule_match_outcome, record_profile_rewrite_rule_prefilter_candidate,
-    record_profile_rule_rhs_alpha_rename, record_profile_rule_rhs_binding_value,
-    record_profile_single_presence_scan,
+    record_profile_expression_rebuild, record_profile_lexical_substitution_finish,
+    record_profile_lexical_substitution_start, record_profile_module_body_substitution,
+    record_profile_module_init_substitution, record_profile_module_resume_entry,
+    record_profile_multi_presence_scan, record_profile_rewrite_rule_match_outcome,
+    record_profile_rewrite_rule_prefilter_candidate, record_profile_rule_rhs_alpha_rename,
+    record_profile_rule_rhs_binding_value, record_profile_single_presence_scan,
 };
 pub(super) use reset::reset_lexical_profile_counters;
 pub(super) use scopes::{
@@ -123,6 +122,7 @@ pub(super) use timing::{
     record_profile_runtime_path_timing_adopted_defer_pause,
     record_profile_runtime_path_timing_adopted_none, record_profile_runtime_path_timing_adopted_ok,
     rule_rhs_timing_start, runtime_path_timing_start, runtime_path_timing_start_adopted,
+    runtime_path_timing_start_module_resume,
 };
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]

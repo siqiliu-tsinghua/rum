@@ -449,6 +449,7 @@ pub(crate) fn snapshot() -> LogicalProfileSnapshot {
         "repr_enabled".into(),
         u8::from(rum_core::repr_profile_enabled()),
     );
+    observe_module_completions(&mut out);
     out
 }
 
@@ -483,4 +484,60 @@ fn profiling_observer_covers_every_map_and_flag_without_ranking() {
         snapshot().logical,
         "observer ran guest work or changed counters"
     );
+}
+
+// LP07's logical projection uses actual native completion outcomes. Physical
+// attempt counters remain in the exhaustive raw telemetry maps above.
+fn observe_module_completions(out: &mut LogicalProfileSnapshot) {
+    const PHASES: [&str; 4] = [
+        "module.eval.total",
+        "module.resume_initializers",
+        "module.initializer.evaluate",
+        "module.body.evaluate",
+    ];
+    let before = out.logical.clone();
+    out.logical.retain(|key, _| {
+        !PHASES
+            .iter()
+            .any(|phase| key.starts_with(&format!("runtime|{phase}|")))
+    });
+    let Some(epoch) = logical::epoch::current() else {
+        return;
+    };
+    for (key, c) in epoch.rows() {
+        let logical::AggregateKey::Runtime { phase, source } = key else {
+            continue;
+        };
+        if !PHASES.contains(&phase) {
+            continue;
+        }
+        let key = format!(
+            "runtime|{phase}|{}",
+            source.map(|s| s.to_string()).unwrap_or_else(|| "-".into())
+        );
+        assert!(
+            out.logical
+                .insert(
+                    key,
+                    vec![
+                        c.calls,
+                        c.ok,
+                        c.err,
+                        c.some,
+                        c.none,
+                        c.return_err,
+                        c.throw_err
+                    ]
+                )
+                .is_none()
+        );
+    }
+    for (key, value) in &before {
+        if !PHASES
+            .iter()
+            .any(|phase| key.starts_with(&format!("runtime|{phase}|")))
+        {
+            assert_eq!(out.logical.get(key), Some(value));
+        }
+    }
 }

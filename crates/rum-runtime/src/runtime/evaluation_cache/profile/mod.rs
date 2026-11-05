@@ -583,3 +583,25 @@ pub(crate) fn observe_logical_profile(out: &mut crate::runtime::profiling::Logic
 #[cfg(test)]
 #[path = "tests/cold_load.rs"]
 mod cold_load;
+
+impl Session {
+    pub(in crate::runtime) fn module_source_alias_completion(symbol: Symbol) {
+        let mut counters = symbol_timing_profile_counters().lock().unwrap();
+        counters
+            .entry(("eval_module_by_source", symbol))
+            .or_default()
+            .count += 1;
+    }
+    pub(in crate::runtime) fn module_source_alias_duration(
+        symbol: Symbol,
+        nanos: u64,
+        self_nanos: u64,
+    ) {
+        let mut counters = symbol_timing_profile_counters().lock().unwrap();
+        let entry = counters
+            .entry(("eval_module_by_source", symbol))
+            .or_default();
+        entry.nanos = entry.nanos.saturating_add(nanos);
+        entry.self_nanos = entry.self_nanos.saturating_add(self_nanos);
+    }
+}

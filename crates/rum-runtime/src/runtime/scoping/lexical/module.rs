@@ -14,7 +14,6 @@ struct SuspendedModuleInitializers {
 impl Session {
     pub(in crate::runtime) fn eval_module(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {
         self.record_profile_eval_module_entry();
-        let profile_start = lexical_profile_start();
         let eval_cache_profile_start =
             evaluation_cache_profile_source_timing_start("eval_module_by_source");
 
@@ -75,12 +74,11 @@ impl Session {
             0,
             None,
         );
-        record_profile_eval_module(profile_start);
-        record_profile_eval_module_by_source(eval_cache_profile_start);
-        record_profile_runtime_path_timing(
-            runtime_profile_total,
-            runtime_profile_outcome_for_expr_result(&result),
+        record_profile_eval_module_by_source(
+            eval_cache_profile_start,
+            runtime_profile_total.is_some(),
         );
+        self.record_profile_runtime_path_timing_adopted_boundary(runtime_profile_total, &result);
         result
     }
 
@@ -104,9 +102,9 @@ impl Session {
                     }
                     Err(error) => {
                         let result = self.finish_module_scope(activation_depth, Err(error));
-                        record_profile_runtime_path_timing(
+                        self.record_profile_runtime_path_timing_adopted_boundary(
                             runtime_profile_resume,
-                            runtime_profile_outcome_for_expr_result(&result),
+                            &result,
                         );
                         return result;
                     }
@@ -124,9 +122,9 @@ impl Session {
                 record_profile_module_body_substitution_by_source(eval_cache_profile_start);
                 let runtime_profile_body = runtime_path_timing_start("module.body.evaluate");
                 let result = self.evaluate(body);
-                record_profile_runtime_path_timing(
+                self.record_profile_runtime_path_timing_adopted_boundary(
                     runtime_profile_body,
-                    runtime_profile_outcome_for_expr_result(&result),
+                    &result,
                 );
                 let outcome = crate::resume_or_suspend!(
                     self,
@@ -141,9 +139,9 @@ impl Session {
                     }
                     outcome => self.finish_module_scope(activation_depth, outcome),
                 };
-                record_profile_runtime_path_timing(
+                self.record_profile_runtime_path_timing_adopted_boundary(
                     runtime_profile_resume,
-                    runtime_profile_outcome_for_expr_result(&result),
+                    &result,
                 );
                 return result;
             }
@@ -159,9 +157,9 @@ impl Session {
                 record_profile_module_init_substitution_by_source(eval_cache_profile_start);
                 let runtime_profile_init = runtime_path_timing_start("module.initializer.evaluate");
                 let init_result = self.evaluate(renamed_init);
-                record_profile_runtime_path_timing(
+                self.record_profile_runtime_path_timing_adopted_boundary(
                     runtime_profile_init,
-                    runtime_profile_outcome_for_expr_result(&init_result),
+                    &init_result,
                 );
                 match init_result {
                     Err(EvalError::InputRequired { request }) => {
@@ -174,9 +172,9 @@ impl Session {
                         };
                         crate::resume_or_suspend!(insert self, ResumeModuleInitializersSuspensionFrame2 { state });
                         let result = Err(EvalError::InputRequired { request });
-                        record_profile_runtime_path_timing(
+                        self.record_profile_runtime_path_timing_adopted_boundary(
                             runtime_profile_resume,
-                            runtime_profile_outcome_for_expr_result(&result),
+                            &result,
                         );
                         return result;
                     }
@@ -194,7 +192,8 @@ impl Session {
         mut state: SuspendedModuleInitializers,
         mut pending: Option<Result<Expr, EvalError>>,
     ) -> Result<Expr, EvalError> {
-        let runtime_profile_resume = runtime_path_timing_start("module.resume_initializers");
+        let runtime_profile_resume =
+            crate::runtime::profiling::runtime_path_timing_start_module_resume();
         loop {
             if let Some(outcome) = pending.take() {
                 let symbol = state.items[state.index].0;
@@ -205,9 +204,9 @@ impl Session {
                     }
                     Err(error) => {
                         let result = self.finish_module_scope(state.activation_depth, Err(error));
-                        record_profile_runtime_path_timing(
+                        self.record_profile_runtime_path_timing_adopted_boundary(
                             runtime_profile_resume,
-                            runtime_profile_outcome_for_expr_result(&result),
+                            &result,
                         );
                         return result;
                     }
@@ -226,9 +225,9 @@ impl Session {
                 record_profile_module_body_substitution_by_source(eval_cache_profile_start);
                 let runtime_profile_body = runtime_path_timing_start("module.body.evaluate");
                 let result = self.evaluate(body);
-                record_profile_runtime_path_timing(
+                self.record_profile_runtime_path_timing_adopted_boundary(
                     runtime_profile_body,
-                    runtime_profile_outcome_for_expr_result(&result),
+                    &result,
                 );
                 let outcome = crate::resume_or_suspend!(
                     self,
@@ -246,9 +245,9 @@ impl Session {
                     }
                     outcome => self.finish_module_scope(state.activation_depth, outcome),
                 };
-                record_profile_runtime_path_timing(
+                self.record_profile_runtime_path_timing_adopted_boundary(
                     runtime_profile_resume,
-                    runtime_profile_outcome_for_expr_result(&result),
+                    &result,
                 );
                 return result;
             }
@@ -265,17 +264,17 @@ impl Session {
                 record_profile_module_init_substitution_by_source(eval_cache_profile_start);
                 let runtime_profile_init = runtime_path_timing_start("module.initializer.evaluate");
                 let init_result = self.evaluate(renamed_init);
-                record_profile_runtime_path_timing(
+                self.record_profile_runtime_path_timing_adopted_boundary(
                     runtime_profile_init,
-                    runtime_profile_outcome_for_expr_result(&init_result),
+                    &init_result,
                 );
                 match init_result {
                     Err(EvalError::InputRequired { request }) => {
                         crate::resume_or_suspend!(insert self, ResumeSuspendedModuleInitializersSuspensionFrame2 { state });
                         let result = Err(EvalError::InputRequired { request });
-                        record_profile_runtime_path_timing(
+                        self.record_profile_runtime_path_timing_adopted_boundary(
                             runtime_profile_resume,
-                            runtime_profile_outcome_for_expr_result(&result),
+                            &result,
                         );
                         return result;
                     }

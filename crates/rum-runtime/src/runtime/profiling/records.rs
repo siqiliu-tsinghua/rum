@@ -92,10 +92,6 @@ pub(in crate::runtime) fn record_profile_definition_rhs_eval(start: Option<Insta
     );
 }
 
-pub(in crate::runtime) fn record_profile_eval_module(start: Option<Instant>) {
-    record_timing(&EVAL_MODULE_COUNT, &EVAL_MODULE_NANOS, "eval_module", start);
-}
-
 pub(in crate::runtime) fn record_profile_module_resume_entry(index: usize) {
     if !lexical_profile_enabled() {
         return;

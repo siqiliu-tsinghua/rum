@@ -163,7 +163,7 @@ impl Epoch {
             parent: crate::runtime::accumulator_chain::AccumulatorChain::new(parent_path),
             owner: owner.clone(),
             key,
-            state: Mutex::new(super::totals::State::default()),
+            state: Mutex::new(super::module::initial_state(key)),
             _storage: storage,
         });
         let parent_path = path.parent.clone();
