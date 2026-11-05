@@ -330,3 +330,48 @@ coverage, mechanism, measurement or draft bars.
   blocker.
 - Run `python3 -I scripts/report.py check 675` and return its summary and
   every compliance verdict line.
+
+## Amendment 1 — 2026-11-05: canonical formatting of the pinned form
+
+The STOP was correct. The ten production files were copied byte-for-byte
+from the measured tree and the stripped observer differs from `value-port`
+by exactly the two permitted lines, but the repository's `cargo fmt
+--check` fails on that exact form: 26 hunks across nine of the ten
+allowed production files. The measured tree was hand-edited and never
+normalized; formatting is not part of the measured semantics, and the
+repository bar requires it. This amendment answers Q1.
+
+- **Ruling: formatting-only normalization is authorized.** The pinned form
+  is the measured tree under the repository's own canonical formatting —
+  the toolchain pinned by `rust-toolchain.toml`, the repository's
+  `rustfmt.toml`, applied as `cargo fmt` applies it. This supersedes the
+  byte-for-byte-copy sentence in "Target form": after normalization the
+  ten production files must be byte-identical to the canonical formatting
+  of the same measured files, and the observer to the canonical formatting
+  of the `value-port` observer with only the `MODULE_PORT` print and the
+  `selected` helper removed. Nothing else changes; no hand formatting, no
+  edit beyond what the canonical formatter produces.
+- **Confined to permitted files.** Normalization may touch only files this
+  brief allows you to modify. A formatting change to any other file is a
+  STOP; the pre-STOP `cargo fmt --check` lists exactly the nine allowed
+  files, so a wider result means the tree has diverged.
+- **Step-1 shape stop re-runs on the normalized source**, before the
+  correctness stage: the ten-file identity, the `builtin_module` prologue
+  1,736 B, the reentry 1,080 B, one ordinary Module Callgrind row 692, one
+  debug Module stack row 54,048 B with zero residual, and one enabled
+  coverage row. Formatting must not move a measured row; a moved row is a
+  STOP. The controls already passed on the unformatted bytes remain design
+  evidence; this re-run certifies the exact final source.
+- **Earlier replay output is stale, not final.** The nine generated
+  inventory files copied back before the STOP were generated from the
+  unformatted form, and normalization shifts line positions they record.
+  After the last source edit — now including normalization — the canonical
+  generators replay them per step 4; the ledger's generated
+  producer-position string follows the same rule. No hand edit and no
+  hand revert of a generated cell.
+- **Unchanged.** All six steps, every hard bar, the full P1507 set and the
+  individual per-cell proofs, the campaign on the exact final source, the
+  run cap (2,000, 46 used and declared), and the report duties. The final
+  `cargo fmt --check` must be green, including every later test and source
+  edit. Record this amendment, the normalization receipts, the equality
+  check and the re-run shape controls in the report.
