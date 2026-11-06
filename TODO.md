@@ -645,7 +645,25 @@ open design question; brief 682 designs and measures the epoch-wide
 synchronous-event collector (the 676 Q2 authorization) at the exact
 stack with 681's red controls as the requirement list, and roots the
 +64 at the instruction level; the pair bar stays 20/20; the mispair
-and the 15 key rows stay as ruled. The schema-v2 publication form
+and the 15 key rows stay as ruled. Brief 682 designed and measured the
+collector: it is green on queue 9/9, the direct flush, lifecycle
+open=0, mirrors 67/67, the seven Throw counter kills and 19/20 pairs;
+its hot prologues equal the exact form (`Session::evaluate` `sub
+$0x378`, size `0x1066`; `prepare_arguments` `sub $0x368`); the +64
+publish is root-caused (3 `Session::evaluate` frames + 1
+`prepare_arguments` frame, 16 B each) and the sha256-identical gated
+binary prints the same `none-two` miss. The only red is
+`call.stage.down_values` (queued none=2, resumed some=2; `down`
+some=1 on both sides), so Stage B was not started and the round
+stopped. Director gate (`.temp/director/brief-682-gate.md`): one
+`ProfileBoundary::observe` discrimination with the invariant that a
+logical row records the stage's own `Option` outcome once — a hit is
+`Some`, a miss is `None`, an inner input value is not that outcome;
+pair 20/20 with `down` at some=1; then the two-build two-draw stack
+campaign and the per-site disabled attribution; then the mispair kill
+or measured impossibility and the 15 key rows; the contract's
+cross-thread, isolation and reset obligations are recorded, not
+assumed. Brief 683 carries that. The schema-v2 publication form
 follows the collector. The
 promotion stays complete and atomic — no subset,
 no rebaseline, no retained cell without its named promotion — and LP08
