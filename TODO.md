@@ -629,9 +629,24 @@ publish is excluded; brief 681 runs build3 through the full battery
 before any attach search; the pair bar is 20/20; the mispair must kill
 or return a measured impossibility; the 15 rows need probes or
 `path:line` citations; each extra delta is attributed per site.
-Brief 681 is the exact-stack battery; brief 682 then designs the
-epoch-wide synchronous-event collector and the schema-v2 publication
-form. The
+Brief 681 ran the exact-stack battery and returned STOP: build3 (the
+680 gated tree with the `adopted_slow` publish removed — one hunk,
+verified) is red on the enabled path. Calibration reproduced the base
+first (22/22 keys, nine native diffs, boundaries 9/2/6); then the
+parser and direct flush panicked at `epoch/snapshot.rs:17` left
+`(1,1,1,0,0)`, cancel left `evaluate.total` open=1 at
+`brief677_probe.rs:138`, all 20 pairs printed `native_same=false
+faults=0`, the seven outcome probes panicked left `(0,0,1,0,0)`, the
+Throw and mispair mutants hit and then died on the unmutated asserts
+(not kills), and keys recorded 130/150 with 20 open. The publish is
+necessary — measured, not argued; both +64 placements stay excluded.
+Director gate (`.temp/director/brief-681-gate.md`): the attach is the
+open design question; brief 682 designs and measures the epoch-wide
+synchronous-event collector (the 676 Q2 authorization) at the exact
+stack with 681's red controls as the requirement list, and roots the
++64 at the instruction level; the pair bar stays 20/20; the mispair
+and the 15 key rows stay as ruled. The schema-v2 publication form
+follows the collector. The
 promotion stays complete and atomic — no subset,
 no rebaseline, no retained cell without its named promotion — and LP08
 is not closed until the promotion transaction passes. Then come C2's remaining 353 rows on the final source, the manifest
