@@ -557,8 +557,8 @@ does the same work, only without its profiling hooks.
     failed / 61 ignored each), the required-switch host suites, the lease
     and `cargo fmt --check` are green. Gate in the brief.
 
-**LP08 is open** (design briefs 676/677 gated 2026-11-06; brief 678 in
-flight). Brief 676 re-anchored the 624 LP08 draft on the post-675 tree
+**LP08 is open** (design briefs 676/677/678 gated 2026-11-06; brief 679
+next). Brief 676 re-anchored the 624 LP08 draft on the post-675 tree
 and returned STOP: the complete non-encoding counter promotion has
 91,424 in-set loss cells and no retaining promotion (ledger 103,759
 records = 7,960 key records + 91,424 losses + 4,375 receipts; owners
@@ -574,16 +574,31 @@ strongest partial form (ordered2) pays +37 instructions/call in
 `resume_fixed_point_from` and +16 B/level in the Function/Module
 recursive stacks, turns the existing parser-consumer control red,
 leaves all seven reset-resume probes red, and covers 41/50 keys with
-three mispair and seven Throw wrong-outcome mutants open. Director
-ruling: the target contract in `docs/dev/profiling.md` governs, the
-pause-as-Error ruling is superseded for the sites it still governs, and
-the cost bar is exact — the disabled path pays only the standing
-cold-load gate, the recursive stack equals base exactly (18,304/18,896,
-residual 0), and the +37/+16 form is rejected. Brief 678 continues the
-residual design (zero-cost form, parser boundary, reset-resume,
-definition and outcome mutants, full route plan); brief 679 then
-designs the epoch-wide synchronous-event collector and the schema-v2
-publication form. The promotion stays complete and atomic — no subset,
+three mispair and seven Throw wrong-outcome mutants open. Brief 678
+measured four completion families and none is retaining: the fused
+`M::start/finish` selector costs +14 instructions (97 versus 83), the
+outlined form 84+38, full static completion +16 B/level
+(18,320/18,912 in both builds), and `callonly` shrinks the frame to
+18,256/18,848 (still not exact). It also closed real ground: the parser
+control is green on the rules form with assertions byte-identical,
+seven kernel reset probes pass, the seven Throw wrong-outcome mutants
+turn the per-outcome equality red, and nine previously unobserved keys
+are routed; the direct flush stays red, `HostSession::reset` is
+unprobed, `modonly` is unmeasured and 41 keys are unrouted. Director
+ruling (`.temp/director/brief-678-gate.md`): the target contract in
+`docs/dev/profiling.md` governs, the pause-as-Error ruling is
+superseded, and the cost bar is exact — the disabled path pays only the
+standing cold-load gate, the recursive stack equals base exactly
+(18,304/18,896, residual 0). The four mirrors are legitimate
+observations; the rejected thing is the new selector mechanism. The
+resumed path must reuse the queued path's own
+`runtime_path_timing_start` calls and pay the standing per-site gate;
+the 97/84+38/+16/callonly rows stay excluded, and the base instruction
+row is re-measured in two builds. Brief 679 continues the residual
+design (queued-instrumentation reuse, completion outside the frame,
+direct flush, host reset, all 50 routes); brief 680 then designs the
+epoch-wide synchronous-event collector and the schema-v2 publication
+form. The promotion stays complete and atomic — no subset,
 no rebaseline, no retained cell without its named promotion — and LP08
 is not closed until the promotion transaction passes. Then come C2's remaining 353 rows on the final source, the manifest
 (CM, `.temp/brief-621/draft-G15-CM-obligation-manifest.md`), `CHANGELOG.md`
