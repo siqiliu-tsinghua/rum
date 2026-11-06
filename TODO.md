@@ -594,11 +594,30 @@ observations; the rejected thing is the new selector mechanism. The
 resumed path must reuse the queued path's own
 `runtime_path_timing_start` calls and pay the standing per-site gate;
 the 97/84+38/+16/callonly rows stay excluded, and the base instruction
-row is re-measured in two builds. Brief 679 continues the residual
-design (queued-instrumentation reuse, completion outside the frame,
-direct flush, host reset, all 50 routes); brief 680 then designs the
-epoch-wide synchronous-event collector and the schema-v2 publication
-form. The promotion stays complete and atomic — no subset,
+row is re-measured in two builds. Brief 679 solved the mirror half:
+the resumed sites call the queued path's own
+`runtime_path_timing_start`/`record_profile_runtime_path_timing`, the
+disabled delta is 39 gate instructions with body −2 (native +37,
+argument +26, the queued path's own sequence), stack exact in two
+builds and two draws. It also shaped the completion half for cost:
+`gated` keeps 18,304/18,896 with the state outside the frame, while
+`modonly`/`coldphase` (session in generic `complete_phase`) pay
++64 B/level and are excluded. But the gated form's enabled path faults:
+resumed pair faults=5, the outcome control dies with 13 faults, the
+direct flush is red, the parser control fails quiescence
+`(1,1,1,0,0)`, the queue-owner test fails and cancel leaves
+`evaluate.total` open. Director rulings (`brief-679-gate.md`): the
+four `evaluate_atom_fast_path.stable_symbol`/`.atom` pause and error
+rows are source-impossible (`eval_core/mod.rs:168-181`); the terminal
+parent must be settled exactly once at its actual outcome;
+`HostSession::reset` abandoning the suspended request is the host
+contract (no `session.rs` patch); the mirror delta is the standing
+per-site gate and passes; the selector, +64, +16/+37 and the outlined
+adapter stay excluded. Brief 680 continues correctness on the gated
+form at the exact stack (faults, parser/owner/cancel, flush, mispair,
+pair, Throw, 50 keys); brief 681 then designs the epoch-wide
+synchronous-event collector and the schema-v2 publication form. The
+promotion stays complete and atomic — no subset,
 no rebaseline, no retained cell without its named promotion — and LP08
 is not closed until the promotion transaction passes. Then come C2's remaining 353 rows on the final source, the manifest
 (CM, `.temp/brief-621/draft-G15-CM-obligation-manifest.md`), `CHANGELOG.md`
