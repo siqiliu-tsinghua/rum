@@ -557,9 +557,25 @@ does the same work, only without its profiling hooks.
     failed / 61 ignored each), the required-switch host suites, the lease
     and `cargo fmt --check` are green. Gate in the brief.
 
-**LP08 follows**, the last of the line, from
-`.temp/brief-624/drafts/LP03-evaluator-dispatch-arguments.md` and its
-successors. Write them at the granularity `TEMPLATE.md` now records. Then come C2's remaining 353 rows on the final source, the manifest
+**LP08 is open** (design brief 676, gated 2026-11-06; brief 677 in
+flight). The design re-anchored the 624 LP08 draft on the post-675 tree
+and returned STOP: the complete non-encoding counter promotion has
+91,424 in-set loss cells and no retaining promotion (ledger 103,759
+records = 7,960 key records + 91,424 losses + 4,375 receipts; owners
+LP03 64,932, LP06 17,536, LP04 4,564, LP05 4,392); all three measured
+publication forms are excluded (legacy rank-64 cap truncates 32 of 96
+definition keys; epoch-only misses 21 keys; the hybrid has 23
+thread-dependent rows); and the nine native queued/resumed differences
+are the brief-637 pause-as-Error deferral. Director ruling: the target
+contract in `docs/dev/profiling.md` governs the final line, so the
+pause-as-Error ruling is superseded for the sites it still governs.
+Two design rounds open: brief 677, the residual completion (open
+records across suspension, the nine native rows and the four resumed
+synchronous groups), then brief 678, the epoch-wide synchronous-event
+collector and the schema-v2 publication form. The promotion stays
+complete and atomic — no subset, no rebaseline, no retained cell
+without its named promotion — and LP08 is not closed until the
+promotion transaction passes. Then come C2's remaining 353 rows on the final source, the manifest
 (CM, `.temp/brief-621/draft-G15-CM-obligation-manifest.md`), `CHANGELOG.md`
 (user ruling), and S10 from `.temp/brief-606/draft-S10.md`, with its
 owned-row table from `.temp/brief-621/draft-existing-owner-additions.md`. The
