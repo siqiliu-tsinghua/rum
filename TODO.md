@@ -557,8 +557,8 @@ does the same work, only without its profiling hooks.
     failed / 61 ignored each), the required-switch host suites, the lease
     and `cargo fmt --check` are green. Gate in the brief.
 
-**LP08 is open** (design brief 676, gated 2026-11-06; brief 677 in
-flight). The design re-anchored the 624 LP08 draft on the post-675 tree
+**LP08 is open** (design briefs 676/677 gated 2026-11-06; brief 678 in
+flight). Brief 676 re-anchored the 624 LP08 draft on the post-675 tree
 and returned STOP: the complete non-encoding counter promotion has
 91,424 in-set loss cells and no retaining promotion (ledger 103,759
 records = 7,960 key records + 91,424 losses + 4,375 receipts; owners
@@ -566,16 +566,26 @@ LP03 64,932, LP06 17,536, LP04 4,564, LP05 4,392); all three measured
 publication forms are excluded (legacy rank-64 cap truncates 32 of 96
 definition keys; epoch-only misses 21 keys; the hybrid has 23
 thread-dependent rows); and the nine native queued/resumed differences
-are the brief-637 pause-as-Error deferral. Director ruling: the target
-contract in `docs/dev/profiling.md` governs the final line, so the
-pause-as-Error ruling is superseded for the sites it still governs.
-Two design rounds open: brief 677, the residual completion (open
-records across suspension, the nine native rows and the four resumed
-synchronous groups), then brief 678, the epoch-wide synchronous-event
-collector and the schema-v2 publication form. The promotion stays
-complete and atomic — no subset, no rebaseline, no retained cell
-without its named promotion — and LP08 is not closed until the
-promotion transaction passes. Then come C2's remaining 353 rows on the final source, the manifest
+are the brief-637 pause-as-Error deferral. Brief 677 found the measured
+direction (decoded-result metadata boundary + owner-checked definition
+handoff + post-install prepared completion) and closed the corrected
+nine native vectors and four mirrors on 20 valid cases, but the
+strongest partial form (ordered2) pays +37 instructions/call in
+`resume_fixed_point_from` and +16 B/level in the Function/Module
+recursive stacks, turns the existing parser-consumer control red,
+leaves all seven reset-resume probes red, and covers 41/50 keys with
+three mispair and seven Throw wrong-outcome mutants open. Director
+ruling: the target contract in `docs/dev/profiling.md` governs, the
+pause-as-Error ruling is superseded for the sites it still governs, and
+the cost bar is exact — the disabled path pays only the standing
+cold-load gate, the recursive stack equals base exactly (18,304/18,896,
+residual 0), and the +37/+16 form is rejected. Brief 678 continues the
+residual design (zero-cost form, parser boundary, reset-resume,
+definition and outcome mutants, full route plan); brief 679 then
+designs the epoch-wide synchronous-event collector and the schema-v2
+publication form. The promotion stays complete and atomic — no subset,
+no rebaseline, no retained cell without its named promotion — and LP08
+is not closed until the promotion transaction passes. Then come C2's remaining 353 rows on the final source, the manifest
 (CM, `.temp/brief-621/draft-G15-CM-obligation-manifest.md`), `CHANGELOG.md`
 (user ruling), and S10 from `.temp/brief-606/draft-S10.md`, with its
 owned-row table from `.temp/brief-621/draft-existing-owner-additions.md`. The
