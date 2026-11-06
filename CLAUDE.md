@@ -101,7 +101,10 @@ human labour to budget.
   `-j8`, tests at `RUST_TEST_THREADS=8` (user ruling 2026-11-01: 876 s serial
   → 315 s at a 6.33 GB peak), with `--no-fail-fast`; a red is reproduced at
   `--test-threads=1` before it is called a defect. Timing, perf and callgrind
-  runs are serial and run alone.
+  runs are serial and run alone. **After every commit and push, run
+  `python3 -I scripts/clean-temp.py --apply` (dry-run first; user ruling
+  2026-11-07): it deletes `./target` and prunes `.temp/`, and refuses
+  unless the tree is clean and HEAD is pushed.**
 
 ## Context economy (user ruling 2026-10-29)
 
@@ -165,7 +168,7 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
 - **Permission lists.** They get under-enumerated, so write a disclosure duty
   instead. An inventory rule must cover what new call edges make reachable.
 
-## Current state (2026-11-01)
+## Current state (2026-11-07)
 
 - **Nesting.** The security-hardening mainline (since 2026-09-02) contains
   the retention line (paused at E0), which contains the suspension
@@ -180,10 +183,7 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   it, then Q1, Q2, Q4, Q5 (user ruling 2026-10-29), the binary snapshot
   format, the remaining audit items and the threat-model critiques. Only then
   `v0.3.0`.
-- **Latest done:** brief-636, the shared parse (`caec4c8e`), closed test
-  isolation (briefs 634–636); before it brief-635's epoch lease and write
-  gate, brief-630's cleanup errors. Details in `director-log.md`.
-- **Workers.** kimi only (2026-10-30: cdx has no quota, grk no balance).
+- **Latest done:** LP07 closed (`a9cb067d`); LP08 at brief 683, waiting for cdx.
 - **Earlier lines** are recorded in `director-log.md`; deferred items in
   `TODO.md` (full polynomial factorization stays deferred by user decision).
 
