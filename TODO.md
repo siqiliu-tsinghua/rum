@@ -613,10 +613,25 @@ parent must be settled exactly once at its actual outcome;
 `HostSession::reset` abandoning the suspended request is the host
 contract (no `session.rs` patch); the mirror delta is the standing
 per-site gate and passes; the selector, +64, +16/+37 and the outlined
-adapter stay excluded. Brief 680 continues correctness on the gated
-form at the exact stack (faults, parser/owner/cancel, flush, mispair,
-pair, Throw, 50 keys); brief 681 then designs the epoch-wide
-synchronous-event collector and the schema-v2 publication form. The
+adapter stay excluded. Brief 680 root-caused every fault on the gated
+form and made the enabled path green, but the green lifecycle
+publishes the stashed outer phase from
+`record_profile_runtime_path_timing_adopted_slow` and pays +64 B/level
+(18,368/18,960; the same publish in `complete_phase` the same), so the
+exact-stack form (build3, 18,304/18,896) was built for attribution only
+and never run through the enabled-path controls. The round is green on
+parser 9/9, flush `faults=0`, lifecycle `open=0`, mirrors 67/67 and
+seven Throw kills; pair is 19/20 (none-two: queued none=2, resumed
+some=2), the three mispair mutants hit and pass (not kills), 15 key
+rows stay open, and extra disabled deltas appear beyond the standing
+gate. Director rulings (`.temp/director/brief-680-gate.md`): the +64
+publish is excluded; brief 681 runs build3 through the full battery
+before any attach search; the pair bar is 20/20; the mispair must kill
+or return a measured impossibility; the 15 rows need probes or
+`path:line` citations; each extra delta is attributed per site.
+Brief 681 is the exact-stack battery; brief 682 then designs the
+epoch-wide synchronous-event collector and the schema-v2 publication
+form. The
 promotion stays complete and atomic — no subset,
 no rebaseline, no retained cell without its named promotion — and LP08
 is not closed until the promotion transaction passes. Then come C2's remaining 353 rows on the final source, the manifest
