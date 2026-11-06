@@ -106,7 +106,7 @@ def brief_key(path: Path) -> tuple[int, str]:
 
 
 def gate_number(name: str) -> int | None:
-    match = re.match(r"gate-(\d+)(?:[-.].*)?$", name)
+    match = re.match(r"gate-(\d+)", name)
     return int(match.group(1)) if match else None
 
 
