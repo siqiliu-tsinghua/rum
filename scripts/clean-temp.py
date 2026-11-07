@@ -117,6 +117,8 @@ def assert_deletable(path: Path) -> None:
     temp = TEMP.resolve()
     if resolved == temp or not resolved.is_relative_to(temp):
         raise SystemExit(f"refusing to delete outside .temp: {resolved}")
+    if resolved.parent == temp and resolved.name.startswith("brief-"):
+        raise SystemExit(f"refusing to delete a brief root: {resolved}")
 
 
 def plan() -> tuple[list[tuple[str, Path, int, str]], list[str]]:
@@ -132,12 +134,12 @@ def plan() -> tuple[list[tuple[str, Path, int, str]], list[str]]:
         key=brief_key,
     )
     for root in briefs[:-KEEP_BRIEF_ROOTS]:
-        subs = [c for c in root.iterdir() if c.is_dir() and not c.is_symlink()]
-        if subs:
-            actions.append(
-                ("prune", root, sum(size_of(c) for c in subs),
-                 f"{len(subs)} subdir(s), root files kept"),
-            )
+        for sub in sorted(root.iterdir()):
+            if sub.is_dir() and not sub.is_symlink():
+                actions.append(
+                    ("delete", sub, size_of(sub),
+                     f"old brief subdir of {root.name}; root files kept"),
+                )
 
     director = TEMP / "director"
     gates: dict[int, list[Path]] = {}
