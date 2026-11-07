@@ -59,6 +59,23 @@ keeps them with the incidents that produced them. Read it on demand.
   original 2026-06-21 reason for full access), via
   `CDX_SANDBOX=danger-full-access`, telling the user. The brief's
   **Scope + Hard rules** remain the inner fence.
+- Besides these dispatcher workers, the user added a Mistral Vibe account on
+  2026-11-07 (one-year subscription; $150/month on the Vibe pool) as the
+  Codex-outage fallback, mainly for its GLM-5.3 model. `BRIEF_WORKER=mst`
+  (alias `vibe`) runs `mst -p` — a fish function `with_proxy vibe` over the
+  Mistral Vibe CLI — and accepts only that function, never the bare binary.
+  `MST_MODEL` defaults to `glm-5-3` (the thinking level comes from
+  `~/.vibe/config.toml`; Vibe has no effort flag); `MST_RESUME=<session id>`
+  continues a run (the session keeps its model, because Vibe refuses
+  `--model` on resume); `MST_TIME_LIMIT` and `MST_MAX_PRICE` are optional
+  bounds. The run is headless with `--auto-approve --trust --output text
+  --output-dir <log>.export`; `export.json` carries usage, `cost_usd`,
+  `stop_reason` and `session_id`, which the dispatcher appends to the log as
+  `# vibe-session:` and `# vibe-result:`. Vibe has no OS write fence of its
+  own, so the branch installs the git shim and disables the
+  git_bash/web/task/skill/ask/powershell tool classes; the brief's Scope is
+  the inner fence. The account's $15 Studio credit is not used here: it needs
+  a separate API key and is not for big jobs.
 - Do not mutate the repo while a brief is in flight (my commits queue until
   the gate).
 

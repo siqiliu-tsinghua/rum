@@ -183,15 +183,19 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   it, then Q1, Q2, Q4, Q5 (user ruling 2026-10-29), the binary snapshot
   format, the remaining audit items and the threat-model critiques. Only then
   `v0.3.0`.
-- **Latest done:** LP07 closed (`a9cb067d`); LP08 at brief 692 (design):
+- **Latest done:** LP07 closed (`a9cb067d`); LP08 at brief 693 (design):
   post-consumer publication is position- and enabled-green; brief 690
   measured the terminal reload's cause, excluded both terminal-side
   shapes and settled the resumed-helper coverage (two dynamic witnesses,
   one source-proved exclusion); brief 691 measured two independent
   triggers (the attachment and the publication each keep 55; only
-  removing both returns 54) and excluded both relocation shapes; brief
-  692 moves the whole pause body out of the pause function's direct
-  code.
+  removing both returns 54); brief 692 excluded the whole pause-body
+  placement family (a five-byte dispatcher still reads 55; the phase
+  publication split does not isolate one occurrence); brief 693 moves the
+  attachment and publication to the suspension point after the consumer
+  push and restores the pause function to its base source. A Mistral
+  Vibe worker (`BRIEF_WORKER=mst`, GLM-5.3, $150/month Vibe budget) is
+  wired in as the Codex-outage fallback.
 - **Earlier lines** are recorded in `director-log.md`; deferred items in
   `TODO.md` (full polynomial factorization stays deferred by user decision).
 

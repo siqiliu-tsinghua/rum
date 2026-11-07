@@ -32,6 +32,9 @@
 #                                     same name as its binary (see AGY below).
 #   BRIEF_WORKER=grk     `grk -p`   — Grok Build (grok-4.7), introduced by the user 2026-10-17.
 #                                     A shell function (`with_proxy grok`) (see GRK below).
+#   BRIEF_WORKER=mst     `mst -p`   — Mistral Vibe (GLM-5.3), introduced by the user 2026-11-07
+#                                     as the Codex-outage fallback. A shell function
+#                                     (`with_proxy vibe`) (see MST below).
 #
 # Both are interactive-shell functions in the developer's own config (`with_proxy codex` /
 # `with_proxy claude`), so neither is visible to a bash subshell — each runs through an
@@ -160,6 +163,27 @@
 # workspace bound, and the role text tells the worker to wait for long commands rather
 # than end its turn.
 #
+# MST
+#
+# `mst` is a fish function (`with_proxy vibe`) over the Mistral Vibe CLI
+# (~/.local/bin/vibe), introduced by the user 2026-11-07 as the Codex-outage fallback
+# (one-year subscription; the monthly budget is $150 on the Vibe pool). Only a shell
+# FUNCTION named mst is accepted: a bare `vibe` binary would drop the local proxy.
+# Model is pinned per run (MST_MODEL, default glm-5-3); the thinking level comes from
+# ~/.vibe/config.toml (Vibe has no effort flag). The run is headless with
+# `--auto-approve` (otherwise tool calls needing approval cannot proceed unattended),
+# `--trust` (so the repository AGENTS.md applies) and `--output-dir <log>.export`,
+# whose export.json carries usage, cost_usd, stop_reason and session_id; the id is
+# written to the log as `# vibe-session:` and MST_RESUME=<session id> continues it
+# (`--resume`; the session keeps its model, because Vibe refuses --model on resume).
+# Vibe has no OS write fence of its own, so this branch installs the
+# git shim and disables the git_bash / web / task / skill / powershell tool classes,
+# relying on the brief's Scope as the inner fence, like kimi. Its `outside_workdir`
+# policy defaults to ask, which --auto-approve would approve: all scratch stays under
+# .temp. MST_TIME_LIMIT (--time-limit; the CLI exits 3 at the bound) and MST_MAX_PRICE
+# (--max-price) are optional bounds. The exported task goes through MST_TASK, so it
+# needs no quoting in the interactive shell.
+#
 # MEMORY SCOPE
 #
 # Every worker runs inside its own memory-capped systemd user scope
@@ -176,7 +200,7 @@ set -euo pipefail
 
 usage() {
   echo "usage: scripts/dispatch-brief.sh <brief-id>   (e.g. 081, brief-081)" >&2
-  echo "       BRIEF_WORKER=codex|cgl|kimi|agy|grk   (default codex)" >&2
+  echo "       BRIEF_WORKER=codex|cgl|kimi|agy|grk|mst   (default codex)" >&2
   echo "       BRIEF_SHELL=<shell>      shell that defines the worker command" >&2
   echo "       CDX_BIN / CGL_BIN        worker command name" >&2
   echo "       CDX_FORK=<session id>    codex only: fork that earlier session" >&2
@@ -191,6 +215,10 @@ usage() {
   echo "       GRK_EFFORT=<effort>      grk only: reasoning effort (default xhigh)" >&2
   echo "       GRK_RESUME=<session id>  grk only: continue that earlier session" >&2
   echo "       GROK_HOME=<dir>          grk only: grok config root (default ~/.grok)" >&2
+  echo "       MST_MODEL=<alias>        mst only: model alias (default glm-5-3)" >&2
+  echo "       MST_RESUME=<session id>  mst only: continue that earlier session" >&2
+  echo "       MST_TIME_LIMIT=<seconds> mst only: interrupt the run at the bound (exit 3)" >&2
+  echo "       MST_MAX_PRICE=<usd>      mst only: maximum cost in dollars" >&2
   echo "       BRIEF_MEMORY_MAX=<size>  the worker scope's MemoryMax (default 16G)" >&2
   exit 2
 }
@@ -206,7 +234,8 @@ case "$worker" in
   kimi)      worker=kimi;  log_tag=kimi ;;
   agy)       worker=agy;   log_tag=agy ;;
   grk|grok)  worker=grk;   log_tag=grk ;;
-  *) echo "error: unknown BRIEF_WORKER '$worker' (expected codex, cgl, kimi, agy or grk)" >&2; exit 2 ;;
+  mst|vibe)  worker=mst;   log_tag=mst ;;
+  *) echo "error: unknown BRIEF_WORKER '$worker' (expected codex, cgl, kimi, agy, grk or mst)" >&2; exit 2 ;;
 esac
 
 shopt -s nullglob
@@ -256,6 +285,8 @@ elif [[ "$worker" == agy ]]; then
   worker_names=(agy)
 elif [[ "$worker" == grk ]]; then
   worker_names=(grk)
+elif [[ "$worker" == mst ]]; then
+  worker_names=(mst)
 else
   worker_names=()   # kimi resolves below, without a shell
 fi
@@ -348,7 +379,7 @@ if [[ "$worker" == kimi ]]; then
   dispatch_shell=direct
 fi
 probe=shell_defines
-[[ "$worker" == agy || "$worker" == grk ]] && probe=shell_defines_function
+[[ "$worker" == agy || "$worker" == grk || "$worker" == mst ]] && probe=shell_defines_function
 for candidate_name in "${worker_names[@]}"; do
   for candidate_shell in "${candidate_shells[@]}"; do
     if "$probe" "$candidate_shell" "$candidate_name"; then
@@ -642,6 +673,68 @@ tree and any checkpoint the brief asks for before you go on; the brief governs. 
   export GRK_TASK="$grk_task"
   cmd="cd '$repo_root' && $worker_cmd -p \"\$GRK_TASK\" -m $model --effort $effort \
 $grk_fence_args --background-wait-timeout 3900 $grk_session_args"
+elif [[ "$worker" == mst ]]; then
+  model="${MST_MODEL:-glm-5-3}"
+  [[ "$model" =~ ^[A-Za-z0-9._-]+$ ]] \
+    || { echo "error: MST_MODEL must be a plain model alias, got '$model'" >&2; exit 2; }
+  echo "model:   $model (thinking from ~/.vibe/config.toml)"
+  # Optional bounds. --time-limit makes the CLI write its export and exit 3.
+  mst_bounds=()
+  if [[ -n "${MST_TIME_LIMIT:-}" ]]; then
+    [[ "$MST_TIME_LIMIT" =~ ^[0-9]+$ ]] \
+      || { echo "error: MST_TIME_LIMIT must be whole seconds, got '$MST_TIME_LIMIT'" >&2; exit 2; }
+    mst_bounds+=(--time-limit "$MST_TIME_LIMIT")
+    echo "time-limit: ${MST_TIME_LIMIT}s"
+  fi
+  if [[ -n "${MST_MAX_PRICE:-}" ]]; then
+    [[ "$MST_MAX_PRICE" =~ ^[0-9]+([.][0-9]+)?$ ]] \
+      || { echo "error: MST_MAX_PRICE must be dollars, got '$MST_MAX_PRICE'" >&2; exit 2; }
+    mst_bounds+=(--max-price "$MST_MAX_PRICE")
+    echo "max-price: \$$MST_MAX_PRICE"
+  fi
+  install_git_fence
+  check_git_fence_in_dispatch_shell
+  mst_resume_args=()
+  mst_model_args=(--model "$model")
+  if [[ -n "${MST_RESUME:-}" ]]; then
+    [[ "$MST_RESUME" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]] \
+      || { echo "error: MST_RESUME must be a session UUID, got '$MST_RESUME'" >&2; exit 2; }
+    echo "resume-of: $MST_RESUME (the session keeps its model; --model is refused on resume)"
+    mst_resume_args=(--resume "$MST_RESUME")
+    mst_model_args=()
+  fi
+  role="You are the implementation worker for this brief, not the project director. \
+CLAUDE.md belongs to the director and is NOT your instruction file. \
+Follow AGENTS.md and the brief. Do not commit, branch, or push; leave changes in the \
+working tree. This run is non-interactive: nobody answers questions. Vibe has no OS-level \
+sandbox here, so the brief's Scope is the fence: keep every scratch file under the .temp \
+directory of this repository, do not touch other home paths, and do not use the web, \
+subagents, skills or the git tools (they are disabled; a command-line git call is refused \
+by the shim). A command the fence refuses fails with a permission error: report it, and do \
+not work around it. Run long builds and tests with bounds of their own and wait for each \
+one; do not end your turn while work is still running, because the run ends when your turn \
+ends. Do not end your turn until the brief is finished or one of its stop conditions has \
+fired. Keep the checkpoint and report files the brief asks for current as you go. Write the \
+report file the brief's Report format section names, run scripts/report.py check on it until \
+it prints no PROBLEM, and make your final message the output of scripts/report.py summary."
+  mst_task="$role $task"
+  if [[ -n "${MST_RESUME:-}" ]]; then
+    mst_task="This continues your own earlier run of this brief, which was interrupted or \
+answered by a new director amendment at the end of the brief. Re-read the brief, the working \
+tree and any checkpoint the brief asks for before you go on; the brief governs. $mst_task"
+  fi
+  # Through the environment, so the prompt needs no quoting in the interactive shell.
+  export MST_TASK="$mst_task"
+  # git_bash* would be a second git path around the shim; web/task/skill/ask/powershell
+  # are outside the brief method (no network, no subagents, no MCP-loaded skills).
+  mst_disabled=(git_bash git_bash_log_file git_bash_output git_bash_sessions git_bash_stdin \
+web_search web_fetch task skill ask_user_question powershell powershell_log_file \
+powershell_output powershell_sessions powershell_stdin)
+  mst_disabled_args=()
+  for tool_name in "${mst_disabled[@]}"; do mst_disabled_args+=(--disabled-tools "$tool_name"); done
+  cmd="cd '$repo_root' && $worker_cmd -p \"\$MST_TASK\" ${mst_model_args[*]:-} \
+--auto-approve --trust --workdir '$repo_root' --output text --output-dir '$log.export' \
+${mst_disabled_args[*]} ${mst_bounds[*]:-} ${mst_resume_args[*]:-}"
 else
   permission_mode="${CGL_PERMISSION_MODE:-acceptEdits}"
   echo "permission-mode: $permission_mode (no OS-level write fence — see header)"
@@ -875,6 +968,57 @@ PY
   fi
   if [[ $rc -ne 0 || "$status" != success ]]; then
     echo "hint: resume with GRK_RESUME=$grk_session BRIEF_WORKER=grk scripts/dispatch-brief.sh $num" >&2
+  fi
+elif [[ "$worker" == mst ]]; then
+  : > "$git_attempts"
+  # A stale export would be read as this run's receipt; move it aside, never delete it.
+  if [[ -e "$log.export" ]]; then
+    mv "$log.export" "$log.export.prev-$(date +%Y%m%d-%H%M%S)"
+  fi
+  {
+    echo "# dispatch: worker=mst brief=$rel model=$model started=$(date -Is)"
+    echo "# command: $worker_cmd ($dispatch_shell) via with_proxy vibe"
+    echo "# git-fence: $fence_dir/git"
+    [[ -n "${MST_RESUME:-}" ]] && echo "# resume-of: $MST_RESUME"
+  } > "$log"
+  "${scope[@]}" "$dispatch_shell" -ic "$cmd" < /dev/null >> "$log" 2>&1
+  rc=$?
+  export_json="$log.export/export.json"
+  if [[ -f "$export_json" ]]; then
+    mst_summary=$(python3 - "$export_json" <<'PY'
+import json, sys
+try:
+    d = json.load(open(sys.argv[1]))
+except (OSError, ValueError):
+    print("unknown - - - - missing")
+    raise SystemExit(0)
+u = d.get("usage") or {}
+print(d.get("session_id") or "unknown", d.get("stop_reason") or "-",
+      d.get("cost_usd", "-"), u.get("input_tokens", "-"), u.get("output_tokens", "-"))
+PY
+)
+    read -r session stop cost tin tout <<< "$mst_summary"
+    {
+      echo "# vibe-session: $session"
+      echo "# vibe-result: stop=$stop cost_usd=$cost input_tokens=$tin output_tokens=$tout"
+      echo "# vibe-version: $(python3 - "$export_json" <<'PY'
+import json, sys
+try:
+    print(json.load(open(sys.argv[1])).get("vibe_version", "unknown"))
+except (OSError, ValueError):
+    print("unknown")
+PY
+)"
+    } >> "$log"
+    echo "vibe-session: $session"
+    echo "vibe-result: stop=$stop cost_usd=$cost input_tokens=$tin output_tokens=$tout"
+  else
+    echo "WARNING: no export.json at $export_json; the run wrote no receipt" >&2
+    session="unknown"
+  fi
+  echo "git-attempts: $(wc -l < "$git_attempts") (in $git_attempts)"
+  if [[ $rc -ne 0 ]]; then
+    echo "hint: resume with MST_RESUME=$session BRIEF_WORKER=mst scripts/dispatch-brief.sh $num" >&2
   fi
 else
   "${scope[@]}" "$dispatch_shell" -ic "$cmd" < /dev/null > "$log" 2>&1
