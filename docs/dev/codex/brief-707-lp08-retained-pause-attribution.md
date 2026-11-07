@@ -381,6 +381,66 @@ the census pairing as sections. Check with
 `python3 -I scripts/report.py check 707`. A failed bar stops with the exact
 panel, never a looser check.
 
+## Continuation A — director ruling after the first run (2026-11-08)
+
+The first run implemented the target shape, produced the seven pre-repair
+reds and the nine green tests, then stopped at
+`logical_profile_lifecycle.rs:271` (`reasons[2]` 17 vs 1). **The bar was
+mine and is corrected; the worker is not at fault.** The install's retention
+keeps the entry-split phase records open until the resumed path completes
+them, so a failed restore retires that whole open tree; the global reason sum
+now counts those records honestly. I measured the pre-repair tree in a
+private target: pauses 18/29/29 and 40, reasons 17/17/34 — identical before
+and after the repair, i.e. install-inherent. The oracle now scopes both
+reasons bars to the native logical row through the new director accessor
+`Session::logical_profile_test_reasons_for(phase)`; the exact values
+(`[2] == 1`; `[3] + [4] == expected`) are unchanged.
+
+**The tree already carries the accepted repair and two director edits.** Do
+not revert, rewrite or re-derive them: `mod.rs` gains the accessor, and the
+host test's two reasons assertions are native-scoped. Do not edit the host
+test, `census/tests.rs`, or any existing test. The five production files and
+`retained_pause.rs` stay exactly as they are; the only production edits
+allowed in this continuation are the scratch-copy mutants below.
+
+At briefing time the full workspace shows exactly the standing
+derived-inventory reds (18 `rum-stdlib --lib` failures in ownership_graph /
+retention_closure local / census, inventory lookups) and nothing else; the
+replay order below resolves them. One earlier run also marked
+`rum-runtime --lib` red; it did not reproduce in the standalone or workspace
+reruns and no log line survived, so treat a recurrence as a real red and
+quote it.
+
+Remaining obligations, in this order (the STOP cut them; nothing else is
+added):
+
+1. **Mutants M1–M5** with the calibrated reds named in *Falsifiers*. One
+   scratch copy of the current source tree (exclude `.temp/`, `target/`,
+   `.git/`), one private `CARGO_TARGET_DIR` for that copy, five sequential
+   mutations, each reverted before the next. The live tree is never mutated.
+   Cargo's unit hash ignores the package path: a copy that builds into a
+   shared target lets the live tree reuse its artifacts, so the private
+   target dir is mandatory.
+2. **Final green**: the new module, both host children at one thread, the
+   host binary at 8, `lp03_leaf_phases_close_after_resume`, `fmt --check`.
+3. **Standing replays** (contract fingerprints, certificates, ownership/unknown
+   inventories, LP01 required/bindings/producers/ledger, typed-slot receipts,
+   frame-root closed lists, rejection census) before the first acceptance
+   suite.
+4. **Acceptance** exactly as in *Verification order and bars*, including the
+   focused set at 8 and 1 threads.
+5. **LP01 five-mode parents** at 8 and 1 threads with the canonical writer and
+   installer (path constants only), the per-cell proof the authority.
+6. **Typed-slot**, **frame-root**, and the **census before/after pairing**
+   (`RUM_CENSUS_DUMP`; no hand edit; population change stops that item with
+   the full row pairing).
+7. **State size** before/after and the **scope audit**; report the source
+   sha256 of the six changed files at start and end.
+
+Do not repeat the pre-repair reference run. Do not edit the production files
+in the live tree. Stop with the exact panel on any failed bar; a loose check
+or a re-baselined gold is never the answer.
+
 ## Host discipline and hard rules
 
 One cargo command at a time in the dispatcher's 16G/no-swap scope, build jobs
