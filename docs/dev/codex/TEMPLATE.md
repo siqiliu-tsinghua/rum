@@ -180,16 +180,29 @@ produce; for implementation: code + tests + the before/after per-label rows).
    is progress**: a compile error you are actively fixing is not a wall, and
    the stop-loss is measured only once the tree compiles. Keying it on the
    failure's reason instead fires on every converging mechanical repair.
-8. **An instruction gate builds both arms with one codegen unit.** Per-iteration
-   instruction slopes (`taskset -c 2 perf stat -x, -e cpu_core/instructions/u`,
-   `(count(2N) - count(N)) / N`, stdin `/dev/null`) decide; timing does not. But
-   the default release profile has 16 codegen units, and adding code anywhere in
-   a crate repartitions them and moves inlining in code the change never
-   touched: brief-565's ordinary `Take` read +0.6% from that alone and 0.00%
-   with one unit, while untouched controls sat within ±0.02%. Build base and
-   candidate with `CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1` (from the same
-   source paths' exports, each into its own target directory) whenever the
-   gate's threshold is finer than about 1%.
+8. **An instruction gate builds both arms with one codegen unit at one
+   stable path.** Per-iteration instruction slopes (`taskset -c 2 perf stat
+   -x, -e cpu_core/instructions/u`, `(count(2N) - count(N)) / N`, stdin
+   `/dev/null`) decide; timing does not. But the default release profile has
+   16 codegen units, and adding code anywhere in a crate repartitions them
+   and moves inlining in code the change never touched: brief-565's ordinary
+   `Take` read +0.6% from that alone and 0.00% with one unit, while untouched
+   controls sat within ±0.02%. Build base and candidate with
+   `CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1` (same absolute build path, never a
+   per-arm path) whenever the gate's threshold is finer than about 1%.
+   **Probe builds go through `scripts/probe-build.py` (user ruling
+   2026-11-07).** The caller assembles the complete tree and passes it with
+   `--tree`; the script copies it to the stable path `.temp/probe/active`,
+   keys the artifact cache on the assembled-tree hash × rustc version ×
+   flags, and reuses the binary across arms, builds and briefs. One build
+   per (arm, kind) is enough; measurements still use two draws per round;
+   one arm per round is rebuilt with `--force` as a sha256 spot-check. The
+   second full build index (`build1/2`, `diagnosis1/2`, `coverage1/2`) is
+   retired: same-arm same-kind rebuilds proved byte-identical in briefs
+   693–695 (16/16, 16/16, 20/20). Never change opt-level, codegen-units or
+   incremental to make a measurement build faster, and never set
+   `CARGO_TARGET_DIR` yourself. The disabled-cost bars are unchanged: the
+   cache shortens the build, never the evidence.
 9. **Concurrency is planned per stage, from measured resource profiles**
    (user ruling 2026-10-26; it supersedes the 2026-09-30 all-serial cargo
    rule).

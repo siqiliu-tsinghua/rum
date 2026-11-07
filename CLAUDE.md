@@ -101,10 +101,13 @@ human labour to budget.
   `-j8`, tests at `RUST_TEST_THREADS=8` (user ruling 2026-11-01: 876 s serial
   → 315 s at a 6.33 GB peak), with `--no-fail-fast`; a red is reproduced at
   `--test-threads=1` before it is called a defect. Timing, perf and callgrind
-  runs are serial and run alone. **After every commit and push, run
-  `python3 -I scripts/clean-temp.py --apply` (dry-run first; user ruling
-  2026-11-07): it deletes `./target` and prunes `.temp/`, and refuses
-  unless the tree is clean and HEAD is pushed.**
+  runs are serial and run alone. Probe builds go through
+  `scripts/probe-build.py` (stable `.temp/probe/active`, content-addressed
+  cache, one build per arm, one `--force` sha256 spot-check per round).
+  **After every commit and push, run `python3 -I scripts/clean-temp.py
+  --apply` (dry-run first; user ruling 2026-11-07): it prunes `.temp/` —
+  never `./target`, which is bounded and now kept — and refuses unless the
+  tree is clean and HEAD is pushed.**
 
 ## Context economy (user ruling 2026-10-29)
 
@@ -174,20 +177,17 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   the retention line (paused at E0) and the active suspension branch.
 - **Branch queue:** LP03–LP08; G15-C2's remaining 353 rows then CM;
   `CHANGELOG.md` (user ruling: before S10); G13 S10–S54, F1–F23, R; E2.
-- **After the branch:** the retention line from E0 with Q3 beside it, then
-  Q1, Q2, Q4, Q5 (user ruling 2026-10-29), the binary snapshot format, the
-  audit items and the threat-model critiques; only then `v0.3.0`.
-- **Latest done:** LP07 closed (`a9cb067d`); LP08 at brief 695 (design):
-  post-consumer publication is position- and enabled-green; briefs
-  690–693 excluded the terminal-side, whole-body and duplicate-pause
-  families; brief 694 excluded the unconditional completion interior
-  (`InputRequired` is shared with adopted completions; `rhs.rs:55-66`)
-  and the one-completion suspension move (terminal 56, unmatched
-  `Result` copy, stack −48/level). Brief 695 keys the publication to the
-  eight `PhaseKey::CallStage*` variants inside `complete_phase`'s
-  `InputRequired` arm with `pause_phase_at_finish_slow` byte-identical to
-  base and the call sites untouched. A Mistral Vibe worker (`BRIEF_WORKER=mst`,
-  GLM-5.3, $150/month Vibe budget) is the Codex-outage fallback.
+- **After the branch:** retention from E0 with Q3, then Q1/Q2/Q4/Q5, the
+  binary snapshot format, audit items and threat-model critiques; then `v0.3.0`.
+- **Latest done:** LP07 closed (`a9cb067d`); LP08 at brief 695 (gated STOP):
+  both authorized forms measured red — the keyed completion interior
+  (terminal 55, stack +64/level, preparation/evaluation residuals) and the
+  entry split (terminal 55 only). The entry split is frozen as the placement
+  of record; the next round is a terminal-local ownership/liveness change
+  with the exact 54/one-load/base-sequence bar. The disabled workload executes
+  none of the new code, so the +1 is a whole-crate codegen effect, not
+  execution. A Mistral Vibe worker (`BRIEF_WORKER=mst`, GLM-5.3, $150/month)
+  is the Codex-outage fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
 ## Pointers

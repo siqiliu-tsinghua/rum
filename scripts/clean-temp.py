@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 """clean-temp.py — post-commit disk cleanup (user ruling 2026-11-07).
 
-Run after every commit and push: delete ./target and prune .temp/.
+Run after every commit and push: prune .temp/.
 Default is a dry-run; --apply performs the deletions.
+
+The workspace `./target` is kept entirely (user ruling 2026-11-07): the
+disk blowup came from .temp never being cleaned (150+ brief roots at
+several GB each), not from target, which is large but bounded.
 
 Preconditions enforced before --apply (dry-run only warns):
   * git work tree clean;
@@ -10,13 +14,13 @@ Preconditions enforced before --apply (dry-run only warns):
   * no scripts/dispatch-brief.sh, cargo or rustc process running.
 
 Deleted:
-  * <repo>/target;
   * subdirectories of every .temp/brief-* root older than the newest
     KEEP_BRIEF_ROOTS (root-level reports, binaries and logs are kept);
   * .temp/director/gate-<number>* directories older than the newest
     KEEP_GATE_DIRS distinct numbers.
 
-Never touched: .temp/logs/, .temp/director/state.md and every other
+Never touched: <repo>/target, .temp/probe/ (the probe build root and
+artifact cache), .temp/logs/, .temp/director/state.md and every other
 file, .temp/director/gate-state/ and the non-gate directories, and any
 unrecognised top-level entry in .temp (reported, not deleted).
 """
@@ -38,7 +42,6 @@ ROOT = Path(subprocess.run(
     text=True, capture_output=True, check=True,
 ).stdout.strip())
 TEMP = ROOT / ".temp"
-TARGET = ROOT / "target"
 
 
 def human(n: int) -> str:
@@ -112,8 +115,6 @@ def gate_number(name: str) -> int | None:
 
 def assert_deletable(path: Path) -> None:
     resolved = path.resolve()
-    if resolved == TARGET.resolve():
-        return
     temp = TEMP.resolve()
     if resolved == temp or not resolved.is_relative_to(temp):
         raise SystemExit(f"refusing to delete outside .temp: {resolved}")
@@ -124,9 +125,6 @@ def assert_deletable(path: Path) -> None:
 def plan() -> tuple[list[tuple[str, Path, int, str]], list[str]]:
     actions: list[tuple[str, Path, int, str]] = []
     skipped: list[str] = []
-
-    if TARGET.exists():
-        actions.append(("delete", TARGET, size_of(TARGET), "workspace target"))
 
     briefs = sorted(
         (p for p in TEMP.iterdir()
@@ -157,7 +155,7 @@ def plan() -> tuple[list[tuple[str, Path, int, str]], list[str]]:
                 for entry in gates[number]:
                     actions.append(("delete", entry, size_of(entry), "old gate dir"))
 
-    known = {"director", "logs"}
+    known = {"director", "logs", "probe"}
     for entry in sorted(TEMP.iterdir()):
         if entry.name in known or entry.name.startswith("brief-"):
             continue
