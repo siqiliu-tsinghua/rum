@@ -171,40 +171,29 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
 ## Current state (2026-11-07)
 
 - **Nesting.** The security-hardening mainline (since 2026-09-02) contains
-  the retention line (paused at E0), which contains the suspension
-  continuation branch (active).
-- **Branch queue, in order:**
-  1. LP03–LP08;
-  2. G15-C2's remaining 353 rows, then CM;
-  3. `CHANGELOG.md` (user ruling: before S10);
-  4. G13 S10–S54, F1–F23, R;
-  5. E2.
-- **After the branch:** the retention line from E0 with Q3 designed beside
-  it, then Q1, Q2, Q4, Q5 (user ruling 2026-10-29), the binary snapshot
-  format, the remaining audit items and the threat-model critiques. Only then
-  `v0.3.0`.
-- **Latest done:** LP07 closed (`a9cb067d`); LP08 at brief 693 (design):
-  post-consumer publication is position- and enabled-green; brief 690
-  measured the terminal reload's cause, excluded both terminal-side
-  shapes and settled the resumed-helper coverage (two dynamic witnesses,
-  one source-proved exclusion); brief 691 measured two independent
-  triggers (the attachment and the publication each keep 55; only
-  removing both returns 54); brief 692 excluded the whole pause-body
-  placement family (a five-byte dispatcher still reads 55; the phase
-  publication split does not isolate one occurrence); brief 693 moves the
-  attachment and publication to the suspension point after the consumer
-  push and restores the pause function to its base source. A Mistral
-  Vibe worker (`BRIEF_WORKER=mst`, GLM-5.3, $150/month Vibe budget) is
-  wired in as the Codex-outage fallback.
-- **Earlier lines** are recorded in `director-log.md`; deferred items in
-  `TODO.md` (full polynomial factorization stays deferred by user decision).
+  the retention line (paused at E0) and the active suspension branch.
+- **Branch queue:** LP03–LP08; G15-C2's remaining 353 rows then CM;
+  `CHANGELOG.md` (user ruling: before S10); G13 S10–S54, F1–F23, R; E2.
+- **After the branch:** the retention line from E0 with Q3 beside it, then
+  Q1, Q2, Q4, Q5 (user ruling 2026-10-29), the binary snapshot format, the
+  audit items and the threat-model critiques; only then `v0.3.0`.
+- **Latest done:** LP07 closed (`a9cb067d`); LP08 at brief 694 (design):
+  post-consumer publication is position- and enabled-green; briefs
+  690–692 excluded the terminal-side and whole-pause-body placement
+  families; brief 693 measured that the +1 is stable and that the pause
+  statements alone flip base's 54 to 55, then excluded its
+  suspension-point shape as a duplicate pause (second take faults, 0/20
+  enabled); brief 694 moves the attachment and publication into
+  `complete_phase`'s `InputRequired` arm with the pause slow body
+  byte-identical to base. A Mistral Vibe worker (`BRIEF_WORKER=mst`,
+  GLM-5.3, $150/month Vibe budget) is wired in as the Codex-outage
+  fallback.
+- **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
 ## Pointers
 
-- `AGENTS.md`: the operational first stop (snapshot, commands, tests).
-- `TODO.md`: the active roadmap. `PROGRESS.md`: the append-only log.
-  `CHANGELOG.md`: release-facing changes.
-- `docs/dev/codex/TEMPLATE.md`: the brief format, with the standing
-  inventories every source stage replays.
-- `~/.claude/projects/-home-remi-dev-rum/memory/`: my cross-session memory;
-  `MEMORY.md` is its index.
+- `AGENTS.md`: the operational first stop.
+- `TODO.md` (roadmap), `PROGRESS.md` (log), `CHANGELOG.md` (release
+  notes), `docs/dev/codex/TEMPLATE.md` (brief format and inventories).
+- `~/.claude/projects/-home-remi-dev-rum/memory/`: my cross-session
+  memory; `MEMORY.md` is the index.
