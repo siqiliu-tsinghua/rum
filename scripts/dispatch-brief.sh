@@ -775,7 +775,10 @@ if [[ "${DRY_RUN:-0}" == "1" ]]; then
 fi
 
 # Refuse rather than run unbounded: the scope is what keeps an OOM inside the job.
-if ! "${scope[@]}" true 2>/dev/null; then
+# The probe uses a distinct unit name: a transient scope with the same name can
+# still be loaded when the real run starts (2026-11-07: "Unit ... was already
+# loaded or has a fragment file").
+if ! "$repo_root/scripts/memory-scope.sh" "${scope_unit}-probe" "$memory_max" true 2>/dev/null; then
   echo "error: cannot create a memory scope (systemd-run --user); nothing dispatched" >&2
   exit 1
 fi
