@@ -183,11 +183,11 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   both authorized forms measured red — the keyed completion interior
   (terminal 55, stack +64/level, preparation/evaluation residuals) and the
   entry split (terminal 55 only). The entry split is frozen as the placement
-  of record; the next round is a terminal-local ownership/liveness change
-  with the exact 54/one-load/base-sequence bar. The disabled workload executes
-  none of the new code, so the +1 is a whole-crate codegen effect, not
-  execution. A Mistral Vibe worker (`BRIEF_WORKER=mst`, GLM-5.3, $150/month)
-  is the Codex-outage fallback.
+  of record; brief 696 (design) tests a terminal-local ownership/liveness
+  change with the exact 54/one-load/base-sequence bar. The disabled workload
+  executes none of the new code, so the +1 is a whole-crate codegen effect,
+  not execution. A Mistral Vibe worker (`BRIEF_WORKER=mst`, GLM-5.3,
+  $150/month) is the Codex-outage fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
 ## Pointers
