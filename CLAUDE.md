@@ -177,17 +177,17 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
 - **After the branch:** the retention line from E0 with Q3 beside it, then
   Q1, Q2, Q4, Q5 (user ruling 2026-10-29), the binary snapshot format, the
   audit items and the threat-model critiques; only then `v0.3.0`.
-- **Latest done:** LP07 closed (`a9cb067d`); LP08 at brief 694 (design):
+- **Latest done:** LP07 closed (`a9cb067d`); LP08 at brief 695 (design):
   post-consumer publication is position- and enabled-green; briefs
-  690–692 excluded the terminal-side and whole-pause-body placement
-  families; brief 693 measured that the +1 is stable and that the pause
-  statements alone flip base's 54 to 55, then excluded its
-  suspension-point shape as a duplicate pause (second take faults, 0/20
-  enabled); brief 694 moves the attachment and publication into
-  `complete_phase`'s `InputRequired` arm with the pause slow body
-  byte-identical to base. A Mistral Vibe worker (`BRIEF_WORKER=mst`,
-  GLM-5.3, $150/month Vibe budget) is wired in as the Codex-outage
-  fallback.
+  690–693 excluded the terminal-side, whole-body and duplicate-pause
+  families; brief 694 excluded the unconditional completion interior
+  (`InputRequired` is shared with adopted completions; `rhs.rs:55-66`)
+  and the one-completion suspension move (terminal 56, unmatched
+  `Result` copy, stack −48/level). Brief 695 keys the publication to the
+  eight `PhaseKey::CallStage*` variants inside `complete_phase`'s
+  `InputRequired` arm with `pause_phase_at_finish_slow` byte-identical to
+  base and the call sites untouched. A Mistral Vibe worker (`BRIEF_WORKER=mst`,
+  GLM-5.3, $150/month Vibe budget) is the Codex-outage fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
 ## Pointers
