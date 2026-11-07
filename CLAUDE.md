@@ -183,7 +183,9 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   it, then Q1, Q2, Q4, Q5 (user ruling 2026-10-29), the binary snapshot
   format, the remaining audit items and the threat-model critiques. Only then
   `v0.3.0`.
-- **Latest done:** LP07 closed (`a9cb067d`); LP08 at brief 683, waiting for cdx.
+- **Latest done:** LP07 closed (`a9cb067d`); LP08 at brief 687 (design
+  STOP: the 686 form is enabled-green and exact-stack at +9/call;
+  both 687 cost forms excluded), brief 688 dispatched.
 - **Earlier lines** are recorded in `director-log.md`; deferred items in
   `TODO.md` (full polynomial factorization stays deferred by user decision).
 
