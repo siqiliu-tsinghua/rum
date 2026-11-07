@@ -663,7 +663,30 @@ pair 20/20 with `down` at some=1; then the two-build two-draw stack
 campaign and the per-site disabled attribution; then the mispair kill
 or measured impossibility and the 15 key rows; the contract's
 cross-thread, isolation and reset obligations are recorded, not
-assumed. Brief 683 carries that. The schema-v2 publication form
+assumed. Brief 683 measured the one observe discrimination and
+returned STOP: on the 682 collector it added one guard keyed to
+`call.stage.down_values` that returns on the delivered `Slot::Value`;
+six pairs turn red (argument-source, down, down-return, match,
+module-source, none-two), 14/20, every diff on that phase, faults=0.
+The observer build (two `#[cfg(test)]` trace sites) shows
+`CONSUME_DOWN stage_option=None` then
+`OBSERVE_DOWN channel=Value(f[2])` twice, and `Some` then `Value(7)`
+once: the stage's Option is consumed at `eval_core/call.rs:510`
+(typed consumers `:603/:604`, `:667/:668`) and the queue takes the
+cell before `observe` (`profile_queue.rs:352/357`), so a return
+retires the row as `LastDrop` (`logical/mod.rs:65`) against
+`profiling.md:38`. The guard is not the rejected blanket
+`Slot::Value => None`, and the exclusion is scoped to this
+observe-only guard, not a proof against every implementation. The
+other controls stay green (queue 9/9, flush, lifecycle open=0,
+mirrors 67/67, seven Throw kills, keys 131/19) and Scope NONE holds
+(live 2232 changed=0, retained 4415 changed=0, git clean). Director
+gate (`.temp/director/brief-683-gate.md`): Q1 approved — the next
+design places the down-values marker at its actual consumer frontier,
+bound to the production consumer CellId (`profile_queue.rs:197`),
+with the sampling-position exception stated and later recorded in
+`docs/dev/profiling.md`; an unresolved identity source is a STOP.
+Brief 684 carries that. The schema-v2 publication form
 follows the collector. The
 promotion stays complete and atomic — no subset,
 no rebaseline, no retained cell without its named promotion — and LP08
