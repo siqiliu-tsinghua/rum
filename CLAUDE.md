@@ -183,10 +183,12 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   it, then Q1, Q2, Q4, Q5 (user ruling 2026-10-29), the binary snapshot
   format, the remaining audit items and the threat-model critiques. Only then
   `v0.3.0`.
-- **Latest done:** LP07 closed (`a9cb067d`); LP08 at brief 689 (design
-  STOP: post-consumer publication is position- and enabled-green, but
-  the inherited terminal `movq:+1` and three unhit resumed helpers keep
-  the cost form unpromoted), brief 690 dispatched.
+- **Latest done:** LP07 closed (`a9cb067d`); LP08 at brief 691 (design):
+  post-consumer publication is position- and enabled-green; brief 690
+  measured the terminal reload's cause (the DownValues attachment in the
+  cold pause body), excluded both terminal-side shapes and settled the
+  resumed-helper coverage (two dynamic witnesses, one source-proved
+  exclusion); brief 691 relocates the attachment out of the cold body.
 - **Earlier lines** are recorded in `director-log.md`; deferred items in
   `TODO.md` (full polynomial factorization stays deferred by user decision).
 
