@@ -578,3 +578,63 @@ edit, the full lib 3x at 8 threads and once at 1, the workspace, the release
 erasure check and the test-name delta. Every surface compiles, formats and
 passes its lock audit before the next begins. Everything else in the brief
 stands. Resume with `CDX_FORK`.
+
+## Director ruling — 2026-11-08 (stage-4 static stop): Q7 settled; the owned-drop shape is authorized
+
+C4 is accepted as a static round: it made no source edit (the tree is the C3
+checkpoint, 33 files), its question is real, and stopping before the
+out-of-scope constructor is right. Q4-Q6 stand.
+
+**Q7 — the owned-drop shape: authorised as proposed, with four conditions.**
+The route is genuine: `clear_stash_admitted` and `drop_belonging_admitted`
+hold the collector's read permit while a selected `Arc<ProfileBoundary>` may
+be the last reference; the Drop then reaches `abandon` ->
+`segments::finish_active` -> `Epoch::close`, and the required entry
+admission in that chain would nest (a deadlock against a queued writer and a
+depth assertion in debug). The explicit-release shape is the correct one:
+type-enforced, no TLS fallback, no deferred refund, production
+representation unchanged.
+
+1. **The shape.** `type BoundaryStorage = Option<Storage>` under the exact
+   test cfg and `= Storage` otherwise; `release_admitted(&Admitted,
+   Arc<Self>)` uses `Arc::into_inner`, calls the admitted abandonment with
+   the *existing* permit, takes the storage, drops the cleaned boundary,
+   then drops the storage in the existing field order; `Drop` early-returns
+   (test cfg only) when the storage is `None`. The helper must not
+   fabricate a permit, use TLS depth, defer the refund, or `mem::forget`.
+   The ordinary `Drop` keeps today's `abandon(Retire::LastDrop)` body; its
+   own entry admission may be `None`, and per Q1/Q2 the boundary's own row
+   settlement and refund complete while only process-global alias/cache
+   writes are skipped. Any Drop path that can reach the *current* epoch's
+   rows from an unregistered thread is a STOP; name the proof.
+   - `size_of::<BoundaryStorage>()` must equal `size_of::<Storage>()` in
+     both cfgs (the `Arc` niche should make the `Option` free). Assert it
+     and quote both numbers. If it differs, STOP and re-shape; do not
+     re-derive a budget ledger.
+2. **Scope extension by class: the constructor initialisers.** Every
+   `ProfileBoundary { ... }` literal adapts `_storage: storage` to
+   `_storage: storage.into()` — I enumerated the set: `logical/mod.rs:683`,
+   `logical/completion.rs:40`, `suspension/core/profile_queue/tests.rs:222`,
+   `profiling/tests/record_engine.rs:153` and `:198`. Nothing else changes
+   in any of those files; `completion.rs` gets that one line only. The
+   `From<Storage> for Option<Storage>` and the reflexive `Into` make the
+   same text compile under both cfgs. Every file is disclosed.
+3. **Every collector release site wires the helper** for a selected
+   boundary it may hold the last reference to (`clear_stash_admitted`,
+   `drop_belonging_admitted`, and `drain_matching_admitted`'s `keep`); the
+   `Arc::into_inner` `None` case drops one reference exactly as today.
+   `drain_attached`'s success path (boundary consumed into a cell) keeps its
+   current shape.
+4. **The Q6 instance erratum (mine).** The added closure instance is
+   `selected.retain` at `collector.rs:176`; the row the keyed comparison
+   labels ADDED at `collector.rs:328` is the pre-existing
+   `hook.is_some_and` closure whose partner moved. The class ruling is
+   unchanged: one new closure, a pre-existing reason class, on an added
+   line. The census multiplicity note must say this in those terms.
+
+After Q7: the retained-entry `Option<Admitted>` propagation (epoch
+`terminal/settle`, the `Epoch.data` -> `RecordPath.state` order, alias
+writes only under `Some`), the three timing-frame repairs, the warning
+deletions, then segments/context, summary/reset, budget, the six mutants
+(including the Q4 B/C arms), the replays after the last source edit, and the
+acceptance runs. Resume with `CDX_FORK`.
