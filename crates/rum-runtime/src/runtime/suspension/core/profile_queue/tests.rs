@@ -106,7 +106,7 @@ fn logical_deferred_markers_keep_sequence_order_after_a_return() {
             .data
             .lock()
             .unwrap()
-            .ordered_and_balanced(queue.root);
+            .ordered_and_balanced(queue.root_id());
         let after = if i % 4 == 0 {
             None
         } else {
@@ -140,7 +140,7 @@ fn logical_deferred_markers_keep_sequence_order_after_a_return() {
             .data
             .lock()
             .unwrap()
-            .ordered_and_balanced(queue.root);
+            .ordered_and_balanced(queue.root_id());
         if i % 3 != 0 {
             deferred.push(*now.iter().find(|id| !before.contains(id)).unwrap());
         }
@@ -152,7 +152,7 @@ fn logical_deferred_markers_keep_sequence_order_after_a_return() {
         .data
         .lock()
         .unwrap()
-        .ordered_and_balanced(queue.root);
+        .ordered_and_balanced(queue.root_id());
     assert!(queue.push(context, Entry::EvaluationReturn, false));
     let after = queue
         .arena
@@ -161,7 +161,7 @@ fn logical_deferred_markers_keep_sequence_order_after_a_return() {
         .data
         .lock()
         .unwrap()
-        .ordered_and_balanced(queue.root);
+        .ordered_and_balanced(queue.root_id());
     let added = *after.iter().find(|id| !before.contains(id)).unwrap();
     let mut expected: Vec<_> = before
         .iter()

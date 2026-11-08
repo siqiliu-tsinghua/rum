@@ -48,6 +48,7 @@ pub(in crate::runtime) struct Epoch {
 struct Data {
     records: Index<RecordId, Record>,
     rows: Index<AggregateKey, Counts>,
+    deferred: Index<RecordId, RecordId>,
 }
 
 impl Epoch {
@@ -60,6 +61,7 @@ impl Epoch {
             budget.claim(std::mem::size_of::<Self>() + 2 * std::mem::size_of::<usize>())?;
         let records_storage = budget.claim(0)?;
         let rows_storage = budget.claim(0)?;
+        let deferred_storage = budget.claim(0)?;
         Some(Arc::new(Self {
             id: EpochId(next_id()),
             valid: AtomicBool::new(true),
@@ -70,6 +72,7 @@ impl Epoch {
             data: Mutex::new(Data {
                 records: Index::new(records_storage),
                 rows: Index::new(rows_storage),
+                deferred: Index::new(deferred_storage),
             }),
             _storage: storage,
         }))
@@ -194,7 +197,8 @@ impl Epoch {
         let Some(path) = data.records.get(id).map(|r| Arc::clone(&r.path)) else {
             return false;
         };
-        let Data { records, rows } = &mut *data;
+        data.deferred.remove(id);
+        let Data { records, rows, .. } = &mut *data;
         if !super::totals::terminal(&path, rows, outcome) {
             return false;
         }
@@ -212,6 +216,17 @@ impl Epoch {
         if let Some(counts) = data.rows.get_mut(key) {
             counts.input_required = counts.input_required.saturating_add(1);
         }
+    }
+
+    /// Mark a record that only LP08 retention keeps open. Physical
+    /// InputRequired observation is preserved for the total test accessor.
+    pub(super) fn observe_silent_retention(&self, record: RecordId) {
+        let Some(path) = self.path(record) else {
+            return;
+        };
+        path.state.lock().unwrap().pause_transparent = true;
+        // Release record-state before taking epoch-data in input_required.
+        self.input_required(record);
     }
 
     pub(in crate::runtime) fn inspect(
@@ -255,7 +270,8 @@ impl Epoch {
             return;
         }
         let mut data = self.data.lock().unwrap();
-        let Data { records, rows } = &mut *data;
+        for _ in data.deferred.remove_matching(|_| true) {}
+        let Data { records, rows, .. } = &mut *data;
         for record in records.remove_matching(|_| true) {
             super::totals::terminal(&record.path, rows, Err(reason));
             super::totals::settle(record.path, rows, |_| {});
@@ -279,7 +295,17 @@ impl Epoch {
         reason: Retire,
     ) {
         let mut data = self.data.lock().unwrap();
-        let Data { records, rows } = &mut *data;
+        {
+            let Data {
+                records, deferred, ..
+            } = &mut *data;
+            for _ in deferred.remove_matching(|id| {
+                records
+                    .get(*id)
+                    .is_some_and(|r| Arc::ptr_eq(&r.owner.control, control))
+            }) {}
+        }
+        let Data { records, rows, .. } = &mut *data;
         for record in records.remove_matching(|r| Arc::ptr_eq(&r.owner.control, control)) {
             super::totals::terminal(&record.path, rows, Err(reason));
             super::totals::settle(record.path, rows, |_| {});
@@ -294,6 +320,21 @@ pub(in crate::runtime) fn test_limit(
 ) {
     reset_for_lease(lease);
     current_slot().lock().unwrap().epoch = Epoch::new_unleased(limit);
+}
+
+/// The leased epoch when one already exists. Unlike `current`, this does not
+/// construct an epoch: a direct definition flush has no active segment, and
+/// creating one here would attach the deferred record to the wrong owner.
+pub(in crate::runtime) fn existing() -> Option<Arc<Epoch>> {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    if crate::runtime::profiling::lease::blocks_unregistered_thread() {
+        return None;
+    }
+    current_slot().lock().unwrap().epoch.clone()
 }
 
 pub(in crate::runtime) fn current() -> Option<Arc<Epoch>> {
@@ -327,7 +368,11 @@ fn reset_unleased() {
     let mut slot = current_slot().lock().unwrap();
     slot.failed = None;
     if let Some(old) = slot.epoch.take() {
+        super::collector::clear_registrations();
         old.retire(Retire::ProfileReset);
+        // Records are already retired. Dropping a leftover boundary closes
+        // nothing and cannot fault a missing record.
+        super::collector::clear_stash();
     }
 }
 
@@ -350,11 +395,10 @@ pub(in crate::runtime) fn reset_for_lease(lease: &crate::runtime::profiling::lea
 }
 
 pub(in crate::runtime) fn drop_session(session: &crate::runtime::Session) {
+    let control = Arc::clone(&session.request_interrupt_control.borrow());
+    super::collector::drop_belonging(&control);
     if let Some(epoch) = current_slot().lock().unwrap().epoch.as_ref() {
-        epoch.abandon_owner(
-            &session.request_interrupt_control.borrow(),
-            Retire::SessionDrop,
-        );
+        epoch.abandon_owner(&control, Retire::SessionDrop);
     }
 }
 
@@ -390,5 +434,34 @@ pub(in crate::runtime) fn drain_for_lease(_lease: &crate::runtime::profiling::le
             budget::process_bytes()
         );
         std::thread::yield_now();
+    }
+}
+
+impl Epoch {
+    pub(super) fn defer_definition(&self, record: RecordId) {
+        if !self.is_valid() {
+            return;
+        }
+        let ok = self.data.lock().unwrap().deferred.insert(record, record);
+        if !ok {
+            self.retire(Retire::DiagnosticCap);
+        }
+    }
+    pub(super) fn take_deferred_definition(
+        &self,
+        control: &Arc<crate::runtime::RequestInterruptState>,
+    ) -> Option<RecordId> {
+        let mut data = self.data.lock().unwrap();
+        let Data {
+            records, deferred, ..
+        } = &mut *data;
+        deferred
+            .remove_matching(|id| {
+                records.get(*id).is_some_and(|r| {
+                    Arc::ptr_eq(&r.owner.control, control)
+                        && r.owner.generation == control.logical_generation()
+                })
+            })
+            .next()
     }
 }

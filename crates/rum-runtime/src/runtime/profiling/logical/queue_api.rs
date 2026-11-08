@@ -3,6 +3,25 @@ use crate::runtime::Session;
 use std::sync::Arc;
 
 impl Session {
+    /// Sampling-position exception: the down-values stage's own Option slot.
+    /// The pending owner is borrowed continuously from validation to insertion.
+    pub(in crate::runtime) fn logical_insert_down_values_before_consumer(
+        &mut self,
+        boundary: Arc<crate::runtime::profiling::logical::ProfileBoundary>,
+    ) {
+        let Some(owner) = self.pending_suspension.as_mut() else {
+            boundary.epoch.fault();
+            return;
+        };
+        if !boundary.belongs_to(&self.request_interrupt_control.borrow()) {
+            boundary.epoch.fault();
+            return;
+        }
+        owner.frames.profile_boundary_before_consumer(boundary);
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingSuspension,
+        );
+    }
     /// Enabled-only producer/consumer frontier, stable through queue insertion.
     #[allow(dead_code)] // Explicit insertion API for later phase adoption.
     pub(in crate::runtime) fn logical_frontier(
@@ -31,6 +50,10 @@ impl Session {
                 crate::runtime::profiling::logical::Policy::Expr
                     | crate::runtime::profiling::logical::Policy::ApplicableExpr
                     | crate::runtime::profiling::logical::Policy::Incoming(_)
+                    | crate::runtime::profiling::logical::Policy::OptionalExpr
+                    | crate::runtime::profiling::logical::Policy::Bool
+                    | crate::runtime::profiling::logical::Policy::Prepared
+                    | crate::runtime::profiling::logical::Policy::Match
             )
         ));
         let context = self.resume_context();

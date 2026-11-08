@@ -3,6 +3,7 @@ use crate::runtime::{EvalError, Expr, suspension::Slot};
 use std::sync::Arc;
 
 mod budget;
+mod collector;
 mod context;
 pub(in crate::runtime) mod epoch;
 mod incoming;
@@ -15,6 +16,7 @@ pub(in crate::runtime) mod source_stack;
 mod totals;
 
 pub(in crate::runtime) use budget::Storage;
+pub(in crate::runtime) use collector::{drain_attached, drain_attached_for, set_hooks};
 pub(in crate::runtime) use context::{
     Context, ContextGuard, ExecutionScope, refresh_execution_control,
 };
@@ -288,7 +290,7 @@ pub(in crate::runtime) fn complete_definition_rule(
         return;
     };
     match result {
-        Err(crate::runtime::EvalError::InputRequired { .. }) => call.finish_input_required(),
+        Err(crate::runtime::EvalError::InputRequired { .. }) => call.defer_definition(),
         other => finish_logical_optional(Some(call), other),
     }
 }
@@ -528,6 +530,21 @@ impl crate::runtime::Session {
     }
 
     #[doc(hidden)]
+    pub fn logical_profile_test_reasons_for(phase: &'static str) -> [u64; 11] {
+        let mut reasons = [0; 11];
+        if let Some(epoch) = epoch::current() {
+            for (key, counts) in epoch.rows() {
+                if matches!(key, AggregateKey::Runtime { phase: actual, .. } if actual == phase) {
+                    for (target, value) in reasons.iter_mut().zip(counts.abandonment_reasons) {
+                        *target += value;
+                    }
+                }
+            }
+        }
+        reasons
+    }
+
+    #[doc(hidden)]
     pub fn logical_profile_test_pauses_for(phase: &'static str) -> u64 {
         epoch::current()
             .map(|e| {
@@ -537,6 +554,26 @@ impl crate::runtime::Session {
                         matches!(key, AggregateKey::Runtime { phase: actual, .. } if *actual == phase)
                     })
                     .map(|(_, c)| c.pauses)
+                    .sum()
+            })
+            .unwrap_or(0)
+    }
+
+    /// Physical `InputRequired` observations for the `Runtime` phase or
+    /// `Definition` kind named `name`. A retained definition call closes `ok`
+    /// at its consumer, so this is where its pause is recorded.
+    #[doc(hidden)]
+    pub fn logical_profile_test_input_required_for(name: &'static str) -> u64 {
+        epoch::current()
+            .map(|e| {
+                e.rows()
+                    .iter()
+                    .filter(|(key, _)| match key {
+                        AggregateKey::Runtime { phase, .. } => *phase == name,
+                        AggregateKey::Definition { kind, .. } => *kind == name,
+                        _ => false,
+                    })
+                    .map(|(_, c)| c.input_required)
                     .sum()
             })
             .unwrap_or(0)
@@ -624,10 +661,17 @@ impl Call {
         self.inner.epoch.input_required(self.inner.record);
         self.finish(Outcome::Error);
     }
-    pub(in crate::runtime) fn pause(mut self) -> Option<Arc<ProfileBoundary>> {
+    pub(in crate::runtime) fn pause(self) -> Option<Arc<ProfileBoundary>> {
         if let Some(segment) = &self.inner.segment {
             segment.pause();
         }
+        self.into_boundary()
+    }
+    fn retain(self) -> Option<Arc<ProfileBoundary>> {
+        self.inner.epoch.observe_silent_retention(self.inner.record);
+        self.into_boundary()
+    }
+    fn into_boundary(mut self) -> Option<Arc<ProfileBoundary>> {
         self.inner.segment.take();
         let storage = self
             .inner
@@ -975,10 +1019,38 @@ pub(in crate::runtime) fn complete_phase(
         return;
     };
     if matches!(outcome, super::RuntimeProfileOutcome::InputRequired) {
-        call.finish_input_required();
+        // The boundary waits on the process-wide stash. This body does not use
+        // session, so the hot callers can keep the session argument dead.
+        if let Some(boundary) = call.retain() {
+            collector::stash_boundary(boundary);
+        }
     } else {
         finish(call.into());
     }
+}
+
+#[cold]
+#[inline(never)]
+fn publish_stashed_phases_slow(session: &mut crate::runtime::Session) {
+    let paused = collector::take_stash();
+    // Suspend publishes only after the owner exists. A completion that stashes
+    // first keeps the boundary until that owner is current, and never attaches
+    // a boundary whose control is a different session.
+    if session.pending_suspension.is_none() {
+        collector::restore_stash(paused);
+        return;
+    }
+    session.flush_definition_boundaries();
+    let control = session.request_interrupt_control.borrow().clone();
+    let mut keep = Vec::new();
+    for boundary in paused {
+        if !boundary.belongs_to(&control) {
+            keep.push(boundary);
+            continue;
+        }
+        session.logical_insert_boundary(boundary, None, false);
+    }
+    collector::restore_stash(keep);
 }
 
 #[inline]
@@ -1107,6 +1179,26 @@ impl ProfileBoundary {
             Ok(slot) => match (policy, slot) {
                 (Policy::Incoming(outcome), Slot::Value(_)) => outcome,
                 (Policy::Expr, Slot::Value(_)) => Outcome::Ok,
+                (Policy::Expr, Slot::State(ContinuationState::OptionalExpr(Some(_))))
+                    if self.has_runtime_key("definition.rhs.total") =>
+                {
+                    Outcome::Ok
+                }
+                // prepare_arguments' logical outcome is None. The typed queue
+                // presents that completion as a value, same as the state arm.
+                (Policy::OptionalExpr, Slot::Value(_))
+                    if self.has_runtime_key("call.stage.prepare_arguments") =>
+                {
+                    Outcome::None
+                }
+                // A resumed value is the stage's produced expression: function,
+                // ordinary builtin, and a direct definition flush all share it.
+                (Policy::OptionalExpr, Slot::Value(_)) => Outcome::Some,
+                (Policy::OptionalExpr, Slot::State(ContinuationState::PreparedArguments(_)))
+                    if self.has_runtime_key("call.stage.prepare_arguments") =>
+                {
+                    Outcome::None
+                }
                 (Policy::ApplicableExpr, Slot::Value(_)) => Outcome::Some,
                 (Policy::OptionalExpr, Slot::State(ContinuationState::OptionalExpr(value))) => {
                     if value.is_some() {
@@ -1118,6 +1210,9 @@ impl ProfileBoundary {
                 (Policy::Bool, Slot::State(ContinuationState::Bool(_)))
                 | (Policy::Prepared, Slot::State(ContinuationState::PreparedArguments(_)))
                 | (Policy::Match, Slot::State(ContinuationState::MatchOutcome(_))) => Outcome::Ok,
+                // The typed queue resumes these stages with the produced expression.
+                // Queued finish records Ok for the same success.
+                (Policy::Prepared, Slot::Value(_)) | (Policy::Match, Slot::Value(_)) => Outcome::Ok,
                 _ => {
                     self.epoch.fault();
                     return;
@@ -1138,6 +1233,10 @@ pub(in crate::runtime) use super::tests::engine_support as test_support;
 #[cfg(test)]
 #[path = "../tests/evaluator.rs"]
 mod evaluator;
+
+#[cfg(test)]
+#[path = "../tests/retained_pause.rs"]
+mod retained_pause;
 
 #[cfg(test)]
 #[path = "../tests/definitions.rs"]
@@ -1177,4 +1276,50 @@ pub(in crate::runtime) fn resume_profile_epoch() -> Option<Arc<Epoch>> {
     segments::executing_epoch()
         .filter(|epoch| epoch.is_valid())
         .or_else(epoch::current)
+}
+
+pub(in crate::runtime) mod completion;
+
+#[inline]
+pub(in crate::runtime) fn pause_call_stage_at_finish(
+    session: &mut crate::runtime::Session,
+    phase: &'static str,
+) {
+    if !crate::runtime::profiling::lexical_profile_enabled() {
+        return;
+    }
+    pause_call_stage_at_finish_slow(session, phase)
+}
+
+#[cold]
+#[inline(never)]
+fn pause_call_stage_at_finish_slow(session: &mut crate::runtime::Session, phase: &'static str) {
+    if let Some(key) = PhaseKey::from_name(phase) {
+        if key == PhaseKey::CallStageDownValues {
+            // Director-approved exception for this diagnostic marker only.
+            // The witnessed dispatch consumer has just been pushed; bind this
+            // invocation before another push can replace its insertion handle.
+            let Some(entry) = take_phase(key) else {
+                return;
+            };
+            let Some(call) = entry.call else {
+                return;
+            };
+            if let Some(boundary) = call.retain() {
+                session.logical_insert_down_values_before_consumer(boundary);
+            }
+        } else {
+            complete_phase(
+                session,
+                key,
+                super::RuntimeProfileOutcome::InputRequired,
+                |_| {},
+            );
+        }
+        // The fixed-point witness has not pushed its R/G consumer yet.
+        // All other finish pauses follow their witnessed consumer.
+        if key != PhaseKey::EvaluateOnceUnstable {
+            publish_stashed_phases_slow(session);
+        }
+    }
 }

@@ -1,6 +1,8 @@
 use super::*;
 use crate::runtime::kernel_api::{FrameRootTrace, FrameRootVisitor, SlotWitness, slot_witness};
-use crate::runtime::profiling::logical::{complete_phase_error_at_finish, pause_phase_at_finish};
+use crate::runtime::profiling::logical::{
+    complete_phase_error_at_finish, pause_call_stage_at_finish,
+};
 use crate::runtime::suspension::{ContinueToken, TypedAction, TypedFrame};
 use std::sync::Arc;
 
@@ -250,7 +252,7 @@ impl Session {
                                 witness,
                                 request,
                             );
-                            pause_phase_at_finish(self, stage.profile_name());
+                            pause_call_stage_at_finish(self, stage.profile_name());
                             return failed;
                         }
                         Err(error) => {
@@ -308,7 +310,7 @@ impl Session {
                         witness,
                         request,
                     );
-                    pause_phase_at_finish(self, stage.profile_name());
+                    pause_call_stage_at_finish(self, stage.profile_name());
                     failed
                 }
                 Err(error) => Err(error),
@@ -326,7 +328,8 @@ impl Session {
     ) -> Result<Expr, EvalError> {
         loop {
             if stage_index >= plan.len() {
-                let final_args = match unevaluated_restore {
+                let terminal_restore = unevaluated_restore;
+                let final_args = match terminal_restore {
                     Some(restore) => {
                         let mut restored_args = restore.prepared_args.into_vec();
                         for (position, wrapper) in restore.wrappers.iter() {
@@ -373,7 +376,7 @@ impl Session {
                                 witness,
                                 request,
                             );
-                            pause_phase_at_finish(self, stage.profile_name());
+                            pause_call_stage_at_finish(self, stage.profile_name());
                             return failed;
                         }
                         Err(error) => {
@@ -433,7 +436,7 @@ impl Session {
                         witness,
                         request,
                     );
-                    pause_phase_at_finish(self, stage.profile_name());
+                    pause_call_stage_at_finish(self, stage.profile_name());
                     failed
                 }
                 Err(error) => Err(error),

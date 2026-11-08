@@ -46,8 +46,9 @@ struct Stack {
 thread_local! {
     static ACTIVE_STATE: Cell<usize> = const { Cell::new(0) };
     // A single InputRequired unwinds native callers and then the queue guard.
-    // Only the first (innermost) observer emits its pause; callers advance this
-    // cursor. The next execution entry starts a new event.
+    // Only explicit observers emit pauses and advance this cursor. Retained
+    // execution/timing records have separate restored pause attribution.
+    // The next execution entry starts a new event.
     static PAUSE_PARENT: Cell<Option<(EpochId, RecordId)>> = const { Cell::new(None) };
     static ACTIVE: RefCell<Stack> = const { RefCell::new(Stack {
         frames: Vec::new(), free: None, top: None, count: 0,
@@ -137,18 +138,36 @@ pub(in crate::runtime) fn enter(epoch: &Arc<Epoch>, record: RecordId) -> Option<
     }
     install(epoch, path, false)
 }
-/// A record that closes locally at `InputRequired`, so the queue never
-/// carries it: every adopted runtime phase, and every definition-rule record.
+/// The local-key classification is independent of current openness. Explicit
+/// phase carriers still observe pauses; retained records may remain open.
 fn locally_closed(key: &AggregateKey) -> bool {
     matches!(key, AggregateKey::Runtime { phase, .. } if PhaseKey::from_name(phase).is_some())
         || matches!(key, AggregateKey::Definition { .. })
 }
 
 pub(super) fn restore(epoch: &Arc<Epoch>, path: &Arc<RecordPath>) -> Option<Segment> {
-    // Adopted phases close locally on InputRequired; only an explicit LP02
-    // boundary remains open across the typed queue.
+    // Retained records restore as execution/timing records. Pause attribution
+    // separately selects the explicit observer behind transparent retention.
     if !path.is_open() {
         if locally_closed(&path.key) {
+            return path
+                .parent
+                .clone()
+                .into_inner()
+                .and_then(|parent| restore(epoch, &parent));
+        }
+        // Terminal parent only. The invalid-epoch clause stays out unless a
+        // probe fails without it.
+        let (closed, settled, children) = {
+            let state = path.state.lock().unwrap();
+            (state.closed, state.settled, state.children)
+        };
+        if closed && !settled && children > 0 {
+            return None;
+        }
+        // A record that already settled is not a new fault. Resume walks to
+        // its parent, including after ProfileReset has settled the old epoch.
+        if closed && settled && children == 0 {
             return path
                 .parent
                 .clone()
@@ -160,6 +179,38 @@ pub(super) fn restore(epoch: &Arc<Epoch>, path: &Arc<RecordPath>) -> Option<Segm
     }
     install(epoch, Arc::clone(path), true)
 }
+
+fn pause_observer<'a>(epoch: &Epoch, path: &'a RecordPath) -> Option<&'a RecordPath> {
+    if !path.state.lock().unwrap().pause_transparent {
+        return Some(path);
+    }
+    let mut parent = path.parent.as_deref();
+    while let Some(path) = parent {
+        let (transparent, closed, settled, children) = {
+            let state = path.state.lock().unwrap();
+            (
+                state.pause_transparent,
+                state.closed,
+                state.settled,
+                state.children,
+            )
+        };
+        if transparent || (closed && (locally_closed(&path.key) || (settled && children == 0))) {
+            parent = path.parent.as_deref();
+            continue;
+        }
+        if !closed {
+            return Some(path);
+        }
+        if !settled && children > 0 {
+            return None;
+        }
+        epoch.fault();
+        return None;
+    }
+    None
+}
+
 fn install(epoch: &Arc<Epoch>, path: Arc<RecordPath>, restored: bool) -> Option<Segment> {
     let head = path.state.lock().unwrap().active;
     if head.is_some_and(|id| id.thread != std::thread::current().id()) {
@@ -206,23 +257,30 @@ impl Segment {
             }
             active.park(Instant::now());
             active.paused = true;
-            PAUSE_PARENT.with(|cursor| {
-                if cursor.get() != Some((self.epoch.id, self.record)) {
-                    active.path.pause();
-                }
-                let mut parent = active.path.parent.as_deref();
-                let next = loop {
-                    let Some(path) = parent else {
-                        break None;
-                    };
-                    if locally_closed(&path.key) {
-                        parent = path.parent.as_deref();
-                    } else {
-                        break Some((self.epoch.id, path.record));
+            let observed = if active.restored {
+                pause_observer(&self.epoch, &active.path)
+            } else {
+                Some(&*active.path)
+            };
+            if let Some(path) = observed {
+                PAUSE_PARENT.with(|cursor| {
+                    if cursor.get() != Some((self.epoch.id, path.record)) {
+                        path.pause();
                     }
-                };
-                cursor.set(next);
-            });
+                    let mut parent = path.parent.as_deref();
+                    let next = loop {
+                        let Some(path) = parent else {
+                            break None;
+                        };
+                        if locally_closed(&path.key) {
+                            parent = path.parent.as_deref();
+                        } else {
+                            break Some((self.epoch.id, path.record));
+                        }
+                    };
+                    cursor.set(next);
+                });
+            }
         });
     }
     pub(in crate::runtime) fn end(&self) {

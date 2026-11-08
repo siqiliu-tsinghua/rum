@@ -341,14 +341,31 @@ fn baseline(source: &Source) {
         && row.site.start == (36, 19)
         && row.reason == "path AccumulatorChain::default has 0 exact bindings"));
     // Brief 668 ruling: replay equals brief 666 row for row: 1067 paired, 0 removed, 63 added.
+    // Brief 705 (LP08 install): the entry split's new sources move the
+    // frontier to 1162 (11/1114/37). Paired by kind, file, callee and reason
+    // against the pre-install emission: 1124 rows keep their identity and
+    // columns on the line shifted by exactly the inserted lines, and two
+    // `Arc::new`/`Mutex::new` spans in epoch.rs keep their identity with only
+    // the end line moved past the inserted line. 35 rows appear: 31 from the
+    // new collector module (1 RET001, 30 RET002, all on its added lines), two
+    // RET002 on epoch.rs's added `deferred_storage` line 64 and one on its
+    // added `deferred: Index::new` line 75, and one RET002 (opaque Arc) on
+    // mod.rs's added `call.pause()` line 982. Three RET002 retire from
+    // mod.rs's method-receiver bucket (9 -> 6): the replaced
+    // `call.finish_input_required()` sites remove its only resolved entry,
+    // so its body row and the two body rows of its `Call::finish` callee
+    // leave the frontier. One `method instance has unknown bounds` row
+    // re-spells at resolution.rs's changed fixed-point arm
+    // (543:5-551:6 -> 560:18-568:6). No other file's population changes;
+    // still no mark and no coverage.
     assert_eq!(
         options.rejected.len(),
-        1130,
+        1162,
         "STOP: brief-545 exact legacy frontier inventory moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 1083), (Kind::RET003, 37)])
+        BTreeMap::from([(Kind::RET001, 11), (Kind::RET002, 1114), (Kind::RET003, 37)])
     );
     let wrapper = regions::frontier(
         source,

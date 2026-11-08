@@ -49,6 +49,14 @@ impl FrameStorage {
             profile.retire_diagnostics();
         }
     }
+    pub(in crate::runtime) fn register_profile_owner(
+        &self,
+        control: Arc<crate::runtime::RequestInterruptState>,
+    ) {
+        if let Self::Profiled(queue) = self {
+            profile_queue::register_owner(control, queue);
+        }
+    }
     #[cold]
     #[inline(never)]
     pub(in crate::runtime) fn frontier(&self) -> Option<CellId> {
@@ -82,6 +90,20 @@ impl FrameStorage {
             }
         }
     }
+    #[cold]
+    #[inline(never)]
+    pub(in crate::runtime) fn profile_boundary_before_consumer(
+        &mut self,
+        boundary: Arc<ProfileBoundary>,
+    ) {
+        if let Self::Profiled(profile) = self {
+            if !profile.insert_before_consumer(boundary) {
+                self.deprofile();
+            }
+        } else {
+            boundary.epoch.fault();
+        }
+    }
     #[inline(always)]
     pub(super) fn push_back(&mut self, context: ResumeContext, frame: Arc<DynSuspensionFrame>) {
         match self {
@@ -111,6 +133,8 @@ impl FrameStorage {
             Self::Profiled(p) => {
                 if !p.push(context, Entry::Typed(frame), false) {
                     self.deprofile();
+                } else {
+                    p.publish_stashed_after_consumer();
                 }
             }
         }

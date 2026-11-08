@@ -42,6 +42,7 @@ pub(super) struct State {
     pub children: usize,
     pub active: Option<ActiveId>,
     pub totals: Totals,
+    pub(super) pause_transparent: bool,
 }
 
 impl RecordPath {

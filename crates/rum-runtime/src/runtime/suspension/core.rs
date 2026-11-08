@@ -516,6 +516,9 @@ impl Session {
         pending.guest_form_environment = guest_form_environment;
         if crate::runtime::profiling::logical::resume_profile_configured() {
             Self::enable_pending_profile(&mut pending.frames);
+            pending
+                .frames
+                .register_profile_owner(Arc::clone(&self.request_interrupt_control.borrow()));
         }
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,

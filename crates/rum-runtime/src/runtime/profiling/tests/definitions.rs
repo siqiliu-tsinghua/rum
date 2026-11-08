@@ -79,13 +79,13 @@ fn lp04_rhs_paused_and_resumed_down_value() {
     }
     let rows = Session::logical_profile_test_rows();
     for phase in ["definition.rhs.total", "definition.rhs.evaluate"] {
-        assert_eq!(row(&rows, "phase", phase), [1, 0, 1, 0, 0, 0, 0, 0, 0, 0]);
+        assert_eq!(row(&rows, "phase", phase), [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]);
     }
     assert_rule_row(
         &rows,
         "down_value_rhs_eval",
         "f",
-        [1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [1, 1, 0, 1, 0, 0, 0, 0, 0, 0],
     );
     assert_closed(&rows);
 }

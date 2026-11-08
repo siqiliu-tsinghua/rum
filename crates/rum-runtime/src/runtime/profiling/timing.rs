@@ -628,6 +628,9 @@ fn record_profile_runtime_path_timing_adopted_slow<
         }
     }
     record_profile_runtime_path_timing(token, outcome);
+    // Session stays unused past the dead complete_phase argument. The drain
+    // reads the process-wide stash and the registered owner, not this frame.
+    crate::runtime::profiling::logical::drain_attached();
 }
 
 #[inline]

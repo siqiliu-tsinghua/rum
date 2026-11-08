@@ -391,6 +391,8 @@ impl Session {
         token: ContinueToken<'resume, PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame>,
     ) -> Result<SuspendedPreparedCallArguments, ResumeStop<PreparedCallArguments>> {
         let list_drops_nothing = is_system_symbol_name(&state.head, heads::structure::LIST);
+        // Same calls the queued append uses at eval_call_prepare.rs:321 and :345.
+        let runtime_profile_append = runtime_path_timing_start("prepare_arguments.append_arg");
         state.prepared = append_suspended_prepared_argument(
             state.prepared,
             value,
@@ -398,6 +400,7 @@ impl Session {
             state.attributes.sequence_hold(),
             list_drops_nothing,
         );
+        record_profile_runtime_path_timing(runtime_profile_append, RuntimeProfileOutcome::Ok);
         self.resume_suspended_call_argument_preparation(state, token)
     }
 

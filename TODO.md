@@ -690,7 +690,16 @@ Brief 684 carries that. The schema-v2 publication form
 follows the collector. The
 promotion stays complete and atomic — no subset,
 no rebaseline, no retained cell without its named promotion — and LP08
-is not closed until the promotion transaction passes. Then come C2's remaining 353 rows on the final source, the manifest
+is not closed until the promotion transaction passes. **2026-11-08: LP08's
+install (705) and repair (707) have landed.** The frozen entry split and the
+one-line `terminal_owner` ledger cut the terminal branch 54 -> 42
+instructions, and Option C's silent retention with transparent restored
+pause attribution replaced HEAD's local `finish_input_required` close.
+The acceptance on the final tree is green: workspace 4,156/0/61 (seven
+standing skips), focused 201/0/2 at 8 and 1 threads, and the five-mode LP01
+parents at 8 and 1 byte-identical (88,795 records, 0 semantic differences).
+Brief 708 reproduced every 702/703 campaign bar on fresh binaries and found
+no new executed work on the disabled path. Then come C2's remaining 353 rows on the final source, the manifest
 (CM, `.temp/brief-621/draft-G15-CM-obligation-manifest.md`), `CHANGELOG.md`
 (user ruling), and S10 from `.temp/brief-606/draft-S10.md`, with its
 owned-row table from `.temp/brief-621/draft-existing-owner-additions.md`. The

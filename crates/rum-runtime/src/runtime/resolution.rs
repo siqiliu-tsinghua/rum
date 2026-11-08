@@ -420,12 +420,18 @@ impl Session {
         mut state: SuspendedFixedPointState,
         next: Expr,
     ) -> Result<Expr, EvalError> {
-        if next == state.current {
+        // Same calls the queued loop uses at resolution.rs:403 and :410.
+        let runtime_profile_equal = runtime_path_timing_start("evaluate.fixed_point_equal");
+        let fixed_point = next == state.current;
+        record_profile_runtime_path_timing(runtime_profile_equal, RuntimeProfileOutcome::Ok);
+        if fixed_point {
             return Ok(next);
         }
 
+        let runtime_profile_update = runtime_path_timing_start("evaluate.trace_update");
         self.push_evaluation_pass_trace(&state.current, &next);
         state.current = next;
+        record_profile_runtime_path_timing(runtime_profile_update, RuntimeProfileOutcome::Ok);
 
         loop {
             if state.evaluation_passes >= self.resource_limits.evaluation_pass_limit {
@@ -436,7 +442,13 @@ impl Session {
             state.evaluation_passes += 1;
 
             self.enforce_active_resource_limits_for_expr(&state.current)?;
-            if self.cached_expr_is_evaluation_stable(&state.current) {
+            let runtime_profile_stability = runtime_path_timing_start("evaluate.stability_check");
+            let stable = self.cached_expr_is_evaluation_stable(&state.current);
+            record_profile_runtime_path_timing(
+                runtime_profile_stability,
+                RuntimeProfileOutcome::Ok,
+            );
+            if stable {
                 return Ok(state.current);
             }
 
@@ -471,12 +483,17 @@ impl Session {
                 Err(error) => return Err(error),
             };
 
-            if next == state.current {
+            let runtime_profile_equal = runtime_path_timing_start("evaluate.fixed_point_equal");
+            let fixed_point = next == state.current;
+            record_profile_runtime_path_timing(runtime_profile_equal, RuntimeProfileOutcome::Ok);
+            if fixed_point {
                 return Ok(next);
             }
 
+            let runtime_profile_update = runtime_path_timing_start("evaluate.trace_update");
             self.push_evaluation_pass_trace(&state.current, &next);
             state.current = next;
+            record_profile_runtime_path_timing(runtime_profile_update, RuntimeProfileOutcome::Ok);
         }
     }
 }
@@ -540,7 +557,7 @@ fn suspend_initial_evaluation_once_with_boundary(
     request: crate::runtime::RuntimeInputRequest,
 ) -> Result<Expr, EvalError> {
     crate::runtime::profiling::logical::pause_phase_at_finish(session, "evaluate.once_unstable");
-    witness.suspend_evaluation_return(
+    let result = witness.suspend_evaluation_return(
         session,
         request,
         EvaluateProfiledFixedPointSuspensionFrame::freeze(
@@ -548,7 +565,8 @@ fn suspend_initial_evaluation_once_with_boundary(
             evaluation_passes,
             fixed_point_seen,
         ),
-    )
+    );
+    result
 }
 
 #[cold]
@@ -560,9 +578,10 @@ fn suspend_resumed_evaluation_once_with_boundary(
     request: crate::runtime::RuntimeInputRequest,
 ) -> Result<Expr, EvalError> {
     crate::runtime::profiling::logical::pause_phase_at_finish(session, "evaluate.once_unstable");
-    witness.suspend_evaluation_return(
+    let result = witness.suspend_evaluation_return(
         session,
         request,
         ResumeFixedPointFromSuspensionFrame { state },
-    )
+    );
+    result
 }

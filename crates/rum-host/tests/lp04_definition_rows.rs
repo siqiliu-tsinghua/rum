@@ -23,8 +23,9 @@ const CASES: &[Case] = &[
             "down_values.compiled_matcher",
         ],
         kinds: &["down_value_rhs_eval"],
-        // The pause lands inside the RHS, so its rows close as errors; the
-        // matcher runs before the RHS and must still complete ok.
+        // The pause lands inside the RHS; the retained definition call
+        // observes InputRequired and closes ok at its consumer. The matcher
+        // runs before the RHS and must still complete ok.
         paused_phases: &[],
     },
     Case {
@@ -49,8 +50,10 @@ struct Case {
     resume: Option<&'static str>,
     phases: &'static [&'static str],
     kinds: &'static [&'static str],
-    /// Rows that must close with at least one error: the pause is recorded on
-    /// the definition record, not silently dropped.
+    /// Rows that must record one physical InputRequired observation: the
+    /// pause is recorded on the definition record, not silently dropped.
+    /// Retention closes the call `ok` at its consumer, so the observation is
+    /// `input_required`, not an error.
     paused_phases: &'static [&'static str],
 }
 
@@ -118,7 +121,12 @@ fn lp04_adopted_definition_rows_are_exact_in_completed_and_resumed_runs() {
                 .unwrap_or_else(|| panic!("{phase} missing for `{program}`: {rows:?}"));
             assert_closed(phase, counts);
             if case.paused_phases.contains(phase) {
-                assert!(counts[2] > 0, "{phase} recorded no paused call: {counts:?}");
+                assert_eq!(
+                    Session::logical_profile_test_input_required_for(*phase),
+                    1,
+                    "{phase} recorded no paused call: {counts:?}"
+                );
+                assert!(counts[1] > 0, "{phase} never completed ok: {counts:?}");
             } else {
                 assert!(counts[1] > 0, "{phase} never completed ok: {counts:?}");
             }
@@ -129,7 +137,12 @@ fn lp04_adopted_definition_rows_are_exact_in_completed_and_resumed_runs() {
             });
             assert_closed(kind, counts);
             if case.paused_phases.contains(kind) {
-                assert!(counts[2] > 0, "{kind} recorded no paused call: {counts:?}");
+                assert_eq!(
+                    Session::logical_profile_test_input_required_for(*kind),
+                    1,
+                    "{kind} recorded no paused call: {counts:?}"
+                );
+                assert!(counts[1] > 0, "{kind} never completed ok: {counts:?}");
             } else {
                 assert!(counts[1] > 0, "{kind} never completed ok: {counts:?}");
             }

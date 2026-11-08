@@ -314,6 +314,27 @@ impl Arena {
         };
         self.balance_up(parent)
     }
+    pub(super) fn insert_before(
+        &mut self,
+        root: Option<CellId>,
+        consumer: CellId,
+        added: CellId,
+    ) -> Option<CellId> {
+        if !self.belongs(root, consumer) {
+            return None;
+        }
+        // The consumer identity is supplied by allocation, not discovered here.
+        // This is the symmetric AVL insertion operation at that exact cell.
+        let parent = if let Some(left) = self.node(consumer)?.left {
+            let previous = self.last(Some(left))?;
+            self.right(previous, Some(added))?;
+            previous
+        } else {
+            self.left(consumer, Some(added))?;
+            consumer
+        };
+        self.balance_up(parent)
+    }
     fn join_pivot(
         &mut self,
         left: Option<CellId>,

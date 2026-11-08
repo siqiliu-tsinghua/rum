@@ -65,23 +65,26 @@ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	13	
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	35	35	rum_runtime::runtime::profiling::logical::epoch::Epoch.valid: foreign representation std::sync::atomic::AtomicBool: AtomicBool
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	36	38	rum_runtime::runtime::profiling::logical::epoch::Epoch.contexts: foreign representation std::sync::atomic::AtomicUsize: AtomicUsize
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	37	36	rum_runtime::runtime::profiling::logical::epoch::Epoch.faults: foreign representation std::sync::atomic::AtomicU64: AtomicU64
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	83	12	rum_runtime::runtime::profiling::logical::DefinitionRuleRecord.start/std::option::Option[Own]/arg0: foreign representation std::time::Instant: std :: time :: Instant
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	400	12	rum_runtime::runtime::profiling::logical::LogicalProfileTestLease.inner: unresolved conditional storage: super :: lease :: TestLease
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	410	9	conditional public input signature logical_profile_test_acquire
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	417	9	conditional public input signature logical_profile_test_span
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	449	9	conditional public input signature logical_profile_test_source_scope
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	459	9	conditional public input signature logical_profile_test_rows
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	487	9	conditional public input signature logical_profile_test_leases
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	494	9	conditional public input signature logical_profile_test_assert_quiescent
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	501	9	conditional public input signature logical_profile_test_reset
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	506	9	conditional public input signature logical_profile_test_reasons
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	519	9	conditional public input signature logical_profile_test_pauses
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	531	9	conditional public input signature logical_profile_test_pauses_for
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1138	1	module evaluator has 0 source candidates
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1142	1	module definitions has 0 source candidates
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1146	1	module assignments has 0 source candidates
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1150	1	module lease_release has 0 source candidates
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1154	1	module control_tests has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	85	12	rum_runtime::runtime::profiling::logical::DefinitionRuleRecord.start/std::option::Option[Own]/arg0: foreign representation std::time::Instant: std :: time :: Instant
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	402	12	rum_runtime::runtime::profiling::logical::LogicalProfileTestLease.inner: unresolved conditional storage: super :: lease :: TestLease
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	412	9	conditional public input signature logical_profile_test_acquire
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	419	9	conditional public input signature logical_profile_test_span
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	451	9	conditional public input signature logical_profile_test_source_scope
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	461	9	conditional public input signature logical_profile_test_rows
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	489	9	conditional public input signature logical_profile_test_leases
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	496	9	conditional public input signature logical_profile_test_assert_quiescent
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	503	9	conditional public input signature logical_profile_test_reset
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	508	9	conditional public input signature logical_profile_test_reasons
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	521	9	conditional public input signature logical_profile_test_pauses
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	533	9	conditional public input signature logical_profile_test_reasons_for
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	548	9	conditional public input signature logical_profile_test_pauses_for
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	566	9	conditional public input signature logical_profile_test_input_required_for
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1233	1	module evaluator has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1237	1	module retained_pause has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1241	1	module definitions has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1245	1	module assignments has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1249	1	module lease_release has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1253	1	module control_tests has 0 source candidates
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	13	12	rum_runtime::runtime::profiling::logical::segments::Active.start/std::option::Option[Own]/arg0: foreign representation std::time::Instant: Instant
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/totals.rs	31	17	rum_runtime::runtime::profiling::logical::totals::ActiveId.thread: foreign representation std::thread::ThreadId: std :: thread :: ThreadId
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	485	12	rum_runtime::runtime::profiling::BuiltinTimingToken.start: foreign representation std::time::Instant: Instant
@@ -96,6 +99,7 @@ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/logical_contract
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/logical_contract.rs	13	20	rum_runtime::runtime::profiling::logical_contract::LogicalProfileSnapshot.telemetry: unresolved conditional storage: BTreeMap < String , String >
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/logical_contract.rs	14	16	rum_runtime::runtime::profiling::logical_contract::LogicalProfileSnapshot.flags: unresolved conditional storage: BTreeMap < String , u8 >
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/logical_contract.rs	16	15	rum_runtime::runtime::profiling::logical_contract::LogicalProfileSnapshot.maps: unresolved conditional storage: BTreeMap < String , usize >
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/retained_pause.rs	1	1	source file is not reachable from a production or test module declaration
 UnknownConstruct	crates/rum-runtime/src/runtime/session/batch_file.rs	9	11	rum_runtime::runtime::session::batch_file::PublicFileRollbackFrame.path: foreign representation std::path::PathBuf: PathBuf
 UnknownConstruct	crates/rum-runtime/src/runtime/session/guest_loading/file.rs	5	22	rum_runtime::runtime::session::guest_loading::file::GuestFileSource.path: foreign representation std::path::PathBuf: PathBuf
 UnknownConstruct	crates/rum-runtime/src/runtime/session/guest_loading/scope.rs	42	20	rum_runtime::runtime::session::guest_loading::scope::GuestFormEnvironment.eval_deadline/std::option::Option[Own]/arg0: foreign representation std::time::Instant: Instant

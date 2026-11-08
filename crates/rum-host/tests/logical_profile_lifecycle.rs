@@ -268,7 +268,10 @@ fn logical_native_lifecycle() {
     Session::logical_profile_test_reset(&lease);
     assert!(a.restore_from_bytes(b"LpSpan[InputString[]]").is_err());
     closed([1, 0, 0, 0, 0, 0, 0, 0, 1, 0]);
-    assert_eq!(Session::logical_profile_test_reasons()[2], 1);
+    // Retention keeps production phase records open until the resumed path
+    // completes them, so a failed restore retires that whole open tree; this
+    // test's reasons bar is the native logical row (file header).
+    assert_eq!(Session::logical_profile_test_reasons_for("native")[2], 1);
     println!("LP02_NATIVE failed-restore abandoned-once");
 
     for (source, expected) in [
@@ -278,7 +281,7 @@ fn logical_native_lifecycle() {
         Session::logical_profile_test_reset(&lease);
         done(a.eval(source));
         closed([expected, 0, 0, 0, 0, 0, 0, 0, expected, 0]);
-        let reasons = Session::logical_profile_test_reasons();
+        let reasons = Session::logical_profile_test_reasons_for("native");
         assert_eq!(reasons[3] + reasons[4], expected);
     }
     println!("LP02_NATIVE rollback helper-discard abandoned-once");

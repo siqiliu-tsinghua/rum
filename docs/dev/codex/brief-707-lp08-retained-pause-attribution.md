@@ -522,3 +522,42 @@ change, `UnknownHostPayload`, a changed accepted semantic ledger/position/
 ownership bar, or an uncalibrated falsifier. The five allowed production files
 and the one new test module are the whole implementation; a sixth file is a
 STOP unless the template's standing maintenance duty names it as generated.
+
+## Director gate — 2026-11-08: GREEN (install + repair landed)
+
+Run 1 delivered the five permitted production files at the Option C shape
+plus `retained_pause.rs`, and stopped at the native lifecycle's
+failed-restore reason aggregate. I measured the same bar on the 705-installed
+pre-repair tree in a private target: identical, so the inflation is
+install-inherent, and re-scoped both reason bars through the test-gated
+`logical_profile_test_reasons_for("native")` with the exact values kept.
+
+Continuation A ran the mutants, the shape panel and the standing replays
+green, then stopped at the LP04 switch test. I measured that bar on the
+pre-repair tree too: `definition.rhs.total` has the same `[1,1,0,...]` row
+and **zero** physical `input_required` observations, so the old `err > 0`
+was HEAD's local close, not this test's contract. The oracle now uses the
+test-gated `logical_profile_test_input_required_for(name)` and asserts
+exactly `1` plus a completed call; I watched it red on the pre-repair tree
+(0 vs 1) and green on the amended live tree at 8 and 1 threads.
+
+Continuation B passed fmt, LP02 and both switch suites, and stopped only on
+nine native ZeroMQ tests whose loopback bind the worker sandbox denies
+(`Operation not permitted`, reproduced at 1 thread; the host bind works).
+That is an environment boundary, not a code defect. On the host I ran the
+same acceptance on this tree: `cargo fmt --check` clean; workspace
+**4,156 passed / 0 failed / 61 ignored** (the seven standing skips);
+focused **201 / 0 / 2** at 8 and 1 threads; five-mode LP01 parents at 8 and
+1 PASS with `semantic_differences=0`, `moved_stamps=0`,
+`byte_identical=true` and 88,795 records (keys 1,592/mode, receipts
+875/mode, losses 0/15,463/19,468/18,757/22,772).
+
+Brief 708 then re-measured the final source end to end: terminal 54 -> 42 in
+all four cells, ownership `[1,2,1]`, 386 positions, stack 18,304/18,896,
+coverage 94/96/416/606, witnesses 145 -> 129 / 108 -> 84, the five
+falsifiers, M1 3/3 / M2 1/1 / M3 3/3, direct flush, 150 routes, the host
+contract, and the disabled path with no new executed work (largest positive
+label +2.71%, inside the layout envelope; 312 Callgrind captures with zero
+evaluator-work delta).
+
+**Verdict: the repair is accepted and committed with the install.**
