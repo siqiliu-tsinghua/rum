@@ -433,3 +433,81 @@ candidate calls the outlined wrapper); and the `#[inline]` experiment, built
 through the canonical probe builder at CGU 1 (`sha256
 cc8490e7b67c86919e4d0d609bba1bcfe4ad0487a9681a47f2d23ac4d8ec8581`), whose
 eight samples equal the standing bar exactly.
+
+## Director gate — 2026-11-08 (continuation D): the disabled path executes extra work
+
+The repair landed the exact stack in both builds (18,304 / 12,392 / residual
+0, eight samples, and all ninety executable chain frames byte-equal), and the
+Function instruction rows and the queued 49 control pass. Then the standing
+timing panel stopped on eight separated distributions, the largest being
+association key reads at +24.78% and +28.09%. I attributed both sides of that
+STOP myself, and the larger finding is not the one the worker reported.
+
+**My finding — a real default-path cost the campaign's bar never measured.**
+I profiled the same 120-label workload under Callgrind on the two qualified
+CLI binaries and compared per-call costs across functions whose call counts
+are identical. Six functions on the disabled path execute more instructions
+per call in the candidate:
+
+| function | calls | Ir/call |
+|---|---|---|
+| `counters::record_timing` | 103,920 | 13 → 19 (+6) |
+| `timing::record_profile_rule_rhs_timing` | 393,040 | 23 → 25 (+2) |
+| `..._dispatch_candidate` | 91,440 | 18 → 20 (+2) |
+| `..._dispatch_matcher_outcome` | 49,008 | 20 → 22 (+2) |
+| `..._dispatch_fast_outcome` | 21,428 | 20 → 22 (+2) |
+| `..._dispatch_prefilter_skip` | 7,003 | 18 → 20 (+2) |
+
+That is 1,747,358 extra retired instructions on this workload. The mechanism
+is visible in the disassembly: `record_timing`'s disabled path is a sentinel
+compare and a jump, but its prologue grew from three pushes and two stores to
+six pushes and four stores because the enabled body now holds more values
+live across calls. The same prologue runs when profiling is off. This is
+new default-path work, the hard line forbids it, and the campaign's
+instruction bar missed it because Ruling 3 restated the 709 bar's Function
+rows and the queued control, not the seam functions' own cost. **That gap is
+mine, as Ruling 1a's narrow zero-additions condition was.**
+
+**The timing movement is not executed work.** The eight separated labels are
+not a work regression: every one of the 55 association functions executes an
+identical count (the `association_front`, `association_lookup`,
+`association_data_stability` rows differ by hundreds of instructions in
+billions), and the label's own operation in isolation is not slower — a
+40,000-read program measures 42.3 ms on both binaries, and under Callgrind
+the candidate retires 1.56M *fewer* instructions (592,955,683 vs
+594,511,526). The panel's 25% is layout or harness context, not work; it must
+still be re-measured on the repaired binaries, and the instruction ledger
+decides.
+
+**Ruling 7 — the disabled path is the bar, per call, on every function it
+executes.** A seam function's disabled path must not execute more
+instructions per call than base, in both arms, at identical call counts. The
+dispatching wrappers and `record_timing` must be reshaped so their off path
+is the gate check alone and the recording body lives behind a cold outlined
+call; the six functions above define the ledger, and any other function the
+disabled path executes belongs to it too. Measure the whole-workload
+instruction total as well, and require it not to exceed base. A cheaper off
+path is acceptable and recorded, never padded back to the old number. The
+stack bar keeps its exact identity: 18,304 / 12,392 / residual 0 / the eight
+samples, all ninety chain frames equal.
+
+**The timing panel is re-run, not re-litigated.** After the repair, run the
+703 four-pass three-arm protocol again on the repaired binaries. If labels
+still separate, capture per-function Callgrind for each one and let the
+instruction ledger decide; an identical per-operation count is a layout
+artefact, recorded with its numbers, and is not a work regression. Do not
+rebaseline the panel and do not discard a pass.
+
+**What this re-opens.** As Ruling 6 says: canonical replays, fingerprints,
+census, mutants and the cost rows all follow the edited source. The census
+assertion moves only if the population genuinely changes — otherwise STOP.
+Then the remaining acceptance: five-mode LP01 parents at 8 and 1, host
+lifecycle and the required-switch suites, focused acceptance, the whole
+workspace once.
+
+**What I verified myself.** The per-call ledger above from two qualified CLI
+binaries under Callgrind (identical call counts, 16,465,136,997 vs
+16,469,766,509 total, +0.028%); the `record_timing` prologues in both
+disassembly dumps; the 55 association functions' identical counts; the
+standalone timing (42.3 ms both) and the standalone Callgrind totals; and the
+report's own stack and frame rows against the two saved binaries.
