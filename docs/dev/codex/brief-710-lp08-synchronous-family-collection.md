@@ -333,3 +333,47 @@ inspected as pure line shifts with unchanged text; the live inventory
 byte-identical to the pre-brief snapshot and untouched in `git status`;
 `ownership-replay.json` shows zero new host payloads, zero new self-reaching
 rows and zero ledger moves; the continuation changed only the test file.
+
+## Director gate — 2026-11-08 (continuation B): the census population change is ruled
+
+The STOP is the TEMPLATE's rule working: the census counts moved, the worker
+did not touch the assertion, and the comparison is keyed by kind, file, callee
+and reason. I rule the population change in, and I update the assertion
+myself, as the TEMPLATE requires.
+
+**Ruling 4 — the census is 1,192 (11/1,143/38).** I edited
+`crates/rum-stdlib/src/tests/retention_closure/census/tests.rs` with the new
+counts and a dated rationale in the file's established style. Verified from
+the raw frontier dumps: before 1,162 (11/1,114/37), after 1,192
+(11/1,143/38); all 1,162 prior occurrences pair with unchanged kind, file,
+callee, reason and both endpoints and columns (112 of them on a moved line);
+zero retire; thirty appear. The additions are the collector's own boundaries:
+eight in `epoch.rs` (the new `events: Index::new` and
+`event_birth: Instant::now` lines, plus four rows inside the unchanged
+`existing()` body that the new InputRequired hook's
+`logical::epoch::existing()` call at `timing.rs:861` makes reachable), five in
+the new `synchronous.rs`, seventeen in `timing.rs` (the non-adopted runtime
+event block, the dispatch delta capture, and the InputRequired branch,
+including the single RET003 `matches!`). A new call edge that grows the
+analysed surface is exactly the case the census exists to disclose; no
+coverage mark, classification or promotion set moved.
+
+**Ruling 5 — the certificate red after this edit is an ordering artifact.**
+The contract fingerprint hashes every `.rs`/`.py`/`.toml` under `crates/`
+(`local/contracts.rs:88-133`), so any source or test-source edit expires every
+contract fingerprint by construction; I reproduced the
+`stale contract fingerprint O011` red in the census run after my edit. The
+canonical certificate replay must therefore run *after* this edit and before
+any suite that verifies contracts. That red is not a regression, and no
+fingerprint is to be hand-edited.
+
+**Ruling 3 continues.** Mutants, the two-build disabled cost rows, the
+remaining replays, and the acceptance suite at the prescribed point.
+
+**What I verified myself.** The two raw frontier dumps and their per-kind
+counts; the added-row spans against the current source lines
+(`epoch.rs:85:25` `Index::new`, `86:30` `Instant::now`, `timing.rs:835:25`
+`EventValue::count`, `859:12` `matches!`, `862:17` `epoch.fault()`); the
+baseline provenance (1,532 Rust files compared, 0 different); `census-pairing`
+and `census-span-proof` (1,162 paired, 0 removed, 30 added, 112 moved);
+`cargo fmt --check` clean after my edit.
