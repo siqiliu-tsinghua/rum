@@ -511,3 +511,119 @@ binaries under Callgrind (identical call counts, 16,465,136,997 vs
 disassembly dumps; the 55 association functions' identical counts; the
 standalone timing (42.3 ms both) and the standalone Callgrind totals; and the
 report's own stack and frame rows against the two saved binaries.
+
+## Director gate — 2026-11-08 (continuation E): the disabled path is cheaper, and the all-function reducer is not an instrument
+
+Continuation E reshaped the six seams and the report stopped on the expanded
+ledger: 30 and 20 increasing equal-call rows in the two builds. I reproduced
+both sides on my own fresh captures and the STOP is the instrument, not the
+repair.
+
+**The repair does what Ruling 7 asked.** Cold-outlined recording plus
+`#[inline(never)]` on the six outer wrappers, and nothing else: the
+continuation's whole source delta is six attributes, the body split into a
+gate and a `#[cold] #[inline(never)]` helper, and `#[inline]` on the dispatch
+gate helper. My own Callgrind captures of the qualified base and candidate
+CLIs on the same 120-label workload, with profiling off:
+
+| function | calls | Ir/call |
+|---|---|---|
+| `counters::record_timing` | 103,920 | 13 → 3 |
+| `timing::record_profile_rule_rhs_timing` | 393,040 | 23 → 18 |
+| `..._dispatch_candidate` | 91,440 | 18 → 14 |
+| `..._dispatch_matcher_outcome` | 49,008 | 20 → 18 |
+| `..._dispatch_fast_outcome` | 21,428 | 20 → 18 |
+| `..._dispatch_prefilter_skip` | 7,003 | 18 → 14 |
+
+Call counts are identical in both arms. The cold helpers
+(`record_timing_slow`, `record_profile_rule_rhs_timing_slow`) have zero
+calls, and `record_profile_definition_dispatch` is inlined into the
+wrappers; the disabled path executes the gate alone. Per Ruling 7 a cheaper
+off path is recorded, not padded back.
+
+**The whole-workload total falls below every base draw.** My fresh draws:
+base 16,463,477,222 and 16,458,943,348; candidate 16,456,887,219. The
+worker's: base 16,465,136,997 and 16,459,575,574; candidate 16,456,258,584
+and 16,455,617,811. Every candidate draw is below every base draw; the
+separation is 2.06M instructions against a 16.46-billion total.
+
+**The all-function reducer fails its own null.** Comparing two Callgrind
+captures of the *byte-identical* base binary flags 15 increasing equal-call
+rows in my capture set (26 in the worker's). A zero-growth criterion over
+every function in a dynamically linked process therefore fires on unchanged
+code; it is not calibrated, and I will not gate on it. The remaining
+identities are the workload's process-level nondeterminism: hash seeds,
+allocator paths, and the formatting of the measured durations the program
+prints (`rumMicroEmit` prints `ToString[seconds]`, so digit counts move with
+the measurement). Of my ten stable rows, four vary between the two base
+draws — the printed-duration formatter, a hash-map drop, the standing hash
+row `default_builtin_dispatch_spec_for_symbol` (16% spread on identical
+code) and a canonicalization row. The
+six genuinely stable increases total **+150 instructions** across
+16.46 billion: four dynamic-loader/`???` addresses (+36, +6, +24, +25),
+`__strtoul_internal` (+24) and `core::str::converts::from_utf8` (+35). None
+is reachable from the changed code: on the disabled path the seams call
+nothing new, so the repair cannot add work to a libc or std string routine.
+
+**Ruling 8 — the bar's scope, stated as it should have been.** Ruling 7's
+"every function it executes" means the functions the *changed code* executes
+on its disabled path — the seam bodies and anything they newly reach — plus
+the whole-workload instruction total. It does not mean a zero-tolerance
+reduction over every function in the process, which the instrument cannot
+resolve on this workload (its null is 15 rows). The seam ledger and the
+whole total both pass; the residual rows stay in the record with their
+vectors, are not re-baselined, offset or excluded. The scope error was mine
+in Ruling 7; the worker's literal reducer and its STOP were correct readings
+of what I wrote.
+
+**The timing panel is decided by the ledger, as Ruling 7 said.** The panel
+re-ran on the repaired binaries: 12 passes, 3 arms, 120 labels, 8 separated
+labels, the largest association key reads at +25.42% and +22.80%. Per-label
+Callgrind: `sort`/`reversesort` operation rows are exactly equal in both
+builds (5 rows each), `deletecases` 6 rows equal, the two association labels
+18 of 20 rows equal with the remaining two differing by at most 615
+instructions (0.0003%) in both directions across builds, and the association
+set-key row within 151. The label totals move in both directions across
+builds (`deletecases` +983,651 in one build and -110,676 in the other).
+The two association labels are the key-read loop: `-width4000` was excluded
+by brief-620 after an unchanged base measured a 2.06 ratio against itself
+(brief-622 carried the exemption), and `-width32000` is its sibling, already
+at 1.13 in brief-609. Its mechanism is documented in `TODO.md`: the
+key-read loop's entry offset within a 64-byte line, +20.8% from a 16-byte
+shift and +1.3% under 64-byte alignment. The panel remains FLAGGED as
+recorded — no pass is inferred from
+it, and no pass is discarded. The layout arm is continuation D's
+cold-perturbator build, hash-verified and reused rather than rebuilt on the
+repaired source; it is a noise-floor instrument only. The timing lane is
+secondary and the instruction ledger decided.
+
+**The stack bar is exact, reproduced by me.** Both arms give
+`consumed = 12,392 + 18,304 × depth` at depths 5, 10, 15 and 20 — the eight
+standing samples exactly — and my own probe backtraces are 93 frames with
+identical names at every index in both arms.
+
+**What I accepted.** Continuation E's repair, its replays (ownership 35
+position moves, 0 added, 0 retired; 68 fingerprints; two certificate rows in
+both cells; LP01 metadata; typed-slot; frame-root; census 1,192 with 0
+added and 0 retired), its six source mutants (12 named reds at 8 and 1,
+six restored greens), the Function rows (14 rows equal between arms, queued
+F6 49), and the acceptance below.
+
+**The acceptance I ran on the host.** `cargo fmt --check` clean; the
+profiling/suspension focus 214 passed / 2 failed / 2 ignored at both eight
+and one thread, the two failures being exactly the standing
+`lp655_root_context_falsifier` and `lp656_public_root_context_falsifier`;
+the host lifecycle suite 6/6 and the switch-gated `lp03`/`lp04`/`lp05`
+suites 5/5 at eight and one under `RUM_PROFILE_LEXICAL_SUBSTITUTION=1`; the
+five-mode LP01 parents 88,795 records with zero semantic differences in all
+four (feature, threads) cells and the installed loss ledger byte-unchanged;
+and the whole workspace once, 62 binaries, **4,169 passed / 0 failed / 61
+ignored** in 403 s with the seven switch-gated names skipped, peak 6.98 GB
+of 14 and no OOM. The three pre-existing `register_test_*` dead-code
+warnings are the only warnings in the run. The nine native ZeroMQ tests
+that the worker's sandbox denies pass here.
+
+Since the scope ruling is mine, I record it plainly: Ruling 7's wording
+made a whole-process zero-tolerance reduction look like the bar, and the
+worker stopped on it rather than talk past it. The repair itself was never
+at fault.

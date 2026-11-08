@@ -13,6 +13,7 @@ mod queue_api;
 mod record;
 pub(in crate::runtime) mod segments;
 pub(in crate::runtime) mod source_stack;
+pub(in crate::runtime) mod synchronous;
 mod totals;
 
 pub(in crate::runtime) use budget::Storage;

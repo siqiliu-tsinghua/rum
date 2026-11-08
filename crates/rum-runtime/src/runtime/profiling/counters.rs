@@ -1,5 +1,6 @@
 use super::*;
 
+#[inline(never)]
 pub(super) fn record_timing(
     count: &AtomicU64,
     total_nanos: &AtomicU64,
@@ -10,6 +11,12 @@ pub(super) fn record_timing(
         return;
     };
 
+    record_timing_slow(count, total_nanos, name, start);
+}
+
+#[cold]
+#[inline(never)]
+fn record_timing_slow(count: &AtomicU64, total_nanos: &AtomicU64, name: &str, start: Instant) {
     #[cfg(any(
         test,
         feature = "test-builtin-memory-growth",
@@ -19,6 +26,7 @@ pub(super) fn record_timing(
         return;
     };
     let elapsed_nanos = start.elapsed().as_nanos().min(u128::from(u64::MAX)) as u64;
+    logical::synchronous::counter(name, start, elapsed_nanos);
     let count_value = count.fetch_add(1, Ordering::Relaxed) + 1;
     let total_value = total_nanos
         .fetch_add(elapsed_nanos, Ordering::Relaxed)

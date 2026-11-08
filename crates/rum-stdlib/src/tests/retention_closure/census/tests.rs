@@ -358,14 +358,30 @@ fn baseline(source: &Source) {
     // re-spells at resolution.rs's changed fixed-point arm
     // (543:5-551:6 -> 560:18-568:6). No other file's population changes;
     // still no mark and no coverage.
+    // Brief 710 (LP08 schema-v2 stage A): the epoch-owned synchronous collector
+    // moves this frontier to 1192 (11/1143/38). Paired by kind, file, callee and
+    // reason against the accepted 1162-row frontier: 1162 rows keep their
+    // identity, callee, reason and both columns (112 of them on a moved line),
+    // none retires, and 30 appear. The additions are the collector's own
+    // boundaries: eight in epoch.rs -- the new `events: Index::new` and
+    // `event_birth: Instant::now` storage lines, and four rows inside the
+    // unchanged `existing()` body that the new InputRequired hook makes
+    // reachable through `logical::epoch::existing()` (timing.rs 861:13); five
+    // in the new synchronous.rs (`EventValue::default`/`count`/`add` and
+    // `EventKey::Cache` method-syntax and macro boundaries); seventeen in
+    // timing.rs -- the non-adopted runtime event block, the dispatch delta
+    // capture, and the InputRequired branch's `matches!` (the one RET003) with
+    // `fault()`/`synchronous::add`. Ruled by the director 2026-11-08: a new
+    // call edge into unchanged code grows the analysed surface; no coverage
+    // mark, classification or promotion set moved. Still no mark or coverage.
     assert_eq!(
         options.rejected.len(),
-        1162,
+        1192,
         "STOP: brief-545 exact legacy frontier inventory moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 11), (Kind::RET002, 1114), (Kind::RET003, 37)])
+        BTreeMap::from([(Kind::RET001, 11), (Kind::RET002, 1143), (Kind::RET003, 38)])
     );
     let wrapper = regions::frontier(
         source,

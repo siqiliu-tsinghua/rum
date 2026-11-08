@@ -174,6 +174,20 @@ fn record_symbol_timing_profile_counter(
         return;
     };
 
+    if name == "definition_rhs_eval_by_source" {
+        use crate::runtime::profiling::logical::synchronous::{self, EventKey, EventValue};
+        let mut delta = EventValue::count(1);
+        delta.durations[0] = elapsed_nanos;
+        delta.durations[1] = self_nanos;
+        synchronous::add(
+            EventKey::CacheSource {
+                event: name,
+                symbol,
+            },
+            delta,
+            start,
+        );
+    }
     let mut counters = symbol_timing_profile_counters()
         .lock()
         .expect("profile timing counter lock should not be poisoned");

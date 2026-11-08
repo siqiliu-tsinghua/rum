@@ -1,4 +1,5 @@
 use super::index::Index;
+use super::synchronous::{EventKey, EventValue};
 use super::*;
 use budget::{Budget, Storage};
 use record::Record;
@@ -6,6 +7,7 @@ use std::sync::{
     Mutex, OnceLock,
     atomic::{AtomicBool, AtomicU64, AtomicUsize, Ordering},
 };
+use std::time::Instant;
 
 #[cfg(any(
     test,
@@ -13,6 +15,10 @@ use std::sync::{
     feature = "test-continuation-slots"
 ))]
 mod snapshot;
+
+#[cfg(test)]
+#[path = "../tests/synchronous_families.rs"]
+mod synchronous_families;
 
 static NEXT_ID: AtomicU64 = AtomicU64::new(1);
 static CURRENT: OnceLock<Mutex<Current>> = OnceLock::new();
@@ -49,6 +55,8 @@ struct Data {
     records: Index<RecordId, Record>,
     rows: Index<AggregateKey, Counts>,
     deferred: Index<RecordId, RecordId>,
+    events: Index<EventKey, EventValue>,
+    event_birth: Instant,
 }
 
 impl Epoch {
@@ -62,6 +70,7 @@ impl Epoch {
         let records_storage = budget.claim(0)?;
         let rows_storage = budget.claim(0)?;
         let deferred_storage = budget.claim(0)?;
+        let event_storage = budget.claim(0)?;
         Some(Arc::new(Self {
             id: EpochId(next_id()),
             valid: AtomicBool::new(true),
@@ -73,6 +82,8 @@ impl Epoch {
                 records: Index::new(records_storage),
                 rows: Index::new(rows_storage),
                 deferred: Index::new(deferred_storage),
+                events: Index::new(event_storage),
+                event_birth: Instant::now(),
             }),
             _storage: storage,
         }))
@@ -112,6 +123,56 @@ impl Epoch {
             self.retire(Retire::DiagnosticCap);
         }
         claim
+    }
+
+    pub(in crate::runtime) fn event(
+        &self,
+        key: EventKey,
+        delta: EventValue,
+        start: Option<Instant>,
+    ) {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        if crate::runtime::profiling::lease::blocks_unregistered_thread() {
+            return;
+        }
+        let mut data = self.data.lock().unwrap();
+        if !self.is_valid() || start.is_some_and(|start| start < data.event_birth) {
+            return;
+        }
+        // Equal clock readings cannot prove membership in this epoch.
+        if start.is_some_and(|start| start == data.event_birth) {
+            drop(data);
+            self.fault();
+            return;
+        }
+        if data.events.get(key).is_none() && !data.events.insert(key, EventValue::default()) {
+            drop(data);
+            self.retire(Retire::DiagnosticCap);
+            return;
+        }
+        data.events.get_mut(key).unwrap().add(delta);
+    }
+
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    pub(in crate::runtime) fn event_rows(&self) -> Vec<(EventKey, EventValue)> {
+        if crate::runtime::profiling::lease::blocks_unregistered_thread() {
+            return Vec::new();
+        }
+        self.data
+            .lock()
+            .unwrap()
+            .events
+            .iter()
+            .map(|(key, value)| (key, *value))
+            .collect()
     }
 
     pub(in crate::runtime) fn open(

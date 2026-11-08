@@ -32,8 +32,11 @@ duration basis reuses `Epoch::rows()` including the observing thread's
 running intervals; the own-invocation sentence is qualified by the family
 gate; the current 23-key handoff witness stands; transient buffers are not
 charged twice; equal clock readings invalidate visibly; symbol keys use an
-injective escaped encoding. Stage A (brief 710) is the epoch-owned
-synchronous family index; B renders, C accepts. The test
+injective escaped encoding. Stage A is installed (brief 710): the
+epoch-owned synchronous family index over the seven recorder seams, with the
+disabled path cheaper per call than base on all six seams, the stack
+identity exact and the whole-workload instruction total below every base
+draw; B renders, C accepts. The test
 audit's Stage B and D03 are closed; LP05-LP08's promotion is done. The
 10-29 estimate in `docs/dev/security-hardening-progress.md` is pending a
 re-base (user ruling 2026-11-08: the Codex tier was upgraded and the
@@ -717,8 +720,20 @@ standing skips), focused 201/0/2 at 8 and 1 threads, and the five-mode LP01
 parents at 8 and 1 byte-identical (88,795 records, 0 semantic differences).
 Brief 708 reproduced every 702/703 campaign bar on fresh binaries and found
 no new executed work on the disabled path. The promotion transaction has
-therefore passed. `RumProfileSnapshot` still returns `Null`, so LP08's
-schema-v2 publication half is still open; it follows the collector. Then
+therefore passed. **2026-11-08: LP08's schema-v2 stage A has landed**
+(brief 710): the epoch-owned side index collects the synchronous families —
+runtime phases the epoch does not carry, rule RHS, definition dispatch,
+counters and the evaluation-cache entry/symbol/source events — from seven
+recorder seams, with the enabled bodies cold-outlined so the disabled path
+executes fewer instructions per call than base on all six seams
+(13 -> 3, 23 -> 18, 18/20 -> 14/18) and the whole-workload total below every
+base draw, the stack identity exact at 18,304 / 12,392 / residual 0, and the
+acceptance green (focused 214/2/2 at 8 and 1 with only the standing
+root-context reds, workspace 4,169/0/61 with the seven switch-gated names
+skipped, LP01 five-mode parents 88,795 records and zero semantic
+differences). `RumProfileSnapshot` still returns `Null`, so LP08's
+schema-v2 publication half is still open: stage B renders the snapshot over
+the side index, stage C accepts it. Then
 come C2's remaining 353 rows on the final source, the manifest
 (CM, `.temp/brief-621/draft-G15-CM-obligation-manifest.md`), `CHANGELOG.md`
 (user ruling), and S10 from `.temp/brief-606/draft-S10.md`, with its

@@ -110,6 +110,7 @@ impl Session {
         record_evaluation_cache_counter(&EVALUATE_ENTRY_COUNT, "evaluate_entries");
     }
 
+    #[inline]
     pub(in crate::runtime) fn record_profile_down_value_scan(&self, symbol: &Symbol) {
         record_evaluation_cache_counter(&DOWN_VALUE_SCAN_COUNT, "down_value_scans");
         record_symbol_profile_counter("down_value_scans", symbol);
@@ -208,6 +209,7 @@ pub(super) fn record_evaluation_cache_counter(counter: &AtomicU64, name: &str) {
 #[cold]
 #[inline(never)]
 fn record_evaluation_cache_counter_slow(counter: &AtomicU64, name: &str) {
+    crate::runtime::profiling::logical::synchronous::cache(name);
     let value = counter.fetch_add(1, Ordering::Relaxed) + 1;
     if evaluation_cache_profile_incremental_enabled() && value.is_power_of_two() {
         eprintln!("rum-profile evaluation-cache {name}={value}");
@@ -255,6 +257,24 @@ pub(super) fn record_symbol_profile_counter(name: &'static str, symbol: &Symbol)
 #[cold]
 #[inline(never)]
 fn record_symbol_profile_counter_slow(name: &'static str, symbol: Symbol) {
+    if matches!(
+        name,
+        "down_value_scans"
+            | "down_value_applications"
+            | "sub_value_applications"
+            | "builtin_applications"
+            | "eval_module_entries_by_source"
+    ) {
+        use crate::runtime::profiling::logical::synchronous::{self, EventKey, EventValue};
+        synchronous::add(
+            EventKey::CacheSymbol {
+                event: name,
+                symbol,
+            },
+            EventValue::count(1),
+            None,
+        );
+    }
     let mut counters = symbol_profile_counters()
         .lock()
         .expect("profile counter lock should not be poisoned");
@@ -583,6 +603,22 @@ pub(crate) fn observe_logical_profile(out: &mut crate::runtime::profiling::Logic
 #[cfg(test)]
 #[path = "tests/cold_load.rs"]
 mod cold_load;
+
+#[cfg(test)]
+impl Session {
+    pub(in crate::runtime) fn test_with_source_timing_lock(f: impl FnOnce()) {
+        let _guard = symbol_timing_profile_counters().lock().unwrap();
+        f();
+    }
+
+    pub(in crate::runtime) fn test_cache_profile_flags(flags: [u8; 3]) -> [u8; 3] {
+        [
+            EVALUATION_CACHE_PROFILE_ENABLED.swap(flags[0], Ordering::Relaxed),
+            EVALUATION_CACHE_PROFILE_ACTIVE.swap(flags[1], Ordering::Relaxed),
+            EVALUATION_CACHE_PROFILE_INCREMENTAL_ENABLED.swap(flags[2], Ordering::Relaxed),
+        ]
+    }
+}
 
 impl Session {
     pub(in crate::runtime) fn module_source_alias_completion(symbol: Symbol) {

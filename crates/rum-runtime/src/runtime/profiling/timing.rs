@@ -348,6 +348,7 @@ impl crate::runtime::Session {
     }
 }
 
+#[inline(never)]
 pub(in crate::runtime) fn record_profile_rule_rhs_timing(
     phase: &'static str,
     start: Option<Instant>,
@@ -360,11 +361,33 @@ pub(in crate::runtime) fn record_profile_rule_rhs_timing(
     let Some(start) = start else {
         return;
     };
+
+    record_profile_rule_rhs_timing_slow(phase, start, changed);
+}
+
+#[cold]
+#[inline(never)]
+fn record_profile_rule_rhs_timing_slow(phase: &'static str, start: Instant, changed: Option<bool>) {
     let elapsed_nanos = elapsed_nanos_since(start);
     let key = RuleRhsTimingKey {
         phase,
         source_symbol: current_expression_rebuild_source_symbol(),
     };
+    {
+        use logical::synchronous::{self, EventKey, EventValue};
+        let mut delta = EventValue::count(1);
+        delta.vector[1] = u64::from(changed == Some(true));
+        delta.vector[2] = u64::from(changed == Some(false));
+        delta.durations[0] = elapsed_nanos;
+        synchronous::add(
+            EventKey::Rhs {
+                phase,
+                source: key.source_symbol,
+            },
+            delta,
+            Some(start),
+        );
+    }
     RULE_RHS_TIMING_STATS.with(|stats| {
         let mut stats = stats.borrow_mut();
         let entry = stats.entry(key).or_default();
@@ -429,6 +452,7 @@ fn record_profile_definition_rule_timing_slow(
     });
 }
 
+#[inline(never)]
 pub(in crate::runtime) fn record_profile_definition_dispatch_candidate(
     kind: &'static str,
     symbol: &Symbol,
@@ -438,6 +462,7 @@ pub(in crate::runtime) fn record_profile_definition_dispatch_candidate(
     });
 }
 
+#[inline(never)]
 pub(in crate::runtime) fn record_profile_definition_dispatch_prefilter_skip(
     kind: &'static str,
     symbol: &Symbol,
@@ -447,6 +472,7 @@ pub(in crate::runtime) fn record_profile_definition_dispatch_prefilter_skip(
     });
 }
 
+#[inline(never)]
 pub(in crate::runtime) fn record_profile_definition_dispatch_fast_outcome(
     kind: &'static str,
     symbol: &Symbol,
@@ -461,6 +487,7 @@ pub(in crate::runtime) fn record_profile_definition_dispatch_fast_outcome(
     });
 }
 
+#[inline(never)]
 pub(in crate::runtime) fn record_profile_definition_dispatch_matcher_outcome(
     kind: &'static str,
     symbol: &Symbol,
@@ -506,7 +533,7 @@ fn record_profile_definition_dispatch_phase_timing_slow(
     }
 
     let elapsed_nanos = elapsed_nanos_since(start);
-    record_profile_definition_dispatch(kind, symbol, |stats| match phase {
+    record_profile_definition_dispatch_at(kind, symbol, Some(start), |stats| match phase {
         "prefilter" => {
             stats.prefilter_nanos = stats.prefilter_nanos.saturating_add(elapsed_nanos);
         }
@@ -525,6 +552,7 @@ fn record_profile_definition_dispatch_phase_timing_slow(
     });
 }
 
+#[inline]
 fn record_profile_definition_dispatch<F>(kind: &'static str, symbol: &Symbol, update: F)
 where
     F: FnOnce(&mut DefinitionDispatchStats),
@@ -533,16 +561,59 @@ where
         return;
     }
 
+    record_profile_definition_dispatch_at(kind, symbol, None, update);
+}
+
+#[cold]
+#[inline(never)]
+fn record_profile_definition_dispatch_at<F>(
+    kind: &'static str,
+    symbol: &Symbol,
+    start: Option<Instant>,
+    update: F,
+) where
+    F: FnOnce(&mut DefinitionDispatchStats),
+{
+    let source = evaluation_profile_current_source_symbol();
+
     let key = DefinitionDispatchKey {
         kind,
         symbol: Symbol::new(symbol.context(), symbol.name()),
-        source_symbol: evaluation_profile_current_source_symbol()
-            .map(|symbol| Symbol::new(symbol.context(), symbol.name())),
+        source_symbol: source.map(|symbol| Symbol::new(symbol.context(), symbol.name())),
     };
-    DEFINITION_DISPATCH_STATS.with(|stats| {
+    let delta = DEFINITION_DISPATCH_STATS.with(|stats| {
         let mut stats = stats.borrow_mut();
-        update(stats.entry(key).or_default());
+        let entry = stats.entry(key).or_default();
+        let before = *entry;
+        update(entry);
+        logical::synchronous::EventValue {
+            vector: [
+                entry.candidates - before.candidates,
+                entry.prefilter_skips - before.prefilter_skips,
+                entry.fast_matches - before.fast_matches,
+                entry.fast_misses - before.fast_misses,
+                entry.matcher_matches - before.matcher_matches,
+                entry.matcher_misses - before.matcher_misses,
+                0,
+            ],
+            durations: [
+                entry.prefilter_nanos - before.prefilter_nanos,
+                entry.fast_match_nanos - before.fast_match_nanos,
+                entry.compiled_matcher_nanos - before.compiled_matcher_nanos,
+                entry.rhs_substitution_nanos - before.rhs_substitution_nanos,
+            ],
+            input_required: 0,
+        }
     });
+    logical::synchronous::add(
+        logical::synchronous::EventKey::Dispatch {
+            kind,
+            symbol: *symbol,
+            source,
+        },
+        delta,
+        start,
+    );
 }
 
 #[inline]
@@ -774,6 +845,48 @@ fn record_profile_runtime_path_timing_slow(
             .unwrap_or(0)
     });
     let self_nanos = elapsed_nanos.saturating_sub(child_nanos);
+    if logical::PhaseKey::from_name(token.key.phase).is_none() {
+        use logical::synchronous::{self, EventKey, EventValue};
+        let mut delta = EventValue::count(1);
+        delta.durations[0] = elapsed_nanos;
+        delta.durations[1] = self_nanos;
+        match outcome {
+            RuntimeProfileOutcome::Ok => delta.vector[1] = 1,
+            RuntimeProfileOutcome::Some => {
+                delta.vector[1] = 1;
+                delta.vector[3] = 1;
+            }
+            RuntimeProfileOutcome::None => {
+                delta.vector[1] = 1;
+                delta.vector[4] = 1;
+            }
+            RuntimeProfileOutcome::Return => {
+                delta.vector[2] = 1;
+                delta.vector[5] = 1;
+            }
+            RuntimeProfileOutcome::Throw => {
+                delta.vector[2] = 1;
+                delta.vector[6] = 1;
+            }
+            RuntimeProfileOutcome::Error => delta.vector[2] = 1,
+            RuntimeProfileOutcome::InputRequired => delta.input_required = 1,
+        }
+        if matches!(outcome, RuntimeProfileOutcome::InputRequired) {
+            // Synchronous families have no continuation to own an open call.
+            if let Some(epoch) = logical::epoch::existing() {
+                epoch.fault();
+            }
+        } else {
+            synchronous::add(
+                EventKey::Runtime {
+                    phase: token.key.phase,
+                    source: token.key.source_symbol,
+                },
+                delta,
+                Some(token.start),
+            );
+        }
+    }
     RUNTIME_PATH_TIMING_STATS.with(|stats| {
         let mut stats = stats.borrow_mut();
         let entry = stats.entry(token.key).or_default();

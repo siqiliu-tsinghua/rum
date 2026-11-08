@@ -287,11 +287,6 @@ impl<K: Ord + Copy, V> Index<K, V> {
         }
         Some(self.node(i)?.key)
     }
-    #[cfg(any(
-        test,
-        feature = "test-builtin-memory-growth",
-        feature = "test-continuation-slots"
-    ))]
     pub(in crate::runtime) fn iter(&self) -> impl Iterator<Item = (K, &V)> {
         self.slots.iter().filter_map(|s| match s {
             Slot::Live(n) => Some((n.key, &n.value)),

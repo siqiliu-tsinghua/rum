@@ -3802,3 +3802,59 @@ Method:
 - *Timing is secondary when the instruction instrument can settle it.* The
   layout control calibrates the panel-wide noise floor, and the 312
   Callgrind captures — not the milliseconds — decide the disabled path.
+
+## 2026-11-08 — LP08 schema-v2 stage A: the synchronous family index (brief 710)
+
+Brief 709 measured the form; brief 710 installs stage A: an epoch-owned side
+index for the logical families the epoch does not own — runtime phases it
+does not carry, rule RHS, definition dispatch, counters and the
+evaluation-cache entry/symbol/source events — recorded by seven seams behind
+their existing family gates into `logical/synchronous.rs`.
+`RumProfileSnapshot` is untouched; stage B renders.
+
+The campaign took four continuations and three director rulings, all about
+the default path:
+
+- The first install ran the seams' enabled bodies inline. Profiling off, six
+  seam functions executed more instructions per call than base
+  (`record_timing` 13 -> 19, `rule_rhs_timing` 23 -> 25, the four dispatch
+  wrappers 18/20 -> 20/22, 1.75M extra instructions on the 120-label
+  workload). The cause was the prologue: more live values across calls
+  forced more pushes and stores, and every one of them runs with profiling
+  off.
+- Ruling 7 made the disabled path the bar itself. The repair put each
+  enabled body behind a `#[cold] #[inline(never)]` helper and pinned the six
+  outer wrappers out of line. The result is cheaper than base on all six
+  seams at identical call counts (13 -> 3, 23 -> 18, 18 -> 14, 20 -> 18,
+  20 -> 18, 18 -> 14), the cold helpers are never called, and every
+  candidate whole-workload draw is below every base draw (16,456,887,219
+  against 16,458,943,348 at the closest).
+- Ruling 8 fixed the bar's scope: the literal all-function reducer fires 15
+  rows on two captures of the byte-identical base, so it is not an
+  instrument. The changed code's own disabled path plus the whole-workload
+  total decide; the six genuinely stable residual increases total +150
+  instructions in 16.46 billion, all in loader, libc and std string paths the
+  disabled path cannot reach.
+- Ruling 9: the re-run timing panel separates eight labels, and per-label
+  Callgrind shows their operation rows equal at identical call counts. The
+  two association labels are the key-read loop excluded by brief-620/622,
+  whose entry offset inside a 64-byte line is the documented mechanism.
+
+Acceptance: fmt clean; focused 214/2/2 at 8 and 1 (only the two standing
+root-context reds); host lifecycle 6/6 and the switch-gated suites 5/5 at 8
+and 1; LP01 five-mode parents 88,795 records with zero semantic differences
+in all four cells; workspace 4,169/0/61 in 403 s with the seven
+switch-gated names skipped and no new warnings. Replays: ownership 35
+position-only moves, 68 fingerprints, both certificate cells, census 1,192
+with 0 added and 0 retired. Six source mutants: 12 named reds at 8 and 1,
+six restored greens.
+
+Method:
+
+- *A prologue is default-path work.* The enabled body's register pressure is
+  paid on every disabled call. Outlining the body is the repair; pinning the
+  call boundary is what makes the per-call ledger comparable.
+- *Calibrate the reducer, not the candidate.* Two captures of an identical
+  binary moved 15 equal-call rows. A zero-tolerance all-function bar is a
+  demand to fix noise; the bar belongs to the changed code's own path and
+  the whole-workload total.
