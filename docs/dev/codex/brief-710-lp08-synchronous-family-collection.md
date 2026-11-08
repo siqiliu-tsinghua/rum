@@ -276,3 +276,60 @@ green at eight and one threads; `report.py check 710` OK with 57 citations; the
 nine-file scope with no live-doc or inventory change; the STOP row and both
 reproduction verdicts quoted from the worker's logs; three pre-existing
 warnings only.
+
+## Director gate — 2026-11-08 (continuation A): the twelve additions are authorized
+
+The STOP is correct under the condition I wrote, and the condition was too
+narrow: I authorized the retirement without knowing the same source change
+discovers twelve new `UnknownConstruct` rows. Every one is a construct this
+brief itself creates, and ten of the twelve were already present at the first
+checkpoint. Suppressing them would weaken the census; installing them is the
+canonical output.
+
+**Ruling 1a — the twelve additions are authorized.** Terms, unchanged in
+spirit from Ruling 1: exactly the one authorized retirement; exactly these
+twelve additions; no new `UnknownHostPayload`; no new self-reaching row; no
+existing identity, status or disposition change; the installed tables are
+byte-identical to the canonical discovery output, and the proposed tables are
+byte-identical to what the install writes. Position-only moves are replayed
+with their row content unchanged. Any further disappearance or addition is
+still a STOP.
+
+The twelve authorized rows:
+
+```text
+unknown_macros.tsv      profile/mod.rs:259:8    unexpanded macro matches!
+unknown_captures.tsv    epoch.rs:174:18         closure captures: |(key, value)|
+unknown_captures.tsv    epoch.rs:143:50         closure captures: |start|
+unknown_captures.tsv    epoch.rs:147:30         closure captures: |start|
+unknown_storage.tsv     epoch.rs:19:1           module synchronous_families has 0 source candidates
+unknown_storage.tsv     epoch.rs:59:18          Data.event_birth: foreign representation std::time::Instant
+unknown_attributes.tsv  epoch.rs:134:9          cfg (test, test-builtin-memory-growth, test-continuation-slots)
+unknown_attributes.tsv  epoch.rs:160:5          cfg (test, test-builtin-memory-growth, test-continuation-slots)
+unknown_attributes.tsv  synchronous.rs:6:1      derive (Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)
+unknown_attributes.tsv  synchronous.rs:33:1     derive (Clone, Copy, Default)
+unknown_storage.tsv     tests/synchronous_families.rs:1:1   source file not reachable from a module declaration
+unknown_macros.tsv      timing.rs:859:12        unexpanded macro matches!
+```
+
+The last two `unknown_storage` rows are the analyzer's accurate statement
+about the `#[path]` test-module registration; they are a limitation of the
+census, not a dead module (the thirteen proofs run from that file).
+
+**Ruling 1b — the correspondence adaptation is accepted on one condition.**
+Normalizing the two dispatch-closure spellings is allowed only as a
+correspondence device: the final tables must equal canonical discovery
+(`check_ruling.py`'s first assertion), and the removal set must remain exactly
+the one authorized row. Both properties are enforced by the retained script
+and I re-ran them; the adaptation is disclosed in
+`generator-source-mapping.diff` and `dispatch-closure-source-pairs.json`.
+
+**What I verified myself.** The thirteen model proofs green at eight and one
+threads (the new fault test forces a non-adopted `InputRequired`, asserts one
+fault, an invalid epoch, no side row, and the same two prompts and result `7`);
+`cargo fmt --check` clean; `report.py check 710` OK with 92 citations; the
+proposed tables byte-identical to the discovery log; the 177 position moves
+inspected as pure line shifts with unchanged text; the live inventory
+byte-identical to the pre-brief snapshot and untouched in `git status`;
+`ownership-replay.json` shows zero new host payloads, zero new self-reaching
+rows and zero ledger moves; the continuation changed only the test file.
