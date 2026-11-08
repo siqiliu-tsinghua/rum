@@ -1190,3 +1190,152 @@ Context surface -> the remaining named conversions (summary/reset, budget)
 the standing replays with the once-only pinned census -> the acceptance runs
 (full lib 3x at 8 threads, once at 1, the workspace, the release erasure,
 the test-name delta). Resume with `CDX_FORK`.
+
+## Director ruling — 2026-11-09 (stage-11 stop): Q18 an admitting destructor may not run under a permit
+
+Q16 is accepted exactly as ruled: `enter_active` takes the owned permit,
+borrows it for `restore_admitted`, drops it as the very next statement, and
+the production signature and body are byte-unchanged (source audit PASS). The
+permanent real-retirement test is green at 8 and 1 (`invalid=true
+path_open=true before=1 after=1 no_nested_admission=true`), the hold-to-end
+single-site mutant is red at both (`before=1 after=2`, `nested profiling
+admission`), and the fixed bytes are restored (`73dae444…`). The 237-body
+destructor census is accepted as coverage, not closure: it found a real class
+hole, and the STOP is correct.
+
+### The measured instance
+
+`drain_attached` now owns an `Admitted` and passes it into
+`attach_boundary_admitted`. The hook's policy assertion can fire on a
+legitimate schedule: an owner is found, then the record is retired before the
+policy read, so the assertion sees `None`. On unwind, `paused`'s owned
+boundary drops; `ProfileBoundary::Drop` calls the admitting `abandon`,
+`admit()` refuses `ADMITTED_DEPTH == 1`, and the panic in a destructor during
+unwinding aborts at 8 and 1 when the boundary is the sole reference. With one
+reference retained outside the drain the identical assertion is caught and
+the test passes. The permit-holding drain is new in this brief — the baseline
+`drain_attached` held no permit, and its hook admitted and released inside the
+callee — so the abort is introduced here, not inherited.
+
+### The class rule
+
+A permit is an exclusion transaction. Every value it owns must leave it
+through an explicit handoff or an unwind owner; **no admitting destructor may
+run at depth >= 1, on the normal path or on unwind**. For every body that
+holds `Admitted`/`&Admitted`, a value whose Drop can reach `admit()` (an
+`Arc<ProfileBoundary>`, a `Segment`, a `Call`, a collector Cell or arena, and
+any future type with an admitting Drop) must have one of:
+
+(a) a transfer that completes before the permit's last shared access (Q16's
+    shape, the segments tail results);
+(b) an explicit under-permit release that defuses the destructor (Q7's
+    `release_admitted`, once the storage is taken first);
+(c) an exact-cfg unwind owner that forwards the same permit.
+
+A row settled only by argument is an open obligation: the argument must name
+every panic source it excludes.
+
+The class covers panics the protocol can raise: assertions, debug
+assertions, callbacks and test hooks. A panic that can only come from an
+already-poisoned payload mutex is a cascade; a guard would re-enter the same
+poison and abort too. Such rows are dispositioned POISON_ONLY, named
+individually, and are not the owner's responsibility.
+
+### The collector owner (the measured instance)
+
+Authorize a private, exact-cfg owner in `logical/collector.rs` (the name is
+the worker's choice) holding the permit borrow (`&Admitted`) and every
+boundary Arc the body owns. Its Drop calls
+`ProfileBoundary::release_admitted(access, boundary)` for each element still
+held — the under-permit spelling of exactly what the unconditional Drop does
+in production (the last reference settles; aliases are untouched). The normal
+path hands every element out explicitly; on unwind the owner performs the
+disposal instead.
+
+It must cover all ten unresolved rows' owned values:
+`stash_boundary_admitted`'s argument, `take_selected_admitted`'s `selected`
+from the first clone, `restore_stash_admitted`'s `keep`, all of
+`drain_matching_admitted` (the whole taken vector, its iteration state, and
+the accumulated `keep`), and the `clear_stash`/`drop_belonging` loops.
+`take_selected`/`take_belonging`'s tail results then become TRANSFERRED.
+
+Two shape conditions are part of the ruling:
+
+1. The attach call must borrow the current element from the owner
+   (`attach(access, &boundary)`) and move it out only after the call returns.
+   A bare loop local at the call site re-creates the measured gap.
+2. The owner is declared before any payload-lock guard so that it drops after
+   that guard: its releases must never run with a payload lock held. It must
+   not allocate or take a payload lock before its releases, and must not
+   itself call `admit()`.
+
+Production erases the owner; every production body stays byte-unchanged.
+Order is preserved where it exists: the drain keeps stash order, and the
+owner's release order is deterministic and disclosed.
+
+### `release_admitted` is made unwind-safe
+
+`release_admitted` currently takes `_storage` after `abandon_admitted`; an
+unwind inside settlement drops a boundary whose test-cfg Drop still admits at
+depth 1. Reorder: `Arc::into_inner` -> take the storage -> `abandon_admitted`
+-> drop the boundary (the test-cfg Drop early-returns on `None`) -> drop the
+storage for the refund. `_storage` is read only by `release_admitted` and that
+Drop (verified in `logical/mod.rs`), so no state is lost, and the sole-owner
+path can no longer admit from its destructor.
+
+### `finish_active_admitted` and the registry rows
+
+`finish_active_admitted`'s token is resolved by construction, not by an
+owner: `Segment::end`'s test-cfg precheck admits only while the TLS slot still
+matches, and the ordered path removes the slot at `segments.rs:655` before
+any packing or lock call; the only admitting call before the take is
+`fault_admitted` on the `!ordered` branch, whose panic source is lock poison.
+The row must state the take line and the POISON_ONLY exception.
+
+The five owner-registry rows and `attach_boundary_admitted` stay outside the
+owner only with the same kind of path-complete proof: a live `ProfileQueue`
+holds its own arena Arc, so a registry removal is never the arena's last
+reference while the queue exists; `ProfileQueue::Drop` unregisters before it
+drains, and drains outside any permit; and a registry-held arena can still
+hold cells only after an interrupted queue destructor, i.e. a cascade. The
+attach Cell clones the caller's Arc, so the caller's (now guarded) owner is
+the final reference. Each row's text must carry that proof and mark the
+residual as POISON/CASCADE. If the proof cannot be established, that family
+joins the class (the owner drains the cells under the permit) — not a silent
+row.
+
+### Falsifier, mandatory
+
+The measured sole-owner/control pair is accepted as calibration. A permanent
+deterministic test must now exercise the real drain: a real lease, a real
+registered owner epoch, a real open record and one real charged boundary as
+the sole Arc, held by `drain_matching_admitted`; a panic at the attach-hook
+position; the original panic caught; no nested admission; the boundary
+disposed under the permit (its charge refunded, no row settled by a second
+transaction); at 8 and 1. The real policy assertion under the real retire
+schedule is preferred (a test-cfg scheduling seam at the measured point, no
+production build change); a test-installed panicking drain hook through the
+existing hook table is acceptable only if it saves and restores the real
+hooks through the module's private access so that no other test can observe
+it. Before the owner the test must abort with the quoted `nested profiling
+admission` / `panic in a destructor during cleanup` / `aborting` lines at 8
+and 1; after the owner it must be green at both; and a one-site mutant (the
+drain's owner removed) must abort and be restored. No deadline, assertion,
+policy variant or pool setting may change.
+
+### Bookkeeping and order
+
+All ten Q18 rows, the two EXPLICIT_NORMAL rows and the five registry rows
+flip to a resolved disposition naming the mechanism; no row may remain
+Q18_UNWIND_UNRESOLVED or _PENDING; the body count stays 237. The pinned
+census/rejection counts are still updated once at the final source checkpoint
+(Q15/Q17) from a fresh canonical replay with the per-class table — no hand
+edit, no scanner change.
+
+**Order after Q18.** The owner + the `release_admitted` reorder + the resolved
+census + the permanent falsifier + the mutant -> 15/15 at 8 and 1 -> the
+remaining Context surface -> the remaining named conversions (summary/reset,
+budget) -> the six mutants including the Q4 B/C arms and the Q10 handoff ->
+the standing replays with the once-only pinned census -> the acceptance runs
+(full lib 3x at 8 threads, once at 1, the workspace, the release erasure,
+the test-name delta). Resume with `CDX_FORK`.
