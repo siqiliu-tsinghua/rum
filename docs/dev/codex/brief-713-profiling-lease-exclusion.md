@@ -370,3 +370,35 @@ dependency change. No assertion weakened, no skip added, no default thread
 count changed. A live inventory edit only through its canonical replay. A
 forbidden lock edge, a changed guest behaviour or an unclassified item-3
 route is a STOP. Leave the changes uncommitted for the director's gate.
+
+## Director ruling — 2026-11-08 (stage-1 stop): the fixture scope is extended by class
+
+The stop is accepted, and the calibration is accepted. The Scope omission was
+mine: `evaluation_cache/profile/tests/cold_load.rs` stores a process-global
+flag and calls the cold-load initializer directly, so contract point 2 reaches
+it, and the file was not in the MAY list. Editing outside the fence to satisfy
+a contract would have broken the fence; stopping was correct.
+
+**Ruling.** The MAY list is extended **by class**, not by one file: any
+test-only fixture module under
+`crates/rum-runtime/src/runtime/profiling/` or
+`crates/rum-runtime/src/runtime/evaluation_cache/profile/` that stores a
+process-global profiling flag, or calls a cold-load initializer directly, may
+be modified **only** to place that store (and that initializer call) under the
+write-side `publish()` transaction. Reads stay where they are. No test name,
+assertion, expectation, observer, thread count or default may change. Every
+file touched under this class is disclosed in the report, and a `publish()`
+that returns `None` in a lease-holding fixture is a STOP (the lease registers
+its holder). The known file is
+`evaluation_cache/profile/tests/cold_load.rs` (stores at :14 and :17, the
+initializer at :15); the stage-2 audit must list every other file this class
+reaches.
+
+Everything else in the brief stands. The seven pre-fix gates and their tuples
+are accepted as the falsifier's red arm; the first registration sample
+(`fenced=true`) is superseded by the refined observer (`fenced=false`) and is
+not used. The cleanup and nested-admission gates are fixed-tree-only
+instruments and must be installed together with the primitives. Stage 2 may
+resume from these receipts; the tree at the stop compiles (I verified
+`cargo check -p rum-runtime --all-targets` with both test features: rc=0,
+three pre-existing warnings in `test_builtins.rs`).
