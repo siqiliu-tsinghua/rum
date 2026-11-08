@@ -27,7 +27,11 @@ publication, G15-C2's remaining 353 rows on the final source, CM,
 `CHANGELOG.md`, and S10 onward. LP08's counter promotion has landed
 (`b9b39763`); `RumProfileSnapshot` still returns `Null`, so the public
 schema-v2 form in `docs/dev/profiling.md` is the open half. The test
-audit's Stage B and D03 are closed; LP05-LP08's promotion is done. New briefs go to cdx for every brief (user
+audit's Stage B and D03 are closed; LP05-LP08's promotion is done. The
+10-29 estimate in `docs/dev/security-hardening-progress.md` is pending a
+re-base (user ruling 2026-11-08: the Codex tier was upgraded and the
+director backend moved to DeepSeek without a time-window quota; re-base
+after the next few milestones on this period's measured pace). New briefs go to cdx for every brief (user
 ruling 2026-11-01); a cdx quota death is a stop and a question, never a
 silent fallback.
 

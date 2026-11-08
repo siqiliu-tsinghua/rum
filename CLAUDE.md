@@ -111,16 +111,16 @@ human labour to budget.
 
 ## Context economy (user ruling 2026-10-29)
 
-My usage is calls times context, and my time-window quota is the bottleneck.
-So:
+My usage is calls times context. The time-window quota bottleneck ended with
+the DeepSeek backend (user, 2026-11-08); context growth still compounds. So:
 
 - Worker reports are `rum-report/1` JSON (`scripts/report.py`, `TEMPLATE.md`).
   I read `summary`, pull a part with `show`, gate scope with `check
   --against-git`, and `render` the record into the brief. Diffs: in full.
 - Procedures become scripts, inputs in and one table out: the gate is
   `director-gate.py run NNN [--perf resume,cli]`; long output in `.temp/`.
-- Subagents are never switched to a smaller model or a lower effort to save
-  tokens (user ruling): recovering from their errors costs more.
+- Never switch a subagent to a smaller model or lower effort to save tokens:
+  recovering from its errors costs more.
 - The `rum-director` mod (`tools/claude-mod/rum-director/`) enforces the
   dispatch, commit and push discipline, and compacts after every commit at
   200k tokens or more. Before every commit, rewrite `.temp/director/state.md`
