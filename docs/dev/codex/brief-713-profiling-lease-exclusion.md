@@ -1016,3 +1016,92 @@ including the Q4 B/C arms and the Q10 handoff mutant -> the standing replays
 after the last source edit -> the acceptance runs (full lib 3x at 8 threads,
 once at 1, the workspace, the release erasure, the test-name delta).
 Resume with `CDX_FORK`.
+
+## Director ruling — 2026-11-09 (stage-9 stop): Q14 the ExecutionScope ownership bit; Q15 the for_test MOVE
+
+The Q13 repair is accepted in shape: `lease_drained()` waits without the
+lease, acquires, resets, re-checks and retries; the permanent falsifier went
+red on the pre-fix fixture with `diagnostic drain stalled at 32800 bytes` at
+the 30-second deadline and green in 0 ms on the fix; 20 consecutive 8-thread
+focused runs passed 14/14. C9 then converted the Epoch acquisition/reader
+family and its direct permit callers (13 Rust files from C8) and stopped at
+two items before the remaining segment/context surface. Both are mine to
+rule.
+
+### Q14 — the scope records what it pushed and releases exactly that
+
+The measured defect is real: `ExecutionScope` is a zero-sized marker, so a
+scope whose `enter()` pushed a TLS control under its own lease has no record
+of that fact; its `Drop` re-decides from the *current* flag through the
+admitting getter, which refuses on a foreign lease, and the pushed entry is
+leaked (`baseline=0 pushed=1 remaining=1 stale_control=true`, at 8 and 1).
+The inverse mistake is equally wrong: a scope whose `enter()` was refused
+must not pop somebody else's entry.
+
+Rule:
+
+1. Under the exact test cfg, `ExecutionScope` gains one ownership field,
+   `pushed: bool`. Production keeps the zero-sized struct; enforce it with
+   `#[cfg(not(exact))] const _: () = assert!(std::mem::size_of::<ExecutionScope>() == 0);`
+   so a production frame growth is a compile error, not a review finding.
+2. Under the exact cfg, `enter()` takes **one** `admit()`:
+   - `None` (foreign lease): return `pushed: false`; no flag read, no push.
+   - `Some(access)`: `pushed = lexical_profile_configured_admitted(access)`,
+     and when true the control is pushed exactly as today, inside the same
+     function that returns the bit. `lexical_profile_configured_admitted`
+     cold-loads through `publish_cold_load`'s CAS when the flag is 0, so the
+     production decision (`flag != 2` then `configured()`) is reproduced
+     exactly.
+   - The raw `LEXICAL_PROFILE_ENABLED.load` is not executed under the exact
+     cfg; the admitted getter is the only read.
+3. Under the exact cfg, `Drop` reads **only** `self.pushed`:
+   - true -> pop one entry unconditionally (`EXECUTION_CONTROLS` +
+     `try_with`); no flag read, no `admit()`, no refusal. Caller-owned TLS
+     cleanup always completes (Q2).
+   - false -> do nothing; a refused scope never pops.
+4. Production `enter()` and `Drop` are unchanged, byte for byte (raw
+   hot-path load, cold `push_control`/`pop_control`).
+5. `enter()` must be reached at depth 0. Its `admit()` carries the depth
+   assertion; a nested call is a STOP, not a patch point.
+6. The investigative probe becomes a permanent test with both clauses:
+   - (a) prior-lease push, foreign-lease drop -> the entry is gone
+     (`remaining=0`, `stale_control=false`);
+   - (b) an older entry is pushed under a lease, a new scope is entered and
+     dropped under a foreign lease -> the older entry **remains**, and is
+     then cleaned up under a registered lease.
+   Two mutants, each watched red and restored: `Drop` ignoring `pushed`
+   (clause (b) must fail) and `Drop` re-deciding from the getter (keyed to
+   the pre-fix shape; clause (a) must fail). No assertion, skip, thread
+   default or frame shape may be weakened.
+
+### Q15 — the `for_test` row is a MOVE; the candidate may be copied
+
+I verified the origin in the committed baseline: `HEAD:epoch.rs:88` carries
+the identical `#[cfg(any(test, feature = "test-builtin-memory-growth",
+feature = "test-continuation-slots"))]` attribute on the existing
+`Epoch::for_test`. C9 did not edit that attribute; the function only moved
+(88 -> 91 -> 99) because lines were added above it, and the replay's
+first-match pairing consumed the descriptor at `epoch.rs:367`. That is the
+same duplicate-descriptor artifact as the four Q9 rows, which carry forward
+unchanged: the disposition is MOVE.
+
+Copy `evidence/ownership-replayed-c9` unchanged (the 8,560-construct
+candidate; the five non-closure flags are four Q9 carries plus this MOVE, and
+the sixth, the cross-file `|boundary|` closure move, is brief-added, not a
+baseline disappearance). No hand edit, no scanner weakening, no baseline
+descriptor loss.
+
+**Census counts.** The pinned rejection census has been deferred through
+every stop as an intermediate-maintenance artifact. At the final source
+checkpoint, before the acceptance runs, update the pinned counts once from a
+fresh canonical replay and include the per-class table; a hand-edited count
+is a STOP.
+
+**Order after Q14-Q15.** The ownership bit + the permanent two-clause test ->
+the two mutants -> 14/14 at 8 and 1 -> the remaining segment/context
+conversions -> the remaining named conversions (summary/reset, budget) -> the
+six mutants including the Q4 B/C arms and the Q10 handoff mutant -> the
+standing replays after the last source edit (with the once-only pinned
+census) -> the acceptance runs (full lib 3x at 8 threads, once at 1, the
+workspace, the release erasure, the test-name delta). Resume with
+`CDX_FORK`.
