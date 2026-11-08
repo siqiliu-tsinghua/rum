@@ -1684,3 +1684,93 @@ budget -> the remaining mutants including the Q4 B/C arms and the Q10
 handoff -> the standing replays with the once-only pinned census -> the
 acceptance runs (full lib 3x at 8 threads, once at 1, the workspace, the
 release erasure, the test-name delta). Resume with `CDX_FORK`.
+
+## Director ruling — 2026-11-09 (stage-16 stop): Q24 the Q16 fixture pins from its own worker; the TLS appendix is classified
+
+The round is accepted as evidence only. No crate file was edited: I re-hashed
+the five quoted files and all five are exact (`brief713_context_drop.rs`
+`bb6bc7b3…`, `context.rs` `cc28d760…`, `segments.rs` `ccc95130…`,
+`profile_queue.rs` `7ee9caf3…`, `epoch.rs` `8c97360a…`), the tree is C15, and
+the Q23 repair is still unapplied at `profile_queue.rs:110/116/117`. The
+pre-fix scan is recorded as ruled (131 files, 443 occurrences, 417
+conservative name pairs, 13 dispositions, all 131 source hashes exact). The
+Q16 witness is green 1/0/0 at 8 and 1. The census count stays deferred: no
+pin at C16.
+
+### Q24 — the real data pin moves to its own scope worker; the schedule is preserved
+
+The edge is real and belongs to this brief's class. `brief713_context_drop.rs:28`
+holds the real `Epoch.data` guard across `Context::enter_with_control` at :44,
+whose wrapper admits at `context.rs:137`; Q16's mandated early release at :236
+means the restored `Option<Segment>` is dropped on the invalid return, and
+`Segment::end` admits at `segments.rs:610` while that guard is still live (the
+explicit `drop(data)` is at :48). Entry-plus-existing-leaf cannot close it: a
+pre-lock permit only moves the first acquisition, and retaining the permit
+through the segment drop is exactly the shape Q16 forbade. The exclusion is
+real, not cosmetic: a payload guard held across an admission is the third leg
+of the cycle this whole brief closes — a `WRITE_GATE.write()` waiter (any
+concurrent `publish()` or `admit_exclusive()` in the same test process), the
+retiring worker waiting on `data`, and the admitting thread holding `data`.
+Excluding the row would manufacture the required zero; do not.
+
+The proposed fixture-only schedule is authorized as written, with these
+conditions:
+
+1. Move only the real `Epoch.data` pin onto a scope worker. The main thread
+   keeps, unchanged: the TLS header and spare slot (`segments::enter` at :24),
+   `Context::capture` at :25, the real `Context::enter_with_control` wrapper
+   call, and every expectation (`invalid && open`, `no_nested_admission`,
+   `after == before`, and the exact `B713 CONTEXT_DROP` tuple). The test name
+   stays.
+2. The pin worker locks the real mutex itself (a `MutexGuard` cannot cross
+   threads), signals readiness, and holds the guard until a release signal. The
+   main thread observes readiness before the retire worker starts. The sole
+   release sender is a local of the parent's scoped closure so its `Drop`
+   releases the pin on every exit; use bounded `recv_timeout` waits with assert
+   messages; the pin worker performs no admission and no profiling mutation
+   under its guard.
+3. `open` is read from a retained real `Arc<RecordPath>` obtained from
+   `data.records` under a momentary guard before the pin worker starts (or from
+   `Context::records` if you prove the same allocation), read after validity
+   goes false — never through a data guard the admitting thread holds.
+4. Do not move the `Context` call to another thread: the TLS header and spare
+   slot the restore depends on are the parent's, and rebuilding them on a
+   worker would replace a calibrated schedule with a new one.
+5. No production `#[cfg(test)]` pause seam, no fabricated writer, guard,
+   validity or path state, no new skip, no expectation change, and no exclusion
+   of this test from the scan. If the fixture cannot be built without touching
+   production source, STOP.
+6. Re-calibrate after the change: the unchanged test green at 8 and 1, and the
+   Q16 mutant (retain the entry permit past `restore_admitted` to function end)
+   red at 8 and 1 with the `nested profiling admission` receipt, then restored
+   byte-exactly.
+
+### The TLS appendix — classify, do not convert
+
+The eight strict calls under `PHASE_LIFO` borrows (`logical/mod.rs:1194/1195/1198`
+in `push_phase`, `:1217` in `take_phase`; `tests/evaluator.rs:832/836` and
+`:901/905`) are thread-local `RefCell` borrows, not cross-thread payload mutexes:
+they cannot form a cycle with `WRITE_GATE`, and this brief's lock-order rule is
+about cross-thread locks. They stay in the scan table as a classified appendix —
+never excluded, never claimed as deadlocks. For each one record: (i) the
+enclosing body holds no `Admitted` (the strict call itself admits at depth 0);
+if any enclosing caller holds a permit, that site is a STOP; (ii) the borrow is
+thread-local and released on unwind; (iii) every `PhaseEntry`/`Call`/`Storage`
+destructor runs outside the borrow (`take_phase` pops and returns the entry,
+`push_phase` only pushes) — if one ran inside it, that would be the Q18 class
+and a STOP. Record `push_phase`'s storage-refused branch
+(`epoch.retire(Retire::DiagnosticCap)`) at depth 0 with no payload lock.
+
+### Order after Q24
+
+Apply the Q24 fixture schedule and the already-authorized Q23 repair (unchanged:
+entry `admit()` before `queue_arena.lock()`, `storage_admitted` for both claims,
+body and `slot.take()`/assignment order intact; do not convert the rest of
+`ProfileQueue::new`) -> re-run the reverse-edge scan on the post-fix source and
+record zero with both pre-fix coordinate sets quoted (queue `:110/116/117` ->
+`epoch.rs:134`; fixture `:28/44/48` -> `context.rs:137`, `segments.rs:610`) ->
+the Q16 mutant re-kill at 8 and 1 -> the budget classification (index/arena
+growth, owned refunds) -> the remaining mutants including the Q4 B/C arms and
+the Q10 handoff -> the standing replays with the once-only pinned census -> the
+acceptance runs (full lib 3x at 8 threads, once at 1, the workspace, the release
+erasure, the test-name delta). Resume with `CDX_FORK`.
