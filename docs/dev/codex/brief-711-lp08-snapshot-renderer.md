@@ -8,7 +8,8 @@ schema-v2 line from the native epoch fold, the side index, the Module-alias
 projections and the eight fixed scalar defaults. The acceptance campaign
 (stage C) stays separate.
 
-The tree is `8ec1e9c1`. LP08's counter promotion landed at `b9b39763`; the
+The source tree is `8ec1e9c1`; the brief commits on top of it touch no source
+(`04712674` and this erratum). LP08's counter promotion landed at `b9b39763`; the
 workspace is 4,169 passed / 0 failed / 61 ignored. `RumProfileSnapshot` still
 returns `Null` after printing the legacy diagnostics
 (`crates/rum-runtime/src/runtime/debug_tools/basic.rs:124-139`, producing the
@@ -132,12 +133,20 @@ cache-symbol|{event}|{symbol}
 cache-source|{event}|{symbol}
 ```
 
-Worked spellings the tests pin: `runtime|compound.item.suspend|-`;
-`builtin|s(System,RumProfileSnapshot,n)|-|1`;
-`definition-rule|down_value_rhs_eval|s(Global,witness,n)|0`;
-`definition-dispatch|down_value|s(Global,witness,n)|-`;
-`cache-symbol|builtin_applications|s(System,RumProfileSnapshot,n)`;
+Worked spellings the tests pin — the trailing backtick is part of the stored
+context (`Symbol::context()` returns ``System` `` / ``Global` ``;
+`crates/rum-core/src/expr.rs:16-17`) and is emitted literally, because a
+backtick is not a key separator and is therefore not in the escape set:
+`runtime|compound.item.suspend|-`;
+``builtin|s(System`,RumProfileSnapshot,n)|-|1``;
+``definition-rule|down_value_rhs_eval|s(Global`,witness,n)|0``;
+``definition-dispatch|down_value|s(Global`,witness,n)|-``;
+``cache-symbol|builtin_applications|s(System`,RumProfileSnapshot,n)``;
 `cache-source|definition_rhs_eval_by_source|s(ctx,name,3)`.
+
+Do not trim the backtick: a host can construct both
+``Symbol::new("System`", name)`` and `Symbol::new("System", name)`, and the
+Q6 formula keeps their contexts distinct.
 
 ### The union
 
@@ -433,3 +442,16 @@ of a family gate, no new public surface, no guest evaluation from the
 renderer. A departure from the contract above, an unapproved family or an
 unparseable emitted expression is a STOP: report the evidence and the minimum
 scope change. The director owns the gate and every commit.
+
+## Director erratum (2026-11-08, before the second dispatch)
+
+The first dispatch stopped before any source edit: the four worked keys
+omitted the trailing backtick that `Symbol::context()` actually stores
+(`crates/rum-core/src/expr.rs:16-17`: ``GLOBAL_CONTEXT = "Global`"``,
+``SYSTEM_CONTEXT = "System`"``), so the pinned examples contradicted the Q6
+formula. The formula, the escape set and the ordering stand unchanged; only
+the four examples above are corrected, and a sentence now says explicitly
+that the backtick is literal and must not be trimmed. The worker's evidence
+(two qualified stage-A binaries returning ``List["System`", "Global`"]``;
+zero live edits; `report.py check 711`, 40 citations) is reproduced from
+`rum-core` by the director. No design change.
