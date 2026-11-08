@@ -734,3 +734,120 @@ source edit -> the acceptance runs (full lib 3x at 8 threads, once at 1, the
 workspace, the release erasure, the test-name delta). Every surface compiles,
 formats and passes its lock audit before the next begins. Resume with
 `CDX_FORK`.
+
+## Director ruling — 2026-11-09 (stage-6 stop): Q10 the witness observes both refund windows; Q11 the SourceStack permit forwarding
+
+**Where the round stands.** The Q8 handoff is exact (generation store,
+unchanged fence, registration, lease construction, `reset_for_lease`,
+return); the two named permit edges are closed; the dead items are gated and
+the default lib is at zero warnings with lib-test at the three baseline
+entries; the 14 focused gates pass at 8 and 1; Q9's canonical ownership copy
+is in and verified. The round stopped at two real observations, both mine to
+rule.
+
+### Q10 — the witness must observe both refund windows, with type-derived expectations
+
+The literal `refunded=296` I stipulated in Q8 was measured in the drop window
+before the handoff existed. With the full reset inside `lease()`, the old
+epoch's record path is retired in the handoff, so its charge
+(`size_of::<RecordPath>() + 2 * size_of::<usize>()`, the remainder 248) is
+refunded before the witness's baseline, and the drop window carries only the
+boundary's own charge (`size_of::<ProfileBoundary>() + 16`, measured 48).
+248 + 48 = 296: no charge is lost; the window moved with the cut itself. The
+worker is right that this is a window change, not a regression, and right to
+stop rather than rewrite the observer on its own.
+
+The correction is **not** "296 -> 48". As the witness stands,
+`same_current_epoch=false` and `current_rows_changed=false` also pass on a
+handoff that swaps `CURRENT` without retiring the old epoch's records: the
+stale boundary then settles the old epoch's record on the foreign thread, the
+new epoch's rows stay untouched, and the old row still reads `(1, 1, 0)`
+after settlement. Only the handoff-window refund forces the retirement Q8
+names. A check that cannot fail on the transformation it certifies is not a
+check.
+
+Rule:
+
+1. In `logical/epoch.rs`, beside `RecordPath`, add one shared constant
+   `pub(in crate::runtime) const RECORD_PATH_STORAGE_BYTES: usize =
+   std::mem::size_of::<RecordPath>() + 2 * std::mem::size_of::<usize>();`
+   and use it in `Epoch::open`'s claim. No behaviour change, no second
+   literal for the same quantity.
+2. In `brief713_prior_boundary_cannot_settle_current_lease_rows`, sample
+   `budget::process_bytes()` immediately before and immediately after
+   `let current = lease();`. Assert the handoff window equals
+   `RECORD_PATH_STORAGE_BYTES` exactly. This converts the 248 from an
+   inference into a measurement.
+3. Assert the drop window equals `std::mem::size_of::<ProfileBoundary>() + 16`
+   exactly — the expression the test already builds the claim with — replacing
+   `refunded > 0`.
+4. Assert the two windows sum to the total the witness charged (one record
+   path plus one boundary storage), and print both numbers
+   (`handoff_refunded=... refunded=...`).
+5. Every other assertion and printed field stays exactly as it is today:
+   identity false, current rows unchanged, `unregistered=true`, counts
+   `(1, 1, 0)`, faults 0.
+6. Falsifier, mandatory: with `reset_for_lease(&lease)` removed from
+   `lease()` (the pre-Q8 shape), the strengthened witness must go red with
+   `same_current_epoch=true` and a zero handoff window; restore and record
+   the green line. This mutant joins the six.
+7. Do not retain dead charges, defer refunds, or move one baseline across
+   the construction of the replacement epoch to make any window print 296.
+   If a window measures anything beyond the named claim, STOP with the
+   measured composition instead of absorbing it.
+
+Both numbers are now type-derived, so a `RecordPath` or `ProfileBoundary`
+size change moves the claim and the expectation together.
+
+### Q11 — the narrow SourceStack permit forwarding is authorized, with a class census
+
+`SourceStack::push` reaches `Epoch::storage()`, an admitting wrapper, beneath
+the cache source entry's permit. The depth assertion did its job: this is a
+real nested admission, reproduced serially, and a defect against the accepted
+C5 green regardless of why C5's cache child did not reach it. The repair is
+the class's repair: pass the permit down.
+
+Scope extension: `crates/rum-runtime/src/runtime/profiling/logical/source_stack.rs`
+and the single converted caller
+`crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs:80`
+(`evaluation_profile_definition_source_enabled`).
+
+Shape:
+
+- `push_admitted` with the brief's cfg'd `_access: &Admitted` parameter; body
+  = today's `push` body, with `Epoch::storage_admitted(access, bytes)` in
+  place of the admitting `Epoch::storage(bytes)`; `epoch::current()`
+  unchanged.
+- `push` stays as the admitting wrapper for the unconverted callers
+  (`profiling/state.rs`, `logical/context.rs`): `admit()` at entry; on `None`
+  the same `missing` bookkeeping as today's `None` branch (`missing = 1` from
+  zero, saturating increment otherwise, tail untouched); otherwise delegate
+  with the permit. The refusal path must stay observationally identical.
+- One converted caller changes: `source.rs:80` calls
+  `push_admitted(_access, symbol)`.
+- No TLS depth fallback, no fabricated permit, no shortened transaction, no
+  duplicated body, no `#[allow]`, no second admission.
+
+**Class census (a disclosure duty, not an instance list).** Enumerate every
+body that holds an `Admitted` and transitively reaches an admitting wrapper —
+roots are the `admit()`/`publish()` sites; edges are every wrapper that
+admits (`Epoch::current/storage/retire/fault/open/close`, boundary
+`complete/abandon`, `drop_session`, collector entries, the cache
+entry/getter family, `segments`, `summary`, budget). One table: holder ->
+call edge -> admitting wrapper -> disposition (`_admitted` variant already
+used / repaired in this round under this same private-forwarding class /
+pending with the reason it is unreachable under the lease). The class
+extension covers another site only when the callee's `_admitted` variant
+already exists; anything needing a new admitting-free callee is a STOP. Do
+not claim closure beyond the table. State, with evidence, why C5's LP01 cache
+child did not reach this edge (slot failure semantics versus an unreached
+path) — a one-line disclosure, not a repair.
+
+**Order after Q10-Q11.** Both repairs -> focused 14/14 plus the LP01 cache
+child at 1 and 8 -> the strengthened witness's mutant red -> restore -> the
+remaining epoch callees, segments/context, summary/reset, budget -> the six
+mutants including the Q4 B/C arms -> the standing replays after the last
+source edit -> the acceptance runs (full lib 3x at 8 threads, once at 1, the
+workspace, the release erasure, the test-name delta). Every surface compiles,
+formats and passes its lock audit before the next begins. Resume with
+`CDX_FORK`.
