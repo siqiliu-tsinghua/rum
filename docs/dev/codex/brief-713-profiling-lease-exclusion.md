@@ -402,3 +402,67 @@ instruments and must be installed together with the primitives. Stage 2 may
 resume from these receipts; the tree at the stop compiles (I verified
 `cargo check -p rum-runtime --all-targets` with both test features: rc=0,
 three pre-existing warnings in `test_builtins.rs`).
+
+## Director ruling — 2026-11-08 (stage-2 stop): Q1-Q3 settled
+
+The stage-2 stop is accepted; all three hard stops are mine to settle. The
+fixture Q3 change and the 11 disclosed fixtures are accepted as the
+authorised setup-only shape. Stage 2 resumes at the lock-order repair.
+
+**Q1 — cache writer transaction and retained aliases: authorised, this
+shape.** Every cache writer entry takes its admission **before** its first
+payload lock and passes the permit to its body; the incremental getter inside
+the body is the `_admitted` variant. Concretely, `record_symbol_profile_counter`
+takes `admit()` at its entry (replacing its own getter call) and passes the
+permit to `record_symbol_profile_counter_slow`, which locks
+`symbol_profile_counters` under it and calls
+`evaluation_cache_profile_incremental_enabled_admitted`. Every other writer
+with the same edge (getter -> payload lock -> admitted getter) is repaired
+the same way; the stage-2 audit's list is the checklist.
+
+The retained-alias publication (`totals::terminal/settle` ->
+`Session::module_source_alias_completion/duration`) is classified at its
+retained entry: every entry that reaches `totals::terminal/settle` obtains an
+`Option<Admitted>` **before** `Epoch.data`/`RecordPath.state`, and the alias
+leaf writes only under `Some`. Under `None` (unregistered thread, lease
+current) the epoch's own rows still settle — caller-owned cleanup — and the
+process-global alias write is skipped. No admission is acquired beneath a
+payload lock; a path that cannot be shaped this way is a STOP. Entries called
+from inside an existing permit take the admitted variant; a second `admit()`
+on the same thread is the depth-stop, not a fallback.
+
+**Q2 — ownership pairing: accepted with an explicit disposition.** I ran the
+descriptor-multiset comparison myself between the live inventories and the
+candidate: `unknown_attributes.tsv` +79/-0, `unknown_captures.tsv` +7/-0,
+`unknown_storage.tsv` +3/-0, `unknown_macros.tsv` +41/-39 (the 39 removals are
+the same macros whose `ends at L:C` descriptor moved), the three pointer files
+0/0. No committed construct disappears, and every added row is on code this
+brief added. The two unchanged-line flags are the duplicate-descriptor
+ambiguity the stop names: original `counters.rs:74` -> current `:92` and
+original `:135` -> current `:177`; the first-match pairing mislabels them NEW.
+**Disposition: both are MOVE, not NEW.** The candidate under
+`.temp/brief-713/evidence/ownership-replayed/` is the replay's output and may
+be copied into the live inventories as the canonical replay; do not hand-edit
+a row. Record the disposition in the report.
+
+**Q3 — rejection census: accepted under a predicate.** The keyed comparison
+is exactly the allowed class: 10 added and 6 removed, all inside the three
+files this brief converts, and the added reasons are the new test-cfg
+attributes and cfg'd parameters (`method lexical scope contains local
+items/imports`, `unresolved non-test cfg alternative or opaque import
+namespace`) replacing `method receiver lacks checked nominal/place
+provenance`. At the end of stage 3 the pinned counts in
+`retention_closure/census/tests.rs` may be updated to the final discovered
+values as a derived cell **if and only if** every added or removed key is in a
+file this brief converted and every added reason is one of those two classes
+(or another reason directly attributable to a new cfg or parameter); every
+added and removed row is listed in the report. Anything else is a STOP.
+
+**Warnings.** Remove the unused import this brief introduced in
+`counters.rs` (the one new lib-test warning). Do not touch the out-of-scope
+`profiling/mod.rs` re-export; if a warning comes from it, name it and leave
+it.
+
+Everything else in the brief stands: the surface order, the lock-order table,
+the nine gate tests and their mutants, the standing replays after the last
+edit, and the acceptance runs. Resume with `CDX_FORK`.
