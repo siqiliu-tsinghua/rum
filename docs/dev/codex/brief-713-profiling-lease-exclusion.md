@@ -1339,3 +1339,77 @@ budget) -> the six mutants including the Q4 B/C arms and the Q10 handoff ->
 the standing replays with the once-only pinned census -> the acceptance runs
 (full lib 3x at 8 threads, once at 1, the workspace, the release erasure,
 the test-name delta). Resume with `CDX_FORK`.
+
+## Director ruling — 2026-11-09 (stage-12 stop): Q19 the summary is one admitted transaction; six report files get forwarding only
+
+Q18 is accepted in shape: the exact-cfg owners cover every collector
+argument, vector, current element, iterator and `keep`; `release_admitted`
+takes the storage before settlement; the permanent real-retirement test is
+green at 8 and 1 with `original_assertion_caught=true disposed=true
+refunded=296 expected=296 rows_unchanged_since_retire=true`, the pre-owner
+and one-site mutant arms abort at both (`nested profiling admission` /
+`panic in a destructor during cleanup` / `aborting`, exit -6), and the fixed
+source is restored (`166c9f33…`). The final census has 237 bodies and zero
+unresolved or pending rows: 6 UNWIND_OWNER, 9 TRANSFERRED, 1
+DEFUSED_BEFORE_SETTLEMENT, 1 SLOT_REMOVED_BEFORE_PANIC_POISON_ONLY, 5 arena
+plus 1 borrowed-cell POISON_CASCADE, 183 NO_ADMITTING_LOCAL, 31
+OUTSIDE_PERMIT. 15/15 at 8 and 1. The Q19 stop is correct: the summary body
+is a named conversion surface whose callees live in six files outside the
+MAY list.
+
+### Q19 — one transaction, forwarded
+
+The summary is one admitted transaction. A report is a single observation of
+the profiling state: a reset or publication on a sibling registered thread
+must not interleave between its sections, and the raw rewrite counters in
+`print_rewrite_rule_prefilter_summary` have no getter at all, so outside the
+permit they would be read unfenced. Per-helper admission, releasing around
+the helpers, and duplicated helper bodies are rejected for exactly those
+reasons. A TLS depth fallback stays forbidden.
+
+Rule:
+
+1. `print_lexical_profile_summary_body` keeps a strict entry wrapper (its two
+   callers in `summary.rs` stay unchanged): admit, return on refusal, call
+   one `_admitted` body that holds the permit across `logical::summary()`
+   and every helper. Production erases the parameter and keeps the body
+   single-source. Refusal is wholesale: an unregistered thread under a lease
+   now prints nothing, where today the body's own counter lines print
+   unfenced. That is the intended class behaviour and must be disclosed.
+2. Scope extension, exactly these six files and only this forwarding:
+   `profiling/report_bindings.rs`, `report_presence_reuse.rs`,
+   `report_presence_shapes.rs`, `report_presence_sources.rs`,
+   `report_rebuild.rs`, `report_timing.rs`. Each helper gains the exact-cfg
+   `&Admitted` parameter on its existing item (or one `_admitted` twin whose
+   only caller is the summary; no second wrapper may be left uncalled), and
+   every strict getter call reachable in its body becomes the existing
+   `_admitted` variant — all nine getters have one. There are 28 getter call
+   sites today; that number is a sanity check, not the list. The duty is the
+   class: every strict getter reachable from a converted helper, found by a
+   scan, and the held-body test nests on any missed one. No output, order,
+   formatting (beyond rustfmt of the edited items) or logic change; no other
+   edit in these files.
+3. `print_rewrite_rule_prefilter_summary` takes the parameter and reads its
+   raw counters under the summary's permit. If any of its reads can occur
+   outside it, STOP.
+4. Lock order: the body holds the fence read side across `logical::summary()`'s
+   `current_slot()` lock and the helpers' TLS/atomic reads. No holder of the
+   slot (or another payload lock) may call a strict admitting wrapper or
+   `publish()`; a reverse edge is a STOP. An existing `_admitted` variant is
+   used, never a call to the strict wrapper.
+
+### Falsifier
+
+The held-body probe becomes the permanent test: the `_admitted` body called
+under a real permit at 8 and 1, plus the strict entry at depth 0. Before the
+conversion the held arm nests at depth 1 while the depth-0 control passes
+(quote the receipt); after it both arms pass. The depth-0 printed bytes are
+compared by the LP01 parents, which must stay identical; no output assertion
+is invented for the held arm beyond return-and-no-nest.
+
+**Order after Q19.** The entry wrapper + the six-file forwarding + the
+permanent held-summary test -> reset -> budget -> the six mutants including
+the Q4 B/C arms and the Q10 handoff -> the standing replays with the once-only
+pinned census -> the acceptance runs (full lib 3x at 8 threads, once at 1,
+the workspace, the release erasure, the test-name delta). Resume with
+`CDX_FORK`.
