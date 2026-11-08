@@ -638,3 +638,99 @@ writes only under `Some`), the three timing-frame repairs, the warning
 deletions, then segments/context, summary/reset, budget, the six mutants
 (including the Q4 B/C arms), the replays after the last source edit, and the
 acceptance runs. Resume with `CDX_FORK`.
+
+## Director ruling — 2026-11-09 (stage-5 stop): Q8 handoff, Q9 ownership, the last two edges
+
+C5 is accepted as a checkpoint: the retained `Option<Admitted>` propagation,
+the three timing-frame repairs, the four named warning removals, the owned-drop
+wiring and the Q8 witness are real progress, and the stop is correct on every
+count. Q7 stands.
+
+**Q8 — the generation handoff: a full reset inside `lease()`, after the
+fence, before it returns.** The diagnosis is right: `lease()` publishes a
+generation but leaves `CURRENT` holding the previous epoch, so the next
+holder and a boundary created under the previous lease share one epoch
+identity. The repair is not a stamp on the slots; it is the generation
+boundary itself. Exact order:
+
+1. `TEST_LEASE.lock()`; `NEXT_GEN`; `CURRENT_GEN.store(generation, Release)`
+   (unchanged).
+2. `fence_admitted_writes()` (unchanged). This is the cut: every write
+   admitted before the generation has landed, and from the store onward an
+   unregistered thread is refused at every entry.
+3. `REGISTERED_GEN.set(generation)` (moved before the handoff).
+4. Construct the `TestLease`, then call the existing admitted reset
+   (`epoch::reset_for_lease(&lease)`) — the full `reset_unleased` body:
+   `failed = None`, clear registrations, take and retire the previous epoch,
+   clear the stash, all under the one `admit()` taken after registration.
+5. Return the lease.
+
+The full reset is the handoff, not only the epoch take: owners left behind
+let the new generation attach to old owners, and a stash left behind lets the
+new generation's `take_stash`/`drain_attached` consume old boundaries — the
+theft class. The handoff must not wait on process bytes (the fixture's
+`drain_for_lease` stays after acquisition), must not take the fence while
+holding a permit, must not fabricate `Admitted`, and must not register before
+the generation store. `TestLease::Drop` is unchanged: it does not detach, so
+post-drop inspection keeps today's behavior; the next acquisition is the
+handoff. The fixture's explicit `reset_for_lease` becomes idempotent; a
+second mid-test reset keeps today's meaning. Production erases all of it
+(`lease()` and `reset_for_lease` are already cfg'd).
+
+The falsifier is the C5 witness
+`brief713_prior_boundary_cannot_settle_current_lease_rows`: red pre-handoff at
+8 and 1 (tuple `same_current_epoch=true unregistered=true
+current_rows_changed=true old_calls=1 old_open=0 refunded=296 faults=0`), and
+green post-handoff with `same_current_epoch=false`,
+`current_rows_changed=false`, `refunded=296` and the same fault count.
+Refusing the refund or deferring it is a STOP.
+
+**Q9 — ownership: accepted with eight MOVE dispositions and three explained
+removals.** I verified the origin review: each flag is an existing item whose
+identical cfg descriptor is duplicated by the conversion's new cfg'd
+parameters, and first-match pairing consumed the old row elsewhere. The
+eight: `epoch.rs:583 existing` (baseline 404), `:600 publication_state`
+(421), `:616 current` (437), `:701 reset_for_lease` (479 via C4 514; the Q5
+disposition carries forward), `mod.rs:533 LogicalProfileTestLease` (398),
+`:542 logical_profile_test_acquire` (407), `:727 start` (592),
+`segments.rs:334 end`'s `|cell|` closure (293). **Disposition: MOVE, not
+NEW.** The three REMOVED rows are the deleted owner wrappers' cfg'd
+parameters (`profile_queue.rs:725/734/745`), explained by this round's
+authorised warning cleanup. Copy `evidence/ownership-replayed-c5` unchanged;
+no hand edits. The final replay after the last source edit supersedes it.
+
+**The two remaining lock edges: close them under Q1, no new permission.**
+- `drop_session` (`epoch.rs:727-731`): take the entry admission before
+  locking `CURRENT` and pass the permit into `drop_belonging_admitted` and
+  `abandon_owner_admitted`. Under `None`, the session's own queue/arena
+  drops still release their storage (caller-owned); the registry/stash
+  abandonment is deferred to the next reset/handoff, which releases it
+  before `drain_for_lease` waits (Q2). No charge may be lost.
+- attach: pass the attach body's existing permit into the storage-failure
+  retire path (`retire_admitted(Some(_access), ...)`); no second `admit()`
+  beneath the permit.
+
+**Warnings: the default lib is the bar, and it is 6 -> 0.** The six
+default-lib dead items are all strict-gate entries whose only callers are
+the new test files: `evaluation_cache/profile/mod.rs:195/231/267/909`
+(`evaluation_cache_profile_configured`, `_active`,
+`_incremental_enabled`, `module_source_alias_completion`/`_duration`) and
+`profiling/config.rs:86/165` (`lexical_profile_active`,
+`lexical_profile_incremental_enabled`). Gate them `#[cfg(test)]` or delete
+them; nothing else changes in those files. After that the default lib must
+be zero-warning and the lib-test must carry only the three pre-existing
+`test_builtins` warnings. The feature-library build is a diagnostic, not a
+release bar: its remaining dead-code warnings must be enumerated against
+the pre-713 feature build, and the accepted class is feature-gated test
+support unused without `test` (the `test_builtins` precedent). `publish()`
+/`Publication` are `pub(in crate::runtime)` and used only by fixtures; test
+-gate them if the feature-only build still warns.
+
+**Order after Q8-Q9.** Handoff -> the two edges -> the six `#[cfg(test)]`
+gates -> the Q8 witness green plus all focused gates (14/14) -> the remaining
+epoch callees, segments/context, summary/reset, budget -> the six unrun
+mutants including the Q4 B/C arms -> the standing replays after the last
+source edit -> the acceptance runs (full lib 3x at 8 threads, once at 1, the
+workspace, the release erasure, the test-name delta). Every surface compiles,
+formats and passes its lock audit before the next begins. Resume with
+`CDX_FORK`.
