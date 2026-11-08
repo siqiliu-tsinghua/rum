@@ -924,3 +924,95 @@ and the Q10 handoff mutant -> the standing replays after the last source
 edit -> the acceptance runs (full lib 3x at 8 threads, once at 1, the
 workspace, the release erasure, the test-name delta). Resume with
 `CDX_FORK`.
+
+## Director ruling — 2026-11-09 (stage-8 stop): Q13 the drain must not hold the lease while it waits
+
+The event bridge is in and is the ruled shape (strict wrapper, one
+`event_admitted` body, `fault_admitted`/`retire_admitted` on the two failure
+branches, `add_admitted` passing its permit, tests still on the wrapper);
+LP01 passes at 1 and 8; the census now lists 106 sites in 100 root bodies and
+176 root/permit bodies with the 13 former event chains repaired. The stop is
+correct: one 8-thread focused run stalled, and a passing retry does not
+cancel it. And the stall is now **measured**, not hypothetical:
+`logs/c8-event-focused-8.log` carries
+
+    thread '...brief713_cache_write_from_unregistered_thread_is_refused' panicked
+    at .../logical/epoch.rs:874:9: diagnostic drain stalled at 104 bytes
+
+at the 30-second deadline, then the outer 60-second bound killed the rest.
+
+### The defect: a lock inversion in the test fixture, older than this round
+
+`epoch::drain_for_lease` waits for `PROCESS_BYTES == 0` **while the caller
+holds `TEST_LEASE`**. A cross-lease probe legitimately retains a caller-owned
+charge across its lease-free window (`drop(previous)` -> charge still live ->
+next `lease()`); it cannot release that charge until it reacquires
+`TEST_LEASE`. Any test that runs `enabled()` (or either other drain site) in
+that window takes `TEST_LEASE` and waits for the very charge the probe can
+only release by taking `TEST_LEASE`. That is the deadlock; 104 bytes is the
+measured retained total. The race predates C8 — the drain dates from LP06
+(brief 668/669) and the cross-lease probes from this brief's C5, and the
+event bridge neither charges nor drains — and it is not a stale inventory
+artifact. It must be fixed here because the 37-run acceptance campaign would
+hit it.
+
+Holding the lease across the probe's gap is not the repair: the retained
+charge across `drop(previous)` is the property the probes exist to test.
+
+### Rule: wait without the lease, acquire, re-check, retry
+
+One test-only helper implements the protocol — the drain and the acquisition
+are one operation, and the lease is never held while waiting:
+
+```
+pub(in crate::runtime) fn lease_drained() -> TestLease {
+    let deadline = Instant::now() + Duration::from_secs(30);   // existing bound and message
+    loop {
+        while budget::process_bytes() != 0 {                    // wait WITHOUT the lease
+            release_deferred_charge();
+            assert!(Instant::now() < deadline, "diagnostic drain stalled at {} bytes", ...);
+            std::thread::yield_now();
+        }
+        let lease = lease::lease();                             // Q8 handoff reset
+        epoch::reset_for_lease(&lease);                         // keep the explicit reset
+        if budget::process_bytes() == 0 { return lease; }
+        drop(lease);                                            // let the cross-gap probe run
+        std::thread::yield_now();
+    }
+}
+```
+
+- The helper returns only in the state that matters: lease held, handoff and
+  explicit reset done under it, `PROCESS_BYTES == 0`. Nothing about the
+  predicate, the deadline, the message or the reset is weakened.
+- Route all three drain sites through it: `engine_support::enabled()`
+  (replacing `lease()` + `reset_for_lease` + `drain_for_lease`),
+  `tests/module.rs:407-409`, and `retained_pause.rs` (drop `enabled` first,
+  as `module.rs` already does, then `lease_drained()` and the same
+  `== 0` assertion). `drain_for_lease` becomes private to the helper; if a
+  site genuinely needs to hold a lease it already owns, it asserts zero
+  without waiting.
+- No probe changes: the retained charge across the gap stays exactly where
+  it is.
+- No deadline change, no skip, no thread-default change, no weakened
+  assertion, no early release in any probe.
+
+**Falsifier, mandatory.** A deterministic reproduction that pins the
+inversion: one thread retains a caller-owned charge across a lease-free
+window; a second thread calls `enabled()` / `lease_drained()` while the
+charge is live; the first thread then reacquires the lease, releases the
+charge and finishes. Run it on the **pre-fix** fixture code first and quote
+the 30-second `diagnostic drain stalled at N bytes` panic line (that is the
+red); then on the fixed helper, where it must pass promptly (green). Keep it
+as a permanent test — the green path is fast. Back it with ~20 consecutive
+8-thread runs of the focused 14-test set, all 14/14, and report the wall
+times. The falsifier is the proof; the repeats are the supporting
+distribution.
+
+**Order after Q13.** The helper and the three sites -> the falsifier red and
+green -> focused 14/14 at 8 and 1 -> the remaining named conversions
+(epoch callees, segments/context, summary/reset, budget) -> the six mutants
+including the Q4 B/C arms and the Q10 handoff mutant -> the standing replays
+after the last source edit -> the acceptance runs (full lib 3x at 8 threads,
+once at 1, the workspace, the release erasure, the test-name delta).
+Resume with `CDX_FORK`.
