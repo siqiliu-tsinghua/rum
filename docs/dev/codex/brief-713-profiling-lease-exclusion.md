@@ -1545,3 +1545,79 @@ including the Q4 B/C arms and the Q10 handoff -> the standing replays with
 the once-only pinned census -> the acceptance runs (full lib 3x at 8
 threads, once at 1, the workspace, the release erasure, the test-name
 delta). Resume with `CDX_FORK`.
+
+## Director ruling — 2026-11-09 (stage-14 stop): Q21 the mutant the type makes inexpressible; Q22 the ownership disposition
+
+Q20 is accepted in shape: one private `acquire_write(&waiting)` order shared
+by `publish()` and `admit_exclusive()` (depth assert -> wait observable ->
+write gate -> observable decrement -> registration check after the gate ->
+depth +1), the `AdmittedGate` enum with the only two guard shapes, the
+`ExclusiveAdmitted` root whose only constructor is `admit_exclusive`, both
+reset entries converted, `reset_unleased`/`reset_production` taking the
+exclusive proof and the leaves taking `admitted()`, and the permit held
+through every counter store and TLS clear. The separate `RESET_WAITING`
+observable is written only around the wait, and `FENCING` stays the
+lease/publication fence's. The two permanent witnesses were red at 8 and 1
+on the real pre-fix source (`B713 SUMMARY_RESET before=7 while_held=0
+reset_completed_while_held=true reset_fenced=false after=0`, both tests,
+0/2/0) and are green at both (`before=7 while_held=7
+reset_completed_while_held=false reset_fenced=true after=0`, 4/0/0), with
+15/15 focused at both. No speculative change, no weakened expectation.
+
+### Q21 — an inexpressible mutant is the type working, not a falsifier gap
+
+The prescribed M1 substitution stops at compile time: E0599 `no method named
+'admitted' found for struct 'Admitted'` and E0308 `expected
+&ExclusiveAdmitted, found &Admitted`, because `reset_unleased` /
+`reset_production` take `&ExclusiveAdmitted` and a shared `admit()` cannot
+produce one. That **is** item 4 of the Q20 ruling working. Record both exact
+errors in the report and do not hunt for a compiling way to write that
+mutation; do not weaken the signatures, add a conversion, or add a
+constructor for the mutant's sake.
+
+Replace M1/M2 with:
+
+- **M1' (class, runtime).** Inside `admit_exclusive()`, acquire the shared
+  side and return it in the same root: `AdmittedGate::Shared` over
+  `WRITE_GATE.read()`, the same registration check and depth bookkeeping,
+  nothing else changed. Every caller still compiles. Both permanent
+  witnesses must go red at 8 and 1 with the same tuple as the pre-fix red;
+  quote both. One mutant covers both roots because the strong type merges
+  the two entries into one acquisition — a per-root pair would be two names
+  for one mutation. Per-root discrimination is already established by each
+  witness's own pre-fix red; this mutant proves the current source still
+  discriminates both. Restore byte-for-byte (SHA) and show both green.
+- **M3' (instrument).** Neutralize the wait observable (`RESET_WAITING`'s
+  bump or `reset_waiting()`), leaving the gate in place. Both witnesses must
+  fail at the bounded 30 s deadline, quoting both samples, without hanging:
+  that calibrates the deadline path Q20 introduced and proves the
+  observable is load-bearing. Restore and show both green.
+
+The pre-fix receipts stay as the historical red; the mutants do not replace
+them.
+
+### Q22 — the ownership disposition is accepted
+
+The canonical candidate's delta is exactly the Q20-mandated replacement and
+nothing else: 8 MOVE (existing macro and capture rows shifted), 1 REMOVED
+(the old `Admitted._gate` `RwLockReadGuard` storage descriptor), 8 NEW
+(`Admitted._gate: AdmittedGate`, the two variant guards,
+`ExclusiveAdmitted.access: Admitted`, and the four rows inside the extracted
+`acquire_write`), all in `lease.rs`; UnknownHostPayload unchanged at 79,
+self-reaching unchanged at 61, every UnknownConstruct status preserved, no
+other file touched. The ownership obligation is preserved and strengthened:
+the guard is still owned by the permit and released by its Drop, and the
+enum only adds the exclusive variant. The second original flag — the
+`|poison|` closure at `admit`, baseline 66 -> current 92 — is the accepted
+duplicate-descriptor pairing class (Q5/Q9): that closure still exists, and
+the canonical first-match pairing consumed its descriptor at the new
+`acquire_write` 135. Copy the complete candidate unchanged, no hand edits,
+and replay the ownership cell to exact green as in the earlier stages
+(`c13-ownership-exact` shape). Pinned census counts still update once at
+the final source checkpoint.
+
+**Order after Q21/Q22.** M1' and M3' (red at 8 and 1, restored) -> budget
+-> the remaining mutants including the Q4 B/C arms and the Q10 handoff ->
+the standing replays with the once-only pinned census -> the acceptance runs
+(full lib 3x at 8 threads, once at 1, the workspace, the release erasure,
+the test-name delta). Resume with `CDX_FORK`.
